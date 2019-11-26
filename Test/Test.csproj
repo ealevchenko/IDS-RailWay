@@ -49,6 +49,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ELOG\ELOG.csproj">
+      <Project>{513e1e72-406a-4309-92dd-fb8c079c9bbd}</Project>
+      <Name>ELOG</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FLOG\FLOG.csproj">
       <Project>{32908704-611b-4c22-8349-e03369ae725f}</Project>
       <Name>FLOG</Name>

@@ -30,5 +30,27 @@ namespace Test.TestModule
         }
 
         #endregion
+
+        #region EventLogs
+
+        public void ELOG_EventLogs()
+        {
+            Exception ex = new Exception("error1", new Exception("error0"));
+
+            "Тест сохрнения Information".InformationToEvent();
+            "Тест сохрнения Information".InformationToEvent(1,2);
+            //"Тест сохрнения Information(error)".InformationToEvent(ex);
+            //"Тест сохрнения WarningToFile".WarningToFile();
+            //"Тест сохрнения WarningToFile(error)".WarningToFile(ex);
+            //"Тест сохрнения DebugToFile".DebugToFile();
+            //"Тест сохрнения DebugToFile(error)".DebugToFile(ex);
+            //"Тест сохрнения ErrorToFile".ErrorToFile();
+            //"Тест сохрнения ErrorToFile(error)".ErrorToFile(ex);
+            //"Тест сохрнения FatalToFile".FatalToFile();
+            //"Тест сохрнения FatalToFile(error)".FatalToFile(ex);
+        }
+
+        #endregion
+
     }
 }

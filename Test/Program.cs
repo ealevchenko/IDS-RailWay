@@ -14,9 +14,8 @@ namespace Test
             #region Test_Logs тест логирования
             Test_Logs tlogs = new Test_Logs();
 
-            #region FLOG
-            tlogs.FLOG_FileLogs();
-            #endregion
+            //tlogs.FLOG_FileLogs();
+            tlogs.ELOG_EventLogs();
 
             #endregion
 
