@@ -34,6 +34,7 @@ namespace EFLOG.Concrete
             }
             catch (Exception e)
             {
+                Console.WriteLine(e); 
                 return null;
             }
         }
@@ -46,6 +47,7 @@ namespace EFLOG.Concrete
             }
             catch (Exception e)
             {
+                Console.WriteLine(e);
                 return null;
             }
         }
@@ -58,7 +60,7 @@ namespace EFLOG.Concrete
             }
             catch (Exception e)
             {
-
+                Console.WriteLine(e);
             }
         }
 
@@ -70,7 +72,7 @@ namespace EFLOG.Concrete
             }
             catch (Exception e)
             {
-
+                Console.WriteLine(e);
             }
         }
 
@@ -90,7 +92,7 @@ namespace EFLOG.Concrete
             }
             catch (Exception e)
             {
-
+                Console.WriteLine(e);
             }
 
         }
@@ -103,7 +105,7 @@ namespace EFLOG.Concrete
             }
             catch (Exception e)
             {
-
+                Console.WriteLine(e);
             }
         }
 
@@ -115,6 +117,7 @@ namespace EFLOG.Concrete
             }
             catch (Exception e)
             {
+                Console.WriteLine(e);
                 return -1;
             }
         }
@@ -128,6 +131,7 @@ namespace EFLOG.Concrete
             }
             catch (Exception e)
             {
+                Console.WriteLine(e);
                 return null;
             }
         }

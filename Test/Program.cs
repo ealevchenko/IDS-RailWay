@@ -15,7 +15,8 @@ namespace Test
             Test_Logs tlogs = new Test_Logs();
 
             //tlogs.FLOG_FileLogs();
-            tlogs.ELOG_EventLogs();
+            //tlogs.ELOG_EventLogs();
+            tlogs.DBLOG_DataBaseLogs();
 
             #endregion
 

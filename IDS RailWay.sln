@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29409.12
+# Visual Studio Express 2013 for Web
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "METRANS", "METRANS", "{C7CFBCEA-BDFC-4765-8F3F-4BFE82D3EFD0}"
 EndProject
@@ -20,6 +20,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{A4970E0A-9744-4732-ACB6-967900690A6D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ELOG", "ELOG\ELOG.csproj", "{513E1E72-406A-4309-92DD-FB8C079C9BBD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBLOG", "DBLOG\DBLOG.csproj", "{5A44478B-12A2-410F-BE17-4E3AD2331C5C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{513E1E72-406A-4309-92DD-FB8C079C9BBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{513E1E72-406A-4309-92DD-FB8C079C9BBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{513E1E72-406A-4309-92DD-FB8C079C9BBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A44478B-12A2-410F-BE17-4E3AD2331C5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A44478B-12A2-410F-BE17-4E3AD2331C5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A44478B-12A2-410F-BE17-4E3AD2331C5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A44478B-12A2-410F-BE17-4E3AD2331C5C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -62,6 +68,7 @@ Global
 		{910D6360-9E8C-4143-A4DD-84E778EDB7A6} = {3DBE5AF9-4FF6-40BD-9884-E29572D2D2CC}
 		{A4970E0A-9744-4732-ACB6-967900690A6D} = {C36F02F9-9586-40E0-88E7-3C2AED843C3E}
 		{513E1E72-406A-4309-92DD-FB8C079C9BBD} = {3DBE5AF9-4FF6-40BD-9884-E29572D2D2CC}
+		{5A44478B-12A2-410F-BE17-4E3AD2331C5C} = {3DBE5AF9-4FF6-40BD-9884-E29572D2D2CC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8EB4D1C1-5CE4-43B6-B167-22E790286574}

@@ -24,6 +24,7 @@ namespace IDSLogs
             {
                 _eventSourceName = "IDSLog";
                 _logName = "IDSLogFile";
+                Console.WriteLine(e);
             }
 
             try
@@ -38,6 +39,7 @@ namespace IDSLogs
             catch (Exception e)
             {
                 elog = null;
+                Console.WriteLine(e);
             }
         }
 
