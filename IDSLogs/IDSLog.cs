@@ -25,7 +25,6 @@ namespace IDSLogs
 
         static IDSLog()
         {
-            //FileLogs.InitLogger();
             try
             {
                 _eLog = bool.Parse(ConfigurationManager.AppSettings["ELog"].ToString());
@@ -37,11 +36,11 @@ namespace IDSLogs
             }
             catch (Exception e)
             {
-                //LogError(e, String.Format("Ошибка чтения AppSettings:(Logs,LogErrors,dbLogs,dbLogErrors,fLogs,fLogErrors)"));
+                Console.WriteLine(String.Format("Ошибка чтения IDSLog.AppSettings:(ELog,ELogException,DBLog,DBLogException,FLog,FLogException)"));
             }
         }
 
-        public static void InitRWLogs(bool eLogs, bool eLogErrors, bool dbLogs, bool dbLogErrors, bool fLogs, bool fLogErrors)
+        public static void InitLog(bool eLogs, bool eLogErrors, bool dbLogs, bool dbLogErrors, bool fLogs, bool fLogErrors)
         {
             _eLog = eLogs;
             _eLogException = eLogErrors;
@@ -56,62 +55,115 @@ namespace IDSLogs
         //    Console.WriteLine(e.ToString());
         //    FileLogs.SaveError(message, e);
         //}
+        #region Вспомогательные функции
+        public static string GetSource(service service, eventID eventID)
+        {
+            return String.Format("[service.{0}, eventID.{1}] ", service, eventID);
+        }
+        #endregion
 
-        //#region Information
+        #region Information
 
-        //public static void WriteInformation(this string message, service service, eventID eventID, bool elog, bool dblog, bool flog)
-        //{
-        //    if (elog) message.SaveInformationToEventLogs(service, eventID);
-        //    if (dblog) message.SaveInformationToDB(service, eventID);
-        //    if (flog) message.SaveInformationToFile(service, eventID);
-        //    Console.WriteLine(String.Format("\nservice: {0}\neventID: {1}\nInformation: {2}", service, eventID, message));
-        //}
 
-        //public static void WriteInformation(this string message, service service, bool elog, bool dblog, bool flog)
-        //{
-        //    if (elog) message.SaveInformationToEventLogs(service);
-        //    if (dblog) message.SaveInformationToDB(service);
-        //    if (flog) message.SaveInformationToFile(service);
-        //    Console.WriteLine(String.Format("\nservice: {0}\nInformation: {1}", service, message));
-        //}
 
-        //public static void WriteInformation(this string message, eventID eventID, bool elog, bool dblog, bool flog)
-        //{
-        //    if (elog) message.SaveInformationToEventLogs(eventID);
-        //    if (dblog) message.SaveInformationToDB(eventID);
-        //    if (flog) message.SaveInformationToFile(eventID);
-        //    Console.WriteLine(String.Format("\neventID: {0}\nInformation: {1}", eventID, message));
-        //}
+        public static void InformationToEvent(this string log, service service, eventID eventID)
+        {
+            log.InformationToEvent((service == service.Null ? (int?)null : (int)service), (eventID == eventID.Null ? (int?)null : (int)eventID));
+        }
 
-        //public static void WriteInformation(this string message, bool elog, bool dblog, bool flog)
-        //{
-        //    if (elog) message.SaveInformationToEventLogs();
-        //    if (dblog) message.SaveInformationToDB();
-        //    if (flog) message.SaveInformationToFile();
-        //    Console.WriteLine(String.Format("\nInformation: {0}", message));
-        //}
+        public static void InformationToEvent(this string log, service service)
+        {
+            log.InformationToEvent((service == service.Null ? (int?)null : (int)service), null);
+        }
 
-        //public static void WriteInformation(this string message, service service, eventID eventID)
-        //{
-        //    WriteInformation(message, service, eventID, _eLog, _dbLog, _fLog);
-        //}
+        public static void InformationToEvent(this string log, eventID eventID)
+        {
+            log.InformationToEvent(null, (eventID == eventID.Null ? (int?)null : (int)eventID));
+        }
 
-        //public static void WriteInformation(this string message, service service)
-        //{
-        //    WriteInformation(message, service, _eLog, _dbLog, _fLog);
-        //}
+        public static void InformationToDB(this string log, service service, eventID eventID)
+        {
+            log.InformationToDB((service == service.Null ? (int?)null : (int)service), (eventID == eventID.Null ? (int?)null : (int)eventID));
+        }
 
-        //public static void WriteInformation(this string message, eventID eventID)
-        //{
-        //    WriteInformation(message, eventID, _eLog, _dbLog, _fLog);
-        //}
+        public static void InformationToDB(this string log, service service)
+        {
+            log.InformationToDB((service == service.Null ? (int?)null : (int)service), null);
+        }
 
-        //public static void WriteInformation(this string message)
-        //{
-        //    WriteInformation(message, _eLog, _dbLog, _fLog);
-        //}
+        public static void InformationToDB(this string log, eventID eventID)
+        {
+            log.InformationToDB(null, (eventID == eventID.Null ? (int?)null : (int)eventID));
+        }
 
-        //#endregion
+        public static void InformationToFile(this string log, service service, eventID eventID)
+        {
+            (GetSource(service, eventID) + log).InformationToFile();
+        }
+
+        public static void InformationToFile(this string log, service service)
+        {
+            (GetSource(service, eventID.Null) + log).InformationToFile();
+        }
+
+        public static void InformationToFile(this string log, eventID eventID)
+        {
+            (GetSource(service.Null, eventID) + log).InformationToFile();
+        }
+
+        public static void InformationLog(this string message, service service, eventID eventID, bool elog, bool dblog, bool flog)
+        {
+            Console.WriteLine(String.Format("\nservice: {0}\neventID: {1}\nInformation: {2}", service, eventID, message));            
+            if (elog) message.InformationToEvent(service, eventID);
+            if (dblog) message.InformationToDB(service, eventID);
+            if (flog) message.InformationToFile(service, eventID);
+        }
+
+        public static void InformationLog(this string message, service service, bool elog, bool dblog, bool flog)
+        {
+            Console.WriteLine(String.Format("\nservice: {0}\nInformation: {1}", service, message));            
+            if (elog) message.InformationToEvent(service);
+            if (dblog) message.InformationToDB(service);
+            if (flog) message.InformationToFile(service);
+        }
+
+        public static void InformationLog(this string message, eventID eventID, bool elog, bool dblog, bool flog)
+        {
+            Console.WriteLine(String.Format("\neventID: {0}\nInformation: {1}", eventID, message));            
+            if (elog) message.InformationToEvent(eventID);
+            if (dblog) message.InformationToDB(eventID);
+            if (flog) message.InformationToFile(eventID);
+        }
+
+        public static void InformationLog(this string message, bool elog, bool dblog, bool flog)
+        {
+            Console.WriteLine(String.Format("\nInformation: {0}", message));            
+            if (elog) message.InformationToEvent();
+            if (dblog) message.InformationToDB();
+            if (flog) message.InformationToFile();
+        }
+
+        public static void InformationLog(this string message, service service, eventID eventID)
+        {
+            message.InformationLog(service, eventID, _eLog, _dbLog, _fLog);
+        }
+
+        public static void InformationLog(this string message, service service)
+        {
+            message.InformationLog(service, _eLog, _dbLog, _fLog);
+        }
+
+        public static void InformationLog(this string message, eventID eventID)
+        {
+            message.InformationLog(eventID, _eLog, _dbLog, _fLog);
+        }
+
+        public static void InformationLog(this string message)
+        {
+            message.InformationLog(_eLog, _dbLog, _fLog);
+        }
+
+        #endregion
 
         //#region Warning
 
