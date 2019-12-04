@@ -1,9 +1,9 @@
-﻿using IDSLogs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using IDSLogs;
 
 namespace Test.TestModule
 {
@@ -68,6 +68,20 @@ namespace Test.TestModule
 
             long resultCritical1 = "Тест сохрнения Critical".CriticalToDB();
             long resultCritical2 = "Тест сохрнения Critical id_services=1, id_eventID=2".CriticalToDB(1, 2);
+
+            long resultException1 = ex.ExceptionToDB();
+            long resultException2 = ex.ExceptionToDB("Тест сохрнения Exception");
+            long resultException3 = ex.ExceptionToDB(1, 2);
+            long resultException4 = ex.ExceptionToDB("Тест сохрнения Exception id_services=1, id_eventID=2", 1, 2);
+
+            long resultEvent1 = "Тест сохрнения Event".EventToDB("Статус");
+            long resultEvent2 = "Тест сохрнения Event id_services=1, id_eventID=2".EventToDB("Статус", 1, 2);
+            long resultEvent3 = "Тест сохрнения Event id_services=1".EventOfServicesToDB("Статус", 1);
+            long resultEvent4 = "Тест сохрнения Event id_eventID=2".EventOfeventIDToDB("Статус", 2);
+            long resultEvent5 = "Тест сохрнения Event".EventToDB(EventStatus.Ok);
+            long resultEvent6 = "Тест сохрнения Event id_services=1, id_eventID=2".EventToDB(EventStatus.Ok, 1, 2);
+            long resultEvent7 = "Тест сохрнения Event id_services=1".EventOfServicesToDB(EventStatus.Ok, 1);
+            long resultEvent8 = "Тест сохрнения Event id_eventID=2".EventOfeventIDToDB(EventStatus.Ok, 2);
 
         }
 
