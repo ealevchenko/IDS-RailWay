@@ -32,10 +32,15 @@ namespace IDSLogs
         static private string GetIP()
         {
             string ips = "";
-            foreach (System.Net.IPAddress ip in System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName()).AddressList)
-            {
-                ips += ip.ToString() + "; ";
+            System.Net.IPAddress[] list_ip = System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName()).AddressList;
+            if (list_ip.Count() > 0) {
+                ips = list_ip[list_ip.Count() - 1].ToString();
             }
+            //foreach (System.Net.IPAddress ip in System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName()).AddressList)
+            //{
+            //    ips += ip.ToString() + "; ";
+            //}
+
             return ips.Trim();
         }
 
