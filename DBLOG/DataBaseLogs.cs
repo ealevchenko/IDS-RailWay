@@ -318,5 +318,44 @@ namespace IDSLogs
         }
 
         #endregion
+
+        #region Services
+
+        static private long SaveServices(this int id_services, DateTime start, DateTime stop, int code)
+        {
+            try
+            {
+                EFServices ef_services = new EFServices(new EFDbContext());
+                TimeSpan ts = stop - start;
+                int cur_ms = (int)ts.TotalMilliseconds;
+
+                Services new_services = new Services()
+                {
+                    id = 0,
+                    service = id_services,
+                    start = start,
+                    duration = cur_ms,
+                    code_return = code
+                };
+
+                ef_services.Add(new_services);
+                ef_services.Save();
+                ef_services.Refresh(new_services);
+                return new_services.id;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(String.Format("Ошибка выполнения метода SaveServices(id_services={0}, start={1}, stop={2}, code={3}). Exception:{4}", id_services, start, stop, code, e));
+                return -1;
+            }
+        }
+
+        static public long ServicesToDB(this int id_services, DateTime start, DateTime stop, int code)
+        {
+            return id_services.SaveServices(start, stop, code);
+        }
+
+        #endregion
+
     }
 }

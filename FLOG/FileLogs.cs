@@ -66,6 +66,16 @@ namespace IDSLogs
         {
             log.Fatal(message, ex);
         }
+
+        public static void ExceptionToFile(this Exception ex)
+        {
+            log.Error(ex);
+        }
+
+        public static void ExceptionToFile(this Exception ex, string message)
+        {
+            log.Error(message, ex);
+        }
         /// <summary>
         /// Сохранить ошибку выполнения метода
         /// </summary>
