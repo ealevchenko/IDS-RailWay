@@ -654,7 +654,7 @@ namespace IDSLogs
             events.EventToDB(status, (service == service.Null ? (int?)null : (int)service), (eventID == eventID.Null ? (int?)null : (int)eventID));
         }
 
-        public static void EventToLog(this string events, string status, service service, eventID eventID, bool elog, bool dblog, bool flog)
+        public static void EventLog(this string events, string status, service service, eventID eventID, bool elog, bool dblog, bool flog)
         {
             Console.WriteLine(String.Format("\nservice: {0}\neventID: {1}\nevents: {2}\nstatus: {3}", service, eventID, events, status));
 
@@ -663,7 +663,7 @@ namespace IDSLogs
             if (flog) (events + ", status:" + status).WarningToFile(service, eventID);
         }
 
-        public static void EventToLog(this string events, EventStatus status, service service, eventID eventID, bool elog, bool dblog, bool flog)
+        public static void EventLog(this string events, EventStatus status, service service, eventID eventID, bool elog, bool dblog, bool flog)
         {
             Console.WriteLine(String.Format("\nservice: {0}\neventID: {1}\nevents: {2}\nstatus: {3}", service, eventID, events, status));
 
@@ -672,65 +672,74 @@ namespace IDSLogs
             if (flog) (events + ", status:" + status).WarningToFile(service, eventID);
         }
 
-        public static void EventToLog(this string events, string status, service service, bool elog, bool dblog, bool flog)
+        public static void EventLog(this string events, string status, service service, bool elog, bool dblog, bool flog)
         {
-            events.EventToLog(status, service, eventID.Null, elog, dblog, flog);
+            events.EventLog(status, service, eventID.Null, elog, dblog, flog);
         }
 
-        public static void EventToLog(this string events, EventStatus status, service service, bool elog, bool dblog, bool flog)
+        public static void EventLog(this string events, EventStatus status, service service, bool elog, bool dblog, bool flog)
         {
-            events.EventToLog(status, service, eventID.Null, elog, dblog, flog);
+            events.EventLog(status, service, eventID.Null, elog, dblog, flog);
         }
 
-        public static void EventToLog(this string events, string status, eventID eventID, bool elog, bool dblog, bool flog)
+        public static void EventLog(this string events, string status, eventID eventID, bool elog, bool dblog, bool flog)
         {
-            events.EventToLog(status, service.Null, eventID, elog, dblog, flog);
+            events.EventLog(status, service.Null, eventID, elog, dblog, flog);
         }
 
-        public static void EventToLog(this string events, EventStatus status, eventID eventID, bool elog, bool dblog, bool flog)
+        public static void EventLog(this string events, EventStatus status, eventID eventID, bool elog, bool dblog, bool flog)
         {
-            events.EventToLog(status, service.Null, eventID, elog, dblog, flog);
+            events.EventLog(status, service.Null, eventID, elog, dblog, flog);
         }
 
-        public static void EventToLog(this string events, string status, bool elog, bool dblog, bool flog)
+        public static void EventLog(this string events, string status, bool elog, bool dblog, bool flog)
         {
-            events.EventToLog(status, service.Null, eventID.Null, elog, dblog, flog);
+            events.EventLog(status, service.Null, eventID.Null, elog, dblog, flog);
         }
 
-        public static void EventToLog(this string events, EventStatus status, bool elog, bool dblog, bool flog)
+        public static void EventLog(this string events, EventStatus status, bool elog, bool dblog, bool flog)
         {
-            events.EventToLog(status, service.Null, eventID.Null, elog, dblog, flog);
+            events.EventLog(status, service.Null, eventID.Null, elog, dblog, flog);
         }
 
-
-        public static void EventToLog(this string events, string status, service service)
+        public static void EventLog(this string events, string status, service service, eventID eventID)
         {
-            events.EventToLog(status, service, eventID.Null, _eLogEvent, _dbLogEvent, _fLogEvent);
+            events.EventLog(status, service, eventID, _eLogEvent, _dbLogEvent, _fLogEvent);
         }
 
-        public static void EventToLog(this string events, EventStatus status, service service)
+        public static void EventLog(this string events, EventStatus status, service service, eventID eventID)
         {
-            events.EventToLog(status, service, eventID.Null, _eLogEvent, _dbLogEvent, _fLogEvent);
+            events.EventLog(status, service, eventID, _eLogEvent, _dbLogEvent, _fLogEvent);
         }
 
-        public static void EventToLog(this string events, string status, eventID eventID)
+        public static void EventLog(this string events, string status, service service)
         {
-            events.EventToLog(status, service.Null, eventID, _eLogEvent, _dbLogEvent, _fLogEvent);
+            events.EventLog(status, service, eventID.Null, _eLogEvent, _dbLogEvent, _fLogEvent);
         }
 
-        public static void EventToLog(this string events, EventStatus status, eventID eventID)
+        public static void EventLog(this string events, EventStatus status, service service)
         {
-            events.EventToLog(status, service.Null, eventID, _eLogEvent, _dbLogEvent, _fLogEvent);
+            events.EventLog(status, service, eventID.Null, _eLogEvent, _dbLogEvent, _fLogEvent);
         }
 
-        public static void EventToLog(this string events, string status)
+        public static void EventLog(this string events, string status, eventID eventID)
         {
-            events.EventToLog(status, service.Null, eventID.Null, _eLogEvent, _dbLogEvent, _fLogEvent);
+            events.EventLog(status, service.Null, eventID, _eLogEvent, _dbLogEvent, _fLogEvent);
         }
 
-        public static void EventToLog(this string events, EventStatus status)
+        public static void EventLog(this string events, EventStatus status, eventID eventID)
         {
-            events.EventToLog(status, service.Null, eventID.Null, _eLogEvent, _dbLogEvent, _fLogEvent);
+            events.EventLog(status, service.Null, eventID, _eLogEvent, _dbLogEvent, _fLogEvent);
+        }
+
+        public static void EventLog(this string events, string status)
+        {
+            events.EventLog(status, service.Null, eventID.Null, _eLogEvent, _dbLogEvent, _fLogEvent);
+        }
+
+        public static void EventLog(this string events, EventStatus status)
+        {
+            events.EventLog(status, service.Null, eventID.Null, _eLogEvent, _dbLogEvent, _fLogEvent);
         }
 
         #endregion
@@ -786,15 +795,9 @@ namespace IDSLogs
         //}
         //#endregion
 
-        ///// <summary>
-        ///// Возращает скорректированую ошибку eventID + error_code
-        ///// </summary>
-        ///// <param name="ev"></param>
-        ///// <param name="error_code"></param>
-        ///// <returns></returns>
-        //static public int GetEventIDErrorCode(this eventID ev, int error_code)
-        //{
-        //    return ((int)ev * (-10)) + error_code;
-        //}
+        static public int GetEventIDErrorCode(this eventID ev, int error_code)
+        {
+            return ((int)ev * (-10)) + error_code;
+        }
     }
 }
