@@ -15,16 +15,19 @@ namespace IDSLogs
         static bool _eLog = false;                  // Пользовательских сообщений 
         static bool _eLogException = false;         // Исключений(Exception)
         static bool _eLogEvent = false;             // Событий системы
+        static bool _eLogServices = false;          // Событий сервисов
 
         // Вкл\Отк логирования в базу данных
         static bool _dbLog = false;                 // Пользовательских сообщений
-        static bool _dbLogException = false;         // Исключений(Exception)
-        static bool _dbLogEvent = false;             // Событий системы
+        static bool _dbLogException = false;        // Исключений(Exception)
+        static bool _dbLogEvent = false;            // Событий системы
+        static bool _dbLogServices = false;         // Событий сервисов
 
         // Вкл\Отк логирования в файл на диске
         static bool _fLog = false;                  // Пользовательских сообщений
         static bool _fLogException = false;         // Исключений(Exception)
         static bool _fLogEvent = false;             // Событий системы
+        static bool _fLogServices = false;          // Событий сервисов
 
         static IDSLog()
         {
@@ -33,14 +36,17 @@ namespace IDSLogs
                 _eLog = bool.Parse(ConfigurationManager.AppSettings["ELog"].ToString());
                 _eLogException = bool.Parse(ConfigurationManager.AppSettings["ELogException"].ToString());
                 _eLogException = bool.Parse(ConfigurationManager.AppSettings["ELogEvent"].ToString());
+                _eLogException = bool.Parse(ConfigurationManager.AppSettings["ELogServices"].ToString());
 
                 _dbLog = bool.Parse(ConfigurationManager.AppSettings["DBLog"].ToString());
                 _dbLogException = bool.Parse(ConfigurationManager.AppSettings["DBLogException"].ToString());
                 _dbLogException = bool.Parse(ConfigurationManager.AppSettings["DBLogEvent"].ToString());
+                _dbLogException = bool.Parse(ConfigurationManager.AppSettings["DBLogServices"].ToString());
 
                 _fLog = bool.Parse(ConfigurationManager.AppSettings["FLog"].ToString());
                 _fLogException = bool.Parse(ConfigurationManager.AppSettings["FLogException"].ToString());
                 _fLogException = bool.Parse(ConfigurationManager.AppSettings["FLogEvent"].ToString());
+                _fLogException = bool.Parse(ConfigurationManager.AppSettings["FLogServices"].ToString());
 
             }
             catch (Exception e)
@@ -49,14 +55,26 @@ namespace IDSLogs
             }
         }
 
-        public static void InitLog(bool eLogs, bool eLogErrors, bool dbLogs, bool dbLogErrors, bool fLogs, bool fLogErrors)
+        public static void InitLog(
+            bool eLogs, bool eLogErrors, bool eLogEvent, bool eLogServices,
+            bool dbLogs, bool dbLogErrors, bool dbLogEvent, bool dbLogServices,
+            bool fLogs, bool fLogErrors, bool fLogEvent, bool fLogServices)
         {
             _eLog = eLogs;
             _eLogException = eLogErrors;
+            _eLogEvent = eLogEvent;
+            _eLogServices = eLogServices;
+
             _dbLog = dbLogs;
             _dbLogException = dbLogErrors;
+            _dbLogEvent = dbLogEvent;
+            _dbLogServices = dbLogServices;
+
             _fLog = fLogs;
             _fLogException = fLogErrors;
+            _fLogEvent = fLogEvent;
+            _fLogServices = fLogServices;
+
         }
 
         //public static void LogError(Exception e, string message)
@@ -636,7 +654,7 @@ namespace IDSLogs
             events.EventToDB(status, (service == service.Null ? (int?)null : (int)service), (eventID == eventID.Null ? (int?)null : (int)eventID));
         }
 
-        public static void EventToDB(this string events, string status, service service, eventID eventID, bool elog, bool dblog, bool flog)
+        public static void EventToLog(this string events, string status, service service, eventID eventID, bool elog, bool dblog, bool flog)
         {
             Console.WriteLine(String.Format("\nservice: {0}\neventID: {1}\nevents: {2}\nstatus: {3}", service, eventID, events, status));
 
@@ -645,7 +663,7 @@ namespace IDSLogs
             if (flog) (events + ", status:" + status).WarningToFile(service, eventID);
         }
 
-        public static void EventToDB(this string events, EventStatus status, service service, eventID eventID, bool elog, bool dblog, bool flog)
+        public static void EventToLog(this string events, EventStatus status, service service, eventID eventID, bool elog, bool dblog, bool flog)
         {
             Console.WriteLine(String.Format("\nservice: {0}\neventID: {1}\nevents: {2}\nstatus: {3}", service, eventID, events, status));
 
@@ -654,101 +672,97 @@ namespace IDSLogs
             if (flog) (events + ", status:" + status).WarningToFile(service, eventID);
         }
 
-        public static void EventToDB(this string events, string status, service service, bool elog, bool dblog, bool flog)
+        public static void EventToLog(this string events, string status, service service, bool elog, bool dblog, bool flog)
         {
-            events.EventToDB(status, service, eventID.Null, elog, dblog, flog);
+            events.EventToLog(status, service, eventID.Null, elog, dblog, flog);
         }
 
-        public static void EventToDB(this string events, EventStatus status, service service, bool elog, bool dblog, bool flog)
+        public static void EventToLog(this string events, EventStatus status, service service, bool elog, bool dblog, bool flog)
         {
-            events.EventToDB(status, service, eventID.Null, elog, dblog, flog);
+            events.EventToLog(status, service, eventID.Null, elog, dblog, flog);
         }
 
-        public static void EventToDB(this string events, string status, eventID eventID, bool elog, bool dblog, bool flog)
+        public static void EventToLog(this string events, string status, eventID eventID, bool elog, bool dblog, bool flog)
         {
-            events.EventToDB(status, service.Null, eventID, elog, dblog, flog);
+            events.EventToLog(status, service.Null, eventID, elog, dblog, flog);
         }
 
-        public static void EventToDB(this string events, EventStatus status, eventID eventID, bool elog, bool dblog, bool flog)
+        public static void EventToLog(this string events, EventStatus status, eventID eventID, bool elog, bool dblog, bool flog)
         {
-            events.EventToDB(status, service.Null, eventID, elog, dblog, flog);
+            events.EventToLog(status, service.Null, eventID, elog, dblog, flog);
         }
 
-        public static void EventToDB(this string events, string status, bool elog, bool dblog, bool flog)
+        public static void EventToLog(this string events, string status, bool elog, bool dblog, bool flog)
         {
-            events.EventToDB(status, service.Null, eventID.Null, elog, dblog, flog);
+            events.EventToLog(status, service.Null, eventID.Null, elog, dblog, flog);
         }
 
-        public static void EventToDB(this string events, EventStatus status, bool elog, bool dblog, bool flog)
+        public static void EventToLog(this string events, EventStatus status, bool elog, bool dblog, bool flog)
         {
-            events.EventToDB(status, service.Null, eventID.Null, elog, dblog, flog);
+            events.EventToLog(status, service.Null, eventID.Null, elog, dblog, flog);
         }
 
 
-        public static void EventToDB(this string events, string status, service service)
+        public static void EventToLog(this string events, string status, service service)
         {
-            events.EventToDB(status, service, eventID.Null, _eLogEvent, _dbLogEvent, _fLogEvent);
+            events.EventToLog(status, service, eventID.Null, _eLogEvent, _dbLogEvent, _fLogEvent);
         }
 
-        public static void EventToDB(this string events, EventStatus status, service service)
+        public static void EventToLog(this string events, EventStatus status, service service)
         {
-            events.EventToDB(status, service, eventID.Null, _eLogEvent, _dbLogEvent, _fLogEvent);
+            events.EventToLog(status, service, eventID.Null, _eLogEvent, _dbLogEvent, _fLogEvent);
         }
 
-        public static void EventToDB(this string events, string status, eventID eventID)
+        public static void EventToLog(this string events, string status, eventID eventID)
         {
-            events.EventToDB(status, service.Null, eventID, _eLogEvent, _dbLogEvent, _fLogEvent);
+            events.EventToLog(status, service.Null, eventID, _eLogEvent, _dbLogEvent, _fLogEvent);
         }
 
-        public static void EventToDB(this string events, EventStatus status, eventID eventID)
+        public static void EventToLog(this string events, EventStatus status, eventID eventID)
         {
-            events.EventToDB(status, service.Null, eventID, _eLogEvent, _dbLogEvent, _fLogEvent);
+            events.EventToLog(status, service.Null, eventID, _eLogEvent, _dbLogEvent, _fLogEvent);
         }
 
-        public static void EventToDB(this string events, string status)
+        public static void EventToLog(this string events, string status)
         {
-            events.EventToDB(status, service.Null, eventID.Null, _eLogEvent, _dbLogEvent, _fLogEvent);
+            events.EventToLog(status, service.Null, eventID.Null, _eLogEvent, _dbLogEvent, _fLogEvent);
         }
 
-        public static void EventToDB(this string events, EventStatus status)
+        public static void EventToLog(this string events, EventStatus status)
         {
-            events.EventToDB(status, service.Null, eventID.Null, _eLogEvent, _dbLogEvent, _fLogEvent);
+            events.EventToLog(status, service.Null, eventID.Null, _eLogEvent, _dbLogEvent, _fLogEvent);
         }
 
         #endregion
 
         #region Services
 
+        private static string GetServices(this service service, DateTime start, DateTime stop, int code)
+        {
+            TimeSpan ts = stop - start;
+            int cur_ms = (int)ts.TotalMilliseconds;
+            return String.Format("service:{0}, запущен:{1}, остановлен:{2}, время выполнения (мс): {3}, код выполнения: {4}", service.ToString(), start, stop, cur_ms, code);
+        }
+
         static public long ServicesToDB(this service service, DateTime start, DateTime stop, int code)
         {
             return ((int)service).ServicesToDB(start, stop, code);
         }
 
-        //public static void ServicesToDB(this service service, DateTime start, DateTime stop, int code, bool elog, bool dblog, bool flog)
-        //{
-        //    Console.WriteLine(String.Format("\nservice: {0}\neventID: {1}\nevents: {2}\nstatus: {3}", service, eventID, events, status));
-
-        //    if (elog) (events + ", status:" + status).WarningToEvent(service, eventID); // в лог записывается как событие Warning
-        //    if (dblog) events.EventToDB(status, service, eventID);
-        //    if (flog) (events + ", status:" + status).WarningToFile(service, eventID);
-        //}
-
+        public static void ServicesToLog(this service service, DateTime start, DateTime stop, int code, bool elog, bool dblog, bool flog)
+        {
+            Console.WriteLine(String.Format("\nservice: {0}\nstart: {1}\nstop: {2}\ncode: {3}", service, start, stop, code));
+            if (elog) service.GetServices(start, stop, code).WarningToEvent(service); // в лог записывается как событие Warning
+            if (dblog) service.ServicesToDB(start, stop, code);
+            if (flog) service.GetServices(start, stop, code).DebugToFile();
+        }
+        public static void ServicesToLog(this service service, DateTime start, DateTime stop, int code)
+        {
+            service.ServicesToLog(start, stop, code, _eLogServices, _dbLogServices, _fLogServices);
+        }
         #endregion
 
         //#region Services
-        ///// <summary>
-        ///// Записать лог сервиса
-        ///// </summary>
-        ///// <param name="id_service"></param>
-        ///// <param name="start"></param>
-        ///// <param name="stop"></param>
-        ///// <param name="code"></param>
-        ///// <returns></returns>
-        //public static long WriteServices(this service service, DateTime start, DateTime stop, int code)
-        //{
-        //    service.WriteStatusServices(start, stop);
-        //    return MServicesLog.WriteLogServices(service, start, stop, code);
-        //}
         ///// <summary>
         ///// Записать статус сервиса после выполнения
         ///// </summary>
