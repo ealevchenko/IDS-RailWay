@@ -16,7 +16,13 @@ namespace Test
 
             //tlogs.FLOG_FileLogs();
             //tlogs.ELOG_EventLogs();
-            tlogs.DBLOG_DataBaseLogs();
+            //tlogs.DBLOG_DataBaseLogs();
+
+            #endregion
+
+            #region Test_Metrans тест Метранса
+            Test_Metrans tmt= new Test_Metrans();
+            tmt.MTTransfer_TransferApproaches();
 
             #endregion
 
