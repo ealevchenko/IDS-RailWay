@@ -58,11 +58,15 @@ namespace MT
             set;
         }
     }
-    
+
     public class MTTransfer
     {
         private eventID eventID = eventID.MT_MTTransfer;
         protected service servece_owner = service.Null;
+
+        EFApproachesCars ef_app_cars = new EFApproachesCars(new EFDbContext());
+        EFApproachesSostav ef_app_sostav = new EFApproachesSostav(new EFDbContext());
+        //UZDirectory uz_directory = new UZDirectory(this.servece_owner);// Подключим библиотеку УЗ
 
         private string fromPath;
         public string FromPath { get { return this.fromPath; } set { this.fromPath = value; } }
@@ -94,7 +98,7 @@ namespace MT
             try
             {
                 long? parentid = null;
-                EFApproachesCars ef_app_cars = new EFApproachesCars(new EFDbContext());
+                //EFApproachesCars ef_app_cars = new EFApproachesCars(new EFDbContext());
                 ApproachesCars old_car = ef_app_cars.Get().Where(c => c.num == car.num).OrderByDescending(c => c.id).FirstOrDefault();
                 if (old_car == null) return null; // нет историии движения, первая операция над вагоном
                 if (old_car.arrived != null) return null; // история закрыта, первая операция над вагоном 
@@ -164,6 +168,7 @@ namespace MT
                 UZDirectory uz_directory = new UZDirectory(this.servece_owner);// Подключим библиотеку УЗ
                 StreamReader sr = new StreamReader(file, System.Text.Encoding.Default);
                 string input = null;
+                DateTime start = DateTime.Now;
                 while ((input = sr.ReadLine()) != null)
                 {
                     count++;
@@ -177,14 +182,26 @@ namespace MT
                             int code_station_on = -1;
                             if (!String.IsNullOrWhiteSpace(array[3]))
                             {
+                                DateTime start0 = DateTime.Now;                                
                                 code_cargo = uz_directory.GetCodeCorrectCargo(int.Parse(array[3]));
+                                DateTime stop0 = DateTime.Now;
+                                servece_owner.ServicesToLog(eventID, "Метод code_cargo", start0, stop0, code_cargo);
                             }
                             if (!String.IsNullOrWhiteSpace(array[4]))
                             {
+
+
                                 int codefrom = int.Parse(array[4].Substring(0, 4));
                                 int codeon = int.Parse(array[4].Substring(9, 4));
+                                DateTime start1 = DateTime.Now;
                                 code_station_from = uz_directory.GetCodeCorrectStations(codefrom, false);
+                                DateTime stop1 = DateTime.Now;
+                                servece_owner.ServicesToLog(eventID, "Метод code_station_from", start1, stop1, code_station_from);
+                                DateTime start2 = DateTime.Now;
                                 code_station_on = uz_directory.GetCodeCorrectStations(codeon, false);
+                                DateTime stop2 = DateTime.Now;
+                                servece_owner.ServicesToLog(eventID, "Метод code_station_on", start2, stop2, code_station_on);
+
                             }
                             ApproachesCars new_wag = new ApproachesCars()
                             {
@@ -225,6 +242,8 @@ namespace MT
                         error++;
                     }
                 }
+                DateTime stop = DateTime.Now;
+                servece_owner.ServicesToLog(eventID, "Метод TransferTXTToListApproachesCars", start, stop, list.Count());
                 sr.Close();
                 string mess = String.Format("В файле {0} определенно: {1} вагонов, добавлено в список : {2}, пропущено по ошибке : {3}", file, count, list.Count(), error);
                 mess.InformationLog(servece_owner, eventID);
@@ -243,7 +262,7 @@ namespace MT
         /// <returns></returns>
         public int TransferListApproachesCarsToDB(List<ApproachesCars> list)
         {
-            EFApproachesCars ef_app_cars = new EFApproachesCars(new EFDbContext());
+            //EFApproachesCars ef_app_cars = new EFApproachesCars(new EFDbContext());
             if (list == null) return this.eventID.GetEventIDErrorCode((int)mtt_err.not_listApproachesCars);
             try
             {
@@ -358,8 +377,8 @@ namespace MT
                 var listFileSostavs = from c in list_sostav.OrderBy(c => c.Date).ThenBy(c => c.Index)
                                       select new { c.Index, c.Date, c.File };
 
-                EFApproachesCars ef_app_cars = new EFApproachesCars(new EFDbContext());
-                EFApproachesSostav ef_app_sostav = new EFApproachesSostav(new EFDbContext());
+                //EFApproachesCars ef_app_cars = new EFApproachesCars(new EFDbContext());
+                //EFApproachesSostav ef_app_sostav = new EFApproachesSostav(new EFDbContext());
 
                 // Пройдемся по списку
                 foreach (var fs in listFileSostavs)

@@ -9,8 +9,10 @@ namespace EFUZ.Entities
     [Table("UZ.Directory_Cargo")]
     public partial class Directory_Cargo
     {
+        [Key]
         public int id { get; set; }
 
+        [Index]
         public int code_etsng { get; set; }
 
         [Required]

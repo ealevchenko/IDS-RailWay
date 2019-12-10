@@ -35,18 +35,18 @@ namespace IDSLogs
             {
                 _eLog = bool.Parse(ConfigurationManager.AppSettings["ELog"].ToString());
                 _eLogException = bool.Parse(ConfigurationManager.AppSettings["ELogException"].ToString());
-                _eLogException = bool.Parse(ConfigurationManager.AppSettings["ELogEvent"].ToString());
-                _eLogException = bool.Parse(ConfigurationManager.AppSettings["ELogServices"].ToString());
+                _eLogEvent = bool.Parse(ConfigurationManager.AppSettings["ELogEvent"].ToString());
+                _eLogServices = bool.Parse(ConfigurationManager.AppSettings["ELogServices"].ToString());
 
                 _dbLog = bool.Parse(ConfigurationManager.AppSettings["DBLog"].ToString());
                 _dbLogException = bool.Parse(ConfigurationManager.AppSettings["DBLogException"].ToString());
-                _dbLogException = bool.Parse(ConfigurationManager.AppSettings["DBLogEvent"].ToString());
-                _dbLogException = bool.Parse(ConfigurationManager.AppSettings["DBLogServices"].ToString());
+                _dbLogEvent = bool.Parse(ConfigurationManager.AppSettings["DBLogEvent"].ToString());
+                _dbLogServices = bool.Parse(ConfigurationManager.AppSettings["DBLogServices"].ToString());
 
                 _fLog = bool.Parse(ConfigurationManager.AppSettings["FLog"].ToString());
                 _fLogException = bool.Parse(ConfigurationManager.AppSettings["FLogException"].ToString());
-                _fLogException = bool.Parse(ConfigurationManager.AppSettings["FLogEvent"].ToString());
-                _fLogException = bool.Parse(ConfigurationManager.AppSettings["FLogServices"].ToString());
+                _fLogEvent = bool.Parse(ConfigurationManager.AppSettings["FLogEvent"].ToString());
+                _fLogServices = bool.Parse(ConfigurationManager.AppSettings["FLogServices"].ToString());
 
             }
             catch (Exception e)

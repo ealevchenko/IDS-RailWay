@@ -36,6 +36,9 @@ namespace EFUZ.Concrete
                 .WithRequired(e => e.Directory_States)
                 .HasForeignKey(e => e.id_state)
                 .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Directory_Cargo>().HasIndex(u => u.code_etsng);
+
         }
     }
 }
