@@ -11,9 +11,16 @@ namespace EFLOG.Entities
     {
         public long id { get; set; }
 
-        public int service { get; set; }
+        public int? service { get; set; }
+
+        public int? event_id { get; set; }
+
+        [StringLength(100)]
+        public string description { get; set; }
 
         public DateTime start { get; set; }
+
+        public DateTime stop { get; set; }
 
         public int duration { get; set; }
 

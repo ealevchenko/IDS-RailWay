@@ -51,7 +51,7 @@ namespace IDSLogs
             }
             catch (Exception e)
             {
-                Console.WriteLine(String.Format("Ошибка чтения IDSLog.AppSettings:(), Exception: {0}",e));
+                Console.WriteLine(String.Format("Ошибка чтения IDSLog.AppSettings:(), Exception: {0}", e));
             }
         }
 
@@ -746,6 +746,34 @@ namespace IDSLogs
 
         #region Services
 
+        private static string GetServices(this service service, eventID eventID, string description, DateTime start, DateTime stop, int code)
+        {
+            TimeSpan ts = stop - start;
+            int cur_ms = (int)ts.TotalMilliseconds;
+            return String.Format("service:{0}, eventID:{1}, описание:{2}, запущен:{3}, остановлен:{4}, время выполнения (мс): {5}, код выполнения: {6}", service.ToString(), eventID.ToString(), description, start, stop, cur_ms, code);
+        }
+
+        private static string GetServices(this service service, string description, DateTime start, DateTime stop, int code)
+        {
+            TimeSpan ts = stop - start;
+            int cur_ms = (int)ts.TotalMilliseconds;
+            return String.Format("service:{0}, описание:{1}, запущен:{2}, остановлен:{3}, время выполнения (мс): {4}, код выполнения: {5}", service.ToString(), description, start, stop, cur_ms, code);
+        }
+
+        private static string GetEventID(this eventID eventID, string description, DateTime start, DateTime stop, int code)
+        {
+            TimeSpan ts = stop - start;
+            int cur_ms = (int)ts.TotalMilliseconds;
+            return String.Format("eventID:{0}, описание:{1}, запущен:{2}, остановлен:{3}, время выполнения (мс): {4}, код выполнения: {5}", eventID.ToString(), description, start, stop, cur_ms, code);
+        }
+
+        private static string GetServices(this service service, eventID eventID, DateTime start, DateTime stop, int code)
+        {
+            TimeSpan ts = stop - start;
+            int cur_ms = (int)ts.TotalMilliseconds;
+            return String.Format("service:{0}, eventID:{1}, запущен:{2}, остановлен:{3}, время выполнения (мс): {4}, код выполнения: {5}", service.ToString(), eventID.ToString(), start, stop, cur_ms, code);
+        }
+
         private static string GetServices(this service service, DateTime start, DateTime stop, int code)
         {
             TimeSpan ts = stop - start;
@@ -753,22 +781,122 @@ namespace IDSLogs
             return String.Format("service:{0}, запущен:{1}, остановлен:{2}, время выполнения (мс): {3}, код выполнения: {4}", service.ToString(), start, stop, cur_ms, code);
         }
 
+        private static string GetEventID(this eventID eventID, DateTime start, DateTime stop, int code)
+        {
+            TimeSpan ts = stop - start;
+            int cur_ms = (int)ts.TotalMilliseconds;
+            return String.Format("eventID:{0}, запущен:{1}, остановлен:{2}, время выполнения (мс): {3}, код выполнения: {4}", eventID.ToString(), start, stop, cur_ms, code);
+        }
+
+
+        static public long ServicesToDB(this service service, eventID eventID, string description, DateTime start, DateTime stop, int code)
+        {
+            return ((int?)service).ServicesToDB((int?)eventID, description, start, stop, code);
+        }
+
+        static public long ServicesToDB(this service service, string description, DateTime start, DateTime stop, int code)
+        {
+            return ((int?)service).ServicesToDB(description, start, stop, code);
+        }
+
+        static public long EventIDToDB(this eventID eventID, string description, DateTime start, DateTime stop, int code)
+        {
+            return ((int?)eventID).EventIDToDB(description, start, stop, code);
+        }
+
+        static public long ServicesToDB(this service service, eventID eventID, DateTime start, DateTime stop, int code)
+        {
+            return ((int?)service).ServicesToDB((int?)eventID, start, stop, code);
+        }
+
         static public long ServicesToDB(this service service, DateTime start, DateTime stop, int code)
         {
-            return ((int)service).ServicesToDB(start, stop, code);
+            return ((int?)service).ServicesToDB(start, stop, code);
+        }
+
+        static public long EventIDToDB(this eventID eventID, DateTime start, DateTime stop, int code)
+        {
+            return ((int?)eventID).EventIDToDB(start, stop, code);
+        }
+
+        public static void ServicesToLog(this service service, eventID eventID, string description, DateTime start, DateTime stop, int code, bool elog, bool dblog, bool flog)
+        {
+            Console.WriteLine(String.Format(GetServices(service, eventID, description, start, stop, code)));
+            if (elog) service.GetServices(eventID, description, start, stop, code).WarningToEvent(service); // в лог записывается как событие Warning
+            if (dblog) service.ServicesToDB(eventID, description, start, stop, code);
+            if (flog) service.GetServices(eventID, description, start, stop, code).DebugToFile();
+        }
+
+        public static void ServicesToLog(this service service, string description, DateTime start, DateTime stop, int code, bool elog, bool dblog, bool flog)
+        {
+            Console.WriteLine(String.Format(GetServices(service, description, start, stop, code)));
+            if (elog) service.GetServices(description, start, stop, code).WarningToEvent(service); // в лог записывается как событие Warning
+            if (dblog) service.ServicesToDB(description, start, stop, code);
+            if (flog) service.GetServices(description, start, stop, code).DebugToFile();
+        }
+
+        public static void EventIDToLog(this eventID eventID, string description, DateTime start, DateTime stop, int code, bool elog, bool dblog, bool flog)
+        {
+            Console.WriteLine(String.Format(GetEventID(eventID, description, start, stop, code)));
+            if (elog) eventID.GetEventID(description, start, stop, code).WarningToEvent(eventID); // в лог записывается как событие Warning
+            if (dblog) eventID.GetEventID(description, start, stop, code);
+            if (flog) eventID.GetEventID(description, start, stop, code).DebugToFile();
+        }
+
+        public static void ServicesToLog(this service service, eventID eventID, DateTime start, DateTime stop, int code, bool elog, bool dblog, bool flog)
+        {
+            Console.WriteLine(String.Format(GetServices(service, eventID, start, stop, code)));
+            if (elog) service.GetServices(eventID, start, stop, code).WarningToEvent(service); // в лог записывается как событие Warning
+            if (dblog) service.ServicesToDB(eventID, start, stop, code);
+            if (flog) service.GetServices(eventID, start, stop, code).DebugToFile();
         }
 
         public static void ServicesToLog(this service service, DateTime start, DateTime stop, int code, bool elog, bool dblog, bool flog)
         {
-            Console.WriteLine(String.Format("\nservice: {0}\nstart: {1}\nstop: {2}\ncode: {3}", service, start, stop, code));
+            Console.WriteLine(String.Format(GetServices(service, start, stop, code)));
             if (elog) service.GetServices(start, stop, code).WarningToEvent(service); // в лог записывается как событие Warning
             if (dblog) service.ServicesToDB(start, stop, code);
             if (flog) service.GetServices(start, stop, code).DebugToFile();
         }
+
+        public static void EventIDToLog(this eventID eventID, DateTime start, DateTime stop, int code, bool elog, bool dblog, bool flog)
+        {
+            Console.WriteLine(String.Format(GetEventID(eventID, start, stop, code)));
+            if (elog) eventID.GetEventID(start, stop, code).WarningToEvent(eventID); // в лог записывается как событие Warning
+            if (dblog) eventID.GetEventID(start, stop, code);
+            if (flog) eventID.GetEventID(start, stop, code).DebugToFile();
+        }
+
+        public static void ServicesToLog(this service service, eventID eventID, string description, DateTime start, DateTime stop, int code)
+        {
+            service.ServicesToLog(eventID, description, start, stop, code, _eLogServices, _dbLogServices, _fLogServices);
+        }
+
+        public static void ServicesToLog(this service service, string description, DateTime start, DateTime stop, int code)
+        {
+            service.ServicesToLog(description, start, stop, code, _eLogServices, _dbLogServices, _fLogServices);
+        }
+
+        public static void EventIDToLog(this eventID eventID, string description, DateTime start, DateTime stop, int code)
+        {
+            eventID.EventIDToLog(description, start, stop, code, _eLogServices, _dbLogServices, _fLogServices);
+        }
+
+        public static void ServicesToLog(this service service, eventID eventID, DateTime start, DateTime stop, int code)
+        {
+            service.ServicesToLog(eventID, start, stop, code, _eLogServices, _dbLogServices, _fLogServices);
+        }
+
         public static void ServicesToLog(this service service, DateTime start, DateTime stop, int code)
         {
             service.ServicesToLog(start, stop, code, _eLogServices, _dbLogServices, _fLogServices);
         }
+
+        public static void EventIDToLog(this eventID eventID, DateTime start, DateTime stop, int code)
+        {
+            eventID.EventIDToLog(start, stop, code, _eLogServices, _dbLogServices, _fLogServices);
+        }
+
         #endregion
 
         //#region Services

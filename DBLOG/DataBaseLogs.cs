@@ -33,7 +33,8 @@ namespace IDSLogs
         {
             string ips = "";
             System.Net.IPAddress[] list_ip = System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName()).AddressList;
-            if (list_ip.Count() > 0) {
+            if (list_ip.Count() > 0)
+            {
                 ips = list_ip[list_ip.Count() - 1].ToString();
             }
             //foreach (System.Net.IPAddress ip in System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName()).AddressList)
@@ -221,12 +222,12 @@ namespace IDSLogs
         /// <param name="id_services"></param>
         /// <param name="id_eventID"></param>
         /// <returns></returns>
-        
+
         static public long ExceptionToDB(this Exception e, string user_message, int? id_services, int? id_eventID)
         {
             return SaveLogs(e, user_message, id_services, id_eventID);
-        } 
-       
+        }
+
         static public long ExceptionToDB(this Exception e, int? id_services, int? id_eventID)
         {
             return SaveLogs(e, null, id_services, id_eventID);
@@ -321,7 +322,7 @@ namespace IDSLogs
 
         #region Services
 
-        static private long SaveServices(this int id_services, DateTime start, DateTime stop, int code)
+        static private long SaveServices(this int? id_services, int? event_id, string description, DateTime start, DateTime stop, int code)
         {
             try
             {
@@ -333,9 +334,12 @@ namespace IDSLogs
                 {
                     id = 0,
                     service = id_services,
+                    event_id = event_id,
+                    description = description,
                     start = start,
+                    stop = stop,
                     duration = cur_ms,
-                    code_return = code
+                    code_return = code,
                 };
 
                 ef_services.Add(new_services);
@@ -345,16 +349,40 @@ namespace IDSLogs
             }
             catch (Exception e)
             {
-                Console.WriteLine(String.Format("Ошибка выполнения метода SaveServices(id_services={0}, start={1}, stop={2}, code={3}). Exception:{4}", id_services, start, stop, code, e));
+                Console.WriteLine(String.Format("Ошибка выполнения метода SaveServices(id_services={0},event_id={1}, description={2}, start={3}, stop={4}, code={5}). Exception:{6}", id_services, event_id, description, start, stop, code, e));
                 return -1;
             }
         }
 
-        static public long ServicesToDB(this int id_services, DateTime start, DateTime stop, int code)
+        static public long ServicesToDB(this int? id_services, int? event_id, string description, DateTime start, DateTime stop, int code)
         {
-            return id_services.SaveServices(start, stop, code);
+            return id_services.SaveServices(event_id, description, start, stop, code);
         }
 
+        static public long ServicesToDB(this int? id_services, string description, DateTime start, DateTime stop, int code)
+        {
+            return id_services.SaveServices(null, description, start, stop, code);
+        }
+
+        static public long EventIDToDB(this int? event_id, string description, DateTime start, DateTime stop, int code)
+        {
+            return SaveServices(null, event_id, description, start, stop, code);
+        }
+
+        static public long ServicesToDB(this int? id_services, int? event_id, DateTime start, DateTime stop, int code)
+        {
+            return id_services.SaveServices(event_id, null, start, stop, code);
+        }
+
+        static public long ServicesToDB(this int? id_services, DateTime start, DateTime stop, int code)
+        {
+            return id_services.SaveServices(null, null, start, stop, code);
+        }
+
+        static public long EventIDToDB(this int? event_id, DateTime start, DateTime stop, int code)
+        {
+            return SaveServices(null, event_id, null, start, stop, code);
+        }
         #endregion
 
     }
