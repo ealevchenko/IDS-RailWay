@@ -14,6 +14,8 @@ namespace EFMT.Concrete
     {
 
         private EFDbContext db;
+        private string field = " [id],[file_name],[composition_index],[date_time],[create],[close],[approaches],[parent_id] ";
+        private string table = " [METRANS].[ApproachesSostav] ";
 
         public EFApproachesSostav(EFDbContext db)
         {
@@ -154,6 +156,22 @@ namespace EFMT.Concrete
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        public ApproachesSostav GetSostavOfFileName(string file_name)
+        {
+            string sql = "SELECT " + field + " FROM " + table + "   where [file_name] = N'" + file_name + "' order by [date_time]";
+            return this.db.Database.SqlQuery<ApproachesSostav>(sql).FirstOrDefault();   
+        }
+        /// <summary>
+        /// Получить последний не закрытый состав
+        /// </summary>
+        /// <param name="composition_index"></param>
+        /// <param name="datetime"></param>
+        /// <returns></returns>
+        public ApproachesSostav GetNoCloseSostav(string composition_index, DateTime datetime) {
+            string sql = "SELECT " + field + " FROM " + table + "   where [composition_index] = N'" + composition_index + "' and [close] is null and [approaches] is null and [date_time]<=Convert(datetime,'" + datetime.ToString("yyyy-MM-dd HH:mm:ss") + "',120) order by [date_time] desc";
+            return this.db.Database.SqlQuery<ApproachesSostav>(sql).FirstOrDefault();   
         }
 
     }

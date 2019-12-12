@@ -14,8 +14,8 @@ namespace EFUZ.Concrete
 
             // Здесь мы можем указывать различные настройки контекста,
             // например выводить в отладчик сгенерированный SQL-код
-            context.Database.Log =
-                (s => System.Diagnostics.Debug.WriteLine(s));
+            //context.Database.Log =
+            //    (s => System.Diagnostics.Debug.WriteLine(s));
 
             // Загрузка данных с помощью универсального метода Set
             return context.Set<TEntity>();
@@ -26,8 +26,8 @@ namespace EFUZ.Concrete
 
             // Здесь мы можем указывать различные настройки контекста,
             // например выводить в отладчик сгенерированный SQL-код
-            context.Database.Log =
-                (s => System.Diagnostics.Debug.WriteLine(s));
+            //context.Database.Log =
+            //    (s => System.Diagnostics.Debug.WriteLine(s));
 
             // Загрузка данных с помощью универсального метода Set
             return context.Set<TEntity>().Find(id);
@@ -38,8 +38,8 @@ namespace EFUZ.Concrete
 
             // Здесь мы можем указывать различные настройки контекста,
             // например выводить в отладчик сгенерированный SQL-код
-            context.Database.Log =
-                (s => System.Diagnostics.Debug.WriteLine(s));
+            //context.Database.Log =
+            //    (s => System.Diagnostics.Debug.WriteLine(s));
 
             // Загрузка данных с помощью универсального метода Set
             return context.Set<TEntity>().Find(id);
@@ -49,8 +49,8 @@ namespace EFUZ.Concrete
         {
             // Здесь мы можем указывать различные настройки контекста,
             // например выводить в отладчик сгенерированный SQL-код
-            context.Database.Log =
-                (s => System.Diagnostics.Debug.WriteLine(s));
+            //context.Database.Log =
+            //    (s => System.Diagnostics.Debug.WriteLine(s));
 
             context.Entry(entity).State = EntityState.Added;
         }
@@ -64,7 +64,7 @@ namespace EFUZ.Concrete
             context.Configuration.AutoDetectChangesEnabled = false;
             context.Configuration.ValidateOnSaveEnabled = false;
 
-            context.Database.Log = (s => System.Diagnostics.Debug.WriteLine(s));
+            //context.Database.Log = (s => System.Diagnostics.Debug.WriteLine(s));
 
             foreach (TEntity entity in entities)
                 context.Entry(entity).State = EntityState.Added;
@@ -78,8 +78,8 @@ namespace EFUZ.Concrete
         {
             // Здесь мы можем указывать различные настройки контекста,
             // например выводить в отладчик сгенерированный SQL-код
-            context.Database.Log =
-                (s => System.Diagnostics.Debug.WriteLine(s));
+            //context.Database.Log =
+            //    (s => System.Diagnostics.Debug.WriteLine(s));
 
             context.Entry(entity).State = EntityState.Modified;
         }
@@ -88,8 +88,8 @@ namespace EFUZ.Concrete
         {
             // Здесь мы можем указывать различные настройки контекста,
             // например выводить в отладчик сгенерированный SQL-код
-            context.Database.Log =
-                (s => System.Diagnostics.Debug.WriteLine(s));
+            //context.Database.Log =
+            //    (s => System.Diagnostics.Debug.WriteLine(s));
 
             TEntity item = context.Set<TEntity>().Find(id);
             if (item != null)

@@ -99,6 +99,7 @@ namespace MT
             {
                 long? parentid = null;
                 //EFApproachesCars ef_app_cars = new EFApproachesCars(new EFDbContext());
+                //ApproachesCars old_car = ef_app_cars.GetLastCars(car.num); //Get().Where(c => c.num == car.num).OrderByDescending(c => c.id).FirstOrDefault();
                 ApproachesCars old_car = ef_app_cars.Get().Where(c => c.num == car.num).OrderByDescending(c => c.id).FirstOrDefault();
                 if (old_car == null) return null; // нет историии движения, первая операция над вагоном
                 if (old_car.arrived != null) return null; // история закрыта, первая операция над вагоном 
@@ -143,6 +144,7 @@ namespace MT
                 old_car.arrived = car.date_operation;
                 ef_app_cars.Update(old_car);
                 ef_app_cars.Save(); // сохранить изменение
+                //ef_app_cars.Refresh(old_car);
                 //ef_app_cars.SaveApproachesCars(old_car); // сохранить изменение
                 return parentid;
             }
@@ -168,7 +170,7 @@ namespace MT
                 UZDirectory uz_directory = new UZDirectory(this.servece_owner);// Подключим библиотеку УЗ
                 StreamReader sr = new StreamReader(file, System.Text.Encoding.Default);
                 string input = null;
-                DateTime start = DateTime.Now;
+                //DateTime start = DateTime.Now;
                 while ((input = sr.ReadLine()) != null)
                 {
                     count++;
@@ -182,10 +184,10 @@ namespace MT
                             int code_station_on = -1;
                             if (!String.IsNullOrWhiteSpace(array[3]))
                             {
-                                DateTime start0 = DateTime.Now;                                
+                                //DateTime start0 = DateTime.Now;                                
                                 code_cargo = uz_directory.GetCodeCorrectCargo(int.Parse(array[3]));
-                                DateTime stop0 = DateTime.Now;
-                                servece_owner.ServicesToLog(eventID, "Метод code_cargo", start0, stop0, code_cargo);
+                                //DateTime stop0 = DateTime.Now;
+                                //servece_owner.ServicesToLog(eventID, "Метод code_cargo", start0, stop0, code_cargo);
                             }
                             if (!String.IsNullOrWhiteSpace(array[4]))
                             {
@@ -193,14 +195,14 @@ namespace MT
 
                                 int codefrom = int.Parse(array[4].Substring(0, 4));
                                 int codeon = int.Parse(array[4].Substring(9, 4));
-                                DateTime start1 = DateTime.Now;
+                                //DateTime start1 = DateTime.Now;
                                 code_station_from = uz_directory.GetCodeCorrectStations(codefrom, false);
-                                DateTime stop1 = DateTime.Now;
-                                servece_owner.ServicesToLog(eventID, "Метод code_station_from", start1, stop1, code_station_from);
-                                DateTime start2 = DateTime.Now;
+                                //DateTime stop1 = DateTime.Now;
+                                //servece_owner.ServicesToLog(eventID, "Метод code_station_from", start1, stop1, code_station_from);
+                                //DateTime start2 = DateTime.Now;
                                 code_station_on = uz_directory.GetCodeCorrectStations(codeon, false);
-                                DateTime stop2 = DateTime.Now;
-                                servece_owner.ServicesToLog(eventID, "Метод code_station_on", start2, stop2, code_station_on);
+                                //DateTime stop2 = DateTime.Now;
+                                //servece_owner.ServicesToLog(eventID, "Метод code_station_on", start2, stop2, code_station_on);
 
                             }
                             ApproachesCars new_wag = new ApproachesCars()
@@ -242,8 +244,8 @@ namespace MT
                         error++;
                     }
                 }
-                DateTime stop = DateTime.Now;
-                servece_owner.ServicesToLog(eventID, "Метод TransferTXTToListApproachesCars", start, stop, list.Count());
+                //DateTime stop = DateTime.Now;
+                //servece_owner.ServicesToLog(eventID, "Метод TransferTXTToListApproachesCars", start, stop, list.Count());
                 sr.Close();
                 string mess = String.Format("В файле {0} определенно: {1} вагонов, добавлено в список : {2}, пропущено по ошибке : {3}", file, count, list.Count(), error);
                 mess.InformationLog(servece_owner, eventID);
@@ -386,13 +388,16 @@ namespace MT
                     try
                     {
                         Console.WriteLine("Переносим файл {0}", fs.File);
+                        DateTime start = DateTime.Now;
                         // защита от записи повторов
                         FileInfo fi = new FileInfo(fs.File);
+                        //ApproachesSostav exs_sostav = ef_app_sostav.GetSostavOfFileName(fi.Name);//   .Get().Where(s => s.file_name == fi.Name).FirstOrDefault();
                         ApproachesSostav exs_sostav = ef_app_sostav.Get().Where(s => s.file_name == fi.Name).FirstOrDefault();
                         if (exs_sostav == null)
                         {
                             long? ParentIDSostav = null;
                             // получить не закрытый состав
+                            //ApproachesSostav no_close_sostav = ef_app_sostav.GetNoCloseSostav(fs.Index, fs.Date);//  .Get().Where(s => s.composition_index == fs.Index & s.close == null & s.approaches == null & s.date_time <= fs.Date).OrderByDescending(s => s.date_time).FirstOrDefault();
                             ApproachesSostav no_close_sostav = ef_app_sostav.Get().Where(s => s.composition_index == fs.Index & s.close == null & s.approaches == null & s.date_time <= fs.Date).OrderByDescending(s => s.date_time).FirstOrDefault();
                             if (no_close_sostav != null)
                             {
@@ -429,6 +434,7 @@ namespace MT
                         {
                             // Проверка сравниваем количество если совподает удаляем файл, иначе добавляем новые вагоны и удаляем файл
                             List<ApproachesCars> list = TransferTXTToListApproachesCars(fs.File, exs_sostav.id);
+                            //List<ApproachesCars> listdb = ef_app_cars.GetCarsOfSostav(exs_sostav.id);// Get().Where(c => c.id_sostav == exs_sostav.id).ToList();
                             List<ApproachesCars> listdb = ef_app_cars.Get().Where(c => c.id_sostav == exs_sostav.id).ToList();
                             if (list != null && listdb != null)
                             {
@@ -455,6 +461,8 @@ namespace MT
                                 countExist++;
                             }
                         }
+                        DateTime stop = DateTime.Now;
+                        servece_owner.ServicesToLog(eventID, String.Format("Файл {0} - перенесен.", fs.File), start, stop, countCopy);
                     }
                     catch (Exception e)
                     {

@@ -99,7 +99,8 @@ namespace UZ
         /// <returns></returns>
         public Directory_Cargo GetCargoOfCodeETSNG(int code_etsng)
         {
-            return ef_cargo.Get().Where(c => c.code_etsng == code_etsng).FirstOrDefault();
+            //return ef_cargo.Get().Where(c => c.code_etsng == code_etsng).FirstOrDefault();
+            return ef_cargo.Database.SqlQuery<Directory_Cargo>("SELECT [id] ,[code_etsng] ,[name_etsng] ,[code_gng] ,[name_gng] ,[id_sap] FROM [UZ].[Directory_Cargo] where [code_etsng] = " + code_etsng.ToString() + " order by [id]").FirstOrDefault();
         }
         /// <summary>
         /// Вернуть список грузов по указаному деапазону кодов ETSNG
@@ -109,7 +110,9 @@ namespace UZ
         /// <returns></returns>
         public IQueryable<Directory_Cargo> GetCargoOfCodeETSNG(int code_etsng_start, int code_etsng_stop)
         {
-            return ef_cargo.Get().Where(c => c.code_etsng >= code_etsng_start & c.code_etsng <= code_etsng_stop).AsQueryable();
+            //return ef_cargo.Get().Where(c => c.code_etsng >= code_etsng_start & c.code_etsng <= code_etsng_stop).AsQueryable();
+            return ef_cargo.Database.SqlQuery<Directory_Cargo>("SELECT [id] ,[code_etsng] ,[name_etsng] ,[code_gng] ,[name_gng] ,[id_sap] FROM [UZ].[Directory_Cargo] where [code_etsng] >= " + code_etsng_start.ToString() + " and [code_etsng] <= " + code_etsng_stop.ToString() + " order by [id]").AsQueryable();
+
         }
         /// <summary>
         /// Вернуть уточненую строку ReferenceCargo
@@ -198,7 +201,9 @@ namespace UZ
         {
             try
             {
-                return ef_station.Get().Where(c => c.code == code).FirstOrDefault();
+                //return ef_station.Get().Where(c => c.code == code).FirstOrDefault();
+                return ef_station.Database.SqlQuery<Directory_Stations>("SELECT [id],[code],[code_cs],[station],[id_ir] FROM [UZ].[Directory_Stations] where [code] = " + code.ToString() + " order by 1").FirstOrDefault();
+
             }
             catch (Exception e)
             {
@@ -211,7 +216,9 @@ namespace UZ
         {
             try
             {
-                return ef_station.Get().Where(c => c.code >= code_start & c.code <= code_stop).AsQueryable();
+                //return ef_station.Get().Where(c => c.code >= code_start & c.code <= code_stop).AsQueryable();
+                return ef_station.Database.SqlQuery<Directory_Stations>("SELECT [id],[code],[code_cs],[station],[id_ir] FROM [UZ].[Directory_Stations] where [code] >= " + code_start.ToString() + " and [code] <= " + code_stop.ToString() + " order by 1").AsQueryable();
+
             }
             catch (Exception e)
             {

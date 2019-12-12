@@ -14,6 +14,8 @@ namespace EFMT.Concrete
     {
 
         private EFDbContext db;
+        private string field = " [id],[id_sostav],[composition_index],[num],[country_code],[weight],[cargo_code],[train_number],[operation],[date_operation],[code_station_from],[code_station_on],[code_station_current],[count_wagons],[sum_weight],[flag_cargo],[route],[owner],[num_doc_arrived],[arrived],[parent_id],[user_name] ";
+        private string table = " [METRANS].[ApproachesCars] ";
 
         public EFApproachesCars(EFDbContext db)
         {
@@ -154,6 +156,24 @@ namespace EFMT.Concrete
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+        /// <summary>
+        /// Получить последнюю запись вагона
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public ApproachesCars GetLastCars(int num) {
+            string sql = "SELECT " + field + " FROM " + table + " where [Num]= " + num.ToString() + " order by [id] desc";
+            return this.db.Database.SqlQuery<ApproachesCars>(sql).FirstOrDefault();
+        }
+        /// <summary>
+        /// Получить все вагоны пренадлежащие указаному составу
+        /// </summary>
+        /// <param name="id_sostav"></param>
+        /// <returns></returns>
+        public List<ApproachesCars> GetCarsOfSostav(long id_sostav) {
+            string sql = "SELECT " + field + " FROM " + table + " where [id_sostav]= " + id_sostav.ToString() + " order by [id]";
+            return this.db.Database.SqlQuery<ApproachesCars>(sql).ToList();   
         }
 
     }
