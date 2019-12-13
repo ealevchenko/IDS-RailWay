@@ -10,10 +10,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using UZ;
 
 namespace MT
 {
+    public enum mtOperation : int { not = 0, coming = 1, tsp = 2 }
     /// <summary>
     /// Коды ошибок операций переноса вагонов
     /// </summary>
@@ -59,14 +61,36 @@ namespace MT
         }
     }
 
+    [Serializable()]
+    public class FileArrivalSostav
+    {
+        public string Index
+        {
+            get;
+            set;
+        }
+        public DateTime Date
+        {
+            get;
+            set;
+        }
+        public int Operation
+        {
+            get;
+            set;
+        }
+        public string File
+        {
+            get;
+            set;
+        }
+
+    }
+
     public class MTTransfer
     {
         private eventID eventID = eventID.MT_MTTransfer;
         protected service servece_owner = service.Null;
-
-        EFApproachesCars ef_app_cars = new EFApproachesCars(new EFDbContext());
-        EFApproachesSostav ef_app_sostav = new EFApproachesSostav(new EFDbContext());
-        //UZDirectory uz_directory = new UZDirectory(this.servece_owner);// Подключим библиотеку УЗ
 
         private string fromPath;
         public string FromPath { get { return this.fromPath; } set { this.fromPath = value; } }
@@ -75,6 +99,13 @@ namespace MT
 
         private int day_range_approaches_cars = 30; // тайм аут по времени для вагонов на подходе
         public int DayRangeApproachesCars { get { return this.day_range_approaches_cars; } set { this.day_range_approaches_cars = value; } }
+
+
+        private int day_range_arrival_cars = 10; // тайм аут по времени для вагонов прибывших на УЗ
+        public int DayRangeArrivalCars { get { return this.day_range_arrival_cars; } set { this.day_range_arrival_cars = value; } }
+
+        private bool arrival_to_railway = true;  // Признак переносить вагоны в прибытие АМКР 
+        public bool ArrivalToRailWay { get { return this.arrival_to_railway; } set { this.arrival_to_railway = value; } }
 
         public MTTransfer()
         {
@@ -98,9 +129,8 @@ namespace MT
             try
             {
                 long? parentid = null;
-                //EFApproachesCars ef_app_cars = new EFApproachesCars(new EFDbContext());
-                //ApproachesCars old_car = ef_app_cars.GetLastCars(car.num); //Get().Where(c => c.num == car.num).OrderByDescending(c => c.id).FirstOrDefault();
-                ApproachesCars old_car = ef_app_cars.Get().Where(c => c.num == car.num).OrderByDescending(c => c.id).FirstOrDefault();
+                EFApproachesCars ef_app_cars = new EFApproachesCars(new EFDbContext());
+                ApproachesCars old_car = ef_app_cars.Context.Where(c => c.num == car.num).OrderByDescending(c => c.id).FirstOrDefault();
                 if (old_car == null) return null; // нет историии движения, первая операция над вагоном
                 if (old_car.arrived != null) return null; // история закрыта, первая операция над вагоном 
 
@@ -144,8 +174,6 @@ namespace MT
                 old_car.arrived = car.date_operation;
                 ef_app_cars.Update(old_car);
                 ef_app_cars.Save(); // сохранить изменение
-                //ef_app_cars.Refresh(old_car);
-                //ef_app_cars.SaveApproachesCars(old_car); // сохранить изменение
                 return parentid;
             }
             catch (Exception e)
@@ -225,9 +253,6 @@ namespace MT
                                 flag_cargo = !String.IsNullOrWhiteSpace(array[11]) ? int.Parse(array[11]) : -1,
                                 route = !String.IsNullOrWhiteSpace(array[12]) ? int.Parse(array[12]) : -1,
                                 owner = !String.IsNullOrWhiteSpace(array[13]) ? int.Parse(array[13]) : -1,
-                                //num_doc_arrived = null,
-                                //arrived = null,
-                                //user_name = null, 
                             };
                             // Получить parent_id
                             new_wag.parent_id = GetParentID(new_wag, this.day_range_approaches_cars);
@@ -264,7 +289,7 @@ namespace MT
         /// <returns></returns>
         public int TransferListApproachesCarsToDB(List<ApproachesCars> list)
         {
-            //EFApproachesCars ef_app_cars = new EFApproachesCars(new EFDbContext());
+            EFApproachesCars ef_app_cars = new EFApproachesCars(new EFDbContext());
             if (list == null) return this.eventID.GetEventIDErrorCode((int)mtt_err.not_listApproachesCars);
             try
             {
@@ -379,8 +404,8 @@ namespace MT
                 var listFileSostavs = from c in list_sostav.OrderBy(c => c.Date).ThenBy(c => c.Index)
                                       select new { c.Index, c.Date, c.File };
 
-                //EFApproachesCars ef_app_cars = new EFApproachesCars(new EFDbContext());
-                //EFApproachesSostav ef_app_sostav = new EFApproachesSostav(new EFDbContext());
+                EFApproachesCars ef_app_cars = new EFApproachesCars(new EFDbContext());
+                EFApproachesSostav ef_app_sostav = new EFApproachesSostav(new EFDbContext());
 
                 // Пройдемся по списку
                 foreach (var fs in listFileSostavs)
@@ -391,14 +416,12 @@ namespace MT
                         DateTime start = DateTime.Now;
                         // защита от записи повторов
                         FileInfo fi = new FileInfo(fs.File);
-                        //ApproachesSostav exs_sostav = ef_app_sostav.GetSostavOfFileName(fi.Name);//   .Get().Where(s => s.file_name == fi.Name).FirstOrDefault();
-                        ApproachesSostav exs_sostav = ef_app_sostav.Get().Where(s => s.file_name == fi.Name).FirstOrDefault();
+                        ApproachesSostav exs_sostav = ef_app_sostav.Context.Where(s => s.file_name == fi.Name).FirstOrDefault();
                         if (exs_sostav == null)
                         {
                             long? ParentIDSostav = null;
                             // получить не закрытый состав
-                            //ApproachesSostav no_close_sostav = ef_app_sostav.GetNoCloseSostav(fs.Index, fs.Date);//  .Get().Where(s => s.composition_index == fs.Index & s.close == null & s.approaches == null & s.date_time <= fs.Date).OrderByDescending(s => s.date_time).FirstOrDefault();
-                            ApproachesSostav no_close_sostav = ef_app_sostav.Get().Where(s => s.composition_index == fs.Index & s.close == null & s.approaches == null & s.date_time <= fs.Date).OrderByDescending(s => s.date_time).FirstOrDefault();
+                            ApproachesSostav no_close_sostav = ef_app_sostav.Context.Where(s => s.composition_index == fs.Index & s.close == null & s.approaches == null & s.date_time <= fs.Date).OrderByDescending(s => s.date_time).FirstOrDefault();
                             if (no_close_sostav != null)
                             {
                                 ParentIDSostav = no_close_sostav.id;
@@ -434,15 +457,14 @@ namespace MT
                         {
                             // Проверка сравниваем количество если совподает удаляем файл, иначе добавляем новые вагоны и удаляем файл
                             List<ApproachesCars> list = TransferTXTToListApproachesCars(fs.File, exs_sostav.id);
-                            //List<ApproachesCars> listdb = ef_app_cars.GetCarsOfSostav(exs_sostav.id);// Get().Where(c => c.id_sostav == exs_sostav.id).ToList();
-                            List<ApproachesCars> listdb = ef_app_cars.Get().Where(c => c.id_sostav == exs_sostav.id).ToList();
+                            List<ApproachesCars> listdb = ef_app_cars.Context.Where(c => c.id_sostav == exs_sostav.id).ToList();
                             if (list != null && listdb != null)
                             {
                                 if (list.Count() != listdb.Count())
                                 {
                                     // Количество не совпадает удаляем старые вагоны добавляем новые
-                                    SqlParameter id_sostav = new SqlParameter("@IDSostav", exs_sostav.id);
-                                    ef_app_cars.Database.ExecuteSqlCommand("DELETE FROM METRANS.ApproachesCars WHERE id_sostav = @IDSostav", id_sostav);
+                                    SqlParameter IDSostav = new SqlParameter("@IDSostav", exs_sostav.id);
+                                    ef_app_cars.Database.ExecuteSqlCommand("DELETE FROM METRANS.ApproachesCars WHERE id_sostav = @IDSostav", IDSostav);
                                     if (delete_file & SaveApproachesWagons(exs_sostav.id, fs.File, ref  countCopy, ref  countError))
                                     {
                                         File.Delete(fs.File);
@@ -490,6 +512,428 @@ namespace MT
             return TransferApproaches(this.fromPath, this.delete_file);
         }
 
+        #endregion
+
+        #region TransferArrival Перенос составов на станциях УЗ
+
+        public long? GetParentID(ArrivalCars car, int day_range)
+        {
+            try
+            {
+                long? parentid = null;
+                EFArrivalCars ef_arr_cars = new EFArrivalCars(new EFDbContext());
+                EFConsignee ef_consignee = new EFConsignee(new EFDbContext());
+                ArrivalCars old_car = ef_arr_cars.Context.Where(c => c.num == car.num).OrderByDescending(c => c.id).FirstOrDefault();
+                if (old_car == null) return null; // нет историии движения, первая операция над вагоном
+                if (old_car.arrived != null) return null; // история закрыта, первая операция над вагоном 
+
+                if (old_car.cargo_code == car.cargo_code)
+                {
+                    if (old_car.date_operation.Date.AddDays(day_range) > car.date_operation)
+                    {
+
+                        if (old_car.composition_index == car.composition_index |
+                                (old_car.composition_index != car.composition_index &
+                                ef_consignee.IsConsigneeSend(false, old_car.consignee, mtConsignee.AMKR) &
+                                ef_consignee.IsConsigneeSend(true, car.consignee, mtConsignee.AMKR)))
+                        { // Продолжаем цепочку вагонов если равны CompositionIndex или (CompositionIndex не равны но следующий код досылки и входит в диапазон времени)
+                            parentid = old_car.id;
+                            old_car.num_doc_arrived = (int)mtt_err_arrival.close_car;
+                            old_car.arrived = car.date_operation;
+                        }
+                        else
+                        {
+                            // вагон начал движение по новому маршруту
+                            old_car.num_doc_arrived = (int)mtt_err_arrival.close_new_route;
+                            old_car.arrived = car.date_operation;
+                        }
+                    }
+                    else
+                    {
+                        // больше допустимого интервала
+                        old_car.num_doc_arrived = (int)mtt_err_arrival.close_timeout;
+                        old_car.arrived = DateTime.Now;
+                    }
+                }
+                else
+                {
+                    // грузы в вагонах разные
+                    old_car.num_doc_arrived = (int)mtt_err_arrival.close_different_cargo;
+                    old_car.arrived = car.date_operation;
+                }
+                // закрываем старый вагон
+                old_car.arrived = car.date_operation;
+                ef_arr_cars.Update(old_car);
+                ef_arr_cars.Save(); // сохранить изменение
+                return parentid;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetParentID(car={0}, day_range={1})", car, day_range), servece_owner, eventID);
+                return -1;
+            }
+        }
+        /// <summary>
+        /// Получить тип операции над составом
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        protected int GetOperationToXml(string file)
+        {
+            try
+            {
+                XDocument doc;
+                try
+                {
+                    doc = XDocument.Load(file);
+                }
+                catch (Exception e)
+                {
+                    e.ExceptionLog(String.Format("Ошибка считывания файла:{0}", file), servece_owner, eventID);
+                    return (int)mtt_err.file_error;
+                }
+
+                foreach (XElement element in doc.Element("NewDataSet").Elements("Table"))
+                {
+                    string opr = (string)element.Element("Operation");
+                    if (String.IsNullOrEmpty(opr)) return (int)mtOperation.not;
+                    if (opr.Trim().ToUpper() == "ПРИБ") return (int)mtOperation.coming;
+                    if (opr.Trim().ToUpper() == "ТСП") return (int)mtOperation.tsp;
+                }
+            }
+            catch (Exception e)
+            {
+                e.ExceptionLog(String.Format("Ошибка определения операции файл:{0}", file), servece_owner, eventID);
+            }
+            return (int)mtOperation.not;
+
+        }
+        /// <summary>
+        /// Возвращает список вагонов из xml-файла
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="id_sostav"></param>
+        /// <returns></returns>
+        public List<ArrivalCars> TransferXMLToListArrivalCars(string file, long id_sostav)
+        {
+            List<ArrivalCars> list = new List<ArrivalCars>();
+            int count = 0;
+            int error = 0;
+            try
+            {
+                //Reference api_reference = new Reference();
+                UZDirectory uz_directory = new UZDirectory(this.servece_owner);// Подключим библиотеку УЗ
+                XDocument doc;
+                try
+                {
+                    doc = XDocument.Load(file);
+                }
+                catch (Exception e)
+                {
+                    e.ExceptionLog(String.Format("Ошибка считывания файла:{0}", file), servece_owner, eventID);
+                    return null;
+                }
+                foreach (XElement element in doc.Element("NewDataSet").Elements("Table"))
+                {
+                    try
+                    {
+                        int code_cargo = -1;
+                        if (!String.IsNullOrWhiteSpace((string)element.Element("IDCargo")))
+                        {
+                            code_cargo = uz_directory.GetCodeCargoOfCodeETSNG((int)element.Element("IDCargo"));
+                        }
+                        ArrivalCars mtarr = new ArrivalCars()
+                        {
+                            id = 0,
+                            id_sostav = id_sostav,
+                            position = !String.IsNullOrWhiteSpace((string)element.Element("Position")) ? (int)element.Element("Position") : -1,
+                            num = !String.IsNullOrWhiteSpace((string)element.Element("CarriageNumber")) ? (int)element.Element("CarriageNumber") : -1,
+                            country_code = !String.IsNullOrWhiteSpace((string)element.Element("CountryCode"))
+                             ? ((string)element.Element("CountryCode")).Length >= 2 ? int.Parse(((string)element.Element("CountryCode")).Substring(0, 2)) : (int)element.Element("CountryCode") : -1, // Подрезка кода страны в фале 3 цифры переводим в 2 цифры 
+                            wight = !String.IsNullOrWhiteSpace((string)element.Element("Weight")) ? (int)element.Element("Weight") : -1,
+                            cargo_code = code_cargo,
+                            cargo = !String.IsNullOrWhiteSpace((string)element.Element("Cargo")) ? (string)element.Element("Cargo") : "?",
+                            station_code = !String.IsNullOrWhiteSpace((string)element.Element("IDStation")) ? (int)element.Element("IDStation") : -1,
+                            station = !String.IsNullOrWhiteSpace((string)element.Element("Station")) ? (string)element.Element("Station") : "?",
+                            consignee = !String.IsNullOrWhiteSpace((string)element.Element("Consignee")) ? (int)element.Element("Consignee") : -1,
+                            operation = !String.IsNullOrWhiteSpace((string)element.Element("Operation")) ? (string)element.Element("Operation") : "?",
+                            composition_index = !String.IsNullOrWhiteSpace((string)element.Element("CompositionIndex")) ? (string)element.Element("CompositionIndex") : "?",
+                            date_operation = !String.IsNullOrWhiteSpace((string)element.Element("DateOperation")) ? DateTime.Parse((string)element.Element("DateOperation"), CultureInfo.CreateSpecificCulture("ru-RU")) : DateTime.Now,
+                            train = !String.IsNullOrWhiteSpace((string)element.Element("TrainNumber")) ? (int)element.Element("TrainNumber") : -1,
+                        };
+                        // Получить parent_id
+                        mtarr.parent_id = GetParentID(mtarr, this.day_range_arrival_cars);
+                        list.Add(mtarr);
+                    }
+                    catch (Exception e)
+                    {
+                        e.ExceptionMethodLog(String.Format("TransferXMLToListArrivalCars, файл:{0}, вагон:{1}", file, element.Element("CarriageNumber")), servece_owner, eventID);
+                        error++;
+                    }
+                }
+                string mess = String.Format("В файле {0} определенно: {1} вагонов, добавлено в список : {2}, пропущено по ошибке : {3}", file, count, list.Count(), error);
+                mess.InformationLog(servece_owner, eventID);
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("TransferXMLToListArrivalCars(file={0}, id_sostav={1}), файл:{0})", file, id_sostav), servece_owner, eventID);
+                return null;
+            }
+            return list;
+        }
+        /// <summary>
+        /// Перенос списка вагонов в БД Arrival
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="set_arrival"></param>
+        /// <returns></returns>
+        public int TransferListArrivalCarsToDB(List<ArrivalCars> list)
+        {
+
+            EFArrivalCars ef_arr_cars = new EFArrivalCars(new EFDbContext());
+            if (list == null) return this.eventID.GetEventIDErrorCode((int)mtt_err.not_listArrivalCars);
+            try
+            {
+                int error = 0;
+                int trans = 0;
+                string trans_id = "";
+
+                if (list.Count() > 0)
+                {
+                    foreach (ArrivalCars apc in list)
+                    {
+                        ef_arr_cars.Add(apc);
+                        ef_arr_cars.Save();
+                        long res = ef_arr_cars.Refresh(apc).id;
+                        if (res > 0) { trans++; }
+                        if (res < 0) { error++; }
+                        trans_id = trans_id + res.ToString() + "; ";
+
+                    }
+                    string mess = String.Format("В списке определенно: {0} вагонов, перенесено в БД METRANS.Arrival : {1}, пропущено по ошибке : {2}", list.Count(), trans, error);
+                    mess.InformationLog(servece_owner, this.eventID);
+                    if (list.Count() > 0) { mess.EventLog(trans_id, servece_owner, eventID); }
+                    return trans;
+                }
+                else return 0;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("TransferListArrivalCarsToDB(list={0})", list), servece_owner, eventID);
+                return -1;
+            }
+        }
+        /// <summary>
+        /// Перенести БД Arrival вагоны состава из файла xml.
+        /// </summary>
+        /// <param name="new_id"></param>
+        /// <param name="file"></param>
+        /// <param name="countCopy"></param>
+        /// <param name="countError"></param>
+        /// <returns></returns>
+        protected bool SaveArrivalWagons(long new_id, string file, ref int countCopy, ref int countError)
+        {
+            try
+            {
+                int count_wagons = 0;
+                if (new_id > 0)
+                {
+                    // Переносим вагоны
+                    count_wagons = TransferListArrivalCarsToDB(TransferXMLToListArrivalCars(file, new_id));
+                    if (count_wagons > 0) { countCopy++; }
+                    if (count_wagons < 0) { countError++; } // Счетчик ошибок при переносе
+                }
+                if (new_id < 0) { countError++; } // Счетчик ошибок при переносе
+                if (count_wagons > 0 & new_id > 0)
+                {
+                    if (arrival_to_railway)
+                    {
+                        //int res = AddBufferArrivalSostav(new_id);
+                        //TODO: Выполнить механизм переноса вагонов на подходы АМКР
+                    }
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                e.ExceptionLog(String.Format("Ошибка операции добавления вагонов в БД METRANS.Arrival, сотава на станции УЗ КР :{0}", new_id), servece_owner, eventID);
+            }
+            return false;
+        }
+        /// <summary>
+        /// Получить список FileArrivalSostav
+        /// </summary>
+        /// <param name="files"></param>
+        /// <returns></returns>
+        protected List<FileArrivalSostav> GetFileArrivalSostav(string[] files)
+        {
+            List<FileArrivalSostav> listfs = new List<FileArrivalSostav>();
+            foreach (string file in files)
+            {
+                try
+                {
+                    if (!String.IsNullOrEmpty(file))
+                    {
+                        FileInfo fi = new FileInfo(file);
+                        string index = fi.Name.Substring(5, 13);
+                        DateTime date = DateTime.Parse(fi.Name.Substring(19, 4) + "-" + fi.Name.Substring(23, 2) + "-" + fi.Name.Substring(25, 2) + " " + fi.Name.Substring(27, 2) + ":" + fi.Name.Substring(29, 2) + ":00");
+                        int operation = GetOperationToXml(file);
+                        // Добавим строку если определилась операция
+                        listfs.Add(new FileArrivalSostav()
+                        {
+                            Index = index,
+                            Date = date,
+                            Operation = operation,
+                            File = file
+                        });
+
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.ExceptionLog(String.Format("Ошибка формирования строки списка файлов состава List<FileArrivalSostav>, файл:{0}", file), servece_owner, eventID);
+                }
+            }
+            return listfs;
+        }
+        /// <summary>
+        /// Перености xml-файлы из указанной папки  в таблицы Arrival
+        /// </summary>
+        /// <param name="fromPath"></param>
+        /// <param name="delete_file"></param>
+        /// <returns></returns>
+        public int TransferArrival(string fromPath, bool delete_file)
+        {
+            try
+            {
+                if (!Directory.Exists(fromPath))
+                {
+                    String.Format("Указанного пути {0} с xml-файлами для переноса в БД METRANS.Arrival.. не существует.", fromPath).ErrorLog(servece_owner, this.eventID);
+                    return this.eventID.GetEventIDErrorCode((int)mtt_err.not_fromPath);
+                }
+                int countCopy = 0;
+                int countExist = 0;
+                int countError = 0;
+                int countDelete = 0;
+                string[] files = Directory.GetFiles(fromPath, "*.xml");
+                if (files == null | files.Count() == 0) { return 0; }
+                String.Format("Определенно {0} xml-файлов для копирования", files.Count()).InformationLog(servece_owner, this.eventID);
+                List<FileArrivalSostav> list_sostav = GetFileArrivalSostav(files);
+                var listFileSostavs = from c in list_sostav.OrderBy(c => c.Date).ThenBy(c => c.Index).ThenBy(c => c.Operation)
+                                      select new { c.Index, c.Date, c.Operation, c.File };
+                EFArrivalCars ef_arr_cars = new EFArrivalCars(new EFDbContext());
+                EFArrivalSostav ef_arr_sostav = new EFArrivalSostav(new EFDbContext());
+                // Пройдемся по списку
+                foreach (var fs in listFileSostavs)
+                {
+                    try
+                    {
+                        Console.WriteLine("Переносим файл {0}", fs.File);
+                        DateTime start = DateTime.Now;
+                        XDocument doc = XDocument.Load(fs.File);
+                        // защита от записи повторов
+                        FileInfo fi = new FileInfo(fs.File);
+                        ArrivalSostav exs_sostav = ef_arr_sostav.Context.Where(s => s.file_name == fi.Name).FirstOrDefault();
+                        if (exs_sostav == null)
+                        {
+                            long? ParentIDSostav = null;
+                            long? id_arrived = ef_arr_sostav.Database.SqlQuery<long?>("SELECT max([id_arrived]) FROM [METRANS].[ArrivalSostav]").FirstOrDefault();//    .GetNextIDArrival();//SELECT max([id_arrived]) FROM [METRANS].[ArrivalSostav]
+                            id_arrived = id_arrived != null ? id_arrived+1 : 0; // Проверка и инкримент
+                            // получить не закрытый состав
+                            ArrivalSostav no_close_sostav = ef_arr_sostav.GetNoCloseArrivalSostav(fs.Index, fs.Date, this.day_range_arrival_cars);
+
+                            if (no_close_sostav != null)
+                            {
+                                ParentIDSostav = no_close_sostav.id;
+                                id_arrived = no_close_sostav.id_arrived;
+                                // Закрыть состав
+                                no_close_sostav.close = DateTime.Now;
+                                ef_arr_sostav.Update(no_close_sostav);
+                                ef_arr_sostav.Save();
+                            }
+                            ArrivalSostav new_sostav = new ArrivalSostav()
+                            {
+                                id = 0,
+                                id_arrived = (int)id_arrived,
+                                file_name = fi.Name,
+                                composition_index = fs.Index,
+                                date_time = fs.Date,
+                                create = DateTime.Now,
+                                close = null,
+                                arrived = null,
+                                Parent_id = ParentIDSostav,
+                                operation = fs.Operation,
+
+                            };
+                            ef_arr_sostav.Add(new_sostav);
+                            ef_arr_sostav.Save();
+                            new_sostav = ef_arr_sostav.Refresh(new_sostav);
+                            long new_id = new_sostav.id;
+
+
+                            if (delete_file & SaveArrivalWagons(new_id, fs.File, ref  countCopy, ref  countError))
+                            {
+                                File.Delete(fs.File);
+                                countDelete++;
+                            }
+                        }
+                        else
+                        {
+                            // Проверка сравниваем количество если совподает удаляем файл, иначе добавляем новые вагоны и удаляем файл
+                            List<ArrivalCars> list = TransferXMLToListArrivalCars(fs.File, exs_sostav.id);
+                            List<ArrivalCars> listdb = ef_arr_cars.Context.Where(c => c.id_sostav == exs_sostav.id).ToList(); 
+                            if (list != null && listdb != null)
+                            {
+                                if (list.Count() != listdb.Count())
+                                {
+                                    SqlParameter IDSostav = new SqlParameter("@IDSostav", exs_sostav.id);
+                                    ef_arr_sostav.Database.ExecuteSqlCommand("DELETE FROM [METRANS].[ArrivalCars] WHERE [id_sostav] = @IDSostav", IDSostav);
+                                    if (delete_file & SaveArrivalWagons(exs_sostav.id, fs.File, ref  countCopy, ref  countError))
+                                    {
+                                        File.Delete(fs.File);
+                                        countDelete++;
+                                    }
+                                }
+                                else
+                                {
+                                    // Файл перенесен ранеее, удалим его если это требуется
+                                    if (delete_file)
+                                    {
+                                        File.Delete(fs.File);
+                                        countDelete++;
+                                    }
+                                }
+                                countExist++;
+                            }
+                        }
+                        DateTime stop = DateTime.Now;
+                        servece_owner.ServicesToLog(eventID, String.Format("Файл {0} - перенесен.", fs.File), start, stop, countCopy);
+                    }
+                    catch (Exception e)
+                    {
+                        e.ExceptionLog(String.Format("Ошибка переноса xml-файла в БД METRANS.Arrival, файл {0}", fs.File), servece_owner, eventID);
+                        countError++;
+                    }
+                }
+                string mess = String.Format("Перенос xml-файлов в БД METRANS.Arrival выполнен, определено для переноса {0} xml-файлов, перенесено {1}, были перенесены ранее {2}, ошибки при переносе {3}, удаленно {4}.", files.Count(), countCopy, countExist, countError, countDelete);
+                mess.InformationLog(servece_owner, this.eventID);
+                if (files != null && files.Count() > 0) { mess.EventLog(countError > 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID); }
+                return files.Count();
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("TransferArrival(fromPath={0}, delete_file={1})", fromPath, delete_file), servece_owner, eventID);
+                return -1;
+            }
+        }
+        /// <summary>
+        /// Перености xml-файлы из папки по умолчанию  в таблицы Arrival
+        /// </summary>
+        /// <returns></returns>
+        public int TransferArrival()
+        {
+            return TransferArrival(this.fromPath, this.delete_file);
+        }
         #endregion
     }
 }

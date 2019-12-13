@@ -26,6 +26,11 @@ namespace EFMT.Concrete
             get { return this.db.Database; }
         }
 
+        public IQueryable<ArrivalSostav> Context
+        {
+            get { return db.ArrivalSostav; }
+        }
+
         public IEnumerable<ArrivalSostav> Get()
         {
             try
@@ -156,5 +161,18 @@ namespace EFMT.Concrete
             GC.SuppressFinalize(this);
         }
 
+        public ArrivalSostav GetNoCloseArrivalSostav(string composition_index, DateTime date, int period)
+        {
+            try
+            {
+                DateTime data_start = date.AddDays(-1 * period);
+                return db.ArrivalSostav.Where(s => s.composition_index == composition_index & s.close == null & s.arrived == null & s.date_time >= data_start & s.date_time <= date).OrderByDescending(s => s.date_time).FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
     }
 }

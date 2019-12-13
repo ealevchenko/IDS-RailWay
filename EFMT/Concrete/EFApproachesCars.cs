@@ -28,6 +28,12 @@ namespace EFMT.Concrete
             get { return this.db.Database; }
         }
 
+
+        public IQueryable<ApproachesCars> Context
+        {
+            get { return db.ApproachesCars; }
+        }
+      
         public IEnumerable<ApproachesCars> Get()
         {
             try
@@ -163,6 +169,8 @@ namespace EFMT.Concrete
         /// <param name="num"></param>
         /// <returns></returns>
         public ApproachesCars GetLastCars(int num) {
+
+            //db.ApproachesCars.
             string sql = "SELECT " + field + " FROM " + table + " where [Num]= " + num.ToString() + " order by [id] desc";
             return this.db.Database.SqlQuery<ApproachesCars>(sql).FirstOrDefault();
         }

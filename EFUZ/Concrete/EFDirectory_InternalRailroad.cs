@@ -25,6 +25,11 @@ namespace EFUZ.Concrete
             get { return this.db.Database; }
         }
 
+        public IQueryable<Directory_InternalRailroad> Context
+        {
+            get { return db.Directory_InternalRailroad; }
+        }
+
         public IEnumerable<Directory_InternalRailroad> Get()
         {
             try

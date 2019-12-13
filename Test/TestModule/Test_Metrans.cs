@@ -23,6 +23,17 @@ namespace Test.TestModule
             int res_transfer = mtt.TransferApproaches();
         }
 
+        public void MTTransfer_TransferArrival()
+        {
+            MTTransfer mtt = new MTTransfer();
+            mtt.DayRangeArrivalCars = 10; 
+            mtt.ArrivalToRailWay = false;        
+            mtt.FromPath = @"D:\xlm_new";
+            mtt.DeleteFile = true;
+            int res_transfer = mtt.TransferArrival();
+
+        }
+
         #endregion
     }
 }

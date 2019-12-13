@@ -28,6 +28,11 @@ namespace EFMT.Concrete
             get { return this.db.Database; }
         }
 
+        public IQueryable<ApproachesSostav> Context
+        {
+            get { return db.ApproachesSostav; }
+        }
+
         public IEnumerable<ApproachesSostav> Get()
         {
             try

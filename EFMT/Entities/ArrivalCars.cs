@@ -25,7 +25,7 @@ namespace EFMT.Entities
 
         public int country_code { get; set; }
 
-        public float Wwight { get; set; }
+        public float wight { get; set; }
 
         public int cargo_code { get; set; }
 

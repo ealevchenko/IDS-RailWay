@@ -17,6 +17,7 @@ namespace EFMT.Concrete
         public virtual DbSet<ApproachesSostav> ApproachesSostav { get; set; }
         public virtual DbSet<ArrivalCars> ArrivalCars { get; set; }
         public virtual DbSet<ArrivalSostav> ArrivalSostav { get; set; }
+        public virtual DbSet<Consignee> Consignee { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

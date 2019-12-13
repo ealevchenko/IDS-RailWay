@@ -25,6 +25,11 @@ namespace EFUZ.Concrete
             get { return this.db.Database; }
         }
 
+        public IQueryable<Directory_Cargo> Context
+        {
+            get { return db.Directory_Cargo; }
+        }
+
         public IEnumerable<Directory_Cargo> Get()
         {
             try

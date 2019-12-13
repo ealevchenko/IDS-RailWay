@@ -22,8 +22,8 @@ namespace Test
 
             #region Test_Metrans тест Метранса
             Test_Metrans tmt= new Test_Metrans();
-            tmt.MTTransfer_TransferApproaches();
-
+            //tmt.MTTransfer_TransferApproaches();
+            tmt.MTTransfer_TransferArrival();
             #endregion
 
             Console.WriteLine("Press any key to exit...");

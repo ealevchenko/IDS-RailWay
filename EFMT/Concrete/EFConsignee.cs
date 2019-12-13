@@ -9,13 +9,14 @@ using System.Threading.Tasks;
 
 namespace EFMT.Concrete
 {
+    public enum mtConsignee : int { AMKR = 1 }
 
-    public class EFArrivalCars : IRepository<ArrivalCars>
+    public class EFConsignee : IRepository<Consignee>
     {
 
         private EFDbContext db;
 
-        public EFArrivalCars(EFDbContext db)
+        public EFConsignee(EFDbContext db)
         {
 
             this.db = db;
@@ -26,16 +27,16 @@ namespace EFMT.Concrete
             get { return this.db.Database; }
         }
 
-        public IQueryable<ArrivalCars> Context
+        public IQueryable<Consignee> Context
         {
-            get { return db.ArrivalCars; }
+            get { return db.Consignee; }
         }
 
-        public IEnumerable<ArrivalCars> Get()
+        public IEnumerable<Consignee> Get()
         {
             try
             {
-                return db.Select<ArrivalCars>();
+                return db.Select<Consignee>();
             }
             catch (Exception e)
             {
@@ -44,11 +45,11 @@ namespace EFMT.Concrete
             }
         }
 
-        public ArrivalCars Get(long id)
+        public Consignee Get(long id)
         {
             try
             {
-                return db.Select<ArrivalCars>(id);
+                return db.Select<Consignee>(id);
             }
             catch (Exception e)
             {
@@ -57,11 +58,11 @@ namespace EFMT.Concrete
             }
         }
 
-        public void Add(ArrivalCars item)
+        public void Add(Consignee item)
         {
             try
             {
-                db.Insert<ArrivalCars>(item);
+                db.Insert<Consignee>(item);
             }
             catch (Exception e)
             {
@@ -69,11 +70,11 @@ namespace EFMT.Concrete
             }
         }
 
-        public void Update(ArrivalCars item)
+        public void Update(Consignee item)
         {
             try
             {
-                db.Update<ArrivalCars>(item);
+                db.Update<Consignee>(item);
             }
             catch (Exception e)
             {
@@ -81,11 +82,11 @@ namespace EFMT.Concrete
             }
         }
 
-        public void AddOrUpdate(ArrivalCars item)
+        public void AddOrUpdate(Consignee item)
         {
             try
             {
-                ArrivalCars dbEntry = db.ArrivalCars.Find(item.id);
+                Consignee dbEntry = db.Consignee.Find(item.code);
                 if (dbEntry == null)
                 {
                     Add(item);
@@ -106,7 +107,7 @@ namespace EFMT.Concrete
         {
             try
             {
-                ArrivalCars item = db.Delete<ArrivalCars>(id);
+                Consignee item = db.Delete<Consignee>(id);
             }
             catch (Exception e)
             {
@@ -127,12 +128,12 @@ namespace EFMT.Concrete
             }
         }
 
-        public ArrivalCars Refresh(ArrivalCars item)
+        public Consignee Refresh(Consignee item)
         {
             try
             {
                 db.Entry(item).State = EntityState.Detached;
-                return db.Select<ArrivalCars>(item.id);
+                return db.Select<Consignee>(item.code);
             }
             catch (Exception e)
             {
@@ -159,6 +160,12 @@ namespace EFMT.Concrete
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        public bool IsConsigneeSend(bool auxiliary, int code, mtConsignee Consignee)
+        {
+            Consignee consignee = db.Consignee.Where(c => c.auxiliary == auxiliary & c.code == code & c.id_consignee == (int)Consignee).FirstOrDefault();
+            return consignee != null ? true : false;
         }
     }
 }
