@@ -19,6 +19,17 @@ namespace MT
         null_client_sftp = -5,
     }
 
+    [Serializable()]
+    public class TransferProperty
+    {
+        public string pathHost { get; set; }
+        public string filtrHost { get; set; }
+        public string pathReceiver { get; set; }
+        public string pathTempReceiver { get; set; }
+        public bool receiverDelete { get; set; }
+        public bool receiverRewrite { get; set; }
+    }
+
     public class SFTPTransfer
     {
         private eventID eventID = eventID.MT_SFTPTransfer;
@@ -218,6 +229,38 @@ namespace MT
         public int CopyToDir()
         {
             return CopyToDir(this._fromPathsHost, this._FileFiltrHost, this._toTMPDirPath, this._toDirPath, this._DeleteFileHost, this._RewriteFile);
+        }
+        /// <summary>
+        /// Копирование списка 
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public List<int> CopyToDir(List<TransferProperty> list)
+        {
+            List<int> result = new List<int>();
+            if (list == null || list.Count == 0) return result;
+
+            try
+            {
+                if (Connect())
+                {
+                    foreach (TransferProperty cp in list)
+                    {
+                        result.Add(CopySFTPFile(cp.pathHost, cp.filtrHost, cp.pathTempReceiver, cp.pathReceiver, cp.receiverDelete, cp.receiverRewrite));
+                    }
+                    Close();
+                }
+                else
+                {
+                    result.Add(this.eventID.GetEventIDErrorCode((int)sftp_transfer_error.not_connect));
+                }
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("CopyToDir(list={0})", list), this.servece_owner, eventID);
+                result.Add(this.eventID.GetEventIDErrorCode((int)sftp_transfer_error.clobal_error));
+            }
+            return result;
         }
     }
 }

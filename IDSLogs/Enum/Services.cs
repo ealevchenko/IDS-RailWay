@@ -12,5 +12,8 @@ namespace IDSLogs.Enum
         Test = 1,
         // сервисы Метранса
         Metrans = 100,
+        Metrans_Transfer_MT_to_AMKR = 101,
+        Metrans_TransferApproaches = 102,
+        Metrans_TransferArrival = 103,
     }
 }
