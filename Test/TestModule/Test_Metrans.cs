@@ -1,6 +1,8 @@
-﻿using MT;
+﻿using IDSLogs.Enum;
+using MT;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,7 +33,39 @@ namespace Test.TestModule
             mtt.FromPath = @"D:\xlm_new";
             mtt.DeleteFile = true;
             int res_transfer = mtt.TransferArrival();
+        }
 
+        public void MTThread_SFTPTransfer()
+        {
+            string host = "159.224.194.27";
+            int port = 222;
+            string user = "arcelors";
+            string psw = "$fh#ER2J63"; // Fjt8Fyeq45
+
+            SFTPTransfer csftp = new SFTPTransfer(host, port, user, psw, service.Null);
+
+            List<TransferProperty> listProperty = new List<TransferProperty>();
+
+            listProperty.Add(new TransferProperty()
+            {
+                pathHost = ConfigurationManager.AppSettings["fromPathHostTransferApproaches"].ToString(),
+                filtrHost = ConfigurationManager.AppSettings["FileFiltrHostTransferApproaches"].ToString(),
+                pathReceiver = ConfigurationManager.AppSettings["toDirPathTransferApproaches"].ToString(),
+                pathTempReceiver = ConfigurationManager.AppSettings["toTMPDirPathTransferApproaches"].ToString(),
+                receiverDelete = bool.Parse(ConfigurationManager.AppSettings["DeleteFileHostTransferApproaches"].ToString()),
+                receiverRewrite = bool.Parse(ConfigurationManager.AppSettings["RewriteFileTransferApproaches"].ToString())
+            });
+            listProperty.Add(new TransferProperty()
+            {
+                pathHost = ConfigurationManager.AppSettings["fromPathHostTransferArrival"].ToString(),
+                filtrHost = ConfigurationManager.AppSettings["FileFiltrHostTransferArrival"].ToString(),
+                pathReceiver = ConfigurationManager.AppSettings["toDirPathTransferArrival"].ToString(),
+                pathTempReceiver = ConfigurationManager.AppSettings["toTMPDirPathTransferArrival"].ToString(),
+                receiverDelete = bool.Parse(ConfigurationManager.AppSettings["DeleteFileHostTransferArrival"].ToString()),
+                receiverRewrite = bool.Parse(ConfigurationManager.AppSettings["RewriteFileTransferArrival"].ToString())
+            });
+
+            List<int> count_copy = csftp.CopyToDir(listProperty);
         }
 
         #endregion
