@@ -24,7 +24,7 @@ namespace Test
             Test_Metrans tmt= new Test_Metrans();
             //tmt.MTTransfer_TransferApproaches();
             //tmt.MTTransfer_TransferArrival();
-            tmt.MTThread_SFTPTransfer();
+            //tmt.MTThread_SFTPTransfer();
             #endregion
 
             Console.WriteLine("Press any key to exit...");
