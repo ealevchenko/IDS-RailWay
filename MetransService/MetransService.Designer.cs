@@ -31,7 +31,7 @@
             // 
             // MetransService
             // 
-            this.ServiceName = "Service1";
+            this.ServiceName = "Metrans";
 
         }
 

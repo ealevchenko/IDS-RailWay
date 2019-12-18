@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // общие сведения об этой сборке.
 [assembly: AssemblyTitle("MetransService")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Сервис переноса данных МЕТРАНС")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("АМКР ДАТП")]
 [assembly: AssemblyProduct("MetransService")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
