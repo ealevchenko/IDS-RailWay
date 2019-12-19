@@ -41,7 +41,7 @@ namespace MetransService
             // 
             this.serviceInstaller1.Description = "Сервис обработки данных ООО МеталлургТранс";
             this.serviceInstaller1.DisplayName = "Metrans";
-            this.serviceInstaller1.ServiceName = "Metrans";
+            this.serviceInstaller1.ServiceName = "METRANS";
             this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             // 
             // ProjectInstaller
@@ -59,7 +59,7 @@ namespace MetransService
 
         protected override void OnBeforeInstall(IDictionary savedState)
         {
-            string parameter = "Metrans\" \"MetransLogFile";
+            string parameter = "METRANS\" \"IDS_METRANS";
             Context.Parameters["assemblypath"] = "\"" + Context.Parameters["assemblypath"] + "\" \"" + parameter + "\"";
             base.OnBeforeInstall(savedState);
         }

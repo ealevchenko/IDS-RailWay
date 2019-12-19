@@ -152,13 +152,13 @@ namespace MetransService
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
 
             // Отправить сообщение
-            string message = String.Format("Сервис : {0} - запущен", this.servece_name);
+            string message = String.Format("Сервис : {0} - запущен.", this.servece_name);
             message.WarningLog(servece_name, eventID);message.EventLog(EventStatus.Ok, servece_name, eventID);
-            message = String.Format("Интервал выполнения сервиса {0}-{1} сек.,", this.thread_file, this.interval_transfer_file);
+            message = String.Format("Интервал выполнения сервиса {0}-{1} сек.", this.thread_file, this.interval_transfer_file);
             message.WarningLog(servece_name, eventID);message.EventLog(EventStatus.Ok, servece_name, eventID);
-            message = String.Format("Интервал выполнения сервиса {0}-{1} сек.,", this.thread_approaches, this.interval_transfer_approaches);
+            message = String.Format("Интервал выполнения сервиса {0}-{1} сек.", this.thread_approaches, this.interval_transfer_approaches);
             message.WarningLog(servece_name, eventID);message.EventLog(EventStatus.Ok, servece_name, eventID);
-            message = String.Format("Интервал выполнения сервиса {0}-{1} сек.,", this.thread_arrival, this.interval_transfer_arrival);
+            message = String.Format("Интервал выполнения сервиса {0}-{1} сек.", this.thread_arrival, this.interval_transfer_arrival);
             message.WarningLog(servece_name, eventID);message.EventLog(EventStatus.Ok, servece_name, eventID);
             //String.Format(" сервиса {0}-{1} сек.,", this.thread_tracking, this.interval_transfer_tracking);
             //String.Format(" сервиса {0}-{1} сек.,", this.thread_close_approaches, this.interval_close_approaches);

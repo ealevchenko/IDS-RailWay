@@ -36,8 +36,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DiffieHellman, Version=0.0.0.0, Culture=neutral">
-      <HintPath>..\packages\DiffieHellman.1.0.0\lib\net40\DiffieHellman.dll</HintPath>
+    <Reference Include="DiffieHellman, Version=0.0.0.0, Culture=neutral, PublicKeyToken=4ed5f4288b4076af, processorArchitecture=MSIL">
+      <HintPath>..\packages\DiffieHellman.local.1.0.0\lib\net40\DiffieHellman.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.0\lib\net45\EntityFramework.dll</HintPath>
