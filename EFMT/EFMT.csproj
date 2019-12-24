@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\IRepository.cs" />
+    <Compile Include="Concrete\EFWagonsTracking.cs" />
     <Compile Include="Concrete\EFConsignee.cs" />
     <Compile Include="Concrete\EFArrivalSostav.cs" />
     <Compile Include="Concrete\EFArrivalCars.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="Entities\ArrivalSostav.cs" />
     <Compile Include="Concrete\EFDbContext.cs" />
     <Compile Include="Entities\Consignee.cs" />
+    <Compile Include="Entities\WagonsTracking.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

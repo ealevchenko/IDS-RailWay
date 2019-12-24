@@ -106,6 +106,17 @@ namespace MT
 
         private bool arrival_to_railway = true;  // Признак переносить вагоны в прибытие АМКР 
         public bool ArrivalToRailWay { get { return this.arrival_to_railway; } set { this.arrival_to_railway = value; } }
+        // TransferWagonsTracking
+        private DateTime datetime_start_new_tracking = new DateTime(2018, 01, 01, 0, 0, 0); // Время начала запроса информации по вагону которого нет в базе АМКР
+        public DateTime DateTimeStartNewTracking { get { return this.datetime_start_new_tracking; } set { this.datetime_start_new_tracking = value; } }
+        private string url_wagons_tracking;
+        public string URLWagonsTracking { get { return this.url_wagons_tracking; } set { this.url_wagons_tracking = value; } }
+        private string user_wagons_tracking;
+        public string UserWagonsTracking { get { return this.user_wagons_tracking; } set { this.user_wagons_tracking = value; } }
+        private string psw_wagons_tracking;
+        public string PSWWagonsTracking { get { return this.psw_wagons_tracking; } set { this.psw_wagons_tracking = value; } }
+        private string api_wagons_tracking;
+        public string APIWagonsTracking { get { return this.api_wagons_tracking; } set { this.api_wagons_tracking = value; } }
 
         public MTTransfer()
         {
@@ -935,5 +946,179 @@ namespace MT
             return TransferArrival(this.fromPath, this.delete_file);
         }
         #endregion
+
+        #region TransferWagonsTracking Перенос вагонов из Web.Api МетТранса
+        /// <summary>
+        /// Добавить список изменений по вагону
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public int TransferWagonsTracking(List<WagonsTrackingMT> list)
+        {
+            if (list == null || list.Count() == 0) return 0;
+            UZDirectory uz_directory = new UZDirectory(this.servece_owner);// Подключим библиотеку УЗ
+
+            EFWagonsTracking ef_wt = new EFWagonsTracking(new EFDbContext());
+            int countCopy = 0;
+            int countError = 0;
+            int res = 0;
+            //string trans_id = "";
+            try
+            {
+                foreach (WagonsTrackingMT wt in list.OrderBy(l => l.dt))
+                {
+                    try
+                    {
+                        int id_cargo = 0;
+                        if (wt.kgr != null && wt.kgr > 0)
+                        {
+                            id_cargo = 0;//TODO: Доработать внутрений справочник uz_directory.GetIDReferenceCargoOfCorrectCodeETSNG((int)wt.kgr);
+                        }
+                        WagonsTracking new_wt = new WagonsTracking()
+                        {
+                            id = 0,
+                            nvagon = wt.nvagon,
+                            st_disl = wt.st_disl,
+                            nst_disl = wt.nst_disl,
+                            kodop = wt.kodop,
+                            nameop = wt.nameop,
+                            full_nameop = wt.full_nameop,
+                            dt = wt.dt,
+                            st_form = wt.st_form,
+                            nst_form = wt.nst_form,
+                            idsost = wt.idsost,
+                            nsost = wt.nsost,
+                            st_nazn = wt.st_nazn,
+                            nst_nazn = wt.nst_nazn,
+                            ntrain = wt.ntrain,
+                            st_end = wt.st_end,
+                            nst_end = wt.nst_end,
+                            kgr = wt.kgr,
+                            nkgr = wt.nkgr,
+                            id_cargo = id_cargo,
+                            kgrp = wt.kgrp,
+                            ves = wt.ves,
+                            updated = wt.updated,
+                            kgro = wt.kgro,
+                            km = wt.km,
+                        };
+                        ef_wt.Add(new_wt);
+                        res = ef_wt.Save();
+                        if (res >= 0)
+                        {
+                            countCopy++;
+                        }
+                        else
+                        {
+                            countError++;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        e.ExceptionLog(String.Format("Ошибка переноса информации по вагону {0} дата операции {1} в БД MT.WagonsTracking", wt.nvagon, wt.dt), servece_owner, eventID);
+                        countError++;
+                    }
+                }
+                string mess = String.Format("Вагон №{0}, Определенно: {1} новых операций, перенесено в БД MT.WagonsTracking : {2}, пропущено по ошибке : {3}", (list != null && list.Count() > 0 ? list[0].nvagon : -1), list.Count(), countCopy, countError);
+                mess.InformationLog(servece_owner, this.eventID);
+                if (list != null && list.Count() > 0) { mess.EventLog(countError > 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID); }
+                return countError == 0 ? countCopy : -1;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("TransferWagonsTracking(list={0})", list), servece_owner, eventID);
+                return -1;
+            }
+        }
+        /// <summary>
+        /// Перенести информацию слежения за вагонами
+        /// </summary>
+        /// <returns></returns>
+        public int TransferWagonsTracking(DateTime datetime_start_new_tracking, string url, string user, string psw, string api)
+        {
+            int countCopy = 0;
+            int countSkip = 0;
+            int countError = 0;
+            int res = 0;
+            EFWagonsTracking ef_wt = new EFWagonsTracking(new EFDbContext());
+            try
+            {
+                WebApiClientMT client = new WebApiClientMT(url, user, psw, api, this.servece_owner);
+                List<WagonsTrackingMT> list_tracking = client.GetWagonsTracking();
+                if (list_tracking == null) return (int)mtt_err.not_listWagonsTracking;
+                foreach (WagonsTrackingMT wt in list_tracking)
+                {
+                    try
+                    {
+                        List<WagonsTracking> list = ef_wt.Context.Where(t => t.nvagon == wt.nvagon).ToList(); // GetWagonsTrackingOfNumCars(wt.nvagon).ToList();
+                        WagonsTracking wt_old = list.OrderByDescending(t => t.dt).FirstOrDefault();
+                        if (wt_old == null)
+                        {
+                            // Обновляем информацию переносим все
+                            List<WagonsTrackingMT> list_new = client.GetWagonsTracking(wt.nvagon, datetime_start_new_tracking);
+                            if (list_new == null || list_new.Count() == 0)
+                            {
+                                list_new.Add(wt);
+                            }
+                            res = TransferWagonsTracking(list_new);
+                            if (res >= 0)
+                            {
+                                countCopy++;
+                            }
+                            else
+                            {
+                                countError++;
+                            }
+                        }
+                        else
+                        {
+                            if (wt_old.dt != wt.dt)
+                            {
+                                // Обновляем информацию добавим новое
+                                List<WagonsTrackingMT> list_new = client.GetWagonsTracking(wt.nvagon, ((DateTime)wt_old.dt).AddSeconds(1));
+                                res = TransferWagonsTracking(list_new);
+                                if (res >= 0)
+                                {
+                                    countCopy++;
+                                }
+                                else
+                                {
+                                    countError++;
+                                }
+                            }
+                            else
+                            {
+                                countSkip++;
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        e.ExceptionLog(String.Format("Ошибка переноса информации по вагону {0} дата операции {1} в БД MT.WagonsTracking", wt.nvagon, wt.dt), servece_owner, eventID);
+                        countError++;
+                    }
+                }
+                string mess = String.Format("Перенос информации о слежении за вагонами в БД MT.WagonsTracking выполнен, доступна информация о {0} вагонах, перенесено новых данных {1}, пропущено {2}, ошибки при переносе {3}."
+                    , list_tracking.Count(), countCopy, countSkip, countError);
+                mess.InformationLog(servece_owner, this.eventID);
+                if (list_tracking != null && list_tracking.Count() > 0) { mess.EventLog(countError > 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID); }
+                return list_tracking.Count();
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("TransferWagonsTracking()"), servece_owner, eventID);
+                return -1;
+            }
+        }
+        /// <summary>
+        /// Перенести информацию слежения за вагонами
+        /// </summary>
+        /// <returns></returns>
+        public int TransferWagonsTracking()
+        {
+            return TransferWagonsTracking(this.datetime_start_new_tracking, this.url_wagons_tracking, this.user_wagons_tracking, this.psw_wagons_tracking, this.api_wagons_tracking);
+        }
+        #endregion
+
     }
 }

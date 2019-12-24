@@ -19,8 +19,14 @@ namespace EFMT.Concrete
         public virtual DbSet<ArrivalSostav> ArrivalSostav { get; set; }
         public virtual DbSet<Consignee> Consignee { get; set; }
 
+        public virtual DbSet<WagonsTracking> WagonsTracking { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<WagonsTracking>()
+                .Property(e => e.ves)
+                .HasPrecision(18, 3);
+
             modelBuilder.Entity<ApproachesCars>()
                 .HasMany(e => e.ApproachesCars1)
                 .WithOptional(e => e.ApproachesCars2)

@@ -50,6 +50,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -66,6 +67,7 @@
     <Compile Include="MTTransfer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SFTPTransfer.cs" />
+    <Compile Include="WebApiClientMT.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DBLOG\DBLOG.csproj">
@@ -83,6 +85,10 @@
     <ProjectReference Include="..\UZ\UZ.csproj">
       <Project>{d7147560-b66a-41bb-bddd-4d24403d5e97}</Project>
       <Name>UZ</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WebApiClient\WebApiClient.csproj">
+      <Project>{4dfb537d-a480-47d9-8d3c-29124822d02a}</Project>
+      <Name>WebApiClient</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

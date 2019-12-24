@@ -15,7 +15,7 @@ namespace Test.TestModule
         
         }
 
-        #region
+        #region MTTransfer
 
         public void MTTransfer_TransferApproaches()
         {
@@ -35,6 +35,25 @@ namespace Test.TestModule
             int res_transfer = mtt.TransferArrival();
         }
 
+        public void MTTransfer_WebApiClientMT()
+        {
+            WebApiClientMT clientMT = new WebApiClientMT(service.Null);
+            //Console.WriteLine(clientMT.wapi.to);
+            //EFMetallurgTrans efmt = new EFMetallurgTrans();
+            Console.WriteLine("Запрос....");
+            //List<WagonsTrackingMT> list1 =  clientMT.GetWagonsTracking();
+            List<WagonsTrackingMT> list2 = clientMT.GetWagonsTracking(58647785);
+            ////List<WagonsTrackingMT> list3 = clientMT.GetWagonsTracking(56858111, DateTime.Now.AddMonths(-1));
+            ////List<WagonsTrackingMT> list4 = clientMT.GetWagonsTracking(56858111, DateTime.Now.AddDays(-15), DateTime.Now.AddDays(-5));
+            //foreach (WagonsTrackingMT wt in list1)
+            //{
+            //    Console.WriteLine(wt.nvagon);
+            //    //efmt.SaveWagonsTracking(wt);
+            //}
+        }
+        #endregion
+
+        #region MTThread
         public void MTThread_SFTPTransfer()
         {
             string host = "159.224.194.27";

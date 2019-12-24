@@ -12,6 +12,12 @@ namespace IDSLogs.Enum
         RailWay = 0,
         Test = 1,
 
+        #region SHARED Общие библиотеки
+        WebApi = 100,
+
+        #endregion
+
+
         #region Служба УЗ 1000
 
         EFUZ = 1100,                    // Библиотека базы данных Укр. Ж.Д.
@@ -28,6 +34,7 @@ namespace IDSLogs.Enum
         MT_SFTPTransfer = 2300,         // Сервис переноса даных из SFTP Метранс
         MT_MTTransfer = 2400,           // Сервис переноса даных из файлов в БД Метранс
         MT_MTThread = 2500,             // Библиотека потоков выполнения сервисов Метранс
+        MT_WebApiClient = 2600,         // Библиотека доступа к WEB API
         #endregion
 
 
