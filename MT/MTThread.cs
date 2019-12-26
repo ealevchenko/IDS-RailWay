@@ -27,6 +27,9 @@ namespace MT
         protected Thread thTransferArrival = null;
         public bool statusTransferArrival { get { return thTransferArrival.IsAlive; } }
 
+        protected Thread thTransferWT = null;
+        public bool statusTransferWT { get { return thTransferWT.IsAlive; } }
+
         public MTThread()
         {
 
@@ -132,7 +135,7 @@ namespace MT
                         if (result > 0) { res += result; }
                     }
                 }
-                service.ServicesToLog(dt_start, DateTime.Now, res);
+                service.ServicesToLog(service.ToString() + " - выполнен.", dt_start, DateTime.Now, res);
             }
             catch (ThreadAbortException exc)
             {
@@ -141,7 +144,7 @@ namespace MT
             catch (Exception ex)
             {
                 ex.ExceptionLog(String.Format("Ошибка выполнения потока {0} сервиса {1}", service.ToString(), servece_owner), servece_owner, eventID);
-                service.ServicesToLog(dt_start, DateTime.Now, -1);
+                service.ServicesToLog(service.ToString() + " - завершен с ошибкой.", dt_start, DateTime.Now, -1);
 
             }
         }
@@ -208,7 +211,7 @@ namespace MT
                 TimeSpan ts = DateTime.Now - dt_start;
                 string mes_service_exec = String.Format("Поток {0} сервиса {1} - время выполнения: {2}:{3}:{4}({5}), код выполнения: res_transfer:{6}", service.ToString(), servece_owner, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds, res_transfer);
                 mes_service_exec.InformationLog(servece_owner, eventID);
-                service.ServicesToLog(dt_start, DateTime.Now, res_transfer);
+                service.ServicesToLog(service.ToString() + " - выполнен.", dt_start, DateTime.Now, res_transfer);
             }
             catch (ThreadAbortException exc)
             {
@@ -217,7 +220,7 @@ namespace MT
             catch (Exception ex)
             {
                 ex.ExceptionLog(String.Format("Ошибка выполнения потока {0} сервиса {1}", service.ToString(), servece_owner), servece_owner, eventID);
-                service.ServicesToLog(dt_start, DateTime.Now, -1);
+                service.ServicesToLog(service.ToString() + " - завершен с ошибкой.", dt_start, DateTime.Now, -1);
 
             }
         }
@@ -291,7 +294,7 @@ namespace MT
                 TimeSpan ts = DateTime.Now - dt_start;
                 string mes_service_exec = String.Format("Поток {0} сервиса {1} - время выполнения: {2}:{3}:{4}({5}), код выполнения: res_transfer:{6}.", service.ToString(), servece_owner, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds, res_transfer);
                 mes_service_exec.InformationLog(servece_owner, eventID);
-                service.ServicesToLog(dt_start, DateTime.Now, res_transfer);
+                service.ServicesToLog(service.ToString() + " - выполнен.", dt_start, DateTime.Now, res_transfer);
             }
             catch (ThreadAbortException exc)
             {
@@ -300,10 +303,96 @@ namespace MT
             catch (Exception ex)
             {
                 ex.ExceptionLog(String.Format("Ошибка выполнения цикла переноса, потока {0} сервис {1}", service.ToString(), servece_owner), servece_owner, eventID);
-                service.ServicesToLog(dt_start, DateTime.Now, -1);
+                service.ServicesToLog(service.ToString() + " - завершен с ошибкой.", dt_start, DateTime.Now, -1);
             }
         }
         #endregion
+
+        #region Metrans_TransferWT
+        /// <summary>
+        /// Запустить поток переноса вагонов по прибытию
+        /// </summary>
+        /// <param name="delay"></param>
+        /// <returns></returns>
+        public bool Start_TransferWT()
+        {
+            service service = service.Metrans_TransferWT;
+            string mes_service_start = String.Format("Поток : {0} сервиса : {1}", service.ToString(), servece_owner);
+            try
+            {
+                if ((thTransferWT == null) || (!thTransferWT.IsAlive && thTransferWT.ThreadState == ThreadState.Stopped))
+                {
+                    thTransferWT = new Thread(TransferWT);
+                    thTransferWT.Name = service.ToString();
+                    thTransferWT.Start();
+                }
+                return thTransferWT.IsAlive;
+            }
+            catch (Exception ex)
+            {
+                mes_service_start += " - ошибка запуска.";
+                ex.ExceptionLog(mes_service_start, servece_owner, eventID);
+                return false;
+            }
+        }
+        /// <summary>
+        /// Поток переноса информации об вагонах по которым установленно слижение в MT и формирование циклограммы
+        /// </summary>
+        private static void TransferWT()
+        {
+            service service = service.Metrans_TransferWT;
+            DateTime dt_start = DateTime.Now;
+            try
+            {
+                DateTime datetime_start_new_tracking = new DateTime(2019, 01, 01, 0, 0, 0);
+                string url_wagons_tracking = @"https://inform.umtrans.com.ua";
+                string user_wagons_tracking = "Arcelor1";
+                string psw_wagons_tracking = "12345678-";
+                string api_wagons_tracking = @"/api/WagonsTracking";
+
+                // считать настройки
+                try
+                {
+                    // Если нет перенесем настройки в БД
+                    datetime_start_new_tracking = DateTime.Parse(ConfigurationManager.AppSettings["DateTimeStartNewTracking"].ToString());
+                    url_wagons_tracking = ConfigurationManager.AppSettings["WebApiMTURL"].ToString();
+                    user_wagons_tracking = ConfigurationManager.AppSettings["WebApiMTUser"].ToString();
+                    psw_wagons_tracking = ConfigurationManager.AppSettings["WebApiMTPSW"].ToString();
+                    api_wagons_tracking = ConfigurationManager.AppSettings["WebApiMTApi"].ToString();   
+                }
+                catch (Exception ex)
+                {
+                    ex.ExceptionLog(String.Format("Ошибка выполнения считывания настроек потока {0}, сервиса {1}", service.ToString(), servece_owner), servece_owner, eventID);
+                }
+                int res_transfer = 0;
+                //int res_transfer_cycle = 0;
+
+                MTTransfer mtt = new MTTransfer(service);
+                mtt.DateTimeStartNewTracking = datetime_start_new_tracking;
+                mtt.URLWagonsTracking = url_wagons_tracking;
+                mtt.UserWagonsTracking = user_wagons_tracking;
+                mtt.PSWWagonsTracking = psw_wagons_tracking;
+                mtt.APIWagonsTracking = api_wagons_tracking;
+                res_transfer = mtt.TransferWagonsTracking();        // Перенос данных
+                //res_transfer_cycle = mtt.TransferWTCycle();     // TODO: Добавить Формироание циклограмм
+                TimeSpan ts = DateTime.Now - dt_start;
+                string mes_service_exec = String.Format("Поток {0} сервиса {1} - время выполнения: {2}:{3}:{4}({5}), код выполнения: res_transfer:{6}, res_transfer_cycle:{7}.", service.ToString(), servece_owner, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds, res_transfer, 0);
+                mes_service_exec.InformationLog(servece_owner, eventID);
+                service.ServicesToLog(service.ToString() + " - выполнен.", dt_start, DateTime.Now, res_transfer);
+            }
+            catch (ThreadAbortException exc)
+            {
+                String.Format("Поток {0} сервиса {1} - прерван по событию ThreadAbortException={2}", service.ToString(), servece_owner, exc).WarningLog(servece_owner, eventID);
+            }
+            catch (Exception ex)
+            {
+                ex.ExceptionLog(String.Format("Ошибка выполнения цикла переноса, потока {0} сервис {1}", service.ToString(), servece_owner), servece_owner, eventID);
+                service.ServicesToLog(service.ToString() + " - завершен с ошибкой.", dt_start, DateTime.Now, -1);
+            }
+        }
+        #endregion
+
+
 
     }
 }

@@ -25,6 +25,8 @@ namespace Test
             //tmt.MTTransfer_TransferApproaches();
             //tmt.MTTransfer_TransferArrival();
             //tmt.MTThread_SFTPTransfer();
+            //tmt.MTTransfer_WebApiClientMT();
+            tmt.MTThread_Start_TransferWT();
             #endregion
 
             Console.WriteLine("Press any key to exit...");

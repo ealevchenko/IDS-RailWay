@@ -15,5 +15,6 @@ namespace IDSLogs.Enum
         Metrans_Transfer_MT_to_AMKR = 101,
         Metrans_TransferApproaches = 102,
         Metrans_TransferArrival = 103,
+        Metrans_TransferWT = 104,
     }
 }

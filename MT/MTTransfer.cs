@@ -1015,11 +1015,11 @@ namespace MT
                     }
                     catch (Exception e)
                     {
-                        e.ExceptionLog(String.Format("Ошибка переноса информации по вагону {0} дата операции {1} в БД MT.WagonsTracking", wt.nvagon, wt.dt), servece_owner, eventID);
+                        e.ExceptionLog(String.Format("Ошибка переноса информации по вагону {0} дата операции {1} в БД METRANS.WagonsTracking", wt.nvagon, wt.dt), servece_owner, eventID);
                         countError++;
                     }
                 }
-                string mess = String.Format("Вагон №{0}, Определенно: {1} новых операций, перенесено в БД MT.WagonsTracking : {2}, пропущено по ошибке : {3}", (list != null && list.Count() > 0 ? list[0].nvagon : -1), list.Count(), countCopy, countError);
+                string mess = String.Format("Вагон №{0}, Определенно: {1} новых операций, перенесено в БД METRANS.WagonsTracking : {2}, пропущено по ошибке : {3}", (list != null && list.Count() > 0 ? list[0].nvagon : -1), list.Count(), countCopy, countError);
                 mess.InformationLog(servece_owner, this.eventID);
                 if (list != null && list.Count() > 0) { mess.EventLog(countError > 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID); }
                 return countError == 0 ? countCopy : -1;
@@ -1094,7 +1094,7 @@ namespace MT
                     }
                     catch (Exception e)
                     {
-                        e.ExceptionLog(String.Format("Ошибка переноса информации по вагону {0} дата операции {1} в БД MT.WagonsTracking", wt.nvagon, wt.dt), servece_owner, eventID);
+                        e.ExceptionLog(String.Format("Ошибка переноса информации по вагону {0} дата операции {1} в БД METRANS.WagonsTracking", wt.nvagon, wt.dt), servece_owner, eventID);
                         countError++;
                     }
                 }

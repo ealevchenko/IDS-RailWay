@@ -69,6 +69,7 @@ namespace WebApiClient
                     
                     var response =
                         client.PostAsync(APP_PATH + "/Token", content).Result;
+                    String.Format("Web API METRANS Connect [AbsoluteUri :{0}, user : {1} status:{2}", response.RequestMessage.RequestUri.AbsoluteUri, userName, response.StatusCode).WarningLog(eventID);
                     if (response.StatusCode != HttpStatusCode.OK)
                     {
                         string err = "Ошибка выполнения client.PostAsync :" + response.ToString();
@@ -130,6 +131,7 @@ namespace WebApiClient
                 using (var client = CreateClient(token))
                 {
                     var response = client.GetAsync(APP_PATH + api_comand).Result;
+                    String.Format("Web API METRANS GetAsync [requestUri :{0}, status:{1}", APP_PATH + api_comand, response.StatusCode).WarningLog(eventID);
                     if (response.StatusCode != HttpStatusCode.OK)
                     {
                         string err = response.ToString();

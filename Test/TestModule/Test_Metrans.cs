@@ -87,6 +87,12 @@ namespace Test.TestModule
             List<int> count_copy = csftp.CopyToDir(listProperty);
         }
 
+        public void MTThread_Start_TransferWT() { 
+            MTThread mtt = new MTThread(service.Metrans);
+            mtt.Start_TransferWT();
+        
+        }
+
         #endregion
     }
 }
