@@ -62,7 +62,7 @@ namespace WebApiClient
                 //using (var client = new HttpClient(handler))
                 using (var client = new HttpClient())
                 {
-                    client.Timeout = TimeSpan.FromMinutes(20);
+                    client.Timeout = TimeSpan.FromMinutes(10);
                     //var encoding = new ASCIIEncoding();
                     //var authHeader = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(encoding.GetBytes(string.Format("{0}:{1}", @"europe\ealevchenko1", "Yfcnz_04201601"))));
                     //client.DefaultRequestHeaders.Authorization = authHeader;
@@ -93,6 +93,7 @@ namespace WebApiClient
         public HttpClient CreateClient(string accessToken = "")
         {
             var client = new HttpClient();
+            client.Timeout = TimeSpan.FromMinutes(10); // Добавил таймаут 10 мин
             if (!string.IsNullOrWhiteSpace(accessToken))
             {
                 client.DefaultRequestHeaders.Authorization =
