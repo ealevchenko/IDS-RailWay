@@ -19,7 +19,7 @@ namespace WEB_UI.App_LocalResources {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class GlobalResource {
@@ -57,6 +57,60 @@ namespace WEB_UI.App_LocalResources {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Контакты.
+        /// </summary>
+        public static string home_link_contact {
+            get {
+                return ResourceManager.GetString("home_link_contact", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Инструкции.
+        /// </summary>
+        public static string home_link_document {
+            get {
+                return ResourceManager.GetString("home_link_document", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Home.
+        /// </summary>
+        public static string home_link_home {
+            get {
+                return ResourceManager.GetString("home_link_home", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сервисы.
+        /// </summary>
+        public static string home_link_services {
+            get {
+                return ResourceManager.GetString("home_link_services", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Системы.
+        /// </summary>
+        public static string home_link_system {
+            get {
+                return ResourceManager.GetString("home_link_system", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Menu.
+        /// </summary>
+        public static string home_menu {
+            get {
+                return ResourceManager.GetString("home_menu", resourceCulture);
             }
         }
         

@@ -33,6 +33,10 @@ namespace WEB_UI
             bundles.Add(new ScriptBundle("~/bundles/scrollreveal").Include(
                       "~/Scripts/scrollreveal/scrollreveal.min.js"));
 
+            // jquery.easing
+            bundles.Add(new ScriptBundle("~/bundles/easing").Include(
+                      "~/Scripts/jquery.easing.1.3.js"));
+
             // Используйте версию Modernizr для разработчиков, чтобы учиться работать. Когда вы будете готовы перейти к работе,
             // готово к выпуску, используйте средство сборки по адресу https://modernizr.com, чтобы выбрать только необходимые тесты.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
