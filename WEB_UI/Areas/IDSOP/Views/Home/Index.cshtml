@@ -1,0 +1,41 @@
+﻿@using WEB_UI.App_LocalResources;
+@{
+    ViewBag.Title = @GlobalResource.system_own_park_title;
+    ViewBag.Section = @GlobalResource.system_own_park_description;
+}
+
+@section styles {
+    <link rel="stylesheet" type="text/css" href="~/Content/view/home-idsop.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/view/home-menu.css">
+}
+
+@section scripts {
+    <script>
+        $('header').addClass('img-header-idsop');
+    </script>
+}
+
+@section Services {
+
+}
+
+@section Document {
+
+}
+
+<h1 id="homeHeading">@GlobalResource.system_own_park_title</h1>
+<hr>
+<p>@GlobalResource.system_own_park_description</p>
+<div class="content">
+    <ul class="ca-menu">
+        <li>
+            <a href='@Url.Action("Card", "Home", new { area = "IDSOP" })'>
+                <span class="ca-icon">H</span>
+                <div class="ca-content">
+                    <h2 class="ca-main">Карточки</h2>
+                    <h3 class="ca-sub">лллллллллллллллллллл</h3>
+                </div>
+            </a>
+        </li>
+    </ul>
+</div>

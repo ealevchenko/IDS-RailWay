@@ -143,6 +143,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>GlobalResource.resx</DependentUpon>
     </Compile>
+    <Compile Include="App_LocalResources\GlobalResource.en.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GlobalResource.en.resx</DependentUpon>
+    </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\Ninject.Web.Common.cs" />
@@ -176,6 +181,8 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Areas\IDSOP\Controllers\HomeController.cs" />
+    <Compile Include="Areas\IDSOP\IDSOPAreaRegistration.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
@@ -234,11 +241,15 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="Content\view\home-idsop.css" />
+    <Content Include="Content\view\home-menu.css" />
     <Content Include="Content\view\home.css" />
     <Content Include="Content\view\ids_layout.css" />
     <Content Include="Content\view\ids_layout.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="fonts\websymbols\websymbols-regular-webfont.svg" />
+    <Content Include="fonts\websymbols\WebSymbolsRegular-demo.html" />
     <Content Include="Global.asax" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
     <Content Include="Areas\HelpPage\Views\Shared\_Layout.cshtml" />
@@ -259,8 +270,8 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
-    <Content Include="Images\header-home.jpg" />
     <Content Include="Images\header.jpg" />
+    <Content Include="Images\ids-op.jpg" />
     <Content Include="Images\portfolio\fullsize\1.jpg" />
     <Content Include="Images\portfolio\fullsize\2.jpg" />
     <Content Include="Images\portfolio\fullsize\3.jpg" />
@@ -325,6 +336,13 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Areas\IDSOP\Views\web.config" />
+    <Content Include="Areas\IDSOP\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\IDSOP\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\IDSOP\Views\Home\Index.cshtml" />
+    <Content Include="fonts\websymbols\websymbols-regular-webfont.eot" />
+    <Content Include="fonts\websymbols\websymbols-regular-webfont.ttf" />
+    <Content Include="fonts\websymbols\websymbols-regular-webfont.woff" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -444,6 +462,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\IDSOP\Models\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
@@ -464,6 +483,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="App_LocalResources\GlobalResource.en.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GlobalResource.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="App_LocalResources\GlobalResource.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>GlobalResource.Designer.cs</LastGenOutput>

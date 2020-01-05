@@ -123,67 +123,58 @@
   <data name="contact_admin_phone" xml:space="preserve">
     <value>96332</value>
   </data>
-  <data name="contact_admin_title" xml:space="preserve">
-    <value>Техническая поддержка, администрирование сайта : Левченко Эдуард</value>
-  </data>
-  <data name="contact_rail_transport_email" xml:space="preserve">
-    <value>Irina.Shuba@arcelormittal.com</value>
-  </data>
-  <data name="contact_rail_transport_phone" xml:space="preserve">
-    <value>91932</value>
-  </data>
   <data name="contact_rail_transport_title" xml:space="preserve">
-    <value>Техническая поддержка, ВДС «ЖД АМКР»: Шуба Ирина</value>
+    <value>Technical support, GVA "Railway AMKR": Irina fur coat</value>
   </data>
   <data name="home_link_contact" xml:space="preserve">
-    <value>Контакты</value>
+    <value>Contacts</value>
   </data>
   <data name="home_link_document" xml:space="preserve">
-    <value>Инструкции</value>
+    <value>Instructions</value>
   </data>
   <data name="home_link_home" xml:space="preserve">
     <value>Home</value>
   </data>
   <data name="home_link_services" xml:space="preserve">
-    <value>Сервисы</value>
+    <value>Services</value>
   </data>
   <data name="home_link_system" xml:space="preserve">
-    <value>Системы</value>
+    <value>Systems</value>
   </data>
   <data name="home_menu" xml:space="preserve">
     <value>Menu</value>
   </data>
   <data name="home_title" xml:space="preserve">
-    <value>Информационно диспетчерская система</value>
+    <value>Information Dispatch System</value>
   </data>
   <data name="home_title1" xml:space="preserve">
-    <value>Информационно диспетчерская система</value>
+    <value>Information Dispatch System</value>
   </data>
   <data name="home_title2" xml:space="preserve">
-    <value>Транспортный департамент ArcelorMittal Кривой Рог</value>
+    <value>Transport Department ArcelorMittal Kryvyi Rih</value>
   </data>
   <data name="lang" xml:space="preserve">
-    <value>ru-RU</value>
+    <value>en-US</value>
   </data>
   <data name="link_goto" xml:space="preserve">
-    <value>Перейти</value>
+    <value>Go to</value>
   </data>
   <data name="system_own_park_description" xml:space="preserve">
-    <value>"Собственный парк" - информационно диспетчерская система по управлению собственными вагонами ПАО «АРСЕЛОРМИТТАЛ КРИВОЙ РОГ»</value>
+    <value>Own fleet - information dispatch system for managing own wagons of PJSC “ARSELORMITTAL Krivoy Rog”</value>
   </data>
   <data name="system_own_park_title" xml:space="preserve">
-    <value>ИДС "СП"</value>
+    <value>IDS "SP"</value>
   </data>
   <data name="system_rail_transport_description" xml:space="preserve">
-    <value>«Железнодорожный транспорт АМКР» - внутренняя диспетчерская система оперативного управления перевозочным процессом на железнодорожном транспорте  внутри предприятияПАО «АРСЕЛОРМИТТАЛ КРИВОЙ РОГ»</value>
+    <value>AMKR railway transport - an internal dispatching system for the operational management of the transportation process in railway transport within the enterprise "ARSELORMITTAL CURVE HORN"</value>
   </data>
   <data name="system_rail_transport_title" xml:space="preserve">
-    <value>ВДС «ЖД АМКР»</value>
+    <value>GVA "Railway AMKR"</value>
   </data>
   <data name="system_transport_department_description" xml:space="preserve">
-    <value>Аналитическая отчетность транспортного департамента ПАО «АРСЕЛОРМИТТАЛ КРИВОЙ РОГ»</value>
+    <value>Analytical reporting of the transport department of PJSC “ARSELORMITTAL Krivoy Rog”</value>
   </data>
   <data name="system_transport_department_title" xml:space="preserve">
-    <value>ТД</value>
+    <value>TD</value>
   </data>
 </root>

@@ -414,3 +414,20 @@ img::-moz-selection {
 body {
   webkit-tap-highlight-color: #222222;
 }
+
+/*—ылки на выбор €зыка*/
+a.select-lang, a.select-not-lang {
+    position: relative;
+    display: block;
+    float: left;
+    padding: 10px 5px;
+}
+
+a.select-lang {
+    font-weight: bold;
+    color: #fff200;
+}
+
+a.select-not-lang {
+    color: green;
+}

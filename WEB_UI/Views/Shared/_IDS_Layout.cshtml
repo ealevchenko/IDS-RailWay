@@ -45,12 +45,32 @@
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                     <span class="sr-only">Toggle navigation</span> @GlobalResource.home_menu <i class="fa fa-bars"></i>
                 </button>
-                <a class="navbar-brand page-scroll" href="#page-top">@GlobalResource.home_link_home</a>
+                @*<a class="navbar-brand page-scroll" href="#page-top">@GlobalResource.home_link_home</a>*@
+                <a class="navbar-brand" href='@Url.Action("Index", "Home", new { Area = "" })'>@GlobalResource.home_link_home</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        @using (Html.BeginForm("ChangeCulture", "Home", new { area = "" }))
+                        {
+                            @Html.RouteLink("RU", new
+                           {
+                               controller = "Home",
+                               action = "ChangeCulture",
+                               area = "",
+                               lang = "ru"
+                           }, new { @class = "ru-RU" == @GlobalResource.lang ? "select-lang" : "select-not-lang" })
+                            @Html.RouteLink("EN", new
+                           {
+                               controller = "Home",
+                               action = "ChangeCulture",
+                               area = "",
+                               lang = "en"
+                           }, new { @class = "en-US" == @GlobalResource.lang ? "select-lang" : "select-not-lang" })
+                        }
+                    </li>
                     <li>
                         <a class="page-scroll" href="#about">@GlobalResource.home_link_system</a>
                     </li>
@@ -82,22 +102,22 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4 text-center">
-                    <h2 class="section-heading">ИДС "СП"</h2>
+                    <h2 class="section-heading">@GlobalResource.system_own_park_title</h2>
                     <hr class="light">
-                    <p class="text-faded">"Собственный парк" - информационно диспетчерская система по управлению собственными вагонами ПАО «АРСЕЛОРМИТТАЛ КРИВОЙ РОГ»</p>
-                    <a href="#services" class="page-scroll btn btn-default btn-xl sr-button">Войти</a>
+                    <p class="text-faded">@GlobalResource.system_own_park_description</p>
+                    <a href='@Url.Action("Index", "Home", new { Area = "IDSOP" })' class="btn btn-default btn-xl sr-button">@GlobalResource.link_goto</a>
                 </div>
                 <div class="col-md-4 text-center">
-                    <h2 class="section-heading">ВДС "ВУ"</h2>
+                    <h2 class="section-heading">@GlobalResource.system_rail_transport_title</h2>
                     <hr class="light">
-                    <p class="text-faded">"Внутренний учет" - внутренняя диспетчерская система предприятия для контроля за нахождением вагонов на территории ПАО «АРСЕЛОРМИТТАЛ КРИВОЙ РОГ»</p>
-                    <a href="#services" class="page-scroll btn btn-default btn-xl sr-button">Войти</a>
+                    <p class="text-faded">@GlobalResource.system_rail_transport_description</p>
+                    <a href="#" class="btn btn-default btn-xl sr-button">@GlobalResource.link_goto</a>
                 </div>
                 <div class="col-md-4 text-center">
-                    <h2 class="section-heading">ТД</h2>
+                    <h2 class="section-heading">@GlobalResource.system_transport_department_title</h2>
                     <hr class="light">
-                    <p class="text-faded">Аналитическая отчетность транспортного департамента ПАО «АРСЕЛОРМИТТАЛ КРИВОЙ РОГ»</p>
-                    <a href="#services" class="page-scroll btn btn-default btn-xl sr-button">Войти</a>
+                    <p class="text-faded">@GlobalResource.system_transport_department_description</p>
+                    <a href="#" class="btn btn-default btn-xl sr-button">@GlobalResource.link_goto</a>
                 </div>
             </div>
         </div>
@@ -107,7 +127,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    <h2 class="section-heading">Сервисы</h2>
+                    <h2 class="section-heading">@GlobalResource.home_link_services</h2>
                     <hr class="primary">
                 </div>
             </div>
@@ -148,129 +168,46 @@
     </section>
 
     <section class="no-padding" id="document">
-
         @RenderSection("Document", false)
-        <div class="container-fluid">
-            <div class="row no-gutter popup-gallery">
-                <div class="col-lg-4 col-sm-6">
-                    <a href="~/Images/portfolio/thumbnails/1.jpg" class="portfolio-box">
-                        <img src="~/Images/portfolio/thumbnails/1.jpg" class="img-responsive" alt="">
-                        <div class="portfolio-box-caption">
-                            <div class="portfolio-box-caption-content">
-                                <div class="project-category text-faded">
-                                    Руководство пользователя
-                                </div>
-                                <div class="project-name">
-                                    ИДС "Собственный парк"
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-4 col-sm-6">
-                    <a href="~/Images/portfolio/thumbnails/2.jpg" class="portfolio-box">
-                        <img src="~/Images/portfolio/thumbnails/2.jpg" class="img-responsive" alt="">
-                        <div class="portfolio-box-caption">
-                            <div class="portfolio-box-caption-content">
-                                <div class="project-category text-faded">
-                                    Руководство пользователя
-                                </div>
-                                <div class="project-name">
-                                    ВДС "Внутренний учет"
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-4 col-sm-6">
-                    <a href="~/Images/portfolio/thumbnails/3.jpg" class="portfolio-box">
-                        <img src="~/Images/portfolio/thumbnails/3.jpg" class="img-responsive" alt="">
-                        <div class="portfolio-box-caption">
-                            <div class="portfolio-box-caption-content">
-                                <div class="project-category text-faded">
-                                    Инструкции
-                                </div>
-                                <div class="project-name">
-                                    ИДС
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                @*<div class="col-lg-4 col-sm-6">
-                            <a href="Images/portfolio/fullsize/4.jpg" class="portfolio-box">
-                                <img src="Images/portfolio/thumbnails/4.jpg" class="img-responsive" alt="">
-                                <div class="portfolio-box-caption">
-                                    <div class="portfolio-box-caption-content">
-                                        <div class="project-category text-faded">
-                                            Category
-                                        </div>
-                                        <div class="project-name">
-                                            Project Name
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-lg-4 col-sm-6">
-                            <a href="Images/portfolio/fullsize/5.jpg" class="portfolio-box">
-                                <img src="Images/portfolio/thumbnails/5.jpg" class="img-responsive" alt="">
-                                <div class="portfolio-box-caption">
-                                    <div class="portfolio-box-caption-content">
-                                        <div class="project-category text-faded">
-                                            Category
-                                        </div>
-                                        <div class="project-name">
-                                            Project Name
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-lg-4 col-sm-6">
-                            <a href="Images/portfolio/fullsize/6.jpg" class="portfolio-box">
-                                <img src="Images/portfolio/thumbnails/6.jpg" class="img-responsive" alt="">
-                                <div class="portfolio-box-caption">
-                                    <div class="portfolio-box-caption-content">
-                                        <div class="project-category text-faded">
-                                            Category
-                                        </div>
-                                        <div class="project-name">
-                                            Project Name
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    </div>*@
     </section>
 
-    @*<aside class="bg-dark">
-            <div class="container text-center">
-                <div class="call-to-action">
-                    <h2>Free Download at Start Bootstrap!</h2>
-                    <a href="http://startbootstrap.com/template-overviews/creative/" class="btn btn-default btn-xl sr-button">Download Now!</a>
-                </div>
+    <aside class="bg-dark">
+        <div class="container text-center">
+            <div class="call-to-action">
+                <h2>Free Download at Start Bootstrap!</h2>
+                <a href="http://startbootstrap.com/template-overviews/creative/" class="btn btn-default btn-xl sr-button">Download Now!</a>
             </div>
-        </aside>*@
+        </div>
+    </aside>
 
     <section id="contact">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 text-center">
-                    <h2 class="section-heading">Контакты:</h2>
+                    <h2 class="section-heading">@GlobalResource.home_link_contact</h2>
                     <hr class="primary">
-                    <p>Техническая поддержка, администрирование сайта : Левченко Эдуард</p>
+                    <p>@GlobalResource.contact_admin_title</p>
                 </div>
                 <div class="col-lg-4 col-lg-offset-2 text-center">
                     <i class="fa fa-phone fa-3x sr-contact"></i>
-                    <p>96332</p>
+                    <p>@GlobalResource.contact_admin_phone</p>
                 </div>
                 <div class="col-lg-4 text-center">
                     <i class="fa fa-envelope-o fa-3x sr-contact"></i>
-                    <p><a href="mailto:Eduard.Levchenko@arcelormittal.com">Eduard.Levchenko@arcelormittal.com</a></p>
+                    <p><a href="mailto:Eduard.Levchenko@arcelormittal.com">@GlobalResource.contact_admin_email</a></p>
                 </div>
+                <div class="col-lg-8 col-lg-offset-2 text-center">
+                    <p>@GlobalResource.contact_rail_transport_title</p>
+                </div>
+                <div class="col-lg-4 col-lg-offset-2 text-center">
+                    <i class="fa fa-phone fa-3x sr-contact"></i>
+                    <p>@GlobalResource.contact_rail_transport_phone</p>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <i class="fa fa-envelope-o fa-3x sr-contact"></i>
+                    <p><a href="mailto:Eduard.Levchenko@arcelormittal.com">@GlobalResource.contact_rail_transport_email</a></p>
+                </div>
+
             </div>
         </div>
     </section>

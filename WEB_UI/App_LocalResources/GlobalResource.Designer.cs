@@ -19,7 +19,7 @@ namespace WEB_UI.App_LocalResources {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class GlobalResource {
@@ -57,6 +57,60 @@ namespace WEB_UI.App_LocalResources {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Eduard.Levchenko@arcelormittal.com.
+        /// </summary>
+        public static string contact_admin_email {
+            get {
+                return ResourceManager.GetString("contact_admin_email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на 96332.
+        /// </summary>
+        public static string contact_admin_phone {
+            get {
+                return ResourceManager.GetString("contact_admin_phone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Техническая поддержка, администрирование сайта : Левченко Эдуард.
+        /// </summary>
+        public static string contact_admin_title {
+            get {
+                return ResourceManager.GetString("contact_admin_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Irina.Shuba@arcelormittal.com.
+        /// </summary>
+        public static string contact_rail_transport_email {
+            get {
+                return ResourceManager.GetString("contact_rail_transport_email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на 91932.
+        /// </summary>
+        public static string contact_rail_transport_phone {
+            get {
+                return ResourceManager.GetString("contact_rail_transport_phone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Техническая поддержка, ВДС «ЖД АМКР»: Шуба Ирина.
+        /// </summary>
+        public static string contact_rail_transport_title {
+            get {
+                return ResourceManager.GetString("contact_rail_transport_title", resourceCulture);
             }
         }
         
@@ -115,11 +169,101 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на ИДС.
+        ///   Ищет локализованную строку, похожую на Информационно диспетчерская система.
         /// </summary>
         public static string home_title {
             get {
                 return ResourceManager.GetString("home_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Информационно диспетчерская система.
+        /// </summary>
+        public static string home_title1 {
+            get {
+                return ResourceManager.GetString("home_title1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Транспортный департамент ArcelorMittal Кривой Рог.
+        /// </summary>
+        public static string home_title2 {
+            get {
+                return ResourceManager.GetString("home_title2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на ru-RU.
+        /// </summary>
+        public static string lang {
+            get {
+                return ResourceManager.GetString("lang", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Перейти.
+        /// </summary>
+        public static string link_goto {
+            get {
+                return ResourceManager.GetString("link_goto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на &quot;Собственный парк&quot; - информационно диспетчерская система по управлению собственными вагонами ПАО «АРСЕЛОРМИТТАЛ КРИВОЙ РОГ».
+        /// </summary>
+        public static string system_own_park_description {
+            get {
+                return ResourceManager.GetString("system_own_park_description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на ИДС &quot;СП&quot;.
+        /// </summary>
+        public static string system_own_park_title {
+            get {
+                return ResourceManager.GetString("system_own_park_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на «Железнодорожный транспорт АМКР» - внутренняя диспетчерская система оперативного управления перевозочным процессом на железнодорожном транспорте  внутри предприятияПАО «АРСЕЛОРМИТТАЛ КРИВОЙ РОГ».
+        /// </summary>
+        public static string system_rail_transport_description {
+            get {
+                return ResourceManager.GetString("system_rail_transport_description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на ВДС «ЖД АМКР».
+        /// </summary>
+        public static string system_rail_transport_title {
+            get {
+                return ResourceManager.GetString("system_rail_transport_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Аналитическая отчетность транспортного департамента ПАО «АРСЕЛОРМИТТАЛ КРИВОЙ РОГ».
+        /// </summary>
+        public static string system_transport_department_description {
+            get {
+                return ResourceManager.GetString("system_transport_department_description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на ТД.
+        /// </summary>
+        public static string system_transport_department_title {
+            get {
+                return ResourceManager.GetString("system_transport_department_title", resourceCulture);
             }
         }
     }
