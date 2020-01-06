@@ -1,4 +1,8 @@
 ﻿jQuery(document).ready(function ($) {
+
+    var lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang'));
+
+
     //open/close lateral filter
     $('.cd-filter-trigger').on('click', function () {
         triggerFilter(true);

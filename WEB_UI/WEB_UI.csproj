@@ -253,13 +253,13 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
-    <Content Include="Content\view\electronic-cards.css" />
+    <Content Include="Content\view\idsmors\electronic-cards.css" />
     <Content Include="Content\view\error.css" />
-    <Content Include="Content\view\home-idsmors.css" />
-    <Content Include="Content\view\home-menu.css" />
-    <Content Include="Content\view\idsmors.css" />
-    <Content Include="Content\view\ids_layout.css" />
-    <Content Include="Content\view\ids_layout.min.css" />
+    <Content Include="Content\view\shared\filter-menu.css" />
+    <Content Include="Content\view\idsmors\home.css" />
+    <Content Include="Content\view\shared\home-menu.css" />
+    <Content Include="Content\view\shared\_idsmors.css" />
+    <Content Include="Content\view\shared\_ids.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="fonts\websymbols\websymbols-regular-webfont.svg" />
@@ -358,7 +358,6 @@
     <Content Include="fonts\websymbols\websymbols-regular-webfont.woff" />
     <Content Include="Areas\IDSMORS\Views\web.config" />
     <Content Include="Areas\IDSMORS\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\IDSMORS\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\IDSMORS\Views\Home\Index.cshtml" />
     <Content Include="Areas\IDSMORS\Views\Home\ElectronicСards.cshtml" />
     <Content Include="Areas\IDSMORS\Views\Shared\_IDSMORS.cshtml" />
@@ -452,8 +451,7 @@
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
     <Content Include="Scripts\view\idsmors\electronic-cards.js" />
-    <Content Include="Scripts\view\ids_layout.js" />
-    <Content Include="Scripts\view\ids_layout.min.js" />
+    <Content Include="Scripts\view\shared\_ids.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -467,7 +465,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Scripts\umd\popper.min.js.map" />
     <Content Include="Scripts\umd\popper.js.map" />
     <Content Include="Scripts\umd\popper.js.flow" />
@@ -478,7 +475,7 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
-    <Content Include="Views\Shared\_IDS_Layout.cshtml" />
+    <Content Include="Views\Shared\_IDS.cshtml" />
     <Content Include="Views\Error\Http404.cshtml" />
     <Content Include="Views\Error\Default.cshtml" />
     <Content Include="Views\Error\AccessDenied.cshtml" />

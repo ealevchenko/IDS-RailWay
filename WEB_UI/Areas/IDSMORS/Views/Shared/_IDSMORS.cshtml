@@ -6,9 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-
-    @*<link href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,700' rel='stylesheet' type='text/css'>*@
-    <link rel="stylesheet" href="~/Content/view/idsmors.css"> <!-- CSS reset -->
+    <link rel="stylesheet" href="~/Content/view/shared/_idsmors.css"> <!-- CSS reset -->
     @Scripts.Render("~/bundles/modernizr")
 
     <title>@ViewBag.Title</title>
@@ -21,13 +19,14 @@
             <ul>
                 <!-- inser more links here -->
                 <li><a href='@Url.Action("Index", "Home", new { area = "" })'>Home</a></li>
-                <li><a href='@Url.Action("Index", "Home", new { area = "IDSMORS" })'>Menu</a></li>
+                <li><a href='@Url.Action("Index", "Home", new { area = "IDSMORS" })'>ИДС"УСПС"</a></li>
                 <li><a id="new-project" href='#'>Добавить вагон</a></li>
             </ul>
         </nav> <!-- cd-main-nav -->
     </header>
     @RenderBody()
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jquery-cookie")
     @RenderSection("scripts", required: false)
 </body>
 </html>

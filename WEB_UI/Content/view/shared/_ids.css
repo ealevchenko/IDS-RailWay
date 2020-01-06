@@ -508,12 +508,11 @@ a.select-not-lang {
 }
 /*Картинки на главной форме*/
 .img-header-global {
-    background-image: url(../../Images/header.jpg);
+    background-image: url(../../../Images/header.jpg);
 }
 .img-header-idsmors {
-    background-image: url(../../Images/header.jpg);
-    /*background-image: url(../../Images/ids-op.jpg);*/
+    background-image: url(../../../Images/header.jpg);
 }
 .img-header-access-denied {
-    background-image: url(../../Images/access-denied.jpg);
+    background-image: url(../../../Images/access-denied.jpg);
 }
