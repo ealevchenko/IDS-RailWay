@@ -1,24 +1,24 @@
 ﻿using System.Web.Mvc;
 
-namespace WEB_UI.Areas.IDSOP
+namespace WEB_UI.Areas.IDSMORS
 {
-    public class IDSOPAreaRegistration : AreaRegistration 
+    public class IDSMORSAreaRegistration : AreaRegistration 
     {
         public override string AreaName 
         {
             get 
             {
-                return "IDSOP";
+                return "IDSMORS";
             }
         }
 
         public override void RegisterArea(AreaRegistrationContext context) 
         {
             context.MapRoute(
-                "IDSOP_default",
-                "IDSOP/{controller}/{action}/{id}",
+                "IDSMORS_default",
+                "IDSMORS/{controller}/{action}/{id}",
                 new { action = "Index", id = UrlParameter.Optional },
-                namespaces: new[] { "WEB_UI.Areas.IDSOP.Controllers" }
+                namespaces: new[] { "WEB_UI.Areas.IDSMORS.Controllers" }
             );
         }
     }

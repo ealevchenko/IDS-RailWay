@@ -102,10 +102,10 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4 text-center">
-                    <h2 class="section-heading">@GlobalResource.system_own_park_title</h2>
+                    <h2 class="section-heading">@GlobalResource.system_idsmors_title</h2>
                     <hr class="light">
-                    <p class="text-faded">@GlobalResource.system_own_park_description</p>
-                    <a href='@Url.Action("Index", "Home", new { Area = "IDSOP" })' class="btn btn-default btn-xl sr-button">@GlobalResource.link_goto</a>
+                    <p class="text-faded">@GlobalResource.system_idsmors_description</p>
+                    <a href='@Url.Action("Index", "Home", new { Area = "IDSMORS" })' class="btn btn-default btn-xl sr-button">@GlobalResource.link_goto</a>
                 </div>
                 <div class="col-md-4 text-center">
                     <h2 class="section-heading">@GlobalResource.system_rail_transport_title</h2>
@@ -171,11 +171,12 @@
         @RenderSection("Document", false)
     </section>
 
-    <aside class="bg-dark">
+    @*<aside class="bg-dark">*@
+    <aside class="bg-primary">
         <div class="container text-center">
             <div class="call-to-action">
-                <h2>Free Download at Start Bootstrap!</h2>
-                <a href="http://startbootstrap.com/template-overviews/creative/" class="btn btn-default btn-xl sr-button">Download Now!</a>
+                @*<h2>Free Download at Start Bootstrap!</h2>
+                    <a href="http://startbootstrap.com/template-overviews/creative/" class="btn btn-default btn-xl sr-button">Download Now!</a>*@
             </div>
         </div>
     </aside>
@@ -214,6 +215,7 @@
 
     <!-- jQuery -->
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jquery-cookie")
     <!-- Bootstrap Core JavaScript -->
     @Scripts.Render("~/bundles/bootstrap")
     <!-- Plugin JavaScript -->

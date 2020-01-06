@@ -1,0 +1,26 @@
+﻿header .header-content {
+    top:10%;
+}
+
+#message-error{
+    text-align: center;
+}
+
+
+#message-error h2{
+	margin:0px;
+	padding:20px;
+	font-size:25px;
+	/*color:#000;*/
+    text-shadow:1px 1px 1px rgba(255,255,255,0.9);
+	text-align:center;
+	font-weight:400;
+}
+#message-error h2 span{
+    /*display:block;*/
+	/*font-size:16px;*/
+	color:gold;
+    font-style:italic;
+    font-family:Georgia, serif;
+	padding-top:5px;
+}

@@ -19,7 +19,7 @@ namespace WEB_UI.App_LocalResources {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class GlobalResource {
@@ -111,6 +111,33 @@ namespace WEB_UI.App_LocalResources {
         public static string contact_rail_transport_title {
             get {
                 return ResourceManager.GetString("contact_rail_transport_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Для учетной  записи:.
+        /// </summary>
+        public static string error_ad_text1 {
+            get {
+                return ResourceManager.GetString("error_ad_text1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на доступ запрещен к ресурсу.
+        /// </summary>
+        public static string error_ad_text2 {
+            get {
+                return ResourceManager.GetString("error_ad_text2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ошибка! Извините что-то пошло не так..
+        /// </summary>
+        public static string error_message {
+            get {
+                return ResourceManager.GetString("error_message", resourceCulture);
             }
         }
         
@@ -214,20 +241,20 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на &quot;Собственный парк&quot; - информационно диспетчерская система по управлению собственными вагонами ПАО «АРСЕЛОРМИТТАЛ КРИВОЙ РОГ».
+        ///   Ищет локализованную строку, похожую на Информационно-диспетчерская система «Управление собственным подвижным составом АРСЕЛОРМИТТАЛ КРИВОЙ РОГ».
         /// </summary>
-        public static string system_own_park_description {
+        public static string system_idsmors_description {
             get {
-                return ResourceManager.GetString("system_own_park_description", resourceCulture);
+                return ResourceManager.GetString("system_idsmors_description", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на ИДС &quot;СП&quot;.
+        ///   Ищет локализованную строку, похожую на ИДС &quot; УСПС&quot;.
         /// </summary>
-        public static string system_own_park_title {
+        public static string system_idsmors_title {
             get {
-                return ResourceManager.GetString("system_own_park_title", resourceCulture);
+                return ResourceManager.GetString("system_idsmors_title", resourceCulture);
             }
         }
         

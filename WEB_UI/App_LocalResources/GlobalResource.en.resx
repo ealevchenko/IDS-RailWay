@@ -123,6 +123,12 @@
   <data name="contact_admin_phone" xml:space="preserve">
     <value>96332</value>
   </data>
+  <data name="contact_admin_phone1" xml:space="preserve">
+    <value>96332</value>
+  </data>
+  <data name="contact_admin_title" xml:space="preserve">
+    <value>Technical support, site administration: Eduard Levchenko</value>
+  </data>
   <data name="contact_rail_transport_title" xml:space="preserve">
     <value>Technical support, GVA "Railway AMKR": Irina fur coat</value>
   </data>
@@ -159,11 +165,11 @@
   <data name="link_goto" xml:space="preserve">
     <value>Go to</value>
   </data>
-  <data name="system_own_park_description" xml:space="preserve">
-    <value>Own fleet - information dispatch system for managing own wagons of PJSC “ARSELORMITTAL Krivoy Rog”</value>
+  <data name="system_idsmors_description" xml:space="preserve">
+    <value>Information-dispatching system "Management of own rolling stock ARSELORMITTAL Krivoy Rog"</value>
   </data>
-  <data name="system_own_park_title" xml:space="preserve">
-    <value>IDS "SP"</value>
+  <data name="system_idsmors_title" xml:space="preserve">
+    <value>IDS "MORS"</value>
   </data>
   <data name="system_rail_transport_description" xml:space="preserve">
     <value>AMKR railway transport - an internal dispatching system for the operational management of the transportation process in railway transport within the enterprise "ARSELORMITTAL CURVE HORN"</value>
