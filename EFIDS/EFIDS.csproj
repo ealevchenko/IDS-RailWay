@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\IRepository.cs" />
+    <Compile Include="Concrete\EFDirectory_GenusWagons.cs" />
     <Compile Include="Concrete\EFRepository.cs" />
     <Compile Include="Entities\CardsWagons.cs" />
     <Compile Include="Entities\CardsWagonsRepairs.cs" />

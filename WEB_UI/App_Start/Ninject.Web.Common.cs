@@ -68,6 +68,8 @@ namespace WEB_UI.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_GenusWagons>>().To<EFIDS.Concrete.EFDirectory_GenusWagons>();            
+            
             kernel.Bind<EFUZ.Abstract.IRepository<EFUZ.Entities.Directory_InternalRailroad>>().To<EFUZ.Concrete.EFDirectory_InternalRailroad>();
         }        
     }
