@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 namespace EFIDS.Concrete
 {
 
-    public class EFDirectory_GenusWagons : IRepository<Directory_GenusWagons>
+    public class EFDirectory_SpecialConditions : IRepository<Directory_SpecialConditions>
     {
 
         private EFDbContext db;
 
-        public EFDirectory_GenusWagons(EFDbContext db)
+        public EFDirectory_SpecialConditions(EFDbContext db)
         {
 
             this.db = db;
@@ -26,16 +26,16 @@ namespace EFIDS.Concrete
             get { return this.db.Database; }
         }
 
-        public IQueryable<Directory_GenusWagons> Context
+        public IQueryable<Directory_SpecialConditions> Context
         {
-            get { return db.Directory_GenusWagons; }
+            get { return db.Directory_SpecialConditions; }
         }
 
-        public IEnumerable<Directory_GenusWagons> Get()
+        public IEnumerable<Directory_SpecialConditions> Get()
         {
             try
             {
-                return db.Select<Directory_GenusWagons>();
+                return db.Select<Directory_SpecialConditions>();
             }
             catch (Exception e)
             {
@@ -44,11 +44,11 @@ namespace EFIDS.Concrete
             }
         }
 
-        public Directory_GenusWagons Get(int id)
+        public Directory_SpecialConditions Get(int id)
         {
             try
             {
-                return db.Select<Directory_GenusWagons>(id);
+                return db.Select<Directory_SpecialConditions>(id);
             }
             catch (Exception e)
             {
@@ -57,11 +57,11 @@ namespace EFIDS.Concrete
             }
         }
 
-        public void Add(Directory_GenusWagons item)
+        public void Add(Directory_SpecialConditions item)
         {
             try
             {
-                db.Insert<Directory_GenusWagons>(item);
+                db.Insert<Directory_SpecialConditions>(item);
             }
             catch (Exception e)
             {
@@ -69,11 +69,11 @@ namespace EFIDS.Concrete
             }
         }
 
-        public void Update(Directory_GenusWagons item)
+        public void Update(Directory_SpecialConditions item)
         {
             try
             {
-                db.Update<Directory_GenusWagons>(item);
+                db.Update<Directory_SpecialConditions>(item);
             }
             catch (Exception e)
             {
@@ -81,11 +81,11 @@ namespace EFIDS.Concrete
             }
         }
 
-        public void AddOrUpdate(Directory_GenusWagons item)
+        public void AddOrUpdate(Directory_SpecialConditions item)
         {
             try
             {
-                Directory_GenusWagons dbEntry = db.Directory_GenusWagons.Find(item.id);
+                Directory_SpecialConditions dbEntry = db.Directory_SpecialConditions.Find(item.id);
                 if (dbEntry == null)
                 {
                     Add(item);
@@ -106,7 +106,7 @@ namespace EFIDS.Concrete
         {
             try
             {
-                Directory_GenusWagons item = db.Delete<Directory_GenusWagons>(id);
+                Directory_SpecialConditions item = db.Delete<Directory_SpecialConditions>(id);
             }
             catch (Exception e)
             {
@@ -127,12 +127,12 @@ namespace EFIDS.Concrete
             }
         }
 
-        public Directory_GenusWagons Refresh(Directory_GenusWagons item)
+        public Directory_SpecialConditions Refresh(Directory_SpecialConditions item)
         {
             try
             {
                 db.Entry(item).State = EntityState.Detached;
-                return db.Select<Directory_GenusWagons>(item.id);
+                return db.Select<Directory_SpecialConditions>(item.id);
             }
             catch (Exception e)
             {

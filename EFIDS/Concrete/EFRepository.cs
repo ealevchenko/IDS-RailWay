@@ -21,7 +21,7 @@ namespace EFIDS.Concrete
             return context.Set<TEntity>();
         }
 
-        public static TEntity Select<TEntity>(this EFDbContext context, long id) where TEntity : class
+        public static TEntity Select<TEntity>(this EFDbContext context, int id) where TEntity : class
         {
 
             // Здесь мы можем указывать различные настройки контекста,
@@ -84,7 +84,20 @@ namespace EFIDS.Concrete
             context.Entry(entity).State = EntityState.Modified;
         }
 
-        public static TEntity Delete<TEntity>(this EFDbContext context, long id) where TEntity : class
+        public static TEntity Delete<TEntity>(this EFDbContext context, int id) where TEntity : class
+        {
+            // Здесь мы можем указывать различные настройки контекста,
+            // например выводить в отладчик сгенерированный SQL-код
+            //context.Database.Log =
+            //    (s => System.Diagnostics.Debug.WriteLine(s));
+
+            TEntity item = context.Set<TEntity>().Find(id);
+            if (item != null)
+                context.Entry<TEntity>(item).State = EntityState.Deleted;
+            return item;
+        }
+
+        public static TEntity Delete<TEntity>(this EFDbContext context, string id) where TEntity : class
         {
             // Здесь мы можем указывать различные настройки контекста,
             // например выводить в отладчик сгенерированный SQL-код

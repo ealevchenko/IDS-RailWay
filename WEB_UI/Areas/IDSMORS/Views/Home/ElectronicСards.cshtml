@@ -4,15 +4,17 @@
 }
 
 @section styles {
-<link rel="stylesheet" type="text/css" href="~/Content/view/shared/filter-menu.css">
-<link rel="stylesheet" type="text/css" href="~/Content/view/idsmors/electronic-cards.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/view/shared/filter-menu.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/view/idsmors/electronic-cards.css">
 
 }
 
 @section scripts {
-    @*<script src="js/jquery-2.1.1.js"></script>
-        <script src="js/jquery.mixitup.min.js"></script>*@
-    <script src="~/Scripts/view/idsmors/electronic-cards.js"></script> <!-- Resource jQuery -->
+    <script src="~/Scripts/view/shared/common.js"></script> <!-- Общая библиотека методов программы -->
+    <script src="~/Scripts/api/shared.js"></script> <!-- Общая библиотека методов API -->
+    <script src="~/Scripts/api/ids_directory.js"></script> <!-- Class API ИДС Справочники -->
+    <script src="~/Scripts/api/uz_directory.js"></script> <!-- Class API УЗ Справочники -->
+    <script src="~/Scripts/view/idsmors/electronic-cards.js"></script> <!--  -->
 }
 <main class="cd-main-content">
     <div class="cd-tab-filter-wrapper">

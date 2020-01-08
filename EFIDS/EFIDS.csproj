@@ -53,6 +53,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\IRepository.cs" />
+    <Compile Include="Concrete\EFDirectory_WagonsCondition.cs" />
+    <Compile Include="Concrete\EFDirectory_DEPO.cs" />
+    <Compile Include="Concrete\EFDirectory_SpecialConditions.cs" />
+    <Compile Include="Concrete\EFDirectory_PoligonTravelWagons.cs" />
+    <Compile Include="Concrete\EFDirectory_OperatorsWagons.cs" />
+    <Compile Include="Concrete\EFDirectory_LessorsWagons.cs" />
+    <Compile Include="Concrete\EFDirectory_OwnersWagons.cs" />
+    <Compile Include="Concrete\EFDirectory_TypeOwnerShip.cs" />
+    <Compile Include="Concrete\EFDirectory_TypeWagons.cs" />
+    <Compile Include="Concrete\EFDirectory_ModelsWagons.cs" />
+    <Compile Include="Concrete\EFDirectory_TypesRepairsWagons.cs" />
+    <Compile Include="Concrete\EFDirectory_WagonManufacturers.cs" />
     <Compile Include="Concrete\EFDirectory_GenusWagons.cs" />
     <Compile Include="Concrete\EFRepository.cs" />
     <Compile Include="Entities\CardsWagons.cs" />

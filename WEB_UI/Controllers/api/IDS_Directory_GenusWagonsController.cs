@@ -15,11 +15,11 @@ namespace WEB_UI.Controllers.api
     /// РОД ВАГОНА
     /// </summary>
     [RoutePrefix("api/ids/directory/genus_wagon")]
-    public class GenusWagonsController : ApiController
+    public class IDS_Directory_GenusWagonsController : ApiController
     {
         protected IRepository<Directory_GenusWagons> ef_gw;
 
-        public GenusWagonsController(IRepository<Directory_GenusWagons> gw)
+        public IDS_Directory_GenusWagonsController(IRepository<Directory_GenusWagons> gw)
         {
             this.ef_gw = gw;
         }

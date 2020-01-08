@@ -68,9 +68,26 @@ namespace WEB_UI.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_GenusWagons>>().To<EFIDS.Concrete.EFDirectory_GenusWagons>();            
-            
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_GenusWagons>>().To<EFIDS.Concrete.EFDirectory_GenusWagons>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_WagonManufacturers>>().To<EFIDS.Concrete.EFDirectory_WagonManufacturers>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_TypesRepairsWagons>>().To<EFIDS.Concrete.EFDirectory_TypesRepairsWagons>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_ModelsWagons>>().To<EFIDS.Concrete.EFDirectory_ModelsWagons>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_TypeWagons>>().To<EFIDS.Concrete.EFDirectory_TypeWagons>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_TypeOwnerShip>>().To<EFIDS.Concrete.EFDirectory_TypeOwnerShip>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_OwnersWagons>>().To<EFIDS.Concrete.EFDirectory_OwnersWagons>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_LessorsWagons>>().To<EFIDS.Concrete.EFDirectory_LessorsWagons>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_OperatorsWagons>>().To<EFIDS.Concrete.EFDirectory_OperatorsWagons>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_PoligonTravelWagons>>().To<EFIDS.Concrete.EFDirectory_PoligonTravelWagons>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_SpecialConditions>>().To<EFIDS.Concrete.EFDirectory_SpecialConditions>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_DEPO>>().To<EFIDS.Concrete.EFDirectory_DEPO>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_WagonsCondition>>().To<EFIDS.Concrete.EFDirectory_WagonsCondition>();
+
+
+
+            kernel.Bind<EFUZ.Abstract.IRepository<EFUZ.Entities.Directory_States>>().To<EFUZ.Concrete.EFDirectory_States>();            
             kernel.Bind<EFUZ.Abstract.IRepository<EFUZ.Entities.Directory_InternalRailroad>>().To<EFUZ.Concrete.EFDirectory_InternalRailroad>();
+            kernel.Bind<EFUZ.Abstract.IRepository<EFUZ.Entities.Directory_Countrys>>().To<EFUZ.Concrete.EFDirectory_Countrys>();
+            kernel.Bind<EFUZ.Abstract.IRepository<EFUZ.Entities.Directory_Stations>>().To<EFUZ.Concrete.EFDirectory_Stations>();
         }        
     }
 }
