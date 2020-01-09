@@ -53,6 +53,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\IRepository.cs" />
+    <Compile Include="Concrete\EFCardsWagonsRepairs.cs" />
+    <Compile Include="Concrete\EFCardsWagons.cs" />
     <Compile Include="Concrete\EFDirectory_WagonsCondition.cs" />
     <Compile Include="Concrete\EFDirectory_DEPO.cs" />
     <Compile Include="Concrete\EFDirectory_SpecialConditions.cs" />

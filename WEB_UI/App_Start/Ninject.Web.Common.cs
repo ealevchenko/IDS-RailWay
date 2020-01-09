@@ -82,6 +82,8 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_DEPO>>().To<EFIDS.Concrete.EFDirectory_DEPO>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_WagonsCondition>>().To<EFIDS.Concrete.EFDirectory_WagonsCondition>();
 
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.CardsWagons>>().To<EFIDS.Concrete.EFCardsWagons>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.CardsWagonsRepairs>>().To<EFIDS.Concrete.EFCardsWagonsRepairs>();
 
 
             kernel.Bind<EFUZ.Abstract.IRepository<EFUZ.Entities.Directory_States>>().To<EFUZ.Concrete.EFDirectory_States>();            

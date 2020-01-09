@@ -35,25 +35,11 @@
 
     var lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang')),
         langs = $.extend(true, $.extend(true, getLanguages($.Text_View, lang), getLanguages($.Text_Common, lang)), getLanguages($.Text_Table, lang)),
-        ids_dir = new IDS_DIRECTORY(lang), // Создадим класс IDS_DIRECTORY
-        uz_dir = new UZ_DIRECTORY(lang), // Создадим класс UZ_DIRECTORY
+        mors = new IDS_MORS(lang), // Создадим класс IDS_MORS
         loadReference = function (callback) {
             LockScreen(langView('mess_load', langs));
-            var count = 2;
-            // Згрузка библиотек справочников ИДС
-            ids_dir.load(['genus_wagon', 'wagon_manufacturers', 'types_repairs_wagons', 'models_wagons', 'type_wagons', 'type_owner_ship', 'owners_wagons', 'lessors_wagons', 'operators_wagons', 'poligon_travel_wagons', 'special_conditions', 'depo', 'wagons_condition'], function () {
-                LockScreen(langView('mess_load_ids_dir', langs));
-                count -= 1;
-                if (count === 0) {
-                    if (typeof callback === 'function') {
-                        LockScreenOff();
-                        callback();
-                    }
-                }
-            });
-            // Згрузка библиотек справочников УЗ
-            uz_dir.load(['states', 'stations', 'internal_railroad'], function () {
-                LockScreen(langView('mess_load_uz_dir', langs));
+            var count = 1;
+            mors.load(['cards_wagons'], function () {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
@@ -83,8 +69,7 @@
             });
         }
         //-------------------------------------------------
-        var t = uz_dir
-        var t1 = ids_dir
+        var t = mors
     });
 
 });

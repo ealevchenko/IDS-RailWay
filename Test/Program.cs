@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Test.TestModule;
@@ -11,6 +12,67 @@ namespace Test
     {
         static void Main(string[] args)
         {
+
+            try
+            {
+                //String.Format("Выполняем запрос к WebAPI, url:{0}, api_comand {1}, metod {2}, accept {3}", url, api_comand, metod, accept).WriteInformation(eventID);
+                HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(@"https://uz.gov.ua/car_info/index.php?func=print&site_nv=52724994");
+                request.Method = "GET";
+                request.PreAuthenticate = true;
+                request.Credentials = CredentialCache.DefaultCredentials;
+                request.Accept = "text/html";
+                try
+                {
+                    using (System.Net.WebResponse response = request.GetResponse())
+                    {
+                        try
+                        {
+                            using (System.IO.StreamReader rd = new System.IO.StreamReader(response.GetResponseStream()))
+                            {
+                                string result = rd.ReadToEnd();
+                                //PM> Install-Package HtmlAgilityPack -Version 1.11.17
+                                //HtmlDocument htmlSnippet = new HtmlDocument();
+                                //htmlSnippet.LoadHtml(Html);
+
+                                //List<string> hrefTags = new List<string>();
+
+                                //foreach (HtmlNode link in htmlSnippet.DocumentNode.SelectNodes("//a[@href]"))
+                                //{
+                                //    HtmlAttribute att = link.Attributes["href"];
+                                //    hrefTags.Add(att.Value);
+                                //}
+                                int r1 = result.IndexOf("<td>&nbsp;");
+                                int r2 = result.IndexOf("&nbsp;</td>");
+                                string text = result.Substring(r1 + 10, r2 - (r1 + 10));
+                                //string[] res = result.Split("<td>", StringSplitOptions.None);
+
+
+                            }
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+            
+            
+            
+            
+            
+            
+            
+            
+            
             #region Test_Logs тест логирования
             Test_Logs tlogs = new Test_Logs();
 
@@ -26,7 +88,7 @@ namespace Test
             //tmt.MTTransfer_TransferArrival();
             //tmt.MTThread_SFTPTransfer();
             //tmt.MTTransfer_WebApiClientMT();
-            tmt.MTThread_Start_TransferWT();
+            //tmt.MTThread_Start_TransferWT();
             #endregion
 
             Console.WriteLine("Press any key to exit...");
