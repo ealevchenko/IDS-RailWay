@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HtmlAgilityPack;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -30,20 +31,23 @@ namespace Test
                             using (System.IO.StreamReader rd = new System.IO.StreamReader(response.GetResponseStream()))
                             {
                                 string result = rd.ReadToEnd();
-                                //PM> Install-Package HtmlAgilityPack -Version 1.11.17
-                                //HtmlDocument htmlSnippet = new HtmlDocument();
-                                //htmlSnippet.LoadHtml(Html);
+                                //PM > Install - Package HtmlAgilityPack - Version 1.11.17
+                                HtmlDocument htmlSnippet = new HtmlDocument();
+                                htmlSnippet.LoadHtml(result);
 
-                                //List<string> hrefTags = new List<string>();
+                                List<string> hrefTags = new List<string>();
 
-                                //foreach (HtmlNode link in htmlSnippet.DocumentNode.SelectNodes("//a[@href]"))
-                                //{
-                                //    HtmlAttribute att = link.Attributes["href"];
-                                //    hrefTags.Add(att.Value);
-                                //}
-                                int r1 = result.IndexOf("<td>&nbsp;");
-                                int r2 = result.IndexOf("&nbsp;</td>");
-                                string text = result.Substring(r1 + 10, r2 - (r1 + 10));
+                                foreach (HtmlNode link in htmlSnippet.DocumentNode.SelectNodes("//td"))
+                                {
+                                    //HtmlAttribute att = link.Attributes["href"];
+                                    //hrefTags.Add(att.Value);
+                                    string value = link.InnerHtml;
+                                    value = value.Replace("&nbsp;", "");
+                                    hrefTags.Add(value);
+                                }
+                                //int r1 = result.IndexOf("<td>&nbsp;");
+                                //int r2 = result.IndexOf("&nbsp;</td>");
+                                //string text = result.Substring(r1 + 10, r2 - (r1 + 10));
                                 //string[] res = result.Split("<td>", StringSplitOptions.None);
 
 
