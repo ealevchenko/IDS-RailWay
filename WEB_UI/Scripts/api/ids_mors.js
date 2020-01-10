@@ -10,6 +10,9 @@ var IDS_MORS = function (lang) {
 
 IDS_MORS.list_cards_wagons = [];
 
+IDS_MORS.list_cards_wagons_repairs = [];
+
+
 IDS_MORS.prototype.load = function (list, callback) {
     var count = list.length+2;
     var obj = this;
@@ -47,6 +50,18 @@ IDS_MORS.prototype.load = function (list, callback) {
                 }
             });
         };
+        if (el === 'cards_wagons_repairs') {
+            IDS_MORS.prototype.getCardsWagonsRepairs(function (result_cards_wagons_repairs) {
+                obj.list_cards_wagons_repairs = result_cards_wagons_repairs;
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        LockScreenOff();
+                        callback();
+                    }
+                }
+            });
+        };
     });
 };
 
@@ -58,6 +73,29 @@ IDS_MORS.prototype.getCardsWagons = function (callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/mors/cards_wagons/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_MORS.getCardsWagons", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//======= CardsWagonsRepairs (Таблица карточек ремонтов вагонов) ======================================
+IDS_MORS.prototype.getCardsWagonsRepairs = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/mors/cards_wagons_repairs/all',
         async: true,
         dataType: 'json',
         beforeSend: function () {

@@ -63,10 +63,10 @@ namespace WEB_UI.Controllers.api
                         change_user = c.change_user,
                         
                     }).ToList();
-                if (list == null || list.Count() == 0)
-                {
-                    return NotFound();
-                }
+                //if (list == null || list.Count() == 0)
+                //{
+                //    return NotFound();
+                //}
                 return Ok(list);
             }
             catch (Exception e)

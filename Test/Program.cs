@@ -45,12 +45,6 @@ namespace Test
                                     value = value.Replace("&nbsp;", "");
                                     hrefTags.Add(value);
                                 }
-                                //int r1 = result.IndexOf("<td>&nbsp;");
-                                //int r2 = result.IndexOf("&nbsp;</td>");
-                                //string text = result.Substring(r1 + 10, r2 - (r1 + 10));
-                                //string[] res = result.Split("<td>", StringSplitOptions.None);
-
-
                             }
                         }
                         catch (Exception e)
