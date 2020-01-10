@@ -1,4 +1,5 @@
-﻿// Подключите shared.js
+﻿// Подключите common.js
+// Подключите shared.js
 // Подключите ids_directory.js
 // Подключите uz_directory
 
@@ -45,7 +46,7 @@ IDS_MORS.prototype.load = function (list, callback) {
                 if (count === 0) {
                     if (typeof callback === 'function') {
                         LockScreenOff();
-                        callback();
+                        callback(result_cards_wagons);
                     }
                 }
             });
@@ -57,7 +58,7 @@ IDS_MORS.prototype.load = function (list, callback) {
                 if (count === 0) {
                     if (typeof callback === 'function') {
                         LockScreenOff();
-                        callback();
+                        callback(result_cards_wagons_repairs);
                     }
                 }
             });

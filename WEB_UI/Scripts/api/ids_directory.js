@@ -1,4 +1,6 @@
-﻿
+﻿// Подключите common.js
+// Подключите shared.js
+
 var IDS_DIRECTORY = function (lang) {
     this.lang = lang;
 
@@ -493,4 +495,163 @@ IDS_DIRECTORY.prototype.getWagonsCondition = function (callback) {
             AJAXComplete();
         },
     });
+};
+/* ----------------------------------------------------------
+функции для работы с внутреним массивом
+-------------------------------------------------------------*/
+//======= IDS_DIRECTORY.list_genus_wagon  (Справочник РОД ВАГОНА) ======================================
+IDS_DIRECTORY.prototype.getLocalGenusWagons = function (id_genus_wagon) {
+    if (this.list_genus_wagon) {
+        var genus_wagon = getObjects(this.list_genus_wagon, 'id', id_genus_wagon)
+        return genus_wagon && genus_wagon.length > 0 ? genus_wagon[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getAbbrOfLocalGenusWagons = function (id_genus_wagon) {
+    var genus_wagon = this.getLocalGenusWagons(id_genus_wagon);
+    return genus_wagon ? genus_wagon['abbr_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getGenusOfLocalGenusWagons = function (id_genus_wagon) {
+    var genus_wagon = this.getLocalGenusWagons(id_genus_wagon);
+    return genus_wagon ? genus_wagon['genus_' + this.lang] : null;
+};
+//======= IDS_DIRECTORY.list_wagon_manufacturers (Справочник заводов изготовителей) ======================================
+IDS_DIRECTORY.prototype.getLocalWagonManufacturers = function (id_wagon_manufacturer) {
+    if (this.list_wagon_manufacturers) {
+        var obj = getObjects(this.list_wagon_manufacturers, 'id', id_wagon_manufacturer)
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getAbbrOfLocalWagonManufacturers = function (id_wagon_manufacturer) {
+    var obj = this.getLocalWagonManufacturers(id_wagon_manufacturer);
+    return obj ? obj['abbr_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getNameOfLocalWagonManufacturers = function (id_wagon_manufacturer) {
+    var obj = this.getLocalWagonManufacturers(id_wagon_manufacturer);
+    return obj ? obj['name_' + this.lang] : null;
+};
+//======= IDS_DIRECTORY.list_types_repairs_wagons (Справочник типов ремонта) ======================================
+IDS_DIRECTORY.prototype.getLocalTypesRepairsWagons = function (id_type_repairs) {
+    if (this.list_types_repairs_wagons) {
+        var obj = getObjects(this.list_types_repairs_wagons, 'id', id_type_repairs)
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getAbbrOfLocalTypesRepairsWagons = function (id_type_repairs) {
+    var obj = this.getLocalTypesRepairsWagons(id_type_repairs);
+    return obj ? obj['abbr_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getTypeOfLocalTypesRepairsWagons = function (id_type_repairs) {
+    var obj = this.getLocalTypesRepairsWagons(id_type_repairs);
+    return obj ? obj['type_repairs' + this.lang] : null;
+};
+//======= IDS_DIRECTORY.list_models_wagons (Справочник моделей вагонов) ======================================
+
+//======= IDS_DIRECTORY.list_type_wagons (Справочник типов подвижного состава) ======================================
+IDS_DIRECTORY.prototype.getLocalTypeWagons = function (id_type_wagon) {
+    if (this.list_type_wagons) {
+        var obj = getObjects(this.list_type_wagons, 'id', id_type_wagon)
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getTypeOfLocalTypeWagons = function (id_type_wagon) {
+    var obj = this.getLocalTypeWagons(id_type_wagon);
+    return obj ? obj['type_' + this.lang] : null;
+};
+//======= IDS_DIRECTORY.list_type_owner_ship (Справочник типов собственности) ======================================
+IDS_DIRECTORY.prototype.getLocalTypeOwnerShip = function (id_type_ownership) {
+    if (this.list_type_owner_ship) {
+        var obj = getObjects(this.list_type_owner_ship, 'id', id_type_ownership)
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getTypeOwnershipOfLocalTypeOwnerShip = function (id_type_ownership) {
+    var obj = this.getLocalTypeOwnerShip(id_type_ownership);
+    return obj ? obj['type_ownership_' + this.lang] : null;
+};
+//======= IDS_DIRECTORY.list_owners_wagons (Справочник собствинеков вагонов) ======================================
+IDS_DIRECTORY.prototype.getLocalOwnersWagons = function (id_owner_wagon) {
+    if (this.list_owners_wagons) {
+        var obj = getObjects(this.list_owners_wagons, 'id', id_owner_wagon)
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getAbbrOfLocalOwnersWagons = function (id_owner_wagon) {
+    var obj = this.getLocalOwnersWagons(id_owner_wagon);
+    return obj ? obj['abbr_' + this.lang] : null;
+};
+IDS_DIRECTORY.prototype.getOwnerOfLocalOwnersWagons = function (id_owner_wagon) {
+    var obj = this.getLocalOwnersWagons(id_owner_wagon);
+    return obj ? obj['owner_' + this.lang] : null;
+};
+//======= IDS_DIRECTORY.list_lessors_wagons (Справочник арендодателей вагонов) ======================================
+IDS_DIRECTORY.prototype.getLocalLessorsWagons = function (id_lessor_wagon) {
+    if (this.list_lessors_wagons) {
+        var obj = getObjects(this.list_lessors_wagons, 'id', id_lessor_wagon)
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getAbbrOfLocalLessorsWagons = function (id_lessor_wagon) {
+    var obj = this.getLocalLessorsWagons(id_lessor_wagon);
+    return obj ? obj['abbr_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getLessorsOfLocalLessorsWagons = function (id_lessor_wagon) {
+    var obj = this.getLocalLessorsWagons(id_lessor_wagon);
+    return obj ? obj['lessors_' + this.lang] : null;
+};
+//======= IDS_DIRECTORY.list_operators_wagons (Справочник операторов вагонов) ======================================
+IDS_DIRECTORY.prototype.getLocalOperatorsWagons = function (id_operator_wagon) {
+    if (this.list_operators_wagons) {
+        var obj = getObjects(this.list_operators_wagons, 'id', id_operator_wagon)
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getAbbrOfLocalOperatorsWagons = function (id_operator_wagon) {
+    var obj = this.getLocalOperatorsWagons(id_operator_wagon);
+    return obj ? obj['abbr_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getOperatorsOfLocalOperatorsWagons = function (id_operator_wagon) {
+    var obj = this.getLocalOperatorsWagons(id_operator_wagon);
+    return obj ? obj['operators_' + this.lang] : null;
+};
+//======= IDS_DIRECTORY.list_poligon_travel_wagons (Справочник полигоны курсирования) ======================================
+IDS_DIRECTORY.prototype.getLocalPoligonTravelWagons = function (id_poligon_travel_wagon) {
+    if (this.list_poligon_travel_wagons) {
+        var obj = getObjects(this.list_poligon_travel_wagons, 'id', id_poligon_travel_wagon)
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getAbbrOfLocalPoligonTravelWagons = function (id_poligon_travel_wagon) {
+    var obj = this.getLocalPoligonTravelWagons(id_poligon_travel_wagon);
+    return obj ? obj['abbr_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getPoligonTravelOfLocalPoligonTravelWagons = function (id_poligon_travel_wagon) {
+    var obj = this.getLocalPoligonTravelWagons(id_poligon_travel_wagon);
+    return obj ? obj['poligon_travel_' + this.lang] : null;
+};
+//======= IDS_DIRECTORY.list_special_conditions (Справочник особых условий эксплуатации) ======================================
+IDS_DIRECTORY.prototype.getLocalSpecialConditions = function (id_special_conditions) {
+    if (this.list_special_conditions) {
+        var obj = getObjects(this.list_special_conditions, 'id', id_special_conditions)
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getSpecialConditionOfLocalSpecialConditions = function (id_special_conditions) {
+    var obj = this.getLocalSpecialConditions(id_special_conditions);
+    return obj ? obj['special_conditions_' + this.lang] : null;
 };

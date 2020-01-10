@@ -1,4 +1,6 @@
-﻿
+﻿// Подключите common.js
+// Подключите shared.js
+
 var UZ_DIRECTORY = function (lang) {
     this.lang = lang;
 
@@ -124,4 +126,41 @@ UZ_DIRECTORY.prototype.getInternalRailroad = function (callback) {
             AJAXComplete();
         },
     });
+};
+/* ----------------------------------------------------------
+функции для работы с внутреним массивом
+-------------------------------------------------------------*/
+//======= UZ_DIRECTORY.list_states  (Справочник Стран и железных дорог) ======================================
+UZ_DIRECTORY.prototype.getLocalStates = function (id_state) {
+    if (this.list_states) {
+        var obj = getObjects(this.list_states, 'id', id_state)
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+UZ_DIRECTORY.prototype.getStateOfLocalStates = function (id_state) {
+    var obj = this.getLocalStates(id_state);
+    return obj ? obj['state'] : null;
+};
+//
+UZ_DIRECTORY.prototype.getAbbrOfLocalGenusWagons = function (id_state) {
+    var obj = this.getLocalStates(id_state);
+    return obj ? obj['abb_' + this.lang] : null;
+};
+//
+UZ_DIRECTORY.prototype.getNameNetworkOfLocalStates = function (id_state) {
+    var obj = this.getLocalStates(id_state);
+    return obj ? obj['name_network'] : null;
+};
+//======= UZ_DIRECTORY.list_stations  (Справочник ж.д. станций) ======================================
+UZ_DIRECTORY.prototype.getLocalStations = function (code) {
+    if (this.list_stations) {
+        var obj = getObjects(this.list_stations, 'code_cs', code)
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+UZ_DIRECTORY.prototype.getStationOfLocalStations = function (code) {
+    var obj = this.getLocalStates(code);
+    return obj ? obj['station'] : null;
 };

@@ -462,6 +462,7 @@
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <Content Include="Images\access-denied.jpg" />
     <Content Include="Images\amk_logo.png" />
+    <Content Include="Images\cd-icon-arrow.svg" />
     <Content Include="Images\cd-icon-filter.svg" />
     <Content Include="Images\header.jpg" />
     <Content Include="Images\ids-op.jpg" />
@@ -711,7 +712,7 @@
     <Content Include="Areas\IDSMORS\Views\web.config" />
     <Content Include="Areas\IDSMORS\Views\_ViewStart.cshtml" />
     <Content Include="Areas\IDSMORS\Views\Home\Index.cshtml" />
-    <Content Include="Areas\IDSMORS\Views\Home\ElectronicСards.cshtml" />
+    <Content Include="Areas\IDSMORS\Views\Home\ElectronicCards.cshtml" />
     <Content Include="Areas\IDSMORS\Views\Shared\_IDSMORS.cshtml" />
     <Content Include="Content\DataTables\extensions\Buttons\css\mixins.scss" />
     <Content Include="Content\DataTables\extensions\Buttons\css\common.scss" />

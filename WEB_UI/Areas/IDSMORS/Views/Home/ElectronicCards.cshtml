@@ -4,12 +4,16 @@
 }
 
 @section styles {
+    @Styles.Render("~/DataTables/css")
     <link rel="stylesheet" type="text/css" href="~/Content/view/shared/filter-menu.css">
     <link rel="stylesheet" type="text/css" href="~/Content/view/idsmors/electronic-cards.css">
+<link rel="stylesheet" type="text/css" href="~/Content/DataTables/extensions/Buttons/css/buttons.dataTables.min.css">
 
 }
 
 @section scripts {
+    @Scripts.Render("~/bundles/DataTables")
+
     <script src="~/Scripts/view/shared/common.js"></script> <!-- Общая библиотека методов программы -->
     <script src="~/Scripts/api/shared.js"></script> <!-- Общая библиотека методов API -->
     <script src="~/Scripts/api/ids_directory.js"></script> <!-- Class API ИДС Справочники -->
@@ -21,12 +25,16 @@
 <main class="cd-main-content">
     <div class="cd-tab-filter-wrapper">
         <div class="cd-tab-filter">
+            @*<input id="myInput1" type="text" />
+            <input id="myInput2" type="text" />*@ 
+                    
         </div> <!-- cd-tab-filter -->
     </div> <!-- cd-tab-filter-wrapper -->
     <section class="cd-gallery">
-        hhhh
+        <table class='display compact' id="table-cards-wagons" style="width:100%" cellpadding="0"></table>
     </section> <!-- cd-gallery -->
     <div class="cd-filter">
+        <div id="search-contener" class="cd-filter-form"></div>   
         <a href="#0" class="cd-close">Close</a>
     </div> <!-- cd-filter -->
     <a href="#0" class="cd-filter-trigger">Filters</a>
