@@ -92,9 +92,9 @@
                     "paging": true,
                     "searching": true,
                     "ordering": true,
-                    "info": false,
+                    "info": true,
                     "select": true,
-                    "autoWidth": false,
+                    "autoWidth": true,
                     //"filter": true,
                     //"scrollY": "600px",
                     "scrollX": true,
@@ -127,6 +127,46 @@
                         { data: "special_conditions", title: langView('field_special_conditions', langs), width: "50px", orderable: true, searchable: true },
                         { data: "sap", title: langView('field_sap', langs), width: "50px", orderable: true, searchable: false },
                     ],
+                    dom: 'Bfrtip',
+                    stateSave: false,
+                    buttons: [
+                        {
+                            text: 'Детально',
+                            action: function (e, dt, node, config) {
+                                wagon.content.addClass('is-visible');
+                            },
+                            enabled: false
+                        },
+                        {
+                            text: 'Скопировать в буфер',
+                            extend: 'copyHtml5',
+                        },
+                        {
+                            text: 'Экспорт в Excel',
+                            extend: 'excelHtml5',
+                            sheetName: 'Карточки вагонов',
+                            messageTop: function () {
+                                return '';
+                            }
+                        },
+                        {
+                            extend: 'colvis',
+                            text: 'Выбрать поля таблицы',
+                            collectionLayout: 'fixed two-column',
+                            //postfixButtons: ['colvisRestore']
+                        },
+                        {
+                            extend: 'colvisGroup',
+                            text: 'Показать все поля',
+                            show: ':hidden'
+                        },
+                        {
+                            extend: 'pageLength',
+                        }
+                    ],
+                }).on('select deselect', function () {
+                    var selectedRows = table_fuel_sales.obj.rows({ selected: true }).count();
+                    table_fuel_sales.obj.button(0).enable(selectedRows === 1);
                 });
             },
             // Показать таблицу с данными
@@ -151,9 +191,6 @@
                 this.list = data;
                 this.obj.clear();
                 for (i = 0; i < data.length; i++) {
-
-                    //var genus_wagon = mors.ids_dir !== null ? mors.ids_dir.getLocalGenusGenusWagons(data[i].id_genus_wagon) : data[i].id_genus_wagon; 
-
                     this.obj.row.add({
                         "num": data[i].num,
                         "id_genus_wagon": data[i].id_genus_wagon,
@@ -187,7 +224,7 @@
                         "id_poligon_travel_wagon": data[i].id_poligon_travel_wagon,
                         "poligon_travel_wagon": mors.ids_dir !== null ? mors.ids_dir.getPoligonTravelOfLocalPoligonTravelWagons(data[i].id_poligon_travel_wagon) : data[i].id_poligon_travel_wagon,
                         "id_special_conditions": data[i].id_special_conditions,
-                        "special_conditions": mors.ids_dir !== null ? mors.ids_dir.getSpecialConditionOfLocalSpecialConditions(data[i].id_special_conditions) : data[i].id_special_conditions,
+                        "special_conditions": mors.ids_dir !== null ? (data[i].id_special_conditions !== null ? mors.ids_dir.getSpecialConditionOfLocalSpecialConditions(data[i].id_special_conditions) : "") : data[i].id_special_conditions,
                         "sap": data[i].sap,
                         "note": data[i].note,
                         "create": data[i].create,
@@ -202,30 +239,61 @@
 
             initComplete: function () {
                 table_fuel_sales.obj.data().columns([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]).every(function () {
+                    var n = 0;
                     var column = this;
-                    //$('<div class="cd-filter-block"> <h4>Надпись</h4><div class="cd-filter-content"><div class="cd-select cd-filters"></div></div></div>').appendTo($("#search-contener"))
-                    //var d = column.header();
-                    //var s = column.header().firstChild.innerText;
+                    var num = column[0][0];
                     var name = column.header().firstChild.innerText;
-                    var select = $('<select class="filter"><option value=""></option></select>')
-                        //.appendTo($(column.footer()).empty())
-                        .appendTo($('<div class="cd-filter-block"> <h4>' + name + '</h4><div class="cd-filter-content"><div class="cd-select cd-filters"></div></div></div>').appendTo($("#search-contener")))
-                        .on( 'change', function () {
-                            var val = $.fn.dataTable.util.escapeRegex(
-                                $(this).val()
-                            );
-                            column
-                                .search( val ? '^'+val+'$' : '', true, false )
-                                .draw();
-                        });
-                    column.data().unique().sort().each( function ( d, j ) {
-                        select.append( '<option value="'+d+'">'+d+'</option>' )
-                    } );
-                } );
-            },
+                    var select = $('<select class="filter"><option value="">Выбрать...</option></select>').on('change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+                        column
+                            .search(val ? '^' + val + '$' : '', true, false)
+                            .draw();
+                    });
+                    //
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + (d ? d : "") + '">' + (d ? d : "Не определенно") + '</option>');
+                        n++;
+                    });
+                    if (n > 1) {
+                        $('form')
+                            .append('<div class="cd-filter-block" id="filter-block-' + num + '"></div>');
+                        $('div#filter-block-' + num)
+                            .append('<h4>' + name + '</h4>')
+                            .append('<div class="cd-filter-content" id="filter-content-' + num + '"></div>');
+                        $('div#filter-content-' + num)
+                            .append('<div class="cd-select cd-filters" id="select-' + num + '"></div>');
+                        $('div#select-' + num)
+                            .append(select);
+                    }
+                });
+                //close filter dropdown inside lateral .cd-filter 
+                $('.cd-filter-block h4').on('click', function () {
+                    $(this).toggleClass('closed').siblings('.cd-filter-content').slideToggle(300);
+                });
+            }
+        },
+        // Окно вагон детально
+        wagon = {
+            content: $('.cd-wagon-content'),
+            init: function () {
+                // Настройка закрыть детали проекта
+                wagon.content.on('click', '.close', function (event) {
+                    event.preventDefault();
+                    wagon.content.removeClass('is-visible');
+                });
+                //
+                $("form.cd-form").submit(function () {
+                    event.preventDefault();
+                    var form = $(this);
+                    return true; //отправляете ваш submit
+                });
+            }
         };
     // Инициализация
     table_fuel_sales.initObject();
+    wagon.init();
     //Настроим фильтр open/close lateral filter
     $('.cd-filter-trigger').on('click', function () {
         triggerFilter(true);
@@ -240,6 +308,9 @@
             $(this).toggleClass('filter-is-visible', $bool);
         });
     }
+
+
+
     // Загрузка библиотек
     loadReference(function (result) {
         table_fuel_sales.viewTable(false);

@@ -61,7 +61,8 @@ namespace WEB_UI
 
                 "~/Scripts/DataTables/extensions/Select/js/dataTables.select.min.js",
                 "~/Scripts/DataTables/extensions/Select/js/select.jqueryui.min.js",
-                "~/Scripts/extensions/JSZip/js/jszip.min.js"
+
+                "~/Scripts/DataTables/extensions/JSZip/jszip.min.js"
                 ));
 
             bundles.Add(new StyleBundle("~/DataTables/css").Include(

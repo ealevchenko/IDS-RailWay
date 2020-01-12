@@ -462,7 +462,9 @@
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <Content Include="Images\access-denied.jpg" />
     <Content Include="Images\amk_logo.png" />
+    <Content Include="Images\cd-close-dark.svg" />
     <Content Include="Images\cd-icon-arrow.svg" />
+    <Content Include="Images\cd-icon-check.svg" />
     <Content Include="Images\cd-icon-filter.svg" />
     <Content Include="Images\header.jpg" />
     <Content Include="Images\ids-op.jpg" />

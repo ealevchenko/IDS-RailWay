@@ -60,16 +60,16 @@ Main Components
         overflow: hidden;
     }
 
-        /*.cd-main-content.is-fixed .cd-filter form {
-            height: 100vh;
-            overflow: auto;
-            -webkit-overflow-scrolling: touch;
-        }*/
-        .cd-main-content.is-fixed .cd-filter .cd-filter-form {
+        .cd-main-content.is-fixed .cd-filter form {
             height: 100vh;
             overflow: auto;
             -webkit-overflow-scrolling: touch;
         }
+        /*.cd-main-content.is-fixed .cd-filter .cd-filter-form {
+            height: 100vh;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }*/
 
     .cd-main-content.is-fixed .cd-filter-trigger {
         position: fixed;
@@ -263,6 +263,7 @@ xgallery
 .cd-gallery {
     padding: 26px 5%;
     width: 100%;
+    font-size:12px;
 }
 
     /*.cd-gallery li {
@@ -332,6 +333,7 @@ xgallery
     display: block;
     float: left;
 }*/
+
 /* -------------------------------- 
 
 xfilter 
@@ -342,7 +344,8 @@ xfilter
     top: 0;
     left: 0;
     width: 280px;
-    height: 100%;
+    /*height: 100%;*/
+    height: auto;
     background: #ffffff;
     box-shadow: 4px 4px 20px transparent;
     z-index: 2;
@@ -376,10 +379,7 @@ xfilter
         z-index: 2;
     }
 
-    /*.cd-filter form {
-        padding: 70px 20px;
-    }*/
-    .cd-filter .cd-filter-form {
+    .cd-filter form {
         padding: 70px 20px;
     }
 
@@ -412,7 +412,6 @@ xfilter
     -o-transform: translateX(0);
     transform: translateX(0);
     box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.2);
-    height:auto;
 }
 
     .cd-filter.filter-is-visible .cd-close {
@@ -424,10 +423,7 @@ xfilter
         width: 20%;
     }
 
-        /*.cd-filter form {
-            padding: 70px 10%;
-        }*/
-        .cd-filter .cd-filter-form {
+        .cd-filter form {
             padding: 70px 10%;
         }
 }
@@ -477,10 +473,10 @@ xfilter
     }
 }
 
-   
+
 /* -------------------------------- 
 
-xcustom .cd-filter-form elements 
+xcustom form elements 
 
 -------------------------------- */
 .cd-filter-block {
@@ -490,8 +486,8 @@ xcustom .cd-filter-form elements
     .cd-filter-block h4 {
         /* filter block title */
         position: relative;
-        /*margin-bottom: .2em;
-        padding: 10px 0 10px 20px;*/
+        margin-bottom: .2em;
+        padding: 10px 0 10px 20px;
         color: #9a9a9a;
         text-transform: uppercase;
         font-weight: 700;
@@ -548,7 +544,7 @@ xcustom .cd-filter-form elements
     .cd-filter-block input[type='text'],
     .cd-filter-block select {
         width: 100%;
-        padding: .3em;
+        padding: .8em;
         -webkit-appearance: none;
         -moz-appearance: none;
         -ms-appearance: none;
