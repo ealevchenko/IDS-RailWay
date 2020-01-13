@@ -142,3 +142,28 @@ Project content panel
     text-indent: 100%;
     white-space: nowrap;
 }
+
+div.cd-wagon-content form {
+    width: 90%;
+    max-width: 800px;
+    margin: 4em auto;
+}
+
+label {
+    margin-bottom: 5px;
+    color: #6f757c;
+    /*font-weight:bold;*/
+}
+
+
+fieldset {
+    padding: 0;
+    border: 2px solid cornflowerblue;
+    padding:10px;
+    margin-bottom:20px;
+}
+
+legend {
+    color:cornflowerblue;
+    font-style:italic
+}

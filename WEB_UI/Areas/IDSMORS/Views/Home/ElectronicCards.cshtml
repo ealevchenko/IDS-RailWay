@@ -8,7 +8,6 @@
     @*<link rel="stylesheet" type="text/css" href="~/Content/DataTables/extensions/Buttons/css/buttons.dataTables.min.css">*@
 
     <link rel="stylesheet" type="text/css" href="~/Content/view/shared/filter-menu.css">
-    <link rel="stylesheet" type="text/css" href="~/Content/view/shared/cd-form.css">
     <link rel="stylesheet" type="text/css" href="~/Content/view/idsmors/electronic-cards.css">
 
 
@@ -45,8 +44,160 @@
 </main> <!-- cd-main-content -->
 
 <div class="cd-wagon-content">
-    <div>
-        <form id="wagon" class="cd-form">
+    <form>
+        <div class="wagon-view">
+            <div class="form-group row">
+                <div class="offset-sm-2 col-sm-12">
+                    <button type="button" class="btn btn-primary">Править</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6">
+                    <label for="num-wagon-view">Номер вагона:</label>
+                    <input type="number" class="form-control" id="num-wagon-view" placeholder="" disabled>
+                </div>
+            </div>
+            <fieldset>
+                <legend> Основные характеристики </legend>
+                <div class="row">
+                    <div class="form-group col-xs-6">
+                        <label for="state-wagon-view">Государство собственник:</label>
+                        <input type="text" class="form-control" id="state-wagon-view" placeholder="" disabled>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label for="station-wagon-view">Станция приписки:</label>
+                        <input type="text" class="form-control" id="station-wagon-view" placeholder="" disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-4">
+                        <label for="genus-wagon-view">Род подвижного сотава:</label>
+                        <input type="text" class="form-control" id="genus-wagon-view" placeholder="" disabled>
+                    </div>
+                    <div class="form-group col-xs-4">
+                        <label for="type-wagon-view">Тип подвижного сотава:</label>
+                        <input type="text" class="form-control" id="type-wagon-view" placeholder="" disabled>
+                    </div>
+                    <div class="form-group col-xs-4">
+                        <label for="code-model-wagon-view">Модель:</label>
+                        <input type="text" class="form-control" id="code-model-wagon-view" placeholder="" disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-6">
+                        <label for="wagon-manufacturer-wagon-view">Завод изготовитель:</label>
+                        <input type="text" class="form-control" id="wagon-manufacturer-wagon-view" placeholder="" disabled>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label for="year-wagon-create-wagon-view">Год постройки:</label>
+                        <input type="text" class="form-control" id="year-wagon-create-wagon-view" placeholder="" disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-3">
+                        <label for="carrying-capacity-wagon-view">Грузоподъемность,т:</label>
+                        <input type="text" class="form-control" id="carrying-capacity-wagon-view" placeholder="" disabled>
+                    </div>
+                    <div class="form-group col-xs-3">
+                        <label for="tara-wagon-view">Тара, тонн:</label>
+                        <input type="text" class="form-control" id="tara-wagon-view" placeholder="" disabled>
+                    </div>
+                    <div class="form-group col-xs-3">
+                        <label for="body-volume-wagon-view">Объем кузова:</label>
+                        <input type="text" class="form-control" id="body-volume-wagon-view" placeholder="" disabled>
+                    </div>
+                    <div class="form-group col-xs-3">
+                        <label for="axis-length-wagon-view">Длина по осям,м:</label>
+                        <input type="text" class="form-control" id="axis-length-wagon-view" placeholder="" disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-6">
+                        <label for="type-repairs-wagon-view">Тип планируемого ремонта:</label>
+                        <input type="text" class="form-control" id="type-repairs-wagon-view" placeholder="" disabled>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label for="date-type-repairs-wagon-view">Дата планируемого ремонта:</label>
+                        <input type="text" class="form-control" id="date-type-repairs-wagon-view" placeholder="" disabled>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend> Собственность </legend>
+                <div class="row">
+                    <div class="form-group col-xs-4">
+                        <label for="type-ownership-wagon-view">Признак собственности:</label>
+                        <input type="text" class="form-control" id="type-ownership-wagon-view" placeholder="" disabled>
+                    </div>
+                    <div class="form-group col-xs-4">
+                        <label for="owner-wagon-view">Собственник:</label>
+                        <input type="text" class="form-control" id="owner-wagon-view" placeholder="" disabled>
+                    </div>
+                    <div class="form-group col-xs-4">
+                        <label for="date-registration-wagon-view">Дата последней регистрации:</label>
+                        <input type="text" class="form-control" id="date-registration-wagon-view" placeholder="" disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-6">
+                        <label for="lessor-wagon-view">Арендодатель:</label>
+                        <input type="text" class="form-control" id="lessor-wagon-view" placeholder="" disabled>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label for="operator-wagon-view">Оперативное управление:</label>
+                        <input type="text" class="form-control" id="operator-wagon-view" placeholder="" disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-6">
+                        <label for="poligon-travel-wagon-view">Полигон курсирования:</label>
+                        <input type="text" class="form-control" id="poligon-travel-wagon-view" placeholder="" disabled>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label for="special-conditions-view">Особые условия:</label>
+                        <input type="text" class="form-control" id="special-conditions-view" placeholder="" disabled>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend> Ремонты </legend>
+                <fieldset>
+                    <legend> ДЕПОвский </legend>
+                </fieldset>
+                <fieldset>
+                    <legend> Капитальный </legend>
+                </fieldset>
+                <fieldset>
+                    <legend> Текущий </legend>
+                </fieldset>
+            </fieldset>
+
+        </div>
+        @*<div class="form-group col-xs-6">
+                <label for="body-volume-wagon-view">Объем кузова:</label>
+                <input type="text" class="form-control" id="body-volume-wagon-view" placeholder="" disabled>
+            </div>*@
+        @*<div class="form-group col-xs-6">
+                <label for="axis-length-wagon-view">Длина по осям,м:</label>
+                <input type="text" class="form-control" id="axis-length-wagon-view" placeholder="" disabled>
+            </div>*@
+
+        @*<div class="row">
+                <div class="form-group col-xs-6">
+                    <label for="num-wagon-view">Example label</label>
+                    <input type="number" class="form-control" id="num-wagon-view" placeholder="номер вагона">
+                </div>
+                <div class="form-group col-xs-6">
+                    <label for="inputEmail">Адрес email:</label>
+                    <select class="form-control">
+                        <option>Большой - 1</option>
+                        <option>Большой - 2</option>
+                    </select>
+                </div>
+            </div>*@
+
+    </form>
+    @*<form id="wagon" class="cd-form">
             <div class="wagon-view">
                 <div>
                     <input type="button" id="edit-info" value="Править">
@@ -88,7 +239,6 @@
                     </legend>
                 </fieldset>
             </div>
-        </form>
-    </div>
+        </form>*@
     <a href="#0" class="close cd-img-replace">Close</a>
 </div> <!-- .cd-project-content -->
