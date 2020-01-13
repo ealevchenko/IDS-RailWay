@@ -83,8 +83,6 @@
             html_table: $('#table-cards-wagons'),
             obj: null,
             select: null,
-            select_id: null,
-            //list: [],
             // Инициализировать таблицу
             initObject: function () {
                 this.obj = this.html_table.DataTable({
@@ -131,9 +129,12 @@
                     stateSave: false,
                     buttons: [
                         {
+
                             text: 'Детально',
                             action: function (e, dt, node, config) {
-                                wagon.content.addClass('is-visible');
+                                if (table_fuel_sales.select) {
+                                    wagon.view(table_fuel_sales.select.num);
+                                }
                             },
                             enabled: false
                         },
@@ -164,9 +165,17 @@
                             extend: 'pageLength',
                         }
                     ],
-                }).on('select deselect', function () {
-                    var selectedRows = table_fuel_sales.obj.rows({ selected: true }).count();
-                    table_fuel_sales.obj.button(0).enable(selectedRows === 1);
+                }).on('select', function (e, dt, type, indexes) {
+                    var rowData = table_fuel_sales.obj.rows(indexes).data();
+                    if (rowData && rowData.length > 0) {
+                        table_fuel_sales.select = rowData[0];
+                        table_fuel_sales.obj.button(0).enable(true);
+                    } else {
+                        table_fuel_sales.obj.button(0).enable(false);
+                    }
+                }).on('deselect', function (e, dt, type, indexes) {
+                    table_fuel_sales.select = null;
+                    table_fuel_sales.obj.button(0).enable(false);
                 });
             },
             // Показать таблицу с данными
@@ -236,7 +245,7 @@
                 LockScreenOff();
                 table_fuel_sales.initComplete();
             },
-
+            // Формирование элементов фильтра
             initComplete: function () {
                 table_fuel_sales.obj.data().columns([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]).every(function () {
                     var n = 0;
@@ -257,7 +266,7 @@
                         n++;
                     });
                     if (n > 1) {
-                        $('form')
+                        $('form#filtr')
                             .append('<div class="cd-filter-block" id="filter-block-' + num + '"></div>');
                         $('div#filter-block-' + num)
                             .append('<h4>' + name + '</h4>')
@@ -277,6 +286,7 @@
         // Окно вагон детально
         wagon = {
             content: $('.cd-wagon-content'),
+            // инициализировать
             init: function () {
                 // Настройка закрыть детали проекта
                 wagon.content.on('click', '.close', function (event) {
@@ -289,6 +299,11 @@
                     var form = $(this);
                     return true; //отправляете ваш submit
                 });
+            },
+            // Показать информацию
+            view: function (num) {
+                $('#num-wagon-view').val(num);
+                wagon.content.addClass('is-visible');
             }
         };
     // Инициализация

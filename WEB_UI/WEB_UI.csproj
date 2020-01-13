@@ -430,6 +430,7 @@
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="Content\view\idsmors\electronic-cards.css" />
     <Content Include="Content\view\error.css" />
+    <Content Include="Content\view\shared\cd-form.css" />
     <Content Include="Content\view\shared\filter-menu.css" />
     <Content Include="Content\view\idsmors\home.css" />
     <Content Include="Content\view\shared\home-menu.css" />

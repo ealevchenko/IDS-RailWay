@@ -5,9 +5,12 @@
 
 @section styles {
     @Styles.Render("~/DataTables/css")
+    @*<link rel="stylesheet" type="text/css" href="~/Content/DataTables/extensions/Buttons/css/buttons.dataTables.min.css">*@
+
     <link rel="stylesheet" type="text/css" href="~/Content/view/shared/filter-menu.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/view/shared/cd-form.css">
     <link rel="stylesheet" type="text/css" href="~/Content/view/idsmors/electronic-cards.css">
-    <link rel="stylesheet" type="text/css" href="~/Content/DataTables/extensions/Buttons/css/buttons.dataTables.min.css">
+
 
 }
 
@@ -35,8 +38,7 @@
         <table class='compact cell-border display' id="table-cards-wagons" style="width:100%" cellpadding="0"></table>
     </section> <!-- cd-gallery -->
     <div class="cd-filter">
-        <form>
-        </form>
+        <form id="filtr"></form>
         <a href="#0" class="cd-close">Close</a>
     </div> <!-- cd-filter -->
     <a href="#0" class="cd-filter-trigger">Filters</a>
@@ -44,6 +46,49 @@
 
 <div class="cd-wagon-content">
     <div>
+        <form id="wagon" class="cd-form">
+            <div class="wagon-view">
+                <div>
+                    <input type="button" id="edit-info" value="Править">
+                </div>
+                <div>
+                    <div class="left">
+                        <label class="cd-label" for="num-wagon-view">Номер вагона:</label>
+                        <input type="number" id="num-wagon-view" name="num-wagon-view" disabled="disabled">
+                    </div>
+                </div>
+
+                <fieldset>
+                    <legend>
+                        <div>
+                            <div class="left">
+                                <label class="cd-label" for="num-wagon-view">Номер вагона:</label>
+                                <input type="number" id="num-wagon-view" name="num-wagon-view" disabled="disabled">
+                            </div>
+                            <div class="right">
+                                <label class="cd-label" for="num-wagon-view">Номер вагона:</label>
+                                <input type="number" id="num-wagon-view" name="num-wagon-view" disabled="disabled">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="left">
+                                <h4>ddddddddddd</h4>
+                                <p class="cd-select">
+                                    <select class="budget" id="cd-budget-currency-project-edit" name="cd-budget-currency-project-edit"></select>
+                                </p>
+                            </div>
+                            <div class="right">
+                                <h4>ffffffffff</h4>
+                                <p class="cd-select">
+                                    <select class="budget" id="cd-budget-currency-project-edit" name="cd-budget-currency-project-edit"></select>
+                                </p>
+                            </div>
+                        </div>
+
+                    </legend>
+                </fieldset>
+            </div>
+        </form>
     </div>
     <a href="#0" class="close cd-img-replace">Close</a>
 </div> <!-- .cd-project-content -->
