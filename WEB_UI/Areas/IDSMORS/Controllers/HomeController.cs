@@ -15,7 +15,7 @@ namespace WEB_UI.Areas.IDSMORS.Controllers
             return View();
         }
 
-        [ViewAuthorize(Roles = @"EUROPE\KRR-LG-PA-RailWay_Developers", Users = @"HP_EDIK\lev75")]
+        [ViewAuthorize(Roles = @"EUROPE\KRR-LG-PA-RailWay_Developers", Users = @"HP_EDIK\lev75,EUROPE\mpkulenko")]
         public ActionResult ElectronicCards()
         {
             return View();
