@@ -117,11 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="bt_edit_text" xml:space="preserve">
+    <value>Править</value>
+  </data>
   <data name="ecards_description" xml:space="preserve">
     <value>Электронные карточки с техническими характеристиками подвижного состава.</value>
   </data>
   <data name="ecards_title" xml:space="preserve">
     <value>КАРТОЧКИ</value>
+  </data>
+  <data name="genus_wagon_label" xml:space="preserve">
+    <value>Род подвижного сотава</value>
+  </data>
+  <data name="legend_main_characteristics" xml:space="preserve">
+    <value>Основные характеристики</value>
+  </data>
+  <data name="num_wagon_label" xml:space="preserve">
+    <value>Номер вагона</value>
   </data>
   <data name="park_description" xml:space="preserve">
     <value>Парк подвижного состава, сгруппированный по параметрам.</value>
@@ -129,10 +141,19 @@
   <data name="park_title" xml:space="preserve">
     <value>ПАРК</value>
   </data>
+  <data name="state_label" xml:space="preserve">
+    <value>Государство собственник</value>
+  </data>
+  <data name="station_label" xml:space="preserve">
+    <value>Станция приписки</value>
+  </data>
   <data name="system_idsmors_description" xml:space="preserve">
     <value>Информационно-диспетчерская система «Управление собственным подвижным составом АРСЕЛОРМИТТАЛ КРИВОЙ РОГ»</value>
   </data>
   <data name="system_idsmors_title" xml:space="preserve">
     <value>ИДС " УСПС"</value>
+  </data>
+  <data name="type_wagon_label" xml:space="preserve">
+    <value>Тип подвижного сотава</value>
   </data>
 </root>

@@ -285,7 +285,63 @@
         },
         // Окно вагон детально
         wagon = {
+            // панели
+            panel_view: $('div.wagon-view').hide(),
+            panel_edit: $('div.wagon-edit').hide(),
+            // кнопки управления
+            bt_edit: $('button#bt-edit').on('click', function () {
+                wagon.view_mode(1);
+            }),
+            // кнопки управления
+            bt_save: $('button#bt-save').on('click', function () {
+                wagon.view_mode(0);
+            }),
+            bt_cancel: $('button#bt-cancel').on('click', function () {
+                wagon.view_mode(0);
+            }),
+            // Основные характеристики
             content: $('.cd-wagon-content'),
+            num_wagon_view: $('input#num-wagon-view'),
+            state_wagon_view: $('input#state-wagon-view'),
+            state_wagon_edit: null,
+            station_wagon_view: $('input#station-wagon-view'),
+            station_wagon_edit: null,
+            genus_wagon_view: $('input#genus-wagon-view'),
+            type_wagon_view: $('input#type-wagon-view'),
+            code_model_wagon_view: $('input#code-model-wagon-view'),
+            wagon_manufacturer_wagon_view: $('input#wagon-manufacturer-wagon-view'),
+            year_wagon_create_wagon_view: $('input#year-wagon-create-wagon-view'),
+            carrying_capacity_wagon_view: $('input#carrying-capacity-wagon-view'),
+            tara_wagon_view: $('input#tara-wagon-view'),
+            body_volume_wagon_view: $('input#body-volume-wagon-view'),
+            axis_length_wagon_view: $('input#axis-length-wagon-view'),
+            type_repairs_wagon_view: $('input#type-repairs-wagon-view'),
+            date_type_repairs_wagon_view: $('input#date-type-repairs-wagon-view'),
+            type_ownership_wagon_view: $('input#type-ownership-wagon-view'),
+            owner_wagon_view: $('input#owner-wagon-view'),
+            date_registration_wagon_view: $('input#date-registration-wagon-view'),
+            lessor_wagon_view: $('input#lessor-wagon-view'),
+            operator_wagon_view: $('input#operator-wagon-view'),
+            poligon_travel_wagon_view: $('input#poligon-travel-wagon-view'),
+            special_conditions_view: $('input#special-conditions-view'),
+            // Ремонты 
+            depo_date_wagons_repairs_view: $('input#depo-date-wagons-repairs-view'),
+            depo_internal_railroad_wagons_repairs_view: $('input#depo-internal-railroad-wagons-repairs-view'),
+            depo_code_depo_wagons_repairs_view: $('input#depo-code-depo-wagons-repairs-view'),
+            kap_date_wagons_repairs_view: $('input#kap-date-wagons-repairs-view'),
+            kap_internal_railroad_wagons_repairs_view: $('input#kap-internal-railroad-wagons-repairs-view'),
+            kap_code_depo_wagons_repairs_view: $('input#kap-code-depo-wagons-repairs-view'),
+            cur_date_wagons_repairs_view: $('input#cur-date-wagons-repairs-view'),
+            cur_internal_railroad_wagons_repairs_view: $('input#cur-internal-railroad-wagons-repairs-view'),
+            cur_code_depo_wagons_repairs_view: $('input#cur-code-depo-wagons-repairs-view'),
+            cur_type_wagons_repairs_view: $('input#cur-type-wagons-repairs-view'),
+            cur_date_non_working_wagons_repairs_view: $('input#cur-date-non-working-wagons-repairs-view'),
+            cur_condition_wagons_repairs_view: $('input#cur-condition-wagons-repairs-view'),
+
+            //
+            mode: 0,
+            num: null,
+            wagon: null,
             // инициализировать
             init: function () {
                 // Настройка закрыть детали проекта
@@ -293,8 +349,94 @@
                     event.preventDefault();
                     wagon.content.removeClass('is-visible');
                 });
-                //
-                $("form.cd-form").submit(function () {
+                // Инициализация выпадающих списков
+                this.state_wagon_edit = cd_initSelect(
+                    $('select#state-wagon-edit'),
+                    { lang: lang },
+                    mors.uz_dir.list_states,
+                    function (row) {
+                        return { value: Number(row.id), text: mors.uz_dir.getStateOfLocalStates(row.id) };
+                    },
+                    -1,
+                    function (event) {
+                        event.preventDefault();
+                        var id = $(this).val();
+                    },
+                    null);
+                //var availableTags = []
+                //for (i = 0, j = mors.uz_dir.list_stations.length; i < j; i++) {
+                //    availableTags.push(mors.uz_dir.list_stations[i].code_cs + " - " + mors.uz_dir.list_stations[i].station);
+                //}
+
+      //          var availableTags = [
+
+      //"ActionScript",
+
+      //"AppleScript",
+
+      //"Asp",
+
+      //"BASIC",
+
+      //"C",
+
+      //"C++",
+
+      //"Clojure",
+
+      //"COBOL",
+
+      //"ColdFusion",
+
+      //"Erlang",
+
+      //"Fortran",
+
+      //"Groovy",
+
+      //"Haskell",
+
+      //"Java",
+
+      //"JavaScript",
+
+      //"Lisp",
+
+      //"Perl",
+
+      //"PHP",
+
+      //"Python",
+
+      //"Ruby",
+
+      //"Scala",
+
+      //"Scheme"
+
+      //          ];
+
+
+      //          this.station_wagon_edit = $('input#station-wagon-edit').autocomplete({
+      //              source: availableTags
+      //          });
+
+
+                this.station_wagon_edit = cd_initSelect(
+                    $('select#station-wagon-edit'),
+                    { lang: lang },
+                    mors.uz_dir.list_stations,
+                    function (row) {
+                        return { value: Number(row.code_cs), text: row.station };
+                    },
+                    -1,
+                    function (event) {
+                        event.preventDefault();
+                        var id = $(this).val();
+                    },
+                    null);
+
+                $("form#wagon-content").submit(function () {
                     event.preventDefault();
                     var form = $(this);
                     return true; //отправляете ваш submit
@@ -302,13 +444,83 @@
             },
             // Показать информацию
             view: function (num) {
-                $('#num-wagon-view').val(num);
+                this.num = num;
+                // Получим данные
+                if (num) {
+                    LockScreen(langView('mess_delay', langs));
+                    // Загрузим проект
+                    mors.getCardsWagonsOfNum(num, function (result_card_wagon) {
+                        wagon.wagon = result_card_wagon;
+                        wagon.view_wagon(wagon.wagon, 0);
+                        //project_detali.project = result_project;
+                        //project_detali.view_mode_project(result_project, mode);
+                        //project_detali.set_mode(mode, result_project.id_project_manager == pm.id);
+                        ////!!! Добавить обновление списка и карточек на эеране
+                        LockScreenOff();
+                        //if (typeof callback === 'function') {
+                        //    callback(result_project);
+                        //}
+                    });
+                }
                 wagon.content.addClass('is-visible');
+            },
+            // Показать информацию по вагону 
+            view_wagon: function (wagon, mode) {
+                this.view_mode(mode);
+                this.num_wagon_view.val(wagon ? wagon.num : '');
+                //
+                this.state_wagon_view.val(wagon ? mors.uz_dir !== null ? mors.uz_dir.getStateOfLocalStates(wagon.id_state) : wagon.id_state : '');
+                this.state_wagon_edit.val(wagon.id_state !== null ? wagon.id_state : -1);
+
+                this.station_wagon_view.val(wagon ? mors.uz_dir !== null ? mors.uz_dir.getStationOfLocalStations(wagon.code_station) : wagon.code_station : '');
+                //this.station_wagon_edit.val(wagon.code_station !== null ? wagon.code_station : -1);
+                //this.genus_wagon_view = ;
+                //this.type_wagon_view = ;
+                //this.code_model_wagon_view = ;
+                //this.wagon_manufacturer_wagon_view = ;
+                //this.year_wagon_create_wagon_view = ;
+                //this.carrying_capacity_wagon_view = ;
+                //this.tara_wagon_view = ;
+                //this.body_volume_wagon_view = ;
+                //this.axis_length_wagon_view = ;
+                //this.type_repairs_wagon_view = ;
+                //this.date_type_repairs_wagon_view = ;
+                //this.type_ownership_wagon_view = ;
+                //this.owner_wagon_view = ;
+                //this.date_registration_wagon_view = ;
+                //this.lessor_wagon_view = ;
+                //this.operator_wagon_view = ;
+                //this.poligon_travel_wagon_view = ;
+                //this.special_conditions_view = ;
+                //// Ремонты 
+                //this.depo_date_wagons_repairs_view = ;
+                //this.depo_internal_railroad_wagons_repairs_view = ;
+                //this.depo_code_depo_wagons_repairs_view = ;
+                //this.kap_date_wagons_repairs_view = ;
+                //this.kap_internal_railroad_wagons_repairs_view = ;
+                //this.kap_code_depo_wagons_repairs_view = ;
+                //this.cur_date_wagons_repairs_view = ;
+                //this.cur_internal_railroad_wagons_repairs_view = ;
+                //this.cur_code_depo_wagons_repairs_view = ;
+                //this.cur_type_wagons_repairs_view = ;
+                //this.cur_date_non_working_wagons_repairs_view = ;
+                //this.cur_condition_wagons_repairs_view = ;
+
+            },
+            // Активировать панель
+            view_mode: function (mode) {
+                wagon.panel_view.hide();
+                wagon.panel_edit.hide();
+                switch (mode) {
+                    case 1: wagon.panel_edit.show(); wagon.mode = mode; break;
+                    case 2: wagon.panel_edit.show(); wagon.mode = mode; break;
+                    default: wagon.panel_view.show(); wagon.mode = 0; break;
+                }
             }
+
         };
     // Инициализация
     table_fuel_sales.initObject();
-    wagon.init();
     //Настроим фильтр open/close lateral filter
     $('.cd-filter-trigger').on('click', function () {
         triggerFilter(true);
@@ -328,8 +540,8 @@
 
     // Загрузка библиотек
     loadReference(function (result) {
+        wagon.init();
         table_fuel_sales.viewTable(false);
-
         // #myInput is a <input type="text"> element
 
         //$('#myInput1').on( 'keyup', function () {

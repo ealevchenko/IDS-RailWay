@@ -161,6 +161,7 @@ UZ_DIRECTORY.prototype.getLocalStations = function (code) {
 };
 //
 UZ_DIRECTORY.prototype.getStationOfLocalStations = function (code) {
-    var obj = this.getLocalStates(code);
-    return obj ? obj['station'] : null;
+    //var obj = this.getLocalStations(code);
+    //return obj ? obj['station'] : null;
+    return null
 };

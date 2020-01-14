@@ -61,6 +61,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Править.
+        /// </summary>
+        public static string bt_edit_text {
+            get {
+                return ResourceManager.GetString("bt_edit_text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Электронные карточки с техническими характеристиками подвижного состава..
         /// </summary>
         public static string ecards_description {
@@ -75,6 +84,33 @@ namespace WEB_UI.App_LocalResources {
         public static string ecards_title {
             get {
                 return ResourceManager.GetString("ecards_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Род подвижного сотава.
+        /// </summary>
+        public static string genus_wagon_label {
+            get {
+                return ResourceManager.GetString("genus_wagon_label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Основные характеристики.
+        /// </summary>
+        public static string legend_main_characteristics {
+            get {
+                return ResourceManager.GetString("legend_main_characteristics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Номер вагона.
+        /// </summary>
+        public static string num_wagon_label {
+            get {
+                return ResourceManager.GetString("num_wagon_label", resourceCulture);
             }
         }
         
@@ -97,6 +133,24 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Государство собственник.
+        /// </summary>
+        public static string state_label {
+            get {
+                return ResourceManager.GetString("state_label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Станция приписки.
+        /// </summary>
+        public static string station_label {
+            get {
+                return ResourceManager.GetString("station_label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Информационно-диспетчерская система «Управление собственным подвижным составом АРСЕЛОРМИТТАЛ КРИВОЙ РОГ».
         /// </summary>
         public static string system_idsmors_description {
@@ -111,6 +165,15 @@ namespace WEB_UI.App_LocalResources {
         public static string system_idsmors_title {
             get {
                 return ResourceManager.GetString("system_idsmors_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Тип подвижного сотава.
+        /// </summary>
+        public static string type_wagon_label {
+            get {
+                return ResourceManager.GetString("type_wagon_label", resourceCulture);
             }
         }
     }

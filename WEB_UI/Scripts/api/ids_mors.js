@@ -92,6 +92,28 @@ IDS_MORS.prototype.getCardsWagons = function (callback) {
         },
     });
 };
+IDS_MORS.prototype.getCardsWagonsOfNum = function (num, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/mors/cards_wagons/num/'+num,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_MORS.getCardsWagonsOfNum", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 //======= CardsWagonsRepairs (Таблица карточек ремонтов вагонов) ======================================
 IDS_MORS.prototype.getCardsWagonsRepairs = function (callback) {
     $.ajax({

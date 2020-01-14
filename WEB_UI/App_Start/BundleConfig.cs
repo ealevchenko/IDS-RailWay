@@ -16,6 +16,13 @@ namespace WEB_UI
             bundles.Add(new ScriptBundle("~/bundles/jquery-cookie").Include(
                         "~/Scripts/jquery.cookie.js"));
 
+            //jquery-ui
+            bundles.Add(new ScriptBundle("~/bundles/jquery-ui").Include(
+                    "~/Scripts/jquery-ui-1.12.1.min.js"
+                    //,"~/Scripts/datepicker-ru.js"
+                //"~/Scripts/datepicker-en-GB.js"
+                    ));
+
 
             //bootstrap --------------------------------------------------------------------------
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
