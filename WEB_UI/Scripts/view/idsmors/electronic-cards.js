@@ -97,7 +97,7 @@
                     //"scrollY": "600px",
                     "scrollX": true,
                     language: language_table(langs),
-                    jQueryUI: true,
+                    jQueryUI: false,
                     "createdRow": function (row, data, index) {
                         $(row).attr('num', data.num);
                     },
@@ -181,7 +181,7 @@
             // Показать таблицу с данными
             viewTable: function (data_refresh) {
                 LockScreen(langView('mess_delay', langs));
-                if (mors.list_cards_wagons == null | data_refresh == true) {
+                if (!mors.list_cards_wagons | data_refresh === true) {
                     // Обновим данные
                     mors.getCardsWagons(
                         function (result) {
@@ -205,12 +205,12 @@
                         "id_genus_wagon": data[i].id_genus_wagon,
                         "genus_wagon": mors.ids_dir !== null ? mors.ids_dir.getGenusOfLocalGenusWagons(data[i].id_genus_wagon) : data[i].id_genus_wagon,
                         "id_state": data[i].id_state,
-                        "state": mors.uz_dir !== null ? mors.uz_dir.getStateOfLocalStates(data[i].id_state) : data[i].id_state,
+                        "state": mors.uz_dir !== null ? mors.uz_dir.getValue_States_Of_ID(data[i].id_state, 'state') : data[i].id_state,
                         "id_wagon_manufacturer": data[i].id_wagon_manufacturer,
                         "wagon_manufacturer": mors.ids_dir !== null ? mors.ids_dir.getNameOfLocalWagonManufacturers(data[i].id_wagon_manufacturer) : data[i].id_wagon_manufacturer,
                         "year_wagon_create": data[i].year_wagon_create,
                         "code_station": data[i].code_station,
-                        "station": mors.uz_dir !== null ? mors.uz_dir.getStationOfLocalStations(data[i].code_station) : data[i].code_station,
+                        "station": mors.uz_dir !== null ? mors.uz_dir.getValue_Station_Of_CodeCS(data[i].code_station, 'station') : data[i].code_station,
                         "carrying_capacity": data[i].carrying_capacity,
                         "tara": data[i].tara,
                         "id_type_repairs": data[i].id_type_repairs,
@@ -305,7 +305,7 @@
             state_wagon_view: $('input#state-wagon-view'),
             state_wagon_edit: null,
             station_wagon_view: $('input#station-wagon-view'),
-            station_wagon_edit: null,
+            station_wagon_edit: $('input#station-wagon-edit'),
             genus_wagon_view: $('input#genus-wagon-view'),
             type_wagon_view: $('input#type-wagon-view'),
             code_model_wagon_view: $('input#code-model-wagon-view'),
@@ -355,7 +355,7 @@
                     { lang: lang },
                     mors.uz_dir.list_states,
                     function (row) {
-                        return { value: Number(row.id), text: mors.uz_dir.getStateOfLocalStates(row.id) };
+                        return { value: Number(row.id), text: mors.uz_dir.getValueObj(row, 'state') };
                     },
                     -1,
                     function (event) {
@@ -363,78 +363,29 @@
                         var id = $(this).val();
                     },
                     null);
-                //var availableTags = []
-                //for (i = 0, j = mors.uz_dir.list_stations.length; i < j; i++) {
-                //    availableTags.push(mors.uz_dir.list_stations[i].code_cs + " - " + mors.uz_dir.list_stations[i].station);
-                //}
-
-      //          var availableTags = [
-
-      //"ActionScript",
-
-      //"AppleScript",
-
-      //"Asp",
-
-      //"BASIC",
-
-      //"C",
-
-      //"C++",
-
-      //"Clojure",
-
-      //"COBOL",
-
-      //"ColdFusion",
-
-      //"Erlang",
-
-      //"Fortran",
-
-      //"Groovy",
-
-      //"Haskell",
-
-      //"Java",
-
-      //"JavaScript",
-
-      //"Lisp",
-
-      //"Perl",
-
-      //"PHP",
-
-      //"Python",
-
-      //"Ruby",
-
-      //"Scala",
-
-      //"Scheme"
-
-      //          ];
-
-
-      //          this.station_wagon_edit = $('input#station-wagon-edit').autocomplete({
-      //              source: availableTags
-      //          });
-
-
-                this.station_wagon_edit = cd_initSelect(
-                    $('select#station-wagon-edit'),
-                    { lang: lang },
-                    mors.uz_dir.list_stations,
-                    function (row) {
-                        return { value: Number(row.code_cs), text: row.station };
-                    },
-                    -1,
-                    function (event) {
-                        event.preventDefault();
-                        var id = $(this).val();
-                    },
-                    null);
+                var station_list = [];
+                for (i = 0, j = mors.uz_dir.list_stations.length; i < j; i++) {
+                    station_list.push(mors.uz_dir.list_stations[i].code_cs + " - " + mors.uz_dir.list_stations[i].station);
+                }
+                this.station_wagon_edit = this.station_wagon_edit.autocomplete({
+                    minLength: 3,
+                    source: station_list,
+                    change: function (event, ui) {
+                    }
+                });
+                //this.station_wagon_edit = cd_initSelect(
+                //    $('select#station-wagon-edit'),
+                //    { lang: lang },
+                //    mors.uz_dir.list_stations,
+                //    function (row) {
+                //        return { value: Number(row.code_cs), text: row.station };
+                //    },
+                //    -1,
+                //    function (event) {
+                //        event.preventDefault();
+                //        var id = $(this).val();
+                //    },
+                //    null);
 
                 $("form#wagon-content").submit(function () {
                     event.preventDefault();
@@ -469,11 +420,12 @@
                 this.view_mode(mode);
                 this.num_wagon_view.val(wagon ? wagon.num : '');
                 //
-                this.state_wagon_view.val(wagon ? mors.uz_dir !== null ? mors.uz_dir.getStateOfLocalStates(wagon.id_state) : wagon.id_state : '');
+                this.state_wagon_view.val(wagon ? mors.uz_dir !== null ? mors.uz_dir.getValue_States_Of_ID(wagon.id_state, 'state') : wagon.id_state : '');
                 this.state_wagon_edit.val(wagon.id_state !== null ? wagon.id_state : -1);
 
-                this.station_wagon_view.val(wagon ? mors.uz_dir !== null ? mors.uz_dir.getStationOfLocalStations(wagon.code_station) : wagon.code_station : '');
-                //this.station_wagon_edit.val(wagon.code_station !== null ? wagon.code_station : -1);
+                this.station_wagon_view.val(wagon ? mors.uz_dir !== null ? mors.uz_dir.getValue_Station_Of_CodeCS(wagon.code_station, 'station') : wagon.code_station : '');
+                //wagon.code_station = 40031;
+                this.station_wagon_edit.val(mors.uz_dir !== null && wagon.code_station !== null ? wagon.code_station + " - " + mors.uz_dir.getValue_Station_Of_CodeCS(wagon.code_station, 'station') : '');
                 //this.genus_wagon_view = ;
                 //this.type_wagon_view = ;
                 //this.code_model_wagon_view = ;

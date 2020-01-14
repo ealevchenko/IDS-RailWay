@@ -127,41 +127,83 @@ UZ_DIRECTORY.prototype.getInternalRailroad = function (callback) {
         },
     });
 };
+
+/* ----------------------------------------------------------
+функции для работы с объектами
+-------------------------------------------------------------*/
+UZ_DIRECTORY.prototype.getValueObj = function (obj, name) {
+    return obj ? obj[name] : null;
+};
+UZ_DIRECTORY.prototype.getValueCultureObj = function (obj, name) {
+    return obj ? obj[name+ '_' + this.lang] : null;
+};
 /* ----------------------------------------------------------
 функции для работы с внутреним массивом
 -------------------------------------------------------------*/
 //======= UZ_DIRECTORY.list_states  (Справочник Стран и железных дорог) ======================================
-UZ_DIRECTORY.prototype.getLocalStates = function (id_state) {
+UZ_DIRECTORY.prototype.getStates_Internal_Of_ID = function (id_state) {
     if (this.list_states) {
-        var obj = getObjects(this.list_states, 'id', id_state)
+        var obj = getObjects(this.list_states, 'id', id_state);
         return obj && obj.length > 0 ? obj[0] : null;
     }
 };
 //
-UZ_DIRECTORY.prototype.getStateOfLocalStates = function (id_state) {
-    var obj = this.getLocalStates(id_state);
-    return obj ? obj['state'] : null;
+UZ_DIRECTORY.prototype.getValue_States_Of_ID = function (id_state, name) {
+    var obj = this.getStates_Internal_Of_ID(id_state);
+    return obj ? obj[name] : null;
 };
+UZ_DIRECTORY.prototype.getValueCulture_States_Of_ID = function (id_state, name) {
+    var obj = this.getStates_Internal_Of_ID(id_state);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//UZ_DIRECTORY.prototype.getStateOfStates = function (obj) {
+//    return this.getValueObj(obj,'state');
+//};
+//UZ_DIRECTORY.prototype.getStateOfStates = function (obj) {
+//    return obj ? obj['state'] : null;
+//};
+////
+//UZ_DIRECTORY.prototype.getAbbrOfGenusWagons = function (obj) {
+//    return obj ? obj['abb_' + this.lang] : null;
+//};
+////
+//UZ_DIRECTORY.prototype.getNameNetworkOfStates = function (obj) {
+//    return obj ? obj['name_network'] : null;
+//};
 //
-UZ_DIRECTORY.prototype.getAbbrOfLocalGenusWagons = function (id_state) {
-    var obj = this.getLocalStates(id_state);
-    return obj ? obj['abb_' + this.lang] : null;
-};
+
 //
-UZ_DIRECTORY.prototype.getNameNetworkOfLocalStates = function (id_state) {
-    var obj = this.getLocalStates(id_state);
-    return obj ? obj['name_network'] : null;
-};
+//UZ_DIRECTORY.prototype.getStateOfID = function (id_state) {
+//    var obj = this.getStatesInternalOfid(id_state);
+//    return obj ? obj['state'] : null;
+//};
+//
+
+////
+//UZ_DIRECTORY.prototype.getAbbrOfID = function (id_state) {
+//    var obj = this.getLocalStatesOfID(id_state);
+//    return obj ? obj['abb_' + this.lang] : null;
+//};
+
+////
+//UZ_DIRECTORY.prototype.getNameNetworkOfID = function (id_state) {
+//    var obj = this.getLocalStatesOfID(id_state);
+//    return obj ? obj['name_network'] : null;
+//};
 //======= UZ_DIRECTORY.list_stations  (Справочник ж.д. станций) ======================================
-UZ_DIRECTORY.prototype.getLocalStations = function (code) {
-    if (this.list_stations) {
-        var obj = getObjects(this.list_stations, 'code_cs', code)
+UZ_DIRECTORY.prototype.getStations_Internal_Of_CodeCS = function (code_cs) {
+    if (this.list_stations && code_cs) {
+        var obj = getObjects(this.list_stations, 'code_cs', code_cs);
         return obj && obj.length > 0 ? obj[0] : null;
-    }
+    } else return null;
 };
+UZ_DIRECTORY.prototype.getValue_Station_Of_CodeCS = function (code_cs, name) {
+    var obj = this.getStations_Internal_Of_CodeCS(code_cs);
+    return obj ? obj[name] : null;
+};
+
+////
+//UZ_DIRECTORY.prototype.getStationOfStations = function (obj) {
+//    return obj ? obj['station'] : null;
+//};
 //
-UZ_DIRECTORY.prototype.getStationOfLocalStations = function (code) {
-    //var obj = this.getLocalStations(code);
-    //return obj ? obj['station'] : null;
-    return null
-};
