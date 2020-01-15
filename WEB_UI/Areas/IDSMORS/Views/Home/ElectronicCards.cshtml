@@ -253,61 +253,96 @@
                         </div>
                         <div class="form-group col-xs-6">
                             <label for="station-wagon-edit">@IDSMORSResource.station_label:</label>
-                            @*<select class="form-control" id="station-wagon-edit">
-                            </select>*@
                             <input type="text" class="form-control" id="station-wagon-edit" placeholder="">
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-xs-4">
-                            <label for="genus-wagon-view">Род подвижного сотава:</label>
-                            <input type="text" class="form-control" id="genus-wagon-view" placeholder="" disabled>
+                            <label for="genus-wagon-edit">Род подвижного сотава:</label>
+                            <select class="form-control" id="genus-wagon-edit"></select>
+                          </div>
+                        <div class="form-group col-xs-4">
+                            <label for="type-wagon-edit">Тип подвижного сотава:</label>
+                            <select class="form-control" id="type-wagon-edit"></select>
                         </div>
                         <div class="form-group col-xs-4">
-                            <label for="type-wagon-view">Тип подвижного сотава:</label>
-                            <input type="text" class="form-control" id="type-wagon-view" placeholder="" disabled>
+                            <label for="code-model-wagon-edit">Модель:</label>
+                            <input type="text" class="form-control" id="code-model-wagon-edit" placeholder="">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-6">
+                            <label for="wagon-manufacturer-wagon-edit">Завод изготовитель:</label>
+                            <select class="form-control" id="wagon-manufacturer-wagon-edit"></select>
+                        </div>
+                        <div class="form-group col-xs-6">
+                            <label for="year-wagon-create-wagon-edit">Год постройки:</label>
+                            <input type="number" class="form-control" id="year-wagon-create-wagon-edit" placeholder="">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-3">
+                            <label for="carrying-capacity-wagon-edit">Грузоподъемность,т:</label>
+                            <input type="number" class="form-control" id="carrying-capacity-wagon-edit" placeholder="">
+                        </div>
+                        <div class="form-group col-xs-3">
+                            <label for="tara-wagon-edit">Тара, тонн:</label>
+                            <input type="number" class="form-control" id="tara-wagon-edit" placeholder="">
+                        </div>
+                        <div class="form-group col-xs-3">
+                            <label for="body-volume-wagon-edit">Объем кузова:</label>
+                            <input type="number" class="form-control" id="body-volume-wagon-edit" placeholder="">
+                        </div>
+                        <div class="form-group col-xs-3">
+                            <label for="axis-length-wagon-edit">Длина по осям,м:</label>
+                            <input type="number" class="form-control" id="axis-length-wagon-edit" placeholder="">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-6">
+                            <label for="type-repairs-wagon-edit">Тип планируемого ремонта:</label>
+                            <select class="form-control" id="type-repairs-wagon-edit"></select>
+                        </div>
+                        <div class="form-group col-xs-6">
+                            <label for="date-type-repairs-wagon-edit">Дата планируемого ремонта:</label>
+                            <input type="date" class="form-control" id="date-type-repairs-wagon-edit" placeholder="">
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend> Собственность </legend>
+                    <div class="row">
+                        <div class="form-group col-xs-4">
+                            <label for="type-ownership-wagon-edit">Признак собственности:</label>
+                            <select class="form-control" id="type-ownership-wagon-edit"></select>
                         </div>
                         <div class="form-group col-xs-4">
-                            <label for="code-model-wagon-view">Модель:</label>
-                            <input type="text" class="form-control" id="code-model-wagon-view" placeholder="" disabled>
+                            <label for="owner-wagon-edit">Собственник:</label>
+                            <select class="form-control" id="owner-wagon-edit"></select>
+                        </div>
+                        <div class="form-group col-xs-4">
+                            <label for="date-registration-wagon-edit">Дата последней регистрации:</label>
+                            <input type="date" class="form-control" id="date-registration-wagon-edit" placeholder="">
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-xs-6">
-                            <label for="wagon-manufacturer-wagon-view">Завод изготовитель:</label>
-                            <input type="text" class="form-control" id="wagon-manufacturer-wagon-view" placeholder="" disabled>
+                            <label for="lessor-wagon-edit">Арендодатель:</label>
+                            <select class="form-control" id="lessor-wagon-edit"></select>
                         </div>
                         <div class="form-group col-xs-6">
-                            <label for="year-wagon-create-wagon-view">Год постройки:</label>
-                            <input type="text" class="form-control" id="year-wagon-create-wagon-view" placeholder="" disabled>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-xs-3">
-                            <label for="carrying-capacity-wagon-view">Грузоподъемность,т:</label>
-                            <input type="text" class="form-control" id="carrying-capacity-wagon-view" placeholder="" disabled>
-                        </div>
-                        <div class="form-group col-xs-3">
-                            <label for="tara-wagon-view">Тара, тонн:</label>
-                            <input type="text" class="form-control" id="tara-wagon-view" placeholder="" disabled>
-                        </div>
-                        <div class="form-group col-xs-3">
-                            <label for="body-volume-wagon-view">Объем кузова:</label>
-                            <input type="text" class="form-control" id="body-volume-wagon-view" placeholder="" disabled>
-                        </div>
-                        <div class="form-group col-xs-3">
-                            <label for="axis-length-wagon-view">Длина по осям,м:</label>
-                            <input type="text" class="form-control" id="axis-length-wagon-view" placeholder="" disabled>
+                            <label for="operator-wagon-edit">Оперативное управление:</label>
+                            <select class="form-control" id="operator-wagon-edit"></select>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-xs-6">
-                            <label for="type-repairs-wagon-view">Тип планируемого ремонта:</label>
-                            <input type="text" class="form-control" id="type-repairs-wagon-view" placeholder="" disabled>
+                            <label for="poligon-travel-wagon-edit">Полигон курсирования:</label>
+                            <select class="form-control" id="poligon-travel-wagon-edit"></select>
                         </div>
                         <div class="form-group col-xs-6">
-                            <label for="date-type-repairs-wagon-view">Дата планируемого ремонта:</label>
-                            <input type="text" class="form-control" id="date-type-repairs-wagon-view" placeholder="" disabled>
+                            <label for="special-conditions-edit">Особые условия:</label>
+                            <select class="form-control" id="special-conditions-edit"></select>
                         </div>
                     </div>
                 </fieldset>

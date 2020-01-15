@@ -497,161 +497,371 @@ IDS_DIRECTORY.prototype.getWagonsCondition = function (callback) {
     });
 };
 /* ----------------------------------------------------------
-функции для работы с внутреним массивом
+функции для работы с объектами
 -------------------------------------------------------------*/
-//======= IDS_DIRECTORY.list_genus_wagon  (Справочник РОД ВАГОНА) ======================================
-IDS_DIRECTORY.prototype.getLocalGenusWagons = function (id_genus_wagon) {
-    if (this.list_genus_wagon) {
-        var genus_wagon = getObjects(this.list_genus_wagon, 'id', id_genus_wagon)
-        return genus_wagon && genus_wagon.length > 0 ? genus_wagon[0] : null;
+IDS_DIRECTORY.prototype.getValueObj = function (obj, name, lang) {
+    if (lang) {
+        return obj ? obj[name + '_' + lang] : null;
+    } else {
+        return obj ? obj[name] : null;
     }
 };
 //
-IDS_DIRECTORY.prototype.getAbbrOfLocalGenusWagons = function (id_genus_wagon) {
-    var genus_wagon = this.getLocalGenusWagons(id_genus_wagon);
-    return genus_wagon ? genus_wagon['abbr_' + this.lang] : null;
+IDS_DIRECTORY.prototype.getValueCultureObj = function (obj, name) {
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+/* ----------------------------------------------------------
+функции для работы с внутреним массивом
+-------------------------------------------------------------*/
+//*======= IDS_DIRECTORY.list_genus_wagon  (Справочник РОД ВАГОНА) ======================================
+IDS_DIRECTORY.prototype.getGenusWagons_Internal_Of_ID = function (id_genus_wagon) {
+    if (this.list_genus_wagon) {
+        var obj = getObjects(this.list_genus_wagon, 'id', id_genus_wagon)
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
 };
 //
-IDS_DIRECTORY.prototype.getGenusOfLocalGenusWagons = function (id_genus_wagon) {
-    var genus_wagon = this.getLocalGenusWagons(id_genus_wagon);
-    return genus_wagon ? genus_wagon['genus_' + this.lang] : null;
+IDS_DIRECTORY.prototype.getValue_GenusWagons_Of_ID = function (id_state, name, lang) {
+    var obj = this.getGenusWagons_Internal_Of_ID(id_state);
+    return this.getValueObj(obj, name, lang);
 };
-//======= IDS_DIRECTORY.list_wagon_manufacturers (Справочник заводов изготовителей) ======================================
-IDS_DIRECTORY.prototype.getLocalWagonManufacturers = function (id_wagon_manufacturer) {
+//
+IDS_DIRECTORY.prototype.getValueCulture_GenusWagons_Of_ID = function (id_state, name) {
+    var obj = this.getGenusWagons_Internal_Of_ID(id_state);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getListGenusWagons = function (fvalue, ftext, lang) {
+    var list = [];
+    if (this.list_genus_wagon) {
+        for (i = 0, j = this.list_genus_wagon.length; i < j; i++) {
+            var l = this.list_genus_wagon[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
+//*======= IDS_DIRECTORY.list_wagon_manufacturers (Справочник заводов изготовителей) ======================================
+IDS_DIRECTORY.prototype.getWagonManufacturers_Internal_Of_ID = function (id_wagon_manufacturer) {
     if (this.list_wagon_manufacturers) {
         var obj = getObjects(this.list_wagon_manufacturers, 'id', id_wagon_manufacturer)
         return obj && obj.length > 0 ? obj[0] : null;
     }
 };
 //
-IDS_DIRECTORY.prototype.getAbbrOfLocalWagonManufacturers = function (id_wagon_manufacturer) {
-    var obj = this.getLocalWagonManufacturers(id_wagon_manufacturer);
-    return obj ? obj['abbr_' + this.lang] : null;
+IDS_DIRECTORY.prototype.getValue_WagonManufacturers_Of_ID = function (id_wagon_manufacturer, name, lang) {
+    var obj = this.getWagonManufacturers_Internal_Of_ID(id_wagon_manufacturer);
+    return this.getValueObj(obj, name, lang);
 };
 //
-IDS_DIRECTORY.prototype.getNameOfLocalWagonManufacturers = function (id_wagon_manufacturer) {
-    var obj = this.getLocalWagonManufacturers(id_wagon_manufacturer);
-    return obj ? obj['name_' + this.lang] : null;
+IDS_DIRECTORY.prototype.getValueCulture_WagonManufacturers_Of_ID = function (id_wagon_manufacturer, name) {
+    var obj = this.getWagonManufacturers_Internal_Of_ID(id_wagon_manufacturer);
+    return obj ? obj[name + '_' + this.lang] : null;
 };
-//======= IDS_DIRECTORY.list_types_repairs_wagons (Справочник типов ремонта) ======================================
-IDS_DIRECTORY.prototype.getLocalTypesRepairsWagons = function (id_type_repairs) {
+//
+IDS_DIRECTORY.prototype.getListWagonManufacturers = function (fvalue, ftext, lang) {
+    var list = [];
+    if (this.list_wagon_manufacturers) {
+        for (i = 0, j = this.list_wagon_manufacturers.length; i < j; i++) {
+            var l = this.list_wagon_manufacturers[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
+//*======= IDS_DIRECTORY.list_types_repairs_wagons (Справочник типов ремонта) ======================================
+IDS_DIRECTORY.prototype.getTypesRepairsWagons_Internal_Of_ID = function (id_type_repairs) {
     if (this.list_types_repairs_wagons) {
         var obj = getObjects(this.list_types_repairs_wagons, 'id', id_type_repairs)
         return obj && obj.length > 0 ? obj[0] : null;
     }
 };
 //
-IDS_DIRECTORY.prototype.getAbbrOfLocalTypesRepairsWagons = function (id_type_repairs) {
-    var obj = this.getLocalTypesRepairsWagons(id_type_repairs);
-    return obj ? obj['abbr_' + this.lang] : null;
+IDS_DIRECTORY.prototype.getValue_TypesRepairsWagons_Of_ID = function (id_type_repairs, name, lang) {
+    var obj = this.getTypesRepairsWagons_Internal_Of_ID(id_type_repairs);
+    return this.getValueObj(obj, name, lang);
 };
 //
-IDS_DIRECTORY.prototype.getTypeOfLocalTypesRepairsWagons = function (id_type_repairs) {
-    var obj = this.getLocalTypesRepairsWagons(id_type_repairs);
-    return obj ? obj['type_repairs' + this.lang] : null;
+IDS_DIRECTORY.prototype.getValueCulture_TypesRepairsWagons_Of_ID = function (id_type_repairs, name) {
+    var obj = this.getTypesRepairsWagons_Internal_Of_ID(id_type_repairs);
+    return obj ? obj[name + '_' + this.lang] : null;
 };
-//======= IDS_DIRECTORY.list_models_wagons (Справочник моделей вагонов) ======================================
-
-//======= IDS_DIRECTORY.list_type_wagons (Справочник типов подвижного состава) ======================================
-IDS_DIRECTORY.prototype.getLocalTypeWagons = function (id_type_wagon) {
+//
+IDS_DIRECTORY.prototype.getListTypesRepairsWagons = function (fvalue, ftext, lang) {
+    var list = [];
+    if (this.list_types_repairs_wagons) {
+        for (i = 0, j = this.list_types_repairs_wagons.length; i < j; i++) {
+            var l = this.list_types_repairs_wagons[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
+//*======= IDS_DIRECTORY.list_models_wagons (Справочник моделей вагонов) ======================================
+IDS_DIRECTORY.prototype.getModelsWagons_Internal_Of_ID = function (code) {
+    if (this.list_models_wagons) {
+        var obj = getObjects(this.list_models_wagons, 'code', code)
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getValue_ModelsWagons_Of_ID = function (code, name, lang) {
+    var obj = this.getModelsWagons_Internal_Of_ID(code);
+    return this.getValueObj(obj, name, lang);
+};
+//
+IDS_DIRECTORY.prototype.getValueCulture_ModelsWagons_Of_ID = function (code, name) {
+    var obj = this.getModelsWagons_Internal_Of_ID(code);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getListModelsWagons = function (fvalue, ftext, lang) {
+    var list = [];
+    if (this.list_models_wagons) {
+        for (i = 0, j = this.list_models_wagons.length; i < j; i++) {
+            var l = this.list_models_wagons[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
+//*======= IDS_DIRECTORY.list_type_wagons (Справочник типов подвижного состава) ======================================
+IDS_DIRECTORY.prototype.getTypeWagons_Internal_Of_ID = function (id_type_wagon) {
     if (this.list_type_wagons) {
         var obj = getObjects(this.list_type_wagons, 'id', id_type_wagon)
         return obj && obj.length > 0 ? obj[0] : null;
     }
 };
 //
-IDS_DIRECTORY.prototype.getTypeOfLocalTypeWagons = function (id_type_wagon) {
-    var obj = this.getLocalTypeWagons(id_type_wagon);
-    return obj ? obj['type_' + this.lang] : null;
+IDS_DIRECTORY.prototype.getValue_TypeWagons_Of_ID = function (id_state, name, lang) {
+    var obj = this.getTypeWagons_Internal_Of_ID(id_state);
+    return this.getValueObj(obj, name, lang);
 };
-//======= IDS_DIRECTORY.list_type_owner_ship (Справочник типов собственности) ======================================
-IDS_DIRECTORY.prototype.getLocalTypeOwnerShip = function (id_type_ownership) {
+//
+IDS_DIRECTORY.prototype.getValueCulture_TypeWagons_Of_ID = function (id_state, name) {
+    var obj = this.getTypeWagons_Internal_Of_ID(id_state);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getListTypeWagons = function (fvalue, ftext, lang) {
+    var list = [];
+    if (this.list_type_wagons) {
+        for (i = 0, j = this.list_type_wagons.length; i < j; i++) {
+            var l = this.list_type_wagons[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
+//*======= IDS_DIRECTORY.list_type_owner_ship (Справочник типов собственности) ======================================
+IDS_DIRECTORY.prototype.getTypeOwnerShip_Internal_Of_ID = function (id_type_ownership) {
     if (this.list_type_owner_ship) {
         var obj = getObjects(this.list_type_owner_ship, 'id', id_type_ownership)
         return obj && obj.length > 0 ? obj[0] : null;
     }
 };
 //
-IDS_DIRECTORY.prototype.getTypeOwnershipOfLocalTypeOwnerShip = function (id_type_ownership) {
-    var obj = this.getLocalTypeOwnerShip(id_type_ownership);
-    return obj ? obj['type_ownership_' + this.lang] : null;
+IDS_DIRECTORY.prototype.getValue_TypeOwnerShip_Of_ID = function (id_type_ownership, name, lang) {
+    var obj = this.getTypeOwnerShip_Internal_Of_ID(id_type_ownership);
+    return this.getValueObj(obj, name, lang);
 };
-//======= IDS_DIRECTORY.list_owners_wagons (Справочник собствинеков вагонов) ======================================
-IDS_DIRECTORY.prototype.getLocalOwnersWagons = function (id_owner_wagon) {
+//
+IDS_DIRECTORY.prototype.getValueCulture_TypeOwnerShip_Of_ID = function (id_type_ownership, name) {
+    var obj = this.getTypeOwnerShip_Internal_Of_ID(id_type_ownership);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getListTypeOwnerShip = function (fvalue, ftext, lang) {
+    var list = [];
+    if (this.list_type_owner_ship) {
+        for (i = 0, j = this.list_type_owner_ship.length; i < j; i++) {
+            var l = this.list_type_owner_ship[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
+//*======= IDS_DIRECTORY.list_owners_wagons (Справочник собствинеков вагонов) ======================================
+IDS_DIRECTORY.prototype.getOwnersWagons_Internal_Of_ID = function (id_owner_wagon) {
     if (this.list_owners_wagons) {
         var obj = getObjects(this.list_owners_wagons, 'id', id_owner_wagon)
         return obj && obj.length > 0 ? obj[0] : null;
     }
 };
 //
-IDS_DIRECTORY.prototype.getAbbrOfLocalOwnersWagons = function (id_owner_wagon) {
-    var obj = this.getLocalOwnersWagons(id_owner_wagon);
-    return obj ? obj['abbr_' + this.lang] : null;
+IDS_DIRECTORY.prototype.getValue_OwnersWagons_Of_ID = function (id_owner_wagon, name, lang) {
+    var obj = this.getOwnersWagons_Internal_Of_ID(id_owner_wagon);
+    return this.getValueObj(obj, name, lang);
 };
-IDS_DIRECTORY.prototype.getOwnerOfLocalOwnersWagons = function (id_owner_wagon) {
-    var obj = this.getLocalOwnersWagons(id_owner_wagon);
-    return obj ? obj['owner_' + this.lang] : null;
+//
+IDS_DIRECTORY.prototype.getValueCulture_OwnersWagons_Of_ID = function (id_owner_wagon, name) {
+    var obj = this.getOwnersWagons_Internal_Of_ID(id_owner_wagon);
+    return obj ? obj[name + '_' + this.lang] : null;
 };
-//======= IDS_DIRECTORY.list_lessors_wagons (Справочник арендодателей вагонов) ======================================
-IDS_DIRECTORY.prototype.getLocalLessorsWagons = function (id_lessor_wagon) {
+//
+IDS_DIRECTORY.prototype.getListOwnersWagons = function (fvalue, ftext, lang) {
+    var list = [];
+    if (this.list_owners_wagons) {
+        for (i = 0, j = this.list_owners_wagons.length; i < j; i++) {
+            var l = this.list_owners_wagons[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
+//*======= IDS_DIRECTORY.list_lessors_wagons (Справочник арендодателей вагонов) ======================================
+IDS_DIRECTORY.prototype.getLessorsWagons_Internal_Of_ID = function (id_lessor_wagon) {
     if (this.list_lessors_wagons) {
         var obj = getObjects(this.list_lessors_wagons, 'id', id_lessor_wagon)
         return obj && obj.length > 0 ? obj[0] : null;
     }
 };
 //
-IDS_DIRECTORY.prototype.getAbbrOfLocalLessorsWagons = function (id_lessor_wagon) {
-    var obj = this.getLocalLessorsWagons(id_lessor_wagon);
-    return obj ? obj['abbr_' + this.lang] : null;
+IDS_DIRECTORY.prototype.getValue_LessorsWagons_Of_ID = function (id_lessor_wagon, name, lang) {
+    var obj = this.getLessorsWagons_Internal_Of_ID(id_lessor_wagon);
+    return this.getValueObj(obj, name, lang);
 };
 //
-IDS_DIRECTORY.prototype.getLessorsOfLocalLessorsWagons = function (id_lessor_wagon) {
-    var obj = this.getLocalLessorsWagons(id_lessor_wagon);
-    return obj ? obj['lessors_' + this.lang] : null;
+IDS_DIRECTORY.prototype.getValueCulture_LessorsWagons_Of_ID = function (id_lessor_wagon, name) {
+    var obj = this.getLessorsWagons_Internal_Of_ID(id_lessor_wagon);
+    return obj ? obj[name + '_' + this.lang] : null;
 };
-//======= IDS_DIRECTORY.list_operators_wagons (Справочник операторов вагонов) ======================================
-IDS_DIRECTORY.prototype.getLocalOperatorsWagons = function (id_operator_wagon) {
+//
+IDS_DIRECTORY.prototype.getListLessorsWagons = function (fvalue, ftext, lang) {
+    var list = [];
+    if (this.list_lessors_wagons) {
+        for (i = 0, j = this.list_lessors_wagons.length; i < j; i++) {
+            var l = this.list_lessors_wagons[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
+//*======= IDS_DIRECTORY.list_operators_wagons (Справочник операторов вагонов) ======================================
+IDS_DIRECTORY.prototype.getOperatorsWagons_Internal_Of_ID = function (id_operator_wagon) {
     if (this.list_operators_wagons) {
         var obj = getObjects(this.list_operators_wagons, 'id', id_operator_wagon)
         return obj && obj.length > 0 ? obj[0] : null;
     }
 };
 //
-IDS_DIRECTORY.prototype.getAbbrOfLocalOperatorsWagons = function (id_operator_wagon) {
-    var obj = this.getLocalOperatorsWagons(id_operator_wagon);
-    return obj ? obj['abbr_' + this.lang] : null;
+IDS_DIRECTORY.prototype.getValue_OperatorsWagons_Of_ID = function (id_operator_wagon, name, lang) {
+    var obj = this.getOperatorsWagons_Internal_Of_ID(id_operator_wagon);
+    return this.getValueObj(obj, name, lang);
 };
 //
-IDS_DIRECTORY.prototype.getOperatorsOfLocalOperatorsWagons = function (id_operator_wagon) {
-    var obj = this.getLocalOperatorsWagons(id_operator_wagon);
-    return obj ? obj['operators_' + this.lang] : null;
+IDS_DIRECTORY.prototype.getValueCulture_OperatorsWagons_Of_ID = function (id_operator_wagon, name) {
+    var obj = this.getOperatorsWagons_Internal_Of_ID(id_operator_wagon);
+    return obj ? obj[name + '_' + this.lang] : null;
 };
-//======= IDS_DIRECTORY.list_poligon_travel_wagons (Справочник полигоны курсирования) ======================================
-IDS_DIRECTORY.prototype.getLocalPoligonTravelWagons = function (id_poligon_travel_wagon) {
+//
+IDS_DIRECTORY.prototype.getListOperatorsWagons = function (fvalue, ftext, lang) {
+    var list = [];
+    if (this.list_operators_wagons) {
+        for (i = 0, j = this.list_operators_wagons.length; i < j; i++) {
+            var l = this.list_operators_wagons[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
+//*======= IDS_DIRECTORY.list_poligon_travel_wagons (Справочник полигоны курсирования) ======================================
+IDS_DIRECTORY.prototype.getPoligonTravelWagons_Internal_Of_ID = function (id_poligon_travel_wagon) {
     if (this.list_poligon_travel_wagons) {
         var obj = getObjects(this.list_poligon_travel_wagons, 'id', id_poligon_travel_wagon)
         return obj && obj.length > 0 ? obj[0] : null;
     }
 };
 //
-IDS_DIRECTORY.prototype.getAbbrOfLocalPoligonTravelWagons = function (id_poligon_travel_wagon) {
-    var obj = this.getLocalPoligonTravelWagons(id_poligon_travel_wagon);
-    return obj ? obj['abbr_' + this.lang] : null;
+IDS_DIRECTORY.prototype.getValue_PoligonTravelWagons_Of_ID = function (id_poligon_travel_wagon, name, lang) {
+    var obj = this.getPoligonTravelWagons_Internal_Of_ID(id_poligon_travel_wagon);
+    return this.getValueObj(obj, name, lang);
 };
 //
-IDS_DIRECTORY.prototype.getPoligonTravelOfLocalPoligonTravelWagons = function (id_poligon_travel_wagon) {
-    var obj = this.getLocalPoligonTravelWagons(id_poligon_travel_wagon);
-    return obj ? obj['poligon_travel_' + this.lang] : null;
+IDS_DIRECTORY.prototype.getValueCulture_PoligonTravelWagons_Of_ID = function (id_poligon_travel_wagon, name) {
+    var obj = this.getPoligonTravelWagons_Internal_Of_ID(id_poligon_travel_wagon);
+    return obj ? obj[name + '_' + this.lang] : null;
 };
-//======= IDS_DIRECTORY.list_special_conditions (Справочник особых условий эксплуатации) ======================================
-IDS_DIRECTORY.prototype.getLocalSpecialConditions = function (id_special_conditions) {
+//
+IDS_DIRECTORY.prototype.getListPoligonTravelWagons = function (fvalue, ftext, lang) {
+    var list = [];
+    if (this.list_poligon_travel_wagons) {
+        for (i = 0, j = this.list_poligon_travel_wagons.length; i < j; i++) {
+            var l = this.list_poligon_travel_wagons[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
+//*======= IDS_DIRECTORY.list_special_conditions (Справочник особых условий эксплуатации) ======================================
+IDS_DIRECTORY.prototype.getSpecialConditions_Internal_Of_ID = function (id_special_conditions) {
     if (this.list_special_conditions) {
         var obj = getObjects(this.list_special_conditions, 'id', id_special_conditions)
         return obj && obj.length > 0 ? obj[0] : null;
     }
 };
 //
-IDS_DIRECTORY.prototype.getSpecialConditionOfLocalSpecialConditions = function (id_special_conditions) {
-    var obj = this.getLocalSpecialConditions(id_special_conditions);
-    return obj ? obj['special_conditions_' + this.lang] : null;
+IDS_DIRECTORY.prototype.getValue_SpecialConditions_Of_ID = function (id_special_conditions, name, lang) {
+    var obj = this.getSpecialConditions_Internal_Of_ID(id_special_conditions);
+    return this.getValueObj(obj, name, lang);
+};
+//
+IDS_DIRECTORY.prototype.getValueCulture_SpecialConditions_Of_ID = function (id_special_conditions, name) {
+    var obj = this.getSpecialConditions_Internal_Of_ID(id_special_conditions);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getListSpecialConditions = function (fvalue, ftext, lang) {
+    var list = [];
+    if (this.list_special_conditions) {
+        for (i = 0, j = this.list_special_conditions.length; i < j; i++) {
+            var l = this.list_special_conditions[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
 };
