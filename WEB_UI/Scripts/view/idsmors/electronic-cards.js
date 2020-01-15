@@ -30,6 +30,9 @@
                 'field_poligon_travel_wagon': 'Полигон курсирования',
                 'field_special_conditions': 'Особые условия',
                 'field_sap': 'SAP',
+
+                'text_link_tabs_control_1': 'Характеристики',
+                'text_link_tabs_control_2': 'Ремонты',
             },
             'en':  //default language: English
             {
@@ -78,6 +81,7 @@
                 }
             });
         },
+
         // Таблица 
         table_fuel_sales = {
             html_table: $('#table-cards-wagons'),
@@ -285,20 +289,99 @@
         },
         // Окно вагон детально
         wagon_card = {
+            tabs: {
+                html_div: $("#tabs-controls"),
+                active: 0,
+                init: function () {
+                    $('#link-tabs-control-1').text(langView('text_link_tabs_control_1', langs));
+                    $('#link-tabs-control-2').text(langView('text_link_tabs_control_2', langs));
+                    this.html_div.tabs({
+                        collapsible: true,
+                        activate: function (event, ui) {
+                            wagon_card.tabs.active = wagon_card.tabs.html_div.tabs("option", "active");
+                            wagon_card.tabs.activeTab(wagon_card.tabs.active, false);
+                        },
+                    });
+                    //this.activeTable(this.active, true);
+                },
+                activeTab: function (active, data_refresh) {
+                    if (active === 0) {
+                        wagon_card.view_mode(0);
+                        //table_fuel_sales.viewTable(data_refresh);
+                    }
+                    if (active === 1) {
+                        wagon_card.view_mode(2);
+                        //table_fuel_sales.viewTable(data_refresh);
+                    }
+
+                },
+                disableTabRepairs: function () {
+                    wagon_card.tabs.html_div.tabs("option", "active", 0);
+                    wagon_card.tabs.html_div.tabs("option", "disabled", [1]);
+                },
+                enableTabRepairs: function () {
+                    wagon_card.tabs.html_div.tabs("option", "disabled", []);
+                },
+            },
             // панели
-            panel_view: $('div.wagon-view').hide(),
-            panel_edit: $('div.wagon-edit').hide(),
+            //panel_view: $('div.wagon-view').hide(),
+            //panel_edit: $('div.wagon-edit').hide(),
             // кнопки управления
-            bt_edit: $('button#bt-edit').on('click', function () {
+            bt_info_edit: $('button#bt-info-edit').on('click', function () {
                 wagon_card.view_mode(1);
             }),
             // кнопки управления
-            bt_save: $('button#bt-save').on('click', function () {
-                wagon_card.view_mode(0);
+            bt_info_save: $('button#bt-info-save').on('click', function () {
+                //переменная formValid
+                var formValid = true;
+                //перебрать все элементы управления input
+                $('input').each(function () {
+                    //найти предков, которые имеют класс .form-group, для установления success/error
+                    var formGroup = $(this).parents('.form-group');
+                    //найти glyphicon, который предназначен для показа иконки успеха или ошибки
+                    var glyphicon = formGroup.find('.form-control-feedback');
+                    //для валидации данных используем HTML5 функцию checkValidity
+                    if (this.checkValidity()) {
+                        //добавить к formGroup класс .has-success, удалить has-error
+                        formGroup.addClass('has-success').removeClass('has-error');
+                        //добавить к glyphicon класс glyphicon-ok, удалить glyphicon-remove
+                        glyphicon.addClass('glyphicon-ok').removeClass('glyphicon-remove');
+                    } else {
+                        //добавить к formGroup класс .has-error, удалить .has-success
+                        formGroup.addClass('has-error').removeClass('has-success');
+                        //добавить к glyphicon класс glyphicon-remove, удалить glyphicon-ok
+                        glyphicon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
+                        //отметить форму как невалидную
+                        formValid = false;
+                    }
+                });
+                if (formValid) {
+                    //отобразить сообщение об успехе
+                    $('#success-alert').removeClass('hidden');
+                    wagon_card.view_mode(0);
+                }
             }),
-            bt_cancel: $('button#bt-cancel').on('click', function () {
-                wagon_card.view_mode(0);
+            bt_info_cancel: $('button#bt-info-cancel').on('click', function () {
+                wagon_card.clear_error();
+                if (wagon_card.mode === 4) {
+                    wagon_card.content.removeClass('is-visible');
+                } else {
+                    wagon_card.view_mode(0);
+                }
+
             }),
+            bt_repairs_edit: $('button#bt-repairs-edit').on('click', function () {
+                wagon_card.view_mode(3);
+            }),
+            // кнопки управления
+            bt_repairs_save: $('button#bt-repairs-save').on('click', function () {
+                wagon_card.view_mode(2);
+            }),
+            bt_repairs_cancel: $('button#bt-repairs-cancel').on('click', function () {
+                wagon_card.clear_error();
+                wagon_card.view_mode(2);
+            }),
+
             // Основные характеристики
             content: $('.cd-wagon-content'),
             num_wagon_view: $('input#num-wagon-view'),
@@ -391,7 +474,7 @@
                 list_operators_wagons,
                 list_poligon_travel_wagons,
                 list_special_conditions
-                ) {
+            ) {
                 this.list_state = list_state;
                 this.list_station = list_station;
                 this.list_genus_wagon = list_genus_wagon;
@@ -399,17 +482,23 @@
                 this.list_models_wagons = list_models_wagons;
                 this.list_wagon_manufacturers = list_wagon_manufacturers;
                 this.list_types_repairs_wagons = list_types_repairs_wagons;
-                this.list_type_owner_ship = list_type_owner_ship,
-                this.list_owners_wagons = list_owners_wagons,
-                this.list_lessors_wagons = list_lessors_wagons,
-                this.list_operators_wagons = list_operators_wagons,
-                this.list_poligon_travel_wagons = list_poligon_travel_wagons,
-                this.list_special_conditions = list_special_conditions,
-
+                this.list_type_owner_ship = list_type_owner_ship;
+                this.list_owners_wagons = list_owners_wagons;
+                this.list_lessors_wagons = list_lessors_wagons;
+                this.list_operators_wagons = list_operators_wagons;
+                this.list_poligon_travel_wagons = list_poligon_travel_wagons;
+                this.list_special_conditions = list_special_conditions;
+                // Настроим панель 
+                wagon_card.tabs.init();
                 // Настройка закрыть детали проекта
                 wagon_card.content.on('click', '.close', function (event) {
                     event.preventDefault();
                     wagon_card.content.removeClass('is-visible');
+                });
+                // Событие создание нового проекта
+                $('a#new-item').on('click', function () {
+                    event.preventDefault();
+                    wagon_card.view(null);
                 });
                 // Инициализация выпадающих списков
                 this.state_wagon_edit = cd_initSelect(
@@ -579,9 +668,13 @@
             },
             // Показать информацию
             view: function (num) {
-                this.num = num;
+                this.clear_error();
+                //    .parents('.form-group').addClass('has-feedback');
+                ////найти glyphicon, который предназначен для показа иконки успеха или ошибки
+                //formGroup.find('.form-control-feedback').removeClass('glyphicon-ok glyphicon-remove');
                 // Получим данные
                 if (num) {
+                    this.num = num;
                     LockScreen(langView('mess_delay', langs));
                     // Загрузим проект
                     mors.getCardsWagonsOfNum(num, function (result_card_wagon) {
@@ -596,6 +689,8 @@
                         //    callback(result_project);
                         //}
                     });
+                } else {
+                    wagon_card.view_wagon(null, 4);
                 }
                 wagon_card.content.addClass('is-visible');
             },
@@ -605,68 +700,68 @@
                 this.num_wagon_view.val(wagon ? wagon.num : '');
                 //
                 this.state_wagon_view.val(wagon ? this.getTextOfList(this.list_state, wagon.id_state) : '');
-                this.state_wagon_edit.val(wagon.id_state !== null ? wagon.id_state : -1);
+                this.state_wagon_edit.val(wagon && wagon.id_state !== null ? wagon.id_state : -1);
                 //
                 this.station_wagon_view.val(wagon && wagon.code_station ? this.getTextOfList(this.list_station, wagon.code_station) : '');
                 //wagon.code_station = 40031;
-                this.station_wagon_edit.val(wagon.code_station !== null ? wagon.code_station : '');
+                this.station_wagon_edit.val(wagon && wagon.code_station !== null ? wagon.code_station : '');
                 //
                 this.genus_wagon_view.val(wagon ? this.getTextOfList(this.list_genus_wagon, wagon.id_genus_wagon) : '');
-                this.genus_wagon_edit.val(wagon.id_genus_wagon !== null ? wagon.id_genus_wagon : -1);
+                this.genus_wagon_edit.val(wagon && wagon.id_genus_wagon !== null ? wagon.id_genus_wagon : -1);
                 //
                 this.type_wagon_view.val(wagon ? this.getTextOfList(this.list_type_wagons, wagon.id_type_wagon) : '');
-                this.type_wagon_edit.val(wagon.id_type_wagon !== null ? wagon.id_type_wagon : -1);
+                this.type_wagon_edit.val(wagon && wagon.id_type_wagon !== null ? wagon.id_type_wagon : -1);
                 //
                 this.code_model_wagon_view.val(wagon && wagon.code_model_wagon ? this.getTextOfList(this.list_models_wagons, wagon.code_model_wagon) : '');
                 //wagon.code_model_wagon = '10-475';
-                this.code_model_wagon_edit.val(wagon.code_model_wagon !== null ? wagon.code_model_wagon : '');
+                this.code_model_wagon_edit.val(wagon && wagon.code_model_wagon !== null ? wagon.code_model_wagon : '');
                 //
                 this.wagon_manufacturer_wagon_view.val(wagon ? this.getTextOfList(this.list_wagon_manufacturers, wagon.id_wagon_manufacturer) : '');
-                this.wagon_manufacturer_wagon_edit.val(wagon.id_wagon_manufacturer !== null ? wagon.id_wagon_manufacturer : -1);
+                this.wagon_manufacturer_wagon_edit.val(wagon && wagon.id_wagon_manufacturer !== null ? wagon.id_wagon_manufacturer : -1);
                 //
-                this.year_wagon_create_wagon_view.val(wagon.year_wagon_create ? wagon.year_wagon_create : '');
-                this.year_wagon_create_wagon_edit.val(wagon.year_wagon_create ? wagon.year_wagon_create : '');
+                this.year_wagon_create_wagon_view.val(wagon && wagon.year_wagon_create ? wagon.year_wagon_create : '');
+                this.year_wagon_create_wagon_edit.val(wagon && wagon.year_wagon_create ? wagon.year_wagon_create : '');
                 //
-                this.carrying_capacity_wagon_view.val(wagon.carrying_capacity ? wagon.carrying_capacity : '');
-                this.carrying_capacity_wagon_edit.val(wagon.carrying_capacity ? wagon.carrying_capacity : '');
+                this.carrying_capacity_wagon_view.val(wagon && wagon.carrying_capacity ? wagon.carrying_capacity : '');
+                this.carrying_capacity_wagon_edit.val(wagon && wagon.carrying_capacity ? wagon.carrying_capacity : '');
                 //
-                this.tara_wagon_view.val(wagon.tara ? wagon.tara : '');
-                this.tara_wagon_edit.val(wagon.tara ? wagon.tara : '');
+                this.tara_wagon_view.val(wagon && wagon.tara ? wagon.tara : '');
+                this.tara_wagon_edit.val(wagon && wagon.tara ? wagon.tara : '');
                 //
-                this.body_volume_wagon_view.val(wagon.body_volume ? wagon.body_volume : '');
-                this.body_volume_wagon_edit.val(wagon.body_volume ? wagon.body_volume : '');
+                this.body_volume_wagon_view.val(wagon && wagon.body_volume ? wagon.body_volume : '');
+                this.body_volume_wagon_edit.val(wagon && wagon.body_volume ? wagon.body_volume : '');
                 //
-                this.axis_length_wagon_view.val(wagon.axis_length ? wagon.axis_length : '');
-                this.axis_length_wagon_edit.val(wagon.axis_length ? wagon.axis_length : '');
+                this.axis_length_wagon_view.val(wagon && wagon.axis_length ? wagon.axis_length : '');
+                this.axis_length_wagon_edit.val(wagon && wagon.axis_length ? wagon.axis_length : '');
 
                 this.type_repairs_wagon_view.val(wagon ? this.getTextOfList(this.list_types_repairs_wagons, wagon.id_type_repairs) : '');
-                this.type_repairs_wagon_edit.val(wagon.id_type_repairs !== null ? wagon.id_type_repairs : -1);
+                this.type_repairs_wagon_edit.val(wagon && wagon.id_type_repairs !== null ? wagon.id_type_repairs : -1);
                 //
-                this.date_type_repairs_wagon_view.val(wagon.date_type_repairs ? wagon.date_type_repairs : '');
+                this.date_type_repairs_wagon_view.val(wagon && wagon.date_type_repairs ? wagon.date_type_repairs : '');
                 //wagon.date_type_repairs = "2020-01-02T00:00:00";
-                this.date_type_repairs_wagon_edit.val(wagon.date_type_repairs ? wagon.date_type_repairs : '');
+                this.date_type_repairs_wagon_edit.val(wagon && wagon.date_type_repairs ? wagon.date_type_repairs : '');
                 //
                 this.type_ownership_wagon_view.val(wagon ? this.getTextOfList(this.list_type_owner_ship, wagon.id_type_ownership) : '');
-                this.type_ownership_wagon_edit.val(wagon.id_type_ownership !== null ? wagon.id_type_ownership : -1);
+                this.type_ownership_wagon_edit.val(wagon && wagon.id_type_ownership !== null ? wagon.id_type_ownership : -1);
                 //
                 this.owner_wagon_view.val(wagon ? this.getTextOfList(this.list_owners_wagons, wagon.id_owner_wagon) : '');
-                this.owner_wagon_edit.val(wagon.id_owner_wagon !== null ? wagon.id_owner_wagon : -1);
+                this.owner_wagon_edit.val(wagon && wagon.id_owner_wagon !== null ? wagon.id_owner_wagon : -1);
                 //
-                this.date_registration_wagon_view.val(wagon.date_registration ? wagon.date_registration : '');
+                this.date_registration_wagon_view.val(wagon && wagon.date_registration ? wagon.date_registration : '');
                 //wagon.date_type_repairs = "2020-01-02T00:00:00";
-                this.date_registration_wagon_edit.val(wagon.date_registration ? wagon.date_registration : '');
+                this.date_registration_wagon_edit.val(wagon && wagon.date_registration ? wagon.date_registration : '');
                 //
                 this.lessor_wagon_view.val(wagon ? this.getTextOfList(this.list_lessors_wagons, wagon.id_lessor_wagon) : '');
-                this.lessor_wagon_edit.val(wagon.id_lessor_wagon !== null ? wagon.id_lessor_wagon : -1);
+                this.lessor_wagon_edit.val(wagon && wagon.id_lessor_wagon !== null ? wagon.id_lessor_wagon : -1);
                 //
                 this.operator_wagon_view.val(wagon ? this.getTextOfList(this.list_operators_wagons, wagon.id_operator_wagon) : '');
-                this.operator_wagon_edit.val(wagon.id_operator_wagon !== null ? wagon.id_operator_wagon : -1);
+                this.operator_wagon_edit.val(wagon && wagon.id_operator_wagon !== null ? wagon.id_operator_wagon : -1);
                 //
                 this.poligon_travel_wagon_view.val(wagon ? this.getTextOfList(this.list_poligon_travel_wagons, wagon.id_poligon_travel_wagon) : '');
-                this.poligon_travel_wagon_edit.val(wagon.id_poligon_travel_wagon !== null ? wagon.id_poligon_travel_wagon : -1);
+                this.poligon_travel_wagon_edit.val(wagon && wagon.id_poligon_travel_wagon !== null ? wagon.id_poligon_travel_wagon : -1);
                 //
                 this.special_conditions_view.val(wagon ? this.getTextOfList(this.list_special_conditions, wagon.id_special_conditions) : '');
-                this.special_conditions_edit.val(wagon.id_special_conditions !== null ? wagon.id_special_conditions : -1);
+                this.special_conditions_edit.val(wagon && wagon.id_special_conditions !== null ? wagon.id_special_conditions : -1);
 
                 //// Ремонты 
                 //this.depo_date_wagons_repairs_view = ;
@@ -685,13 +780,83 @@
             },
             // Активировать панель
             view_mode: function (mode) {
-                wagon_card.panel_view.hide();
-                wagon_card.panel_edit.hide();
+                wagon_card.mode_clear();
                 switch (mode) {
-                    case 1: wagon_card.panel_edit.show(); wagon_card.mode = mode; break;
-                    case 2: wagon_card.panel_edit.show(); wagon_card.mode = mode; break;
-                    default: wagon_card.panel_view.show(); wagon_card.mode = 0; break;
+                    case 0: wagon_card.mode_view_info(); wagon_card.mode = 0; break;
+                    case 1: wagon_card.mode_edit_info(); wagon_card.mode = 1; break;
+                    case 2: wagon_card.mode_view_repairs(); wagon_card.mode = 2; break;
+                    case 3: wagon_card.mode_edit_repairs(); wagon_card.mode = 3; break;
+                    case 4: wagon_card.mode_add_info(); wagon_card.mode = 4; break;
                 }
+            },
+
+            clear_error: function () {
+                var fm = $('form#wagon-content');
+                var fg = fm.find('.form-group').addClass('has-feedback').removeClass('has-error has-success');
+                var fcf = fg.find('.form-control-feedback').removeClass('glyphicon-ok glyphicon-remove');
+            },
+
+            mode_clear: function () {
+                $('.wagon-info-view').hide();
+                $('.wagon-info-edit').hide();
+                $('.wagon-info-add').hide();
+                $('.wagon-repairs-view').hide();
+                $('.wagon-repairs-edit').hide();
+            },
+
+            mode_view_info: function () {
+                wagon_card.tabs.enableTabRepairs();
+                $('.wagon-view').show();
+                $('.wagon-add').hide();
+                $('.wagon-info-view').show();
+                $('.wagon-info-edit').hide();
+                $('.wagon-info-add').hide();
+                $('.wagon-repairs-view').hide();
+                $('.wagon-repairs-edit').hide();
+            },
+
+            mode_edit_info: function () {
+                wagon_card.tabs.enableTabRepairs();
+                $('.wagon-view').show();
+                $('.wagon-add').hide();
+                $('.wagon-info-view').hide();
+                $('.wagon-info-edit').show();
+                $('.wagon-info-add').hide();
+                $('.wagon-repairs-view').hide();
+                $('.wagon-repairs-edit').hide();
+            },
+
+            mode_add_info: function () {
+                wagon_card.tabs.disableTabRepairs();
+                $('.wagon-view').hide();
+                $('.wagon-add').show();
+                $('.wagon-info-view').hide();
+                $('.wagon-info-edit').show();
+                $('.wagon-info-add').show();
+                $('.wagon-repairs-view').hide();
+                $('.wagon-repairs-edit').hide();
+            },
+
+            mode_view_repairs: function () {
+                wagon_card.tabs.enableTabRepairs();
+                $('.wagon-view').show();
+                $('.wagon-add').hide();
+                $('.wagon-info-view').hide();
+                $('.wagon-info-edit').hide();
+                $('.wagon-info-add').hide();
+                $('.wagon-repairs-view').show();
+                $('.wagon-repairs-edit').hide();
+            },
+
+            mode_edit_repairs: function () {
+                wagon_card.tabs.enableTabRepairs();
+                $('.wagon-view').show();
+                $('.wagon-add').hide();
+                $('.wagon-info-view').hide();
+                $('.wagon-info-edit').hide();
+                $('.wagon-info-add').hide();
+                $('.wagon-repairs-view').hide();
+                $('.wagon-repairs-edit').show();
             },
 
             // Получить список для выбора в компоненте JQuery UI Autocomplete
@@ -748,7 +913,7 @@
             mors.ids_dir.getListOperatorsWagons('id', 'operators', lang),
             mors.ids_dir.getListPoligonTravelWagons('id', 'poligon_travel', lang),
             mors.ids_dir.getListSpecialConditions('id', 'special_conditions', lang)
-            );
+        );
         table_fuel_sales.viewTable(false);
         // #myInput is a <input type="text"> element
 

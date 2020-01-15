@@ -40,7 +40,7 @@ Project content panel
     }
 
         .cd-wagon-content > div > * {
-            max-width: 800px;
+            max-width: 900px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -145,7 +145,7 @@ Project content panel
 
 div.cd-wagon-content form {
     width: 90%;
-    max-width: 800px;
+    max-width: 900px;
     margin: 4em auto;
 }
 
@@ -159,11 +159,17 @@ label {
 fieldset {
     padding: 0;
     border: 2px solid cornflowerblue;
-    padding:10px;
-    margin-bottom:20px;
+    padding: 10px;
+    margin-bottom: 20px;
 }
 
 legend {
-    color:cornflowerblue;
-    font-style:italic
+    color: cornflowerblue;
+    font-style: italic
+}
+
+.panel-control-top {
+    /*background-color: #ebebeb;
+    border: 1px solid #6f757c;*/
+    padding: 1em 1.4em 0 1.4em;
 }
