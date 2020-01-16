@@ -299,37 +299,32 @@
                     "change_user": data.change_user,
                     }
             },
-            //
+            // Обновить данные в таблице
             updateRow: function (data) {
                 var row = this.getRow(data);
-                //var rows = $('tr#' + row.num);
-                //var s =
-                    table_wagon_cards.obj.rows('.selected').data({ num: row.num, genus_wagon: row.genus_wagon});
-
-                var s1 = s[0].cell(':eq(2)').data();
-
-                //table_wagon_cards.obj.row('.selected').cell(':eq(1)').data(row.genus_wagon);
-                //table_wagon_cards.obj.row('.selected').cell(':eq(2)').data(row.state);
-                //table_wagon_cards.obj.row('.selected').cell(':eq(3)').data(row.wagon_manufacturer);
-                //table_wagon_cards.obj.row('.selected').cell(':eq(4)').data(row.year_wagon_create);
-                //table_wagon_cards.obj.row('.selected').cell(':eq(5)').data(row.station);
-                //table_wagon_cards.obj.row('.selected').cell(':eq(6)').data(row.carrying_capacity);
-                //table_wagon_cards.obj.row('.selected').cell(':eq(7)').data(row.tara);
-                //table_wagon_cards.obj.row('.selected').cell(':eq(8)').data(row.type_repairs);
-                //table_wagon_cards.obj.row('.selected').cell(':eq(9)').data(row.date_type_repairs);
-                //table_wagon_cards.obj.row('.selected').cell(':eq(10)').data(row.code_model_wagon);
-                //table_wagon_cards.obj.row('.selected').cell(':eq(11)').data(row.type_wagon);
-                //table_wagon_cards.obj.row('.selected').cell(':eq(12)').data(row.axis_length);
-                //table_wagon_cards.obj.row('.selected').cell(':eq(13)').data(row.body_volume);
-                //table_wagon_cards.obj.row('.selected').cell(':eq(14)').data(row.type_ownership);
-                //table_wagon_cards.obj.row('.selected').cell(':eq(15)').data(row.owner_wagon);
-                //table_wagon_cards.obj.row('.selected').cell(':eq(16)').data(row.date_registration);
-                //table_wagon_cards.obj.row('.selected').cell(':eq(17)').data(row.lessor_wagon);
-                //table_wagon_cards.obj.row('.selected').cell(':eq(18)').data(row.operator_wagon);
-                //table_wagon_cards.obj.row('.selected').cell(':eq(19)').data(row.poligon_travel_wagon);
-                //table_wagon_cards.obj.row('.selected').cell(':eq(20)').data(row.special_conditions);
-                //table_wagon_cards.obj.row('.selected').cell(':eq(21)').data(row.sap);
-                //table_wagon_cards.obj.draw(false);
+                var index = table_wagon_cards.obj.row('#' + data.num).index();
+                table_wagon_cards.obj.cell(index, 1).data(row.genus_wagon);
+                table_wagon_cards.obj.cell(index, 2).data(row.state);
+                table_wagon_cards.obj.cell(index, 3).data(row.wagon_manufacturer);
+                table_wagon_cards.obj.cell(index, 4).data(row.year_wagon_create);
+                table_wagon_cards.obj.cell(index, 5).data(row.station);
+                table_wagon_cards.obj.cell(index, 6).data(row.carrying_capacity);
+                table_wagon_cards.obj.cell(index, 7).data(row.tara);
+                table_wagon_cards.obj.cell(index, 8).data(row.type_repairs);
+                table_wagon_cards.obj.cell(index, 9).data(row.date_type_repairs);
+                table_wagon_cards.obj.cell(index, 10).data(row.code_model_wagon);
+                table_wagon_cards.obj.cell(index, 11).data(row.type_wagon);
+                table_wagon_cards.obj.cell(index, 12).data(row.axis_length);
+                table_wagon_cards.obj.cell(index, 13).data(row.body_volume);
+                table_wagon_cards.obj.cell(index, 14).data(row.type_ownership);
+                table_wagon_cards.obj.cell(index, 15).data(row.owner_wagon);
+                table_wagon_cards.obj.cell(index, 16).data(row.date_registration);
+                table_wagon_cards.obj.cell(index, 17).data(row.lessor_wagon);
+                table_wagon_cards.obj.cell(index, 18).data(row.operator_wagon);
+                table_wagon_cards.obj.cell(index, 19).data(row.poligon_travel_wagon);
+                table_wagon_cards.obj.cell(index, 20).data(row.special_conditions);
+                table_wagon_cards.obj.cell(index, 21).data(row.sap);
+                table_wagon_cards.obj.draw();
             },
             // Формирование элементов фильтра
             initComplete: function () {
@@ -721,9 +716,6 @@
             // Показать информацию
             view: function (num) {
                 this.clear_error();
-                //    .parents('.form-group').addClass('has-feedback');
-                ////найти glyphicon, который предназначен для показа иконки успеха или ошибки
-                //formGroup.find('.form-control-feedback').removeClass('glyphicon-ok glyphicon-remove');
                 // Получим данные
                 if (num) {
                     this.num = num;
@@ -757,7 +749,6 @@
                 this.state_wagon_edit.val(wagon && wagon.id_state !== null ? wagon.id_state : -1);
                 //
                 this.station_wagon_view.val(wagon && wagon.code_station ? this.getTextOfList(this.list_station, wagon.code_station) : '');
-                //wagon.code_station = 40031;
                 this.station_wagon_edit.val(wagon && wagon.code_station !== null ? wagon.code_station : '');
                 //
                 this.genus_wagon_view.val(wagon ? this.getTextOfList(this.list_genus_wagon, wagon.id_genus_wagon) : '');
@@ -767,7 +758,6 @@
                 this.type_wagon_edit.val(wagon && wagon.id_type_wagon !== null ? wagon.id_type_wagon : -1);
                 //
                 this.code_model_wagon_view.val(wagon && wagon.code_model_wagon ? this.getTextOfList(this.list_models_wagons, wagon.code_model_wagon) : '');
-                //wagon.code_model_wagon = '10-475';
                 this.code_model_wagon_edit.val(wagon && wagon.code_model_wagon !== null ? wagon.code_model_wagon : '');
                 //
                 this.wagon_manufacturer_wagon_view.val(wagon ? this.getTextOfList(this.list_wagon_manufacturers, wagon.id_wagon_manufacturer) : '');
@@ -1098,26 +1088,6 @@
             mors.ids_dir.getListSpecialConditions('id', 'special_conditions', lang)
         );
         table_wagon_cards.viewTable(false);
-        // #myInput is a <input type="text"> element
-
-        //$('#myInput1').on( 'keyup', function () {
-
-        //    //table_wagon_cards.obj.search(this.value).draw();
-
-        //    table_wagon_cards.obj.columns(1).search(this.value,false,true)
-        //    table_wagon_cards.obj.draw();
-
-        //});
-        //$('#myInput2').on( 'keyup', function () {
-
-        //    //table_wagon_cards.obj.search(this.value).draw();
-
-        //    table_wagon_cards.obj.columns(2).search(this.value,false,true)
-        //    table_wagon_cards.obj.draw();
-
-        //});
-
-        //var t = mors
     });
 
 });
