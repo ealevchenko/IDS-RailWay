@@ -250,6 +250,7 @@ var cd_initSelect = function (obj_select, property, data, callback_option, value
 /* ----------------------------------------------------------
     Компоненты JQUERY UI
 -------------------------------------------------------------*/
+//Datepicker ----------------------------------------------------------------------
 $.datepicker.regional.ru = {
     closeText: "Закрыть",
     prevText: "&#x3C;Пред",
@@ -268,4 +269,72 @@ $.datepicker.regional.ru = {
     isRTL: false,
     showMonthAfterYear: false,
     yearSuffix: ""
+};
+
+/* ----------------------------------------------------------
+    Спомогательные функции
+-------------------------------------------------------------*/
+// Коррекция вывода даты с учетом зоны
+var toISOStringTZ = function (date) {
+    return date ? new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString() : null;
+};
+// Преобразовать из ISO в Date
+var ISOtoDate = function (s_date) {
+    if (s_date){
+        var dt = moment(s_date);
+        return dt ? dt._d : null;
+    }
+    return null
+};
+// Преобразовать из Date в строку согласно указанного формата
+var DateToStringOfCulture = function (date, lang) {
+    if (date) {
+        return moment(date).format(lang === 'ru' ? 'DD.MM.YYYY' : 'MM/DD/YYYY');
+    }
+    return null;
+}
+//
+var StringDateToFormatStringDate = function (s_date, lang) {
+    return DateToStringOfCulture(ISOtoDate(s_date), lang);
+};
+
+//var toCorrectISOString = function (date) {
+//    return date ? date.toISOString() : null;
+//};
+//
+var get_date_value = function (obj, lang) {
+    if (obj && obj.val()) {
+        var dt = moment(obj.val(), lang === 'ru' ? 'DD.MM.YYYY' : 'MM/DD/YYYY');
+        return dt ? dt._d : null;
+    }
+    return null;
+};
+
+var set_date_value = function (date, lang) {
+    if (date) {
+        var dt = moment(date, lang === 'ru' ? 'DD.MM.YYYY' : 'MM/DD/YYYY');
+        return dt ? dt._d : null;
+    }
+    return null;
+};
+
+// Врнуть значение select с проверкой
+var get_input_value = function (obj) {
+    if (obj) {
+        return obj.val() !== '' ? Number(obj.val()) : null;
+    }
+    return null ;
+};
+// Врнуть значение select с проверкой
+var get_select_value = function (select) {
+    if (select) {
+        return select.val() === "-1" ? '' : select.val();
+    }
+    return '';
+};
+var get_select_number_value = function (select) {
+    if (select) {
+        return Number(select.val()) === -1 ? null : Number(select.val());
+    }
+    return null;
 };

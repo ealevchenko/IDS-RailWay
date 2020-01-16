@@ -15,8 +15,7 @@
 
 @section scripts {
     @Scripts.Render("~/bundles/DataTables")
-
-
+    @Scripts.Render("~/bundles/Moment")
     <script src="~/Scripts/view/shared/common.js"></script> <!-- Общая библиотека методов программы -->
     <script src="~/Scripts/api/shared.js"></script> <!-- Общая библиотека методов API -->
     <script src="~/Scripts/api/ids_directory.js"></script> <!-- Class API ИДС Справочники -->
@@ -25,6 +24,7 @@
 
     <script src="~/Scripts/view/idsmors/electronic-cards.js"></script> <!--  -->
 }
+<input id="username" type="hidden" value="@User.Identity.Name" />
 <main class="cd-main-content">
     <div class="cd-tab-filter-wrapper">
         <div class="cd-tab-filter">
@@ -72,8 +72,12 @@
                     </div>
                     <div class="row wagon-add">
                         <div class="form-group col-xs-6">
-                            <label for="num-wagon-edit">@IDSMORSResource.num_wagon_label:</label>
-                            <input type="number" class="form-control" id="num-wagon-edit">
+                            <label for="num-wagon-edit" class="control-label">@IDSMORSResource.num_wagon_label:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
+                                <input type="number" class="form-control" id="num-wagon-edit" name="num-wagon-edit" required="required" pattern="\d[0-9]{8,}">
+                                <span class=" glyphicon form-control-feedback"></span>
+                            </div>
                         </div>
                     </div>
                 </div>

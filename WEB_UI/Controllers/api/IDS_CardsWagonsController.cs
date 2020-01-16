@@ -125,5 +125,39 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // POST api/ids/mors/cards_wagons/
+        [HttpPost]
+        [Route("")]
+        public int PostCardsWagons([FromBody]CardsWagons value)
+        {
+            try
+            {
+                this.ef_cards.Add(value);
+                this.ef_cards.Save();
+                this.ef_cards.Refresh(value);
+                return value.num;
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+        }
+
+        // PUT api/ids/mors/cards_wagons/num
+        [HttpPut]
+        [Route("num/{num:int}")]
+        public int PutListProjects(int num, [FromBody]CardsWagons value)
+        {
+            try
+            {
+                this.ef_cards.Update(value);
+                return this.ef_cards.Save();
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+        }
+
     }
 }

@@ -649,13 +649,13 @@ IDS_DIRECTORY.prototype.getTypeWagons_Internal_Of_ID = function (id_type_wagon) 
     }
 };
 //
-IDS_DIRECTORY.prototype.getValue_TypeWagons_Of_ID = function (id_state, name, lang) {
-    var obj = this.getTypeWagons_Internal_Of_ID(id_state);
+IDS_DIRECTORY.prototype.getValue_TypeWagons_Of_ID = function (id_type_wagon, name, lang) {
+    var obj = this.getTypeWagons_Internal_Of_ID(id_type_wagon);
     return this.getValueObj(obj, name, lang);
 };
 //
-IDS_DIRECTORY.prototype.getValueCulture_TypeWagons_Of_ID = function (id_state, name) {
-    var obj = this.getTypeWagons_Internal_Of_ID(id_state);
+IDS_DIRECTORY.prototype.getValueCulture_TypeWagons_Of_ID = function (id_type_wagon, name) {
+    var obj = this.getTypeWagons_Internal_Of_ID(id_type_wagon);
     return obj ? obj[name + '_' + this.lang] : null;
 };
 //

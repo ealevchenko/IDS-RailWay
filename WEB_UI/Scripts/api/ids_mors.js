@@ -92,6 +92,7 @@ IDS_MORS.prototype.getCardsWagons = function (callback) {
         },
     });
 };
+//
 IDS_MORS.prototype.getCardsWagonsOfNum = function (num, callback) {
     $.ajax({
         type: 'GET',
@@ -114,6 +115,82 @@ IDS_MORS.prototype.getCardsWagonsOfNum = function (num, callback) {
         },
     });
 };
+//Обновить карточку
+IDS_MORS.prototype.putCardsWagons = function (card, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/mors/cards_wagons/num/' + card.num,
+        data: JSON.stringify(card),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_MORS.putCardsWagons", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Удалить карточку по номеру вагона
+IDS_MORS.prototype.deleteCardsWagons = function (num, callback) {
+    $.ajax({
+        url: '../../api/ids/mors/cards_wagons/num/' + num,
+        type: 'DELETE',
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_MORS.deleteCardsWagons", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Добавить карточку
+IDS_MORS.prototype.postCardsWagons = function (card, callback) {
+    $.ajax({
+        url: '../../api/ids/mors/cards_wagons/',
+        type: 'POST',
+        data: JSON.stringify(card),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_MORS.postCardsWagons", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
+
+
+
 //======= CardsWagonsRepairs (Таблица карточек ремонтов вагонов) ======================================
 IDS_MORS.prototype.getCardsWagonsRepairs = function (callback) {
     $.ajax({

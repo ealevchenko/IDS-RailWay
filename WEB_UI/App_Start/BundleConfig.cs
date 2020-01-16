@@ -89,6 +89,10 @@ namespace WEB_UI
                 //,"~/Content/DataTables/css/datatables.css"
                 ));
 
+            // Moment ---------------------------------------------------------------------------
+            bundles.Add(new ScriptBundle("~/bundles/Moment").Include(
+                "~/Scripts/moment.min.js"
+                ));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/site.css"));
