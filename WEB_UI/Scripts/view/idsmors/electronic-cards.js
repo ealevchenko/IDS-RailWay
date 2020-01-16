@@ -396,7 +396,7 @@
                 },
                 enableTabRepairs: function () {
                     wagon_card.tabs.html_div.tabs("option", "disabled", []);
-                },
+                }
             },
             // кнопки управления
             bt_info_edit: $('button#bt-info-edit').on('click', function () {
