@@ -133,9 +133,9 @@ namespace WEB_UI.Controllers.api
             try
             {
                 this.ef_cards.Add(value);
-                this.ef_cards.Save();
-                this.ef_cards.Refresh(value);
-                return value.num;
+                return this.ef_cards.Save();
+                //this.ef_cards.Refresh(value);
+                //return value.num;
             }
             catch (Exception e)
             {
@@ -151,6 +151,22 @@ namespace WEB_UI.Controllers.api
             try
             {
                 this.ef_cards.Update(value);
+                return this.ef_cards.Save();
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+        }
+
+        // DELETE api/ids/mors/cards_wagons/num
+        [HttpDelete]
+        [Route("num/{num:int}")]
+        public int DeleteCards(int num)
+        {
+            try
+            {
+                this.ef_cards.Delete(num);
                 return this.ef_cards.Save();
             }
             catch (Exception e)

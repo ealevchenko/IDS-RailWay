@@ -61,6 +61,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Удалить.
+        /// </summary>
+        public static string bt_delete_text {
+            get {
+                return ResourceManager.GetString("bt_delete_text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Править.
         /// </summary>
         public static string bt_edit_text {
