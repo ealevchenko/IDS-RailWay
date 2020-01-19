@@ -187,10 +187,6 @@ IDS_MORS.prototype.postCardsWagons = function (card, callback) {
         },
     });
 };
-
-
-
-
 //======= CardsWagonsRepairs (Таблица карточек ремонтов вагонов) ======================================
 IDS_MORS.prototype.getCardsWagonsRepairs = function (callback) {
     $.ajax({

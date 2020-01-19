@@ -284,7 +284,7 @@ var ISOtoDate = function (s_date) {
         var dt = moment(s_date);
         return dt ? dt._d : null;
     }
-    return null
+    return null;
 };
 // Преобразовать из Date в строку согласно указанного формата
 var DateToStringOfCulture = function (date, lang) {
@@ -302,9 +302,16 @@ var StringDateToFormatStringDate = function (s_date, lang) {
 //    return date ? date.toISOString() : null;
 //};
 //
-var get_date_value = function (obj, lang) {
+var get_date_value_obj = function (obj, lang) {
     if (obj && obj.val()) {
-        var dt = moment(obj.val(), lang === 'ru' ? 'DD.MM.YYYY' : 'MM/DD/YYYY');
+        return get_date_value(obj.val(), lang);
+    }
+    return null;
+};
+
+var get_date_value = function (s_date, lang) {
+    if (s_date) {
+        var dt = moment(s_date, lang === 'ru' ? 'DD.MM.YYYY' : 'MM/DD/YYYY');
         return dt ? dt._d : null;
     }
     return null;

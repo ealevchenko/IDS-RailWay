@@ -225,8 +225,8 @@
                     "year_wagon_create": data.year_wagon_create,
                     "code_station": data.code_station,
                     "station": mors.uz_dir !== null ? mors.uz_dir.getValue_Station_Of_CodeCS(data.code_station, 'station') : data.code_station,
-                    "carrying_capacity": data.carrying_capacity,
-                    "tara": data.tara,
+                    "carrying_capacity": data.carrying_capacity !== null ? Number(data.carrying_capacity).toFixed(1) : null,
+                    "tara": data.tara !== null ? Number(data.tara).toFixed(1) : null,
                     "id_type_repairs": data.id_type_repairs,
                     "type_repairs": mors.ids_dir !== null ? mors.ids_dir.getValue_TypesRepairsWagons_Of_ID(data.id_type_repairs, 'type_repairs', lang) : data.id_type_repairs,
                     //"date_type_repairs": data.date_type_repairs,
@@ -234,8 +234,8 @@
                     "code_model_wagon": data.code_model_wagon,
                     "id_type_wagon": data.id_type_wagon,
                     "type_wagon": mors.ids_dir !== null ? mors.ids_dir.getValue_TypeWagons_Of_ID(data.id_type_wagon, 'type', lang) : data.id_type_wagon,
-                    "axis_length": data.axis_length,
-                    "body_volume": data.body_volume,
+                    "axis_length": data.axis_length !== null ? Number(data.axis_length).toFixed(2) : null,
+                    "body_volume": data.body_volume !== null ? Number(data.body_volume).toFixed(1) : null,
                     "id_type_ownership": data.id_type_ownership,
                     "type_ownership": mors.ids_dir !== null ? mors.ids_dir.getValue_TypeOwnerShip_Of_ID(data.id_type_ownership, 'type_ownership', lang) : data.id_type_ownership,
                     "id_owner_wagon": data.id_owner_wagon,
@@ -307,7 +307,7 @@
             // Select по номеру вагона
             selectRow: function (num) {
                 var index = table_wagon_cards.obj.row('#' + num).index();
-                    table_wagon_cards.obj.row(index).select();            
+                table_wagon_cards.obj.row(index).select();
             },
             // Deselect по номеру вагона
             deselectRow: function (num) {
@@ -416,8 +416,12 @@
                     wagon_card.view_card(wagon_card.wagon, 0); // отмена по режиму "Править"
                 }
             }),
+
+            bt_repairs_add: $('button#bt-repairs-add').on('click', function () {
+                wagon_card.view_card(null, 3);
+            }),
             // Режим "Править" панель "Ремонты"
-            bt_repairs_edit: $('button#bt-repairs-edit').on('click', function () {
+            bt_depo_repairs_edit: $('button#bt-depo-repairs-edit').on('click', function () {
                 wagon_card.view_card(wagon_card.wagon, 1);
             }),
             // "Сохранить изменения" панель "Ремонты"
@@ -432,6 +436,8 @@
 
             // Основные характеристики
             content: $('.cd-wagon-content'),
+            // сообщения
+            wagon_content_message: $('div#wagon-content-success-alert'),
             num_wagon_view: $('input#num-wagon-view'),
             num_wagon_edit: $('input#num-wagon-edit'),
             state_wagon_view: $('input#state-wagon-view'),
@@ -505,6 +511,7 @@
             mode: 0,        // Режим 0-view 1-edit 2 add
             num: null,      // Номер вагона выбранного
             wagon: null,    // Информация по выбранному вагону
+            repairs: null,    // Информация по ремонтам выбранного вагона
             // инициализировать
             init: function (
                 list_state,
@@ -712,6 +719,21 @@
                     return true; //отправляете ваш submit
                 });
             },
+            //----------------------------------------------------------------------
+            load_repairs: function (num) {
+                this.num = num;
+                LockScreen(langView('mess_delay', langs));
+                // Загрузим проект
+                mors.getCardsWagonsOfNum(num, function (result_card_repairs) {
+                    wagon_card.repairs = result_card_repairs;
+
+                    wagon_card.mode = 0; // сбросим на просмотр
+                    wagon_card.view_card(wagon_card.wagon, wagon_card.mode);
+                    LockScreenOff();
+                });
+            },
+
+            //----------------------------------------------------------------------
             // Загрузить данные и показать
             load_card: function (num) {
                 this.num = num;
@@ -805,8 +827,21 @@
                     wagon_card.mode_add_info();
                 }
             },
-            //
+            // Очистить сообщения
+            clear_message: function () {
+                this.wagon_content_message.addClass('hidden').find('div#wagon-content-message').text('');
+            },
+            // Вывести сообщение об ошибке
+            out_error_message: function (message) {
+                this.wagon_content_message.removeClass('alert-success hidden').addClass('alert-danger').find('div#wagon-content-message').append(message).append($('<br />'));
+            },
+            // Вывести информационное сообщение
+            out_info_message: function (message) {
+                this.wagon_content_message.removeClass('alert-danger hidden').addClass('alert-success').find('div#wagon-content-message').text(message);
+            },
+            // Очистить все ошибки
             clear_error: function () {
+                this.clear_message();
                 var fm = $('form#wagon-content');
                 var fg = fm.find('.form-group').addClass('has-feedback').removeClass('has-error has-success');
                 var fcf = fg.find('.form-control-feedback').removeClass('glyphicon-ok glyphicon-remove');
@@ -874,56 +909,131 @@
                 $('.wagon-repairs-view').hide();
                 $('.wagon-repairs-edit').show();
             },
+            //----------ВАЛИДАЦИЯ-------------------------------------------------------
+            // Установить признак ошибка
+            set_control_error: function (o) {
+                var formGroupCaptcha = o.parents('.form-group');
+                var glyphiconCaptcha = formGroupCaptcha.find('.form-control-feedback');
+                formGroupCaptcha.addClass('has-error').removeClass('has-success');
+                glyphiconCaptcha.addClass('glyphicon-remove').removeClass('glyphicon-ok');
+            },
+            // Установить признак Ok
+            set_control_ok: function (o) {
+                var formGroupCaptcha = o.parents('.form-group');
+                var glyphiconCaptcha = formGroupCaptcha.find('.form-control-feedback');
+                formGroupCaptcha.addClass('has-success').removeClass('has-error');
+                glyphiconCaptcha.addClass('glyphicon-ok').removeClass('glyphicon-remove');
+            },
+            // Проверим Select выбор сделан?
+            checkSelection: function (o, message) {
+                if (Number(o.val()) < 0) {
+                    wagon_card.set_control_error(o);
+                    wagon_card.out_error_message(message);
+                    return false;
+                } else {
+                    wagon_card.set_control_ok(o);
+                    return true;
+                }
+            },
+            // Проверим Input введенное значение есть в справочнике
+            checkInputOfList: function (o, list, message) {
+                if (o.val() !== "") {
+                    var value = o.val();
+                    var obj = getObjects(list, 'value', value);
+                    if (obj.length > 0) {
+                        wagon_card.set_control_ok(o);
+                        return true;
+                    } else {
+                        wagon_card.set_control_error(o);
+                        wagon_card.out_error_message(message);
+                        return false;
+                    }
+                } else {
+                    wagon_card.set_control_ok(o);
+                    return true;
+                }
+            },
+            // Проверим Input введенное значение входит в диапазон
+            checkInputOfRange: function (o, min, max, message) {
+                if (o.val() !== "") {
+                    var value = Number(o.val());
+                    if (isNaN(value) || value > max || value < min ) {
+                        wagon_card.set_control_error(o);
+                        wagon_card.out_error_message(message);
+                        return false;
+                    } else {
+                        wagon_card.set_control_ok(o);
+                        return true;
+                    }
+                } else {
+                    wagon_card.set_control_ok(o);
+                    return true;
+                }
+            },
+            // Проверим Input размер текста
+            checkInputOfLength: function (o, min, max, message) {
+                    var value = Number(o.val());
+                if (o.val().length > max || o.val().length < min ) {
+                        wagon_card.set_control_error(o);
+                        wagon_card.out_error_message(message);
+                        return false;
+                    } else {
+                        wagon_card.set_control_ok(o);
+                        return true;
+                    }
+            },
+            // Проверить Input введенное значение даты
+            checkInputOfDate: function (o, format) {
+                if (o.val() !== "") {
+                    var s = o.val();
+                    var dt = moment(o.val(), format);
+                    if (!dt.isValid()) {
+                        wagon_card.set_control_error(o);
+                        wagon_card.out_error_message("Дата должна быть указана в формате '"+ format + "'");
+                        return false;
+                    } else {
+                        wagon_card.set_control_ok(o);
+                        return true;
+                    }
+                } else {
+                    wagon_card.set_control_ok(o);
+                    return true;
+                }
+            },
             // Проверка валидности формы основных настроек
             validation_info: function () {
+                this.clear_error();
                 var valid = true;
+
+                if (wagon_card.mode === 2) {
+                    valid = valid & wagon_card.checkInputOfLength(wagon_card.num_wagon_edit, 8, 8, "Номер вагона должен иметь размер 8 чисел.");
+                }
+                // Проверим государство собственник
+                valid = valid & wagon_card.checkSelection(wagon_card.state_wagon_edit, "Укажите государство собственник");
+                // Если указана станция проверим
+                valid = valid & wagon_card.checkInputOfList(wagon_card.station_wagon_edit, wagon_card.list_station, "Код станции не найден в справочнике.");
+                valid = valid & wagon_card.checkSelection(wagon_card.genus_wagon_edit, "Выберите род подвижного состава");
+                wagon_card.set_control_ok(wagon_card.type_wagon_edit);
+                valid = valid & wagon_card.checkInputOfList(wagon_card.code_model_wagon_edit, wagon_card.list_models_wagons, "Модель вагона не найдена в справочнике.");
+                wagon_card.set_control_ok(wagon_card.wagon_manufacturer_wagon_edit);
+                valid = valid & wagon_card.checkInputOfRange(wagon_card.year_wagon_create_wagon_edit, 1980, new Date().getFullYear(), "Год постройки должен быть в диапазоне от 1980 по " + new Date().getFullYear());
+                valid = valid & wagon_card.checkInputOfRange(wagon_card.carrying_capacity_wagon_edit, 60.0, 80.0, "Грузоподъемность должна быть в диапазоне от 60.0 до 80.0 тон.");
+                valid = valid & wagon_card.checkInputOfRange(wagon_card.tara_wagon_edit, 20.0, 30.0, "Тара должна быть в диапазоне от 20.0 до 30.0 тон.");
+                valid = valid & wagon_card.checkInputOfRange(wagon_card.body_volume_wagon_edit, 38.0, 94.0, "Объем кузова должен быть в диапазоне от 38.0 до 94.0 м.");
+                valid = valid & wagon_card.checkInputOfRange(wagon_card.axis_length_wagon_edit, 13.0, 15.0, "Длина по осям должна быть в диапазоне от 13.0 до 15.0 м.");
+                wagon_card.set_control_ok(wagon_card.type_repairs_wagon_edit);
+                valid = valid & wagon_card.checkInputOfDate(wagon_card.date_type_repairs_wagon_edit, lang === 'ru' ? 'DD.MM.YYYY' : 'MM/DD/YYYY');
+                valid = valid & wagon_card.checkSelection(wagon_card.type_ownership_wagon_edit, "Укажите признак собственности");
+                valid = valid & wagon_card.checkSelection(wagon_card.owner_wagon_edit, "Укажите собственника");
+                valid = valid & wagon_card.checkInputOfDate(wagon_card.date_registration_wagon_edit, lang === 'ru' ? 'DD.MM.YYYY' : 'MM/DD/YYYY');
+                wagon_card.set_control_ok(wagon_card.lessor_wagon_edit);
+                wagon_card.set_control_ok(wagon_card.operator_wagon_edit);
+                wagon_card.set_control_ok(wagon_card.poligon_travel_wagon_edit);
+                wagon_card.set_control_ok(wagon_card.special_conditions_edit);
                 return valid;
-                ////переменная formValid
-                //var formValid = true;
-                ////перебрать все элементы управления input
-                //$('input select').each(function () {
-                //    //найти предков, которые имеют класс .form-group, для установления success/error
-                //    var formGroup = $(this).parents('.form-group');
-                //    //найти glyphicon, который предназначен для показа иконки успеха или ошибки
-                //    var glyphicon = formGroup.find('.form-control-feedback');
-                //    //для валидации данных используем HTML5 функцию checkValidity
-                //    if (this.checkValidity()) {
-                //        //добавить к formGroup класс .has-success, удалить has-error
-                //        formGroup.addClass('has-success').removeClass('has-error');
-                //        //добавить к glyphicon класс glyphicon-ok, удалить glyphicon-remove
-                //        glyphicon.addClass('glyphicon-ok').removeClass('glyphicon-remove');
-                //    } else {
-                //        //добавить к formGroup класс .has-error, удалить .has-success
-                //        formGroup.addClass('has-error').removeClass('has-success');
-                //        //добавить к glyphicon класс glyphicon-remove, удалить glyphicon-ok
-                //        glyphicon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
-                //        //отметить форму как невалидную
-                //        formValid = false;
-                //    }
-                //});
-
-                ////переменная formCaptcha
-                //inputCaptcha = $("select#state-wagon-edit");
-                //formGroupCaptcha = inputCaptcha.parents('.form-group');
-                //glyphiconCaptcha = formGroupCaptcha.find('.form-control-feedback');
-                //if (inputCaptcha.val() === "-1") {
-                //    formGroupCaptcha.addClass('has-error').removeClass('has-success');
-                //    glyphiconCaptcha.addClass('glyphicon-remove').removeClass('glyphicon-ok');
-                //    //отметить капчу как невалидную 
-                //    formValid = false;
-                //} else {
-                //    formGroupCaptcha.addClass('has-success').removeClass('has-error');
-                //    glyphiconCaptcha.addClass('glyphicon-ok').removeClass('glyphicon-remove');
-                //}
-
-                //if (formValid) {
-                //    //отобразить сообщение об успехе
-                //    $('#success-alert').removeClass('hidden');
-                //    wagon_card.view_mode(0);
-                //}
             },
             // Сохранить изменения основных настроек по карте вагона 
-            save_info: function () {
+            save_info: function ()   {
                 var valid = wagon_card.validation_info();
                 if (valid) {
                     var wagon = wagon_card.get_wagon();
@@ -935,7 +1045,8 @@
                                 table_wagon_cards.addRow(wagon);
                                 wagon_card.load_card(wagon.num);
                             } else {
-                                //Ошибка
+                                wagon_card.clear_message();
+                                wagon_card.out_error_message("При добавлении нового вагона произошла ошибка!");
                             }
                         });
                     } else {
@@ -946,7 +1057,8 @@
                                 table_wagon_cards.updateRow(wagon);
                                 wagon_card.load_card(wagon.num);
                             } else {
-                                //Ошибка
+                                wagon_card.clear_message();
+                                wagon_card.out_error_message("При обновлении вагона произошла ошибка!");
                             }
                         });
                     }
@@ -956,21 +1068,22 @@
             delete_info: function () {
                 if (wagon_card.num) {
                     mors.deleteCardsWagons(wagon_card.num,
-                    function (result_del) {
-                        if (result_del > 0) {
-                            table_wagon_cards.deleteRow();
-                            wagon_card.content.removeClass('is-visible');
-                        } else {
-                            //Ошибка
-                        }
-                    });
+                        function (result_del) {
+                            if (result_del > 0) {
+                                table_wagon_cards.deleteRow();
+                                wagon_card.content.removeClass('is-visible');
+                            } else {
+                                wagon_card.clear_message();
+                                wagon_card.out_error_message("При удалении вагона произошла ошибка!");
+                            }
+                        });
                 }
             },
             // Сохранить изменения ремонтов по карте вагона 
             save_repairs: function () {
                 //var valid = wagon_card.validation_info();
                 if (valid) {
-
+                    //!!
                 }
             },
             // Получить новый объект карта вагона
@@ -988,14 +1101,14 @@
                     carrying_capacity: get_input_value(wagon_card.carrying_capacity_wagon_edit),
                     tara: get_input_value(wagon_card.tara_wagon_edit),
                     id_type_repairs: get_select_number_value(wagon_card.type_repairs_wagon_edit),
-                    date_type_repairs: toISOStringTZ(get_date_value(wagon_card.date_type_repairs_wagon_edit, lang)),
+                    date_type_repairs: toISOStringTZ(get_date_value(wagon_card.date_type_repairs_wagon_edit.datepicker("getDate"), lang)),
                     code_model_wagon: wagon_card.code_model_wagon_edit.val(),
                     id_type_wagon: get_select_number_value(wagon_card.type_wagon_edit),
                     axis_length: get_input_value(wagon_card.axis_length_wagon_edit),
                     body_volume: get_input_value(wagon_card.body_volume_wagon_edit),
                     id_type_ownership: get_select_number_value(wagon_card.type_ownership_wagon_edit),
                     id_owner_wagon: get_select_number_value(wagon_card.owner_wagon_edit),
-                    date_registration: toISOStringTZ(get_date_value(wagon_card.date_registration_wagon_edit, lang)),
+                    date_registration: toISOStringTZ(get_date_value(wagon_card.date_registration_wagon_edit.datepicker("getDate"), lang)),
                     id_lessor_wagon: get_select_number_value(wagon_card.lessor_wagon_edit),
                     id_operator_wagon: get_select_number_value(wagon_card.operator_wagon_edit),
                     id_poligon_travel_wagon: get_select_number_value(wagon_card.poligon_travel_wagon_edit),
