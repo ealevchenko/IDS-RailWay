@@ -418,11 +418,19 @@
             }),
 
             bt_repairs_add: $('button#bt-repairs-add').on('click', function () {
-                wagon_card.view_card(null, 3);
+                wagon_card.view_repairs_card(null, 6);
             }),
             // Режим "Править" панель "Ремонты"
             bt_depo_repairs_edit: $('button#bt-depo-repairs-edit').on('click', function () {
-                wagon_card.view_card(wagon_card.wagon, 1);
+                wagon_card.view_repairs_card(wagon_card.repairs, 3);
+            }),
+            // Режим "Править" панель "Ремонты"
+            bt_kap_repairs_edit: $('button#bt-kap-repairs-edit').on('click', function () {
+                wagon_card.view_repairs_card(wagon_card.repairs, 4);
+            }),
+            // Режим "Править" панель "Ремонты"
+            bt_cur_repairs_edit: $('button#bt-cur-repairs-edit').on('click', function () {
+                wagon_card.view_repairs_card(wagon_card.repairs, 5);
             }),
             // "Сохранить изменения" панель "Ремонты"
             bt_repairs_save: $('button#bt-repairs-save').on('click', function () {
@@ -493,6 +501,9 @@
             cur_type_wagons_repairs_view: $('input#cur-type-wagons-repairs-view'),
             cur_date_non_working_wagons_repairs_view: $('input#cur-date-non-working-wagons-repairs-view'),
             cur_condition_wagons_repairs_view: $('input#cur-condition-wagons-repairs-view'),
+
+            date_wagons_repairs_edit: $('input#date-wagons-repairs-edit'),
+            internal_railroad_wagons_repairs_edit: null,
             // Списки 
             list_state: null,
             list_station: null,
@@ -507,11 +518,15 @@
             list_operators_wagons: null,
             list_poligon_travel_wagons: null,
             list_special_conditions: null,
+            list_internal_railroad: null,
             //
-            mode: 0,        // Режим 0-view 1-edit 2 add
-            num: null,      // Номер вагона выбранного
-            wagon: null,    // Информация по выбранному вагону
-            repairs: null,    // Информация по ремонтам выбранного вагона
+            mode: 0,                    // Режим 0-view 1-edit 2 add
+            num: null,                  // Номер вагона выбранного
+            wagon: null,                // Информация по выбранному вагону
+            repairs: null,              // Информация по ремонтам выбранного вагона
+            repairs_depo_id: null,      // Информация по последнему деповскому ремонту выбранного вагона
+            repairs_kap_id: null,       // Информация по последнему капитальному ремонту выбранного вагона
+            repairs_cur_id: null,       // Информация по последнему текущему ремонту выбранного вагона
             // инициализировать
             init: function (
                 list_state,
@@ -526,7 +541,8 @@
                 list_lessors_wagons,
                 list_operators_wagons,
                 list_poligon_travel_wagons,
-                list_special_conditions
+                list_special_conditions,
+                list_internal_railroad
             ) {
                 this.list_state = list_state;
                 this.list_station = list_station;
@@ -541,6 +557,7 @@
                 this.list_operators_wagons = list_operators_wagons;
                 this.list_poligon_travel_wagons = list_poligon_travel_wagons;
                 this.list_special_conditions = list_special_conditions;
+                this.list_internal_railroad = list_internal_railroad;
                 // Настроим панель 
                 wagon_card.tabs.init();
                 // Настройка закрыть детали проекта
@@ -712,6 +729,25 @@
                         var id = $(this).val();
                     },
                     null);
+                // ----------------------------------------------------------------
+                this.date_wagons_repairs_edit = this.date_wagons_repairs_edit.datepicker({
+                    showOtherMonths: true,
+                    selectOtherMonths: true,
+                    showAnim: 'slideDown',
+                });
+                //
+                this.internal_railroad_wagons_repairs_edit = cd_initSelect(
+                    $('select#internal-railroad-wagons-repairs-edit'),
+                    { lang: lang },
+                    wagon_card.list_internal_railroad,
+                    null,
+                    -1,
+                    function (event) {
+                        event.preventDefault();
+                        var id = $(this).val();
+                    },
+                    null);
+
                 //
                 $("form#wagon-content").submit(function () {
                     event.preventDefault();
@@ -720,19 +756,70 @@
                 });
             },
             //----------------------------------------------------------------------
+            // 
             load_repairs: function (num) {
                 this.num = num;
                 LockScreen(langView('mess_delay', langs));
                 // Загрузим проект
-                mors.getCardsWagonsOfNum(num, function (result_card_repairs) {
+                mors.getCardsWagonsRepairsOfNum(num, function (result_card_repairs) {
                     wagon_card.repairs = result_card_repairs;
+                    // Определим последние ремонты
+                    wagon_card.repairs_depo_id = null;
+                    wagon_card.repairs_kap_id = null;
+                    wagon_card.repairs_cur_id = null;
 
                     wagon_card.mode = 0; // сбросим на просмотр
-                    wagon_card.view_card(wagon_card.wagon, wagon_card.mode);
+                    wagon_card.view_repairs_card(wagon_card.repairs, wagon_card.mode);
                     LockScreenOff();
                 });
             },
+            // Отобразить данные на экране
+            view_repairs_card: function (repairs, mode) {
+                this.mode = mode;
+                this.clear_error(); // очистить сообщения об ошибках
+                this.mode_clear(); // Очистить режим панелей
+                if (mode === 0) {
+                    wagon_card.out_repairs_card_mode_view(repairs); //Отобразить информацию режим "Просмотр"
+                } else {
+                    var rep = null;
+                    switch (mode) {
+                        case 3: {
+                            rep = getObjects(wagon_card.repairs, 'id', wagon_card.repairs_depo_id);
+                            break;
+                        }
+                        case 4: {
+                            rep = getObjects(wagon_card.repairs, 'id', wagon_card.repairs_kap_id);
+                            break;
+                        }
+                        case 5: {
+                            rep = getObjects(wagon_card.repairs, 'id', wagon_card.repairs_cur_id);
+                            break;
+                        }
+                    }
+                    wagon_card.out_repairs_card_mode_edit(rep && rep.length > 0 ? rep[0] : null); //Отобразить информацию режим "Править", "Добаввить"
+                }
+                wagon_card.content.addClass('is-visible');
+            },
+            //
+            out_repairs_card_mode_view: function (repairs) {
 
+                // отобразим панель "Основная информация" или "Ремонты"
+                if (wagon_card.tabs.active === 0) {
+                    wagon_card.mode_view_info();
+                } else {
+                    wagon_card.mode_view_repairs();
+                }
+            },
+            //
+            out_repairs_card_mode_edit: function (repairs) {
+
+                //
+                if (wagon_card.tabs.active === 0) {
+                    wagon_card.mode_edit_info();
+                } else {
+                    wagon_card.mode_edit_repairs();
+                }
+            },
             //----------------------------------------------------------------------
             // Загрузить данные и показать
             load_card: function (num) {
@@ -957,7 +1044,7 @@
             checkInputOfRange: function (o, min, max, message) {
                 if (o.val() !== "") {
                     var value = Number(o.val());
-                    if (isNaN(value) || value > max || value < min ) {
+                    if (isNaN(value) || value > max || value < min) {
                         wagon_card.set_control_error(o);
                         wagon_card.out_error_message(message);
                         return false;
@@ -972,15 +1059,15 @@
             },
             // Проверим Input размер текста
             checkInputOfLength: function (o, min, max, message) {
-                    var value = Number(o.val());
-                if (o.val().length > max || o.val().length < min ) {
-                        wagon_card.set_control_error(o);
-                        wagon_card.out_error_message(message);
-                        return false;
-                    } else {
-                        wagon_card.set_control_ok(o);
-                        return true;
-                    }
+                var value = Number(o.val());
+                if (o.val().length > max || o.val().length < min) {
+                    wagon_card.set_control_error(o);
+                    wagon_card.out_error_message(message);
+                    return false;
+                } else {
+                    wagon_card.set_control_ok(o);
+                    return true;
+                }
             },
             // Проверить Input введенное значение даты
             checkInputOfDate: function (o, format) {
@@ -989,7 +1076,7 @@
                     var dt = moment(o.val(), format);
                     if (!dt.isValid()) {
                         wagon_card.set_control_error(o);
-                        wagon_card.out_error_message("Дата должна быть указана в формате '"+ format + "'");
+                        wagon_card.out_error_message("Дата должна быть указана в формате '" + format + "'");
                         return false;
                     } else {
                         wagon_card.set_control_ok(o);
@@ -1033,7 +1120,7 @@
                 return valid;
             },
             // Сохранить изменения основных настроек по карте вагона 
-            save_info: function ()   {
+            save_info: function () {
                 var valid = wagon_card.validation_info();
                 if (valid) {
                     var wagon = wagon_card.get_wagon();
@@ -1082,9 +1169,9 @@
             // Сохранить изменения ремонтов по карте вагона 
             save_repairs: function () {
                 //var valid = wagon_card.validation_info();
-                if (valid) {
-                    //!!
-                }
+                //if (valid) {
+                //    //!!
+                //}
             },
             // Получить новый объект карта вагона
             get_wagon: function () {
@@ -1175,7 +1262,8 @@
             mors.ids_dir.getListLessorsWagons('id', 'lessors', lang),
             mors.ids_dir.getListOperatorsWagons('id', 'operators', lang),
             mors.ids_dir.getListPoligonTravelWagons('id', 'poligon_travel', lang),
-            mors.ids_dir.getListSpecialConditions('id', 'special_conditions', lang)
+            mors.ids_dir.getListSpecialConditions('id', 'special_conditions', lang),
+            mors.uz_dir.getListInternalRailroad('id', 'internal_railroad')
         );
         table_wagon_cards.viewTable(false);
     });

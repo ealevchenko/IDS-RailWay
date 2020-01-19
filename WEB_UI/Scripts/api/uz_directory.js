@@ -203,3 +203,36 @@ UZ_DIRECTORY.prototype.getListStation = function (fvalue, ftext, lang) {
     }
     return list;
 };
+//======= UZ_DIRECTORY.list_internal_railroad  (Справочник Стран и железных дорог) ======================================
+UZ_DIRECTORY.prototype.getInternalRailroad_Internal_Of_ID = function (id_internal_railroad) {
+    if (this.list_internal_railroad) {
+        var obj = getObjects(this.list_internal_railroad, 'id', id_internal_railroad);
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+UZ_DIRECTORY.prototype.getValue_InternalRailroad_Of_ID = function (id_internal_railroad, name) {
+    var obj = this.getInternalRailroad_Internal_Of_ID(id_internal_railroad);
+    return obj ? obj[name] : null;
+};
+//
+UZ_DIRECTORY.prototype.getValueCulture_InternalRailroad_Of_ID = function (id_internal_railroad, name) {
+    var obj = this.getInternalRailroad_Internal_Of_ID(id_internal_railroad);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+UZ_DIRECTORY.prototype.getListInternalRailroad = function (fvalue, ftext, lang) {
+    var list = [];
+    if (this.list_internal_railroad) {
+        for (i = 0, j = this.list_internal_railroad.length; i < j; i++) {
+            var l = this.list_internal_railroad[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+
+        }
+    }
+    return list;
+};
