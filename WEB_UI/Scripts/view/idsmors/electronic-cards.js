@@ -809,7 +809,7 @@
             //----------------------------------------------------------------------
             // 
             load_repairs: function (num) {
-                this.num = num;
+                wagon_card.num = num;
                 LockScreen(langView('mess_delay', langs));
                 // Загрузим проект
                 mors.getCardsWagonsRepairsOfNum(num, function (result_card_repairs) {
@@ -826,9 +826,9 @@
             },
             // Отобразить данные на экране
             view_repairs_card: function (repairs, mode) {
-                this.mode = mode;
-                this.clear_error(); // очистить сообщения об ошибках
-                this.mode_clear(); // Очистить режим панелей
+                wagon_card.mode = mode;
+                wagon_card.clear_error(); // очистить сообщения об ошибках
+                wagon_card.mode_clear(); // Очистить режим панелей
                 if (mode === 0) {
                     wagon_card.out_repairs_card_mode_view(repairs); //Отобразить информацию режим "Просмотр"
                 } else {
@@ -853,7 +853,7 @@
             },
             //
             out_repairs_card_mode_view: function (repairs) {
-                
+
                 //this.date_wagons_repairs_v.val(repairs && repairs.date_repair ? StringDateToFormatStringDate(repairs.date_repair, lang) : '');
 
                 //this.state_wagon_view.val(repairs ? this.getTextOfList(this.list_state, repairs.id_state) : '');
@@ -871,15 +871,17 @@
             out_repairs_card_mode_edit: function (repairs) {
 
                 if (repairs && repairs.date_repair) {
-                    this.date_wagons_repairs_edit.datepicker("setDate", StringDateToFormatStringDate(repairs.date_repair, lang));
+                    wagon_card.date_wagons_repairs_edit.datepicker("setDate", StringDateToFormatStringDate(repairs.date_repair, lang));
+                } else {
+                    wagon_card.date_wagons_repairs_edit.datepicker("setDate", "");
                 }
-                this.internal_railroad_wagons_repairs_edit.val(repairs && repairs.id_internal_railroad !== null ? repairs.id_internal_railroad : -1);
-                this.code_depo_wagons_repairs_edit.val(repairs && repairs.code_depo !== null ? repairs.code_depo : -1);
-                this.type_wagons_repairs_edit.val(repairs && repairs.id_type_repair_wagon !== null ? repairs.id_type_repair_wagon : -1);
+                wagon_card.internal_railroad_wagons_repairs_edit.val(repairs && repairs.id_internal_railroad !== null ? repairs.id_internal_railroad : -1);
+                wagon_card.code_depo_wagons_repairs_edit.val(repairs && repairs.code_depo !== null ? repairs.code_depo : -1);
+                wagon_card.type_wagons_repairs_edit.val(repairs && repairs.id_type_repair_wagon !== null ? repairs.id_type_repair_wagon : -1);
                 if (repairs && repairs.date_non_working) {
-                    this.date_non_working_wagons_repairs_edit.datepicker("setDate", StringDateToFormatStringDate(repairs.date_non_working, lang));
+                    wagon_card.date_non_working_wagons_repairs_edit.datepicker("setDate", StringDateToFormatStringDate(repairs.date_non_working, lang));
                 }
-                this.condition_wagons_repairs_edit.val(repairs && repairs.id_wagons_condition !== null ? repairs.id_wagons_condition : -1);
+                wagon_card.condition_wagons_repairs_edit.val(repairs && repairs.id_wagons_condition !== null ? repairs.id_wagons_condition : -1);
                 //
                 if (wagon_card.tabs.active === 0) {
                     wagon_card.mode_edit_info();
@@ -1245,6 +1247,29 @@
                 var valid = wagon_card.validation_repairs();
                 if (valid) {
                     var repairs = wagon_card.get_repairs();
+                    if (wagon_card.mode === 6) {
+                        // Добавить ремонт
+                        mors.postCardsWagonsRepairs(repairs, function (result_add) {
+                            if (result_add > 0) {
+                                // Ок
+                                wagon_card.load_repairs(wagon_card.num);
+                            } else {
+                                wagon_card.clear_message();
+                                wagon_card.out_error_message("При добавлении нового ремонта вагона произошла ошибка!");
+                            }
+                        });
+                    } else {
+                        // Обновить ремонт
+                        mors.putCardsWagonsRepairs(repairs, function (result_upd) {
+                            if (result_upd > 0) {
+                                // Ок
+                                wagon_card.load_repairs(wagon_card.num);
+                            } else {
+                                wagon_card.clear_message();
+                                wagon_card.out_error_message("При обновлении ремонта вагона произошла ошибка!");
+                            }
+                        });
+                    }
                 }
             },
             // Получить новый объект карта вагона
@@ -1288,18 +1313,18 @@
                 var old_repairs = wagon_card.repairs;
                 var mode = wagon_card.mode;
                 return {
-                    id : mode !== 6 && old_repairs ? old_repairs.id : 0,
+                    id: mode !== 6 && old_repairs ? old_repairs.id : 0,
                     num: wagon_card.num,
                     id_type_repair_wagon: get_select_number_value(wagon_card.type_wagons_repairs_edit),
-                    date_repair : toISOStringTZ(get_date_value(wagon_card.date_wagons_repairs_edit.datepicker("getDate"), lang)),
+                    date_repair: toISOStringTZ(get_date_value(wagon_card.date_wagons_repairs_edit.datepicker("getDate"), lang)),
                     id_internal_railroad: get_select_number_value(wagon_card.internal_railroad_wagons_repairs_edit),
                     code_depo: get_select_number_value(wagon_card.code_depo_wagons_repairs_edit),
                     date_non_working: toISOStringTZ(get_date_value(wagon_card.date_non_working_wagons_repairs_edit.datepicker("getDate"), lang)),
                     id_wagons_condition: get_select_number_value(wagon_card.condition_wagons_repairs_edit),
-                    note : '',
+                    note: '',
                     create: mode !== 6 && old_repairs ? old_repairs.create : toISOStringTZ(new Date()),
                     create_user: mode !== 2 && old_repairs ? old_repairs.create_user : user_name,
-                    change : toISOStringTZ(new Date()),
+                    change: toISOStringTZ(new Date()),
                     change_user: user_name,
                 }
             },
