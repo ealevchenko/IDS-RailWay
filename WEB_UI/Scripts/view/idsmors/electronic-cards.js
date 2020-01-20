@@ -229,7 +229,6 @@
                     "tara": data.tara !== null ? Number(data.tara).toFixed(1) : null,
                     "id_type_repairs": data.id_type_repairs,
                     "type_repairs": mors.ids_dir !== null ? mors.ids_dir.getValue_TypesRepairsWagons_Of_ID(data.id_type_repairs, 'type_repairs', lang) : data.id_type_repairs,
-                    //"date_type_repairs": data.date_type_repairs,
                     "date_type_repairs": StringDateToFormatStringDate(data.date_type_repairs, lang),
                     "code_model_wagon": data.code_model_wagon,
                     "id_type_wagon": data.id_type_wagon,
@@ -504,6 +503,11 @@
 
             date_wagons_repairs_edit: $('input#date-wagons-repairs-edit'),
             internal_railroad_wagons_repairs_edit: null,
+            code_depo_wagons_repairs_edit: null,
+            type_wagons_repairs_edit: null,
+            date_non_working_wagons_repairs_edit: $('input#date-non-working-wagons-repairs-edit'),
+            condition_wagons_repairs_edit: null,
+
             // Списки 
             list_state: null,
             list_station: null,
@@ -519,6 +523,7 @@
             list_poligon_travel_wagons: null,
             list_special_conditions: null,
             list_internal_railroad: null,
+            list_depo: null,
             //
             mode: 0,                    // Режим 0-view 1-edit 2 add
             num: null,                  // Номер вагона выбранного
@@ -542,7 +547,10 @@
                 list_operators_wagons,
                 list_poligon_travel_wagons,
                 list_special_conditions,
-                list_internal_railroad
+                list_internal_railroad,
+                list_depo,
+                list_wagons_condition
+
             ) {
                 this.list_state = list_state;
                 this.list_station = list_station;
@@ -558,6 +566,8 @@
                 this.list_poligon_travel_wagons = list_poligon_travel_wagons;
                 this.list_special_conditions = list_special_conditions;
                 this.list_internal_railroad = list_internal_railroad;
+                this.list_depo = list_depo;
+                this.list_wagons_condition = list_wagons_condition;
                 // Настроим панель 
                 wagon_card.tabs.init();
                 // Настройка закрыть детали проекта
@@ -747,7 +757,48 @@
                         var id = $(this).val();
                     },
                     null);
-
+                //
+                this.code_depo_wagons_repairs_edit = cd_initSelect(
+                    $('select#code-depo-wagons-repairs-edit'),
+                    { lang: lang },
+                    wagon_card.list_depo,
+                    null,
+                    -1,
+                    function (event) {
+                        event.preventDefault();
+                        var id = $(this).val();
+                    },
+                    null);
+                //
+                this.type_wagons_repairs_edit = cd_initSelect(
+                    $('select#type-wagons-repairs-edit'),
+                    { lang: lang },
+                    wagon_card.list_types_repairs_wagons,
+                    null,
+                    -1,
+                    function (event) {
+                        event.preventDefault();
+                        var id = $(this).val();
+                    },
+                    null);
+                //
+                this.date_non_working_wagons_repairs_edit = this.date_non_working_wagons_repairs_edit.datepicker({
+                    showOtherMonths: true,
+                    selectOtherMonths: true,
+                    showAnim: 'slideDown',
+                });
+                //
+                this.condition_wagons_repairs_edit = cd_initSelect(
+                    $('select#condition-wagons-repairs-edit'),
+                    { lang: lang },
+                    wagon_card.list_wagons_condition,
+                    null,
+                    -1,
+                    function (event) {
+                        event.preventDefault();
+                        var id = $(this).val();
+                    },
+                    null);
                 //
                 $("form#wagon-content").submit(function () {
                     event.preventDefault();
@@ -802,7 +853,13 @@
             },
             //
             out_repairs_card_mode_view: function (repairs) {
+                
+                //this.date_wagons_repairs_v.val(repairs && repairs.date_repair ? StringDateToFormatStringDate(repairs.date_repair, lang) : '');
 
+                //this.state_wagon_view.val(repairs ? this.getTextOfList(this.list_state, repairs.id_state) : '');
+
+
+                //this.type_repairs_wagon_view.val(repairs ? this.getTextOfList(this.list_types_repairs_wagons, repairs.id_type_repairs) : '');
                 // отобразим панель "Основная информация" или "Ремонты"
                 if (wagon_card.tabs.active === 0) {
                     wagon_card.mode_view_info();
@@ -813,6 +870,16 @@
             //
             out_repairs_card_mode_edit: function (repairs) {
 
+                if (repairs && repairs.date_repair) {
+                    this.date_wagons_repairs_edit.datepicker("setDate", StringDateToFormatStringDate(repairs.date_repair, lang));
+                }
+                this.internal_railroad_wagons_repairs_edit.val(repairs && repairs.id_internal_railroad !== null ? repairs.id_internal_railroad : -1);
+                this.code_depo_wagons_repairs_edit.val(repairs && repairs.code_depo !== null ? repairs.code_depo : -1);
+                this.type_wagons_repairs_edit.val(repairs && repairs.id_type_repair_wagon !== null ? repairs.id_type_repair_wagon : -1);
+                if (repairs && repairs.date_non_working) {
+                    this.date_non_working_wagons_repairs_edit.datepicker("setDate", StringDateToFormatStringDate(repairs.date_non_working, lang));
+                }
+                this.condition_wagons_repairs_edit.val(repairs && repairs.id_wagons_condition !== null ? repairs.id_wagons_condition : -1);
                 //
                 if (wagon_card.tabs.active === 0) {
                     wagon_card.mode_edit_info();
@@ -1263,7 +1330,9 @@
             mors.ids_dir.getListOperatorsWagons('id', 'operators', lang),
             mors.ids_dir.getListPoligonTravelWagons('id', 'poligon_travel', lang),
             mors.ids_dir.getListSpecialConditions('id', 'special_conditions', lang),
-            mors.uz_dir.getListInternalRailroad('id', 'internal_railroad')
+            mors.uz_dir.getListInternalRailroad('id', 'internal_railroad'),
+            mors.ids_dir.getListDEPO('code', 'depo', lang),
+            mors.ids_dir.getListWagonsCondition('id', 'condition', lang)
         );
         table_wagon_cards.viewTable(false);
     });

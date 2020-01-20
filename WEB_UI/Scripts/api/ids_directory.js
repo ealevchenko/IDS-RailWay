@@ -865,3 +865,67 @@ IDS_DIRECTORY.prototype.getListSpecialConditions = function (fvalue, ftext, lang
     }
     return list;
 };
+//*======= IDS_DIRECTORY.list_depo (Справочник ДЕПО) ======================================
+IDS_DIRECTORY.prototype.getDEPO_Internal_Of_ID = function (code_depo) {
+    if (this.list_depo) {
+        var obj = getObjects(this.list_depo, 'code', code_depo)
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getValue_DEPO_Of_ID = function (code_depo, name, lang) {
+    var obj = this.getDEPO_Internal_Of_ID(code_depo);
+    return this.getValueObj(obj, name, lang);
+};
+//
+IDS_DIRECTORY.prototype.getValueCulture_DEPO_Of_ID = function (code_depo, name) {
+    var obj = this.getDEPO_Internal_Of_ID(code_depo);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getListDEPO = function (fvalue, ftext, lang) {
+    var list = [];
+    if (this.list_depo) {
+        for (i = 0, j = this.list_depo.length; i < j; i++) {
+            var l = this.list_depo[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
+//======= IDS_DIRECTORY.list_wagons_condition (Справочник ДЕПО) ======================================
+IDS_DIRECTORY.prototype.getWagonsCondition_Internal_Of_ID = function (id_wagons_condition) {
+    if (this.list_wagons_condition) {
+        var obj = getObjects(this.list_wagons_condition, 'code', id_wagons_condition)
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getValue_WagonsCondition_Of_ID = function (id_wagons_condition, name, lang) {
+    var obj = this.getWagonsCondition_Internal_Of_ID(id_wagons_condition);
+    return this.getValueObj(obj, name, lang);
+};
+//
+IDS_DIRECTORY.prototype.getValueCulture_WagonsCondition_Of_ID = function (id_wagons_condition, name) {
+    var obj = this.getWagonsCondition_Internal_Of_ID(id_wagons_condition);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getListWagonsCondition = function (fvalue, ftext, lang) {
+    var list = [];
+    if (this.list_wagons_condition) {
+        for (i = 0, j = this.list_wagons_condition.length; i < j; i++) {
+            var l = this.list_wagons_condition[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
