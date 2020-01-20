@@ -169,7 +169,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на ИДС &quot; УСПС&quot;.
+        ///   Ищет локализованную строку, похожую на ИДС &quot;УСПС&quot;.
         /// </summary>
         public static string system_idsmors_title {
             get {
