@@ -1186,6 +1186,13 @@
                 wagon_card.set_control_ok(wagon_card.special_conditions_edit);
                 return valid;
             },
+            // Проверка валидности формы ремонтов
+            validation_repairs: function () {
+                this.clear_error();
+                var valid = true;
+
+                return valid;
+            },
             // Сохранить изменения основных настроек по карте вагона 
             save_info: function () {
                 var valid = wagon_card.validation_info();
@@ -1235,10 +1242,10 @@
             },
             // Сохранить изменения ремонтов по карте вагона 
             save_repairs: function () {
-                //var valid = wagon_card.validation_info();
-                //if (valid) {
-                //    //!!
-                //}
+                var valid = wagon_card.validation_repairs();
+                if (valid) {
+                    //!!
+                }
             },
             // Получить новый объект карта вагона
             get_wagon: function () {
