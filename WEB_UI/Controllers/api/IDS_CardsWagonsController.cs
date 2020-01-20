@@ -146,7 +146,7 @@ namespace WEB_UI.Controllers.api
         // PUT api/ids/mors/cards_wagons/num
         [HttpPut]
         [Route("num/{num:int}")]
-        public int PutListProjects(int num, [FromBody]CardsWagons value)
+        public int PutCardsWagons(int num, [FromBody]CardsWagons value)
         {
             try
             {
@@ -162,7 +162,7 @@ namespace WEB_UI.Controllers.api
         // DELETE api/ids/mors/cards_wagons/num
         [HttpDelete]
         [Route("num/{num:int}")]
-        public int DeleteCards(int num)
+        public int DeleteCardsWagons(int num)
         {
             try
             {
