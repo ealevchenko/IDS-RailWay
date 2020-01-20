@@ -1244,7 +1244,7 @@
             save_repairs: function () {
                 var valid = wagon_card.validation_repairs();
                 if (valid) {
-                    //!!
+                    var repairs = wagon_card.get_repairs();
                 }
             },
             // Получить новый объект карта вагона
@@ -1253,7 +1253,7 @@
                 var old_wagon = wagon_card.wagon;
                 var mode = wagon_card.mode;
                 return {
-                    num: mode !== 4 && old_wagon ? old_wagon.num : Number(wagon_card.num_wagon_edit.val()),
+                    num: mode !== 2 && old_wagon ? old_wagon.num : Number(wagon_card.num_wagon_edit.val()),
                     id_genus_wagon: get_select_number_value(wagon_card.genus_wagon_edit),
                     id_state: get_select_number_value(wagon_card.state_wagon_edit),
                     id_wagon_manufacturer: get_select_number_value(wagon_card.wagon_manufacturer_wagon_edit),
@@ -1276,9 +1276,30 @@
                     id_special_conditions: get_select_number_value(wagon_card.special_conditions_edit),
                     sap: null,
                     note: '',
-                    create: mode !== 4 && old_wagon ? old_wagon.create : toISOStringTZ(new Date()),
-                    create_user: mode !== 4 && old_wagon ? old_wagon.create_user : user_name,
+                    create: mode !== 2 && old_wagon ? old_wagon.create : toISOStringTZ(new Date()),
+                    create_user: mode !== 2 && old_wagon ? old_wagon.create_user : user_name,
                     change: toISOStringTZ(new Date()), //'2020-01-02T00:00:00'
+                    change_user: user_name,
+                }
+            },
+
+            get_repairs: function () {
+                // Получим старый ремонт
+                var old_repairs = wagon_card.repairs;
+                var mode = wagon_card.mode;
+                return {
+                    id : mode !== 6 && old_repairs ? old_repairs.id : 0,
+                    num: wagon_card.num,
+                    id_type_repair_wagon: get_select_number_value(wagon_card.type_wagons_repairs_edit),
+                    date_repair : toISOStringTZ(get_date_value(wagon_card.date_wagons_repairs_edit.datepicker("getDate"), lang)),
+                    id_internal_railroad: get_select_number_value(wagon_card.internal_railroad_wagons_repairs_edit),
+                    code_depo: get_select_number_value(wagon_card.code_depo_wagons_repairs_edit),
+                    date_non_working: toISOStringTZ(get_date_value(wagon_card.date_non_working_wagons_repairs_edit.datepicker("getDate"), lang)),
+                    id_wagons_condition: get_select_number_value(wagon_card.condition_wagons_repairs_edit),
+                    note : '',
+                    create: mode !== 6 && old_repairs ? old_repairs.create : toISOStringTZ(new Date()),
+                    create_user: mode !== 2 && old_repairs ? old_repairs.create_user : user_name,
+                    change : toISOStringTZ(new Date()),
                     change_user: user_name,
                 }
             },
