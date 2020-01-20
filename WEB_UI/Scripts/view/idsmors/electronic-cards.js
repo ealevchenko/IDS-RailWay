@@ -375,13 +375,13 @@
                     //this.activeTable(this.active, true);
                 },
                 activeTab: function (active, data_refresh) {
-                    wagon_card.view_card(wagon_card.wagon, 0);
-                    //if (active === 0) {
-                    //    wagon_card.view_card(0);
-                    //}
-                    //if (active === 1) {
-                    //    wagon_card.view_card(2);
-                    //}
+                    
+                    if (active === 0) {
+                        wagon_card.view_card(wagon_card.wagon, 0);
+                    }
+                    if (active === 1) {
+                        wagon_card.load_repairs(wagon_card.num)
+                    }
 
                 },
                 disableTabRepairs: function () {
