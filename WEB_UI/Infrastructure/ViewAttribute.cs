@@ -6,14 +6,14 @@ using System.Web.Mvc;
 
 namespace WEB_UI.Infrastructure
 {
-    public class ViewAuthorizeAttribute : AuthorizeAttribute, IActionFilter
+    public class ViewAttribute : AuthorizeAttribute, IActionFilter
     {
         private string[] allowedUsers = new string[] { };
         private string[] allowedRoles = new string[] { };
         private string RulesAccess = null;
         private bool? access = false;
 
-        public ViewAuthorizeAttribute()
+        public ViewAttribute()
         {
         }
 
@@ -86,25 +86,7 @@ namespace WEB_UI.Infrastructure
             bool rl = Role(filterContext.HttpContext);
             if (!(us | rl))
             {
-
-                string message = filterContext.HttpContext.User.Identity.Name + ";" + filterContext.ActionDescriptor.ActionName;
-                filterContext.Result = new ViewResult()
-                {
-                    ViewName = "AccessDenied",
-                    ViewData = new ViewDataDictionary(filterContext.Controller.ViewData)
-                    {
-                        Model = message, // set the model
-                    }
-                };
-
-
-                // если не локал хост
-                ////if (!filterContext.HttpContext.Request.IsLocal) logVisit.SaveVisit(filterContext, this.RulesAccess, this.access);
-                //filterContext.Result = new ViewResult
-                //{
-                //    ViewName = "AccessDenied",
-                //    ViewData = new ViewDataDictionary<string>("test")
-                //};
+                filterContext.Result = new EmptyResult();
             }
         }
     }

@@ -225,6 +225,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\CustomLocationViewEngine.cs" />
+    <Compile Include="Infrastructure\ViewAttribute.cs" />
     <Compile Include="Infrastructure\ViewAuthorizeAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -726,6 +727,10 @@
     <Content Include="Areas\IDSMORS\Views\Shared\_IDSMORS.cshtml" />
     <Content Include="Content\DataTables\extensions\Buttons\css\mixins.scss" />
     <Content Include="Content\DataTables\extensions\Buttons\css\common.scss" />
+    <Content Include="Areas\IDSMORS\Views\Home\ElectronicCardsEdit.cshtml" />
+    <Content Include="Areas\IDSMORS\Views\Home\ElectronicCardsEditDEPO.cshtml" />
+    <Content Include="Areas\IDSMORS\Views\Home\ElectronicCardsEditKap.cshtml" />
+    <Content Include="Areas\IDSMORS\Views\Home\ElectronicCardsEditCur.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
