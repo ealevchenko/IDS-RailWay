@@ -13,8 +13,11 @@ namespace EFIDS.Concrete
         {
         }
 
+        // MORS
         public virtual DbSet<CardsWagons> CardsWagons { get; set; }
         public virtual DbSet<CardsWagonsRepairs> CardsWagonsRepairs { get; set; }
+
+        // Справочники
         public virtual DbSet<Directory_DEPO> Directory_DEPO { get; set; }
         public virtual DbSet<Directory_GenusWagons> Directory_GenusWagons { get; set; }
         public virtual DbSet<Directory_LessorsWagons> Directory_LessorsWagons { get; set; }
@@ -28,6 +31,9 @@ namespace EFIDS.Concrete
         public virtual DbSet<Directory_TypeWagons> Directory_TypeWagons { get; set; }
         public virtual DbSet<Directory_WagonManufacturers> Directory_WagonManufacturers { get; set; }
         public virtual DbSet<Directory_WagonsCondition> Directory_WagonsCondition { get; set; }
+        // Доступ к сайту
+        public virtual DbSet<WebAccess> WebAccess { get; set; }
+        public virtual DbSet<WebView> WebView { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

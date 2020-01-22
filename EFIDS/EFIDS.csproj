@@ -58,6 +58,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\IRepository.cs" />
+    <Compile Include="Abstract\IWebView.cs" />
+    <Compile Include="Abstract\IWebAccess.cs" />
     <Compile Include="Concrete\EFCardsWagonsRepairs.cs" />
     <Compile Include="Concrete\EFCardsWagons.cs" />
     <Compile Include="Concrete\EFDirectory_WagonsCondition.cs" />
@@ -74,6 +76,8 @@
     <Compile Include="Concrete\EFDirectory_WagonManufacturers.cs" />
     <Compile Include="Concrete\EFDirectory_GenusWagons.cs" />
     <Compile Include="Concrete\EFRepository.cs" />
+    <Compile Include="Concrete\EFWebView.cs" />
+    <Compile Include="Concrete\EFWebAccess.cs" />
     <Compile Include="Entities\CardsWagons.cs" />
     <Compile Include="Entities\CardsWagonsRepairs.cs" />
     <Compile Include="Entities\Directory_DEPO.cs" />
@@ -90,6 +94,8 @@
     <Compile Include="Entities\Directory_WagonManufacturers.cs" />
     <Compile Include="Entities\Directory_WagonsCondition.cs" />
     <Compile Include="Concrete\EFDbContext.cs" />
+    <Compile Include="Entities\WebAccess.cs" />
+    <Compile Include="Entities\WebView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

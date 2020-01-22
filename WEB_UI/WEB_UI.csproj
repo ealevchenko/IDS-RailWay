@@ -225,7 +225,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\CustomLocationViewEngine.cs" />
+    <Compile Include="Infrastructure\ViewOfDBAttribute.cs" />
     <Compile Include="Infrastructure\ViewAttribute.cs" />
+    <Compile Include="Infrastructure\AccessOfDBAttribute.cs" />
     <Compile Include="Infrastructure\ViewAuthorizeAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -14,54 +14,61 @@ namespace Test
         static void Main(string[] args)
         {
 
-            try
-            {
-                //String.Format("Выполняем запрос к WebAPI, url:{0}, api_comand {1}, metod {2}, accept {3}", url, api_comand, metod, accept).WriteInformation(eventID);
-                HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(@"https://uz.gov.ua/car_info/index.php?func=print&site_nv=52724994");
-                request.Method = "GET";
-                request.PreAuthenticate = true;
-                request.Credentials = CredentialCache.DefaultCredentials;
-                request.Accept = "text/html";
-                try
-                {
-                    using (System.Net.WebResponse response = request.GetResponse())
-                    {
-                        try
-                        {
-                            using (System.IO.StreamReader rd = new System.IO.StreamReader(response.GetResponseStream()))
-                            {
-                                string result = rd.ReadToEnd();
-                                //PM > Install - Package HtmlAgilityPack - Version 1.11.17
-                                HtmlDocument htmlSnippet = new HtmlDocument();
-                                htmlSnippet.LoadHtml(result);
+            string ar = "WEB_UI.Areas.IDSMORS.Controllers.HomeController";
 
-                                List<string> hrefTags = new List<string>();
+            int n = ar.IndexOf("Areas.");
 
-                                foreach (HtmlNode link in htmlSnippet.DocumentNode.SelectNodes("//td"))
-                                {
-                                    //HtmlAttribute att = link.Attributes["href"];
-                                    //hrefTags.Add(att.Value);
-                                    string value = link.InnerHtml;
-                                    value = value.Replace("&nbsp;", "");
-                                    hrefTags.Add(value);
-                                }
-                            }
-                        }
-                        catch (Exception e)
-                        {
+            int n1 = ar.IndexOf(".Controllers");
+            ar = ar.Substring(ar.IndexOf("Areas.") + 6, ar.IndexOf(".Controllers") - (ar.IndexOf("Areas.") + 6));
 
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
+            //try
+            //{
+            //    //String.Format("Выполняем запрос к WebAPI, url:{0}, api_comand {1}, metod {2}, accept {3}", url, api_comand, metod, accept).WriteInformation(eventID);
+            //    HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(@"https://uz.gov.ua/car_info/index.php?func=print&site_nv=52724994");
+            //    request.Method = "GET";
+            //    request.PreAuthenticate = true;
+            //    request.Credentials = CredentialCache.DefaultCredentials;
+            //    request.Accept = "text/html";
+            //    try
+            //    {
+            //        using (System.Net.WebResponse response = request.GetResponse())
+            //        {
+            //            try
+            //            {
+            //                using (System.IO.StreamReader rd = new System.IO.StreamReader(response.GetResponseStream()))
+            //                {
+            //                    string result = rd.ReadToEnd();
+            //                    //PM > Install - Package HtmlAgilityPack - Version 1.11.17
+            //                    HtmlDocument htmlSnippet = new HtmlDocument();
+            //                    htmlSnippet.LoadHtml(result);
 
-                }
-            }
-            catch (Exception e)
-            {
+            //                    List<string> hrefTags = new List<string>();
 
-            }
+            //                    foreach (HtmlNode link in htmlSnippet.DocumentNode.SelectNodes("//td"))
+            //                    {
+            //                        //HtmlAttribute att = link.Attributes["href"];
+            //                        //hrefTags.Add(att.Value);
+            //                        string value = link.InnerHtml;
+            //                        value = value.Replace("&nbsp;", "");
+            //                        hrefTags.Add(value);
+            //                    }
+            //                }
+            //            }
+            //            catch (Exception e)
+            //            {
+
+            //            }
+            //        }
+            //    }
+            //    catch (Exception e)
+            //    {
+
+            //    }
+            //}
+            //catch (Exception e)
+            //{
+
+            //}
             
             
             
