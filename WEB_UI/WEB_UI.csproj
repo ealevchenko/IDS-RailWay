@@ -883,6 +883,10 @@
       <Project>{3ac80091-5add-43bd-8875-0f3ce3e86a25}</Project>
       <Name>EFUZ</Name>
     </ProjectReference>
+    <ProjectReference Include="..\IDSLogs\IDSLogs.csproj">
+      <Project>{910d6360-9e8c-4143-a4dd-84e778edb7a6}</Project>
+      <Name>IDSLogs</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App_LocalResources\GlobalResource.en.resx">

@@ -6,11 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using IDSLogs;
 
 namespace WEB_UI.Infrastructure
 {
     public class AccessOfDBAttribute : FilterAttribute, IActionFilter
     {
+        public bool LogVisit = false;
         private string[] allowedUsers = new string[] { };
         private string[] allowedRoles = new string[] { };
         private string RulesAccess = null;
@@ -58,7 +60,8 @@ namespace WEB_UI.Infrastructure
             if (filterContext.Result is ViewResult)
             {
                 // если не локал хост
-                //if (!filterContext.HttpContext.Request.IsLocal) logVisit.SaveVisit(filterContext, this.RulesAccess, this.access);
+                if (!filterContext.HttpContext.Request.IsLocal & LogVisit)
+                    filterContext.VisitLog(this.RulesAccess, this.access);
                 return;
             }
         }
@@ -94,6 +97,12 @@ namespace WEB_UI.Infrastructure
                 bool rl = Role(filterContext.HttpContext);
                 if (!(us | rl))
                 {
+                    this.RulesAccess = null;
+                    this.access = false;
+                    // если не локал хост
+                    if (!filterContext.HttpContext.Request.IsLocal & LogVisit)
+                        filterContext.VisitLog(this.RulesAccess, this.access);
+
 
                     string message = filterContext.HttpContext.User.Identity.Name + ";" + filterContext.ActionDescriptor.ActionName;
                     filterContext.Result = new ViewResult()
@@ -105,6 +114,11 @@ namespace WEB_UI.Infrastructure
                         }
                     };
                 }
+            }
+            else
+            {
+                this.RulesAccess = "General access";
+                this.access = null;
             }
         }
     }

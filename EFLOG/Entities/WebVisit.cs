@@ -34,10 +34,13 @@ namespace EFLOG.Entities
         public string physical_path { get; set; }
 
         [StringLength(100)]
-        public string action_name { get; set; }
+        public string areas { get; set; }
 
         [StringLength(100)]
-        public string controller_name { get; set; }
+        public string controller { get; set; }
+
+        [StringLength(100)]
+        public string action { get; set; }
 
         [StringLength(1000)]
         public string roles_access { get; set; }

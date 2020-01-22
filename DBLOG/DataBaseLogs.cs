@@ -385,5 +385,48 @@ namespace IDSLogs
         }
         #endregion
 
+        #region WebVisit
+
+        static public long SaveVisit(this string user_name, bool? authentication,
+            string authentication_type, string user_host_name,
+            string user_host_address, string url,
+            string physical_path, string areas, string controller,
+            string action, string roles_access, bool? access)
+        {
+            try
+            {
+                EFWebVisit ef_visit = new EFWebVisit(new EFDbContext());
+                WebVisit new_visit = new WebVisit()
+                {
+                    id = 0,
+                    date_time = DateTime.Now,
+                    user_name = user_name,
+                    authentication = authentication,
+                    authentication_type = authentication_type,
+                    user_host_name = user_host_name,
+                    user_host_address = user_host_address,
+                    url = url,
+                    physical_path = physical_path, 
+                    areas=areas, 
+                    controller=controller,
+                    action = action,
+                    roles_access = roles_access,
+                    access = access
+                };
+
+                ef_visit.Add(new_visit);
+                ef_visit.Save();
+                ef_visit.Refresh(new_visit);
+                return new_visit.id;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(String.Format("Ошибка выполнения метода SaveVisit(user_name={0},authentication={1}, authentication_type={2}, user_host_name={3}, user_host_address={4}, url={5}, physical_path={6}, areas={7}, controller={8}, action={9}, roles_access={10}, access={11}). Exception:{12}",
+                    user_name, authentication, authentication_type, user_host_name, user_host_address, url, physical_path, areas, controller, action, roles_access, access, e));
+                return -1;
+            }
+        }
+
+        #endregion
     }
 }
