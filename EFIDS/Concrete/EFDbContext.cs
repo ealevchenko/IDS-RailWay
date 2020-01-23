@@ -16,6 +16,8 @@ namespace EFIDS.Concrete
         // MORS
         public virtual DbSet<CardsWagons> CardsWagons { get; set; }
         public virtual DbSet<CardsWagonsRepairs> CardsWagonsRepairs { get; set; }
+        public virtual DbSet<ParksListWagons> ParksListWagons { get; set; }
+        public virtual DbSet<ParksWagons> ParksWagons { get; set; }
 
         // Справочники
         public virtual DbSet<Directory_DEPO> Directory_DEPO { get; set; }
@@ -37,6 +39,17 @@ namespace EFIDS.Concrete
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<CardsWagons>()
+                .HasMany(e => e.ParksListWagons)
+                .WithRequired(e => e.CardsWagons)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<ParksWagons>()
+                .HasMany(e => e.ParksListWagons)
+                .WithRequired(e => e.ParksWagons)
+                .HasForeignKey(e => e.id_park_wagon)
+                .WillCascadeOnDelete(false);
+            
             modelBuilder.Entity<CardsWagons>()
                 .HasMany(e => e.CardsWagonsRepairs)
                 .WithRequired(e => e.CardsWagons)

@@ -50,5 +50,11 @@ namespace WEB_UI.Areas.IDSMORS.Controllers
         {
             return PartialView();
         }
+
+        [AccessOfDB(LogVisit = true)]
+        public ActionResult ParksWagons()
+        {
+            return View();
+        }
     }
 }

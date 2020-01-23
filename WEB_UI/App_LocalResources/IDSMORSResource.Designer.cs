@@ -106,6 +106,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Парк подвижного состава.
+        /// </summary>
+        public static string label_park_wagon_title {
+            get {
+                return ResourceManager.GetString("label_park_wagon_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Основные характеристики.
         /// </summary>
         public static string legend_main_characteristics {

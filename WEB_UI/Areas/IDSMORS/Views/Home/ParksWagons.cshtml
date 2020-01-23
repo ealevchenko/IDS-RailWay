@@ -1,0 +1,108 @@
+﻿@using WEB_UI.App_LocalResources;
+@{
+    ViewBag.Title = @IDSMORSResource.park_title;
+}
+
+@section styles {
+    @Styles.Render("~/DataTables/css")
+    <link rel="stylesheet" type="text/css" href="~/Content/view/shared/filter-menu.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/view/idsmors/park_wagons.css">
+
+
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/DataTables")
+    @Scripts.Render("~/bundles/Moment")
+    <script src="~/Scripts/view/shared/common.js"></script> <!-- Общая библиотека методов программы -->
+    <script src="~/Scripts/api/shared.js"></script> <!-- Общая библиотека методов API -->
+    <script src="~/Scripts/api/ids_directory.js"></script> <!-- Class API ИДС Справочники -->
+    <script src="~/Scripts/api/uz_directory.js"></script> <!-- Class API УЗ Справочники -->
+    <script src="~/Scripts/api/ids_mors.js"></script> <!-- Class API ИДС " Управление собственным подвижным составом" -->
+
+    <script src="~/Scripts/view/idsmors/park_wagons.js"></script> <!--  -->
+}
+<input id="username" type="hidden" value="@User.Identity.Name" />
+
+<div class="container-fluid idsmors-report">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="form-group col-xs-12 col-sm-2">
+                    <label class="control-label">@IDSMORSResource.label_park_wagon_title:</label>
+                </div>
+                <div class="form-group col-xs-12 col-sm-4">
+                    <select class="form-control" id="select-park-wagon" name="select-park-wagon"></select>
+                </div>
+                <div class="form-group col-xs-12 col-sm-4">
+                    <button type="button" class="btn btn-warning">Добавить</button>
+                    <button type="button" class="btn btn-warning">Переименовать</button>
+                    <button type="button" class="btn btn-warning">Удалить</button>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <table class='compact cell-border display' id="table-wagons" style="width:100%" cellpadding="0"></table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="confirm-rfid-card" title="" class="table-confirm-rfid-card" style="display:none">
+    <form id="form-rfid-card">
+        <fieldset>
+            <table id="table-confirm-rfid-card" class="confirm-rfid-card table-striped">
+                <tr>
+                    <th>id карты :</th>
+                    <td><input id="id" name="id" type="text" disabled="disabled" class="confirm-input ui-widget-content ui-corner-all" /></td>
+                </tr>
+                <tr>
+                    <th>Номер карты :</th>
+                    <td><input id="Number" name="Number" type="text" disabled="disabled" class="confirm-input ui-widget-content ui-corner-all" /></td>
+                </tr>
+                <tr>
+                    <th>DriverName :</th>
+                    <td><input id="DriverName" name="DriverName" type="text" disabled="disabled" class="confirm-input ui-widget-content ui-corner-all" /></td>
+                </tr>
+                <tr>
+                    <th>Номер автомобиля :</th>
+                    <td><input id="AutoNumber" name="AutoNumber" type="text" disabled="disabled" class="confirm-input ui-widget-content ui-corner-all" /></td>
+                </tr>
+                <tr>
+                    <th>Код дебитора :</th>
+                    <td><input id="Debitor" name="Debitor" type="number" disabled="disabled" class="confirm-input ui-widget-content ui-corner-all" /></td>
+                </tr>
+                <tr>
+                    <th>Код транспортного средства :</th>
+                    <td><input id="Sn1" name="Sn1" type="text" disabled="disabled" class="confirm-input ui-widget-content ui-corner-all" /></td>
+                </tr>
+                <tr>
+                    <th>Модель автомобиля :</th>
+                    <td><input id="AutoModel" name="AutoModel" type="text" disabled="disabled" class="confirm-input ui-widget-content ui-corner-all" /></td>
+                </tr>
+                <tr>
+                    <th>Автоколона :</th>
+                    <td><input id="Street" name="Street" type="number" disabled="disabled" class="confirm-input ui-widget-content ui-corner-all" /></td>
+                </tr>
+                <tr>
+                    <th>House :</th>
+                    <td><textarea id="House" name="House" type="text" rows="3" disabled="disabled" class="ui-widget-content ui-corner-all"></textarea></td>
+                </tr>
+                <tr>
+                    <th>Owner :</th>
+                    <td><input id="Owner" name="Owner" type="text" disabled="disabled" class="confirm-input ui-widget-content ui-corner-all" /></td>
+                </tr>
+                <tr>
+                    <th>Активация карты :</th>
+                    <td><input id="Active" name="Active" type="checkbox" disabled="disabled" class="confirm-input ui-widget-content ui-corner-all" /></td>
+                </tr>
+            </table>
+            <!-- Allow form submission with keyboard without duplicating the dialog button -->
+            <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+        </fieldset>
+    </form>
+</div>
+

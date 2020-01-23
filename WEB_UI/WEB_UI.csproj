@@ -442,6 +442,7 @@
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="Content\view\idsmors\electronic-cards.css" />
     <Content Include="Content\view\error.css" />
+    <Content Include="Content\view\idsmors\park_wagons.css" />
     <Content Include="Content\view\shared\filter-menu.css" />
     <Content Include="Content\view\idsmors\home.css" />
     <Content Include="Content\view\shared\home-menu.css" />
@@ -735,6 +736,7 @@
     <Content Include="Areas\IDSMORS\Views\Home\ElectronicCardsEditDEPO.cshtml" />
     <Content Include="Areas\IDSMORS\Views\Home\ElectronicCardsEditKap.cshtml" />
     <Content Include="Areas\IDSMORS\Views\Home\ElectronicCardsEditCur.cshtml" />
+    <Content Include="Areas\IDSMORS\Views\Home\ParksWagons.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -829,7 +831,8 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
-    <Content Include="Scripts\view\idsmors\electronic-cards.js" />
+    <Content Include="Scripts\view\idsmors\electronic_cards.js" />
+    <Content Include="Scripts\view\idsmors\park_wagons.js" />
     <Content Include="Scripts\view\shared\common.js" />
     <Content Include="Scripts\view\shared\_ids.js" />
     <Content Include="Web.config" />

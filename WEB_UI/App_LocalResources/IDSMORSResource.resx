@@ -132,6 +132,9 @@
   <data name="genus_wagon_label" xml:space="preserve">
     <value>Род подвижного сотава</value>
   </data>
+  <data name="label_park_wagon_title" xml:space="preserve">
+    <value>Парк подвижного состава</value>
+  </data>
   <data name="legend_main_characteristics" xml:space="preserve">
     <value>Основные характеристики</value>
   </data>
