@@ -477,6 +477,8 @@
     <Content Include="Images\cd-icon-arrow.svg" />
     <Content Include="Images\cd-icon-check.svg" />
     <Content Include="Images\cd-icon-filter.svg" />
+    <Content Include="Images\error.jpg" />
+    <Content Include="Images\Error404.png" />
     <Content Include="Images\header.jpg" />
     <Content Include="Images\ids-op.jpg" />
     <Content Include="Images\portfolio\fullsize\1.jpg" />

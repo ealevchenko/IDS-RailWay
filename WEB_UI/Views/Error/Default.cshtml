@@ -1,1 +1,28 @@
-﻿<h2>Default error page template</h2>
+﻿@using WEB_UI.App_LocalResources;
+
+@*@model string*@
+
+@{
+    ViewBag.Title = @GlobalResource.home_title;
+
+}
+
+@*@{
+    string[] message = @Model.Split(';');
+}*@
+
+@section styles {
+    <link rel="stylesheet" type="text/css" href="~/Content/view/error.css">
+}
+
+@section scripts {
+    <script>
+        $('header').addClass('img-header-error-default ');
+    </script>
+}
+<div id="message-error">
+    <h2>Default error page template</h2>
+    @*<h2>@GlobalResource.error_ad_text1<span>@message[0]</span> <br /> @GlobalResource.error_ad_text2 <span>@message[1]</span></h2>*@
+</div>
+
+

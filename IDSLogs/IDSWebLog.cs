@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Moveax.Mvc.ErrorHandler;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,10 +24,11 @@ namespace IDSLogs
         }
 
         #region WebVisit
-        public static void VisitLog(this ActionExecutingContext filterContext, string RolesAccess, bool? Access)
+
+        public static long VisitLog(this ActionExecutingContext filterContext, string RolesAccess, bool? Access)
         {
 
-            filterContext.HttpContext.User.Identity.Name.SaveVisit((bool?)filterContext.HttpContext.User.Identity.IsAuthenticated,
+            return filterContext.HttpContext.User.Identity.Name.SaveVisit((bool?)filterContext.HttpContext.User.Identity.IsAuthenticated,
                 filterContext.HttpContext.User.Identity.AuthenticationType, filterContext.HttpContext.Request.UserHostName,
                 filterContext.HttpContext.Request.UserHostAddress, filterContext.HttpContext.Request.Url.AbsoluteUri,
                 filterContext.HttpContext.Request.PhysicalPath,
@@ -36,9 +38,9 @@ namespace IDSLogs
                 RolesAccess, (bool?)Access);
         }
 
-        public static void VisitLog(this ActionExecutedContext filterContext, string RolesAccess, bool? Access)
+        public static long VisitLog(this ActionExecutedContext filterContext, string RolesAccess, bool? Access)
         {
-            filterContext.HttpContext.User.Identity.Name.SaveVisit((bool?)filterContext.HttpContext.User.Identity.IsAuthenticated,
+            return filterContext.HttpContext.User.Identity.Name.SaveVisit((bool?)filterContext.HttpContext.User.Identity.IsAuthenticated,
                 filterContext.HttpContext.User.Identity.AuthenticationType, filterContext.HttpContext.Request.UserHostName,
                 filterContext.HttpContext.Request.UserHostAddress, filterContext.HttpContext.Request.Url.AbsoluteUri,
                 filterContext.HttpContext.Request.PhysicalPath, 
@@ -47,6 +49,21 @@ namespace IDSLogs
                 filterContext.ActionDescriptor.ActionName, 
                  RolesAccess, (bool?)Access);
         }
+        #endregion
+
+        #region WebException
+
+        public static long WebExceptionLog(this Exception Exception, int? HttpCode, HttpRequest Request)
+        {
+            return Exception.SaveWebException(Request.LogonUserIdentity.Name, Request.IsAuthenticated, Request.LogonUserIdentity.AuthenticationType,
+                 Request.UserHostName, Request.UserHostAddress, Request.Url.AbsolutePath, Request.PhysicalPath, Request.UserAgent, Request.RequestType, HttpCode);
+        }
+
+        public static long WebExceptionLog(this ErrorDescription errorDescription)
+        {
+            return errorDescription.Exception.WebExceptionLog(errorDescription.HttpCode, errorDescription.Request);
+        }
+
         #endregion
 
     }

@@ -406,9 +406,9 @@ namespace IDSLogs
                     user_host_name = user_host_name,
                     user_host_address = user_host_address,
                     url = url,
-                    physical_path = physical_path, 
-                    areas=areas, 
-                    controller=controller,
+                    physical_path = physical_path,
+                    areas = areas,
+                    controller = controller,
                     action = action,
                     roles_access = roles_access,
                     access = access
@@ -423,6 +423,61 @@ namespace IDSLogs
             {
                 Console.WriteLine(String.Format("Ошибка выполнения метода SaveVisit(user_name={0},authentication={1}, authentication_type={2}, user_host_name={3}, user_host_address={4}, url={5}, physical_path={6}, areas={7}, controller={8}, action={9}, roles_access={10}, access={11}). Exception:{12}",
                     user_name, authentication, authentication_type, user_host_name, user_host_address, url, physical_path, areas, controller, action, roles_access, access, e));
+                return -1;
+            }
+        }
+
+        #endregion
+
+        #region WebError
+
+        static public long SaveWebException(this Exception Exception, string user_name, bool? authentication,
+                        string authentication_type, string user_host_name,
+                        string user_host_address, string url,
+                        string physical_path,string user_agent,string request_type, 
+                        int? HttpCode)
+        {
+            try
+            {
+                EFWebErrors ef_err = new EFWebErrors(new EFDbContext());
+                // Запись циклических ошибок
+                if (Exception.InnerException != null)
+                {
+                    Exception.InnerException.SaveWebException(user_name, 
+                        authentication, authentication_type, 
+                        user_host_name, user_host_address, url, 
+                        physical_path, user_agent, request_type, null);
+                }
+                WebErrors new_err = new WebErrors()
+                {
+                    id = 0,
+                    date_time = DateTime.Now,
+                    user_name = user_name,
+                    authentication = authentication,
+                    authentication_type = authentication_type,
+                    user_host_name = user_host_name,
+                    user_host_address = user_host_address,
+                    url = url,
+                    physical_path = physical_path,
+                    user_agent = user_agent,
+                    request_type = request_type,
+                    httpcode = HttpCode,
+                    hresult = Exception.HResult,
+                    inner_exception = Exception.InnerException != null ? Exception.InnerException.Message : null,
+                    message = Exception.Message,
+                    source = Exception.Source,
+                    stack_trace = Exception.StackTrace,
+                };
+
+                ef_err.Add(new_err);
+                ef_err.Save();
+                ef_err.Refresh(new_err);
+                return new_err.id;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(String.Format("Ошибка выполнения метода SaveWebException(Exception={0},user_name={1}, authentication={2}, authentication_type={3}, user_host_name={4}, user_host_address={5}, url={6}, physical_path={7}, user_agent={8}, request_type={9}, HttpCode={10}). Exception:{11}",
+                    Exception, user_name, authentication, authentication_type, user_host_name, user_host_address, url, physical_path, user_agent, request_type, HttpCode, e));
                 return -1;
             }
         }

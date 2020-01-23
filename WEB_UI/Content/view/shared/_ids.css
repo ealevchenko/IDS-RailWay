@@ -516,3 +516,9 @@ a.select-not-lang {
 .img-header-access-denied {
     background-image: url(../../../Images/access-denied.jpg);
 }
+.img-header-error-404 {
+    background-image: url(../../../Images/Error404.png);
+}
+.img-header-error-default {
+    background-image: url(../../../Images/error.jpg);
+}
