@@ -1,7 +1,7 @@
 (function ($) {
     "use strict"; // Start of use strict
 
-    // jQuery for page scrolling feature - requires jQuery Easing plugin
+     //jQuery for page scrolling feature - requires jQuery Easing plugin
     //$('a.page-scroll').bind('click', function (event) {
     //    var $anchor = $(this);
     //    $('html, body').stop().animate({
@@ -11,20 +11,29 @@
     //});
 
     // Highlight the top nav as scrolling occurs
-    $('body').scrollspy({
-        target: '.navbar-fixed-top',
-        offset: 51
-    });
+    //$('body').scrollspy({
+    //    target: '.navbar-fixed-top',
+    //    offset: 51
+    //});
 
-    // Closes the Responsive Menu on Menu Item Click
-    $('.navbar-collapse ul li a').click(function () {
-        $('.navbar-toggle:visible').click();
-    });
+    //// Closes the Responsive Menu on Menu Item Click
+    //$('.navbar-collapse ul li a').click(function () {
+    //    $('.navbar-toggler:visible').click();
+    //});
 
-    // Offset for Main Navigation
-    $('#mainNav').affix({
-        offset: {
-            top: 100
+    //// Offset for Main Navigation
+    //$('#mainNav').position({
+    //    offset: {
+    //        top: 100
+    //    }
+    //});
+
+    $(window).on('scroll', function (event) {
+        var scrollValue = $(window).scrollTop();
+        if (scrollValue > 51) {
+            $('#mainNav').removeClass('bg-x').addClass('bg-dark');
+        } else {
+            $('#mainNav').removeClass('bg-dark').addClass('bg-x');
         }
     });
 

@@ -29,7 +29,8 @@ namespace WEB_UI
 
             //bootstrap --------------------------------------------------------------------------
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js"));
+                      "~/Scripts/bootstrap.js",
+                       "~/Scripts/popper.js"));
 
             bundles.Add(new StyleBundle("~/bootstrap/css").Include(
                       "~/Content/bootstrap.css"));

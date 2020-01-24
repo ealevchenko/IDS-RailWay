@@ -24,17 +24,18 @@
 }
 <input id="username" type="hidden" value="@User.Identity.Name" />
 
-<div class="container-fluid idsmors-report">
+
+<div class="container-fluid idsmors-report jumbotron">
     <div class="panel panel-primary">
         <div class="panel-heading">
             <div class="row">
-                <div class="form-group col-xs-12 col-sm-2">
+                <div class="form-group col-sm-2 text-right">
                     <label class="control-label">@IDSMORSResource.label_park_wagon_title:</label>
                 </div>
-                <div class="form-group col-xs-12 col-sm-4">
+                <div class="form-group col-sm-4">
                     <select class="form-control" id="select-park-wagon" name="select-park-wagon"></select>
                 </div>
-                <div class="form-group col-xs-12 col-sm-4">
+                <div class="form-group sm-4">
                     <button type="button" class="btn btn-warning" id="add-park">Добавить</button>
                     <button type="button" class="btn btn-warning" id="edit-park">Переименовать</button>
                     <button type="button" class="btn btn-warning" id="delete-park">Удалить</button>

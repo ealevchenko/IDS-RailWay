@@ -49,10 +49,21 @@ p {
     line-height: 1.5;
     margin-bottom: 20px;
 }
-
-.bg-primary {
-    background-color: #F05F40;
+.bg-x {
+    background-color: rgba(0,0,0,0.15);
 }
+
+.bg-amkr {
+    background-color: #F05F40;
+    color:white;
+}
+.text-amkr {
+    color: #F05F40;
+}
+
+/*.bg-primary {
+    background-color: #F05F40;
+}*/
 
 .bg-dark {
     background-color: #222222;
@@ -75,6 +86,7 @@ aside {
     padding: 0;
 }
 
+/*
 .navbar-default {
     background-color: white;
     border-color: rgba(34, 34, 34, 0.05);
@@ -177,6 +189,7 @@ aside {
                     color: #F05F40;
                 }
 }
+    */
 
 header {
     position: relative;
@@ -187,7 +200,6 @@ header {
     background-size: cover;
     -o-background-size: cover;
     background-position: center;
-    /*background-image: url(../../Images/header.jpg);*/
     text-align: center;
     color: white;
 }

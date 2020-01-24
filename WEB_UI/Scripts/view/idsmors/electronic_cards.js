@@ -1066,8 +1066,11 @@
             clear_error: function () {
                 this.clear_message();
                 var fm = $('form#wagon-content');
-                var fg = fm.find('.form-group').addClass('has-feedback').removeClass('has-error has-success');
-                var fcf = fg.find('.form-control-feedback').removeClass('glyphicon-ok glyphicon-remove');
+                var fg = fm.find('input, select');
+                fg.removeClass('is-valid is-invalid');
+
+                //var fg = fm.find('.form-group').addClass('has-feedback').removeClass('has-error has-success');
+                //var fcf = fg.find('.form-control-feedback').removeClass('glyphicon-ok glyphicon-remove');
             },
             //
             mode_clear: function () {
@@ -1135,17 +1138,21 @@
             //----------ВАЛИДАЦИЯ-------------------------------------------------------
             // Установить признак ошибка
             set_control_error: function (o) {
-                var formGroupCaptcha = o.parents('.form-group');
-                var glyphiconCaptcha = formGroupCaptcha.find('.form-control-feedback');
-                formGroupCaptcha.addClass('has-error').removeClass('has-success');
-                glyphiconCaptcha.addClass('glyphicon-remove').removeClass('glyphicon-ok');
+
+                o.removeClass('is-valid').addClass('is-invalid');
+
+                //var formGroupCaptcha = o.parents('.form-group');
+                //var glyphiconCaptcha = formGroupCaptcha.find('.form-control-feedback');
+                //formGroupCaptcha.addClass('has-error').removeClass('has-success');
+                //glyphiconCaptcha.addClass('glyphicon-remove').removeClass('glyphicon-ok');
             },
             // Установить признак Ok
             set_control_ok: function (o) {
-                var formGroupCaptcha = o.parents('.form-group');
-                var glyphiconCaptcha = formGroupCaptcha.find('.form-control-feedback');
-                formGroupCaptcha.addClass('has-success').removeClass('has-error');
-                glyphiconCaptcha.addClass('glyphicon-ok').removeClass('glyphicon-remove');
+                o.removeClass('is-invalid').addClass('is-valid');
+                //var formGroupCaptcha = o.parents('.form-group');
+                //var glyphiconCaptcha = formGroupCaptcha.find('.form-control-feedback');
+                //formGroupCaptcha.addClass('has-success').removeClass('has-error');
+                //glyphiconCaptcha.addClass('glyphicon-ok').removeClass('glyphicon-remove');
             },
             // Проверим Select выбор сделан?
             checkSelection: function (o, message) {

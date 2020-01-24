@@ -34,8 +34,7 @@
         </div> <!-- cd-tab-filter -->
     </div> <!-- cd-tab-filter-wrapper -->
     <section class="cd-gallery">
-        <div class="alert alert-success hidden" id="global-success-alert"> <div id="global-message"></div> </div>
-        @*<div class="alert alert-danger" id="success-alert"> <div>Ваши данные были успешно отправлены.</div> </div>*@
+        <div class="alert alert-success fade show" id="global-success-alert"> <div id="global-message"></div> </div>
         <table class='compact cell-border display' id="table-cards-wagons" style="width:100%" cellpadding="0"></table>
     </section> <!-- cd-gallery -->
     <div class="cd-filter">
@@ -57,26 +56,26 @@
                 </ul>
                 <div class="panel-control-top">
                     <div class="form-group row">
-                        <div class="offset-sm-2 col-sm-12">
+                        <div class="col-12">
                             @{ Html.RenderAction("ElectronicCardsEdit", "Home", new { area = "IDSMORS" }); }
                             @*<button type="button" id="bt-info-edit" class="btn btn-primary wagon-info-view">@IDSMORSResource.bt_edit_text</button>
-                            <button type="button" id="bt-info-delete" class="btn btn-primary wagon-info-view">@IDSMORSResource.bt_delete_text</button>
-                            <button type="button" id="bt-info-save" class="btn btn-primary wagon-info-edit">Сохранить</button>
-                            <button type="button" id="bt-info-cancel" class="btn btn-primary wagon-info-edit">Отмена</button>
-                            <button type="button" id="bt-repairs-add" class="btn btn-primary wagon-repairs-view">Добавить</button>*@
+                                <button type="button" id="bt-info-delete" class="btn btn-primary wagon-info-view">@IDSMORSResource.bt_delete_text</button>
+                                <button type="button" id="bt-info-save" class="btn btn-primary wagon-info-edit">Сохранить</button>
+                                <button type="button" id="bt-info-cancel" class="btn btn-primary wagon-info-edit">Отмена</button>
+                                <button type="button" id="bt-repairs-add" class="btn btn-primary wagon-repairs-view">Добавить</button>*@
                         </div>
                     </div>
                     <div class="row wagon-view">
-                        <div class="form-group col-xs-6">
+                        <div class="form-group col-6">
                             <label for="num-wagon-view">@IDSMORSResource.num_wagon_label:</label>
                             <input type="number" class="form-control" id="num-wagon-view" placeholder="" disabled>
                         </div>
                     </div>
                     <div class="row wagon-add">
-                        <div class="form-group col-xs-6">
-                            <label for="num-wagon-edit" class="control-label">@IDSMORSResource.num_wagon_label:</label>
+                        <div class="form-group col-6">
+                            <label for="num-wagon-edit" class="col-form-label">@IDSMORSResource.num_wagon_label:</label>
                             <div class="input-group">
-                                <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
+                                <span class="input-group-append"><i class="glyphicon glyphicon-pencil"></i></span>
                                 <input type="number" class="form-control" id="num-wagon-edit" name="num-wagon-edit" required="required">
                                 <span class=" glyphicon form-control-feedback"></span>
                             </div>
@@ -88,64 +87,64 @@
                     <div class="wagon-info-view">
                         <fieldset>
                             <legend> @IDSMORSResource.legend_main_characteristics </legend>
-                            <div class="row">
-                                <div class="form-group col-xs-6">
+                            <div class="row col-12">
+                                <div class="form-group col-6">
                                     <label for="state-wagon-view">@IDSMORSResource.state_label:</label>
                                     <input type="text" class="form-control" id="state-wagon-view" placeholder="" disabled>
                                 </div>
-                                <div class="form-group col-xs-6">
+                                <div class="form-group col-6">
                                     <label for="station-wagon-view">@IDSMORSResource.station_label:</label>
                                     <input type="text" class="form-control" id="station-wagon-view" placeholder="" disabled>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-xs-4">
+                                <div class="form-group col-4">
                                     <label for="genus-wagon-view">@IDSMORSResource.genus_wagon_label:</label>
                                     <input type="text" class="form-control" id="genus-wagon-view" placeholder="" disabled>
                                 </div>
-                                <div class="form-group col-xs-4">
+                                <div class="form-group col-4">
                                     <label for="type-wagon-view">@IDSMORSResource.type_wagon_label:</label>
                                     <input type="text" class="form-control" id="type-wagon-view" placeholder="" disabled>
                                 </div>
-                                <div class="form-group col-xs-4">
+                                <div class="form-group col-4">
                                     <label for="code-model-wagon-view">Модель:</label>
                                     <input type="text" class="form-control" id="code-model-wagon-view" placeholder="" disabled>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-xs-6">
+                                <div class="form-group col-6">
                                     <label for="wagon-manufacturer-wagon-view">Завод изготовитель:</label>
                                     <input type="text" class="form-control" id="wagon-manufacturer-wagon-view" placeholder="" disabled>
                                 </div>
-                                <div class="form-group col-xs-6">
+                                <div class="form-group col-6">
                                     <label for="year-wagon-create-wagon-view">Год постройки:</label>
                                     <input type="text" class="form-control" id="year-wagon-create-wagon-view" placeholder="" disabled>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-xs-3">
+                                <div class="form-group col-3">
                                     <label for="carrying-capacity-wagon-view">Грузоподъемность,т:</label>
                                     <input type="text" class="form-control" id="carrying-capacity-wagon-view" placeholder="" disabled>
                                 </div>
-                                <div class="form-group col-xs-3">
+                                <div class="form-group col-3">
                                     <label for="tara-wagon-view">Тара, тонн:</label>
                                     <input type="text" class="form-control" id="tara-wagon-view" placeholder="" disabled>
                                 </div>
-                                <div class="form-group col-xs-3">
+                                <div class="form-group col-3">
                                     <label for="body-volume-wagon-view">Объем кузова:</label>
                                     <input type="text" class="form-control" id="body-volume-wagon-view" placeholder="" disabled>
                                 </div>
-                                <div class="form-group col-xs-3">
+                                <div class="form-group col-3">
                                     <label for="axis-length-wagon-view">Длина по осям,м:</label>
                                     <input type="text" class="form-control" id="axis-length-wagon-view" placeholder="" disabled>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-xs-6">
+                                <div class="form-group col-6">
                                     <label for="type-repairs-wagon-view">Тип планируемого ремонта:</label>
                                     <input type="text" class="form-control" id="type-repairs-wagon-view" placeholder="" disabled>
                                 </div>
-                                <div class="form-group col-xs-6">
+                                <div class="form-group col-6">
                                     <label for="date-type-repairs-wagon-view">Дата планируемого ремонта:</label>
                                     <input type="text" class="form-control" id="date-type-repairs-wagon-view" placeholder="" disabled>
                                 </div>
@@ -154,155 +153,256 @@
                         <fieldset>
                             <legend> Собственность </legend>
                             <div class="row">
-                                <div class="form-group col-xs-4">
+                                <div class="form-group col-4">
                                     <label for="type-ownership-wagon-view">Признак собственности:</label>
                                     <input type="text" class="form-control" id="type-ownership-wagon-view" placeholder="" disabled>
                                 </div>
-                                <div class="form-group col-xs-4">
+                                <div class="form-group col-4">
                                     <label for="owner-wagon-view">Собственник:</label>
                                     <input type="text" class="form-control" id="owner-wagon-view" placeholder="" disabled>
                                 </div>
-                                <div class="form-group col-xs-4">
+                                <div class="form-group col-4">
                                     <label for="date-registration-wagon-view">Дата последней регистрации:</label>
                                     <input type="text" class="form-control" id="date-registration-wagon-view" placeholder="" disabled>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-xs-6">
+                                <div class="form-group col-6">
                                     <label for="lessor-wagon-view">Арендодатель:</label>
                                     <input type="text" class="form-control" id="lessor-wagon-view" placeholder="" disabled>
                                 </div>
-                                <div class="form-group col-xs-6">
+                                <div class="form-group col-6">
                                     <label for="operator-wagon-view">Оперативное управление:</label>
                                     <input type="text" class="form-control" id="operator-wagon-view" placeholder="" disabled>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-xs-6">
+                                <div class="form-group col-6">
                                     <label for="poligon-travel-wagon-view">Полигон курсирования:</label>
                                     <input type="text" class="form-control" id="poligon-travel-wagon-view" placeholder="" disabled>
                                 </div>
-                                <div class="form-group col-xs-6">
+                                <div class="form-group col-6">
                                     <label for="special-conditions-view">Особые условия:</label>
                                     <input type="text" class="form-control" id="special-conditions-view" placeholder="" disabled>
                                 </div>
                             </div>
                         </fieldset>
                     </div>
+
+
+                    @*<form>
+                        <div class="form-row">
+                            <div class="col-md-4 mb-3">
+                                <label for="validationServer013">First name</label>
+                                <input type="text" class="form-control is-valid" id="validationServer013" placeholder="First name"
+                                       value="Mark" required>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="validationServer023">Last name</label>
+                                <input type="text" class="form-control is-valid" id="validationServer023" placeholder="Last name"
+                                       value="Otto" required>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="validationServerUsername33">Username</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGroupPrepend33">@</span>
+                                    </div>
+                                    <input type="text" class="form-control is-invalid" id="validationServerUsername33" placeholder="Username"
+                                           aria-describedby="inputGroupPrepend33" required>
+                                    <div class="invalid-feedback">
+                                        Please choose a username.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-6 mb-3">
+                                <label for="validationServer033">City</label>
+                                <input type="text" class="form-control is-invalid" id="validationServer033" placeholder="City"
+                                       required>
+                                <div class="invalid-feedback">
+                                    Please provide a valid city.
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="validationServer043">State</label>
+                                <input type="text" class="form-control is-invalid" id="validationServer043" placeholder="State"
+                                       required>
+                                <div class="invalid-feedback">
+                                    Please provide a valid state.
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="validationServer053">Zip</label>
+                                <input type="text" class="form-control is-invalid" id="validationServer053" placeholder="Zip"
+                                       required>
+                                <div class="invalid-feedback">
+                                    Please provide a valid zip.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input is-invalid" id="invalidCheck33" required>
+                                <label class="custom-control-label" for="invalidCheck33">Agree to terms and conditions</label>
+                                <div class="invalid-feedback">
+                                    You must agree before submitting.
+                                </div>
+                            </div>
+                            <div class="invalid-feedback">
+                                You must agree before submitting.
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-sm" type="submit">Submit form</button>
+                    </form>*@
+
+
+
+
+
                     <div class="wagon-info-edit">
                         <fieldset>
                             <legend> @IDSMORSResource.legend_main_characteristics </legend>
-                            <div class="row">
-                                <div class="form-group col-xs-6 has-feedback">
-                                    <label for="state-wagon-edit" class="control-label">@IDSMORSResource.state_label:</label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
-                                        <select class="form-control" id="state-wagon-edit" name="state-wagon-edit" required="required"></select>
-                                        <span class="glyphicon form-control-feedback"></span>
-                                    </div>
 
+                            <div class="form-row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="state-wagon-edit" class="col-form-label">@IDSMORSResource.state_label:</label>
+                                    <select class="form-control is-invalid" id="state-wagon-edit" name="state-wagon-edit" required="required"></select>
+                                    <div class="invalid-feedback">
+                                        Укажите государство собственника
+                                    </div>
                                 </div>
-                                <div class="form-group col-xs-6 has-feedback">
-                                    <label for="station-wagon-edit" class="control-label">@IDSMORSResource.station_label:</label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
-                                        <input type="text" class="form-control" id="station-wagon-edit" placeholder="" name="station-wagon-edit">
-                                        <span class="glyphicon form-control-feedback"></span>
-                                    </div>
-
+                                <div class="col-md-6 mb-3">
+                                    <label for="station-wagon-edit" class="col-form-label">@IDSMORSResource.station_label:</label>
+                                    <input type="text" class="form-control" id="station-wagon-edit" placeholder="" name="station-wagon-edit">
                                 </div>
                             </div>
+                            @*<div class="row">
+                                <dir class="col-6">
+                                    <div class="form-group has-feedback">
+                                        <label for="state-wagon-edit" class="col-form-label">@IDSMORSResource.state_label:</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span><i class="glyphicon glyphicon-list"></i></span>
+                                            </div>
+                                            <select class="form-control is-invalid" id="state-wagon-edit" name="state-wagon-edit" required="required"></select>
+                                            <div class="input-group-append">
+                                                <span class="glyphicon form-control-feedback"></span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </dir>
+                                <dir class="col-6">
+                                    <div class="form-group has-feedback">
+                                        <label for="station-wagon-edit" class="col-form-label">@IDSMORSResource.station_label:</label>
+                                        <div class="input-group">
+                                            <span class="input-group-append"><i class="glyphicon glyphicon-pencil"></i></span>
+                                            <input type="text" class="form-control" id="station-wagon-edit" placeholder="" name="station-wagon-edit">
+                                            <span class="glyphicon form-control-feedback"></span>
+                                        </div>
+
+                                    </div>
+                                </dir>
+                            </div>*@
                             <div class="row">
-                                <div class="form-group col-xs-4 has-feedback">
-                                    <label for="genus-wagon-edit" class="control-label">Род подвижного сотава:</label>
+                                <div class="form-group col-4 has-feedback">
+                                    <label for="genus-wagon-edit" class="col-form-label">Род подвижного сотава:</label>
                                     <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                                        <span class="input-group-append"><i class="glyphicon glyphicon-list"></i></span>
                                         <select class="form-control" id="genus-wagon-edit" name="genus-wagon-edit" required="required"></select>
                                         <span class="glyphicon form-control-feedback"></span>
                                     </div>
                                 </div>
-                                <div class="form-group col-xs-4 has-feedback">
-                                    <label for="type-wagon-edit" class="control-label">Тип подвижного сотава:</label>
+                                <div class="form-group col-4 has-feedback">
+                                    <label for="type-wagon-edit" class="col-form-label">Тип подвижного сотава:</label>
                                     <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                                        <span class="input-group-append"><i class="glyphicon glyphicon-list"></i></span>
                                         <select class="form-control" id="type-wagon-edit" name="type-wagon-edit" required=""></select>
                                         <span class="glyphicon form-control-feedback"></span>
                                     </div>
                                 </div>
-                                <div class="form-group col-xs-4 has-feedback">
-                                    <label for="code-model-wagon-edit" class="control-label">Модель:</label>
+                                <div class="form-group col-4 has-feedback">
+                                    <label for="code-model-wagon-edit" class="col-form-label">Модель:</label>
                                     <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
+                                        <span class="input-group-append"><i class="glyphicon glyphicon-pencil"></i></span>
                                         <input type="text" class="form-control" id="code-model-wagon-edit" name="code-model-wagon-edit" placeholder="">
                                         <span class="glyphicon form-control-feedback"></span>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-xs-6 has-feedback">
-                                    <label for="wagon-manufacturer-wagon-edit" class="control-label">Завод изготовитель:</label>
+                                <div class="form-group col-6 has-feedback">
+                                    <label for="wagon-manufacturer-wagon-edit" class="col-form-label">Завод изготовитель:</label>
                                     <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                                        <span class="input-group-append"><i class="glyphicon glyphicon-list"></i></span>
                                         <select class="form-control" id="wagon-manufacturer-wagon-edit" name="wagon-manufacturer-wagon-edit"></select>
                                         <span class="glyphicon form-control-feedback"></span>
                                     </div>
                                 </div>
-                                <div class="form-group col-xs-6 has-feedback">
-                                    <label for="year-wagon-create-wagon-edit" class="control-label">Год постройки:</label>
+                                <div class="form-group col-6 has-feedback">
+                                    <label for="year-wagon-create-wagon-edit" class="col-form-label">Год постройки:</label>
                                     <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                        <span class="input-group-append"><i class="glyphicon glyphicon-calendar"></i></span>
                                         <input type="number" class="form-control" id="year-wagon-create-wagon-edit" name="year-wagon-create-wagon-edit" placeholder="">
                                         <span class="glyphicon form-control-feedback"></span>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-xs-3 has-feedback">
-                                    <label for="carrying-capacity-wagon-edit" class="control-label">Грузоподъемность,т:</label>
+                                <div class="form-group col-3 has-feedback">
+                                    <label for="carrying-capacity-wagon-edit" class="col-form-label">Грузоподъемность,т:</label>
                                     <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-sound-7-1"></i></span>
+                                        <span class="input-group-append"><i class="glyphicon glyphicon-sound-7-1"></i></span>
                                         <input type="number" class="form-control" id="carrying-capacity-wagon-edit" placeholder="" name="carrying-capacity-wagon-edit" pattern="\d+(\.\d{1})?">
                                         <span class="glyphicon form-control-feedback"></span>
                                     </div>
                                 </div>
-                                <div class="form-group col-xs-3 has-feedback">
-                                    <label for="tara-wagon-edit" class="control-label">Тара, тонн:</label>
+                                <div class="form-group col-3 has-feedback">
+                                    <label for="tara-wagon-edit" class="col-form-label">Тара, тонн:</label>
                                     <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-sound-7-1"></i></span>
+                                        <span class="input-group-append"><i class="glyphicon glyphicon-sound-7-1"></i></span>
                                         <input type="number" class="form-control" id="tara-wagon-edit" name="tara-wagon-edit" placeholder="">
                                         <span class="glyphicon form-control-feedback"></span>
                                     </div>
                                 </div>
-                                <div class="form-group col-xs-3 has-feedback">
-                                    <label for="body-volume-wagon-edit" class="control-label">Объем кузова:</label>
+                                <div class="form-group col-3 has-feedback">
+                                    <label for="body-volume-wagon-edit" class="col-form-label">Объем кузова:</label>
                                     <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-sound-7-1"></i></span>
+                                        <span class="input-group-append"><i class="glyphicon glyphicon-sound-7-1"></i></span>
                                         <input type="number" class="form-control" id="body-volume-wagon-edit" name="body-volume-wagon-edit" placeholder="">
                                         <span class="glyphicon form-control-feedback"></span>
                                     </div>
                                 </div>
-                                <div class="form-group col-xs-3 has-feedback">
-                                    <label for="axis-length-wagon-edit" class="control-label">Длина по осям,м:</label>
+                                <div class="form-group col-3 has-feedback">
+                                    <label for="axis-length-wagon-edit" class="col-form-label">Длина по осям,м:</label>
                                     <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-sound-7-1"></i></span>
+                                        <span class="input-group-append"><i class="glyphicon glyphicon-sound-7-1"></i></span>
                                         <input type="number" class="form-control" id="axis-length-wagon-edit" name="axis-length-wagon-edit" placeholder="">
                                         <span class="glyphicon form-control-feedback"></span>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-xs-6 has-feedback">
-                                    <label for="type-repairs-wagon-edit" class="control-label">Тип планируемого ремонта:</label>
+                                <div class="form-group col-6 has-feedback">
+                                    <label for="type-repairs-wagon-edit" class="col-form-label">Тип планируемого ремонта:</label>
                                     <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                                        <span class="input-group-append"><i class="glyphicon glyphicon-list"></i></span>
                                         <select class="form-control" id="type-repairs-wagon-edit" name="type-repairs-wagon-edit"></select>
                                         <span class="glyphicon form-control-feedback"></span>
                                     </div>
                                 </div>
-                                <div class="form-group col-xs-6 has-feedback">
-                                    <label for="date-type-repairs-wagon-edit" class="control-label">Дата планируемого ремонта:</label>
+                                <div class="form-group col-6 has-feedback">
+                                    <label for="date-type-repairs-wagon-edit" class="col-form-label">Дата планируемого ремонта:</label>
                                     <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                        <span class="input-group-append"><i class="glyphicon glyphicon-calendar"></i></span>
                                         <input type="datetime" class="form-control" id="date-type-repairs-wagon-edit" name="date-type-repairs-wagon-edit" placeholder="">
                                         <span class="glyphicon form-control-feedback"></span>
                                     </div>
@@ -312,62 +412,62 @@
                         <fieldset>
                             <legend> Собственность </legend>
                             <div class="row">
-                                <div class="form-group col-xs-4 has-feedback">
-                                    <label for="type-ownership-wagon-edit" class="control-label">Признак собственности:</label>
+                                <div class="form-group col-4 has-feedback">
+                                    <label for="type-ownership-wagon-edit" class="col-form-label">Признак собственности:</label>
                                     <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                                        <span class="input-group-append"><i class="glyphicon glyphicon-list"></i></span>
                                         <select class="form-control" id="type-ownership-wagon-edit" name="type-ownership-wagon-edit"></select>
                                         <span class="glyphicon form-control-feedback"></span>
                                     </div>
                                 </div>
-                                <div class="form-group col-xs-4 has-feedback">
-                                    <label for="owner-wagon-edit" class="control-label">Собственник:</label>
+                                <div class="form-group col-4 has-feedback">
+                                    <label for="owner-wagon-edit" class="col-form-label">Собственник:</label>
                                     <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                                        <span class="input-group-append"><i class="glyphicon glyphicon-list"></i></span>
                                         <select class="form-control" id="owner-wagon-edit" name="owner-wagon-edit"></select>
                                         <span class="glyphicon form-control-feedback"></span>
                                     </div>
                                 </div>
-                                <div class="form-group col-xs-4 has-feedback">
-                                    <label for="date-registration-wagon-edit" class="control-label">Дата последней регистрации:</label>
+                                <div class="form-group col-4 has-feedback">
+                                    <label for="date-registration-wagon-edit" class="col-form-label">Дата последней регистрации:</label>
                                     <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                        <span class="input-group-append"><i class="glyphicon glyphicon-calendar"></i></span>
                                         <input type="date" class="form-control" id="date-registration-wagon-edit" name="date-registration-wagon-edit" placeholder="">
                                         <span class="glyphicon form-control-feedback"></span>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-xs-6 has-feedback">
-                                    <label for="lessor-wagon-edit" class="control-label">Арендодатель:</label>
+                                <div class="form-group col-6 has-feedback">
+                                    <label for="lessor-wagon-edit" class="col-form-label">Арендодатель:</label>
                                     <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                                        <span class="input-group-append"><i class="glyphicon glyphicon-list"></i></span>
                                         <select class="form-control" id="lessor-wagon-edit" name="lessor-wagon-edit"></select>
                                         <span class="glyphicon form-control-feedback"></span>
                                     </div>
                                 </div>
-                                <div class="form-group col-xs-6 has-feedback">
-                                    <label for="operator-wagon-edit" class="control-label">Оперативное управление:</label>
+                                <div class="form-group col-6 has-feedback">
+                                    <label for="operator-wagon-edit" class="col-form-label">Оперативное управление:</label>
                                     <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                                        <span class="input-group-append"><i class="glyphicon glyphicon-list"></i></span>
                                         <select class="form-control" id="operator-wagon-edit" name="operator-wagon-edit"></select>
                                         <span class="glyphicon form-control-feedback"></span>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-xs-6 has-feedback">
-                                    <label for="poligon-travel-wagon-edit" class="control-label">Полигон курсирования:</label>
+                                <div class="form-group col-6 has-feedback">
+                                    <label for="poligon-travel-wagon-edit" class="col-form-label">Полигон курсирования:</label>
                                     <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                                        <span class="input-group-append"><i class="glyphicon glyphicon-list"></i></span>
                                         <select class="form-control" id="poligon-travel-wagon-edit" name="poligon-travel-wagon-edit"></select>
                                         <span class="glyphicon form-control-feedback"></span>
                                     </div>
                                 </div>
-                                <div class="form-group col-xs-6 has-feedback">
-                                    <label for="special-conditions-edit" class="control-label">Особые условия:</label>
+                                <div class="form-group col-6 has-feedback">
+                                    <label for="special-conditions-edit" class="col-form-label">Особые условия:</label>
                                     <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                                        <span class="input-group-append"><i class="glyphicon glyphicon-list"></i></span>
                                         <select class="form-control" id="special-conditions-edit" name="special-conditions-edit"></select>
                                         <span class="glyphicon form-control-feedback"></span>
                                     </div>
@@ -381,23 +481,23 @@
                         <fieldset>
                             <legend> ДЕПОвский </legend>
                             <div class="row">
-                                <div class="form-group col-xs-12">
+                                <div class="form-group col-12">
                                     @{ Html.RenderAction("ElectronicCardsEditDEPO", "Home", new { area = "IDSMORS" }); }
                                     @*<button type="button" id="bt-depo-repairs-edit" class="btn btn-primary wagon-repairs-view">@IDSMORSResource.bt_edit_text</button>
-                                    <button type="button" id="bt-depo-repairs-delete" class="btn btn-primary wagon-repairs-view">@IDSMORSResource.bt_delete_text</button>*@
+                                        <button type="button" id="bt-depo-repairs-delete" class="btn btn-primary wagon-repairs-view">@IDSMORSResource.bt_delete_text</button>*@
                                 </div>
                             </div>
                             <div class="row">
 
-                                <div class="form-group col-xs-4">
+                                <div class="form-group col-4">
                                     <label for="depo-date-wagons-repairs-view">Дата:</label>
                                     <input type="text" class="form-control" id="depo-date-wagons-repairs-view" placeholder="" disabled>
                                 </div>
-                                <div class="form-group col-xs-4">
+                                <div class="form-group col-4">
                                     <label for="depo-internal-railroad-wagons-repairs-view">Дорога:</label>
                                     <input type="text" class="form-control" id="depo-internal-railroad-wagons-repairs-view" placeholder="" disabled>
                                 </div>
-                                <div class="form-group col-xs-4">
+                                <div class="form-group col-4">
                                     <label for="depo-code-depo-wagons-repairs-view">ВРП(депо):</label>
                                     <input type="text" class="form-control" id="depo-code-depo-wagons-repairs-view" placeholder="" disabled>
                                 </div>
@@ -406,22 +506,22 @@
                         <fieldset>
                             <legend> Капитальный </legend>
                             <div class="row">
-                                <div class="form-group col-xs-12">
+                                <div class="form-group col-12">
                                     @{ Html.RenderAction("ElectronicCardsEditKap", "Home", new { area = "IDSMORS" }); }
                                     @*<button type="button" id="bt-kap-repairs-edit" class="btn btn-primary wagon-repairs-view">@IDSMORSResource.bt_edit_text</button>
-                                    <button type="button" id="bt-kap-repairs-delete" class="btn btn-primary wagon-repairs-view">@IDSMORSResource.bt_delete_text</button>*@
+                                        <button type="button" id="bt-kap-repairs-delete" class="btn btn-primary wagon-repairs-view">@IDSMORSResource.bt_delete_text</button>*@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-xs-4">
+                                <div class="form-group col-4">
                                     <label for="kap-date-wagons-repairs-view">Дата:</label>
                                     <input type="text" class="form-control" id="kap-date-wagons-repairs-view" placeholder="" disabled>
                                 </div>
-                                <div class="form-group col-xs-4">
+                                <div class="form-group col-4">
                                     <label for="kap-internal-railroad-wagons-repairs-view">Дорога:</label>
                                     <input type="text" class="form-control" id="kap-internal-railroad-wagons-repairs-view" placeholder="" disabled>
                                 </div>
-                                <div class="form-group col-xs-4">
+                                <div class="form-group col-4">
                                     <label for="kap-code-depo-wagons-repairs-view">ВРП(депо):</label>
                                     <input type="text" class="form-control" id="kap-code-depo-wagons-repairs-view" placeholder="" disabled>
                                 </div>
@@ -430,36 +530,36 @@
                         <fieldset>
                             <legend> Текущий </legend>
                             <div class="row">
-                                <div class="form-group col-xs-12">
+                                <div class="form-group col-12">
                                     @{ Html.RenderAction("ElectronicCardsEditCur", "Home", new { area = "IDSMORS" }); }
                                     @*<button type="button" id="bt-cur-repairs-edit" class="btn btn-primary wagon-repairs-view">@IDSMORSResource.bt_edit_text</button>
-                                    <button type="button" id="bt-cur-repairs-delete" class="btn btn-primary wagon-repairs-view">@IDSMORSResource.bt_delete_text</button>*@
+                                        <button type="button" id="bt-cur-repairs-delete" class="btn btn-primary wagon-repairs-view">@IDSMORSResource.bt_delete_text</button>*@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-xs-4">
+                                <div class="form-group col-4">
                                     <label for="cur-date-wagons-repairs-view">Дата:</label>
                                     <input type="text" class="form-control" id="cur-date-wagons-repairs-view" placeholder="" disabled>
                                 </div>
-                                <div class="form-group col-xs-4">
+                                <div class="form-group col-4">
                                     <label for="cur-internal-railroad-wagons-repairs-view">Дорога:</label>
                                     <input type="text" class="form-control" id="cur-internal-railroad-wagons-repairs-view" placeholder="" disabled>
                                 </div>
-                                <div class="form-group col-xs-4">
+                                <div class="form-group col-4">
                                     <label for="cur-code-depo-wagons-repairs-view">ВРП(депо):</label>
                                     <input type="text" class="form-control" id="cur-code-depo-wagons-repairs-view" placeholder="" disabled>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-xs-4">
+                                <div class="form-group col-4">
                                     <label for="cur-type-wagons-repairs-view">Вид ремонта:</label>
                                     <input type="text" class="form-control" id="cur-type-wagons-repairs-view" placeholder="" disabled>
                                 </div>
-                                <div class="form-group col-xs-4">
+                                <div class="form-group col-4">
                                     <label for="cur-date-non-working-wagons-repairs-view">Дата постановки в нер. парк:</label>
                                     <input type="text" class="form-control" id="cur-date-non-working-wagons-repairs-view" placeholder="" disabled>
                                 </div>
-                                <div class="form-group col-xs-4">
+                                <div class="form-group col-4">
                                     <label for="cur-condition-wagons-repairs-view">Неисправность:</label>
                                     <input type="text" class="form-control" id="cur-condition-wagons-repairs-view" placeholder="" disabled>
                                 </div>
@@ -468,58 +568,58 @@
                     </div>
                     <div class="wagon-repairs-edit">
                         <div class="row">
-                            <div class="form-group col-xs-12">
+                            <div class="form-group col-12">
                                 <button type="button" id="bt-repairs-save" class="btn btn-primary wagon-repairs-edit">Сохранить</button>
                                 <button type="button" id="bt-repairs-cancel" class="btn btn-primary wagon-repairs-edit">Отмена</button>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group col-xs-4 has-feedback">
-                                <label for="date-wagons-repairs-edit" class="control-label">Дата:</label>
+                            <div class="form-group col-4 has-feedback">
+                                <label for="date-wagons-repairs-edit" class="col-form-label">Дата:</label>
                                 <div class="input-group">
-                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                    <span class="input-group-append"><i class="glyphicon glyphicon-calendar"></i></span>
                                     <input type="text" class="form-control" id="date-wagons-repairs-edit" name="date-wagons-repairs-edit" placeholder="">
                                     <span class=" glyphicon form-control-feedback"></span>
                                 </div>
                             </div>
-                            <div class="form-group col-xs-4 has-feedback">
-                                <label for="internal-railroad-wagons-repairs-edit" class="control-label">Дорога:</label>
+                            <div class="form-group col-4 has-feedback">
+                                <label for="internal-railroad-wagons-repairs-edit" class="col-form-label">Дорога:</label>
                                 <div class="input-group">
-                                    <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                                    <span class="input-group-append"><i class="glyphicon glyphicon-list"></i></span>
                                     <select class="form-control" id="internal-railroad-wagons-repairs-edit" name="internal-railroad-wagons-repairs-edit" required="required"></select>
                                     <span class=" glyphicon form-control-feedback"></span>
                                 </div>
                             </div>
-                            <div class="form-group col-xs-4 has-feedback">
-                                <label for="code-depo-wagons-repairs-edit" class="control-label">ВРП(депо):</label>
+                            <div class="form-group col-4 has-feedback">
+                                <label for="code-depo-wagons-repairs-edit" class="col-form-label">ВРП(депо):</label>
                                 <div class="input-group">
-                                    <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                                    <span class="input-group-append"><i class="glyphicon glyphicon-list"></i></span>
                                     <select class="form-control" id="code-depo-wagons-repairs-edit" name="code-depo-wagons-repairs-edit" required="required"></select>
                                     <span class=" glyphicon form-control-feedback"></span>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group col-xs-4 has-feedback">
-                                <label for="type-wagons-repairs-edit" class="control-label">Вид ремонта:</label>
+                            <div class="form-group col-4 has-feedback">
+                                <label for="type-wagons-repairs-edit" class="col-form-label">Вид ремонта:</label>
                                 <div class="input-group">
-                                    <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                                    <span class="input-group-append"><i class="glyphicon glyphicon-list"></i></span>
                                     <select class="form-control" id="type-wagons-repairs-edit" name="type-wagons-repairs-edit" required="required"></select>
                                     <span class=" glyphicon form-control-feedback"></span>
                                 </div>
                             </div>
-                            <div class="form-group col-xs-4 has-feedback">
-                                <label for="date-non-working-wagons-repairs-edit" class="control-label">Дата постановки в нер. парк:</label>
+                            <div class="form-group col-4 has-feedback">
+                                <label for="date-non-working-wagons-repairs-edit" class="col-form-label">Дата постановки в нер. парк:</label>
                                 <div class="input-group">
-                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                    <span class="input-group-append"><i class="glyphicon glyphicon-calendar"></i></span>
                                     <input type="text" class="form-control" id="date-non-working-wagons-repairs-edit" name="date-non-working-wagons-repairs-edit" placeholder="">
                                     <span class=" glyphicon form-control-feedback"></span>
                                 </div>
                             </div>
-                            <div class="form-group col-xs-4 has-feedback">
-                                <label for="condition-wagons-repairs-edit" class="control-label">Неисправность:</label>
+                            <div class="form-group col-4 has-feedback">
+                                <label for="condition-wagons-repairs-edit" class="col-form-label">Неисправность:</label>
                                 <div class="input-group">
-                                    <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                                    <span class="input-group-append"><i class="glyphicon glyphicon-list"></i></span>
                                     <select class="form-control" id="condition-wagons-repairs-edit" name="condition-wagons-repairs-edit"></select>
                                     <span class=" glyphicon form-control-feedback"></span>
                                 </div>

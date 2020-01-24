@@ -38,11 +38,12 @@
 
 <body id="page-top">
 
-    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+    @*<nav id="mainNav" class="navbar navbar-expand-md navbar-default">*@
+    <nav id="mainNav" class="navbar navbar-expand-sm navbar-dark bg-x fixed-top">
         <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                     <span class="sr-only">Toggle navigation</span> @GlobalResource.home_menu <i class="fa fa-bars"></i>
                 </button>
                 @*<a class="navbar-brand page-scroll" href="#page-top">@GlobalResource.home_link_home</a>*@
@@ -50,9 +51,10 @@
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            @*class="collapse navbar-collapse novbar" id="bs-example-navbar-collapse-1"*@
+            <div id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li>
+                    <li class="nav-item">
                         @using (Html.BeginForm("ChangeCulture", "Home", new { area = "" }))
                         {
                             @Html.RouteLink("RU", new
@@ -71,17 +73,17 @@
                            }, new { @class = "en-US" == @GlobalResource.lang ? "select-lang" : "select-not-lang" })
                         }
                     </li>
-                    <li>
-                        <a class="page-scroll" href="#about">@GlobalResource.home_link_system</a>
+                    <li class="nav-item">
+                        <a class="nav-link page-scroll" href="#about">@GlobalResource.home_link_system</a>
                     </li>
-                    <li>
-                        <a class="page-scroll" href="#services">@GlobalResource.home_link_services</a>
+                    <li class="nav-item">
+                        <a class="nav-link page-scroll" href="#services">@GlobalResource.home_link_services</a>
                     </li>
-                    <li>
-                        <a class="page-scroll" href="#document">@GlobalResource.home_link_document</a>
+                    <li class="nav-item">
+                        <a class="nav-link page-scroll" href="#document">@GlobalResource.home_link_document</a>
                     </li>
-                    <li>
-                        <a class="page-scroll" href="#contact">@GlobalResource.home_link_contact</a>
+                    <li class="nav-item">
+                        <a class="nav-link page-scroll" href="#contact">@GlobalResource.home_link_contact</a>
                     </li>
                 </ul>
             </div>
@@ -98,7 +100,7 @@
         </div>
     </header>
 
-    <section class="bg-primary" id="about">
+    <section class="bg-amkr " id="about">
         <div class="container">
             <div class="row">
                 <div class="col-md-4 text-center">
@@ -136,28 +138,28 @@
             <div class="row">
                 <div class="col-lg-3 col-md-6 text-center">
                     <div class="service-box">
-                        <i class="fa fa-4x fa-diamond text-primary sr-icons"></i>
+                        <i class="fa fa-4x fa-diamond text-amkr sr-icons"></i>
                         <h3>Администрирование</h3>
                         <p class="text-muted">Сервисы для настройки систем, служб и предоставления доступа к Web-сервисам ИДС</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 text-center">
                     <div class="service-box">
-                        <i class="fa fa-4x fa-paper-plane text-primary sr-icons"></i>
+                        <i class="fa fa-4x fa-paper-plane text-amkr sr-icons"></i>
                         <h3>Рассылка</h3>
                         <p class="text-muted">Настройка и контроль рассылка электронной почты сервисами ИДС</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 text-center">
                     <div class="service-box">
-                        <i class="fa fa-4x fa-newspaper-o text-primary sr-icons"></i>
+                        <i class="fa fa-4x fa-newspaper-o text-amkr sr-icons"></i>
                         <h3>Справочники УЗ</h3>
                         <p class="text-muted">Справочники грузов, железных дорог и станций УЗ</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 text-center">
                     <div class="service-box">
-                        <i class="fa fa-4x fa-heart text-primary sr-icons"></i>
+                        <i class="fa fa-4x fa-heart text-amkr sr-icons"></i>
                         <h3>Контроль систем</h3>
                         <p class="text-muted">Диагностика и контроль работы ИДС</p>
                     </div>
@@ -171,8 +173,7 @@
         @RenderSection("Document", false)
     </section>
 
-    @*<aside class="bg-dark">*@
-    <aside class="bg-primary">
+    <aside class="bg-amkr">
         <div class="container text-center">
             <div class="call-to-action">
                 @*<h2>Free Download at Start Bootstrap!</h2>
@@ -184,31 +185,40 @@
     <section id="contact">
         <div class="container">
             <div class="row">
-                <div class="col-lg-8 col-lg-offset-2 text-center">
+                <div class="col-lg-12 text-center">
                     <h2 class="section-heading">@GlobalResource.home_link_contact</h2>
                     <hr class="primary">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2 text-center">
                     <p>@GlobalResource.contact_admin_title</p>
                 </div>
-                <div class="col-lg-4 col-lg-offset-2 text-center">
+            </div>
+            <div class="row">
+                <div class="col-lg-4 offset-lg-2 text-center">
                     <i class="fa fa-phone fa-3x sr-contact"></i>
                     <p>@GlobalResource.contact_admin_phone</p>
                 </div>
-                <div class="col-lg-4 text-center">
+                <div class="col-lg-4 text-left">
                     <i class="fa fa-envelope-o fa-3x sr-contact"></i>
                     <p><a href="mailto:Eduard.Levchenko@arcelormittal.com">@GlobalResource.contact_admin_email</a></p>
                 </div>
-                <div class="col-lg-8 col-lg-offset-2 text-center">
+            </div>
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2 text-center">
                     <p>@GlobalResource.contact_rail_transport_title</p>
                 </div>
-                <div class="col-lg-4 col-lg-offset-2 text-center">
+            </div>
+            <div class="row">
+                <div class="col-lg-4 offset-lg-2 text-center">
                     <i class="fa fa-phone fa-3x sr-contact"></i>
                     <p>@GlobalResource.contact_rail_transport_phone</p>
                 </div>
-                <div class="col-lg-4 text-center">
+                <div class="col-lg-4 text-left">
                     <i class="fa fa-envelope-o fa-3x sr-contact"></i>
-                    <p><a href="mailto:Eduard.Levchenko@arcelormittal.com">@GlobalResource.contact_rail_transport_email</a></p>
+                    <p><a href="mailto:Irina.Shuba@arcelormittal.com">@GlobalResource.contact_rail_transport_email</a></p>
                 </div>
-
             </div>
         </div>
     </section>
