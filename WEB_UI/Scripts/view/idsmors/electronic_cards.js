@@ -1137,10 +1137,12 @@
             },
             //----------ВАЛИДАЦИЯ-------------------------------------------------------
             // Установить признак ошибка
-            set_control_error: function (o) {
+            set_control_error: function (o, message) {
 
-                o.removeClass('is-valid').addClass('is-invalid');
+                o.removeClass('is-valid').addClass('is-invalid').next(".invalid-feedback").text(message);
 
+            //                var formGroupCaptcha = o.parents('div');
+//var glyphiconCaptcha = formGroupCaptcha.find('.form-control-feedback');
                 //var formGroupCaptcha = o.parents('.form-group');
                 //var glyphiconCaptcha = formGroupCaptcha.find('.form-control-feedback');
                 //formGroupCaptcha.addClass('has-error').removeClass('has-success');
@@ -1157,7 +1159,7 @@
             // Проверим Select выбор сделан?
             checkSelection: function (o, message) {
                 if (Number(o.val()) < 0) {
-                    wagon_card.set_control_error(o);
+                    wagon_card.set_control_error(o,message);
                     wagon_card.out_error_message(message);
                     return false;
                 } else {
@@ -1174,7 +1176,7 @@
                         wagon_card.set_control_ok(o);
                         return true;
                     } else {
-                        wagon_card.set_control_error(o);
+                        wagon_card.set_control_error(o, message);
                         wagon_card.out_error_message(message);
                         return false;
                     }
@@ -1188,7 +1190,7 @@
                 if (o.val() !== "") {
                     var value = Number(o.val());
                     if (isNaN(value) || value > max || value < min) {
-                        wagon_card.set_control_error(o);
+                        wagon_card.set_control_error(o, message);
                         wagon_card.out_error_message(message);
                         return false;
                     } else {
@@ -1204,7 +1206,7 @@
             checkInputOfLength: function (o, min, max, message) {
                 var value = Number(o.val());
                 if (o.val().length > max || o.val().length < min) {
-                    wagon_card.set_control_error(o);
+                    wagon_card.set_control_error(o, message);
                     wagon_card.out_error_message(message);
                     return false;
                 } else {
@@ -1218,7 +1220,7 @@
                     var s = o.val();
                     var dt = moment(o.val(), format);
                     if (!dt.isValid()) {
-                        wagon_card.set_control_error(o);
+                        wagon_card.set_control_error(o,"Дата должна быть указана в формате '" + format + "'");
                         wagon_card.out_error_message("Дата должна быть указана в формате '" + format + "'");
                         return false;
                     } else {
@@ -1266,7 +1268,7 @@
             validation_repairs: function () {
                 this.clear_error();
                 var valid = true;
-                valid = valid & wagon_card.checkSelection(wagon_card.type_wagons_repairs_edit, "Укажите вид ремонта")
+                valid = valid & wagon_card.checkSelection(wagon_card.type_wagons_repairs_edit, "Укажите вид ремонта");
                 valid = valid & wagon_card.checkInputOfDate(wagon_card.date_wagons_repairs_edit, lang === 'ru' ? 'DD.MM.YYYY' : 'MM/DD/YYYY');
                 valid = valid & wagon_card.checkInputOfDate(wagon_card.date_non_working_wagons_repairs_edit, lang === 'ru' ? 'DD.MM.YYYY' : 'MM/DD/YYYY');
                 wagon_card.set_control_ok(wagon_card.internal_railroad_wagons_repairs_edit);
