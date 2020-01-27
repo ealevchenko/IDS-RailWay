@@ -9,7 +9,7 @@
     @Styles.Render("~/jquery-ui/css")
     @Styles.Render("~/bootstrap/css")
 
-    <link rel="stylesheet" href="~/Content/view/shared/_idsmors.css"> <!-- CSS reset -->
+    <link rel="stylesheet" href="~/Content/view/shared/_idsmors.css">
     @Scripts.Render("~/bundles/modernizr")
 
     <title>@ViewBag.Title</title>
@@ -17,7 +17,44 @@
 </head>
 <body>
     <div id="lockPanel" class="LockOff"></div>
-    <header class="cd-header">
+    <nav id="mainNav" class="navbar navbar-expand-sm navbar-dark bg-amkr fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>Menu<i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand" href="#">
+                    <img src="~/Images/logo.png" width="90" height="40" class="d-inline-block align-top" alt="">
+                    ArselorMittal
+                </a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            @*class="collapse navbar-collapse novbar" id="bs-example-navbar-collapse-1"*@
+            <div>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="nav-item">
+                        <a class="nav-link page-scroll" href="#about">link1</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link page-scroll" href="#services">link2</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link page-scroll" href="#document">link3</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link page-scroll" href="#contact">link4</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+
+
+    @*<header class="cd-header">
         <div id="cd-logo"><a href="#0"><img src="~/Images/amk_logo.png" alt="Logo"></a></div>
         <nav class="cd-main-nav">
             <ul>
@@ -27,7 +64,7 @@
                 <li><a id="new-item" href='#'>Добавить вагон</a></li>
             </ul>
         </nav> <!-- cd-main-nav -->
-    </header>
+    </header>*@
     @RenderBody()
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jquery-cookie")

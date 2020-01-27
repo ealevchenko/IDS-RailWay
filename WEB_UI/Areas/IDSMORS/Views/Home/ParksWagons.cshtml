@@ -5,7 +5,7 @@
 
 @section styles {
     @Styles.Render("~/DataTables/css")
-    <link rel="stylesheet" type="text/css" href="~/Content/view/shared/filter-menu.css">
+    @*<link rel="stylesheet" type="text/css" href="~/Content/view/shared/filter-menu.css">*@
     <link rel="stylesheet" type="text/css" href="~/Content/view/idsmors/park_wagons.css">
 
 
@@ -23,27 +23,31 @@
     <script src="~/Scripts/view/idsmors/park_wagons.js"></script> <!--  -->
 }
 <input id="username" type="hidden" value="@User.Identity.Name" />
-
-
 <div class="container-fluid idsmors-report">
     <div class="card">
         <div class="card-header bg-secondary text-white">
-            <div class="row wagon-view">
-                <div class="col-md-4 mb-3 text-right">
-                    <label class="control-label">@IDSMORSResource.label_park_wagon_title:</label>
+            @*<div class="container">*@
+
+            <form id="fm-select-park-wagon">
+                <div class="form-row">
+                    <div class="col-md-3 mb-3 text-right">
+                        <label class="col-form-label" for="select-park-wagon">@IDSMORSResource.label_park_wagon_title:</label>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <select class="form-control" id="select-park-wagon" name="select-park-wagon"></select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <button type="button" class="btn btn-warning btn" id="add-park">Добавить</button>
+                        <button type="button" class="btn btn-warning btn" id="edit-park">Переименовать</button>
+                        <button type="button" class="btn btn-warning btn" id="delete-park">Удалить</button>
+                    </div>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <select class="form-control" id="select-park-wagon" name="select-park-wagon"></select>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <button type="button" class="btn btn-warning btn-lg" id="add-park">Добавить</button>
-                    <button type="button" class="btn btn-warning btn-lg" id="edit-park">Переименовать</button>
-                    <button type="button" class="btn btn-warning btn-lg" id="delete-park">Удалить</button>
-                </div>
-            </div>
+            </form>
+            @*</div>*@
+
         </div>
         <div class="card-body">
-            <div class="row wagon-view">
+            <div class="form-row">
                 <div class="col-md-12 mb-3">
                     <table class='compact cell-border display' id="table-wagons" style="width:100%" cellpadding="0"></table>
                 </div>
@@ -54,12 +58,21 @@
 
 
 <div id="edit-park-name" title="" style="display:none">
+    <div class="alert" id="edit-park-name-alert">
+    </div>
     <form id="form-park-name">
         <fieldset>
             <div class="form-row">
                 <div class="col-md-12 mb-3">
-                    <label for="state-wagon-view">Парк подвижного состава:</label>
-                    <input type="text" class="form-control" id="name-park-wagon" placeholder="">
+                    <label for="name-park-wagon-ru">Парк подвижного состава (ru):</label>
+                    <input type="text" class="form-control" id="name-park-wagon-ru" placeholder="">
+                    <div class="invalid-feedback">
+                        Это поле не может быть пустым
+                    </div>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label for="name-park-wagon-en">Парк подвижного состава (en):</label>
+                    <input type="text" class="form-control" id="name-park-wagon-en" placeholder="">
                     <div class="invalid-feedback">
                         Это поле не может быть пустым
                     </div>

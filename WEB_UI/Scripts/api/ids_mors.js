@@ -7,38 +7,68 @@ var IDS_MORS = function (lang) {
     this.lang = lang;
     this.ids_dir = new IDS_DIRECTORY(lang), // Создадим класс IDS_DIRECTORY
     this.uz_dir = new UZ_DIRECTORY(lang) // Создадим класс UZ_DIRECTORY
-    };
+};
 
 IDS_MORS.list_cards_wagons = [];
 
 IDS_MORS.list_cards_wagons_repairs = [];
 
+IDS_MORS.list_park_wagons = [];
 
+IDS_MORS.list_park_list_wagons = [];
+
+// Загрузить указаные справочники
 IDS_MORS.prototype.load = function (list, callback) {
-    var count = list.length+2;
+    //var count = list.length + 2;
+    var count = list.length;
     var obj = this;
-    // Згрузка библиотек справочников ИДС
-    this.ids_dir.load(['genus_wagon', 'wagon_manufacturers', 'types_repairs_wagons', 'models_wagons', 'type_wagons', 'type_owner_ship', 'owners_wagons', 'lessors_wagons', 'operators_wagons', 'poligon_travel_wagons', 'special_conditions', 'depo', 'wagons_condition'], function () {
-        count -= 1;
-        if (count === 0) {
-            if (typeof callback === 'function') {
-                LockScreenOff();
-                callback();
-            }
-        }
-    });
-    // Згрузка библиотек справочников УЗ
-    this.uz_dir.load(['states', 'stations', 'internal_railroad'], function () {
-        count -= 1;
-        if (count === 0) {
-            if (typeof callback === 'function') {
-                LockScreenOff();
-                callback();
-            }
-        }
-    });
+    //// Згрузка библиотек справочников ИДС
+    //this.ids_dir.load(['genus_wagon', 'wagon_manufacturers', 'types_repairs_wagons', 'models_wagons', 'type_wagons', 'type_owner_ship', 'owners_wagons', 'lessors_wagons', 'operators_wagons', 'poligon_travel_wagons', 'special_conditions', 'depo', 'wagons_condition'], function () {
+    //    count -= 1;
+    //    if (count === 0) {
+    //        if (typeof callback === 'function') {
+    //            LockScreenOff();
+    //            callback();
+    //        }
+    //    }
+    //});
+    //// Згрузка библиотек справочников УЗ
+    //this.uz_dir.load(['states', 'stations', 'internal_railroad'], function () {
+    //    count -= 1;
+    //    if (count === 0) {
+    //        if (typeof callback === 'function') {
+    //            LockScreenOff();
+    //            callback();
+    //        }
+    //    }
+    //});
     // Згрузка собственных таблиц
     $.each(list, function (i, el) {
+        if (el === 'ids') {
+            // Згрузка библиотек справочников ИДС
+            obj.ids_dir.load(['genus_wagon', 'wagon_manufacturers', 'types_repairs_wagons', 'models_wagons', 'type_wagons', 'type_owner_ship', 'owners_wagons', 'lessors_wagons', 'operators_wagons', 'poligon_travel_wagons', 'special_conditions', 'depo', 'wagons_condition'], function () {
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        LockScreenOff();
+                        callback();
+                    }
+                }
+            });
+        };
+        // Згрузка библиотек справочников УЗ
+        if (el === 'uz') {
+            obj.uz_dir.load(['states', 'stations', 'internal_railroad'], function () {
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        LockScreenOff();
+                        callback();
+                    }
+                }
+            });
+        };
+
         if (el === 'cards_wagons') {
             IDS_MORS.prototype.getCardsWagons(function (result_cards_wagons) {
                 obj.list_cards_wagons = result_cards_wagons;
@@ -63,9 +93,65 @@ IDS_MORS.prototype.load = function (list, callback) {
                 }
             });
         };
+        // Парк вагонов
+        if (el === 'park_wagons') {
+            IDS_MORS.prototype.getParksWagons(function (result_park_wagons) {
+                obj.list_park_wagons = result_park_wagons;
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        LockScreenOff();
+                        callback(result_park_wagons);
+                    }
+                }
+            });
+        };
+        if (el === 'park_list_wagons') {
+            IDS_MORS.prototype.getParksWagons(function (result_park_list_wagons) {
+                obj.list_park_list_wagons = result_park_list_wagons;
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        LockScreenOff();
+                        callback(result_park_list_wagons);
+                    }
+                }
+            });
+        };
+
     });
 };
 
+IDS_MORS.prototype.loadCardsWagons = function (callback) {
+    var obj = this;
+    IDS_MORS.prototype.getCardsWagons(function (result_cards_wagons) {
+        obj.list_cards_wagons = result_cards_wagons;
+        if (typeof callback === 'function') {
+            callback(result_cards_wagons);
+        }
+    });
+};
+// Загрузить список парков
+IDS_MORS.prototype.loadParksWagons = function (callback) {
+    var obj = this;
+    IDS_MORS.prototype.getParksWagons(function (result_park_wagons) {
+        obj.list_park_wagons = result_park_wagons;
+        if (typeof callback === 'function') {
+            callback(result_park_wagons);
+        }
+    });
+};
+
+/* ----------------------------------------------------------
+функции для работы с объектами
+-------------------------------------------------------------*/
+IDS_MORS.prototype.getValueObj = function (obj, name) {
+    return obj ? obj[name] : null;
+};
+//
+IDS_MORS.prototype.getValueCultureObj = function (obj, name) {
+    return obj ? obj[name + '_' + this.lang] : null;
+};
 /* ----------------------------------------------------------
 AJAX функции
 -------------------------------------------------------------*/
@@ -96,7 +182,7 @@ IDS_MORS.prototype.getCardsWagons = function (callback) {
 IDS_MORS.prototype.getCardsWagonsOfNum = function (num, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/mors/cards_wagons/num/'+num,
+        url: '../../api/ids/mors/cards_wagons/num/' + num,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -214,7 +300,7 @@ IDS_MORS.prototype.getCardsWagonsRepairs = function (callback) {
 IDS_MORS.prototype.getCardsWagonsRepairsOfNum = function (num, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/mors/cards_wagons_repairs/num/'+num,
+        url: '../../api/ids/mors/cards_wagons_repairs/num/' + num,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -327,4 +413,160 @@ IDS_MORS.prototype.deleteCardsWagonsRepairs = function (id, callback) {
             AJAXComplete();
         },
     });
+};
+//======= ParksWagons (Таблица парков вагонов) ======================================
+IDS_MORS.prototype.getParksWagons = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/mors/park_wagons/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_MORS.getParksWagons", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//
+IDS_MORS.prototype.getParksWagonsOfID = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/mors/park_wagons/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_MORS.getParksWagonsOfID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Добавить
+IDS_MORS.prototype.postParksWagons = function (park, callback) {
+    $.ajax({
+        url: '../../api/ids/mors/park_wagons/',
+        type: 'POST',
+        data: JSON.stringify(park),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_MORS.postParksWagons", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Обновить
+IDS_MORS.prototype.putParksWagons = function (park, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/mors/park_wagons/id/' + park.id,
+        data: JSON.stringify(park),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_MORS.putParksWagons", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Удалить
+IDS_MORS.prototype.deleteParksWagons = function (id, callback) {
+    $.ajax({
+        url: '../../api/ids/mors/park_wagons/id/' + id,
+        type: 'DELETE',
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_MORS.deleteParksWagons", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//======= ParksListWagons (Таблица списков вагонов парка вагонов) ======================================
+
+/* ----------------------------------------------------------
+функции для работы с внутреним массивом
+-------------------------------------------------------------*/
+//======= IDS_MORS.list_park_wagons  (Список парков) ======================================
+IDS_MORS.prototype.getParksWagons_Internal_Of_ID = function (id_park) {
+    if (this.list_park_wagons) {
+        var obj = getObjects(this.list_park_wagons, 'id', id_park);
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_MORS.prototype.getValue_ParksWagons_Of_ID = function (id_park, name) {
+    var obj = this.getParksWagons_Internal_Of_ID(id_park);
+    return obj ? obj[name] : null;
+};
+//
+IDS_MORS.prototype.getValueCulture_ParksWagons_Of_ID = function (id_park, name) {
+    var obj = this.getParksWagons_Internal_Of_ID(id_park);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+IDS_MORS.prototype.getListParksWagons = function (fvalue, ftext, lang) {
+    var list = [];
+    if (this.list_park_wagons) {
+        for (i = 0, j = this.list_park_wagons.length; i < j; i++) {
+            var l = this.list_park_wagons[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+
+        }
+    }
+    return list;
 };

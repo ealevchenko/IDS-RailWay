@@ -280,7 +280,7 @@ var toISOStringTZ = function (date) {
 };
 // Преобразовать из ISO в Date
 var ISOtoDate = function (s_date) {
-    if (s_date){
+    if (s_date) {
         var dt = moment(s_date);
         return dt ? dt._d : null;
     }
@@ -330,7 +330,7 @@ var get_input_value = function (obj) {
     if (obj) {
         return obj.val() !== '' ? Number(obj.val()) : null;
     }
-    return null ;
+    return null;
 };
 // Врнуть значение select с проверкой
 var get_select_value = function (select) {
@@ -345,3 +345,88 @@ var get_select_number_value = function (select) {
     }
     return null;
 };
+
+/* ----------------------------------------------------------
+    Функции валидации и вывода сообщений
+-------------------------------------------------------------*/
+
+var VALIDATION = function (lang, alert) {
+
+    this.lang = lang;
+    this.alert = alert;
+};
+// Очистить все ошибки
+VALIDATION.prototype.clear_error = function (fm) {
+    this.clear_message();
+    var fg = fm.find('input, select');
+    fg.removeClass('is-valid is-invalid');
+}
+
+// Очистить сообщения
+VALIDATION.prototype.clear_message = function () {
+    if (this.alert) {
+        this.alert.hide().text('');
+    }
+};
+ 
+// Вывести сообщение об ошибке
+VALIDATION.prototype.out_error_message = function (message) {
+    if (this.alert) {
+        this.alert.show().removeClass('alert-success').addClass('alert-danger');
+        if (message) {
+            this.alert.append(message).append($('<br />'));
+        }
+    }
+};
+// Вывести информационное сообщение
+VALIDATION.prototype.out_info_message = function (message) {
+    if (this.alert) {
+        this.alert.show().removeClass('alert-danger').addClass('alert-success');
+        if (message) {
+            this.alert.text(message);
+        }
+    }
+};
+// Установить признак ошибка
+VALIDATION.prototype.set_control_error = function (o, message) {
+    o.removeClass('is-valid').addClass('is-invalid');
+    if (message) {
+        o.next(".invalid-feedback").text(message);
+    }
+};
+// Установить признак Ok
+VALIDATION.prototype.set_control_ok = function (o, message) {
+    o.removeClass('is-invalid').addClass('is-valid');
+    if (message) {
+        o.next(".valid-feedback").text(message);
+    }
+};
+
+// Проверка на пустой объект
+VALIDATION.prototype.checkInputOfNull = function (o, mes_error, mes_ok) {
+    if (o.val() === '' || o.val() === null) {
+        this.set_control_error(o, mes_error);
+        this.out_error_message(mes_error);
+        return false;
+    } else {
+        this.set_control_ok(o, mes_ok);
+        this.out_info_message(mes_ok);
+        return true;
+    }
+};
+//var checkInputOfStringRange = function (o, min, max, message) {
+//    if (o.val() !== "") {
+//        var value = Number(o.val());
+//        if (isNaN(value) || value > max || value < min) {
+//            wagon_card.set_control_error(o, message);
+//            wagon_card.out_error_message(message);
+//            return false;
+//        } else {
+//            wagon_card.set_control_ok(o);
+//            return true;
+//        }
+//    } else {
+//        wagon_card.set_control_ok(o);
+//        return true;
+//    }
+//},

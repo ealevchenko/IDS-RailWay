@@ -200,6 +200,8 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Areas\IDSMORS\Controllers\HomeController.cs" />
     <Compile Include="Areas\IDSMORS\IDSMORSAreaRegistration.cs" />
+    <Compile Include="Controllers\api\IDS_ParksListWagonsController.cs" />
+    <Compile Include="Controllers\api\IDS_ParksWagonsController.cs" />
     <Compile Include="Controllers\api\IDS_CardsWagonsRepairsController.cs" />
     <Compile Include="Controllers\api\IDS_CardsWagonsController.cs" />
     <Compile Include="Controllers\api\IDS_Directory_WagonsConditionController.cs" />
@@ -485,6 +487,7 @@
     <Content Include="Images\Error404.png" />
     <Content Include="Images\header.jpg" />
     <Content Include="Images\ids-op.jpg" />
+    <Content Include="Images\logo.png" />
     <Content Include="Images\portfolio\fullsize\1.jpg" />
     <Content Include="Images\portfolio\fullsize\2.jpg" />
     <Content Include="Images\portfolio\fullsize\3.jpg" />
@@ -721,7 +724,7 @@
     <Content Include="Areas\IDSMORS\Views\_ViewStart.cshtml" />
     <Content Include="Areas\IDSMORS\Views\Home\Index.cshtml" />
     <Content Include="Areas\IDSMORS\Views\Home\ElectronicCards.cshtml" />
-    <Content Include="Areas\IDSMORS\Views\Shared\_IDSMORS.cshtml" />
+    <None Include="Areas\IDSMORS\Views\Shared\_IDSMORS1" />
     <Content Include="Content\DataTables\extensions\Buttons\css\mixins.scss" />
     <Content Include="Content\DataTables\extensions\Buttons\css\common.scss" />
     <Content Include="Areas\IDSMORS\Views\Home\ElectronicCardsEdit.cshtml" />
@@ -746,6 +749,7 @@
     <Content Include="Scripts\esm\popper.js.map" />
     <Content Include="Scripts\esm\popper-utils.min.js.map" />
     <Content Include="Scripts\esm\popper-utils.js.map" />
+    <Content Include="Areas\IDSMORS\Views\Shared\_IDSMORS.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />

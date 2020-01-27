@@ -73,7 +73,7 @@
             LockScreen(langView('mess_load', langs));
             var count = 1;
             //mors.load(['cards_wagons', 'cards_wagons_repairs'], function () {
-            mors.load([], function () {
+            mors.load(['ids','uz'], function () {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {

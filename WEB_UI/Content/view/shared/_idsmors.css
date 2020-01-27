@@ -47,6 +47,16 @@ table {
 	border-spacing: 0;
 }
 
+
+.bg-x {
+    background-color: rgba(0,0,0,0.15);
+}
+
+.bg-amkr {
+    background-color: #F05F40;
+    color:white;
+}
+
 /**/
 
 /* -------------------------------- 
@@ -54,7 +64,7 @@ table {
 Primary style
 
 -------------------------------- */
-html * {
+/*html * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -69,20 +79,20 @@ body {
   font-size: 100%;
   font-family: "Ubuntu", sans-serif;
   color: #f35535;
-  background-color: #2e313d;
+  background-color: #f1f1f1;
 }
 
 a {
   text-decoration: none;
-}
+}*/
 
 /* -------------------------------- 
 
 Main components 
 
 -------------------------------- */
-.cd-header {
-  /*position: fixed;*/
+/*.cd-header {
+  
   position: relative;
   top: 0;
   left: 0;
@@ -111,9 +121,9 @@ Main components
   .cd-header #cd-logo {
     margin: 23px 0 0 5%;
   }
-}
+}*/
 
-.cd-main-nav {
+/*.cd-main-nav {
     float: right;
     margin-right: 5%;
     width: 44px;
@@ -185,11 +195,11 @@ Main components
     padding: .6em 1em;
     border-top: none;
     font-size: 13px;
-    /*font-size: 0.8125rem;*/
+
     font-weight: bold;
     text-transform: uppercase;
   }
-}
+}*/
 
 
 /*Блокировка экрана*/
