@@ -1,25 +1,44 @@
 ﻿jQuery(document).ready(function ($) {
 
     //--------------------------------------------------------------------------------
-    // Панель "Информация по RFID-карте"
-    var confirm_rfid_card = {
+    // Панель "Править название парка"
+    var pn_edit_park_name = {
         obj: null,
+        lang : ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang')),
+        mors : new IDS_MORS(this.lang), // Создадим класс IDS_MORS
         init: function () {
-            confirm_rfid_card.obj = $("#confirm-rfid-card").dialog({
+            //mors.load(['cards_wagons', 'cards_wagons_repairs'], function () { });
+            pn_edit_park_name.obj = $("div#edit-park-name").dialog({
                 resizable: false,
                 modal: true,
                 autoOpen: false,
                 height: "auto",
-                width: 400,
-                buttons: {
-                    'Закрыть': function () {
-                        $(this).dialog("close");
-                    }
-                }
+                width: 500,
+                buttons: [
+                  {
+                      text: "Сохранить",
+                      class: "btn btn-warning btn-lg",
+                      click: function () {
+                          $(this).dialog("close");
+                      }
+                  },
+                  {
+                      text: "Отмена",
+                      class: "btn btn-warning btn-lg",
+                      click: function () {
+                          $(this).dialog("close");
+                      }
+                  },
+                ]
             });
         },
         Open: function (id) {
-            confirm_rfid_card.obj.dialog("open");
+            pn_edit_park_name.obj.dialog("open");
+            if (id) {
+                pn_edit_park_name.obj.dialog("option", "title", 'Добавить парк подвижного состава');
+            } else {
+                pn_edit_park_name.obj.dialog("option", "title", 'Изменить название парка подвижного состава');
+            }
             //if (id) {
             //    // пистолеты
             //    if (trk_num > 0 && trk_num < 10) {
@@ -54,10 +73,10 @@
         }
     };
 
-    confirm_rfid_card.init();
+    pn_edit_park_name.init();
 
     $('button#add-park').on('click', function () {
-        confirm_rfid_card.Open();
+        pn_edit_park_name.Open();
     });
 });
 
