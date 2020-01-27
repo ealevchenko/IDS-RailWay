@@ -1052,15 +1052,16 @@
             },
             // Очистить сообщения
             clear_message: function () {
-                this.wagon_content_message.addClass('hidden').find('div#wagon-content-message').text('');
+                this.wagon_content_message.hide().text('');
+                //this.wagon_content_message.addClass('hidden').find('div#wagon-content-message').text('');
             },
             // Вывести сообщение об ошибке
             out_error_message: function (message) {
-                this.wagon_content_message.removeClass('alert-success hidden').addClass('alert-danger').find('div#wagon-content-message').append(message).append($('<br />'));
+                this.wagon_content_message.show().removeClass('alert-success').addClass('alert-danger').append(message).append($('<br />'));
             },
             // Вывести информационное сообщение
             out_info_message: function (message) {
-                this.wagon_content_message.removeClass('alert-danger hidden').addClass('alert-success').find('div#wagon-content-message').text(message);
+                this.wagon_content_message.show().removeClass('alert-danger').addClass('alert-success').text(message);
             },
             // Очистить все ошибки
             clear_error: function () {

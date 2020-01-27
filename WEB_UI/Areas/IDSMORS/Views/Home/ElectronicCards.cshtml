@@ -34,7 +34,7 @@
         </div> <!-- cd-tab-filter -->
     </div> <!-- cd-tab-filter-wrapper -->
     <section class="cd-gallery">
-        <div class="alert alert-success fade show" id="global-success-alert"> <div id="global-message"></div> </div>
+        @*<div class="alert alert-success fade show" id="global-success-alert"> <div id="global-message"></div> </div>*@
         <table class='compact cell-border display' id="table-cards-wagons" style="width:100%" cellpadding="0"></table>
     </section> <!-- cd-gallery -->
     <div class="cd-filter">
@@ -47,8 +47,9 @@
 <div class="cd-wagon-content">
     <div>
         <form id="wagon-content">
-            <div class="alert alert-success hidden" id="wagon-content-success-alert"><div id="wagon-content-message"></div> </div>
-            @*<div class="alert alert-danger hidden" id="success-alert"> <div>Ваши данные были успешно отправлены.</div> </div>*@
+            <div class="alert alert-success" id="wagon-content-success-alert">
+                @*<div id="wagon-content-message"></div>*@
+            </div>
             <div id="tabs-controls">
                 <ul>
                     <li><a href="#tabs-control-1" id="link-tabs-control-1"></a></li>
@@ -370,13 +371,13 @@
                             </div>
 
                             @*<div class="form-row">
-                                <div class="col-md-6 mb-3">
+                                    <div class="col-md-6 mb-3">
 
-                                    <div class="invalid-feedback">
+                                        <div class="invalid-feedback">
 
+                                        </div>
                                     </div>
-                                </div>
-                            </div>*@
+                                </div>*@
 
                         </fieldset>
                         <fieldset>
