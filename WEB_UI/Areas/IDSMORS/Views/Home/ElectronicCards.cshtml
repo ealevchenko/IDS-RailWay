@@ -34,8 +34,14 @@
         </div> <!-- cd-tab-filter -->
     </div> <!-- cd-tab-filter-wrapper -->
     <section class="cd-gallery">
-        @*<div class="alert alert-success fade show" id="global-success-alert"> <div id="global-message"></div> </div>*@
-        <table class='compact cell-border display' id="table-cards-wagons" style="width:100%" cellpadding="0"></table>
+        <div class="container-fluid">
+            <div class="form-row">
+                <div class="col-md-12">
+                    @*<div class="alert alert-success fade show" id="global-success-alert"> <div id="global-message"></div> </div>*@
+                    <table class='compact cell-border display' id="table-cards-wagons" style="width:100%" cellpadding="0"></table>
+                </div>
+            </div>
+        </div>
     </section> <!-- cd-gallery -->
     <div class="cd-filter">
         <form id="filtr"></form>
@@ -44,7 +50,7 @@
     <a href="#0" class="cd-filter-trigger">Filters</a>
 </main> <!-- cd-main-content -->
 
-<div class="cd-wagon-content">
+<div class="cd-wagon-content text-left">
     <div>
         <form id="wagon-content">
             <div class="alert alert-success" id="wagon-content-success-alert">
@@ -57,7 +63,7 @@
                 </ul>
                 <div class="panel-control-top">
                     <div class="form-group row">
-                        <div class="col-12">
+                        <div class="col-12 text-left">
                             @{ Html.RenderAction("ElectronicCardsEdit", "Home", new { area = "IDSMORS" }); }
                         </div>
                     </div>
@@ -266,7 +272,6 @@
                     <div class="wagon-info-edit">
                         <fieldset>
                             <legend> @IDSMORSResource.legend_main_characteristics </legend>
-
                             <div class="form-row">
                                 <div class="col-md-6 mb-3">
                                     <label for="state-wagon-edit" class="col-form-label">@IDSMORSResource.state_label:</label>
@@ -445,7 +450,7 @@
                         <fieldset>
                             <legend> ДЕПОвский </legend>
                             <div class="form-row">
-                                <div class="col-md-12 mb-3">
+                                <div class="col-md-12 mb-3 text-left">
                                     @{ Html.RenderAction("ElectronicCardsEditDEPO", "Home", new { area = "IDSMORS" }); }
                                 </div>
                             </div>
@@ -468,7 +473,7 @@
                         <fieldset>
                             <legend> Капитальный </legend>
                             <div class="form-row">
-                                <div class="col-md-12 mb-3">
+                                <div class="col-md-12 mb-3  text-left">
                                     @{ Html.RenderAction("ElectronicCardsEditKap", "Home", new { area = "IDSMORS" }); }
                                 </div>
                             </div>
@@ -490,7 +495,7 @@
                         <fieldset>
                             <legend> Текущий </legend>
                             <div class="form-row">
-                                <div class="col-md-12 mb-3">
+                                <div class="col-md-12 mb-3  text-left">
                                     @{ Html.RenderAction("ElectronicCardsEditCur", "Home", new { area = "IDSMORS" }); }
                                 </div>
                             </div>
@@ -526,7 +531,7 @@
                     </div>
                     <div class="wagon-repairs-edit">
                         <div class="form-row">
-                            <div class="col-md-12 mb-3">
+                            <div class="col-md-12 mb-3  text-left">
                                 <button type="button" id="bt-repairs-save" class="btn btn-primary wagon-repairs-edit">Сохранить</button>
                                 <button type="button" id="bt-repairs-cancel" class="btn btn-primary wagon-repairs-edit">Отмена</button>
                             </div>

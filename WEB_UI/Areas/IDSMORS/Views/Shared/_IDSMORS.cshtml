@@ -17,55 +17,61 @@
 </head>
 <body>
     <div id="lockPanel" class="LockOff"></div>
-    <nav id="mainNav" class="navbar navbar-expand-sm navbar-dark bg-amkr fixed-top">
+    <nav id="mainNav" class="navbar navbar-expand-md navbar-amkr bg-amkr fixed-top">
         <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="~/Images/amk_logo.png" width="200" height="40" class="d-inline-block align-top" alt="">
+            </a>
             <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
+            <div class="navbar-header navbar-right">
                 <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>Menu<i class="fa fa-bars"></i>
+                    <span class="navbar-toggler-icon"></span>
+                    @*<span class="sr-only">Toggle navigation</span>Menu<i class="fa fa-bars"></i>*@
                 </button>
-                <a class="navbar-brand" href="#">
-                    <img src="~/Images/logo.png" width="90" height="40" class="d-inline-block align-top" alt="">
-                    ArselorMittal
-                </a>
+                <div class="collapse navbar-collapse novbar" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="nav-item">
+                            <a class="nav-link" href='@Url.Action("Index", "Home", new { area = "" })'>Номе</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href='@Url.Action("Index", "Home", new { area = "IDSMORS" })'>ИДС"УСПС"</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="new-item" href="#document">Добавить</a>
+                        </li>
+                        @*<li class="nav-item">
+                            <a class="nav-link page-scroll" href="#contact">link4</a>
+                        </li>*@
+                    </ul>
+                </div>
             </div>
 
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            @*class="collapse navbar-collapse novbar" id="bs-example-navbar-collapse-1"*@
-            <div>
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="nav-item">
-                        <a class="nav-link page-scroll" href="#about">link1</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link page-scroll" href="#services">link2</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link page-scroll" href="#document">link3</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link page-scroll" href="#contact">link4</a>
-                    </li>
-                </ul>
-            </div>
             <!-- /.navbar-collapse -->
+
         </div>
         <!-- /.container-fluid -->
     </nav>
+    <header>
+        <div class="header-content">
+            @RenderBody()
+            @*<div class="header-content-inner">
+
+        </div>*@
+        </div>
+    </header>
 
 
     @*<header class="cd-header">
-        <div id="cd-logo"><a href="#0"><img src="~/Images/amk_logo.png" alt="Logo"></a></div>
-        <nav class="cd-main-nav">
-            <ul>
-                <!-- inser more links here -->
-                <li><a href='@Url.Action("Index", "Home", new { area = "" })'>Home</a></li>
-                <li><a href='@Url.Action("Index", "Home", new { area = "IDSMORS" })'>ИДС"УСПС"</a></li>
-                <li><a id="new-item" href='#'>Добавить вагон</a></li>
-            </ul>
-        </nav> <!-- cd-main-nav -->
-    </header>*@
-    @RenderBody()
+            <div id="cd-logo"><a href="#0"><img src="~/Images/amk_logo.png" alt="Logo"></a></div>
+            <nav class="cd-main-nav">
+                <ul>
+                    <!-- inser more links here -->
+                    <li><a href='@Url.Action("Index", "Home", new { area = "" })'>Home</a></li>
+                    <li><a href='@Url.Action("Index", "Home", new { area = "IDSMORS" })'>ИДС"УСПС"</a></li>
+                    <li><a id="new-item" href='#'>Добавить вагон</a></li>
+                </ul>
+            </nav> <!-- cd-main-nav -->
+        </header>*@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jquery-cookie")
     @Scripts.Render("~/bundles/jquery-ui")

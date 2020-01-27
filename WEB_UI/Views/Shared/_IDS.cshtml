@@ -38,54 +38,52 @@
 
 <body id="page-top">
 
-    @*<nav id="mainNav" class="navbar navbar-expand-md navbar-default">*@
     <nav id="mainNav" class="navbar navbar-expand-sm navbar-dark bg-x fixed-top">
         <div class="container-fluid">
+            <a class="navbar-brand" href='@Url.Action("Index", "Home", new { Area = "" })'>@GlobalResource.home_link_home</a>
             <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
+            <div class="navbar-header navbar-right">
                 <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span> @GlobalResource.home_menu <i class="fa fa-bars"></i>
+                    <span class="navbar-toggler-icon"></span>
+                    @*<span class="sr-only">Toggle navigation</span> @GlobalResource.home_menu <i class="fa fa-bars"></i>*@
                 </button>
                 @*<a class="navbar-brand page-scroll" href="#page-top">@GlobalResource.home_link_home</a>*@
-                <a class="navbar-brand" href='@Url.Action("Index", "Home", new { Area = "" })'>@GlobalResource.home_link_home</a>
-            </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            @*class="collapse navbar-collapse novbar" id="bs-example-navbar-collapse-1"*@
-            <div id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="nav-item">
-                        @using (Html.BeginForm("ChangeCulture", "Home", new { area = "" }))
-                        {
-                            @Html.RouteLink("RU", new
-                           {
-                               controller = "Home",
-                               action = "ChangeCulture",
-                               area = "",
-                               lang = "ru"
-                           }, new { @class = "ru-RU" == @GlobalResource.lang ? "select-lang" : "select-not-lang" })
-                            @Html.RouteLink("EN", new
-                           {
-                               controller = "Home",
-                               action = "ChangeCulture",
-                               area = "",
-                               lang = "en"
-                           }, new { @class = "en-US" == @GlobalResource.lang ? "select-lang" : "select-not-lang" })
-                        }
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link page-scroll" href="#about">@GlobalResource.home_link_system</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link page-scroll" href="#services">@GlobalResource.home_link_services</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link page-scroll" href="#document">@GlobalResource.home_link_document</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link page-scroll" href="#contact">@GlobalResource.home_link_contact</a>
-                    </li>
-                </ul>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse novbar" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="nav-item">
+                            @using (Html.BeginForm("ChangeCulture", "Home", new { area = "" }))
+                            {
+                                @Html.RouteLink("RU", new
+                               {
+                                   controller = "Home",
+                                   action = "ChangeCulture",
+                                   area = "",
+                                   lang = "ru"
+                               }, new { @class = "ru-RU" == @GlobalResource.lang ? "select-lang" : "select-not-lang" }) //select-not-lang
+                                @Html.RouteLink("EN", new
+                               {
+                                   controller = "Home",
+                                   action = "ChangeCulture",
+                                   area = "",
+                                   lang = "en"
+                               }, new { @class = "en-US" == @GlobalResource.lang ? "select-lang" : "select-not-lang" })
+                            }
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link page-scroll" href="#about">@GlobalResource.home_link_system</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link page-scroll" href="#services">@GlobalResource.home_link_services</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link page-scroll" href="#document">@GlobalResource.home_link_document</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link page-scroll" href="#contact">@GlobalResource.home_link_contact</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <!-- /.navbar-collapse -->
         </div>
