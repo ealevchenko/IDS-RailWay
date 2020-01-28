@@ -47,7 +47,7 @@ namespace WEB_UI.Controllers.api
         }
 
         // GET: api/ids/mors/park_wagons/id/
-        [Route("num/{num:int}")]
+        [Route("id/{id:int}")]
         [ResponseType(typeof(ParksWagons))]
         public IHttpActionResult GetParksWagons(int id)
         {

@@ -25,10 +25,10 @@
 <input id="username" type="hidden" value="@User.Identity.Name" />
 <div class="container-fluid idsmors-report">
     <div class="card">
-        <div class="card-header bg-secondary text-white">
+        <div class="card-header bg-info text-white">
             <div class="container">
 
-            <form id="fm-select-park-wagon">
+                @*<form id="fm-select-park-wagon">*@
                 <div class="form-row">
                     <div class="col-sm-3 mb-3 text-right">
                         <label class="col-form-label" for="select-park-wagon">@IDSMORSResource.label_park_wagon_title:</label>
@@ -36,20 +36,20 @@
                     <div class="col-sm-3 mb-3">
                         <select class="form-control" id="select-park-wagon" name="select-park-wagon"></select>
                     </div>
-                    <div class="col-sm-6 mb-3">
-                        <button type="button" class="btn btn-warning btn" id="add-park">Добавить</button>
-                        <button type="button" class="btn btn-warning btn" id="edit-park">Переименовать</button>
-                        <button type="button" class="btn btn-warning btn" id="delete-park">Удалить</button>
+                    <div class="col-sm-6 mb-3 text-left">
+                        <button type="button" class="btn btn-dark" id="add-park">Добавить</button>
+                        <button type="button" class="btn btn-dark" id="edit-park">Переименовать</button>
+                        <button type="button" class="btn btn-dark" id="delete-park">Удалить</button>
                     </div>
                 </div>
-            </form>
+                @*</form>*@
             </div>
 
         </div>
         <div class="card-body">
             <div class="form-row">
                 <div class="col-md-12 mb-3">
-                    <table class='compact cell-border display' id="table-wagons" style="width:100%" cellpadding="0"></table>
+                    <table class='compact cell-border display' id="table-wagons-park" style="width:100%" cellpadding="0"></table>
                 </div>
             </div>
         </div>
@@ -64,14 +64,14 @@
         <fieldset>
             <div class="form-row">
                 <div class="col-md-12 mb-3">
-                    <label for="name-park-wagon-ru">Парк подвижного состава (ru):</label>
+                    <label class="col-form-label" for="name-park-wagon-ru">Парк подвижного состава (ru):</label>
                     <input type="text" class="form-control" id="name-park-wagon-ru" placeholder="">
                     <div class="invalid-feedback">
                         Это поле не может быть пустым
                     </div>
                 </div>
                 <div class="col-md-12 mb-3">
-                    <label for="name-park-wagon-en">Парк подвижного состава (en):</label>
+                    <label class="col-form-label" for="name-park-wagon-en">Парк подвижного состава (en):</label>
                     <input type="text" class="form-control" id="name-park-wagon-en" placeholder="">
                     <div class="invalid-feedback">
                         Это поле не может быть пустым
@@ -83,4 +83,12 @@
         </fieldset>
     </form>
 </div>
+
+<div id="dialog-confirm" title="Empty the recycle bin?">
+    <p id="dialog-confirm-text">
+        <span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>
+    </p>
+</div>
+
+
 

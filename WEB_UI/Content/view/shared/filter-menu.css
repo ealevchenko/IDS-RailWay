@@ -128,7 +128,7 @@ xtab-filter
         display: inline-block;
         width: 16px;
         height: 16px;
-        background: url("../../../Images/project/cd-icon-arrow.svg") no-repeat center center;
+        background: url("../../../Images/cd-icon-arrow.svg") no-repeat center center;
         -webkit-transition: all 0.3s;
         -moz-transition: all 0.3s;
         transition: all 0.3s;

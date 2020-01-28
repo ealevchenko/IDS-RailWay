@@ -206,12 +206,15 @@ var language_table = function (langs) {
 var cd_initSelect = function (obj_select, property, data, callback_option, value_select, event_change, exceptions_value) {
     var options = [];
     var lang = 'ru';
+    var select = true;
     if (property.lang) {
         lang = property.lang;
     }
-
+    if (property.select) {
+        select = property.select;
+    }
     // Проверка выбор неопределен
-    if (value_select == -1) {
+    if (value_select == -1 | select) {
         options.push("<option value='-1' >" + (lang == 'en' ? 'Select...' : 'Выберите...') + "</option>");
     }
     if (data != null) {
@@ -350,16 +353,24 @@ var get_select_number_value = function (select) {
     Функции валидации и вывода сообщений
 -------------------------------------------------------------*/
 
-var VALIDATION = function (lang, alert) {
+var VALIDATION = function (lang, alert, all_obj) {
 
     this.lang = lang;
     this.alert = alert;
+    this.all_obj = all_obj;
 };
-// Очистить все ошибки
-VALIDATION.prototype.clear_error = function (fm) {
+VALIDATION.prototype.clear_all = function () {
     this.clear_message();
-    var fg = fm.find('input, select');
-    fg.removeClass('is-valid is-invalid');
+    this.clear_error();
+}
+
+// Очистить все ошибки
+VALIDATION.prototype.clear_error = function (objs) {
+    if (objs) {
+        obs.removeClass('is-valid is-invalid');
+    } else {
+        this.all_obj.removeClass('is-valid is-invalid');
+    }
 }
 
 // Очистить сообщения
@@ -368,7 +379,7 @@ VALIDATION.prototype.clear_message = function () {
         this.alert.hide().text('');
     }
 };
- 
+
 // Вывести сообщение об ошибке
 VALIDATION.prototype.out_error_message = function (message) {
     if (this.alert) {
