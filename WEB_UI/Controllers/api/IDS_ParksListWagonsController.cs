@@ -46,31 +46,6 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // GET: api/ids/mors/park_list_wagons/park/id/
-        [Route("park/id")]
-        [ResponseType(typeof(ParksListWagons))]
-        public IHttpActionResult GetParksListWagonsOfPark(int id)
-        {
-            try
-            {
-                List<ParksListWagons> list = this.ef_park
-                    .Context
-                    .Where(l => l.id_park_wagon == id)
-                    .ToList()
-                    .Select(l => new ParksListWagons
-                    {
-                        id = l.id,
-                        id_park_wagon = l.id_park_wagon,
-                        num = l.num
-                    }).ToList();
-                return Ok(list);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
         // GET: api/ids/mors/park_list_wagons/id/
         [Route("num/{num:int}")]
         [ResponseType(typeof(ParksListWagons))]
@@ -96,6 +71,33 @@ namespace WEB_UI.Controllers.api
                 return BadRequest(e.Message);
             }
         }
+
+
+        // GET: api/ids/mors/park_list_wagons/park/id/21
+        [Route("park/id/{id:int}")]
+        [ResponseType(typeof(ParksListWagons))]
+        public IHttpActionResult GetParksListWagonsOfPark(int id)
+        {
+            try
+            {
+                List<ParksListWagons> list = this.ef_park
+                    .Context
+                    .Where(l => l.id_park_wagon == id)
+                    .ToList()
+                    .Select(l => new ParksListWagons
+                    {
+                        id = l.id,
+                        id_park_wagon = l.id_park_wagon,
+                        num = l.num
+                    }).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
 
         // POST api/ids/mors/park_list_wagons/
         [HttpPost]

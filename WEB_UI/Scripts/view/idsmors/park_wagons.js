@@ -73,7 +73,7 @@
     loadReference = function (callback) {
         LockScreen(langView('mess_load', langs));
         var count = 1;
-        mors.load(['ids', 'uz', 'park_wagons'], function () {
+        mors.load(['ids', 'uz', 'park_wagons', 'cards_wagons'], function () {
             count -= 1;
             if (count === 0) {
                 if (typeof callback === 'function') {
@@ -136,6 +136,7 @@
                     event.preventDefault();
                     var id = $(this).val();
                     update_button_edit_park(id);
+                    update_list_wagons_park(id);
                 },
                 null);
         update_button_edit_park(id_park);
@@ -152,92 +153,238 @@
     },
     // Обновим перечень вагонов входящих в парк
     update_list_wagons_park = function (id_park) {
-
+        table_wagon_cards.view(id_park, true);
     },
-            // Таблица 
+    // Таблица 
     table_wagon_cards = {
         html_table: $('#table-wagons-park'),
-        obj: $('#table-wagons-park').DataTable({
-            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-            "paging": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "select": true,
-            "autoWidth": true,
-            //"filter": true,
-            //"scrollY": "600px",
-            "scrollX": true,
-            language: language_table(langs),
-            jQueryUI: false,
-            "createdRow": function (row, data, index) {
-                $(row).attr('id', data.num);
-            },
-            columns: [
-                { data: "num", title: langView('field_num', langs), width: "50px", orderable: true, searchable: true },
-                { data: "genus_wagon", title: langView('field_genus_wagon', langs), width: "50px", orderable: true, searchable: true },
-                { data: "state", title: langView('field_state', langs), width: "50px", orderable: true, searchable: true },
-                { data: "wagon_manufacturer", title: langView('field_wagon_manufacturer', langs), width: "50px", orderable: true, searchable: true },
-                { data: "year_wagon_create", title: langView('field_year_wagon_create', langs), width: "50px", orderable: true, searchable: true },
-                { data: "station", title: langView('field_station', langs), width: "50px", orderable: true, searchable: true },
-                { data: "carrying_capacity", title: langView('field_carrying_capacity', langs), width: "50px", orderable: true, searchable: true },
-                { data: "tara", title: langView('field_tara', langs), width: "50px", orderable: true, searchable: true },
-                { data: "type_repairs", title: langView('field_type_repairs', langs), width: "50px", orderable: true, searchable: true },
-                { data: "date_type_repairs", title: langView('field_date_type_repairs', langs), width: "50px", orderable: true, searchable: true },
-                { data: "code_model_wagon", title: langView('field_code_model_wagon', langs), width: "50px", orderable: true, searchable: true },
-                { data: "type_wagon", title: langView('field_type_wagon', langs), width: "50px", orderable: true, searchable: true },
-                { data: "axis_length", title: langView('field_axis_length', langs), width: "50px", orderable: true, searchable: true },
-                { data: "body_volume", title: langView('field_body_volume', langs), width: "50px", orderable: true, searchable: true },
-                { data: "type_ownership", title: langView('field_type_ownership', langs), width: "50px", orderable: true, searchable: true },
-                { data: "owner_wagon", title: langView('field_owner_wagon', langs), width: "50px", orderable: true, searchable: true },
-                { data: "date_registration", title: langView('field_date_registration', langs), width: "50px", orderable: true, searchable: true },
-                { data: "lessor_wagon", title: langView('field_lessor_wagon', langs), width: "50px", orderable: true, searchable: true },
-                { data: "operator_wagon", title: langView('field_operator_wagon', langs), width: "50px", orderable: true, searchable: true },
-                { data: "poligon_travel_wagon", title: langView('field_poligon_travel_wagon', langs), width: "50px", orderable: true, searchable: true },
-                { data: "special_conditions", title: langView('field_special_conditions', langs), width: "50px", orderable: true, searchable: true },
-                { data: "sap", title: langView('field_sap', langs), width: "50px", orderable: true, searchable: false },
-            ],
-            dom: 'Bfrtip',
-            stateSave: false,
-            buttons: [
-                {
+        obj: null,
+        id_park_wagon: null,
+        list_wagon_park: null,
+        init: function () {
+            this.obj = this.html_table.DataTable({
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                "paging": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "select": true,
+                select: {
+                    style: 'multi'
+                },
+                "autoWidth": true,
+                //"filter": true,
+                //"scrollY": "600px",
+                "scrollX": true,
+                language: language_table(langs),
+                jQueryUI: false,
+                "createdRow": function (row, data, index) {
+                    $(row).attr('id', data.num);
+                },
+                columns: [
+                    { data: "num", title: langView('field_num', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "genus_wagon", title: langView('field_genus_wagon', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "state", title: langView('field_state', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "wagon_manufacturer", title: langView('field_wagon_manufacturer', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "year_wagon_create", title: langView('field_year_wagon_create', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "station", title: langView('field_station', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "carrying_capacity", title: langView('field_carrying_capacity', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "tara", title: langView('field_tara', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "type_repairs", title: langView('field_type_repairs', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "date_type_repairs", title: langView('field_date_type_repairs', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "code_model_wagon", title: langView('field_code_model_wagon', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "type_wagon", title: langView('field_type_wagon', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "axis_length", title: langView('field_axis_length', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "body_volume", title: langView('field_body_volume', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "type_ownership", title: langView('field_type_ownership', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "owner_wagon", title: langView('field_owner_wagon', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "date_registration", title: langView('field_date_registration', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "lessor_wagon", title: langView('field_lessor_wagon', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "operator_wagon", title: langView('field_operator_wagon', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "poligon_travel_wagon", title: langView('field_poligon_travel_wagon', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "special_conditions", title: langView('field_special_conditions', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "sap", title: langView('field_sap', langs), width: "50px", orderable: true, searchable: false },
+                ],
+                dom: 'Bfrtip',
+                stateSave: false,
+                buttons: [
+                    {
 
-                    text: 'Детально',
-                    action: function (e, dt, node, config) {
-                        if (table_wagon_cards.select) {
-                            // загрузить и открыть окно просмотра-правки
-                            wagon_card.load_card(table_wagon_cards.select.num);
+                        text: 'Добавить в список',
+                        action: function (e, dt, node, config) {
+
+                            table_wagon_cards.obj.rows().deselect();
+                            table_wagon_cards.view_panel_add_wagon();
+                            //if (table_wagon_cards.select) {
+                            //    // загрузить и открыть окно просмотра-правки
+                            //    wagon_card.load_card(table_wagon_cards.select.num);
+                            //}
+                        },
+                        enabled: true
+                    },
+                    {
+
+                        text: 'Удалить из списка',
+                        action: function (e, dt, node, config) {
+                            //if (table_wagon_cards.select) {
+                            //    // загрузить и открыть окно просмотра-правки
+                            //    wagon_card.load_card(table_wagon_cards.select.num);
+                            //}
+                        },
+                        enabled: false
+                    },
+
+                    {
+                        text: 'Выбрать все',
+                        extend: 'selectAll',
+                    },
+                    {
+                        text: 'Убрать все',
+                        extend: 'selectNone',
+                    },
+                    {
+                        text: 'Скопировать в буфер',
+                        extend: 'copyHtml5',
+                    },
+                    {
+                        text: 'Экспорт в Excel',
+                        extend: 'excelHtml5',
+                        sheetName: 'Карточки вагонов',
+                        messageTop: function () {
+                            return '';
                         }
                     },
-                    enabled: false
-                },
-                {
-                    text: 'Скопировать в буфер',
-                    extend: 'copyHtml5',
-                },
-                {
-                    text: 'Экспорт в Excel',
-                    extend: 'excelHtml5',
-                    sheetName: 'Карточки вагонов',
-                    messageTop: function () {
-                        return '';
+                    {
+                        extend: 'colvis',
+                        text: 'Выбрать поля таблицы',
+                        collectionLayout: 'fixed two-column',
+                    },
+                    {
+                        extend: 'colvisGroup',
+                        text: 'Показать все поля',
+                        show: ':hidden'
+                    },
+                    {
+                        extend: 'pageLength',
                     }
-                },
-                {
-                    extend: 'colvis',
-                    text: 'Выбрать поля таблицы',
-                    collectionLayout: 'fixed two-column',
-                },
-                {
-                    extend: 'colvisGroup',
-                    text: 'Показать все поля',
-                    show: ':hidden'
-                },
-                {
-                    extend: 'pageLength',
-                }
-            ],
-        }),
+                ],
+            }).on('select', function (e, dt, type, indexes) {
+                //var rowData = table_wagon_cards.obj.rows(indexes).data().toArray();
+                var rows = table_wagon_cards.obj.rows('.selected').data();
+                table_wagon_cards.update_button_delete(rows.length);
+
+            })
+
+        .on('deselect', function (e, dt, type, indexes) {
+            //var rowData = table_wagon_cards.obj.rows(indexes).data().toArray();
+            var rows = table_wagon_cards.obj.rows('.selected').data();
+            table_wagon_cards.update_button_delete(rows.length);
+        });
+        },
+        // Показать таблицу с данными
+        view: function (id_park_wagon, data_refresh) {
+            table_wagon_cards.id_park_wagon = id_park_wagon;
+            LockScreen(langView('mess_delay', langs));
+            if (!table_wagon_cards.list_wagon_park | data_refresh === true) {
+                // Обновим данные
+                mors.getParksListWagonsOfPark(
+                    Number(id_park_wagon),
+                    function (result) {
+                        table_wagon_cards.list_wagon_park = result;
+                        table_wagon_cards.load_data(table_wagon_cards.list_wagon_park);
+                        table_wagon_cards.obj.draw();
+                    }
+                );
+            } else {
+                table_wagon_cards.load_data(table_wagon_cards.list_wagon_park);
+                table_wagon_cards.obj.draw();
+            };
+        },
+        // Загрузить данные
+        load_data: function (data) {
+            this.list = data;
+            this.obj.clear();
+            for (i = 0; i < data.length; i++) {
+                this.obj.row.add(this.get_row_data(data[i]));
+            }
+            LockScreenOff();
+            //table_wagon_cards.initComplete();
+        },
+        // Получить строку для таблицы
+        get_row_data: function (data) {
+            if (data) {
+                var card = mors.getCardsWagons_Internal_Of_ID(data.num);
+                var card_wagon = table_wagon_cards.get_row_card_wagon(card);
+                var card_park = {
+                    "id_list_wagon_park": data.id,
+                    "id_park_wagon": data.id_park_wagon,
+                    "num": data.num,
+                };
+                $.extend(card_park, card_wagon);
+                return card_park;
+            }
+        },
+        // Получить полную информацию по вагонам
+        get_row_card_wagon: function (data) {
+            return {
+                "num": data.num,
+                "id_genus_wagon": data.id_genus_wagon,
+                "genus_wagon": mors.ids_dir !== null ? mors.ids_dir.getValue_GenusWagons_Of_ID(data.id_genus_wagon, 'genus', lang) : data.id_genus_wagon,
+                "id_state": data.id_state,
+                "state": mors.uz_dir !== null ? mors.uz_dir.getValue_States_Of_ID(data.id_state, 'state') : data.id_state,
+                "id_wagon_manufacturer": data.id_wagon_manufacturer,
+                "wagon_manufacturer": mors.ids_dir !== null ? mors.ids_dir.getValue_WagonManufacturers_Of_ID(data.id_wagon_manufacturer, 'name', lang) : data.id_wagon_manufacturer,
+                "year_wagon_create": data.year_wagon_create,
+                "code_station": data.code_station,
+                "station": mors.uz_dir !== null ? mors.uz_dir.getValue_Station_Of_CodeCS(data.code_station, 'station') : data.code_station,
+                "carrying_capacity": data.carrying_capacity !== null ? Number(data.carrying_capacity).toFixed(1) : null,
+                "tara": data.tara !== null ? Number(data.tara).toFixed(1) : null,
+                "id_type_repairs": data.id_type_repairs,
+                "type_repairs": mors.ids_dir !== null ? mors.ids_dir.getValue_TypesRepairsWagons_Of_ID(data.id_type_repairs, 'type_repairs', lang) : data.id_type_repairs,
+                "date_type_repairs": StringDateToFormatStringDate(data.date_type_repairs, lang),
+                "code_model_wagon": data.code_model_wagon,
+                "id_type_wagon": data.id_type_wagon,
+                "type_wagon": mors.ids_dir !== null ? mors.ids_dir.getValue_TypeWagons_Of_ID(data.id_type_wagon, 'type', lang) : data.id_type_wagon,
+                "axis_length": data.axis_length !== null ? Number(data.axis_length).toFixed(2) : null,
+                "body_volume": data.body_volume !== null ? Number(data.body_volume).toFixed(1) : null,
+                "id_type_ownership": data.id_type_ownership,
+                "type_ownership": mors.ids_dir !== null ? mors.ids_dir.getValue_TypeOwnerShip_Of_ID(data.id_type_ownership, 'type_ownership', lang) : data.id_type_ownership,
+                "id_owner_wagon": data.id_owner_wagon,
+                "owner_wagon": mors.ids_dir !== null ? mors.ids_dir.getValue_OwnersWagons_Of_ID(data.id_owner_wagon, 'owner', lang) : data.id_owner_wagon,
+                "date_registration": StringDateToFormatStringDate(data.date_registration, lang),
+                "id_lessor_wagon": data.id_lessor_wagon,
+                "lessor_wagon": mors.ids_dir !== null ? mors.ids_dir.getValue_LessorsWagons_Of_ID(data.id_lessor_wagon, 'lessors', lang) : data.id_lessor_wagon,
+                "id_operator_wagon": data.id_operator_wagon,
+                "operator_wagon": mors.ids_dir !== null ? mors.ids_dir.getValue_OperatorsWagons_Of_ID(data.id_operator_wagon, 'operators', lang) : data.id_operator_wagon,
+                "id_poligon_travel_wagon": data.id_poligon_travel_wagon,
+                "poligon_travel_wagon": mors.ids_dir !== null ? mors.ids_dir.getValue_PoligonTravelWagons_Of_ID(data.id_poligon_travel_wagon, 'poligon_travel', lang) : data.id_poligon_travel_wagon,
+                "id_special_conditions": data.id_special_conditions,
+                "special_conditions": mors.ids_dir !== null ? (data.id_special_conditions !== null ? mors.ids_dir.getValue_SpecialConditions_Of_ID(data.id_special_conditions, 'special_conditions', lang) : "") : data.id_special_conditions,
+                "sap": data.sap,
+                "note": data.note,
+                "create": data.create,
+                "create_user": data.create_user,
+                "change": data.change,
+                "change_user": data.change_user,
+            }
+        },
+        // Обновить кнопки
+        update_button_delete: function (count) {
+            if (count > 0) {
+                table_wagon_cards.obj.button(1).enable(true);
+            } else {
+                table_wagon_cards.obj.button(1).enable(false);
+            }
+        },
+        // Отобразить панель добавить вагоны
+        view_panel_add_wagon: function () {
+            var rows = table_wagon_cards.obj.rows().data();
+            var arr_num = [];
+            $.each(rows, function (i, el) {
+                arr_num.push(el.num);
+            });
+            pn_add_wagon.Open(arr_num);
+        }
     },
     // DIALOG Controls ---------------------------------------------------
     // Панель "Править название парка"
@@ -290,9 +437,9 @@
                 height: "auto",
                 width: 500,
                 classes: {
-                    "ui-dialog":"card",
+                    "ui-dialog": "card",
                     "ui-dialog-titlebar": "card-header bg-primary text-white",
-                    "ui-dialog-content":"card-body",
+                    "ui-dialog-content": "card-body",
                     "ui-dialog-buttonpane": "card-footer text-muted"
                 },
                 open: function (event, ui) {
@@ -390,6 +537,230 @@
             }
         }
     },
+    // Панель добавить вагоны
+    pn_add_wagon = {
+        obj: null,
+        table: null,
+        // список парков
+        list_cards_wagons: null,
+        list_cards_wagons_select: null,
+        lang: ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang')),
+        mors: null,
+        // Загрузка библиотек
+        loadReference: function (callback) {
+            // загрузим список парков
+            if (!pn_add_wagon.list_cards_wagons) {
+                pn_add_wagon.mors.load(['ids', 'uz', 'cards_wagons'], function () {
+                    pn_add_wagon.list_cards_wagons = pn_add_wagon.mors.list_cards_wagons;
+                    if (typeof callback === 'function') {
+                        LockScreenOff();
+                        callback();
+                    }
+                });
+            } else {
+                LockScreenOff();
+                callback();
+            }
+        },
+        // инициализвция Диалога
+        init: function (list_cards_wagons, callback_ok) {
+            pn_add_wagon.list_cards_wagons = list_cards_wagons;
+            this.mors = new IDS_MORS(pn_add_wagon.lang); // Создадим класс IDS_MORS
+            pn_add_wagon.obj = $("div#add-wagon-park").dialog({
+                resizable: false,
+                title: 'Добавить вагоны в парк',
+                modal: true,
+                autoOpen: false,
+                height: "auto",
+                width: 1100,
+                classes: {
+                    "ui-dialog": "card",
+                    "ui-dialog-titlebar": "card-header bg-primary text-white",
+                    "ui-dialog-content": "card-body",
+                    "ui-dialog-buttonpane": "card-footer text-muted"
+                },
+                open: function (event, ui) {
+
+                },
+                buttons: [
+                  {
+                      text: "Ок",
+                      class: "btn btn-outline-primary btn-sm",
+                      click: function () {
+                          pn_add_wagon.save(callback_ok);
+                      }
+                  },
+                  {
+                      text: "Отмена",
+                      class: "btn btn-outline-primary btn-sm",
+                      click: function () {
+                          $(this).dialog("close");
+                      }
+                  },
+                ]
+            });
+            pn_add_wagon.init_table();
+        },
+        //
+        init_table: function () {
+            pn_add_wagon.table = $('#table-add-wagons-park').DataTable({
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                "paging": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "select": true,
+                select: {
+                    style: 'multi'
+                },
+                "autoWidth": true,
+                //"filter": true,
+                "scrollY": "500px",
+                "scrollX": true,
+                language: language_table(langs),
+                jQueryUI: false,
+                "createdRow": function (row, data, index) {
+                    $(row).attr('id', data.num);
+                },
+                columns: [
+                    { data: "num", title: langView('field_num', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "genus_wagon", title: langView('field_genus_wagon', langs), width: "50px", orderable: true, searchable: true },
+                    //{ data: "state", title: langView('field_state', langs), width: "50px", orderable: true, searchable: true },
+                    //{ data: "wagon_manufacturer", title: langView('field_wagon_manufacturer', langs), width: "50px", orderable: true, searchable: true },
+                    //{ data: "year_wagon_create", title: langView('field_year_wagon_create', langs), width: "50px", orderable: true, searchable: true },
+                    //{ data: "station", title: langView('field_station', langs), width: "50px", orderable: true, searchable: true },
+                    //{ data: "carrying_capacity", title: langView('field_carrying_capacity', langs), width: "50px", orderable: true, searchable: true },
+                    //{ data: "tara", title: langView('field_tara', langs), width: "50px", orderable: true, searchable: true },
+                    //{ data: "type_repairs", title: langView('field_type_repairs', langs), width: "50px", orderable: true, searchable: true },
+                    //{ data: "date_type_repairs", title: langView('field_date_type_repairs', langs), width: "50px", orderable: true, searchable: true },
+                    //{ data: "code_model_wagon", title: langView('field_code_model_wagon', langs), width: "50px", orderable: true, searchable: true },
+                    //{ data: "type_wagon", title: langView('field_type_wagon', langs), width: "50px", orderable: true, searchable: true },
+                    //{ data: "axis_length", title: langView('field_axis_length', langs), width: "50px", orderable: true, searchable: true },
+                    //{ data: "body_volume", title: langView('field_body_volume', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "type_ownership", title: langView('field_type_ownership', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "owner_wagon", title: langView('field_owner_wagon', langs), width: "50px", orderable: true, searchable: true },
+                    //{ data: "date_registration", title: langView('field_date_registration', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "lessor_wagon", title: langView('field_lessor_wagon', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "operator_wagon", title: langView('field_operator_wagon', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "poligon_travel_wagon", title: langView('field_poligon_travel_wagon', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "special_conditions", title: langView('field_special_conditions', langs), width: "50px", orderable: true, searchable: true },
+                    //{ data: "sap", title: langView('field_sap', langs), width: "50px", orderable: true, searchable: false },
+                ],
+                dom: 'Bfrtip',
+                stateSave: false,
+                buttons: [
+                    {
+                        text: 'Выбрать все',
+                        extend: 'selectAll',
+                    },
+                    {
+                        text: 'Убрать все',
+                        extend: 'selectNone',
+                    },
+                    //{
+                    //    text: 'Скопировать в буфер',
+                    //    extend: 'copyHtml5',
+                    //},
+                    //{
+                    //    text: 'Экспорт в Excel',
+                    //    extend: 'excelHtml5',
+                    //    sheetName: 'Карточки вагонов',
+                    //    messageTop: function () {
+                    //        return '';
+                    //    }
+                    //},
+                    //{
+                    //    extend: 'colvis',
+                    //    text: 'Выбрать поля таблицы',
+                    //    collectionLayout: 'fixed two-column',
+                    //},
+                    //{
+                    //    extend: 'colvisGroup',
+                    //    text: 'Показать все поля',
+                    //    show: ':hidden'
+                    //},
+                    {
+                        extend: 'pageLength',
+                    }
+                ],
+            });
+        },
+        // Открыть Диалог 
+        Open: function (nums) {
+            // Загрузим перечень вагонов всех
+            pn_add_wagon.loadReference(function () {
+                // если заданы существующие вагоны, исключим их из перечня
+                if (nums && nums.length > 0) {
+                    pn_add_wagon.list_cards_wagons_select = pn_add_wagon.list_cards_wagons.filter(function (el) {
+                        if ($.inArray(el.num, nums) !== -1)
+                        { return false; }
+                        else
+                        { return true; }
+                    });
+                } else {
+                    pn_add_wagon.list_cards_wagons_select = pn_add_wagon.list_cards_wagons;
+                }
+                pn_add_wagon.load_data(pn_add_wagon.list_cards_wagons_select);
+
+            });
+            pn_add_wagon.obj.dialog("open");
+        },
+        // Загрузить данные
+        load_data: function (data) {
+            LockScreen('Загружаю данные...');
+            pn_add_wagon.table.clear();
+            for (i = 0; i < data.length; i++) {
+                pn_add_wagon.table.row.add(pn_add_wagon.get_row_card_wagon(data[i]));
+            }
+            LockScreenOff();
+            pn_add_wagon.table.draw();
+            //table_wagon_cards.initComplete();
+        },
+        //
+        get_row_card_wagon: function (data) {
+            return {
+                "num": data.num,
+                //"id_genus_wagon": data.id_genus_wagon,
+                "genus_wagon": pn_add_wagon.mors.ids_dir !== null ? pn_add_wagon.mors.ids_dir.getValue_GenusWagons_Of_ID(data.id_genus_wagon, 'genus', lang) : data.id_genus_wagon,
+                //"id_state": data.id_state,
+                //"state": pn_add_wagon.mors.uz_dir !== null ? pn_add_wagon.mors.uz_dir.getValue_States_Of_ID(data.id_state, 'state') : data.id_state,
+                //"id_wagon_manufacturer": data.id_wagon_manufacturer,
+                //"wagon_manufacturer": pn_add_wagon.mors.ids_dir !== null ? pn_add_wagon.mors.ids_dir.getValue_WagonManufacturers_Of_ID(data.id_wagon_manufacturer, 'name', lang) : data.id_wagon_manufacturer,
+                //"year_wagon_create": data.year_wagon_create,
+                //"code_station": data.code_station,
+                //"station": pn_add_wagon.mors.uz_dir !== null ? pn_add_wagon.mors.uz_dir.getValue_Station_Of_CodeCS(data.code_station, 'station') : data.code_station,
+                //"carrying_capacity": data.carrying_capacity !== null ? Number(data.carrying_capacity).toFixed(1) : null,
+                //"tara": data.tara !== null ? Number(data.tara).toFixed(1) : null,
+                //"id_type_repairs": data.id_type_repairs,
+                //"type_repairs": pn_add_wagon.mors.ids_dir !== null ? pn_add_wagon.mors.ids_dir.getValue_TypesRepairsWagons_Of_ID(data.id_type_repairs, 'type_repairs', lang) : data.id_type_repairs,
+                //"date_type_repairs": StringDateToFormatStringDate(data.date_type_repairs, lang),
+                //"code_model_wagon": data.code_model_wagon,
+                //"id_type_wagon": data.id_type_wagon,
+                //"type_wagon": pn_add_wagon.mors.ids_dir !== null ? pn_add_wagon.mors.ids_dir.getValue_TypeWagons_Of_ID(data.id_type_wagon, 'type', lang) : data.id_type_wagon,
+                //"axis_length": data.axis_length !== null ? Number(data.axis_length).toFixed(2) : null,
+                //"body_volume": data.body_volume !== null ? Number(data.body_volume).toFixed(1) : null,
+                //"id_type_ownership": data.id_type_ownership,
+                "type_ownership": pn_add_wagon.mors.ids_dir !== null ? pn_add_wagon.mors.ids_dir.getValue_TypeOwnerShip_Of_ID(data.id_type_ownership, 'type_ownership', lang) : data.id_type_ownership,
+                //"id_owner_wagon": data.id_owner_wagon,
+                "owner_wagon": pn_add_wagon.mors.ids_dir !== null ? pn_add_wagon.mors.ids_dir.getValue_OwnersWagons_Of_ID(data.id_owner_wagon, 'owner', lang) : data.id_owner_wagon,
+                //"date_registration": StringDateToFormatStringDate(data.date_registration, lang),
+                //"id_lessor_wagon": data.id_lessor_wagon,
+                "lessor_wagon": pn_add_wagon.mors.ids_dir !== null ? pn_add_wagon.mors.ids_dir.getValue_LessorsWagons_Of_ID(data.id_lessor_wagon, 'lessors', lang) : data.id_lessor_wagon,
+                //"id_operator_wagon": data.id_operator_wagon,
+                "operator_wagon": pn_add_wagon.mors.ids_dir !== null ? pn_add_wagon.mors.ids_dir.getValue_OperatorsWagons_Of_ID(data.id_operator_wagon, 'operators', lang) : data.id_operator_wagon,
+                //"id_poligon_travel_wagon": data.id_poligon_travel_wagon,
+                "poligon_travel_wagon": pn_add_wagon.mors.ids_dir !== null ? pn_add_wagon.mors.ids_dir.getValue_PoligonTravelWagons_Of_ID(data.id_poligon_travel_wagon, 'poligon_travel', lang) : data.id_poligon_travel_wagon,
+                //"id_special_conditions": data.id_special_conditions,
+                "special_conditions": pn_add_wagon.mors.ids_dir !== null ? (data.id_special_conditions !== null ? pn_add_wagon.mors.ids_dir.getValue_SpecialConditions_Of_ID(data.id_special_conditions, 'special_conditions', lang) : "") : data.id_special_conditions,
+                //"sap": data.sap,
+                //"note": data.note,
+                //"create": data.create,
+                //"create_user": data.create_user,
+                //"change": data.change,
+                //"change_user": data.change_user,
+            }
+        },
+    },
     // Форма диалога
     dialog_confirm = {
         result: false,
@@ -442,12 +813,20 @@
     // Основной вход
     //=================================================================
     // Инициализация
+    // Инициализация "Правка Парков"
     pn_edit_park_name.init(null, function (result_id, refresh) {
+        // Обратный вызов парк обновлен, добавлен
         var id = result_id;
         mors.loadParksWagons(function (result) {
             update_list_park(id)
         })
     });
+    // Инициализация "Добавить вагоны"
+    pn_add_wagon.init(null, function (refresh) {
+        // Обратный вызов вагоны добавлены
+    });
+    // 
+    table_wagon_cards.init();
     // Загрузка основных библиотек
     loadReference(function (result) {
         update_list_park()
