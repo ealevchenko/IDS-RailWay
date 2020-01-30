@@ -629,6 +629,29 @@ IDS_MORS.prototype.deleteParksListWagons = function (id, callback) {
     });
 };
 
+IDS_MORS.prototype.delete_listParksListWagons = function (list, callback) {
+    $.ajax({
+        url: '../../api/ids/mors/park_list_wagons/list/' + list,
+        type: 'POST',
+        data: JSON.stringify(list),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_MORS.delete_listParksListWagons", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 /* ----------------------------------------------------------
 функции для работы с внутреним массивом
 -------------------------------------------------------------*/
