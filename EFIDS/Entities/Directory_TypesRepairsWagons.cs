@@ -12,6 +12,7 @@ namespace EFIDS.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Directory_TypesRepairsWagons()
         {
+            CardsWagons = new HashSet<CardsWagons>();
             CardsWagonsRepairs = new HashSet<CardsWagonsRepairs>();
         }
 
@@ -32,6 +33,9 @@ namespace EFIDS.Entities
         [Required]
         [StringLength(50)]
         public string type_repairs_en { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CardsWagons> CardsWagons { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CardsWagonsRepairs> CardsWagonsRepairs { get; set; }

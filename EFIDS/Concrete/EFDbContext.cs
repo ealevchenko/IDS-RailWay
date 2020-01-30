@@ -104,6 +104,12 @@ namespace EFIDS.Concrete
                 .HasForeignKey(e => e.id_type_repair_wagon)
                 .WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<Directory_TypesRepairsWagons>()
+                .HasMany(e => e.CardsWagons)
+                .WithRequired(e => e.Directory_TypesRepairsWagons)
+                .HasForeignKey(e => e.id_type_repairs)
+                .WillCascadeOnDelete(false);
+
             modelBuilder.Entity<Directory_TypeWagons>()
                 .HasMany(e => e.CardsWagons)
                 .WithOptional(e => e.Directory_TypeWagons)
@@ -118,6 +124,11 @@ namespace EFIDS.Concrete
                 .HasMany(e => e.CardsWagonsRepairs)
                 .WithOptional(e => e.Directory_WagonsCondition)
                 .HasForeignKey(e => e.id_wagons_condition);
+
+            modelBuilder.Entity<Directory_ModelsWagons>()
+                .HasMany(e => e.CardsWagons)
+                .WithOptional(e => e.Directory_ModelsWagons)
+                .HasForeignKey(e => e.code_model_wagon);
         }
     }
 }

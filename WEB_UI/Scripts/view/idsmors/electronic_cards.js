@@ -76,7 +76,7 @@
             LockScreen(langView('mess_load', langs));
             var count = 1;
             //mors.load(['cards_wagons', 'cards_wagons_repairs'], function () {
-            mors.load(['ids','uz'], function () {
+            mors.load(['ids', 'uz'],false, function () {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
@@ -101,6 +101,9 @@
                     "ordering": true,
                     "info": true,
                     "select": true,
+                    select: {
+                        style: 'single'
+                    },
                     "autoWidth": true,
                     //"filter": true,
                     //"scrollY": "600px",
@@ -220,37 +223,48 @@
                 return {
                     "num": data.num,
                     "id_genus_wagon": data.id_genus_wagon,
-                    "genus_wagon": mors.ids_dir !== null ? mors.ids_dir.getValue_GenusWagons_Of_ID(data.id_genus_wagon, 'genus', lang) : data.id_genus_wagon,
+                    "genus_wagon": data.Directory_GenusWagons ? mors.getValueCultureObj(data.Directory_GenusWagons, 'genus') : null,
+                    //"genus_wagon": mors.ids_dir !== null ? mors.ids_dir.getValue_GenusWagons_Of_ID(data.id_genus_wagon, 'genus', lang) : data.id_genus_wagon,
                     "id_state": data.id_state,
                     "state": mors.uz_dir !== null ? mors.uz_dir.getValue_States_Of_ID(data.id_state, 'state') : data.id_state,
                     "id_wagon_manufacturer": data.id_wagon_manufacturer,
-                    "wagon_manufacturer": mors.ids_dir !== null ? mors.ids_dir.getValue_WagonManufacturers_Of_ID(data.id_wagon_manufacturer, 'name', lang) : data.id_wagon_manufacturer,
+                    "wagon_manufacturer": mors.getValueCultureObj(data.Directory_WagonManufacturers, 'name'),
+                    //"wagon_manufacturer": mors.ids_dir !== null ? mors.ids_dir.getValue_WagonManufacturers_Of_ID(data.id_wagon_manufacturer, 'name', lang) : data.id_wagon_manufacturer,
                     "year_wagon_create": data.year_wagon_create,
                     "code_station": data.code_station,
+                    //"station":'',
                     "station": mors.uz_dir !== null ? mors.uz_dir.getValue_Station_Of_CodeCS(data.code_station, 'station') : data.code_station,
                     "carrying_capacity": data.carrying_capacity !== null ? Number(data.carrying_capacity).toFixed(1) : null,
                     "tara": data.tara !== null ? Number(data.tara).toFixed(1) : null,
                     "id_type_repairs": data.id_type_repairs,
-                    "type_repairs": mors.ids_dir !== null ? mors.ids_dir.getValue_TypesRepairsWagons_Of_ID(data.id_type_repairs, 'type_repairs', lang) : data.id_type_repairs,
+                    "type_repairs": mors.getValueCultureObj(data.Directory_TypesRepairsWagons, 'type_repairs'),
+                    //"type_repairs": mors.ids_dir !== null ? mors.ids_dir.getValue_TypesRepairsWagons_Of_ID(data.id_type_repairs, 'type_repairs', lang) : data.id_type_repairs,
                     "date_type_repairs": StringDateToFormatStringDate(data.date_type_repairs, lang),
                     "code_model_wagon": data.code_model_wagon,
                     "id_type_wagon": data.id_type_wagon,
-                    "type_wagon": mors.ids_dir !== null ? mors.ids_dir.getValue_TypeWagons_Of_ID(data.id_type_wagon, 'type', lang) : data.id_type_wagon,
+                    "type_wagon": mors.getValueCultureObj(data.Directory_TypeWagons, 'type'),
+                    //"type_wagon": mors.ids_dir !== null ? mors.ids_dir.getValue_TypeWagons_Of_ID(data.id_type_wagon, 'type', lang) : data.id_type_wagon,
                     "axis_length": data.axis_length !== null ? Number(data.axis_length).toFixed(2) : null,
                     "body_volume": data.body_volume !== null ? Number(data.body_volume).toFixed(1) : null,
                     "id_type_ownership": data.id_type_ownership,
-                    "type_ownership": mors.ids_dir !== null ? mors.ids_dir.getValue_TypeOwnerShip_Of_ID(data.id_type_ownership, 'type_ownership', lang) : data.id_type_ownership,
+                    "type_ownership": mors.getValueCultureObj(data.Directory_TypeOwnerShip, 'type_ownership'),
+                    //"type_ownership": mors.ids_dir !== null ? mors.ids_dir.getValue_TypeOwnerShip_Of_ID(data.id_type_ownership, 'type_ownership', lang) : data.id_type_ownership,
                     "id_owner_wagon": data.id_owner_wagon,
-                    "owner_wagon": mors.ids_dir !== null ? mors.ids_dir.getValue_OwnersWagons_Of_ID(data.id_owner_wagon, 'owner', lang) : data.id_owner_wagon,
+                    "owner_wagon": mors.getValueCultureObj(data.Directory_OwnersWagons, 'owner'),
+                    //"owner_wagon": mors.ids_dir !== null ? mors.ids_dir.getValue_OwnersWagons_Of_ID(data.id_owner_wagon, 'owner', lang) : data.id_owner_wagon,
                     "date_registration": StringDateToFormatStringDate(data.date_registration, lang),
                     "id_lessor_wagon": data.id_lessor_wagon,
-                    "lessor_wagon": mors.ids_dir !== null ? mors.ids_dir.getValue_LessorsWagons_Of_ID(data.id_lessor_wagon, 'lessors', lang) : data.id_lessor_wagon,
+                    "lessor_wagon": mors.getValueCultureObj(data.Directory_LessorsWagons, 'lessors'),
+                    //"lessor_wagon": mors.ids_dir !== null ? mors.ids_dir.getValue_LessorsWagons_Of_ID(data.id_lessor_wagon, 'lessors', lang) : data.id_lessor_wagon,
                     "id_operator_wagon": data.id_operator_wagon,
-                    "operator_wagon": mors.ids_dir !== null ? mors.ids_dir.getValue_OperatorsWagons_Of_ID(data.id_operator_wagon, 'operators', lang) : data.id_operator_wagon,
+                    "operator_wagon": mors.getValueCultureObj(data.Directory_OperatorsWagons, 'operators'),
+                    //"operator_wagon": mors.ids_dir !== null ? mors.ids_dir.getValue_OperatorsWagons_Of_ID(data.id_operator_wagon, 'operators', lang) : data.id_operator_wagon,
                     "id_poligon_travel_wagon": data.id_poligon_travel_wagon,
-                    "poligon_travel_wagon": mors.ids_dir !== null ? mors.ids_dir.getValue_PoligonTravelWagons_Of_ID(data.id_poligon_travel_wagon, 'poligon_travel', lang) : data.id_poligon_travel_wagon,
+                    "poligon_travel_wagon": mors.getValueCultureObj(data.Directory_PoligonTravelWagons, 'poligon_travel'),
+                    //"poligon_travel_wagon": mors.ids_dir !== null ? mors.ids_dir.getValue_PoligonTravelWagons_Of_ID(data.id_poligon_travel_wagon, 'poligon_travel', lang) : data.id_poligon_travel_wagon,
                     "id_special_conditions": data.id_special_conditions,
-                    "special_conditions": mors.ids_dir !== null ? (data.id_special_conditions !== null ? mors.ids_dir.getValue_SpecialConditions_Of_ID(data.id_special_conditions, 'special_conditions', lang) : "") : data.id_special_conditions,
+                    "special_conditions": mors.getValueCultureObj(data.GetSpecialConditions, 'special_conditions'),
+                    //"special_conditions": mors.ids_dir !== null ? (data.id_special_conditions !== null ? mors.ids_dir.getValue_SpecialConditions_Of_ID(data.id_special_conditions, 'special_conditions', lang) : "") : data.id_special_conditions,
                     "sap": data.sap,
                     "note": data.note,
                     "create": data.create,
@@ -402,7 +416,11 @@
             }),
             // Режим "Править" панель "Основная информация"
             bt_info_delete: $('button#bt-info-delete').on('click', function () {
-                wagon_card.delete_info();
+                dialog_confirm.open('Удалить?', 'Вы уверены что хотите удалить карточку по вагону: ' + wagon_card.num + '?', function (result) {
+                    if (result) {
+                        wagon_card.delete_info();
+                    }
+                });
             }),
             // "Сохранить изменения" панель "Основная информация"
             bt_info_save: $('button#bt-info-save').on('click', function () {
@@ -438,15 +456,27 @@
             }),
             // Режим "Править" панель "Ремонты"
             bt_depo_repairs_delete: $('button#bt-depo-repairs-delete').on('click', function () {
-                wagon_card.delete_repair(wagon_card.repairs_depo_id);
+                dialog_confirm.open('Удалить?', 'Вы уверены что хотите удалить информацию по ремонту вагона № ' + wagon_card.num + '?', function (result) {
+                    if (result) {
+                        wagon_card.delete_repair(wagon_card.repairs_depo_id);
+                    }
+                });
             }),
             // Режим "Править" панель "Ремонты"
             bt_kap_repairs_delete: $('button#bt-kap-repairs-delete').on('click', function () {
-                wagon_card.delete_repair(wagon_card.repairs_kap_id);
+                dialog_confirm.open('Удалить?', 'Вы уверены что хотите удалить информацию по ремонту вагона № ' + wagon_card.num + '?', function (result) {
+                    if (result) {
+                        wagon_card.delete_repair(wagon_card.repairs_kap_id);
+                    }
+                });
             }),
             // Режим "Править" панель "Ремонты"
             bt_cur_repairs_delete: $('button#bt-cur-repairs-delete').on('click', function () {
-                wagon_card.delete_repair(wagon_card.repairs_cur_id);
+                dialog_confirm.open('Удалить?', 'Вы уверены что хотите удалить информацию по ремонту вагона № ' + wagon_card.num + '?', function (result) {
+                    if (result) {
+                        wagon_card.delete_repair(wagon_card.repairs_cur_id);
+                    }
+                });
             }),
             // "Сохранить изменения" панель "Ремонты"
             bt_repairs_save: $('button#bt-repairs-save').on('click', function () {
@@ -1145,8 +1175,8 @@
 
                 o.removeClass('is-valid').addClass('is-invalid').next(".invalid-feedback").text(message);
 
-            //                var formGroupCaptcha = o.parents('div');
-//var glyphiconCaptcha = formGroupCaptcha.find('.form-control-feedback');
+                //                var formGroupCaptcha = o.parents('div');
+                //var glyphiconCaptcha = formGroupCaptcha.find('.form-control-feedback');
                 //var formGroupCaptcha = o.parents('.form-group');
                 //var glyphiconCaptcha = formGroupCaptcha.find('.form-control-feedback');
                 //formGroupCaptcha.addClass('has-error').removeClass('has-success');
@@ -1163,7 +1193,7 @@
             // Проверим Select выбор сделан?
             checkSelection: function (o, message) {
                 if (Number(o.val()) < 0) {
-                    wagon_card.set_control_error(o,message);
+                    wagon_card.set_control_error(o, message);
                     wagon_card.out_error_message(message);
                     return false;
                 } else {
@@ -1224,7 +1254,7 @@
                     var s = o.val();
                     var dt = moment(o.val(), format);
                     if (!dt.isValid()) {
-                        wagon_card.set_control_error(o,"Дата должна быть указана в формате '" + format + "'");
+                        wagon_card.set_control_error(o, "Дата должна быть указана в формате '" + format + "'");
                         wagon_card.out_error_message("Дата должна быть указана в формате '" + format + "'");
                         return false;
                     } else {
@@ -1290,8 +1320,14 @@
                         mors.postCardsWagons(wagon, function (result_add) {
                             if (result_add > 0) {
                                 // Ок
-                                table_wagon_cards.addRow(wagon);
-                                wagon_card.load_card(wagon.num);
+
+                                mors.getCardsWagonsOfNum(wagon.num, function (result_card_wagon) {
+                                    table_wagon_cards.addRow(result_card_wagon);
+                                    wagon_card.load_card(wagon.num);
+                                });
+
+
+
                             } else {
                                 wagon_card.clear_message();
                                 wagon_card.out_error_message("При добавлении нового вагона произошла ошибка!");
@@ -1302,8 +1338,11 @@
                         mors.putCardsWagons(wagon, function (result_upd) {
                             if (result_upd > 0) {
                                 // Ок
-                                table_wagon_cards.updateRow(wagon);
-                                wagon_card.load_card(wagon.num);
+                                mors.getCardsWagonsOfNum(wagon.num, function (result_card_wagon) {
+                                    table_wagon_cards.updateRow(result_card_wagon);
+                                    wagon_card.load_card(wagon.num);
+                                });
+
                             } else {
                                 wagon_card.clear_message();
                                 wagon_card.out_error_message("При обновлении вагона произошла ошибка!");
@@ -1387,7 +1426,7 @@
                     tara: get_input_value(wagon_card.tara_wagon_edit),
                     id_type_repairs: get_select_number_value(wagon_card.type_repairs_wagon_edit),
                     date_type_repairs: toISOStringTZ(get_date_value(wagon_card.date_type_repairs_wagon_edit.datepicker("getDate"), lang)),
-                    code_model_wagon: wagon_card.code_model_wagon_edit.val(),
+                    code_model_wagon: wagon_card.code_model_wagon_edit.val() !== '' ? wagon_card.code_model_wagon_edit.val() : null,
                     id_type_wagon: get_select_number_value(wagon_card.type_wagon_edit),
                     axis_length: get_input_value(wagon_card.axis_length_wagon_edit),
                     body_volume: get_input_value(wagon_card.body_volume_wagon_edit),
@@ -1457,6 +1496,54 @@
                     var obj = getObjects(list, 'value', id)
                     return obj && obj.length > 0 ? obj[0].text : null;
                 } return null;
+            }
+        },
+        // Форма диалога
+        dialog_confirm = {
+            result: false,
+            callback_ok: null,
+            obj: $("#dialog-confirm").dialog({
+                resizable: false,
+                autoOpen: false,
+                height: "auto",
+                width: 400,
+                modal: true,
+                open: function (event, ui) {
+                },
+                close: function (event, ui) {
+                    if (typeof dialog_confirm.callback_ok === 'function') {
+                        dialog_confirm.callback_ok(dialog_confirm.result);
+                    }
+                },
+                classes: {
+                    "ui-dialog": "card",
+                    "ui-dialog-titlebar": "card-header bg-primary text-white",
+                    "ui-dialog-content": "card-body",
+                    "ui-dialog-buttonpane": "card-footer text-muted"
+                },
+                buttons: [
+                    {
+                        text: "Ок",
+                        class: "btn btn-outline-primary btn-sm",
+                        click: function () {
+                            dialog_confirm.result = true;
+                            $(this).dialog("close");
+                        }
+                    },
+                    {
+                        text: "Отмена",
+                        class: "btn btn-outline-primary btn-sm",
+                        click: function () {
+                            $(this).dialog("close");
+                        }
+                    }]
+            }),
+            open: function (titlt, text, callback_ok) {
+                dialog_confirm.result = false;
+                dialog_confirm.obj.dialog("option", "title", titlt);
+                $('p#dialog-confirm-text').text(text);
+                dialog_confirm.callback_ok = callback_ok;
+                dialog_confirm.obj.dialog("open")
             }
         };
     // Инициализация

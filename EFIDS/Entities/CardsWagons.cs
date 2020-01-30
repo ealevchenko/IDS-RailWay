@@ -96,6 +96,10 @@ namespace EFIDS.Entities
 
         public virtual Directory_WagonManufacturers Directory_WagonManufacturers { get; set; }
 
+        public virtual Directory_TypesRepairsWagons Directory_TypesRepairsWagons { get; set; }
+
+        public virtual Directory_ModelsWagons Directory_ModelsWagons { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CardsWagonsRepairs> CardsWagonsRepairs { get; set; }
 

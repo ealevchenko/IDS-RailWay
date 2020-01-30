@@ -32,7 +32,7 @@ IDS_DIRECTORY.list_depo = [];
 
 IDS_DIRECTORY.list_wagons_condition = [];
 
-IDS_DIRECTORY.prototype.load = function (list, callback) {
+IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
     var count = list.length;
     var obj = this;
     $.each(list, function (i, el) {
@@ -42,7 +42,7 @@ IDS_DIRECTORY.prototype.load = function (list, callback) {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
-                        LockScreenOff();
+                        if (lockOff) { LockScreenOff(); }
                         callback();
                     }
                 }
@@ -54,7 +54,7 @@ IDS_DIRECTORY.prototype.load = function (list, callback) {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
-                        LockScreenOff();
+                        if (lockOff) { LockScreenOff(); }
                         callback();
                     }
                 }
@@ -66,7 +66,7 @@ IDS_DIRECTORY.prototype.load = function (list, callback) {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
-                        LockScreenOff();
+                        if (lockOff) { LockScreenOff(); }
                         callback();
                     }
                 }
@@ -78,7 +78,7 @@ IDS_DIRECTORY.prototype.load = function (list, callback) {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
-                        LockScreenOff();
+                        if (lockOff) { LockScreenOff(); }
                         callback();
                     }
                 }
@@ -90,7 +90,7 @@ IDS_DIRECTORY.prototype.load = function (list, callback) {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
-                        LockScreenOff();
+                        if (lockOff) { LockScreenOff(); }
                         callback();
                     }
                 }
@@ -102,7 +102,7 @@ IDS_DIRECTORY.prototype.load = function (list, callback) {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
-                        LockScreenOff();
+                        if (lockOff) { LockScreenOff(); }
                         callback();
                     }
                 }
@@ -114,7 +114,7 @@ IDS_DIRECTORY.prototype.load = function (list, callback) {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
-                        LockScreenOff();
+                        if (lockOff) { LockScreenOff(); }
                         callback();
                     }
                 }
@@ -126,7 +126,7 @@ IDS_DIRECTORY.prototype.load = function (list, callback) {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
-                        LockScreenOff();
+                        if (lockOff) { LockScreenOff(); }
                         callback();
                     }
                 }
@@ -138,7 +138,7 @@ IDS_DIRECTORY.prototype.load = function (list, callback) {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
-                        LockScreenOff();
+                        if (lockOff) { LockScreenOff(); }
                         callback();
                     }
                 }
@@ -150,7 +150,7 @@ IDS_DIRECTORY.prototype.load = function (list, callback) {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
-                        LockScreenOff();
+                        if (lockOff) { LockScreenOff(); }
                         callback();
                     }
                 }
@@ -162,7 +162,7 @@ IDS_DIRECTORY.prototype.load = function (list, callback) {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
-                        LockScreenOff();
+                        if (lockOff) { LockScreenOff(); }
                         callback();
                     }
                 }
@@ -174,7 +174,7 @@ IDS_DIRECTORY.prototype.load = function (list, callback) {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
-                        LockScreenOff();
+                        if (lockOff) { LockScreenOff(); }
                         callback();
                     }
                 }
@@ -186,7 +186,7 @@ IDS_DIRECTORY.prototype.load = function (list, callback) {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
-                        LockScreenOff();
+                        if (lockOff) { LockScreenOff(); }
                         callback();
                     }
                 }

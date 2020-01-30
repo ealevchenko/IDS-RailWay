@@ -9,6 +9,12 @@ namespace EFIDS.Entities
     [Table("IDS.Directory_ModelsWagons")]
     public partial class Directory_ModelsWagons
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Directory_ModelsWagons()
+        {
+            CardsWagons = new HashSet<CardsWagons>();
+        }
+
         [Key]
         [StringLength(20)]
         public string code { get; set; }
@@ -20,5 +26,8 @@ namespace EFIDS.Entities
         [Required]
         [StringLength(250)]
         public string model_en { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CardsWagons> CardsWagons { get; set; }
     }
 }

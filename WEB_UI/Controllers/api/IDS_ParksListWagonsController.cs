@@ -107,9 +107,9 @@ namespace WEB_UI.Controllers.api
             try
             {
                 this.ef_park.Add(value);
-                return this.ef_park.Save();
-                //this.ef_cards.Refresh(value);
-                //return value.num;
+                this.ef_park.Save();
+                this.ef_park.Refresh(value);
+                return value.id;
             }
             catch (Exception e)
             {

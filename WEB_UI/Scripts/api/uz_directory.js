@@ -3,7 +3,7 @@
 
 var UZ_DIRECTORY = function (lang) {
     this.lang = lang;
-
+    this.list_stations_buff = [];
 };
 
 UZ_DIRECTORY.list_states = [];
@@ -12,7 +12,7 @@ UZ_DIRECTORY.list_stations = [];
 
 UZ_DIRECTORY.list_internal_railroad = [];
 
-UZ_DIRECTORY.prototype.load = function (list, callback) {
+UZ_DIRECTORY.prototype.load = function (list, lockOff, callback) {
     var count = list.length;
     var obj = this;
     $.each(list, function (i, el) {
@@ -22,7 +22,7 @@ UZ_DIRECTORY.prototype.load = function (list, callback) {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
-                        LockScreenOff();
+                        if (lockOff) { LockScreenOff(); }
                         callback();
                     }
                 }
@@ -31,10 +31,11 @@ UZ_DIRECTORY.prototype.load = function (list, callback) {
         if (el === 'stations') {
             UZ_DIRECTORY.prototype.getStations(function (result_stations) {
                 obj.list_stations = result_stations;
+                //obj.list_stations_sc = result_stations.filter(function (el) { return el.code_cs ? true : false });
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
-                        LockScreenOff();
+                        if (lockOff) { LockScreenOff(); }
                         callback();
                     }
                 }
@@ -46,7 +47,7 @@ UZ_DIRECTORY.prototype.load = function (list, callback) {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
-                        LockScreenOff();
+                        if (lockOff) { LockScreenOff(); }
                         callback();
                     }
                 }
@@ -178,9 +179,18 @@ UZ_DIRECTORY.prototype.getListStates = function (fvalue, ftext, lang) {
 //
 UZ_DIRECTORY.prototype.getStations_Internal_Of_CodeCS = function (code_cs) {
     if (this.list_stations && code_cs) {
-        var obj = getObjects(this.list_stations, 'code_cs', code_cs);
-        return obj && obj.length > 0 ? obj[0] : null;
-    } else return null;
+        var obj_buff = getObjects(this.list_stations_buff, 'code_cs', code_cs);
+        if (!obj_buff || obj_buff.length === 0) {
+            var obj = getObjects(this.list_stations, 'code_cs', code_cs);
+            if (obj && obj.length > 0) {
+                this.list_stations_buff.push(obj[0]);
+                return obj[0];
+            }
+        } else {
+            return obj_buff[0];
+        }
+    }
+        return null;
 };
 //
 UZ_DIRECTORY.prototype.getValue_Station_Of_CodeCS = function (code_cs, name) {

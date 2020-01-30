@@ -18,18 +18,18 @@ IDS_MORS.list_park_wagons = [];
 IDS_MORS.list_park_list_wagons = [];
 
 // Загрузить указаные справочники
-IDS_MORS.prototype.load = function (list, callback) {
+IDS_MORS.prototype.load = function (list, lockOff, callback) {
     var count = list.length;
     var obj = this;
     // Згрузка собственных таблиц
     $.each(list, function (i, el) {
         if (el === 'ids') {
             // Згрузка библиотек справочников ИДС
-            obj.ids_dir.load(['genus_wagon', 'wagon_manufacturers', 'types_repairs_wagons', 'models_wagons', 'type_wagons', 'type_owner_ship', 'owners_wagons', 'lessors_wagons', 'operators_wagons', 'poligon_travel_wagons', 'special_conditions', 'depo', 'wagons_condition'], function () {
+            obj.ids_dir.load(['genus_wagon', 'wagon_manufacturers', 'types_repairs_wagons', 'models_wagons', 'type_wagons', 'type_owner_ship', 'owners_wagons', 'lessors_wagons', 'operators_wagons', 'poligon_travel_wagons', 'special_conditions', 'depo', 'wagons_condition'], lockOff, function () {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
-                        LockScreenOff();
+                        if (lockOff) { LockScreenOff(); }
                         callback();
                     }
                 }
@@ -37,11 +37,11 @@ IDS_MORS.prototype.load = function (list, callback) {
         };
         // Згрузка библиотек справочников УЗ
         if (el === 'uz') {
-            obj.uz_dir.load(['states', 'stations', 'internal_railroad'], function () {
+            obj.uz_dir.load(['states', 'stations', 'internal_railroad'], lockOff, function () {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
-                        LockScreenOff();
+                        if (lockOff) { LockScreenOff(); }
                         callback();
                     }
                 }
@@ -54,7 +54,7 @@ IDS_MORS.prototype.load = function (list, callback) {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
-                        LockScreenOff();
+                        if (lockOff) { LockScreenOff(); }
                         callback(result_cards_wagons);
                     }
                 }
@@ -66,7 +66,7 @@ IDS_MORS.prototype.load = function (list, callback) {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
-                        LockScreenOff();
+                        if (lockOff) { LockScreenOff(); }
                         callback(result_cards_wagons_repairs);
                     }
                 }
@@ -79,7 +79,7 @@ IDS_MORS.prototype.load = function (list, callback) {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
-                        LockScreenOff();
+                        if (lockOff) { LockScreenOff(); }
                         callback(result_park_wagons);
                     }
                 }
@@ -91,7 +91,7 @@ IDS_MORS.prototype.load = function (list, callback) {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
-                        LockScreenOff();
+                        if (lockOff) { LockScreenOff(); }
                         callback(result_park_list_wagons);
                     }
                 }
@@ -558,10 +558,10 @@ IDS_MORS.prototype.getParksListWagonsOfID = function (id, callback) {
     });
 };
 //
-IDS_MORS.prototype.getParksListWagonsOfPark = function (id, callback) {
+IDS_MORS.prototype.getParksListWagonsOfPark = function (id_park, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/mors/park_list_wagons/park/id/' + id,
+        url: '../../api/ids/mors/park_list_wagons/park/id/' + id_park,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -580,6 +580,55 @@ IDS_MORS.prototype.getParksListWagonsOfPark = function (id, callback) {
         },
     });
 };
+// Добавить
+IDS_MORS.prototype.postParksListWagons = function (park_list, callback) {
+    $.ajax({
+        url: '../../api/ids/mors/park_list_wagons/',
+        type: 'POST',
+        data: JSON.stringify(park_list),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_MORS.postParksListWagons", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Удалить
+IDS_MORS.prototype.deleteParksListWagons = function (id, callback) {
+    $.ajax({
+        url: '../../api/ids/mors/park_list_wagons/id/' + id,
+        type: 'DELETE',
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_MORS.deleteParksListWagons", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 /* ----------------------------------------------------------
 функции для работы с внутреним массивом
 -------------------------------------------------------------*/
