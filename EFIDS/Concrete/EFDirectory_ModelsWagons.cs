@@ -172,5 +172,11 @@ namespace EFIDS.Concrete
         {
             throw new NotImplementedException();
         }
+
+
+        public void Add(IEnumerable<Directory_ModelsWagons> items)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -161,5 +161,11 @@ namespace EFIDS.Concrete
             GC.SuppressFinalize(this);
         }
 
+
+
+        public void Add(IEnumerable<ParksWagons> items)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

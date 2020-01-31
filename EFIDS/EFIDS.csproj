@@ -100,6 +100,7 @@
     <Compile Include="Entities\WebView.cs" />
     <Compile Include="Entities\ParksListWagons.cs" />
     <Compile Include="Entities\ParksWagons.cs" />
+    <Compile Include="Helper\ids_library.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

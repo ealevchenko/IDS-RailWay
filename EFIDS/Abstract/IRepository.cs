@@ -14,6 +14,7 @@ namespace EFIDS.Abstract
         IEnumerable<T> Get();       // получение всех объектов
         T Get(int id);              // получение одного объекта по id
         void Add(T item);           // создание объекта
+        void Add(IEnumerable<T> items);           // создание объекта
         void Update(T item);        // обновление объекта
         void AddOrUpdate(T item);   // добавить или обновить
         void Delete(int id);        // удаление объекта по id

@@ -161,5 +161,11 @@ namespace EFIDS.Concrete
             GC.SuppressFinalize(this);
         }
 
+
+
+        public void Add(IEnumerable<Directory_TypesRepairsWagons> items)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

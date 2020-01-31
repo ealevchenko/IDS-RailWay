@@ -73,7 +73,7 @@
         loadReference = function (callback) {
             LockScreen(langView('mess_load', langs));
             var count = 1;
-            mors.load(['ids', 'uz', 'park_wagons', 'cards_wagons'], false, function () {
+            mors.load(['uz', 'park_wagons', 'cards_wagons'], false, function () {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
@@ -136,10 +136,12 @@
                     event.preventDefault();
                     var id = $(this).val();
                     update_button_edit_park(id);
+                    table_wagon_cards.update_button_add(id);
                     update_list_wagons_park(id);
                 },
                 null);
             update_button_edit_park(id_park);
+            table_wagon_cards.update_button_add(id_park);
         },
         // Обновить состояние кнопок редактирования парков
         update_button_edit_park = function (id_park) {
@@ -172,6 +174,7 @@
                     select: {
                         style: 'multi'
                     },
+                    //"deferRender": true,
                     "autoWidth": true,
                     //"filter": true,
                     //"scrollY": "600px",
@@ -211,8 +214,14 @@
                         {
                             text: 'Добавить в список',
                             action: function (e, dt, node, config) {
-                                table_wagon_cards.obj.rows().deselect();
-                                table_wagon_cards.view_panel_add_wagon();
+                                var id_park = select_park_wagon.val();
+                                if (id_park > 0) {
+                                    table_wagon_cards.obj.rows().deselect();
+                                    table_wagon_cards.view_panel_add_wagon();
+                                } else {
+                                    alert("Выберите парк");
+                                }
+
                             },
                             enabled: true
                         },
@@ -230,20 +239,19 @@
                                         var wh = [];
                                         $.each(rows, function (i, el) {
                                             wh.push(Number(el.id_list_wagon_park));
-                                            //wh += el.id_list_wagon_park + ',';
-
-                                            //mors.deleteParksListWagons(el.id_list_wagon_park,
-                                            //    function (result) {
-                                            //        count--;
-                                            //        if (count === 0) {
-                                            //            update_button_edit_park(Number(id_park));
-                                            //            update_list_wagons_park(Number(id_park));
-                                            //            LockScreenOff();
-                                            //        }
-                                            //    });
                                         });
-                                        //if (wh !== '') wh.substring(0, str.length - 1);
-                                        mors.delete_listParksListWagons(wh, function (result) {
+                                        mors.deleteParksListWagonsArr(wh, function (result) {
+                                            LockScreenOff();
+                                            if (result > 0) {
+                                                // Ок
+                                                update_button_edit_park(Number(id_park));
+                                                table_wagon_cards.update_button_add(id_park);
+                                                table_wagon_cards.update_button_delete(0);
+                                                table_wagon_cards.obj.rows('.selected').remove().draw(false);
+                                                //update_list_wagons_park(Number(id_park));
+                                            } else {
+                                                // error
+                                            }
 
                                         });
                                     }
@@ -301,8 +309,8 @@
             },
             // Показать таблицу с данными
             view: function (id_park_wagon, data_refresh) {
-                table_wagon_cards.id_park_wagon = id_park_wagon;
                 LockScreen(langView('mess_delay', langs));
+                table_wagon_cards.id_park_wagon = id_park_wagon;
                 if (!table_wagon_cards.list_wagon_park | data_refresh === true) {
                     // Обновим данные
                     mors.getParksListWagonsOfPark(
@@ -311,16 +319,17 @@
                             table_wagon_cards.list_wagon_park = result;
                             table_wagon_cards.load_data(table_wagon_cards.list_wagon_park);
                             table_wagon_cards.obj.draw();
+                            LockScreenOff();
                         }
                     );
                 } else {
                     table_wagon_cards.load_data(table_wagon_cards.list_wagon_park);
                     table_wagon_cards.obj.draw();
+                    LockScreenOff();
                 };
             },
             // Загрузить данные
             load_data: function (data) {
-                //this.list = data;
                 table_wagon_cards.obj.clear();
                 $.each(data, function (i, el) {
                     var card_wagon = table_wagon_cards.get_row_card_wagon(el.CardsWagons);
@@ -328,7 +337,7 @@
                     card_wagon["id_park_wagon"] = el.id_park_wagon;
                     table_wagon_cards.obj.row.add(card_wagon);
                 });
-                LockScreenOff();
+
                 //table_wagon_cards.initComplete();
             },
             // Получить строку для таблицы
@@ -407,6 +416,14 @@
                     table_wagon_cards.obj.button(1).enable(true);
                 } else {
                     table_wagon_cards.obj.button(1).enable(false);
+                }
+            },
+            // Обновить кнопки
+            update_button_add: function (id_park) {
+                if (id_park > 0) {
+                    table_wagon_cards.obj.button(0).enable(true);
+                } else {
+                    table_wagon_cards.obj.button(0).enable(false);
                 }
             },
             // Отобразить панель добавить вагоны
@@ -584,7 +601,7 @@
             loadReference: function (callback) {
                 // загрузим список парков
                 if (!pn_add_wagon.list_cards_wagons) {
-                    pn_add_wagon.mors.load(['ids', 'uz', 'cards_wagons'], false, function () {
+                    pn_add_wagon.mors.load(['uz', 'cards_wagons'], false, function () {
                         pn_add_wagon.list_cards_wagons = pn_add_wagon.mors.list_cards_wagons;
                         if (typeof callback === 'function') {
                             //LockScreenOff();
@@ -599,7 +616,7 @@
             // инициализвция Диалога
             init: function (list_cards_wagons, callback_ok) {
                 pn_add_wagon.list_cards_wagons = list_cards_wagons;
-                this.mors = new IDS_MORS(pn_add_wagon.lang); // Создадим класс IDS_MORS
+                pn_add_wagon.mors = new IDS_MORS(pn_add_wagon.lang); // Создадим класс IDS_MORS
                 pn_add_wagon.obj = $("div#add-wagon-park").dialog({
                     resizable: false,
                     title: 'Добавить вагоны в парк',
@@ -622,10 +639,6 @@
                             class: "btn btn-outline-primary btn-sm",
                             click: function () {
                                 var rows = pn_add_wagon.table.rows('.selected').data();
-                                //var arr_num = [];
-                                //$.each(rows, function (i, el) {
-                                //    arr_num.push(el.num);
-                                //});
                                 $(this).dialog("close");
                                 if (typeof callback_ok === 'function') {
                                     callback_ok(rows);
@@ -652,7 +665,7 @@
                     "searching": true,
                     "ordering": true,
                     "info": true,
-                    "select": true,
+                    //"select": true,
                     select: {
                         style: 'multi'
                     },
@@ -661,33 +674,33 @@
                     "scrollY": "500px",
                     "scrollX": true,
                     language: language_table(langs),
-                    jQueryUI: false,
+                    jQueryUI: true,
                     "createdRow": function (row, data, index) {
-                        $(row).attr('id', data.num);
+                        //$(row).attr('id', data.num);
                     },
                     columns: [
                         { data: "num", title: langView('field_num', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "genus_wagon", title: langView('field_genus_wagon', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "state", title: langView('field_state', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "wagon_manufacturer", title: langView('field_wagon_manufacturer', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "year_wagon_create", title: langView('field_year_wagon_create', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "station", title: langView('field_station', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "carrying_capacity", title: langView('field_carrying_capacity', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "tara", title: langView('field_tara', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "type_repairs", title: langView('field_type_repairs', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "date_type_repairs", title: langView('field_date_type_repairs', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "code_model_wagon", title: langView('field_code_model_wagon', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "type_wagon", title: langView('field_type_wagon', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "axis_length", title: langView('field_axis_length', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "body_volume", title: langView('field_body_volume', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "type_ownership", title: langView('field_type_ownership', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "owner_wagon", title: langView('field_owner_wagon', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "date_registration", title: langView('field_date_registration', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "lessor_wagon", title: langView('field_lessor_wagon', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "operator_wagon", title: langView('field_operator_wagon', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "poligon_travel_wagon", title: langView('field_poligon_travel_wagon', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "special_conditions", title: langView('field_special_conditions', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "sap", title: langView('field_sap', langs), width: "50px", orderable: true, searchable: false },
+                        { data: "genus_wagon", title: langView('field_genus_wagon', langs), width: "100px", orderable: true, searchable: true },
+                        //{ data: "state", title: langView('field_state', langs), width: "50px", orderable: true, searchable: true },
+                        //{ data: "wagon_manufacturer", title: langView('field_wagon_manufacturer', langs), width: "50px", orderable: true, searchable: true },
+                        //{ data: "year_wagon_create", title: langView('field_year_wagon_create', langs), width: "50px", orderable: true, searchable: true },
+                        //{ data: "station", title: langView('field_station', langs), width: "50px", orderable: true, searchable: true },
+                        //{ data: "carrying_capacity", title: langView('field_carrying_capacity', langs), width: "50px", orderable: true, searchable: true },
+                        //{ data: "tara", title: langView('field_tara', langs), width: "50px", orderable: true, searchable: true },
+                        //{ data: "type_repairs", title: langView('field_type_repairs', langs), width: "50px", orderable: true, searchable: true },
+                        //{ data: "date_type_repairs", title: langView('field_date_type_repairs', langs), width: "50px", orderable: true, searchable: true },
+                        //{ data: "code_model_wagon", title: langView('field_code_model_wagon', langs), width: "50px", orderable: true, searchable: true },
+                        //{ data: "type_wagon", title: langView('field_type_wagon', langs), width: "50px", orderable: true, searchable: true },
+                        //{ data: "axis_length", title: langView('field_axis_length', langs), width: "50px", orderable: true, searchable: true },
+                        //{ data: "body_volume", title: langView('field_body_volume', langs), width: "50px", orderable: true, searchable: true },
+                        { data: "type_ownership", title: langView('field_type_ownership', langs), width: "100px", orderable: true, searchable: true },
+                        { data: "owner_wagon", title: langView('field_owner_wagon', langs), width: "100px", orderable: true, searchable: true },
+                        //{ data: "date_registration", title: langView('field_date_registration', langs), width: "50px", orderable: true, searchable: true },
+                        { data: "lessor_wagon", title: langView('field_lessor_wagon', langs), width: "100px", orderable: true, searchable: true },
+                        { data: "operator_wagon", title: langView('field_operator_wagon', langs), width: "100px", orderable: true, searchable: true },
+                        { data: "poligon_travel_wagon", title: langView('field_poligon_travel_wagon', langs), width: "100px", orderable: true, searchable: true },
+                        { data: "special_conditions", title: langView('field_special_conditions', langs), width: "100px", orderable: true, searchable: true },
+                        //{ data: "sap", title: langView('field_sap', langs), width: "50px", orderable: true, searchable: false },
                     ],
                     dom: 'Bfrtip',
                     stateSave: false,
@@ -700,32 +713,60 @@
                             text: 'Убрать все',
                             extend: 'selectNone',
                         },
-                        //{
-                        //    text: 'Скопировать в буфер',
-                        //    extend: 'copyHtml5',
-                        //},
-                        //{
-                        //    text: 'Экспорт в Excel',
-                        //    extend: 'excelHtml5',
-                        //    sheetName: 'Карточки вагонов',
-                        //    messageTop: function () {
-                        //        return '';
-                        //    }
-                        //},
-                        //{
-                        //    extend: 'colvis',
-                        //    text: 'Выбрать поля таблицы',
-                        //    collectionLayout: 'fixed two-column',
-                        //},
-                        //{
-                        //    extend: 'colvisGroup',
-                        //    text: 'Показать все поля',
-                        //    show: ':hidden'
-                        //},
                         {
                             extend: 'pageLength',
                         }
                     ],
+                });
+                //pn_add_wagon.initComplete()
+            },
+            // Формирование элементов фильтра
+            initComplete: function () {
+                pn_add_wagon.table.data().columns([1, 2, 3, 4, 5, 6, 7]).every(function () {
+                    var n = 0;
+                    var column = this;
+                    var num = column[0][0];
+                    var name = column.header().firstChild.innerText;
+                    var select = $('<select><option value="">' + (lang == 'en' ? 'All' : 'Все') + '</option></select>')
+                        .appendTo($(column.header()).empty().append(name))
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val()
+                            );
+                            column
+                                .search(val ? '^' + val + '$' : '', true, false)
+                                .draw();
+                        });
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+
+                    //var select = $('<select class="filter"><option value="">Выбрать...</option></select>')
+                    //    .appendTo($(column.header()).empty())
+                    //    .on('change', function () {
+                    //    var val = $.fn.dataTable.util.escapeRegex(
+                    //        $(this).val()
+                    //    );
+                    //    column
+                    //        .search(val ? '^' + val + '$' : '', true, false)
+                    //        .draw();
+                    //});
+                    ////
+                    //column.data().unique().sort().each(function (d, j) {
+                    //    select.append('<option value="' + (d ? d : "") + '">' + (d ? d : "Не определенно") + '</option>');
+                    //    n++;
+                    //});
+                    //if (n > 1) {
+                    //    $('form#filtr')
+                    //        .append('<div class="cd-filter-block" id="filter-block-' + num + '"></div>');
+                    //    $('div#filter-block-' + num)
+                    //        .append('<h4>' + name + '</h4>')
+                    //        .append('<div class="cd-filter-content" id="filter-content-' + num + '"></div>');
+                    //    $('div#filter-content-' + num)
+                    //        .append('<div class="cd-select cd-filters" id="select-' + num + '"></div>');
+                    //    $('div#select-' + num)
+                    //        .append(select);
+                    //}
                 });
             },
             // Открыть Диалог 
@@ -733,7 +774,6 @@
                 LockScreen('Загружаю данные...');
                 // Загрузим перечень вагонов всех
                 pn_add_wagon.loadReference(function () {
-                    //LockScreen('Обрабатываю данные...');
                     // если заданы существующие вагоны, исключим их из перечня
                     if (nums && nums.length > 0) {
                         pn_add_wagon.list_cards_wagons_select = pn_add_wagon.list_cards_wagons.filter(function (el) {
@@ -747,17 +787,16 @@
                     pn_add_wagon.obj.dialog("open");
                     LockScreenOff();
                 });
-
             },
             // Загрузить данные
             load_data: function (data) {
-                //LockScreen('Загружаю данные...');
                 pn_add_wagon.table.clear();
                 for (i = 0; i < data.length; i++) {
                     pn_add_wagon.table.row.add(pn_add_wagon.get_row_card_wagon(data[i]));
                 }
                 pn_add_wagon.table.draw();
-                //table_wagon_cards.initComplete();
+                pn_add_wagon.table.order([1, 'asc']);
+                //pn_add_wagon.initComplete()
             },
             //
             get_row_card_wagon: function (data) {
@@ -882,16 +921,21 @@
         var id_park = select_park_wagon.val();
         if (Number(id_park) > 0) {
             var count = rows.length;
+            // Получим новый перечень 
+            var list = [];
             $.each(rows, function (i, el) {
-                mors.postParksListWagons({ id: 0, id_park_wagon: Number(id_park), num: el.num },
-                    function (result) {
-                        count--;
-                        if (count === 0) {
-                            update_button_edit_park(Number(id_park));
-                            update_list_wagons_park(Number(id_park));
-                            LockScreenOff();
-                        }
-                    });
+                list.push({ id: 0, id_park_wagon: Number(id_park), num: el.num });
+            });
+            // Добавим все сразу одним массивом
+            mors.postParksListWagonsArr(list, function (result) {
+                if (result > 0) {
+                    // Ок
+                    update_button_edit_park(Number(id_park));
+                    update_list_wagons_park(Number(id_park));
+                } else {
+                    // error
+                }
+                LockScreenOff();
             });
         }
 

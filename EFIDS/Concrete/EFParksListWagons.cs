@@ -69,6 +69,18 @@ namespace EFIDS.Concrete
             }
         }
 
+        public void Add(IEnumerable<ParksListWagons> items)
+        {
+            try
+            {
+                db.Inserts<ParksListWagons>(items);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
         public void Update(ParksListWagons item)
         {
             try
