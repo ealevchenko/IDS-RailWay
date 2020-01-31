@@ -165,6 +165,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>IDSMORSResource.resx</DependentUpon>
     </Compile>
+    <Compile Include="App_LocalResources\IDSRWTResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IDSRWTResource.resx</DependentUpon>
+    </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\Ninject.Web.Common.cs" />
@@ -200,6 +205,8 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Areas\IDSMORS\Controllers\HomeController.cs" />
     <Compile Include="Areas\IDSMORS\IDSMORSAreaRegistration.cs" />
+    <Compile Include="Areas\IDSRWT\Controllers\HomeController.cs" />
+    <Compile Include="Areas\IDSRWT\IDSRWTAreaRegistration.cs" />
     <Compile Include="Controllers\api\IDS_ParksListWagonsController.cs" />
     <Compile Include="Controllers\api\IDS_ParksWagonsController.cs" />
     <Compile Include="Controllers\api\IDS_CardsWagonsRepairsController.cs" />
@@ -454,6 +461,7 @@
     <Content Include="Content\view\shared\home-menu.css" />
     <Content Include="Content\view\shared\_idsmors.css" />
     <Content Include="Content\view\shared\_ids.css" />
+    <Content Include="Content\view\shared\_idsrwt.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\websymbols\websymbols-regular-webfont.svg" />
     <Content Include="fonts\websymbols\WebSymbolsRegular-demo.html" />
@@ -487,6 +495,7 @@
     <Content Include="Images\Error404.png" />
     <Content Include="Images\header.jpg" />
     <Content Include="Images\ids-op.jpg" />
+    <Content Include="Images\ids-rwt.jpg" />
     <Content Include="Images\logo.png" />
     <Content Include="Images\portfolio\fullsize\1.jpg" />
     <Content Include="Images\portfolio\fullsize\2.jpg" />
@@ -750,6 +759,12 @@
     <Content Include="Scripts\esm\popper-utils.min.js.map" />
     <Content Include="Scripts\esm\popper-utils.js.map" />
     <Content Include="Areas\IDSMORS\Views\Shared\_IDSMORS.cshtml" />
+    <Content Include="Areas\IDSRWT\Views\web.config" />
+    <Content Include="Areas\IDSRWT\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\IDSRWT\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\IDSRWT\Views\Home\Index.cshtml" />
+    <Content Include="Areas\IDSRWT\Views\Home\Arrival.cshtml" />
+    <Content Include="Areas\IDSRWT\Views\Shared\_IDSRWT.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -879,6 +894,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\IDSMORS\Models\" />
+    <Folder Include="Areas\IDSRWT\Models\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
@@ -915,6 +931,10 @@
     <EmbeddedResource Include="App_LocalResources\IDSMORSResource.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>IDSMORSResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_LocalResources\IDSRWTResource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>IDSRWTResource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

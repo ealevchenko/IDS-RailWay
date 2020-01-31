@@ -525,6 +525,10 @@ a.select-not-lang {
 .img-header-idsmors {
     background-image: url(../../../Images/ids-op.jpg);
 }
+.img-header-idsrwt {
+    background-image: url(../../../Images/ids-rwt.jpg);
+}
+
 .img-header-access-denied {
     background-image: url(../../../Images/access-denied.jpg);
 }

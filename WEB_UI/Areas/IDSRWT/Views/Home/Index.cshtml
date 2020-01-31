@@ -1,0 +1,50 @@
+﻿@using WEB_UI.App_LocalResources;
+@{
+    Layout = "~/Views/Shared/_IDS.cshtml";
+    ViewBag.Title = @IDSRWTResource.system_idsrwt_title;
+}
+
+@section styles {
+    <link rel="stylesheet" type="text/css" href="~/Content/view/idsmors/home.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/view/shared/home-menu.css">
+}
+
+@section scripts {
+    <script>
+        $('header').addClass('img-header-idsrwt');
+    </script>
+}
+
+@section Services {
+
+}
+
+@section Document {
+
+}
+
+<h1 id="homeHeading">@IDSRWTResource.system_idsrwt_title</h1>
+<hr>
+<p>@IDSRWTResource.system_idsrwt_description</p>
+<div class="content">
+    <ul class="ca-menu">
+        <li>
+            <a href='@Url.Action("Arrival", "Home", new { area = "IDSRWT" })'>
+                <span class="ca-icon">?</span>
+                <div class="ca-content">
+                    <h2 class="ca-main">@IDSRWTResource.arrival_title</h2>
+                    <h3 class="ca-sub">@IDSRWTResource.arrival_description</h3>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href='@Url.Action("Reception", "Home", new { area = "IDSRWT" })'>
+                <span class="ca-icon">j</span>
+                <div class="ca-content">
+                    <h2 class="ca-main">@IDSRWTResource.reception_title</h2>
+                    <h3 class="ca-sub">@IDSRWTResource.reception_description</h3>
+                </div>
+            </a>
+        </li>
+    </ul>
+</div>
