@@ -52,7 +52,7 @@ table {
     border-spacing: 0;
 }
 
-
+/**/
 header {
     position: relative;
     width: 100%;
@@ -69,14 +69,68 @@ header {
     header .header-content {
         position: relative;
         text-align: center;
-        margin-top: 65px;
-        padding: 15px 0;
+        margin-top: 55px;
+        padding: 15px 15px;
         width: 100%;
         color: rgba(51, 29, 53, 0.8);
     }
 
+/*navbar*/
+.navbar-amkr {
+    border-color: rgba(34, 34, 34, 0.05);
+    font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+    -webkit-transition: all 0.35s;
+    -moz-transition: all 0.35s;
+    transition: all 0.35s;
+}
 
+    .navbar-amkr .navbar-header .navbar-brand {
+        color: #F05F40;
+        font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
 
+        .navbar-amkr .navbar-header .navbar-brand:hover,
+        .navbar-amkr .navbar-header .navbar-brand:focus {
+            color: white;
+        }
+
+    .navbar-amkr .navbar-header .navbar-toggle {
+        font-weight: 700;
+        font-size: 12px;
+        color: rgba(255, 252, 252, 0.7);
+        text-transform: uppercase;
+    }
+
+    .navbar-amkr .nav > li > a,
+    .navbar-amkr .nav > li > a:focus {
+        text-transform: uppercase;
+        font-weight: 700;
+        font-size: 13px;
+        color: rgba(255, 252, 252, 0.7);
+    }
+
+        .navbar-amkr .nav > li > a:hover,
+        .navbar-amkr .nav > li > a:focus:hover {
+            color: white;
+        }
+
+    .navbar-amkr .nav > li.active > a,
+    .navbar-amkr .nav > li.active > a:focus {
+        color: white !important;
+        background-color: transparent;
+    }
+
+        .navbar-amkr .nav > li.active > a:hover,
+        .navbar-amkr .nav > li.active > a:focus:hover {
+            background-color: transparent;
+        }
+
+.navbar-header button {
+    color: rgba(255, 255, 255, 0.5);
+    border-color: rgba(255, 255, 255, .1);
+}
 
 
 .bg-x {

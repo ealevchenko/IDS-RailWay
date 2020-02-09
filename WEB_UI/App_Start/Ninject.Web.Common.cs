@@ -68,6 +68,14 @@ namespace WEB_UI.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
+            kernel.Bind<EFMT.Abstract.IRepository<EFMT.Entities.ArrivalSostav>>().To<EFMT.Concrete.EFArrivalSostav>();
+            kernel.Bind<EFMT.Abstract.IRepository<EFMT.Entities.ArrivalCars>>().To<EFMT.Concrete.EFArrivalCars>();  
+            kernel.Bind<EFMT.Abstract.IRepository<EFMT.Entities.ApproachesSostav>>().To<EFMT.Concrete.EFApproachesSostav>();
+            kernel.Bind<EFMT.Abstract.IRepository<EFMT.Entities.ApproachesCars>>().To<EFMT.Concrete.EFApproachesCars>();   
+            kernel.Bind<EFMT.Abstract.IRepository<EFMT.Entities.Consignee>>().To<EFMT.Concrete.EFConsignee>();  
+            
+            kernel.Bind<EFMT.Abstract.IRepository<EFMT.Entities.WagonsTracking>>().To<EFMT.Concrete.EFWagonsTracking>();  
+            
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_GenusWagons>>().To<EFIDS.Concrete.EFDirectory_GenusWagons>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_WagonManufacturers>>().To<EFIDS.Concrete.EFDirectory_WagonManufacturers>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_TypesRepairsWagons>>().To<EFIDS.Concrete.EFDirectory_TypesRepairsWagons>();

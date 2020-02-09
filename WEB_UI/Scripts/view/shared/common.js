@@ -197,8 +197,8 @@ var language_table = function (langs) {
         "zeroRecords": langView('dt_zeroRecords', langs),
         "paginate": langView('dt_paginate', langs),
         "aria": langView('dt_aria', langs),
-    }
-}
+    };
+};
 /* ----------------------------------------------------------
     Компоненты UI
 -------------------------------------------------------------*/
@@ -214,19 +214,19 @@ var cd_initSelect = function (obj_select, property, data, callback_option, value
         select = property.select;
     }
     // Проверка выбор неопределен
-    if (value_select == -1 | select) {
-        options.push("<option value='-1' >" + (lang == 'en' ? 'Select...' : 'Выберите...') + "</option>");
+    if (value_select === -1 | select) {
+        options.push("<option value='-1' >" + (lang === 'en' ? 'Select...' : 'Выберите...') + "</option>");
     }
-    if (data != null) {
+    if (data !== null) {
         for (i = 0, count_data_select = data.length; i < count_data_select; i++) {
-            var option = { value: data[i].value, text: data[i].text, disabled: data[i].disabled }
+            var option = { value: data[i].value, text: data[i].text, disabled: data[i].disabled };
             // Преобразовать формат
             if (typeof callback_option === 'function') {
                 option = callback_option(data[i]);
             }
-            if (option != null) {
-                if (exceptions_value != null) {
-                    if (exceptions_value.indexOf(option.value) == -1) {
+            if (option !== null) {
+                if (exceptions_value !== null) {
+                    if (exceptions_value.indexOf(option.value) === -1) {
                         options.push("<option value='" + option.value + "' " + (option.disabled ? "disabled='disabled'" : "") + ">" + option.text + "</option>");
                     }
                 } else {
@@ -295,7 +295,7 @@ var DateToStringOfCulture = function (date, lang) {
         return moment(date).format(lang === 'ru' ? 'DD.MM.YYYY' : 'MM/DD/YYYY');
     }
     return null;
-}
+};
 //
 var StringDateToFormatStringDate = function (s_date, lang) {
     return DateToStringOfCulture(ISOtoDate(s_date), lang);
@@ -349,6 +349,15 @@ var get_select_number_value = function (select) {
     return null;
 };
 
+// Вернуть режим
+var outOperation = function (i) {
+    if (i === null) return null;
+    switch (Number(i)) {
+        case 1: return "ПРИБЫТИЕ";
+        case 2: return "ТСП";
+        default: return i;
+    }
+};
 /* ----------------------------------------------------------
     Функции валидации и вывода сообщений
 -------------------------------------------------------------*/
@@ -362,7 +371,7 @@ var VALIDATION = function (lang, alert, all_obj) {
 VALIDATION.prototype.clear_all = function () {
     this.clear_message();
     this.clear_error();
-}
+};
 
 // Очистить все ошибки
 VALIDATION.prototype.clear_error = function (objs) {
@@ -371,7 +380,7 @@ VALIDATION.prototype.clear_error = function (objs) {
     } else {
         this.all_obj.removeClass('is-valid is-invalid');
     }
-}
+};
 
 // Очистить сообщения
 VALIDATION.prototype.clear_message = function () {

@@ -1,0 +1,19 @@
+﻿body {
+}
+
+table.dataTable tbody tr:not(.selected).consignee-basic.odd, table.dataTable tbody tr:not(.selected).consignee-basic.even {
+    background-color: antiquewhite;
+}
+table.dataTable tbody tr:not(.selected).consignee-auxiliary.odd, table.dataTable tbody tr:not(.selected).consignee-auxiliary.even {
+    background-color: #ffdfb5;
+}
+
+/*table.dataTable tbody tr:not(.selected).consignee-amkr.even, table.dataTable tbody tr:not(.selected).consignee-amkr.odd {
+    background-color: #dbc8af;
+}*/
+
+/*table.order-column.dataTable tbody tr.consignee-amkr > .sorting_1, table.order-column.dataTable tbody tr.consignee-amkr > .sorting_2, table.order-column.dataTable tbody tr.consignee-amkr > .sorting_3, table.display.dataTable tbody tr.consignee-amkr > .sorting_1, table.display.dataTable tbody tr.consignee-amkr > .sorting_2, table.display.dataTable tbody tr.consignee-amkr > .sorting_3 {
+    background-color: #dbc8af;
+}*/
+
+

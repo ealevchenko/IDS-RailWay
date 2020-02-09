@@ -16,19 +16,18 @@
 </head>
 
 <body>
-    <div id="lockPanel" class="LockOff"></div>
-
-    <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
+    <div id="lockPanel" class="LockOn">Идет загрузка…</div>
+    <nav class="navbar navbar-expand-sm bg-amkr navbar-amkr fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
                 <img src="~/Images/amk_logo.png" width="200" height="40" class="d-inline-block align-top" alt="">
             </a>
-            <div class="navbar-header ">
+            <div class="navbar-header">
                 <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                    <ul class="navbar-nav">
+                    <ul class="nav navbar-nav">
                         <li class="nav-item">
                             <a class="nav-link" href="#">Link</a>
                         </li>
@@ -43,13 +42,14 @@
             </div>
         </div>
     </nav>
-    <header>
-        <div class="header-content">
-            <div class="container-fluid">
+    @*<div class="container-fluid">*@
+        <header>
+            <div class="header-content">
                 @RenderBody()
             </div>
-        </div>
-    </header>
+        </header>
+    @*</div>*@
+
     <div class="jumbotron text-center" style="margin-bottom:0">
         <p>Footer</p>
     </div>

@@ -944,7 +944,7 @@
     table_wagon_cards.init();
     // Загрузка основных библиотек
     loadReference(function (result) {
-        update_list_park()
+        update_list_park();
     });
 
 

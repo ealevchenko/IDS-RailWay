@@ -224,6 +224,8 @@
     <Compile Include="Controllers\api\IDS_Directory_ModelsWagonsController.cs" />
     <Compile Include="Controllers\api\IDS_Directory_TypesRepairsWagonsController.cs" />
     <Compile Include="Controllers\api\IDS_Directory_WagonManufacturersController.cs" />
+    <Compile Include="Controllers\api\Metrans_ConsigneeController.cs" />
+    <Compile Include="Controllers\api\Metrans_ArrivalSostavController.cs" />
     <Compile Include="Controllers\api\UZ_Directory_InternalRailroadController.cs" />
     <Compile Include="Controllers\api\UZ_Directory_StationsController.cs" />
     <Compile Include="Controllers\api\UZ_Directory_StatesController.cs" />
@@ -394,11 +396,13 @@
     <Content Include="Content\DataTables\media\css\dataTables.semanticui.min.css" />
     <Content Include="Content\DataTables\media\css\jquery.dataTables.css" />
     <Content Include="Content\DataTables\media\css\jquery.dataTables.min.css" />
-    <Content Include="Content\DataTables\media\images\sort_asc.png" />
-    <Content Include="Content\DataTables\media\images\sort_asc_disabled.png" />
-    <Content Include="Content\DataTables\media\images\sort_both.png" />
-    <Content Include="Content\DataTables\media\images\sort_desc.png" />
-    <Content Include="Content\DataTables\media\images\sort_desc_disabled.png" />
+    <Content Include="Content\DataTables\media\images1\sort_asc.png" />
+    <Content Include="Content\DataTables\media\images1\sort_asc_disabled.png" />
+    <Content Include="Content\DataTables\media\images1\sort_both.png" />
+    <Content Include="Content\DataTables\media\images1\sort_desc.png" />
+    <Content Include="Content\DataTables\media\images1\sort_desc_disabled.png" />
+    <Content Include="Content\DateTime\daterangepicker.css" />
+    <Content Include="Content\DateTime\daterangepicker.min.css" />
     <Content Include="Content\font-awesome\css\font-awesome.css" />
     <Content Include="Content\font-awesome\css\font-awesome.min.css" />
     <Content Include="Content\font-awesome\fonts\fontawesome-webfont.svg" />
@@ -456,6 +460,7 @@
     <Content Include="Content\view\idsmors\electronic-cards.css" />
     <Content Include="Content\view\error.css" />
     <Content Include="Content\view\idsmors\park_wagons.css" />
+    <Content Include="Content\view\idsrwt\arrival.css" />
     <Content Include="Content\view\shared\filter-menu.css" />
     <Content Include="Content\view\idsmors\home.css" />
     <Content Include="Content\view\shared\home-menu.css" />
@@ -511,6 +516,7 @@
     <Content Include="Images\portfolio\thumbnails\6.jpg" />
     <Content Include="Scripts\api\ids_directory.js" />
     <Content Include="Scripts\api\ids_mors.js" />
+    <Content Include="Scripts\api\metrans.js" />
     <Content Include="Scripts\api\shared.js" />
     <Content Include="Scripts\api\uz_directory.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
@@ -749,6 +755,8 @@
     <Content Include="Content\bootstrap-reboot.css.map" />
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
+    <Content Include="Scripts\DateTime\jquery.daterangepicker.js" />
+    <Content Include="Scripts\DateTime\jquery.daterangepicker.min.js" />
     <Content Include="Scripts\esm\popper-utils.js" />
     <Content Include="Scripts\esm\popper-utils.min.js" />
     <Content Include="Scripts\esm\popper.js" />
@@ -765,6 +773,7 @@
     <Content Include="Areas\IDSRWT\Views\Home\Index.cshtml" />
     <Content Include="Areas\IDSRWT\Views\Home\Arrival.cshtml" />
     <Content Include="Areas\IDSRWT\Views\Shared\_IDSRWT.cshtml" />
+    <Content Include="Content\DateTime\daterangepicker.scss" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -861,6 +870,7 @@
     <Content Include="Scripts\umd\popper.min.js" />
     <Content Include="Scripts\view\idsmors\electronic_cards.js" />
     <Content Include="Scripts\view\idsmors\park_wagons.js" />
+    <Content Include="Scripts\view\idsrwt\arrival.js" />
     <Content Include="Scripts\view\shared\common.js" />
     <Content Include="Scripts\view\shared\_ids.js" />
     <Content Include="Web.config" />
@@ -909,6 +919,10 @@
     <ProjectReference Include="..\EFIDS\EFIDS.csproj">
       <Project>{07a94bbb-16a5-4817-87ea-bb7baea844a7}</Project>
       <Name>EFIDS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EFMT\EFMT.csproj">
+      <Project>{0ef55f70-8933-4553-a6d9-407d54b61b49}</Project>
+      <Name>EFMT</Name>
     </ProjectReference>
     <ProjectReference Include="..\EFUZ\EFUZ.csproj">
       <Project>{3ac80091-5add-43bd-8875-0f3ce3e86a25}</Project>

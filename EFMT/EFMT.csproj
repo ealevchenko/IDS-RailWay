@@ -70,6 +70,7 @@
     <Compile Include="Concrete\EFDbContext.cs" />
     <Compile Include="Entities\Consignee.cs" />
     <Compile Include="Entities\WagonsTracking.cs" />
+    <Compile Include="Helper\metrans_library.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

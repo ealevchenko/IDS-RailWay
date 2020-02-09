@@ -1,8 +1,98 @@
-﻿<div class="form-row">
+﻿@using WEB_UI.App_LocalResources;
+@{
+    ViewBag.Title = @IDSRWTResource.arrival_title;
+}
 
-    <h1>ПРИВЕТ</h1>
-    <p>hdhjdnjncsjcjdc nnnnnnnnnnn nnnnnnnnnn nnnnnnnnnnnnnnnn nnnnnnnnnnnnnnnn nnnnnnnnnnnnnnnnnn nnnnnnnnnnnnnnnnnn nnnnnnnns
-        hdhjdnjncsjcjdc nnnnnnnnnnn nnnnnnnnnn nnnnnnnnnnnnnnnn nnnnnnnnnnnnnnnn nnnnnnnnnnnnnnnnnn nnnnnnnnnnnnnnnnnn nnnnnnnns
-        hdhjdnjncsjcjdc nnnnnnnnnnn nnnnnnnnnn nnnnnnnnnnnnnnnn nnnnnnnnnnnnnnnn nnnnnnnnnnnnnnnnnn nnnnnnnnnnnnnnnnnn nnnnnnnns
-    </p>
+@section styles {
+    @Styles.Render("~/DataTables/css")
+    @Styles.Render("~/DateTime/css")
+    <link rel="stylesheet" type="text/css" href="~/Content/view/idsrwt/arrival.css">
+
+
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/Moment")
+    @Scripts.Render("~/bundles/DataTables")
+    @Scripts.Render("~/bundles/DateTime")
+
+    <script src="~/Scripts/view/shared/common.js"></script> <!-- Общая библиотека методов программы -->
+    <script src="~/Scripts/api/shared.js"></script> <!-- Общая библиотека методов API -->
+    <script src="~/Scripts/api/uz_directory.js"></script> <!-- Class API УЗ Справочники -->
+    <script src="~/Scripts/api/ids_directory.js"></script> <!-- Class API ИДС Справочники -->
+    <script src="~/Scripts/api/metrans.js"></script> <!-- Class API МЕТРАНС -->
+
+    <script src="~/Scripts/view/idsrwt/arrival.js"></script> <!--  -->
+}
+<input id="username" type="hidden" value="@User.Identity.Name" />
+<div class="row">
+    <div class="container-fluid">
+        <form>
+            <div class="form-row bg-light">
+                <div class="offset-xl-2 col-xl-1 mb-3 mt-3 text-xl-right">
+                    <label class="col-form-label" for="select-station">Станция прибытия:</label>
+                </div>
+                <div class="col-xl-2 mb-3 mt-3">
+                    <select class="form-control" id="select-station" name="select-station"></select>
+                </div>
+                <div class="col-xl-1 mb-3 mt-3 text-xl-right">
+                    <label class="col-form-label" for="select-date">Период прибытия:</label>
+                </div>
+                <div class="col-xl-3 mb-3 mt-3 text-xl-left">
+                    <span id="select-date">
+                        <input type="datetime" class="form-control-sm" id="date-start" name="date-start">
+                        <input type="datetime" class="form-control-sm" id="date-stop" name="date-stop">
+                    </span>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-2 mb-3 border-right">
+        @*<fieldset class="form-group">
+            <legend class="mb-3"> Составы: </legend>*@
+        <div class="list-group" id="list-sostav">
+        </div>
+        @*</fieldset>*@
+    </div>
+    <div class="col-xl-10 mb-3 pl-3 pr-3">
+        @*<h1><span class="badge badge-secondary">Операции(вагоны)</span></h1>*@
+        @*<fieldset class="form-group">
+            <legend class="mb-1"></legend>*@
+        <div class="row border-bottom">
+            <nav class="nav nav-pills nav-justified" id="list-operation">
+            </nav>
+        </div>
+        <div class="row">
+            <div class="card mb-3" style="width:100%">
+                <div class="card-header">
+                    <table class="table table-bordered table-sm">
+                        <tbody>
+                            <tr>
+                                <th class="bg-light text-dark" style="width:10%">Номер состава:</th>
+                                <td class="bg-white text-dark" style="width:20%" id="composition_index"></td>
+                                <th class="bg-light text-dark" style="width:10%">Код и станция отправления:</th>
+                                <td class="bg-white text-dark" style="width:20%" id="departure_station"></td>
+                                <th class="bg-light text-dark" style="width:10%">Код и станция прибытия:</th>
+                                <td class="bg-white text-dark" style="width:20%" id="arrival_station"></td>
+                            </tr>
+                            <tr>
+                                <th class="bg-light text-dark">Дата операции:</th>
+                                <td class="bg-white text-dark" id="date_operation"></td>
+                                <th class="bg-light text-dark">№ поезда:</th>
+                                <td class="bg-white text-dark" id="train"></td>
+                                <th class="bg-light text-dark">Кол. вагонов (кол. АМКР):</th>
+                                <td class="bg-white text-dark" id="count_wagon"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-body" style="display:none">
+                    <table class="table table-sm" id="table-wagons" style="width:100%"></table>
+                </div>
+            </div>
+        </div>
+        @*</fieldset>*@
+    </div>
 </div>
