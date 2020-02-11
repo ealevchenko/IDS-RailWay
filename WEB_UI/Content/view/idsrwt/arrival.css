@@ -16,4 +16,11 @@ table.dataTable tbody tr:not(.selected).consignee-auxiliary.odd, table.dataTable
     background-color: #dbc8af;
 }*/
 
+p strong {
+    font-weight:bold;
+}
+
+p em {
+    font-style:italic;
+}
 

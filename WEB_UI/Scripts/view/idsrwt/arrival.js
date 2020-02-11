@@ -60,10 +60,11 @@
                     "searching": true,
                     "ordering": true,
                     "info": false,
-                    select: {
-                        style: "single"
-                        /*toggleable: false*/
-                    },
+                    "select": false,
+                    //select: {
+                    //    style: "single"
+                    //    /*toggleable: false*/
+                    //},
                     "autoWidth": true,
                     //"filter": true,
                     //"scrollY": "600px",
@@ -78,7 +79,7 @@
                             if (data.auxiliary)
                             { $(row).addClass('consignee-auxiliary'); }
 
-                            
+
                         }
                     },
                     columns: [
@@ -230,7 +231,7 @@
         },
         //
         loadReference = function (callback) {
-            LockScreen(langView('mess_load', langs));
+            LockScreen(langView('mess_delay', langs));
             var count = 1;
             mt.load(['uz', 'list_consignee'], false, function () {
                 count -= 1;
@@ -244,7 +245,7 @@
         },
         // загрузить данные
         load = function (start, stop, callback) {
-            LockScreen(langView('mess_load', langs));
+            LockScreen(langView('mess_delay', langs));
             loadReference(function () {
                 if (data_start === null || data_stop === null || data_start !== start || data_stop !== stop) {
                     mt.getArrivalSostav(start, stop, function (data) {
@@ -347,23 +348,40 @@
             var default_id_wagon = null;
             list_operation_arrival = getObjects(list_arrival, 'id', id_sostav);
             if (list_operation_arrival !== null && list_operation_arrival.length > 0) {
+                view_sostav_info(list_operation_arrival[0]);
                 var cars = list_operation_arrival[0].ArrivalCars;
                 table_wagon.view(cars);
-                $('div.card-body').show();
+                $('div#card-sostav').show();
             } else {
-                $('div.card-body').hide();
+                $('div#card-sostav').hide();
                 LockScreenOff();
             }
         },
-        //
+        // Пока отключил
         view_select = function (row) {
             $('td#composition_index').text(row.composition_index);
             $('td#date_operation').text(row.date_operation);
             $('td#train').text(row.train);
         },
+        // Показать информацию о составе
+        view_sostav_info = function (sostav) {
+            $('em#composition_index').text(sostav.composition_index);
+            var departure_station = mt.uz_dir.getStations_Internal_Correct_Code(sostav.composition_index.substring(0, 4));
+            $('em#departure_station').text(departure_station && departure_station.length > 0 ? departure_station[0].station + ' (' + departure_station[0].code + ')' : sostav.composition_index.substring(0, 4));
+            var arrival_station = mt.uz_dir.getStations_Internal_Correct_Code(sostav.composition_index.substring(9, 13));
+            $('em#arrival_station').text(arrival_station && arrival_station.length > 0 ? arrival_station[0].station + ' (' + arrival_station[0].code + ')' : sostav.composition_index.substring(9, 13));
+
+            $('em#date_operation').text(sostav.date_time ? moment(sostav.date_time).format('DD.MM.YYYY HH:mm:ss') : '');
+            $('em#train').text(sostav && sostav.ArrivalCars && sostav.ArrivalCars.length>0 ? sostav.ArrivalCars[0].train : '');
+            $('em#count_wagon').text(sostav && sostav.ArrivalCars && sostav.ArrivalCars.length > 0 ? sostav.ArrivalCars.length : '');
+
+            $('em#file_name').text(sostav.file_name);
+            $('em#create').text(sostav.create ? moment(sostav.create).format('DD.MM.YYYY HH:mm:ss') : '');
+            $('em#close').text(sostav.close ? moment(sostav.close).format('DD.MM.YYYY HH:mm:ss') : '');
+        },
         // панель выбора исходных данных для запроса
         pn_sel = {
-            cur_dt: moment('02/02/2020').set({ 'hour': 0, 'minute': 0, 'second': 0, 'millisecond': 0 }),
+            cur_dt: moment().set({ 'hour': 0, 'minute': 0, 'second': 0, 'millisecond': 0 }),
             start_dt: null,
             stop_dt: null,
             code_ctation: null,
@@ -433,8 +451,8 @@
     table_wagon.init();
     // загрузим новый период
     load(pn_sel.start_dt, pn_sel.stop_dt, function () {
-
+        //LockScreenOff();
     });
 
-    LockScreenOff();
+    //LockScreenOff();
 });

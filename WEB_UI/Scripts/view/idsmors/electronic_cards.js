@@ -342,7 +342,7 @@
                     var n = 0;
                     var column = this;
                     var num = column[0][0];
-                    var name = column.header().firstChild.innerText;
+                    var name = column.header().firstChild.data;
                     var select = $('<select class="filter"><option value="">Выбрать...</option></select>').on('change', function () {
                         var val = $.fn.dataTable.util.escapeRegex(
                             $(this).val()

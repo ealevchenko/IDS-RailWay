@@ -65,30 +65,44 @@
             </nav>
         </div>
         <div class="row">
-            <div class="card mb-3" style="width:100%">
+            <div class="card mb-3" style="width:100%;display:none" id="card-sostav">
                 <div class="card-header">
-                    <table class="table table-bordered table-sm">
-                        <tbody>
-                            <tr>
-                                <th class="bg-light text-dark" style="width:10%">Номер состава:</th>
-                                <td class="bg-white text-dark" style="width:20%" id="composition_index"></td>
-                                <th class="bg-light text-dark" style="width:10%">Код и станция отправления:</th>
-                                <td class="bg-white text-dark" style="width:20%" id="departure_station"></td>
-                                <th class="bg-light text-dark" style="width:10%">Код и станция прибытия:</th>
-                                <td class="bg-white text-dark" style="width:20%" id="arrival_station"></td>
-                            </tr>
-                            <tr>
-                                <th class="bg-light text-dark">Дата операции:</th>
-                                <td class="bg-white text-dark" id="date_operation"></td>
-                                <th class="bg-light text-dark">№ поезда:</th>
-                                <td class="bg-white text-dark" id="train"></td>
-                                <th class="bg-light text-dark">Кол. вагонов (кол. АМКР):</th>
-                                <td class="bg-white text-dark" id="count_wagon"></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="row mb-2">
+                        <div class="col-xl-4 text-left">
+                            <p><strong>Номер состава: </strong><em id="composition_index"></em></p>
+                        </div>
+                        <div class="col-xl-4 text-left">
+                            <p><strong>Код и станция отправления: </strong><em id="departure_station"></em></p>
+                        </div>
+                        <div class="col-xl-4 text-left">
+                            <p><strong>Код и станция прибытия: </strong><em id="arrival_station"></em></p>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-xl-4 text-left">
+                            <p><strong>Дата операции: </strong><em id="date_operation"></em></p>
+                        </div>
+                        <div class="col-xl-4 text-left">
+                            <p><strong>№ поезда: </strong><em id="train"></em></p>
+                        </div>
+                        <div class="col-xl-4 text-left">
+                            <p><strong>Кол. вагонов (кол. АМКР):</strong><em id="count_wagon"></em></p>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-xl-4 text-left">
+                            <p><strong>xml-файл: </strong><em id="file_name"></em></p>
+                        </div>
+                        <div class="col-xl-4 text-left">
+                            <p><strong>Строка создана: </strong><em id="create"></em></p>
+                        </div>
+                        <div class="col-xl-4 text-left">
+                            <p><strong>Строка закрыта:</strong><em id="close"></em></p>
+                        </div>
+                    </div>
+
                 </div>
-                <div class="card-body" style="display:none">
+                <div class="card-body">
                     <table class="table table-sm" id="table-wagons" style="width:100%"></table>
                 </div>
             </div>

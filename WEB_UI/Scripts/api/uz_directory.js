@@ -213,6 +213,28 @@ UZ_DIRECTORY.prototype.getListStation = function (fvalue, ftext, lang) {
     }
     return list;
 };
+// Получить список станций которые начинаются с указанного кода
+UZ_DIRECTORY.prototype.getStations_Internal_Like_Code = function (code) {
+    if (this.list_stations && code) {
+        var res = this.list_stations.filter(function (i) {
+            var str = String(i.code).slice(0, String(code).length);
+            var num = str.indexOf(code, 0);
+            return num >= 0 ? true : false;
+        });
+        return res;
+    }
+    return null;
+};
+
+UZ_DIRECTORY.prototype.getStations_Internal_Correct_Code = function (code) {
+    if (this.list_stations && code) {
+        var res = this.list_stations.filter(function (i) {
+            return (i.code >= (code * 10)) && (i.code <= (code * 10) + 9) ? true : false;
+        });
+        return res;
+    }
+    return null;
+};
 //======= UZ_DIRECTORY.list_internal_railroad  (Справочник Стран и железных дорог) ======================================
 UZ_DIRECTORY.prototype.getInternalRailroad_Internal_Of_ID = function (id_internal_railroad) {
     if (this.list_internal_railroad) {

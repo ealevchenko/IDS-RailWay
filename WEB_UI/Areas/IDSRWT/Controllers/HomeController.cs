@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WEB_UI.Infrastructure;
 
 namespace WEB_UI.Areas.IDSRWT.Controllers
 {
@@ -14,6 +15,7 @@ namespace WEB_UI.Areas.IDSRWT.Controllers
             return View();
         }
 
+        [AccessOfDB(LogVisit = true)]
         public ActionResult Arrival()
         {
             return View();
