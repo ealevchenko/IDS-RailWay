@@ -13,7 +13,8 @@ namespace IDSLogs.Enum
         Test = 1,
 
         #region SHARED Общие библиотеки
-        WebApi = 100,
+        WebApiToken = 101,
+        WebApiURL = 102,
 
         #endregion
 

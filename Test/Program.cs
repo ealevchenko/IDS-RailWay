@@ -14,12 +14,12 @@ namespace Test
         static void Main(string[] args)
         {
 
-            string ar = "WEB_UI.Areas.IDSMORS.Controllers.HomeController";
+            //string ar = "WEB_UI.Areas.IDSMORS.Controllers.HomeController";
 
-            int n = ar.IndexOf("Areas.");
+            //int n = ar.IndexOf("Areas.");
 
-            int n1 = ar.IndexOf(".Controllers");
-            ar = ar.Substring(ar.IndexOf("Areas.") + 6, ar.IndexOf(".Controllers") - (ar.IndexOf("Areas.") + 6));
+            //int n1 = ar.IndexOf(".Controllers");
+            //ar = ar.Substring(ar.IndexOf("Areas.") + 6, ar.IndexOf(".Controllers") - (ar.IndexOf("Areas.") + 6));
 
             //try
             //{
@@ -94,6 +94,16 @@ namespace Test
             //tmt.MTThread_SFTPTransfer();
             //tmt.MTTransfer_WebApiClientMT();
             //tmt.MTThread_Start_TransferWT();
+            #endregion
+
+            #region Test_UZ тест логирования
+            Test_UZ tuz = new Test_UZ();
+            tuz.UZ_WebApiClientUZWagon();
+
+            //tlogs.FLOG_FileLogs();
+            //tlogs.ELOG_EventLogs();
+            //tlogs.DBLOG_DataBaseLogs();
+
             #endregion
 
             Console.WriteLine("Press any key to exit...");

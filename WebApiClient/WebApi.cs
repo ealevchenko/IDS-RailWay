@@ -14,16 +14,16 @@ using System.Threading.Tasks;
 
 namespace WebApiClient
 {
-    public class WebApi
+    public class WebApiToken
     {
-        private eventID eventID = eventID.WebApi;
+        private eventID eventID = eventID.WebApiToken;
 
         private string APP_PATH;
         private string userName;
         private string password;
         private static string token;
 
-        public WebApi(string url, string userName, string password)
+        public WebApiToken(string url, string userName, string password)
         {
             this.APP_PATH = url;
             this.userName = userName;
@@ -66,7 +66,7 @@ namespace WebApiClient
                     //var encoding = new ASCIIEncoding();
                     //var authHeader = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(encoding.GetBytes(string.Format("{0}:{1}", @"europe\ealevchenko1", "Yfcnz_04201601"))));
                     //client.DefaultRequestHeaders.Authorization = authHeader;
-                    
+
                     var response =
                         client.PostAsync(APP_PATH + "/Token", content).Result;
                     String.Format("Web API METRANS Connect [AbsoluteUri :{0}, user : {1} status:{2}", response.RequestMessage.RequestUri.AbsoluteUri, userName, response.StatusCode).WarningLog(eventID);
@@ -84,7 +84,7 @@ namespace WebApiClient
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("GetTokenDictionary(userName={0}, password={1})",userName, password), eventID);
+                e.ExceptionMethodLog(String.Format("GetTokenDictionary(userName={0}, password={1})", userName, password), eventID);
                 return null;
             }
         }
@@ -171,5 +171,64 @@ namespace WebApiClient
             return JSONStringToClass<T>(GetApiValues(api_comand));
         }
 
+    }
+
+    public class WebApiURL
+    {
+        private eventID eventID = eventID.WebApiURL;
+        private string url;
+
+        public WebApiURL(string url)
+        {
+            this.url = url;
+        }
+        /// <summary>
+        /// Отправить запрос и получить ответ
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="api_comand"></param>
+        /// <param name="metod"></param>
+        /// <param name="accept"></param>
+        /// <returns></returns>
+        public string Select(string url, string api_comand, string metod, string accept)
+        {
+            try
+            {
+                //String.Format("Выполняем запрос к WebAPI, url:{0}, api_comand {1}, metod {2}, accept {3}", url, api_comand, metod, accept).WriteInformation(eventID);
+                HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url + api_comand);
+                request.Method = metod;
+                request.PreAuthenticate = true;
+                request.Credentials = CredentialCache.DefaultCredentials;
+                request.Accept = accept;
+                try
+                {
+                    using (System.Net.WebResponse response = request.GetResponse())
+                    {
+                        try
+                        {
+                            using (System.IO.StreamReader rd = new System.IO.StreamReader(response.GetResponseStream()))
+                            {
+                                return rd.ReadToEnd();
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            e.ExceptionLog(String.Format("Ошибка создания StreamReader ответа, команда {0}, метод {1}, accept {2}", api_comand, metod, accept), this.eventID);
+                            return null;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.ExceptionLog(String.Format("Ошибка получения ответа WebResponse, команда {0}, метод {1}, accept {2}", api_comand, metod, accept), this.eventID);
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("Select(url={0},api_comand={1},metod={2},accept={3})", url, api_comand, metod, accept), this.eventID);
+                return null;
+            }
+        }
     }
 }

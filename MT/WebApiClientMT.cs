@@ -86,7 +86,7 @@ namespace MT
     {
         private eventID eventID = eventID.MT_WebApiClient;
         protected service servece_owner = service.Null;
-        public WebApi wapi;
+        public WebApiToken wapi;
         private string url;
         private string user;
         private string psw;
@@ -100,7 +100,7 @@ namespace MT
                 this.user = ConfigurationManager.AppSettings["WebApiMTUser"].ToString();
                 this.psw = ConfigurationManager.AppSettings["WebApiMTPSW"].ToString();
                 this.api = ConfigurationManager.AppSettings["WebApiMTApi"].ToString();
-                wapi = new WebApi(url, user, psw);
+                wapi = new WebApiToken(url, user, psw);
              }
             catch (Exception e)
             {
@@ -117,7 +117,7 @@ namespace MT
                 this.user = user;
                 this.psw = psw;
                 this.api = api;
-                wapi = new WebApi(url, user, psw);
+                wapi = new WebApiToken(url, user, psw);
              }
             catch (Exception e)
             {

@@ -66,6 +66,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestModule\Test_Logs.cs" />
     <Compile Include="TestModule\Test_Metrans.cs" />
+    <Compile Include="TestModule\Test_UZ.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -93,6 +94,10 @@
     <ProjectReference Include="..\MT\MT.csproj">
       <Project>{165bfdab-435f-42eb-8b6c-120f910a62e8}</Project>
       <Name>MT</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UZ\UZ.csproj">
+      <Project>{d7147560-b66a-41bb-bddd-4d24403d5e97}</Project>
+      <Name>UZ</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
