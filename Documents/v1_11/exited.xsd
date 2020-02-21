@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema 
+    targetNamespace="uz:rwc_document::exited:1.11"
+    attributeFormDefault="unqualified"
+    elementFormDefault="qualified"
+    xmlns:tns="uz:rwc:document:exited:1.11"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:common="uz:rwc:document:common:1.11"
+    xmlns:exited="uz:rwc_document::exited:1.11"
+>
+  <xs:element name='changes'>
+    <xs:complexType>
+      <xs:choice maxOccurs='unbounded'>
+        <xs:element name='delete' type="exited:deletions" />
+        <xs:element name='insert' type="exited:insertions" />
+        <xs:element name='update' type="exited:changes" />
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- deletions -->
+  <xs:complexType name='deletions'>
+    <xs:sequence>
+      <xs:any namespace='##any' minOccurs='0' maxOccurs='unbounded' processContents='skip' />
+    </xs:sequence>
+    <xs:anyAttribute namespace='##any' processContents='skip' />
+  </xs:complexType>
+  <!-- deletions end -->
+
+
+  <!-- changes -->
+  <xs:complexType name='changes'>
+    <xs:sequence>
+      <xs:any namespace='##any' minOccurs='0' maxOccurs='unbounded' processContents='skip' />
+    </xs:sequence>
+    <xs:anyAttribute namespace='##any' processContents='skip' />
+  </xs:complexType>
+  <!-- changes end -->
+
+  <!-- insertions -->
+  <xs:complexType name='insertions'>
+    <xs:sequence>
+      <xs:any namespace='##any' minOccurs='0' maxOccurs='unbounded' processContents='skip' />
+    </xs:sequence>
+    <xs:anyAttribute namespace='##any' processContents='skip' />
+  </xs:complexType>
+  <!-- insertions end -->
+
+
+  <xs:element name="OTPR" type="exited:consignment" >
+  </xs:element>
+  
+  <xs:complexType name="consignment">
+     <xs:sequence>
+        <xs:any minOccurs='0' namespace='##targetNamespace' maxOccurs='unbounded' processContents='skip' />
+     </xs:sequence>
+     <xs:anyAttribute  namespace='##local' processContents='skip' />
+  </xs:complexType>
+
+
+</xs:schema>

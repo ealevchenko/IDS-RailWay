@@ -98,7 +98,8 @@ namespace Test
 
             #region Test_UZ тест логирования
             Test_UZ tuz = new Test_UZ();
-            tuz.UZ_WebApiClientUZWagon();
+            //tuz.UZ_WebApiClientUZWagon();
+            tuz.UZ_XML1();
 
             //tlogs.FLOG_FileLogs();
             //tlogs.ELOG_EventLogs();

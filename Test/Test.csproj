@@ -99,6 +99,10 @@
       <Project>{d7147560-b66a-41bb-bddd-4d24403d5e97}</Project>
       <Name>UZ</Name>
     </ProjectReference>
+    <ProjectReference Include="..\UZ_Client\UZ_Client.csproj">
+      <Project>{f5dac563-41eb-45c4-9e40-24e9e2cfd28d}</Project>
+      <Name>UZ_Client</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

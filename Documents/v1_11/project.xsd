@@ -1,0 +1,661 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+    targetNamespace="uz:rwc:document:project:1.11"
+    attributeFormDefault="unqualified"
+    elementFormDefault="qualified"
+    xmlns:tns="uz:rwc:document:project:1.11"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:common="uz:rwc:document:common:1.11"
+    xmlns:project="uz:rwc:document:project:1.11"
+>
+  <xs:import namespace="uz:rwc:document:common:1.11"/>
+
+  <xs:element name='changes'>
+    <xs:complexType>
+      <xs:choice maxOccurs='unbounded'>
+        <xs:element name='delete' type="project:deletions" />
+        <xs:element name='insert' type="project:insertions" />
+        <xs:element name='update' type="project:changes" />
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- deletions begin -->
+  <xs:complexType name='deletions'>
+    <xs:complexContent >
+      <xs:extension base='common:changes'>
+        <xs:choice minOccurs='0' >
+          <xs:element name='OTPR'>
+            <xs:complexType >
+              <xs:complexContent >
+                <xs:extension base='project:base-consignment'>
+                  <xs:attribute name='cargo_recipient_position' type='common:C_120' use='optional'/>
+                  <xs:attribute name='cargo_recipient_date' type='common:DateTime' use='optional'/>
+                  <xs:attribute name='country_nazn' type='common:N_3' use='optional'/>
+                  <xs:attribute name='country_otpr' type='common:N_3' use='optional'/>
+                  <xs:attribute name='kod_doc' type='common:N_3' use='optional'/>
+                  <xs:attribute name='loader' type='common:LoaderKind' use='optional'/>
+                  <xs:attribute name='rab_esr' type='common:N_2' use='optional'/>
+                  <xs:attribute name='speed' type='common:SpeedKind' use='optional'/>
+                  <xs:attribute name='type_pay' type='common:PayKind' use='optional'/>
+                  <xs:attribute name='vid' type='common:ConsignmentCategory' use='optional'/>
+                </xs:extension>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name='CARRIER' type='common:carrier'/>
+          <xs:element name='CIM_INFO' type='common:cim-info'/>
+          <xs:element name='CLIENT'>
+            <xs:complexType >
+              <xs:complexContent >
+                <xs:extension base='project:base-client'>
+                  <xs:attribute name='carrier_kod' type='common:N_4' use='optional'/>
+                  <xs:attribute name='carrier_name' type='common:C_50' use='optional'/>
+                  <xs:attribute name='kod' type='common:ClientCode4' use='optional'/>
+                  <xs:attribute name='name' type='common:C_300' use='optional'/>
+                  <xs:attribute name='type' type='common:ClientKind' use='optional'/>
+                </xs:extension>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name='CLIENT_LOC'>
+            <xs:complexType >
+              <xs:complexContent >
+                <xs:extension base='common:client-loc'>
+                  <xs:attribute name='lang' type='common:CimLang' use='optional'/>
+                </xs:extension>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name='COM_COND' type='common:com-cond'/>
+          <xs:element name='CONT'>
+            <xs:complexType >
+              <xs:complexContent >
+                <xs:extension base='project:base-container'/>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name='COLLECT_K'>
+            <xs:complexType >
+              <xs:complexContent >
+                <xs:extension base='common:collect'>
+                  <xs:attribute name='kod_etsng' type='common:EtsngCode' use='optional'/>
+                  <xs:attribute name='name_etsng' type='common:C_800' use='optional'/>
+                </xs:extension>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name='ZPU_K' type='common:zpu'/>
+          <xs:element name='JOINT'>
+            <xs:complexType >
+              <xs:complexContent >
+                <xs:extension base='common:base-joint'/>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name='JOINT_LOC'>
+            <xs:complexType >
+              <xs:complexContent >
+                <xs:extension base='common:joint-loc-for-changes' />
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name='OTPRDP'>
+            <xs:complexType >
+              <xs:complexContent >
+                <xs:extension base='common:base-dp'/>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name='PAC' type='common:pac'/>
+          <xs:element name='FRONTIER_MARK' type='common:frontier-mark'/>
+          <xs:element name='PASS_MARK' type='common:pass-mark'/>
+          <xs:element name='PEREADR_INFO' type='common:pereadr_info' />
+          <xs:element name='PL'>
+            <xs:complexType >
+              <xs:complexContent >
+                <xs:extension base='project:base-payer'/>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name='PL_LOC'>
+            <xs:complexType >
+              <xs:complexContent >
+                <xs:extension base='common:pl-loc'>
+                  <xs:attribute name='lang' type='common:CimLang' use='optional'/>
+                </xs:extension>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name='ROUTE' >
+            <xs:complexType >
+              <xs:complexContent >
+                <xs:extension base='common:base-route-for-changes' />
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name='ROUTE_LOC' type='common:route-loc-for-changes' />
+          <xs:element name='RW_STAT' type='common:rw-stat'/>
+
+          <xs:element name='COLLECT_V'>
+            <xs:complexType >
+              <xs:complexContent >
+                <xs:extension base='common:collect'>
+                  <xs:attribute name='kod_etsng' type='common:EtsngCode' use='optional'/>
+                  <xs:attribute name='name_etsng' type='common:C_800' use='optional'/>
+                </xs:extension>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name='TOOLS' type='common:tools'/>
+          <xs:element name='ZPU_V' type='common:zpu'/>
+          <xs:element name='SENDER_DOC' type='common:sender_doc-info' />
+          <xs:element name='SEND_STAT' type='common:send-stat'/>
+          <xs:element name='SHTEMPEL' type='common:shtempel-info'/>
+          <xs:element name='SPEC_COND' type='common:spec-cond'/>
+          <xs:element name='TEXT' type='common:text'/>
+          <xs:element name='VAGON'>
+            <xs:complexType >
+              <xs:complexContent >
+                <xs:extension base='project:base-wagon'/>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <!-- deletions end -->
+
+
+  <!-- changes begin -->
+  <xs:complexType name='changes'>
+    <xs:complexContent >
+      <xs:extension base='common:changes'>
+        <xs:choice >
+          <xs:element name='OTPR'>
+            <xs:complexType >
+              <xs:complexContent >
+                <xs:extension base='project:base-consignment'>
+                  <xs:attribute name='country_nazn' type='common:N_3' use='optional'/>
+                  <xs:attribute name='country_otpr' type='common:N_3' use='optional'/>
+                  <xs:attribute name='kod_doc' type='common:N_3' use='optional'/>
+                  <xs:attribute name='loader' type='common:LoaderKind' use='optional'/>
+                  <xs:attribute name='rab_esr' type='common:N_2' use='optional'/>
+                  <xs:attribute name='speed' type='common:SpeedKind' use='optional'/>
+                  <xs:attribute name='type_pay' type='common:PayKind' use='optional'/>
+                  <xs:attribute name='vid' type='common:ConsignmentCategory' use='optional'/>
+                </xs:extension>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name='CARRIER' type='common:carrier'/>
+          <xs:element name='CIM_INFO' type='common:cim-info'/>
+          <xs:element name='CLIENT'>
+            <xs:complexType >
+              <xs:complexContent >
+                <xs:extension base='project:base-client'>
+                  <xs:attribute name='kod' type='common:ClientCode4' use='optional'/>
+                  <xs:attribute name='name' type='common:C_300' use='optional'/>
+                  <xs:attribute name='type' type='common:ClientKind' use='optional'/>
+                </xs:extension>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name='CLIENT_LOC'>
+            <xs:complexType >
+              <xs:complexContent >
+                <xs:extension base='common:client-loc'>
+                  <xs:attribute name='lang' type='common:CimLang' use='optional'/>
+                </xs:extension>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name='COM_COND' type='common:com-cond'/>
+          <xs:element name='CONT'>
+            <xs:complexType >
+              <xs:complexContent >
+                <xs:extension base='project:base-container'/>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name='COLLECT_K'>
+            <xs:complexType >
+              <xs:complexContent >
+                <xs:extension base='common:collect'>
+                  <xs:attribute name='kod_etsng' type='common:EtsngCode' use='optional'/>
+                  <xs:attribute name='name_etsng' type='common:C_800' use='optional'/>
+                </xs:extension>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name='ZPU_K' type='common:zpu'/>
+          <xs:element name='JOINT'>
+            <xs:complexType >
+              <xs:complexContent >
+                <xs:extension base='common:base-joint'/>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name='JOINT_LOC'>
+            <xs:complexType >
+              <xs:complexContent >
+                <xs:extension base='common:joint-loc-for-changes' />
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name='OTPRDP'>
+            <xs:complexType >
+              <xs:complexContent >
+                <xs:extension base='common:base-dp'/>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name='PAC' type='common:pac'/>
+          <xs:element name='FRONTIER_MARK' type='common:frontier-mark'/>
+          <xs:element name='PASS_MARK' type='common:pass-mark'/>
+          <xs:element name='PEREADR_INFO' type='common:pereadr_info' />
+          <xs:element name='PL'>
+            <xs:complexType >
+              <xs:complexContent >
+                <xs:extension base='project:base-payer'/>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name='PL_LOC'>
+            <xs:complexType >
+              <xs:complexContent >
+                <xs:extension base='common:pl-loc'>
+                  <xs:attribute name='lang' type='common:CimLang' use='optional'/>
+                </xs:extension>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+
+          <xs:element name='ROUTE' >
+            <xs:complexType >
+              <xs:complexContent >
+                <xs:extension base='common:base-route-for-changes' />
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name='ROUTE_LOC' type='common:route-loc-for-changes' />
+          <xs:element name='RW_STAT' type='common:rw-stat'/>
+
+          <xs:element name='COLLECT_V'>
+            <xs:complexType >
+              <xs:complexContent >
+                <xs:extension base='common:collect'>
+                  <xs:attribute name='kod_etsng' type='common:EtsngCode' use='optional'/>
+                  <xs:attribute name='name_etsng' type='common:C_800' use='optional'/>
+                </xs:extension>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name='TOOLS' type='common:tools'/>
+          <xs:element name='ZPU_V' type='common:zpu'/>
+          <xs:element name='SENDER_DOC' type='common:sender_doc-info' />
+          <xs:element name='SEND_STAT' type='common:send-stat'/>
+          <xs:element name='SHTEMPEL' type='common:shtempel-info'/>
+          <xs:element name='SPEC_COND' type='common:spec-cond'/>
+          <xs:element name='TEXT' type='common:text'/>
+          <xs:element name='VAGON'>
+            <xs:complexType >
+              <xs:complexContent >
+                <xs:extension base='project:base-wagon'/>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name='insertions'>
+    <xs:complexContent >
+      <xs:extension base='common:changes'>
+        <xs:choice >
+          <xs:element name='CARRIER' type='common:carrier'/>
+          <xs:element name='CIM_INFO' type='common:cim-info'/>
+          <xs:element name='CLIENT' type='project:client'/>
+          <xs:element name='CLIENT_LOC' type='common:client-loc'/>
+          <xs:element name='COM_COND' type='common:com-cond'/>
+          <xs:element name='CONT' type='project:container'/>
+          <xs:element name='COLLECT_K' type='common:collect'/>
+          <xs:element name='ZPU_K' type='common:zpu'/>
+          <xs:element name='JOINT' type='project:joint'/>
+          <xs:element name='JOINT_LOC' type='common:joint-loc'/>
+          <xs:element name='OTPRDP' type='common:dp'/>
+          <xs:element name='OTPRDP_LOC' type='common:dp-loc' />
+          <xs:element name='PAC' type='common:pac'/>
+          <xs:element name='FRONTIER_MARK' type='common:frontier-mark'/>
+          <xs:element name='PASS_MARK' type='common:pass-mark'/>
+          <xs:element name='PEREADR_INFO' type='common:pereadr_info' />
+          <xs:element name='PL' type='project:payer'/>
+          <xs:element name='PL_LOC' type='common:pl-loc'/>
+          <xs:element name='ROUTE' type='project:route'/>
+          <xs:element name='ROUTE_LOC' type='common:route-loc'/>
+          <xs:element name='RW_STAT' type='common:rw-stat'/>
+          <xs:element name='COLLECT_V' type='common:collect'/>
+          <xs:element name='TOOLS' type='common:tools'/>
+          <xs:element name='ZPU_V' type='common:zpu'/>
+          <xs:element name='SENDER_DOC' type='common:sender_doc-info' />
+          <xs:element name='SEND_STAT' type='common:send-stat'/>
+          <xs:element name='SHTEMPEL' type='common:shtempel-info'/>
+          <xs:element name='SPEC_COND' type='common:spec-cond'/>
+          <xs:element name='TEXT' type='common:text'/>
+          <xs:element name='VAGON' type='project:wagon'/>
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <!-- changes end -->
+
+  <xs:element name="OTPR" type="project:consignment">
+  </xs:element>
+
+  <xs:complexType name="consignment">
+    <xs:complexContent>
+      <xs:extension base="project:base-consignment">
+        <xs:sequence >
+          <xs:element name='CARRIER' type='common:carrier' minOccurs='0'  maxOccurs='unbounded' />
+          <xs:element name='CIM_INFO' type='common:cim-info' minOccurs='0' />
+          <xs:element name='CLIENT' type='project:client' minOccurs='2' maxOccurs='2'/>
+          <xs:element name='COM_COND' type='common:com-cond' minOccurs='0' maxOccurs='unbounded'/>
+          <xs:element name='CONT' type='project:container' minOccurs='0' maxOccurs='unbounded' />
+          <xs:element name='OTPRDP' type='common:dp' minOccurs='0' />
+          <xs:element name='PAC' type='common:pac' minOccurs='0' />
+          <xs:element name='FRONTIER_MARK' type='common:frontier-mark' minOccurs='0' maxOccurs='unbounded' />
+          <xs:element name='PASS_MARK' type='common:pass-mark' minOccurs='0' maxOccurs='unbounded' />
+          <xs:element name='PL' type='project:payer' minOccurs='0' maxOccurs='unbounded' />
+          <xs:element name='ROUTE' type='project:route' minOccurs='1' maxOccurs='unbounded' />
+          <xs:element name='RW_STAT' type='common:rw-stat' minOccurs='0' />
+          <xs:element name='SENDER_DOC' type='common:sender_doc-info' minOccurs='0' maxOccurs='unbounded' />
+          <xs:element name='SEND_STAT' type='common:send-stat' minOccurs='0' maxOccurs='unbounded'/>
+          <xs:element name='SHTEMPEL' type='common:shtempel-info' minOccurs='0' maxOccurs='unbounded' />
+          <xs:element name='SPEC_COND' type='common:spec-cond' minOccurs='0' maxOccurs='unbounded'/>
+          <xs:element name='TEXT' type='common:text' minOccurs='0' />
+          <xs:element name='VAGON' type='project:wagon' minOccurs='0' maxOccurs='120' />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name='base-consignment'>
+    <xs:attributeGroup ref='project:consignment-attributes' />
+  </xs:complexType>
+
+  <xs:attributeGroup name='consignment-attributes'>
+    <xs:attribute name='kod_doc' type='common:N_3' use='required' >
+      <xs:annotation>
+        <xs:documentation>Код документу </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='doc_lang' type='common:CimLang' use='optional' >
+      <xs:annotation>
+        <xs:documentation>Друга мова перевізного документа (для ЦІМ та ЦІМ/СМГС)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='f1' type='common:C_30' use='optional' >
+      <xs:annotation>
+        <xs:documentation>Номер замовлення на погодження перевезення</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='speed' type='common:SpeedKind' use='required'>
+      <xs:annotation>
+        <xs:documentation>Код швидкості</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='srok_end' type='common:Date' >
+      <xs:annotation>
+        <xs:documentation>Термін доставки вантажу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nom_plan' type='common:N_10' >
+      <xs:annotation>
+        <xs:documentation>Номер плану навантаження</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='date_plan' type='common:Date' >
+      <xs:annotation>
+        <xs:documentation>Дата планового навантаження</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='vid' type='common:ConsignmentCategory' use='required' >
+      <xs:annotation>
+        <xs:documentation>Категорія відправки </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nom_marsh_grot' type='common:N_6' >
+      <xs:annotation>
+        <xs:documentation>Номер маршруту відправлення</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='vid_marsh' type='common:N_6' >
+      <xs:annotation>
+        <xs:documentation>Вид маршруту відправника</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='country_otpr' type='common:N_3' use='required'>
+      <xs:annotation>
+        <xs:documentation>Код країни відправлення </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='type_pay' type='common:PayKind'>
+      <xs:annotation>
+        <xs:documentation>Вид розрахунку</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nom_doc' type='common:N_8' >
+      <xs:annotation>
+        <xs:documentation>Номер документу </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='ser_doc' type='common:C_4' >
+      <xs:annotation>
+        <xs:documentation>Серія документу </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute name='nоm_park' type='common:N_2' >
+      <xs:annotation>
+        <xs:documentation>Номер парку </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='pr_vohr' type='common:VOhrKind'>
+      <xs:annotation>
+        <xs:documentation>Охорона вантажу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='measure_equip_num' type='common:C_50'>
+      <xs:annotation>
+        <xs:documentation>Заводський номер засобу вагоно-вимірювальної техніки</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='metod' type='common:N_2' >
+      <xs:annotation>
+        <xs:documentation>Код способу визначення маси (обов'язковий, якщо контейнер або вагон не порожній) </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='loader' type='common:LoaderKind'>
+      <xs:annotation>
+        <xs:documentation>Навантаження  засобами</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='value' type='common:N_13' >
+      <xs:annotation>
+        <xs:documentation>Об'явлена цінність вантажу </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='val_gr' type='common:N_3' >
+      <xs:annotation>
+        <xs:documentation>Код валюти цінності вантажу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='pr_locom' type='common:LocoModeKind' >
+      <xs:annotation>
+        <xs:documentation>Ознака  подачі одиночного локомотиву</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='use_recipient_warrant' type='common:Boolean' >
+      <xs:annotation>
+        <xs:documentation>Ознака розкредитування перевізного документа залізницею за довіреністю одержувача</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='use_sender_warrant' type='common:Boolean' >
+      <xs:annotation>
+        <xs:documentation>Ознака оформлення перевізного документа залізницею за довіреністю відправника</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='vid_perev' type='common:CarriageKind' >
+      <xs:annotation>
+        <xs:documentation>Вид перевезення </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='country_nazn' type='common:N_3' use='required'>
+      <xs:annotation>
+        <xs:documentation>Код країни призначення </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='esr_nakop' type='common:EsrCode' >
+      <xs:annotation>
+        <xs:documentation>Станція накопичення</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='freeze' type='common:CoolingKind' >
+      <xs:annotation>
+        <xs:documentation>Ознака попереднього охолодження швидкопсувних вантажів</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='pr_freeze' type='common:N_1' >
+      <xs:annotation>
+        <xs:documentation>Ознака охолодження </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute name='kod_marsh_grot' type='common:SenderRouteKind'>
+      <xs:annotation>
+        <xs:documentation>Код типу маршруту, з класифікатора типів маршрутів та поїздів</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='esr_rz_marsh_grot' type='common:EsrCode'>
+      <xs:annotation>
+        <xs:documentation>Код станції розпилення маршруту</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='priznak' type='common:NotWorking'>
+      <xs:annotation>
+        <xs:documentation>Ознака неробочого парку</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='rab_esr' type='common:N_2'>
+      <xs:annotation>
+        <xs:documentation>Вид роботи станції</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute name='vmd_nom_custom' type='common:N_9' >
+      <xs:annotation>
+        <xs:documentation>Код митниці у номері ЕЗН (единої залізничної накладної)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='vmd_nom_declar' type='common:N_6' >
+      <xs:annotation>
+        <xs:documentation>Номер митної декларації у номері ЕЗН (единої залізничної накладної)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='vmd_year_declar' type='common:N_4'>
+      <xs:annotation>
+        <xs:documentation>Рік у номері ЕЗН (единої залізничної накладної)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute name='vmd_date_declar' type='common:Date' >
+      <xs:annotation>
+        <xs:documentation>Дата оформлення митної декларації</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+  </xs:attributeGroup>
+
+  <xs:complexType name='base-payer'>
+    <xs:attributeGroup ref='common:payer-attributes' />
+  </xs:complexType>
+
+  <xs:complexType name='payer'>
+    <xs:complexContent>
+      <xs:extension base='project:base-payer'>
+        <xs:sequence >
+          <xs:element name='PL_LOC' type='common:pl-loc' minOccurs='0' maxOccurs='1' />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name='base-client'>
+    <xs:attributeGroup ref='common:client-info' />
+  </xs:complexType>
+
+  <xs:complexType name='client'>
+    <xs:complexContent>
+      <xs:extension base='project:base-client'>
+        <xs:sequence >
+          <xs:element name='CLIENT_LOC' type='common:client-loc' minOccurs='0' maxOccurs='1' />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name='joint'>
+    <xs:complexContent>
+      <xs:extension base='common:base-joint'>
+        <xs:sequence >
+          <xs:element name='JOINT_LOC' type='common:joint-loc' minOccurs='0' maxOccurs='1' />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name='route'>
+    <xs:complexContent>
+      <xs:extension base='common:base-route'>
+        <xs:sequence>
+          <xs:element name='JOINT' type='project:joint' minOccurs='0' maxOccurs='100' />
+          <xs:element name='PEREADR_INFO' type='common:pereadr_info' minOccurs='0' maxOccurs='1' />
+          <xs:element name='ROUTE_LOC' type='common:route-loc' minOccurs='0' maxOccurs='1' />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name='base-wagon'>
+    <xs:attributeGroup ref='common:wagon-attributes' />
+  </xs:complexType>
+
+  <xs:complexType name='wagon'>
+    <xs:complexContent>
+      <xs:extension base='project:base-wagon'>
+        <xs:sequence  >
+          <xs:element name='COLLECT_V' type='common:collect' minOccurs='0' maxOccurs='99' />
+          <xs:element name='TOOLS' type='common:tools'  minOccurs='0' maxOccurs='unbounded' />
+          <xs:element name='ZPU_V' type='common:zpu' minOccurs='0' maxOccurs='60'/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name='base-container'>
+    <xs:attributeGroup ref='common:container-attributes' />
+  </xs:complexType>
+
+  <xs:complexType name='container'>
+    <xs:complexContent>
+      <xs:extension base='project:base-container'>
+        <xs:sequence >
+          <xs:element name='COLLECT_K' type='common:collect' />
+          <xs:element name='ZPU_K' type='common:zpu' minOccurs='0' maxOccurs='60' />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+</xs:schema>

@@ -1,0 +1,3581 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+    targetNamespace="uz:rwc:document:common:1.11"
+    attributeFormDefault="unqualified"
+    elementFormDefault="qualified"
+    xmlns:tns="uz:rwc:document:common:1.11"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:common="uz:rwc:document:common:1.11"
+    >
+
+  <xs:complexType name='changes'>
+    <xs:attribute name='target' type='xs:string' />
+  </xs:complexType>
+
+  <xs:complexType name='pereadr_info' >
+    <xs:attribute name='date_nakaz' type='common:Date' >
+      <xs:annotation>
+        <xs:documentation>Дата надання наказу на переадресування вантажу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='date_pereadr' type='common:Date' >
+      <xs:annotation>
+        <xs:documentation>Дата здійснення операції переадресування за первинним перевізним документом</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='distance' type='common:N_5' >
+      <xs:annotation>
+        <xs:documentation>Відстань від станції переадресування до станції призначення (у км)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nakaz' type='common:C_100' >
+      <xs:annotation>
+        <xs:documentation>Номер наказу на переадресування вантажу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nom_perv_doc' type='common:N_8' >
+      <xs:annotation>
+        <xs:documentation>Номер первинного перевізного документа</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='ser_perv_doc' type='common:C_4' >
+      <xs:annotation>
+        <xs:documentation>Серія первинного перевізного документа</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='type_pay_old' type='common:PayKind' >
+      <xs:annotation>
+        <xs:documentation>Вид розрахунку у перевізному документі до виконання переадресування</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:attributeGroup name='route-attributes' >
+    <xs:attribute name='stn_from' type='common:EsrCode' use='required' >
+      <xs:annotation>
+        <xs:documentation>Код станції відправлення</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='name_from' type='common:C_50' use='required' >
+      <xs:annotation>
+        <xs:documentation>Назва станції відправлення</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='rw_from' type='common:N_2' use='required' >
+      <xs:annotation>
+        <xs:documentation>код залізниці відправлення</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='stn_to' type='common:EsrCode' use='required' >
+      <xs:annotation>
+        <xs:documentation>Код станції призначення</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='name_to' type='common:C_50' use='required' >
+      <xs:annotation>
+        <xs:documentation>Назва станції призначення </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='rw_to' type='common:N_2' use='required'>
+      <xs:annotation>
+        <xs:documentation>Код залізниці призначення</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='zd_otpr' type='common:N_4' use='optional'>
+      <xs:annotation>
+        <xs:documentation>Код залізниці відправлення</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='zd_nazn' type='common:N_4' use='optional'>
+      <xs:annotation>
+        <xs:documentation>Код залізниці призначення</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute name='index' type='common:N_2' use='required' >
+      <xs:annotation>
+        <xs:documentation>Порядковий номер маршруту прямування (нумерація ведеться з 0). Нові маршрути прямування додаються при переадресуваннях або при досиланнях вантажу.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+
+  <xs:complexType name='base-route'>
+    <xs:attributeGroup ref='common:route-attributes' />
+  </xs:complexType>
+
+  <xs:complexType name='base-route-for-changes'>
+    <xs:attribute name='stn_from' type='common:EsrCode' use='optional' />
+    <xs:attribute name='name_from' type='common:C_50' use='optional' />
+    <xs:attribute name='rw_from' type='common:N_2' use='optional' />
+    <xs:attribute name='stn_to' type='common:EsrCode' use='optional' />
+    <xs:attribute name='name_to' type='common:C_50' use='optional' />
+    <xs:attribute name='rw_to' type='common:N_2' use='optional' />
+    <xs:attribute name='zd_otpr' type='common:N_4' use='optional' />
+    <xs:attribute name='zd_nazn' type='common:N_4' use='optional' />
+    <xs:attribute name='index' type='common:N_2' use='optional' />
+  </xs:complexType>
+
+  <xs:complexType name='route'>
+    <xs:complexContent>
+      <xs:extension base='common:base-route'>
+        <xs:sequence>
+          <xs:element name='JOINT' type='common:joint' minOccurs='0' maxOccurs='100' />
+          <xs:element name='PEREADR_INFO' type='common:pereadr_info' minOccurs='0' maxOccurs='1' />
+          <xs:element name='ROUTE_LOC' type='common:route-loc' minOccurs='0' maxOccurs='1' />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name='route-loc'>
+    <xs:attribute name='lang' type='common:CimLang' use='required' >
+      <xs:annotation>
+        <xs:documentation>Двозначний код другої мови перевізного документа по стандарту ІSO 639.1 (для ЦІМ та ЦІМ/СМГС бланка)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='name_from' type='common:C_50' use='required' >
+      <xs:annotation>
+        <xs:documentation>Код залізниці відправлення</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='name_to' type='common:C_50' use='required' >
+      <xs:annotation>
+        <xs:documentation>Код залізниці призначення</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name='route-loc-for-changes'>
+    <xs:attribute name='lang' type='common:CimLang' use='optional' />
+    <xs:attribute name='name_from' type='common:C_50' use='optional' />
+    <xs:attribute name='name_to' type='common:C_50' use='optional' />
+  </xs:complexType>
+
+  <xs:complexType name='text'>
+    <xs:attribute name='carload_agent_name' type='common:C_120' >
+      <xs:annotation>
+        <xs:documentation>Представитель вагонной службы </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='marks' type='common:C_400' >
+      <xs:annotation>
+        <xs:documentation>Відмітки не обов'язкові для залізниці </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='without_client' type='common:N_1' >
+      <xs:annotation>
+        <xs:documentation>Признак без зазначення клієнта</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='delivery_receipt' type='common:C_300' >
+      <xs:annotation>
+        <xs:documentation>Расписка о получении</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='prescript' type='common:C_50' >
+      <xs:annotation>
+        <xs:documentation>Розпорядження №</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='prescript_date' type='common:DateTime' >
+      <xs:annotation>
+        <xs:documentation>Дата розпорядження</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='zayava' type='common:C_800' >
+      <xs:annotation>
+        <xs:documentation>Особливі відмітки відправника</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='name_gr' type='common:C_800' >
+      <xs:annotation>
+        <xs:documentation>Додаткові відомості про вантаж</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nom_dog' type='common:C_30' >
+      <xs:annotation>
+        <xs:documentation>Номер договору експорту/імпорту</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nom_dog_sender_rw' type='common:C_30' >
+      <xs:annotation>
+        <xs:documentation>Номер договору між відправником та залізницею</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='outside_payer_code' type='common:N_8' >
+      <xs:annotation>
+        <xs:documentation>Код платника за межами УЗ</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='branch' type='common:C_35' >
+      <xs:annotation>
+        <xs:documentation>Найменування власника під'їзної колії </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='calc_reason' type='common:C_100' >
+      <xs:annotation>
+        <xs:documentation>Підстави для розрахунку</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='sing' type='common:C_200' >
+      <xs:annotation>
+        <xs:documentation>Знаки  </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='marks_gr' type='common:C_200' >
+      <xs:annotation>
+        <xs:documentation>Марки</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nom_gr' type='common:C_200' >
+      <xs:annotation>
+        <xs:documentation>Номери</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='mount_para' type='common:C_30' >
+      <xs:annotation>
+        <xs:documentation>Параграфи ТУ , згідно яких закріплений вантаж</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='mount_chapter' type='common:C_30' >
+      <xs:annotation>
+        <xs:documentation>Розділи ТУ , згідно яких закріплений вантаж</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='carrier_from' type='common:N_4' >
+      <xs:annotation>
+        <xs:documentation>Компанія-перевізник при відправленні з країн ЦІМ</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='create_place' type='common:C_120' >
+      <xs:annotation>
+        <xs:documentation>Місце оформлення</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='create_place_de' type='common:C_120' >
+      <xs:annotation>
+        <xs:documentation>Місце оформлення на другій мові документа (німецька або англійська для ЦІМ та ЦІМ/СМГС бланка)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='date_permit' type='common:Date' >
+      <xs:annotation>
+        <xs:documentation>Дата надання дозволу/довіреності на право використання власного вагона</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='trans_plan' type='common:NC_10' >
+      <xs:annotation>
+        <xs:documentation>Номер транспортного плану</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nom_permit' type='common:C_10' >
+      <xs:annotation>
+        <xs:documentation>Номер дозволу/довіреності на право використання власного вагона</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='loader_position' type='common:C_50' >
+      <xs:annotation>
+        <xs:documentation>Посада особи, відповідальної за навантаження</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='loader_fio' type='common:C_50' >
+      <xs:annotation>
+        <xs:documentation>Прізвище та ім'я по батькові особи, відповідальної за навантаження</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='rwc_doc_name' type='common:C_200'>
+      <xs:annotation>
+        <xs:documentation>Логічне ім'я документа</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='stn_accum' type='common:EsrCode' use='optional'>
+      <xs:annotation>
+        <xs:documentation>Код станції накопичення</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='stn_name_accum' type='common:C_50' use='optional'>
+      <xs:annotation>
+        <xs:documentation>Найменування станції накопичення</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name='pac'>
+    <xs:attribute name='kol_pac' type='common:N_7' >
+      <xs:annotation>
+        <xs:documentation>Кількість  місць упаковки</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='weight_place_br' type='common:N_5' >
+      <xs:annotation>
+        <xs:documentation>Стандартна маса одного місця брутто (кг)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='weight_place_net' type='common:N_5' >
+      <xs:annotation>
+        <xs:documentation>Стандартна маса одного місця нетто (кг)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name='taks'>
+    <xs:attribute name='coeff_type' type='common:CoeffKind' >
+      <xs:annotation>
+        <xs:documentation>Вид коефіцієнта </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='coeff_value' type='common:N_6_4' >
+      <xs:annotation>
+        <xs:documentation>Значення коефіцієнта</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='coeff_mode' type='common:CoeffModeKind' >
+      <xs:annotation>
+        <xs:documentation>Ознака введення значення коефіцієнта</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='iskl_tar' type='common:N_4' >
+      <xs:annotation>
+        <xs:documentation>Винятковий  тариф</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='iskl_mode' type='common:ValueKind' >
+      <xs:annotation>
+        <xs:documentation>Ознака введення виняткового тарифу </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name='schema'>
+    <xs:attribute name='carry_sch' type='common:R_2_1' >
+      <xs:annotation>
+        <xs:documentation>Схема таксування по відправленню</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='pr_sch' type='common:ValueKind' >
+      <xs:annotation>
+        <xs:documentation>Ознака виставлення схеми таксування</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:attributeGroup name='joint-attributes'>
+    <xs:attribute name='cross_time' type='common:Date' >
+      <xs:annotation>
+        <xs:documentation>Дата та час перетину кордону</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='direction' type='common:JointDirection' >
+      <xs:annotation>
+        <xs:documentation>Напрямок при перетині кордону</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='admin' type='common:N_2' >
+      <xs:annotation>
+        <xs:documentation>Код адміністрації станції перетину кордону</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='port_name' type='common:C_150' >
+      <xs:annotation>
+        <xs:documentation>Найменування порту перехідного стикового пункту</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='stn' type='common:EsrCode' >
+      <xs:annotation>
+        <xs:documentation>Код станції перетину кордону</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='stn_name' type='common:C_50' >
+      <xs:annotation>
+        <xs:documentation>Найменування станції перетину кордону</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='zd_kod' type='common:N_4'>
+      <xs:annotation>
+        <xs:documentation>Код залізниці прикордонної станції</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+
+  <xs:complexType name='joint-loc'>
+    <xs:attribute name='lang' use='required' type='common:CimLang' >
+      <xs:annotation>
+        <xs:documentation>Двозначний код другої мови перевізного документа по стандарту ІSO 639.1 (для ЦІМ та ЦІМ/СМГС бланка)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='stn_name' type='common:C_100' >
+      <xs:annotation>
+        <xs:documentation>Найменування станції перетину кордону на другій мові перевізного документа (для ЦІМ та ЦІМ/СМГС бланка)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name='joint-loc-for-changes'>
+    <xs:attribute name='lang' type='common:CimLang'   use='optional' />
+    <xs:attribute name='stn_name' type='common:C_100' use='optional' />
+  </xs:complexType>
+
+  <xs:complexType name='base-joint'>
+    <xs:attributeGroup ref='common:joint-attributes' />
+  </xs:complexType>
+
+  <xs:complexType name='joint'>
+    <xs:complexContent>
+      <xs:extension base='common:base-joint'>
+        <xs:sequence >
+          <xs:element name='JOINT_LOC' type='common:joint-loc' minOccurs='0' maxOccurs='1' />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name='zpu'>
+    <xs:attribute name='nom_zpu' type='common:C_20' >
+      <xs:annotation>
+        <xs:documentation>Номер ЗПП</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='esr_zpu' type='common:EsrCode' >
+      <xs:annotation>
+        <xs:documentation>Код станції накладання пломби або ЗПП</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='sobst_zpu' type='common:SealOwnerKind' >
+      <xs:annotation>
+        <xs:documentation>Ознака  власності пломб або ЗПП</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='zpu' type='common:SealKind' >
+      <xs:annotation>
+        <xs:documentation>Код виду ЗПП </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='zd_kod' type='common:N_4' >
+      <xs:annotation>
+        <xs:documentation>Код залізниці накладання пломби</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:attributeGroup name='payer-attributes'>
+    <xs:attribute name='kod_adm' type='common:N_2' >
+      <xs:annotation>
+        <xs:documentation>Код адміністрації платника (тільки для транзитних платників)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='carrier_kod' type='common:N_4' >
+      <xs:annotation>
+        <xs:documentation>Код перевізника</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='carrier_name' type='common:C_50' >
+      <xs:annotation>
+        <xs:documentation>Скорочене найменування перевізника</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='currency' type='common:N_3' >
+      <xs:annotation>
+        <xs:documentation>Бажана валюта сплати транзитного платника</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='date_carrier_dog' type='common:Date' >
+      <xs:annotation>
+        <xs:documentation>Дата укладення договору між перевізником та платником за перевезення</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='kod_plat' type='common:C_20' >
+      <xs:annotation>
+        <xs:documentation>Код платника (для платника по відправленню/прибуттю — код з 7 цифр,  для транзитного платника по УЗ — 10 цифр, інші — до 20 символів)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='name_plat' type='common:C_300' >
+      <xs:annotation>
+        <xs:documentation>Найменування платника</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='num_carrier_dog' type='common:C_50' >
+      <xs:annotation>
+        <xs:documentation>Номер договору укладеного між перевізником та платником за перевезення</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='podkod_exp' type='common:N_7' >
+      <xs:annotation>
+        <xs:documentation>Підкод платника (експедитора) </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='sector_num' type='common:N_2' >
+      <xs:annotation>
+        <xs:documentation>Номер ділянки</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='type' type='common:PayerKind' >
+      <xs:annotation>
+        <xs:documentation>Тип платника</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+
+  <xs:complexType name='consignment-pay'>
+    <xs:complexContent>
+      <xs:extension base='common:pay'>
+        <xs:attribute name='ser_doc' type='common:C_4' >
+          <xs:annotation>
+            <xs:documentation>Серія документу </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name='nom_doc' type='common:N_8' >
+          <xs:annotation>
+            <xs:documentation>Номер ГУ-57</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:attributeGroup name='client-info'>
+    <xs:attribute name='carrier_kod' type='common:N_4' use='optional' >
+      <xs:annotation>
+        <xs:documentation>Код вантажовідправника/вантажоодержувача</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='carrier_name' type='common:C_50' use='optional' >
+      <xs:annotation>
+        <xs:documentation>Код вантажовідправника/вантажоодержувача</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='kod' type='common:ClientCode4' use='optional' >
+      <xs:annotation>
+        <xs:documentation>Код вантажовідправника/вантажоодержувача</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='type' use='required' type='common:ClientKind' >
+      <xs:annotation>
+        <xs:documentation>Тип (вантажовідправник/вантажоодержувач)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='name' type='common:C_300' use='optional' >
+      <xs:annotation>
+        <xs:documentation>Найменування вантажовідправника/вантажоодержувача (Обов'язкове поле для заповнення відправником)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='adress' type='common:C_300' >
+      <xs:annotation>
+        <xs:documentation>Адреса  вантажовідправника /вантажоодержувача (Обов'язкове поле для заповнення відправником)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='okpo' type='common:EdrpouCode' >
+      <xs:annotation>
+        <xs:documentation>ЄДРПОУ вантажовідправника (Обов'язкове поле для заповнення відправником)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='bank' type='common:C_100' >
+      <xs:annotation>
+        <xs:documentation>Найменування банку вантажовідправника (Обов'язкове поле для заповнення відправником)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='business_unit_num' type='common:C_3' >
+      <xs:annotation>
+        <xs:documentation>Номер філії</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='city' type='common:C_100' >
+      <xs:annotation>
+        <xs:documentation>Місто знаходження банку (Обов'язкове поле для заповнення відправником)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='mfo' type='common:Mfo' >
+      <xs:annotation>
+        <xs:documentation>МФО банку вантажовідпр. (Обов'язкове поле для заповнення відправником)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='account' type='common:BankAccount' >
+      <xs:annotation>
+        <xs:documentation>Номер розрахункового рахунку вантажовідправника (Обов'язкове поле для заповнення відправником)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='phone' type='common:C_25' >
+      <xs:annotation>
+        <xs:documentation>Номер телефону клієнта</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='fax' type='common:C_25' >
+      <xs:annotation>
+        <xs:documentation>Номер факсу клієнта</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='email' type='common:C_60' >
+      <xs:annotation>
+        <xs:documentation>e-maіl клієнта</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nds_pay_code' type='common:C_25' >
+      <xs:annotation>
+        <xs:documentation>Номер свідоцтва платника ПДВ клієнта</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='representative_pib' type='common:C_120' >
+      <xs:annotation>
+        <xs:documentation>Прізвище та им'я по батькові представника відправника, відповідального за внесення відомостей в перевізний документ</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+
+  <xs:attributeGroup name='wagon-attributes'>
+    <xs:attribute name='kol_conductor' type='common:N_2' >
+      <xs:annotation>
+        <xs:documentation>Кількість провідників</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='cleaning_span' type='common:N_5' use='optional' >
+      <xs:annotation>
+        <xs:documentation>Простой под очисткой (часов)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='excise_date' type='common:Date' use='optional' >
+      <xs:annotation>
+        <xs:documentation>Дата складання акцизної накладної</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='excise_edrpou' type='common:N_8' use='optional' >
+      <xs:annotation>
+        <xs:documentation>Код за ЄДРПОУ відокремленого підрозділу юридичної особи або код за внутрішньою кодифікацією, прийнятою юридичною особою (друга складова номеру акцизної накладної)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='excise_num' type='common:N_10' use='optional' >
+      <xs:annotation>
+        <xs:documentation>Порядковий номер акцизної накладної (перша складова номеру акцизної накладної)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='inspection_info' type='common:C_120' use='optional' >
+      <xs:annotation>
+        <xs:documentation>Огляд вагона</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='stn_owner' type='common:EsrCode' use='optional' >
+      <xs:annotation>
+        <xs:documentation>Код станції приписки вагона</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='stn_name_owner' type='common:C_50' use='optional' >
+      <xs:annotation>
+        <xs:documentation>Найменування станції приписки вагона</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='use' type='common:N_1' >
+      <xs:annotation>
+        <xs:documentation>Ознака використання вагону</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='pr_zam' type='common:N_1' >
+      <xs:annotation>
+        <xs:documentation>Ознака заміни вагону</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='negab_rs' type='common:N_4' >
+      <xs:annotation>
+        <xs:documentation>Індекс негабаритності рухомого складу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='negab_do' type='common:N_4' >
+      <xs:annotation>
+        <xs:documentation>Індекс негабаритності додаткового обладнання</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='negab_v' type='common:N_4' >
+      <xs:annotation>
+        <xs:documentation>Індекс негабаритності вантажу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nomer' type='common:C_12' >
+      <xs:annotation>
+        <xs:documentation>Номер вагону (Обов'язкове поле для всіх відправок, окрім контейнерних)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='gruzp' type='common:N_6_1'  >
+      <xs:annotation>
+        <xs:documentation>Вантажопід'ємність вагону (т)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='u_tara' type='common:N_6' >
+      <xs:annotation>
+        <xs:documentation>Вага уточненої тари вагону (кг)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='ves_tary_arc' type='common:N_6' >
+      <xs:annotation>
+        <xs:documentation>Вага тари вагону (кг)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='rod_vag' type='common:N_2' >
+      <xs:annotation>
+        <xs:documentation>Род вагону</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='kol_os' type='common:N_2' >
+      <xs:annotation>
+        <xs:documentation>Кількість вісей</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='pr_sobst' type='common:N_1' >
+      <xs:annotation>
+        <xs:documentation>Ознака власності вагону </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='kod_adm' type='common:N_2' >
+      <xs:annotation>
+        <xs:documentation>Код власника вагону </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nom_ref' type='common:N_6' >
+      <xs:annotation>
+        <xs:documentation>Номер реф. секції</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='ostat_davl' type='common:N_3_2' >
+      <xs:annotation>
+        <xs:documentation>Залишковий тиск у котлу (МПа)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='pour_off_date' type='common:Date' >
+      <xs:annotation>
+        <xs:documentation>Дата злиття цистерни</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='roller_weight' type='common:N_10' >
+      <xs:annotation>
+        <xs:documentation>Вага роллерів (кг)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='remove_weight' type='common:N_10' >
+      <xs:annotation>
+        <xs:documentation>Вага знімного устаткування (кг)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='etsng_old' type='common:EtsngCode' >
+      <xs:annotation>
+        <xs:documentation>Код вантажу  по ЄТСНВ, з- під якого був вивантажений вагон</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='gng_old' type='common:GngCode' >
+      <xs:annotation>
+        <xs:documentation>Код вантажу по ГНВ, з-під якого був вивантажений вагон</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='is_removed' type='common:RemovedWagon' >
+      <xs:annotation>
+        <xs:documentation>Ознака викреслення вагона з перевізного документа при відчепленні</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='usl_tip' type='common:C_4' >
+      <xs:annotation>
+        <xs:documentation>Тип цистерни</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='kod_firm_owner' type='common:C_6' >
+      <xs:annotation>
+        <xs:documentation>Код компанії - власниці вагона</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='name_firm_owner' type='common:C_255' >
+      <xs:annotation>
+        <xs:documentation>Найменування компанії - власниці вагона</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+     <xs:attribute name='name_firm_operator' type='common:C_255' >
+      <xs:annotation>
+        <xs:documentation>Найменування операторської компанії</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='name_firm_renter' type='common:C_255' >
+      <xs:annotation>
+        <xs:documentation>найменування орендаря</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+     <xs:attribute name='promoted_by' type='common:VAGONpromoted_by' >
+      <xs:annotation>
+        <xs:documentation>Ознака надання вагону для перевезення:0-перевізником; 1-відправником</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='sobst_name' type='common:N_3' />
+    <xs:attribute name='tank_state' type='common:N_3' >
+      <xs:annotation>
+        <xs:documentation>Стан цистерни після перевезення небезпечного вантажу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='zd_kod' type='common:N_4' >
+      <xs:annotation>
+        <xs:documentation>Код залізниці приписки вагона</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+
+  <xs:complexType name='tools'>
+    <xs:attribute name='ves_tools' type='common:N_6' >
+      <xs:annotation>
+        <xs:documentation>Вага пристроїв (кг)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='name' type='common:C_120' >
+      <xs:annotation>
+        <xs:documentation>Найменування пристрою</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='num' type='common:N_3' >
+      <xs:annotation>
+        <xs:documentation>Кількість пристроїв</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name='peregr'>
+    <xs:attribute name='esr_per' type='common:EsrCode' >
+      <xs:annotation>
+        <xs:documentation>Код станції перевантаження </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='kol_devices' type='common:N_5' >
+      <xs:annotation>
+        <xs:documentation>Кількість місць багатооборотних перевізних пристосувань</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='kol_pac' type='common:N_5' >
+      <xs:annotation>
+        <xs:documentation>Кількість місць після перевантаження для вагона</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='kol_packet' type='common:N_5' >
+      <xs:annotation>
+        <xs:documentation>Кількість пакетів</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nom_pereg' type='common:C_12' >
+      <xs:annotation>
+        <xs:documentation>Номер вагону, з якого був перевантажений вантаж</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='vesg' type='common:N_6' >
+      <xs:annotation>
+        <xs:documentation>Вага вантажу нетто (кг)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name='collect'>
+    <xs:attribute name='kod_etsng' type='common:EtsngCode' use='required' >
+      <xs:annotation>
+        <xs:documentation>Код вантажу по ЄТСНВ</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='name_etsng' type='common:C_800' use='required' >
+      <xs:annotation>
+        <xs:documentation>Найменування вантажу по ЄТСНВ</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='kod_gng' type='common:GngCode' >
+      <xs:annotation>
+        <xs:documentation>Код вантажу по ГНВ (Обов'язкове поле для міжнародних відправок)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='vesg' type='common:N_6' >
+      <xs:annotation>
+        <xs:documentation>Вага вантажу нетто (кг)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='pac' type='common:C_3' >
+      <xs:annotation>
+        <xs:documentation>Код роду упаковки</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='packing_group' type='common:C_3' >
+      <xs:annotation>
+        <xs:documentation>Група пакування небезпечного вантажу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='kol_pac' type='common:N_5' >
+      <xs:annotation>
+        <xs:documentation>Кількість  місць упаковки</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='kol_packet' type='common:N_5' >
+      <xs:annotation>
+        <xs:documentation>Кількість пакетів</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='danger' type='common:DangerCode' >
+      <xs:annotation>
+        <xs:documentation>Клас небезпечності вантажу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='danger_signs' type='common:C_30' >
+      <xs:annotation>
+        <xs:documentation>Знаки небезпеки</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='p_danger' type='common:DangerCode' >
+      <xs:annotation>
+        <xs:documentation>Підклас небезпечності вантажу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='danger_sng' type='common:N_3' >
+      <xs:annotation>
+        <xs:documentation>Код небезпечного вантажу для транзиту згідно з Дод. 4 ТП СНД</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='danger_sng_name' type='common:C_200' >
+      <xs:annotation>
+        <xs:documentation>Найменування небезпечного вантажу для транзиту згідно з Дод. 4 ТП СНД</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nom_oon' type='common:UNCode' >
+      <xs:annotation>
+        <xs:documentation>Номер ООН небезпечного вантажу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nom_card' type='common:DisasterCardNumber' >
+      <xs:annotation>
+        <xs:documentation>Номер аварійної  картки</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nom_polis' type='common:C_8' >
+      <xs:annotation>
+        <xs:documentation>Номер страхового полісу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='date_strah_dog' type='common:Date' >
+      <xs:annotation>
+        <xs:documentation>Дата початку дії страхового договору</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='strah_komp' type='common:N_2' >
+      <xs:annotation>
+        <xs:documentation>Умовний код страхової компанії</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute name='name_komp' type='common:C_70' >
+      <xs:annotation>
+        <xs:documentation>Найменування страхової компанії </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nhm_id' type='common:NhmCode' >
+      <xs:annotation>
+        <xs:documentation>NHM код вантажу  (Обов'язкове поле для ЦІМ та ЦІМ/СМГС)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nhm_name' type='common:C_800' >
+      <xs:annotation>
+        <xs:documentation>Найменування вантажу NHM на російській мові(Обов'язкове поле для ЦІМ та ЦІМ/СМГС)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nhm_name_de' type='common:C_800' >
+      <xs:annotation>
+        <xs:documentation>Найменування вантажу NHM на другій мові документа (Обов'язкове поле для ЦІМ та ЦІМ/СМГС)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute name='name_gng' type='common:C_800' >
+      <xs:annotation>
+        <xs:documentation>Найменування вантажу по ГНВ  (Обов'язкове поле для міжнародних відправок)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='danger_proper_name' type='common:C_550' >
+      <xs:annotation>
+        <xs:documentation>Належне найменування небезпечного вантажу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='danger_kod' type='common:C_4' >
+      <xs:annotation>
+        <xs:documentation>Код небезпеки вантажу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='danger_text' type='common:C_800' >
+      <xs:annotation>
+        <xs:documentation>Найменування небезпечного вантажу та інформація про небезпечний вантаж</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='kol_devices' type='common:N_5' >
+      <xs:annotation>
+        <xs:documentation>Кількість місць багатооборотних перевізних пристосувань</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='danger_ak_pr' type='common:COLLECT_ak_pr' >
+      <xs:annotation>
+        <xs:documentation>Ознака прикладеної аварійної картки: 0 – окрема аварійна картка не прикладена; 1 – прикладена окрема аварійна картка.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='pr_packet' type='common:COLLECTpr_packet' >
+      <xs:annotation>
+        <xs:documentation>Ознака перевезення вантажу в пакетах: 0 - перевезення вантажу без пакетів; 1 - перевезення вантажу в пакетах.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='density' type='common:N_1_6' >
+      <xs:annotation>
+        <xs:documentation>Густина(г/см³)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='tank_level' type='common:N_3' >
+      <xs:annotation>
+        <xs:documentation>Висота наливу (см)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='temp' type='common:C_6' >
+      <xs:annotation>
+        <xs:documentation>Температура(°С)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='ballast' type='common:N_3_1' >
+      <xs:annotation>
+        <xs:documentation>Вміст баласту (%)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='density20deg' type='common:N_7_6' >
+      <xs:annotation>
+        <xs:documentation>Густина за температури 20°С (г/см³)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='metod_gr' type='common:N_2' >
+      <xs:annotation>
+        <xs:documentation>Код способу визначення маси вантажу (для збірної відправки)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='waterlevel' type='common:N_4_1' >
+      <xs:annotation>
+        <xs:documentation>Рівень підтоварної води (см)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='mark_gr' type='common:C_200' >
+      <xs:annotation>
+        <xs:documentation>Марки вантажу (для збірної відправки)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nomer_gr' type='common:C_200' >
+      <xs:annotation>
+        <xs:documentation>Номери вантажу (для збірної відправки)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='negab_gr' type='common:N_4' >
+      <xs:annotation>
+        <xs:documentation>Індекс негабаритності вантажу (для збірної відправки)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='sing_gr' type='common:C_200' >
+      <xs:annotation>
+        <xs:documentation>Знаки вантажу (для збірної відправки)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='weight_place_br_gr' type='common:N_5' >
+      <xs:annotation>
+        <xs:documentation>Стандартна маса одного місця брутто (кг) (для збірної відправки)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='weight_place_net_gr' type='common:N_5' >
+      <xs:annotation>
+        <xs:documentation>Стандартна маса одного місця нетто (кг) (для збірної відправки)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='zvvt_num' type='common:C_50' >
+      <xs:annotation>
+        <xs:documentation>Заводський номер засобу вагоно-вимірювальної техніки (для збірної відправки)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:attributeGroup name='container-attributes'>
+    <xs:attribute name='excise_date' type='common:Date' use='optional' >
+      <xs:annotation>
+        <xs:documentation>Дата складання акцизної накладної</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='excise_edrpou' type='common:N_8' use='optional' >
+      <xs:annotation>
+        <xs:documentation>Код за ЄДРПОУ відокремленого підрозділу юридичної особи або код за внутрішньою кодифікацією, прийнятою юридичною особою (друга складова номеру акцизної накладної)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='excise_num' type='common:N_10' use='optional' >
+      <xs:annotation>
+        <xs:documentation>Порядковий номер акцизної накладної (перша складова номеру акцизної накладної)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nom_cont' type='common:C_11' >
+      <xs:annotation>
+        <xs:documentation>Номер контейнеру</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='gruzp' type='common:N_4' >
+      <xs:annotation>
+        <xs:documentation>Маса брутто за трафаретом (т)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='ves_tary_arc' type='common:N_6' >
+      <xs:annotation>
+        <xs:documentation>Маса тари контейнеру (кг)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='pr_sobst' type='common:N_1' >
+      <xs:annotation>
+        <xs:documentation>Ознака власності контейнеру</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='kod_adm' type='common:N_2' >
+      <xs:annotation>
+        <xs:documentation>Код власника контейнеру </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nom_vag' type='common:N_12' >
+      <xs:annotation>
+        <xs:documentation>Номер вагону, у якому перевозиться контейнер</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='tiporazmer' type='common:C_4' >
+      <xs:annotation>
+        <xs:documentation>Категорія контейнеру</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='kod_tiporazmer' type='common:C_4' >
+      <xs:annotation>
+        <xs:documentation>Типорозмір контейнеру</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='prizn' type='common:N_2' >
+      <xs:annotation>
+        <xs:documentation>Тип(ознака) контейнеру </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='cim_size_type' type='common:N_10' >
+      <xs:annotation>
+        <xs:documentation>Код типорозміру по UNІ</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='info_cont' type='common:C_70' >
+      <xs:annotation>
+        <xs:documentation>Інші відомості про контейнер</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+  </xs:attributeGroup>
+
+  <xs:complexType name='pay'>
+    <xs:attribute name='currency' type='common:N_3'>
+      <xs:annotation>
+        <xs:documentation>з-х значний код валюти платежу </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='date' type='common:Date'>
+      <xs:annotation>
+        <xs:documentation>Дата призначення платежу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='kod' type='common:PaymentCode' >
+      <xs:annotation>
+        <xs:documentation>Код платежу </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='podkod' type='common:PaymentCode' >
+      <xs:annotation>
+        <xs:documentation>Підкод платежу </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='pr_avt' type='common:PaymentCalcModeKind' >
+      <xs:annotation>
+        <xs:documentation>Ознака автоматичного нарахування платежу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='stn' type='common:EsrCode' >
+      <xs:annotation>
+        <xs:documentation>Cума платежу (коп.)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='summa' type='common:N_13' >
+      <xs:annotation>
+        <xs:documentation>Cума платежу (коп.)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name='frontier-mark'>
+    <xs:attribute name='carrier_kod' type='common:N_4' >
+      <xs:annotation>
+        <xs:documentation>Код перевізника</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='carrier_name' type='common:C_50' >
+      <xs:annotation>
+        <xs:documentation>Скорочене найменування перевізника</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='cross_date' type='common:Date' >
+      <xs:annotation>
+        <xs:documentation>Дата передачі вантажу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='direction' type='common:FRONTIER_MARKdirection' >
+      <xs:annotation>
+        <xs:documentation>Напрямок</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='esr' type='common:N_6' >
+      <xs:annotation>
+        <xs:documentation>Код станції передачі вантажу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='esr_name' type='common:C_50' >
+      <xs:annotation>
+        <xs:documentation>Найменування станції передачі вантажу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='zd_kod' type='common:N_4' >
+      <xs:annotation>
+        <xs:documentation>Код залізниці</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name='pass-mark'>
+    <xs:attribute name='carrier_kod' type='common:N_4' >
+      <xs:annotation>
+        <xs:documentation>Код перевізника</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='carrier_name' type='common:C_50' >
+      <xs:annotation>
+        <xs:documentation>Скорочене найменування перевізника</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='esr' type='common:N_6' >
+      <xs:annotation>
+        <xs:documentation>Код станції передачі вантажу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='esr_name' type='common:C_50' >
+      <xs:annotation>
+        <xs:documentation>Найменування станції передачі вантажу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='pass_date' type='common:Date' >
+      <xs:annotation>
+        <xs:documentation>Дата передачі вантажу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='zd_kod' type='common:N_4' >
+      <xs:annotation>
+        <xs:documentation>Код залізниці</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name='carrier'>
+    <xs:attribute name='address' type='common:C_200'>
+      <xs:annotation>
+        <xs:documentation>Поштова адреса перевізника</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='kod' type='common:N_4' use='required' >
+      <xs:annotation>
+        <xs:documentation>Код перевізника на ділянці маршруту</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='name' type='common:C_50' use='required' >
+      <xs:annotation>
+        <xs:documentation>Скорочене найменування перевізника на ділянці маршруту</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='sector_num' type='common:N_2' >
+      <xs:annotation>
+        <xs:documentation>Номер ділянки</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='esr_in' type='common:N_6'>
+      <xs:annotation>
+        <xs:documentation>Код вхідної станції ділянки</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='esr_name_in' type='common:C_50'>
+      <xs:annotation>
+        <xs:documentation>Найменування вхідної станції ділянки</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='esr_out' type='common:N_6'  >
+      <xs:annotation>
+        <xs:documentation>Код вихідної станції ділянки</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='esr_name_out' type='common:C_50' >
+      <xs:annotation>
+        <xs:documentation>Найменування вихідної станції ділянки</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='status' type='common:N_1'>
+      <xs:annotation>
+        <xs:documentation>Статус перевізника: 0 або Null –договірний; 1 –наступний; 2 –фактичний</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='zd_kod_in' type='common:N_4'  >
+      <xs:annotation>
+        <xs:documentation>Код залізниці вхідної станції ділянки</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='zd_kod_out' type='common:N_4'  >
+      <xs:annotation>
+        <xs:documentation>Код залізниці вихідної станції ділянки</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name='cim-info'>
+    <xs:attribute name='arc_code' type='common:C_21' >
+      <xs:annotation>
+        <xs:documentation>Податковий адміністративний код ARC</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='cuv' type='common:N_1' >
+      <xs:annotation>
+        <xs:documentation>Позначка ЦУВ</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='export_mark' type='common:N_1' >
+      <xs:annotation>
+        <xs:documentation>Позначка EXPORT: 0 або Null –ознака відсутня, 1–'EXPORT'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='place_from' type='common:C_15' >
+      <xs:annotation>
+        <xs:documentation>Код місця передачі (код станції приймання вантажу)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='place_name_from' type='common:C_120' >
+      <xs:annotation>
+        <xs:documentation>Місце передачі (назва станції приймання вантажу)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='place_name_from_de' type='common:C_120' >
+      <xs:annotation>
+        <xs:documentation>Місце передачі (назва станції приймання вантажу) на другій мові документа (німецька або англійська для ЦІМ та ЦІМ/СМГС бланка)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='place_rw_from' type='common:N_4' >
+      <xs:annotation>
+        <xs:documentation>Залізниця місця передачі (код залізничної адміністрації станції приймання вантажу)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='place_rw_smgs_from' type='common:N_4' >
+      <xs:annotation>
+        <xs:documentation>Залізниця СМГС місця передачі</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='place_date_from' type='common:DateTime' >
+      <xs:annotation>
+        <xs:documentation>Дата передачі (дата і час приймання вантажу до перевезення)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='place_to' type='common:C_15' >
+      <xs:annotation>
+        <xs:documentation>Код місця доставки</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='place_name_to' type='common:C_120' >
+      <xs:annotation>
+        <xs:documentation>Місце доставки</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <!-- <xs:attribute name='place_name_to_de' type='common:C_120' > -->
+    <!--   <xs:annotation> -->
+    <!--     <xs:documentation>Місце доставки на другій мові документа</xs:documentation> -->
+    <!--   </xs:annotation> -->
+    <!-- </xs:attribute> -->
+    <xs:attribute name='place_transhipment_stn' type='common:C_6' >
+      <xs:annotation>
+        <xs:documentation>Місце перевідправлення (ЄМР або ЦІМ код станції)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='place_transhipment_rw' type='common:N_4' >
+      <xs:annotation>
+        <xs:documentation>Місце перевідправлення (код залізничної адміністрації)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='place_transhipment_name' type='common:C_100' >
+      <xs:annotation>
+        <xs:documentation>Назва станції місця перевідправлення</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='place_transhipment_name_de' type='common:C_100' >
+      <xs:annotation>
+        <xs:documentation>Назва станції місця перевідправлення на другій мові документа (німецька або англійська для ЦІМ та ЦІМ/СМГС бланка)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='sender_note' type='common:C_250' >
+      <xs:annotation>
+        <xs:documentation>Відмітки для одержувача</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <!-- <xs:attribute name='sender_note_de' type='common:C_250' > -->
+    <!--   <xs:annotation> -->
+    <!--     <xs:documentation>Відмітки для одержувача на другій мові документа</xs:documentation> -->
+    <!--   </xs:annotation> -->
+    <!-- </xs:attribute> -->
+    <xs:attribute name='extraordinarily' type='common:N_1' >
+      <xs:annotation>
+        <xs:documentation>Надзвичайне відправлення</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='interest_value' type='common:N_20_4' >
+      <xs:annotation>
+        <xs:documentation>Зацікавленість у постачанні</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='interest_currency' type='common:N_3' >
+      <xs:annotation>
+        <xs:documentation>Валюта зацікавленості в постачанні</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='payment' type='common:N_20_4' >
+      <xs:annotation>
+        <xs:documentation>Накладений платіж</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='payment_currency' type='common:N_3' >
+      <xs:annotation>
+        <xs:documentation>Валюта накладеного платежу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='dep_agent_code_1' type='common:C_8' >
+      <xs:annotation>
+        <xs:documentation>Код №1 перевізника при відправленні</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='dep_agent_code_2' type='common:C_8' >
+      <xs:annotation>
+        <xs:documentation>Код №2 перевізника при відправленні</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='dep_agent_code_3' type='common:C_8' >
+      <xs:annotation>
+        <xs:documentation>Код №3 перевізника при відправленні</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='dep_agent_code_4' type='common:C_8' >
+      <xs:annotation>
+        <xs:documentation>Код №4 перевізника при відправленні</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='arr_agent_code_1' type='common:C_8' >
+      <xs:annotation>
+        <xs:documentation>Код №1 перевізника при прибутті</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='arr_agent_code_2' type='common:C_8' >
+      <xs:annotation>
+        <xs:documentation>Код №2 перевізника при прибутті</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='arr_agent_code_3' type='common:C_8' >
+      <xs:annotation>
+        <xs:documentation>Код №3 перевізника при прибутті</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='arr_agent_code_4' type='common:C_8' >
+      <xs:annotation>
+        <xs:documentation>Код №4 перевізника при прибутті</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='route_info' type='common:C_250' >
+      <xs:annotation>
+        <xs:documentation>Маршрут проходження</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <!-- <xs:attribute name='route_info_de' type='common:C_250' > -->
+    <!--   <xs:annotation> -->
+    <!--     <xs:documentation>Маршрут проходження на другій мові документа</xs:documentation> -->
+    <!--   </xs:annotation> -->
+    <!-- </xs:attribute> -->
+    <xs:attribute name='custom_stn_code' type='common:C_8' >
+      <xs:annotation>
+        <xs:documentation>Код станції проходження митного контролю</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='custom_stn_name' type='common:C_120' >
+      <xs:annotation>
+        <xs:documentation>Найменування станції проходження митного контролю</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='custom_stn_name_de' type='common:C_120' >
+      <xs:annotation>
+        <xs:documentation>Найменування станції проходження митного контролю на другій мові документа (німецька або англійська для ЦІМ та ЦІМ/СМГС бланка)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='payment_bill_num' type='common:C_25' >
+      <xs:annotation>
+        <xs:documentation>Транспортна накладна для накладених платежів</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='payment_bill_date' type='common:Date' >
+      <xs:annotation>
+        <xs:documentation>Дата транспортної накладної для накладених платежів</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='others_agents' type='common:C_250' >
+      <xs:annotation>
+        <xs:documentation>Інші перевізники</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <!-- <xs:attribute name='others_agents_de' type='common:C_250' > -->
+    <!--   <xs:annotation> -->
+    <!--     <xs:documentation>Інші перевізники на другій мові документа</xs:documentation> -->
+    <!--   </xs:annotation> -->
+    <!-- </xs:attribute> -->
+    <xs:attribute name='primary_agent' type='common:C_250' >
+      <xs:annotation>
+        <xs:documentation>Договірний перевізник</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <!-- <xs:attribute name='primary_agent_de' type='common:C_250' > -->
+    <!--   <xs:annotation> -->
+    <!--     <xs:documentation>Договірний перевізник на другій мові документа</xs:documentation> -->
+    <!--   </xs:annotation> -->
+    <!-- </xs:attribute> -->
+    <!-- <xs:attribute name='extra' type='common:N_20_4'  > -->
+    <!--   <xs:annotation> -->
+    <!--     <xs:documentation>Доплати</xs:documentation> -->
+    <!--   </xs:annotation> -->
+    <!-- </xs:attribute> -->
+    <xs:attribute name='fr_fracht_sum' type='common:N_20_4' >
+      <xs:annotation>
+        <xs:documentation>Франко вартість перевезення "від"</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='fr_fracht_max' type='common:N_20_4' >
+      <xs:annotation>
+        <xs:documentation>Франко вартість перевезення "до"</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='incoterms_code' type='common:C_3' >
+      <xs:annotation>
+        <xs:documentation>Код послуги</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='incoterms_station' type='common:C_60' >
+      <xs:annotation>
+        <xs:documentation>Станція надання послуги</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='mrn_code' type='common:C_18' >
+      <xs:annotation>
+        <xs:documentation>Ідентифікаційний митний номер</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='mrn_condition' type='common:N_1' >
+      <xs:annotation>
+        <xs:documentation>Умови подання декларації: 1 –'E MRN',2 –'T MRN',3 –'TS MRN',4 –'EXS MRN',5 –'ENS MRN'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nonexpert_system' type='common:N_1' >
+      <xs:annotation>
+        <xs:documentation>Спрощена процедура для залізничних відправлень</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='responsible_person' type='common:C_10' >
+      <xs:annotation>
+        <xs:documentation>Код основної відповідальної особи</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='weight_name_de' type='common:C_100' >
+      <xs:annotation>
+        <xs:documentation>Вага вантажу прописом на другій мові бланка перевізного документа</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name='spec-cond'>
+
+    <xs:attribute name='code' type='common:N_4' >
+      <xs:annotation>
+        <xs:documentation>Код особливої умови</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='val' type='common:C_60' >
+      <xs:annotation>
+        <xs:documentation>Значення додаткового параметра</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='name_val' type='common:NC_25' >
+      <xs:annotation>
+        <xs:documentation>Найменування власника брухту чорних металів. Заповнюється при перевезенні металобрухту (code=26).</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='name_metal' type='common:NC_80' >
+      <xs:annotation>
+        <xs:documentation>Назва брухту чорних металів. Заповнюється при перевезенні металобрухту (code=26).</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name='send-stat'>
+    <xs:attribute name='code' type='common:C_4' >
+      <xs:annotation>
+        <xs:documentation>Код заяви відправника</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='param' type='common:C_120' >
+      <xs:annotation>
+        <xs:documentation>Додаткова інформація</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='param_de' type='common:C_120' >
+      <xs:annotation>
+        <xs:documentation>Додаткова інформація на другій мові документа (німецька або англійська для ЦІМ та ЦІМ/СМГС бланка)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name='com-cond'>
+    <xs:attribute name='code' type='common:C_4' >
+      <xs:annotation>
+        <xs:documentation>Код комерційної умови</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='param' type='common:C_120' >
+      <xs:annotation>
+        <xs:documentation>Додаткова інформація до комерційної умови</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='param_de' type='common:C_120' >
+      <xs:annotation>
+        <xs:documentation>Додаткова інформація до комерційної умови на другій мові документа (німецька або англійська для ЦІМ та ЦІМ/СМГС бланка)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name='rw-stat'>
+    <xs:attribute name='code' type='common:C_4' >
+      <xs:annotation>
+        <xs:documentation>Код заяви перевізника</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='param' type='common:C_120' >
+      <xs:annotation>
+        <xs:documentation>Додаткова інформація до заяви перевізника</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='param_de' type='common:C_120' >
+      <xs:annotation>
+        <xs:documentation>Додаткова інформація до заяви перевізника  на другій мові документа (німецька або англійська для ЦІМ та ЦІМ/СМГС бланка)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name='pl-loc'>
+    <xs:attribute name='lang' use='required' type='common:CimLang' >
+      <xs:annotation>
+        <xs:documentation>Двозначний код другої мови перевізного документа по стандарту ІSO 639.1 (для ЦІМ та ЦІМ/СМГС бланка)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='name' type='common:C_300' >
+      <xs:annotation>
+        <xs:documentation>Найменування платника на другій мові документа (для ЦІМ та ЦІМ/СМГС бланка)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='adress' type='common:C_300' >
+      <xs:annotation>
+        <xs:documentation>Адреса платника (для ЦІМ та ЦІМ/СМГС бланка)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name='client-loc'>
+    <xs:attribute name='lang' use='required' type='common:CimLang' >
+      <xs:annotation>
+        <xs:documentation>Двозначний код другої мови перевізного документа по стандарту ІSO 639.1 (для ЦІМ та ЦІМ/СМГС бланка)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='name' type='common:C_300' >
+      <xs:annotation>
+        <xs:documentation>Найменування клієнта на другій мові документа (для ЦІМ та ЦІМ/СМГС бланка)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='adress' type='common:C_300' >
+      <xs:annotation>
+        <xs:documentation>Адреса клієнта на другій мові документа (для ЦІМ та ЦІМ/СМГС бланка)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+
+  <xs:complexType name='readdr-info'>
+    <xs:attribute name='readr_type' type='common:ReaddrKind'>
+      <xs:annotation>
+        <xs:documentation>Ознака передресування</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='npp' type='common:N_1'>
+      <xs:annotation>
+        <xs:documentation>Порядковий номер переадресування</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nakaz' type='common:C_100'>
+      <xs:annotation>
+        <xs:documentation>Номер наказу на переадресування вантажу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='data_nakaz' type='common:Date'>
+      <xs:annotation>
+        <xs:documentation>Дата надання наказу на переадресування вантажу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='date_pa' type='common:Date'>
+      <xs:annotation>
+        <xs:documentation>(тільки для readr_type="1") дата здійснення операції переадресування</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='distance' type='common:N_5'>
+      <xs:annotation>
+        <xs:documentation>(тільки для readr_type="1") відстань від станції переадресування до нової станції призначення</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nom_doc' type='common:N_8'>
+      <xs:annotation>
+        <xs:documentation>(тільки для readr_type="3") номер первинного перевізного документа</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='ser_doc' type='common:C_4'>
+      <xs:annotation>
+        <xs:documentation>(тільки для readr_type="3") серія первинного перевізного документа</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name='station-info'>
+    <xs:attribute name='esr' type='common:EsrCode'>
+      <xs:annotation>
+        <xs:documentation>код станції</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='adm' type='common:N_2'>
+      <xs:annotation>
+        <xs:documentation>код залізничної адміністрації станції</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='name' type='common:C_50'>
+      <xs:annotation>
+        <xs:documentation>найменування станції</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name='new-recipient-info'>
+    <xs:attribute name='kod' type='common:PayerCode'>
+      <xs:annotation>
+        <xs:documentation>Код нового одержувача</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='address' type='common:C_300'>
+      <xs:annotation>
+        <xs:documentation>адреса нового одержувача</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='okpo' type='common:EdrpouCode'>
+      <xs:annotation>
+        <xs:documentation>ЄДРПОУ нового одержувача</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='name' type='common:C_300'>
+      <xs:annotation>
+        <xs:documentation>науменування нового одержувача</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:attributeGroup name='dp-attributes'>
+    <xs:attribute name='nom_osn_doc' type='common:N_8' >
+      <xs:annotation>
+        <xs:documentation>Номер основного документу </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='ser_osn_doc' type='common:C_4' >
+      <xs:annotation>
+        <xs:documentation>Серія основного документу </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='admin_otpr' type='common:N_2'>
+      <xs:annotation>
+        <xs:documentation>Адміністрація станції відправлення досилання</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='stn_otpr' type='common:EsrCode'>
+      <xs:annotation>
+        <xs:documentation>Код станції відправлення досилання</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='stn_name_otpr' type='common:C_50'>
+      <xs:annotation>
+        <xs:documentation>Найменування станції відправлення досилання</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='zd_otpr' type='common:N_4' use='optional'>
+      <xs:annotation>
+        <xs:documentation>Код залізниці відправлення</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='zd_nazn' type='common:N_4' use='optional'>
+      <xs:annotation>
+        <xs:documentation>Код залізниці призначення</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+
+  <xs:complexType name='dp-loc'>
+    <xs:attribute name='lang' use='required' type='common:CimLang' >
+      <xs:annotation>
+        <xs:documentation>Двозначний код другої мови перевізного документа по стандарту ІSO 639.1 (для ЦІМ та ЦІМ/СМГС бланка)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='stn_name_otpr' type='common:C_50' >
+      <xs:annotation>
+        <xs:documentation>Найменування станції відправлення досилання на другій мові перевізного документа (для ЦІМ та ЦІМ/СМГС бланка)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name='base-dp'>
+    <xs:attributeGroup ref='common:dp-attributes' />
+  </xs:complexType>
+
+  <xs:complexType name='dp'>
+    <xs:complexContent>
+      <xs:extension base='common:base-dp'>
+        <xs:sequence>
+          <xs:element name='JOINT' type='common:joint' minOccurs='0' maxOccurs='100' />
+          <xs:element name='OTPRDP_LOC' type='common:dp-loc' minOccurs='0' maxOccurs='1' />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name='shtempel-info'>
+    <xs:attribute name='column_num' type='common:C_50' >
+      <xs:annotation>
+        <xs:documentation>Код графи перевізного документа</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nom_sht' type='common:N_4' >
+      <xs:annotation>
+        <xs:documentation>Номер (код) штемпеля/відмітки, з класифікатора штемпелів та відміток</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='info_sht' type='common:C_400' >
+      <xs:annotation>
+        <xs:documentation>Код штемпеля/відмітки</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name='sender_doc-info'>
+    <xs:attribute name='id' type='common:N_25' >
+      <xs:annotation>
+        <xs:documentation>Ідентифікатор документа у базі УЗ</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='description' type='common:C_500' >
+      <xs:annotation>
+        <xs:documentation>Опис документа</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='doc_date' type='common:Date' >
+      <xs:annotation>
+        <xs:documentation>Дата документу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='doc_num' type='common:C_30' >
+      <xs:annotation>
+        <xs:documentation>Реєстраційний номер документу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='doc_type' type='common:C_3' >
+      <xs:annotation>
+        <xs:documentation>Код типу супровідного документа</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='doc_type_name' type='common:C_150' >
+      <xs:annotation>
+        <xs:documentation>Найменування типу супровідного документу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='kol' type='common:N_2' >
+      <xs:annotation>
+        <xs:documentation>Кількість екземплярів</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='kod_zd_use' type='common:N_4' >
+      <xs:annotation>
+        <xs:documentation>Код залізниці вилучення документа</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name='refusion-info'>
+    <xs:attribute name='esr' use='required' type='common:EsrCode' >
+      <xs:annotation>
+        <xs:documentation>ЄМР станції переходу до паперового документу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='rang' use='required' type='common:C_128' >
+      <xs:annotation>
+        <xs:documentation>Посада відповідальної особи, що прийняла рішення про перехід на паперовий перевізний документ</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='pib' use='required' type='common:C_128' >
+      <xs:annotation>
+        <xs:documentation>ПІБ відповідальної особи, що прийняла рішення про перехід на паперовий перевізний документ</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='info' use='required' type='common:C_800' >
+      <xs:annotation>
+        <xs:documentation>Обґрунтування переходу на паперовий перевізний документ</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='act_nom' type='common:C_12' >
+      <xs:annotation>
+        <xs:documentation>Номер акту загальної форми</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='act_date' type='common:Date' >
+      <xs:annotation>
+        <xs:documentation>Дата акту загальної форми</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+
+  <xs:complexType name='base-act'>
+    <xs:attributeGroup ref='common:act-attributes' />
+  </xs:complexType>
+
+  <xs:attributeGroup name='act-attributes'>
+    <xs:attribute name='admin_akt' type='common:N_2' >
+      <xs:annotation>
+        <xs:documentation>Код адміністрації станції оформлення акту</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='carrier_kod' type='common:N_4' >
+      <xs:annotation>
+        <xs:documentation>Код перевізника</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='carrier_name' type='common:C_50' >
+      <xs:annotation>
+        <xs:documentation>Скорочене найменування перевізника</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='vagon_nom' type='common:C_12' >
+      <xs:annotation>
+        <xs:documentation>Номер вагону </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nom_akt' type='common:C_12' >
+      <xs:annotation>
+        <xs:documentation>Номер акту </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='date_akt' type='common:Date' >
+      <xs:annotation>
+        <xs:documentation>Дата складання акту</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='stn_akt' type='common:EsrCode' >
+      <xs:annotation>
+        <xs:documentation>Код станції складання акту </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='stn_name_akt' type='common:C_50' >
+      <xs:annotation>
+        <xs:documentation>Найменування станції складання акту </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='prichina_akt' type='common:C_70' >
+      <xs:annotation>
+        <xs:documentation>Причина </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='nom_dved' type='common:N_8' >
+      <xs:annotation>
+        <xs:documentation>Номер досильної дорожньої відомості</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='oper_date' type='common:Date' >
+      <xs:annotation>
+        <xs:documentation>Дата внесення даних по акту у перевізний документ</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='ser_dved' type='common:C_4' >
+      <xs:annotation>
+        <xs:documentation>Серія досильної дорожньої відомості</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='date_dved' type='common:DateTime'>
+      <xs:annotation>
+        <xs:documentation>Дата укладання досильної дорожньої відомості</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='responsible_person' type='common:C_50' >
+      <xs:annotation>
+        <xs:documentation>Ім'я особи, відповідальної за внесення данних по акту у перевізний документ</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='type' type='common:ActKind' >
+      <xs:annotation>
+        <xs:documentation>Тип акту</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='zd_kod' type='common:N_4' >
+      <xs:annotation>
+        <xs:documentation>Код залізниці перевантаження</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+
+  <xs:complexType name='base-prolongation'>
+    <xs:attributeGroup ref='common:prolongation-attributes' />
+  </xs:complexType>
+
+  <xs:attributeGroup name='prolongation-attributes'>
+    <xs:attribute name='carrier_kod' type='common:N_4' >
+      <xs:annotation>
+        <xs:documentation>Код перевізника</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='carrier_name' type='common:C_50' >
+      <xs:annotation>
+        <xs:documentation>Скорочене найменування перевізника</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='date_end_delay' type='common:Date' >
+      <xs:annotation>
+        <xs:documentation>Дата та час закінчення затримки</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='date_start_delay' type='common:Date' >
+      <xs:annotation>
+        <xs:documentation>Дата та час початку затримки</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='esr' type='common:N_6' >
+      <xs:annotation>
+        <xs:documentation>Код станції затримки</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='esr_name' type='common:C_50' >
+      <xs:annotation>
+        <xs:documentation>Найменування станції затримки</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='reason' type='common:N_2' >
+      <xs:annotation>
+        <xs:documentation>Код причини затримки</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='type' type='common:PROLONGATION_TYPE' use='required'>
+      <xs:annotation>
+        <xs:documentation>Ознака відповідності коду причини подовження терміну доставки до договору перевезення ЦІМ або СМГС</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='user_reason_name' type='common:C_100' >
+      <xs:annotation>
+        <xs:documentation>Текст причини затримки для коду причини затримки 10 (інші причини)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='zd_kod' type='common:N_4' >
+      <xs:annotation>
+        <xs:documentation>Код залізниці затримки</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+
+  <xs:complexType name='refuse_epd'>
+    <xs:attribute name='act_date' type='common:Date' >
+      <xs:annotation>
+        <xs:documentation>Дата акту загальної форми</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='act_nom' type='common:C_12' >
+      <xs:annotation>
+        <xs:documentation>Номер акту загальної форми</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='esr' type='common:EsrCode' >
+      <xs:annotation>
+        <xs:documentation>Код станції переходу до паперового документу</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='info' type='common:C_800' >
+      <xs:annotation>
+        <xs:documentation>Обґрунтування переходу на паперовий перевізний документ</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='pib' type='common:C_128' >
+      <xs:annotation>
+        <xs:documentation>П.І.Б. відповідальної особи, що прийняла рішення про перехід на паперовий перевізний документ</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='rang' type='common:C_128' >
+      <xs:annotation>
+        <xs:documentation>Посада відповідальної особи, що прийняла рішення про перехід на паперовий перевізний</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+  </xs:complexType>
+
+  <xs:complexType name='reissue_info'>
+    <xs:attribute name='date_otpr' type='common:Date' >
+      <xs:annotation>
+        <xs:documentation>Дата прийому до перевезення документу, до переоформлення</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='doc_num' type='common:N_8' >
+      <xs:annotation>
+        <xs:documentation>Номер перевізного документу, що був оформлений до переоформлення</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name='doc_seria' type='common:C_4' >
+      <xs:annotation>
+        <xs:documentation>Серія перевізного документу, що був оформлений до переоформлення</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <!-- Значение "Да" - "Нет" -->
+  <xs:simpleType name='Boolean'>
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="0">
+        <xs:annotation>
+          <xs:documentation>Нет</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>Да</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- Двозначний код другої мови перевізного документа -->
+  <xs:simpleType name='CimLang'>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="de">
+        <xs:annotation>
+          <xs:documentation>Німецька</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="en">
+        <xs:annotation>
+          <xs:documentation>Англійська</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='ConsignmentStatus'>
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="0">
+        <xs:annotation>
+          <xs:documentation>оформлення документу за межами залізниці (іншої залізниці відправлення)</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>вантаж, ще не прийнятий до перевезення (оформлений документ)</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="2">
+        <xs:annotation>
+          <xs:documentation>надрукований документ</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="3">
+        <xs:annotation>
+          <xs:documentation>документ, прийнятий до перевезення</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="4">
+        <xs:annotation>
+          <xs:documentation>шаблон</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="5">
+        <xs:annotation>
+          <xs:documentation>документ по прибуттю</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="6">
+        <xs:annotation>
+          <xs:documentation>перевезення завершено (розкредитований документ)</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="8">
+        <xs:annotation>
+          <xs:documentation>документ відкоригований по переадресуванню за новими документами</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9">
+        <xs:annotation>
+          <xs:documentation>скасований документ</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="CarriageKind" >
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>вивіз до третіх країн</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="2">
+        <xs:annotation>
+          <xs:documentation>ввіз з третіх країн</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="3">
+        <xs:annotation>
+          <xs:documentation>транзит</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="4">
+        <xs:annotation>
+          <xs:documentation>вивіз в країни СНД</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="5">
+        <xs:annotation>
+          <xs:documentation>ввіз з країн СНД</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="8">
+        <xs:annotation>
+          <xs:documentation>УЗ</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9">
+        <xs:annotation>
+          <xs:documentation>внутрістанційне перевезення</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ConsignmentCategory">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="01">
+        <xs:annotation>
+          <xs:documentation>дрібна</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="02">
+        <xs:annotation>
+          <xs:documentation>повагонна</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="03">
+        <xs:annotation>
+          <xs:documentation>маршрутна</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="04">
+        <xs:annotation>
+          <xs:documentation>контейнерна навантажена</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="05">
+        <xs:annotation>
+          <xs:documentation>контейнерна порожня</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="06">
+        <xs:annotation>
+          <xs:documentation>група вагонів</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="07">
+        <xs:annotation>
+          <xs:documentation>комплект спецконтейнерів</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="08">
+        <xs:annotation>
+          <xs:documentation>комплект контейнерів, навантажених на п/к</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="09">
+        <xs:annotation>
+          <xs:documentation>спецконтейнери вантажовласників</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="10">
+        <xs:annotation>
+          <xs:documentation>зчепи</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="11">
+        <xs:annotation>
+          <xs:documentation>неробочий парк</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="14">
+        <xs:annotation>
+          <xs:documentation>маршрутна контейнерна</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="15">
+        <xs:annotation>
+          <xs:documentation>групова контейнерна</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="16">
+        <xs:annotation>
+          <xs:documentation>контрейлерна</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="MilitaryKind">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>воїнське перевезенн</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="NotWorking">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>вагони неробочого парку</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="FullnessKind">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="0">
+        <xs:annotation>
+          <xs:documentation>неповний комплект</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>повний комплект</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="RemovedWagon">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="0">
+        <xs:annotation>
+          <xs:documentation>вагон у документі</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>вагон відчеплено</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="LocoModeKind">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="0">
+        <xs:annotation>
+          <xs:documentation>ні (без окремого локомотиву)</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="2">
+        <xs:annotation>
+          <xs:documentation>власний тепловоз</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="3">
+        <xs:annotation>
+          <xs:documentation>власний електровоз</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="4">
+        <xs:annotation>
+          <xs:documentation>тепловоз загального парку</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="5">
+        <xs:annotation>
+          <xs:documentation>електровоз загального парку</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="SenderRouteKind">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="101">
+        <xs:annotation>
+          <xs:documentation>Контейнерний поїзд</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="102">
+        <xs:annotation>
+          <xs:documentation>Контейнерний поїзд Южний (Нікополь – Керч – Нікополь)</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="103">
+        <xs:annotation>
+          <xs:documentation>Контейнерний поїзд Ніка (Нікополь – Іллічівськ – Нікополь)</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="104">
+        <xs:annotation>
+          <xs:documentation>Контейнерний поїзд Хрещатик (Дарниця – Одеса-Порт/Іллічівськ)</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="105">
+        <xs:annotation>
+          <xs:documentation>Контейнерний поїзд Дніпровець (Дніпропетровськ-Ліски – Одеса-Порт/Іллічівськ)</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="106">
+        <xs:annotation>
+          <xs:documentation>Контейнерний поїзд Поділля (Хмельницький – Одеса-Порт/Іллічівськ)</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="107">
+        <xs:annotation>
+          <xs:documentation>Контейнерный поезд «Славянский экспресс»</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="108">
+        <xs:annotation>
+          <xs:documentation>Контейнерный поезд «Одесса»</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="109">
+        <xs:annotation>
+          <xs:documentation>Контейнерный поезд «ZUBR»</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="110">
+        <xs:annotation>
+          <xs:documentation>Контейнерный поезд «Илльичевец»</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="201">
+        <xs:annotation>
+          <xs:documentation>Контрейлерний поїзд</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="301">
+        <xs:annotation>
+          <xs:documentation>Поїзд комбінованого транспорту</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="1001">
+        <xs:annotation>
+          <xs:documentation>Маршрут відправника прямий</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="1002">
+        <xs:annotation>
+          <xs:documentation>Ступінчатий маршрут прямий</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="2001">
+        <xs:annotation>
+          <xs:documentation>Маршрут відправника з розпиленням на станції</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="2002">
+        <xs:annotation>
+          <xs:documentation>Ступінчатий маршрут з розпиленням на станції</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="3001">
+        <xs:annotation>
+          <xs:documentation>Маршрут відправника з переломом маси</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="3002">
+        <xs:annotation>
+          <xs:documentation>Ступінчатий маршрут з переломом маси</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="4001">
+        <xs:annotation>
+          <xs:documentation>Кільцевий маршрут</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="SpeedKind">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>велика</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="2">
+        <xs:annotation>
+          <xs:documentation>вантажна</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="3">
+        <xs:annotation>
+          <xs:documentation>пасажирська</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="LoaderKind">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>залізниц</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="2">
+        <xs:annotation>
+          <xs:documentation>вантажовідправни</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="CoolingKind">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>попередньо охолоджений</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="PriceListKind">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="0">
+        <xs:annotation>
+          <xs:documentation>Тарифне керівництво №1</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>Тарифна політика</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="DistanceKind">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>ручне виставлення</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="0">
+        <xs:annotation>
+          <xs:documentation>автоматичне виставлення</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ConductorsKind">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>відмова</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="VOhrKind">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>Не охороняти вантаж</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="2">
+        <xs:annotation>
+          <xs:documentation>Охороняти вантаж</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="3">
+        <xs:annotation>
+          <xs:documentation>Охороняти вантаж по заявці вантажовідправника</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="PayKind">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="0">
+        <xs:annotation>
+          <xs:documentation>на станції відправлення</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>на станції призначення</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="2">
+        <xs:annotation>
+          <xs:documentation>через УЗ</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="3">
+        <xs:annotation>
+          <xs:documentation>безкоштовне перевезення</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="4">
+        <xs:annotation>
+          <xs:documentation>готівкою на станції відправлення</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="5">
+        <xs:annotation>
+          <xs:documentation>готівкою на станції призначення</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="CoeffModeKind">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>значення, введене вручну</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="2">
+        <xs:annotation>
+          <xs:documentation>значення розраховано автоматично</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="CoeffKind">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>коефіцієнт знижки до схеми в залежності від категорії оператора</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="2">
+        <xs:annotation>
+          <xs:documentation>коефіцієнт таксування по коду вантажу</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="3">
+        <xs:annotation>
+          <xs:documentation>коефіцієнт підвищення / зниження</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ValueKind">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>значення, введене вручну</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="2">
+        <xs:annotation>
+          <xs:documentation>значення розраховано автоматично</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="SealOwnerKind">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="0">
+        <xs:annotation>
+          <xs:documentation>залізниця</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>вантажовідправник</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="2">
+        <xs:annotation>
+          <xs:documentation>митниця</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="3">
+        <xs:annotation>
+          <xs:documentation>експедитор</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="SealKind">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="0">
+        <xs:annotation>
+          <xs:documentation>ПЛОМБА</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>ВАРТА-УНИВЕРСАЛ М</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="2">
+        <xs:annotation>
+          <xs:documentation>Варта-Секюр</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="3">
+        <xs:annotation>
+          <xs:documentation>Капкан</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="4">
+        <xs:annotation>
+          <xs:documentation>Варта М</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="5">
+        <xs:annotation>
+          <xs:documentation>Варта Л</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="6">
+        <xs:annotation>
+          <xs:documentation>Люкс</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="7">
+        <xs:annotation>
+          <xs:documentation>Клещ-60</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="8">
+        <xs:annotation>
+          <xs:documentation>Клещ-60СЦ</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9">
+        <xs:annotation>
+          <xs:documentation>Спрут - 777</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="10">
+        <xs:annotation>
+          <xs:documentation>Спрут - 777М</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="11">
+        <xs:annotation>
+          <xs:documentation>Скат</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="12">
+        <xs:annotation>
+          <xs:documentation>ЛаВР</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="13">
+        <xs:annotation>
+          <xs:documentation>ЛаВР-Гарант-М</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="14">
+        <xs:annotation>
+          <xs:documentation>ЛаВРиК</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="15">
+        <xs:annotation>
+          <xs:documentation>Газ-Гарант</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="16">
+        <xs:annotation>
+          <xs:documentation>ТП-2800-02</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="17">
+        <xs:annotation>
+          <xs:documentation>ТП 350-01</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="18">
+        <xs:annotation>
+          <xs:documentation>Блок-Гарант</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="19">
+        <xs:annotation>
+          <xs:documentation>Блок-Гарант М</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="20">
+        <xs:annotation>
+          <xs:documentation>Нукер-Гарант</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="21">
+        <xs:annotation>
+          <xs:documentation>Нукер-1</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="22">
+        <xs:annotation>
+          <xs:documentation>Нукер-Блок</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="23">
+        <xs:annotation>
+          <xs:documentation>Аманат-ЗПП</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="24">
+        <xs:annotation>
+          <xs:documentation>Универсал-1</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="25">
+        <xs:annotation>
+          <xs:documentation>Спрут-М4</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="26">
+        <xs:annotation>
+          <xs:documentation>HUMO-1</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="27">
+        <xs:annotation>
+          <xs:documentation>Кomplekss U</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="28">
+        <xs:annotation>
+          <xs:documentation>Охра-1</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="99">
+        <xs:annotation>
+          <xs:documentation>ЗПП виробництва інших держав</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ClientKind">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>вантажовідправник</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="2">
+        <xs:annotation>
+          <xs:documentation>вантажоодержувач</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="PayerKind">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="0">
+        <xs:annotation>
+          <xs:documentation>по відправленню</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>по прибуттю</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="2">
+        <xs:annotation>
+          <xs:documentation>транзитний</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="3">
+        <xs:annotation>
+          <xs:documentation>по входу на УЗ/по прибытию, указанный отправителем</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="PaymentCalcModeKind">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="0">
+        <xs:annotation>
+          <xs:documentation>ручне таксування</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>машинне таксування</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="PaycheckKind">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="0">
+        <xs:annotation>
+          <xs:documentation>платіж без ПДВ</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>платіж з ПДВ</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="2">
+        <xs:annotation>
+          <xs:documentation>ПДВ по платежу</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="3">
+        <xs:annotation>
+          <xs:documentation>загальний ПДВ</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ActKind">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="common">
+        <xs:annotation>
+          <xs:documentation>Акт загального типу</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="commercial">
+        <xs:annotation>
+          <xs:documentation>Комерційний акт</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="GY-23a">
+        <xs:annotation>
+          <xs:documentation>акт ГУ-23а</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ReaddrKind">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>переадресований за первинними документами</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="2">
+        <xs:annotation>
+          <xs:documentation>інформація щодо нового документа, за яким виконано переадресування, у попередньому документі</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="3">
+        <xs:annotation>
+          <xs:documentation>інформація щодо попереднього документа в документі на переадресування за новими докуметами</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="JointDirection">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="0">
+        <xs:annotation>
+          <xs:documentation>Виїзд з адміністрації залізниці</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>В'їзд на адміністрацію залізниці</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="VAGONpromoted_by">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="0">
+        <xs:annotation>
+          <xs:documentation>Перевізником</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>Відправником</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="COLLECT_ak_pr">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="0">
+        <xs:annotation>
+          <xs:documentation>Окрема аварійна картка не прикладена</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>Прикладена окрема аварійна картка</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="COLLECTpr_packet">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="0">
+        <xs:annotation>
+          <xs:documentation>Перевезення вантажу без пакетів</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>Перевезення вантажу в пакетах</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="FRONTIER_MARKdirection">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="0">
+        <xs:annotation>
+          <xs:documentation>Вхід</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>Вихід</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="PROLONGATION_TYPE">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="0">
+        <xs:annotation>
+          <xs:documentation>По договору перевезення ЦІМ</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>По договору перевезення СМГС</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- Common types -->
+
+  <xs:simpleType name='DateTime'>
+    <xs:restriction base='xs:string' >
+      <xs:pattern value='[0-9][0-9].[0-9][0-9].[0-9][0-9][0-9][0-9] [0-9][0-9]:[0-9][0-9](:[0-9][0-9]){0,1}' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='Date'>
+    <xs:restriction base='xs:string' >
+      <xs:pattern value='[0-9][0-9].[0-9][0-9].[0-9][0-9][0-9][0-9]( [0-9][0-9]:[0-9][0-9](:[0-9][0-9]){0,1}){0,1}' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='R_2_1'>
+    <xs:restriction base='xs:string'>
+      <xs:pattern value='([0-9]){1,2}(.[0-9]){0,1}' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='N_1'>
+    <xs:restriction base='xs:integer'>
+      <xs:totalDigits value='1' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='N_2'>
+    <xs:restriction base='xs:integer'>
+      <xs:totalDigits value='2' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='N_3'>
+    <xs:restriction base='xs:integer'>
+      <xs:totalDigits value='3' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='N_4'>
+    <xs:restriction base='xs:integer'>
+      <xs:totalDigits value='4' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='N_5'>
+    <xs:restriction base='xs:integer'>
+      <xs:totalDigits value='5' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='N_6'>
+    <xs:restriction base='xs:integer'>
+      <xs:totalDigits value='6' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='N_7'>
+    <xs:restriction base='xs:integer'>
+      <xs:totalDigits value='7' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='N_8'>
+    <xs:restriction base='xs:integer'>
+      <xs:totalDigits value='8' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='N_9'>
+    <xs:restriction base='xs:integer'>
+      <xs:totalDigits value='9' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='N_10'>
+    <xs:restriction base='xs:integer'>
+      <xs:totalDigits value='10' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='N_12'>
+    <xs:restriction base='xs:integer'>
+      <xs:totalDigits value='12' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='N_13'>
+    <xs:restriction base='xs:integer'>
+      <xs:totalDigits value='13' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='N_14'>
+    <xs:restriction base='xs:integer'>
+      <xs:totalDigits value='14' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='N_25'>
+    <xs:restriction base='xs:integer'>
+      <xs:totalDigits value='25' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- string types -->
+  <xs:simpleType name='GngCode'>
+    <xs:restriction base='xs:string'>
+      <xs:pattern value='[0-9]{8}' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='EtsngCode'>
+    <xs:restriction base='xs:string'>
+      <xs:pattern value='[0-9]{6}' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='NhmCode'>
+    <xs:restriction base='xs:string'>
+      <xs:pattern value='[0-9]{8}' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='UNCode'>
+    <xs:restriction base='xs:string'>
+      <xs:pattern value='[0-9]{4}' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='EsrCode'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='12' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='PaymentCode'>
+    <xs:restriction base='xs:string'>
+      <xs:pattern value='[0-9]{1,3}' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='ClientCode4'>
+    <xs:restriction base='xs:string'>
+      <xs:pattern value='[0-9]{4}' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='PayerCode'>
+    <xs:restriction base='xs:string'>
+      <xs:pattern value='[0-9]{7,10}' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='PayerSubcode'>
+    <xs:restriction base='xs:string'>
+      <xs:pattern value='[0-9]{4}' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='Mfo'>
+    <xs:restriction base='xs:string'>
+      <xs:pattern value='[0-9]{1,6}' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='BankAccount'>
+    <xs:restriction base='xs:string'>
+      <xs:pattern value='[0-9]{1,14}' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='EdrpouCode'>
+    <xs:restriction base='xs:string'>
+      <xs:pattern value='[0-9]{8,15}' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='CurrencyCode'>
+    <xs:restriction base='xs:string'>
+      <xs:pattern value='[0-9]{3}' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='DangerCode'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='3' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='DisasterCardNumber'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='3' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_3'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='3' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_4'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='4' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_5'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='5' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_6'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='6' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_7'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='7' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_8'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='8' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_9'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='9' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_10'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='10' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='NC_10'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='10' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_11'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='11' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_12'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='12' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_15'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='15' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_18'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='18' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_20'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='20' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_21'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='21' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_25'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='25' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_30'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='30' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_35'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='35' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='NC_40'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='40' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_50'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='50' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_60'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='60' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_70'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='70' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_75'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='75' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='NC_25'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='25' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='NC_80'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='80' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_100'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='100' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_120'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='120' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_128'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='128' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_150'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='150' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_200'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='200' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_250'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='250' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_255'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='255' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_300'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='300' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_400'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='400' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_500'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='500' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_550'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='550' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='C_800'>
+    <xs:restriction base='xs:string'>
+      <xs:maxLength value='800' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- fractional types -->
+  <xs:simpleType name='N_1_6'>
+    <xs:restriction base='xs:decimal'>
+      <xs:totalDigits value='7' />
+      <xs:fractionDigits value='6' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='N_2_4'>
+    <xs:restriction base='xs:decimal'>
+      <xs:totalDigits value='6' />
+      <xs:fractionDigits value='4' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='N_3_1'>
+    <xs:restriction base='xs:decimal'>
+      <xs:totalDigits value='4' />
+      <xs:fractionDigits value='1' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='N_3_2'>
+    <xs:restriction base='xs:decimal'>
+      <xs:totalDigits value='3' />
+      <xs:fractionDigits value='2' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='N_4_1'>
+    <xs:restriction base='xs:decimal'>
+      <xs:totalDigits value='5' />
+      <xs:fractionDigits value='1' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='N_6_1'>
+    <xs:restriction base='xs:decimal'>
+      <xs:pattern value="(\d{1,6}\.\d{1})|(\d{1,6})" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='N_6_4'>
+    <xs:restriction base='xs:decimal'>
+      <xs:totalDigits value='9' />
+      <xs:fractionDigits value='4' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='N_7_6'>
+    <xs:restriction base='xs:decimal'>
+      <xs:totalDigits value='13' />
+      <xs:fractionDigits value='6' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='N_20_4'>
+    <xs:restriction base='xs:decimal'>
+      <xs:totalDigits value='24' />
+      <xs:fractionDigits value='4' />
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>

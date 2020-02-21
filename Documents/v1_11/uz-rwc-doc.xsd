@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="uz:rwc:document:1.11"
+           targetNamespace="uz:rwc:document:1.11"
+           attributeFormDefault="unqualified"
+           elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:rwc="uz:rwc:document:1.11"
+           xmlns:project="uz:rwc:document:project:1.11"
+           xmlns:accepted="uz:rwc:document:accepted:1.11"
+           xmlns:resent="uz:rwc:document:resend:1.11"
+           xmlns:arrived="uz:rwc:document:arrived:1.11"
+           xmlns:reviewed="uz:rwc:document:reviewed:1.11"
+           xmlns:uncredited="uz:rwc:document:uncredited:1.11"
+           xmlns:foreign="uz:rwc:document::foreign:1.11"
+           xmlns:entered="uz:rwc:document::entered:1.11"
+           xmlns:exited ="uz:rwc_document::exited:1.11"
+           >
+
+  <xs:import namespace="uz:rwc:document:project:1.11" />
+  <xs:import namespace="uz:rwc:document:accepted:1.11" />
+  <xs:import namespace="uz:rwc:document:resend:1.11" />
+  <xs:import namespace="uz:rwc:document:arrived:1.11" />
+  <xs:import namespace="uz:rwc:document:reviewed:1.11" />
+  <xs:import namespace="uz:rwc:document:uncredited:1.11" />
+  <xs:import namespace="uz:rwc:document::foreign:1.11" />
+  <xs:import namespace="uz:rwc:document::entered:1.11" />
+  <xs:import namespace="uz:rwc_document::exited:1.11" />
+
+  <xs:element name='uz-rwc-doc' type='rwc:uz-rwc-doc-info'/>
+
+  <xs:complexType name='uz-rwc-doc-info'>
+    <xs:sequence>
+      <xs:element name='document-data' type='rwc:document-data-info' />
+      <xs:element name='signature' type='rwc:signature' minOccurs='0'  />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name='document-data-info'>
+    <xs:choice>
+      <xs:sequence>
+        <xs:element ref='rwc:uz-rwc-doc' />
+        <xs:choice>
+          <xs:element ref='project:changes' />
+          <xs:element ref='accepted:changes' />
+          <xs:element ref='resent:changes' />
+          <xs:element ref='reviewed:changes' />
+          <xs:element ref='arrived:changes' />
+          <xs:element ref='uncredited:changes' />
+          <xs:element ref='entered:changes' />
+          <xs:element ref='exited:changes' />
+        </xs:choice>
+      </xs:sequence>
+      <xs:choice>
+        <xs:element ref='project:OTPR' />
+        <xs:element ref='accepted:OTPR' />
+        <xs:element ref='resent:OTPR' />
+        <xs:element ref='reviewed:OTPR' />
+        <xs:element ref='arrived:OTPR' />
+        <xs:element ref='uncredited:OTPR' />
+        <xs:element ref='foreign:OTPR' />
+        <xs:element ref='entered:OTPR' />
+        <xs:element ref='exited:OTPR' />
+      </xs:choice>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:simpleType name='signature'>
+    <xs:restriction base='rwc:base64-encoded-data'>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='base64-encoded-data'>
+    <xs:restriction base='xs:string'>
+      <xs:pattern value='([A-Za-z0-9+\\=/])+' />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name='DateTime'>
+    <xs:restriction base='xs:string' >
+      <xs:pattern value='[0-9][0-9].[0-9][0-9].[0-9][0-9][0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]\+[0-9][0-9]' />
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>
