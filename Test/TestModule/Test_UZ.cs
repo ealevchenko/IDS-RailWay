@@ -177,7 +177,7 @@ namespace Test.TestModule
 
             documentdatainfo f = new documentdatainfo();
 
-            f.ItemsElementName.SetValue(ItemsChoiceType.OTPR);
+            //f.ItemsElementName.SetValue(ItemsChoiceType.OTPR);
 
             //string d = xDoc.ToString();
             documentdatainfo customer = ser.Deserialize<documentdatainfo>(d);
