@@ -1,6 +1,7 @@
 ﻿using IDSLogs.Enum;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -73,12 +74,30 @@ namespace Test.TestModule
         public int? vmd_nom_custom { get; set; }
         public int? vmd_year_declar { get; set; }
         public DateTime? vmd_date_declar { get; set; }
-        public CLIENT[] client = new CLIENT[] { };
-        public PL[] pl = new PL[] { };
-        public ROUTE[] route = new ROUTE[] { };
-        public SHTEMPEL[] shtempel = new SHTEMPEL[] { };
-        public SPEC_COND[] spec_cond = new SPEC_COND[] { };
-        public TEXT text { get; set; }
+        // ACTS
+        // CARRIER
+        // CIM_INFO (1)
+        public CLIENT[] client = new CLIENT[] { }; // (2)
+                                                   // COM_COND (~)
+                                                   // CONT (~)
+                                                   // FRONTIER_MARK (~)
+                                                   // OTPRDP (0..1)
+                                                   // PAC (0..1)
+                                                   // PASS_MARK (~)
+        public PL[] pl = new PL[] { }; // (~)
+                                       // PROLONGATION (~)
+        public ROUTE[] route = new ROUTE[] { };// (~)
+        // RW_STAT (~)
+        // REFUSE_EPD (0..1)
+        // REISSUE_INFO (0..1)
+        // SCHEMA (0..10)
+        // SENDER_DOC (~)
+        // SEND_STAT (~)
+        public SHTEMPEL[] shtempel = new SHTEMPEL[] { }; // (~)
+        public SPEC_COND[] spec_cond = new SPEC_COND[] { }; // (~)
+        //TAKS (0..1)
+        public TEXT text { get; set; } // (0..1)
+        public VAGON[] vagon = new VAGON[] { }; // (0..120)
     }
 
     public class CLIENT
@@ -100,7 +119,7 @@ namespace Test.TestModule
         public string phone { get; set; }
         public string representative_pib { get; set; }
         public string type { get; set; }
-        public CLIENT_LOC[] client_loc = new CLIENT_LOC[] { };
+        public CLIENT_LOC[] client_loc = new CLIENT_LOC[] { }; // (2)
     }
 
     public class CLIENT_LOC
@@ -123,11 +142,12 @@ namespace Test.TestModule
         public int? podkod_exp { get; set; }	        //	Підкод платника (експедитора) 
         public int? sector_num { get; set; }	        //	Номер ділянки
         public string type { get; set; }	            //	Тип платника
-        public PAY[] pay = new PAY[] { };
-        public PL_LOC[] pl_loc = new PL_LOC[] { };
-    }
+        public PAY[] pay = new PAY[] { }; // (~)
+        public PL_LOC pl_loc { get; set; } // (1)
+}
 
-    public class PAY {
+    public class PAY
+    {
         public int? currency { get; set; }	//	Тризначний код валюти платежу
         public DateTime? date { get; set; }	//	Дата призначення платежу
         public string kod { get; set; }	    //	Код платежу 
@@ -139,13 +159,15 @@ namespace Test.TestModule
         public int? summa { get; set; }	    //	Cума платежу (коп.)
     }
 
-    public class PL_LOC {
+    public class PL_LOC
+    {
         public string adress { get; set; }	//	Адреса платника (для ЦІМ та ЦІМ/СМГС бланка)
         public string lang { get; set; }	//	Двозначний код мови по стандарту ІSO 639.1 (для ЦІМ та ЦІМ/СМГС бланка)
         public string name { get; set; }	//	Найменування платника (для ЦІМ та ЦІМ/СМГС бланка)
     }
 
-    public class ROUTE {
+    public class ROUTE
+    {
         public int? index { get; set; }	        //	Порядковий номер маршруту прямування (нумерація ведеться з 0)
         public string stn_from { get; set; }	//	Код станції відправлення
         public string name_from { get; set; }	//	Найменування станції відправлення
@@ -155,12 +177,13 @@ namespace Test.TestModule
         public int? rw_to { get; set; }	        //	Адміністрація станції призначення
         public int? zd_nazn { get; set; }	    //	Код залізниці призначення
         public int? zd_otpr { get; set; }	    //	Код залізниці відправлення
-        public JOINT[] joint = new JOINT[] { };
-        public PEREADR_INFO[] pereadr_info = new PEREADR_INFO[] { };
-        public ROUTE_LOC[] route_loc = new ROUTE_LOC[] { };
+        public JOINT[] joint = new JOINT[] { }; // {0..100}
+        public PEREADR_INFO pereadr_info { get; set; }
+        public ROUTE_LOC route_loc { get; set; }
     }
-
-    public class JOINT {
+    
+    public class JOINT
+    {
         public DateTime? cross_time { get; set; }	//	Дата та час перетину кордону
         public string direction { get; set; }	    //	Напрямок при перетині кордону
         public string port_name { get; set; }	    //	Найменування порту перехідного стикового пункту
@@ -168,10 +191,11 @@ namespace Test.TestModule
         public string stn_name { get; set; }	    //	Найменування станції перетину кордону
         public int? admin { get; set; }	            //	Код залізничної адміністрації станції перетину кордону
         public int? zd_kod { get; set; }	        //	Код залізниці прикордонної станції
-        public JOINT_LOC[] joint_loc = new JOINT_LOC[] { };
+        public JOINT_LOC joint_loc { get; set; }  // {0..1}
     }
 
-    public class JOINT_LOC {
+    public class JOINT_LOC
+    {
         public string stn_name { get; set; }	//	Найменування станції перетину кордону на другій мові перевізного документа (для ЦІМ та ЦІМ/СМГС бланка)
         public string lang { get; set; }	//	Двозначный код другої  мови по стандарту ІSO 639.1 (для ЦІМ та ЦІМ/СМГС бланка)
     }
@@ -240,6 +264,119 @@ namespace Test.TestModule
         public string zayava { get; set; }	    //	Особливі відмітки відправника
     }
 
+    public class VAGON {
+        public int? calc_weight { get; set; }   //	Розрахункова вага вантажу (кг)
+        public string etsng_old { get; set; }   //	Код вантажу по ЄТСНВ, 
+        public string gng_old { get; set; } //	Код вантажу по ГНВ, з-під якого був вивантажений вагон
+        public double? gruzp { get; set; }  //	Вантажопід'ємність вагону (т)
+        public string is_removed { get; set; }  //	Ознака викреслення вагона з перевізного документа при відчепленні
+        public double? ostat_davl { get; set; } //	Залишковий тиск у котлу (МПа)
+        public int? kod_adm { get; set; }   //	Код власника вагону 
+        public string kod_firm_owner { get; set; }  //	Код компанії — власниці вагона
+        public int? kol_conductor { get; set; } //	Кількість провідників
+        public int? kol_os { get; set; }    //	Кількість вісей
+        public string measure_equip_num { get; set; }   //	Заводський номер засобу вагоно-вимірювальної техніки
+        public string name_firm_owner { get; set; } //	Найменування компанії — власниці вагона
+        public int? negab_do { get; set; }  //	Індекс негабаритності додаткового обладнання
+        public int? negab_rs { get; set; }  //	Індекс негабаритності рухомого складу
+        public int? negab_v { get; set; }   //	Індекс негабаритності вантажу
+        public int? nom_ref { get; set; }   //	Номер реф. секції
+        public string nomer { get; set; }   //	Номер вагону (Обов'язкове поле для всіх відправок, окрім контейнерних)
+        public DateTime? pour_off_date { get; set; }    //	Дата злиття цистерни
+        public int? pr_sobst { get; set; }  //	Ознака власності вагону 
+        public int? pr_zam { get; set; }    //	Ознака заміни вагону
+        public string promoted_by { get; set; } //	Ознака надання вагону для перевезення
+        public int? remove_weight { get; set; } //	Вага знімного устаткування (кг)
+        public int? rod_vag { get; set; }   //	Род вагону
+        public int? roller_weight { get; set; } //	Вага роллерів (кг)
+        public int? tank_state { get; set; }    //	Стан цистерни після перевезення небезпечного вантажу
+        public int? use { get; set; }   //	Ознака використання вагону
+        public string usl_tip { get; set; } //	Тип цистерни
+        public int? u_tara { get; set; }    //	Вага уточненої тари вагону (кг)
+        public int? ves_tary_arc { get; set; }  //	Вага тари вагону (кг)
+        public int? zd_kod { get; set; }    //	Код залізниці приписки вагона
+    }
+
+    public class PEREGR_V
+    {
+        public string esr_per { get; set; } //	Код станції перевантаження 
+        public int? kol_devices { get; set; }   //	Кількість місць багатооборотних перевізних пристосувань
+        public int? kol_pac { get; set; }   //	Кількість місць після перевантаження для вагона
+        public int? kol_packet { get; set; }    //	Кількість пакетів
+        public string nom_pereg { get; set; }   //	Номер вагону, з якого був перевантажений вантаж
+        public int? vesg { get; set; }  //	Вага вантажу нетто (кг)
+    }
+
+    public class PAY_V
+    {
+        public int? currency { get; set; }  //	Тризначний код валюти платежу
+        public DateTime? date { get; set; } //	Дата призначення платежу
+        public string kod { get; set; } //	Код платежу 
+        public string podkod { get; set; }  //	Підкод платежу 
+        public int? summa { get; set; } //	Cума платежу (коп.)
+        public string stn { get; set; } //	Код станції призначення платежу
+    }
+
+    public class COLLECT_V
+    {
+        public double? ballast { get; set; } //	Вміст баласту (%)
+        public string danger { get; set; }  //	Клас небезпечності вантажу
+        public string danger_ak_pr { get; set; }    //	Ознака прикладеної аварійної картки
+        public string danger_kod { get; set; }  //	Код небезпеки вантажу
+        public string danger_proper_name { get; set; }  //	Належне найменування небезпечного вантажу
+        public string danger_signs { get; set; }    //	Знаки небезпеки
+        public int? danger_sng { get; set; }    //	Код небезпечного вантажу для транзиту згідно з Дод. 4 ТП СНД
+        public string danger_text { get; set; } //	Найменування небезпечного вантажу та інформація про небезпечний вантаж
+        public DateTime? date_strah_dog { get; set; }   //	Дата початку дії страхового договору
+        public double? density { get; set; }    //	Густина
+        public double? density20deg { get; set; }   //	Густина за температури 20°С (г/см³)
+        public string kod_etsng { get; set; }   //	Код вантажу по ЄТСНВ
+        public int? kol_devices { get; set; }   //	Кількість місць багатооборотних перевізних пристосувань
+        public string kod_gng { get; set; } //	Код вантажу по ГНВ (Обов'язкове поле для міжнародних відправок)
+        public int? kol_pac { get; set; }   //	Кількість місць упаковки
+        public int? kol_packet { get; set; }    //	Кількість пакетів
+        public string mark_gr { get; set; } //	Марки вантажу (для збірних відправок)
+        public int? metod_gr { get; set; }  //	Код способу визначення маси вантажу (для збірних відправок)
+        public string name_etsng { get; set; }  //	Найменування вантажу по ЄТСНВ
+        public string name_gng { get; set; }    //	Найменування вантажу по ГНВ (Обов'язкове поле для міжнародних відправок)
+        public string name_komp { get; set; }   //	Найменування страхової компанії 
+        public int? negab_gr { get; set; }  //	Індекс негабаритності вантажу (для збірних відправок)
+        public string nhm_id { get; set; }  //	NHM код вантажу (Обов'язкове поле для ЦІМ та ЦІМ/СМГС)
+        public string nhm_name { get; set; }    //	Найменування вантажу NHM на російській мові (Обов'язкове поле для ЦІМ та ЦІМ/СМГС)
+        public string nhm_name_de { get; set; } //	Найменування вантажу NHM на другій мові документа (Обов'язкове поле для ЦІМ та ЦІМ/СМГС)
+        public string nom_card { get; set; }    //	Номер аварійної картки
+        public string nom_oon { get; set; } //	Номер ООН небезпечного вантажу
+        public string nom_polis { get; set; }   //	Номер страхового полісу
+        public string nomer_gr { get; set; }    //	Номери вантажу (для збірних відправок)
+        public string p_danger { get; set; }    //	Підклас небезпечності вантажу
+        public string pac { get; set; } //	Код роду упаковки
+        public string packing_group { get; set; }   //	Група пакування небезпечного вантажу
+        public string pr_packet { get; set; }   //	Ознака перевезення вантажу в пакетах
+        public string sing_gr { get; set; } //	Знаки вантажу (для збірних відправок)
+        public int? strah_komp { get; set; }    //	Умовний код страхової компанії
+        public int? tank_level { get; set; }    //	Висота наливу
+        public string temp { get; set; }    //	Температура
+        public int? vesg { get; set; }  //	Вага вантажу нетто (кг)
+        public double? waterlevel { get; set; } //	Рівень підтоварної води (см)
+        public int? weight_place_br_gr { get; set; }    //	Стандартна маса одного місця брутто (кг) (для збірних відправок)
+        public int? weight_place_net_gr { get; set; }   //	Стандартна маса одного місця нетто (кг) (для збірних відправок)
+        public string zvvt_num { get; set; }    //	Заводський номер засобу вагоно-вимірювальної техніки (для збірних відправок)
+    }
+
+    public class TOOLS
+    {
+        public int? ves_tools { get; set; } //	Вага пристроїв (кг)
+    }
+
+    public class ZPU_V
+    {
+        public string esr_zpu { get; set; } //	Код станції накладання пломби або ЗПП
+        public string nom_zpu { get; set; } //	Номер ЗПП
+        public string sobst_zpu { get; set; }   //	Ознака власності пломб або ЗПП
+        public int? zd_kod { get; set; }    //	Код залізниці накладання пломби
+        public string zpu { get; set; }	//	Код виду ЗПП 
+    }
+
     public class Test_UZ
     {
         public Test_UZ()
@@ -285,7 +422,7 @@ namespace Test.TestModule
                 }
                 if (typeof(T) == typeof(System.Double?))
                 {
-                    return !String.IsNullOrWhiteSpace(attr.Value) ? (T)(object)Double.Parse(attr.Value) : default(T);
+                    return !String.IsNullOrWhiteSpace(attr.Value) ? (T)(object)Double.Parse(attr.Value, new CultureInfo("en")) : default(T);
                 }
                 if (typeof(T) == typeof(System.DateTime))
                 {
@@ -446,10 +583,7 @@ namespace Test.TestModule
                 {
                     PL_LOC pl_loc = new PL_LOC();
                     GetAttributes(chield_node, ref pl_loc);
-                    // Добавим клиентов
-                    List<PL_LOC> list = tag.pl_loc.ToList();
-                    list.Add(pl_loc);
-                    tag.pl_loc = list.ToArray();
+                    tag.pl_loc = pl_loc;
                 }
             }
         }
@@ -500,19 +634,13 @@ namespace Test.TestModule
                 {
                     PEREADR_INFO pereadr_info = new PEREADR_INFO();
                     GetAttributes(chield_node, ref pereadr_info);
-                    // Добавим клиентов
-                    List<PEREADR_INFO> list = tag.pereadr_info.ToList();
-                    list.Add(pereadr_info);
-                    tag.pereadr_info = list.ToArray();
+                    tag.pereadr_info = pereadr_info;
                 }
                 if (chield_node.Name == "ROUTE_LOC")
                 {
                     ROUTE_LOC route_loc = new ROUTE_LOC();
                     GetAttributes(chield_node, ref route_loc);
-                    // Добавим клиентов
-                    List<ROUTE_LOC> list = tag.route_loc.ToList();
-                    list.Add(route_loc);
-                    tag.route_loc = list.ToArray();
+                    tag.route_loc = route_loc;
                 }
             }
         }
@@ -532,10 +660,7 @@ namespace Test.TestModule
                 {
                     JOINT_LOC joint_loc = new JOINT_LOC();
                     GetAttributes(chield_node, ref joint_loc);
-                    // Добавим клиентов
-                    List<JOINT_LOC> list = tag.joint_loc.ToList();
-                    list.Add(joint_loc);
-                    tag.joint_loc = list.ToArray();
+                    tag.joint_loc = joint_loc;
                 }
             }
         }
@@ -610,6 +735,40 @@ namespace Test.TestModule
             tag.zayava = getAttributes<string>(node, "zayava");
         }
 
+        public void GetAttributes(XmlNode node, ref VAGON tag)
+        {
+            tag.calc_weight = getAttributes<int?>(node, "calc_weight");
+            tag.etsng_old = getAttributes<string>(node, "etsng_old");
+            tag.gng_old = getAttributes<string>(node, "gng_old");
+            tag.gruzp = getAttributes<double?>(node, "gruzp");
+            tag.is_removed = getAttributes<string>(node, "is_removed");
+            tag.ostat_davl = getAttributes<double?>(node, "ostat_davl");
+            tag.kod_adm = getAttributes<int?>(node, "kod_adm");
+            tag.kod_firm_owner = getAttributes<string>(node, "kod_firm_owner");
+            tag.kol_conductor = getAttributes<int?>(node, "kol_conductor");
+            tag.kol_os = getAttributes<int?>(node, "kol_os");
+            tag.measure_equip_num = getAttributes<string>(node, "measure_equip_num");
+            tag.name_firm_owner = getAttributes<string>(node, "name_firm_owner");
+            tag.negab_do = getAttributes<int?>(node, "negab_do");
+            tag.negab_rs = getAttributes<int?>(node, "negab_rs");
+            tag.negab_v = getAttributes<int?>(node, "negab_v");
+            tag.nom_ref = getAttributes<int?>(node, "nom_ref");
+            tag.nomer = getAttributes<string>(node, "nomer");
+            tag.pour_off_date = getAttributes<DateTime?>(node, "pour_off_date");
+            tag.pr_sobst = getAttributes<int?>(node, "pr_sobst");
+            tag.pr_zam = getAttributes<int?>(node, "pr_zam");
+            tag.promoted_by = getAttributes<string>(node, "promoted_by");
+            tag.remove_weight = getAttributes<int?>(node, "remove_weight");
+            tag.rod_vag = getAttributes<int?>(node, "rod_vag");
+            tag.roller_weight = getAttributes<int?>(node, "roller_weight");
+            tag.tank_state = getAttributes<int?>(node, "tank_state");
+            tag.use = getAttributes<int?>(node, "use");
+            tag.usl_tip = getAttributes<string>(node, "usl_tip");
+            tag.u_tara = getAttributes<int?>(node, "u_tara");
+            tag.ves_tary_arc = getAttributes<int?>(node, "ves_tary_arc");
+            tag.zd_kod = getAttributes<int?>(node, "zd_kod");
+        }
+
         //---------------------------------------------------------------------
 
         public void GetTagClient(XmlNode node, ref OTPR otpr)
@@ -661,11 +820,22 @@ namespace Test.TestModule
             list.Add(tag);
             otpr.spec_cond = list.ToArray();
         }
+
         public void GetTagTEXT(XmlNode node, ref OTPR otpr)
         {
             TEXT tag = new TEXT();
             GetAttributes(node, ref tag);
             otpr.text = tag;
+        }
+
+        public void GetTagVAGON(XmlNode node, ref OTPR otpr)
+        {
+            VAGON tag = new VAGON();
+            GetAttributes(node, ref tag);
+            // Добавим клиентов
+            List<VAGON> list = otpr.vagon.ToList();
+            list.Add(tag);
+            otpr.vagon = list.ToArray();
         }
 
         public void UZ_XML_DOC(XmlElement xRoot)
@@ -710,6 +880,7 @@ namespace Test.TestModule
                                     case "ROUTE": { GetTagROUTE(otpr_node, ref otpr); break; }
                                     // RW_STAT
                                     // REFUSE_EPD
+                                    // REISSUE_INFO
                                     // SCHEMA
                                     // SENDER_DOC
                                     // SEND_STAT
@@ -717,6 +888,7 @@ namespace Test.TestModule
                                     case "SPEC_COND": { GetTagSPEC_COND(otpr_node, ref otpr); break; }
                                     //TAKS
                                     case "TEXT": { GetTagTEXT(otpr_node, ref otpr); break; }
+                                    case "VAGON": { GetTagVAGON(otpr_node, ref otpr); break; }
                                 }
                             }
                         }
