@@ -11,6 +11,235 @@ using UZ;
 
 namespace Test.TestModule
 {
+    public class OTPR
+    {
+        public DateTime? date_finish { get; set; }
+        public DateTime? date_plan { get; set; }
+        public DateTime? date_strah_dog_recipient { get; set; }
+        public DateTime? date_vid { get; set; }
+        public string deliv_note { get; set; }
+        public string street { get; set; }
+        public string ser_passp { get; set; }
+        public int? strah_komp_recipient { get; set; }
+        public string name_strah_komp_recipient { get; set; }
+        public int? nom_passp { get; set; }
+        public int? nom_dover { get; set; }
+        public string nom_strah_polis_recipient { get; set; }
+        public string house { get; set; }
+        public DateTime? date_dover { get; set; }
+        public string city { get; set; }
+        public int? apartam { get; set; }
+        public int? rab_esr_pr { get; set; }
+        public DateTime? date_pr { get; set; }
+        public DateTime? date_grpol { get; set; }
+        public int? sum_pereb { get; set; }
+        public int? sum_deliv { get; set; }
+        public string ser_doc { get; set; }
+        public string pr_distance { get; set; }
+        public int? osum { get; set; }
+        public int? distance_way { get; set; }
+        public string doc_lang { get; set; }
+        public DateTime? date_otpr { get; set; }
+        public int? country_nazn { get; set; }
+        public int? country_otpr { get; set; }
+        public string esr_nakop { get; set; }
+        public string esr_rz_marsh_grot { get; set; }
+        public int? foreign_not_accept { get; set; }
+        public string freeze { get; set; }
+        public int? kod_doc { get; set; }
+        public string kod_marsh_grot { get; set; }
+        public string loader { get; set; }
+        public string measure_equip_num { get; set; }
+        public int? metod { get; set; }
+        public int? nom_doc { get; set; }
+        public int? nom_marsh_grot { get; set; }
+        public int? nom_plan { get; set; }
+        public int? nоm_park { get; set; }
+        public int? pr_freeze { get; set; }
+        public string pr_locom { get; set; }
+        public string pr_vohr { get; set; }
+        public string priznak { get; set; }
+        public int? rab_esr { get; set; }
+        public string speed { get; set; }
+        public DateTime? srok_end { get; set; }
+        public string type_pay { get; set; }
+        public int? val_gr { get; set; }
+        public int? value { get; set; }
+        public string vid { get; set; }
+        public int? vid_marsh { get; set; }
+        public int? vid_nakaz_pr { get; set; }
+        public string vid_perev { get; set; }
+        public int? vmd_nom_declar { get; set; }
+        public int? vmd_nom_custom { get; set; }
+        public int? vmd_year_declar { get; set; }
+        public DateTime? vmd_date_declar { get; set; }
+        public CLIENT[] client = new CLIENT[] { };
+        public PL[] pl = new PL[] { };
+        public ROUTE[] route = new ROUTE[] { };
+        public SHTEMPEL[] shtempel = new SHTEMPEL[] { };
+        public SPEC_COND[] spec_cond = new SPEC_COND[] { };
+        public TEXT text { get; set; }
+    }
+
+    public class CLIENT
+    {
+        public string account { get; set; }
+        public string adress { get; set; }
+        public string bank { get; set; }
+        public string business_unit_num { get; set; }
+        public int? carrier_kod { get; set; }
+        public string carrier_name { get; set; }
+        public string city { get; set; }
+        public string email { get; set; }
+        public string fax { get; set; }
+        public string kod { get; set; }
+        public string mfo { get; set; }
+        public string name { get; set; }
+        public string nds_pay_code { get; set; }
+        public string okpo { get; set; }
+        public string phone { get; set; }
+        public string representative_pib { get; set; }
+        public string type { get; set; }
+        public CLIENT_LOC[] client_loc = new CLIENT_LOC[] { };
+    }
+
+    public class CLIENT_LOC
+    {
+        public string adress { get; set; }
+        public string lang { get; set; }
+        public string name { get; set; }
+    }
+
+    public class PL
+    {
+        public int? carrier_kod { get; set; }	        //	Код перевізника
+        public string carrier_name { get; set; }	    //	Скорочене найменування перевізника
+        public int? currency { get; set; }	            //	Бажана валюта сплати транзитного платника 
+        public DateTime? date_carrier_dog { get; set; }	//	Дата укладення договору між перевізником та платником за перевезення
+        public int? kod_adm { get; set; }	            //	Код адміністрації платника (вказується тільки для транзитних платників)
+        public string kod_plat { get; set; }	        //	Код платника (для платника по відправленню/прибуттю — код з 7 цифр,  для транзитного платника по АТ «Укрзалізниця»; — 10 цифр, інші — до 20 символів).
+        public string name_plat { get; set; }	        //	Найменування платника
+        public string num_carrier_dog { get; set; }	    //	Номер договору укладеного між перевізником та платником за перевезення
+        public int? podkod_exp { get; set; }	        //	Підкод платника (експедитора) 
+        public int? sector_num { get; set; }	        //	Номер ділянки
+        public string type { get; set; }	            //	Тип платника
+        public PAY[] pay = new PAY[] { };
+        public PL_LOC[] pl_loc = new PL_LOC[] { };
+    }
+
+    public class PAY {
+        public int? currency { get; set; }	//	Тризначний код валюти платежу
+        public DateTime? date { get; set; }	//	Дата призначення платежу
+        public string kod { get; set; }	    //	Код платежу 
+        public int? nom_doc { get; set; }	//	Номер ГУ-57
+        public string podkod { get; set; }	//	Підкод платежу 
+        public string pr_avt { get; set; }	//	Ознака автоматичного нарахування платежу
+        public string ser_doc { get; set; }	//	Серія документу 
+        public string stn { get; set; }	    //	Код станції призначення платежу
+        public int? summa { get; set; }	    //	Cума платежу (коп.)
+    }
+
+    public class PL_LOC {
+        public string adress { get; set; }	//	Адреса платника (для ЦІМ та ЦІМ/СМГС бланка)
+        public string lang { get; set; }	//	Двозначний код мови по стандарту ІSO 639.1 (для ЦІМ та ЦІМ/СМГС бланка)
+        public string name { get; set; }	//	Найменування платника (для ЦІМ та ЦІМ/СМГС бланка)
+    }
+
+    public class ROUTE {
+        public int? index { get; set; }	        //	Порядковий номер маршруту прямування (нумерація ведеться з 0)
+        public string stn_from { get; set; }	//	Код станції відправлення
+        public string name_from { get; set; }	//	Найменування станції відправлення
+        public int? rw_from { get; set; }	    //	Адміністрація станції відправлення
+        public string stn_to { get; set; }	    //	Код станції призначення
+        public string name_to { get; set; }	    //	Найменування станції призначення
+        public int? rw_to { get; set; }	        //	Адміністрація станції призначення
+        public int? zd_nazn { get; set; }	    //	Код залізниці призначення
+        public int? zd_otpr { get; set; }	    //	Код залізниці відправлення
+        public JOINT[] joint = new JOINT[] { };
+        public PEREADR_INFO[] pereadr_info = new PEREADR_INFO[] { };
+        public ROUTE_LOC[] route_loc = new ROUTE_LOC[] { };
+    }
+
+    public class JOINT {
+        public DateTime? cross_time { get; set; }	//	Дата та час перетину кордону
+        public string direction { get; set; }	    //	Напрямок при перетині кордону
+        public string port_name { get; set; }	    //	Найменування порту перехідного стикового пункту
+        public string stn { get; set; }	            //	Код станції перетину кордону
+        public string stn_name { get; set; }	    //	Найменування станції перетину кордону
+        public int? admin { get; set; }	            //	Код залізничної адміністрації станції перетину кордону
+        public int? zd_kod { get; set; }	        //	Код залізниці прикордонної станції
+        public JOINT_LOC[] joint_loc = new JOINT_LOC[] { };
+    }
+
+    public class JOINT_LOC {
+        public string stn_name { get; set; }	//	Найменування станції перетину кордону на другій мові перевізного документа (для ЦІМ та ЦІМ/СМГС бланка)
+        public string lang { get; set; }	//	Двозначный код другої  мови по стандарту ІSO 639.1 (для ЦІМ та ЦІМ/СМГС бланка)
+    }
+
+    public class PEREADR_INFO
+    {
+        public DateTime? date_nakaz { get; set; }	//	Дата наказу на переадресування вантажу
+        public DateTime? date_pereadr { get; set; }	//	Дата здійснення операції переадресування за первинним перевізним документом
+        public int? distance { get; set; }	//	Відстань від станції переадресування до станції призначення (у км)
+        public string nakaz { get; set; }	//	Номер наказу на переадресування вантажу
+        public int? nom_perv_doc { get; set; }	//	Номер первинного перевізного документа
+        public string ser_perv_doc { get; set; }	//	Серія первинного перевізного документа
+        public string type_pay_old { get; set; }	//	Вид розрахунку у перевізному документі до переадресування
+    }
+
+    public class ROUTE_LOC
+    {
+        public string lang { get; set; }	//	Двозначний код другої мови перевізного документа по стандарту ІSO 639.1 (для ЦІМ та ЦІМ/СМГС бланка)
+        public string name_from { get; set; }	//	Код залізниці відправлення
+        public string name_to { get; set; }	//	Код залізниці призначення
+    }
+
+    public class SHTEMPEL
+    {
+        public string column_num { get; set; }	//	Код графи перевізного документа
+        public string info_sht { get; set; }	//	Текст штемпеля/відмітки
+        public int? nom_sht { get; set; }	    //	Номер (код) штемпеля/відмітки, з класифікатора штемпелів та відміток
+    }
+
+    public class SPEC_COND
+    {
+        public int? code { get; set; }	//
+        public string name_metal { get; set; }	//
+        public string name_val { get; set; }	//
+        public string val { get; set; }	//
+    }
+
+    public class TEXT
+    {
+        public string branch { get; set; }	//	Найменування власника під'їзної колії 
+        public string calc_reason { get; set; }	//	Підстави для розрахунку
+        public int? carrier_from { get; set; }	//	Компанія-перевізник при відправленні з країн ЦІМ
+        public string create_place { get; set; }	//	Місце оформлення
+        public string create_place_de { get; set; }	//	Місце оформлення німецькою мовою (для ЦІМ та ЦІМ/СМГС бланка)
+        public DateTime? date_permit { get; set; }	//	Дата надання дозволу/довіреності на право використання власного вагона
+        public string doc_grot { get; set; }	//	Документи, прикладені вантажовідправником (заповнюється касиром, при створенні нового документа. Якщо документ створює вантажовідправник, то прикладені документи вказуються у тезі SENDER_DOC).
+        public string rwc_doc_name { get; set; }	//	Логічне ім'я документа
+        public string rw_note { get; set; }	//	Відмітки залізниці 
+        public string rw_mark { get; set; }	//	Марка залізниці
+        public string name_tov { get; set; }	//	Призвище товарного кассиру, який оформив документ по відправленню 
+        public string loader_fio { get; set; }	//	Прізвище та ім'я по батькові особи, відповідальної за навантаження
+        public string loader_position { get; set; }	//	Посада особи, відповідальної за навантаження
+        public string marks { get; set; }	//	Відмітки не обов'язкові для залізниці 
+        public string marks_gr { get; set; }	//	Марки
+        public string mount_chapter { get; set; }	//	Розділи ТУ , згідно яких закріплений вантаж
+        public string mount_para { get; set; }	//	Параграфи ТУ , згідно яких закріплений вантаж
+        public string name_gr { get; set; }	//	Додаткові відомості про вантаж
+        public string nom_dog { get; set; }	//	Номер договору експорту/імпорту
+        public string nom_gr { get; set; }	//	Номери
+        public string nom_permit { get; set; }	//	Номер дозволу/довіреності на право використання власного вагона
+        public int? outside_payer_code { get; set; }	//	Код платника за межами АТ «Укрзалізниця»;
+        public string sing { get; set; }	//	Знаки 
+        public string stn_accum { get; set; }	//	Код станції накопичення
+        public string stn_name_accum { get; set; }	//	Найменування станції накопичення
+        public string trans_plan { get; set; }	//	Номер транспортного плану
+        public string zayava { get; set; }	    //	Особливі відмітки відправника
+    }
+
     public class Test_UZ
     {
         public Test_UZ()
@@ -26,6 +255,417 @@ namespace Test.TestModule
             Console.WriteLine("Запрос....");
             //List<string> list2 = client.GetInfoWagon(58647785);
             UZWagonInfo info = client.GetInfoWagonOfNum(58647782);
+        }
+        /// <summary>
+        /// Получить атрибут
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static T getAttributes<T>(XmlNode node, string name)
+        {
+            XmlNode attr = node.Attributes.GetNamedItem(name);
+            if (attr != null)
+            {
+                if (typeof(T) == typeof(System.Int32))
+                {
+                    return (T)(object)Int32.Parse(attr.Value);
+                }
+                if (typeof(T) == typeof(System.Int32?))
+                {
+                    return !String.IsNullOrWhiteSpace(attr.Value) ? (T)(object)Int32.Parse(attr.Value) : default(T);
+                }
+                if (typeof(T) == typeof(System.String))
+                {
+                    return (T)(object)attr.Value;
+                }
+                if (typeof(T) == typeof(System.Double))
+                {
+                    return (T)(object)Double.Parse(attr.Value);
+                }
+                if (typeof(T) == typeof(System.Double?))
+                {
+                    return !String.IsNullOrWhiteSpace(attr.Value) ? (T)(object)Double.Parse(attr.Value) : default(T);
+                }
+                if (typeof(T) == typeof(System.DateTime))
+                {
+                    return (T)(object)DateTime.Parse(attr.Value);
+                }
+                if (typeof(T) == typeof(System.DateTime?))
+                {
+                    return !String.IsNullOrWhiteSpace(attr.Value) ? (T)(object)DateTime.Parse(attr.Value) : default(T);
+                }
+            }
+            return default(T);
+        }
+
+        public void GetAttributes(XmlNode node, ref OTPR tag)
+        {
+            if (node.Attributes.Count > 0)
+            {
+                tag.date_finish = getAttributes<DateTime?>(node, "date_finish");
+                tag.date_plan = getAttributes<DateTime?>(node, "date_plan");
+                tag.date_strah_dog_recipient = getAttributes<DateTime?>(node, "date_strah_dog_recipient");
+                tag.date_vid = getAttributes<DateTime?>(node, "date_vid");
+                tag.deliv_note = getAttributes<string>(node, "deliv_note");
+                tag.street = getAttributes<string>(node, "street");
+                tag.ser_passp = getAttributes<string>(node, "ser_passp");
+                tag.strah_komp_recipient = getAttributes<int?>(node, "strah_komp_recipient");
+                tag.name_strah_komp_recipient = getAttributes<string>(node, "name_strah_komp_recipient");
+                tag.nom_passp = getAttributes<int?>(node, "nom_passp");
+                tag.nom_dover = getAttributes<int?>(node, "nom_dover");
+                tag.nom_strah_polis_recipient = getAttributes<string>(node, "nom_strah_polis_recipient");
+                tag.house = getAttributes<string>(node, "house");
+                tag.date_dover = getAttributes<DateTime?>(node, "date_dover");
+                tag.city = getAttributes<string>(node, "city");
+                tag.apartam = getAttributes<int?>(node, "apartam");
+                tag.rab_esr_pr = getAttributes<int?>(node, "rab_esr_pr");
+                tag.date_pr = getAttributes<DateTime?>(node, "date_pr");
+                tag.date_grpol = getAttributes<DateTime?>(node, "date_grpol");
+                tag.sum_pereb = getAttributes<int?>(node, "sum_pereb");
+                tag.sum_deliv = getAttributes<int?>(node, "sum_deliv");
+                tag.ser_doc = getAttributes<string>(node, "ser_doc");
+                tag.pr_distance = getAttributes<string>(node, "pr_distance");
+                tag.osum = getAttributes<int?>(node, "osum");
+                tag.distance_way = getAttributes<int?>(node, "distance_way");
+                tag.doc_lang = getAttributes<string>(node, "doc_lang");
+                tag.date_otpr = getAttributes<DateTime?>(node, "date_otpr");
+                tag.country_nazn = getAttributes<int?>(node, "country_nazn");
+                tag.country_otpr = getAttributes<int?>(node, "country_otpr");
+                tag.esr_nakop = getAttributes<string>(node, "esr_nakop");
+                tag.esr_rz_marsh_grot = getAttributes<string>(node, "esr_rz_marsh_grot");
+                tag.foreign_not_accept = getAttributes<int?>(node, "foreign_not_accept");
+                tag.freeze = getAttributes<string>(node, "freeze");
+                tag.kod_doc = getAttributes<int?>(node, "kod_doc");
+                tag.kod_marsh_grot = getAttributes<string>(node, "kod_marsh_grot");
+                tag.loader = getAttributes<string>(node, "loader");
+                tag.measure_equip_num = getAttributes<string>(node, "measure_equip_num");
+                tag.metod = getAttributes<int?>(node, "metod");
+                tag.nom_doc = getAttributes<int?>(node, "nom_doc");
+                tag.nom_marsh_grot = getAttributes<int?>(node, "nom_marsh_grot");
+                tag.nom_plan = getAttributes<int?>(node, "nom_plan");
+                tag.nоm_park = getAttributes<int?>(node, "nоm_park");
+                tag.pr_freeze = getAttributes<int?>(node, "pr_freeze");
+                tag.pr_locom = getAttributes<string>(node, "pr_locom");
+                tag.pr_vohr = getAttributes<string>(node, "pr_vohr");
+                tag.priznak = getAttributes<string>(node, "priznak");
+                tag.rab_esr = getAttributes<int?>(node, "rab_esr");
+                tag.speed = getAttributes<string>(node, "speed");
+                tag.srok_end = getAttributes<DateTime?>(node, "srok_end");
+                tag.type_pay = getAttributes<string>(node, "type_pay");
+                tag.val_gr = getAttributes<int?>(node, "val_gr");
+                tag.value = getAttributes<int?>(node, "value");
+                tag.vid = getAttributes<string>(node, "vid");
+                tag.vid_marsh = getAttributes<int?>(node, "vid_marsh");
+                tag.vid_nakaz_pr = getAttributes<int?>(node, "vid_nakaz_pr");
+                tag.vid_perev = getAttributes<string>(node, "vid_perev");
+                tag.vmd_nom_declar = getAttributes<int?>(node, "vmd_nom_declar");
+                tag.vmd_nom_custom = getAttributes<int?>(node, "vmd_nom_custom");
+                tag.vmd_year_declar = getAttributes<int?>(node, "vmd_year_declar");
+                tag.vmd_date_declar = getAttributes<DateTime?>(node, "vmd_date_declar");
+            }
+        }
+        /// <summary>
+        /// Заполнить атрибуты CLIENT
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="tag"></param>
+        public void GetAttributes(XmlNode node, ref CLIENT tag)
+        {
+            if (node.Attributes.Count > 0)
+            {
+                tag.account = getAttributes<string>(node, "account");
+                tag.adress = getAttributes<string>(node, "adress");
+                tag.bank = getAttributes<string>(node, "bank");
+                tag.business_unit_num = getAttributes<string>(node, "business_unit_num");
+                tag.carrier_kod = getAttributes<int?>(node, "carrier_kod");
+                tag.carrier_name = getAttributes<string>(node, "carrier_name");
+                tag.city = getAttributes<string>(node, "city");
+                tag.email = getAttributes<string>(node, "email");
+                tag.fax = getAttributes<string>(node, "fax");
+                tag.kod = getAttributes<string>(node, "kod");
+                tag.mfo = getAttributes<string>(node, "mfo");
+                tag.name = getAttributes<string>(node, "name");
+                tag.nds_pay_code = getAttributes<string>(node, "nds_pay_code");
+                tag.okpo = getAttributes<string>(node, "okpo");
+                tag.phone = getAttributes<string>(node, "phone");
+                tag.representative_pib = getAttributes<string>(node, "representative_pib");
+                tag.type = getAttributes<string>(node, "type");
+            }
+            foreach (XmlNode chield_node in node.ChildNodes)
+            {
+                if (chield_node.Name == "CLIENT_LOC")
+                {
+                    CLIENT_LOC client_loc = new CLIENT_LOC();
+                    GetAttributes(chield_node, ref client_loc);
+                    // Добавим клиентов
+                    List<CLIENT_LOC> list = tag.client_loc.ToList();
+                    list.Add(client_loc);
+                    tag.client_loc = list.ToArray();
+                }
+            }
+
+        }
+        /// <summary>
+        /// Класс CLIENT_LOC
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="tag"></param>
+        public void GetAttributes(XmlNode node, ref CLIENT_LOC tag)
+        {
+            tag.adress = getAttributes<string>(node, "adress");
+            tag.lang = getAttributes<string>(node, "lang");
+            tag.name = getAttributes<string>(node, "name");
+        }
+
+        public void GetAttributes(XmlNode node, ref PL tag)
+        {
+            tag.carrier_kod = getAttributes<int?>(node, "carrier_kod");
+            tag.carrier_name = getAttributes<string>(node, "carrier_name");
+            tag.currency = getAttributes<int?>(node, "currency");
+            tag.date_carrier_dog = getAttributes<DateTime?>(node, "date_carrier_dog");
+            tag.kod_adm = getAttributes<int?>(node, "kod_adm");
+            tag.kod_plat = getAttributes<string>(node, "kod_plat");
+            tag.name_plat = getAttributes<string>(node, "name_plat");
+            tag.num_carrier_dog = getAttributes<string>(node, "num_carrier_dog");
+            tag.podkod_exp = getAttributes<int?>(node, "podkod_exp");
+            tag.sector_num = getAttributes<int?>(node, "sector_num");
+            tag.type = getAttributes<string>(node, "type");
+            foreach (XmlNode chield_node in node.ChildNodes)
+            {
+                if (chield_node.Name == "PAY")
+                {
+                    PAY pay = new PAY();
+                    GetAttributes(chield_node, ref pay);
+                    // Добавим клиентов
+                    List<PAY> list = tag.pay.ToList();
+                    list.Add(pay);
+                    tag.pay = list.ToArray();
+                }
+                if (chield_node.Name == "PL_LOC")
+                {
+                    PL_LOC pl_loc = new PL_LOC();
+                    GetAttributes(chield_node, ref pl_loc);
+                    // Добавим клиентов
+                    List<PL_LOC> list = tag.pl_loc.ToList();
+                    list.Add(pl_loc);
+                    tag.pl_loc = list.ToArray();
+                }
+            }
+        }
+
+        public void GetAttributes(XmlNode node, ref PAY tag)
+        {
+            tag.currency = getAttributes<int?>(node, "currency");
+            tag.date = getAttributes<DateTime?>(node, "date");
+            tag.kod = getAttributes<string>(node, "kod");
+            tag.nom_doc = getAttributes<int?>(node, "nom_doc");
+            tag.podkod = getAttributes<string>(node, "podkod");
+            tag.pr_avt = getAttributes<string>(node, "pr_avt");
+            tag.ser_doc = getAttributes<string>(node, "ser_doc");
+            tag.stn = getAttributes<string>(node, "stn");
+            tag.summa = getAttributes<int?>(node, "summa");
+        }
+
+        public void GetAttributes(XmlNode node, ref PL_LOC tag)
+        {
+            tag.adress = getAttributes<string>(node, "adress");
+            tag.lang = getAttributes<string>(node, "lang");
+            tag.name = getAttributes<string>(node, "name");
+        }
+
+        public void GetAttributes(XmlNode node, ref ROUTE tag)
+        {
+            tag.index = getAttributes<int?>(node, "index");
+            tag.stn_from = getAttributes<string>(node, "stn_from");
+            tag.name_from = getAttributes<string>(node, "name_from");
+            tag.rw_from = getAttributes<int?>(node, "rw_from");
+            tag.stn_to = getAttributes<string>(node, "stn_to");
+            tag.name_to = getAttributes<string>(node, "name_to");
+            tag.rw_to = getAttributes<int?>(node, "rw_to");
+            tag.zd_nazn = getAttributes<int?>(node, "zd_nazn");
+            tag.zd_otpr = getAttributes<int?>(node, "zd_otpr");
+            foreach (XmlNode chield_node in node.ChildNodes)
+            {
+                if (chield_node.Name == "JOINT")
+                {
+                    JOINT joint = new JOINT();
+                    GetAttributes(chield_node, ref joint);
+                    // Добавим клиентов
+                    List<JOINT> list = tag.joint.ToList();
+                    list.Add(joint);
+                    tag.joint = list.ToArray();
+                }
+                if (chield_node.Name == "PEREADR_INFO")
+                {
+                    PEREADR_INFO pereadr_info = new PEREADR_INFO();
+                    GetAttributes(chield_node, ref pereadr_info);
+                    // Добавим клиентов
+                    List<PEREADR_INFO> list = tag.pereadr_info.ToList();
+                    list.Add(pereadr_info);
+                    tag.pereadr_info = list.ToArray();
+                }
+                if (chield_node.Name == "ROUTE_LOC")
+                {
+                    ROUTE_LOC route_loc = new ROUTE_LOC();
+                    GetAttributes(chield_node, ref route_loc);
+                    // Добавим клиентов
+                    List<ROUTE_LOC> list = tag.route_loc.ToList();
+                    list.Add(route_loc);
+                    tag.route_loc = list.ToArray();
+                }
+            }
+        }
+
+        public void GetAttributes(XmlNode node, ref JOINT tag)
+        {
+            tag.cross_time = getAttributes<DateTime?>(node, "cross_time");
+            tag.direction = getAttributes<string>(node, "direction");
+            tag.port_name = getAttributes<string>(node, "port_name");
+            tag.stn = getAttributes<string>(node, "stn");
+            tag.stn_name = getAttributes<string>(node, "stn_name");
+            tag.admin = getAttributes<int?>(node, "admin");
+            tag.zd_kod = getAttributes<int?>(node, "zd_kod");
+            foreach (XmlNode chield_node in node.ChildNodes)
+            {
+                if (chield_node.Name == "JOINT_LOC")
+                {
+                    JOINT_LOC joint_loc = new JOINT_LOC();
+                    GetAttributes(chield_node, ref joint_loc);
+                    // Добавим клиентов
+                    List<JOINT_LOC> list = tag.joint_loc.ToList();
+                    list.Add(joint_loc);
+                    tag.joint_loc = list.ToArray();
+                }
+            }
+        }
+
+        public void GetAttributes(XmlNode node, ref JOINT_LOC tag)
+        {
+            tag.stn_name = getAttributes<string>(node, "stn_name");
+            tag.lang = getAttributes<string>(node, "lang");
+        }
+
+        public void GetAttributes(XmlNode node, ref PEREADR_INFO tag)
+        {
+            tag.date_nakaz = getAttributes<DateTime?>(node, "date_nakaz");
+            tag.date_pereadr = getAttributes<DateTime?>(node, "date_pereadr");
+            tag.distance = getAttributes<int?>(node, "distance");
+            tag.nakaz = getAttributes<string>(node, "nakaz");
+            tag.nom_perv_doc = getAttributes<int?>(node, "nom_perv_doc");
+            tag.ser_perv_doc = getAttributes<string>(node, "ser_perv_doc");
+            tag.type_pay_old = getAttributes<string>(node, "type_pay_old");
+        }
+
+        public void GetAttributes(XmlNode node, ref ROUTE_LOC tag)
+        {
+            tag.lang = getAttributes<string>(node, "lang");
+            tag.name_from = getAttributes<string>(node, "name_from");
+            tag.name_to = getAttributes<string>(node, "name_to");
+        }
+
+        public void GetAttributes(XmlNode node, ref SHTEMPEL tag)
+        {
+            tag.column_num = getAttributes<string>(node, "column_num");
+            tag.info_sht = getAttributes<string>(node, "info_sht");
+            tag.nom_sht = getAttributes<int?>(node, "nom_sht");
+        }
+
+        public void GetAttributes(XmlNode node, ref SPEC_COND tag)
+        {
+            tag.code = getAttributes<int?>(node, "code");
+            tag.name_metal = getAttributes<string>(node, "name_metal");
+            tag.name_val = getAttributes<string>(node, "name_val");
+            tag.val = getAttributes<string>(node, "val");
+        }
+
+        public void GetAttributes(XmlNode node, ref TEXT tag)
+        {
+            tag.branch = getAttributes<string>(node, "branch");
+            tag.calc_reason = getAttributes<string>(node, "calc_reason");
+            tag.carrier_from = getAttributes<int?>(node, "carrier_from");
+            tag.create_place = getAttributes<string>(node, "create_place");
+            tag.create_place_de = getAttributes<string>(node, "create_place_de");
+            tag.date_permit = getAttributes<DateTime?>(node, "date_permit");
+            tag.doc_grot = getAttributes<string>(node, "doc_grot");
+            tag.rwc_doc_name = getAttributes<string>(node, "rwc_doc_name");
+            tag.rw_note = getAttributes<string>(node, "rw_note");
+            tag.rw_mark = getAttributes<string>(node, "rw_mark");
+            tag.name_tov = getAttributes<string>(node, "name_tov");
+            tag.loader_fio = getAttributes<string>(node, "loader_fio");
+            tag.loader_position = getAttributes<string>(node, "loader_position");
+            tag.marks = getAttributes<string>(node, "marks");
+            tag.marks_gr = getAttributes<string>(node, "marks_gr");
+            tag.mount_chapter = getAttributes<string>(node, "mount_chapter");
+            tag.mount_para = getAttributes<string>(node, "mount_para");
+            tag.name_gr = getAttributes<string>(node, "name_gr");
+            tag.nom_dog = getAttributes<string>(node, "nom_dog");
+            tag.nom_gr = getAttributes<string>(node, "nom_gr");
+            tag.nom_permit = getAttributes<string>(node, "nom_permit");
+            tag.outside_payer_code = getAttributes<int?>(node, "outside_payer_code");
+            tag.sing = getAttributes<string>(node, "sing");
+            tag.stn_accum = getAttributes<string>(node, "stn_accum");
+            tag.stn_name_accum = getAttributes<string>(node, "stn_name_accum");
+            tag.trans_plan = getAttributes<string>(node, "trans_plan");
+            tag.zayava = getAttributes<string>(node, "zayava");
+        }
+
+        //---------------------------------------------------------------------
+
+        public void GetTagClient(XmlNode node, ref OTPR otpr)
+        {
+            CLIENT tag = new CLIENT();
+            GetAttributes(node, ref tag);
+            // Добавим клиентов
+            List<CLIENT> list = otpr.client.ToList();
+            list.Add(tag);
+            otpr.client = list.ToArray();
+        }
+
+        public void GetTagPL(XmlNode node, ref OTPR otpr)
+        {
+            PL tag = new PL();
+            GetAttributes(node, ref tag);
+            // Добавим клиентов
+            List<PL> list = otpr.pl.ToList();
+            list.Add(tag);
+            otpr.pl = list.ToArray();
+        }
+
+        public void GetTagROUTE(XmlNode node, ref OTPR otpr)
+        {
+            ROUTE tag = new ROUTE();
+            GetAttributes(node, ref tag);
+            // Добавим клиентов
+            List<ROUTE> list = otpr.route.ToList();
+            list.Add(tag);
+            otpr.route = list.ToArray();
+        }
+
+        public void GetTagSHTEMPEL(XmlNode node, ref OTPR otpr)
+        {
+            SHTEMPEL tag = new SHTEMPEL();
+            GetAttributes(node, ref tag);
+            // Добавим клиентов
+            List<SHTEMPEL> list = otpr.shtempel.ToList();
+            list.Add(tag);
+            otpr.shtempel = list.ToArray();
+        }
+
+        public void GetTagSPEC_COND(XmlNode node, ref OTPR otpr)
+        {
+            SPEC_COND tag = new SPEC_COND();
+            GetAttributes(node, ref tag);
+            // Добавим клиентов
+            List<SPEC_COND> list = otpr.spec_cond.ToList();
+            list.Add(tag);
+            otpr.spec_cond = list.ToArray();
+        }
+        public void GetTagTEXT(XmlNode node, ref OTPR otpr)
+        {
+            TEXT tag = new TEXT();
+            GetAttributes(node, ref tag);
+            otpr.text = tag;
         }
 
         public void UZ_XML_DOC(XmlElement xRoot)
@@ -47,7 +687,38 @@ namespace Test.TestModule
                         // если узел - document-data
                         if (child_node_doc.Name == "OTPR")
                         {
-                            //
+                            OTPR otpr = new OTPR();
+                            // атрибуты
+                            GetAttributes(child_node_doc, ref otpr);
+
+                            foreach (XmlNode otpr_node in child_node_doc.ChildNodes)
+                            {
+                                switch (otpr_node.Name)
+                                {
+                                    // ACTS
+                                    // CARRIER
+                                    // CIM_INFO                                     
+                                    case "CLIENT": { GetTagClient(otpr_node, ref otpr); break; }
+                                    // COM_COND
+                                    // CONT
+                                    // FRONTIER_MARK
+                                    // OTPRDP
+                                    // PAC
+                                    // PASS_MARK
+                                    case "PL": { GetTagPL(otpr_node, ref otpr); break; }
+                                    // PROLONGATION
+                                    case "ROUTE": { GetTagROUTE(otpr_node, ref otpr); break; }
+                                    // RW_STAT
+                                    // REFUSE_EPD
+                                    // SCHEMA
+                                    // SENDER_DOC
+                                    // SEND_STAT
+                                    case "SHTEMPEL": { GetTagSHTEMPEL(otpr_node, ref otpr); break; }
+                                    case "SPEC_COND": { GetTagSPEC_COND(otpr_node, ref otpr); break; }
+                                    //TAKS
+                                    case "TEXT": { GetTagTEXT(otpr_node, ref otpr); break; }
+                                }
+                            }
                         }
                     }
                 }
@@ -79,7 +750,7 @@ namespace Test.TestModule
                 {
                     Console.WriteLine("Компания: {childnode.InnerText}");
                 }
-                
+
                 //foreach (XmlNode childnode in xnode.ChildNodes)
                 //{
                 //    // если узел - company
@@ -93,15 +764,15 @@ namespace Test.TestModule
                 //        Console.WriteLine("Возраст: {childnode.InnerText}");
                 //    }
                 //}
-                
+
                 //uz-rwc-doc
-                    //document-data
-                        //uz-rwc-doc
-                            //document-data
-                                //<OTPR 
-                            //signature
-                        //changes
-                    //signature
+                //document-data
+                //uz-rwc-doc
+                //document-data
+                //<OTPR 
+                //signature
+                //changes
+                //signature
                 //?changes
 
 
@@ -132,7 +803,6 @@ namespace Test.TestModule
 
         }
 
-
         public class Serializer
         {
             public T Deserialize<T>(string input) where T : class
@@ -150,7 +820,7 @@ namespace Test.TestModule
                 {
                     return null;
                 }
-                
+
 
             }
 
@@ -165,7 +835,6 @@ namespace Test.TestModule
                 }
             }
         }
-
 
         public void UZ_XML1()
         {
