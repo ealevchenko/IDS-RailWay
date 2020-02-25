@@ -2224,6 +2224,67 @@ namespace UZ
                 //}
             }
         }
+
+        private void UZ_XML_DOC(XmlElement xRoot, ref string xml)
+        {
+            foreach (XmlNode xnode in xRoot)
+            {
+                //foreach (XmlNode node_doc in xnode.ChildNodes)
+                //{
+                // если узел - document-data
+                if (xnode.Name == "document-data")
+                {
+                    foreach (XmlNode child_node_doc in xnode.ChildNodes)
+                    {
+                        // если узел - document-data
+                        if (child_node_doc.Name == "uz-rwc-doc")
+                        {
+                            UZ_XML_DOC((XmlElement)child_node_doc, ref xml);
+                        }
+                        // если узел - document-data
+                        if (child_node_doc.Name == "changes")
+                        {
+                            // Применить изменения
+                            foreach (XmlNode changes_node in child_node_doc.ChildNodes)
+                            {
+                                XmlDocument doc = new XmlDocument();
+                                doc.LoadXml(xml);
+                                string target = getAttributes<string>(changes_node, "target");
+                                
+                                if (changes_node.Name == "delete")
+                                {
+
+                                }
+                                if (changes_node.Name == "update")
+                                {
+                                    XmlNodeList elemList = doc.GetElementsByTagName(target);
+                                }
+                                if (changes_node.Name == "insert")
+                                {
+
+                                }
+                            }
+                        }
+
+                        // если узел - document-data
+                        if (child_node_doc.Name == "OTPR")
+                        {
+                            // атрибуты
+                            xml = child_node_doc.OuterXml;
+                        }
+                    }
+                }
+                // если узел - changes
+                if (xnode.Name == "signature")
+                {
+                    foreach (XmlNode childnode in xnode.ChildNodes)
+                    {
+
+                    }
+                }
+                //}
+            }
+        }
         /// <summary>
         /// Получить Электронный перевозочный документ OTPR
         /// </summary>
@@ -2238,7 +2299,9 @@ namespace UZ
                 // получим корневой элемент
                 XmlElement xRoot = xDoc.DocumentElement;
                 OTPR otpr = new OTPR();
-                UZ_XML_DOC(xRoot, ref otpr);
+                //UZ_XML_DOC(xRoot, ref otpr);
+                string xml_out = null;
+                UZ_XML_DOC(xRoot, ref xml_out);
                 return otpr;
             }
             catch (Exception e)
