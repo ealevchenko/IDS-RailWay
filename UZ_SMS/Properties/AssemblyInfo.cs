@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Управление общими сведениями о сборке осуществляется с помощью 
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("UZ_Client")]
+[assembly: AssemblyTitle("UZ_SMS")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("UZ_Client")]
+[assembly: AssemblyProduct("UZ_SMS")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Следующий GUID служит для идентификации библиотеки типов, если этот проект будет видимым для COM
-[assembly: Guid("a2f37dce-4fb7-450f-b8c4-122e4a8fce4a")]
+[assembly: Guid("e4e32ca4-63cf-4c71-aa49-849ca35e4fe0")]
 
 // Сведения о версии сборки состоят из следующих четырех значений:
 //
