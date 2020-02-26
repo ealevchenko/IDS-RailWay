@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Globalization;
+using System.Xml.Linq;
 
 namespace UZ
 {
@@ -1443,7 +1444,7 @@ namespace UZ
         {
             if (node.Attributes.Count > 0)
             {
-                tag.code = getAttributes<int?>(node, "code");                
+                tag.code = getAttributes<int?>(node, "code");
                 tag.param = getAttributes<string>(node, "param");
                 tag.param_de = getAttributes<string>(node, "param_de");
             }
@@ -2158,7 +2159,7 @@ namespace UZ
                             foreach (XmlNode changes_node in child_node_doc.ChildNodes)
                             {
                                 string target = getAttributes<string>(changes_node, "target");
-                                
+
                                 if (changes_node.Name == "delete")
                                 {
 
@@ -2247,22 +2248,7 @@ namespace UZ
                             // Применить изменения
                             foreach (XmlNode changes_node in child_node_doc.ChildNodes)
                             {
-                                XmlDocument doc = new XmlDocument();
-                                doc.LoadXml(xml);
-                                string target = getAttributes<string>(changes_node, "target");
-                                
-                                if (changes_node.Name == "delete")
-                                {
-
-                                }
-                                if (changes_node.Name == "update")
-                                {
-                                    XmlNodeList elemList = doc.GetElementsByTagName(target);
-                                }
-                                if (changes_node.Name == "insert")
-                                {
-
-                                }
+                                int res = SetEditNode(ref xml, changes_node);
                             }
                         }
 
@@ -2284,6 +2270,138 @@ namespace UZ
                 }
                 //}
             }
+        }
+
+        public XmlNode GetNode(XmlNode node, string name_node)
+        {
+            foreach (XmlNode chield_node in node.ChildNodes)
+            {
+                if (chield_node.Name == name_node) return chield_node;
+            }
+            return null;
+        }
+
+        public XmlNode[] GetNodes(XmlNode node, string name_node)
+        {
+            XmlNode[] result = null;
+
+            foreach (XmlNode chield_node in node.ChildNodes)
+            {
+                if (chield_node.Name == name_node)
+                {
+                    if (result == null) { result = new XmlNode[] { }; }
+                    List<XmlNode> list = result.ToList();
+                    list.Add(chield_node);
+                    result = list.ToArray();
+                };
+            }
+            return result;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="xml"></param>
+        /// <param name="change_node"></param>
+        /// <returns></returns>
+        public int SetEditNode(ref string xml, XmlNode change_node)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xml);
+            XmlNode root = doc.DocumentElement;
+            // Определим изменения -----------------------
+            // Определим режим
+            int mode = -1;
+            switch (change_node.Name) { 
+                case "insert": mode=0;break;
+                case "update": mode = 1; break;
+                case "delete": mode = 2; break;
+            }
+
+            XmlNode edit_node = change_node.FirstChild;
+            // Определим узел
+            string target = getAttributes<string>(change_node, "target");
+            string[] nodes = target.Split('/');
+            // Найдем узел
+            XmlNode node_searsh = root;
+            string name = null;
+            int index = 1;
+
+            foreach (string name_node in nodes)
+            {
+                if (name_node != "OTPR")
+                {
+                    string[] name_nodes = name_node.Split('[');
+                    // Получим чистое имя
+                    name = name_nodes[0];
+                    // Определим индекс
+                    index = 1; // По умолчанию
+                    if (name_nodes.Count() > 1)
+                    {
+                        string[] nums = name_nodes[1].Split(']');
+                        index = int.Parse(nums[0]);
+                    }
+
+                    if (node_searsh != null)
+                    {
+                        XmlNode[] searsh_nodes = GetNodes(node_searsh, name);
+                        if (searsh_nodes != null && searsh_nodes.Count() >= index)
+                        {
+                            node_searsh = searsh_nodes[index - 1];
+                        }
+                        else
+                        {
+                            // Узла нет! если команда Insert добавить узел
+                            if (mode == 0)
+                            {
+                                XmlElement new_node = doc.CreateElement(name);
+                                node_searsh.AppendChild(new_node);
+                                node_searsh = new_node;
+                            }
+                            else { 
+                                // !!Ошибка нет узла!
+                                return -1;
+                            }
+                            
+                        }
+                    }
+                }
+            }
+
+            if (node_searsh == null) return -1; // Ошибка узел не найден!
+            foreach (XmlNode attr in edit_node.Attributes)
+            {
+               
+                if (mode == 0 || mode == 1)
+                {
+                    XmlNode upd_attr = node_searsh.Attributes.GetNamedItem(attr.Name);
+                    if (upd_attr != null)
+                    {
+                        upd_attr.Value = attr.Value;
+                    }
+                    else {
+                        XmlAttribute new_attr = doc.CreateAttribute(attr.Name);
+                        new_attr.Value = attr.Value;
+                        node_searsh.Attributes.Append(new_attr);
+                    }
+                    
+                }
+                if (mode == 2)
+                {
+                    node_searsh.Attributes.Remove(node_searsh.Attributes[attr.Name]);
+                    //XmlNode at = node_searsh.Attributes.GetNamedItem(attr.Name);
+                    //at.RemoveAll();
+                }
+                
+
+            }
+
+
+            //XmlNode attr = node_searsh.Attributes.GetNamedItem();
+
+
+            // обновим
+            xml = doc.OuterXml;
+            return 1;
         }
         /// <summary>
         /// Получить Электронный перевозочный документ OTPR
