@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Globalization;
 using System.Xml.Linq;
+using System.Configuration;
+using TMSoft.Gohub.Client;
 
 namespace UZ
 {
@@ -684,16 +686,74 @@ namespace UZ
     {
         private eventID eventID = eventID.UZ_SMS;
         protected service servece_owner = service.Null;
+        protected string host;
+        protected int port;
+        //protected var connection;
 
         public UZ_SMS()
         {
+            try
+            {
+                this.host = ConfigurationManager.AppSettings["SMS_HOST"].ToString();
+                this.port = int.Parse(ConfigurationManager.AppSettings["SMS_PORT"].ToString());
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UZ_SMS()"), this.servece_owner, eventID);
+            }
+        }
 
+        public UZ_SMS(string host, int port)
+        {
+            this.host = host;
+            this.port = port;
         }
 
         public UZ_SMS(service servece_owner)
         {
-            this.servece_owner = servece_owner;
+            try
+            {
+                this.servece_owner = servece_owner;
+                this.host = ConfigurationManager.AppSettings["SMS_HOST"].ToString();
+                this.port = int.Parse(ConfigurationManager.AppSettings["SMS_PORT"].ToString());
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UZ_SMS(servece_owner={0})", servece_owner), this.servece_owner, eventID);
+            }
         }
+
+        public UZ_SMS(string host, int port, service servece_owner)
+        {
+            this.servece_owner = servece_owner;
+            this.host = host;
+            this.port = port;
+        }
+
+        public bool Connection() {
+            var connection = new GohubConnection(this.host, this.port);
+
+            GohubDocument doc = connection.QueryDocument("69490431");
+
+            string xml = doc.GetXmlText();
+
+            XmlDocument xDoc = new XmlDocument();
+            xDoc.LoadXml(xml);
+            // получим корневой элемент
+            XmlElement xRoot = xDoc.DocumentElement;
+            string xml_out = null;
+            UZ_XML_DOC(xRoot, ref xml_out);
+
+            XmlDocument xDoc_out = new XmlDocument();
+            xDoc_out.LoadXml(xml_out);
+            XmlElement xRoot_out = xDoc_out.DocumentElement;
+            OTPR otpr = new OTPR();
+            UZ_XML_DOC(xRoot_out, ref otpr);
+
+
+            return true;
+        }
+
 
         #region ЗАПОЛНИТЬ АТРИБУТЫ
         /// <summary>
@@ -2155,25 +2215,25 @@ namespace UZ
                         // если узел - document-data
                         if (child_node_doc.Name == "changes")
                         {
-                            // Применить изменения
-                            foreach (XmlNode changes_node in child_node_doc.ChildNodes)
-                            {
-                                string target = getAttributes<string>(changes_node, "target");
+                            //// Применить изменения
+                            //foreach (XmlNode changes_node in child_node_doc.ChildNodes)
+                            //{
+                            //    string target = getAttributes<string>(changes_node, "target");
 
-                                if (changes_node.Name == "delete")
-                                {
+                            //    if (changes_node.Name == "delete")
+                            //    {
 
-                                }
-                                if (changes_node.Name == "update")
-                                {
+                            //    }
+                            //    if (changes_node.Name == "update")
+                            //    {
 
-                                }
-                                if (changes_node.Name == "insert")
-                                {
+                            //    }
+                            //    if (changes_node.Name == "insert")
+                            //    {
 
-                                }
-                            }
-                            OTPR g = otpr;
+                            //    }
+                            //}
+                            //OTPR g = otpr;
                         }
 
                         // если узел - document-data
@@ -2311,8 +2371,9 @@ namespace UZ
             // Определим изменения -----------------------
             // Определим режим
             int mode = -1;
-            switch (change_node.Name) { 
-                case "insert": mode=0;break;
+            switch (change_node.Name)
+            {
+                case "insert": mode = 0; break;
                 case "update": mode = 1; break;
                 case "delete": mode = 2; break;
             }
@@ -2357,11 +2418,12 @@ namespace UZ
                                 node_searsh.AppendChild(new_node);
                                 node_searsh = new_node;
                             }
-                            else { 
+                            else
+                            {
                                 // !!Ошибка нет узла!
                                 return -1;
                             }
-                            
+
                         }
                     }
                 }
@@ -2370,7 +2432,7 @@ namespace UZ
             if (node_searsh == null) return -1; // Ошибка узел не найден!
             foreach (XmlNode attr in edit_node.Attributes)
             {
-               
+
                 if (mode == 0 || mode == 1)
                 {
                     XmlNode upd_attr = node_searsh.Attributes.GetNamedItem(attr.Name);
@@ -2378,12 +2440,13 @@ namespace UZ
                     {
                         upd_attr.Value = attr.Value;
                     }
-                    else {
+                    else
+                    {
                         XmlAttribute new_attr = doc.CreateAttribute(attr.Name);
                         new_attr.Value = attr.Value;
                         node_searsh.Attributes.Append(new_attr);
                     }
-                    
+
                 }
                 if (mode == 2)
                 {
@@ -2391,7 +2454,7 @@ namespace UZ
                     //XmlNode at = node_searsh.Attributes.GetNamedItem(attr.Name);
                     //at.RemoveAll();
                 }
-                
+
 
             }
 
@@ -2420,6 +2483,7 @@ namespace UZ
                 //UZ_XML_DOC(xRoot, ref otpr);
                 string xml_out = null;
                 UZ_XML_DOC(xRoot, ref xml_out);
+
                 return otpr;
             }
             catch (Exception e)
@@ -2428,5 +2492,7 @@ namespace UZ
                 return null;
             }
         }
+
+
     }
 }

@@ -39,6 +39,12 @@ namespace Test.TestModule
             OTPR otpr = sms.GetECD_OTPR(xDoc.InnerXml);
         }
 
+        public void UZ_Connection()
+        {
+            UZ_SMS sms = new UZ_SMS();
+            sms.Connection();
+        }
+
         //public class Serializer
         //{
         //    public T Deserialize<T>(string input) where T : class
