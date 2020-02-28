@@ -688,7 +688,7 @@ namespace UZ
         protected service servece_owner = service.Null;
         protected string host;
         protected int port;
-        //protected var connection;
+        protected GohubConnection connection;
 
         public UZ_SMS()
         {
@@ -730,28 +730,64 @@ namespace UZ
             this.port = port;
         }
 
-        public bool Connection() {
-            var connection = new GohubConnection(this.host, this.port);
 
-            GohubDocument doc = connection.QueryDocument("69490431");
+        /// <summary>
+        /// Подключится к модулю согласования
+        /// </summary>
+        /// <returns></returns>
+        public bool Connection()
+        {
+            try
+            {
+                if (connection == null)
+                {
+                    this.connection = new GohubConnection(this.host, this.port);
+                    Console.WriteLine("OK");
+                    return true;
 
-            string xml = doc.GetXmlText();
+                }
 
-            XmlDocument xDoc = new XmlDocument();
-            xDoc.LoadXml(xml);
-            // получим корневой элемент
-            XmlElement xRoot = xDoc.DocumentElement;
-            string xml_out = null;
-            UZ_XML_DOC(xRoot, ref xml_out);
+                //Console.WriteLine("OK");
+                //GohubDocument doc = connection.QueryDocument("69490431");
 
-            XmlDocument xDoc_out = new XmlDocument();
-            xDoc_out.LoadXml(xml_out);
-            XmlElement xRoot_out = xDoc_out.DocumentElement;
-            OTPR otpr = new OTPR();
-            UZ_XML_DOC(xRoot_out, ref otpr);
+                //string xml = doc.GetXmlText();
+
+                //XmlDocument xDoc = new XmlDocument();
+                //xDoc.LoadXml(xml);
+                //// получим корневой элемент
+                //XmlElement xRoot = xDoc.DocumentElement;
+                //string xml_out = null;
+                //UZ_XML_DOC(xRoot, ref xml_out);
+
+                //XmlDocument xDoc_out = new XmlDocument();
+                //xDoc_out.LoadXml(xml_out);
+                //XmlElement xRoot_out = xDoc_out.DocumentElement;
+                //OTPR otpr = new OTPR();
+                //UZ_XML_DOC(xRoot_out, ref otpr);
+
+                return false;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("Connection()"), this.servece_owner, eventID);
+                return false;
+            }
 
 
-            return true;
+
+
+
+
+        }
+
+        public OTPR GetOTPR(string id_doc)
+        {
+            if (this.connection != null)
+            {
+                GohubDocument doc = this.connection.QueryDocument("43000000000518166808");
+                return GetOTPROfFinalXML(GetFinalXML(doc.GetXmlText()));
+            }
+            return null;
         }
 
 
@@ -2196,142 +2232,12 @@ namespace UZ
 
         #endregion
 
-        private void UZ_XML_DOC(XmlElement xRoot, ref OTPR otpr)
-        {
-            foreach (XmlNode xnode in xRoot)
-            {
-                //foreach (XmlNode node_doc in xnode.ChildNodes)
-                //{
-                // если узел - document-data
-                if (xnode.Name == "document-data")
-                {
-                    foreach (XmlNode child_node_doc in xnode.ChildNodes)
-                    {
-                        // если узел - document-data
-                        if (child_node_doc.Name == "uz-rwc-doc")
-                        {
-                            UZ_XML_DOC((XmlElement)child_node_doc, ref otpr);
-                        }
-                        // если узел - document-data
-                        if (child_node_doc.Name == "changes")
-                        {
-                            //// Применить изменения
-                            //foreach (XmlNode changes_node in child_node_doc.ChildNodes)
-                            //{
-                            //    string target = getAttributes<string>(changes_node, "target");
-
-                            //    if (changes_node.Name == "delete")
-                            //    {
-
-                            //    }
-                            //    if (changes_node.Name == "update")
-                            //    {
-
-                            //    }
-                            //    if (changes_node.Name == "insert")
-                            //    {
-
-                            //    }
-                            //}
-                            //OTPR g = otpr;
-                        }
-
-                        // если узел - document-data
-                        if (child_node_doc.Name == "OTPR")
-                        {
-                            // атрибуты
-                            GetAttributes(child_node_doc, ref otpr);
-                            foreach (XmlNode otpr_node in child_node_doc.ChildNodes)
-                            {
-                                switch (otpr_node.Name)
-                                {
-                                    case "ACTS": { GetTagACTS(otpr_node, ref otpr); break; }
-                                    case "CARRIER": { GetTagCARRIER(otpr_node, ref otpr); break; }
-                                    case "CIM_INFO": { GetTagCIM_INFO(otpr_node, ref otpr); break; }
-                                    case "CLIENT": { GetTagCLIENT(otpr_node, ref otpr); break; }
-                                    case "COM_COND": { GetTagCOM_COND(otpr_node, ref otpr); break; }
-                                    case "CONT": { GetTagCONT(otpr_node, ref otpr); break; }
-                                    case "FRONTIER_MARK": { GetTagFRONTIER_MARK(otpr_node, ref otpr); break; }
-                                    case "OTPRDP": { GetTagOTPRDP(otpr_node, ref otpr); break; }
-                                    case "PAC": { GetTagPAC(otpr_node, ref otpr); break; }
-                                    case "PASS_MARK": { GetTagPASS_MARK(otpr_node, ref otpr); break; }
-                                    case "PL": { GetTagPL(otpr_node, ref otpr); break; }
-                                    case "PROLONGATION": { GetTagPROLONGATION(otpr_node, ref otpr); break; }
-                                    case "ROUTE": { GetTagROUTE(otpr_node, ref otpr); break; }
-                                    case "RW_STAT": { GetTagRW_STAT(otpr_node, ref otpr); break; }
-                                    case "REFUSE_EPD": { GetTagREFUSE_EPD(otpr_node, ref otpr); break; }
-                                    case "REISSUE_INFO": { GetTagREISSUE_INFO(otpr_node, ref otpr); break; }
-                                    case "SCHEMA": { GetTagSCHEMA(otpr_node, ref otpr); break; }
-                                    case "SENDER_DOC": { GetTagSENDER_DOC(otpr_node, ref otpr); break; }
-                                    case "SEND_STAT": { GetTagSEND_STAT(otpr_node, ref otpr); break; }
-                                    case "SHTEMPEL": { GetTagSHTEMPEL(otpr_node, ref otpr); break; }
-                                    case "SPEC_COND": { GetTagSPEC_COND(otpr_node, ref otpr); break; }
-                                    case "TAKS": { GetTagTAKS(otpr_node, ref otpr); break; }
-                                    case "TEXT": { GetTagTEXT(otpr_node, ref otpr); break; }
-                                    case "VAGON": { GetTagVAGON(otpr_node, ref otpr); break; }
-                                }
-                            }
-                        }
-                    }
-                }
-                // если узел - changes
-                if (xnode.Name == "signature")
-                {
-                    foreach (XmlNode childnode in xnode.ChildNodes)
-                    {
-
-                    }
-                }
-                //}
-            }
-        }
-
-        private void UZ_XML_DOC(XmlElement xRoot, ref string xml)
-        {
-            foreach (XmlNode xnode in xRoot)
-            {
-                //foreach (XmlNode node_doc in xnode.ChildNodes)
-                //{
-                // если узел - document-data
-                if (xnode.Name == "document-data")
-                {
-                    foreach (XmlNode child_node_doc in xnode.ChildNodes)
-                    {
-                        // если узел - document-data
-                        if (child_node_doc.Name == "uz-rwc-doc")
-                        {
-                            UZ_XML_DOC((XmlElement)child_node_doc, ref xml);
-                        }
-                        // если узел - document-data
-                        if (child_node_doc.Name == "changes")
-                        {
-                            // Применить изменения
-                            foreach (XmlNode changes_node in child_node_doc.ChildNodes)
-                            {
-                                int res = SetEditNode(ref xml, changes_node);
-                            }
-                        }
-
-                        // если узел - document-data
-                        if (child_node_doc.Name == "OTPR")
-                        {
-                            // атрибуты
-                            xml = child_node_doc.OuterXml;
-                        }
-                    }
-                }
-                // если узел - changes
-                if (xnode.Name == "signature")
-                {
-                    foreach (XmlNode childnode in xnode.ChildNodes)
-                    {
-
-                    }
-                }
-                //}
-            }
-        }
-
+        /// <summary>
+        /// Найти узел по имени
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="name_node"></param>
+        /// <returns></returns>
         public XmlNode GetNode(XmlNode node, string name_node)
         {
             foreach (XmlNode chield_node in node.ChildNodes)
@@ -2340,7 +2246,12 @@ namespace UZ
             }
             return null;
         }
-
+        /// <summary>
+        /// Найти все узлы по имени
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="name_node"></param>
+        /// <returns></returns>
         public XmlNode[] GetNodes(XmlNode node, string name_node)
         {
             XmlNode[] result = null;
@@ -2358,12 +2269,12 @@ namespace UZ
             return result;
         }
         /// <summary>
-        /// 
+        /// Применить изменения в XML
         /// </summary>
         /// <param name="xml"></param>
         /// <param name="change_node"></param>
         /// <returns></returns>
-        public int SetEditNode(ref string xml, XmlNode change_node)
+        private int SetEditNode(ref string xml, XmlNode change_node)
         {
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xml);
@@ -2430,69 +2341,292 @@ namespace UZ
             }
 
             if (node_searsh == null) return -1; // Ошибка узел не найден!
-            foreach (XmlNode attr in edit_node.Attributes)
+
+            if (edit_node == null && mode == 2) // Если не указаны атребуты и операция удаления, удаляем раздел
             {
-
-                if (mode == 0 || mode == 1)
-                {
-                    XmlNode upd_attr = node_searsh.Attributes.GetNamedItem(attr.Name);
-                    if (upd_attr != null)
-                    {
-                        upd_attr.Value = attr.Value;
-                    }
-                    else
-                    {
-                        XmlAttribute new_attr = doc.CreateAttribute(attr.Name);
-                        new_attr.Value = attr.Value;
-                        node_searsh.Attributes.Append(new_attr);
-                    }
-
-                }
-                if (mode == 2)
-                {
-                    node_searsh.Attributes.Remove(node_searsh.Attributes[attr.Name]);
-                    //XmlNode at = node_searsh.Attributes.GetNamedItem(attr.Name);
-                    //at.RemoveAll();
-                }
-
-
+                XmlNode parent = node_searsh.ParentNode;
+                parent.RemoveChild(node_searsh);
             }
+            else
+            {
+                foreach (XmlNode attr in edit_node.Attributes)
+                {
 
+                    if (mode == 0 || mode == 1)
+                    {
+                        XmlNode upd_attr = node_searsh.Attributes.GetNamedItem(attr.Name);
+                        if (upd_attr != null)
+                        {
+                            upd_attr.Value = attr.Value;
+                        }
+                        else
+                        {
+                            XmlAttribute new_attr = doc.CreateAttribute(attr.Name);
+                            new_attr.Value = attr.Value;
+                            node_searsh.Attributes.Append(new_attr);
+                        }
 
-            //XmlNode attr = node_searsh.Attributes.GetNamedItem();
-
-
+                    }
+                    if (mode == 2)
+                    {
+                        node_searsh.Attributes.Remove(node_searsh.Attributes[attr.Name]);
+                        //XmlNode at = node_searsh.Attributes.GetNamedItem(attr.Name);
+                        //at.RemoveAll();
+                    }
+                }
+                foreach (XmlNode child_node_doc in edit_node.ChildNodes)
+                {
+                    if (mode == 0)
+                    {
+                        XmlElement new_node = doc.CreateElement(child_node_doc.Name);
+                        foreach (XmlNode attr in child_node_doc.Attributes){
+                            new_node.SetAttribute(attr.Name, attr.Value);
+                        }
+                        node_searsh.AppendChild(new_node);
+                    }
+                }
+            }
             // обновим
             xml = doc.OuterXml;
             return 1;
         }
         /// <summary>
-        /// Получить Электронный перевозочный документ OTPR
+        /// Обход изменения формирование финальной XML
+        /// </summary>
+        /// <param name="xRoot"></param>
+        /// <param name="xml"></param>
+        private void UZ_XML_DOC(XmlElement xRoot, ref string xml)
+        {
+            foreach (XmlNode xnode in xRoot)
+            {
+                // если узел - document-data
+                if (xnode.Name == "document-data")
+                {
+                    foreach (XmlNode child_node_doc in xnode.ChildNodes)
+                    {
+                        // если узел - document-data
+                        if (child_node_doc.Name == "uz-rwc-doc")
+                        {
+                            UZ_XML_DOC((XmlElement)child_node_doc, ref xml);
+                        }
+                        // если узел - document-data
+                        if (child_node_doc.Name == "changes")
+                        {
+                            // Применить изменения
+                            foreach (XmlNode changes_node in child_node_doc.ChildNodes)
+                            {
+                                int res = SetEditNode(ref xml, changes_node);
+                            }
+                        }
+
+                        // если узел - document-data
+                        if (child_node_doc.Name == "OTPR")
+                        {
+                            // атрибуты
+                            xml = child_node_doc.OuterXml;
+                        }
+                    }
+                }
+                // если узел - changes
+                if (xnode.Name == "signature")
+                {
+                    foreach (XmlNode childnode in xnode.ChildNodes)
+                    {
+
+                    }
+                }
+            }
+        }
+        /// <summary>
+        /// Вернуть XML со всеми изменениями
         /// </summary>
         /// <param name="xml"></param>
         /// <returns></returns>
-        public OTPR GetECD_OTPR(string xml)
+        public string GetFinalXML(string xml)
         {
             try
             {
+                string xml_out = null;
                 XmlDocument xDoc = new XmlDocument();
                 xDoc.LoadXml(xml);
                 // получим корневой элемент
                 XmlElement xRoot = xDoc.DocumentElement;
-                OTPR otpr = new OTPR();
-                //UZ_XML_DOC(xRoot, ref otpr);
-                string xml_out = null;
                 UZ_XML_DOC(xRoot, ref xml_out);
-
-                return otpr;
+                return xml_out;
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("GetECD_OTPR(xml={0})", xml), this.servece_owner, this.eventID);
+                e.ExceptionMethodLog(String.Format("GetFinalXML(xml)"), this.servece_owner, this.eventID);
                 return null;
             }
         }
+        /// <summary>
+        /// Получить OTPR по финальному XML
+        /// </summary>
+        /// <param name="xml"></param>
+        /// <returns></returns>
+        public OTPR GetOTPROfFinalXML(string xml)
+        {
+            OTPR otpr = new OTPR();
+            XmlDocument xDoc = new XmlDocument();
+            xDoc.LoadXml(xml);
+            XmlElement xRoot = xDoc.DocumentElement;
+            if (xRoot.Name == "OTPR")
+            {
+                // атрибуты
+                GetAttributes(xRoot, ref otpr);
+                foreach (XmlNode otpr_node in xRoot.ChildNodes)
+                {
+                    switch (otpr_node.Name)
+                    {
+                        case "ACTS": { GetTagACTS(otpr_node, ref otpr); break; }
+                        case "CARRIER": { GetTagCARRIER(otpr_node, ref otpr); break; }
+                        case "CIM_INFO": { GetTagCIM_INFO(otpr_node, ref otpr); break; }
+                        case "CLIENT": { GetTagCLIENT(otpr_node, ref otpr); break; }
+                        case "COM_COND": { GetTagCOM_COND(otpr_node, ref otpr); break; }
+                        case "CONT": { GetTagCONT(otpr_node, ref otpr); break; }
+                        case "FRONTIER_MARK": { GetTagFRONTIER_MARK(otpr_node, ref otpr); break; }
+                        case "OTPRDP": { GetTagOTPRDP(otpr_node, ref otpr); break; }
+                        case "PAC": { GetTagPAC(otpr_node, ref otpr); break; }
+                        case "PASS_MARK": { GetTagPASS_MARK(otpr_node, ref otpr); break; }
+                        case "PL": { GetTagPL(otpr_node, ref otpr); break; }
+                        case "PROLONGATION": { GetTagPROLONGATION(otpr_node, ref otpr); break; }
+                        case "ROUTE": { GetTagROUTE(otpr_node, ref otpr); break; }
+                        case "RW_STAT": { GetTagRW_STAT(otpr_node, ref otpr); break; }
+                        case "REFUSE_EPD": { GetTagREFUSE_EPD(otpr_node, ref otpr); break; }
+                        case "REISSUE_INFO": { GetTagREISSUE_INFO(otpr_node, ref otpr); break; }
+                        case "SCHEMA": { GetTagSCHEMA(otpr_node, ref otpr); break; }
+                        case "SENDER_DOC": { GetTagSENDER_DOC(otpr_node, ref otpr); break; }
+                        case "SEND_STAT": { GetTagSEND_STAT(otpr_node, ref otpr); break; }
+                        case "SHTEMPEL": { GetTagSHTEMPEL(otpr_node, ref otpr); break; }
+                        case "SPEC_COND": { GetTagSPEC_COND(otpr_node, ref otpr); break; }
+                        case "TAKS": { GetTagTAKS(otpr_node, ref otpr); break; }
+                        case "TEXT": { GetTagTEXT(otpr_node, ref otpr); break; }
+                        case "VAGON": { GetTagVAGON(otpr_node, ref otpr); break; }
+                    }
+                }
+                return otpr;
+            }
+            return null;
 
+        }
+
+        ///// <summary>
+        ///// Получить Электронный перевозочный документ OTPR
+        ///// </summary>
+        ///// <param name="xml"></param>
+        ///// <returns></returns>
+        //public OTPR GetECD_OTPR(string xml)
+        //{
+        //    try
+        //    {
+        //        XmlDocument xDoc = new XmlDocument();
+        //        xDoc.LoadXml(xml);
+        //        // получим корневой элемент
+        //        XmlElement xRoot = xDoc.DocumentElement;
+        //        OTPR otpr = new OTPR();
+        //        //UZ_XML_DOC(xRoot, ref otpr);
+        //        string xml_out = null;
+        //        UZ_XML_DOC(xRoot, ref xml_out);
+
+        //        return otpr;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        e.ExceptionMethodLog(String.Format("GetECD_OTPR(xml={0})", xml), this.servece_owner, this.eventID);
+        //        return null;
+        //    }
+        //}
+
+        //private void UZ_XML_DOC(XmlElement xRoot, ref OTPR otpr)
+        //{
+        //    foreach (XmlNode xnode in xRoot)
+        //    {
+        //        //foreach (XmlNode node_doc in xnode.ChildNodes)
+        //        //{
+        //        // если узел - document-data
+        //        if (xnode.Name == "document-data")
+        //        {
+        //            foreach (XmlNode child_node_doc in xnode.ChildNodes)
+        //            {
+        //                // если узел - document-data
+        //                if (child_node_doc.Name == "uz-rwc-doc")
+        //                {
+        //                    UZ_XML_DOC((XmlElement)child_node_doc, ref otpr);
+        //                }
+        //                // если узел - document-data
+        //                if (child_node_doc.Name == "changes")
+        //                {
+        //                    //// Применить изменения
+        //                    //foreach (XmlNode changes_node in child_node_doc.ChildNodes)
+        //                    //{
+        //                    //    string target = getAttributes<string>(changes_node, "target");
+
+        //                    //    if (changes_node.Name == "delete")
+        //                    //    {
+
+        //                    //    }
+        //                    //    if (changes_node.Name == "update")
+        //                    //    {
+
+        //                    //    }
+        //                    //    if (changes_node.Name == "insert")
+        //                    //    {
+
+        //                    //    }
+        //                    //}
+        //                    //OTPR g = otpr;
+        //                }
+
+        //                // если узел - document-data
+        //                if (child_node_doc.Name == "OTPR")
+        //                {
+        //                    // атрибуты
+        //                    GetAttributes(child_node_doc, ref otpr);
+        //                    foreach (XmlNode otpr_node in child_node_doc.ChildNodes)
+        //                    {
+        //                        switch (otpr_node.Name)
+        //                        {
+        //                            case "ACTS": { GetTagACTS(otpr_node, ref otpr); break; }
+        //                            case "CARRIER": { GetTagCARRIER(otpr_node, ref otpr); break; }
+        //                            case "CIM_INFO": { GetTagCIM_INFO(otpr_node, ref otpr); break; }
+        //                            case "CLIENT": { GetTagCLIENT(otpr_node, ref otpr); break; }
+        //                            case "COM_COND": { GetTagCOM_COND(otpr_node, ref otpr); break; }
+        //                            case "CONT": { GetTagCONT(otpr_node, ref otpr); break; }
+        //                            case "FRONTIER_MARK": { GetTagFRONTIER_MARK(otpr_node, ref otpr); break; }
+        //                            case "OTPRDP": { GetTagOTPRDP(otpr_node, ref otpr); break; }
+        //                            case "PAC": { GetTagPAC(otpr_node, ref otpr); break; }
+        //                            case "PASS_MARK": { GetTagPASS_MARK(otpr_node, ref otpr); break; }
+        //                            case "PL": { GetTagPL(otpr_node, ref otpr); break; }
+        //                            case "PROLONGATION": { GetTagPROLONGATION(otpr_node, ref otpr); break; }
+        //                            case "ROUTE": { GetTagROUTE(otpr_node, ref otpr); break; }
+        //                            case "RW_STAT": { GetTagRW_STAT(otpr_node, ref otpr); break; }
+        //                            case "REFUSE_EPD": { GetTagREFUSE_EPD(otpr_node, ref otpr); break; }
+        //                            case "REISSUE_INFO": { GetTagREISSUE_INFO(otpr_node, ref otpr); break; }
+        //                            case "SCHEMA": { GetTagSCHEMA(otpr_node, ref otpr); break; }
+        //                            case "SENDER_DOC": { GetTagSENDER_DOC(otpr_node, ref otpr); break; }
+        //                            case "SEND_STAT": { GetTagSEND_STAT(otpr_node, ref otpr); break; }
+        //                            case "SHTEMPEL": { GetTagSHTEMPEL(otpr_node, ref otpr); break; }
+        //                            case "SPEC_COND": { GetTagSPEC_COND(otpr_node, ref otpr); break; }
+        //                            case "TAKS": { GetTagTAKS(otpr_node, ref otpr); break; }
+        //                            case "TEXT": { GetTagTEXT(otpr_node, ref otpr); break; }
+        //                            case "VAGON": { GetTagVAGON(otpr_node, ref otpr); break; }
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        // если узел - changes
+        //        if (xnode.Name == "signature")
+        //        {
+        //            foreach (XmlNode childnode in xnode.ChildNodes)
+        //            {
+
+        //            }
+        //        }
+        //        //}
+        //    }
+        //}
 
     }
 }

@@ -1,0 +1,61 @@
+﻿<OTPR country_nazn="804" country_otpr="643" date_otpr="18.02.2020 16:53:00" distance_way="634" kod_doc="94" loader="2" metod="4" nom_doc="28599840" pr_vohr="2" rab_esr="82" speed="2" type_pay="1" vid="6" xmlns="uz:rwc:document::entered:1.10" date_grpol="27.02.2020 13:53:00" date_pr="27.02.2020 12:35:00">
+  <CARRIER esr_in="612003" esr_name_in="ТАТЬЯНКА" esr_name_out="СОЛОВЕЙ ЭКС." esr_out="439701" kod="0020" name="ОАО  РЖД" zd_kod_in="20" zd_kod_out="20" />
+  <CARRIER esr_in="431801" esr_name_in="ТОПОЛИ ЭКСП" esr_name_out="КУПЯНСК-СОРТ" esr_out="430002" kod="0022" name="УЗ" zd_kod_in="22" zd_kod_out="22" />
+  <CLIENT adress="400029 Г.ВОЛГОГРАД 40 ЛЕТ ВЛКСМ 55 ВОЛГОГРАДСКАЯ ОБЛАСТЬ" kod="3494" name="ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ   ЛУКОЙЛ-ВОЛГОГРАДНЕФТЕПЕРЕРАБОТКА" okpo="00148599" representative_pib="СТ. ОПЕРАТОР ТОВАРНЫ КУДРЯВЦЕВА А." type="1" />
+  <CLIENT adress="Дніпропетровська область, м. Кривий Ріг ВУЛ. OPДЖOHІKІДЗE, БУД.  1" kod="7932" name="ПАТ АРСЕЛОРМІТТАЛ КРИВИЙ РІГ (8116733) 24432974" okpo="24432974" type="2" />
+  <FRONTIER_MARK carrier_kod="0022" carrier_name="УЗ" cross_date="22.02.2020 20:46:00" direction="1" esr="431801" esr_name="Тополи (эксп.)" zd_kod="22" />
+  <PASS_MARK carrier_kod="0022" carrier_name="УЗ" esr="431801" esr_name="Тополи (эксп.)" pass_date="22.02.2020 20:46:00" zd_kod="22" />
+  <PL type="3" carrier_kod="0022" carrier_name="УЗ" kod_plat="8202468" name_plat="ООО  ЭКСПИОЙЛ" />
+  <PL carrier_kod="0020" kod_plat="1000091105" name_plat="ООО  ЛУКОЙЛ-ВОЛГОГРАДНЕФТЕПЕРЕРАБОТКА" type="2" kod_adm="20" />
+  <ROUTE index="0" name_from="Татьянка" name_to="Купянск-Сортировочный" rw_from="20" rw_to="22" stn_from="612003" stn_to="430002" zd_nazn="22" zd_otpr="20">
+    <JOINT admin="20" direction="0" stn="439701" stn_name="Соловей (эксп.)" zd_kod="20" />
+    <JOINT admin="22" cross_time="22.02.2020 00:00:00" direction="1" stn="431801" stn_name="Тополи (эксп.)" zd_kod="22" />
+  </ROUTE>
+  <SENDER_DOC description="СВИДЕТЕЛЬСТВО О ТЕХНИЧЕСКОМ СОСТОЯН" doc_type="916" />
+  <SENDER_DOC description="ДЕКЛАРАЦИЯ НА ТОВАРЫ" doc_type="916" />
+  <SENDER_DOC description="ПАСПОРТ КАЧЕСТВА" doc_type="Z69" />
+  <SENDER_DOC description="ИНВОЙС" doc_type="380" />
+  <SHTEMPEL column_num="у верхній частині" info_sht="Легковоспламеняется" nom_sht="512" />
+  <SHTEMPEL column_num="у верхній частині" info_sht="Импорт" nom_sht="707" />
+  <SHTEMPEL column_num="15" info_sht="Прикрытие 0-0-1" nom_sht="310" />
+  <TEXT name_gr="ПРИВАТНЫЙ ВАГОН СОБСТВЕННИК/АРЕНДАТОР ООО  ЛУКОЙЛ-ТРАНСТОПЛИВО ДИЗЕЛЬНОЕ С Т ВСПЫШКИ &amp; 60; 61 ГР.СВАГОНЫ НЕ ПРИНАДЛЕЖАТ ПЕРЕВОЗЧИКУ." nom_dog="-" zayava="КОТЕЛ И АРМАТУРА ИСПРАВНЫ И СООТВЕТСТВУЮТ УСТАНОВЛЕННЫМ ТРЕБОВАНИЯМ;" branch="." />
+  <VAGON gruzp="60.0" kod_adm="20" kol_os="4" name_firm_owner="ООО ЛУКОЙЛ-ТРАНС" nomer="51095388" pr_sobst="1" promoted_by="1" u_tara="23400" use="0" ves_tary_arc="23400" zd_kod="20" rod_vag="70">
+    <COLLECT_V danger="3" danger_kod="30" danger_proper_name="ГАЗОЙЛЬ или ТОПЛИВО ДИЗЕЛЬНОЕ или ТОПЛИВО ПЕЧНОЕ ЛЕГКОЕ (температура вспышки не более 60°С)" danger_signs="3" danger_text="30/UN1202 ГАЗОЙЛЬ или ТОПЛИВО ДИЗЕЛЬНОЕ или ТОПЛИВО ПЕЧНОЕ ЛЕГКОЕ (температура вспышки не более 60°С), 3, III, АК №315" kod_etsng="214043" kod_gng="27410000" name_etsng="Топливо дизельное с температурой вспышки ниже 61с (в закрытом тигле)" name_gng="Топливо дизельное" nom_card="315" nom_oon="1202" pac="VL" packing_group="III" vesg="59161" />
+    <ZPU_V esr_zpu="612003" nom_zpu="Н8453702" sobst_zpu="1" zd_kod="20" zpu="99" />
+  </VAGON>
+  <VAGON gruzp="66.0" kod_adm="20" kol_os="4" name_firm_owner="ООО ЛУКОЙЛ-ТРАНС" nomer="73072738" pr_sobst="1" promoted_by="1" u_tara="27000" use="0" ves_tary_arc="27000" zd_kod="20" rod_vag="70">
+    <COLLECT_V danger="3" danger_kod="30" danger_proper_name="ГАЗОЙЛЬ или ТОПЛИВО ДИЗЕЛЬНОЕ или ТОПЛИВО ПЕЧНОЕ ЛЕГКОЕ (температура вспышки не более 60°С)" danger_signs="3" danger_text="30/UN1202 ГАЗОЙЛЬ или ТОПЛИВО ДИЗЕЛЬНОЕ или ТОПЛИВО ПЕЧНОЕ ЛЕГКОЕ (температура вспышки не более 60°С), 3, III, АК №315" kod_etsng="214043" kod_gng="27410000" name_etsng="Топливо дизельное с температурой вспышки ниже 61с (в закрытом тигле)" name_gng="Топливо дизельное" nom_card="315" nom_oon="1202" pac="VL" packing_group="III" vesg="65056" />
+    <ZPU_V esr_zpu="612003" nom_zpu="Н8453704" sobst_zpu="1" zd_kod="20" zpu="99" />
+  </VAGON>
+  <VAGON gruzp="66.0" kod_adm="20" kol_os="4" name_firm_owner="ООО ЛУКОЙЛ-ТРАНС" nomer="57393936" pr_sobst="1" promoted_by="1" u_tara="26800" use="0" ves_tary_arc="26800" zd_kod="20" rod_vag="70">
+    <COLLECT_V danger="3" danger_kod="30" danger_proper_name="ГАЗОЙЛЬ или ТОПЛИВО ДИЗЕЛЬНОЕ или ТОПЛИВО ПЕЧНОЕ ЛЕГКОЕ (температура вспышки не более 60°С)" danger_signs="3" danger_text="30/UN1202 ГАЗОЙЛЬ или ТОПЛИВО ДИЗЕЛЬНОЕ или ТОПЛИВО ПЕЧНОЕ ЛЕГКОЕ (температура вспышки не более 60°С), 3, III, АК №315" kod_etsng="214043" kod_gng="27410000" name_etsng="Топливо дизельное с температурой вспышки ниже 61с (в закрытом тигле)" name_gng="Топливо дизельное" nom_card="315" nom_oon="1202" pac="VL" packing_group="III" vesg="65497" />
+    <ZPU_V esr_zpu="612003" nom_zpu="Н8453706" sobst_zpu="1" zd_kod="20" zpu="99" />
+  </VAGON>
+  <VAGON gruzp="66.0" kod_adm="20" kol_os="4" name_firm_owner="ООО ЛУКОЙЛ-ТРАНС" nomer="50720887" pr_sobst="1" promoted_by="1" u_tara="25900" use="0" ves_tary_arc="25900" zd_kod="20" rod_vag="70">
+    <COLLECT_V danger="3" danger_kod="30" danger_proper_name="ГАЗОЙЛЬ или ТОПЛИВО ДИЗЕЛЬНОЕ или ТОПЛИВО ПЕЧНОЕ ЛЕГКОЕ (температура вспышки не более 60°С)" danger_signs="3" danger_text="30/UN1202 ГАЗОЙЛЬ или ТОПЛИВО ДИЗЕЛЬНОЕ или ТОПЛИВО ПЕЧНОЕ ЛЕГКОЕ (температура вспышки не более 60°С), 3, III, АК №315" kod_etsng="214043" kod_gng="27410000" name_etsng="Топливо дизельное с температурой вспышки ниже 61с (в закрытом тигле)" name_gng="Топливо дизельное" nom_card="315" nom_oon="1202" pac="VL" packing_group="III" vesg="65455" />
+    <ZPU_V esr_zpu="612003" nom_zpu="Н8453707" sobst_zpu="1" zd_kod="20" zpu="99" />
+  </VAGON>
+  <VAGON gruzp="65.0" kod_adm="20" kol_os="4" name_firm_owner="ООО ЛУКОЙЛ-ТРАНС" nomer="50776285" pr_sobst="1" promoted_by="1" u_tara="27700" use="0" ves_tary_arc="27700" zd_kod="20" rod_vag="70">
+    <COLLECT_V danger="3" danger_kod="30" danger_proper_name="ГАЗОЙЛЬ или ТОПЛИВО ДИЗЕЛЬНОЕ или ТОПЛИВО ПЕЧНОЕ ЛЕГКОЕ (температура вспышки не более 60°С)" danger_signs="3" danger_text="30/UN1202 ГАЗОЙЛЬ или ТОПЛИВО ДИЗЕЛЬНОЕ или ТОПЛИВО ПЕЧНОЕ ЛЕГКОЕ (температура вспышки не более 60°С), 3, III, АК №315" kod_etsng="214043" kod_gng="27410000" name_etsng="Топливо дизельное с температурой вспышки ниже 61с (в закрытом тигле)" name_gng="Топливо дизельное" nom_card="315" nom_oon="1202" pac="VL" packing_group="III" vesg="59113" />
+    <ZPU_V esr_zpu="612003" nom_zpu="Н8453708" sobst_zpu="1" zd_kod="20" zpu="99" />
+  </VAGON>
+  <VAGON gruzp="66.0" kod_adm="20" kol_os="4" name_firm_owner="ООО ЛУКОЙЛ-ТРАНС" nomer="51468569" pr_sobst="1" promoted_by="1" u_tara="27300" use="0" ves_tary_arc="27300" zd_kod="20" rod_vag="70">
+    <COLLECT_V danger="3" danger_kod="30" danger_proper_name="ГАЗОЙЛЬ или ТОПЛИВО ДИЗЕЛЬНОЕ или ТОПЛИВО ПЕЧНОЕ ЛЕГКОЕ (температура вспышки не более 60°С)" danger_signs="3" danger_text="30/UN1202 ГАЗОЙЛЬ или ТОПЛИВО ДИЗЕЛЬНОЕ или ТОПЛИВО ПЕЧНОЕ ЛЕГКОЕ (температура вспышки не более 60°С), 3, III, АК №315" kod_etsng="214043" kod_gng="27410000" name_etsng="Топливо дизельное с температурой вспышки ниже 61с (в закрытом тигле)" name_gng="Топливо дизельное" nom_card="315" nom_oon="1202" pac="VL" packing_group="III" vesg="58514" />
+    <ZPU_V esr_zpu="612003" nom_zpu="Н8453709" sobst_zpu="1" zd_kod="20" zpu="99" />
+  </VAGON>
+  <VAGON gruzp="66.0" kod_adm="20" kol_os="4" name_firm_owner="ООО ЛУКОЙЛ-ТРАНС" nomer="50751171" pr_sobst="1" promoted_by="1" u_tara="26900" use="0" ves_tary_arc="26900" zd_kod="20" rod_vag="70">
+    <COLLECT_V danger="3" danger_kod="30" danger_proper_name="ГАЗОЙЛЬ или ТОПЛИВО ДИЗЕЛЬНОЕ или ТОПЛИВО ПЕЧНОЕ ЛЕГКОЕ (температура вспышки не более 60°С)" danger_signs="3" danger_text="30/UN1202 ГАЗОЙЛЬ или ТОПЛИВО ДИЗЕЛЬНОЕ или ТОПЛИВО ПЕЧНОЕ ЛЕГКОЕ (температура вспышки не более 60°С), 3, III, АК №315" kod_etsng="214043" kod_gng="27410000" name_etsng="Топливо дизельное с температурой вспышки ниже 61с (в закрытом тигле)" name_gng="Топливо дизельное" nom_card="315" nom_oon="1202" pac="VL" packing_group="III" vesg="59942" />
+    <ZPU_V esr_zpu="612003" nom_zpu="Н8453710" sobst_zpu="1" zd_kod="20" zpu="99" />
+  </VAGON>
+  <VAGON gruzp="68.0" kod_adm="20" kol_os="4" name_firm_owner="ООО ЛУКОЙЛ-ТРАНС" nomer="51080778" pr_sobst="1" promoted_by="1" u_tara="24700" use="0" ves_tary_arc="24700" zd_kod="20" rod_vag="70">
+    <COLLECT_V danger="3" danger_kod="30" danger_proper_name="ГАЗОЙЛЬ или ТОПЛИВО ДИЗЕЛЬНОЕ или ТОПЛИВО ПЕЧНОЕ ЛЕГКОЕ (температура вспышки не более 60°С)" danger_signs="3" danger_text="30/UN1202 ГАЗОЙЛЬ или ТОПЛИВО ДИЗЕЛЬНОЕ или ТОПЛИВО ПЕЧНОЕ ЛЕГКОЕ (температура вспышки не более 60°С), 3, III, АК №315" kod_etsng="214043" kod_gng="27410000" name_etsng="Топливо дизельное с температурой вспышки ниже 61с (в закрытом тигле)" name_gng="Топливо дизельное" nom_card="315" nom_oon="1202" pac="VL" packing_group="III" vesg="67080" />
+    <ZPU_V esr_zpu="612003" nom_zpu="Н8453711" sobst_zpu="1" zd_kod="20" zpu="99" />
+  </VAGON>
+  <ROUTE index="1" name_from="Купянск-Сортировочный" name_to="Кривой Рог-Главный" rw_from="22" rw_to="22" stn_from="430002" stn_to="467004" zd_nazn="22" zd_otpr="22" xmlns="">
+    <PEREADR_INFO date_pereadr="24.02.2020 18:10:00" nom_perv_doc="28599840" type_pay_old="1" />
+  </ROUTE>
+  <SHTEMPEL column_num="у верхній частині" info_sht="Охрана ж. д." nom_sht="401" xmlns="" />
+  <SHTEMPEL column_num="7" info_sht="Смотри прилагаемую ведомость" nom_sht="708" xmlns="" />
+  <SHTEMPEL column_num="15" info_sht="Договор перевозки изменен" nom_sht="918" xmlns="" />
+  <SHTEMPEL column_num="30" info_sht="Переадресован на станцию КРИВИЙ РІГ-ГОЛОВНИЙ получателю ПАТ АРСЕЛОРМІТТАЛ КРИВИЙ РІГ (8116733) 24432974  на основании 736 от 24.02.2020" nom_sht="919" xmlns="" />
+</OTPR>

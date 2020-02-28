@@ -33,16 +33,17 @@ namespace Test.TestModule
 
         public void UZ_XML()
         {
-            XmlDocument xDoc = new XmlDocument();
-            xDoc.Load("test1.xml");
-            UZ_SMS sms = new UZ_SMS();
-            OTPR otpr = sms.GetECD_OTPR(xDoc.InnerXml);
+            //XmlDocument xDoc = new XmlDocument();
+            //xDoc.Load("test1.xml");
+            //UZ_SMS sms = new UZ_SMS();
+            //OTPR otpr = sms.GetECD_OTPR(xDoc.InnerXml);
         }
 
         public void UZ_Connection()
         {
             UZ_SMS sms = new UZ_SMS();
             sms.Connection();
+            sms.GetOTPR("69490431");
         }
 
         //public class Serializer
