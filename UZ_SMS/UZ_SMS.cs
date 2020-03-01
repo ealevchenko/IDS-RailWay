@@ -482,7 +482,7 @@ namespace UZ
 
     public class SCHEMA
     {
-        public int? carry_sch { get; set; }	//	Схема таксування по відправленню
+        public double? carry_sch { get; set; }	//	Схема таксування по відправленню
         public int? pr_sch { get; set; }	//	Ознака виставлення схеми таксування
     }
 
@@ -788,6 +788,14 @@ namespace UZ
                 return GetOTPROfFinalXML(GetFinalXML(doc.GetXmlText()));
             }
             return null;
+        }
+        /// <summary>
+        /// Получить OTPR из XML
+        /// </summary>
+        /// <param name="xml"></param>
+        /// <returns></returns>
+        public OTPR GetOTPROfXML(string xml) { 
+                return GetOTPROfFinalXML(GetFinalXML(xml));        
         }
 
 
@@ -1585,7 +1593,7 @@ namespace UZ
         {
             if (node.Attributes.Count > 0)
             {
-                tag.carry_sch = getAttributes<int?>(node, "carry_sch");
+                tag.carry_sch = getAttributes<double?>(node, "carry_sch");
                 tag.pr_sch = getAttributes<int?>(node, "pr_sch");
             }
         }

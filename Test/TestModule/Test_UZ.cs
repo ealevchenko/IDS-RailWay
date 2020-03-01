@@ -46,6 +46,14 @@ namespace Test.TestModule
             sms.GetOTPR("69490431");
         }
 
+        public void UZ_SMS_GetOTPROfXML()
+        {
+            XmlDocument xDoc = new XmlDocument();
+            xDoc.Load("test1.xml");
+            UZ_SMS sms = new UZ_SMS();
+            OTPR otpr = sms.GetOTPROfXML(xDoc.InnerXml);
+        }
+
         //public class Serializer
         //{
         //    public T Deserialize<T>(string input) where T : class

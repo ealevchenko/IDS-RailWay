@@ -100,11 +100,8 @@ namespace Test
             Test_UZ tuz = new Test_UZ();
             //tuz.UZ_WebApiClientUZWagon();
             //tuz.UZ_XML();
-            tuz.UZ_Connection();
-            //tlogs.FLOG_FileLogs();
-            //tlogs.ELOG_EventLogs();
-            //tlogs.DBLOG_DataBaseLogs();
-
+            //tuz.UZ_Connection();
+            tuz.UZ_SMS_GetOTPROfXML();
             #endregion
 
             Console.WriteLine("Press any key to exit...");
