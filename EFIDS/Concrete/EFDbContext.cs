@@ -13,6 +13,11 @@ namespace EFIDS.Concrete
         {
         }
 
+        // RWT
+        public virtual DbSet<ArrivalCars> ArrivalCars { get; set; }
+        public virtual DbSet<ArrivalSostav> ArrivalSostav { get; set; }
+        public virtual DbSet<Directory_Station> Directory_Station { get; set; }
+
         // MORS
         public virtual DbSet<CardsWagons> CardsWagons { get; set; }
         public virtual DbSet<CardsWagonsRepairs> CardsWagonsRepairs { get; set; }
@@ -39,6 +44,24 @@ namespace EFIDS.Concrete
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+
+            // RWT
+            modelBuilder.Entity<ArrivalSostav>()
+                .HasMany(e => e.ArrivalCars)
+                .WithOptional(e => e.ArrivalSostav)
+                .HasForeignKey(e => e.id_arrival);
+
+            modelBuilder.Entity<Directory_Station>()
+                .HasMany(e => e.ArrivalSostav)
+                .WithRequired(e => e.Directory_Station)
+                .HasForeignKey(e => e.id_station_from)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Directory_Station>()
+                .HasMany(e => e.ArrivalSostav1)
+                .WithOptional(e => e.Directory_Station1)
+                .HasForeignKey(e => e.id_station_on);
+            //
             modelBuilder.Entity<CardsWagons>()
                 .HasMany(e => e.ParksListWagons)
                 .WithRequired(e => e.CardsWagons)

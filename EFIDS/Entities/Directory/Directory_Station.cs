@@ -1,0 +1,51 @@
+namespace EFIDS.Entities
+{
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
+
+    [Table("IDS.Directory_Station")]
+    public partial class Directory_Station
+    {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Directory_Station()
+        {
+            ArrivalSostav = new HashSet<ArrivalSostav>();
+            ArrivalSostav1 = new HashSet<ArrivalSostav>();
+        }
+
+        public int id { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string station_name_ru { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string station_name_en { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string station_abbr_ru { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string station_abbr_en { get; set; }
+
+        public bool exit_uz { get; set; }
+
+        public bool station_uz { get; set; }
+
+        public bool? default_side { get; set; }
+
+        public int? code { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ArrivalSostav> ArrivalSostav { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ArrivalSostav> ArrivalSostav1 { get; set; }
+    }
+}
