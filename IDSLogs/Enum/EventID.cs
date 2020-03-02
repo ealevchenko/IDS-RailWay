@@ -38,6 +38,12 @@ namespace IDSLogs.Enum
         MT_WebApiClient = 2600,         // Библиотека доступа к WEB API
         #endregion
 
+        #region Служба Информационно диспечерской системы 2000
 
+        IDS = 3000,
+        EFIDS = 3100,                    // Библиотека базы данных IDS
+        IDS_IDSTransfer = 3400,           // Сервис переноса даных из файлов в БД IDS
+
+        #endregion
     }
 }

@@ -10,7 +10,7 @@ namespace IDS
 {
     public class IDSTransfer
     {
-        private eventID eventID = eventID.MT_MTTransfer;
+        private eventID eventID = eventID.IDS_IDSTransfer;
         protected service servece_owner = service.Null;
         
         public IDSTransfer()
