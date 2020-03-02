@@ -10,9 +10,44 @@ using System.Globalization;
 using System.Xml.Linq;
 using System.Configuration;
 using TMSoft.Gohub.Client;
+using EFUZ.Concrete;
+using EFUZ.Entities;
+//using EFUZ.Concrete;
+//using EFUZ.Entities;
 
 namespace UZ
 {
+    public enum uz_status : int
+    {
+        unknown = 0,	            //	 Статус невідомий
+        draft = 1,	                //	 Чернетка
+        sending = 2,	            //	 Документ передається товарному касиру
+        registered = 3,	            //	 Документ переданий товарному касиру
+        reclaiming = 4, 	        //	 Документ відкликається від товарного касира
+        accepted = 5,	            //	 Вантаж прийнято до перевезення
+        delivered = 6,	            //	 Вантаж прибув
+        recieved = 7,	            //	 Вантаж отримано одержувачем
+        uncredited = 8,	            //	 Документ розкредитовано товарним касиром
+        recieved_draft = 9,	        //	 Вантаж отримано одержувачем і редагується
+        recieved_sending = 10,	    //	 Вантаж отримано одержувачем і переданий товарному касиру 
+        recieved_reclaiming = 11,	//	 Вантаж отримано одержувачем і відкликається від товарного касира
+        canceled = 12,	            //	 Документ зіпсований товарним касиром
+        locked = 13,	            //	 Документ заблокований
+    }
+
+    public class UZ_DOC
+    {
+        public string id_doc { get; set; }
+        public int revision { get; set; }
+        public uz_status? status { get; set; }
+        public string sender_code { get; set; }
+        public string recipient_code { get; set; }
+        public DateTime? dt { get; set; }
+        public string xml { get; set; }
+        public string xml_final { get; set; }
+        public OTPR otpr { get; set; }
+    }
+
     #region КЛАССЫ СТРУКТУРЫ OTPR
 
     public class OTPR
@@ -730,46 +765,18 @@ namespace UZ
             this.port = port;
         }
 
-
-        /// <summary>
-        /// Подключится к модулю согласования
-        /// </summary>
-        /// <returns></returns>
-        public bool Connection()
+        public bool Connection(string host, int port)
         {
             try
             {
-                if (connection == null)
-                {
-                    this.connection = new GohubConnection(this.host, this.port);
-                    Console.WriteLine("OK");
-                    return true;
+                this.host = host;
+                this.port = port;
+                return Connection();
 
-                }
-
-                //Console.WriteLine("OK");
-                //GohubDocument doc = connection.QueryDocument("69490431");
-
-                //string xml = doc.GetXmlText();
-
-                //XmlDocument xDoc = new XmlDocument();
-                //xDoc.LoadXml(xml);
-                //// получим корневой элемент
-                //XmlElement xRoot = xDoc.DocumentElement;
-                //string xml_out = null;
-                //UZ_XML_DOC(xRoot, ref xml_out);
-
-                //XmlDocument xDoc_out = new XmlDocument();
-                //xDoc_out.LoadXml(xml_out);
-                //XmlElement xRoot_out = xDoc_out.DocumentElement;
-                //OTPR otpr = new OTPR();
-                //UZ_XML_DOC(xRoot_out, ref otpr);
-
-                return false;
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("Connection()"), this.servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("Connection(host={0}, port={1})", host, port), this.servece_owner, eventID);
                 return false;
             }
 
@@ -779,12 +786,39 @@ namespace UZ
 
 
         }
+        /// <summary>
+        /// Подключится к модулю согласования
+        /// </summary>
+        /// <returns></returns>
+        public bool Connection()
+        {
+            try
+            {
+                this.connection = new GohubConnection(this.host, this.port);
+                Console.WriteLine("OK");
+                return true;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("Connection()"), this.servece_owner, eventID);
+                return false;
+            }
+        }
 
+        /// <summary>
+        /// Получить OTPR по ID документа СМС
+        /// </summary>
+        /// <param name="id_doc"></param>
+        /// <returns></returns>
         public OTPR GetOTPR(string id_doc)
         {
+            if (this.connection == null)
+            {
+                Connection();
+            }
             if (this.connection != null)
             {
-                GohubDocument doc = this.connection.QueryDocument("43000000000518166808");
+                GohubDocument doc = this.connection.QueryDocument(id_doc);
                 return GetOTPROfFinalXML(GetFinalXML(doc.GetXmlText()));
             }
             return null;
@@ -794,11 +828,12 @@ namespace UZ
         /// </summary>
         /// <param name="xml"></param>
         /// <returns></returns>
-        public OTPR GetOTPROfXML(string xml) { 
-                return GetOTPROfFinalXML(GetFinalXML(xml));        
+        public OTPR GetOTPROfXML(string xml)
+        {
+            return GetOTPROfFinalXML(GetFinalXML(xml));
         }
 
-
+        #region ПОЛУЧЕНИЕ OTPR
         #region ЗАПОЛНИТЬ АТРИБУТЫ
         /// <summary>
         /// Получить атрибут
@@ -2241,6 +2276,59 @@ namespace UZ
         #endregion
 
         /// <summary>
+        /// Получить OTPR по финальному XML
+        /// </summary>
+        /// <param name="xml"></param>
+        /// <returns></returns>
+        public OTPR GetOTPROfFinalXML(string xml)
+        {
+            OTPR otpr = new OTPR();
+            XmlDocument xDoc = new XmlDocument();
+            xDoc.LoadXml(xml);
+            XmlElement xRoot = xDoc.DocumentElement;
+            if (xRoot.Name == "OTPR")
+            {
+                // атрибуты
+                GetAttributes(xRoot, ref otpr);
+                foreach (XmlNode otpr_node in xRoot.ChildNodes)
+                {
+                    switch (otpr_node.Name)
+                    {
+                        case "ACTS": { GetTagACTS(otpr_node, ref otpr); break; }
+                        case "CARRIER": { GetTagCARRIER(otpr_node, ref otpr); break; }
+                        case "CIM_INFO": { GetTagCIM_INFO(otpr_node, ref otpr); break; }
+                        case "CLIENT": { GetTagCLIENT(otpr_node, ref otpr); break; }
+                        case "COM_COND": { GetTagCOM_COND(otpr_node, ref otpr); break; }
+                        case "CONT": { GetTagCONT(otpr_node, ref otpr); break; }
+                        case "FRONTIER_MARK": { GetTagFRONTIER_MARK(otpr_node, ref otpr); break; }
+                        case "OTPRDP": { GetTagOTPRDP(otpr_node, ref otpr); break; }
+                        case "PAC": { GetTagPAC(otpr_node, ref otpr); break; }
+                        case "PASS_MARK": { GetTagPASS_MARK(otpr_node, ref otpr); break; }
+                        case "PL": { GetTagPL(otpr_node, ref otpr); break; }
+                        case "PROLONGATION": { GetTagPROLONGATION(otpr_node, ref otpr); break; }
+                        case "ROUTE": { GetTagROUTE(otpr_node, ref otpr); break; }
+                        case "RW_STAT": { GetTagRW_STAT(otpr_node, ref otpr); break; }
+                        case "REFUSE_EPD": { GetTagREFUSE_EPD(otpr_node, ref otpr); break; }
+                        case "REISSUE_INFO": { GetTagREISSUE_INFO(otpr_node, ref otpr); break; }
+                        case "SCHEMA": { GetTagSCHEMA(otpr_node, ref otpr); break; }
+                        case "SENDER_DOC": { GetTagSENDER_DOC(otpr_node, ref otpr); break; }
+                        case "SEND_STAT": { GetTagSEND_STAT(otpr_node, ref otpr); break; }
+                        case "SHTEMPEL": { GetTagSHTEMPEL(otpr_node, ref otpr); break; }
+                        case "SPEC_COND": { GetTagSPEC_COND(otpr_node, ref otpr); break; }
+                        case "TAKS": { GetTagTAKS(otpr_node, ref otpr); break; }
+                        case "TEXT": { GetTagTEXT(otpr_node, ref otpr); break; }
+                        case "VAGON": { GetTagVAGON(otpr_node, ref otpr); break; }
+                    }
+                }
+                return otpr;
+            }
+            return null;
+
+        }
+        #endregion
+
+        #region ПОЛУЧЕНИЕ XML
+        /// <summary>
         /// Найти узел по имени
         /// </summary>
         /// <param name="node"></param>
@@ -2387,7 +2475,8 @@ namespace UZ
                     if (mode == 0)
                     {
                         XmlElement new_node = doc.CreateElement(child_node_doc.Name);
-                        foreach (XmlNode attr in child_node_doc.Attributes){
+                        foreach (XmlNode attr in child_node_doc.Attributes)
+                        {
                             new_node.SetAttribute(attr.Name, attr.Value);
                         }
                         node_searsh.AppendChild(new_node);
@@ -2468,56 +2557,72 @@ namespace UZ
                 return null;
             }
         }
+        #endregion
+
+        #region Работа с промежуточной базой KRR-PA-VIZ-Other_DATA
         /// <summary>
-        /// Получить OTPR по финальному XML
+        /// Получить статус по названию в базе
         /// </summary>
-        /// <param name="xml"></param>
+        /// <param name="status"></param>
         /// <returns></returns>
-        public OTPR GetOTPROfFinalXML(string xml)
+        public uz_status? GetStatus(string status) {
+            switch (status) { 
+                case "Recieved": return uz_status.recieved; 
+                case "Uncredited": return uz_status.uncredited; 
+                case "Accepted": return uz_status.accepted; 
+                case "Delivered": return uz_status.delivered; 
+                case "Draft": return uz_status.draft; 
+                case "Registered": return uz_status.registered; 
+                case "Canceled": return uz_status.canceled;
+                default: return null; 
+           }
+        }
+        /// <summary>
+        /// Получить XML перевозочного документа из промежуточной базой KRR-PA-VIZ-Other_DATA по номеру вагона
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public UZ_DOC GetDocumentOfDB_Num(int num)
         {
-            OTPR otpr = new OTPR();
-            XmlDocument xDoc = new XmlDocument();
-            xDoc.LoadXml(xml);
-            XmlElement xRoot = xDoc.DocumentElement;
-            if (xRoot.Name == "OTPR")
+            try
             {
-                // атрибуты
-                GetAttributes(xRoot, ref otpr);
-                foreach (XmlNode otpr_node in xRoot.ChildNodes)
+                UZ_DOC doc = null;
+                EFUZ_VagonData ef_vagon = new EFUZ_VagonData(new EFSMSDbContext());
+                EFUZ_Data ef_data = new EFUZ_Data(new EFSMSDbContext());
+                UZ_VagonData vagon = ef_vagon.Context.Where(v => v.nomer == num.ToString()).OrderByDescending(c => c.dt).FirstOrDefault();
+                if (vagon != null)
                 {
-                    switch (otpr_node.Name)
+                    // вагон найден. найдем документ
+                    UZ_Data data = ef_data.Context.Where(d => d.doc_Id == vagon.nom_doc).FirstOrDefault();
+                    if (data != null)
                     {
-                        case "ACTS": { GetTagACTS(otpr_node, ref otpr); break; }
-                        case "CARRIER": { GetTagCARRIER(otpr_node, ref otpr); break; }
-                        case "CIM_INFO": { GetTagCIM_INFO(otpr_node, ref otpr); break; }
-                        case "CLIENT": { GetTagCLIENT(otpr_node, ref otpr); break; }
-                        case "COM_COND": { GetTagCOM_COND(otpr_node, ref otpr); break; }
-                        case "CONT": { GetTagCONT(otpr_node, ref otpr); break; }
-                        case "FRONTIER_MARK": { GetTagFRONTIER_MARK(otpr_node, ref otpr); break; }
-                        case "OTPRDP": { GetTagOTPRDP(otpr_node, ref otpr); break; }
-                        case "PAC": { GetTagPAC(otpr_node, ref otpr); break; }
-                        case "PASS_MARK": { GetTagPASS_MARK(otpr_node, ref otpr); break; }
-                        case "PL": { GetTagPL(otpr_node, ref otpr); break; }
-                        case "PROLONGATION": { GetTagPROLONGATION(otpr_node, ref otpr); break; }
-                        case "ROUTE": { GetTagROUTE(otpr_node, ref otpr); break; }
-                        case "RW_STAT": { GetTagRW_STAT(otpr_node, ref otpr); break; }
-                        case "REFUSE_EPD": { GetTagREFUSE_EPD(otpr_node, ref otpr); break; }
-                        case "REISSUE_INFO": { GetTagREISSUE_INFO(otpr_node, ref otpr); break; }
-                        case "SCHEMA": { GetTagSCHEMA(otpr_node, ref otpr); break; }
-                        case "SENDER_DOC": { GetTagSENDER_DOC(otpr_node, ref otpr); break; }
-                        case "SEND_STAT": { GetTagSEND_STAT(otpr_node, ref otpr); break; }
-                        case "SHTEMPEL": { GetTagSHTEMPEL(otpr_node, ref otpr); break; }
-                        case "SPEC_COND": { GetTagSPEC_COND(otpr_node, ref otpr); break; }
-                        case "TAKS": { GetTagTAKS(otpr_node, ref otpr); break; }
-                        case "TEXT": { GetTagTEXT(otpr_node, ref otpr); break; }
-                        case "VAGON": { GetTagVAGON(otpr_node, ref otpr); break; }
+                        string xml_final = GetFinalXML(data.raw_xml);
+                        OTPR otpr = GetOTPROfFinalXML(xml_final);
+
+                        // Документ найден 
+                        doc = new UZ_DOC();
+                        doc.id_doc = data.doc_Id;
+                        doc.revision = data.doc_Revision;
+                        doc.status = GetStatus(data.doc_Status);
+                        doc.sender_code = data.depart_code;
+                        doc.recipient_code = data.arrived_code;
+                        doc.dt = data.dt;
+                        doc.xml = data.raw_xml;
+                        doc.xml_final = xml_final;
+                        doc.otpr = otpr;
                     }
                 }
-                return otpr;
-            }
-            return null;
+                return doc;
 
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetDB_XMLOfNum(num={0})", num), this.servece_owner, eventID);
+                return null;
+            }
         }
+
+        #endregion
 
         ///// <summary>
         ///// Получить Электронный перевозочный документ OTPR

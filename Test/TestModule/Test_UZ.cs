@@ -39,11 +39,13 @@ namespace Test.TestModule
             //OTPR otpr = sms.GetECD_OTPR(xDoc.InnerXml);
         }
 
-        public void UZ_Connection()
+        public void UZ_SMS_GetOTPR()
         {
             UZ_SMS sms = new UZ_SMS();
             sms.Connection();
-            sms.GetOTPR("69490431");
+            OTPR otpr = sms.GetOTPR("69490431");
+            OTPR otpr1 = sms.GetOTPR("43000000000518178624");
+            OTPR otpr2 = sms.GetOTPR("43000000000518166808");
         }
 
         public void UZ_SMS_GetOTPROfXML()
@@ -54,56 +56,11 @@ namespace Test.TestModule
             OTPR otpr = sms.GetOTPROfXML(xDoc.InnerXml);
         }
 
-        //public class Serializer
-        //{
-        //    public T Deserialize<T>(string input) where T : class
-        //    {
-        //        try
-        //        {
-        //            System.Xml.Serialization.XmlSerializer ser = new System.Xml.Serialization.XmlSerializer(typeof(T));
-
-        //            using (StringReader sr = new StringReader(input))
-        //            {
-        //                return (T)ser.Deserialize(sr);
-        //            }
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            return null;
-        //        }
-
-
-        //    }
-
-        //    public string Serialize<T>(T ObjectToSerialize)
-        //    {
-        //        XmlSerializer xmlSerializer = new XmlSerializer(ObjectToSerialize.GetType());
-
-        //        using (StringWriter textWriter = new StringWriter())
-        //        {
-        //            xmlSerializer.Serialize(textWriter, ObjectToSerialize);
-        //            return textWriter.ToString();
-        //        }
-        //    }
-        //}
-
-        //public void UZ_XML1()
-        //{
-        //    XmlDocument xDoc = new XmlDocument();
-        //    xDoc.Load("test2.xml");
-        //    // получим корневой элемент
-        //    Serializer ser = new Serializer();
-        //    string d = File.ReadAllText("test1.xml");
-
-        //    documentdatainfo f = new documentdatainfo();
-
-        //    //f.ItemsElementName.SetValue(ItemsChoiceType.OTPR);
-
-        //    //string d = xDoc.ToString();
-        //    documentdatainfo customer = ser.Deserialize<documentdatainfo>(d);
-        //    //xmlOutputData = ser.Serialize<consignment5>(customer);
-        //}
-
+        public void UZ_SMS_GetDB_XMLOfNum()
+        {
+            UZ_SMS sms = new UZ_SMS();
+            UZ_DOC doc = sms.GetDocumentOfDB_Num(54764493);
+        }
         #endregion
     }
 }

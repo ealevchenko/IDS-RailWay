@@ -56,18 +56,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\IRepository.cs" />
-    <Compile Include="Concrete\EFDirectory_Stations.cs" />
-    <Compile Include="Concrete\EFDirectory_States.cs" />
-    <Compile Include="Concrete\EFDirectory_InternalRailroad.cs" />
-    <Compile Include="Concrete\EFDirectory_Countrys.cs" />
-    <Compile Include="Concrete\EFDirectory_Cargo.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_Stations.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_States.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_InternalRailroad.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_Countrys.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_Cargo.cs" />
+    <Compile Include="Concrete\EFSMSRepository.cs" />
+    <Compile Include="Concrete\EFSMSDbContext.cs" />
     <Compile Include="Concrete\EFRepository.cs" />
-    <Compile Include="Entities\Directory_Cargo.cs" />
-    <Compile Include="Entities\Directory_Countrys.cs" />
-    <Compile Include="Entities\Directory_InternalRailroad.cs" />
-    <Compile Include="Entities\Directory_States.cs" />
-    <Compile Include="Entities\Directory_Stations.cs" />
+    <Compile Include="Concrete\SMS\EFUZ_VagonData.cs" />
+    <Compile Include="Concrete\SMS\EFUZ_Data.cs" />
+    <Compile Include="Entities\Directory\Directory_Cargo.cs" />
+    <Compile Include="Entities\Directory\Directory_Countrys.cs" />
+    <Compile Include="Entities\Directory\Directory_InternalRailroad.cs" />
+    <Compile Include="Entities\Directory\Directory_States.cs" />
+    <Compile Include="Entities\Directory\Directory_Stations.cs" />
     <Compile Include="Concrete\EFDbContext.cs" />
+    <Compile Include="Entities\SMS\UZ_Data.cs" />
+    <Compile Include="Entities\SMS\UZ_VagonData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
