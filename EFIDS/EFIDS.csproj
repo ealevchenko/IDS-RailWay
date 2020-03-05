@@ -107,6 +107,7 @@
     <Compile Include="Entities\RWT\ArrivalCars.cs" />
     <Compile Include="Entities\RWT\ArrivalSostav.cs" />
     <Compile Include="Entities\Directory\Directory_Station.cs" />
+    <Compile Include="Entities\RWT\UZ_DOC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

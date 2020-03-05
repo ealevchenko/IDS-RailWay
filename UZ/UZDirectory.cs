@@ -277,10 +277,16 @@ namespace UZ
             }
         }
 
-        public int GetCodeCorrectStations(int code_etsng, bool check)
+        public int GetCodeCorrectStations(int code, bool check)
         {
-            Directory_Stations ref_station = GetCorrectStationsOfCode(code_etsng, check);
-            return ref_station != null ? ref_station.code : code_etsng;
+            Directory_Stations ref_station = GetCorrectStationsOfCode(code, check);
+            return ref_station != null ? ref_station.code : code;
+        }
+
+        public int GetCodeCSCorrectStations(int code, bool check)
+        {
+            Directory_Stations ref_station = GetCorrectStationsOfCode(code, check);
+            return ref_station != null && ref_station.code_cs!=null ? (int)ref_station.code_cs : code;
         }
 
         #endregion

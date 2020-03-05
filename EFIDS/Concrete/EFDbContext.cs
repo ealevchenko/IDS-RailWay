@@ -16,7 +16,8 @@ namespace EFIDS.Concrete
         // RWT
         public virtual DbSet<ArrivalCars> ArrivalCars { get; set; }
         public virtual DbSet<ArrivalSostav> ArrivalSostav { get; set; }
-        public virtual DbSet<Directory_Station> Directory_Station { get; set; }
+        public virtual DbSet<UZ_DOC> UZ_DOC { get; set; }
+
 
         // MORS
         public virtual DbSet<CardsWagons> CardsWagons { get; set; }
@@ -38,6 +39,7 @@ namespace EFIDS.Concrete
         public virtual DbSet<Directory_TypeWagons> Directory_TypeWagons { get; set; }
         public virtual DbSet<Directory_WagonManufacturers> Directory_WagonManufacturers { get; set; }
         public virtual DbSet<Directory_WagonsCondition> Directory_WagonsCondition { get; set; }
+        public virtual DbSet<Directory_Station> Directory_Station { get; set; }
         // Доступ к сайту
         public virtual DbSet<WebAccess> WebAccess { get; set; }
         public virtual DbSet<WebView> WebView { get; set; }

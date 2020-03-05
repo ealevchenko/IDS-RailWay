@@ -42,7 +42,8 @@ namespace IDSLogs.Enum
 
         IDS = 3000,
         EFIDS = 3100,                    // Библиотека базы данных IDS
-        IDS_IDSTransfer = 3400,           // Сервис переноса даных из файлов в БД IDS
+        IDS_Directory = 3300,            // Сервис справочников ИДС
+        IDS_IDSTransfer = 3400,          // Сервис переноса даных из файлов в БД IDS
 
         #endregion
     }

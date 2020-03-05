@@ -19,12 +19,16 @@ namespace EFIDS.Entities
 
         public int position_arrival { get; set; }
 
+        public int consignee { get; set; }
+
+        [StringLength(50)]
+        public string num_doc { get; set; }
+
         [StringLength(200)]
         public string note { get; set; }
 
-        public DateTime arrival { get; set; }
+        public DateTime? arrival { get; set; }
 
-        [Required]
         [StringLength(50)]
         public string arrival_user { get; set; }
 
@@ -34,12 +38,13 @@ namespace EFIDS.Entities
         [StringLength(50)]
         public string create_user { get; set; }
 
-        public DateTime change { get; set; }
+        public DateTime? change { get; set; }
 
-        [Required]
         [StringLength(50)]
         public string change_user { get; set; }
 
         public virtual ArrivalSostav ArrivalSostav { get; set; }
+
+        public virtual UZ_DOC UZ_DOC { get; set; }
     }
 }

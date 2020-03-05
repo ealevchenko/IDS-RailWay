@@ -69,14 +69,19 @@ namespace Test
             //{
 
             //}
-            
-            
-            
-            
-            
-            
-            
-            
+
+
+
+
+
+
+
+            #region Test_IDS Тест ИДС
+            Test_IDS tids = new Test_IDS();
+            tids.IDSTransfer_AddArrival();
+            //tids.IDSDirectory_GetID_Directory_StationOfCodeCS();
+
+            #endregion            
             
             #region Test_Logs тест логирования
             Test_Logs tlogs = new Test_Logs();
@@ -102,7 +107,7 @@ namespace Test
             //tuz.UZ_XML();
             //tuz.UZ_SMS_GetOTPR();
             //tuz.UZ_SMS_GetOTPROfXML();
-            tuz.UZ_SMS_GetDB_XMLOfNum();
+            //tuz.UZ_SMS_GetDB_XMLOfNum();
             #endregion
 
             Console.WriteLine("Press any key to exit...");

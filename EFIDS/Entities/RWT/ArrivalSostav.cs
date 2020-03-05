@@ -33,7 +33,7 @@ namespace EFIDS.Entities
 
         public DateTime? date_adoption_act { get; set; }
 
-        public int id_station_from { get; set; }
+        public int? id_station_from { get; set; }
 
         public int? id_station_on { get; set; }
 
@@ -54,9 +54,8 @@ namespace EFIDS.Entities
         [StringLength(50)]
         public string create_user { get; set; }
 
-        public DateTime change { get; set; }
+        public DateTime? change { get; set; }
 
-        [Required]
         [StringLength(50)]
         public string change_user { get; set; }
 
