@@ -79,7 +79,11 @@ namespace IDS
                     }
                 }
                 // Требуется обновить информацию о сотаве
-
+                if (sostav.status > 0)
+                {
+                    // Состав взят в работу, обновление не требуетмя.
+                    return sostav.id; // Возвращаем id состава
+                }
                 return 0;
             }
             catch (Exception e)
