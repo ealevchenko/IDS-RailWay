@@ -26,6 +26,7 @@ namespace EFIDS.Concrete
         public virtual DbSet<ParksWagons> ParksWagons { get; set; }
 
         // Справочники
+        public virtual DbSet<Directory_Consignee> Directory_Consignee { get; set; }
         public virtual DbSet<Directory_DEPO> Directory_DEPO { get; set; }
         public virtual DbSet<Directory_GenusWagons> Directory_GenusWagons { get; set; }
         public virtual DbSet<Directory_LessorsWagons> Directory_LessorsWagons { get; set; }

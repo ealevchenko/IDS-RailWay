@@ -78,7 +78,7 @@ namespace Test
 
             #region Test_IDS Тест ИДС
             Test_IDS tids = new Test_IDS();
-            tids.IDSTransfer_AddArrival();
+            //tids.IDSTransfer_AddArrival();
             //tids.IDSDirectory_GetID_Directory_StationOfCodeCS();
 
             #endregion            
@@ -99,6 +99,7 @@ namespace Test
             //tmt.MTThread_SFTPTransfer();
             //tmt.MTTransfer_WebApiClientMT();
             //tmt.MTThread_Start_TransferWT();
+            tmt.MTTransfer_InsertIDSArrivalSostav();
             #endregion
 
             #region Test_UZ тест логирования

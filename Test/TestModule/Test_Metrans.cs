@@ -51,6 +51,16 @@ namespace Test.TestModule
             //    //efmt.SaveWagonsTracking(wt);
             //}
         }
+        /// <summary>
+        /// Перенести состав в систему IDS
+        /// </summary>
+        public void MTTransfer_InsertIDSArrivalSostav()
+        {
+            MTTransfer mtt = new MTTransfer();
+            mtt.InsertIDSArrivalSostav(5620);
+            //mtt.InsertIDSArrivalSostav(5621);
+        }
+
         #endregion
 
         #region MTThread

@@ -60,6 +60,7 @@
     <Compile Include="Abstract\IRepository.cs" />
     <Compile Include="Abstract\IWebView.cs" />
     <Compile Include="Abstract\IWebAccess.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_Consignee.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Station.cs" />
     <Compile Include="Concrete\MORS\EFParksListWagons.cs" />
     <Compile Include="Concrete\MORS\EFParksWagons.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Concrete\Directory\EFDirectory_WagonManufacturers.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_GenusWagons.cs" />
     <Compile Include="Concrete\EFRepository.cs" />
+    <Compile Include="Concrete\RWT\EFUZ_DOC.cs" />
     <Compile Include="Concrete\RWT\EFArrivalCars.cs" />
     <Compile Include="Concrete\RWT\EFArrivalSostav.cs" />
     <Compile Include="Concrete\Shared\EFWebView.cs" />
@@ -108,6 +110,7 @@
     <Compile Include="Entities\RWT\ArrivalSostav.cs" />
     <Compile Include="Entities\Directory\Directory_Station.cs" />
     <Compile Include="Entities\RWT\UZ_DOC.cs" />
+    <Compile Include="Entities\Directory\Directory_Consignee.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

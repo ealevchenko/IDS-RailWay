@@ -86,6 +86,10 @@
       <Project>{910d6360-9e8c-4143-a4dd-84e778edb7a6}</Project>
       <Name>IDSLogs</Name>
     </ProjectReference>
+    <ProjectReference Include="..\IDS\IDS.csproj">
+      <Project>{5929fe8f-0a9b-4eed-80e4-624705795d02}</Project>
+      <Name>IDS</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UZ\UZ.csproj">
       <Project>{d7147560-b66a-41bb-bddd-4d24403d5e97}</Project>
       <Name>UZ</Name>

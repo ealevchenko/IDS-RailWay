@@ -17,6 +17,7 @@ namespace IDS
         protected service servece_owner = service.Null;
 
         EFDirectory_Station ef_station = new EFDirectory_Station(new EFDbContext());
+        EFDirectory_Consignee ef_сonsignee = new EFDirectory_Consignee(new EFDbContext());
 
         public IDSDirectory()
         {
@@ -98,6 +99,20 @@ namespace IDS
         }
 
 
+        #endregion
+
+        #region СПРАВОЧНИК КОДОВ ГРУЗОПОЛУЧАТЕЛЕЙ ПРЕДПРИЯТИЯ (IDS.Directory_Consignee )
+        /// <summary>
+        /// Проверим соответсвует указаный код грузополучателя коду грузополучателя в справочнике
+        /// </summary>
+        /// <param name="auxiliary"></param>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public bool IsConsignee(bool auxiliary, int code)
+        {
+            Directory_Consignee consignee = ef_сonsignee.Context.Where(c => c.auxiliary == auxiliary & c.code == code).FirstOrDefault();
+            return consignee != null ? true : false;
+        }
         #endregion
     }
 }

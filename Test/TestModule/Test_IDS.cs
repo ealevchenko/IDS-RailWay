@@ -20,8 +20,9 @@ namespace Test.TestModule
         public void IDSTransfer_AddArrival() {
 
             IDSTransfer ids = new IDSTransfer(service.Test);
-            long res = ids.AddArrival(1608, 5621, 3609, "4577-038-4670", new DateTime(2020, 3, 5, 10, 45, 0),null);
-
+            long res = ids.InsertArrivalSostav(1608, 5620, 3609, "4577-038-4670", new DateTime(2020, 3, 5, 10, 40, 0),null);
+            long res1 = ids.InsertArrivalSostav(1608, 5621, 3609, "4577-038-4670", new DateTime(2020, 3, 5, 10, 45, 0),null);
+            Console.WriteLine("ID = {0}",res);
         }
 
         #endregion

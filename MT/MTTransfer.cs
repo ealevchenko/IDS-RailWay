@@ -1,5 +1,6 @@
 ﻿using EFMT.Concrete;
 using EFMT.Entities;
+using IDS;
 using IDSLogs;
 using IDSLogs.Enum;
 using System;
@@ -944,6 +945,46 @@ namespace MT
         public int TransferArrival()
         {
             return TransferArrival(this.fromPath, this.delete_file);
+        }
+        /// <summary>
+        /// Добавить прибывший состав в систему IDS
+        /// </summary>
+        /// <param name="id_sostav"></param>
+        /// <returns></returns>
+        public int InsertIDSArrivalSostav(int id_sostav) {
+            try
+            {
+                EFArrivalCars ef_cars = new EFArrivalCars(new EFDbContext());
+                EFArrivalSostav ef_sostav = new EFArrivalSostav(new EFDbContext());
+
+                IDSTransfer ids = new IDSTransfer(this.servece_owner);
+
+                ArrivalSostav sostav = ef_sostav.Get(id_sostav);
+                List<ArrivalCars> cars = ef_cars.Context.Where(c=>c.id_sostav==id_sostav).OrderBy(c=>c.position).ToList();
+
+
+
+                if (sostav!=null && cars!=null && cars.Count()>0){
+                    int train = cars[0].train;
+                    //long id_arrival = ids.InsertArrivalSostav(sostav.id_arrived, sostav.id, train, sostav.composition_index, sostav.date_time);
+                    // Требуется обновить вагоны
+                    long id_arrival = 5; //!!!! Test
+                    if (id_arrival > 0) {
+                        List<ArrCar> arrival_cars = new List<ArrCar>();
+                        arrival_cars = cars.Select(c => new ArrCar() { num = c.num, position = c.position, consignee = c.consignee }).ToList();
+                        int count = ids.InsertArrivalCars(id_arrival, arrival_cars);
+                    }
+
+                }
+                
+
+                return 0;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("InsertIDSArrivalSostav(id_sostav={0})", id_sostav), servece_owner, eventID);
+                return -1;// Возвращаем id=-1 , Ошибка
+            }
         }
         #endregion
 
