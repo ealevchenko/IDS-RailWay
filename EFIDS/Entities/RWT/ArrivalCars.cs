@@ -17,7 +17,7 @@ namespace EFIDS.Entities
 
         public int position { get; set; }
 
-        public int position_arrival { get; set; }
+        public int? position_arrival { get; set; }
 
         public int consignee { get; set; }
 

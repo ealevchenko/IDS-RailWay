@@ -58,7 +58,7 @@ namespace Test.TestModule
         {
             MTTransfer mtt = new MTTransfer();
             mtt.InsertIDSArrivalSostav(5620);
-            //mtt.InsertIDSArrivalSostav(5621);
+            mtt.InsertIDSArrivalSostav(5621);
         }
 
         #endregion

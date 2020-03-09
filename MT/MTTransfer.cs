@@ -459,7 +459,7 @@ namespace MT
                             new_sostav = ef_app_sostav.Refresh(new_sostav);
 
                             long new_id = new_sostav.id;
-                            if (delete_file & SaveApproachesWagons(new_id, fs.File, ref  countCopy, ref  countError))
+                            if (delete_file & SaveApproachesWagons(new_id, fs.File, ref countCopy, ref countError))
                             {
                                 File.Delete(fs.File);
                                 countDelete++;
@@ -477,7 +477,7 @@ namespace MT
                                     // Количество не совпадает удаляем старые вагоны добавляем новые
                                     SqlParameter IDSostav = new SqlParameter("@IDSostav", exs_sostav.id);
                                     ef_app_cars.Database.ExecuteSqlCommand("DELETE FROM METRANS.ApproachesCars WHERE id_sostav = @IDSostav", IDSostav);
-                                    if (delete_file & SaveApproachesWagons(exs_sostav.id, fs.File, ref  countCopy, ref  countError))
+                                    if (delete_file & SaveApproachesWagons(exs_sostav.id, fs.File, ref countCopy, ref countError))
                                     {
                                         File.Delete(fs.File);
                                         countDelete++;
@@ -760,8 +760,8 @@ namespace MT
                 {
                     if (arrival_to_railway)
                     {
-                        //int res = AddBufferArrivalSostav(new_id);
-                        //TODO: Выполнить механизм переноса вагонов на подходы АМКР
+                        // Перенесем вагоны в прибытие
+                        int res = InsertIDSArrivalSostav(new_id);
                     }
                     return true;
                 }
@@ -850,7 +850,7 @@ namespace MT
                         {
                             long? ParentIDSostav = null;
                             long? id_arrived = ef_arr_sostav.Database.SqlQuery<long?>("SELECT max([id_arrived]) FROM [METRANS].[ArrivalSostav]").FirstOrDefault();//    .GetNextIDArrival();//SELECT max([id_arrived]) FROM [METRANS].[ArrivalSostav]
-                            id_arrived = id_arrived != null ? id_arrived+1 : 0; // Проверка и инкримент
+                            id_arrived = id_arrived != null ? id_arrived + 1 : 0; // Проверка и инкримент
                             // получить не закрытый состав
                             ArrivalSostav no_close_sostav = ef_arr_sostav.GetNoCloseArrivalSostav(fs.Index, fs.Date, this.day_range_arrival_cars);
 
@@ -883,7 +883,7 @@ namespace MT
                             long new_id = new_sostav.id;
 
 
-                            if (delete_file & SaveArrivalWagons(new_id, fs.File, ref  countCopy, ref  countError))
+                            if (delete_file & SaveArrivalWagons(new_id, fs.File, ref countCopy, ref countError))
                             {
                                 File.Delete(fs.File);
                                 countDelete++;
@@ -893,14 +893,14 @@ namespace MT
                         {
                             // Проверка сравниваем количество если совподает удаляем файл, иначе добавляем новые вагоны и удаляем файл
                             List<ArrivalCars> list = TransferXMLToListArrivalCars(fs.File, exs_sostav.id);
-                            List<ArrivalCars> listdb = ef_arr_cars.Context.Where(c => c.id_sostav == exs_sostav.id).ToList(); 
+                            List<ArrivalCars> listdb = ef_arr_cars.Context.Where(c => c.id_sostav == exs_sostav.id).ToList();
                             if (list != null && listdb != null)
                             {
                                 if (list.Count() != listdb.Count())
                                 {
                                     SqlParameter IDSostav = new SqlParameter("@IDSostav", exs_sostav.id);
                                     ef_arr_sostav.Database.ExecuteSqlCommand("DELETE FROM [METRANS].[ArrivalCars] WHERE [id_sostav] = @IDSostav", IDSostav);
-                                    if (delete_file & SaveArrivalWagons(exs_sostav.id, fs.File, ref  countCopy, ref  countError))
+                                    if (delete_file & SaveArrivalWagons(exs_sostav.id, fs.File, ref countCopy, ref countError))
                                     {
                                         File.Delete(fs.File);
                                         countDelete++;
@@ -951,34 +951,43 @@ namespace MT
         /// </summary>
         /// <param name="id_sostav"></param>
         /// <returns></returns>
-        public int InsertIDSArrivalSostav(int id_sostav) {
+        public int InsertIDSArrivalSostav(long id_sostav)
+        {
             try
             {
                 EFArrivalCars ef_cars = new EFArrivalCars(new EFDbContext());
                 EFArrivalSostav ef_sostav = new EFArrivalSostav(new EFDbContext());
 
                 IDSTransfer ids = new IDSTransfer(this.servece_owner);
-
+                // Получим состав b вагоны
                 ArrivalSostav sostav = ef_sostav.Get(id_sostav);
-                List<ArrivalCars> cars = ef_cars.Context.Where(c=>c.id_sostav==id_sostav).OrderBy(c=>c.position).ToList();
+                List<ArrivalCars> cars = ef_cars.Context.Where(c => c.id_sostav == id_sostav).OrderBy(c => c.position).ToList();
 
-
-
-                if (sostav!=null && cars!=null && cars.Count()>0){
+                int count = 0;      // Количество перенесеных вагонов
+                string mess = null; // Сообщения
+                // Проверим состав и вагоны
+                if (sostav != null && cars != null && cars.Count() > 0)
+                {
                     int train = cars[0].train;
-                    //long id_arrival = ids.InsertArrivalSostav(sostav.id_arrived, sostav.id, train, sostav.composition_index, sostav.date_time);
+                    long id_arrival = ids.InsertArrivalSostav(sostav.id_arrived, sostav.id, train, sostav.composition_index, sostav.date_time);
                     // Требуется обновить вагоны
-                    long id_arrival = 5; //!!!! Test
-                    if (id_arrival > 0) {
+                    if (id_arrival > 0)
+                    {
                         List<ArrCar> arrival_cars = new List<ArrCar>();
                         arrival_cars = cars.Select(c => new ArrCar() { num = c.num, position = c.position, consignee = c.consignee }).ToList();
-                        int count = ids.InsertArrivalCars(id_arrival, arrival_cars);
+                        count = ids.InsertArrivalCars(id_arrival, arrival_cars);
                     }
-
+                    // Сформируем сообщение и сохраним в логе
+                    mess = String.Format("Перенос состава из БД METRANS.Arrival -> БД IDS.Arrival - ВЫПОЛНЕН (METRANS.Arrival.id={0}, перенесено {1} вагона(ов)).", id_sostav, count);
+                    mess.InformationLog(servece_owner, this.eventID);
+                    mess.EventLog(count < 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
+                    return count;
                 }
-                
-
-                return 0;
+                // Сформируем сообщение и сохраним в логе
+                mess = String.Format("В БД METRANS.Arrival строка METRANS.Arrival.id={0} - НЕ НАЙДЕНА", id_sostav);
+                mess.ErrorLog(servece_owner, this.eventID);
+                mess.EventLog(EventStatus.Error, servece_owner, eventID);
+                return -1;
             }
             catch (Exception e)
             {

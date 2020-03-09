@@ -87,6 +87,16 @@ namespace IDS
                         };
                         ef_sostav.Add(sostav);
                         int result = ef_sostav.Save();
+                        // Сформируем сообщение и сохраним в логе
+                        string mess = String.Format("Создание новой строки состава в БД IDS.Arrival - ВЫПОЛНЕНО. (METRANS.ArrivalSostav.id={0}, Код выполнения:{1}).", sostav.id, result);
+                        if (result > 0)
+                        {
+                            mess.InformationLog(servece_owner, this.eventID);
+                        }
+                        else
+                        {
+                            mess.ErrorLog(servece_owner, this.eventID);
+                        }
                         return result > 0 ? sostav.id : result; // Вернем новое id или код ошибки
                     }
                 }
@@ -95,23 +105,36 @@ namespace IDS
                     // Состава с таким прибытием есть, проверим сотав на id_sostav
                     if (sostav.id_sostav >= id_sostav)
                     {
-                        // Обновление не требуетмя 
+                        // Обновление не требуетcя 
+                        String.Format("Обновление строки  состава METRANS.ArrivalSostav.id={0} в БД IDS.Arrival - ОТМЕНЕНО. (ID={1} новой строки <= ID={2} строки в базе).", sostav.id, id_sostav, sostav.id_sostav ).InformationLog(servece_owner, this.eventID);
                         return 0; // Возвращаем id =0, обновление не надо
                     }
                     else
                     {
                         // Обновим время
                         sostav.date_arrival = date_arrival;
+                        sostav.id_sostav = id_sostav;
                         sostav.change = DateTime.Now;
                         sostav.change_user = user;
                         ef_sostav.Update(sostav);
                         int result = ef_sostav.Save();
+                        // Сформируем сообщение и сохраним в логе
+                        string mess = String.Format("Обновление строки состава METRANS.ArrivalSostav.id={0} в БД IDS.Arrival - ВЫПОЛНЕНО. (Код выполнения:{1}).", sostav.id, result);
+                        if (result > 0)
+                        {
+                            mess.InformationLog(servece_owner, this.eventID);
+                        }
+                        else
+                        {
+                            mess.ErrorLog(servece_owner, this.eventID);
+                        }
                     }
                 }
                 // Требуется обновить информацию о сотаве
                 if (sostav.status > 0)
                 {
                     // Состав взят в работу, обновление не требуетмя.
+                    String.Format("Обновление строки  состава METRANS.ArrivalSostav.id={0} в БД IDS.Arrival - ОТМЕНЕНО. (Строка взята в работу, статус строки:{1}).", sostav.id, ((ids_status)sostav.status).ToString()).InformationLog(servece_owner, this.eventID);
                     return 0; // Возвращаем id=0
                 }
                 return sostav.id; // Возвращаем id состава для обновления
@@ -145,6 +168,8 @@ namespace IDS
         {
             try
             {
+                int add = 0;
+                int error = 0;
                 EFArrivalSostav ef_sostav = new EFArrivalSostav(new EFDbContext());
                 EFArrivalCars ef_car = new EFArrivalCars(new EFDbContext());
                 IDSDirectory ids_directory = new IDSDirectory(this.servece_owner);// Подключим библиотеку УЗ
@@ -160,7 +185,20 @@ namespace IDS
                     if (list != null && list.Count() > 0)
                     {
                         // Вагоны в составе есть требуется обновление, удалим старые вагоны
-
+                        foreach (ArrivalCars car in list)
+                        {
+                            ef_car.Delete(car.id);
+                        }
+                        int res_del = ef_car.Save();
+                        // Сформируем сообщение и сохраним в логе
+                        if (res_del > 0)
+                        {
+                            String.Format("Удаление старых строк вагонов в БД IDS.Arrival - ВЫПОЛНЕНО. (METRANS.ArrivalSostav.id={0}, Удалено:{1} вагонов).", sostav.id, res_del).InformationLog(servece_owner, this.eventID);
+                        }
+                        else
+                        {
+                            String.Format("Удаление старых строк вагонов в БД IDS.Arrival - НЕ ВЫПОЛНЕНО. (METRANS.ArrivalSostav.id={0}, Код выполнения:{1} вагонов).", sostav.id, res_del).ErrorLog(servece_owner, this.eventID);
+                        }
                     }
                     // добавим новые вагоны
                     foreach (ArrCar car in cars)
@@ -170,13 +208,41 @@ namespace IDS
                         {
                             // Получатель АМКР
                             string doc_num = GetNumDoc(car.num);
+                            // Создадим новый вагон
+                            ArrivalCars new_car = new ArrivalCars()
+                            {
+                                id = 0,
+                                id_arrival = id_arrival,
+                                num = car.num,
+                                position = car.position,
+                                position_arrival = null,
+                                consignee = car.consignee,
+                                num_doc = doc_num,
+                                //note = ,
+                                //arrival = ,
+                                //arrival_user = ,
+                                create = DateTime.Now,
+                                create_user = user,
+                                //change = ,
+                                //change_user = ,
 
+                            };
+                            ef_car.Add(new_car);
+                            int res_ins = ef_car.Save();
+                            // Сформируем сообщение и сохраним в логе
+                            if (res_ins > 0)
+                            {
+                                String.Format("Добавление новой строки вагона в БД IDS.Arrival - ВЫПОЛНЕНО. (METRANS.ArrivalSostav.id={0}, вагон:{1} вагонов, METRANS.ArrivalCars.id={2}).", sostav.id, new_car.num, new_car.id).InformationLog(servece_owner, this.eventID);
+                            }
+                            else
+                            {
+                                String.Format("Добавление новой строки вагона в БД IDS.Arrival - НЕ ВЫПОЛНЕНО. (METRANS.ArrivalSostav.id={0}, вагон:{1} вагонов, Код выполнения:{2} вагонов).", sostav.id, new_car.num, res_ins).ErrorLog(servece_owner, this.eventID);
+                            }
+                            if (res_ins > 0) { add++; } else { error++; }
                         }
                     }
                 }
-
-
-                return 0;
+                return add;
             }
             catch (Exception e)
             {
@@ -205,8 +271,9 @@ namespace IDS
             {
                 UZ.UZ_SMS uz_sms = new UZ.UZ_SMS(this.servece_owner);
                 UZ.UZ_DOC uz_doc = uz_sms.GetDocumentOfDB_Num(num_car);
-                if (uz_doc != null) { 
-                
+                if (uz_doc != null)
+                {
+                    return InsertUZ_DOC(uz_doc);
                 }
                 return null;
             }
@@ -216,24 +283,73 @@ namespace IDS
                 return null;// Ошибка
             }
         }
-
+        /// <summary>
+        /// Добавим или обновим документ
+        /// </summary>
+        /// <param name="uz_doc"></param>
+        /// <returns></returns>
         public string InsertUZ_DOC(UZ.UZ_DOC uz_doc)
         {
             try
             {
                 EFUZ_DOC ef_uzdoc = new EFUZ_DOC(new EFDbContext());
-                
-                if (uz_doc != null) {
+
+                if (uz_doc != null)
+                {
+                    int result = 0;
                     UZ_DOC doc = ef_uzdoc.Get(uz_doc.id_doc);
-                    if (doc == null) {
+                    if (doc == null)
+                    {
                         doc = new UZ_DOC()
                         {
-
+                            num_doc = uz_doc.id_doc,
+                            revision = uz_doc.revision,
+                            status = (int)uz_doc.status,
+                            code_from = uz_doc.sender_code,
+                            code_on = uz_doc.recipient_code,
+                            dt = uz_doc.dt,
+                            xml_doc = uz_doc.xml,
                         };
-                        doc.num_doc = uz_doc.id_doc;
-                        doc.revision = uz_doc.
+                        ef_uzdoc.Add(doc);
+                        result = ef_uzdoc.Save();
+                        // Сформируем сообщение и сохраним в логе
+                        if (result > 0)
+                        {
+                            String.Format("Добавление перевозочного документа в БД IDS.Arrival - ВЫПОЛНЕНО. (IDS.UZ_DOC.num_doc={0}).", doc.num_doc).InformationLog(servece_owner, this.eventID);
+                        }
+                        else
+                        {
+                            String.Format("Добавление перевозочного документа в БД IDS.Arrival - НЕ ВЫПОЛНЕНО. (Номер документа={0}, Код выполнения:{1}).", uz_doc.id_doc, result).ErrorLog(servece_owner, this.eventID);
+                        }
+                    }
+                    else
+                    {
+                        // Ревизия документа выше чем ревизия сохраненного документа
+                        if (doc.revision <= uz_doc.revision)
+                        {
+                            doc.num_doc = uz_doc.id_doc;
+                            doc.revision = uz_doc.revision;
+                            doc.status = (int)uz_doc.status;
+                            doc.code_from = uz_doc.sender_code;
+                            doc.code_on = uz_doc.recipient_code;
+                            doc.dt = uz_doc.dt;
+                            doc.xml_doc = uz_doc.xml;
+                            ef_uzdoc.Update(doc);
+                            result = ef_uzdoc.Save();
+                            // Сформируем сообщение и сохраним в логе
+                            if (result > 0)
+                            {
+                                String.Format("Обновление перевозочного документа в БД IDS.Arrival - ВЫПОЛНЕНО. (IDS.UZ_DOC.num_doc={0}).", doc.num_doc).InformationLog(servece_owner, this.eventID);
+                            }
+                            else
+                            {
+                                String.Format("Обновление перевозочного документа в БД IDS.Arrival - НЕ ВЫПОЛНЕНО. (IDS.UZ_DOC.num_doc={0}, Код выполнения:{1}).", uz_doc.id_doc, result).ErrorLog(servece_owner, this.eventID);
+                            }
+                        }
+                        else return doc.num_doc;
                     }
 
+                    return result > 0 ? doc.num_doc : null;
                 }
                 return null;
             }
