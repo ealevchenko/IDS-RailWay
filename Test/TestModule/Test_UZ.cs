@@ -59,8 +59,10 @@ namespace Test.TestModule
         public void UZ_SMS_GetDB_XMLOfNum()
         {
             UZ_SMS sms = new UZ_SMS();
-            UZ_DOC doc = sms.GetDocumentOfDB_Num(54764493);
+            UZ_DOC doc = sms.GetDocumentOfDB_Num(63531479);
         }
+
+
         #endregion
     }
 }

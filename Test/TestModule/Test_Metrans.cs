@@ -61,6 +61,13 @@ namespace Test.TestModule
             mtt.InsertIDSArrivalSostav(5621);
         }
 
+        public void MTTransfer_TransferWagonsMotionSignals()
+        {
+            MTTransfer mtt = new MTTransfer();
+            mtt.TransferWagonsMotionSignals();
+        }
+
+
         #endregion
 
         #region MTThread

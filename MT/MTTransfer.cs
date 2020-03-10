@@ -87,6 +87,49 @@ namespace MT
         }
 
     }
+    /// <summary>
+    /// Класс данных хранения позиции и сигналов движения
+    /// </summary>
+    //public class WTMotionSignals
+    //{
+    //    public long id_wt { get; set; }
+    //    public int nvagon { get; set; }
+    //    public int? st_disl { get; set; }
+    //    public string nst_disl { get; set; }
+    //    public int? kodop { get; set; }
+    //    public string nameop { get; set; }
+    //    public string full_nameop { get; set; }
+    //    public DateTime? dt { get; set; }
+    //    public int? st_form { get; set; }
+    //    public string nst_form { get; set; }
+    //    public int? idsost { get; set; }
+    //    public string nsost { get; set; }
+    //    public int? st_nazn { get; set; }
+    //    public string nst_nazn { get; set; }
+    //    public int? ntrain { get; set; }
+    //    public int? st_end { get; set; }
+    //    public string nst_end { get; set; }
+    //    public int? kgr { get; set; }
+    //    public string nkgr { get; set; }
+    //    public int id_cargo { get; set; }
+    //    public int? kgrp { get; set; }
+    //    public decimal? ves { get; set; }
+    //    public DateTime? updated { get; set; }
+    //    public int? kgro { get; set; }
+    //    public int? km { get; set; }
+    //    public int? station_from { get; set; }
+    //    public int? station_end { get; set; }
+    //    public int? shipper { get; set; }
+    //    public int? consignee { get; set; }
+    //    public int? location { get; set; }
+    //    public int? condition { get; set; }
+    //    public int? type_flight { get; set; }
+    //    public DateTime? start_flight { get; set; }
+    //    public DateTime? start_turnover { get; set; }
+    //    public int? duration_flight { get; set; }
+    //    public int? duration_turnover { get; set; }
+    //    public string note { get; set; }
+    //}
 
     public class MTTransfer
     {
@@ -1170,5 +1213,181 @@ namespace MT
         }
         #endregion
 
+        #region WagonsTracking_MotionSignals Построение сигналов движения вагона на внешней сети из Web.Api МетТранса
+        /// <summary>
+        /// Перенести данные и построить сигналы движения указанного всех вагонов
+        /// </summary>
+        /// <returns></returns>
+        public int TransferWagonsMotionSignals()
+        {
+            try
+            {
+                IDSMORS mors = new IDSMORS(this.servece_owner);
+                List<int> nums = mors.GetNumCarsOfAMKR();
+                foreach (int num in nums)
+                {
+                    int result = TransferWagonsMotionSignals(num);
+                }
+
+                return 0;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("TransferWagonsMotionSignals()"), servece_owner, eventID);
+                return -1;
+            }
+        }
+
+        //public static WTMotionSignals GetWTMotionSignals(this WagonsTracking c)
+        //{
+        //    return new WTMotionSignals
+        //    {
+        //        id_wt = c.id,
+        //        nvagon = c.nvagon,
+        //        st_disl = c.st_disl,
+        //        nst_disl = c.nst_disl,
+        //        kodop = c.kodop,
+        //        nameop = c.nameop,
+        //        full_nameop = c.full_nameop,
+        //        dt = c.dt,
+        //        st_form = c.st_form,
+        //        nst_form = c.nst_form,
+        //        idsost = c.idsost,
+        //        nsost = c.nsost,
+        //        st_nazn = c.st_nazn,
+        //        nst_nazn = c.nst_nazn,
+        //        ntrain = c.ntrain,
+        //        st_end = c.st_end,
+        //        nst_end = c.nst_end,
+        //        kgr = c.kgr,
+        //        nkgr = c.nkgr,
+        //        id_cargo = c.id_cargo,
+        //        kgrp = c.kgrp,
+        //        ves = c.ves,
+        //        updated = c.updated,
+        //        kgro = c.kgro,
+        //        km = c.km,
+        //    };
+        //}
+
+        /// <summary>
+        /// Перенести данные и построить сигналы движения указанного вагона
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public int TransferWagonsMotionSignals(int num)
+        {
+            try
+            {
+                IDSMORS mors = new IDSMORS(this.servece_owner);
+
+                EFWagonsTracking ef_wt = new EFWagonsTracking(new EFDbContext());
+                List<WTMotionSignals> list_wt = new List<WTMotionSignals>();
+
+                WTMotionSignals last_wtms = mors.GetLastWTMotionSignals(num);
+
+                int station_end = 0;
+                int station_from = 0;
+                int shipper = 0;
+                int consignee = 0;
+                int kode_cargo_consignee = 0; // Код грузополучатель
+                int kode_cargo_shipper = 0; // Код грузоотправитель
+
+                if (last_wtms == null)
+                {
+                    // Таблица пуста обрабатываем все записи
+                    list_wt = ef_wt
+                        .Context
+                        .Where(w => w.nvagon == num)
+                        .OrderBy(c => c.dt).Select(w => new WTMotionSignals
+                    {
+                        id_wt = w.id,
+                        nvagon = w.nvagon,
+                        st_disl = w.st_disl,
+                        nst_disl = w.nst_disl,
+                        kodop = w.kodop,
+                        nameop = w.nameop,
+                        full_nameop = w.full_nameop,
+                        dt = w.dt,
+                        st_form = w.st_form,
+                        nst_form = w.nst_form,
+                        idsost = w.idsost,
+                        nsost = w.nsost,
+                        st_nazn = w.st_nazn,
+                        nst_nazn = w.nst_nazn,
+                        ntrain = w.ntrain,
+                        st_end = w.st_end,
+                        nst_end = w.nst_end,
+                        kgr = w.kgr,
+                        nkgr = w.nkgr,
+                        id_cargo = w.id_cargo,
+                        kgrp = w.kgrp,
+                        ves = w.ves,
+                        updated = w.updated,
+                        kgro = w.kgro,
+                        km = w.km,
+                    }).ToList();
+                }
+                else
+                {
+                    // Таблица не пуста обрабатываем все записи начинающиеся после last_idwt
+                    list_wt = ef_wt
+                        .Context
+                        .Where(w => w.nvagon == num & w.id > last_wtms.id_wt)
+                        .OrderBy(c => c.dt).Select(w => new WTMotionSignals
+                        {
+                            id_wt = w.id,
+                            nvagon = w.nvagon,
+                            st_disl = w.st_disl,
+                            nst_disl = w.nst_disl,
+                            kodop = w.kodop,
+                            nameop = w.nameop,
+                            full_nameop = w.full_nameop,
+                            dt = w.dt,
+                            st_form = w.st_form,
+                            nst_form = w.nst_form,
+                            idsost = w.idsost,
+                            nsost = w.nsost,
+                            st_nazn = w.st_nazn,
+                            nst_nazn = w.nst_nazn,
+                            ntrain = w.ntrain,
+                            st_end = w.st_end,
+                            nst_end = w.nst_end,
+                            kgr = w.kgr,
+                            nkgr = w.nkgr,
+                            id_cargo = w.id_cargo,
+                            kgrp = w.kgrp,
+                            ves = w.ves,
+                            updated = w.updated,
+                            kgro = w.kgro,
+                            km = w.km,
+                        }).ToList();
+                }
+                // Обрабатываем полученные данные
+                if (list_wt != null && list_wt.Count() > 0)
+                {
+                    station_end = last_wtms.station_end;
+                    station_from = last_wtms.station_from;
+                    shipper = last_wtms.Shipper != null ? (int)last_Cycle.Shipper : 0;
+                    consignee = last_wtms.Consignee != null ? (int)last_Cycle.Consignee : 0;
+                    kode_cargo_consignee = last_wtms.WagonsTracking.kgrp != null ? (int)last_wtms.WagonsTracking.kgrp : 0;
+                    kode_cargo_shipper = last_wtms.WagonsTracking.kgro != null ? (int)last_wtms.WagonsTracking.kgro : 0;
+
+                    foreach (WTMotionSignals wtms in list_wt)
+                    {
+
+
+                    }
+                }
+                return 0;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("TransferWagonsMotionSignals(num={0})", num), servece_owner, eventID);
+                return -1;
+            }
+        }
+
+        #endregion
     }
 }

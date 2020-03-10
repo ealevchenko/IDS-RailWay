@@ -24,6 +24,7 @@ namespace EFIDS.Concrete
         public virtual DbSet<CardsWagonsRepairs> CardsWagonsRepairs { get; set; }
         public virtual DbSet<ParksListWagons> ParksListWagons { get; set; }
         public virtual DbSet<ParksWagons> ParksWagons { get; set; }
+        public virtual DbSet<WagonsMotionSignals> WagonsMotionSignals { get; set; }
 
         // Справочники
         public virtual DbSet<Directory_Consignee> Directory_Consignee { get; set; }
@@ -48,6 +49,10 @@ namespace EFIDS.Concrete
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
 
+            // MORS
+            modelBuilder.Entity<WagonsMotionSignals>()
+                .Property(e => e.ves)
+                .HasPrecision(18, 3);
             // RWT
             modelBuilder.Entity<ArrivalSostav>()
                 .HasMany(e => e.ArrivalCars)

@@ -62,6 +62,7 @@
     <Compile Include="Abstract\IWebAccess.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Consignee.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Station.cs" />
+    <Compile Include="Concrete\MORS\EFWagonsMotionSignals.cs" />
     <Compile Include="Concrete\MORS\EFParksListWagons.cs" />
     <Compile Include="Concrete\MORS\EFParksWagons.cs" />
     <Compile Include="Concrete\MORS\EFCardsWagonsRepairs.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="Entities\Directory\Directory_Station.cs" />
     <Compile Include="Entities\RWT\UZ_DOC.cs" />
     <Compile Include="Entities\Directory\Directory_Consignee.cs" />
+    <Compile Include="Entities\MORS\WagonsMotionSignals.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
