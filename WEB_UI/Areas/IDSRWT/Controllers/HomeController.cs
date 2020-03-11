@@ -20,5 +20,15 @@ namespace WEB_UI.Areas.IDSRWT.Controllers
         {
             return View();
         }
+        public ActionResult Incoming()
+        {
+            return View();
+        }
+        //public ActionResult Outgoing()
+        //{
+        //    return View();
+        //}
+
+
     }
 }

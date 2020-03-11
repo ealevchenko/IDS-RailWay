@@ -123,10 +123,10 @@
   <data name="arrival_title" xml:space="preserve">
     <value>Подходы</value>
   </data>
-  <data name="reception_description" xml:space="preserve">
+  <data name="incoming_description" xml:space="preserve">
     <value>Номерной учет по прибытию, прием груза (раскредитация)</value>
   </data>
-  <data name="reception_title" xml:space="preserve">
+  <data name="incoming_title" xml:space="preserve">
     <value>Принять на АМКР</value>
   </data>
   <data name="system_idsrwt_description" xml:space="preserve">

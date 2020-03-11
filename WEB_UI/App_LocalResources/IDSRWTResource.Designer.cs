@@ -19,7 +19,7 @@ namespace WEB_UI.App_LocalResources {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class IDSRWTResource {
@@ -81,18 +81,18 @@ namespace WEB_UI.App_LocalResources {
         /// <summary>
         ///   Ищет локализованную строку, похожую на Номерной учет по прибытию, прием груза (раскредитация).
         /// </summary>
-        public static string reception_description {
+        public static string incoming_description {
             get {
-                return ResourceManager.GetString("reception_description", resourceCulture);
+                return ResourceManager.GetString("incoming_description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Принять на АМКР.
         /// </summary>
-        public static string reception_title {
+        public static string incoming_title {
             get {
-                return ResourceManager.GetString("reception_title", resourceCulture);
+                return ResourceManager.GetString("incoming_title", resourceCulture);
             }
         }
         
