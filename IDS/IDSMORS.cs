@@ -37,20 +37,61 @@ namespace IDS
         public DateTime? updated { get; set; }
         public int? kgro { get; set; }
         public int? km { get; set; }
-        public int? station_from { get; set; }
-        public int? station_end { get; set; }
+        public int station_from { get; set; }
+        public int station_end { get; set; }
+        public int route { get; set; }
         public int? shipper { get; set; }
         public int? consignee { get; set; }
-        public int? location { get; set; }
-        public int? condition { get; set; }
-        public int? type_flight { get; set; }
+        public int location { get; set; }
+        public int condition { get; set; }
+        public int type_flight { get; set; }
         public DateTime? start_flight { get; set; }
         public DateTime? start_turnover { get; set; }
         public int? duration_flight { get; set; }
         public int? duration_turnover { get; set; }
         public string note { get; set; }
     }
-    
+    /// <summary>
+    /// Описание маршрута вагона
+    /// </summary>
+    public enum ids_route : int
+    {
+        not = 0,
+        amkr = 1,
+        send = 2,
+        client = 3,
+        ret = 4,
+    }
+    /// <summary>
+    /// Местонахождение вагона
+    /// </summary>
+    public enum ids_location_wagon : int
+    {
+        not = 0,
+        moves = 1,
+        loading_unloading = 2,
+    }
+    /// <summary>
+    /// Состояние вагона
+    /// </summary>
+    public enum ids_condition_wagon : int
+    {
+        not = 0,
+        empty = 1,  // Порожний
+        loaded = 2, // Груженный
+    }
+    /// <summary>
+    /// Виды рейсов
+    /// </summary>
+    public enum ids_type_flight_wagon : int
+    {
+        not = 0,
+        loading = 1,        // Погрузка
+        loaded_flight = 2,  // Груженный
+        unloading = 3,      // Выгрузка
+        empty_flight = 4,   // Порожний
+    }
+
     public class IDSMORS
     {
         private eventID eventID = eventID.IDS_IDSMORS;
@@ -72,7 +113,8 @@ namespace IDS
         /// Получить список вагонов по которым заведены карточки
         /// </summary>
         /// <returns></returns>
-        public List<int> GetNumCarsOfAMKR() {
+        public List<int> GetNumCarsOfAMKR()
+        {
             try
             {
                 EFCardsWagons ef_card = new EFCardsWagons(new EFDbContext());
@@ -91,7 +133,8 @@ namespace IDS
         /// </summary>
         /// <param name="num"></param>
         /// <returns></returns>
-        public long? GetLastIDWTWagonsMotionSignals(int num) {
+        public long? GetLastIDWTWagonsMotionSignals(int num)
+        {
 
             try
             {
@@ -113,7 +156,8 @@ namespace IDS
             {
                 EFWagonsMotionSignals ef_wms = new EFWagonsMotionSignals(new EFDbContext());
                 WagonsMotionSignals wms = ef_wms.Context.Where(s => s.nvagon == num).OrderByDescending(c => c.dt).FirstOrDefault();
-                return wms != null ? new WTMotionSignals {
+                return wms != null ? new WTMotionSignals
+                {
                     id_wt = wms.id,
                     nvagon = wms.nvagon,
                     st_disl = wms.st_disl,
@@ -157,6 +201,118 @@ namespace IDS
             {
                 e.ExceptionMethodLog(String.Format("GetLastIDWTWagonsMotionSignals(num={0})", num), servece_owner, eventID);
                 return null;
+            }
+        }
+
+        public long SetWagonsMotionSignals(WTMotionSignals wtms)
+        {
+            try {
+                EFWagonsMotionSignals ef_wms = new EFWagonsMotionSignals(new EFDbContext());
+                WagonsMotionSignals wms = new WagonsMotionSignals { 
+                    id = 0,
+                    id_wt= wtms.id_wt ,
+                    nvagon= wtms.nvagon ,
+                    st_disl= wtms.st_disl ,
+                    nst_disl= wtms.nst_disl ,
+                    kodop= wtms.kodop ,
+                    nameop= wtms.nameop ,
+                    full_nameop= wtms.full_nameop ,
+                    dt= wtms.dt ,
+                    st_form= wtms.st_form ,
+                    nst_form= wtms.nst_form ,
+                    idsost= wtms.idsost ,
+                    nsost= wtms.nsost ,
+                    st_nazn= wtms.st_nazn ,
+                    nst_nazn= wtms.nst_nazn ,
+                    ntrain= wtms.ntrain ,
+                    st_end= wtms.st_end ,
+                    nst_end= wtms.nst_end ,
+                    kgr= wtms.kgr ,
+                    nkgr= wtms.nkgr ,
+                    id_cargo= wtms.id_cargo ,
+                    kgrp= wtms.kgrp ,
+                    ves= wtms.ves ,
+                    updated= wtms.updated ,
+                    kgro= wtms.kgro ,
+                    km= wtms.km ,
+                    station_from= wtms.station_from ,
+                    station_end= wtms.station_end ,
+                    route= wtms.route ,
+                    shipper= wtms.shipper ,
+                    consignee= wtms.consignee ,
+                    location= wtms.location ,
+                    condition= wtms.condition ,
+                    type_flight= wtms.type_flight ,
+                    start_flight= wtms.start_flight ,
+                    start_turnover= wtms.start_turnover ,
+                    duration_flight= wtms.duration_flight ,
+                    duration_turnover= wtms.duration_turnover            
+                };
+                ef_wms.Add(wms);
+                int result = ef_wms.Save();
+                return result>0 ? wms.id : result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("SetWagonsMotionSignals(wtms={0})", wtms), servece_owner, eventID);
+                return -1;
+            }
+        }
+
+        public int SetWagonsMotionSignals(List<WTMotionSignals> list)
+        {
+            try
+            {
+                EFWagonsMotionSignals ef_wms = new EFWagonsMotionSignals(new EFDbContext());
+                List<WagonsMotionSignals> wms_list = list.Select( w=>new WagonsMotionSignals
+                {
+                    id = 0,
+                    id_wt = w.id_wt,
+                    nvagon = w.nvagon,
+                    st_disl = w.st_disl,
+                    nst_disl = w.nst_disl,
+                    kodop = w.kodop,
+                    nameop = w.nameop,
+                    full_nameop = w.full_nameop,
+                    dt = w.dt,
+                    st_form = w.st_form,
+                    nst_form = w.nst_form,
+                    idsost = w.idsost,
+                    nsost = w.nsost,
+                    st_nazn = w.st_nazn,
+                    nst_nazn = w.nst_nazn,
+                    ntrain = w.ntrain,
+                    st_end = w.st_end,
+                    nst_end = w.nst_end,
+                    kgr = w.kgr,
+                    nkgr = w.nkgr,
+                    id_cargo = w.id_cargo,
+                    kgrp = w.kgrp,
+                    ves = w.ves,
+                    updated = w.updated,
+                    kgro = w.kgro,
+                    km = w.km,
+                    station_from = w.station_from,
+                    station_end = w.station_end,
+                    route = w.route,
+                    shipper = w.shipper,
+                    consignee = w.consignee,
+                    location = w.location,
+                    condition = w.condition,
+                    type_flight = w.type_flight,
+                    start_flight = w.start_flight,
+                    start_turnover = w.start_turnover,
+                    duration_flight = w.duration_flight,
+                    duration_turnover = w.duration_turnover
+                }).ToList();
+                ef_wms.Add(wms_list);
+                int result = ef_wms.Save();
+                return result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("SetWagonsMotionSignals(list={0})", list), servece_owner, eventID);
+                return -1;
             }
         }
     }

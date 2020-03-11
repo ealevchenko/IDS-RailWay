@@ -69,6 +69,18 @@ namespace EFIDS.Concrete
             }
         }
 
+        public void Add(IEnumerable<WagonsMotionSignals> items)
+        {
+            try
+            {
+                db.Inserts<WagonsMotionSignals>(items);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
         public void Update(WagonsMotionSignals item)
         {
             try
@@ -161,11 +173,5 @@ namespace EFIDS.Concrete
             GC.SuppressFinalize(this);
         }
 
-
-
-        public void Add(IEnumerable<WagonsMotionSignals> items)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

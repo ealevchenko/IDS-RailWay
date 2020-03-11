@@ -74,6 +74,8 @@ namespace EFIDS.Entities
 
         public int station_end { get; set; }
 
+        public int route { get; set; }
+
         public int? shipper { get; set; }
 
         public int? consignee { get; set; }

@@ -232,11 +232,11 @@ namespace IDS
                             // Сформируем сообщение и сохраним в логе
                             if (res_ins > 0)
                             {
-                                String.Format("Добавление новой строки вагона в БД IDS.Arrival - ВЫПОЛНЕНО. (METRANS.ArrivalSostav.id={0}, вагон:{1} вагонов, METRANS.ArrivalCars.id={2}).", sostav.id, new_car.num, new_car.id).InformationLog(servece_owner, this.eventID);
+                                String.Format("Добавление новой строки вагона в БД IDS.Arrival - ВЫПОЛНЕНО. (METRANS.ArrivalSostav.id={0}, вагон:{1}, METRANS.ArrivalCars.id={2}).", sostav.id, new_car.num, new_car.id).InformationLog(servece_owner, this.eventID);
                             }
                             else
                             {
-                                String.Format("Добавление новой строки вагона в БД IDS.Arrival - НЕ ВЫПОЛНЕНО. (METRANS.ArrivalSostav.id={0}, вагон:{1} вагонов, Код выполнения:{2} вагонов).", sostav.id, new_car.num, res_ins).ErrorLog(servece_owner, this.eventID);
+                                String.Format("Добавление новой строки вагона в БД IDS.Arrival - НЕ ВЫПОЛНЕНО. (METRANS.ArrivalSostav.id={0}, вагон:{1}, Код выполнения:{2} вагонов).", sostav.id, new_car.num, res_ins).ErrorLog(servece_owner, this.eventID);
                             }
                             if (res_ins > 0) { add++; } else { error++; }
                         }

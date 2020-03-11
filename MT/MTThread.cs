@@ -365,7 +365,7 @@ namespace MT
                     ex.ExceptionLog(String.Format("Ошибка выполнения считывания настроек потока {0}, сервиса {1}", service.ToString(), servece_owner), servece_owner, eventID);
                 }
                 int res_transfer = 0;
-                //int res_transfer_cycle = 0;
+                int res_transfer_motion_signals = 0;
 
                 MTTransfer mtt = new MTTransfer(service);
                 mtt.DateTimeStartNewTracking = datetime_start_new_tracking;
@@ -374,9 +374,9 @@ namespace MT
                 mtt.PSWWagonsTracking = psw_wagons_tracking;
                 mtt.APIWagonsTracking = api_wagons_tracking;
                 res_transfer = mtt.TransferWagonsTracking();        // Перенос данных
-                //res_transfer_cycle = mtt.TransferWTCycle();     // TODO: Добавить Формироание циклограмм
+                res_transfer_motion_signals = mtt.TransferWagonsMotionSignals();     // TODO: Добавить Формироание циклограмм
                 TimeSpan ts = DateTime.Now - dt_start;
-                string mes_service_exec = String.Format("Поток {0} сервиса {1} - время выполнения: {2}:{3}:{4}({5}), код выполнения: res_transfer:{6}, res_transfer_cycle:{7}.", service.ToString(), servece_owner, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds, res_transfer, 0);
+                string mes_service_exec = String.Format("Поток {0} сервиса {1} - время выполнения: {2}:{3}:{4}({5}), код выполнения: res_transfer:{6}, res_transfer_motion_signals:{7}.", service.ToString(), servece_owner, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds, res_transfer, res_transfer_motion_signals);
                 mes_service_exec.InformationLog(servece_owner, eventID);
                 service.ServicesToLog(service.ToString() + " - выполнен.", dt_start, DateTime.Now, res_transfer);
             }

@@ -87,49 +87,6 @@ namespace MT
         }
 
     }
-    /// <summary>
-    /// Класс данных хранения позиции и сигналов движения
-    /// </summary>
-    //public class WTMotionSignals
-    //{
-    //    public long id_wt { get; set; }
-    //    public int nvagon { get; set; }
-    //    public int? st_disl { get; set; }
-    //    public string nst_disl { get; set; }
-    //    public int? kodop { get; set; }
-    //    public string nameop { get; set; }
-    //    public string full_nameop { get; set; }
-    //    public DateTime? dt { get; set; }
-    //    public int? st_form { get; set; }
-    //    public string nst_form { get; set; }
-    //    public int? idsost { get; set; }
-    //    public string nsost { get; set; }
-    //    public int? st_nazn { get; set; }
-    //    public string nst_nazn { get; set; }
-    //    public int? ntrain { get; set; }
-    //    public int? st_end { get; set; }
-    //    public string nst_end { get; set; }
-    //    public int? kgr { get; set; }
-    //    public string nkgr { get; set; }
-    //    public int id_cargo { get; set; }
-    //    public int? kgrp { get; set; }
-    //    public decimal? ves { get; set; }
-    //    public DateTime? updated { get; set; }
-    //    public int? kgro { get; set; }
-    //    public int? km { get; set; }
-    //    public int? station_from { get; set; }
-    //    public int? station_end { get; set; }
-    //    public int? shipper { get; set; }
-    //    public int? consignee { get; set; }
-    //    public int? location { get; set; }
-    //    public int? condition { get; set; }
-    //    public int? type_flight { get; set; }
-    //    public DateTime? start_flight { get; set; }
-    //    public DateTime? start_turnover { get; set; }
-    //    public int? duration_flight { get; set; }
-    //    public int? duration_turnover { get; set; }
-    //    public string note { get; set; }
-    //}
 
     public class MTTransfer
     {
@@ -1215,20 +1172,33 @@ namespace MT
 
         #region WagonsTracking_MotionSignals Построение сигналов движения вагона на внешней сети из Web.Api МетТранса
         /// <summary>
-        /// Перенести данные и построить сигналы движения указанного всех вагонов
+        /// Перенести данные и построить сигналы движения всех вагонов
         /// </summary>
         /// <returns></returns>
         public int TransferWagonsMotionSignals()
         {
             try
             {
+                int add = 0;
+                int error = 0;
+                int skip = 0;
                 IDSMORS mors = new IDSMORS(this.servece_owner);
                 List<int> nums = mors.GetNumCarsOfAMKR();
-                foreach (int num in nums)
+                if (nums != null)
                 {
-                    int result = TransferWagonsMotionSignals(num);
+                    foreach (int num in nums)
+                    {
+                        int result = TransferWagonsMotionSignals(num);
+                        if (result > 0) { add++; }
+                        if (result < 0) { error++; }
+                        if (result == 0) { skip++; }
+                    }
+                    // Сформируем сообщение и сохраним в логе
+                    string mess = String.Format("Построение сигналов и перенос сотояния движения вагонов из БД METRANS.WagonsTracking -> БД IDS.MORS - ВЫПОЛНЕН (Общее количество вагонов={0}, перенесено={1}, пропущено={2}, ошибок переноса={3}).", nums.Count(), add, skip, error);
+                    mess.InformationLog(servece_owner, this.eventID);
+                    mess.EventLog(error >0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
+                    return error > 0 ? error : nums.Count();
                 }
-
                 return 0;
             }
             catch (Exception e)
@@ -1238,38 +1208,187 @@ namespace MT
             }
         }
 
-        //public static WTMotionSignals GetWTMotionSignals(this WagonsTracking c)
-        //{
-        //    return new WTMotionSignals
-        //    {
-        //        id_wt = c.id,
-        //        nvagon = c.nvagon,
-        //        st_disl = c.st_disl,
-        //        nst_disl = c.nst_disl,
-        //        kodop = c.kodop,
-        //        nameop = c.nameop,
-        //        full_nameop = c.full_nameop,
-        //        dt = c.dt,
-        //        st_form = c.st_form,
-        //        nst_form = c.nst_form,
-        //        idsost = c.idsost,
-        //        nsost = c.nsost,
-        //        st_nazn = c.st_nazn,
-        //        nst_nazn = c.nst_nazn,
-        //        ntrain = c.ntrain,
-        //        st_end = c.st_end,
-        //        nst_end = c.nst_end,
-        //        kgr = c.kgr,
-        //        nkgr = c.nkgr,
-        //        id_cargo = c.id_cargo,
-        //        kgrp = c.kgrp,
-        //        ves = c.ves,
-        //        updated = c.updated,
-        //        kgro = c.kgro,
-        //        km = c.km,
-        //    };
-        //}
+        /// <summary>
+        /// Прибыл на АМКР
+        /// </summary>
+        /// <param name="car"></param>
+        /// <param name="route"></param>
+        /// <param name="station_end"></param>
+        /// <param name="station_from"></param>
+        public void ArrivalAMKR(WTMotionSignals car, ref ids_route route, ref  int station_end, ref int station_from, ref DateTime? start_flight, ref DateTime? start_turnover, ref ids_type_flight_wagon type_flight)
+        {
+            // Прибыл на АМКР (считаем время прибытия)
+            if (route == ids_route.ret | route == ids_route.not)
+            {
+                // Прибыл новый цикл
+                route = ids_route.amkr;
+                start_flight = car.dt;
+                start_turnover = car.dt;
+                station_from = (int)car.st_disl;
+                station_end = (int)car.st_end;
+                type_flight = car.ves > 0 ? ids_type_flight_wagon.unloading : ids_type_flight_wagon.loading;
+            }
+            else
+            {
+                // Алгоритм неопределил "вагон возвращается"  
+                if (route == ids_route.client)
+                {
+                    route = ids_route.amkr;
+                    start_flight = car.dt;
+                    start_turnover = car.dt;
+                    station_from = (int)car.st_disl;
+                    station_end = (int)car.st_end;
+                    type_flight = car.ves > 0 ? ids_type_flight_wagon.unloading : ids_type_flight_wagon.loading;
+                }
+                // Вагон возращается на АМКР (цикл не меняем)
+                if (route == ids_route.send)
+                {
 
+                    route = ids_route.amkr;
+                    start_flight = car.dt;
+                    start_turnover = car.dt;
+                    station_from = (int)car.st_disl;
+                    station_end = (int)car.st_end;
+                    type_flight = car.ves > 0 ? ids_type_flight_wagon.unloading : ids_type_flight_wagon.loading;
+                }
+                // Сообщение "Вагон прибыл на АМКР а route != ids_route.ret"
+            }
+
+        }
+        /// <summary>
+        /// Возвращается на АМКР
+        /// </summary>
+        /// <param name="car"></param>
+        /// <param name="route"></param>
+        /// <param name="station_end"></param>
+        /// <param name="station_from"></param>
+        public void ReturnAMKR(WTMotionSignals car, ref ids_route route, ref  int station_end, ref int station_from, ref DateTime? start_flight, ref ids_type_flight_wagon type_flight)
+        {
+            // Отправлен на АМКР (считаем время отправки)
+            if (route == ids_route.client || route == ids_route.not)
+            {
+                // возврат
+                route = ids_route.ret;
+                start_flight = car.dt;
+                station_from = (int)car.st_disl;
+                station_end = (int)car.st_end;
+                type_flight = car.ves > 0 ? ids_type_flight_wagon.loaded_flight : ids_type_flight_wagon.empty_flight;
+            }
+            else
+            {
+                // Алгоритм неопределил "вагон у клиента"  
+                if (route == ids_route.send)
+                {
+                    // возврат
+                    route = ids_route.ret;
+                    start_flight = car.dt;
+                    station_from = (int)car.st_disl;
+                    station_end = (int)car.st_end;
+                    type_flight = car.ves > 0 ? ids_type_flight_wagon.loaded_flight : ids_type_flight_wagon.empty_flight;
+
+                }
+                // Сообщение "Возврат вагона на АМКР а route != ids_route.client"
+            } // {end Отправлен на АМКР}
+        }
+        /// <summary>
+        /// Вагон прибыл клиенту
+        /// </summary>
+        /// <param name="car"></param>
+        /// <param name="route"></param>
+        /// <param name="station_end"></param>
+        /// <param name="station_from"></param>
+        public void ArrivalClient(WTMotionSignals car, ref ids_route route, ref  int station_end, ref int station_from, ref DateTime? start_flight, ref ids_type_flight_wagon type_flight)
+        {
+            // Вагон прибыл к клиенту
+            if (route == ids_route.send || route == ids_route.not)
+            {
+                // прибыл клиенту
+                route = ids_route.client;
+                start_flight = car.dt;
+                station_from = (int)car.st_disl;
+                station_end = (int)car.st_end;
+                type_flight = car.ves > 0 ? ids_type_flight_wagon.unloading : ids_type_flight_wagon.loading;
+            }
+            else
+            {
+                // Алгоритм неопределил "вагон направлен клиенту" 
+                if (route == ids_route.amkr)
+                {
+                    route = ids_route.client;
+                    start_flight = car.dt;
+                    station_from = (int)car.st_disl;
+                    station_end = (int)car.st_end;
+                    type_flight = car.ves > 0 ? ids_type_flight_wagon.unloading : ids_type_flight_wagon.loading;
+                }
+                // Если ids_route.client пропускаем (за ОТОТ может прийти ВЫГРН)
+                // Сообщение "Вагон прибыл к клиенту а route != ids_route.send"
+            }
+        }
+        /// <summary>
+        /// Вагон движится к клиенту
+        /// </summary>
+        /// <param name="car"></param>
+        /// <param name="route"></param>
+        /// <param name="station_end"></param>
+        /// <param name="station_from"></param>
+        public void SendClient(WTMotionSignals car, ref ids_route route, ref  int station_end, ref int station_from, ref DateTime? start_flight, ref ids_type_flight_wagon type_flight)
+        {
+            // Вагон движется к клиенту
+            // Откуда движется вагон от АМКР или Клиента
+            if (car.st_disl == 46700 || car.st_disl == 46720)
+            {
+                // Вагон движется к клиенту от АМКР (считаем время отправки)
+                if (route == ids_route.amkr || route == ids_route.not)
+                {
+                    // отправка клиенту
+                    route = ids_route.send;
+                    start_flight = car.dt;
+                    station_from = (int)car.st_disl;
+                    station_end = (int)car.st_end;
+                    type_flight = car.ves > 0 ? ids_type_flight_wagon.loaded_flight : ids_type_flight_wagon.empty_flight;
+                }
+                else
+                {
+                    // Алгоритм неопределил "вагон на АМКР" 
+                    if (route == ids_route.ret)
+                    {
+                        route = ids_route.send;
+                        start_flight = car.dt;
+                        station_from = (int)car.st_disl;
+                        station_end = (int)car.st_end;
+                        type_flight = car.ves > 0 ? ids_type_flight_wagon.loaded_flight : ids_type_flight_wagon.empty_flight;
+                    }
+                    // Сообщение "Отправка клиенту из АМКР а route != ids_route.amkr"
+                }
+            }
+            else
+            {
+                // Вагон движется к клиенту от клиента (считаем время отправки)                                
+                if (route == ids_route.client || route == ids_route.not)
+                {
+                    // отправка опять клиенту
+                    route = ids_route.send;
+                    start_flight = car.dt;
+                    station_from = (int)car.st_disl;
+                    station_end = (int)car.st_end;
+                    type_flight = car.ves > 0 ? ids_type_flight_wagon.loaded_flight : ids_type_flight_wagon.empty_flight;
+                }
+                else
+                {
+                    // Алгоритм неопределил "вагон у клиента" 
+                    if (route == ids_route.send)
+                    {
+                        start_flight = car.dt;
+                        station_from = (int)car.st_disl;
+                        station_end = (int)car.st_end;
+                        type_flight = car.ves > 0 ? ids_type_flight_wagon.loaded_flight : ids_type_flight_wagon.empty_flight;
+                    }
+
+                    // Сообщение "Отправка клиенту другому клиенту а route != ids_route.client"
+                }
+
+            }
+        }
         /// <summary>
         /// Перенести данные и построить сигналы движения указанного вагона
         /// </summary>
@@ -1286,12 +1405,19 @@ namespace MT
 
                 WTMotionSignals last_wtms = mors.GetLastWTMotionSignals(num);
 
+                int result = 0;
+
+                ids_route route = ids_route.not;
+                ids_type_flight_wagon type_flight = ids_type_flight_wagon.not;
                 int station_end = 0;
                 int station_from = 0;
                 int shipper = 0;
                 int consignee = 0;
                 int kode_cargo_consignee = 0; // Код грузополучатель
                 int kode_cargo_shipper = 0; // Код грузоотправитель
+                DateTime? start_flight = null; // Начало рейса
+                DateTime? start_turnover = null; // Начало маршрута
+                string note = null;
 
                 if (last_wtms == null)
                 {
@@ -1362,24 +1488,106 @@ namespace MT
                             kgro = w.kgro,
                             km = w.km,
                         }).ToList();
+                    station_end = last_wtms.station_end;
+                    station_from = last_wtms.station_from;
+                    route = (ids_route)last_wtms.route;
+                    type_flight = (ids_type_flight_wagon)last_wtms.type_flight;
+                    shipper = last_wtms.shipper != null ? (int)last_wtms.shipper : 0;
+                    consignee = last_wtms.consignee != null ? (int)last_wtms.consignee : 0;
+                    kode_cargo_consignee = last_wtms.kgrp != null ? (int)last_wtms.kgrp : 0;
+                    kode_cargo_shipper = last_wtms.kgro != null ? (int)last_wtms.kgro : 0;
+                    start_flight = last_wtms.start_flight; // Начало рейса
+                    start_turnover = last_wtms.start_turnover; // Начало маршрута
+                    note = last_wtms.note; // 
+
                 }
                 // Обрабатываем полученные данные
                 if (list_wt != null && list_wt.Count() > 0)
                 {
-                    station_end = last_wtms.station_end;
-                    station_from = last_wtms.station_from;
-                    shipper = last_wtms.Shipper != null ? (int)last_Cycle.Shipper : 0;
-                    consignee = last_wtms.Consignee != null ? (int)last_Cycle.Consignee : 0;
-                    kode_cargo_consignee = last_wtms.WagonsTracking.kgrp != null ? (int)last_wtms.WagonsTracking.kgrp : 0;
-                    kode_cargo_shipper = last_wtms.WagonsTracking.kgro != null ? (int)last_wtms.WagonsTracking.kgro : 0;
-
                     foreach (WTMotionSignals wtms in list_wt)
                     {
+                        // Определим цепочку следования грузополучатель грузоприемник
+                        kode_cargo_consignee = wtms.kgrp > 0 ? (int)wtms.kgrp : kode_cargo_consignee;
+                        kode_cargo_shipper = wtms.kgro > 0 ? (int)wtms.kgro : kode_cargo_shipper;
 
-
+                        // Конечная станция не равна null и "в регулировании"
+                        if (wtms.st_end > 0)
+                        {
+                            if (wtms.st_end == 46700 || wtms.st_end == 46720)
+                            {
+                                // Конечная станция Кривой Рог
+                                switch (wtms.nameop)
+                                {
+                                    // Прибыли
+                                    case "ОТОТ": ArrivalAMKR(wtms, ref route, ref station_end, ref station_from, ref start_flight, ref start_turnover, ref type_flight); break;
+                                    case "ВЫГ2": ArrivalAMKR(wtms, ref route, ref station_end, ref station_from, ref start_flight, ref start_turnover, ref type_flight); break;
+                                    case "ВЫГРН": ArrivalAMKR(wtms, ref route, ref station_end, ref station_from, ref start_flight, ref start_turnover, ref type_flight); break;
+                                    // Движутся
+                                    case "ОДПВ": ReturnAMKR(wtms, ref route, ref station_end, ref station_from, ref start_flight, ref type_flight); break;
+                                    case "ПГР2": ReturnAMKR(wtms, ref route, ref station_end, ref station_from, ref start_flight, ref type_flight); break;
+                                    case "ПОГРН": ReturnAMKR(wtms, ref route, ref station_end, ref station_from, ref start_flight, ref type_flight); break;
+                                    // Проверим на смену маршрута
+                                    default: if (wtms.st_end != station_end)
+                                            // Маршрут поменялся вагон движется назад
+                                            ReturnAMKR(wtms, ref route, ref station_end, ref station_from, ref start_flight, ref type_flight);
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                // Конечная станция Клиент
+                                switch (wtms.nameop)
+                                {
+                                    // Прибыл
+                                    case "ОТОТ": ArrivalClient(wtms, ref route, ref station_end, ref station_from, ref start_flight, ref type_flight); break;
+                                    case "ВЫГРН": ArrivalClient(wtms, ref route, ref station_end, ref station_from, ref start_flight, ref type_flight); break;
+                                    // Движутся
+                                    case "ОДПВ": SendClient(wtms, ref route, ref station_end, ref station_from, ref start_flight, ref type_flight); break;
+                                    case "ПГР2": SendClient(wtms, ref route, ref station_end, ref station_from, ref start_flight, ref type_flight); break;
+                                    case "ПОГРН": SendClient(wtms, ref route, ref station_end, ref station_from, ref start_flight, ref type_flight); break;
+                                    // Проверим на смену маршрута
+                                    default: if (wtms.st_end != station_end)
+                                            // Маршрут поменялся вагон движется к клиенту
+                                            SendClient(wtms, ref route, ref station_end, ref station_from, ref start_flight, ref type_flight);
+                                        break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // Обработать эти операции
+                            //ВЫГРН,РАСФ,ТСП,ВЫГРО,ОКОТ,ПРМ,ФОРМ,-НЕИС,ОСВ,ВУ36
+                        }
+                        // Скорректируем дополнительные данные
+                        wtms.station_end = station_end;
+                        wtms.station_from = station_from;
+                        wtms.shipper = kode_cargo_shipper;
+                        wtms.consignee = kode_cargo_consignee;
+                        wtms.route = (int)route;
+                        wtms.location = route == ids_route.amkr || route == ids_route.client ? (int)ids_location_wagon.loading_unloading : (int)ids_location_wagon.moves;
+                        wtms.condition = wtms.ves > 0 ? (int)ids_condition_wagon.loaded : (int)ids_condition_wagon.empty;
+                        wtms.type_flight = (int)type_flight;
+                        wtms.start_flight = start_flight;
+                        wtms.start_turnover = start_turnover;
+                        TimeSpan? ts_duration_flight = start_flight != null && wtms.dt != null ? (TimeSpan?)((DateTime)wtms.dt - (DateTime)start_flight) : null;
+                        TimeSpan? ts_duration_turnover = start_turnover != null && wtms.dt != null ? (TimeSpan?)((DateTime)wtms.dt - (DateTime)start_turnover) : null;
+                        wtms.duration_flight = ts_duration_flight != null ? (int?)((TimeSpan)ts_duration_flight).TotalMinutes : null;
+                        wtms.duration_turnover = ts_duration_turnover != null ? (int?)((TimeSpan)ts_duration_turnover).TotalMinutes : null;
+                        wtms.note = note;
+                    }
+                    List<WTMotionSignals> list_result = list_wt.Where(w => w.start_turnover != null).ToList();
+                    // Сохранить все
+                    result = mors.SetWagonsMotionSignals(list_result);
+                    if (result >= 0)
+                    {
+                        String.Format("Построение сигналов и перенос сотояния движения вагона №{0} в БД IDS.MORS - ВЫПОЛНЕНО. (Перенесено:{1} вагонов).", num, result).InformationLog(servece_owner, this.eventID);
+                    }
+                    else
+                    {
+                        String.Format("Построение сигналов и перенос сотояния движения вагона №{0} в БД IDS.MORS - НЕ ВЫПОЛНЕНО. (Код ошибки:{1} вагонов).", num, result).ErrorLog(servece_owner, this.eventID);
                     }
                 }
-                return 0;
+                return result;
             }
             catch (Exception e)
             {
