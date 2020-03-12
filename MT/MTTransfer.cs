@@ -1580,11 +1580,11 @@ namespace MT
                     result = mors.SetWagonsMotionSignals(list_result);
                     if (result >= 0)
                     {
-                        String.Format("Построение сигналов и перенос сотояния движения вагона №{0} в БД IDS.MORS - ВЫПОЛНЕНО. (Перенесено:{1} вагонов).", num, result).InformationLog(servece_owner, this.eventID);
+                        String.Format("Построение сигналов и перенос сотояния движения вагона №{0} в БД IDS.MORS - ВЫПОЛНЕНО. (Перенесено:{1} состояний).", num, result).InformationLog(servece_owner, this.eventID);
                     }
                     else
                     {
-                        String.Format("Построение сигналов и перенос сотояния движения вагона №{0} в БД IDS.MORS - НЕ ВЫПОЛНЕНО. (Код ошибки:{1} вагонов).", num, result).ErrorLog(servece_owner, this.eventID);
+                        String.Format("Построение сигналов и перенос сотояния движения вагона №{0} в БД IDS.MORS - НЕ ВЫПОЛНЕНО. (Код ошибки:{1} состояний).", num, result).ErrorLog(servece_owner, this.eventID);
                     }
                 }
                 return result;
