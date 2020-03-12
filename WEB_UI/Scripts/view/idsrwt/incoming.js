@@ -19,6 +19,8 @@
                 'field_create_user': 'Создал',
                 'field_change': 'Строка изменена',
                 'field_change_user': 'Правил',
+                'field_create_sostav': 'Добавил',
+                'field_change_sostav': 'Правил',
             },
             'en':  //default language: English
             {
@@ -32,7 +34,7 @@
         langs = $.extend(true, $.extend(true, getLanguages($.Text_View, lang), getLanguages($.Text_Common, lang)), getLanguages($.Text_Table, lang)),
         user_name = $('input#username').val(),
         ids_inc = new IDS_RWT_INCOMING(lang), // Создадим класс IDS_RWT_INCOMING
-        list_arrival = null,
+        list_sostav = null,
         data_start = null,
         data_stop = null,
         //
@@ -48,28 +50,18 @@
                 }
             });
         },
-        // загрузить данные
-        load = function (start, stop, callback) {
+        // Показать составы
+        view_sostav = function (start, stop, filter) {
             LockScreen(langView('mess_delay', langs));
             if (data_start === null || data_stop === null || data_start !== start || data_stop !== stop) {
                 ids_inc.getArrivalSostav(start, stop, function (data) {
-                    list_arrival = data;
+                    list_sostav = data;
                     data_start = start;
                     data_stop = stop;
-                    table_sostav.view(list_arrival);
-                    //view_all(function () {
-                    //    if (typeof callback === 'function') {
-                    //        callback();
-                    //    }
-                    //});
+                    table_sostav.view(typeof filter === 'function' ? list_sostav.filter(filter): list_sostav);
                 });
             } else {
-                table_sostav.view(list_arrival);
-                //view_all(function () {
-                //    if (typeof callback === 'function') {
-                //        callback();
-                //    }
-                //});
+                table_sostav.view(typeof filter === 'function' ? list_sostav.filter(filter) : list_sostav);
             }
         },
         // Таблица 
@@ -94,23 +86,38 @@
                     jQueryUI: false,
                     "createdRow": function (row, data, index) {
                         $(row).attr('id', data.id);
+                        switch (data.status) {
+                            case 1: $(row).addClass('status-in-work'); break;
+                            case 2: $(row).addClass('status-accepted'); break;
+                            case 3: $(row).addClass('status-rejected'); break;
+                        }
+                        if (data.id_arrived !== null && data.id_sostav !== null) {
+                            $('td', row).eq(0).addClass('icon-ok');
+                        } else { $('td', row).eq(0).addClass('icon-warning');}
                     },
                     columns: [
+                        {
+                            orderable: false,
+                            data: null,
+                            defaultContent: ""
+                        },
                         { data: "train", title: langView('field_train', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "composition_index", title: langView('field_composition_index', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "date_arrival", title: langView('field_date_arrival', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "date_adoption", title: langView('field_date_adoption', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "date_adoption_act", title: langView('field_date_adoption_act', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "id_station_from", title: langView('field_station_from', langs), width: "250px", orderable: true, searchable: true },
-                        { data: "id_station_on", title: langView('field_station_on', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "id_way", title: langView('field_way', langs), width: "100px", orderable: true, searchable: true },
+                        { data: "composition_index", title: langView('field_composition_index', langs), width: "150px", orderable: true, searchable: true },
+                        { data: "date_arrival", title: langView('field_date_arrival', langs), width: "150px", orderable: true, searchable: true },
+                        { data: "date_adoption", title: langView('field_date_adoption', langs), width: "150px", orderable: true, searchable: true },
+                        { data: "date_adoption_act", title: langView('field_date_adoption_act', langs), width: "150px", orderable: false, searchable: false },
+                        { data: "station_from", title: langView('field_station_from', langs), width: "150px", orderable: true, searchable: true },
+                        { data: "station_on", title: langView('field_station_on', langs), width: "150px", orderable: true, searchable: true },
+                        { data: "id_way", title: langView('field_way', langs), width: "150px", orderable: true, searchable: true },
                         { data: "num_doc", title: langView('field_num_doc', langs), width: "50px", orderable: true, searchable: true },
                         { data: "count", title: langView('field_count', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "status", title: langView('field_status', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "create", title: langView('field_create', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "create_user", title: langView('field_create_user', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "change", title: langView('field_change', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "change_user", title: langView('field_change_user', langs), width: "50px", orderable: true, searchable: true },
+                        //{ data: "status", title: langView('field_status', langs), width: "50px", orderable: true, searchable: true },
+                        //{ data: "create", title: langView('field_create', langs), width: "50px", orderable: true, searchable: true },
+                        //{ data: "create_user", title: langView('field_create_user', langs), width: "50px", orderable: true, searchable: true },
+                        //{ data: "change", title: langView('field_change', langs), width: "50px", orderable: true, searchable: true },
+                        //{ data: "change_user", title: langView('field_change_user', langs), width: "50px", orderable: true, searchable: true },
+                        { data: "create_sostav", title: langView('field_create_sostav', langs), width: "150px", orderable: true, searchable: true },
+                        { data: "change_sostav", title: langView('field_change_sostav', langs), width: "150px", orderable: true, searchable: true }
                     ],
                     dom: 'Bfrtip',
                     stateSave: false,
@@ -122,11 +129,22 @@
                         {
                             text: 'Экспорт в Excel',
                             extend: 'excelHtml5',
-                            sheetName: 'Карточки вагонов',
+                            sheetName: 'Поезда по прибытию',
                             messageTop: function () {
                                 return '';
                             }
                         },
+                        {
+                            extend: 'colvis',
+                            text: 'Выбрать поля таблицы',
+                            collectionLayout: 'fixed two-column',
+                            //postfixButtons: ['colvisRestore']
+                        },
+                        {
+                            extend: 'colvisGroup',
+                            text: 'Показать все поля',
+                            show: ':hidden'
+                        }
                     ],
                 }).on('select', function (e, dt, type, indexes) {
                     var row = table_sostav.obj.rows(indexes).data();
@@ -145,7 +163,7 @@
                 $.each(data, function (i, el) {
                     table_sostav.obj.row.add(table_sostav.get_sostav(el));
                 });
-                //table_sostav.obj.order([1, 'asc']);
+                table_sostav.obj.order([3, 'asc']);
                 table_sostav.obj.draw();
                 LockScreenOff();
             },
@@ -163,40 +181,20 @@
                     "date_adoption": data.date_adoption !== null ? data.date_adoption.replace(/T/g, ' ') : null,
                     "date_adoption_act": data.date_adoption_act !== null ? data.date_adoption_act.replace(/T/g, ' ') : null,
                     "id_station_from": data.id_station_from,
-
+                    "station_from": data.id_station_from !== null && ids_inc!==null ? ids_inc.ids_dir.getValue_Station_Of_ID(data.id_station_from,'station_name',lang): '',
                     "id_station_on": data.id_station_on,
+                    "station_on": data.id_station_on !== null && ids_inc !== null ? ids_inc.ids_dir.getValue_Station_Of_ID(data.id_station_on,'station_name',lang): '',
                     "id_way": data.id_way,
                     "num_doc": data.num_doc,
                     "count": data.count,
                     "status": data.status,
                     "note": data.note,
-                    "create": data.create,
+                    "create": data.create !== null ? data.create.replace(/T/g, ' ') : null,
                     "create_user": data.create_user,
-                    "change": data.change,
+                    "change": data.change !== null ? data.change.replace(/T/g, ' ') : null,
                     "change_user": data.change_user,
-
-                    //"id_sostav": data.id_sostav,
-                    //"position": data.position,
-                    //"num": data.num,
-                    //"country_code": data.country_code,
-                    //"state": mt.uz_dir !== null ? mt.uz_dir.getValue_States_Of_ID(data.country_code, 'state') : data.country_code,
-                    //"wight": data.wight !== null ? Number(data.wight).toFixed(2) : null,
-                    //"cargo_code": data.cargo_code,
-                    //"cargo": data.cargo,
-                    //"station_code": data.station_code,
-                    //"station": data.station,
-                    //"consignee_code": data.consignee,
-                    //"consignee": cs !== null ? cs.name + '(' + data.consignee + ')' : data.consignee,
-                    //"id_consignee": cs !== null ? cs.id_consignee : null,
-                    //"auxiliary": cs !== null ? cs.auxiliary : null,
-                    //"operation": data.operation,
-                    //"composition_index": data.composition_index,
-                    //"date_operation": data.date_operation,
-                    //"train": data.train,
-                    //"num_doc_arrived": data.num_doc_arrived,
-                    //"arrived": data.arrived,
-                    //"parent_id": data.parent_id,
-                    //"user_name": data.user_name,
+                    "create_sostav" : data.create !== null && data.create_user!==null ? data.create_user + ' ('+data.create.replace(/T/g, ' ')+')': null,
+                    "change_sostav": data.change !== null && data.change_user !== null ? data.change_user + ' (' + data.change.replace(/T/g, ' ')+')': null
                 };
             }
         },
@@ -242,12 +240,6 @@
                     pn_sel.select_station,
                     { lang: lang },
                     list_station,
-                    //[
-                    //    { value: 4670, text: "КРИВОЙ РОГ - ГЛАВНЫЙ" },
-                    //    { value: 4671, text: "КРИВОЙ РОГ - СОРТИРОВОЧНЫЙ" },
-                    //    { value: 4672, text: "КРИВОЙ РОГ" },
-                    //    //{ value: 4672, text: "КРИВОЙ РОГ - ЗАПАДНЫЙ" }
-                    //],
                     null,
                     -1,
                     function (event, ui) {
@@ -258,9 +250,7 @@
                     null);
             },
             view: function () {
-                load(pn_sel.start_dt, pn_sel.stop_dt, function () {
-
-                });
+                view_sostav(pn_sel.start_dt, pn_sel.stop_dt, Number(pn_sel.select_station.val()) !== -1 ? function (i) { return i.id_station_from === Number(pn_sel.select_station.val()) ? true : false; }: null);
             }
         };
 
@@ -271,12 +261,9 @@
     // Загрузка основных библиотек
     loadReference(function (result) {
         // Инициализация
-        pn_sel.init(ids_inc.ids_dir.getListStation('id', 'station_name', lang));
+        pn_sel.init(ids_inc.ids_dir.getListStation('id', 'station_name', lang, function (i) { return i.station_uz === true ? true : false; }));
         table_sostav.init();
-        // загрузим новый период
-        load(pn_sel.start_dt, pn_sel.stop_dt, function () {
-
-        });
+        pn_sel.view();
     });
 
 

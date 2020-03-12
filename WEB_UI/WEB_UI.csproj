@@ -506,6 +506,8 @@
     <Content Include="Images\header.jpg" />
     <Content Include="Images\ids-op.jpg" />
     <Content Include="Images\ids-rwt.jpg" />
+    <Content Include="Images\idsrwt\ok.png" />
+    <Content Include="Images\idsrwt\warning.png" />
     <Content Include="Images\logo.png" />
     <Content Include="Images\portfolio\fullsize\1.jpg" />
     <Content Include="Images\portfolio\fullsize\2.jpg" />

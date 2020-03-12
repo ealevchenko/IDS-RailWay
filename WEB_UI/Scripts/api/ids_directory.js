@@ -985,11 +985,15 @@ IDS_DIRECTORY.prototype.getValueCulture_Stations_Of_ID = function (id_station, n
     return obj ? obj[name + '_' + this.lang] : null;
 };
 //
-IDS_DIRECTORY.prototype.getListStation = function (fvalue, ftext, lang) {
+IDS_DIRECTORY.prototype.getListStation = function (fvalue, ftext, lang, filter) {
     var list = [];
+    var list_filtr = null;
     if (this.list_station) {
-        for (i = 0, j = this.list_station.length; i < j; i++) {
-            var l = this.list_station[i];
+        if (typeof filter === 'function') {
+            list_filtr = this.list_station.filter(filter);
+        } else { list_filtr = this.list_station; }
+        for (i = 0, j = list_filtr.length; i < j; i++) {
+            var l = list_filtr[i];
             if (lang) {
                 list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
             } else {
