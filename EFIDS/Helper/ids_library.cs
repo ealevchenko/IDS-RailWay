@@ -154,6 +154,24 @@ namespace EFIDS.Helper
             };
         }
 
+        public static Directory_Station GetDirectory_Station(this Directory_Station s)
+        {
+            if (s == null) return null;
+            return new Directory_Station()
+            {
+                id = s.id,
+                station_name_ru = s.station_name_ru,
+                station_name_en = s.station_name_en,
+                station_abbr_ru = s.station_abbr_ru,
+                station_abbr_en = s.station_abbr_en,
+                exit_uz = s.exit_uz,
+                station_uz = s.station_uz,
+                default_side = s.default_side,
+                code = s.code,
+            };
+        }
+
+
         public static CardsWagons GetCardsWagons(this CardsWagons c)
         {
             if (c == null) return null;
@@ -201,6 +219,72 @@ namespace EFIDS.Helper
             };
         }
 
+        public static ArrivalSostav GetArrivalSostav(this ArrivalSostav s)
+        {
+            return new ArrivalSostav()
+            {
+
+                id = s.id,
+                id_arrived = s.id_arrived,
+                id_sostav = s.id_sostav,
+                train = s.train,
+                composition_index = s.composition_index,
+                date_arrival = s.date_arrival,
+                date_adoption = s.date_adoption,
+                date_adoption_act = s.date_adoption_act,
+                id_station_from = s.id_station_from,
+                id_station_on = s.id_station_on,
+                id_way = s.id_way,
+                num_doc = s.num_doc,
+                count = s.count,
+                status = s.status,
+                note = s.note,
+                create = s.create,
+                create_user = s.create_user,
+                change = s.change,
+                change_user = s.change_user, 
+                ArrivalCars = s.ArrivalCars.ToList().Select(c => c.GetArrivalCars()).ToList(),
+                Directory_Station = s.Directory_Station.GetDirectory_Station(),
+                Directory_Station1 = s.Directory_Station1.GetDirectory_Station()
+            };
+        }
+
+        public static ArrivalCars GetArrivalCars(this ArrivalCars c)
+        {
+            return new ArrivalCars()
+            {
+                id = c.id ,
+                id_arrival = c.id_arrival ,
+                num = c.num ,
+                position = c.position ,
+                position_arrival = c.position_arrival ,
+                consignee = c.consignee ,
+                num_doc = c.num_doc ,
+                note = c.note , 
+                arrival = c.arrival ,
+                arrival_user = c.arrival_user ,
+                create = c.create ,
+                create_user = c.create_user ,
+                change = c.change ,
+                change_user = c.change_user ,
+                UZ_DOC = c.UZ_DOC.GetUZ_DOC(),
+            };
+        }
+
+        public static UZ_DOC GetUZ_DOC(this UZ_DOC d)
+        {
+            if (d == null) return null;
+            return new UZ_DOC()
+            {
+                num_doc = d.num_doc,
+                revision = d.revision,
+                status = d.status,
+                code_from = d.code_from,
+                code_on = d.code_on,
+                dt = d.dt,
+                xml_doc = d.xml_doc,
+            };
+        }
         #endregion
     }
 }

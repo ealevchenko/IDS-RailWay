@@ -32,6 +32,8 @@ IDS_DIRECTORY.list_depo = [];
 
 IDS_DIRECTORY.list_wagons_condition = [];
 
+IDS_DIRECTORY.list_station = [];
+
 IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
     var count = list.length;
     var obj = this;
@@ -183,6 +185,18 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
         if (el === 'wagons_condition') {
             IDS_DIRECTORY.prototype.getWagonsCondition(function (result_wagons_condition) {
                 obj.list_wagons_condition = result_wagons_condition;
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        if (lockOff) { LockScreenOff(); }
+                        callback();
+                    }
+                }
+            });
+        };
+        if (el === 'station') {
+            IDS_DIRECTORY.prototype.getStation(function (result_station) {
+                obj.list_station = result_station;
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
@@ -496,6 +510,30 @@ IDS_DIRECTORY.prototype.getWagonsCondition = function (callback) {
         },
     });
 };
+//======= Directory_Station (Справочник станций ИДС) ======================================
+IDS_DIRECTORY.prototype.getStation = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/station/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getStation", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 /* ----------------------------------------------------------
 функции для работы с объектами
 -------------------------------------------------------------*/
@@ -920,6 +958,38 @@ IDS_DIRECTORY.prototype.getListWagonsCondition = function (fvalue, ftext, lang) 
     if (this.list_wagons_condition) {
         for (i = 0, j = this.list_wagons_condition.length; i < j; i++) {
             var l = this.list_wagons_condition[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
+//*======= IDS_DIRECTORY.list_station  (Справочник станций) ======================================
+IDS_DIRECTORY.prototype.getStation_Internal_Of_ID = function (id_station) {
+    if (this.list_station) {
+        var obj = getObjects(this.list_station, 'id', id_station)
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getValue_Station_Of_ID = function (id_station, name, lang) {
+    var obj = this.getStation_Internal_Of_ID(id_station);
+    return this.getValueObj(obj, name, lang);
+};
+//
+IDS_DIRECTORY.prototype.getValueCulture_Stations_Of_ID = function (id_station, name) {
+    var obj = this.getStation_Internal_Of_ID(id_station);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getListStation = function (fvalue, ftext, lang) {
+    var list = [];
+    if (this.list_station) {
+        for (i = 0, j = this.list_station.length; i < j; i++) {
+            var l = this.list_station[i];
             if (lang) {
                 list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
             } else {

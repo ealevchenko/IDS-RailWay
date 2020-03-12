@@ -207,6 +207,7 @@
     <Compile Include="Areas\IDSMORS\IDSMORSAreaRegistration.cs" />
     <Compile Include="Areas\IDSRWT\Controllers\HomeController.cs" />
     <Compile Include="Areas\IDSRWT\IDSRWTAreaRegistration.cs" />
+    <Compile Include="Controllers\api\IDS_Directory_StationController.cs" />
     <Compile Include="Controllers\api\IDS_ParksListWagonsController.cs" />
     <Compile Include="Controllers\api\IDS_ParksWagonsController.cs" />
     <Compile Include="Controllers\api\IDS_CardsWagonsRepairsController.cs" />
@@ -224,6 +225,7 @@
     <Compile Include="Controllers\api\IDS_Directory_ModelsWagonsController.cs" />
     <Compile Include="Controllers\api\IDS_Directory_TypesRepairsWagonsController.cs" />
     <Compile Include="Controllers\api\IDS_Directory_WagonManufacturersController.cs" />
+    <Compile Include="Controllers\api\IDS_RWT_Incoming_ArrivalSostavController.cs" />
     <Compile Include="Controllers\api\Metrans_ConsigneeController.cs" />
     <Compile Include="Controllers\api\Metrans_ArrivalSostavController.cs" />
     <Compile Include="Controllers\api\UZ_Directory_InternalRailroadController.cs" />
@@ -519,6 +521,7 @@
     <Content Include="Images\portfolio\thumbnails\6.jpg" />
     <Content Include="Scripts\api\ids_directory.js" />
     <Content Include="Scripts\api\ids_mors.js" />
+    <Content Include="Scripts\api\ids_rwt_incoming.js" />
     <Content Include="Scripts\api\metrans.js" />
     <Content Include="Scripts\api\shared.js" />
     <Content Include="Scripts\api\uz_directory.js" />
