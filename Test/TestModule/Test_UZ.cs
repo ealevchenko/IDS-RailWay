@@ -56,10 +56,10 @@ namespace Test.TestModule
             OTPR otpr = sms.GetOTPROfXML(xDoc.InnerXml);
         }
 
-        public void UZ_SMS_GetDB_XMLOfNum()
+        public void UZ_SMS_GetDocumentOfDB_Num()
         {
             UZ_SMS sms = new UZ_SMS();
-            UZ_DOC doc = sms.GetDocumentOfDB_Num(63531479);
+            UZ_DOC doc = sms.GetDocumentOfDB_Num(61585253);
         }
 
 

@@ -100,7 +100,7 @@ namespace Test
             //tmt.MTTransfer_WebApiClientMT();
             //tmt.MTThread_Start_TransferWT();
             //tmt.MTTransfer_InsertIDSArrivalSostav();
-            tmt.MTTransfer_TransferWagonsMotionSignals();
+            //tmt.MTTransfer_TransferWagonsMotionSignals();
 
             #endregion
 
@@ -110,7 +110,7 @@ namespace Test
             //tuz.UZ_XML();
             //tuz.UZ_SMS_GetOTPR();
             //tuz.UZ_SMS_GetOTPROfXML();
-            //tuz.UZ_SMS_GetDB_XMLOfNum();
+            tuz.UZ_SMS_GetDocumentOfDB_Num();
             #endregion
 
             Console.WriteLine("Press any key to exit...");

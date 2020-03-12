@@ -843,39 +843,47 @@ namespace UZ
         /// <returns></returns>
         public static T getAttributes<T>(XmlNode node, string name)
         {
-            XmlNode attr = node.Attributes.GetNamedItem(name);
-            if (attr != null)
+            try
             {
-                if (typeof(T) == typeof(System.Int32))
+                XmlNode attr = node.Attributes.GetNamedItem(name);
+                if (attr != null)
                 {
-                    return (T)(object)Int32.Parse(attr.Value);
+                    if (typeof(T) == typeof(System.Int32))
+                    {
+                        return (T)(object)Int32.Parse(attr.Value);
+                    }
+                    if (typeof(T) == typeof(System.Int32?))
+                    {
+                        return !String.IsNullOrWhiteSpace(attr.Value) ? (T)(object)Int32.Parse(attr.Value) : default(T);
+                    }
+                    if (typeof(T) == typeof(System.String))
+                    {
+                        return (T)(object)attr.Value;
+                    }
+                    if (typeof(T) == typeof(System.Double))
+                    {
+                        return (T)(object)Double.Parse(attr.Value);
+                    }
+                    if (typeof(T) == typeof(System.Double?))
+                    {
+                        return !String.IsNullOrWhiteSpace(attr.Value) ? (T)(object)Double.Parse(attr.Value, new CultureInfo("en")) : default(T);
+                    }
+                    if (typeof(T) == typeof(System.DateTime))
+                    {
+                        return (T)(object)DateTime.Parse(attr.Value, CultureInfo.CreateSpecificCulture("ru-RU"));
+                    }
+                    if (typeof(T) == typeof(System.DateTime?))
+                    {
+                        return !String.IsNullOrWhiteSpace(attr.Value) ? (T)(object)DateTime.Parse(attr.Value, CultureInfo.CreateSpecificCulture("ru-RU")) : default(T);
+                    }
                 }
-                if (typeof(T) == typeof(System.Int32?))
-                {
-                    return !String.IsNullOrWhiteSpace(attr.Value) ? (T)(object)Int32.Parse(attr.Value) : default(T);
-                }
-                if (typeof(T) == typeof(System.String))
-                {
-                    return (T)(object)attr.Value;
-                }
-                if (typeof(T) == typeof(System.Double))
-                {
-                    return (T)(object)Double.Parse(attr.Value);
-                }
-                if (typeof(T) == typeof(System.Double?))
-                {
-                    return !String.IsNullOrWhiteSpace(attr.Value) ? (T)(object)Double.Parse(attr.Value, new CultureInfo("en")) : default(T);
-                }
-                if (typeof(T) == typeof(System.DateTime))
-                {
-                    return (T)(object)DateTime.Parse(attr.Value);
-                }
-                if (typeof(T) == typeof(System.DateTime?))
-                {
-                    return !String.IsNullOrWhiteSpace(attr.Value) ? (T)(object)DateTime.Parse(attr.Value) : default(T);
-                }
+                return default(T);
             }
-            return default(T);
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("getAttributes(node={0}, name={1})", node, name));
+                return default(T);
+            }
         }
         /// <summary>
         /// Заполнить атрибуты OTPR
@@ -884,68 +892,75 @@ namespace UZ
         /// <param name="tag"></param>
         private void GetAttributes(XmlNode node, ref OTPR tag)
         {
-            if (node.Attributes.Count > 0)
+            try
             {
-                tag.date_finish = getAttributes<DateTime?>(node, "date_finish");
-                tag.date_plan = getAttributes<DateTime?>(node, "date_plan");
-                tag.date_strah_dog_recipient = getAttributes<DateTime?>(node, "date_strah_dog_recipient");
-                tag.date_vid = getAttributes<DateTime?>(node, "date_vid");
-                tag.deliv_note = getAttributes<string>(node, "deliv_note");
-                tag.street = getAttributes<string>(node, "street");
-                tag.ser_passp = getAttributes<string>(node, "ser_passp");
-                tag.strah_komp_recipient = getAttributes<int?>(node, "strah_komp_recipient");
-                tag.name_strah_komp_recipient = getAttributes<string>(node, "name_strah_komp_recipient");
-                tag.nom_passp = getAttributes<int?>(node, "nom_passp");
-                tag.nom_dover = getAttributes<int?>(node, "nom_dover");
-                tag.nom_strah_polis_recipient = getAttributes<string>(node, "nom_strah_polis_recipient");
-                tag.house = getAttributes<string>(node, "house");
-                tag.date_dover = getAttributes<DateTime?>(node, "date_dover");
-                tag.city = getAttributes<string>(node, "city");
-                tag.apartam = getAttributes<int?>(node, "apartam");
-                tag.rab_esr_pr = getAttributes<int?>(node, "rab_esr_pr");
-                tag.date_pr = getAttributes<DateTime?>(node, "date_pr");
-                tag.date_grpol = getAttributes<DateTime?>(node, "date_grpol");
-                tag.sum_pereb = getAttributes<int?>(node, "sum_pereb");
-                tag.sum_deliv = getAttributes<int?>(node, "sum_deliv");
-                tag.ser_doc = getAttributes<string>(node, "ser_doc");
-                tag.pr_distance = getAttributes<string>(node, "pr_distance");
-                tag.osum = getAttributes<int?>(node, "osum");
-                tag.distance_way = getAttributes<int?>(node, "distance_way");
-                tag.doc_lang = getAttributes<string>(node, "doc_lang");
-                tag.date_otpr = getAttributes<DateTime?>(node, "date_otpr");
-                tag.country_nazn = getAttributes<int?>(node, "country_nazn");
-                tag.country_otpr = getAttributes<int?>(node, "country_otpr");
-                tag.esr_nakop = getAttributes<string>(node, "esr_nakop");
-                tag.esr_rz_marsh_grot = getAttributes<string>(node, "esr_rz_marsh_grot");
-                tag.foreign_not_accept = getAttributes<int?>(node, "foreign_not_accept");
-                tag.freeze = getAttributes<string>(node, "freeze");
-                tag.kod_doc = getAttributes<int?>(node, "kod_doc");
-                tag.kod_marsh_grot = getAttributes<string>(node, "kod_marsh_grot");
-                tag.loader = getAttributes<string>(node, "loader");
-                tag.measure_equip_num = getAttributes<string>(node, "measure_equip_num");
-                tag.metod = getAttributes<int?>(node, "metod");
-                tag.nom_doc = getAttributes<int?>(node, "nom_doc");
-                tag.nom_marsh_grot = getAttributes<int?>(node, "nom_marsh_grot");
-                tag.nom_plan = getAttributes<int?>(node, "nom_plan");
-                tag.nоm_park = getAttributes<int?>(node, "nоm_park");
-                tag.pr_freeze = getAttributes<int?>(node, "pr_freeze");
-                tag.pr_locom = getAttributes<string>(node, "pr_locom");
-                tag.pr_vohr = getAttributes<string>(node, "pr_vohr");
-                tag.priznak = getAttributes<string>(node, "priznak");
-                tag.rab_esr = getAttributes<int?>(node, "rab_esr");
-                tag.speed = getAttributes<string>(node, "speed");
-                tag.srok_end = getAttributes<DateTime?>(node, "srok_end");
-                tag.type_pay = getAttributes<string>(node, "type_pay");
-                tag.val_gr = getAttributes<int?>(node, "val_gr");
-                tag.value = getAttributes<int?>(node, "value");
-                tag.vid = getAttributes<string>(node, "vid");
-                tag.vid_marsh = getAttributes<int?>(node, "vid_marsh");
-                tag.vid_nakaz_pr = getAttributes<int?>(node, "vid_nakaz_pr");
-                tag.vid_perev = getAttributes<string>(node, "vid_perev");
-                tag.vmd_nom_declar = getAttributes<int?>(node, "vmd_nom_declar");
-                tag.vmd_nom_custom = getAttributes<int?>(node, "vmd_nom_custom");
-                tag.vmd_year_declar = getAttributes<int?>(node, "vmd_year_declar");
-                tag.vmd_date_declar = getAttributes<DateTime?>(node, "vmd_date_declar");
+                if (node.Attributes.Count > 0)
+                {
+                    tag.date_finish = getAttributes<DateTime?>(node, "date_finish");
+                    tag.date_plan = getAttributes<DateTime?>(node, "date_plan");
+                    tag.date_strah_dog_recipient = getAttributes<DateTime?>(node, "date_strah_dog_recipient");
+                    tag.date_vid = getAttributes<DateTime?>(node, "date_vid");
+                    tag.deliv_note = getAttributes<string>(node, "deliv_note");
+                    tag.street = getAttributes<string>(node, "street");
+                    tag.ser_passp = getAttributes<string>(node, "ser_passp");
+                    tag.strah_komp_recipient = getAttributes<int?>(node, "strah_komp_recipient");
+                    tag.name_strah_komp_recipient = getAttributes<string>(node, "name_strah_komp_recipient");
+                    tag.nom_passp = getAttributes<int?>(node, "nom_passp");
+                    tag.nom_dover = getAttributes<int?>(node, "nom_dover");
+                    tag.nom_strah_polis_recipient = getAttributes<string>(node, "nom_strah_polis_recipient");
+                    tag.house = getAttributes<string>(node, "house");
+                    tag.date_dover = getAttributes<DateTime?>(node, "date_dover");
+                    tag.city = getAttributes<string>(node, "city");
+                    tag.apartam = getAttributes<int?>(node, "apartam");
+                    tag.rab_esr_pr = getAttributes<int?>(node, "rab_esr_pr");
+                    tag.date_pr = getAttributes<DateTime?>(node, "date_pr");
+                    tag.date_grpol = getAttributes<DateTime?>(node, "date_grpol");
+                    tag.sum_pereb = getAttributes<int?>(node, "sum_pereb");
+                    tag.sum_deliv = getAttributes<int?>(node, "sum_deliv");
+                    tag.ser_doc = getAttributes<string>(node, "ser_doc");
+                    tag.pr_distance = getAttributes<string>(node, "pr_distance");
+                    tag.osum = getAttributes<int?>(node, "osum");
+                    tag.distance_way = getAttributes<int?>(node, "distance_way");
+                    tag.doc_lang = getAttributes<string>(node, "doc_lang");
+                    tag.date_otpr = getAttributes<DateTime?>(node, "date_otpr");
+                    tag.country_nazn = getAttributes<int?>(node, "country_nazn");
+                    tag.country_otpr = getAttributes<int?>(node, "country_otpr");
+                    tag.esr_nakop = getAttributes<string>(node, "esr_nakop");
+                    tag.esr_rz_marsh_grot = getAttributes<string>(node, "esr_rz_marsh_grot");
+                    tag.foreign_not_accept = getAttributes<int?>(node, "foreign_not_accept");
+                    tag.freeze = getAttributes<string>(node, "freeze");
+                    tag.kod_doc = getAttributes<int?>(node, "kod_doc");
+                    tag.kod_marsh_grot = getAttributes<string>(node, "kod_marsh_grot");
+                    tag.loader = getAttributes<string>(node, "loader");
+                    tag.measure_equip_num = getAttributes<string>(node, "measure_equip_num");
+                    tag.metod = getAttributes<int?>(node, "metod");
+                    tag.nom_doc = getAttributes<int?>(node, "nom_doc");
+                    tag.nom_marsh_grot = getAttributes<int?>(node, "nom_marsh_grot");
+                    tag.nom_plan = getAttributes<int?>(node, "nom_plan");
+                    tag.nоm_park = getAttributes<int?>(node, "nоm_park");
+                    tag.pr_freeze = getAttributes<int?>(node, "pr_freeze");
+                    tag.pr_locom = getAttributes<string>(node, "pr_locom");
+                    tag.pr_vohr = getAttributes<string>(node, "pr_vohr");
+                    tag.priznak = getAttributes<string>(node, "priznak");
+                    tag.rab_esr = getAttributes<int?>(node, "rab_esr");
+                    tag.speed = getAttributes<string>(node, "speed");
+                    tag.srok_end = getAttributes<DateTime?>(node, "srok_end");
+                    tag.type_pay = getAttributes<string>(node, "type_pay");
+                    tag.val_gr = getAttributes<int?>(node, "val_gr");
+                    tag.value = getAttributes<int?>(node, "value");
+                    tag.vid = getAttributes<string>(node, "vid");
+                    tag.vid_marsh = getAttributes<int?>(node, "vid_marsh");
+                    tag.vid_nakaz_pr = getAttributes<int?>(node, "vid_nakaz_pr");
+                    tag.vid_perev = getAttributes<string>(node, "vid_perev");
+                    tag.vmd_nom_declar = getAttributes<int?>(node, "vmd_nom_declar");
+                    tag.vmd_nom_custom = getAttributes<int?>(node, "vmd_nom_custom");
+                    tag.vmd_year_declar = getAttributes<int?>(node, "vmd_year_declar");
+                    tag.vmd_date_declar = getAttributes<DateTime?>(node, "vmd_date_declar");
+                }
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetAttributes(node={0}, tag={1})", node, tag), this.servece_owner, this.eventID);
             }
         }
         /// <summary>
@@ -2282,47 +2297,55 @@ namespace UZ
         /// <returns></returns>
         public OTPR GetOTPROfFinalXML(string xml)
         {
-            OTPR otpr = new OTPR();
-            XmlDocument xDoc = new XmlDocument();
-            xDoc.LoadXml(xml);
-            XmlElement xRoot = xDoc.DocumentElement;
-            if (xRoot.Name == "OTPR")
+            try
             {
-                // атрибуты
-                GetAttributes(xRoot, ref otpr);
-                foreach (XmlNode otpr_node in xRoot.ChildNodes)
+                OTPR otpr = new OTPR();
+                XmlDocument xDoc = new XmlDocument();
+                xDoc.LoadXml(xml);
+                XmlElement xRoot = xDoc.DocumentElement;
+                if (xRoot.Name == "OTPR")
                 {
-                    switch (otpr_node.Name)
+                    // атрибуты
+                    GetAttributes(xRoot, ref otpr);
+                    foreach (XmlNode otpr_node in xRoot.ChildNodes)
                     {
-                        case "ACTS": { GetTagACTS(otpr_node, ref otpr); break; }
-                        case "CARRIER": { GetTagCARRIER(otpr_node, ref otpr); break; }
-                        case "CIM_INFO": { GetTagCIM_INFO(otpr_node, ref otpr); break; }
-                        case "CLIENT": { GetTagCLIENT(otpr_node, ref otpr); break; }
-                        case "COM_COND": { GetTagCOM_COND(otpr_node, ref otpr); break; }
-                        case "CONT": { GetTagCONT(otpr_node, ref otpr); break; }
-                        case "FRONTIER_MARK": { GetTagFRONTIER_MARK(otpr_node, ref otpr); break; }
-                        case "OTPRDP": { GetTagOTPRDP(otpr_node, ref otpr); break; }
-                        case "PAC": { GetTagPAC(otpr_node, ref otpr); break; }
-                        case "PASS_MARK": { GetTagPASS_MARK(otpr_node, ref otpr); break; }
-                        case "PL": { GetTagPL(otpr_node, ref otpr); break; }
-                        case "PROLONGATION": { GetTagPROLONGATION(otpr_node, ref otpr); break; }
-                        case "ROUTE": { GetTagROUTE(otpr_node, ref otpr); break; }
-                        case "RW_STAT": { GetTagRW_STAT(otpr_node, ref otpr); break; }
-                        case "REFUSE_EPD": { GetTagREFUSE_EPD(otpr_node, ref otpr); break; }
-                        case "REISSUE_INFO": { GetTagREISSUE_INFO(otpr_node, ref otpr); break; }
-                        case "SCHEMA": { GetTagSCHEMA(otpr_node, ref otpr); break; }
-                        case "SENDER_DOC": { GetTagSENDER_DOC(otpr_node, ref otpr); break; }
-                        case "SEND_STAT": { GetTagSEND_STAT(otpr_node, ref otpr); break; }
-                        case "SHTEMPEL": { GetTagSHTEMPEL(otpr_node, ref otpr); break; }
-                        case "SPEC_COND": { GetTagSPEC_COND(otpr_node, ref otpr); break; }
-                        case "TAKS": { GetTagTAKS(otpr_node, ref otpr); break; }
-                        case "TEXT": { GetTagTEXT(otpr_node, ref otpr); break; }
-                        case "VAGON": { GetTagVAGON(otpr_node, ref otpr); break; }
+                        switch (otpr_node.Name)
+                        {
+                            case "ACTS": { GetTagACTS(otpr_node, ref otpr); break; }
+                            case "CARRIER": { GetTagCARRIER(otpr_node, ref otpr); break; }
+                            case "CIM_INFO": { GetTagCIM_INFO(otpr_node, ref otpr); break; }
+                            case "CLIENT": { GetTagCLIENT(otpr_node, ref otpr); break; }
+                            case "COM_COND": { GetTagCOM_COND(otpr_node, ref otpr); break; }
+                            case "CONT": { GetTagCONT(otpr_node, ref otpr); break; }
+                            case "FRONTIER_MARK": { GetTagFRONTIER_MARK(otpr_node, ref otpr); break; }
+                            case "OTPRDP": { GetTagOTPRDP(otpr_node, ref otpr); break; }
+                            case "PAC": { GetTagPAC(otpr_node, ref otpr); break; }
+                            case "PASS_MARK": { GetTagPASS_MARK(otpr_node, ref otpr); break; }
+                            case "PL": { GetTagPL(otpr_node, ref otpr); break; }
+                            case "PROLONGATION": { GetTagPROLONGATION(otpr_node, ref otpr); break; }
+                            case "ROUTE": { GetTagROUTE(otpr_node, ref otpr); break; }
+                            case "RW_STAT": { GetTagRW_STAT(otpr_node, ref otpr); break; }
+                            case "REFUSE_EPD": { GetTagREFUSE_EPD(otpr_node, ref otpr); break; }
+                            case "REISSUE_INFO": { GetTagREISSUE_INFO(otpr_node, ref otpr); break; }
+                            case "SCHEMA": { GetTagSCHEMA(otpr_node, ref otpr); break; }
+                            case "SENDER_DOC": { GetTagSENDER_DOC(otpr_node, ref otpr); break; }
+                            case "SEND_STAT": { GetTagSEND_STAT(otpr_node, ref otpr); break; }
+                            case "SHTEMPEL": { GetTagSHTEMPEL(otpr_node, ref otpr); break; }
+                            case "SPEC_COND": { GetTagSPEC_COND(otpr_node, ref otpr); break; }
+                            case "TAKS": { GetTagTAKS(otpr_node, ref otpr); break; }
+                            case "TEXT": { GetTagTEXT(otpr_node, ref otpr); break; }
+                            case "VAGON": { GetTagVAGON(otpr_node, ref otpr); break; }
+                        }
                     }
+                    return otpr;
                 }
-                return otpr;
+                return null;
             }
-            return null;
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetOTPROfFinalXML(xml={0})", xml), this.servece_owner, eventID);
+                return null;
+            }
 
         }
         #endregion
@@ -2565,17 +2588,19 @@ namespace UZ
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
-        public uz_status? GetStatus(string status) {
-            switch (status) { 
-                case "Recieved": return uz_status.recieved; 
-                case "Uncredited": return uz_status.uncredited; 
-                case "Accepted": return uz_status.accepted; 
-                case "Delivered": return uz_status.delivered; 
-                case "Draft": return uz_status.draft; 
-                case "Registered": return uz_status.registered; 
+        public uz_status? GetStatus(string status)
+        {
+            switch (status)
+            {
+                case "Recieved": return uz_status.recieved;
+                case "Uncredited": return uz_status.uncredited;
+                case "Accepted": return uz_status.accepted;
+                case "Delivered": return uz_status.delivered;
+                case "Draft": return uz_status.draft;
+                case "Registered": return uz_status.registered;
                 case "Canceled": return uz_status.canceled;
-                default: return null; 
-           }
+                default: return null;
+            }
         }
         /// <summary>
         /// Получить XML перевозочного документа из промежуточной базой KRR-PA-VIZ-Other_DATA по номеру вагона
@@ -2617,7 +2642,7 @@ namespace UZ
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("GetDB_XMLOfNum(num={0})", num), this.servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("GetDocumentOfDB_Num(num={0})", num), this.servece_owner, eventID);
                 return null;
             }
         }
