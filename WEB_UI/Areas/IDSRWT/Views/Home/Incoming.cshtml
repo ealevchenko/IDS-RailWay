@@ -89,4 +89,57 @@
     </div>
 </div>
 
+<div id="edit-sostav" title="" style="display:none">
+    <div class="alert" id="edit-sostav-alert">
+    </div>
+    <form id="form-edit-sostav">
+        <div class="form-row">
+            <div class="col-md-6 mb-2">
+                <label for="train-edit" class="col-form-label">@IDSRWTResource.title_train:</label>
+                <input type="text" class="form-control" id="train-edit" placeholder="" name="train-edit" required="required">
+                <div class="invalid-feedback">
+                    @IDSRWTResource.title_train_invalid
+                </div>
+            </div>
+            <div class="col-md-6 mb-2">
+                <label for="composition-index-edit" class="col-form-label">@IDSRWTResource.title_composition_index:</label>
+                <input type="text" class="form-control" id="composition-index-edit" placeholder="" name="composition-index-edit" required="required">
+                <div class="invalid-feedback">
+                    @IDSRWTResource.title_composition_index_invalid
+                </div>
+            </div>
+        </div>
+        @*<div class="form-row">
+
+        </div>*@
+        <div class="form-row">
+            <div class="col-md-6 mb-2">
+                <label for="date-arrival-edit" class="col-form-label">@IDSRWTResource.title_date_arrival:</label>
+                <input type="text" class="form-control" id="date-arrival-edit" placeholder="" name="date-arrival-edit" required="required">
+                <div class="invalid-feedback">
+                    @IDSRWTResource.title_date_arrival_invalid
+                </div>
+            </div>
+            <div class="col-md-6 mb-2">
+                <label for="station-from-edit" class="col-form-label">@IDSRWTResource.title_station_from:</label>
+                <select class="form-control" id="station-from-edit" name="station-from-edit" required="required"></select>
+                <div class="invalid-feedback">
+                    @IDSRWTResource.title_station_from_invalid
+                </div>
+            </div>
+        </div>
+        @*<div class="form-row">
+
+        </div>*@
+        <div class="form-row">
+            <div class="col-md-12 mb-2">
+                <label for="note-edit" class="col-form-label">@IDSRWTResource.title_note:</label>
+                <textarea class="form-control" id="note-edit" placeholder="" name="note-edit"></textarea>
+            </div>
+        </div>
+        <!-- Allow form submission with keyboard without duplicating the dialog button -->
+        <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </form>
+</div>
+
 

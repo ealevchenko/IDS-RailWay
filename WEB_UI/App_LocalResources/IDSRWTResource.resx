@@ -135,4 +135,31 @@
   <data name="system_idsrwt_title" xml:space="preserve">
     <value>ВДС «ЖД АМКР»</value>
   </data>
+  <data name="title_composition_index" xml:space="preserve">
+    <value>Индекс поезда</value>
+  </data>
+  <data name="title_composition_index_invalid" xml:space="preserve">
+    <value>Укажите индекс поезда</value>
+  </data>
+  <data name="title_date_arrival" xml:space="preserve">
+    <value>Дата и время прибытия</value>
+  </data>
+  <data name="title_date_arrival_invalid" xml:space="preserve">
+    <value>Укажите дату и время прибытия</value>
+  </data>
+  <data name="title_note" xml:space="preserve">
+    <value>Примечание</value>
+  </data>
+  <data name="title_station_from" xml:space="preserve">
+    <value>Прибытие со станции</value>
+  </data>
+  <data name="title_station_from_invalid" xml:space="preserve">
+    <value>Укажите станцию прибытия</value>
+  </data>
+  <data name="title_train" xml:space="preserve">
+    <value>№ Поезда</value>
+  </data>
+  <data name="title_train_invalid" xml:space="preserve">
+    <value>Укажите № поезда</value>
+  </data>
 </root>

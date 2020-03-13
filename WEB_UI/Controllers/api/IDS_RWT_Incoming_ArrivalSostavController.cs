@@ -11,7 +11,7 @@ using EFIDS.Entities;
 
 namespace WEB_UI.Controllers.api
 {
-    [RoutePrefix("api/ids_rwt/arrival_sostav")]
+    [RoutePrefix("api/ids/rwt/arrival_sostav")]
     public class IDS_RWT_Incoming_ArrivalSostavController : ApiController
     {
         protected IRepository<ArrivalSostav> ef_ids;
@@ -22,7 +22,7 @@ namespace WEB_UI.Controllers.api
         }
 
 
-        // GET: api/ids_rwt/arrival_sostav/all
+        // GET: api/ids/rwt/arrival_sostav/all
         [Route("all")]
         [ResponseType(typeof(ArrivalSostav))]
         public IHttpActionResult GetArrivalSostav()
@@ -38,7 +38,7 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // GET: api/ids_rwt/arrival_sostav/id/4647
+        // GET: api/ids/rwt/arrival_sostav/id/4647
         [Route("id/{id:int}")]
         [ResponseType(typeof(ArrivalSostav))]
         public IHttpActionResult GetArrivalSostav(int id)
@@ -58,7 +58,7 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // GET: api/ids_rwt/arrival_sostav/start/2020-03-12T00:00:00/stop/2020-03-20T23:59:59
+        // GET: api/ids/rwt/arrival_sostav/start/2020-03-12T00:00:00/stop/2020-03-20T23:59:59
         [Route("start/{start:datetime}/stop/{stop:datetime}")]
         [ResponseType(typeof(ArrivalSostav))]
         public IHttpActionResult GetArrivalSostav(DateTime start, DateTime stop)

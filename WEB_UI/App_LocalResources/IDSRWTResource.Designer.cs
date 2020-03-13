@@ -19,7 +19,7 @@ namespace WEB_UI.App_LocalResources {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class IDSRWTResource {
@@ -111,6 +111,87 @@ namespace WEB_UI.App_LocalResources {
         public static string system_idsrwt_title {
             get {
                 return ResourceManager.GetString("system_idsrwt_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Индекс поезда.
+        /// </summary>
+        public static string title_composition_index {
+            get {
+                return ResourceManager.GetString("title_composition_index", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Укажите индекс поезда.
+        /// </summary>
+        public static string title_composition_index_invalid {
+            get {
+                return ResourceManager.GetString("title_composition_index_invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Дата и время прибытия.
+        /// </summary>
+        public static string title_date_arrival {
+            get {
+                return ResourceManager.GetString("title_date_arrival", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Укажите дату и время прибытия.
+        /// </summary>
+        public static string title_date_arrival_invalid {
+            get {
+                return ResourceManager.GetString("title_date_arrival_invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Примечание.
+        /// </summary>
+        public static string title_note {
+            get {
+                return ResourceManager.GetString("title_note", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Прибытие со станции.
+        /// </summary>
+        public static string title_station_from {
+            get {
+                return ResourceManager.GetString("title_station_from", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Укажите станцию прибытия.
+        /// </summary>
+        public static string title_station_from_invalid {
+            get {
+                return ResourceManager.GetString("title_station_from_invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на № Поезда.
+        /// </summary>
+        public static string title_train {
+            get {
+                return ResourceManager.GetString("title_train", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Укажите № поезда.
+        /// </summary>
+        public static string title_train_invalid {
+            get {
+                return ResourceManager.GetString("title_train_invalid", resourceCulture);
             }
         }
     }

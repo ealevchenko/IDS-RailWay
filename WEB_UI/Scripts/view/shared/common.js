@@ -250,6 +250,55 @@ var cd_initSelect = function (obj_select, property, data, callback_option, value
     return obj_select;
 };
 
+
+var cd_initDateTimeRangePicker = function (obj_select, property, close_function) {
+    var dtrp = {
+        obj: null,
+        lang: 'ru',
+        select_date: null,
+        init: function (obj_select, property, close_function) {
+            if (property.lang) {
+                dtrp.lang = property.lang;
+            }
+            dtrp.obj = obj_select.dateRangePicker(
+            {
+                language: dtrp.lang,
+                format: 'DD.MM.YYYY HH:mm',
+                autoClose: false,
+                singleDate: true,
+                singleMonth: true,
+                showShortcuts: false,
+                time: {
+                    enabled: true
+                },
+            }).
+            bind('datepicker-change', function (evt, obj) {
+                dtrp.select_date = obj.date1;
+            })
+            .bind('datepicker-closed', function () {
+                // Преобразовать формат
+                if (typeof close_function === 'function') {
+                    close_function(dtrp.select_date);
+                }
+            });
+        },
+        getDateTime: function () {
+            return dtrp.select_date;
+        },
+        setDateTime: function (datetime) {
+            if (datetime !== null) {
+                dtrp.obj.data('dateRangePicker').setDateRange(moment(datetime).format('DD.MM.YYYY HH:mm:'), moment(datetime).format('DD.MM.YYYY HH:mm:'), true)
+            } else {
+                // Установить текущую дату и время
+                dtrp.obj.data('dateRangePicker').setDateRange(moment().format('DD.MM.YYYY HH:mm:'), moment().format('DD.MM.YYYY HH:mm:'), true)
+                dtrp.obj.data('dateRangePicker').clear();
+                dtrp.select_date = null; // чтобы вернуло нет даты
+            }
+        },
+    };
+    dtrp.init(obj_select, property, close_function);
+    return dtrp;
+}
 /* ----------------------------------------------------------
     Компоненты JQUERY UI
 -------------------------------------------------------------*/

@@ -66,7 +66,7 @@ AJAX функции
 IDS_RWT_INCOMING.prototype.getArrivalSostav = function (start, stop, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids_rwt/arrival_sostav/start/' + toISOStringTZ(start).substring(0, 19) + '/stop/' + toISOStringTZ(stop).substring(0, 19),
+        url: '../../api/ids/rwt/arrival_sostav/start/' + toISOStringTZ(start).substring(0, 19) + '/stop/' + toISOStringTZ(stop).substring(0, 19),
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -79,6 +79,29 @@ IDS_RWT_INCOMING.prototype.getArrivalSostav = function (start, stop, callback) {
         },
         error: function (x, y, z) {
             OnAJAXError("IDS_RWT_INCOMING.getArrivalSostav", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//
+IDS_RWT_INCOMING.prototype.getArrivalSostavOfID = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/arrival_sostav/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.getArrivalSostavOfID", x, y, z);
         },
         complete: function () {
             AJAXComplete();
