@@ -1,13 +1,24 @@
 ﻿body {
 }
 
+td.icon-right {
+    background: url('../../../Images/idsrwt/right.png') no-repeat left center;
+}
+
+td.icon-user {
+    background: url('../../../Images/idsrwt/user.png') no-repeat left center;
+}
+
 td.icon-ok {
     background: url('../../../Images/idsrwt/ok.png') no-repeat center center;
-    /*cursor: pointer;*/
 }
 
 td.icon-warning {
     background: url('../../../Images/idsrwt/warning.png') no-repeat center center;
+}
+
+td.icon-delete {
+    background: url('../../../Images/idsrwt/delete.png') no-repeat center center;
 }
 
 table.dataTable tbody tr:not(.selected).status-in-work.odd, table.dataTable tbody tr:not(.selected).status-in-work.even {
@@ -20,8 +31,13 @@ table.dataTable tbody tr:not(.selected).status-rejected.odd, table.dataTable tbo
     background-color: #fbcfcf;
 }
 
+div.dt-buttons a {
+    margin-right:2px;
+}
+
+/*Коррекция отображения компонента дата и время*/
 .date-picker {
-  z-index: 202;
+    z-index: 202;
 }
 
 .date-picker-wrapper {

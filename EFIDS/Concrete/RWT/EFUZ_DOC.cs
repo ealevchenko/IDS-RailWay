@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace EFIDS.Concrete
 {
 
-    public class EFUZ_DOC : IRepository<UZ_DOC>
+    public class EFUZ_DOC : IStringRepository<UZ_DOC>
     {
 
         private EFDbContext db;
@@ -171,16 +171,6 @@ namespace EFIDS.Concrete
         {
             Dispose(true);
             GC.SuppressFinalize(this);
-        }
-
-        public UZ_DOC Get(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(int id)
-        {
-            throw new NotImplementedException();
         }
     }
 }

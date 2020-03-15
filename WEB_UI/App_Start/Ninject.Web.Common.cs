@@ -101,9 +101,9 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFUZ.Abstract.IRepository<EFUZ.Entities.Directory_Countrys>>().To<EFUZ.Concrete.EFDirectory_Countrys>();
             kernel.Bind<EFUZ.Abstract.IRepository<EFUZ.Entities.Directory_Stations>>().To<EFUZ.Concrete.EFDirectory_Stations>();
 
-            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.ArrivalSostav>>().To<EFIDS.Concrete.EFArrivalSostav>();
-            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.ArrivalCars>>().To<EFIDS.Concrete.EFArrivalCars>();
-            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.UZ_DOC>>().To<EFIDS.Concrete.EFUZ_DOC>();  
+            kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.ArrivalSostav>>().To<EFIDS.Concrete.EFArrivalSostav>();
+            kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.ArrivalCars>>().To<EFIDS.Concrete.EFArrivalCars>();
+            kernel.Bind<EFIDS.Abstract.IStringRepository<EFIDS.Entities.UZ_DOC>>().To<EFIDS.Concrete.EFUZ_DOC>();  
         }        
     }
 }

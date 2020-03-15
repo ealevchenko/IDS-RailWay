@@ -170,7 +170,7 @@
                     "searching": true,
                     "ordering": true,
                     "info": true,
-                    "select": true,
+                    //"select": true,
                     select: {
                         style: 'multi'
                     },
@@ -538,7 +538,7 @@
                         pn_edit_park_name.name_park_wagon_en.val("");
                         pn_edit_park_name.obj.dialog("open");
                     }
-                })
+                });
             },
             // Получить новый парк
             getNew: function () {
@@ -546,7 +546,7 @@
                     id: (pn_edit_park_name.id ? pn_edit_park_name.id : 0),
                     name_park_ru: pn_edit_park_name.name_park_wagon_ru.val(),
                     name_park_en: pn_edit_park_name.name_park_wagon_en.val(),
-                }
+                };
             },
             // Сохранить изменения
             save: function (callback_ok) {

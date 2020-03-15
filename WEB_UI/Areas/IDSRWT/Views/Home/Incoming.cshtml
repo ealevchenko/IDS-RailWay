@@ -78,6 +78,7 @@
         </div>
     </div>
 </nav>
+<div class="alert" id="incoming-alert"></div>
 <div class="row">
     <div class="col-xl-12 mb-3 mt-2">
         <div class="card border-dark mb-3">
@@ -90,8 +91,7 @@
 </div>
 
 <div id="edit-sostav" title="" style="display:none">
-    <div class="alert" id="edit-sostav-alert">
-    </div>
+    <div class="alert" id="edit-sostav-alert"></div>
     <form id="form-edit-sostav">
         <div class="form-row">
             <div class="col-md-6 mb-2">
@@ -115,7 +115,7 @@
         <div class="form-row">
             <div class="col-md-6 mb-2">
                 <label for="date-arrival-edit" class="col-form-label">@IDSRWTResource.title_date_arrival:</label>
-                <input type="text" class="form-control" id="date-arrival-edit" placeholder="" name="date-arrival-edit" required="required">
+                <input type="datetime" class="form-control" id="date-arrival-edit" placeholder="" name="date-arrival-edit" required="required">
                 <div class="invalid-feedback">
                     @IDSRWTResource.title_date_arrival_invalid
                 </div>
@@ -140,6 +140,12 @@
         <!-- Allow form submission with keyboard without duplicating the dialog button -->
         <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
     </form>
+</div>
+
+<div id="dialog-confirm" title="Empty the recycle bin?" style="display:none">
+    <p id="dialog-confirm-text">
+        <span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>
+    </p>
 </div>
 
 

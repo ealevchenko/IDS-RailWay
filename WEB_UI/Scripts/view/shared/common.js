@@ -410,6 +410,36 @@ var outOperation = function (i) {
 /* ----------------------------------------------------------
     Функции валидации и вывода сообщений
 -------------------------------------------------------------*/
+var ALERT = function (alert) {
+    this.alert = alert;
+};
+// Очистить сообщения
+ALERT.prototype.clear_message = function () {
+    if (this.alert) {
+        this.alert.hide().text('');
+    }
+};
+// Вывести сообщение об ошибке
+ALERT.prototype.out_error_message = function (message) {
+    if (this.alert) {
+        this.alert.show().removeClass('alert-success').addClass('alert-danger');
+        if (message) {
+            this.alert.append(message).append($('<br />'));
+        }
+    }
+};
+// Вывести информационное сообщение
+ALERT.prototype.out_info_message = function (message) {
+    if (this.alert) {
+        this.alert.show().removeClass('alert-danger').addClass('alert-success');
+        if (message) {
+            this.alert.text(message);
+        }
+    }
+};
+/* ----------------------------------------------------------
+    Функции валидации и вывода сообщений
+-------------------------------------------------------------*/
 
 var VALIDATION = function (lang, alert, all_obj) {
 
@@ -437,7 +467,6 @@ VALIDATION.prototype.clear_message = function () {
         this.alert.hide().text('');
     }
 };
-
 // Вывести сообщение об ошибке
 VALIDATION.prototype.out_error_message = function (message) {
     if (this.alert) {
@@ -483,6 +512,31 @@ VALIDATION.prototype.checkInputOfNull = function (o, mes_error, mes_ok) {
         return true;
     }
 };
+// Проверка Select на выбраный раздел
+VALIDATION.prototype.checkSelection = function (o, mes_error, mes_ok) {
+    if (Number(o.val()) < 0) {
+        this.set_control_error(o, mes_error);
+        this.out_error_message(mes_error);
+        return false;
+    } else {
+        this.set_control_ok(o, mes_ok);
+        this.out_info_message(mes_ok);
+        return true;
+    }
+};
+// проверка на шаблон
+VALIDATION.prototype.checkRegexp = function (o, regexp, mes_error, mes_ok) {
+    if (!(regexp.test(o.val()))) {
+        this.set_control_error(o, mes_error);
+        this.out_error_message(mes_error);
+        return false;
+    } else {
+        this.set_control_ok(o, mes_ok);
+        this.out_info_message(mes_ok);
+        return true;
+    }
+};
+
 //var checkInputOfStringRange = function (o, min, max, message) {
 //    if (o.val() !== "") {
 //        var value = Number(o.val());

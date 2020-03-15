@@ -58,6 +58,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstract\IStringRepository.cs" />
+    <Compile Include="Abstract\ILongRepository.cs" />
     <Compile Include="Abstract\IRepository.cs" />
     <Compile Include="Abstract\IWebView.cs" />
     <Compile Include="Abstract\IWebAccess.cs" />

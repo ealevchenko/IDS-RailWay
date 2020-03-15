@@ -167,5 +167,15 @@ namespace EFIDS.Concrete
         {
             throw new NotImplementedException();
         }
+
+        public Directory_Consignee Get(long id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete(long id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

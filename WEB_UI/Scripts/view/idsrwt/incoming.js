@@ -14,7 +14,7 @@
                 'field_way': 'Принят на путь',
                 'field_num_doc': '№ Ведомости',
                 'field_count': 'Кол. вагонов',
-                'field_status': 'Статус состава',
+                'field_status': 'Статус',
                 'field_create': 'Строка создана',
                 'field_create_user': 'Создал',
                 'field_change': 'Строка изменена',
@@ -28,6 +28,9 @@
                 'title_button_add': 'Добавить',
                 'title_button_edit': 'Изменить',
                 'title_button_del': 'Удалить(Отклонить)',
+                'title_button_wagon': 'Вагоны',
+                'title_button_wagon_accept': 'Принять вагоны',
+                'title_button_wagon_view': 'Показать вагоны',
             },
             'en':  //default language: English
             {
@@ -40,6 +43,7 @@
     var lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang')),
         langs = $.extend(true, $.extend(true, getLanguages($.Text_View, lang), getLanguages($.Text_Common, lang)), getLanguages($.Text_Table, lang)),
         user_name = $('input#username').val(),
+        incoming_alert = new ALERT($('div#incoming-alert')),// Создадим класс ALERTG
         ids_inc = new IDS_RWT_INCOMING(lang), // Создадим класс IDS_RWT_INCOMING
         list_sostav = null,
         data_start = null,
@@ -58,9 +62,11 @@
             });
         },
         // Показать составы
-        view_sostav = function (start, stop, filter) {
+        view_sostav = function (refresh, start, stop, filter) {
+            incoming_alert.clear_message();
             LockScreen(langView('mess_delay', langs));
-            if (data_start === null || data_stop === null || data_start !== start || data_stop !== stop) {
+            if (refresh || data_start === null || data_stop === null || data_start !== start || data_stop !== stop) {
+
                 ids_inc.getArrivalSostav(start, stop, function (data) {
                     list_sostav = data;
                     data_start = start;
@@ -94,17 +100,18 @@
                     "createdRow": function (row, data, index) {
                         $(row).attr('id', data.id);
                         switch (data.status) {
-                            case 1: $(row).addClass('status-in-work'); break;
-                            case 2: $(row).addClass('status-accepted'); break;
-                            case 3: $(row).addClass('status-rejected'); break;
+                            case 1: $(row).addClass('status-in-work'); $('td', row).eq(0).addClass('icon-warning'); break;
+                            case 2: $(row).addClass('status-accepted'); $('td', row).eq(0).addClass('icon-ok'); break;
+                            case 3: $(row).addClass('status-rejected'); $('td', row).eq(0).addClass('icon-delete'); break;
                         }
                         if (data.id_arrived !== null && data.id_sostav !== null) {
-                            $('td', row).eq(0).addClass('icon-ok');
-                        } else { $('td', row).eq(0).addClass('icon-warning'); }
+                            $('td', row).eq(1).addClass('icon-right');
+                        } else { $('td', row).eq(1).addClass('icon-user'); }
                     },
                     columns: [
                         {
                             orderable: false,
+                            title: langView('field_status', langs),
                             data: null,
                             defaultContent: ""
                         },
@@ -155,7 +162,7 @@
                         {
                             text: langView('title_button_add', langs),
                             action: function (e, dt, node, config) {
-                                pn_edit_sostav.Open(null)
+                                pn_edit_sostav.Open(null);
                             },
                             enabled: true
                         },
@@ -163,7 +170,7 @@
                             text: langView('title_button_edit', langs),
                             action: function (e, dt, node, config) {
                                 if (table_sostav.select_sostav) {
-                                    pn_edit_sostav.Open(table_sostav.select_sostav.id)
+                                    pn_edit_sostav.Open(table_sostav.select_sostav.id);
                                 }
                             },
                             enabled: false
@@ -172,43 +179,88 @@
                             text: langView('title_button_del', langs),
                             action: function (e, dt, node, config) {
                                 if (table_sostav.select_sostav) {
-                                    //wagon_card.load_card(table_wagon_cards.select.num);
+                                    if (table_sostav.select_sostav.id_arrived === null) {
+                                        dialog_confirm.open('Удалить?', 'Вы уверены что хотите удалить состав : ' + table_sostav.select_sostav.composition_index, function (result) {
+                                            if (result) {
+                                                ids_inc.deleteArrivalSostav(table_sostav.select_sostav.id,
+                                                    function (result_del) {
+                                                        if (result_del > 0) {
+                                                            pn_sel.view(true);
+                                                        } else {
+                                                            incoming_alert.clear_message();
+                                                            incoming_alert.out_error_message("При удалении сотава произошла ошибка");
+                                                        }
+                                                    });
+                                            }
+                                        });
+                                    } else {
+                                        dialog_confirm.open('Отклонить?', 'Вы уверены что хотите отклонить состав : ' + table_sostav.select_sostav.composition_index, function (result) {
+                                            if (result) {
+                                                table_sostav.select_sostav.status = 3;                          // Присвоим статус отклонить
+                                                table_sostav.select_sostav.change = toISOStringTZ(new Date());  // Сохраним кто менял
+                                                table_sostav.select_sostav.change_user = user_name;
+                                                ids_inc.putArrivalSostav(table_sostav.select_sostav,
+                                                    function (result_upd) {
+                                                        if (result_upd > 0) {
+                                                            pn_sel.view(true);
+                                                            incoming_alert.clear_message();
+                                                            incoming_alert.out_info_message("Статус состава (отклонить) - установлен.");
+                                                        } else {
+                                                            incoming_alert.clear_message();
+                                                            incoming_alert.out_error_message("При обновлении статуса сотава произошла ошибка");
+                                                        }
+                                                    });
+                                            }
+                                        });
+                                    }
+
+
+
+
+
                                 }
                             },
                             enabled: false
                         },
-                    ],
+                        {
+                            text: langView('title_button_wagon', langs),
+                            action: function (e, dt, node, config) {
+                                if (table_sostav.select_sostav) {
+                                    //pn_edit_sostav.Open(table_sostav.select_sostav.id);
+                                }
+                            },
+                            enabled: false
+                        }
+                    ]
                 }).on('select', function (e, dt, type, indexes) {
                     var rowData = table_sostav.obj.rows(indexes).data();
                     if (rowData && rowData.length > 0) {
                         table_sostav.select_sostav = rowData[0];
-                        table_sostav.obj.button(5).enable(true);
-                        table_sostav.obj.button(6).enable(true);
+                        table_sostav.obj.button(7).enable(true);
+                        if (table_sostav.select_sostav.status < 2) {
+                            table_sostav.obj.button(5).enable(true);
+                            table_sostav.obj.button(6).enable(true);
+                            table_sostav.obj.button(7).text(langView('title_button_wagon_accept', langs));
+                        } else {
+                            // Если статус принят или удален 
+                            table_sostav.obj.button(5).enable(false);
+                            table_sostav.obj.button(6).enable(false);
+                            table_sostav.obj.button(7).text(langView('title_button_wagon_view', langs));
+                        }
                     } else {
                         table_sostav.obj.button(5).enable(false);
                         table_sostav.obj.button(6).enable(false);
+                        table_sostav.obj.button(7).enable(false);
                     }
                 }).on('deselect', function (e, dt, type, indexes) {
-                    table_sostav.select_sostav = null;
-                    table_sostav.obj.button(5).enable(false);
-                    table_sostav.obj.button(6).enable(false);
+                    table_sostav.deselect();
                 });
-
-
-                //    .on('select', function (e, dt, type, indexes) {
-                //    var row = table_sostav.obj.rows(indexes).data();
-                //    if (row && row.length > 0) {
-                //        view_select(row[0]);
-                //    }
-                //    //var rowData = table_sostav.obj.rows(indexes).data().toArray();
-                //    var rows = table_sostav.obj.rows('.selected').data();
-                //    table_sostav.update_button_delete(rows.length);
-
-                //});
             },
             // Показать таблицу с данными
             view: function (data) {
                 table_sostav.obj.clear();
+                // Сбросить выделенный состав
+                table_sostav.deselect();
                 $.each(data, function (i, el) {
                     table_sostav.obj.row.add(table_sostav.get_sostav(el));
                 });
@@ -245,6 +297,12 @@
                     "create_sostav": data.create !== null && data.create_user !== null ? data.create_user + ' (' + data.create.replace(/T/g, ' ') + ')' : null,
                     "change_sostav": data.change !== null && data.change_user !== null ? data.change_user + ' (' + data.change.replace(/T/g, ' ') + ')' : null
                 };
+            },
+            // Deselect
+            deselect: function () {
+                table_sostav.select_sostav = null;
+                table_sostav.obj.button(5).enable(false);
+                table_sostav.obj.button(6).enable(false);
             }
         },
         // панель выбора исходных данных для запроса
@@ -279,7 +337,7 @@
                         pn_sel.stop_dt = obj.date2;
                     })
                     .bind('datepicker-closed', function () {
-                        pn_sel.view();
+                        pn_sel.view(false);
                     });
                 pn_sel.start_dt = moment(pn_sel.cur_dt).set({ 'hour': 0, 'minute': 0, 'second': 0, 'millisecond': 0 })._d;
                 pn_sel.stop_dt = moment(pn_sel.cur_dt).set({ 'hour': 23, 'minute': 59, 'second': 59, 'millisecond': 0 })._d;
@@ -294,136 +352,270 @@
                     function (event, ui) {
                         event.preventDefault();
                         // Обработать выбор смены
-                        pn_sel.view();
+                        pn_sel.view(false);
                     },
                     null);
             },
-            view: function () {
-                view_sostav(pn_sel.start_dt, pn_sel.stop_dt, Number(pn_sel.select_station.val()) !== -1 ? function (i) { return i.id_station_from === Number(pn_sel.select_station.val()) ? true : false; } : null);
+            view: function (refresh) {
+                view_sostav(refresh, pn_sel.start_dt, pn_sel.stop_dt, Number(pn_sel.select_station.val()) !== -1 ? function (i) { return i.id_station_from === Number(pn_sel.select_station.val()) ? true : false; } : null);
             }
-        }
-    // Панель добавить\править состав
-    pn_edit_sostav = {
-        obj: null,
-        table: null,
-        lang: null,
-        list_station: null,
-        ids_inc: null,
-        id: null,
-        sostav: null,
-        // Поля формы
-        train_edit: $('input#train-edit'),
-        composition_index_edit: $('input#composition-index-edit'),
-        date_arrival_edit: $('input#date-arrival-edit'),
-        date_arrival: null,
-        date_arrival_select: null,
-        station_from_edit: $('select#station-from-edit'),
-        note_edit: $('textarea#note-edit'),
-        // инициализвция Диалога
-        init: function (lang, list_station, callback_ok) {
-            pn_edit_sostav.lang = lang;
-            pn_edit_sostav.list_station = list_station;
-            pn_edit_sostav.ids_inc = new IDS_RWT_INCOMING(lang); // Создадим класс
-            // Инициализация элементов
-            pn_edit_sostav.station_from_edit = cd_initSelect(
-                pn_edit_sostav.station_from_edit,
-                { lang: pn_edit_sostav.lang },
-                pn_edit_sostav.list_station,
-                null,
-                -1,
-                function (event) {
+        },
+        // Панель добавить\править состав
+        pn_edit_sostav = {
+            obj: null,
+            table: null,
+            lang: null,
+            list_station: null,
+            user_name: null,
+            ids_inc: null,
+            id: null,
+            sostav: null,
+            // Поля формы
+            train_edit: $('input#train-edit'),
+            composition_index_edit: $('input#composition-index-edit'),
+            date_arrival_edit: $('input#date-arrival-edit'),
+            date_arrival: null,
+            station_from_edit: $('select#station-from-edit'),
+            note_edit: $('textarea#note-edit'),
+            alert_sostav: $('div#edit-sostav-alert'),
+            all_obj: null,  // массив всех элементов формы 
+            val: null,      // класс валидации
+            // инициализвция Диалога
+            init: function (lang, list_station, user_name, callback_ok) {
+                pn_edit_sostav.lang = lang;
+                pn_edit_sostav.list_station = list_station;
+                pn_edit_sostav.user_name = user_name;
+                // Инициализация элементов
+                pn_edit_sostav.station_from_edit = cd_initSelect(
+                    pn_edit_sostav.station_from_edit,
+                    { lang: pn_edit_sostav.lang },
+                    pn_edit_sostav.list_station,
+                    null,
+                    -1,
+                    function (event) {
+                        event.preventDefault();
+                        var id = $(this).val();
+                    },
+                    null);
+                // настроим компонент выбора времени
+                pn_edit_sostav.date_arrival = cd_initDateTimeRangePicker(pn_edit_sostav.date_arrival_edit, { lang: pn_edit_sostav.lang }, function (datetime) {
+
+                });
+                // Соберем все элементы в массив
+                pn_edit_sostav.all_obj = $([])
+                    .add(pn_edit_sostav.train_edit)
+                    .add(pn_edit_sostav.composition_index_edit)
+                    .add(pn_edit_sostav.date_arrival_edit)
+                    .add(pn_edit_sostav.station_from_edit)
+                    .add(pn_edit_sostav.note_edit)
+                    .add(pn_edit_sostav.alert_park_wagon);
+                // создадим классы
+                pn_edit_sostav.ids_inc = new IDS_RWT_INCOMING(lang); // Создадим класс IDS_RWT_INCOMING
+                pn_edit_sostav.val = new VALIDATION(pn_edit_sostav.lang, pn_edit_sostav.alert_sostav, pn_edit_sostav.all_obj); // Создадим класс VALIDATION
+                pn_edit_sostav.obj = $("div#edit-sostav").dialog({
+                    resizable: false,
+                    //title: 'Принять состав',
+                    modal: true,
+                    autoOpen: false,
+                    height: "auto",
+                    width: 500,
+                    classes: {
+                        "ui-dialog": "card",
+                        "ui-dialog-titlebar": "card-header bg-primary text-white",
+                        "ui-dialog-content": "card-body",
+                        "ui-dialog-buttonpane": "card-footer text-muted"
+                    },
+                    open: function (event, ui) {
+
+                    },
+                    buttons: [
+                        {
+                            text: "Ок",
+                            class: "btn btn-outline-primary btn",
+                            click: function () {
+                                pn_edit_sostav.save(callback_ok);
+                            }
+                        },
+                        {
+                            text: "Отмена",
+                            class: "btn btn-outline-primary btn",
+                            click: function () {
+                                $(this).dialog("close");
+                            }
+                        },
+                    ]
+                });
+                // Sumbit form
+                pn_edit_sostav.obj.find("form").on("submit", function (event) {
                     event.preventDefault();
-                    var id = $(this).val();
-                },
-                null);
-            // настроим компонент выбора времени
-            pn_edit_sostav.date_arrival = cd_initDateTimeRangePicker(pn_edit_sostav.date_arrival_edit, { lang: pn_edit_sostav.lang }, function (datetime) {
+                });
+            },
+            // открыть диалог
+            Open: function (id) {
+                pn_edit_sostav.val.clear_all(); // Очистим ошибки и сообщения;
+                pn_edit_sostav.id = id;
+                if (pn_edit_sostav.id !== null) {
+                    pn_edit_sostav.obj.dialog("option", "title", "Изменить состав");
+                    // Получим текуший состав
+                    pn_edit_sostav.ids_inc.getArrivalSostavOfID(pn_edit_sostav.id, function (result_sostav) {
+                        pn_edit_sostav.sostav = result_sostav[0];
+                        pn_edit_sostav.train_edit.val(pn_edit_sostav.sostav.train);
+                        pn_edit_sostav.composition_index_edit.val(pn_edit_sostav.sostav.composition_index);
+                        pn_edit_sostav.station_from_edit.val(pn_edit_sostav.sostav.id_station_from);
+                        pn_edit_sostav.date_arrival.setDateTime(pn_edit_sostav.sostav.date_arrival !== null ? pn_edit_sostav.sostav.date_arrival.replace(/T/g, ' ') : null);
+                        pn_edit_sostav.note_edit.val(pn_edit_sostav.sostav.note);
 
-            })
+                    });
+                } else {
+                    // 
+                    pn_edit_sostav.obj.dialog("option", "title", "Добавить состав");
+                    pn_edit_sostav.sostav = null;
+                    pn_edit_sostav.train_edit.val('');
+                    pn_edit_sostav.composition_index_edit.val('');
+                    pn_edit_sostav.station_from_edit.val(-1);
+                    pn_edit_sostav.date_arrival.setDateTime(null);
+                    pn_edit_sostav.note_edit.val('');
 
-            pn_edit_sostav.obj = $("div#edit-sostav").dialog({
+                }
+                pn_edit_sostav.obj.dialog("open");
+            },
+            // Валидация данных
+            validation: function () {
+                pn_edit_sostav.val.clear_all();
+                var valid = true;
+                valid = valid & pn_edit_sostav.val.checkInputOfNull(pn_edit_sostav.train_edit, "Укажите номер поезда");
+                valid = valid & pn_edit_sostav.val.checkRegexp(pn_edit_sostav.train_edit, /[0-9]{4}/, "Номер поезда должен содержать 4-и цифры");
+                valid = valid & pn_edit_sostav.val.checkInputOfNull(pn_edit_sostav.composition_index_edit, "Укажите индекс поезда");
+                valid = valid & pn_edit_sostav.val.checkRegexp(pn_edit_sostav.composition_index_edit, /[0-9]{4}[-]{1}[0-9]{3}[-]{1}[0-9]{4}/, "Индекс поезда должен быть в формате (XXXX-XXX-XXXX)");
+                valid = valid & pn_edit_sostav.val.checkInputOfNull(pn_edit_sostav.date_arrival_edit, "Укажите время прибытия поезда");
+                valid = valid & pn_edit_sostav.val.checkSelection(pn_edit_sostav.station_from_edit, "Укажите станцию прибытия");
+                return valid;
+            },
+            // Сохранить изменения
+            save: function (callback_ok) {
+                var valid = pn_edit_sostav.validation();
+                if (valid) {
+                    var arrival_sostav = pn_edit_sostav.getArrivalSostav();
+                    if (pn_edit_sostav.id) {
+                        // Править
+                        pn_edit_sostav.ids_inc.putArrivalSostav(arrival_sostav,
+                            function (result_edit) {
+                                if (result_edit > 0) {
+                                    // Ок
+                                    pn_edit_sostav.obj.dialog("close");
+                                    if (typeof callback_ok === 'function') {
+                                        callback_ok(pn_edit_sostav.id, false);
+                                    }
+                                } else {
+                                    pn_edit_sostav.val.clear_message();
+                                    pn_edit_sostav.val.out_error_message("При обновлении состава произошла ошибка!");
+                                }
+                            });
+                    } else {
+                        // Добавить
+                        pn_edit_sostav.ids_inc.postArrivalSostav(arrival_sostav,
+                            function (result_add) {
+                                if (result_add > 0) {
+                                    // Ок
+                                    pn_edit_sostav.obj.dialog("close");
+                                    if (typeof callback_ok === 'function') {
+                                        callback_ok(result_add, true);
+                                    }
+                                } else {
+                                    pn_edit_sostav.val.clear_message();
+                                    pn_edit_sostav.val.out_error_message("При добавлении состава произошла ошибка!");
+                                }
+                            });
+                    }
+                }
+            },
+            // Получить новый состав
+            getArrivalSostav: function () {
+                return {
+                    id: pn_edit_sostav.id ? pn_edit_sostav.id : 0,
+                    id_arrived: pn_edit_sostav.id !== null ? pn_edit_sostav.sostav.id_arrived : null,
+                    id_sostav: pn_edit_sostav.id !== null ? pn_edit_sostav.sostav.id_sostav : null,
+                    train: pn_edit_sostav.train_edit.val(),
+                    composition_index: pn_edit_sostav.composition_index_edit.val(),
+                    date_arrival: pn_edit_sostav.date_arrival.getDateTime(),
+                    date_adoption: pn_edit_sostav.id ? pn_edit_sostav.sostav.date_adoption : 0,
+                    date_adoption_act: pn_edit_sostav.id ? pn_edit_sostav.sostav.date_adoption_act : 0,
+                    id_station_from: get_select_number_value(pn_edit_sostav.station_from_edit),
+                    id_station_on: pn_edit_sostav.id !== null ? pn_edit_sostav.sostav.id_station_on : null,
+                    id_way: pn_edit_sostav.id !== null ? pn_edit_sostav.sostav.id_way : null,
+                    num_doc: pn_edit_sostav.id !== null ? pn_edit_sostav.sostav.num_doc : null,
+                    count: pn_edit_sostav.id !== null ? pn_edit_sostav.sostav.count : null,
+                    status: pn_edit_sostav.id !== null ? pn_edit_sostav.sostav.status : 0,
+                    note: pn_edit_sostav.note_edit.val(),
+                    create: pn_edit_sostav.id !== null ? pn_edit_sostav.sostav.create : toISOStringTZ(new Date()),
+                    create_user: pn_edit_sostav.id !== null ? pn_edit_sostav.sostav.create_user : pn_edit_sostav.user_name,
+                    change: pn_edit_sostav.id !== null ? toISOStringTZ(new Date()) : null,
+                    change_user: pn_edit_sostav.id !== null ? pn_edit_sostav.user_name : null,
+                };
+            },
+        },
+        // Форма диалога
+        dialog_confirm = {
+            result: false,
+            callback_ok: null,
+            obj: $("#dialog-confirm").dialog({
                 resizable: false,
-                //title: 'Принять состав',
-                modal: true,
                 autoOpen: false,
                 height: "auto",
-                width: 500,
+                width: 400,
+                modal: true,
+                open: function (event, ui) {
+                },
+                close: function (event, ui) {
+                    if (typeof dialog_confirm.callback_ok === 'function') {
+                        dialog_confirm.callback_ok(dialog_confirm.result);
+                    }
+                },
                 classes: {
                     "ui-dialog": "card",
                     "ui-dialog-titlebar": "card-header bg-primary text-white",
                     "ui-dialog-content": "card-body",
                     "ui-dialog-buttonpane": "card-footer text-muted"
                 },
-                open: function (event, ui) {
-
-                },
                 buttons: [
                     {
                         text: "Ок",
-                        class: "btn btn-outline-primary btn",
+                        class: "btn btn-outline-primary btn-sm",
                         click: function () {
-                            //var rows = pn_edit_sostav.table.rows('.selected').data();
+                            dialog_confirm.result = true;
                             $(this).dialog("close");
-                            var s = pn_edit_sostav.date_arrival.getDateTime();
-
-                            if (typeof callback_ok === 'function') {
-                                callback_ok();
-                            }
-
                         }
                     },
                     {
                         text: "Отмена",
-                        class: "btn btn-outline-primary btn",
+                        class: "btn btn-outline-primary btn-sm",
                         click: function () {
                             $(this).dialog("close");
                         }
-                    },
-                ]
-            });
-        },
-        // открыть диалог
-        Open: function (id) {
-            pn_edit_sostav.id = id;
-            if (pn_edit_sostav.id !== null) {
-                // Получим текуший состав
-                pn_edit_sostav.ids_inc.getArrivalSostavOfID(pn_edit_sostav.id, function (result_sostav) {
-                    pn_edit_sostav.sostav = result_sostav[0];
-                    pn_edit_sostav.train_edit.val(pn_edit_sostav.sostav.train);
-                    pn_edit_sostav.composition_index_edit.val(pn_edit_sostav.sostav.composition_index);
-                    pn_edit_sostav.station_from_edit.val(pn_edit_sostav.sostav.id_station_from);
-                    pn_edit_sostav.date_arrival.setDateTime(pn_edit_sostav.sostav.date_arrival !== null ? pn_edit_sostav.sostav.date_arrival.replace(/T/g, ' '): null)
-                    pn_edit_sostav.note_edit.val(pn_edit_sostav.sostav.note);
-
-                })
-            } else {
-                // 
-                pn_edit_sostav.sostav = null;
-                pn_edit_sostav.train_edit.val('');
-                pn_edit_sostav.composition_index_edit.val('');
-                pn_edit_sostav.station_from_edit.val(-1);
-                pn_edit_sostav.date_arrival.setDateTime(null)
-                pn_edit_sostav.note_edit.val('');
-                
+                    }]
+            }),
+            open: function (titlt, text, callback_ok) {
+                dialog_confirm.result = false;
+                dialog_confirm.obj.dialog("option", "title", titlt);
+                $('p#dialog-confirm-text').text(text);
+                dialog_confirm.callback_ok = callback_ok;
+                dialog_confirm.obj.dialog("open");
             }
-            pn_edit_sostav.obj.dialog("open");
-        },
-    };
+        };
 
     //================================================================
     // Основной вход
     //=================================================================
-
     // Загрузка основных библиотек
     loadReference(function (result) {
         // Инициализация
         var list_station = ids_inc.ids_dir.getListStation('id', 'station_name', lang, function (i) { return i.station_uz === true ? true : false; });
         pn_sel.init(list_station);
-        pn_edit_sostav.init(lang, list_station, function (result) {
-
+        pn_edit_sostav.init(lang, list_station, user_name, function (result) {
+            pn_sel.view(true);
         });
         table_sostav.init();
-        pn_sel.view();
+        pn_sel.view(true);
     });
 
 

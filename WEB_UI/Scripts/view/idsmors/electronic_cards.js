@@ -100,7 +100,7 @@
                     "searching": true,
                     "ordering": true,
                     "info": true,
-                    "select": true,
+                    //"select": true,
                     select: {
                         style: 'single'
                     },

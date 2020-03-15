@@ -108,3 +108,75 @@ IDS_RWT_INCOMING.prototype.getArrivalSostavOfID = function (id, callback) {
         },
     });
 };
+//Обновить 
+IDS_RWT_INCOMING.prototype.putArrivalSostav = function (arrival_sostav, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/rwt/arrival_sostav/id/' + arrival_sostav.id,
+        data: JSON.stringify(arrival_sostav),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.putArrivalSostav", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Удалить 
+IDS_RWT_INCOMING.prototype.deleteArrivalSostav = function (id, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/arrival_sostav/id/' + id,
+        type: 'DELETE',
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.deleteArrivalSostav", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Добавить 
+IDS_RWT_INCOMING.prototype.postArrivalSostav = function (arrival_sostav, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/arrival_sostav/',
+        type: 'POST',
+        data: JSON.stringify(arrival_sostav),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT_INCOMING.postArrivalSostav", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};

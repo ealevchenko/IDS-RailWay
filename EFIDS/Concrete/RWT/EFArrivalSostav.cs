@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace EFIDS.Concrete
 {
 
-    public class EFArrivalSostav : IRepository<ArrivalSostav>
+    public class EFArrivalSostav : ILongRepository<ArrivalSostav>
     {
 
         private EFDbContext db;
@@ -161,22 +161,10 @@ namespace EFIDS.Concrete
             GC.SuppressFinalize(this);
         }
 
-
-
         public void Add(IEnumerable<ArrivalSostav> items)
         {
             throw new NotImplementedException();
         }
 
-
-        public ArrivalSostav Get(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

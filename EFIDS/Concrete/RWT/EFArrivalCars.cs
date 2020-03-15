@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace EFIDS.Concrete
 {
 
-    public class EFArrivalCars : IRepository<ArrivalCars>
+    public class EFArrivalCars : ILongRepository<ArrivalCars>
     {
 
         private EFDbContext db;
@@ -160,23 +160,9 @@ namespace EFIDS.Concrete
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
-
-
         public void Add(IEnumerable<ArrivalCars> items)
         {
             throw new NotImplementedException();
-        }
-
-
-        public ArrivalCars Get(int id)
-        {
-            return Get((long)id);
-        }
-
-        public void Delete(int id)
-        {
-            Delete((long)id);
         }
     }
 }
