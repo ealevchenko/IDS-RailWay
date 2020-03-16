@@ -111,7 +111,7 @@
         </div>
         @*<div class="form-row">
 
-        </div>*@
+            </div>*@
         <div class="form-row">
             <div class="col-md-6 mb-2">
                 <label for="date-arrival-edit" class="col-form-label">@IDSRWTResource.title_date_arrival:</label>
@@ -130,7 +130,7 @@
         </div>
         @*<div class="form-row">
 
-        </div>*@
+            </div>*@
         <div class="form-row">
             <div class="col-md-12 mb-2">
                 <label for="note-edit" class="col-form-label">@IDSRWTResource.title_note:</label>
@@ -148,4 +148,186 @@
     </p>
 </div>
 
+<div class="cd-cars-detali">
+    <div class="container-fluid">
+        <form class="cd-form">
+            <div class="card border-secondary">
+                <div class="card-header bg-secondary text-white" id="sostav-info">
+                    <h1 id="sostav-title"></h1>
+                </div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="col-md-4 mb-1">
+                            <div class="card border-success" id="card-arrived-cars">
+                                <div class="card-header">
+                                    Принятые вагоны
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">Special title treatment</h5>
+                                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                                </div>
+                                <div class="card-footer text-muted">
+                                    Принять состав
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-1">
+                            <div class="card border-warning" id="card-car-info">
+                                <div class="card-header">Информация о вагоне</div>
+                                <div class="card-body text-warning">
 
+                                    <div id="accordion" role="tablist" aria-multiselectable="true">
+                                        <div class="card border-primary">
+                                            <div class="card-header text-left" role="tab" id="headingOne">
+                                                <div class="mb-0">
+                                                    <a data-toggle="collapse" data-parent="#accordion" href="#epd-cars" aria-expanded="false" aria-controls="epd-cars" class="collapsed">
+                                                        <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                                                        <h3>ЭПД</h3>
+                                                        <p>Электронно-перевозочный документ</p>
+                                                    </a>
+                                                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                                </div>
+                                            </div>
+                                            <div id="epd-cars" class="collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false" style="">
+                                                <div class="card-block">
+                                                    <div class="form-row">
+                                                        <div class="col-md-4 mb-1">
+                                                            <label for="epd_num_doc" class="col-form-label-sm">@IDSRWTResource.title_num_doc:</label>
+                                                            <input type="text" class="form-control-sm" id="epd_num_doc" placeholder="" name="epd_num_doc" required="required">
+                                                            <div class="invalid-feedback">
+                                                                
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 mb-1">
+                                                            <label for="epd_num_rev" class="col-form-label-sm">@IDSRWTResource.title_num_rev:</label>
+                                                            <input type="number" class="form-control-sm" id="epd_num_rev" placeholder="" name="epd_num_rev" required="required">
+                                                            <div class="invalid-feedback">
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 mb-1">
+                                                            <label for="otpr_nom_doc" class="col-form-label-sm">@IDSRWTResource.title_otpr_nom_doc:</label>
+                                                            <input type="text" class="form-control-sm" id="otpr_nom_doc_edit" placeholder="" name="otpr_nom_doc" required="required">
+                                                            <div class="invalid-feedback">
+
+                                                            </div>
+                                                        </div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card border-primary">
+                                            <div class="card-header text-left" role="tab" id="headingTwo">
+                                                <div class="mb-0">
+                                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
+                                                        <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                                                        <h3>Collapsible Group Item</h3>
+                                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
+                                                    </a>
+                                                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                                </div>
+                                            </div>
+                                            <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" aria-expanded="false">
+                                                <div class="card-block">
+                                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card border-primary">
+                                            <div class="card-header text-left" role="tab" id="headingThree">
+                                                <div class="mb-0">
+                                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
+                                                        <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                                                        <h3>Collapsible Group Item</h3>
+                                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
+                                                    </a>
+                                                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                                </div>
+                                            </div>
+                                            <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree" aria-expanded="false">
+                                                <div class="card-block">
+                                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card border-primary">
+                                            <div class="card-header text-left" role="tab" id="headingOne">
+                                                <div class="mb-0">
+                                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
+                                                        <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                                                        <h3>Collapsible Group Item</h3>
+                                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
+                                                    </a>
+                                                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                                </div>
+                                            </div>
+                                            <div id="collapseFour" class="collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false" style="">
+                                                <div class="card-block">
+                                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card border-primary">
+                                            <div class="card-header text-left" role="tab" id="headingTwo">
+                                                <div class="mb-0">
+                                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
+                                                        <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                                                        <h3>Collapsible Group Item</h3>
+                                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
+                                                    </a>
+                                                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                                </div>
+                                            </div>
+                                            <div id="collapseFive" class="collapse" role="tabpanel" aria-labelledby="headingTwo" aria-expanded="false">
+                                                <div class="card-block">
+                                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card border-primary">
+                                            <div class="card-header text-left" role="tab" id="headingThree">
+                                                <div class="mb-0">
+                                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
+                                                        <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                                                        <h3>Collapsible Group Item</h3>
+                                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
+                                                    </a>
+                                                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                                </div>
+                                            </div>
+                                            <div id="collapseSix" class="collapse" role="tabpanel" aria-labelledby="headingThree" aria-expanded="false">
+                                                <div class="card-block">
+                                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1 mb-1">
+                            <div class="card border-danger" id="card-epd-cars">
+                                <div class="card-header">Сведения ЭПД</div>
+                                <div class="card-body text-danger">
+                                    <div class="list-group" id="list-cars-epd" role="tablist">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1 mb-1">
+                            <div class="card border-primary" id="card-not-arrived-cars">
+                                <div class="card-header">Подходы</div>
+                                <div class="card-body text-primary">
+                                    <div class="list-group" id="list-cars-not-arrival" role="tablist">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <a href="#0" class="close cd-img-replace">Close</a>
+    </div>
+
+</div> <!-- .cd-project-content -->

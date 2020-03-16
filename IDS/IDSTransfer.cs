@@ -106,13 +106,13 @@ namespace IDS
                     if (sostav.id_sostav >= id_sostav)
                     {
                         // Обновление не требуетcя 
-                        String.Format("Обновление строки  состава METRANS.ArrivalSostav.id={0} в БД IDS.Arrival - ОТМЕНЕНО. (ID={1} новой строки <= ID={2} строки в базе).", sostav.id, id_sostav, sostav.id_sostav ).InformationLog(servece_owner, this.eventID);
+                        String.Format("Обновление строки  состава METRANS.ArrivalSostav.id={0} в БД IDS.Arrival - ОТМЕНЕНО. (ID={1} новой строки <= ID={2} строки в базе).", sostav.id, id_sostav, sostav.id_sostav).InformationLog(servece_owner, this.eventID);
                         return 0; // Возвращаем id =0, обновление не надо
                     }
                     else
                     {
                         // Обновим время
-                        sostav.date_arrival = date_arrival;
+                        //sostav.date_arrival = date_arrival; ! время должно быть только прибытия
                         sostav.id_sostav = id_sostav;
                         sostav.change = DateTime.Now;
                         sostav.change_user = user;
@@ -203,43 +203,44 @@ namespace IDS
                     // добавим новые вагоны
                     foreach (ArrCar car in cars)
                     {
+                        string doc_num = null;
                         // Проверим код получателя
                         if (ids_directory.IsConsignee(false, car.consignee))
                         {
                             // Получатель АМКР
-                            string doc_num = GetNumDoc(car.num);
-                            // Создадим новый вагон
-                            ArrivalCars new_car = new ArrivalCars()
-                            {
-                                id = 0,
-                                id_arrival = id_arrival,
-                                num = car.num,
-                                position = car.position,
-                                position_arrival = null,
-                                consignee = car.consignee,
-                                num_doc = doc_num,
-                                //note = ,
-                                //arrival = ,
-                                //arrival_user = ,
-                                create = DateTime.Now,
-                                create_user = user,
-                                //change = ,
-                                //change_user = ,
-
-                            };
-                            ef_car.Add(new_car);
-                            int res_ins = ef_car.Save();
-                            // Сформируем сообщение и сохраним в логе
-                            if (res_ins > 0)
-                            {
-                                String.Format("Добавление новой строки вагона в БД IDS.Arrival - ВЫПОЛНЕНО. (METRANS.ArrivalSostav.id={0}, вагон:{1}, METRANS.ArrivalCars.id={2}).", sostav.id, new_car.num, new_car.id).InformationLog(servece_owner, this.eventID);
-                            }
-                            else
-                            {
-                                String.Format("Добавление новой строки вагона в БД IDS.Arrival - НЕ ВЫПОЛНЕНО. (METRANS.ArrivalSostav.id={0}, вагон:{1}, Код выполнения:{2} вагонов).", sostav.id, new_car.num, res_ins).ErrorLog(servece_owner, this.eventID);
-                            }
-                            if (res_ins > 0) { add++; } else { error++; }
+                            doc_num = GetNumDoc(car.num);
                         }
+                        // Создадим новый вагон
+                        ArrivalCars new_car = new ArrivalCars()
+                        {
+                            id = 0,
+                            id_arrival = id_arrival,
+                            num = car.num,
+                            position = car.position,
+                            position_arrival = null,
+                            consignee = car.consignee,
+                            num_doc = doc_num,
+                            //note = ,
+                            //arrival = ,
+                            //arrival_user = ,
+                            create = DateTime.Now,
+                            create_user = user,
+                            //change = ,
+                            //change_user = ,
+
+                        };
+                        ef_car.Add(new_car);
+                        int res_ins = ef_car.Save();
+                        // Сформируем сообщение и сохраним в логе
+                        if (res_ins > 0)
+                        {
+                            String.Format("Добавление новой строки вагона в БД IDS.Arrival - ВЫПОЛНЕНО. (METRANS.ArrivalSostav.id={0}, вагон:{1}, METRANS.ArrivalCars.id={2}).", sostav.id, new_car.num, new_car.id).InformationLog(servece_owner, this.eventID);
+                        }
+                        else
+                        {
+                            String.Format("Добавление новой строки вагона в БД IDS.Arrival - НЕ ВЫПОЛНЕНО. (METRANS.ArrivalSostav.id={0}, вагон:{1}, Код выполнения:{2} вагонов).", sostav.id, new_car.num, res_ins).ErrorLog(servece_owner, this.eventID);
+                        }
+                        if (res_ins > 0) { add++; } else { error++; }
                     }
                 }
                 return add;

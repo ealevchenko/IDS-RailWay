@@ -150,6 +150,18 @@
   <data name="title_note" xml:space="preserve">
     <value>Примечание</value>
   </data>
+  <data name="title_num_doc" xml:space="preserve">
+    <value>№ ЭПД</value>
+  </data>
+  <data name="title_num_nakl" xml:space="preserve">
+    <value>№ Накладной</value>
+  </data>
+  <data name="title_num_rev" xml:space="preserve">
+    <value>№ Ревизии</value>
+  </data>
+  <data name="title_otpr_nom_doc" xml:space="preserve">
+    <value>№ Документа</value>
+  </data>
   <data name="title_station_from" xml:space="preserve">
     <value>Прибытие со станции</value>
   </data>

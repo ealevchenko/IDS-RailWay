@@ -160,6 +160,42 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на № ЭПД.
+        /// </summary>
+        public static string title_num_doc {
+            get {
+                return ResourceManager.GetString("title_num_doc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на № Накладной.
+        /// </summary>
+        public static string title_num_nakl {
+            get {
+                return ResourceManager.GetString("title_num_nakl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на № Ревизии.
+        /// </summary>
+        public static string title_num_rev {
+            get {
+                return ResourceManager.GetString("title_num_rev", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на № Документа.
+        /// </summary>
+        public static string title_otpr_nom_doc {
+            get {
+                return ResourceManager.GetString("title_otpr_nom_doc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Прибытие со станции.
         /// </summary>
         public static string title_station_from {

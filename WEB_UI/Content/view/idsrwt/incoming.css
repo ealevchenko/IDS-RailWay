@@ -1,6 +1,8 @@
-﻿body {
-}
+﻿@import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
 
+body {
+}
+/**/
 td.icon-right {
     background: url('../../../Images/idsrwt/right.png') no-repeat left center;
 }
@@ -20,7 +22,7 @@ td.icon-warning {
 td.icon-delete {
     background: url('../../../Images/idsrwt/delete.png') no-repeat center center;
 }
-
+/**/
 table.dataTable tbody tr:not(.selected).status-in-work.odd, table.dataTable tbody tr:not(.selected).status-in-work.even {
     background-color: #fcf2ba;
 }
@@ -68,3 +70,201 @@ div.dt-buttons a {
 .date-picker-wrapper .gap .gap-bottom-mask {
   z-index: 203;
 }
+/* -------------------------------- 
+
+cars detali panel 
+
+-------------------------------- */
+.cd-cars-detali {
+    position: fixed;
+    z-index: 3;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    visibility: hidden;
+    background-color: #ebebeb;
+    /* Force Hardware Acceleration */
+    -webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    -o-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform: translateY(100%);
+    -moz-transform: translateY(100%);
+    -ms-transform: translateY(100%);
+    -o-transform: translateY(100%);
+    transform: translateY(100%);
+    -webkit-transition: -webkit-transform 0.4s 0s, visibility 0s 0.4s;
+    -moz-transition: -moz-transform 0.4s 0s, visibility 0s 0.4s;
+    transition: transform 0.4s 0s, visibility 0s 0.4s;
+    -webkit-transition-timing-function: cubic-bezier(0.67, 0.15, 0.83, 0.83);
+    -moz-transition-timing-function: cubic-bezier(0.67, 0.15, 0.83, 0.83);
+    transition-timing-function: cubic-bezier(0.67, 0.15, 0.83, 0.83);
+}
+
+    .cd-cars-detali > div {
+        height: 100%;
+        overflow-y: auto;
+        padding: 4em 2em;
+    }
+
+    .cd-cars-detali.is-visible {
+        visibility: visible;
+        -webkit-transform: translateY(0);
+        -moz-transform: translateY(0);
+        -ms-transform: translateY(0);
+        -o-transform: translateY(0);
+        transform: translateY(0);
+        -webkit-transition: -webkit-transform 0.4s 0s, visibility 0s 0s;
+        -moz-transition: -moz-transform 0.4s 0s, visibility 0s 0s;
+        transition: transform 0.4s 0s, visibility 0s 0s;
+        -webkit-transition-timing-function: cubic-bezier(0.67, 0.15, 0.83, 0.83);
+        -moz-transition-timing-function: cubic-bezier(0.67, 0.15, 0.83, 0.83);
+        transition-timing-function: cubic-bezier(0.67, 0.15, 0.83, 0.83);
+    }
+
+        .cd-cars-detali.is-visible > div {
+            /* smooth scrolling on iOS */
+            -webkit-overflow-scrolling: touch;
+        }
+
+    /*.cd-cars-detali p {
+        margin-bottom: 1em;
+        font-size: 1.4rem;
+        color: #6f757c;
+        line-height: 1.6;
+        font-weight:400;
+    }*/
+
+    .cd-cars-detali .close {
+        display: block;
+        height: 32px;
+        width: 32px;
+        position: absolute;
+        top: 80px;
+        right: 3%;
+        background: url(../../../Images/cd/cd-close-dark.svg) no-repeat center center;
+    }
+
+.cd-img-replace {
+    /* replace text with image */
+    color: transparent;
+    overflow: hidden;
+    text-indent: 100%;
+    white-space: nowrap;
+}
+
+/*@media only screen and (min-width: 900px) {
+    .cd-cars-detali h2 {
+        font-size: 4rem;
+    }
+
+    .cd-cars-detali em {
+        font-size: 2.4rem;
+    }
+
+    .cd-cars-detali p {
+        font-size: 1.8rem;
+    
+
+    .cd-cars-detali .close {
+        top: 80px;
+        right: 2%;
+    }
+}*/
+
+.cd-form {
+    width: 90%;
+    /*max-width: 600px;*/
+    margin: 4em auto;
+}
+
+.list-group-item {
+    padding: 0.5rem 0rem;
+}
+
+div#card-not-arrived-cars, div#card-epd-cars, div#card-car-info, div#card-arrived-cars {
+    height:100%;
+}
+
+div#accordion > div.card {
+    -moz-box-direction: normal;
+    -moz-box-orient: vertical;
+    background-color: #fff;
+    border-radius: 0.25rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    margin-bottom:1px;
+    /*border:none;*/
+}
+div#accordion div.card > .card-header:first-child {
+    border-radius: 0;
+}
+div#accordion > .card-header {
+    background-color: #f7f7f9;
+    margin-bottom: 0;
+    padding: 20px 1.25rem;
+    border:none;
+    
+}
+div#accordion div.card > .card-header a i{
+    float:left;
+    font-size:25px;
+    padding:5px 0;
+    margin:0 25px 0 0px;
+    color:#195C9D;
+}
+div#accordion div.card > .card-header i{
+    float:right;        
+    font-size:30px;
+    width:1%;
+    margin-top:8px;
+    margin-right:10px;
+}
+div#accordion div.card > .card-header a{
+    width:97%;
+    float:left;
+    color:#565656;
+    text-decoration: none;
+}
+div#accordion div.card > .card-header p{
+    margin:0;
+}
+
+div#accordion div.card > .card-header h3{
+    margin:0 0 0px;
+    font-size:20px;
+    font-family: 'Slabo 27px', serif;
+    font-weight:bold;
+    color:#3fc199;
+}
+div#accordion div.card > div > .card-block {
+    -moz-box-flex: 1;
+    flex: 1 1 auto;
+    padding:0.5rem !important;
+    color:#232323;
+    box-shadow:inset 0px 4px 5px rgba(0,0,0,0.1);
+    border-top:1px soild #000;
+    border-radius:0;
+}
+
+
+.card-block > div > div > .col-form-label-sm {
+  padding-top: calc(0.25rem + 1px);
+  padding-bottom: calc(0.25rem + 1px);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.card-block > div > div > .form-control-sm {
+  height: calc(1.5em + 0.5rem + 2px);
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  border-radius: 0.2rem;
+}
+
