@@ -225,6 +225,8 @@
     <Compile Include="Controllers\api\IDS_Directory_ModelsWagonsController.cs" />
     <Compile Include="Controllers\api\IDS_Directory_TypesRepairsWagonsController.cs" />
     <Compile Include="Controllers\api\IDS_Directory_WagonManufacturersController.cs" />
+    <Compile Include="Controllers\api\IDS_RWT_Incoming_UZ_DOCController.cs" />
+    <Compile Include="Controllers\api\IDS_RWT_Incoming_ArrivalCarsController.cs" />
     <Compile Include="Controllers\api\IDS_RWT_Incoming_ArrivalSostavController.cs" />
     <Compile Include="Controllers\api\Metrans_ConsigneeController.cs" />
     <Compile Include="Controllers\api\Metrans_ArrivalSostavController.cs" />
@@ -1074,6 +1076,14 @@
     <ProjectReference Include="..\IDSLogs\IDSLogs.csproj">
       <Project>{910d6360-9e8c-4143-a4dd-84e778edb7a6}</Project>
       <Name>IDSLogs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UZ\UZ.csproj">
+      <Project>{d7147560-b66a-41bb-bddd-4d24403d5e97}</Project>
+      <Name>UZ</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UZ_SMS\UZ_SMS.csproj">
+      <Project>{3e1f3160-047b-435a-b0c9-bd3000f1581a}</Project>
+      <Name>UZ_SMS</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

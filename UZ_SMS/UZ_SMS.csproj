@@ -56,6 +56,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="uz-rwc-doc.cs" />
+    <Compile Include="UZ_Convert.cs" />
     <Compile Include="UZ_SMS.cs" />
   </ItemGroup>
   <ItemGroup>
