@@ -608,9 +608,16 @@
             // Поля
             sostav_title: $('h1#sostav-title'),
             // ЭПД
-            epd_num_doc: $('input#epd_num_doc'),
-            epd_num_rev: $('input#epd_num_rev'),
+            num_car: $('input#num_car'),
+            search_cars_num_doc:$('button#search-car-num-doc').on('click', function (event) {
+                    event.preventDefault();
+
+                }),
             otpr_nom_doc: $('input#otpr_nom_doc'),
+            otpr_nom_dved: $('input#otpr_nom_dved'),
+            car_position: $('input#car_position').inputSpinner(),
+
+
             init: function (lang, user_name) {
                 cars_detali.lang = lang;
                 cars_detali.user = user_name;
@@ -633,14 +640,21 @@
             },
             // Очистить ячейки ЭПД
             clear_cars_epd: function () {
-                cars_detali.epd_num_doc.val('');
-                cars_detali.epd_num_rev.val('');
+                cars_detali.num_car.val('');
+                cars_detali.otpr_nom_doc.val('');
+                cars_detali.otpr_nom_dved.val('');
             },
             // показать электронно перевозочный документ
-            view_cars_epd: function (car) {
-                if (car === null) return;
-                cars_detali.epd_num_doc.val(car.UZ_DOC !== null ? car.UZ_DOC.num_doc : null);
-                cars_detali.epd_num_rev.val(car.UZ_DOC !== null ? car.UZ_DOC.revision : null);
+            view_cars_epd: function (num, otpr) {
+                cars_detali.clear_cars_epd();
+                cars_detali.num_car.val(num);
+                if (otpr !== null) {
+                    cars_detali.search_cars_num_doc.prop("disabled", true);
+                    cars_detali.otpr_nom_doc.val(otpr.otprdp === null ? otpr.nom_doc : otpr.otprdp.nom_osn_doc);
+                    cars_detali.otpr_nom_dved.val(otpr.otprdp !== null ? otpr.nom_doc : null)
+                } else {
+                    cars_detali.search_cars_num_doc.prop("disabled", false);
+                }
 
             },
             // Показать не принятые вагоны
@@ -653,7 +667,13 @@
                     e.preventDefault()
                     var id = $(this).attr('id');
                     var car = getObjOflist(cars_detali.sostav.ArrivalCars, 'id', id);
-                    cars_detali.view_cars_epd(car);
+                    if (car !== null) {
+                        // Если есть вагон найти и ЭПД документ
+                        cars_detali.ids_inc.getOTPR_UZ_DOCOfNum(car.num_doc, function (result_otpr) {
+                            var otpr = result_otpr
+                            cars_detali.view_cars_epd(car.num, otpr);
+                        });
+                    }
                 });
             },
             // Показать информацию по составу

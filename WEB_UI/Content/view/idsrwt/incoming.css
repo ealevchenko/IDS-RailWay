@@ -26,15 +26,17 @@ td.icon-delete {
 table.dataTable tbody tr:not(.selected).status-in-work.odd, table.dataTable tbody tr:not(.selected).status-in-work.even {
     background-color: #fcf2ba;
 }
+
 table.dataTable tbody tr:not(.selected).status-accepted.odd, table.dataTable tbody tr:not(.selected).status-accepted.even {
     background-color: #aeffb9;
 }
+
 table.dataTable tbody tr:not(.selected).status-rejected.odd, table.dataTable tbody tr:not(.selected).status-rejected.even {
     background-color: #fbcfcf;
 }
 
 div.dt-buttons a {
-    margin-right:2px;
+    margin-right: 2px;
 }
 
 /*Коррекция отображения компонента дата и время*/
@@ -43,33 +45,32 @@ div.dt-buttons a {
 }
 
 .date-picker-wrapper {
-  z-index: 201;
-
+    z-index: 201;
 }
 
-.date-picker-wrapper .gap {
-  z-index: 201;
-}
+    .date-picker-wrapper .gap {
+        z-index: 201;
+    }
 
-.date-picker-wrapper .gap .gap-line .gap-1 {
-  z-index: 201;
-}
+        .date-picker-wrapper .gap .gap-line .gap-1 {
+            z-index: 201;
+        }
 
-.date-picker-wrapper .gap .gap-line .gap-2 {
-  z-index: 202;
-}
+        .date-picker-wrapper .gap .gap-line .gap-2 {
+            z-index: 202;
+        }
 
-.date-picker-wrapper .gap .gap-line .gap-3 {
-  z-index: 202;
-}
+        .date-picker-wrapper .gap .gap-line .gap-3 {
+            z-index: 202;
+        }
 
-.date-picker-wrapper .gap .gap-top-mask {
-  z-index: 203;
-}
+        .date-picker-wrapper .gap .gap-top-mask {
+            z-index: 203;
+        }
 
-.date-picker-wrapper .gap .gap-bottom-mask {
-  z-index: 203;
-}
+        .date-picker-wrapper .gap .gap-bottom-mask {
+            z-index: 203;
+        }
 /* -------------------------------- 
 
 cars detali panel 
@@ -185,11 +186,12 @@ cars detali panel
 .list-group-item {
     padding: 0.5rem 0rem;
 }
-
+/* Растянуть CARD по высоте*/
 div#card-not-arrived-cars, div#card-epd-cars, div#card-car-info, div#card-arrived-cars {
-    height:100%;
+    height: 100%;
 }
 
+/**/
 div#accordion > div.card {
     -moz-box-direction: normal;
     -moz-box-orient: vertical;
@@ -198,73 +200,110 @@ div#accordion > div.card {
     display: flex;
     flex-direction: column;
     position: relative;
-    margin-bottom:1px;
+    margin-bottom: 1px;
     /*border:none;*/
 }
+
 div#accordion div.card > .card-header:first-child {
     border-radius: 0;
 }
+
 div#accordion > .card-header {
     background-color: #f7f7f9;
     margin-bottom: 0;
     padding: 20px 1.25rem;
-    border:none;
-    
-}
-div#accordion div.card > .card-header a i{
-    float:left;
-    font-size:25px;
-    padding:5px 0;
-    margin:0 25px 0 0px;
-    color:#195C9D;
-}
-div#accordion div.card > .card-header i{
-    float:right;        
-    font-size:30px;
-    width:1%;
-    margin-top:8px;
-    margin-right:10px;
-}
-div#accordion div.card > .card-header a{
-    width:97%;
-    float:left;
-    color:#565656;
-    text-decoration: none;
-}
-div#accordion div.card > .card-header p{
-    margin:0;
+    border: none;
 }
 
-div#accordion div.card > .card-header h3{
-    margin:0 0 0px;
-    font-size:20px;
-    font-family: 'Slabo 27px', serif;
-    font-weight:bold;
-    color:#3fc199;
+div#accordion div.card > .card-header a i {
+    float: left;
+    font-size: 25px;
+    padding: 5px 0;
+    margin: 0 25px 0 0px;
+    color: #195C9D;
 }
+
+div#accordion div.card > .card-header i {
+    float: right;
+    font-size: 30px;
+    width: 1%;
+    margin-top: 8px;
+    margin-right: 10px;
+}
+
+div#accordion div.card > .card-header a {
+    width: 97%;
+    float: left;
+    color: #565656;
+    text-decoration: none;
+}
+
+div#accordion div.card > .card-header p {
+    margin: 0;
+}
+
+div#accordion div.card > .card-header h3 {
+    margin: 0 0 0px;
+    font-size: 20px;
+    font-family: 'Slabo 27px', serif;
+    font-weight: bold;
+    color: #3fc199;
+}
+
 div#accordion div.card > div > .card-block {
     -moz-box-flex: 1;
     flex: 1 1 auto;
-    padding:0.5rem !important;
-    color:#232323;
-    box-shadow:inset 0px 4px 5px rgba(0,0,0,0.1);
-    border-top:1px soild #000;
-    border-radius:0;
+    padding: 0.5rem !important;
+    color: #232323;
+    box-shadow: inset 0px 4px 5px rgba(0,0,0,0.1);
+    border-top: 1px soild #000;
+    border-radius: 0;
 }
 
 
 .card-block > div > div > .col-form-label-sm {
-  padding-top: calc(0.25rem + 1px);
-  padding-bottom: calc(0.25rem + 1px);
-  font-size: 0.75rem;
-  line-height: 1.5;
+    padding-top: calc(0.25rem + 1px);
+    padding-bottom: calc(0.25rem + 1px);
+    font-size: 0.75rem;
+    line-height: 1.5;
 }
 
 .card-block > div > div > .form-control-sm {
-  height: calc(1.5em + 0.5rem + 2px);
-  padding: 0.2rem 0.5rem;
-  font-size: 0.8rem;
-  line-height: 1.5;
-  border-radius: 0.2rem;
+    height: calc(1.5em + 0.5rem + 2px);
+    padding: 0.2rem 0.5rem;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
 }
 
+/**/
+legend {
+    display: block;
+    width: auto;
+    padding: 0 5px;
+    margin-bottom: 0;
+    font-size: inherit;
+    line-height: inherit;
+    border-bottom: none;
+}
+
+fieldset {
+    border: 2px groove threedface;
+    padding: 10px;
+    border-radius: 3px;
+}
+
+    /*fieldset > div > div > .col-form-label-sm {
+        padding-top: calc(0.25rem + 1px);
+        padding-bottom: calc(0.25rem + 1px);
+        font-size: 0.75rem;
+        line-height: 1.5;
+    }
+
+    fieldset > div > div > .form-control-sm {
+        height: calc(1.5em + 0.5rem + 2px);
+        padding: 0.2rem 0.5rem;
+        font-size: 0.8rem;
+        line-height: 1.5;
+        border-radius: 0.2rem;
+    }*/
