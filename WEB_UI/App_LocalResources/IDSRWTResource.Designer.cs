@@ -19,7 +19,7 @@ namespace WEB_UI.App_LocalResources {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class IDSRWTResource {
@@ -129,6 +129,33 @@ namespace WEB_UI.App_LocalResources {
         public static string title_car_position {
             get {
                 return ResourceManager.GetString("title_car_position", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Грузоотправитель.
+        /// </summary>
+        public static string title_client_kod_from {
+            get {
+                return ResourceManager.GetString("title_client_kod_from", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Грузополучатель.
+        /// </summary>
+        public static string title_client_kod_on {
+            get {
+                return ResourceManager.GetString("title_client_kod_on", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Коммерческое состояние груза.
+        /// </summary>
+        public static string title_commercial_condition {
+            get {
+                return ResourceManager.GetString("title_commercial_condition", resourceCulture);
             }
         }
         
@@ -277,7 +304,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на .
+        ///   Ищет локализованную строку, похожую на Дата и время перехода погр. пункта.
         /// </summary>
         public static string title_route_joint_cross_time {
             get {
@@ -417,6 +444,87 @@ namespace WEB_UI.App_LocalResources {
         public static string title_vagon_ves_tary_arc {
             get {
                 return ResourceManager.GetString("title_vagon_ves_tary_arc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Код опасного груза.
+        /// </summary>
+        public static string title_wagon_collect_v_danger_kod {
+            get {
+                return ResourceManager.GetString("title_wagon_collect_v_danger_kod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Название опасного груза.
+        /// </summary>
+        public static string title_wagon_collect_v_danger_text {
+            get {
+                return ResourceManager.GetString("title_wagon_collect_v_danger_text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Код ЕТСНГ.
+        /// </summary>
+        public static string title_wagon_collect_v_kod_etsng {
+            get {
+                return ResourceManager.GetString("title_wagon_collect_v_kod_etsng", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Код ГНГ.
+        /// </summary>
+        public static string title_wagon_collect_v_kod_gng {
+            get {
+                return ResourceManager.GetString("title_wagon_collect_v_kod_gng", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Кол. мест.
+        /// </summary>
+        public static string title_wagon_collect_v_kol_pac {
+            get {
+                return ResourceManager.GetString("title_wagon_collect_v_kol_pac", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Название груза по ЕТСНГ.
+        /// </summary>
+        public static string title_wagon_collect_v_name_etsng {
+            get {
+                return ResourceManager.GetString("title_wagon_collect_v_name_etsng", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Название груза по ГНГ.
+        /// </summary>
+        public static string title_wagon_collect_v_name_gng {
+            get {
+                return ResourceManager.GetString("title_wagon_collect_v_name_gng", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вес груза, кг.
+        /// </summary>
+        public static string title_wagon_collect_v_vesg {
+            get {
+                return ResourceManager.GetString("title_wagon_collect_v_vesg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на № ЗПУ.
+        /// </summary>
+        public static string title_wagon_zpu_v_nom_zpu {
+            get {
+                return ResourceManager.GetString("title_wagon_zpu_v_nom_zpu", resourceCulture);
             }
         }
     }

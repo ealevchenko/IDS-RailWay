@@ -141,6 +141,15 @@
   <data name="title_car_position" xml:space="preserve">
     <value>№ в поезде</value>
   </data>
+  <data name="title_client_kod_from" xml:space="preserve">
+    <value>Грузоотправитель</value>
+  </data>
+  <data name="title_client_kod_on" xml:space="preserve">
+    <value>Грузополучатель</value>
+  </data>
+  <data name="title_commercial_condition" xml:space="preserve">
+    <value>Коммерческое состояние груза</value>
+  </data>
   <data name="title_composition_index" xml:space="preserve">
     <value>Индекс поезда</value>
   </data>
@@ -190,7 +199,7 @@
     <value>Тариф при выдаче</value>
   </data>
   <data name="title_route_joint_cross_time" xml:space="preserve">
-    <value />
+    <value>Дата и время перехода погр. пункта</value>
   </data>
   <data name="title_route_joint_stn" xml:space="preserve">
     <value>Пограничный  пункт</value>
@@ -236,5 +245,32 @@
   </data>
   <data name="title_vagon_ves_tary_arc" xml:space="preserve">
     <value>Вес тары, кг</value>
+  </data>
+  <data name="title_wagon_collect_v_danger_kod" xml:space="preserve">
+    <value>Код опасного груза</value>
+  </data>
+  <data name="title_wagon_collect_v_danger_text" xml:space="preserve">
+    <value>Название опасного груза</value>
+  </data>
+  <data name="title_wagon_collect_v_kod_etsng" xml:space="preserve">
+    <value>Код ЕТСНГ</value>
+  </data>
+  <data name="title_wagon_collect_v_kod_gng" xml:space="preserve">
+    <value>Код ГНГ</value>
+  </data>
+  <data name="title_wagon_collect_v_kol_pac" xml:space="preserve">
+    <value>Кол. мест</value>
+  </data>
+  <data name="title_wagon_collect_v_name_etsng" xml:space="preserve">
+    <value>Название груза по ЕТСНГ</value>
+  </data>
+  <data name="title_wagon_collect_v_name_gng" xml:space="preserve">
+    <value>Название груза по ГНГ</value>
+  </data>
+  <data name="title_wagon_collect_v_vesg" xml:space="preserve">
+    <value>Вес груза, кг</value>
+  </data>
+  <data name="title_wagon_zpu_v_nom_zpu" xml:space="preserve">
+    <value>№ ЗПУ</value>
   </data>
 </root>

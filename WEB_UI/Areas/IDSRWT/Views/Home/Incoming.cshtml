@@ -219,7 +219,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-6 mb-1 text-left">
-                                                <label for="internal_railroad_from" class="col-form-label">@IDSRWTResource.title_internal_railroad:_from</label>
+                                                <label for="internal_railroad_from" class="col-form-label">@IDSRWTResource.title_internal_railroad</label>
                                                 <input type="text" class="form-control" id="internal_railroad_from" name="internal_railroad_from" required="required">
                                                 <div class="invalid-feedback">
                                                 </div>
@@ -233,7 +233,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-6 mb-1 text-left">
-                                                <label for="internal_railroad_on" class="col-form-label">@IDSRWTResource.title_internal_railroad:_from</label>
+                                                <label for="internal_railroad_on" class="col-form-label">@IDSRWTResource.title_internal_railroad</label>
                                                 <input type="text" class="form-control" id="internal_railroad_on" name="internal_railroad_on" required="required">
                                                 <div class="invalid-feedback">
                                                 </div>
@@ -319,7 +319,7 @@
                                         <div class="form-row">
                                             <div class="col-md-6 mb-1 text-left">
                                                 <label for="operators_wagons" class="col-form-label">@IDSRWTResource.title_operators_wagons:</label>
-                                                <select class="form-control" id="operators_wagons" name="operators_wagons:" required="required"></select>
+                                                <select class="form-control" id="operators_wagons" name="operators_wagons" required="required"></select>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -351,10 +351,94 @@
                                             </div>
                                         </div>
                                     </fieldset>
-                                    <fieldset>
-                                        <legend>Груз</legend>
-
+                                    <fieldset class="border-primary">
+                                        <legend class="text-primary">Груз</legend>
+                                        <div class="form-row">
+                                            <div class="col-md-6 mb-1 text-left">
+                                                <label for="client_kod_from" class="col-form-label">@IDSRWTResource.title_client_kod_from:</label>
+                                                <select class="form-control" id="client_kod_from" name="client_kod_from" required="required"></select>
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-1 text-left">
+                                                <label for="client_kod_on" class="col-form-label">@IDSRWTResource.title_client_kod_on:</label>
+                                                <select class="form-control" id="client_kod_on" name="client_kod_on" required="required"></select>
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-2 mb-1 text-left">
+                                                <label for="wagon_collect_v_kod_etsng" class="col-form-label">@IDSRWTResource.title_wagon_collect_v_kod_etsng:</label>
+                                                <input type="number" class="form-control" id="wagon_collect_v_kod_etsng" name="wagon_collect_v_kod_etsng" required="required">
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-10 mb-1 text-left">
+                                                <label for="wagon_collect_v_name_etsng" class="col-form-label">@IDSRWTResource.title_wagon_collect_v_name_etsng:</label>
+                                                <textarea class="form-control" id="wagon_collect_v_name_etsng" name="wagon_collect_v_name_etsng" required="required"></textarea>
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-2 mb-1 text-left">
+                                                <label for="wagon_collect_v_kod_gng" class="col-form-label">@IDSRWTResource.title_wagon_collect_v_kod_gng:</label>
+                                                <input type="number" class="form-control" id="wagon_collect_v_kod_gng" name="wagon_collect_v_kod_gng" required="required">
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-10 mb-1 text-left">
+                                                <label for="wagon_collect_v_name_gng" class="col-form-label">@IDSRWTResource.title_wagon_collect_v_name_gng:</label>
+                                                <textarea class="form-control" id="wagon_collect_v_name_gng" name="wagon_collect_v_name_gng" required="required"></textarea>
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-2 mb-1 text-left">
+                                                <label for="wagon_collect_v_kol_pac" class="col-form-label">@IDSRWTResource.title_wagon_collect_v_kol_pac:</label>
+                                                <input type="number" class="form-control" id="wagon_collect_v_kol_pac" name="wagon_collect_v_kol_pac" required="required">
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 mb-1 text-left">
+                                                <label for="wagon_collect_v_vesg" class="col-form-label">@IDSRWTResource.title_wagon_collect_v_vesg:</label>
+                                                <input type="number" class="form-control" id="wagon_collect_v_vesg" name="wagon_collect_v_vesg" required="required">
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 mb-1 text-left">
+                                                <label for="wagon_zpu_v_nom_zpu" class="col-form-label">@IDSRWTResource.title_wagon_zpu_v_nom_zpu:</label>
+                                                <input type="number" class="form-control" id="wagon_zpu_v_nom_zpu" name="wagon_zpu_v_nom_zpu" required="required">
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-1 text-left">
+                                                <label for="commercial_condition" class="col-form-label">@IDSRWTResource.title_commercial_condition:</label>
+                                                <select class="form-control" id="commercial_condition" name="commercial_condition" required="required"></select>
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-6 mb-1 text-left">
+                                                <label for="wagon_collect_v_danger_kod" class="col-form-label">@IDSRWTResource.title_wagon_collect_v_danger_kod:</label>
+                                                <select class="form-control" id="wagon_collect_v_danger_kod" name="wagon_collect_v_danger_kod" required="required"></select>
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-1 text-left">
+                                                <label for="wagon_collect_v_danger_text" class="col-form-label">@IDSRWTResource.title_wagon_collect_v_danger_text:</label>
+                                                <input type="number" class="form-control" id="wagon_collect_v_danger_text" name="wagon_collect_v_danger_text" required="required">
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                        </div>
                                     </fieldset>
+
+
+
                                     @*<div id="accordion" role="tablist" aria-multiselectable="true">
                                             <div class="card border-primary">
                                                 <div class="card-header text-left" role="tab" id="headingOne">
