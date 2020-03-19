@@ -51,7 +51,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="TMSoft.Gohub.Client.Net, Version=1.20.218.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\TMSoft\TMSoft.Gohub.Client.Net.dll</HintPath>
+      <HintPath>TMSoft\TMSoft.Gohub.Client.Net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -84,6 +84,49 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="TMSoft\TMSoft.gohub.client.com.tlb" />
+    <None Include="TMSoft\TMSoft.gohub.client.lib" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="TMSoft\AEDO.Logging.dll" />
+    <Content Include="TMSoft\CAConnectors.dll" />
+    <Content Include="TMSoft\CAGUI.dll" />
+    <Content Include="TMSoft\CryptoLib2.Asfpd.Canonicals.dll" />
+    <Content Include="TMSoft\CryptoLib2.Asfpd.Tvklib.Net.dll" />
+    <Content Include="TMSoft\CryptoLib2.Host.dll" />
+    <Content Include="TMSoft\CryptoLib2.Net.dll" />
+    <Content Include="TMSoft\CSPBase.dll" />
+    <Content Include="TMSoft\CSPExtension.dll" />
+    <Content Include="TMSoft\CSPIBase.dll" />
+    <Content Include="TMSoft\EUTMSoft.dll" />
+    <Content Include="TMSoft\KM.dll" />
+    <Content Include="TMSoft\KM.EKeyAlmaz1C.dll" />
+    <Content Include="TMSoft\KM.EKeyCrystal1.dll" />
+    <Content Include="TMSoft\KM.FileSystem.dll" />
+    <Content Include="TMSoft\KM.NCMGryada301.dll" />
+    <Content Include="TMSoft\KM.PKCS11.dll" />
+    <Content Include="TMSoft\KM.TCTEllipseSCard.dll" />
+    <Content Include="TMSoft\LDAPClient.dll" />
+    <Content Include="TMSoft\PKCS11.EKeyAlmaz1C.dll" />
+    <Content Include="TMSoft\PKCS11.EKeyCrystal1.dll" />
+    <Content Include="TMSoft\PKIFormats.dll" />
+    <Content Include="TMSoft\RF.dll" />
+    <Content Include="TMSoft\SMDiagnostics.dll" />
+    <Content Include="TMSoft\TMSoft.CryptoDoc.Fdu92.dll" />
+    <Content Include="TMSoft\TMSoft.CryptoDoc.Gu27.dll" />
+    <Content Include="TMSoft\TMSoft.CryptoDoc.Gu45.dll" />
+    <Content Include="TMSoft\TMSoft.CryptoDoc.Gu46.dll" />
+    <Content Include="TMSoft\TMSoft.Gohub.Client.Agent.dll" />
+    <Content Include="TMSoft\TMSoft.gohub.client.com.dll" />
+    <Content Include="TMSoft\TMSoft.Gohub.Client.Core.dll" />
+    <Content Include="TMSoft\TMSoft.gohub.client.dll" />
+    <Content Include="TMSoft\TMSoft.Gohub.Client.Net.dll" />
+    <Content Include="TMSoft\TMSoft.Gohub.Common.dll" />
+    <Content Include="TMSoft\TMSoft.Validation.dll" />
+    <Content Include="TMSoft\TMSoft.WebOffice.Dom.dll" />
+    <Content Include="TMSoft\TMSoft.WebOffice.ExternalFormats.dll" />
+    <Content Include="TMSoft\WebOffice.Errors.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

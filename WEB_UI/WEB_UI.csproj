@@ -137,9 +137,6 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="TMSoft.Gohub.Client.Net">
-      <HintPath>TMSoft\TMSoft.Gohub.Client.Net.dll</HintPath>
-    </Reference>
     <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
       <HintPath>..\packages\WebActivatorEx.2.2.0\lib\net40\WebActivatorEx.dll</HintPath>
     </Reference>
@@ -1055,7 +1052,6 @@
     <Folder Include="Areas\IDSMORS\Models\" />
     <Folder Include="Areas\IDSRWT\Models\" />
     <Folder Include="Models\" />
-    <Folder Include="TMSoft\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
