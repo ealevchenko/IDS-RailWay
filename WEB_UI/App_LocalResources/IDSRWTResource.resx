@@ -135,16 +135,34 @@
   <data name="system_idsrwt_title" xml:space="preserve">
     <value>ВДС «ЖД АМКР»</value>
   </data>
+  <data name="title_border_cross_time" xml:space="preserve">
+    <value>Дата и время перехода</value>
+  </data>
+  <data name="title_border_point" xml:space="preserve">
+    <value>Пограничный пункт</value>
+  </data>
+  <data name="title_cargo" xml:space="preserve">
+    <value>Груз</value>
+  </data>
+  <data name="title_cargo_analysis" xml:space="preserve">
+    <value>Анализ груза</value>
+  </data>
+  <data name="title_cargo_returns" xml:space="preserve">
+    <value>Признак возврата поставщику</value>
+  </data>
   <data name="title_car_date_adoption_act" xml:space="preserve">
     <value>Время и дата приема по акту</value>
   </data>
-  <data name="title_car_position" xml:space="preserve">
-    <value>№ в поезде</value>
+  <data name="title_certificate_data" xml:space="preserve">
+    <value>Сертификатные данные</value>
   </data>
-  <data name="title_client_kod_from" xml:space="preserve">
+  <data name="title_client_kod" xml:space="preserve">
+    <value>Код</value>
+  </data>
+  <data name="title_client_name_from" xml:space="preserve">
     <value>Грузоотправитель</value>
   </data>
-  <data name="title_client_kod_on" xml:space="preserve">
+  <data name="title_client_name_on" xml:space="preserve">
     <value>Грузополучатель</value>
   </data>
   <data name="title_commercial_condition" xml:space="preserve">
@@ -156,23 +174,89 @@
   <data name="title_composition_index_invalid" xml:space="preserve">
     <value>Укажите индекс поезда</value>
   </data>
+  <data name="title_container" xml:space="preserve">
+    <value>Контейнера</value>
+  </data>
+  <data name="title_danger_class" xml:space="preserve">
+    <value>Класс</value>
+  </data>
+  <data name="title_danger_kod" xml:space="preserve">
+    <value>Код опасности</value>
+  </data>
+  <data name="title_danger_name" xml:space="preserve">
+    <value>Описание класса опасности</value>
+  </data>
   <data name="title_date_arrival" xml:space="preserve">
     <value>Дата и время прибытия</value>
   </data>
   <data name="title_date_arrival_invalid" xml:space="preserve">
     <value>Укажите дату и время прибытия</value>
   </data>
-  <data name="title_internal_railroad" xml:space="preserve">
-    <value>Дорога</value>
+  <data name="title_date_rem_uz" xml:space="preserve">
+    <value>Дата ремонта (БД УЗ)</value>
   </data>
-  <data name="title_name_firm_owner" xml:space="preserve">
+  <data name="title_date_rem_vag" xml:space="preserve">
+    <value>Дата ремонта (вагон)</value>
+  </data>
+  <data name="title_distance_way" xml:space="preserve">
+    <value>Тарифное расстояние</value>
+  </data>
+  <data name="title_EPD" xml:space="preserve">
+    <value>Электронно-перевозочный документ</value>
+  </data>
+  <data name="title_group_cargo" xml:space="preserve">
+    <value>Груз</value>
+  </data>
+  <data name="title_gruzp_doc" xml:space="preserve">
+    <value>Грузоподъемность(ЭПД),т</value>
+  </data>
+  <data name="title_gruzp_uz" xml:space="preserve">
+    <value>Грузоподъемность(БД УЗ),т</value>
+  </data>
+  <data name="title_kod_etsng" xml:space="preserve">
+    <value>Код ЕТСНГ</value>
+  </data>
+  <data name="title_kod_gng" xml:space="preserve">
+    <value>Код ГНГ</value>
+  </data>
+  <data name="title_kod_plat" xml:space="preserve">
+    <value>Код</value>
+  </data>
+  <data name="title_kol_os" xml:space="preserve">
+    <value>Количество осей</value>
+  </data>
+  <data name="title_kol_pac" xml:space="preserve">
+    <value>Кол. мест</value>
+  </data>
+  <data name="title_name_adm" xml:space="preserve">
+    <value>Страна</value>
+  </data>
+  <data name="title_name_etsng" xml:space="preserve">
+    <value>Название груза по ЕТСНГ</value>
+  </data>
+  <data name="title_name_gng" xml:space="preserve">
+    <value>Название груза по ГНГ</value>
+  </data>
+  <data name="title_name_operator" xml:space="preserve">
+    <value>Оператор</value>
+  </data>
+  <data name="title_name_owner" xml:space="preserve">
     <value>Собственник</value>
   </data>
-  <data name="title_nom_dved" xml:space="preserve">
-    <value>№ Досылки</value>
+  <data name="title_name_plat" xml:space="preserve">
+    <value>Платильщик</value>
+  </data>
+  <data name="title_name_rod_vag" xml:space="preserve">
+    <value>Род вагона</value>
+  </data>
+  <data name="title_nom_zpu" xml:space="preserve">
+    <value>№ ЗПУ</value>
   </data>
   <data name="title_note" xml:space="preserve">
     <value>Примечание</value>
+  </data>
+  <data name="title_not_load" xml:space="preserve">
+    <value>Признак не грузить</value>
   </data>
   <data name="title_num_car" xml:space="preserve">
     <value>№ Вагона</value>
@@ -180,41 +264,47 @@
   <data name="title_num_doc" xml:space="preserve">
     <value>№ ЭПД</value>
   </data>
+  <data name="title_num_input_sipply" xml:space="preserve">
+    <value>№ Входящей поставки</value>
+  </data>
   <data name="title_num_rev" xml:space="preserve">
     <value>№ Ревизии</value>
   </data>
-  <data name="title_operators_wagons" xml:space="preserve">
-    <value>Оператор</value>
+  <data name="title_payer" xml:space="preserve">
+    <value>Оплата</value>
   </data>
-  <data name="title_otpr_distance_way" xml:space="preserve">
-    <value>Тарифное расстояние</value>
+  <data name="title_position_arrival" xml:space="preserve">
+    <value>№ в поезде</value>
   </data>
-  <data name="title_otpr_nom_doc" xml:space="preserve">
-    <value>№ Накладной</value>
+  <data name="title_railway_name" xml:space="preserve">
+    <value>Дорога</value>
   </data>
-  <data name="title_pl_name_plat" xml:space="preserve">
-    <value>Платильщик</value>
+  <data name="title_route" xml:space="preserve">
+    <value>Признак маршрута</value>
   </data>
-  <data name="title_pl_pay_kod" xml:space="preserve">
-    <value>Тариф при выдаче</value>
+  <data name="title_sap_inbound_delivery" xml:space="preserve">
+    <value>SAP (Входящая поставка)</value>
   </data>
-  <data name="title_route_joint_cross_time" xml:space="preserve">
-    <value>Дата и время перехода погр. пункта</value>
-  </data>
-  <data name="title_route_joint_stn" xml:space="preserve">
-    <value>Пограничный  пункт</value>
-  </data>
-  <data name="title_route_stn_from" xml:space="preserve">
-    <value>Станция отправки</value>
-  </data>
-  <data name="title_route_stn_on" xml:space="preserve">
-    <value>Станция прибытия</value>
+  <data name="title_ship" xml:space="preserve">
+    <value>Судно</value>
   </data>
   <data name="title_station_from" xml:space="preserve">
     <value>Прибытие со станции</value>
   </data>
   <data name="title_station_from_invalid" xml:space="preserve">
     <value>Укажите станцию прибытия</value>
+  </data>
+  <data name="title_station_on_amkr" xml:space="preserve">
+    <value>Отправить на станцию АМКР</value>
+  </data>
+  <data name="title_stn_code" xml:space="preserve">
+    <value>Код</value>
+  </data>
+  <data name="title_stn_name" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="title_tariff" xml:space="preserve">
+    <value>Тариф при выдаче</value>
   </data>
   <data name="title_train" xml:space="preserve">
     <value>№ Поезда</value>
@@ -225,52 +315,64 @@
   <data name="title_type_wagons" xml:space="preserve">
     <value>Тип вагона</value>
   </data>
-  <data name="title_vagon_adm" xml:space="preserve">
-    <value>Страна</value>
-  </data>
-  <data name="title_vagon_gruzp" xml:space="preserve">
-    <value>Грузоподъемность,т</value>
-  </data>
-  <data name="title_vagon_kol_os" xml:space="preserve">
-    <value>Количество осей</value>
-  </data>
-  <data name="title_vagon_rod_vag" xml:space="preserve">
-    <value>Род вагона</value>
-  </data>
-  <data name="title_vagon_usl_tip" xml:space="preserve">
+  <data name="title_usl_tip" xml:space="preserve">
     <value>Тип цистерны</value>
   </data>
-  <data name="title_vagon_u_tara" xml:space="preserve">
-    <value>Вес уточ. тары, кг</value>
+  <data name="title_uz_doc_num_doc" xml:space="preserve">
+    <value>№ Накладной</value>
   </data>
-  <data name="title_vagon_ves_tary_arc" xml:space="preserve">
+  <data name="title_uz_doc_num_new_doc" xml:space="preserve">
+    <value>№ Досылки</value>
+  </data>
+  <data name="title_uz_route_stn_from" xml:space="preserve">
+    <value>Станция отправки</value>
+  </data>
+  <data name="title_uz_route_stn_on" xml:space="preserve">
+    <value>Станция прибытия</value>
+  </data>
+  <data name="title_u_tara" xml:space="preserve">
+    <value>Вес тары (уточн.), кг</value>
+  </data>
+  <data name="title_vagon" xml:space="preserve">
+    <value>Вагон</value>
+  </data>
+  <data name="title_vagon_act" xml:space="preserve">
+    <value>Акты по вагону</value>
+  </data>
+  <data name="title_vagon_doc" xml:space="preserve">
+    <value>Сертификаты и другие документы</value>
+  </data>
+  <data name="title_vesg_difference" xml:space="preserve">
+    <value>Разница, кг</value>
+  </data>
+  <data name="title_vesg_doc" xml:space="preserve">
+    <value>Вес груза(накл.), кг</value>
+  </data>
+  <data name="title_vesg_reweighing" xml:space="preserve">
+    <value>Вес груза(перев.), кг</value>
+  </data>
+  <data name="title_ves_tary_arc" xml:space="preserve">
     <value>Вес тары, кг</value>
   </data>
-  <data name="title_wagon_collect_v_danger_kod" xml:space="preserve">
-    <value>Код опасного груза</value>
+  <data name="title_wagons_condition" xml:space="preserve">
+    <value>Разметка по прибытию</value>
   </data>
-  <data name="title_wagon_collect_v_danger_text" xml:space="preserve">
-    <value>Название опасного груза</value>
+  <data name="title_warehouse" xml:space="preserve">
+    <value>Заадресовка</value>
   </data>
-  <data name="title_wagon_collect_v_kod_etsng" xml:space="preserve">
-    <value>Код ЕТСНГ</value>
+  <data name="title_warehouse_code" xml:space="preserve">
+    <value>Код склада</value>
   </data>
-  <data name="title_wagon_collect_v_kod_gng" xml:space="preserve">
-    <value>Код ГНГ</value>
+  <data name="title_warehouse_date" xml:space="preserve">
+    <value>Время</value>
   </data>
-  <data name="title_wagon_collect_v_kol_pac" xml:space="preserve">
-    <value>Кол. мест</value>
+  <data name="title_warehouse_name" xml:space="preserve">
+    <value>Склад</value>
   </data>
-  <data name="title_wagon_collect_v_name_etsng" xml:space="preserve">
-    <value>Название груза по ЕТСНГ</value>
+  <data name="title_warehouse_new" xml:space="preserve">
+    <value>Переадресация</value>
   </data>
-  <data name="title_wagon_collect_v_name_gng" xml:space="preserve">
-    <value>Название груза по ГНГ</value>
-  </data>
-  <data name="title_wagon_collect_v_vesg" xml:space="preserve">
-    <value>Вес груза, кг</value>
-  </data>
-  <data name="title_wagon_zpu_v_nom_zpu" xml:space="preserve">
-    <value>№ ЗПУ</value>
+  <data name="title_warehouse_shop" xml:space="preserve">
+    <value>Цех</value>
   </data>
 </root>

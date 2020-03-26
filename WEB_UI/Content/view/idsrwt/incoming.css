@@ -285,6 +285,7 @@ legend {
     font-size: inherit;
     line-height: inherit;
     border-bottom: none;
+    text-transform:uppercase;
 }
 
 fieldset {
@@ -292,6 +293,15 @@ fieldset {
     padding: 10px;
     border-radius: 3px;
 }
+fieldset > fieldset {
+    border: 1px groove threedface;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+    fieldset > fieldset legend {
+        text-transform:none;
+    }
 
     /*fieldset > div > div > .col-form-label-sm {
         padding-top: calc(0.25rem + 1px);
@@ -307,3 +317,7 @@ fieldset {
         line-height: 1.5;
         border-radius: 0.2rem;
     }*/
+
+.close-vagon {
+    display:block;
+}

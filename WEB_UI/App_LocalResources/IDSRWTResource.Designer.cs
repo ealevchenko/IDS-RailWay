@@ -115,6 +115,24 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Дата и время перехода.
+        /// </summary>
+        public static string title_border_cross_time {
+            get {
+                return ResourceManager.GetString("title_border_cross_time", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Пограничный пункт.
+        /// </summary>
+        public static string title_border_point {
+            get {
+                return ResourceManager.GetString("title_border_point", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Время и дата приема по акту.
         /// </summary>
         public static string title_car_date_adoption_act {
@@ -124,29 +142,65 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на № в поезде.
+        ///   Ищет локализованную строку, похожую на Груз.
         /// </summary>
-        public static string title_car_position {
+        public static string title_cargo {
             get {
-                return ResourceManager.GetString("title_car_position", resourceCulture);
+                return ResourceManager.GetString("title_cargo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Анализ груза.
+        /// </summary>
+        public static string title_cargo_analysis {
+            get {
+                return ResourceManager.GetString("title_cargo_analysis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Признак возврата поставщику.
+        /// </summary>
+        public static string title_cargo_returns {
+            get {
+                return ResourceManager.GetString("title_cargo_returns", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сертификатные данные.
+        /// </summary>
+        public static string title_certificate_data {
+            get {
+                return ResourceManager.GetString("title_certificate_data", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Код.
+        /// </summary>
+        public static string title_client_kod {
+            get {
+                return ResourceManager.GetString("title_client_kod", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Грузоотправитель.
         /// </summary>
-        public static string title_client_kod_from {
+        public static string title_client_name_from {
             get {
-                return ResourceManager.GetString("title_client_kod_from", resourceCulture);
+                return ResourceManager.GetString("title_client_name_from", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Грузополучатель.
         /// </summary>
-        public static string title_client_kod_on {
+        public static string title_client_name_on {
             get {
-                return ResourceManager.GetString("title_client_kod_on", resourceCulture);
+                return ResourceManager.GetString("title_client_name_on", resourceCulture);
             }
         }
         
@@ -178,6 +232,42 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Контейнера.
+        /// </summary>
+        public static string title_container {
+            get {
+                return ResourceManager.GetString("title_container", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Класс.
+        /// </summary>
+        public static string title_danger_class {
+            get {
+                return ResourceManager.GetString("title_danger_class", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Код опасности.
+        /// </summary>
+        public static string title_danger_kod {
+            get {
+                return ResourceManager.GetString("title_danger_kod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Описание класса опасности.
+        /// </summary>
+        public static string title_danger_name {
+            get {
+                return ResourceManager.GetString("title_danger_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Дата и время прибытия.
         /// </summary>
         public static string title_date_arrival {
@@ -196,29 +286,191 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Дорога.
+        ///   Ищет локализованную строку, похожую на Дата ремонта (БД УЗ).
         /// </summary>
-        public static string title_internal_railroad {
+        public static string title_date_rem_uz {
             get {
-                return ResourceManager.GetString("title_internal_railroad", resourceCulture);
+                return ResourceManager.GetString("title_date_rem_uz", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Дата ремонта (вагон).
+        /// </summary>
+        public static string title_date_rem_vag {
+            get {
+                return ResourceManager.GetString("title_date_rem_vag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Тарифное расстояние.
+        /// </summary>
+        public static string title_distance_way {
+            get {
+                return ResourceManager.GetString("title_distance_way", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Электронно-перевозочный документ.
+        /// </summary>
+        public static string title_EPD {
+            get {
+                return ResourceManager.GetString("title_EPD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Груз.
+        /// </summary>
+        public static string title_group_cargo {
+            get {
+                return ResourceManager.GetString("title_group_cargo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Грузоподъемность(ЭПД),т.
+        /// </summary>
+        public static string title_gruzp_doc {
+            get {
+                return ResourceManager.GetString("title_gruzp_doc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Грузоподъемность(БД УЗ),т.
+        /// </summary>
+        public static string title_gruzp_uz {
+            get {
+                return ResourceManager.GetString("title_gruzp_uz", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Код ЕТСНГ.
+        /// </summary>
+        public static string title_kod_etsng {
+            get {
+                return ResourceManager.GetString("title_kod_etsng", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Код ГНГ.
+        /// </summary>
+        public static string title_kod_gng {
+            get {
+                return ResourceManager.GetString("title_kod_gng", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Код.
+        /// </summary>
+        public static string title_kod_plat {
+            get {
+                return ResourceManager.GetString("title_kod_plat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Количество осей.
+        /// </summary>
+        public static string title_kol_os {
+            get {
+                return ResourceManager.GetString("title_kol_os", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Кол. мест.
+        /// </summary>
+        public static string title_kol_pac {
+            get {
+                return ResourceManager.GetString("title_kol_pac", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Страна.
+        /// </summary>
+        public static string title_name_adm {
+            get {
+                return ResourceManager.GetString("title_name_adm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Название груза по ЕТСНГ.
+        /// </summary>
+        public static string title_name_etsng {
+            get {
+                return ResourceManager.GetString("title_name_etsng", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Название груза по ГНГ.
+        /// </summary>
+        public static string title_name_gng {
+            get {
+                return ResourceManager.GetString("title_name_gng", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Оператор.
+        /// </summary>
+        public static string title_name_operator {
+            get {
+                return ResourceManager.GetString("title_name_operator", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Собственник.
         /// </summary>
-        public static string title_name_firm_owner {
+        public static string title_name_owner {
             get {
-                return ResourceManager.GetString("title_name_firm_owner", resourceCulture);
+                return ResourceManager.GetString("title_name_owner", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на № Досылки.
+        ///   Ищет локализованную строку, похожую на Платильщик.
         /// </summary>
-        public static string title_nom_dved {
+        public static string title_name_plat {
             get {
-                return ResourceManager.GetString("title_nom_dved", resourceCulture);
+                return ResourceManager.GetString("title_name_plat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Род вагона.
+        /// </summary>
+        public static string title_name_rod_vag {
+            get {
+                return ResourceManager.GetString("title_name_rod_vag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на № ЗПУ.
+        /// </summary>
+        public static string title_nom_zpu {
+            get {
+                return ResourceManager.GetString("title_nom_zpu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Признак не грузить.
+        /// </summary>
+        public static string title_not_load {
+            get {
+                return ResourceManager.GetString("title_not_load", resourceCulture);
             }
         }
         
@@ -250,6 +502,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на № Входящей поставки.
+        /// </summary>
+        public static string title_num_input_sipply {
+            get {
+                return ResourceManager.GetString("title_num_input_sipply", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на № Ревизии.
         /// </summary>
         public static string title_num_rev {
@@ -259,83 +520,56 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Оператор.
+        ///   Ищет локализованную строку, похожую на Оплата.
         /// </summary>
-        public static string title_operators_wagons {
+        public static string title_payer {
             get {
-                return ResourceManager.GetString("title_operators_wagons", resourceCulture);
+                return ResourceManager.GetString("title_payer", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Тарифное расстояние.
+        ///   Ищет локализованную строку, похожую на № в поезде.
         /// </summary>
-        public static string title_otpr_distance_way {
+        public static string title_position_arrival {
             get {
-                return ResourceManager.GetString("title_otpr_distance_way", resourceCulture);
+                return ResourceManager.GetString("title_position_arrival", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на № Накладной.
+        ///   Ищет локализованную строку, похожую на Дорога.
         /// </summary>
-        public static string title_otpr_nom_doc {
+        public static string title_railway_name {
             get {
-                return ResourceManager.GetString("title_otpr_nom_doc", resourceCulture);
+                return ResourceManager.GetString("title_railway_name", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Платильщик.
+        ///   Ищет локализованную строку, похожую на Признак маршрута.
         /// </summary>
-        public static string title_pl_name_plat {
+        public static string title_route {
             get {
-                return ResourceManager.GetString("title_pl_name_plat", resourceCulture);
+                return ResourceManager.GetString("title_route", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Тариф при выдаче.
+        ///   Ищет локализованную строку, похожую на SAP (Входящая поставка).
         /// </summary>
-        public static string title_pl_pay_kod {
+        public static string title_sap_inbound_delivery {
             get {
-                return ResourceManager.GetString("title_pl_pay_kod", resourceCulture);
+                return ResourceManager.GetString("title_sap_inbound_delivery", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Дата и время перехода погр. пункта.
+        ///   Ищет локализованную строку, похожую на Судно.
         /// </summary>
-        public static string title_route_joint_cross_time {
+        public static string title_ship {
             get {
-                return ResourceManager.GetString("title_route_joint_cross_time", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Пограничный  пункт.
-        /// </summary>
-        public static string title_route_joint_stn {
-            get {
-                return ResourceManager.GetString("title_route_joint_stn", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Станция отправки.
-        /// </summary>
-        public static string title_route_stn_from {
-            get {
-                return ResourceManager.GetString("title_route_stn_from", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Станция прибытия.
-        /// </summary>
-        public static string title_route_stn_on {
-            get {
-                return ResourceManager.GetString("title_route_stn_on", resourceCulture);
+                return ResourceManager.GetString("title_ship", resourceCulture);
             }
         }
         
@@ -354,6 +588,42 @@ namespace WEB_UI.App_LocalResources {
         public static string title_station_from_invalid {
             get {
                 return ResourceManager.GetString("title_station_from_invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отправить на станцию АМКР.
+        /// </summary>
+        public static string title_station_on_amkr {
+            get {
+                return ResourceManager.GetString("title_station_on_amkr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Код.
+        /// </summary>
+        public static string title_stn_code {
+            get {
+                return ResourceManager.GetString("title_stn_code", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Название.
+        /// </summary>
+        public static string title_stn_name {
+            get {
+                return ResourceManager.GetString("title_stn_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Тариф при выдаче.
+        /// </summary>
+        public static string title_tariff {
+            get {
+                return ResourceManager.GetString("title_tariff", resourceCulture);
             }
         }
         
@@ -385,146 +655,182 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Страна.
+        ///   Ищет локализованную строку, похожую на Вес тары (уточн.), кг.
         /// </summary>
-        public static string title_vagon_adm {
+        public static string title_u_tara {
             get {
-                return ResourceManager.GetString("title_vagon_adm", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Грузоподъемность,т.
-        /// </summary>
-        public static string title_vagon_gruzp {
-            get {
-                return ResourceManager.GetString("title_vagon_gruzp", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Количество осей.
-        /// </summary>
-        public static string title_vagon_kol_os {
-            get {
-                return ResourceManager.GetString("title_vagon_kol_os", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Род вагона.
-        /// </summary>
-        public static string title_vagon_rod_vag {
-            get {
-                return ResourceManager.GetString("title_vagon_rod_vag", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Вес уточ. тары, кг.
-        /// </summary>
-        public static string title_vagon_u_tara {
-            get {
-                return ResourceManager.GetString("title_vagon_u_tara", resourceCulture);
+                return ResourceManager.GetString("title_u_tara", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Тип цистерны.
         /// </summary>
-        public static string title_vagon_usl_tip {
+        public static string title_usl_tip {
             get {
-                return ResourceManager.GetString("title_vagon_usl_tip", resourceCulture);
+                return ResourceManager.GetString("title_usl_tip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на № Накладной.
+        /// </summary>
+        public static string title_uz_doc_num_doc {
+            get {
+                return ResourceManager.GetString("title_uz_doc_num_doc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на № Досылки.
+        /// </summary>
+        public static string title_uz_doc_num_new_doc {
+            get {
+                return ResourceManager.GetString("title_uz_doc_num_new_doc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Станция отправки.
+        /// </summary>
+        public static string title_uz_route_stn_from {
+            get {
+                return ResourceManager.GetString("title_uz_route_stn_from", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Станция прибытия.
+        /// </summary>
+        public static string title_uz_route_stn_on {
+            get {
+                return ResourceManager.GetString("title_uz_route_stn_on", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вагон.
+        /// </summary>
+        public static string title_vagon {
+            get {
+                return ResourceManager.GetString("title_vagon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Акты по вагону.
+        /// </summary>
+        public static string title_vagon_act {
+            get {
+                return ResourceManager.GetString("title_vagon_act", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сертификаты и другие документы.
+        /// </summary>
+        public static string title_vagon_doc {
+            get {
+                return ResourceManager.GetString("title_vagon_doc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Вес тары, кг.
         /// </summary>
-        public static string title_vagon_ves_tary_arc {
+        public static string title_ves_tary_arc {
             get {
-                return ResourceManager.GetString("title_vagon_ves_tary_arc", resourceCulture);
+                return ResourceManager.GetString("title_ves_tary_arc", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Код опасного груза.
+        ///   Ищет локализованную строку, похожую на Разница, кг.
         /// </summary>
-        public static string title_wagon_collect_v_danger_kod {
+        public static string title_vesg_difference {
             get {
-                return ResourceManager.GetString("title_wagon_collect_v_danger_kod", resourceCulture);
+                return ResourceManager.GetString("title_vesg_difference", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Название опасного груза.
+        ///   Ищет локализованную строку, похожую на Вес груза(накл.), кг.
         /// </summary>
-        public static string title_wagon_collect_v_danger_text {
+        public static string title_vesg_doc {
             get {
-                return ResourceManager.GetString("title_wagon_collect_v_danger_text", resourceCulture);
+                return ResourceManager.GetString("title_vesg_doc", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Код ЕТСНГ.
+        ///   Ищет локализованную строку, похожую на Вес груза(перев.), кг.
         /// </summary>
-        public static string title_wagon_collect_v_kod_etsng {
+        public static string title_vesg_reweighing {
             get {
-                return ResourceManager.GetString("title_wagon_collect_v_kod_etsng", resourceCulture);
+                return ResourceManager.GetString("title_vesg_reweighing", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Код ГНГ.
+        ///   Ищет локализованную строку, похожую на Разметка по прибытию.
         /// </summary>
-        public static string title_wagon_collect_v_kod_gng {
+        public static string title_wagons_condition {
             get {
-                return ResourceManager.GetString("title_wagon_collect_v_kod_gng", resourceCulture);
+                return ResourceManager.GetString("title_wagons_condition", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Кол. мест.
+        ///   Ищет локализованную строку, похожую на Заадресовка.
         /// </summary>
-        public static string title_wagon_collect_v_kol_pac {
+        public static string title_warehouse {
             get {
-                return ResourceManager.GetString("title_wagon_collect_v_kol_pac", resourceCulture);
+                return ResourceManager.GetString("title_warehouse", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Название груза по ЕТСНГ.
+        ///   Ищет локализованную строку, похожую на Код склада.
         /// </summary>
-        public static string title_wagon_collect_v_name_etsng {
+        public static string title_warehouse_code {
             get {
-                return ResourceManager.GetString("title_wagon_collect_v_name_etsng", resourceCulture);
+                return ResourceManager.GetString("title_warehouse_code", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Название груза по ГНГ.
+        ///   Ищет локализованную строку, похожую на Время.
         /// </summary>
-        public static string title_wagon_collect_v_name_gng {
+        public static string title_warehouse_date {
             get {
-                return ResourceManager.GetString("title_wagon_collect_v_name_gng", resourceCulture);
+                return ResourceManager.GetString("title_warehouse_date", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Вес груза, кг.
+        ///   Ищет локализованную строку, похожую на Склад.
         /// </summary>
-        public static string title_wagon_collect_v_vesg {
+        public static string title_warehouse_name {
             get {
-                return ResourceManager.GetString("title_wagon_collect_v_vesg", resourceCulture);
+                return ResourceManager.GetString("title_warehouse_name", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на № ЗПУ.
+        ///   Ищет локализованную строку, похожую на Переадресация.
         /// </summary>
-        public static string title_wagon_zpu_v_nom_zpu {
+        public static string title_warehouse_new {
             get {
-                return ResourceManager.GetString("title_wagon_zpu_v_nom_zpu", resourceCulture);
+                return ResourceManager.GetString("title_warehouse_new", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Цех.
+        /// </summary>
+        public static string title_warehouse_shop {
+            get {
+                return ResourceManager.GetString("title_warehouse_shop", resourceCulture);
             }
         }
     }

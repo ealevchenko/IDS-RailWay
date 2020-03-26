@@ -597,7 +597,7 @@
                 dialog_confirm.obj.dialog("open");
             }
         },
-         // Окно вагоны детально
+        // Окно вагоны детально
         cars_detali = {
             content: $('.cd-cars-detali'),
             lang: null,
@@ -607,15 +607,32 @@
             sostav: null,
             // Поля
             sostav_title: $('h1#sostav-title'),
+            // режимы
+            bt_mode_view: $('button#mode-view').on('click', function (event) {
+                event.preventDefault();
+                cars_detali.set_mode(false);
+            }),
+            bt_mode_edit: $('button#mode-edit').on('click', function (event) {
+                event.preventDefault();
+                cars_detali.set_mode(true);
+            }),
+            bt_mode_open: $('button#mode-open').on('click', function (event) {
+                event.preventDefault();
+                cars_detali.set_open_edit();
+            }),
+            bt_mode_close: $('button#mode-close').on('click', function (event) {
+                event.preventDefault();
+                cars_detali.set_close_edit();
+            }),
             // ЭПД
             num_car: $('input#num_car'),
-            search_cars_num_doc:$('button#search-car-num-doc').on('click', function (event) {
-                    event.preventDefault();
+            search_cars_num_doc: $('button#search-car-num-doc').on('click', function (event) {
+                event.preventDefault();
 
-                }),
-            otpr_nom_doc: $('input#otpr_nom_doc'),
-            otpr_nom_dved: $('input#otpr_nom_dved'),
-            car_position: $('input#car_position').inputSpinner(),
+            }),
+            uz_doc_num_doc: $('input#uz_doc_num_doc'),
+            uz_doc_num_new_doc: $('input#uz_doc_num_new_doc'),
+            arrival_cars_position_arrival: $('input#arrival_cars_position_arrival').inputSpinner(),
 
 
             init: function (lang, user_name) {
@@ -634,6 +651,66 @@
                     cars_detali.content.removeClass('is-visible');
                 });
             },
+            // Возвращает свойство "редактирование разрешено" - true, запрещено -false
+            is_edit_mode_of_element: function (el) {
+                var d = $(el).attr('data-edit');
+                var res = $(el).attr('data-edit') === 'open' || $(el).attr('data-edit') === '' ? true : false;
+                return res;
+            },
+            // Устоновить режим эементов (false-view; true-edit)
+            set_mode: function (mode) {
+                $('[data-mode]').each(function (i, el) {
+                    var edit = $(el).attr('data-edit');
+                    switch ($(el).attr('data-mode')) {
+                        case 'all': {
+                            if (cars_detali.is_edit_mode_of_element(el))
+                            { $(el).prop("disabled", !mode); }
+                            else { $(el).prop("disabled", true); }
+                            break;
+                        }
+                        case 'view': {
+                            $(el).prop("disabled", true); 
+                            if (cars_detali.is_edit_mode_of_element(el))
+                            { if (!mode) { $(el).show(); } else { $(el).hide(); } }
+                            else { $(el).show(); }
+                            break;
+                        }
+                        case 'view-global': {
+                            $(el).prop("disabled", true); 
+                            break;
+                        }
+                        case 'edit': {
+                            $(el).prop("disabled", false); 
+                            if (cars_detali.is_edit_mode_of_element(el))
+                            { if (mode) { $(el).show(); } else { $(el).hide(); } }
+                            else { $(el).hide(); }
+                            break;
+                        }
+                        case 'edit-global': {
+                            // Глобальный элемент для редактирования (не активный только когда - close)
+                            //$(el).show(); убрал иза элемента bootstrap-input-spinner (он скрыт), можно добавить атрибут этого элемента и тогда пропускать
+                            if (cars_detali.is_edit_mode_of_element(el))
+                            { $(el).prop("disabled", false);}
+                            else { $(el).prop("disabled", true); }
+                            break;
+                        }
+                    }
+                });
+            },
+            // Закрыть элементы для редактирования (вагон принят)
+            set_open_edit: function () {
+                $('[data-form="transceiver"]').each(function (i, el) {
+                    $(el).attr('data-edit', 'open');
+                    cars_detali.set_mode(false);
+                });
+            },
+            // Открыть элементы для редактирования (вагон новый или принемается)
+            set_close_edit: function () {
+                $('[data-form="transceiver"]').each(function (i, el) {
+                    $(el).attr('data-edit', 'close');
+                });
+                cars_detali.set_mode(false);
+            },
             // Очистить все ячейки
             clear: function () {
                 cars_detali.clear_cars_epd(); // Очистить ячейки ЭПД
@@ -641,8 +718,8 @@
             // Очистить ячейки ЭПД
             clear_cars_epd: function () {
                 cars_detali.num_car.val('');
-                cars_detali.otpr_nom_doc.val('');
-                cars_detali.otpr_nom_dved.val('');
+                cars_detali.uz_doc_num_doc.val('');
+                cars_detali.uz_doc_num_new_doc.val('');
             },
             // показать электронно перевозочный документ
             view_cars_epd: function (num, otpr) {
@@ -650,8 +727,8 @@
                 cars_detali.num_car.val(num);
                 if (otpr !== null) {
                     cars_detali.search_cars_num_doc.prop("disabled", true);
-                    cars_detali.otpr_nom_doc.val(otpr.otprdp === null ? otpr.nom_doc : otpr.otprdp.nom_osn_doc);
-                    cars_detali.otpr_nom_dved.val(otpr.otprdp !== null ? otpr.nom_doc : null)
+                    cars_detali.uz_doc_num_doc.val(otpr.otprdp === null ? otpr.nom_doc : otpr.otprdp.nom_osn_doc);
+                    cars_detali.uz_doc_num_new_doc.val(otpr.otprdp !== null ? otpr.nom_doc : null);
                 } else {
                     cars_detali.search_cars_num_doc.prop("disabled", false);
                 }
@@ -679,11 +756,17 @@
             // Показать информацию по составу
             view: function (id) {
                 cars_detali.clear();  // Очистить все ячейки
+                cars_detali.set_close_edit();
                 if (id === null) return;
                 cars_detali.id_sostav = id;
                 // Получим текуший состав
                 cars_detali.ids_inc.getArrivalSostavOfID(cars_detali.id_sostav, function (result_sostav) {
                     cars_detali.sostav = result_sostav[0];
+                    // Определим доступность режима редактировать
+                    if (cars_detali.sostav.status < 2) {
+                        // Состав закрыт или отклонен - запрет редактирования
+                        //cars_detali.set_open_edit();
+                    };
                     // Покаать информацию по составу
                     cars_detali.sostav_title.text('Информация по составу (№ поезда :' + cars_detali.sostav.train + ', Индекс поезда :' + cars_detali.sostav.composition_index + ', Прибыл:' + cars_detali.sostav.date_arrival + ')');
                     // Очистить список не принятых вагонов
