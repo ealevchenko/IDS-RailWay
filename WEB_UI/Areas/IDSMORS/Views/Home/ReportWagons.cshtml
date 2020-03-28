@@ -1,0 +1,55 @@
+﻿@using WEB_UI.App_LocalResources;
+@{
+    ViewBag.Title = @IDSMORSResource.report_title;
+}
+
+@section styles {
+    @Styles.Render("~/DataTables/css")
+    <link rel="stylesheet" type="text/css" href="~/Content/view/idsmors/report_wagons.css">
+
+
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/DataTables")
+    @Scripts.Render("~/bundles/Moment")
+    <script src="~/Scripts/view/shared/common.js"></script> <!-- Общая библиотека методов программы -->
+    <script src="~/Scripts/api/shared.js"></script> <!-- Общая библиотека методов API -->
+    <script src="~/Scripts/api/ids_directory.js"></script> <!-- Class API ИДС Справочники -->
+    <script src="~/Scripts/api/uz_directory.js"></script><!--  Class API УЗ Справочники -->
+    <script src="~/Scripts/api/ids_mors.js"></script> <!-- Class API ИДС " Управление собственным подвижным составом" -->
+
+    <script src="~/Scripts/view/idsmors/report_wagons.js"></script> <!--  -->
+}
+<input id="username" type="hidden" value="@User.Identity.Name" />
+<div class="container-fluid idsmors-report">
+    <div class="card">
+        <div class="card-header bg-info text-white">
+            <div class="container">
+
+                @*<form id="fm-select-park-wagon">*@
+                <div class="form-row">
+                    <div class="col-sm-3 mb-3 text-right">
+                        <label class="col-form-label" for="select-park-wagon">@IDSMORSResource.label_park_wagon_title:</label>
+                    </div>
+                    <div class="col-sm-3 mb-3">
+                        <select class="form-control" id="select-park-wagon" name="select-park-wagon"></select>
+                    </div>
+                    <div class="col-sm-6 mb-3 text-left">
+
+                    </div>
+                </div>
+                @*</form>*@
+            </div>
+
+        </div>
+        <div class="card-body">
+            <div class="form-row">
+                <div class="col-md-12 mb-3">
+                    <table class='table table-striped table-bordered' id="table-wms" style="width:100%" cellpadding="0"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

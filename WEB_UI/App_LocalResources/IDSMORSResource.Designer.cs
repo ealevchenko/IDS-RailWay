@@ -151,6 +151,24 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Cигналы движения вагонов на внешней сети ПАО «Укрзализныци».
+        /// </summary>
+        public static string report_description {
+            get {
+                return ResourceManager.GetString("report_description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на ОТЧЕТЫ.
+        /// </summary>
+        public static string report_title {
+            get {
+                return ResourceManager.GetString("report_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Государство собственник.
         /// </summary>
         public static string state_label {

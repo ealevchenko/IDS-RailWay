@@ -147,6 +147,12 @@
   <data name="park_title" xml:space="preserve">
     <value>ПАРК</value>
   </data>
+  <data name="report_description" xml:space="preserve">
+    <value>Cигналы движения вагонов на внешней сети ПАО «Укрзализныци»</value>
+  </data>
+  <data name="report_title" xml:space="preserve">
+    <value>ОТЧЕТЫ</value>
+  </data>
   <data name="state_label" xml:space="preserve">
     <value>Государство собственник</value>
   </data>

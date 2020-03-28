@@ -56,5 +56,11 @@ namespace WEB_UI.Areas.IDSMORS.Controllers
         {
             return View();
         }
+
+        [AccessOfDB(LogVisit = true)]
+        public ActionResult ReportWagons()
+        {
+            return View();
+        }
     }
 }

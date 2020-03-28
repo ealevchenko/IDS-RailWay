@@ -30,7 +30,7 @@ namespace WEB_UI
             //bootstrap --------------------------------------------------------------------------
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                         "~/Scripts/bootstrap.js",
-                        "~/Scripts/bootstrap-select.min.js",
+                        //"~/Scripts/bootstrap-select.min.js",
                         "~/Scripts/bootstrap-input-spinner.js"
                        //,"~/Scripts/popper.js"
                        ));

@@ -9,7 +9,7 @@ namespace EFIDS.Helper
 {
     public static class ids_library
     {
-        #region
+        #region Directory
 
         public static Directory_GenusWagons GetGenusWagons(Directory_GenusWagons g)
         {
@@ -170,8 +170,9 @@ namespace EFIDS.Helper
                 code = s.code,
             };
         }
+        #endregion
 
-
+        #region MORG
         public static CardsWagons GetCardsWagons(this CardsWagons c)
         {
             if (c == null) return null;
@@ -219,6 +220,55 @@ namespace EFIDS.Helper
             };
         }
 
+        public static WagonsMotionSignals GetWagonsMotionSignals(this WagonsMotionSignals w)
+        {
+            if (w == null) return null;
+            return new WagonsMotionSignals()
+            {
+              id = w.id,
+              id_wt = w.id_wt,
+              nvagon = w.nvagon,
+              st_disl = w.st_disl,
+              nst_disl = w.nst_disl,
+              kodop = w.kodop,
+              nameop = w.nameop,
+              full_nameop = w.full_nameop,
+              dt = w.dt,
+              st_form = w.st_form,
+              nst_form = w.nst_form,
+              idsost = w.idsost,
+              nsost = w.nsost,
+              st_nazn = w.st_nazn,
+              nst_nazn = w.nst_nazn,
+              ntrain = w.ntrain,
+              st_end = w.st_end,
+              nst_end = w.nst_end,
+              kgr = w.kgr,
+              nkgr = w.nkgr,
+              id_cargo = w.id_cargo,
+              kgrp = w.kgrp,
+              ves = w.ves,
+              updated = w.updated,
+              kgro = w.kgro,
+              km = w.km,
+              station_from = w.station_from,
+              station_end = w.station_end,
+              route = w.route,
+              shipper = w.shipper,
+              consignee = w.consignee,
+              location = w.location,
+              condition = w.condition,
+              type_flight = w.type_flight,
+              start_flight = w.start_flight,
+              start_turnover = w.start_turnover,
+              duration_flight = w.duration_flight,
+              duration_turnover = w.duration_turnover,
+              note = w.note,
+            };
+        }
+        #endregion
+
+        #region RWT
         public static ArrivalSostav GetArrivalSostav(this ArrivalSostav s)
         {
             return new ArrivalSostav()

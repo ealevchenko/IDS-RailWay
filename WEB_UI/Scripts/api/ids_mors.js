@@ -20,6 +20,12 @@ IDS_MORS.list_park_list_wagons = [];
 // Загрузить указаные справочники
 IDS_MORS.prototype.load = function (list, lockOff, callback) {
     var count = list.length;
+    if (count === 0) {
+        if (typeof callback === 'function') {
+            if (lockOff) { LockScreenOff(); }
+            callback();
+        }
+    }
     var obj = this;
     // Згрузка собственных таблиц
     $.each(list, function (i, el) {
@@ -677,6 +683,99 @@ IDS_MORS.prototype.deleteParksListWagonsArr = function (list, callback) {
         },
     });
 };
+//======= WagonsMotionSignals (Таблица списков вагонов парка вагонов) ======================================
+IDS_MORS.prototype.getWagonsMotionSignals = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/mors/wms/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_MORS.getWagonsMotionSignals", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//
+IDS_MORS.prototype.getWagonsMotionSignalsOfID = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/mors/wms/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_MORS.getWagonsMotionSignalsOfNum", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//
+IDS_MORS.prototype.getWagonsMotionSignalsOfNum = function (num, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/mors/wms/num/' + num,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_MORS.getWagonsMotionSignalsOfNum", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//
+IDS_MORS.prototype.getWagonsMotionSignalsOfPark = function (id_park, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/mors/wms/park/id/' + id_park,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_MORS.getWagonsMotionSignalsOfPark", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 /* ----------------------------------------------------------
 функции для работы с внутреним массивом
 -------------------------------------------------------------*/

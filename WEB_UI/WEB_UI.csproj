@@ -207,6 +207,7 @@
     <Compile Include="Areas\IDSMORS\IDSMORSAreaRegistration.cs" />
     <Compile Include="Areas\IDSRWT\Controllers\HomeController.cs" />
     <Compile Include="Areas\IDSRWT\IDSRWTAreaRegistration.cs" />
+    <Compile Include="Controllers\api\IDS_WagonsMotionSignalsController.cs" />
     <Compile Include="Controllers\api\IDS_Directory_StationController.cs" />
     <Compile Include="Controllers\api\IDS_ParksListWagonsController.cs" />
     <Compile Include="Controllers\api\IDS_ParksWagonsController.cs" />
@@ -465,6 +466,7 @@
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="Content\view\idsmors\electronic-cards.css" />
     <Content Include="Content\view\error.css" />
+    <Content Include="Content\view\idsmors\report_wagons.css" />
     <Content Include="Content\view\idsmors\park_wagons.css" />
     <Content Include="Content\view\idsrwt\incoming.css" />
     <Content Include="Content\view\idsrwt\arrival.css" />
@@ -764,6 +766,7 @@
     <Content Include="Areas\IDSMORS\Views\_ViewStart.cshtml" />
     <Content Include="Areas\IDSMORS\Views\Home\Index.cshtml" />
     <Content Include="Areas\IDSMORS\Views\Home\ElectronicCards.cshtml" />
+    <Content Include="Areas\IDSMORS\Views\Home\ReportWagons.cshtml" />
     <None Include="Areas\IDSMORS\Views\Shared\_IDSMORS1" />
     <Content Include="Content\DataTables\extensions\Buttons\css\mixins.scss" />
     <Content Include="Content\DataTables\extensions\Buttons\css\common.scss" />
@@ -1012,6 +1015,7 @@
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
     <Content Include="Scripts\view\idsmors\electronic_cards.js" />
+    <Content Include="Scripts\view\idsmors\report_wagons.js" />
     <Content Include="Scripts\view\idsmors\park_wagons.js" />
     <Content Include="Scripts\view\idsrwt\incoming.js" />
     <Content Include="Scripts\view\idsrwt\arrival.js" />
