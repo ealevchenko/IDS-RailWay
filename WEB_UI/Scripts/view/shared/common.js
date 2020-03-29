@@ -422,7 +422,16 @@ ALERT.prototype.clear_message = function () {
 // Вывести сообщение об ошибке
 ALERT.prototype.out_error_message = function (message) {
     if (this.alert) {
-        this.alert.show().removeClass('alert-success').addClass('alert-danger');
+        this.alert.show().removeClass('alert-success alert-warning').addClass('alert-danger');
+        if (message) {
+            this.alert.append(message).append($('<br />'));
+        }
+    }
+};
+// Вывести сообщение об ошибке
+ALERT.prototype.out_warning_message = function (message) {
+    if (this.alert) {
+        this.alert.show().removeClass('alert-success alert-danger').addClass('alert-warning');
         if (message) {
             this.alert.append(message).append($('<br />'));
         }
@@ -431,7 +440,7 @@ ALERT.prototype.out_error_message = function (message) {
 // Вывести информационное сообщение
 ALERT.prototype.out_info_message = function (message) {
     if (this.alert) {
-        this.alert.show().removeClass('alert-danger').addClass('alert-success');
+        this.alert.show().removeClass('alert-danger alert-warning').addClass('alert-success');
         if (message) {
             this.alert.text(message);
         }

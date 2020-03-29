@@ -150,12 +150,14 @@
 
 <div class="cd-cars-detali">
     <div class="container-fluid">
+        
         <form class="cd-form">
             <div class="card border-secondary">
                 <div class="card-header bg-secondary text-white" id="sostav-info">
                     <h1 id="sostav-title"></h1>
                 </div>
                 <div class="card-body">
+                    <div class="alert" id="car-detali-alert"></div>
                     <div class="form-row">
                         <div class="col-md-4 mb-1">
                             <div class="card border-success" id="card-arrived-cars">
@@ -180,8 +182,8 @@
                                     <button type="button" class="btn btn-warning btn" id="mode-edit">Edit</button>
                                     <button type="button" class="btn btn-success btn" id="mode-open">Open</button>
                                     <button type="button" class="btn btn-success btn" id="mode-close">Close</button>
+
                                     <fieldset class="border-primary">
-                                        <legend class="text-primary">@IDSRWTResource.title_EPD</legend>
                                         <div class="form-row">
                                             <div class="col-md-3 mb-1 text-left">
                                                 <label for="num_car" class="col-form-label">@IDSRWTResource.title_num_car:</label>
@@ -223,6 +225,11 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </fieldset>
+
+
+                                    <fieldset class="border-primary">
+                                        <legend class="text-primary">@IDSRWTResource.title_route_client</legend>
                                         <fieldset class="border-secondary">
                                             <legend class="text-secondary">@IDSRWTResource.title_uz_route_stn_from</legend>
                                             <div class="form-row">
@@ -286,13 +293,57 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 mb-1 text-left">
-                                                    <label for="uz_route_name_railway_on" class="col-form-label">@IDSRWTResource.title_border_cross_time</label>
-                                                    <input type="text" class="form-control" id="uz_route_name_railway_on" name="uz_route_name_railway_on" data-mode="all" data-edit="" data-form="transceiver">
+                                                    <label for="uz_route_border_cross_time" class="col-form-label">@IDSRWTResource.title_border_cross_time</label>
+                                                    <input type="text" class="form-control" id="uz_route_border_cross_time" name="uz_route_border_cross_time" data-mode="all" data-edit="" data-form="transceiver">
                                                     <div class="invalid-feedback">
                                                     </div>
                                                 </div>
                                             </div>
                                         </fieldset>
+                                        <div class="form-row">
+                                            <div class="col-md-3 mb-1 text-left">
+                                                <label for="uz_cargo_client_kod_from" class="col-form-label">@IDSRWTResource.title_client_kod:</label>
+                                                <input type="text" class="form-control" id="uz_cargo_client_kod_from" name="uz_cargo_client_kod_from" placeholder="CLIENT/kod" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9 mb-1 text-left">
+                                                <label for="uz_cargo_client_name_from" class="col-form-label">@IDSRWTResource.title_client_name_from</label>
+                                                <input type="text" class="form-control" id="uz_cargo_client_name_from" name="uz_cargo_client_name_from" placeholder="CLIENT/name" data-mode="view" data-edit="" data-form="transceiver">
+                                                <select class="form-control" id="uz_cargo_client_name_from" name="uz_cargo_client_name_from" placeholder="CLIENT/name" data-mode="edit" data-edit="" data-form="transceiver"></select>
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-3 mb-1 text-left">
+                                                <label for="uz_cargo_client_kod_on" class="col-form-label">@IDSRWTResource.title_client_kod:</label>
+                                                <input type="text" class="form-control" id="uz_cargo_client_kod_on" name="uz_cargo_client_kod_on" placeholder="CLIENT/kod" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9 mb-1 text-left">
+                                                <label for="uz_cargo_client_name_on" class="col-form-label">@IDSRWTResource.title_client_name_on</label>
+                                                @*<input type="text" class="form-control" id="uz_cargo_client_name_on" name="uz_cargo_client_name_on" placeholder="CLIENT/name" data-mode="view" data-edit="" data-form="transceiver">*@
+                                                <select class="form-control" id="uz_cargo_client_name_on" name="uz_cargo_client_name_on" placeholder="CLIENT/name" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-6 mb-1 text-left">
+                                                <div class="custom-control custom-checkbox" style="top:50%">
+                                                    <input type="checkbox" class="custom-control-input" id="uz_cargo_returns" name="uz_cargo_returns" data-mode="edit-global" data-edit="" data-form="transceiver">
+                                                    <label class="custom-control-label" for="uz_cargo_returns">@IDSRWTResource.title_cargo_returns</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-1 text-left">
+                                                <label for="uz_vag_station_on_amkr" class="col-form-label">@IDSRWTResource.title_station_on_amkr:</label>
+                                                <select class="form-control" id="uz_vag_station_on_amkr" name="uz_vag_station_on_amkr" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                        </div>
                                     </fieldset>
                                     <fieldset class="border-primary">
                                         <legend class="text-primary">@IDSRWTResource.title_vagon</legend>
@@ -306,6 +357,12 @@
                                         </div>
                                         <div class="form-row">
                                             <div class="col-md-4 mb-1 text-left">
+                                                <label for="card_vag_kod_adm" class="col-form-label">@IDSRWTResource.title_kod_adm:</label>
+                                                <input type="text" class="form-control" id="card_vag_kod_adm" name="card_vag_kod_adm" placeholder="VAGON/kod_adm" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 mb-1 text-left">
                                                 <label for="card_vag_name_adm" class="col-form-label">@IDSRWTResource.title_name_adm:</label>
                                                 <input type="text" class="form-control" id="card_vag_name_adm" name="card_vag_name_adm" data-mode="view" data-edit="" data-form="transceiver">
                                                 <select class="form-control" id="card_vag_name_adm" name="card_vag_name_adm" data-mode="edit" data-edit="" data-form="transceiver"></select>
@@ -313,31 +370,23 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-4 mb-1 text-left">
-                                                <label for="card_vag_name_operator" class="col-form-label">@IDSRWTResource.title_name_operator:</label>
-                                                <input type="text" class="form-control" id="card_vag_name_operator" name="card_vag_name_operator" data-mode="view" data-edit="" data-form="transceiver">
-                                                <select class="form-control" id="card_vag_name_operator" name="card_vag_name_operator" data-mode="edit" data-edit="" data-form="transceiver"></select>
-                                                <div class="invalid-feedback">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mb-1 text-left">
-                                                <label for="card_vag_name_owner" class="col-form-label">@IDSRWTResource.title_name_owner:</label>
-                                                <input type="text" class="form-control" id="card_vag_name_owner" name="card_vag_name_owner" data-mode="view" data-edit="" data-form="transceiver">
-                                                <select class="form-control" id="card_vag_name_owner" name="card_vag_name_owner" data-mode="edit" data-edit="" data-form="transceiver"></select>
-                                                <div class="invalid-feedback">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="col-md-4 mb-1 text-left">
                                                 <label for="card_vag_name_rod_vag" class="col-form-label">@IDSRWTResource.title_name_rod_vag:</label>
                                                 <input type="text" class="form-control" id="card_vag_name_rod_vag" name="card_vag_name_rod_vag" data-mode="view" data-edit="" data-form="transceiver">
                                                 <select class="form-control" id="card_vag_name_rod_vag" name="card_vag_name_rod_vag" data-mode="edit" data-edit="" data-form="transceiver"></select>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="form-row">
                                             <div class="col-md-4 mb-1 text-left">
                                                 <label for="card_vag_usl_tip" class="col-form-label">@IDSRWTResource.title_usl_tip:</label>
                                                 <input type="text" class="form-control" id="card_vag_usl_tip" name="card_vag_usl_tip" placeholder="VAGON/usl_tip" data-mode="all" data-edit="" data-form="transceiver">
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 mb-1 text-left">
+                                                <label for="uz_vag_wagons_condition" class="col-form-label">@IDSRWTResource.title_wagons_condition:</label>
+                                                <select class="form-control" id="uz_vag_wagons_condition" name="uz_vag_wagons_condition" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -395,30 +444,47 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="form-row">
-                                            <div class="col-md-6 mb-1 text-left">
-                                                <label for="uz_vag_wagons_condition" class="col-form-label">@IDSRWTResource.title_wagons_condition:</label>
-                                                <select class="form-control" id="uz_vag_wagons_condition" name="uz_vag_wagons_condition" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
+                                            <div class="col-md-4 mb-1 text-left">
+                                                <label for="card_vag_name_owner" class="col-form-label">@IDSRWTResource.title_name_owner:</label>
+                                                <input type="text" class="form-control" id="card_vag_name_owner" name="card_vag_name_owner" data-mode="view" data-edit="" data-form="transceiver">
+                                                <select class="form-control" id="card_vag_name_owner" name="card_vag_name_owner" data-mode="edit" data-edit="" data-form="transceiver"></select>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
-                                            <div class="col-md-6 mb-1 text-left">
-                                                <label for="uz_vag_note" class="col-form-label">@IDSRWTResource.title_note:</label>
-                                                <textarea class="form-control" id="uz_vag_note" name="uz_vag_note" placeholder="" data-mode="edit-global" data-edit="" data-form="transceiver"></textarea>
+                                            <div class="col-md-4 mb-1 text-left">
+                                                <label for="card_vag_name_operator" class="col-form-label">@IDSRWTResource.title_name_operator:</label>
+                                                <input type="text" class="form-control" id="card_vag_name_operator" name="card_vag_name_operator" data-mode="view" data-edit="" data-form="transceiver">
+                                                <select class="form-control" id="card_vag_name_operator" name="card_vag_name_operator" data-mode="edit" data-edit="" data-form="transceiver"></select>
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 mb-1 text-left">
+                                                <label for="card_vag_limiting_loading" class="col-form-label">@IDSRWTResource.title_limiting_loading:</label>
+                                                <input type="number" class="form-control" id="card_vag_limiting_loading" name="card_vag_limiting_loading" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-row">
                                             <div class="col-md-6 mb-1 text-left">
-                                                <label for="uz_vag_station_on_amkr" class="col-form-label">@IDSRWTResource.title_station_on_amkr:</label>
-                                                <select class="form-control" id="uz_vag_station_on_amkr" name="uz_vag_station_on_amkr" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
+                                                <label for="card_vag_type_ownership" class="col-form-label">@IDSRWTResource.title_type_ownership:</label>
+                                                <input type="number" class="form-control" id="card_vag_type_ownership" name="card_vag_type_ownership" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-6 mb-1 text-left">
                                                 <label for="uz_vag_not_load" class="col-form-label">@IDSRWTResource.title_not_load:</label>
                                                 <select class="form-control" id="uz_vag_not_load" name="uz_vag_not_load" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-12 mb-1 text-left">
+                                                <label for="uz_vag_note" class="col-form-label">@IDSRWTResource.title_note:</label>
+                                                <textarea class="form-control" id="uz_vag_note" name="uz_vag_note" placeholder="" data-mode="edit-global" data-edit="" data-form="transceiver"></textarea>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -462,44 +528,6 @@
                                     </fieldset>
                                     <fieldset class="border-primary">
                                         <legend class="text-primary">@IDSRWTResource.title_cargo</legend>
-                                        <div class="form-row">
-                                            <div class="col-md-12 mb-1 text-left">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="uz_cargo_returns" name="uz_cargo_returns" data-mode="edit-global" data-edit="" data-form="transceiver">
-                                                    <label class="custom-control-label" for="uz_cargo_returns">@IDSRWTResource.title_cargo_returns</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="col-md-3 mb-1 text-left">
-                                                <label for="uz_cargo_client_kod_from" class="col-form-label">@IDSRWTResource.title_client_kod:</label>
-                                                <input type="text" class="form-control" id="uz_cargo_client_kod_from" name="uz_cargo_client_kod_from" placeholder="CLIENT/kod" data-mode="view-global" data-edit="" data-form="transceiver">
-                                                <div class="invalid-feedback">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-9 mb-1 text-left">
-                                                <label for="uz_cargo_client_name_from" class="col-form-label">@IDSRWTResource.title_client_name_from</label>
-                                                <input type="text" class="form-control" id="uz_cargo_client_name_from" name="uz_cargo_client_name_from" placeholder="CLIENT/name" data-mode="view" data-edit="" data-form="transceiver">
-                                                <select class="form-control" id="uz_cargo_client_name_from" name="uz_cargo_client_name_from" placeholder="CLIENT/name" data-mode="edit" data-edit="" data-form="transceiver"></select>
-                                                <div class="invalid-feedback">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="col-md-3 mb-1 text-left">
-                                                <label for="uz_cargo_client_kod_on" class="col-form-label">@IDSRWTResource.title_client_kod:</label>
-                                                <input type="text" class="form-control" id="uz_cargo_client_kod_on" name="uz_cargo_client_kod_on" placeholder="CLIENT/kod" data-mode="view-global" data-edit="" data-form="transceiver">
-                                                <div class="invalid-feedback">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-9 mb-1 text-left">
-                                                <label for="uz_cargo_client_name_on" class="col-form-label">@IDSRWTResource.title_client_name_on</label>
-                                                @*<input type="text" class="form-control" id="uz_cargo_client_name_on" name="uz_cargo_client_name_on" placeholder="CLIENT/name" data-mode="view" data-edit="" data-form="transceiver">*@
-                                                <select class="form-control" id="uz_cargo_client_name_on" name="uz_cargo_client_name_on" placeholder="CLIENT/name" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
-                                                <div class="invalid-feedback">
-                                                </div>
-                                            </div>
-                                        </div>
                                         <div class="form-row">
                                             <div class="col-md-3 mb-1 text-left">
                                                 <label for="uz_cargo_kod_etsng" class="col-form-label">@IDSRWTResource.title_kod_etsng:</label>
@@ -694,134 +722,6 @@
 
                                     </fieldset>
 
-
-
-                                    @*<div id="accordion" role="tablist" aria-multiselectable="true">
-                                            <div class="card border-primary">
-                                                <div class="card-header text-left" role="tab" id="headingOne">
-                                                    <div class="mb-0">
-                                                        <a data-toggle="collapse" data-parent="#accordion" href="#epd-cars" aria-expanded="false" aria-controls="epd-cars" class="collapsed">
-                                                            <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                                                            <h3>ЭПД</h3>
-                                                            <p>Электронно-перевозочный документ</p>
-                                                        </a>
-                                                        <i class="fa fa-angle-right" aria-hidden="true"></i>
-                                                    </div>
-                                                </div>
-                                                <div id="epd-cars" class="collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false" style="">
-                                                    <div class="card-block">
-                                                        <div class="form-row">
-                                                            <div class="col-md-4 mb-1">
-                                                                <label for="epd_num_doc" class="col-form-label-sm">@IDSRWTResource.title_num_doc:</label>
-                                                                <input type="text" class="form-control-sm" id="epd_num_doc" placeholder="" name="epd_num_doc" required="required">
-                                                                <div class="invalid-feedback">
-
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4 mb-1">
-                                                                <label for="epd_num_rev" class="col-form-label-sm">@IDSRWTResource.title_num_rev:</label>
-                                                                <input type="number" class="form-control-sm" id="epd_num_rev" placeholder="" name="epd_num_rev" required="required">
-                                                                <div class="invalid-feedback">
-
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4 mb-1">
-                                                                <label for="otpr_nom_doc" class="col-form-label-sm">@IDSRWTResource.title_otpr_nom_doc:</label>
-                                                                <input type="text" class="form-control-sm" id="otpr_nom_doc_edit" placeholder="" name="otpr_nom_doc" required="required">
-                                                                <div class="invalid-feedback">
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card border-primary">
-                                                <div class="card-header text-left" role="tab" id="headingTwo">
-                                                    <div class="mb-0">
-                                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
-                                                            <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                                                            <h3>Collapsible Group Item</h3>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
-                                                        </a>
-                                                        <i class="fa fa-angle-right" aria-hidden="true"></i>
-                                                    </div>
-                                                </div>
-                                                <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" aria-expanded="false">
-                                                    <div class="card-block">
-                                                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card border-primary">
-                                                <div class="card-header text-left" role="tab" id="headingThree">
-                                                    <div class="mb-0">
-                                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
-                                                            <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                                                            <h3>Collapsible Group Item</h3>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
-                                                        </a>
-                                                        <i class="fa fa-angle-right" aria-hidden="true"></i>
-                                                    </div>
-                                                </div>
-                                                <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree" aria-expanded="false">
-                                                    <div class="card-block">
-                                                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card border-primary">
-                                                <div class="card-header text-left" role="tab" id="headingOne">
-                                                    <div class="mb-0">
-                                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
-                                                            <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                                                            <h3>Collapsible Group Item</h3>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
-                                                        </a>
-                                                        <i class="fa fa-angle-right" aria-hidden="true"></i>
-                                                    </div>
-                                                </div>
-                                                <div id="collapseFour" class="collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false" style="">
-                                                    <div class="card-block">
-                                                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card border-primary">
-                                                <div class="card-header text-left" role="tab" id="headingTwo">
-                                                    <div class="mb-0">
-                                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
-                                                            <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                                                            <h3>Collapsible Group Item</h3>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
-                                                        </a>
-                                                        <i class="fa fa-angle-right" aria-hidden="true"></i>
-                                                    </div>
-                                                </div>
-                                                <div id="collapseFive" class="collapse" role="tabpanel" aria-labelledby="headingTwo" aria-expanded="false">
-                                                    <div class="card-block">
-                                                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card border-primary">
-                                                <div class="card-header text-left" role="tab" id="headingThree">
-                                                    <div class="mb-0">
-                                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
-                                                            <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                                                            <h3>Collapsible Group Item</h3>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
-                                                        </a>
-                                                        <i class="fa fa-angle-right" aria-hidden="true"></i>
-                                                    </div>
-                                                </div>
-                                                <div id="collapseSix" class="collapse" role="tabpanel" aria-labelledby="headingThree" aria-expanded="false">
-                                                    <div class="card-block">
-                                                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>*@
                                 </div>
                             </div>
                         </div>
@@ -851,3 +751,129 @@
     </div>
 
 </div> <!-- .cd-project-content -->
+@*<div id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="card border-primary">
+            <div class="card-header text-left" role="tab" id="headingOne">
+                <div class="mb-0">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#epd-cars" aria-expanded="false" aria-controls="epd-cars" class="collapsed">
+                        <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                        <h3>ЭПД</h3>
+                        <p>Электронно-перевозочный документ</p>
+                    </a>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </div>
+            </div>
+            <div id="epd-cars" class="collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false" style="">
+                <div class="card-block">
+                    <div class="form-row">
+                        <div class="col-md-4 mb-1">
+                            <label for="epd_num_doc" class="col-form-label-sm">@IDSRWTResource.title_num_doc:</label>
+                            <input type="text" class="form-control-sm" id="epd_num_doc" placeholder="" name="epd_num_doc" required="required">
+                            <div class="invalid-feedback">
+
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-1">
+                            <label for="epd_num_rev" class="col-form-label-sm">@IDSRWTResource.title_num_rev:</label>
+                            <input type="number" class="form-control-sm" id="epd_num_rev" placeholder="" name="epd_num_rev" required="required">
+                            <div class="invalid-feedback">
+
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-1">
+                            <label for="otpr_nom_doc" class="col-form-label-sm">@IDSRWTResource.title_otpr_nom_doc:</label>
+                            <input type="text" class="form-control-sm" id="otpr_nom_doc_edit" placeholder="" name="otpr_nom_doc" required="required">
+                            <div class="invalid-feedback">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card border-primary">
+            <div class="card-header text-left" role="tab" id="headingTwo">
+                <div class="mb-0">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
+                        <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                        <h3>Collapsible Group Item</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
+                    </a>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </div>
+            </div>
+            <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" aria-expanded="false">
+                <div class="card-block">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                </div>
+            </div>
+        </div>
+        <div class="card border-primary">
+            <div class="card-header text-left" role="tab" id="headingThree">
+                <div class="mb-0">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
+                        <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                        <h3>Collapsible Group Item</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
+                    </a>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </div>
+            </div>
+            <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree" aria-expanded="false">
+                <div class="card-block">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                </div>
+            </div>
+        </div>
+        <div class="card border-primary">
+            <div class="card-header text-left" role="tab" id="headingOne">
+                <div class="mb-0">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
+                        <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                        <h3>Collapsible Group Item</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
+                    </a>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </div>
+            </div>
+            <div id="collapseFour" class="collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false" style="">
+                <div class="card-block">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                </div>
+            </div>
+        </div>
+        <div class="card border-primary">
+            <div class="card-header text-left" role="tab" id="headingTwo">
+                <div class="mb-0">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
+                        <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                        <h3>Collapsible Group Item</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
+                    </a>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </div>
+            </div>
+            <div id="collapseFive" class="collapse" role="tabpanel" aria-labelledby="headingTwo" aria-expanded="false">
+                <div class="card-block">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                </div>
+            </div>
+        </div>
+        <div class="card border-primary">
+            <div class="card-header text-left" role="tab" id="headingThree">
+                <div class="mb-0">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
+                        <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                        <h3>Collapsible Group Item</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
+                    </a>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </div>
+            </div>
+            <div id="collapseSix" class="collapse" role="tabpanel" aria-labelledby="headingThree" aria-expanded="false">
+                <div class="card-block">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                </div>
+            </div>
+        </div>
+    </div>*@

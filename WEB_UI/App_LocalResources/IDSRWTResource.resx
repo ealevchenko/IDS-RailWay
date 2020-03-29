@@ -201,11 +201,8 @@
   <data name="title_distance_way" xml:space="preserve">
     <value>Тарифное расстояние</value>
   </data>
-  <data name="title_EPD" xml:space="preserve">
-    <value>Электронно-перевозочный документ</value>
-  </data>
   <data name="title_group_cargo" xml:space="preserve">
-    <value>Груз</value>
+    <value>Группа груза</value>
   </data>
   <data name="title_gruzp_doc" xml:space="preserve">
     <value>Грузоподъемность(ЭПД),т</value>
@@ -244,7 +241,7 @@
     <value>Собственник</value>
   </data>
   <data name="title_name_plat" xml:space="preserve">
-    <value>Платильщик</value>
+    <value>Платиельщик с ЭПД</value>
   </data>
   <data name="title_name_rod_vag" xml:space="preserve">
     <value>Род вагона</value>
@@ -374,5 +371,17 @@
   </data>
   <data name="title_warehouse_shop" xml:space="preserve">
     <value>Цех</value>
+  </data>
+  <data name="title_kod_adm" xml:space="preserve">
+    <value>Код Адм.</value>
+  </data>
+  <data name="title_limiting_loading" xml:space="preserve">
+    <value>Ограничение погрузки</value>
+  </data>
+  <data name="title_route_client" xml:space="preserve">
+    <value>Маршруты и клиенты</value>
+  </data>
+  <data name="title_type_ownership" xml:space="preserve">
+    <value>Признак собственности</value>
   </data>
 </root>

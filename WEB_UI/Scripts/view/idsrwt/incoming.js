@@ -31,6 +31,10 @@
                 'title_button_wagon': 'Вагоны',
                 'title_button_wagon_accept': 'Принять вагоны',
                 'title_button_wagon_view': 'Показать вагоны',
+
+                'mess_searsh_epd': 'Поиск ЭПД ...',
+                'mess_not_searsh_epd': 'ЭПД не найден, попробуйте найдити документ по номеру вагона (воспользовавшись кнопкой поиска справа от поля "№ вагона") или по номеру накладной (колонка "Сведения ЭПД").',
+
             },
             'en':  //default language: English
             {
@@ -605,6 +609,9 @@
             ids_inc: null,
             id_sostav: null,
             sostav: null,
+            alert: null,
+            otpr: null,
+
             // Поля
             sostav_title: $('h1#sostav-title'),
             // режимы
@@ -634,12 +641,23 @@
             uz_doc_num_new_doc: $('input#uz_doc_num_new_doc'),
             arrival_cars_position_arrival: $('input#arrival_cars_position_arrival').inputSpinner(),
 
+            // Маршруты клиенты
+            uz_route_stn_from: $('input#uz_route_stn_from'),
+            uz_route_name_from: $('input#uz_route_name_from'),
+            uz_route_name_railway_from: $('input#uz_route_name_railway_from'),
+            uz_route_stn_on: $('input#uz_route_stn_on'),
+            uz_route_name_on: $('input#uz_route_name_on'),
+            uz_route_name_railway_on: $('input#uz_route_name_railway_on'),
+            uz_route_stn_border: $('input#uz_route_stn_border'),
+            uz_route_stn_border_name: $('input#uz_route_stn_border_name'),
+            uz_route_border_cross_time: $('input#uz_route_border_cross_time'),
 
             init: function (lang, user_name) {
                 cars_detali.lang = lang;
                 cars_detali.user = user_name;
                 // создадим классы
                 cars_detali.ids_inc = new IDS_RWT_INCOMING(cars_detali.lang); // Создадим класс IDS_RWT_INCOMING
+                alert = new ALERT($('div#car-detali-alert')),// Создадим класс ALERTG
 
                 // Sumbit form
                 cars_detali.content.find("form").on("submit", function (event) {
@@ -713,6 +731,11 @@
             },
             // Очистить все ячейки
             clear: function () {
+                // Очистить сообщения
+                alert.clear_message();
+                // Очистить не принятые вагоны.. ! добавить остальные ячейки
+                $('div#list-cars-not-arrival').empty();
+
                 cars_detali.clear_cars_epd(); // Очистить ячейки ЭПД
             },
             // Очистить ячейки ЭПД
@@ -723,14 +746,56 @@
             },
             // показать электронно перевозочный документ
             view_cars_epd: function (num, otpr) {
+                cars_detali.set_open_edit();   // Перевести в режим "open-edit"
                 cars_detali.clear_cars_epd();
                 cars_detali.num_car.val(num);
                 if (otpr !== null) {
+                    // Документ найден
                     cars_detali.search_cars_num_doc.prop("disabled", true);
                     cars_detali.uz_doc_num_doc.val(otpr.otprdp === null ? otpr.nom_doc : otpr.otprdp.nom_osn_doc);
                     cars_detali.uz_doc_num_new_doc.val(otpr.otprdp !== null ? otpr.nom_doc : null);
+                    // Маршруты клиенты
+                    var stn_from = null, name_from = null, stn_to = null, name_to = null, cross_time = null, stn = null, stn_name = null;
+                    if (otpr.route.length > 0) {
+                        stn_from = otpr.route[0].stn_from;
+                        name_from = otpr.route[0].name_from;
+                        stn_to = otpr.route[0].stn_to;
+                        name_to = otpr.route[0].name_to;
+                        if (otpr.route[0].joint.length > 0) {
+                            otpr.route[0].joint.each(function (i, el) {
+                                el.each(function (i, el) {
+                                    if (el.admin === 22) {
+                                        cross_time = el.cross_time;
+                                        stn = el.stn;
+                                        stn_name = el.stn_name;
+                                    }
+                                })
+                            })
+                        }
+                    }
+                    cars_detali.uz_route_stn_from.val(stn_from);
+                    cars_detali.uz_route_name_from.val(name_from);
+                    cars_detali.uz_route_name_railway_from.val('');
+                    cars_detali.uz_route_stn_on.val(stn_to);
+                    cars_detali.uz_route_name_on.val(name_to);
+                    cars_detali.uz_route_name_railway_on.val('');
+                    cars_detali.uz_route_stn_border.val(stn);
+                    cars_detali.uz_route_stn_border_name.val(stn_name);
+                    cars_detali.uz_route_border_cross_time.val(cross_time);
+
+
                 } else {
+                    // Документ не найден
                     cars_detali.search_cars_num_doc.prop("disabled", false);
+                    cars_detali.uz_route_stn_from.val('');
+                    cars_detali.uz_route_name_from.val('');
+                    cars_detali.uz_route_name_railway_from.val('');
+                    cars_detali.uz_route_stn_on.val('');
+                    cars_detali.uz_route_name_on.val('');
+                    cars_detali.uz_route_name_railway_on.val('');
+                    cars_detali.uz_route_stn_border.val('');
+                    cars_detali.uz_route_stn_border_name.val('');
+                    cars_detali.uz_route_border_cross_time.val('');
                 }
 
             },
@@ -740,41 +805,47 @@
                 $.each(list, function (i, el) {
                     $('div#list-cars-not-arrival').append('<a class="list-group-item list-group-item-action ' + (el.consignee === 7932 ? 'list-group-item-success' : '') + '" id="' + el.id + '" data-toggle="list" href="#" role="tab" aria-controls="">' + el.num + '</a>')
                 });
+                // Определим событие
                 $('#list-cars-not-arrival a').on('click', function (e) {
                     e.preventDefault()
                     var id = $(this).attr('id');
                     var car = getObjOflist(cars_detali.sostav.ArrivalCars, 'id', id);
                     if (car !== null) {
                         // Если есть вагон найти и ЭПД документ
+                        LockScreen(langView('mess_searsh_epd', langs));
+                        alert.clear_message();
                         cars_detali.ids_inc.getOTPR_UZ_DOCOfNum(car.num_doc, function (result_otpr) {
-                            var otpr = result_otpr
-                            cars_detali.view_cars_epd(car.num, otpr);
+                            cars_detali.otpr = result_otpr
+                            if (result_otpr === null) {
+                                alert.out_warning_message(langView('mess_not_searsh_epd', langs));
+                            }
+
+                            cars_detali.view_cars_epd(car.num, cars_detali.otpr);
+                            LockScreenOff();
                         });
                     }
                 });
             },
             // Показать информацию по составу
             view: function (id) {
-                cars_detali.clear();  // Очистить все ячейки
-                cars_detali.set_close_edit();
+                cars_detali.clear();            // Очистить все ячейки
+                cars_detali.set_close_edit();   // Перевести в режим "close" по умолчанию
                 if (id === null) return;
                 cars_detali.id_sostav = id;
                 // Получим текуший состав
+                LockScreen(langView('mess_delay', langs));
                 cars_detali.ids_inc.getArrivalSostavOfID(cars_detali.id_sostav, function (result_sostav) {
                     cars_detali.sostav = result_sostav[0];
-                    // Определим доступность режима редактировать
-                    if (cars_detali.sostav.status < 2) {
-                        // Состав закрыт или отклонен - запрет редактирования
-                        //cars_detali.set_open_edit();
-                    };
+                    //// Определим доступность режима редактировать
+                    //if (cars_detali.sostav.status < 2) {
+                    //    // Состав закрыт или отклонен - запрет редактирования
+                    //    //cars_detali.set_open_edit();
+                    //};
                     // Покаать информацию по составу
                     cars_detali.sostav_title.text('Информация по составу (№ поезда :' + cars_detali.sostav.train + ', Индекс поезда :' + cars_detali.sostav.composition_index + ', Прибыл:' + cars_detali.sostav.date_arrival + ')');
-                    // Очистить список не принятых вагонов
-                    $('div#list-cars-not-arrival').empty();
+                    // Показать список не принятых вагонов
                     cars_detali.view_cars_not_arrival(cars_detali.sostav.ArrivalCars.filter(function (i) { return i.arrival === null ? true : false; }));
-
-
-
+                    LockScreenOff();
                 });
                 // Показать страницу детально
                 this.content.addClass('is-visible');

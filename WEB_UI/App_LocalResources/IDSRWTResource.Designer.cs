@@ -19,7 +19,7 @@ namespace WEB_UI.App_LocalResources {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class IDSRWTResource {
@@ -313,16 +313,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Электронно-перевозочный документ.
-        /// </summary>
-        public static string title_EPD {
-            get {
-                return ResourceManager.GetString("title_EPD", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Груз.
+        ///   Ищет локализованную строку, похожую на Группа груза.
         /// </summary>
         public static string title_group_cargo {
             get {
@@ -345,6 +336,15 @@ namespace WEB_UI.App_LocalResources {
         public static string title_gruzp_uz {
             get {
                 return ResourceManager.GetString("title_gruzp_uz", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Код Адм..
+        /// </summary>
+        public static string title_kod_adm {
+            get {
+                return ResourceManager.GetString("title_kod_adm", resourceCulture);
             }
         }
         
@@ -394,6 +394,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Ограничение погрузки.
+        /// </summary>
+        public static string title_limiting_loading {
+            get {
+                return ResourceManager.GetString("title_limiting_loading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Страна.
         /// </summary>
         public static string title_name_adm {
@@ -439,7 +448,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Платильщик.
+        ///   Ищет локализованную строку, похожую на Платиельщик с ЭПД.
         /// </summary>
         public static string title_name_plat {
             get {
@@ -556,6 +565,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Маршруты и клиенты.
+        /// </summary>
+        public static string title_route_client {
+            get {
+                return ResourceManager.GetString("title_route_client", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на SAP (Входящая поставка).
         /// </summary>
         public static string title_sap_inbound_delivery {
@@ -642,6 +660,15 @@ namespace WEB_UI.App_LocalResources {
         public static string title_train_invalid {
             get {
                 return ResourceManager.GetString("title_train_invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Признак собственности.
+        /// </summary>
+        public static string title_type_ownership {
+            get {
+                return ResourceManager.GetString("title_type_ownership", resourceCulture);
             }
         }
         
