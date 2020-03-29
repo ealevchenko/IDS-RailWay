@@ -27,6 +27,8 @@ namespace EFIDS.Entities
         [StringLength(200)]
         public string note { get; set; }
 
+        public DateTime? date_adoption_act { get; set; }
+
         public DateTime? arrival { get; set; }
 
         [StringLength(50)]
