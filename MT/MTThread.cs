@@ -76,7 +76,8 @@ namespace MT
             DateTime dt_start = DateTime.Now;
             try
             {
-                string host = "159.224.194.27";
+                string host_res = "159.224.194.27";
+                string host = "85.198.128.130";
                 int port = 222;
                 string user = "arcelors";
                 string psw = "$fh#ER2J63"; // Fjt8Fyeq45
@@ -85,6 +86,7 @@ namespace MT
                 // считать настройки
                 try
                 {
+                    host_res = ConfigurationManager.AppSettings["Host_res"].ToString();
                     host = ConfigurationManager.AppSettings["Host"].ToString();
                     port = int.Parse(ConfigurationManager.AppSettings["Port"].ToString());
                     user = ConfigurationManager.AppSettings["User"].ToString();
