@@ -1,7 +1,10 @@
 {
     "acts": [ ],
     "carrier": [ { "address": null, "esr_in": 165909, "esr_name_in": "ПPИДBИHCKAЯ", "esr_name_out": "CЛOBEЧHO (ЭKCП_)", "esr_out": 151200, "kod": 21, "name": "БЧ", "sector_num": null, "status": null, "zd_kod_in": 21, "zd_kod_out": 21 }, { "address": null, "esr_in": 348303, "esr_name_in": "БEPEЖECTЬ (ЭKCП_)", "esr_name_out": "KPИBOЙ POГ ГЛABHЫЙ", "esr_out": 467004, "kod": 22, "name": "УЗ", "sector_num": null, "status": null, "zd_kod_in": 22, "zd_kod_out": 22 } ],
-    "client": [ { "client_loc": [ ], "account": null, "adress": "211321 211321 БEЛAPУCЬ Г_BИTEБCK УЛ_ЦEHTPAЛЬHAЯ 23", "bank": null, "business_unit_num": null, "carrier_kod": null, "carrier_name": null, "city": null, "email": null, "fax": null, "kod": "5350", "mfo": null, "name": "OAO \"ДOЛOMИT\"", "nds_pay_code": null, "okpo": "2945852000", "phone": null, "representative_pib": null, "type": "1" }, { "client_loc": [ ], "account": null, "adress": "Дніпропетровська область, м. Кривий Ріг ВУЛ. OPДЖOHІKІДЗE, БУД.  1", "bank": null, "business_unit_num": null, "carrier_kod": null, "carrier_name": null, "city": null, "email": null, "fax": null, "kod": "7932", "mfo": null, "name": "ПАТ \"АРСЕЛОРМІТТАЛ КРИВИЙ РІГ\"", "nds_pay_code": null, "okpo": "24432974", "phone": null, "representative_pib": null, "type": "2" } ],
+    "client": [
+        { "client_loc": [ ], "account": null, "adress": "211321 211321 БEЛAPУCЬ Г_BИTEБCK УЛ_ЦEHTPAЛЬHAЯ 23", "bank": null, "business_unit_num": null, "carrier_kod": null, "carrier_name": null, "city": null, "email": null, "fax": null, "kod": "5350", "mfo": null, "name": "OAO \"ДOЛOMИT\"", "nds_pay_code": null, "okpo": "2945852000", "phone": null, "representative_pib": null, "type": "1" },
+        { "client_loc": [ ], "account": null, "adress": "Дніпропетровська область, м. Кривий Ріг ВУЛ. OPДЖOHІKІДЗE, БУД.  1", "bank": null, "business_unit_num": null, "carrier_kod": null, "carrier_name": null, "city": null, "email": null, "fax": null, "kod": "7932", "mfo": null, "name": "ПАТ \"АРСЕЛОРМІТТАЛ КРИВИЙ РІГ\"", "nds_pay_code": null, "okpo": "24432974", "phone": null, "representative_pib": null, "type": "2" }
+    ],
     "com_cond": [ ],
     "cont": [ ],
     "frontier_mark": [ { "carrier_kod": 22, "carrier_name": "УЗ", "cross_date": "2020-02-13T20:00:00", "direction": 1, "esr": 348303, "esr_name": "Бережесть (эксп.)", "zd_kod": 22 } ],
