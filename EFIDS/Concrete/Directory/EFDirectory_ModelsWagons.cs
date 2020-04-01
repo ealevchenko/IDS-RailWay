@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace EFIDS.Concrete
 {
 
-    public class EFDirectory_ModelsWagons : IRepository<Directory_ModelsWagons>
+    public class EFDirectory_ModelsWagons : IStringRepository<Directory_ModelsWagons>
     {
 
         private EFDbContext db;
@@ -159,18 +159,6 @@ namespace EFIDS.Concrete
         {
             Dispose(true);
             GC.SuppressFinalize(this);
-        }
-
-
-
-        public Directory_ModelsWagons Get(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(int id)
-        {
-            throw new NotImplementedException();
         }
 
 

@@ -16,9 +16,9 @@ namespace WEB_UI.Controllers.api
     [RoutePrefix("api/ids/directory/models_wagons")]
     public class IDS_Directory_ModelsWagonsController : ApiController
     {
-        protected IRepository<Directory_ModelsWagons> ef_mw;
+        protected IStringRepository<Directory_ModelsWagons> ef_mw;
 
-        public IDS_Directory_ModelsWagonsController(IRepository<Directory_ModelsWagons> mw)
+        public IDS_Directory_ModelsWagonsController(IStringRepository<Directory_ModelsWagons> mw)
         {
             this.ef_mw = mw;
         }
