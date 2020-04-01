@@ -250,7 +250,6 @@ var cd_initSelect = function (obj_select, property, data, callback_option, value
     return obj_select;
 };
 
-
 var cd_initDateTimeRangePicker = function (obj_select, property, close_function) {
     var dtrp = {
         obj: null,
@@ -322,7 +321,16 @@ $.datepicker.regional.ru = {
     showMonthAfterYear: false,
     yearSuffix: ""
 };
-
+// Получить список для выбора в компоненте JQuery UI Autocomplete
+var getAutocompleteList = function (list, field_value) {
+    var alist = [];
+    if (list) {
+        for (i = 0, j = list.length; i < j; i++) {
+            alist.push({ value: (field_value==='value' ? list[i].value : list[i].text), label: list[i].value + " - " + list[i].text });
+        }
+    }
+    return alist;
+};
 /* ----------------------------------------------------------
     Спомогательные функции
 -------------------------------------------------------------*/

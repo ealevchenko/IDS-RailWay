@@ -11,8 +11,8 @@ var IDS_RWT_INCOMING = function (lang) {
 IDS_RWT_INCOMING.list_arrival = [];
 
 // Загрузить указаные справочники
-IDS_RWT_INCOMING.prototype.load = function (list, lockOff, callback) {
-    var count = list.length;
+IDS_RWT_INCOMING.prototype.load = function (list_incoming, list_ids_dir, list_uz_dir, lockOff, callback) {
+    var count = list_incoming.length + (list_ids_dir.length > 0 ? 1 : 0) + (list_uz_dir.length > 0 ? 1 : 0);
     if (count === 0) {
         if (typeof callback === 'function') {
             if (lockOff) { LockScreenOff(); }
@@ -20,33 +20,40 @@ IDS_RWT_INCOMING.prototype.load = function (list, lockOff, callback) {
         }
     }
     var obj = this;
+    // Загрузка справочников ИДС
+    obj.ids_dir.load(list_ids_dir, lockOff, function () {
+        count -= 1;
+        if (count === 0) {
+            if (typeof callback === 'function') {
+                if (lockOff) { LockScreenOff(); }
+                callback();
+            }
+        }
+    });
+    // Загрузка справочников УЗ
+    obj.uz_dir.load(list_uz_dir, lockOff, function () {
+        count -= 1;
+        if (count === 0) {
+            if (typeof callback === 'function') {
+                if (lockOff) { LockScreenOff(); }
+                callback();
+            }
+        }
+    });
     // Згрузка собственных таблиц
-    $.each(list, function (i, el) {
-        // Згрузка библиотек справочников ИДС
-        if (el === 'ids') {
-            obj.ids_dir.load(['station'], lockOff, function () {
+    $.each(list_incoming, function (i, el) {
+        if (el === 'arrival') {
+            IDS_RWT_INCOMING.prototype.getArrivalSostav(function (result_arrival) {
+                obj.list_arrival = result_arrival;
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
                         if (lockOff) { LockScreenOff(); }
-                        callback();
+                        callback(result_arrival);
                     }
                 }
             });
         };
-
-        //if (el === 'list_consignee') {
-        //    METRANS.prototype.getConsignee(function (result_consignee) {
-        //        obj.list_consignee = result_consignee;
-        //        count -= 1;
-        //        if (count === 0) {
-        //            if (typeof callback === 'function') {
-        //                if (lockOff) { LockScreenOff(); }
-        //                callback(result_consignee);
-        //            }
-        //        }
-        //    });
-        //};
     });
 };
 /* ----------------------------------------------------------
@@ -209,7 +216,7 @@ IDS_RWT_INCOMING.prototype.getArrivalCars = function (callback) {
 IDS_RWT_INCOMING.prototype.getArrivalCarsOfSostav = function (id, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/rwt/arrival_cars/sostav/id/'+id,
+        url: '../../api/ids/rwt/arrival_cars/sostav/id/' + id,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -351,7 +358,7 @@ IDS_RWT_INCOMING.prototype.getUZ_DOC = function (callback) {
 IDS_RWT_INCOMING.prototype.getUZ_DOCOfNum = function (num, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/rwt/uz_doc/num/'+num,
+        url: '../../api/ids/rwt/uz_doc/num/' + num,
         async: true,
         dataType: 'json',
         beforeSend: function () {

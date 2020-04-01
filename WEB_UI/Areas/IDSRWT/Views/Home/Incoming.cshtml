@@ -214,7 +214,6 @@
                                                 <label for="uz_doc_num_doc" class="col-form-label">@IDSRWTResource.title_uz_doc_num_doc:</label>
                                                 <input type="number" class="form-control" id="uz_doc_num_doc" name="uz_doc_num_doc" placeholder="OTPR/nom_doc" data-mode="all" data-edit="" data-form="transceiver" required="required">
                                                 <div class="invalid-feedback">
-
                                                 </div>
                                             </div>
                                             <div class="col-md-6 mb-1 text-left">
@@ -226,7 +225,6 @@
                                             </div>
                                         </div>
                                     </fieldset>
-
 
                                     <fieldset class="border-primary">
                                         <legend class="text-primary">@IDSRWTResource.title_route_client</legend>
@@ -309,9 +307,16 @@
                                             </div>
                                             <div class="col-md-9 mb-1 text-left">
                                                 <label for="uz_cargo_client_name_from" class="col-form-label">@IDSRWTResource.title_client_name_from</label>
-                                                <input type="text" class="form-control" id="uz_cargo_client_name_from" name="uz_cargo_client_name_from" placeholder="CLIENT/name" data-mode="view" data-edit="" data-form="transceiver">
-                                                <select class="form-control" id="uz_cargo_client_name_from" name="uz_cargo_client_name_from" placeholder="CLIENT/name" data-mode="edit" data-edit="" data-form="transceiver"></select>
-                                                <div class="invalid-feedback">
+                                                <div class="input-group">
+                                                    @*<select class="form-control" id="uz_cargo_client_name_from" name="uz_cargo_client_name_from" placeholder="CLIENT/name" data-mode="all" data-edit="" data-form="transceiver"></select>*@
+                                                    <input type="text" class="form-control" id="uz_cargo_client_name_from" name="uz_cargo_client_name_from" placeholder="CLIENT/name" data-mode="all" data-edit="" data-form="transceiver">
+                                                    <div class="invalid-feedback">
+                                                    </div>
+                                                    <div class="input-group-append">
+                                                        <button type="button" class="btn btn-danger btn" id="uz_cargo_client_name_from_add" data-form="transceiver">
+                                                            <i class="fa fa-save" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

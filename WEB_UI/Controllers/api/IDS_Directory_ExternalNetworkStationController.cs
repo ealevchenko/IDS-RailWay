@@ -1,0 +1,113 @@
+﻿using EFIDS.Abstract;
+using EFIDS.Entities;
+using EFIDS.Helper;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
+using System.Web.Http.Description;
+
+namespace WEB_UI.Controllers.api
+{
+    /// <summary>
+    /// Модель вагона
+    /// </summary>
+    [RoutePrefix("api/ids/directory/external_network_station")]
+    public class IDS_Directory_ExternalNetworkStationController : ApiController
+    {
+        protected IStringRepository<Directory_ExternalNetworkStation> ef_dir;
+
+        public IDS_Directory_ExternalNetworkStationController(IStringRepository<Directory_ExternalNetworkStation> dir)
+        {
+            this.ef_dir = dir;
+        }
+
+        // GET: api/ids/directory/external_network_station/all
+        [Route("all")]
+        [ResponseType(typeof(Directory_ExternalNetworkStation))]
+        public IHttpActionResult GetExternalNetworkStation()
+        {
+            try
+            {
+                List<Directory_ExternalNetworkStation> list = this.ef_dir.Context.ToList()
+                    .Select(m => m.GetDirectory_ExternalNetworkStation()).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // GET: api/ids/directory/external_network_station/code/
+        [Route("code/{code}")]
+        [ResponseType(typeof(Directory_ExternalNetworkStation))]
+        public IHttpActionResult GetExternalNetworkStationOfCode(string code)
+        {
+            try
+            {
+                Directory_ExternalNetworkStation ens = this.ef_dir
+                    .Context
+                    .Where(w => w.code == code)
+                    .ToList()
+                    .Select(m => m.GetDirectory_ExternalNetworkStation()).FirstOrDefault();
+                return Ok(ens);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST api/ids/directory/external_network_station/
+        [HttpPost]
+        [Route("")]
+        public int PostExternalNetworkStation([FromBody]Directory_ExternalNetworkStation value)
+        {
+            try
+            {
+                this.ef_dir.Add(value);
+                return ef_dir.Save();
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+        }
+
+        // PUT api/ids/directory/external_network_station/code
+        [HttpPut]
+        [Route("code/{code}")]
+        public int PutExternalNetworkStation(string code, [FromBody]Directory_ExternalNetworkStation value)
+        {
+            try
+            {
+                this.ef_dir.Update(value);
+                return this.ef_dir.Save();
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+        }
+
+        // DELETE api/ids/directory/external_network_station/code
+        [HttpDelete]
+        [Route("code/{code}")]
+        public int DeleteExternalNetworkStation(string code)
+        {
+            try
+            {
+                this.ef_dir.Delete(code);
+                return this.ef_dir.Save();
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+        }
+
+    }
+}

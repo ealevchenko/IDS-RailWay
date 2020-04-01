@@ -190,7 +190,7 @@ UZ_DIRECTORY.prototype.getStations_Internal_Of_CodeCS = function (code_cs) {
             return obj_buff[0];
         }
     }
-        return null;
+    return null;
 };
 //
 UZ_DIRECTORY.prototype.getValue_Station_Of_CodeCS = function (code_cs, name) {
@@ -267,4 +267,31 @@ UZ_DIRECTORY.prototype.getListInternalRailroad = function (fvalue, ftext, lang) 
         }
     }
     return list;
+};
+//
+UZ_DIRECTORY.prototype.getInternalRailroad_Internal_Of_StationCode = function (code) {
+    if (this.list_internal_railroad && code !== null) {
+        var obj = this.list_internal_railroad.filter(function (i) {
+            var list_station = i.list_code_station;
+            if (list_station) {
+                var arr_st = list_station.split(';')
+                var res = false;
+                arr_st.forEach(function (el, i, arr) {
+                    if (el !== "") {
+                        arr_code = el.split('–');
+                        if (arr_code.length === 2) {
+                            if (Number(code) >= Number(arr_code[0]) && Number(code) <= Number(arr_code[1]))
+                                res = true;
+                        }
+                        if (arr_code.length === 1) {
+                            if (Number(code) === Number(arr_code[0]))
+                                res = true;
+                        }
+                    }
+                });
+                return res;
+            } else return false;
+        });
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
 };

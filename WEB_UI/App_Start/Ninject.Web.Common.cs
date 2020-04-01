@@ -79,7 +79,7 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_GenusWagons>>().To<EFIDS.Concrete.EFDirectory_GenusWagons>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_WagonManufacturers>>().To<EFIDS.Concrete.EFDirectory_WagonManufacturers>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_TypesRepairsWagons>>().To<EFIDS.Concrete.EFDirectory_TypesRepairsWagons>();
-            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_ModelsWagons>>().To<EFIDS.Concrete.EFDirectory_ModelsWagons>();
+            kernel.Bind<EFIDS.Abstract.IStringRepository<EFIDS.Entities.Directory_ModelsWagons>>().To<EFIDS.Concrete.EFDirectory_ModelsWagons>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_TypeWagons>>().To<EFIDS.Concrete.EFDirectory_TypeWagons>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_TypeOwnerShip>>().To<EFIDS.Concrete.EFDirectory_TypeOwnerShip>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_OwnersWagons>>().To<EFIDS.Concrete.EFDirectory_OwnersWagons>();
@@ -90,6 +90,9 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_DEPO>>().To<EFIDS.Concrete.EFDirectory_DEPO>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_WagonsCondition>>().To<EFIDS.Concrete.EFDirectory_WagonsCondition>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_Station>>().To<EFIDS.Concrete.EFDirectory_Station>();
+            kernel.Bind<EFIDS.Abstract.IStringRepository<EFIDS.Entities.Directory_ExternalNetworkStation>>().To<EFIDS.Concrete.EFDirectory_ExternalNetworkStation>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_Consignee>>().To<EFIDS.Concrete.EFDirectory_Consignee>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_Shipper>>().To<EFIDS.Concrete.EFDirectory_Shipper>();
 
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.CardsWagons>>().To<EFIDS.Concrete.EFCardsWagons>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.CardsWagonsRepairs>>().To<EFIDS.Concrete.EFCardsWagonsRepairs>();

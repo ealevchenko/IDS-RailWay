@@ -42,8 +42,9 @@
             }
         };
 
-    //================================================================
-    // Объявление обектов
+    //**************************************************************************************
+    // ОБЪЯВЛЕНИЕ ОСНОВНЫХ ОБЪЕКТОВ ПРИЛОЖЕНИЯ
+    //**************************************************************************************
     var lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang')),
         langs = $.extend(true, $.extend(true, getLanguages($.Text_View, lang), getLanguages($.Text_Common, lang)), getLanguages($.Text_Table, lang)),
         user_name = $('input#username').val(),
@@ -52,11 +53,11 @@
         list_sostav = null,
         data_start = null,
         data_stop = null,
-        //
+        // Загрузка основных справочников приложения
         loadReference = function (callback) {
             LockScreen(langView('mess_load', langs));
             var count = 1;
-            ids_inc.load(['ids'], false, function () {
+            ids_inc.load([], ['station'], [], false, function () {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
@@ -81,7 +82,9 @@
                 table_sostav.view(typeof filter === 'function' ? list_sostav.filter(filter) : list_sostav);
             }
         },
-        // Таблица 
+        //======================================================================================
+        // ОСНОВНАЯ ТАБЛИЦА СОСТАВОВ
+        //======================================================================================
         table_sostav = {
             html_table: $('table#table-sostav-arrival'),
             obj: null,
@@ -304,7 +307,9 @@
                 table_sostav.obj.button(6).enable(false);
             }
         },
-        // панель выбора исходных данных для запроса
+        //======================================================================================
+        // ОСНОВНАЯ ПАНЕЛЬ ВЫБОРА СОСТАВОВ
+        //======================================================================================
         pn_sel = {
             cur_dt: moment().set({ 'hour': 0, 'minute': 0, 'second': 0, 'millisecond': 0 }),
             start_dt: null,
@@ -359,7 +364,9 @@
                 view_sostav(refresh, pn_sel.start_dt, pn_sel.stop_dt, Number(pn_sel.select_station.val()) !== -1 ? function (i) { return i.id_station_from === Number(pn_sel.select_station.val()) ? true : false; } : null);
             }
         },
-        // Панель добавить\править состав
+        //======================================================================================
+        // ДИАЛОГОВОЕ ОКНО "ДОБАВИТЬ/ПРАВИТЬ СОСТАВ"
+        //======================================================================================
         pn_edit_sostav = {
             obj: null,
             table: null,
@@ -553,7 +560,9 @@
                 };
             },
         },
-        // Форма диалога
+        //======================================================================================
+        // МЕНДАЛЬНОЕ ОКНО ДИАЛОГ
+        //======================================================================================
         dialog_confirm = {
             result: false,
             callback_ok: null,
@@ -561,7 +570,7 @@
                 resizable: false,
                 autoOpen: false,
                 height: "auto",
-                width: 400,
+                width: 500,
                 modal: true,
                 open: function (event, ui) {
                 },
@@ -601,7 +610,9 @@
                 dialog_confirm.obj.dialog("open");
             }
         },
-        // Окно вагоны детально
+        //======================================================================================
+        // ОКНО ПРИНЯТЬ ВАГОНЫ
+        //======================================================================================
         cars_detali = {
             content: $('.cd-cars-detali'),
             lang: null,
@@ -610,9 +621,9 @@
             id_sostav: null,
             sostav: null,
             alert: null,
-            otpr: null,
-
-            // Поля
+            select_otpr: null,
+            select_num: null,
+            // Поля -----------------------------------------------------------------
             sostav_title: $('h1#sostav-title'),
             // режимы
             bt_mode_view: $('button#mode-view').on('click', function (event) {
@@ -651,13 +662,67 @@
             uz_route_stn_border: $('input#uz_route_stn_border'),
             uz_route_stn_border_name: $('input#uz_route_stn_border_name'),
             uz_route_border_cross_time: $('input#uz_route_border_cross_time'),
+            // Грузоотправители
+            uz_cargo_client_kod_from: $('input#uz_cargo_client_kod_from'),
+            uz_cargo_client_name_from: $('input#uz_cargo_client_name_from'),
+            //select_uz_cargo_client_name_from: $('select#uz_cargo_client_name_from'),
+            // Кнопка добавить грузоотправителя
+            bt_client_name_from_add: $('button#uz_cargo_client_name_from_add').on('click', function (event) {
+                event.preventDefault();
+                dialog_confirm.open('Cправочник "Грузоотправителей"', 'Будет добавлена новая запись грузоотправителя [ Код = ' + cars_detali.uz_cargo_client_kod_from.val() + ', Название = ' + cars_detali.uz_cargo_client_name_from.val() + ']', function (result) {
+                    if (result) {
+                        LockScreen(langView('mess_save', langs));
+                        cars_detali.ids_inc.ids_dir.postShipper({
+                            code: cars_detali.uz_cargo_client_kod_from.val(),
+                            shipper_name_ru: cars_detali.uz_cargo_client_name_from.val(),
+                            shipper_name_en: cars_detali.uz_cargo_client_name_from.val(),
+                            create: toISOStringTZ(new Date()),
+                            create_user: cars_detali.user
+                        }, function (result_add) {
+                            if (result_add > 0) {
+                                // Ок
+                                cars_detali.ids_inc.ids_dir.LoadShipper(function () {
+                                    cars_detali.view_epd_client(cars_detali.select_otpr);
+                                    LockScreenOff();
+                                });
+                            } else {
+                                cars_detali.alert.clear_message();
+                                cars_detali.alert.out_error_message("Ошибка. При добавлении записи в справочник возникла ошибка.");
+                                LockScreenOff();
+                            }
+                        })
+                    }
+                });
+            }),
+            // грузополучатели
+            uz_cargo_client_kod_on: $('input#uz_cargo_client_kod_on'),
+            uz_cargo_client_name_on: $('input#uz_cargo_client_name_on'),
+            select_uz_cargo_client_name_on: $('select#uz_cargo_client_name_on'),
 
+
+            // Загрузка библиотек
+            loadReference: function (callback) {
+                LockScreen(langView('mess_load', langs));
+                var count = 1;
+                cars_detali.ids_inc.load([], ['external_network_station', 'consignee', 'shipper'], ['internal_railroad'], false, function () {
+                    count -= 1;
+                    if (count === 0) {
+                        if (typeof callback === 'function') {
+                            callback();
+                        }
+                    }
+                });
+            },
+            //======================================================================================
+            // ИНИЦИАЛИЗАЦИЯ И ОБНОВЛЕНИЕ ЭЛЕМЕНТОВ
+            //======================================================================================
+            // Инициализация
             init: function (lang, user_name) {
                 cars_detali.lang = lang;
                 cars_detali.user = user_name;
                 // создадим классы
                 cars_detali.ids_inc = new IDS_RWT_INCOMING(cars_detali.lang); // Создадим класс IDS_RWT_INCOMING
-                alert = new ALERT($('div#car-detali-alert')),// Создадим класс ALERTG
+                cars_detali.alert = new ALERT($('div#car-detali-alert')),// Создадим класс ALERTG
 
                 // Sumbit form
                 cars_detali.content.find("form").on("submit", function (event) {
@@ -669,6 +734,45 @@
                     cars_detali.content.removeClass('is-visible');
                 });
             },
+            // Загрузти списочные компоненты
+            init_select: function () {
+                cars_detali.update_list_consignee(null); // Грузополучатели
+                cars_detali.update_list_shipper(null); // Грузопоотправитель
+            },
+            // -------- ОБНОВЛЕНИЕ ------------------------------------------------------
+            // Обновить компонент список грузополучателей
+            update_list_consignee: function (code) {
+                cars_detali.select_uz_cargo_client_name_on = cd_initSelect(
+                    $('select#uz_cargo_client_name_on'),
+                    { lang: lang },
+                    cars_detali.ids_inc.ids_dir.getListConsignee('code', 'name', null, function (i) { return !i.auxiliary }),
+                    null,
+                    code ? Number(code) : -1,
+                    function (event) {
+                        event.preventDefault();
+                        var code = $(this).val();
+                        if (Number(code) === 7932) {
+                            cars_detali.set_mode(false);
+                        } else {
+                            cars_detali.set_mode(true);
+                        }
+                    },
+                    null);
+            },
+            // Обновить компонент список грузополучателей
+            update_list_shipper: function (text) {
+                cars_detali.uz_cargo_client_name_from = this.uz_cargo_client_name_from.autocomplete({
+                    minLength: 2,
+                    source: getAutocompleteList(cars_detali.ids_inc.ids_dir.getListShipper('code', 'shipper_name', cars_detali.lang, null), 'text'),
+                    change: function (event, ui) {
+
+                    },
+                    select: function (event, ui) {
+
+                    }
+                }).val(text ? text : '');
+            },
+            // -------- УПРАВЛЕНИЕ РЕЖИМАМИ ------------------------------------------------------
             // Возвращает свойство "редактирование разрешено" - true, запрещено -false
             is_edit_mode_of_element: function (el) {
                 var d = $(el).attr('data-edit');
@@ -687,18 +791,18 @@
                             break;
                         }
                         case 'view': {
-                            $(el).prop("disabled", true); 
+                            $(el).prop("disabled", true);
                             if (cars_detali.is_edit_mode_of_element(el))
                             { if (!mode) { $(el).show(); } else { $(el).hide(); } }
                             else { $(el).show(); }
                             break;
                         }
                         case 'view-global': {
-                            $(el).prop("disabled", true); 
+                            $(el).prop("disabled", true);
                             break;
                         }
                         case 'edit': {
-                            $(el).prop("disabled", false); 
+                            $(el).prop("disabled", false);
                             if (cars_detali.is_edit_mode_of_element(el))
                             { if (mode) { $(el).show(); } else { $(el).hide(); } }
                             else { $(el).hide(); }
@@ -708,7 +812,7 @@
                             // Глобальный элемент для редактирования (не активный только когда - close)
                             //$(el).show(); убрал иза элемента bootstrap-input-spinner (он скрыт), можно добавить атрибут этого элемента и тогда пропускать
                             if (cars_detali.is_edit_mode_of_element(el))
-                            { $(el).prop("disabled", false);}
+                            { $(el).prop("disabled", false); }
                             else { $(el).prop("disabled", true); }
                             break;
                         }
@@ -729,13 +833,15 @@
                 });
                 cars_detali.set_mode(false);
             },
+            // -------- ОЧИСТКА ------------------------------------------------------
             // Очистить все ячейки
             clear: function () {
                 // Очистить сообщения
-                alert.clear_message();
+                cars_detali.alert.clear_message();
                 // Очистить не принятые вагоны.. ! добавить остальные ячейки
+                cars_detali.select_otpr = null;
+                cars_detali.select_num = null;
                 $('div#list-cars-not-arrival').empty();
-
                 cars_detali.clear_cars_epd(); // Очистить ячейки ЭПД
             },
             // Очистить ячейки ЭПД
@@ -743,59 +849,146 @@
                 cars_detali.num_car.val('');
                 cars_detali.uz_doc_num_doc.val('');
                 cars_detali.uz_doc_num_new_doc.val('');
+                cars_detali.uz_route_stn_from.val('');
+                cars_detali.uz_route_name_from.val('');
+                cars_detali.uz_route_name_railway_from.val('');
+                cars_detali.uz_route_stn_on.val('');
+                cars_detali.uz_route_name_on.val('');
+                cars_detali.uz_route_name_railway_on.val('');
+                cars_detali.uz_route_stn_border.val('');
+                cars_detali.uz_route_stn_border_name.val('');
+                cars_detali.uz_route_border_cross_time.val('');
+
+                cars_detali.uz_cargo_client_kod_from.val('');
+                cars_detali.uz_cargo_client_name_from.val('');
+                //cars_detali.select_uz_cargo_client_name_from.val(-1);
+                cars_detali.bt_client_name_from_add.hide();
+
+                cars_detali.uz_cargo_client_kod_on.val('');
+                cars_detali.select_uz_cargo_client_name_on.val(-1);
+            },
+            //=================================================================================
+            // ОТОБРАЖЕНИЕ ЭПД
+            //=================================================================================
+            // Показать грузоотправителя и грузополучателя
+            view_epd_client: function (otpr) {
+                cars_detali.select_uz_cargo_client_name_on.prop("disabled", false);
+                var client_kod_from = null, client_name_from = null, client_kod_on = null, client_name_on = null;
+                if (otpr && otpr.client && otpr.client.length > 0) {
+                    otpr.client.forEach(function (el, i, arr) {
+                        if (Number(el.type) === 1) {
+                            client_kod_from = el.kod;
+                            client_name_from = el.name;
+                            var shipper = cars_detali.ids_inc.ids_dir.getShipper_Of_Code(el.kod); // Иногда код россии пустой
+                            if (!el.kod || shipper) {
+                                cars_detali.bt_client_name_from_add.hide();
+                            } else {
+                                cars_detali.bt_client_name_from_add.show();
+                            }
+                        };
+                        if (Number(el.type) === 2) {
+                            client_kod_on = el.kod;
+                            client_name_on = el.name;
+                            cars_detali.select_uz_cargo_client_name_on.prop("disabled", true);
+                        };
+                    });
+                }
+                cars_detali.uz_cargo_client_kod_from.val(client_kod_from);
+                cars_detali.uz_cargo_client_name_from.val(client_name_from);
+                cars_detali.uz_cargo_client_kod_on.val(client_kod_on);
+                cars_detali.select_uz_cargo_client_name_on.val(client_kod_on);
             },
             // показать электронно перевозочный документ
             view_cars_epd: function (num, otpr) {
+                cars_detali.select_otpr = otpr; // Сохраним документ
+                cars_detali.select_num = num;   // Сохраним номер вагона
                 cars_detali.set_open_edit();   // Перевести в режим "open-edit"
-                cars_detali.clear_cars_epd();
-                cars_detali.num_car.val(num);
-                if (otpr !== null) {
+                cars_detali.clear_cars_epd();   // Очистить параметры окна ЭПД
+
+                cars_detali.num_car.val(cars_detali.select_num);
+                if (cars_detali.select_otpr !== null) {
                     // Документ найден
+                    //--------------------------------------------------------
+                    // требования
                     cars_detali.search_cars_num_doc.prop("disabled", true);
-                    cars_detali.uz_doc_num_doc.val(otpr.otprdp === null ? otpr.nom_doc : otpr.otprdp.nom_osn_doc);
-                    cars_detali.uz_doc_num_new_doc.val(otpr.otprdp !== null ? otpr.nom_doc : null);
-                    // Маршруты клиенты
-                    var stn_from = null, name_from = null, stn_to = null, name_to = null, cross_time = null, stn = null, stn_name = null;
-                    if (otpr.route.length > 0) {
-                        stn_from = otpr.route[0].stn_from;
-                        name_from = otpr.route[0].name_from;
-                        stn_to = otpr.route[0].stn_to;
-                        name_to = otpr.route[0].name_to;
-                        if (otpr.route[0].joint.length > 0) {
-                            otpr.route[0].joint.each(function (i, el) {
-                                el.each(function (i, el) {
-                                    if (el.admin === 22) {
-                                        cross_time = el.cross_time;
-                                        stn = el.stn;
-                                        stn_name = el.stn_name;
-                                    }
-                                })
-                            })
+                    cars_detali.uz_doc_num_doc.val(cars_detali.select_otpr.otprdp === null ? cars_detali.select_otpr.nom_doc : cars_detali.select_otpr.otprdp.nom_osn_doc);
+                    cars_detali.uz_doc_num_new_doc.val(cars_detali.select_otpr.otprdp !== null ? cars_detali.select_otpr.nom_doc : null);
+                    //---------------------------------------------------------------------------------------------
+                    // Маршруты клиенты OTPR\ROUTE
+                    var stn_from = null, name_from = null, ir_name_from = null, stn_to = null, name_to = null, ir_name_to = null, cross_time = null, stn = null, stn_name = null;
+                    if (cars_detali.select_otpr.route.length > 0) {
+                        // Отправка
+                        stn_from = cars_detali.select_otpr.route[0].stn_from;
+                        name_from = cars_detali.select_otpr.route[0].name_from;
+                        // Определим дорогу
+                        var ir_from = cars_detali.ids_inc.uz_dir.getInternalRailroad_Internal_Of_StationCode(stn_from);
+                        if (ir_from) {
+                            ir_name_from = ir_from.internal_railroad;
+                        }
+                        // Прибытие
+                        stn_to = cars_detali.select_otpr.route[0].stn_to;
+                        name_to = cars_detali.select_otpr.route[0].name_to;
+                        // Определим дорогу
+                        var ir_to = cars_detali.ids_inc.uz_dir.getInternalRailroad_Internal_Of_StationCode(stn_to);
+                        if (ir_to) {
+                            ir_name_to = ir_to.internal_railroad;
+                        }
+                        // Определим "Погран переход"
+                        if (cars_detali.select_otpr.route[0].joint.length > 0) {
+                            for (i = 0; i < cars_detali.select_otpr.route[0].joint.length; i++) {
+                                var joint = cars_detali.select_otpr.route[0].joint[i];
+                                if (joint.admin === 22) {
+                                    cross_time = joint.cross_time;
+                                    stn = joint.stn;
+                                    stn_name = joint.stn_name;
+                                }
+                            }
                         }
                     }
+                    //-------------------------------------------------------------------
+                    // Оределим грузоотправителя и грузополучателя OTPR\CLIENT  
+                    cars_detali.view_epd_client(cars_detali.select_otpr);
+
+                    //var client_kod_from = null, client_name_from = null, client_kod_on = null, client_name_on = null;
+                    //if (cars_detali.select_otpr.client.length > 0) {
+                    //cars_detali.select_otpr.client.forEach(function (el, i, arr) {
+                    //    if (Number(el.type) === 1) {
+                    //        client_kod_from = el.kod;
+                    //        client_name_from = el.name;
+                    //        var shipper = cars_detali.ids_inc.ids_dir.getShipper_Of_Code(el.kod);
+                    //        if (shipper) { cars_detali.bt_client_name_from_add.hide(); } else { cars_detali.bt_client_name_from_add.show(); }
+                    //    };
+                    //    if (Number(el.type) === 2) {
+                    //        client_kod_on = el.kod;
+                    //        client_name_on = el.name;
+                    //    };
+                    //});
+                    //}
+                    // Показать
+                    //cars_detali.uz_cargo_client_kod_from.val(client_kod_from);
+                    //cars_detali.uz_cargo_client_name_from.val(client_name_from);
+
+                    //cars_detali.uz_cargo_client_kod_on.val(client_kod_on);
+                    //cars_detali.select_uz_cargo_client_name_on.val(client_kod_on);
+
+
+                    //-------------------------------------------------------------------
+                    // Показать информацию
                     cars_detali.uz_route_stn_from.val(stn_from);
                     cars_detali.uz_route_name_from.val(name_from);
-                    cars_detali.uz_route_name_railway_from.val('');
+                    cars_detali.uz_route_name_railway_from.val(ir_name_from);
                     cars_detali.uz_route_stn_on.val(stn_to);
                     cars_detali.uz_route_name_on.val(name_to);
-                    cars_detali.uz_route_name_railway_on.val('');
+                    cars_detali.uz_route_name_railway_on.val(ir_name_to);
                     cars_detali.uz_route_stn_border.val(stn);
                     cars_detali.uz_route_stn_border_name.val(stn_name);
                     cars_detali.uz_route_border_cross_time.val(cross_time);
 
 
+
                 } else {
                     // Документ не найден
                     cars_detali.search_cars_num_doc.prop("disabled", false);
-                    cars_detali.uz_route_stn_from.val('');
-                    cars_detali.uz_route_name_from.val('');
-                    cars_detali.uz_route_name_railway_from.val('');
-                    cars_detali.uz_route_stn_on.val('');
-                    cars_detali.uz_route_name_on.val('');
-                    cars_detali.uz_route_name_railway_on.val('');
-                    cars_detali.uz_route_stn_border.val('');
-                    cars_detali.uz_route_stn_border_name.val('');
-                    cars_detali.uz_route_border_cross_time.val('');
                 }
 
             },
@@ -813,14 +1006,12 @@
                     if (car !== null) {
                         // Если есть вагон найти и ЭПД документ
                         LockScreen(langView('mess_searsh_epd', langs));
-                        alert.clear_message();
+                        cars_detali.alert.clear_message();
                         cars_detali.ids_inc.getOTPR_UZ_DOCOfNum(car.num_doc, function (result_otpr) {
-                            cars_detali.otpr = result_otpr
                             if (result_otpr === null) {
-                                alert.out_warning_message(langView('mess_not_searsh_epd', langs));
+                                cars_detali.alert.out_warning_message(langView('mess_not_searsh_epd', langs));
                             }
-
-                            cars_detali.view_cars_epd(car.num, cars_detali.otpr);
+                            cars_detali.view_cars_epd(car.num, result_otpr);
                             LockScreenOff();
                         });
                     }
@@ -832,23 +1023,23 @@
                 cars_detali.set_close_edit();   // Перевести в режим "close" по умолчанию
                 if (id === null) return;
                 cars_detali.id_sostav = id;
-                // Получим текуший состав
-                LockScreen(langView('mess_delay', langs));
-                cars_detali.ids_inc.getArrivalSostavOfID(cars_detali.id_sostav, function (result_sostav) {
-                    cars_detali.sostav = result_sostav[0];
-                    //// Определим доступность режима редактировать
-                    //if (cars_detali.sostav.status < 2) {
-                    //    // Состав закрыт или отклонен - запрет редактирования
-                    //    //cars_detali.set_open_edit();
-                    //};
-                    // Покаать информацию по составу
-                    cars_detali.sostav_title.text('Информация по составу (№ поезда :' + cars_detali.sostav.train + ', Индекс поезда :' + cars_detali.sostav.composition_index + ', Прибыл:' + cars_detali.sostav.date_arrival + ')');
-                    // Показать список не принятых вагонов
-                    cars_detali.view_cars_not_arrival(cars_detali.sostav.ArrivalCars.filter(function (i) { return i.arrival === null ? true : false; }));
-                    LockScreenOff();
+                // Загрузка библиотек
+                cars_detali.loadReference(function () {
+                    // Получим текуший состав
+                    LockScreen(langView('mess_delay', langs));
+                    cars_detali.ids_inc.getArrivalSostavOfID(cars_detali.id_sostav, function (result_sostav) {
+                        cars_detali.sostav = result_sostav[0];
+                        // Покаать информацию по составу
+                        cars_detali.sostav_title.text('Информация по составу (№ поезда :' + cars_detali.sostav.train + ', Индекс поезда :' + cars_detali.sostav.composition_index + ', Прибыл:' + cars_detali.sostav.date_arrival + ')');
+                        // Загрузим списочные компоненты
+                        cars_detali.init_select();
+                        // Показать список не принятых вагонов
+                        cars_detali.view_cars_not_arrival(cars_detali.sostav.ArrivalCars.filter(function (i) { return i.arrival === null ? true : false; }));
+                        // Показать страницу детально
+                        cars_detali.content.addClass('is-visible');
+                        LockScreenOff();
+                    });
                 });
-                // Показать страницу детально
-                this.content.addClass('is-visible');
             },
         };
 

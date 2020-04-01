@@ -170,6 +170,55 @@ namespace EFIDS.Helper
                 code = s.code,
             };
         }
+
+        public static Directory_ExternalNetworkStation GetDirectory_ExternalNetworkStation(this Directory_ExternalNetworkStation s)
+        {
+            if (s == null) return null;
+            return new Directory_ExternalNetworkStation()
+            {
+                code = s.code,
+                station_name_ru = s.station_name_ru,
+                station_name_en = s.station_name_en,
+                code_railway = s.code_railway,
+                railway_name_ru = s.railway_name_ru,
+                railway_name_en = s.railway_name_en,
+                railway_abbr_ru = s.railway_abbr_ru,
+                railway_abbr_en = s.railway_abbr_en,
+                code_state = s.code_state,
+                create = s.create,
+                create_user = s.create_user,
+                change = s.change,
+                change_user = s.change_user
+            };
+        }
+
+        public static Directory_Consignee GetDirectory_Consignee(this Directory_Consignee c)
+        {
+            if (c == null) return null;
+            return new Directory_Consignee()
+            {
+                code = c.code,
+                name = c.name,
+                description = c.description,
+                auxiliary = c.auxiliary,
+            };
+        }
+
+        public static Directory_Shipper GetDirectory_Shipper(this Directory_Shipper s)
+        {
+            if (s == null) return null;
+            return new Directory_Shipper()
+            {
+                code = s.code,
+                shipper_name_ru = s.shipper_name_ru,
+                shipper_name_en = s.shipper_name_en,
+                create = s.create,
+                create_user = s.create_user,
+                change = s.change,
+                change_user = s.change_user
+            };
+        }
+
         #endregion
 
         #region MORG
@@ -216,7 +265,6 @@ namespace EFIDS.Helper
                 create_user = c.create_user,
                 change = c.change,
                 change_user = c.change_user,
-
             };
         }
 
@@ -225,45 +273,45 @@ namespace EFIDS.Helper
             if (w == null) return null;
             return new WagonsMotionSignals()
             {
-              id = w.id,
-              id_wt = w.id_wt,
-              nvagon = w.nvagon,
-              st_disl = w.st_disl,
-              nst_disl = w.nst_disl,
-              kodop = w.kodop,
-              nameop = w.nameop,
-              full_nameop = w.full_nameop,
-              dt = w.dt,
-              st_form = w.st_form,
-              nst_form = w.nst_form,
-              idsost = w.idsost,
-              nsost = w.nsost,
-              st_nazn = w.st_nazn,
-              nst_nazn = w.nst_nazn,
-              ntrain = w.ntrain,
-              st_end = w.st_end,
-              nst_end = w.nst_end,
-              kgr = w.kgr,
-              nkgr = w.nkgr,
-              id_cargo = w.id_cargo,
-              kgrp = w.kgrp,
-              ves = w.ves,
-              updated = w.updated,
-              kgro = w.kgro,
-              km = w.km,
-              station_from = w.station_from,
-              station_end = w.station_end,
-              route = w.route,
-              shipper = w.shipper,
-              consignee = w.consignee,
-              location = w.location,
-              condition = w.condition,
-              type_flight = w.type_flight,
-              start_flight = w.start_flight,
-              start_turnover = w.start_turnover,
-              duration_flight = w.duration_flight,
-              duration_turnover = w.duration_turnover,
-              note = w.note,
+                id = w.id,
+                id_wt = w.id_wt,
+                nvagon = w.nvagon,
+                st_disl = w.st_disl,
+                nst_disl = w.nst_disl,
+                kodop = w.kodop,
+                nameop = w.nameop,
+                full_nameop = w.full_nameop,
+                dt = w.dt,
+                st_form = w.st_form,
+                nst_form = w.nst_form,
+                idsost = w.idsost,
+                nsost = w.nsost,
+                st_nazn = w.st_nazn,
+                nst_nazn = w.nst_nazn,
+                ntrain = w.ntrain,
+                st_end = w.st_end,
+                nst_end = w.nst_end,
+                kgr = w.kgr,
+                nkgr = w.nkgr,
+                id_cargo = w.id_cargo,
+                kgrp = w.kgrp,
+                ves = w.ves,
+                updated = w.updated,
+                kgro = w.kgro,
+                km = w.km,
+                station_from = w.station_from,
+                station_end = w.station_end,
+                route = w.route,
+                shipper = w.shipper,
+                consignee = w.consignee,
+                location = w.location,
+                condition = w.condition,
+                type_flight = w.type_flight,
+                start_flight = w.start_flight,
+                start_turnover = w.start_turnover,
+                duration_flight = w.duration_flight,
+                duration_turnover = w.duration_turnover,
+                note = w.note,
             };
         }
         #endregion
@@ -292,7 +340,7 @@ namespace EFIDS.Helper
                 create = s.create,
                 create_user = s.create_user,
                 change = s.change,
-                change_user = s.change_user, 
+                change_user = s.change_user,
                 ArrivalCars = s.ArrivalCars.ToList().Select(c => c.GetArrivalCars()).ToList(),
                 Directory_Station = s.Directory_Station.GetDirectory_Station(),
                 Directory_Station1 = s.Directory_Station1.GetDirectory_Station()
@@ -303,20 +351,20 @@ namespace EFIDS.Helper
         {
             return new ArrivalCars()
             {
-                id = c.id ,
-                id_arrival = c.id_arrival ,
-                num = c.num ,
-                position = c.position ,
-                position_arrival = c.position_arrival ,
-                consignee = c.consignee ,
-                num_doc = c.num_doc ,
-                note = c.note , 
-                arrival = c.arrival ,
-                arrival_user = c.arrival_user ,
-                create = c.create ,
-                create_user = c.create_user ,
-                change = c.change ,
-                change_user = c.change_user ,
+                id = c.id,
+                id_arrival = c.id_arrival,
+                num = c.num,
+                position = c.position,
+                position_arrival = c.position_arrival,
+                consignee = c.consignee,
+                num_doc = c.num_doc,
+                note = c.note,
+                arrival = c.arrival,
+                arrival_user = c.arrival_user,
+                create = c.create,
+                create_user = c.create_user,
+                change = c.change,
+                change_user = c.change_user,
                 UZ_DOC = c.UZ_DOC.GetUZ_DOC(),
             };
         }
