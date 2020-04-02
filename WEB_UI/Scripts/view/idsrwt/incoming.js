@@ -655,7 +655,6 @@
             uz_route_stn_from: $('input#uz_route_stn_from'),
             uz_route_name_from: $('input#uz_route_name_from'),
             uz_route_name_railway_from: $('input#uz_route_name_railway_from'),
-            // Кнопка добавить внешнюю станцию отправления
             bt_route_name_from_add: $('button#uz_route_name_from_add').on('click', function (event) {
                 event.preventDefault();
                 dialog_confirm.open('Cправочник "Внешних сетей и станций"', 'Будет добавлена новая запись внешней станции [ Код = ' + cars_detali.uz_route_stn_from.val() + ', Станция = ' + cars_detali.uz_route_name_from.val() + ', Дорога = ' + cars_detali.uz_route_name_railway_from.val() + ']', function (result) {
@@ -700,8 +699,6 @@
             // Грузоотправители
             uz_cargo_client_kod_from: $('input#uz_cargo_client_kod_from'),
             uz_cargo_client_name_from: $('input#uz_cargo_client_name_from'),
-            //select_uz_cargo_client_name_from: $('select#uz_cargo_client_name_from'),
-            // Кнопка добавить грузоотправителя
             bt_client_name_from_add: $('button#uz_cargo_client_name_from_add').on('click', function (event) {
                 event.preventDefault();
                 dialog_confirm.open('Cправочник "Грузоотправителей"', 'Будет добавлена новая запись грузоотправителя [ Код = ' + cars_detali.uz_cargo_client_kod_from.val() + ', Название = ' + cars_detali.uz_cargo_client_name_from.val() + ']', function (result) {
@@ -717,6 +714,13 @@
             uz_cargo_client_kod_on: $('input#uz_cargo_client_kod_on'),
             uz_cargo_client_name_on: $('input#uz_cargo_client_name_on'),
             select_uz_cargo_client_name_on: $('select#uz_cargo_client_name_on'),
+            // Возврат поставщику
+            uz_cargo_returns: $('input#uz_cargo_returns'),
+            // Отправка на станцию АМКР
+            uz_vag_station_on_amkr: $('select#uz_vag_station_on_amkr'),
+            // ВАГОН
+            uz_vag_route: $('input#uz_vag_route'), // Признак маршрута
+
             //======================================================================================
             // ПРАВКА СПРАВОЧНИКОВ
             //======================================================================================
@@ -826,7 +830,7 @@
             loadReference: function (callback) {
                 LockScreen(langView('mess_load', langs));
                 var count = 1;
-                cars_detali.ids_inc.load([], ['external_network_station', 'consignee', 'shipper', 'border_checkpoint'], ['internal_railroad'], false, function () {
+                cars_detali.ids_inc.load([], ['station','external_network_station', 'consignee', 'shipper', 'border_checkpoint'], ['internal_railroad'], false, function () {
                     count -= 1;
                     if (count === 0) {
                         if (typeof callback === 'function') {
@@ -860,6 +864,7 @@
                 cars_detali.update_list_station_border(null);       // Пограничный пункт
                 cars_detali.update_list_consignee(null);            // Грузополучатели
                 cars_detali.update_list_shipper(null);              // Грузопоотправитель
+                cars_detali.update_list_station_on_amkr(-1);                    // Станция АМКР
 
             },
             // -------- ОБНОВЛЕНИЕ ------------------------------------------------------
@@ -934,7 +939,19 @@
                     }
                 }).val(text ? text : '');
             },
-
+            // Обновить компонент станций АМКР
+            update_list_station_on_amkr: function (id) {
+                cars_detali.uz_vag_station_on_amkr = cd_initSelect(
+                    $('select#uz_vag_station_on_amkr'),
+                    { lang: lang },
+                    cars_detali.ids_inc.ids_dir.getListStation('id', 'station_name', cars_detali.lang, function (i) { return !i.station_uz }),
+                    null,
+                    id ? Number(id) : -1,
+                    function (event) {
+                        event.preventDefault();
+                    },
+                    null);
+            },
 
             // -------- УПРАВЛЕНИЕ РЕЖИМАМИ ------------------------------------------------------
             // Возвращает свойство "редактирование разрешено" - true, запрещено -false
