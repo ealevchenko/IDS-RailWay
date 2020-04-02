@@ -64,6 +64,10 @@
     <Compile Include="Abstract\IWebView.cs" />
     <Compile Include="Abstract\IWebAccess.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_BorderCheckpoint.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_Countrys.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_ExternalStation.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_InlandRailway.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_Railway.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Shipper.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Consignee.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_ExternalNetworkStation.cs" />

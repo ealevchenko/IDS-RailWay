@@ -12,27 +12,27 @@ using System.Web.Http.Description;
 namespace WEB_UI.Controllers.api
 {
     /// <summary>
-    /// СПИСОК СТРАН
+    /// СПИСОК ВНЕШНИХ СТАНЦИЙ
     /// </summary>
-    [RoutePrefix("api/ids/directory/consignee")]
-    public class IDS_Directory_ConsigneeController : ApiController
+    [RoutePrefix("api/ids/directory/external_station")]
+    public class IDS_Directory_ExternalStationController : ApiController
     {
-        protected IRepository<Directory_Consignee> ef_dir;
+        protected IRepository<Directory_ExternalStation> ef_dir;
 
-        public IDS_Directory_ConsigneeController(IRepository<Directory_Consignee> dir)
+        public IDS_Directory_ExternalStationController(IRepository<Directory_ExternalStation> dir)
         {
             this.ef_dir = dir;
         }
 
-        // GET: api/ids/directory/consignee/all
+        // GET: api/ids/directory/external_station/all
         [Route("all")]
-        [ResponseType(typeof(Directory_Consignee))]
-        public IHttpActionResult GetConsignee()
+        [ResponseType(typeof(Directory_ExternalStation))]
+        public IHttpActionResult GetExternalStation()
         {
             try
             {
-                List<Directory_Consignee> list = this.ef_dir.Context.ToList()
-                    .Select(m => m.GetDirectory_Consignee()).ToList();
+                List<Directory_ExternalStation> list = this.ef_dir.Context.ToList()
+                    .Select(m => m.GetDirectory_ExternalStation()).ToList();
                 return Ok(list);
             }
             catch (Exception e)
@@ -41,18 +41,18 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // GET: api/ids/directory/consignee/code/
+        // GET: api/ids/directory/external_station/code/
         [Route("code/{code:int}")]
-        [ResponseType(typeof(Directory_Consignee))]
-        public IHttpActionResult GetConsigneeOfID(int code)
+        [ResponseType(typeof(Directory_ExternalStation))]
+        public IHttpActionResult GetExternalStationOfID(int code)
         {
             try
             {
-                Directory_Consignee ens = this.ef_dir
+                Directory_ExternalStation ens = this.ef_dir
                     .Context
                     .Where(w => w.code == code)
                     .ToList()
-                    .Select(m => m.GetDirectory_Consignee()).FirstOrDefault();
+                    .Select(m => m.GetDirectory_ExternalStation()).FirstOrDefault();
                 return Ok(ens);
             }
             catch (Exception e)
@@ -61,10 +61,10 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // POST api/ids/directory/consignee/
+        // POST api/ids/directory/external_station/
         [HttpPost]
         [Route("")]
-        public int PostConsignee([FromBody]Directory_Consignee value)
+        public int PostExternalStation([FromBody]Directory_ExternalStation value)
         {
             try
             {
@@ -77,10 +77,10 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // PUT api/ids/directory/consignee/code
+        // PUT api/ids/directory/external_station/code
         [HttpPut]
         [Route("code/{code:int}")]
-        public int PutConsignee(int code, [FromBody]Directory_Consignee value)
+        public int PutExternalStation(int code, [FromBody]Directory_ExternalStation value)
         {
             try
             {
@@ -93,10 +93,10 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // DELETE api/ids/directory/consignee/code
+        // DELETE api/ids/directory/external_station/code
         [HttpDelete]
         [Route("code/{code:int}")]
-        public int DeleteConsignee(int code)
+        public int DeleteExternalStation(int code)
         {
             try
             {

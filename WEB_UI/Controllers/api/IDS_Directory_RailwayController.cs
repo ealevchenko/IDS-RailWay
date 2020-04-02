@@ -12,27 +12,27 @@ using System.Web.Http.Description;
 namespace WEB_UI.Controllers.api
 {
     /// <summary>
-    /// ВНЕШНИЕ СЕТИ
+    /// СПИСОК Ж.Д.
     /// </summary>
-    [RoutePrefix("api/ids/directory/external_network_station")]
-    public class IDS_Directory_ExternalNetworkStationController : ApiController
+    [RoutePrefix("api/ids/directory/railway")]
+    public class IDS_Directory_RailwayController : ApiController
     {
-        protected IRepository<Directory_ExternalNetworkStation> ef_dir;
+        protected IRepository<Directory_Railway> ef_dir;
 
-        public IDS_Directory_ExternalNetworkStationController(IRepository<Directory_ExternalNetworkStation> dir)
+        public IDS_Directory_RailwayController(IRepository<Directory_Railway> dir)
         {
             this.ef_dir = dir;
         }
 
-        // GET: api/ids/directory/external_network_station/all
+        // GET: api/ids/directory/railway/all
         [Route("all")]
-        [ResponseType(typeof(Directory_ExternalNetworkStation))]
-        public IHttpActionResult GetExternalNetworkStation()
+        [ResponseType(typeof(Directory_Railway))]
+        public IHttpActionResult GetRailway()
         {
             try
             {
-                List<Directory_ExternalNetworkStation> list = this.ef_dir.Context.ToList()
-                    .Select(m => m.GetDirectory_ExternalNetworkStation()).ToList();
+                List<Directory_Railway> list = this.ef_dir.Context.ToList()
+                    .Select(m => m.GetDirectory_Railway()).ToList();
                 return Ok(list);
             }
             catch (Exception e)
@@ -41,18 +41,18 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // GET: api/ids/directory/external_network_station/code/
+        // GET: api/ids/directory/railway/code/
         [Route("code/{code:int}")]
-        [ResponseType(typeof(Directory_ExternalNetworkStation))]
-        public IHttpActionResult GetExternalNetworkStationOfCode(int code)
+        [ResponseType(typeof(Directory_Railway))]
+        public IHttpActionResult GetRailwayOfID(int code)
         {
             try
             {
-                Directory_ExternalNetworkStation ens = this.ef_dir
+                Directory_Railway ens = this.ef_dir
                     .Context
                     .Where(w => w.code == code)
                     .ToList()
-                    .Select(m => m.GetDirectory_ExternalNetworkStation()).FirstOrDefault();
+                    .Select(m => m.GetDirectory_Railway()).FirstOrDefault();
                 return Ok(ens);
             }
             catch (Exception e)
@@ -61,10 +61,10 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // POST api/ids/directory/external_network_station/
+        // POST api/ids/directory/railway/
         [HttpPost]
         [Route("")]
-        public int PostExternalNetworkStation([FromBody]Directory_ExternalNetworkStation value)
+        public int PostRailway([FromBody]Directory_Railway value)
         {
             try
             {
@@ -77,10 +77,10 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // PUT api/ids/directory/external_network_station/code
+        // PUT api/ids/directory/railway/code
         [HttpPut]
         [Route("code/{code:int}")]
-        public int PutExternalNetworkStation(int code, [FromBody]Directory_ExternalNetworkStation value)
+        public int PutRailway(int code, [FromBody]Directory_Railway value)
         {
             try
             {
@@ -93,10 +93,10 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // DELETE api/ids/directory/external_network_station/code
+        // DELETE api/ids/directory/railway/code
         [HttpDelete]
         [Route("code/{code:int}")]
-        public int DeleteExternalNetworkStation(int code)
+        public int DeleteRailway(int code)
         {
             try
             {

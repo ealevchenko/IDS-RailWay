@@ -42,10 +42,10 @@ namespace EFIDS.Concrete
         public virtual DbSet<Directory_WagonManufacturers> Directory_WagonManufacturers { get; set; }
         public virtual DbSet<Directory_WagonsCondition> Directory_WagonsCondition { get; set; }
         public virtual DbSet<Directory_Station> Directory_Station { get; set; }
-        public virtual DbSet<Directory_ExternalNetworkStation> Directory_ExternalNetworkStation { get; set; }
+        //public virtual DbSet<Directory_ExternalNetworkStation> Directory_ExternalNetworkStation { get; set; }
         public virtual DbSet<Directory_Shipper> Directory_Shipper { get; set; }
-        public virtual DbSet<Directory_BorderCheckpoint> Directory_BorderCheckpoint { get; set; }
 
+        public virtual DbSet<Directory_BorderCheckpoint> Directory_BorderCheckpoint { get; set; }
         public virtual DbSet<Directory_Countrys> Directory_Countrys { get; set; }
         public virtual DbSet<Directory_ExternalStation> Directory_ExternalStation { get; set; }
         public virtual DbSet<Directory_InlandRailway> Directory_InlandRailway { get; set; }
@@ -62,6 +62,12 @@ namespace EFIDS.Concrete
                 .HasMany(e => e.Directory_Railway)
                 .WithRequired(e => e.Directory_Countrys)
                 .HasForeignKey(e => e.id_countrys)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Directory_InlandRailway>()
+                .HasMany(e => e.Directory_BorderCheckpoint)
+                .WithRequired(e => e.Directory_InlandRailway)
+                .HasForeignKey(e => e.code_inlandrailway)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Directory_InlandRailway>()

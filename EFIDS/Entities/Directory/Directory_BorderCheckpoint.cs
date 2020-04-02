@@ -21,25 +21,7 @@ namespace EFIDS.Entities
         [StringLength(50)]
         public string station_name_en { get; set; }
 
-        public int code_railway { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string railway_name_ru { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string railway_name_en { get; set; }
-
-        [Required]
-        [StringLength(10)]
-        public string railway_abbr_ru { get; set; }
-
-        [Required]
-        [StringLength(10)]
-        public string railway_abbr_en { get; set; }
-
-        public int code_state { get; set; }
+        public int code_inlandrailway { get; set; }
 
         public DateTime create { get; set; }
 
@@ -51,5 +33,7 @@ namespace EFIDS.Entities
 
         [StringLength(50)]
         public string change_user { get; set; }
+
+        public virtual Directory_InlandRailway Directory_InlandRailway { get; set; }
     }
 }

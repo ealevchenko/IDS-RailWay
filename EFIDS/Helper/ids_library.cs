@@ -171,27 +171,6 @@ namespace EFIDS.Helper
             };
         }
 
-        public static Directory_ExternalNetworkStation GetDirectory_ExternalNetworkStation(this Directory_ExternalNetworkStation s)
-        {
-            if (s == null) return null;
-            return new Directory_ExternalNetworkStation()
-            {
-                code = s.code,
-                station_name_ru = s.station_name_ru,
-                station_name_en = s.station_name_en,
-                code_railway = s.code_railway,
-                railway_name_ru = s.railway_name_ru,
-                railway_name_en = s.railway_name_en,
-                railway_abbr_ru = s.railway_abbr_ru,
-                railway_abbr_en = s.railway_abbr_en,
-                code_state = s.code_state,
-                create = s.create,
-                create_user = s.create_user,
-                change = s.change,
-                change_user = s.change_user
-            };
-        }
-
         public static Directory_BorderCheckpoint GetDirectory_BorderCheckpoint(this Directory_BorderCheckpoint s)
         {
             if (s == null) return null;
@@ -199,13 +178,9 @@ namespace EFIDS.Helper
             {
                 code = s.code,
                 station_name_ru = s.station_name_ru,
-                station_name_en = s.station_name_en,
-                code_railway = s.code_railway,
-                railway_name_ru = s.railway_name_ru,
-                railway_name_en = s.railway_name_en,
-                railway_abbr_ru = s.railway_abbr_ru,
-                railway_abbr_en = s.railway_abbr_en,
-                code_state = s.code_state,
+                station_name_en = s.station_name_en, 
+                code_inlandrailway = s.code_inlandrailway,
+                Directory_InlandRailway = s.Directory_InlandRailway.GetDirectory_InlandRailway(),
                 create = s.create,
                 create_user = s.create_user,
                 change = s.change,
@@ -233,6 +208,96 @@ namespace EFIDS.Helper
                 code = s.code,
                 shipper_name_ru = s.shipper_name_ru,
                 shipper_name_en = s.shipper_name_en,
+                create = s.create,
+                create_user = s.create_user,
+                change = s.change,
+                change_user = s.change_user
+            };
+        }
+        // Страны
+        public static Directory_Countrys GetDirectory_Countrys(this Directory_Countrys c)
+        {
+            if (c == null) return null;
+            return new Directory_Countrys()
+            {
+                id = c.id,
+                code_sng = c.code_sng,
+                code_europe = c.code_europe,
+                code_iso = c.code_iso,
+                countrys_name_ru = c.countrys_name_ru,
+                countrys_name_en = c.countrys_name_en,
+                country_abbr_ru = c.country_abbr_ru,
+                country_abbr_en = c.country_abbr_en,
+                create = c.create,
+                create_user = c.create_user,
+                change = c.change,
+                change_user = c.change_user,  
+            };
+        }
+        // Ж. Дороги
+        public static Directory_Railway GetDirectory_Railway(this Directory_Railway r)
+        {
+            if (r == null) return null;
+            return new Directory_Railway()
+            {
+                code = r.code,
+                railway_name_ru = r.railway_name_ru,
+                railway_name_en = r.railway_name_en,
+                railway_abbr_ru = r.railway_abbr_ru,
+                railway_abbr_en = r.railway_abbr_en,
+                id_countrys = r.id_countrys,
+                Directory_Countrys = r.Directory_Countrys.GetDirectory_Countrys(),
+                Directory_InlandRailway = r.Directory_InlandRailway.ToList().Select(i => new Directory_InlandRailway()
+                {
+                    code = r.code,
+                    inlandrailway_name_ru = i.inlandrailway_name_ru,
+                    inlandrailway_name_en = i.inlandrailway_name_en,
+                    inlandrailway_abbr_ru = i.inlandrailway_abbr_ru,
+                    inlandrailway_abbr_en = i.inlandrailway_abbr_en,
+                    code_railway = i.code_railway,
+                    //Directory_ExternalStation
+                    create = r.create,
+                    create_user = r.create_user,
+                    change = r.change,
+                    change_user = r.change_user
+                }).ToList(),
+                create = r.create,
+                create_user = r.create_user,
+                change = r.change,
+                change_user = r.change_user
+            };
+        }
+        // Внутрение ж. дороги
+        public static Directory_InlandRailway GetDirectory_InlandRailway(this Directory_InlandRailway r)
+        {
+            if (r == null) return null;
+            return new Directory_InlandRailway()
+            {
+                code = r.code,
+                inlandrailway_name_ru = r.inlandrailway_name_ru,
+                inlandrailway_name_en = r.inlandrailway_name_en,
+                inlandrailway_abbr_ru = r.inlandrailway_abbr_ru,
+                inlandrailway_abbr_en = r.inlandrailway_abbr_en,
+                code_railway = r.code_railway, 
+                Directory_Railway = r.Directory_Railway.GetDirectory_Railway(),
+                //Directory_ExternalStation
+                create = r.create,
+                create_user = r.create_user,
+                change = r.change,
+                change_user = r.change_user
+            };
+        }
+        // Внешние станции
+        public static Directory_ExternalStation GetDirectory_ExternalStation(this Directory_ExternalStation s)
+        {
+            if (s == null) return null;
+            return new Directory_ExternalStation()
+            {
+                code = s.code,
+                station_name_ru = s.station_name_ru,
+                station_name_en = s.station_name_en,
+                code_inlandrailway = s.code_inlandrailway,
+                Directory_InlandRailway = s.Directory_InlandRailway.GetDirectory_InlandRailway(),
                 create = s.create,
                 create_user = s.create_user,
                 change = s.change,

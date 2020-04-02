@@ -34,13 +34,21 @@ IDS_DIRECTORY.list_wagons_condition = [];
 
 IDS_DIRECTORY.list_station = [];
 
-IDS_DIRECTORY.list_external_network_station = [];
+IDS_DIRECTORY.list_external_network_station = []; // delete
 
 IDS_DIRECTORY.list_consignee = [];
 
 IDS_DIRECTORY.list_shipper = [];
 
 IDS_DIRECTORY.list_border_checkpoint = [];
+
+IDS_DIRECTORY.list_countrys = [];
+
+IDS_DIRECTORY.list_railway = [];
+
+IDS_DIRECTORY.list_inlandrailway = [];
+
+IDS_DIRECTORY.list_external_station = [];
 
 /* ----------------------------------------------------------
 ЗАГРУЗКА СПРАВОЧНИКОВ
@@ -218,18 +226,6 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
                 }
             });
         };
-        if (el === 'external_network_station') {
-            IDS_DIRECTORY.prototype.getExternalNetworkStation(function (result_external_network_station) {
-                obj.list_external_network_station = result_external_network_station;
-                count -= 1;
-                if (count === 0) {
-                    if (typeof callback === 'function') {
-                        if (lockOff) { LockScreenOff(); }
-                        callback();
-                    }
-                }
-            });
-        };
         if (el === 'consignee') {
             IDS_DIRECTORY.prototype.getConsignee(function (result_consignee) {
                 obj.list_consignee = result_consignee;
@@ -266,16 +262,54 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
                 }
             });
         };
-    });
-};
-// Загрузка справочника внешних дорог
-IDS_DIRECTORY.prototype.loadExternalNetworkStation = function (callback) {
-    var obj = this;
-    IDS_DIRECTORY.prototype.getExternalNetworkStation(function (result_external_network_station) {
-        obj.list_external_network_station = result_external_network_station;
-        if (typeof callback === 'function') {
-            callback();
-        }
+        if (el === 'countrys') {
+            IDS_DIRECTORY.prototype.getCountrys(function (result_countrys) {
+                obj.list_countrys = result_countrys;
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        if (lockOff) { LockScreenOff(); }
+                        callback();
+                    }
+                }
+            });
+        };
+        if (el === 'railway') {
+            IDS_DIRECTORY.prototype.getRailway(function (result_railway) {
+                obj.list_railway = result_railway;
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        if (lockOff) { LockScreenOff(); }
+                        callback();
+                    }
+                }
+            });
+        };
+        if (el === 'inlandrailway') {
+            IDS_DIRECTORY.prototype.getInlandRailway(function (result_inlandrailway) {
+                obj.list_inlandrailway = result_inlandrailway;
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        if (lockOff) { LockScreenOff(); }
+                        callback();
+                    }
+                }
+            });
+        };
+        if (el === 'external_station') {
+            IDS_DIRECTORY.prototype.getExternalStation(function (result_external_station) {
+                obj.list_external_station = result_external_station;
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        if (lockOff) { LockScreenOff(); }
+                        callback();
+                    }
+                }
+            });
+        };
     });
 };
 // Загрузка справочника грузоотправителей
@@ -298,9 +332,335 @@ IDS_DIRECTORY.prototype.loadBorderCheckpoint = function (callback) {
         }
     });
 };
+// Загрузка справочника стран
+IDS_DIRECTORY.prototype.loadCountrys = function (callback) {
+    var obj = this;
+    IDS_DIRECTORY.prototype.getCountrys(function (result_countrys) {
+        obj.list_countrys = result_countrys;
+        if (typeof callback === 'function') {
+            callback();
+        }
+    });
+};
+// Загрузка справочника внешних станций
+IDS_DIRECTORY.prototype.loadExternalStation = function (callback) {
+    var obj = this;
+    IDS_DIRECTORY.prototype.getExternalStation(function (result_external_station) {
+        obj.list_external_station = result_external_station;
+        if (typeof callback === 'function') {
+            callback();
+        }
+    });
+};
+
 /* ----------------------------------------------------------
 AJAX функции
 -------------------------------------------------------------*/
+//======= Directory_Countrys (Справочник стран) ======================================
+IDS_DIRECTORY.prototype.getCountrys = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/countrys/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getCountrys", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить страну по id
+IDS_DIRECTORY.prototype.getCountrysOfID = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/countrys/id/'+id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getCountrysOfID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить страну по коду СНГ
+IDS_DIRECTORY.prototype.getCountrysOfCode = function (code, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/countrys/code_sng/' + code,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getCountrysOfCode", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Обновить 
+IDS_DIRECTORY.prototype.putCountrys = function (countrys, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/directory/countrys/id/' + countrys.code,
+        data: JSON.stringify(countrys),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.putCountrys", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Удалить 
+IDS_DIRECTORY.prototype.deleteCountrys = function (id, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/countrys/id/' + id,
+        type: 'DELETE',
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.deleteCountrys", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Добавить 
+IDS_DIRECTORY.prototype.postCountrys = function (countrys, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/countrys/',
+        type: 'POST',
+        data: JSON.stringify(countrys),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_DIRECTORY.postCountrys", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//======= Directory_Railway (Справочник дорог) ======================================
+IDS_DIRECTORY.prototype.getRailway = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/railway/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getRailway", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//======= Directory_InlandRailway (Справочник внутрених дорог) ======================================
+IDS_DIRECTORY.prototype.getInlandRailway = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/inlandrailway/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getInlandRailway", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//======= Directory_ExternalStation (Справочник внешних станций) ======================================
+IDS_DIRECTORY.prototype.getExternalStation = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/external_station/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getExternalStation", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить по коду
+IDS_DIRECTORY.prototype.getExternalStationOfCode = function (code, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/external_station/code/' + code,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.GetExternalStationOfCode", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Обновить 
+IDS_DIRECTORY.prototype.putExternalStation = function (shipper, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/directory/external_station/code/' + shipper.code,
+        data: JSON.stringify(shipper),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.putExternalStation", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Удалить 
+IDS_DIRECTORY.prototype.deleteExternalStation = function (code, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/external_station/code/' + code,
+        type: 'DELETE',
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.deleteExternalStation", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Добавить 
+IDS_DIRECTORY.prototype.postExternalStation = function (shipper, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/external_station/',
+        type: 'POST',
+        data: JSON.stringify(shipper),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_DIRECTORY.postExternalStation", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 //======= Directory_GenusWagons (Справочник РОД ВАГОНА) ======================================
 IDS_DIRECTORY.prototype.getGenusWagons = function (callback) {
     $.ajax({
@@ -617,124 +977,6 @@ IDS_DIRECTORY.prototype.getStation = function (callback) {
         },
         error: function (x, y, z) {
             OnAJAXError("IDS_DIRECTORY.getStation", x, y, z);
-        },
-        complete: function () {
-            AJAXComplete();
-        },
-    });
-};
-//======= Directory_ExternalNetworkStation (Справочник внешних ситей и станций) ======================================
-IDS_DIRECTORY.prototype.getExternalNetworkStation = function (callback) {
-    $.ajax({
-        type: 'GET',
-        url: '../../api/ids/directory/external_network_station/all',
-        async: true,
-        dataType: 'json',
-        beforeSend: function () {
-            AJAXBeforeSend();
-        },
-        success: function (data) {
-            if (typeof callback === 'function') {
-                callback(data);
-            }
-        },
-        error: function (x, y, z) {
-            OnAJAXError("IDS_DIRECTORY.getExternalNetworkStation", x, y, z);
-        },
-        complete: function () {
-            AJAXComplete();
-        },
-    });
-};
-// Получить по коду
-IDS_DIRECTORY.prototype.getExternalNetworkStationOfCode = function (code, callback) {
-    $.ajax({
-        type: 'GET',
-        url: '../../api/ids/directory/external_network_station/code/' + code,
-        async: true,
-        dataType: 'json',
-        beforeSend: function () {
-            AJAXBeforeSend();
-        },
-        success: function (data) {
-            if (typeof callback === 'function') {
-                callback(data);
-            }
-        },
-        error: function (x, y, z) {
-            OnAJAXError("IDS_DIRECTORY.getExternalNetworkStationOfCode", x, y, z);
-        },
-        complete: function () {
-            AJAXComplete();
-        },
-    });
-};
-//Обновить 
-IDS_DIRECTORY.prototype.putExternalNetworkStation = function (external_network_station, callback) {
-    $.ajax({
-        type: 'PUT',
-        url: '../../api/ids/directory/external_network_station/code/' + external_network_station.code,
-        data: JSON.stringify(external_network_station),
-        contentType: "application/json;charset=utf-8",
-        async: true,
-        beforeSend: function () {
-            AJAXBeforeSend();
-        },
-        success: function (data) {
-            if (typeof callback === 'function') {
-                callback(data);
-            }
-        },
-        error: function (x, y, z) {
-            OnAJAXError("IDS_DIRECTORY.putExternalNetworkStation", x, y, z);
-        },
-        complete: function () {
-            AJAXComplete();
-        },
-    });
-};
-// Удалить 
-IDS_DIRECTORY.prototype.deleteExternalNetworkStation = function (code, callback) {
-    $.ajax({
-        url: '../../api/ids/directory/external_network_station/code/' + code,
-        type: 'DELETE',
-        contentType: "application/json;charset=utf-8",
-        async: true,
-        beforeSend: function () {
-            AJAXBeforeSend();
-        },
-        success: function (data) {
-            if (typeof callback === 'function') {
-                callback(data);
-            }
-        },
-        error: function (x, y, z) {
-            OnAJAXError("IDS_DIRECTORY.deleteExternalNetworkStation", x, y, z);
-        },
-        complete: function () {
-            AJAXComplete();
-        },
-    });
-};
-//Добавить 
-IDS_DIRECTORY.prototype.postExternalNetworkStation = function (external_network_station, callback) {
-    $.ajax({
-        url: '../../api/ids/directory/external_network_station/',
-        type: 'POST',
-        data: JSON.stringify(external_network_station),
-        contentType: "application/json;charset=utf-8",
-        async: true,
-        beforeSend: function () {
-            AJAXBeforeSend();
-        },
-        success: function (data) {
-            if (typeof callback === 'function') {
-                callback(data);
-            }
-        },
-        error: function (x, y, z) {
-            LockScreenOff();
-            OnAJAXError("IDS_DIRECTORY.postExternalNetworkStation", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1469,42 +1711,6 @@ IDS_DIRECTORY.prototype.getListStation = function (fvalue, ftext, lang, filter) 
     }
     return list;
 };
-//*======= IDS_DIRECTORY.list_external_network_station  (Справочник внешних сетей) ======================================
-IDS_DIRECTORY.prototype.getExternalNetworkStation_Of_Code = function (code) {
-    if (this.list_external_network_station) {
-        var obj = getObjects(this.list_external_network_station, 'code', code)
-        return obj && obj.length > 0 ? obj[0] : null;
-    }
-};
-//
-IDS_DIRECTORY.prototype.getValue_ExternalNetworkStation_Of_ID = function (code, name, lang) {
-    var obj = this.getExternalNetworkStation_Of_Code(code);
-    return this.getValueObj(obj, name, lang);
-};
-//
-IDS_DIRECTORY.prototype.getValueCulture_ExternalNetworkStation_Of_ID = function (code, name) {
-    var obj = this.getExternalNetworkStation_Of_Code(code);
-    return obj ? obj[name + '_' + this.lang] : null;
-};
-//
-IDS_DIRECTORY.prototype.getListExternalNetworkStation = function (fvalue, ftext, lang, filter) {
-    var list = [];
-    var list_filtr = null;
-    if (this.list_external_network_station) {
-        if (typeof filter === 'function') {
-            list_filtr = this.list_external_network_station.filter(filter);
-        } else { list_filtr = this.list_external_network_station; }
-        for (i = 0, j = list_filtr.length; i < j; i++) {
-            var l = list_filtr[i];
-            if (lang) {
-                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
-            } else {
-                list.push({ value: l[fvalue], text: l[ftext] });
-            }
-        }
-    }
-    return list;
-};
 //*======= IDS_DIRECTORY.list_consignee  (Справочник грузополучателей) ======================================
 IDS_DIRECTORY.prototype.getConsignee_Of_Code = function (code) {
     if (this.list_consignee) {
@@ -1602,6 +1808,150 @@ IDS_DIRECTORY.prototype.getListBorderCheckpoint = function (fvalue, ftext, lang,
         if (typeof filter === 'function') {
             list_filtr = this.list_border_checkpoint.filter(filter);
         } else { list_filtr = this.list_border_checkpoint; }
+        for (i = 0, j = list_filtr.length; i < j; i++) {
+            var l = list_filtr[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
+//*======= IDS_DIRECTORY.list_countrys  (Справочник стран) ======================================
+IDS_DIRECTORY.prototype.getCountrys_Of_Code = function (id) {
+    if (this.list_countrys) {
+        var obj = getObjects(this.list_countrys, 'id', id);
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getValue_Countrys_Of_ID = function (id, name, lang) {
+    var obj = this.getBorderCheckpoint_Of_Code(id);
+    return this.getValueObj(obj, name, lang);
+};
+//
+IDS_DIRECTORY.prototype.getValueCulture_Countrys_Of_ID = function (id, name) {
+    var obj = this.getBorderCheckpoint_Of_Code(id);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getListCountrys = function (fvalue, ftext, lang, filter) {
+    var list = [];
+    var list_filtr = null;
+    if (this.list_countrys) {
+        if (typeof filter === 'function') {
+            list_filtr = this.list_countrys.filter(filter);
+        } else { list_filtr = this.list_countrys; }
+        for (i = 0, j = list_filtr.length; i < j; i++) {
+            var l = list_filtr[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
+//*======= IDS_DIRECTORY.list_railway  (Справочник Ж.Д.) ======================================
+IDS_DIRECTORY.prototype.getRailway_Of_Code = function (id) {
+    if (this.list_railway) {
+        var obj = getObjects(this.list_Railway, 'id', id);
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getValue_Railway_Of_ID = function (id, name, lang) {
+    var obj = this.getBorderCheckpoint_Of_Code(id);
+    return this.getValueObj(obj, name, lang);
+};
+//
+IDS_DIRECTORY.prototype.getValueCulture_Railway_Of_ID = function (id, name) {
+    var obj = this.getBorderCheckpoint_Of_Code(id);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getListRailway = function (fvalue, ftext, lang, filter) {
+    var list = [];
+    var list_filtr = null;
+    if (this.list_railway) {
+        if (typeof filter === 'function') {
+            list_filtr = this.list_railway.filter(filter);
+        } else { list_filtr = this.list_railway; }
+        for (i = 0, j = list_filtr.length; i < j; i++) {
+            var l = list_filtr[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
+//*======= IDS_DIRECTORY.list_inlandrailway  (Справочник внутрених Ж.Д.) ======================================
+IDS_DIRECTORY.prototype.getInlandRailway_Of_Code = function (id) {
+    if (this.list_inlandrailway) {
+        var obj = getObjects(this.list_InlandRailway, 'id', id);
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getValue_InlandRailway_Of_ID = function (id, name, lang) {
+    var obj = this.getBorderCheckpoint_Of_Code(id);
+    return this.getValueObj(obj, name, lang);
+};
+//
+IDS_DIRECTORY.prototype.getValueCulture_InlandRailway_Of_ID = function (id, name) {
+    var obj = this.getBorderCheckpoint_Of_Code(id);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getListInlandRailway = function (fvalue, ftext, lang, filter) {
+    var list = [];
+    var list_filtr = null;
+    if (this.list_inlandrailway) {
+        if (typeof filter === 'function') {
+            list_filtr = this.list_inlandrailway.filter(filter);
+        } else { list_filtr = this.list_inlandrailway; }
+        for (i = 0, j = list_filtr.length; i < j; i++) {
+            var l = list_filtr[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
+//*======= IDS_DIRECTORY.list_external_station  (Справочник внешних станций) ======================================
+IDS_DIRECTORY.prototype.getExternalStation_Of_Code = function (code) {
+    if (this.list_external_station) {
+        var obj = getObjects(this.list_external_station, 'code', code);
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getValue_ExternalStation_Of_Code = function (code, name, lang) {
+    var obj = this.getBorderCheckpoint_Of_Code(code);
+    return this.getValueObj(obj, name, lang);
+};
+//
+IDS_DIRECTORY.prototype.getValueCulture_ExternalStation_Of_Code = function (code, name) {
+    var obj = this.getBorderCheckpoint_Of_Code(code);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getListExternalStation = function (fvalue, ftext, lang, filter) {
+    var list = [];
+    var list_filtr = null;
+    if (this.list_external_station) {
+        if (typeof filter === 'function') {
+            list_filtr = this.list_external_station.filter(filter);
+        } else { list_filtr = this.list_external_station; }
         for (i = 0, j = list_filtr.length; i < j; i++) {
             var l = list_filtr[i];
             if (lang) {

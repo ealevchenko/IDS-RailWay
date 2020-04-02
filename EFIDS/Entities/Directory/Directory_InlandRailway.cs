@@ -12,6 +12,7 @@ namespace EFIDS.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Directory_InlandRailway()
         {
+            Directory_BorderCheckpoint = new HashSet<Directory_BorderCheckpoint>();
             Directory_ExternalStation = new HashSet<Directory_ExternalStation>();
         }
 
@@ -47,6 +48,9 @@ namespace EFIDS.Entities
 
         [StringLength(50)]
         public string change_user { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Directory_BorderCheckpoint> Directory_BorderCheckpoint { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Directory_ExternalStation> Directory_ExternalStation { get; set; }

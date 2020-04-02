@@ -659,7 +659,7 @@
                 event.preventDefault();
                 dialog_confirm.open('Cправочник "Внешних сетей и станций"', 'Будет добавлена новая запись внешней станции [ Код = ' + cars_detali.uz_route_stn_from.val() + ', Станция = ' + cars_detali.uz_route_name_from.val() + ', Дорога = ' + cars_detali.uz_route_name_railway_from.val() + ']', function (result) {
                     if (result) {
-                        cars_detali.addDirectory_ExternalNetworkStation(cars_detali.uz_route_stn_from.val(), cars_detali.uz_route_name_from.val(), function () {
+                        cars_detali.addDirectory_ExternalStation(cars_detali.uz_route_stn_from.val(), cars_detali.uz_route_name_from.val(), function () {
                             cars_detali.update_list_station_name_from(cars_detali.uz_route_stn_from.val());
                             cars_detali.view_epd_station_from(cars_detali.select_otpr);
                         }, null);
@@ -674,7 +674,7 @@
                 event.preventDefault();
                 dialog_confirm.open('Cправочник "Внешних сетей и станций"', 'Будет добавлена новая запись станции прибытия [ Код = ' + cars_detali.uz_route_stn_on.val() + ', Станция = ' + cars_detali.uz_route_name_on.val() + ', Дорога = ' + cars_detali.uz_route_name_railway_on.val() + ']', function (result) {
                     if (result) {
-                        cars_detali.addDirectory_ExternalNetworkStation(cars_detali.uz_route_stn_on.val(), cars_detali.uz_route_name_on.val(), function () {
+                        cars_detali.addDirectory_ExternalStation(cars_detali.uz_route_stn_on.val(), cars_detali.uz_route_name_on.val(), function () {
                             cars_detali.update_list_station_name_on(cars_detali.uz_route_stn_on.val());
                             cars_detali.view_epd_station_on(cars_detali.select_otpr);
                         }, null);
@@ -753,25 +753,20 @@
                 })
             },
             // Добавить запись в справочник ExternalNetworkStation
-            addDirectory_ExternalNetworkStation: function (stn, name, callback_ok, callback_err) {
+            addDirectory_ExternalStation: function (stn, name, callback_ok, callback_err) {
                 LockScreen(langView('mess_save', langs));
                 var ir = cars_detali.ids_inc.uz_dir.getInternalRailroad_Internal_Of_StationCode(stn);
-                cars_detali.ids_inc.ids_dir.postExternalNetworkStation({
+                cars_detali.ids_inc.ids_dir.postExternalStation({
                     code: stn,
                     station_name_ru: name,
                     station_name_en: name,
-                    code_railway: ir.code,
-                    railway_name_ru: ir.internal_railroad,
-                    railway_name_en: ir.internal_railroad,
-                    railway_abbr_ru: ir.abbr,
-                    railway_abbr_en: ir.abbr,
-                    code_state: ir.id_state,
+                    code_inlandrailway: ir.code,
                     create: toISOStringTZ(new Date()),
                     create_user: cars_detali.user
                 }, function (result_add) {
                     if (result_add > 0) {
                         // Ок
-                        cars_detali.ids_inc.ids_dir.loadExternalNetworkStation(function () {
+                        cars_detali.ids_inc.ids_dir.loadExternalStation(function () {
                             if (typeof callback_ok === 'function') {
                                 callback_ok();
                             }
@@ -795,12 +790,7 @@
                     code: stn,
                     station_name_ru: name,
                     station_name_en: name,
-                    code_railway: ir.code,
-                    railway_name_ru: ir.internal_railroad,
-                    railway_name_en: ir.internal_railroad,
-                    railway_abbr_ru: ir.abbr,
-                    railway_abbr_en: ir.abbr,
-                    code_state: ir.id_state,
+                    code_inlandrailway: ir.code,
                     create: toISOStringTZ(new Date()),
                     create_user: cars_detali.user
                 }, function (result_add) {
@@ -820,7 +810,7 @@
                         }
                         LockScreenOff();
                     }
-                })
+                });
             },
 
             //======================================================================================
@@ -830,7 +820,7 @@
             loadReference: function (callback) {
                 LockScreen(langView('mess_load', langs));
                 var count = 1;
-                cars_detali.ids_inc.load([], ['station','external_network_station', 'consignee', 'shipper', 'border_checkpoint'], ['internal_railroad'], false, function () {
+                cars_detali.ids_inc.load([], ['countrys', 'railway', 'inlandrailway', 'external_station', 'station', 'consignee', 'shipper', 'border_checkpoint'], ['internal_railroad'], false, function () {
                     count -= 1;
                     if (count === 0) {
                         if (typeof callback === 'function') {
@@ -847,10 +837,10 @@
                 cars_detali.ids_inc = new IDS_RWT_INCOMING(cars_detali.lang); // Создадим класс IDS_RWT_INCOMING
                 cars_detali.alert = new ALERT($('div#car-detali-alert')),// Создадим класс ALERTG
 
-                // Sumbit form
-                cars_detali.content.find("form").on("submit", function (event) {
-                    event.preventDefault();
-                });
+                    // Sumbit form
+                    cars_detali.content.find("form").on("submit", function (event) {
+                        event.preventDefault();
+                    });
                 // Настройка закрыть детали проекта
                 cars_detali.content.on('click', '.close', function (event) {
                     event.preventDefault();
@@ -904,7 +894,7 @@
             update_list_station_name_from: function (text) {
                 cars_detali.uz_route_name_from = this.uz_route_name_from.autocomplete({
                     minLength: 3,
-                    source: getAutocompleteList(cars_detali.ids_inc.ids_dir.getListExternalNetworkStation('code', 'station_name', cars_detali.lang, null), 'text'),
+                    source: getAutocompleteList(cars_detali.ids_inc.ids_dir.getListExternalStation('code', 'station_name', cars_detali.lang, null), 'text'),
                     change: function (event, ui) {
 
                     },
@@ -917,7 +907,7 @@
             update_list_station_name_on: function (text) {
                 cars_detali.uz_route_name_on = this.uz_route_name_on.autocomplete({
                     minLength: 3,
-                    source: getAutocompleteList(cars_detali.ids_inc.ids_dir.getListExternalNetworkStation('code', 'station_name', cars_detali.lang, null), 'text'),
+                    source: getAutocompleteList(cars_detali.ids_inc.ids_dir.getListExternalStation('code', 'station_name', cars_detali.lang, null), 'text'),
                     change: function (event, ui) {
 
                     },
@@ -966,15 +956,13 @@
                     var edit = $(el).attr('data-edit');
                     switch ($(el).attr('data-mode')) {
                         case 'all': {
-                            if (cars_detali.is_edit_mode_of_element(el))
-                            { $(el).prop("disabled", !mode); }
+                            if (cars_detali.is_edit_mode_of_element(el)) { $(el).prop("disabled", !mode); }
                             else { $(el).prop("disabled", true); }
                             break;
                         }
                         case 'view': {
                             $(el).prop("disabled", true);
-                            if (cars_detali.is_edit_mode_of_element(el))
-                            { if (!mode) { $(el).show(); } else { $(el).hide(); } }
+                            if (cars_detali.is_edit_mode_of_element(el)) { if (!mode) { $(el).show(); } else { $(el).hide(); } }
                             else { $(el).show(); }
                             break;
                         }
@@ -984,16 +972,14 @@
                         }
                         case 'edit': {
                             $(el).prop("disabled", false);
-                            if (cars_detali.is_edit_mode_of_element(el))
-                            { if (mode) { $(el).show(); } else { $(el).hide(); } }
+                            if (cars_detali.is_edit_mode_of_element(el)) { if (mode) { $(el).show(); } else { $(el).hide(); } }
                             else { $(el).hide(); }
                             break;
                         }
                         case 'edit-global': {
                             // Глобальный элемент для редактирования (не активный только когда - close)
                             //$(el).show(); убрал иза элемента bootstrap-input-spinner (он скрыт), можно добавить атрибут этого элемента и тогда пропускать
-                            if (cars_detali.is_edit_mode_of_element(el))
-                            { $(el).prop("disabled", false); }
+                            if (cars_detali.is_edit_mode_of_element(el)) { $(el).prop("disabled", false); }
                             else { $(el).prop("disabled", true); }
                             break;
                         }
@@ -1091,10 +1077,12 @@
                 if (otpr && otpr.route && otpr.route.length > 0) {
                     stn_from = cars_detali.select_otpr.route[0].stn_from;
                     name_from = cars_detali.select_otpr.route[0].name_from;
-                    var enstation = cars_detali.ids_inc.ids_dir.getExternalNetworkStation_Of_Code(stn_from); // Определим запись в справочнике
+                    var enstation = cars_detali.ids_inc.ids_dir.getExternalStation_Of_Code(stn_from); // Определим запись в справочнике
                     if (enstation) {
                         cars_detali.bt_route_name_from_add.hide();
-                        ir_name_from = cars_detali.ids_inc.ids_dir.getValueCultureObj(enstation, 'railway_name')
+                        if (enstation.Directory_InlandRailway) {
+                            ir_name_from = cars_detali.ids_inc.ids_dir.getValueCultureObj(enstation.Directory_InlandRailway, 'inlandrailway_name');
+                        }
                     } else {
                         cars_detali.bt_route_name_from_add.show();
                         // Определим дорогу
@@ -1114,10 +1102,12 @@
                 if (otpr && otpr.route && otpr.route.length > 0) {
                     stn_on = cars_detali.select_otpr.route[0].stn_to;
                     name_on = cars_detali.select_otpr.route[0].name_to;
-                    var enstation = cars_detali.ids_inc.ids_dir.getExternalNetworkStation_Of_Code(stn_on); // Определим запись в справочнике
+                    var enstation = cars_detali.ids_inc.ids_dir.getExternalStation_Of_Code(stn_on); // Определим запись в справочнике
                     if (enstation) {
                         cars_detali.bt_route_name_on_add.hide();
-                        ir_name_on = cars_detali.ids_inc.ids_dir.getValueCultureObj(enstation, 'railway_name')
+                        if (enstation.Directory_InlandRailway) {
+                            ir_name_on = cars_detali.ids_inc.ids_dir.getValueCultureObj(enstation.Directory_InlandRailway, 'inlandrailway_name');
+                        }
                     } else {
                         cars_detali.bt_route_name_on_add.show();
                         // Определим дорогу
