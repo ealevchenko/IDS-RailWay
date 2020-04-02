@@ -46,13 +46,35 @@ namespace EFIDS.Concrete
         public virtual DbSet<Directory_Shipper> Directory_Shipper { get; set; }
         public virtual DbSet<Directory_BorderCheckpoint> Directory_BorderCheckpoint { get; set; }
 
+        public virtual DbSet<Directory_Countrys> Directory_Countrys { get; set; }
+        public virtual DbSet<Directory_ExternalStation> Directory_ExternalStation { get; set; }
+        public virtual DbSet<Directory_InlandRailway> Directory_InlandRailway { get; set; }
+        public virtual DbSet<Directory_Railway> Directory_Railway { get; set; }
+
         // Доступ к сайту
         public virtual DbSet<WebAccess> WebAccess { get; set; }
         public virtual DbSet<WebView> WebView { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            // dir
+            modelBuilder.Entity<Directory_Countrys>()
+                .HasMany(e => e.Directory_Railway)
+                .WithRequired(e => e.Directory_Countrys)
+                .HasForeignKey(e => e.id_countrys)
+                .WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<Directory_InlandRailway>()
+                .HasMany(e => e.Directory_ExternalStation)
+                .WithRequired(e => e.Directory_InlandRailway)
+                .HasForeignKey(e => e.code_inlandrailway)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Directory_Railway>()
+                .HasMany(e => e.Directory_InlandRailway)
+                .WithRequired(e => e.Directory_Railway)
+                .HasForeignKey(e => e.code_railway)
+                .WillCascadeOnDelete(false);
             // MORS
             modelBuilder.Entity<WagonsMotionSignals>()
                 .Property(e => e.ves)

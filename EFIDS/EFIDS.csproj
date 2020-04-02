@@ -122,6 +122,10 @@
     <Compile Include="Entities\Directory\Directory_ExternalNetworkStation.cs" />
     <Compile Include="Entities\Directory\Directory_Shipper.cs" />
     <Compile Include="Entities\Directory\Directory_BorderCheckpoint.cs" />
+    <Compile Include="Entities\Directory\Directory_Countrys.cs" />
+    <Compile Include="Entities\Directory\Directory_ExternalStation.cs" />
+    <Compile Include="Entities\Directory\Directory_InlandRailway.cs" />
+    <Compile Include="Entities\Directory\Directory_Railway.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
