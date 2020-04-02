@@ -192,6 +192,27 @@ namespace EFIDS.Helper
             };
         }
 
+        public static Directory_BorderCheckpoint GetDirectory_BorderCheckpoint(this Directory_BorderCheckpoint s)
+        {
+            if (s == null) return null;
+            return new Directory_BorderCheckpoint()
+            {
+                code = s.code,
+                station_name_ru = s.station_name_ru,
+                station_name_en = s.station_name_en,
+                code_railway = s.code_railway,
+                railway_name_ru = s.railway_name_ru,
+                railway_name_en = s.railway_name_en,
+                railway_abbr_ru = s.railway_abbr_ru,
+                railway_abbr_en = s.railway_abbr_en,
+                code_state = s.code_state,
+                create = s.create,
+                create_user = s.create_user,
+                change = s.change,
+                change_user = s.change_user
+            };
+        }
+
         public static Directory_Consignee GetDirectory_Consignee(this Directory_Consignee c)
         {
             if (c == null) return null;

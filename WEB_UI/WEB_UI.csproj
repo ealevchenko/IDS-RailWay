@@ -207,6 +207,7 @@
     <Compile Include="Areas\IDSMORS\IDSMORSAreaRegistration.cs" />
     <Compile Include="Areas\IDSRWT\Controllers\HomeController.cs" />
     <Compile Include="Areas\IDSRWT\IDSRWTAreaRegistration.cs" />
+    <Compile Include="Controllers\api\IDS_Directory_BorderCheckpointController.cs" />
     <Compile Include="Controllers\api\IDS_Directory_ShipperController.cs" />
     <Compile Include="Controllers\api\IDS_Directory_ConsigneeController.cs" />
     <Compile Include="Controllers\api\IDS_Directory_ExternalNetworkStationController.cs" />

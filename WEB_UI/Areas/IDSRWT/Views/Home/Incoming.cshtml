@@ -150,7 +150,7 @@
 
 <div class="cd-cars-detali">
     <div class="container-fluid">
-        
+
         <form class="cd-form">
             <div class="card border-secondary">
                 <div class="card-header bg-secondary text-white" id="sostav-info">
@@ -233,20 +233,27 @@
                                             <div class="form-row">
                                                 <div class="col-md-3 mb-1 text-left">
                                                     <label for="uz_route_stn_from" class="col-form-label">@IDSRWTResource.title_stn_code:</label>
-                                                    <input type="text" class="form-control" id="uz_route_stn_from" name="uz_route_stn_from" placeholder="ROUTE/stn_from" data-mode="all" data-edit="" data-form="transceiver">
-                                                    <div class="invalid-feedback">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-5 mb-1 text-left">
-                                                    <label for="uz_route_name_from" class="col-form-label">@IDSRWTResource.title_stn_name</label>
-                                                    <input type="text" class="form-control" id="uz_route_name_from" name="uz_route_name_from" disabled="disabled" data-form="">
+                                                    <input type="text" class="form-control" id="uz_route_stn_from" name="uz_route_stn_from" placeholder="ROUTE/stn_from" data-mode="view-global" data-edit="" data-form="transceiver">
                                                     <div class="invalid-feedback">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 mb-1 text-left">
-                                                    <label for="uz_route_name_railway_from" class="col-form-label">@IDSRWTResource.title_railway_name</label>
-                                                    <input type="text" class="form-control" id="uz_route_name_railway_from" name="uz_route_name_railway_from" disabled="disabled" data-form="">
+                                                    <label for="uz_route_name_from" class="col-form-label">@IDSRWTResource.title_stn_name</label>
+                                                    <input type="text" class="form-control" id="uz_route_name_from" name="uz_route_name_from" data-mode="all" data-edit="" data-form="transceiver">
                                                     <div class="invalid-feedback">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-5 mb-1 text-left">
+                                                    <label for="uz_route_name_railway_from" class="col-form-label">@IDSRWTResource.title_railway_name</label>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" id="uz_route_name_railway_from" name="uz_route_name_railway_from" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                        <div class="invalid-feedback">
+                                                        </div>
+                                                        <div class="input-group-append">
+                                                            <button type="button" class="btn btn-danger btn" id="uz_route_name_from_add" data-form="transceiver">
+                                                                <i class="fa fa-save" aria-hidden="true"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -256,20 +263,27 @@
                                             <div class="form-row">
                                                 <div class="col-md-3 mb-1 text-left">
                                                     <label for="uz_route_stn_on" class="col-form-label">@IDSRWTResource.title_stn_code:</label>
-                                                    <input type="text" class="form-control" id="uz_route_stn_on" name="uz_route_stn_on" placeholder="ROUTE/stn_on" data-mode="all" data-edit="" data-form="transceiver">
-                                                    <div class="invalid-feedback">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-5 mb-1 text-left">
-                                                    <label for="uz_route_name_on" class="col-form-label">@IDSRWTResource.title_stn_name</label>
-                                                    <input type="text" class="form-control" id="uz_route_name_on" name="uz_route_name_on" disabled="disabled" data-form="">
+                                                    <input type="text" class="form-control" id="uz_route_stn_on" name="uz_route_stn_on" placeholder="ROUTE/stn_on" data-mode="view-global" data-edit="" data-form="transceiver">
                                                     <div class="invalid-feedback">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 mb-1 text-left">
-                                                    <label for="uz_route_name_railway_on" class="col-form-label">@IDSRWTResource.title_railway_name</label>
-                                                    <input type="text" class="form-control" id="uz_route_name_railway_on" name="uz_route_name_railway_on" disabled="disabled" data-form="">
+                                                    <label for="uz_route_name_on" class="col-form-label">@IDSRWTResource.title_stn_name</label>
+                                                    <input type="text" class="form-control" id="uz_route_name_on" name="uz_route_name_on" data-mode="all" data-edit="" data-form="transceiver">
                                                     <div class="invalid-feedback">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-5 mb-1 text-left">
+                                                    <label for="uz_route_name_railway_on" class="col-form-label">@IDSRWTResource.title_railway_name</label>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" id="uz_route_name_railway_on" name="uz_route_name_railway_on" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                        <div class="invalid-feedback">
+                                                        </div>
+                                                        <div class="input-group-append">
+                                                            <button type="button" class="btn btn-danger btn" id="uz_route_name_on_add" data-form="transceiver">
+                                                                <i class="fa fa-save" aria-hidden="true"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -279,15 +293,21 @@
                                             <div class="form-row">
                                                 <div class="col-md-3 mb-1 text-left">
                                                     <label for="uz_route_stn_border" class="col-form-label">@IDSRWTResource.title_stn_code:</label>
-                                                    <input type="text" class="form-control" id="uz_route_stn_border" name="uz_route_stn_border" placeholder="ROUTE/JOINT/stn" disabled="disabled" data-form="">
+                                                    <input type="text" class="form-control" id="uz_route_stn_border" name="uz_route_stn_border" placeholder="ROUTE/JOINT/stn" data-mode="view-global" data-edit="" data-form="transceiver">
                                                     <div class="invalid-feedback">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-5 mb-1 text-left">
                                                     <label for="uz_route_stn_border_name" class="col-form-label">@IDSRWTResource.title_stn_name</label>
-                                                    <input type="text" class="form-control" id="uz_route_stn_border_name" name="uz_route_stn_border_name" data-mode="view" data-edit="" data-form="transceiver">
-                                                    <select class="form-control" id="uz_route_stn_border_name" name="uz_route_stn_border_name" required="required" data-mode="edit" data-edit="" data-form="transceiver"></select>
-                                                    <div class="invalid-feedback">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" id="uz_route_stn_border_name" name="uz_route_stn_border_name" data-mode="all" data-edit="" data-form="transceiver">
+                                                        <div class="invalid-feedback">
+                                                        </div>
+                                                        <div class="input-group-append">
+                                                            <button type="button" class="btn btn-danger btn" id="uz_route_stn_border_add" data-form="transceiver">
+                                                                <i class="fa fa-save" aria-hidden="true"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 mb-1 text-left">
@@ -298,6 +318,7 @@
                                                 </div>
                                             </div>
                                         </fieldset>
+
                                         <div class="form-row">
                                             <div class="col-md-3 mb-1 text-left">
                                                 <label for="uz_cargo_client_kod_from" class="col-form-label">@IDSRWTResource.title_client_kod:</label>
@@ -329,9 +350,16 @@
                                             </div>
                                             <div class="col-md-9 mb-1 text-left">
                                                 <label for="uz_cargo_client_name_on" class="col-form-label">@IDSRWTResource.title_client_name_on</label>
-                                                @*<input type="text" class="form-control" id="uz_cargo_client_name_on" name="uz_cargo_client_name_on" placeholder="CLIENT/name" data-mode="view" data-edit="" data-form="transceiver">*@
-                                                <select class="form-control" id="uz_cargo_client_name_on" name="uz_cargo_client_name_on" placeholder="CLIENT/name" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
-                                                <div class="invalid-feedback">
+                                                <div class="input-group">
+                                                    @*<input type="text" class="form-control" id="uz_cargo_client_name_on" name="uz_cargo_client_name_on" placeholder="CLIENT/name" data-mode="view" data-edit="" data-form="transceiver">*@
+                                                    <select class="form-control" id="uz_cargo_client_name_on" name="uz_cargo_client_name_on" placeholder="CLIENT/name" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
+                                                    <div class="invalid-feedback">
+                                                    </div>
+                                                    <div class="input-group-append">
+                                                        @*<button type="button" class="btn btn-danger btn" id="uz_cargo_client_name_on_add" data-form="transceiver">
+                                                                <i class="fa fa-save" aria-hidden="true"></i>
+                                                            </button>*@
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

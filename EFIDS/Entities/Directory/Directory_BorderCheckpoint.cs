@@ -6,8 +6,8 @@ namespace EFIDS.Entities
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("IDS.Directory_ExternalNetworkStation")]
-    public partial class Directory_ExternalNetworkStation
+    [Table("IDS.Directory_BorderCheckpoint")]
+    public partial class Directory_BorderCheckpoint
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]

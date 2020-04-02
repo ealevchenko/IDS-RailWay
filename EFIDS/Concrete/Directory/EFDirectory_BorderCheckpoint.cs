@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 namespace EFIDS.Concrete
 {
 
-    public class EFDirectory_ExternalNetworkStation : IRepository<Directory_ExternalNetworkStation>
+    public class EFDirectory_BorderCheckpoint : IRepository<Directory_BorderCheckpoint>
     {
 
         private EFDbContext db;
 
-        public EFDirectory_ExternalNetworkStation(EFDbContext db)
+        public EFDirectory_BorderCheckpoint(EFDbContext db)
         {
 
             this.db = db;
@@ -26,16 +26,16 @@ namespace EFIDS.Concrete
             get { return this.db.Database; }
         }
 
-        public IQueryable<Directory_ExternalNetworkStation> Context
+        public IQueryable<Directory_BorderCheckpoint> Context
         {
-            get { return db.Directory_ExternalNetworkStation; }
+            get { return db.Directory_BorderCheckpoint; }
         }
 
-        public IEnumerable<Directory_ExternalNetworkStation> Get()
+        public IEnumerable<Directory_BorderCheckpoint> Get()
         {
             try
             {
-                return db.Select<Directory_ExternalNetworkStation>();
+                return db.Select<Directory_BorderCheckpoint>();
             }
             catch (Exception e)
             {
@@ -44,11 +44,11 @@ namespace EFIDS.Concrete
             }
         }
 
-        public Directory_ExternalNetworkStation Get(int code)
+        public Directory_BorderCheckpoint Get(int code)
         {
             try
             {
-                return db.Select<Directory_ExternalNetworkStation>(code);
+                return db.Select<Directory_BorderCheckpoint>(code);
             }
             catch (Exception e)
             {
@@ -57,11 +57,11 @@ namespace EFIDS.Concrete
             }
         }
 
-        public void Add(Directory_ExternalNetworkStation item)
+        public void Add(Directory_BorderCheckpoint item)
         {
             try
             {
-                db.Insert<Directory_ExternalNetworkStation>(item);
+                db.Insert<Directory_BorderCheckpoint>(item);
             }
             catch (Exception e)
             {
@@ -69,11 +69,11 @@ namespace EFIDS.Concrete
             }
         }
 
-        public void Update(Directory_ExternalNetworkStation item)
+        public void Update(Directory_BorderCheckpoint item)
         {
             try
             {
-                db.Update<Directory_ExternalNetworkStation>(item);
+                db.Update<Directory_BorderCheckpoint>(item);
             }
             catch (Exception e)
             {
@@ -81,11 +81,11 @@ namespace EFIDS.Concrete
             }
         }
 
-        public void AddOrUpdate(Directory_ExternalNetworkStation item)
+        public void AddOrUpdate(Directory_BorderCheckpoint item)
         {
             try
             {
-                Directory_ExternalNetworkStation dbEntry = db.Directory_ExternalNetworkStation.Find(item.code);
+                Directory_BorderCheckpoint dbEntry = db.Directory_BorderCheckpoint.Find(item.code);
                 if (dbEntry == null)
                 {
                     Add(item);
@@ -106,7 +106,7 @@ namespace EFIDS.Concrete
         {
             try
             {
-                Directory_ExternalNetworkStation item = db.Delete<Directory_ExternalNetworkStation>(code);
+                Directory_BorderCheckpoint item = db.Delete<Directory_BorderCheckpoint>(code);
             }
             catch (Exception e)
             {
@@ -127,12 +127,12 @@ namespace EFIDS.Concrete
             }
         }
 
-        public Directory_ExternalNetworkStation Refresh(Directory_ExternalNetworkStation item)
+        public Directory_BorderCheckpoint Refresh(Directory_BorderCheckpoint item)
         {
             try
             {
                 db.Entry(item).State = EntityState.Detached;
-                return db.Select<Directory_ExternalNetworkStation>(item.code);
+                return db.Select<Directory_BorderCheckpoint>(item.code);
             }
             catch (Exception e)
             {
@@ -162,7 +162,7 @@ namespace EFIDS.Concrete
         }
 
 
-        public void Add(IEnumerable<Directory_ExternalNetworkStation> items)
+        public void Add(IEnumerable<Directory_BorderCheckpoint> items)
         {
             throw new NotImplementedException();
         }

@@ -44,6 +44,7 @@ namespace EFIDS.Concrete
         public virtual DbSet<Directory_Station> Directory_Station { get; set; }
         public virtual DbSet<Directory_ExternalNetworkStation> Directory_ExternalNetworkStation { get; set; }
         public virtual DbSet<Directory_Shipper> Directory_Shipper { get; set; }
+        public virtual DbSet<Directory_BorderCheckpoint> Directory_BorderCheckpoint { get; set; }
 
         // Доступ к сайту
         public virtual DbSet<WebAccess> WebAccess { get; set; }

@@ -63,6 +63,7 @@
     <Compile Include="Abstract\IRepository.cs" />
     <Compile Include="Abstract\IWebView.cs" />
     <Compile Include="Abstract\IWebAccess.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_BorderCheckpoint.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Shipper.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Consignee.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_ExternalNetworkStation.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="Entities\MORS\WagonsMotionSignals.cs" />
     <Compile Include="Entities\Directory\Directory_ExternalNetworkStation.cs" />
     <Compile Include="Entities\Directory\Directory_Shipper.cs" />
+    <Compile Include="Entities\Directory\Directory_BorderCheckpoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

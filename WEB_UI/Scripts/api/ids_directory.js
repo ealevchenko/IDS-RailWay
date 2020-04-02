@@ -40,6 +40,12 @@ IDS_DIRECTORY.list_consignee = [];
 
 IDS_DIRECTORY.list_shipper = [];
 
+IDS_DIRECTORY.list_border_checkpoint = [];
+
+/* ----------------------------------------------------------
+ЗАГРУЗКА СПРАВОЧНИКОВ
+-------------------------------------------------------------*/
+// Загрузка списка справочников
 IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
     var count = list.length;
     var obj = this;
@@ -237,7 +243,20 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
             });
         };
         if (el === 'shipper') {
-            IDS_DIRECTORY.prototype.LoadShipper(function () {
+            IDS_DIRECTORY.prototype.getShipper(function (result_shipper) {
+                obj.list_shipper = result_shipper;
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        if (lockOff) { LockScreenOff(); }
+                        callback();
+                    }
+                }
+            });
+        };
+        if (el === 'border_checkpoint') {
+            IDS_DIRECTORY.prototype.getBorderCheckpoint(function (result_border_checkpoint) {
+                obj.list_border_checkpoint = result_border_checkpoint;
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
@@ -249,11 +268,31 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
         };
     });
 };
-
-IDS_DIRECTORY.prototype.LoadShipper = function (callback) {
+// Загрузка справочника внешних дорог
+IDS_DIRECTORY.prototype.loadExternalNetworkStation = function (callback) {
     var obj = this;
-    IDS_DIRECTORY.prototype.GetShipper(function (result_shipper) {
+    IDS_DIRECTORY.prototype.getExternalNetworkStation(function (result_external_network_station) {
+        obj.list_external_network_station = result_external_network_station;
+        if (typeof callback === 'function') {
+            callback();
+        }
+    });
+};
+// Загрузка справочника грузоотправителей
+IDS_DIRECTORY.prototype.loadShipper = function (callback) {
+    var obj = this;
+    IDS_DIRECTORY.prototype.getShipper(function (result_shipper) {
         obj.list_shipper = result_shipper;
+        if (typeof callback === 'function') {
+            callback();
+        }
+    });
+};
+// Загрузка справочника внешних дорог
+IDS_DIRECTORY.prototype.loadBorderCheckpoint = function (callback) {
+    var obj = this;
+    IDS_DIRECTORY.prototype.getBorderCheckpoint(function (result_border_checkpoint) {
+        obj.list_border_checkpoint = result_border_checkpoint;
         if (typeof callback === 'function') {
             callback();
         }
@@ -726,7 +765,7 @@ IDS_DIRECTORY.prototype.getConsignee = function (callback) {
     });
 };
 //======= Directory_Shipper (Справочник грузоотправителей) ======================================
-IDS_DIRECTORY.prototype.GetShipper = function (callback) {
+IDS_DIRECTORY.prototype.getShipper = function (callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/directory/shipper/all',
@@ -749,7 +788,7 @@ IDS_DIRECTORY.prototype.GetShipper = function (callback) {
     });
 };
 // Получить по коду
-IDS_DIRECTORY.prototype.GetShipperOfCode = function (code, callback) {
+IDS_DIRECTORY.prototype.getShipperOfCode = function (code, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/directory/shipper/code/'+code,
@@ -837,6 +876,124 @@ IDS_DIRECTORY.prototype.postShipper = function (shipper, callback) {
         error: function (x, y, z) {
             LockScreenOff();
             OnAJAXError("IDS_DIRECTORY.postShipper", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//======= Directory_BorderCheckpoint (Справочник пограничных пунктов) ======================================
+IDS_DIRECTORY.prototype.getBorderCheckpoint = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/border_checkpoint/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.GetBorderCheckpoint", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить по коду
+IDS_DIRECTORY.prototype.getBorderCheckpointOfCode = function (code, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/border_checkpoint/code/' + code,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.GetBorderCheckpointOfCode", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Обновить 
+IDS_DIRECTORY.prototype.putBorderCheckpoint = function (shipper, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/directory/border_checkpoint/code/' + shipper.code,
+        data: JSON.stringify(shipper),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.putBorderCheckpoint", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Удалить 
+IDS_DIRECTORY.prototype.deleteBorderCheckpoint = function (code, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/border_checkpoint/code/' + code,
+        type: 'DELETE',
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.deleteBorderCheckpoint", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Добавить 
+IDS_DIRECTORY.prototype.postBorderCheckpoint = function (shipper, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/border_checkpoint/',
+        type: 'POST',
+        data: JSON.stringify(shipper),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_DIRECTORY.postBorderCheckpoint", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1312,8 +1469,42 @@ IDS_DIRECTORY.prototype.getListStation = function (fvalue, ftext, lang, filter) 
     }
     return list;
 };
-//*======= IDS_DIRECTORY.external_network_station  (Справочник внешних сетей) ======================================
-
+//*======= IDS_DIRECTORY.list_external_network_station  (Справочник внешних сетей) ======================================
+IDS_DIRECTORY.prototype.getExternalNetworkStation_Of_Code = function (code) {
+    if (this.list_external_network_station) {
+        var obj = getObjects(this.list_external_network_station, 'code', code)
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getValue_ExternalNetworkStation_Of_ID = function (code, name, lang) {
+    var obj = this.getExternalNetworkStation_Of_Code(code);
+    return this.getValueObj(obj, name, lang);
+};
+//
+IDS_DIRECTORY.prototype.getValueCulture_ExternalNetworkStation_Of_ID = function (code, name) {
+    var obj = this.getExternalNetworkStation_Of_Code(code);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getListExternalNetworkStation = function (fvalue, ftext, lang, filter) {
+    var list = [];
+    var list_filtr = null;
+    if (this.list_external_network_station) {
+        if (typeof filter === 'function') {
+            list_filtr = this.list_external_network_station.filter(filter);
+        } else { list_filtr = this.list_external_network_station; }
+        for (i = 0, j = list_filtr.length; i < j; i++) {
+            var l = list_filtr[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
 //*======= IDS_DIRECTORY.list_consignee  (Справочник грузополучателей) ======================================
 IDS_DIRECTORY.prototype.getConsignee_Of_Code = function (code) {
     if (this.list_consignee) {
@@ -1375,6 +1566,42 @@ IDS_DIRECTORY.prototype.getListShipper = function (fvalue, ftext, lang, filter) 
         if (typeof filter === 'function') {
             list_filtr = this.list_shipper.filter(filter);
         } else { list_filtr = this.list_shipper; }
+        for (i = 0, j = list_filtr.length; i < j; i++) {
+            var l = list_filtr[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
+//*======= IDS_DIRECTORY.list_border_checkpoint  (Справочник пограничных пунктов) ======================================
+IDS_DIRECTORY.prototype.getBorderCheckpoint_Of_Code = function (code) {
+    if (this.list_border_checkpoint) {
+        var obj = getObjects(this.list_border_checkpoint, 'code', code)
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getValue_BorderCheckpoint_Of_ID = function (code, name, lang) {
+    var obj = this.getBorderCheckpoint_Of_Code(code);
+    return this.getValueObj(obj, name, lang);
+};
+//
+IDS_DIRECTORY.prototype.getValueCulture_BorderCheckpoint_Of_ID = function (code, name) {
+    var obj = this.getBorderCheckpoint_Of_Code(code);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getListBorderCheckpoint = function (fvalue, ftext, lang, filter) {
+    var list = [];
+    var list_filtr = null;
+    if (this.list_border_checkpoint) {
+        if (typeof filter === 'function') {
+            list_filtr = this.list_border_checkpoint.filter(filter);
+        } else { list_filtr = this.list_border_checkpoint; }
         for (i = 0, j = list_filtr.length; i < j; i++) {
             var l = list_filtr[i];
             if (lang) {

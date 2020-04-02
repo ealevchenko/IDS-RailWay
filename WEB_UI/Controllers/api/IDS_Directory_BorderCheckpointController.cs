@@ -12,27 +12,27 @@ using System.Web.Http.Description;
 namespace WEB_UI.Controllers.api
 {
     /// <summary>
-    /// ВНЕШНИЕ СЕТИ
+    /// ПОГРАН ПЕРЕХОДЫ
     /// </summary>
-    [RoutePrefix("api/ids/directory/external_network_station")]
-    public class IDS_Directory_ExternalNetworkStationController : ApiController
+    [RoutePrefix("api/ids/directory/border_checkpoint")]
+    public class IDS_Directory_BorderCheckpointController : ApiController
     {
-        protected IRepository<Directory_ExternalNetworkStation> ef_dir;
+        protected IRepository<Directory_BorderCheckpoint> ef_dir;
 
-        public IDS_Directory_ExternalNetworkStationController(IRepository<Directory_ExternalNetworkStation> dir)
+        public IDS_Directory_BorderCheckpointController(IRepository<Directory_BorderCheckpoint> dir)
         {
             this.ef_dir = dir;
         }
 
-        // GET: api/ids/directory/external_network_station/all
+        // GET: api/ids/directory/border_checkpoint/all
         [Route("all")]
-        [ResponseType(typeof(Directory_ExternalNetworkStation))]
-        public IHttpActionResult GetExternalNetworkStation()
+        [ResponseType(typeof(Directory_BorderCheckpoint))]
+        public IHttpActionResult GetBorderCheckpoint()
         {
             try
             {
-                List<Directory_ExternalNetworkStation> list = this.ef_dir.Context.ToList()
-                    .Select(m => m.GetDirectory_ExternalNetworkStation()).ToList();
+                List<Directory_BorderCheckpoint> list = this.ef_dir.Context.ToList()
+                    .Select(m => m.GetDirectory_BorderCheckpoint()).ToList();
                 return Ok(list);
             }
             catch (Exception e)
@@ -41,18 +41,18 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // GET: api/ids/directory/external_network_station/code/
+        // GET: api/ids/directory/border_checkpoint/code/
         [Route("code/{code:int}")]
-        [ResponseType(typeof(Directory_ExternalNetworkStation))]
-        public IHttpActionResult GetExternalNetworkStationOfCode(int code)
+        [ResponseType(typeof(Directory_BorderCheckpoint))]
+        public IHttpActionResult GetBorderCheckpointOfCode(int code)
         {
             try
             {
-                Directory_ExternalNetworkStation ens = this.ef_dir
+                Directory_BorderCheckpoint ens = this.ef_dir
                     .Context
                     .Where(w => w.code == code)
                     .ToList()
-                    .Select(m => m.GetDirectory_ExternalNetworkStation()).FirstOrDefault();
+                    .Select(m => m.GetDirectory_BorderCheckpoint()).FirstOrDefault();
                 return Ok(ens);
             }
             catch (Exception e)
@@ -61,10 +61,10 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // POST api/ids/directory/external_network_station/
+        // POST api/ids/directory/border_checkpoint/
         [HttpPost]
         [Route("")]
-        public int PostExternalNetworkStation([FromBody]Directory_ExternalNetworkStation value)
+        public int PostBorderCheckpoint([FromBody]Directory_BorderCheckpoint value)
         {
             try
             {
@@ -77,10 +77,10 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // PUT api/ids/directory/external_network_station/code
+        // PUT api/ids/directory/border_checkpoint/code
         [HttpPut]
         [Route("code/{code:int}")]
-        public int PutExternalNetworkStation(int code, [FromBody]Directory_ExternalNetworkStation value)
+        public int PutBorderCheckpoint(int code, [FromBody]Directory_BorderCheckpoint value)
         {
             try
             {
@@ -93,10 +93,10 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // DELETE api/ids/directory/external_network_station/code
+        // DELETE api/ids/directory/border_checkpoint/code
         [HttpDelete]
         [Route("code/{code:int}")]
-        public int DeleteExternalNetworkStation(int code)
+        public int DeleteBorderCheckpoint(int code)
         {
             try
             {
