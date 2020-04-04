@@ -621,8 +621,9 @@
             id_sostav: null,
             sostav: null,
             alert: null,
-            select_otpr: null,
-            select_num: null,
+            select_otpr: null,  // Выбранный документ
+            select_num: null,   // Выбранный вагон
+            select_vagon: null,   // Информация по выбраному вагону 
             // Поля -----------------------------------------------------------------
             sostav_title: $('h1#sostav-title'),
             // режимы
@@ -720,6 +721,9 @@
             uz_vag_station_on_amkr: $('select#uz_vag_station_on_amkr'),
             // ВАГОН
             uz_vag_route: $('input#uz_vag_route'), // Признак маршрута
+            // Админ.
+            card_vag_kod_adm: $('input#card_vag_kod_adm'),
+            card_vag_name_adm: $('select#card_vag_name_adm'),
 
             //======================================================================================
             // ПРАВКА СПРАВОЧНИКОВ
@@ -854,7 +858,8 @@
                 cars_detali.update_list_station_border(null);       // Пограничный пункт
                 cars_detali.update_list_consignee(null);            // Грузополучатели
                 cars_detali.update_list_shipper(null);              // Грузопоотправитель
-                cars_detali.update_list_station_on_amkr(-1);                    // Станция АМКР
+                cars_detali.update_list_station_on_amkr(-1);        // Станция АМКР
+                cars_detali.update_list_adm(-1);                    // Администрации
 
             },
             // -------- ОБНОВЛЕНИЕ ------------------------------------------------------
@@ -942,6 +947,19 @@
                     },
                     null);
             },
+            // Обновить компонент Администрации
+            update_list_adm: function (id) {
+                cars_detali.card_vag_name_adm = cd_initSelect(
+                    $('select#card_vag_name_adm'),
+                    { lang: lang },
+                    cars_detali.ids_inc.ids_dir.getListCountrys('code_sng', 'countrys_name', cars_detali.lang, function (i) { return i.code_sng !== null ? true : false; }),
+                    null,
+                    id ? Number(id) : -1,
+                    function (event) {
+                        event.preventDefault();
+                    },
+                    null);
+            },
 
             // -------- УПРАВЛЕНИЕ РЕЖИМАМИ ------------------------------------------------------
             // Возвращает свойство "редактирование разрешено" - true, запрещено -false
@@ -1008,6 +1026,7 @@
                 // Очистить не принятые вагоны.. ! добавить остальные ячейки
                 cars_detali.select_otpr = null;
                 cars_detali.select_num = null;
+                cars_detali.select_vagon = null;
                 $('div#list-cars-not-arrival').empty();
                 cars_detali.clear_cars_epd(); // Очистить ячейки ЭПД
             },
@@ -1147,6 +1166,33 @@
                 cars_detali.uz_route_stn_border_name.val(stn_name);
                 cars_detali.uz_route_border_cross_time.val(cross_time);
             },
+            // Показать администрацию
+            view_epd_adm: function (otpr) {
+                //var cross_time = null, stn = null, stn_name = null;
+                if (otpr && otpr.route && otpr.route.length > 0) {
+                    // Определим "Погран переход"
+                    //if (otpr.route[0].joint.length > 0) {
+                    //    for (i = 0; i < otpr.route[0].joint.length; i++) {
+                    //        var joint = otpr.route[0].joint[i];
+                    //        if (joint.admin === 22) {
+                    //            cross_time = joint.cross_time;
+                    //            stn = joint.stn;
+                    //            stn_name = joint.stn_name;
+                    //            var border = cars_detali.ids_inc.ids_dir.getBorderCheckpoint_Of_Code(stn); // Определим запись в справочнике
+                    //            if (border) {
+                    //                cars_detali.bt_route_stn_border_add.hide();
+                    //            } else {
+                    //                cars_detali.bt_route_stn_border_add.show();
+                    //            }
+                    //        }
+                    //    }
+                    //}
+                }
+                //cars_detali.uz_route_stn_border.val(stn);
+                //cars_detali.uz_route_stn_border_name.val(stn_name);
+                //cars_detali.uz_route_border_cross_time.val(cross_time);
+            },
+
             // показать электронно перевозочный документ
             view_cars_epd: function (num, otpr) {
                 cars_detali.select_otpr = otpr; // Сохраним документ
@@ -1157,6 +1203,9 @@
                 cars_detali.num_car.val(cars_detali.select_num);
                 if (cars_detali.select_otpr !== null) {
                     // Документ найден
+                    //--------------------------------------------------------
+                    // Обновим информацию о вагоне
+                    cars_detali.elect_vagon = cars_detali.get_vagon_epd(cars_detali.select_otpr, cars_detali.select_num);
                     //--------------------------------------------------------
                     // требования
                     cars_detali.search_cars_num_doc.prop("disabled", true);
@@ -1170,6 +1219,9 @@
                     //-------------------------------------------------------------------
                     // Оределим грузоотправителя и грузополучателя OTPR\CLIENT  
                     cars_detali.view_epd_client(cars_detali.select_otpr);
+                    //-------------------------------------------------------------------
+                    //
+                    cars_detali.view_epd_adm(cars_detali.select_otpr);
                 } else {
                     // Документ не найден
                     cars_detali.search_cars_num_doc.prop("disabled", false);
@@ -1224,6 +1276,17 @@
                         LockScreenOff();
                     });
                 });
+            },
+            //================================================================
+            // Обработка ЭПД
+            //=================================================================
+            get_vagon_epd: function (otpr, num) {
+                if (otpr && otpr.vagon && otpr.vagon.length > 0) {
+                    for (var i = 0; i < otpr.vagon.length; i++) {
+                        if (Number(otpr.vagon[i].nomer) === num)
+                            return otpr.vagon[i];                       
+                    }
+                }
             },
         };
 

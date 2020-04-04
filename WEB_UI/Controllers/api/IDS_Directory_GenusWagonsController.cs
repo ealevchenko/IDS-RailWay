@@ -1,5 +1,6 @@
 ﻿using EFIDS.Abstract;
 using EFIDS.Entities;
+using EFIDS.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +18,11 @@ namespace WEB_UI.Controllers.api
     [RoutePrefix("api/ids/directory/genus_wagon")]
     public class IDS_Directory_GenusWagonsController : ApiController
     {
-        protected IRepository<Directory_GenusWagons> ef_gw;
+        protected IRepository<Directory_GenusWagons> ef_dir;
 
-        public IDS_Directory_GenusWagonsController(IRepository<Directory_GenusWagons> gw)
+        public IDS_Directory_GenusWagonsController(IRepository<Directory_GenusWagons> dir)
         {
-            this.ef_gw = gw;
+            this.ef_dir = dir;
         }
 
         // GET: api/ids/directory/genus_wagon/all
@@ -31,19 +32,12 @@ namespace WEB_UI.Controllers.api
         {
             try
             {
-                List<Directory_GenusWagons> list = this.ef_gw.Context.ToList()
-                    .Select(g => new Directory_GenusWagons
-                    {
-                        id = g.id,
-                        abbr_ru = g.abbr_ru,
-                        genus_ru = g.genus_ru,
-                        abbr_en = g.abbr_en,
-                        genus_en = g.genus_en,
-                    }).ToList();
-                if (list == null || list.Count() == 0)
-                {
-                    return NotFound();
-                }
+                List<Directory_GenusWagons> list = this.ef_dir.Context.ToList()
+                    .Select(g => g.GetGenusWagons()).ToList();
+                //if (list == null || list.Count() == 0)
+                //{
+                //    return NotFound();
+                //}
                 return Ok(list);
             }
             catch (Exception e)
@@ -51,5 +45,7 @@ namespace WEB_UI.Controllers.api
                 return BadRequest(e.Message);
             }
         }
+
+
     }
 }

@@ -11,15 +11,18 @@ namespace EFIDS.Helper
     {
         #region Directory
 
-        public static Directory_GenusWagons GetGenusWagons(Directory_GenusWagons g)
+        public static Directory_GenusWagons GetGenusWagons(this Directory_GenusWagons g)
         {
+            if (g == null) return null;
             return new Directory_GenusWagons()
             {
                 id = g.id,
                 abbr_ru = g.abbr_ru,
                 genus_ru = g.genus_ru,
                 abbr_en = g.abbr_en,
-                genus_en = g.genus_en,
+                genus_en = g.genus_en, 
+                rod_uz = g.rod_uz, 
+                rod_default = g.rod_default 
             };
         }
 

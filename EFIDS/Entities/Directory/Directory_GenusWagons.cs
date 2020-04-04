@@ -33,6 +33,10 @@ namespace EFIDS.Entities
         [StringLength(50)]
         public string genus_en { get; set; }
 
+        public int? rod_uz { get; set; }
+
+        public bool? rod_default { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CardsWagons> CardsWagons { get; set; }
     }
