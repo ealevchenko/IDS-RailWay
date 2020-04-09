@@ -13,6 +13,7 @@ namespace EFIDS.Entities
         public Directory_OwnersWagons()
         {
             CardsWagons = new HashSet<CardsWagons>();
+            Directory_Cars = new HashSet<Directory_Cars>();
         }
 
         public int id { get; set; }
@@ -35,7 +36,21 @@ namespace EFIDS.Entities
 
         public bool local_use { get; set; }
 
+        public DateTime create { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string create_user { get; set; }
+
+        public DateTime? change { get; set; }
+
+        [StringLength(50)]
+        public string change_user { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CardsWagons> CardsWagons { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Directory_Cars> Directory_Cars { get; set; }
     }
 }

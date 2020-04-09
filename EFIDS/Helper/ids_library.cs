@@ -20,9 +20,9 @@ namespace EFIDS.Helper
                 abbr_ru = g.abbr_ru,
                 genus_ru = g.genus_ru,
                 abbr_en = g.abbr_en,
-                genus_en = g.genus_en, 
-                rod_uz = g.rod_uz, 
-                rod_default = g.rod_default 
+                genus_en = g.genus_en,
+                rod_uz = g.rod_uz,
+                rod_default = g.rod_default
             };
         }
 
@@ -181,7 +181,7 @@ namespace EFIDS.Helper
             {
                 code = s.code,
                 station_name_ru = s.station_name_ru,
-                station_name_en = s.station_name_en, 
+                station_name_en = s.station_name_en,
                 code_inlandrailway = s.code_inlandrailway,
                 Directory_InlandRailway = s.Directory_InlandRailway.GetDirectory_InlandRailway(),
                 create = s.create,
@@ -234,7 +234,7 @@ namespace EFIDS.Helper
                 create = c.create,
                 create_user = c.create_user,
                 change = c.change,
-                change_user = c.change_user,  
+                change_user = c.change_user,
             };
         }
         // Ж. Дороги
@@ -281,7 +281,7 @@ namespace EFIDS.Helper
                 inlandrailway_name_en = r.inlandrailway_name_en,
                 inlandrailway_abbr_ru = r.inlandrailway_abbr_ru,
                 inlandrailway_abbr_en = r.inlandrailway_abbr_en,
-                code_railway = r.code_railway, 
+                code_railway = r.code_railway,
                 Directory_Railway = r.Directory_Railway.GetDirectory_Railway(),
                 //Directory_ExternalStation
                 create = r.create,
@@ -307,6 +307,78 @@ namespace EFIDS.Helper
                 change_user = s.change_user
             };
         }
+        // Справочник ограничений
+        public static Directory_LimitingLoading GetDirectory_LimitingLoading(this Directory_LimitingLoading l)
+        {
+            if (l == null) return null;
+            return new Directory_LimitingLoading()
+            {
+                id = l.id,
+                limiting_name_ru = l.limiting_name_ru,
+                limiting_name_en = l.limiting_name_en,
+                limiting_abbr_ru = l.limiting_abbr_ru,
+                limiting_abbr_en = l.limiting_abbr_en,
+                create = l.create,
+                create_user = l.create_user,
+                change = l.change,
+                change_user = l.change_user
+            };
+        }
+        // Справочник вагонов
+        public static Directory_Cars GetDirectory_Cars(this Directory_Cars c)
+        {
+            if (c == null) return null;
+            return new Directory_Cars()
+            {
+                id = c.id,
+                num = c.num,
+                id_countrys = c.id_countrys,
+                id_genus = c.id_genus,
+                id_owner = c.id_owner,
+                ban_changes_owner = c.ban_changes_owner,
+                id_operator = c.id_operator,
+                gruzp = c.gruzp,
+                kol_os = c.kol_os,
+                usl_tip = c.usl_tip,
+                date_rem_uz = c.date_rem_uz,
+                date_rem_vag = c.date_rem_vag,
+                id_limiting = c.id_limiting,
+                id_type_ownership = c.id_type_ownership, 
+                rent_start = c.rent_start,
+                rent_end = c.rent_end,
+                note = c.note,
+                sobstv_kis = c.sobstv_kis,
+                create = c.create,
+                create_user = c.create_user,
+                change = c.change,
+                change_user = c.change_user,
+                Directory_Countrys = c.Directory_Countrys.GetDirectory_Countrys(),
+                Directory_GenusWagons = c.Directory_GenusWagons.GetGenusWagons(),
+                Directory_OwnersWagons = c.Directory_OwnersWagons.GetOwnersWagons(),
+                Directory_OperatorsWagons = c.Directory_OperatorsWagons.GetOperatorsWagons(),
+                Directory_LimitingLoading = c.Directory_LimitingLoading.GetDirectory_LimitingLoading(),
+                Directory_TypeOwnerShip = c.Directory_TypeOwnerShip.GetTypeOwnerShip(), 
+            };
+        }
+        // Справочник вагонов
+        public static Directory_ConditionArrival GetDirectory_ConditionArrival(this Directory_ConditionArrival c)
+        {
+            if (c == null) return null;
+            return new Directory_ConditionArrival()
+            {
+                id = c.id,
+                condition_name_ru = c.condition_name_ru,
+                condition_name_en = c.condition_name_en,
+                condition_abbr_ru = c.condition_abbr_ru,
+                condition_abbr_en = c.condition_abbr_en, 
+                red = c.red,
+                create = c.create,
+                create_user = c.create_user,
+                change = c.change,
+                change_user = c.change_user,
+            };
+        }
+
 
         #endregion
 

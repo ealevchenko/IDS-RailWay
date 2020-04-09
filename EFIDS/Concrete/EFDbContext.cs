@@ -42,8 +42,10 @@ namespace EFIDS.Concrete
         public virtual DbSet<Directory_WagonManufacturers> Directory_WagonManufacturers { get; set; }
         public virtual DbSet<Directory_WagonsCondition> Directory_WagonsCondition { get; set; }
         public virtual DbSet<Directory_Station> Directory_Station { get; set; }
-        //public virtual DbSet<Directory_ExternalNetworkStation> Directory_ExternalNetworkStation { get; set; }
         public virtual DbSet<Directory_Shipper> Directory_Shipper { get; set; }
+        public virtual DbSet<Directory_Cars> Directory_Cars { get; set; }
+        public virtual DbSet<Directory_LimitingLoading> Directory_LimitingLoading { get; set; }
+        public virtual DbSet<Directory_ConditionArrival> Directory_ConditionArrival { get; set; }
 
         public virtual DbSet<Directory_BorderCheckpoint> Directory_BorderCheckpoint { get; set; }
         public virtual DbSet<Directory_Countrys> Directory_Countrys { get; set; }
@@ -57,6 +59,40 @@ namespace EFIDS.Concrete
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            // dir cars
+            modelBuilder.Entity<Directory_Countrys>()
+                .HasMany(e => e.Directory_Cars)
+                .WithRequired(e => e.Directory_Countrys)
+                .HasForeignKey(e => e.id_countrys)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Directory_GenusWagons>()
+                .HasMany(e => e.Directory_Cars)
+                .WithRequired(e => e.Directory_GenusWagons)
+                .HasForeignKey(e => e.id_genus)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Directory_LimitingLoading>()
+                .HasMany(e => e.Directory_Cars)
+                .WithOptional(e => e.Directory_LimitingLoading)
+                .HasForeignKey(e => e.id_limiting);
+
+            modelBuilder.Entity<Directory_OperatorsWagons>()
+                .HasMany(e => e.Directory_Cars)
+                .WithOptional(e => e.Directory_OperatorsWagons)
+                .HasForeignKey(e => e.id_operator);
+
+            modelBuilder.Entity<Directory_OwnersWagons>()
+                .HasMany(e => e.Directory_Cars)
+                .WithRequired(e => e.Directory_OwnersWagons)
+                .HasForeignKey(e => e.id_owner)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Directory_TypeOwnerShip>()
+                .HasMany(e => e.Directory_Cars)
+                .WithOptional(e => e.Directory_TypeOwnerShip)
+                .HasForeignKey(e => e.id_type_ownership);
+
             // dir
             modelBuilder.Entity<Directory_Countrys>()
                 .HasMany(e => e.Directory_Railway)

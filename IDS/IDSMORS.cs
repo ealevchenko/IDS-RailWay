@@ -148,6 +148,26 @@ namespace IDS
                 return null;
             }
         }
+        /// <summary>
+        /// Вернуть тип владения вагоном
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public int? GetTypeOwnerShipOfNum(int num)
+        {
+
+            try
+            {
+                EFCardsWagons ef_card = new EFCardsWagons(new EFDbContext());
+                CardsWagons card = ef_card.Context.Where(c=>c.num ==num).FirstOrDefault();
+                return card!=null ? (int?)card.id_type_ownership : null;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetTypeOwnerShipOfNum(num={0})", num), servece_owner, eventID);
+                return null;
+            }
+        }
 
         public WTMotionSignals GetLastWTMotionSignals(int num)
         {
@@ -200,6 +220,25 @@ namespace IDS
             catch (Exception e)
             {
                 e.ExceptionMethodLog(String.Format("GetLastIDWTWagonsMotionSignals(num={0})", num), servece_owner, eventID);
+                return null;
+            }
+        }
+        /// <summary>
+        /// Получить карачку вагона
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public CardsWagons GetCardsWagonsOfNum(int num)
+        {
+            try
+            {
+                EFCardsWagons ef_card = new EFCardsWagons(new EFDbContext());
+                CardsWagons card = ef_card.Context.Where(c => c.num == num).FirstOrDefault();
+                return card;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetCardsWagonsOfNum(num={0})", num), servece_owner, eventID);
                 return null;
             }
         }

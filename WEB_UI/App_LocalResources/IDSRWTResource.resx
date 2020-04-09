@@ -384,4 +384,13 @@
   <data name="title_type_ownership" xml:space="preserve">
     <value>Признак собственности</value>
   </data>
+  <data name="title_card_vag" xml:space="preserve">
+    <value>Карточка вагона</value>
+  </data>
+  <data name="title_note_uz" xml:space="preserve">
+    <value> Ограничения УЗ (БД УЗ)</value>
+  </data>
+  <data name="title_rent_start" xml:space="preserve">
+    <value>Начало аренды</value>
+  </data>
 </root>

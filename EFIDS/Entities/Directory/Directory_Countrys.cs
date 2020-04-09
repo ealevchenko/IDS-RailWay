@@ -13,6 +13,7 @@ namespace EFIDS.Entities
         public Directory_Countrys()
         {
             Directory_Railway = new HashSet<Directory_Railway>();
+            Directory_Cars = new HashSet<Directory_Cars>();
         }
 
         public int id { get; set; }
@@ -52,5 +53,8 @@ namespace EFIDS.Entities
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Directory_Railway> Directory_Railway { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Directory_Cars> Directory_Cars { get; set; }
     }
 }

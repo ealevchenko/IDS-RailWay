@@ -19,7 +19,7 @@ namespace WEB_UI.App_LocalResources {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class IDSRWTResource {
@@ -138,6 +138,15 @@ namespace WEB_UI.App_LocalResources {
         public static string title_car_date_adoption_act {
             get {
                 return ResourceManager.GetString("title_car_date_adoption_act", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Карточка вагона.
+        /// </summary>
+        public static string title_card_vag {
+            get {
+                return ResourceManager.GetString("title_card_vag", resourceCulture);
             }
         }
         
@@ -493,6 +502,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на  Ограничения УЗ (БД УЗ).
+        /// </summary>
+        public static string title_note_uz {
+            get {
+                return ResourceManager.GetString("title_note_uz", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на № Вагона.
         /// </summary>
         public static string title_num_car {
@@ -552,6 +570,15 @@ namespace WEB_UI.App_LocalResources {
         public static string title_railway_name {
             get {
                 return ResourceManager.GetString("title_railway_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Начало аренды.
+        /// </summary>
+        public static string title_rent_start {
+            get {
+                return ResourceManager.GetString("title_rent_start", resourceCulture);
             }
         }
         

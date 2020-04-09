@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebApiClient;
 using HtmlAgilityPack;
+using System.Globalization;
 
 namespace UZ
 {
@@ -99,17 +100,17 @@ namespace UZ
             {
                 List<string> list = GetInfoWagon(num);
                 if (list != null && list.Count() == 17) {
-                    UZWagonInfo wagon_info = new UZWagonInfo() { 
+                    UZWagonInfo wagon_info = new UZWagonInfo() {
                         num = !String.IsNullOrWhiteSpace(list[1]) ? int.Parse(list[1]) : 0,
                         admin = !String.IsNullOrWhiteSpace(list[2]) ? list[2] : null,
                         owner = !String.IsNullOrWhiteSpace(list[3]) ? list[3] : null,
                         tenant_admin = !String.IsNullOrWhiteSpace(list[4]) ? list[4] : null,
                         tenant = !String.IsNullOrWhiteSpace(list[5]) ? list[5] : null,
                         operat = !String.IsNullOrWhiteSpace(list[6]) ? list[6] : null,
-                        tara = !String.IsNullOrWhiteSpace(list[7]) ? float.Parse(list[7]) as float? : null,
-                        carrying_capacity = !String.IsNullOrWhiteSpace(list[8]) ? float.Parse(list[8]) as float? : null,
+                        tara = !String.IsNullOrWhiteSpace(list[7]) ? float.Parse(list[7], CultureInfo.CreateSpecificCulture("en")) as float? : null,
+                        carrying_capacity = !String.IsNullOrWhiteSpace(list[8]) ? float.Parse(list[8], CultureInfo.CreateSpecificCulture("en")) as float? : null,
                         resource = !String.IsNullOrWhiteSpace(list[9]) ? list[9] : null,
-                        repair_date = !String.IsNullOrWhiteSpace(list[10]) ? DateTime.Parse(list[10]) as DateTime? : null,
+                        repair_date = !String.IsNullOrWhiteSpace(list[10]) ? DateTime.Parse(list[10], CultureInfo.CreateSpecificCulture("ru-RU")) as DateTime? : null,
                         baseness = !String.IsNullOrWhiteSpace(list[11]) ? list[11] : null,
                         rtp = !String.IsNullOrWhiteSpace(list[12]) ? list[12] : null,
                         new_construction = !String.IsNullOrWhiteSpace(list[13]) ? list[13] : null,

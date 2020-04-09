@@ -377,31 +377,37 @@
                                     </fieldset>
                                     <fieldset class="border-primary">
                                         <legend class="text-primary">@IDSRWTResource.title_vagon</legend>
+                                        <div class="alert" id="card-vag-alert"></div>
                                         <div class="form-row">
-                                            <div class="col-md-12 mb-1 text-left">
+                                            <div class="col-md-6 mb-1 text-left">
                                                 <div class="custom-control custom-checkbox">
                                                     <input type="checkbox" class="custom-control-input" id="uz_vag_route" name="uz_vag_route" data-mode="edit-global" data-edit="" data-form="transceiver">
                                                     <label class="custom-control-label" for="uz_vag_route">@IDSRWTResource.title_route</label>
                                                 </div>
                                             </div>
+                                            <div class="col-md-6 mb-1 text-right">
+                                                <label class="col-form-label" for="card_vag_add">@IDSRWTResource.title_card_vag</label>
+                                                <button type="button" class="btn btn-danger btn" id="card_vag_add" data-form="transceiver">
+                                                    <i class="fa fa-save" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                         <div class="form-row">
-                                            <div class="col-md-4 mb-1 text-left">
+                                            <div class="col-md-3 mb-1 text-left">
                                                 <label for="card_vag_kod_adm" class="col-form-label">@IDSRWTResource.title_kod_adm:</label>
                                                 <input type="text" class="form-control" id="card_vag_kod_adm" name="card_vag_kod_adm" placeholder="VAGON/kod_adm" data-mode="view-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
-                                            <div class="col-md-4 mb-1 text-left">
+                                            <div class="col-md-3 mb-1 text-left">
                                                 <label for="card_vag_name_adm" class="col-form-label">@IDSRWTResource.title_name_adm:</label>
                                                 <select class="form-control" id="card_vag_name_adm" name="card_vag_name_adm" data-mode="all" data-edit="" data-form="transceiver"></select>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
-                                            <div class="col-md-4 mb-1 text-left">
+                                            <div class="col-md-6 mb-1 text-left">
                                                 <label for="card_vag_name_rod_vag" class="col-form-label">@IDSRWTResource.title_name_rod_vag:</label>
-                                                <input type="text" class="form-control" id="card_vag_name_rod_vag" name="card_vag_name_rod_vag" data-mode="view" data-edit="" data-form="transceiver">
-                                                <select class="form-control" id="card_vag_name_rod_vag" name="card_vag_name_rod_vag" data-mode="edit" data-edit="" data-form="transceiver"></select>
+                                                <input type="text" class="form-control" id="card_vag_name_rod_vag" name="card_vag_name_rod_vag" data-mode="all" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -414,14 +420,13 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-4 mb-1 text-left">
-                                                <label for="uz_vag_wagons_condition" class="col-form-label">@IDSRWTResource.title_wagons_condition:</label>
-                                                <select class="form-control" id="uz_vag_wagons_condition" name="uz_vag_wagons_condition" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
+                                                <label for="uz_vag_condition_arrival" class="col-form-label">@IDSRWTResource.title_wagons_condition:</label>
+                                                <select class="form-control" id="uz_vag_condition_arrival" name="uz_vag_condition_arrival" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-4 mb-1 text-left">
                                                 <label for="uz_vag_type_wagon" class="col-form-label">@IDSRWTResource.title_type_wagons:</label>
-                                                @*<input type="text" class="form-control" id="uz_vag_type_wagon" name="uz_vag_type_wagon" data-mode="view" data-edit="" data-form="transceiver">*@
                                                 <select class="form-control" id="uz_vag_type_wagon" name="uz_vag_type_wagon" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
                                                 <div class="invalid-feedback">
                                                 </div>
@@ -430,7 +435,9 @@
                                         <div class="form-row">
                                             <div class="col-md-4 mb-1 text-left">
                                                 <label for="card_vag_kol_os" class="col-form-label">@IDSRWTResource.title_kol_os:</label>
-                                                <input type="number" class="form-control" id="card_vag_kol_os" name="card_vag_kol_os" data-mode="all" data-edit="" data-form="transceiver">
+                                                @*<input type="number" class="form-control" id="card_vag_kol_os" name="card_vag_kol_os" data-mode="all" data-edit="" data-form="transceiver">*@
+                                                <select class="form-control" id="card_vag_kol_os" name="card_vag_kol_os" data-mode="all" data-edit="" data-form="transceiver"></select>
+
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -462,56 +469,65 @@
                                             </div>
                                             <div class="col-md-3 mb-1 text-left">
                                                 <label for="card_vag_date_rem_vag" class="col-form-label">@IDSRWTResource.title_date_rem_vag:</label>
-                                                <input type="number" class="form-control" id="card_vag_date_rem_vag" name="card_vag_date_rem_vag" placeholder="" data-mode="edit-global" data-edit="" data-form="transceiver">
+                                                <input type="datetime" class="form-control" id="card_vag_date_rem_vag" name="card_vag_date_rem_vag" placeholder="" data-mode="edit-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 mb-1 text-left">
                                                 <label for="card_vag_date_rem_uz" class="col-form-label">@IDSRWTResource.title_date_rem_uz:</label>
-                                                <input type="number" class="form-control" id="card_vag_date_rem_uz" name="card_vag_date_rem_uz" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <input type="datetime" class="form-control" id="card_vag_date_rem_uz" name="card_vag_date_rem_uz" placeholder="" data-mode="all" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class="form-row">
                                             <div class="col-md-4 mb-1 text-left">
                                                 <label for="card_vag_name_owner" class="col-form-label">@IDSRWTResource.title_name_owner:</label>
-                                                <input type="text" class="form-control" id="card_vag_name_owner" name="card_vag_name_owner" data-mode="view" data-edit="" data-form="transceiver">
-                                                <select class="form-control" id="card_vag_name_owner" name="card_vag_name_owner" data-mode="edit" data-edit="" data-form="transceiver"></select>
+                                                <input type="text" class="form-control" id="card_vag_name_owner" name="card_vag_name_owner" data-mode="all" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-4 mb-1 text-left">
+                                                <label for="card_vag_rent_start" class="col-form-label">@IDSRWTResource.title_rent_start:</label>
+                                                <input type="datetime" class="form-control" id="card_vag_rent_start" name="card_vag_rent_start" data-mode="edit-global" data-edit="" data-form="transceiver">
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 mb-1 text-left">
+                                                <label for="card_vag_type_ownership" class="col-form-label">@IDSRWTResource.title_type_ownership:</label>
+                                                <select class="form-control" id="card_vag_type_ownership" name="card_vag_type_ownership" data-mode="view-global" data-edit="" data-form="transceiver"></select>
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-5 mb-1 text-left">
                                                 <label for="card_vag_name_operator" class="col-form-label">@IDSRWTResource.title_name_operator:</label>
-                                                <input type="text" class="form-control" id="card_vag_name_operator" name="card_vag_name_operator" data-mode="view" data-edit="" data-form="transceiver">
-                                                <select class="form-control" id="card_vag_name_operator" name="card_vag_name_operator" data-mode="edit" data-edit="" data-form="transceiver"></select>
+                                                <input type="text" class="form-control" id="card_vag_name_operator" name="card_vag_name_operator" data-mode="all" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
-                                            <div class="col-md-4 mb-1 text-left">
+                                            <div class="col-md-7 mb-1 text-left">
                                                 <label for="card_vag_limiting_loading" class="col-form-label">@IDSRWTResource.title_limiting_loading:</label>
                                                 <input type="number" class="form-control" id="card_vag_limiting_loading" name="card_vag_limiting_loading" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
+                                            @*<div class="col-md-6 mb-1 text-left">
+                <label for="uz_vag_not_load" class="col-form-label">@IDSRWTResource.title_not_load:</label>
+                <select class="form-control" id="uz_vag_not_load" name="uz_vag_not_load" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
+                <div class="invalid-feedback">
+                </div>
+            </div>*@
                                         </div>
                                         <div class="form-row">
                                             <div class="col-md-6 mb-1 text-left">
-                                                <label for="card_vag_type_ownership" class="col-form-label">@IDSRWTResource.title_type_ownership:</label>
-                                                <input type="number" class="form-control" id="card_vag_type_ownership" name="card_vag_type_ownership" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <label for="card_vag_note" class="col-form-label">@IDSRWTResource.title_note_uz:</label>
+                                                <textarea class="form-control" id="card_vag_note" name="card_vag_note" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver"></textarea>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-6 mb-1 text-left">
-                                                <label for="uz_vag_not_load" class="col-form-label">@IDSRWTResource.title_not_load:</label>
-                                                <select class="form-control" id="uz_vag_not_load" name="uz_vag_not_load" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
-                                                <div class="invalid-feedback">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="col-md-12 mb-1 text-left">
                                                 <label for="uz_vag_note" class="col-form-label">@IDSRWTResource.title_note:</label>
                                                 <textarea class="form-control" id="uz_vag_note" name="uz_vag_note" placeholder="" data-mode="edit-global" data-edit="" data-form="transceiver"></textarea>
                                                 <div class="invalid-feedback">

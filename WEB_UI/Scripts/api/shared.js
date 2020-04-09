@@ -25,7 +25,7 @@ var OnAJAXError = function (metod, x, y, z) {
     //if (x.status != 404) {
         
     //}
-    //LockScreenOff();
+    LockScreenOff();
 };
 // Событие после выполнения
 var AJAXComplete = function () {

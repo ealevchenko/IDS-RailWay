@@ -64,6 +64,9 @@
     <Compile Include="Abstract\IWebView.cs" />
     <Compile Include="Abstract\IWebAccess.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_BorderCheckpoint.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_ConditionArrival.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_LimitingLoading.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_Cars.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Countrys.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_ExternalStation.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_InlandRailway.cs" />
@@ -130,6 +133,9 @@
     <Compile Include="Entities\Directory\Directory_ExternalStation.cs" />
     <Compile Include="Entities\Directory\Directory_InlandRailway.cs" />
     <Compile Include="Entities\Directory\Directory_Railway.cs" />
+    <Compile Include="Entities\Directory\Directory_Cars.cs" />
+    <Compile Include="Entities\Directory\Directory_LimitingLoading.cs" />
+    <Compile Include="Entities\Directory\Directory_ConditionArrival.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

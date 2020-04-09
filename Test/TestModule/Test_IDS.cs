@@ -1,4 +1,5 @@
-﻿using IDS;
+﻿using EFIDS.Entities;
+using IDS;
 using IDSLogs.Enum;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,14 @@ namespace Test.TestModule
 
             IDSDirectory ids = new IDSDirectory(service.Test);
             int res = ids.GetID_Directory_StationOfCodeCS(873009, true);
+
+        }
+        // Тест получение текущего вагона
+        public void IDSDirectory_GetCurrentDirectory_CarsOfNum()
+        {
+
+            IDSDirectory ids = new IDSDirectory(service.Test);
+            Directory_Cars res = ids.GetCurrentDirectory_CarsOfNum(50030584, 22,60, 4, "", true, @"EUROPE\ealevchenko");
 
         }
 
