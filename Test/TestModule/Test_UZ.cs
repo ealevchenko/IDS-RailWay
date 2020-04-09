@@ -28,7 +28,7 @@ namespace Test.TestModule
             WebAPIClientUZ client = new WebAPIClientUZ(service.Null);
             Console.WriteLine("Запрос....");
             //List<string> list2 = client.GetInfoWagon(58647785);
-            UZWagonInfo info = client.GetInfoWagonOfNum(58647782);
+            UZWagonInfo info = client.GetInfoWagonOfNum(62079280);
         }
 
         public void UZ_XML()

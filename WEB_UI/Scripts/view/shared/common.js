@@ -254,50 +254,70 @@ var cd_initDateTimeRangePicker = function (obj_select, property, close_function)
     var dtrp = {
         obj: null,
         lang: 'ru',
+        time: true,
         select_date: null,
         init: function (obj_select, property, close_function) {
-            if (property.lang) {
+            if (property.lang == null) {
                 dtrp.lang = property.lang;
             }
+            if (property.time !== null) {
+                dtrp.time = property.time;
+            }
+
             dtrp.obj = obj_select.dateRangePicker(
-            {
-                language: dtrp.lang,
-                format: 'DD.MM.YYYY HH:mm',
-                autoClose: false,
-                singleDate: true,
-                singleMonth: true,
-                showShortcuts: false,
-                time: {
-                    enabled: true
-                },
-            }).
-            bind('datepicker-change', function (evt, obj) {
-                dtrp.select_date = obj.date1;
-            })
-            .bind('datepicker-closed', function () {
-                // Преобразовать формат
-                if (typeof close_function === 'function') {
-                    close_function(dtrp.select_date);
-                }
-            });
+                {
+                    language: dtrp.lang,
+                    format: dtrp.lang === 'ru' ? 'DD.MM.YYYY' + (dtrp.time ? ' HH:mm' : '') : 'DD\MM\YYYY' + (dtrp.time ? ' HH:mm' : ''),
+                    autoClose: false,
+                    singleDate: true,
+                    singleMonth: true,
+                    showShortcuts: false,
+                    time: {
+                        enabled: dtrp.time
+                    },
+                }).
+                bind('datepicker-change', function (evt, obj) {
+                    dtrp.select_date = obj.date1;
+                }).bind('datepicker-closed', function () {
+                    //dtrp.setDateTime(dtrp.select_date); // Иначе дату не возможно убрать
+                    // Преобразовать формат
+                    if (typeof close_function === 'function') {
+                        close_function(dtrp.select_date);
+                    }
+                });
         },
         getDateTime: function () {
             return dtrp.select_date;
         },
         setDateTime: function (datetime) {
+            var e = dtrp.obj.attr("disabled");
+            if (e === "disabled") {
+                dtrp.obj.prop("disabled", false);
+            }
             if (datetime !== null) {
-                dtrp.obj.data('dateRangePicker').setDateRange(moment(datetime).format('DD.MM.YYYY HH:mm:'), moment(datetime).format('DD.MM.YYYY HH:mm:'), true)
+                dtrp.obj.data('dateRangePicker').setDateRange(moment(datetime).format('DD.MM.YYYY' + (dtrp.time ? ' HH:mm' : '')), moment(datetime).format('DD.MM.YYYY' + (dtrp.time ? ' HH:mm' : '')), true);
             } else {
                 // Установить текущую дату и время
-                dtrp.obj.data('dateRangePicker').setDateRange(moment().format('DD.MM.YYYY HH:mm:'), moment().format('DD.MM.YYYY HH:mm:'), true)
+                dtrp.obj.data('dateRangePicker').setDateRange(moment().format('DD.MM.YYYY' + (dtrp.time ? ' HH:mm' : '')), moment().format('DD.MM.YYYY' + (dtrp.time ? ' HH:mm' : '')), true);
                 dtrp.obj.data('dateRangePicker').clear();
                 dtrp.select_date = null; // чтобы вернуло нет даты
             }
+            if (e === "disabled") {
+                dtrp.obj.prop("disabled", true);
+            }
         },
+        enable: function (enb) {
+            dtrp.obj.prop("disabled", !enb);
+        },
+        val: function () {
+            return dtrp.obj.val();
+            //dtrp.getDateTime();
+        }
     };
     dtrp.init(obj_select, property, close_function);
     return dtrp;
 }
+
 /* ----------------------------------------------------------
     Компоненты JQUERY UI
 -------------------------------------------------------------*/
@@ -308,9 +328,9 @@ $.datepicker.regional.ru = {
     nextText: "След&#x3E;",
     currentText: "Сегодня",
     monthNames: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
-    "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
+        "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
     monthNamesShort: ["Янв", "Фев", "Мар", "Апр", "Май", "Июн",
-    "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"],
+        "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"],
     dayNames: ["воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "суббота"],
     dayNamesShort: ["вск", "пнд", "втр", "срд", "чтв", "птн", "сбт"],
     dayNamesMin: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
@@ -326,11 +346,22 @@ var getAutocompleteList = function (list, field_value) {
     var alist = [];
     if (list) {
         for (i = 0, j = list.length; i < j; i++) {
-            alist.push({ value: (field_value==='value' ? list[i].value : list[i].text), label: list[i].value + " - " + list[i].text });
+            alist.push({ value: (field_value === 'value' ? list[i].value : list[i].text), label: list[i].value + " - " + list[i].text });
         }
     }
     return alist;
 };
+// Получить список для выбора в компоненте JQuery UI Autocomplete
+var getAutocompleteListText = function (list, field_value) {
+    var alist = [];
+    if (list) {
+        for (i = 0, j = list.length; i < j; i++) {
+            alist.push({ value: (field_value === 'value' ? list[i].value : list[i].text), label: list[i].text });
+        }
+    }
+    return alist;
+};
+
 /* ----------------------------------------------------------
     Спомогательные функции
 -------------------------------------------------------------*/
@@ -516,7 +547,18 @@ VALIDATION.prototype.set_control_ok = function (o, message) {
         o.next(".valid-feedback").text(message);
     }
 };
-
+// Проверка на пустое значение
+VALIDATION.prototype.checkValueOfNull = function (o, val, mes_error, mes_ok) {
+    if (val === '' || val === null) {
+        this.set_control_error(o, mes_error);
+        this.out_error_message(mes_error);
+        return false;
+    } else {
+        this.set_control_ok(o, mes_ok);
+        this.out_info_message(mes_ok);
+        return true;
+    }
+};
 // Проверка на пустой объект
 VALIDATION.prototype.checkInputOfNull = function (o, mes_error, mes_ok) {
     if (o.val() === '' || o.val() === null) {
@@ -553,20 +595,122 @@ VALIDATION.prototype.checkRegexp = function (o, regexp, mes_error, mes_ok) {
         return true;
     }
 };
+// Проверим Input введенное значение входит в диапазон (пустое значение - не допускается)
+VALIDATION.prototype.checkInputOfRange = function (o, min, max, mes_error, mes_ok) {
+    if (o.val() !== '' && o.val() !== null) {
+        var value = Number(o.val());
+        if (isNaN(value) || value > max || value < min) {
+            this.set_control_error(o, mes_error);
+            this.out_error_message(mes_error);
+            return false;
+        } else {
+            this.set_control_ok(o, mes_ok);
+            this.out_info_message(mes_ok);
+            return true;
+        }
+    } else {
+        this.set_control_error(o, mes_error);
+        this.out_error_message(mes_error);
+        return false;
+    }
+};
+// Проверим Input введенное значение входит в диапазон (пустое значение - допускается)
+VALIDATION.prototype.checkInputOfRange_IsNull = function (o, min, max, mes_error, mes_ok) {
+    if (o.val() !== '' && o.val() !== null) {
+        var value = Number(o.val());
+        if (isNaN(value) || value > max || value < min) {
+            this.set_control_error(o, mes_error);
+            this.out_error_message(mes_error);
+            return false;
+        } else {
+            this.set_control_ok(o, mes_ok);
+            this.out_info_message(mes_ok);
+            return true;
+        }
+    } else {
+        this.set_control_ok(o, mes_ok);
+        this.out_info_message(mes_ok);
+        return false;
+    }
+};
 
-//var checkInputOfStringRange = function (o, min, max, message) {
-//    if (o.val() !== "") {
-//        var value = Number(o.val());
-//        if (isNaN(value) || value > max || value < min) {
-//            wagon_card.set_control_error(o, message);
-//            wagon_card.out_error_message(message);
-//            return false;
-//        } else {
-//            wagon_card.set_control_ok(o);
-//            return true;
-//        }
-//    } else {
-//        wagon_card.set_control_ok(o);
-//        return true;
-//    }
-//},
+// Проверим Input введенное значение соответствует формату даты и времени (пустое значение - не допускается)
+VALIDATION.prototype.checkInputOfDateTime = function (o, format, mes_ok) {
+    if (o.val() !== '' && o.val() !== null) {
+        var s = o.val();
+        var dt = moment(o.val(), format);
+        if (!dt.isValid()) {
+            this.set_control_error(o, "Дата должна быть указана в формате '" + format + "'");
+            this.out_error_message("Дата должна быть указана в формате '" + format + "'");
+            return false;
+        } else {
+            this.set_control_ok(o, mes_ok);
+            this.out_info_message(mes_ok);
+            return true;
+        }
+    } else {
+        this.set_control_error(o, "Дата должна быть указана в формате '" + format + "'");
+        this.out_error_message("Дата должна быть указана в формате '" + format + "'");
+        return false;
+    }
+};
+// Проверим Input введенное значение соответствует формату даты и времени (пустое значение - допускается)
+VALIDATION.prototype.checkInputOfDateTime_IsNull = function (o, format, mes_ok) {
+    if (o.val() !== '' && o.val() !== null) {
+        var s = o.val();
+        var dt = moment(o.val(), format);
+        if (!dt.isValid()) {
+            this.set_control_error(o, "Дата должна быть указана в формате '" + format + "'");
+            this.out_error_message("Дата должна быть указана в формате '" + format + "'");
+            return false;
+        } else {
+            this.set_control_ok(o, mes_ok);
+            this.out_info_message(mes_ok);
+            return true;
+        }
+    } else {
+        this.set_control_ok(o, mes_ok);
+        this.out_info_message(mes_ok);
+        return true;
+    }
+};
+// Проверим Input введенное значение есть в списке (пустое значение - не допускается)
+VALIDATION.prototype.checkInputOfList = function (o, list, mes_error, mes_ok) {
+    if (o.val() !== '' && o.val() !== null) {
+        var text = o.val();
+        var obj = getObjects(list, 'text', text);
+        if (!obj || obj.length === 0) {
+            this.set_control_error(o, mes_error);
+            this.out_error_message(mes_error);
+            return false;
+        } else {
+            this.set_control_ok(o, mes_ok);
+            this.out_info_message(mes_ok);
+            return true;
+        }
+    } else {
+        this.set_control_error(o, mes_error);
+        this.out_error_message(mes_error);
+        return false;
+    }
+};
+// Проверим Input введенное значение есть в списке (пустое значение - допускается)
+VALIDATION.prototype.checkInputOfList_IsNull = function (o, list, mes_error, mes_ok) {
+    if (o.val() !== '' && o.val() !== null) {
+        var text = o.val();
+        var obj = getObjects(list, 'text', text);
+        if (!obj || obj.length === 0) {
+            this.set_control_error(o, mes_error);
+            this.out_error_message(mes_error);
+            return false;
+        } else {
+            this.set_control_ok(o, mes_ok);
+            this.out_info_message(mes_ok);
+            return true;
+        }
+    } else {
+        this.set_control_ok(o, mes_ok);
+        this.out_info_message(mes_ok);
+        return true;
+    }
+};

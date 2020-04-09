@@ -208,8 +208,11 @@
     <Compile Include="Areas\IDSRWT\Controllers\HomeController.cs" />
     <Compile Include="Areas\IDSRWT\IDSRWTAreaRegistration.cs" />
     <Compile Include="Controllers\api\IDS_Directory_BorderCheckpointController.cs" />
+    <Compile Include="Controllers\api\IDS_Directory_CarsController.cs" />
     <Compile Include="Controllers\api\IDS_Directory_InlandRailwayController.cs" />
     <Compile Include="Controllers\api\IDS_Directory_ExternalStationController.cs" />
+    <Compile Include="Controllers\api\IDS_Directory_ConditionArrivalController.cs" />
+    <Compile Include="Controllers\api\IDS_Directory_LimitingLoadingController.cs" />
     <Compile Include="Controllers\api\IDS_Directory_RailwayController.cs" />
     <Compile Include="Controllers\api\IDS_Directory_CountrysController.cs" />
     <Compile Include="Controllers\api\IDS_Directory_ShipperController.cs" />
@@ -241,6 +244,7 @@
     <Compile Include="Controllers\api\UZ_Directory_InternalRailroadController.cs" />
     <Compile Include="Controllers\api\UZ_Directory_StationsController.cs" />
     <Compile Include="Controllers\api\UZ_Directory_StatesController.cs" />
+    <Compile Include="Controllers\api\UZ_WebClientController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
@@ -1088,6 +1092,10 @@
     <ProjectReference Include="..\IDSLogs\IDSLogs.csproj">
       <Project>{910d6360-9e8c-4143-a4dd-84e778edb7a6}</Project>
       <Name>IDSLogs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\IDS\IDS.csproj">
+      <Project>{5929FE8F-0A9B-4EED-80E4-624705795D02}</Project>
+      <Name>IDS</Name>
     </ProjectReference>
     <ProjectReference Include="..\UZ\UZ.csproj">
       <Project>{d7147560-b66a-41bb-bddd-4d24403d5e97}</Project>

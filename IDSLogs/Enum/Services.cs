@@ -9,12 +9,18 @@ namespace IDSLogs.Enum
     public enum service : int
     {
         Null = -1,
+        WebSite = 0,
         Test = 1,
+
+        Web = 100,
+        Web_IDS = 101,
+        WebAPI_IDS = 102,
+
         // сервисы Метранса
-        Metrans = 100,
-        Metrans_Transfer_MT_to_AMKR = 101,
-        Metrans_TransferApproaches = 102,
-        Metrans_TransferArrival = 103,
-        Metrans_TransferWT = 104,
+        Metrans = 200,
+        Metrans_Transfer_MT_to_AMKR = 201,
+        Metrans_TransferApproaches = 202,
+        Metrans_TransferArrival = 203,
+        Metrans_TransferWT = 204,
     }
 }
