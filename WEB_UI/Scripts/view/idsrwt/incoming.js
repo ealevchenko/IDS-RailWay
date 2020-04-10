@@ -811,8 +811,8 @@
                 valid = valid & cars_detali.val_card_vag.checkInputOfList(cars_detali.card_vag_name_rod_vag, cars_detali.ids_inc.ids_dir.getListGenusWagons('id', 'genus', cars_detali.lang, null), "Указаного 'Рода вагона' нет в справочнике");
                 valid = valid & cars_detali.val_card_vag.checkInputOfNull(cars_detali.card_vag_name_owner, "Укажите собственника");
                 valid = valid & cars_detali.val_card_vag.checkInputOfList(cars_detali.card_vag_name_owner, cars_detali.ids_inc.ids_dir.getListOwnersWagons('id', 'owner', cars_detali.lang, null), "Указаного 'Владельца' нет в справочнике");
-                cars_detali.val_card_vag.set_control_ok(cars_detali.card_vag_name_operator);
-                valid = valid & cars_detali.val_card_vag.checkInputOfList(cars_detali.card_vag_name_operator, cars_detali.ids_inc.ids_dir.getListOperatorsWagons('id', 'operators', cars_detali.lang, null), "Указаного 'Оператора' нет в справочнике");
+                //cars_detali.val_card_vag.set_control_ok(cars_detali.card_vag_name_operator);
+                valid = valid & cars_detali.val_card_vag.checkInputOfList_IsNull(cars_detali.card_vag_name_operator, cars_detali.ids_inc.ids_dir.getListOperatorsWagons('id', 'operators', cars_detali.lang, null), "Указаного 'Оператора' нет в справочнике");
                 //valid = valid & cars_detali.val_card_vag.checkInputOfNull(cars_detali.card_vag_gruzp, "Укажите грузоподъемность");
                 valid = valid & cars_detali.val_card_vag.checkInputOfRange(cars_detali.card_vag_gruzp, 60.0, 80.0, "Грузоподъемность должна быть в диапазоне от 60.0 до 80.0 тон.");
                 valid = valid & cars_detali.val_card_vag.checkSelection(cars_detali.card_vag_kol_os, "Укажите количество осей (0- по умолчанию, 4,8,12,16,32)");
@@ -821,8 +821,9 @@
                 valid = valid & cars_detali.val_card_vag.checkInputOfDateTime_IsNull(cars_detali.card_vag_date_rem_uz.obj, lang === 'ru' ? 'DD.MM.YYYY' : 'MM/DD/YYYY');
                 valid = valid & cars_detali.val_card_vag.checkInputOfList_IsNull(cars_detali.card_vag_limiting_loading, cars_detali.ids_inc.ids_dir.getListLimitingLoading('id', 'limiting_name', cars_detali.lang, null), "Указаного 'Ограничения погрузки' нет в справочнике");
                 valid = valid & cars_detali.val_card_vag.checkInputOfList_IsNull(cars_detali.card_vag_type_ownership, cars_detali.ids_inc.ids_dir.getListTypeOwnerShip('id', 'type_ownership', cars_detali.lang, null), "Указаного 'Признака собственности' нет в справочнике");
-
                 valid = valid & cars_detali.val_card_vag.checkInputOfNull(cars_detali.card_vag_rent_start.obj, "Укажите время начало аренды");
+                cars_detali.val_card_vag.set_control_ok(cars_detali.card_vag_note);
+
                 return valid;
             },
             //======================================================================================
@@ -997,7 +998,13 @@
                     .add(cars_detali.card_vag_gruzp)
                     .add(cars_detali.card_vag_kol_os)
                     .add(cars_detali.card_vag_usl_tip)
-                    .add(cars_detali.card_vag_rent_start);
+                    .add(cars_detali.card_vag_date_rem_vag.obj)
+                    .add(cars_detali.card_vag_date_rem_uz.obj)
+                    .add(cars_detali.card_vag_limiting_loading)
+                    .add(cars_detali.card_vag_type_ownership)
+                    .add(cars_detali.card_vag_note)
+                    .add(cars_detali.card_vag_rent_start.obj);
+
                 cars_detali.val_card_vag = new VALIDATION(cars_detali.lang, cars_detali.alert_card_vag, cars_detali.all_obj_card_vag); // Создадим класс VALIDATION
 
                 // Sumbit form
