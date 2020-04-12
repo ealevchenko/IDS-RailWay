@@ -326,7 +326,8 @@ namespace IDS
                     id = 0,
                     num = num,
                     id_countrys = id_countrys,
-                    id_genus = id_genus,
+                    // если есть старая запись и она соответсвует группе род, тогда переносим, инчи новый род
+                    id_genus = last_car != null && isDirectory_GenusWagons(last_car.id_genus, rod) ?   last_car.id_genus : id_genus,
                     id_owner = id_owner,
                     ban_changes_owner = false,
                     id_operator = id_operator,
