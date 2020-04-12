@@ -21,6 +21,31 @@
                 'field_change_user': 'Правил',
                 'field_create_sostav': 'Добавил',
                 'field_change_sostav': 'Правил',
+
+                'field_doc_id': 'Ідентифікатор документа у базі АТ «Укрзалізниця»',
+                'field_description': 'Опис документа',
+                'field_doc_date': 'Дата документу',
+                'field_doc_type': 'Код типу супровідного документа',
+                'field_doc_type_name': 'Найменування типу супровідного документу',
+                'field_kod_zd_use': 'Код залізниці вилучення документа',
+                'field_kol': 'Кількість екземплярів',
+
+                'field_carrier_kod': 'Код перевізника',
+                'field_carrier_name': 'Скорочене найменування перевізника',
+                'field_date_akt': 'Дата складання акту',
+                'field_date_dved': 'Дата укладання досильної дорожньої відомості',
+                'field_esr_akt': 'ЄСР станції складання акту ',
+                'field_stn_name_akt': 'Найменування станції складання акту',
+                'field_nom_akt': 'Номер акту',
+                'field_nom_dved': 'Номер досильної дорожньої відомості',
+                'field_oper_date': 'Дата внесення даних по акту у перевізний документ',
+                'field_prichina_akt': 'Причина',
+                'field_responsible_person': 'Ім`я особи, відповідальної за внесення данних по акту у перевізний документ',
+                'field_ser_dved': 'Серія досильної дорожньої відомості',
+                'field_type': 'Тип акту',
+                'field_vagon_nom': 'Номер вагону ',
+                'field_zd_kod': 'Код залізниці перевантаження',
+
                 'title_button_buffer': 'Буфер',
                 'title_button_excel': 'Excel',
                 'title_button_field': 'Поля',
@@ -797,7 +822,153 @@
             uz_vag_condition_arrival: $('select#uz_vag_condition_arrival'),
             // Тип вагона
             uz_vag_type_wagon: $('select#uz_vag_type_wagon'),
+            //---------------------------------------------------------------
+            // Код платильщика
+            uz_rask_kod_plat: $('input#uz_rask_kod_plat'),
+            // Название платильщика
+            uz_rask_name_plat: $('input#uz_rask_name_plat'),
+            // Тарифное расстояние
+            uz_rask_distance_way: $('input#uz_rask_distance_way'),
+            // Тариф при выдачи
+            uz_rask_pl_pay_summa: $('input#uz_rask_pl_pay_summa'),
 
+            //---------------------------------------------------------------
+            // Таблица с документами на груз
+            table_dosc: {
+                html_table: $('#table-sender-doc'),
+                obj: null,
+                list: null,
+                // Инициализировать таблицу
+                init: function () {
+                    cars_detali.table_dosc.obj = cars_detali.table_dosc.html_table.DataTable({
+                        "paging": false,
+                        "searching": false,
+                        "ordering": true,
+                        "info": false,
+                        "select": false,
+                        "autoWidth": true,
+                        //"filter": true,
+                        //"scrollY": "600px",
+                        "scrollX": true,
+                        language: language_table(langs),
+                        jQueryUI: false,
+                        "createdRow": function (row, data, index) {
+                            //$(row).attr('id', data.num);
+                        },
+                        columns: [
+                            { data: "id", title: langView('field_doc_id', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "description", title: langView('field_description', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "doc_date", title: langView('field_doc_date', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "doc_type", title: langView('field_doc_type', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "doc_type_name", title: langView('field_doc_type_name', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "kod_zd_use", title: langView('field_kod_zd_use', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "kol", title: langView('field_kol', langs), width: "50px", orderable: true, searchable: false },
+                        ],
+                        stateSave: false,
+                    });
+                },
+                // Показать таблицу с данными
+                view: function (sender_doc) {
+                    cars_detali.table_dosc.load(sender_doc);
+                    cars_detali.table_dosc.obj.draw();
+                },
+                // Загрузить данные
+                load: function (sender_doc) {
+                    cars_detali.table_dosc.list = sender_doc;
+                    cars_detali.table_dosc.obj.clear();
+                    for (i = 0; i < sender_doc.length; i++) {
+                        cars_detali.table_dosc.obj.row.add(cars_detali.table_dosc.get_row(sender_doc[i]));
+                    }
+                },
+                // Получить строку для таблицы
+                get_row: function (data) {
+                    return {
+                        "id": data.id,
+                        "description": data.description,
+                        "doc_date": data.doc_date !== null ? data.doc_date.replace(/T/g, ' ') : null,
+                        "doc_type": data.doc_type,
+                        "doc_type_name": data.doc_type_name,
+                        "kod_zd_use": data.kod_zd_use !== null ? Number(data.kod_zd_use) : null,
+                        "kol": data.kol !== null ? Number(data.kol) : null,
+                    };
+                }
+            },
+            // Акты
+            table_acts: {
+                html_table: $('#table-acts'),
+                obj: null,
+                list: null,
+                // Инициализировать таблицу
+                init: function () {
+                    cars_detali.table_acts.obj = cars_detali.table_acts.html_table.DataTable({
+                        "paging": false,
+                        "searching": false,
+                        "ordering": true,
+                        "info": false,
+                        "select": false,
+                        "autoWidth": true,
+                        //"filter": true,
+                        //"scrollY": "600px",
+                        "scrollX": true,
+                        language: language_table(langs),
+                        jQueryUI: false,
+                        "createdRow": function (row, data, index) {
+                            //$(row).attr('id', data.num);
+                        },
+                        columns: [
+                            { data: "carrier_kod", title: langView('field_carrier_kod', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "carrier_name", title: langView('field_carrier_name', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "date_akt", title: langView('field_date_akt', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "date_dved", title: langView('field_date_dved', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "esr_akt", title: langView('field_esr_akt', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "stn_name_akt", title: langView('field_stn_name_akt', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "nom_akt", title: langView('field_nom_akt', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "nom_dved", title: langView('field_nom_dved', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "oper_date", title: langView('field_oper_date', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "prichina_akt", title: langView('field_prichina_akt', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "responsible_person", title: langView('field_responsible_person', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "ser_dved", title: langView('field_ser_dved', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "type", title: langView('field_type', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "vagon_nom", title: langView('field_vagon_nom', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "zd_kod", title: langView('field_zd_kod', langs), width: "50px", orderable: true, searchable: false },
+                        ],
+                        stateSave: false,
+                    });
+                },
+                // Показать таблицу с данными
+                view: function (act) {
+                    cars_detali.table_acts.load(act);
+                    cars_detali.table_acts.obj.draw();
+                },
+                // Загрузить данные
+                load: function (act) {
+                    cars_detali.table_acts.list = act;
+                    cars_detali.table_acts.obj.clear();
+                    for (i = 0; i < act.length; i++) {
+                        cars_detali.table_acts.obj.row.add(cars_detali.table_acts.get_row(act[i]));
+                    }
+                },
+                // Получить строку для таблицы
+                get_row: function (data) {
+                    return {
+                        "carrier_kod": data.carrier_kod !== null ? Number(data.carrier_kod) : null,
+                        "carrier_name": data.carrier_name,
+                        "date_akt": data.date_akt !== null ? data.date_akt.replace(/T/g, ' ') : null,
+                        "date_dved": data.date_dved !== null ? data.date_dved.replace(/T/g, ' ') : null,
+                        "esr_akt": data.esr_akt,
+                        "stn_name_akt": data.stn_name_akt,
+                        "nom_akt": data.nom_akt,
+                        "nom_dved": data.nom_dved !== null ? Number(data.nom_dved) : null,
+                        "oper_date": data.oper_date !== null ? data.oper_date.replace(/T/g, ' ') : null,
+                        "prichina_akt": data.prichina_akt,
+                        "responsible_person": data.responsible_person,
+                        "ser_dved": data.ser_dved,
+                        "type": data.type, // ActKind
+                        "vagon_nom": data.vagon_nom,
+                        "zd_kod": data.zd_kod !== null ? Number(data.zd_kod) : null,
+                    };
+                }
+            },
             //======================================================================================
             // ВАЛИДАЦИЯ СПРАВОЧНИКОВ
             //======================================================================================
@@ -1004,9 +1175,11 @@
                     .add(cars_detali.card_vag_type_ownership)
                     .add(cars_detali.card_vag_note)
                     .add(cars_detali.card_vag_rent_start.obj);
-
+                // Валидации
                 cars_detali.val_card_vag = new VALIDATION(cars_detali.lang, cars_detali.alert_card_vag, cars_detali.all_obj_card_vag); // Создадим класс VALIDATION
-
+                // Таблицы
+                cars_detali.table_dosc.init();// Инициализация таблицы с документами
+                cars_detali.table_acts.init();// Инициализация таблицы с акт
                 // Sumbit form
                 cars_detali.content.find("form").on("submit", function (event) {
                     event.preventDefault();
@@ -1219,7 +1392,7 @@
                 cars_detali.uz_vag_condition_arrival = cd_initSelect(
                     $('select#uz_vag_condition_arrival'),
                     { lang: lang },
-                    cars_detali.ids_inc.ids_dir.getListConditionArrival('id', 'condition_name', cars_detali.lang, null),
+                    cars_detali.ids_inc.ids_dir.getList2ConditionArrival('id', 'condition_abbr', 'condition_name', cars_detali.lang, null),
                     null,
                     id ? Number(id) : -1,
                     function (event) {
@@ -1240,6 +1413,20 @@
                     },
                     null);
             },
+            // Обновить компонент платильщик по прибытию
+            update_list_name_plat: function (text) {
+                cars_detali.uz_rask_name_plat = this.uz_rask_name_plat.autocomplete({
+                    minLength: 2,
+                    source: getAutocompleteList(cars_detali.ids_inc.ids_dir.getListPayerArrival('code', 'payer_name', cars_detali.lang, null), 'text'),
+                    change: function (event, ui) {
+
+                    },
+                    select: function (event, ui) {
+
+                    }
+                }).val(text ? text : '');
+            },
+
             // -------- УПРАВЛЕНИЕ РЕЖИМАМИ ------------------------------------------------------
             // Возвращает свойство "редактирование разрешено" - true, запрещено -false
             is_edit_mode_of_element: function (el) {
@@ -1362,6 +1549,18 @@
                 cars_detali.uz_vag_gruzp.val('');
                 cars_detali.uz_vag_ves_tary_arc.val('');
                 cars_detali.uz_vag_u_tara.val('');
+
+                cars_detali.table_dosc.view([]);
+                cars_detali.table_acts.view([]);
+                $('span#count-docs').text('');
+                $('span#count-acts').text('');
+
+                cars_detali.uz_rask_kod_plat.val('');
+                cars_detali.uz_rask_name_plat.val('');
+
+                cars_detali.uz_rask_distance_way.val('');
+                cars_detali.uz_rask_pl_pay_summa.val('');
+
             },
             //=================================================================================
             // ОТОБРАЖЕНИЕ ЭПД
@@ -1599,7 +1798,7 @@
                 cars_detali.view_epd_type_ownership(vagon);
                 cars_detali.view_epd_card_vag_note(vagon);
             },
-            // Показать всю информацию по справочнику вагона
+            // Показать всю информацию по вагону из ЭПД
             view_epd_uz_vag: function (vagon) {
                 if (vagon) {
                     cars_detali.uz_vag_gruzp.val(vagon.gruzp);
@@ -1607,6 +1806,39 @@
                     cars_detali.uz_vag_u_tara.val(vagon.u_tara);
                 }
 
+            },
+            // Показать доп документацию
+            view_epd_docs: function (otpr) {
+                if (otpr && otpr.sender_doc && otpr.sender_doc.length > 0) {
+                    $('span#count-docs').text(otpr.sender_doc.length);
+                    cars_detali.table_dosc.view(otpr.sender_doc);
+                } else {
+                    $('span#count-docs').text('');
+                }
+            },
+            // Показать акты
+            view_epd_acts: function (otpr) {
+                if (otpr && otpr.acts && otpr.acts.length > 0) {
+                    var acts = otpr.acts.filter(function (i) {
+                        if (Number(i.vagon_nom) === cars_detali.select_num) return true; else return false;
+                    });
+                    $('span#count-acts').text(acts.length);
+                    cars_detali.table_acts.view(acts);
+                } else {
+                    $('span#count-acts').text('');
+                }
+            },
+            // Показать тарифное рамсстояние
+            view_epd_distance_way: function (otpr) {
+                if (otpr) {
+                    cars_detali.uz_rask_distance_way.val(otpr.distance_way);
+                }
+            },
+            // Показать тариф при выдаче
+            view_epd_pay_summa: function (otpr) {
+                if (otpr) {
+                    cars_detali.uz_rask_pl_pay_summa.val(0);
+                }
             },
             // показать электронно перевозочный документ
             view_cars_epd: function (num, otpr) {
@@ -1646,7 +1878,16 @@
                         //-------------------------------------------------------------------
                         // Показать информацию из справочника вагонов ИДС (вагон определяеется ранее)
                         cars_detali.view_epd_card_vag(cars_detali.select_vagon);
+                        // Показать информацию из ЭПД
                         cars_detali.view_epd_uz_vag(cars_detali.select_otpr_vagon);
+                        // Показать сопроводительные документы
+                        cars_detali.view_epd_docs(cars_detali.select_otpr);
+                        cars_detali.view_epd_acts(cars_detali.select_otpr);
+                        // Платильщик по прибытию
+
+                        cars_detali.view_epd_distance_way(cars_detali.select_otpr);
+                        cars_detali.view_epd_pay_summa(cars_detali.select_otpr);
+
                         LockScreenOff();
                     });
 

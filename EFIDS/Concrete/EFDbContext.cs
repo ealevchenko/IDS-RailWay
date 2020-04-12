@@ -46,6 +46,7 @@ namespace EFIDS.Concrete
         public virtual DbSet<Directory_Cars> Directory_Cars { get; set; }
         public virtual DbSet<Directory_LimitingLoading> Directory_LimitingLoading { get; set; }
         public virtual DbSet<Directory_ConditionArrival> Directory_ConditionArrival { get; set; }
+        public virtual DbSet<Directory_PayerArrival> Directory_PayerArrival { get; set; }
 
         public virtual DbSet<Directory_BorderCheckpoint> Directory_BorderCheckpoint { get; set; }
         public virtual DbSet<Directory_Countrys> Directory_Countrys { get; set; }
@@ -53,12 +54,35 @@ namespace EFIDS.Concrete
         public virtual DbSet<Directory_InlandRailway> Directory_InlandRailway { get; set; }
         public virtual DbSet<Directory_Railway> Directory_Railway { get; set; }
 
+        public virtual DbSet<Directory_Cargo> Directory_Cargo { get; set; }
+        public virtual DbSet<Directory_CargoETSNG> Directory_CargoETSNG { get; set; }
+        public virtual DbSet<Directory_CargoGNG> Directory_CargoGNG { get; set; }
+        public virtual DbSet<Directory_CargoGroup> Directory_CargoGroup { get; set; }
+
         // Доступ к сайту
         public virtual DbSet<WebAccess> WebAccess { get; set; }
         public virtual DbSet<WebView> WebView { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            // dir cargo
+            modelBuilder.Entity<Directory_CargoETSNG>()
+                .HasMany(e => e.Directory_Cargo)
+                .WithRequired(e => e.Directory_CargoETSNG)
+                .HasForeignKey(e => e.code_etsng)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Directory_CargoGNG>()
+                .HasMany(e => e.Directory_Cargo)
+                .WithOptional(e => e.Directory_CargoGNG)
+                .HasForeignKey(e => e.code_gng);
+
+            modelBuilder.Entity<Directory_CargoGroup>()
+                .HasMany(e => e.Directory_Cargo)
+                .WithRequired(e => e.Directory_CargoGroup)
+                .HasForeignKey(e => e.id_group)
+                .WillCascadeOnDelete(false);
+
             // dir cars
             modelBuilder.Entity<Directory_Countrys>()
                 .HasMany(e => e.Directory_Cars)

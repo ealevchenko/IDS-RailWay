@@ -360,7 +360,7 @@ namespace EFIDS.Helper
                 Directory_TypeOwnerShip = c.Directory_TypeOwnerShip.GetTypeOwnerShip(), 
             };
         }
-        // Справочник вагонов
+        // Справочник годность по прибытию
         public static Directory_ConditionArrival GetDirectory_ConditionArrival(this Directory_ConditionArrival c)
         {
             if (c == null) return null;
@@ -378,7 +378,22 @@ namespace EFIDS.Helper
                 change_user = c.change_user,
             };
         }
-
+        // Справочник годность по прибытию
+        public static Directory_PayerArrival GetDirectory_PayerArrival(this Directory_PayerArrival p)
+        {
+            if (p == null) return null;
+            return new Directory_PayerArrival()
+            {
+                id = p.id,  
+                payer_name_ru = p.payer_name_ru, 
+                payer_name_en = p.payer_name_en,
+                code = p.code,
+                create = p.create,
+                create_user = p.create_user,
+                change = p.change,
+                change_user = p.change_user,
+            };
+        }
 
         #endregion
 

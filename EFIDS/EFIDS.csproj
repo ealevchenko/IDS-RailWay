@@ -64,7 +64,12 @@
     <Compile Include="Abstract\IWebView.cs" />
     <Compile Include="Abstract\IWebAccess.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_BorderCheckpoint.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_CargoGNG.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_CargoGroup.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_ConditionArrival.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_Cargo.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_CargoETSNG.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_PayerArrival.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_LimitingLoading.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Cars.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Countrys.cs" />
@@ -73,7 +78,6 @@
     <Compile Include="Concrete\Directory\EFDirectory_Railway.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Shipper.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Consignee.cs" />
-    <Compile Include="Concrete\Directory\EFDirectory_ExternalNetworkStation.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Station.cs" />
     <Compile Include="Concrete\MORS\EFWagonsMotionSignals.cs" />
     <Compile Include="Concrete\MORS\EFParksListWagons.cs" />
@@ -126,7 +130,6 @@
     <Compile Include="Entities\RWT\UZ_DOC.cs" />
     <Compile Include="Entities\Directory\Directory_Consignee.cs" />
     <Compile Include="Entities\MORS\WagonsMotionSignals.cs" />
-    <Compile Include="Entities\Directory\Directory_ExternalNetworkStation.cs" />
     <Compile Include="Entities\Directory\Directory_Shipper.cs" />
     <Compile Include="Entities\Directory\Directory_BorderCheckpoint.cs" />
     <Compile Include="Entities\Directory\Directory_Countrys.cs" />
@@ -136,6 +139,11 @@
     <Compile Include="Entities\Directory\Directory_Cars.cs" />
     <Compile Include="Entities\Directory\Directory_LimitingLoading.cs" />
     <Compile Include="Entities\Directory\Directory_ConditionArrival.cs" />
+    <Compile Include="Entities\Directory\Directory_PayerArrival.cs" />
+    <Compile Include="Entities\Directory\Directory_Cargo.cs" />
+    <Compile Include="Entities\Directory\Directory_CargoETSNG.cs" />
+    <Compile Include="Entities\Directory\Directory_CargoGNG.cs" />
+    <Compile Include="Entities\Directory\Directory_CargoGroup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

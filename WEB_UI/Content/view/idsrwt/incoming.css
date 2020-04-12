@@ -216,7 +216,7 @@ div#accordion > .card-header {
 
 div#accordion div.card > .card-header a i {
     float: left;
-    font-size: 25px;
+    /*font-size: 25px;*/
     padding: 5px 0;
     margin: 0 25px 0 0px;
     color: #195C9D;
@@ -224,7 +224,7 @@ div#accordion div.card > .card-header a i {
 
 div#accordion div.card > .card-header i {
     float: right;
-    font-size: 30px;
+    /*font-size: 30px;*/
     width: 1%;
     margin-top: 8px;
     margin-right: 10px;
@@ -243,7 +243,7 @@ div#accordion div.card > .card-header p {
 
 div#accordion div.card > .card-header h3 {
     margin: 0 0 0px;
-    font-size: 20px;
+    /*font-size: 20px;*/
     font-family: 'Slabo 27px', serif;
     font-weight: bold;
     color: #3fc199;

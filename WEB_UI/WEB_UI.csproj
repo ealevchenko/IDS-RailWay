@@ -209,6 +209,7 @@
     <Compile Include="Areas\IDSRWT\IDSRWTAreaRegistration.cs" />
     <Compile Include="Controllers\api\IDS_Directory_BorderCheckpointController.cs" />
     <Compile Include="Controllers\api\IDS_Directory_CarsController.cs" />
+    <Compile Include="Controllers\api\IDS_Directory_PayerArrivalController.cs" />
     <Compile Include="Controllers\api\IDS_Directory_InlandRailwayController.cs" />
     <Compile Include="Controllers\api\IDS_Directory_ExternalStationController.cs" />
     <Compile Include="Controllers\api\IDS_Directory_ConditionArrivalController.cs" />

@@ -457,7 +457,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Платиельщик с ЭПД.
+        ///   Ищет локализованную строку, похожую на Плательщик с ЭПД.
         /// </summary>
         public static string title_name_plat {
             get {
