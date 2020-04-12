@@ -9,7 +9,62 @@
     "cont": [ ],
     "frontier_mark": [ { "carrier_kod": 22, "carrier_name": "УЗ", "cross_date": "2020-02-13T20:00:00", "direction": 1, "esr": 348303, "esr_name": "Бережесть (эксп.)", "zd_kod": 22 } ],
     "pass_mark": [ { "carrier_kod": 22, "carrier_name": "УЗ", "esr": 348303, "esr_name": "Бережесть (эксп.)", "pass_date": "2020-02-13T20:00:00", "zd_kod": 22 } ],
-    "pl": [ { "pay": [ { "currency": 980, "date": null, "kod": "23", "nom_doc": null, "podkod": "107", "pr_avt": "1", "ser_doc": null, "stn": null, "summa": 10550 }, { "currency": 980, "date": null, "kod": "21", "nom_doc": null, "podkod": null, "pr_avt": "1", "ser_doc": null, "stn": null, "summa": 12971800 } ], "carrier_kod": 22, "carrier_name": "УЗ", "currency": null, "date_carrier_dog": null, "kod_adm": null, "kod_plat": "5735885", "name_plat": "ТОВ \"СЕЙЛ-ЕКОХІМ\"", "num_carrier_dog": null, "podkod_exp": null, "sector_num": null, "type": "1", "pl_loc": null }, { "pay": [ ], "carrier_kod": 22, "carrier_name": "УЗ", "currency": null, "date_carrier_dog": null, "kod_adm": null, "kod_plat": "5735885", "name_plat": "OOO \"CEЙЛ ЭKOXИM\"", "num_carrier_dog": null, "podkod_exp": null, "sector_num": null, "type": "3", "pl_loc": null } ],
+  "pl": [
+    
+    {
+      "pay": [
+        {
+          "currency": 980,
+          "date": null,
+          "kod": "23",
+          "nom_doc": null,
+          "podkod": "107",
+          "pr_avt": "1",
+          "ser_doc": null,
+          "stn": null,
+          "summa": 10550
+        },
+        {
+          "currency": 980,
+          "date": null,
+          "kod": "21",
+          "nom_doc": null,
+          "podkod": null,
+          "pr_avt": "1",
+          "ser_doc": null,
+          "stn": null,
+          "summa": 12971800
+        }
+      ],
+      "carrier_kod": 22,
+      "carrier_name": "УЗ",
+      "currency": null,
+      "date_carrier_dog": null,
+      "kod_adm": null,
+      "kod_plat": "5735885",
+      "name_plat": "ТОВ \"СЕЙЛ-ЕКОХІМ\"",
+      "num_carrier_dog": null,
+      "podkod_exp": null,
+      "sector_num": null,
+      "type": "1",
+      "pl_loc": null
+    },
+    {
+      "pay": [],
+      "carrier_kod": 22,
+      "carrier_name": "УЗ",
+      "currency": null,
+      "date_carrier_dog": null,
+      "kod_adm": null,
+      "kod_plat": "5735885",
+      "name_plat": "OOO \"CEЙЛ ЭKOXИM\"",
+      "num_carrier_dog": null,
+      "podkod_exp": null,
+      "sector_num": null,
+      "type": "3",
+      "pl_loc": null
+    }
+  ],
     "prolongation": [ { "carrier_kod": 22, "carrier_name": "УЗ", "date_end_delay": "2020-02-17T15:23:00", "date_start_delay": "2020-02-15T15:23:00", "esr": 410006, "esr_name": "Знаменка", "reason": 10, "type": 1, "user_reason_name": "Азф6084Терм.дост.збільш.на 2доби зг.п.2.9 н.644 від 21.11.2000в меж.ДН-3", "zd_kod": 22 } ],
     "route": [
         {
@@ -42,7 +97,36 @@
     ],
     "rw_stat": [ ],
     "shema": [ { "carry_sch": 1.0, "pr_sch": 2 } ],
-    "sender_doc": [ { "id": null, "description": "(ИHBOЙC) CЧET ФAKTУPA  ", "doc_date": null, "doc_type": "916", "doc_type_name": null, "kod_zd_use": null, "kol": null }, { "id": null, "description": "ПACПOPT KAЧECTBA  ", "doc_date": null, "doc_type": "Z69", "doc_type_name": null, "kod_zd_use": null, "kol": null }, { "id": null, "description": "ДPУГИE ПPИЛAГAEMЫE ДOKУMEHTЫ N  ПPO", "doc_date": null, "doc_type": "916", "doc_type_name": null, "kod_zd_use": null, "kol": null } ],
+  "sender_doc": [
+    
+    {
+      "id": null,
+      "description": "(ИHBOЙC) CЧET ФAKTУPA  ",
+      "doc_date": null,
+      "doc_type": "916",
+      "doc_type_name": null,
+      "kod_zd_use": null,
+      "kol": null
+    },
+    {
+      "id": null,
+      "description": "ПACПOPT KAЧECTBA  ",
+      "doc_date": null,
+      "doc_type": "Z69",
+      "doc_type_name": null,
+      "kod_zd_use": null,
+      "kol": null
+    },
+    {
+      "id": null,
+      "description": "ДPУГИE ПPИЛAГAEMЫE ДOKУMEHTЫ N  ПPO",
+      "doc_date": null,
+      "doc_type": "916",
+      "doc_type_name": null,
+      "kod_zd_use": null,
+      "kol": null
+    }
+  ],
     "send_stat": [ ],
     "shtempel": [ { "column_num": "у верхній частині", "info_sht": "Импорт", "nom_sht": 707 }, { "column_num": "7", "info_sht": "Смотри прилагаемую ведомость", "nom_sht": 708 } ],
     "spec_cond": [ ],
