@@ -13,9 +13,7 @@ namespace EFIDS.Entities
 
         public int id_group { get; set; }
 
-        public int code_etsng { get; set; }
-
-        public int? code_gng { get; set; }
+        public int id_cargo_etsng { get; set; }
 
         [Required]
         [StringLength(50)]
@@ -27,6 +25,8 @@ namespace EFIDS.Entities
 
         [StringLength(20)]
         public string code_sap { get; set; }
+
+        public bool? sending { get; set; }
 
         public DateTime create { get; set; }
 
@@ -40,8 +40,6 @@ namespace EFIDS.Entities
         public string change_user { get; set; }
 
         public virtual Directory_CargoETSNG Directory_CargoETSNG { get; set; }
-
-        public virtual Directory_CargoGNG Directory_CargoGNG { get; set; }
 
         public virtual Directory_CargoGroup Directory_CargoGroup { get; set; }
     }

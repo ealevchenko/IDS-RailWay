@@ -9,14 +9,8 @@ namespace EFIDS.Entities
     [Table("IDS.Directory_CargoGNG")]
     public partial class Directory_CargoGNG
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Directory_CargoGNG()
-        {
-            Directory_Cargo = new HashSet<Directory_Cargo>();
-        }
+        public int id { get; set; }
 
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int code { get; set; }
 
         [Required]
@@ -37,8 +31,5 @@ namespace EFIDS.Entities
 
         [StringLength(50)]
         public string change_user { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Directory_Cargo> Directory_Cargo { get; set; }
     }
 }

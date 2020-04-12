@@ -15,8 +15,8 @@ namespace EFIDS.Entities
             Directory_Cargo = new HashSet<Directory_Cargo>();
         }
 
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int id { get; set; }
+
         public int code { get; set; }
 
         [Required]

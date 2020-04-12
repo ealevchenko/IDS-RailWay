@@ -343,7 +343,7 @@ namespace EFIDS.Helper
                 date_rem_uz = c.date_rem_uz,
                 date_rem_vag = c.date_rem_vag,
                 id_limiting = c.id_limiting,
-                id_type_ownership = c.id_type_ownership, 
+                id_type_ownership = c.id_type_ownership,
                 rent_start = c.rent_start,
                 rent_end = c.rent_end,
                 note = c.note,
@@ -357,7 +357,7 @@ namespace EFIDS.Helper
                 Directory_OwnersWagons = c.Directory_OwnersWagons.GetOwnersWagons(),
                 Directory_OperatorsWagons = c.Directory_OperatorsWagons.GetOperatorsWagons(),
                 Directory_LimitingLoading = c.Directory_LimitingLoading.GetDirectory_LimitingLoading(),
-                Directory_TypeOwnerShip = c.Directory_TypeOwnerShip.GetTypeOwnerShip(), 
+                Directory_TypeOwnerShip = c.Directory_TypeOwnerShip.GetTypeOwnerShip(),
             };
         }
         // Справочник годность по прибытию
@@ -370,7 +370,7 @@ namespace EFIDS.Helper
                 condition_name_ru = c.condition_name_ru,
                 condition_name_en = c.condition_name_en,
                 condition_abbr_ru = c.condition_abbr_ru,
-                condition_abbr_en = c.condition_abbr_en, 
+                condition_abbr_en = c.condition_abbr_en,
                 red = c.red,
                 create = c.create,
                 create_user = c.create_user,
@@ -384,14 +384,85 @@ namespace EFIDS.Helper
             if (p == null) return null;
             return new Directory_PayerArrival()
             {
-                id = p.id,  
-                payer_name_ru = p.payer_name_ru, 
+                id = p.id,
+                payer_name_ru = p.payer_name_ru,
                 payer_name_en = p.payer_name_en,
                 code = p.code,
                 create = p.create,
                 create_user = p.create_user,
                 change = p.change,
                 change_user = p.change_user,
+            };
+        }
+        // Справочник групп грузов
+        public static Directory_CargoGroup GetDirectory_CargoGroup(this Directory_CargoGroup g)
+        {
+            if (g == null) return null;
+            return new Directory_CargoGroup()
+            {
+                id = g.id,
+                cargo_group_name_ru = g.cargo_group_name_ru,
+                cargo_group_name_en = g.cargo_group_name_en,
+                //Directory_Cargo
+                create = g.create,
+                create_user = g.create_user,
+                change = g.change,
+                change_user = g.change_user,
+            };
+        }
+        // Справочник грузов ЕТСНГ
+        public static Directory_CargoETSNG GetDirectory_CargoETSNG(this Directory_CargoETSNG c)
+        {
+            if (c == null) return null;
+            return new Directory_CargoETSNG()
+            {
+                id = c.id, 
+                code =c.code, 
+                cargo_etsng_name_ru = c.cargo_etsng_name_ru,
+                cargo_etsng_name_en = c.cargo_etsng_name_en,
+                //Directory_Cargo
+                create = c.create,
+                create_user = c.create_user,
+                change = c.change,
+                change_user = c.change_user,
+            };
+        }
+        // Справочник грузов ГНГ
+        public static Directory_CargoGNG GetDirectory_CargoGNG(this Directory_CargoGNG c)
+        {
+            if (c == null) return null;
+            return new Directory_CargoGNG()
+            {
+                id = c.id,
+                code = c.code,
+                cargo_gng_name_ru = c.cargo_gng_name_ru,
+                cargo_gng_name_en = c.cargo_gng_name_en,
+                //Directory_Cargo
+                create = c.create,
+                create_user = c.create_user,
+                change = c.change,
+                change_user = c.change_user,
+            };
+        }
+        // Справочник грузов
+        public static Directory_Cargo GetDirectory_Cargo(this Directory_Cargo c)
+        {
+            if (c == null) return null;
+            return new Directory_Cargo()
+            {
+                id = c.id,
+                id_group = c.id_group, 
+                id_cargo_etsng = c.id_cargo_etsng,
+                cargo_name_ru = c.cargo_name_ru,
+                cargo_name_en = c.cargo_name_en,
+                code_sap = c.code_sap,
+                Directory_CargoGroup = c.Directory_CargoGroup.GetDirectory_CargoGroup(),
+                Directory_CargoETSNG = c.Directory_CargoETSNG.GetDirectory_CargoETSNG(),
+                sending = c.sending,
+                create = c.create,
+                create_user = c.create_user,
+                change = c.change,
+                change_user = c.change_user,
             };
         }
 

@@ -101,6 +101,10 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_ConditionArrival>>().To<EFIDS.Concrete.EFDirectory_ConditionArrival>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_PayerArrival>>().To<EFIDS.Concrete.EFDirectory_PayerArrival>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_Cars>>().To<EFIDS.Concrete.EFDirectory_Cars>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_Cargo>>().To<EFIDS.Concrete.EFDirectory_Cargo>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_CargoETSNG>>().To<EFIDS.Concrete.EFDirectory_CargoETSNG>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_CargoGNG>>().To<EFIDS.Concrete.EFDirectory_CargoGNG>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_CargoGroup>>().To<EFIDS.Concrete.EFDirectory_CargoGroup>();
 
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.CardsWagons>>().To<EFIDS.Concrete.EFCardsWagons>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.CardsWagonsRepairs>>().To<EFIDS.Concrete.EFCardsWagonsRepairs>();

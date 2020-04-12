@@ -69,13 +69,8 @@ namespace EFIDS.Concrete
             modelBuilder.Entity<Directory_CargoETSNG>()
                 .HasMany(e => e.Directory_Cargo)
                 .WithRequired(e => e.Directory_CargoETSNG)
-                .HasForeignKey(e => e.code_etsng)
+                .HasForeignKey(e => e.id_cargo_etsng)
                 .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Directory_CargoGNG>()
-                .HasMany(e => e.Directory_Cargo)
-                .WithOptional(e => e.Directory_CargoGNG)
-                .HasForeignKey(e => e.code_gng);
 
             modelBuilder.Entity<Directory_CargoGroup>()
                 .HasMany(e => e.Directory_Cargo)

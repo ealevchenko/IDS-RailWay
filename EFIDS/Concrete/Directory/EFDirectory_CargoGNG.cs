@@ -44,11 +44,11 @@ namespace EFIDS.Concrete
             }
         }
 
-        public Directory_CargoGNG Get(int code)
+        public Directory_CargoGNG Get(int id)
         {
             try
             {
-                return db.Select<Directory_CargoGNG>(code);
+                return db.Select<Directory_CargoGNG>(id);
             }
             catch (Exception e)
             {
@@ -85,7 +85,7 @@ namespace EFIDS.Concrete
         {
             try
             {
-                Directory_CargoGNG dbEntry = db.Directory_CargoGNG.Find(item.code);
+                Directory_CargoGNG dbEntry = db.Directory_CargoGNG.Find(item.id);
                 if (dbEntry == null)
                 {
                     Add(item);
@@ -102,11 +102,11 @@ namespace EFIDS.Concrete
 
         }
 
-        public void Delete(int code)
+        public void Delete(int id)
         {
             try
             {
-                Directory_CargoGNG item = db.Delete<Directory_CargoGNG>(code);
+                Directory_CargoGNG item = db.Delete<Directory_CargoGNG>(id);
             }
             catch (Exception e)
             {
