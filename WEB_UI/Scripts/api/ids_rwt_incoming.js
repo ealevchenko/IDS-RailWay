@@ -4,8 +4,8 @@
 
 var IDS_RWT_INCOMING = function (lang) {
     this.lang = lang;
-    this.ids_dir = new IDS_DIRECTORY(lang), // Создадим класс IDS_DIRECTORY
-    this.uz_dir = new UZ_DIRECTORY(lang) // Создадим класс UZ_DIRECTORY
+    this.ids_dir = new IDS_DIRECTORY(lang); // Создадим класс IDS_DIRECTORY
+    this.uz_dir = new UZ_DIRECTORY(lang); // Создадим класс UZ_DIRECTORY
 };
 
 IDS_RWT_INCOMING.list_arrival = [];

@@ -1142,7 +1142,7 @@
             loadReference: function (callback) {
                 LockScreen(langView('mess_load', langs));
                 var count = 1;
-                cars_detali.ids_inc.load([], ['type_wagons', 'condition_arrival', 'type_owner_ship', 'limiting_loading', 'operators_wagons', 'owners_wagons', 'genus_wagon', 'countrys', 'railway', 'inlandrailway', 'external_station', 'station', 'consignee', 'shipper', 'border_checkpoint'], ['internal_railroad'], false, function () {
+                cars_detali.ids_inc.load([], ['cargo','cargo_gng', 'cargo_etsng', 'cargo_group','type_wagons', 'condition_arrival', 'type_owner_ship', 'limiting_loading', 'operators_wagons', 'owners_wagons', 'genus_wagon', 'countrys', 'railway', 'inlandrailway', 'external_station', 'station', 'consignee', 'shipper', 'border_checkpoint'], ['internal_railroad'], false, function () {
                     count -= 1;
                     if (count === 0) {
                         if (typeof callback === 'function') {
