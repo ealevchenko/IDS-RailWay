@@ -263,7 +263,7 @@
                     "poligon_travel_wagon": mors.getValueCultureObj(data.Directory_PoligonTravelWagons, 'poligon_travel'),
                     //"poligon_travel_wagon": mors.ids_dir !== null ? mors.ids_dir.getValue_PoligonTravelWagons_Of_ID(data.id_poligon_travel_wagon, 'poligon_travel', lang) : data.id_poligon_travel_wagon,
                     "id_special_conditions": data.id_special_conditions,
-                    "special_conditions": mors.getValueCultureObj(data.GetSpecialConditions, 'special_conditions'),
+                    "special_conditions": mors.getValueCultureObj(data.Directory_SpecialConditions, 'special_conditions'),
                     //"special_conditions": mors.ids_dir !== null ? (data.id_special_conditions !== null ? mors.ids_dir.getValue_SpecialConditions_Of_ID(data.id_special_conditions, 'special_conditions', lang) : "") : data.id_special_conditions,
                     "sap": data.sap,
                     "note": data.note,
