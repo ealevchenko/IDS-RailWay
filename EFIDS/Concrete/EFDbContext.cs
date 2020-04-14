@@ -47,17 +47,17 @@ namespace EFIDS.Concrete
         public virtual DbSet<Directory_LimitingLoading> Directory_LimitingLoading { get; set; }
         public virtual DbSet<Directory_ConditionArrival> Directory_ConditionArrival { get; set; }
         public virtual DbSet<Directory_PayerArrival> Directory_PayerArrival { get; set; }
-
         public virtual DbSet<Directory_BorderCheckpoint> Directory_BorderCheckpoint { get; set; }
         public virtual DbSet<Directory_Countrys> Directory_Countrys { get; set; }
         public virtual DbSet<Directory_ExternalStation> Directory_ExternalStation { get; set; }
         public virtual DbSet<Directory_InlandRailway> Directory_InlandRailway { get; set; }
         public virtual DbSet<Directory_Railway> Directory_Railway { get; set; }
-
         public virtual DbSet<Directory_Cargo> Directory_Cargo { get; set; }
         public virtual DbSet<Directory_CargoETSNG> Directory_CargoETSNG { get; set; }
         public virtual DbSet<Directory_CargoGNG> Directory_CargoGNG { get; set; }
         public virtual DbSet<Directory_CargoGroup> Directory_CargoGroup { get; set; }
+        public virtual DbSet<Directory_CertificationData> Directory_CertificationData { get; set; }
+        public virtual DbSet<Directory_CommercialCondition> Directory_CommercialCondition { get; set; }
 
         // Доступ к сайту
         public virtual DbSet<WebAccess> WebAccess { get; set; }

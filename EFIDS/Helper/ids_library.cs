@@ -415,8 +415,8 @@ namespace EFIDS.Helper
             if (c == null) return null;
             return new Directory_CargoETSNG()
             {
-                id = c.id, 
-                code =c.code, 
+                id = c.id,
+                code = c.code,
                 cargo_etsng_name_ru = c.cargo_etsng_name_ru,
                 cargo_etsng_name_en = c.cargo_etsng_name_en,
                 //Directory_Cargo
@@ -450,7 +450,7 @@ namespace EFIDS.Helper
             return new Directory_Cargo()
             {
                 id = c.id,
-                id_group = c.id_group, 
+                id_group = c.id_group,
                 id_cargo_etsng = c.id_cargo_etsng,
                 cargo_name_ru = c.cargo_name_ru,
                 cargo_name_en = c.cargo_name_en,
@@ -464,7 +464,36 @@ namespace EFIDS.Helper
                 change_user = c.change_user,
             };
         }
-
+        // Справочник сертификационные данные
+        public static Directory_CertificationData GetDirectory_CertificationData(this Directory_CertificationData c)
+        {
+            if (c == null) return null;
+            return new Directory_CertificationData()
+            {
+                id = c.id,
+                certification_data_ru = c.certification_data_ru,
+                certification_data_en = c.certification_data_en,
+                create = c.create,
+                create_user = c.create_user,
+                change = c.change,
+                change_user = c.change_user,
+            };
+        }
+        // Справочник комерчиское состояние
+        public static Directory_CommercialCondition GetDirectory_CommercialCondition(this Directory_CommercialCondition c)
+        {
+            if (c == null) return null;
+            return new Directory_CommercialCondition()
+            {
+                id = c.id,
+                commercial_condition_ru = c.commercial_condition_ru,
+                commercial_condition_en = c.commercial_condition_en,
+                create = c.create,
+                create_user = c.create_user,
+                change = c.change,
+                change_user = c.change_user,
+            };
+        }
         #endregion
 
         #region MORG
