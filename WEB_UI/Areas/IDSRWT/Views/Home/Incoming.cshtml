@@ -533,7 +533,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div id="accordion" role="tablist" aria-multiselectable="true">
+                                        <div id="accordion" role="tablist" aria-multiselectable="true" class="mt-1">
                                             <div class="card border-primary">
                                                 <div class="card-header text-left" role="tab" id="headingOne">
                                                     <div class="mb-0">
@@ -611,28 +611,42 @@
                                         <div class="form-row">
                                             <div class="col-md-3 mb-1 text-left">
                                                 <label for="uz_cargo_kod_etsng" class="col-form-label">@IDSRWTResource.title_kod_etsng:</label>
-                                                <input type="text" class="form-control" id="uz_cargo_kod_etsng" name="uz_cargo_kod_etsng" placeholder="VAGON/COLLECT_V/kod_etsng" data-mode="all" data-edit="" data-form="transceiver">
+                                                <input type="text" class="form-control" id="uz_cargo_kod_etsng" name="uz_cargo_kod_etsng" placeholder="VAGON/COLLECT_V/kod_etsng" data-mode="view-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-9 mb-1 text-left">
                                                 <label for="uz_cargo_name_etsng" class="col-form-label">@IDSRWTResource.title_name_etsng</label>
-                                                <textarea class="form-control" id="uz_cargo_name_etsng" name="uz_cargo_name_etsng" placeholder="VAGON/COLLECT_V/name_etsng" data-mode="view-global" data-edit="" data-form="transceiver"></textarea>
-                                                <div class="invalid-feedback">
+                                                <div class="input-group">
+                                                    <textarea class="form-control" id="uz_cargo_name_etsng" name="uz_cargo_name_etsng" placeholder="VAGON/COLLECT_V/name_etsng" data-mode="all" data-edit="" data-form="transceiver"></textarea>
+                                                    <div class="invalid-feedback">
+                                                    </div>
+                                                    <div class="input-group-append">
+                                                        <button type="button" class="btn btn-danger btn" id="uz_cargo_name_etsng_add" data-form="transceiver">
+                                                            <i class="fa fa-save" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-row">
                                             <div class="col-md-3 mb-1 text-left">
                                                 <label for="uz_cargo_kod_gng" class="col-form-label">@IDSRWTResource.title_kod_gng:</label>
-                                                <input type="text" class="form-control" id="uz_cargo_kod_gng" name="uz_cargo_kod_gng" placeholder="VAGON/COLLECT_V/kod_gng" data-mode="all" data-edit="" data-form="transceiver">
+                                                <input type="text" class="form-control" id="uz_cargo_kod_gng" name="uz_cargo_kod_gng" placeholder="VAGON/COLLECT_V/kod_gng" data-mode="view-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-9 mb-1 text-left">
                                                 <label for="uz_cargo_name_gng" class="col-form-label">@IDSRWTResource.title_name_gng</label>
-                                                <textarea class="form-control" id="uz_cargo_name_gng" name="uz_cargo_name_gng" placeholder="VAGON/COLLECT_V/name_gng" data-mode="view-global" data-edit="" data-form="transceiver"></textarea>
-                                                <div class="invalid-feedback">
+                                                <div class="input-group">
+                                                    <textarea class="form-control" id="uz_cargo_name_gng" name="uz_cargo_name_gng" placeholder="VAGON/COLLECT_V/name_gng" data-mode="all" data-edit="" data-form="transceiver"></textarea>
+                                                    <div class="invalid-feedback">
+                                                    </div>
+                                                    <div class="input-group-append">
+                                                        <button type="button" class="btn btn-danger btn" id="uz_cargo_name_gng_add" data-form="transceiver">
+                                                            <i class="fa fa-save" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

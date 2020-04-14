@@ -89,7 +89,8 @@ namespace WEB_UI.Controllers.api
             try
             {
                 this.ef_dir.Add(value);
-                return ef_dir.Save();
+                int res = ef_dir.Save();
+                return res > 0 ? value.id : res;
             }
             catch (Exception e)
             {
