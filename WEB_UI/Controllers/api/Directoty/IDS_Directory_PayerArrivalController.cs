@@ -41,16 +41,16 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // GET: api/ids/directory/payer_arrival/id/
-        [Route("id/{id:int}")]
+        // GET: api/ids/directory/payer_arrival/code/
+        [Route("code/{code:int}")]
         [ResponseType(typeof(Directory_PayerArrival))]
-        public IHttpActionResult GetPayerArrivalOfID(int id)
+        public IHttpActionResult GetPayerArrivalOfID(int code)
         {
             try
             {
                 Directory_PayerArrival ens = this.ef_dir
                     .Context
-                    .Where(w => w.id == id)
+                    .Where(w => w.code == code)
                     .ToList()
                     .Select(m => m.GetDirectory_PayerArrival()).FirstOrDefault();
                 return Ok(ens);
@@ -77,10 +77,10 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // PUT api/ids/directory/payer_arrival/id
+        // PUT api/ids/directory/payer_arrival/code
         [HttpPut]
-        [Route("id/{id:int}")]
-        public int PutPayerArrival(int id, [FromBody]Directory_PayerArrival value)
+        [Route("code/{code:int}")]
+        public int PutPayerArrival(int code, [FromBody]Directory_PayerArrival value)
         {
             try
             {
@@ -93,14 +93,14 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // DELETE api/ids/directory/payer_arrival/id
+        // DELETE api/ids/directory/payer_arrival/code
         [HttpDelete]
-        [Route("id/{id:int}")]
-        public int DeletePayerArrival(int id)
+        [Route("code/{code:int}")]
+        public int DeletePayerArrival(int code)
         {
             try
             {
-                this.ef_dir.Delete(id);
+                this.ef_dir.Delete(code);
                 return this.ef_dir.Save();
             }
             catch (Exception e)

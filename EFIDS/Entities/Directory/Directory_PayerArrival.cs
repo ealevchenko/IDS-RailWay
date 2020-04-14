@@ -9,8 +9,8 @@ namespace EFIDS.Entities
     [Table("IDS.Directory_PayerArrival")]
     public partial class Directory_PayerArrival
     {
-        public int id { get; set; }
-
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int code { get; set; }
 
         [Required]

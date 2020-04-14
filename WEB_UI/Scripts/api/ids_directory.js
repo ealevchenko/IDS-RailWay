@@ -852,7 +852,6 @@ IDS_DIRECTORY.prototype.postCargo = function (cargo, callback) {
         },
     });
 };
-
 //======= Directory_CargoGNG (Справочник грузов ГНГ) ======================================
 //
 IDS_DIRECTORY.prototype.getCargoGNG = function (callback) {
@@ -1281,10 +1280,10 @@ IDS_DIRECTORY.prototype.getPayerArrival = function (callback) {
     });
 };
 // Получить по id
-IDS_DIRECTORY.prototype.getPayerArrivalOfID = function (id, callback) {
+IDS_DIRECTORY.prototype.getPayerArrivalOfCode = function (code, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/directory/payer_arrival/id/'+id,
+        url: '../../api/ids/directory/payer_arrival/code/' + code,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -1307,7 +1306,7 @@ IDS_DIRECTORY.prototype.getPayerArrivalOfID = function (id, callback) {
 IDS_DIRECTORY.prototype.putPayerArrival = function (payer, callback) {
     $.ajax({
         type: 'PUT',
-        url: '../../api/ids/directory/payer_arrival/id/' + payer.id,
+        url: '../../api/ids/directory/payer_arrival/code/' + payer.code,
         data: JSON.stringify(payer),
         contentType: "application/json;charset=utf-8",
         async: true,
@@ -1328,9 +1327,9 @@ IDS_DIRECTORY.prototype.putPayerArrival = function (payer, callback) {
     });
 };
 // Удалить 
-IDS_DIRECTORY.prototype.deletePayerArrival = function (id, callback) {
+IDS_DIRECTORY.prototype.deletePayerArrival = function (code, callback) {
     $.ajax({
-        url: '../../api/ids/directory/payer_arrival/id/' + id,
+        url: '../../api/ids/directory/payer_arrival/code/' + code,
         type: 'DELETE',
         contentType: "application/json;charset=utf-8",
         async: true,
@@ -3325,9 +3324,9 @@ IDS_DIRECTORY.prototype.getListLimitingLoading = function (fvalue, ftext, lang, 
     return list;
 };
 //*======= IDS_DIRECTORY.list_payer_arrival  (Справочник платильщиков по прибытию) ======================================
-IDS_DIRECTORY.prototype.getPayerArrival_Of_Code = function (id) {
+IDS_DIRECTORY.prototype.getPayerArrival_Of_Code = function (code) {
     if (this.list_payer_arrival) {
-        var obj = getObjects(this.list_payer_arrival, 'id', id);
+        var obj = getObjects(this.list_payer_arrival, 'code', code);
         return obj && obj.length > 0 ? obj[0] : null;
     }
 };
@@ -3344,8 +3343,8 @@ IDS_DIRECTORY.prototype.getID_PayerArrival_Internal_Of_Name = function (text, ft
     return obj ? obj.id : null;
 };
 //
-IDS_DIRECTORY.prototype.getValue_PayerArrival_Of_Code = function (id, name, lang) {
-    var obj = this.getPayerArrival_Of_Code(id);
+IDS_DIRECTORY.prototype.getValue_PayerArrival_Of_Code = function (code, name, lang) {
+    var obj = this.getPayerArrival_Of_Code(code);
     return this.getValueObj(obj, name, lang);
 };
 //

@@ -44,11 +44,11 @@ namespace EFIDS.Concrete
             }
         }
 
-        public Directory_PayerArrival Get(int id)
+        public Directory_PayerArrival Get(int code)
         {
             try
             {
-                return db.Select<Directory_PayerArrival>(id);
+                return db.Select<Directory_PayerArrival>(code);
             }
             catch (Exception e)
             {
@@ -85,7 +85,7 @@ namespace EFIDS.Concrete
         {
             try
             {
-                Directory_PayerArrival dbEntry = db.Directory_PayerArrival.Find(item.id);
+                Directory_PayerArrival dbEntry = db.Directory_PayerArrival.Find(item.code);
                 if (dbEntry == null)
                 {
                     Add(item);
@@ -102,11 +102,11 @@ namespace EFIDS.Concrete
 
         }
 
-        public void Delete(int id)
+        public void Delete(int code)
         {
             try
             {
-                Directory_PayerArrival item = db.Delete<Directory_PayerArrival>(id);
+                Directory_PayerArrival item = db.Delete<Directory_PayerArrival>(code);
             }
             catch (Exception e)
             {
@@ -132,7 +132,7 @@ namespace EFIDS.Concrete
             try
             {
                 db.Entry(item).State = EntityState.Detached;
-                return db.Select<Directory_PayerArrival>(item.id);
+                return db.Select<Directory_PayerArrival>(item.code);
             }
             catch (Exception e)
             {

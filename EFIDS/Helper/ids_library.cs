@@ -384,10 +384,9 @@ namespace EFIDS.Helper
             if (p == null) return null;
             return new Directory_PayerArrival()
             {
-                id = p.id,
+                code = p.code,
                 payer_name_ru = p.payer_name_ru,
                 payer_name_en = p.payer_name_en,
-                code = p.code,
                 create = p.create,
                 create_user = p.create_user,
                 change = p.change,
