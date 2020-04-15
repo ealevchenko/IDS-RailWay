@@ -71,6 +71,7 @@
     <Compile Include="Concrete\Directory\EFDirectory_Cargo.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_CargoETSNG.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_CertificationData.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_HazardClass.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_PayerArrival.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_LimitingLoading.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Cars.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="Entities\Directory\Directory_CargoGroup.cs" />
     <Compile Include="Entities\Directory\Directory_CertificationData.cs" />
     <Compile Include="Entities\Directory\Directory_CommercialCondition.cs" />
+    <Compile Include="Entities\Directory\Directory_HazardClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +157,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Concrete\Directory\Model\" />
     <Folder Include="Model\" />
   </ItemGroup>
   <ItemGroup>

@@ -68,6 +68,8 @@ IDS_DIRECTORY.list_certification_data = [];
 
 IDS_DIRECTORY.list_commercial_condition = [];
 
+IDS_DIRECTORY.list_hazard_class = [];
+
 IDS_DIRECTORY.list_cars = [];
 
 /* ----------------------------------------------------------
@@ -438,6 +440,18 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
                 }
             });
         };
+        if (el === 'hazard_class')  {
+            IDS_DIRECTORY.prototype.getHazardClass(function (result_hazard_class) {
+                obj.list_hazard_class = result_hazard_class;
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        if (lockOff) { LockScreenOff(); }
+                        callback();
+                    }
+                }
+            });
+        };
         if (el === 'cars') {
             IDS_DIRECTORY.prototype.getExternalStation(function (result_cars) {
                 obj.list_cars = result_cars;
@@ -612,6 +626,16 @@ IDS_DIRECTORY.prototype.loadCommercialCondition = function (callback) {
         }
     });
 };
+// Загрузка справочника комерчиское состояние 
+IDS_DIRECTORY.prototype.loadHazardClass = function (callback) {
+    var obj = this;
+    IDS_DIRECTORY.prototype.getHazardClass(function (result_hazard_class) {
+        obj.list_hazard_class = result_hazard_class;
+        if (typeof callback === 'function') {
+            callback();
+        }
+    });
+};
 /* ----------------------------------------------------------
 AJAX функции
 -------------------------------------------------------------*/
@@ -774,6 +798,125 @@ IDS_DIRECTORY.prototype.postCars = function (car, callback) {
         error: function (x, y, z) {
             LockScreenOff();
             OnAJAXError("IDS_DIRECTORY.postCars", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//======= Directory_HazardClass (Справочник класов опасности) ======================================
+//
+IDS_DIRECTORY.prototype.getHazardClass = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/hazard_class/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getHazardClass", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить по code
+IDS_DIRECTORY.prototype.getHazardClassOfCode = function (code, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/hazard_class/code/' + code,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getHazardClassOfID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Обновить 
+IDS_DIRECTORY.prototype.putHazardClass = function (hazard, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/directory/hazard_class/id/' + hazard.id,
+        data: JSON.stringify(hazard),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.putHazardClass", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Удалить 
+IDS_DIRECTORY.prototype.deleteHazardClass = function (code, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/hazard_class/code/' + code,
+        type: 'DELETE',
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.deleteHazardClass", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Добавить 
+IDS_DIRECTORY.prototype.postHazardClass = function (hazard, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/hazard_class/',
+        type: 'POST',
+        data: JSON.stringify(hazard),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_DIRECTORY.postHazardClass", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -3918,12 +4061,12 @@ IDS_DIRECTORY.prototype.getID_CommercialCondition_Internal_Of_Name = function (t
 };
 //
 IDS_DIRECTORY.prototype.getValue_CommercialCondition_Of_ID = function (id, name, lang) {
-    var obj = this.getCommercialCondition_Of_Code(id);
+    var obj = this.getCommercialCondition_Of_ID(id);
     return this.getValueObj(obj, name, lang);
 };
 //
 IDS_DIRECTORY.prototype.getValueCulture_CommercialCondition_Of_ID = function (id, name) {
-    var obj = this.getCommercialCondition_Of_Code(id);
+    var obj = this.getCommercialCondition_Of_ID(id);
     return obj ? obj[name + '_' + this.lang] : null;
 };
 //
@@ -3945,7 +4088,54 @@ IDS_DIRECTORY.prototype.getListCommercialCondition = function (fvalue, ftext, la
     }
     return list;
 };
-
+//*======= IDS_DIRECTORY.list_hazard_class  (Справочник классов опасности) ======================================
+IDS_DIRECTORY.prototype.getHazardClass_Of_Code = function (code) {
+    if (this.list_hazard_class) {
+        var obj = getObjects(this.list_hazard_class, 'code', code);
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getHazardClass_Internal_Of_Name = function (text, ftext, lang) {
+    if (this.list_hazard_class) {
+        var obj = getObjects(this.list_hazard_class, (lang ? ftext + '_' + lang : name), text);
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getID_HazardClass_Internal_Of_Name = function (text, ftext, lang) {
+    var obj = this.getHazardClass_Internal_Of_Name(text, ftext, lang);
+    return obj ? obj.id : null;
+};
+//
+IDS_DIRECTORY.prototype.getValue_HazardClass_Of_Code = function (code, name, lang) {
+    var obj = this.getHazardClass_Of_Code(code);
+    return this.getValueObj(obj, name, lang);
+};
+//
+IDS_DIRECTORY.prototype.getValueCulture_HazardClass_Of_Code = function (code, name) {
+    var obj = this.getHazardClass_Of_Code(code);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getListHazardClass = function (fvalue, ftext, lang, filter) {
+    var list = [];
+    var list_filtr = null;
+    if (this.list_hazard_class) {
+        if (typeof filter === 'function') {
+            list_filtr = this.list_hazard_class.filter(filter);
+        } else { list_filtr = this.list_hazard_class; }
+        for (i = 0, j = list_filtr.length; i < j; i++) {
+            var l = list_filtr[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
 //*======= IDS_DIRECTORY.list_condition_arrival  (Справочник годность по прибытию) ======================================
 IDS_DIRECTORY.prototype.getConditionArrival_Of_Code = function (id) {
     if (this.list_condition_arrival) {

@@ -58,6 +58,7 @@ namespace EFIDS.Concrete
         public virtual DbSet<Directory_CargoGroup> Directory_CargoGroup { get; set; }
         public virtual DbSet<Directory_CertificationData> Directory_CertificationData { get; set; }
         public virtual DbSet<Directory_CommercialCondition> Directory_CommercialCondition { get; set; }
+        public virtual DbSet<Directory_HazardClass> Directory_HazardClass { get; set; }
 
         // Доступ к сайту
         public virtual DbSet<WebAccess> WebAccess { get; set; }
@@ -65,6 +66,12 @@ namespace EFIDS.Concrete
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            // dir HazardClass
+            modelBuilder.Entity<Directory_HazardClass>()
+                .Property(e => e.code)
+                .IsFixedLength()
+                .IsUnicode(false);
+
             // dir cargo
             modelBuilder.Entity<Directory_CargoETSNG>()
                 .HasMany(e => e.Directory_Cargo)
@@ -167,7 +174,7 @@ namespace EFIDS.Concrete
                 .WithRequired(e => e.ParksWagons)
                 .HasForeignKey(e => e.id_park_wagon)
                 .WillCascadeOnDelete(false);
-            
+
             modelBuilder.Entity<CardsWagons>()
                 .HasMany(e => e.CardsWagonsRepairs)
                 .WithRequired(e => e.CardsWagons)

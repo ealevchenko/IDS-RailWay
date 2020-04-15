@@ -494,6 +494,22 @@ namespace EFIDS.Helper
                 change_user = c.change_user,
             };
         }
+        // Справочник классы опасности
+        public static Directory_HazardClass GetDirectory_HazardClass(this Directory_HazardClass c)
+        {
+            if (c == null) return null;
+            return new Directory_HazardClass()
+            {
+                code =c.code, 
+                hazard_class_ru = c.hazard_class_ru, 
+                hazard_class_en = c.hazard_class_en,
+                create = c.create,
+                create_user = c.create_user,
+                change = c.change,
+                change_user = c.change_user,
+            };
+        }
+
         #endregion
 
         #region MORG

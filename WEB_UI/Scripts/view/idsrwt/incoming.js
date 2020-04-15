@@ -1307,7 +1307,7 @@
             loadReference: function (callback) {
                 LockScreen(langView('mess_load', langs));
                 var count = 1;
-                cars_detali.ids_inc.load([], ['commercial_condition','certification_data','payer_arrival', 'cargo', 'cargo_gng', 'cargo_etsng', 'cargo_group', 'type_wagons', 'condition_arrival', 'type_owner_ship', 'limiting_loading', 'operators_wagons', 'owners_wagons', 'genus_wagon', 'countrys', 'railway', 'inlandrailway', 'external_station', 'station', 'consignee', 'shipper', 'border_checkpoint'], ['internal_railroad'], false, function () {
+                cars_detali.ids_inc.load([], ['hazard_class', 'commercial_condition','certification_data','payer_arrival', 'cargo', 'cargo_gng', 'cargo_etsng', 'cargo_group', 'type_wagons', 'condition_arrival', 'type_owner_ship', 'limiting_loading', 'operators_wagons', 'owners_wagons', 'genus_wagon', 'countrys', 'railway', 'inlandrailway', 'external_station', 'station', 'consignee', 'shipper', 'border_checkpoint'], ['internal_railroad'], false, function () {
                     count -= 1;
                     if (count === 0) {
                         if (typeof callback === 'function') {
@@ -1357,26 +1357,27 @@
             },
             // Загрузить списочные компоненты
             init_select: function () {
-                cars_detali.update_list_station_name_from(null);    // Станция отправитель
-                cars_detali.update_list_station_name_on(null);      // Станция получатель
-                cars_detali.update_list_station_border(null);       // Пограничный пункт
-                cars_detali.update_list_consignee(null);            // Грузополучатели
-                cars_detali.update_list_shipper(null);              // Грузопоотправитель
-                cars_detali.update_list_station_on_amkr(-1);        // Станция АМКР
-                cars_detali.update_list_adm(-1);                    // Администрации
-                cars_detali.update_list_rod(null);                  // Род вагона
-                cars_detali.update_list_owner(null);                // Владелец вагона
-                cars_detali.update_list_operator(null);             // Оператор вагона
-                cars_detali.update_list_kol_os(0);              // Количество осей
-                cars_detali.update_list_limiting_loading(null);     // Ограничение погрузки
-                cars_detali.update_list_type_ownership(-1);         // Признак собственности
-                cars_detali.update_list_condition_arrival(-1);      // Годность по прибытию
-                cars_detali.update_list_type_wagon(-1);             // Тип вагона
-                cars_detali.update_list_name_plat(null);             // Плательщик по прибытию
-                cars_detali.update_list_cargo_etsng(null);           // Грузы ЕТ СНГ
-                cars_detali.update_list_cargo_gng(null);             // Грузы ЕТ ГНГ
-                cars_detali.update_list_certificate_data(-1);        // сертификационные данные
-                cars_detali.update_list_commercial_condition(-1);    // комерчиское состояние
+                cars_detali.update_list_station_name_from(null);        // Станция отправитель
+                cars_detali.update_list_station_name_on(null);          // Станция получатель
+                cars_detali.update_list_station_border(null);           // Пограничный пункт
+                cars_detali.update_list_consignee(null);                // Грузополучатели
+                cars_detali.update_list_shipper(null);                  // Грузопоотправитель
+                cars_detali.update_list_station_on_amkr(-1);            // Станция АМКР
+                cars_detali.update_list_adm(-1);                        // Администрации
+                cars_detali.update_list_rod(null);                      // Род вагона
+                cars_detali.update_list_owner(null);                    // Владелец вагона
+                cars_detali.update_list_operator(null);                 // Оператор вагона
+                cars_detali.update_list_kol_os(0);                      // Количество осей
+                cars_detali.update_list_limiting_loading(null);         // Ограничение погрузки
+                cars_detali.update_list_type_ownership(-1);             // Признак собственности
+                cars_detali.update_list_condition_arrival(-1);          // Годность по прибытию
+                cars_detali.update_list_type_wagon(-1);                 // Тип вагона
+                cars_detali.update_list_name_plat(null);                // Плательщик по прибытию
+                cars_detali.update_list_cargo_etsng(null);              // Грузы ЕТ СНГ
+                cars_detali.update_list_cargo_gng(null);                // Грузы ЕТ ГНГ
+                cars_detali.update_list_certificate_data(-1);           // сертификационные данные
+                cars_detali.update_list_commercial_condition(-1);       // комерчиское состояние
+                cars_detali.update_list_danger_name(-1);                // класс опасности
             },
             // -------- ОБНОВЛЕНИЕ ------------------------------------------------------
             // Обновить компонент список грузоотправителей
@@ -1648,6 +1649,20 @@
                     },
                     null);
             },
+            // Обновить класс опасности
+            update_list_danger_name: function (code) {
+                cars_detali.uz_cargo_danger_name = cd_initSelect(
+                    $('select#uz_cargo_danger_name'),
+                    { lang: lang },
+                    cars_detali.ids_inc.ids_dir.getListHazardClass('code', 'hazard_class', cars_detali.lang, null),
+                    null,
+                    code ? code : -1,
+                    function (event) {
+                        event.preventDefault();
+                    },
+                    null);
+            },
+
             // -------- УПРАВЛЕНИЕ РЕЖИМАМИ ------------------------------------------------------
             // Возвращает свойство "редактирование разрешено" - true, запрещено -false
             is_edit_mode_of_element: function (el) {
@@ -1798,8 +1813,9 @@
                 cars_detali.uz_cargo_vesg_doc.val('');
                 cars_detali.uz_cargo_nom_zpu.val('');
 
+                cars_detali.uz_cargo_danger_class.val('');
+                cars_detali.uz_cargo_danger_name.val(-1);
                 cars_detali.uz_cargo_danger_kod.val('');
-
             },
             //=================================================================================
             // ОТОБРАЖЕНИЕ ЭПД
@@ -2183,6 +2199,13 @@
                     cars_detali.uz_cargo_nom_zpu.val(vagon.zpu_v[0].nom_zpu);
                 }
             },
+            // Показать класс опасности
+            view_epd_danger_class: function (vagon) {
+                if (vagon && vagon.collect_v && vagon.collect_v.length>0) {
+                    cars_detali.uz_cargo_danger_class.val(vagon.collect_v[0].danger);
+                    cars_detali.uz_cargo_danger_name.val(vagon.collect_v[0].danger);
+                }
+            },
             // Показать код опасности
             view_epd_danger_kod: function (vagon) {
                 if (vagon && vagon.collect_v && vagon.collect_v.length>0) {
@@ -2244,6 +2267,7 @@
                         cars_detali.view_epd_vesg_doc(cars_detali.select_otpr_vagon);
                         cars_detali.view_epd_nom_zpu(cars_detali.select_otpr_vagon);
                         // Опасность
+                        cars_detali.view_epd_danger_class(cars_detali.select_otpr_vagon);
                         cars_detali.view_epd_danger_kod(cars_detali.select_otpr_vagon);
                         LockScreenOff();
                     });

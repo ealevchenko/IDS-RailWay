@@ -187,9 +187,9 @@
                                             <div class="col-md-3 mb-1 text-left">
                                                 <label for="num_car" class="col-form-label">@IDSRWTResource.title_num_car:</label>
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control col-md-8 " id="num_car" placeholder="" name="num_car" data-mode="all" data-edit="" data-form="transceiver">
+                                                    <input type="text" class="form-control col-md-8 inp-epd" id="num_car" title="Номер вагона" name="num_car" data-mode="all" data-edit="" data-form="transceiver">
                                                     <div class="input-group-append">
-                                                        <button type="button" class="btn btn-warning btn" id="search-car-num-doc" disabled="disabled" data-form="transceiver">
+                                                        <button type="button" class="btn btn-warning btn" id="search-car-num-doc" title="Найти ЭПД по номеру вагона" disabled="disabled" data-form="transceiver">
                                                             <i class="fa fa-search" aria-hidden="true"></i>
                                                         </button>
                                                     </div>
@@ -197,13 +197,13 @@
                                             </div>
                                             <div class="col-md-3 mb-1 text-left">
                                                 <label for="arrival_cars_position_arrival" class="col-form-label">@IDSRWTResource.title_position_arrival:</label>
-                                                <input type="number" value="1" class="form-control" min="1" max="120" step="1" id="arrival_cars_position_arrival" name="arrival_cars_position_arrival" data-mode="edit-global" data-edit="" data-form="transceiver" />
+                                                <input type="number" value="1" class="form-control inp-manual" min="1" max="120" step="1" id="arrival_cars_position_arrival" name="arrival_cars_position_arrival" title="Ручной ввод (номер вагона в составе)" data-mode="edit-global" data-edit="" data-form="transceiver" />
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-6 mb-1 text-left">
                                                 <label for="arrival_cars_car_date_adoption_act" class="col-form-label">@IDSRWTResource.title_car_date_adoption_act:</label>
-                                                <input type="datetime" class="form-control" id="arrival_cars_car_date_adoption_act" name="arrival_cars_car_date_adoption_act" data-mode="edit-global" data-edit="" data-form="transceiver">
+                                                <input type="datetime" class="form-control inp-manual" id="arrival_cars_car_date_adoption_act" name="arrival_cars_car_date_adoption_act" title="Ручной ввод (если вагон принимается по акту)" data-mode="edit-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -211,13 +211,13 @@
                                         <div class="form-row">
                                             <div class="col-md-6 mb-1 text-left">
                                                 <label for="uz_doc_num_doc" class="col-form-label">@IDSRWTResource.title_uz_doc_num_doc:</label>
-                                                <input type="number" class="form-control" id="uz_doc_num_doc" name="uz_doc_num_doc" placeholder="OTPR/nom_doc" data-mode="all" data-edit="" data-form="transceiver" required="required">
+                                                <input type="number" class="form-control inp-epd" id="uz_doc_num_doc" name="uz_doc_num_doc" title="ЭПД [OTPR/nom_doc] -> Номер накладной" data-mode="all" data-edit="" data-form="transceiver" required="required">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-6 mb-1 text-left">
                                                 <label for="uz_doc_num_new_doc" class="col-form-label">@IDSRWTResource.title_uz_doc_num_new_doc:</label>
-                                                <input type="text" class="form-control" id="uz_doc_num_new_doc" name="uz_doc_num_new_doc" placeholder="OTPRDP/nom_osn_doc" data-mode="all" data-edit="" data-form="transceiver" required="required">
+                                                <input type="text" class="form-control inp-epd" id="uz_doc_num_new_doc" name="uz_doc_num_new_doc" title="ЭПД [OTPRDP/nom_osn_doc] -> Номер досылочного документа" data-mode="all" data-edit="" data-form="transceiver" required="required">
                                                 <div class="invalid-feedback">
 
                                                 </div>
@@ -231,24 +231,24 @@
                                             <div class="form-row">
                                                 <div class="col-md-3 mb-1 text-left">
                                                     <label for="uz_route_stn_from" class="col-form-label">@IDSRWTResource.title_stn_code:</label>
-                                                    <input type="text" class="form-control" id="uz_route_stn_from" name="uz_route_stn_from" placeholder="ROUTE/stn_from" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                    <input type="text" class="form-control inp-epd" id="uz_route_stn_from" name="uz_route_stn_from" title="ЭПД [OTPR/ROUTE/stn_from] -> Код станции отправки" data-mode="view-global" data-edit="" data-form="transceiver">
                                                     <div class="invalid-feedback">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 mb-1 text-left">
                                                     <label for="uz_route_name_from" class="col-form-label">@IDSRWTResource.title_stn_name</label>
-                                                    <input type="text" class="form-control" id="uz_route_name_from" name="uz_route_name_from" data-mode="all" data-edit="" data-form="transceiver">
+                                                    <input type="text" class="form-control inp-epd" id="uz_route_name_from" name="uz_route_name_from" title="ЭПД [OTPR/ROUTE/name_from] -> Справочник 'Внешних станций' -> Справочник 'Дорог' -> Название станции отправки" data-mode="all" data-edit="" data-form="transceiver">
                                                     <div class="invalid-feedback">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-5 mb-1 text-left">
                                                     <label for="uz_route_name_railway_from" class="col-form-label">@IDSRWTResource.title_railway_name</label>
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control" id="uz_route_name_railway_from" name="uz_route_name_railway_from" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                        <input type="text" class="form-control inp-auto" id="uz_route_name_railway_from" name="uz_route_name_railway_from" title="Автоматически берется из справочника 'Дорог' -> Название дороги" data-mode="view-global" data-edit="" data-form="transceiver">
                                                         <div class="invalid-feedback">
                                                         </div>
                                                         <div class="input-group-append">
-                                                            <button type="button" class="btn btn-danger btn" id="uz_route_name_from_add" data-form="transceiver">
+                                                            <button type="button" class="btn btn-danger btn" id="uz_route_name_from_add" title="Добавить новую внешнюю станцию в справочник 'Внешних станций', информация берется автоматически из ЭПД" data-form="transceiver">
                                                                 <i class="fa fa-save" aria-hidden="true"></i>
                                                             </button>
                                                         </div>
@@ -261,24 +261,24 @@
                                             <div class="form-row">
                                                 <div class="col-md-3 mb-1 text-left">
                                                     <label for="uz_route_stn_on" class="col-form-label">@IDSRWTResource.title_stn_code:</label>
-                                                    <input type="text" class="form-control" id="uz_route_stn_on" name="uz_route_stn_on" placeholder="ROUTE/stn_on" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                    <input type="text" class="form-control inp-epd" id="uz_route_stn_on" name="uz_route_stn_on" title="ЭПД [OTPR/ROUTE/stn_on] -> Код станции прибытия" data-mode="view-global" data-edit="" data-form="transceiver">
                                                     <div class="invalid-feedback">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 mb-1 text-left">
                                                     <label for="uz_route_name_on" class="col-form-label">@IDSRWTResource.title_stn_name</label>
-                                                    <input type="text" class="form-control" id="uz_route_name_on" name="uz_route_name_on" data-mode="all" data-edit="" data-form="transceiver">
+                                                    <input type="text" class="form-control inp-epd" id="uz_route_name_on" name="uz_route_name_on" title="ЭПД [OTPR/ROUTE/name_on] -> Справочник 'Внешних станций' -> Справочник 'Дорог' -> Название станции прибытия" data-mode="all" data-edit="" data-form="transceiver">
                                                     <div class="invalid-feedback">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-5 mb-1 text-left">
                                                     <label for="uz_route_name_railway_on" class="col-form-label">@IDSRWTResource.title_railway_name</label>
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control" id="uz_route_name_railway_on" name="uz_route_name_railway_on" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                        <input type="text" class="form-control inp-auto" id="uz_route_name_railway_on" name="uz_route_name_railway_on" title="Автоматически берется из справочника 'Дорог' -> Название дороги" data-mode="view-global" data-edit="" data-form="transceiver">
                                                         <div class="invalid-feedback">
                                                         </div>
                                                         <div class="input-group-append">
-                                                            <button type="button" class="btn btn-danger btn" id="uz_route_name_on_add" data-form="transceiver">
+                                                            <button type="button" class="btn btn-danger btn" id="uz_route_name_on_add" title="Добавить новую внешнюю станцию в справочник 'Внешних станций', информация берется автоматически из ЭПД" data-form="transceiver">
                                                                 <i class="fa fa-save" aria-hidden="true"></i>
                                                             </button>
                                                         </div>
@@ -291,18 +291,18 @@
                                             <div class="form-row">
                                                 <div class="col-md-3 mb-1 text-left">
                                                     <label for="uz_route_stn_border" class="col-form-label">@IDSRWTResource.title_stn_code:</label>
-                                                    <input type="text" class="form-control" id="uz_route_stn_border" name="uz_route_stn_border" placeholder="ROUTE/JOINT/stn" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                    <input type="text" class="form-control inp-epd" id="uz_route_stn_border" name="uz_route_stn_border" title="ЭПД [OTPR/ROUTE/JOINT/stn] - Код пограничного перехода" data-mode="view-global" data-edit="" data-form="transceiver">
                                                     <div class="invalid-feedback">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-5 mb-1 text-left">
                                                     <label for="uz_route_stn_border_name" class="col-form-label">@IDSRWTResource.title_stn_name</label>
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control" id="uz_route_stn_border_name" name="uz_route_stn_border_name" data-mode="all" data-edit="" data-form="transceiver">
+                                                        <input type="text" class="form-control inp-epd" id="uz_route_stn_border_name" name="uz_route_stn_border_name" title="ЭПД [OTPR/ROUTE/JOINT/stn_name] -> Справочник 'Погран переходов' -> Название станции погран перехода" data-mode="all" data-edit="" data-form="transceiver">
                                                         <div class="invalid-feedback">
                                                         </div>
                                                         <div class="input-group-append">
-                                                            <button type="button" class="btn btn-danger btn" id="uz_route_stn_border_add" data-form="transceiver">
+                                                            <button type="button" class="btn btn-danger btn" id="uz_route_stn_border_add" title="Добавить новый погран переход в справочник 'Погран переходов', информация берется автоматически из ЭПД" data-form="transceiver">
                                                                 <i class="fa fa-save" aria-hidden="true"></i>
                                                             </button>
                                                         </div>
@@ -310,7 +310,7 @@
                                                 </div>
                                                 <div class="col-md-4 mb-1 text-left">
                                                     <label for="uz_route_border_cross_time" class="col-form-label">@IDSRWTResource.title_border_cross_time</label>
-                                                    <input type="text" class="form-control" id="uz_route_border_cross_time" name="uz_route_border_cross_time" data-mode="all" data-edit="" data-form="transceiver">
+                                                    <input type="text" class="form-control inp-epd" id="uz_route_border_cross_time" name="uz_route_border_cross_time" title="ЭПД [OTPR/ROUTE/JOINT/cross_time] - Время перехода" data-mode="all" data-edit="" data-form="transceiver">
                                                     <div class="invalid-feedback">
                                                     </div>
                                                 </div>
@@ -319,7 +319,7 @@
                                         <div class="form-row">
                                             <div class="col-md-3 mb-1 text-left">
                                                 <label for="uz_cargo_client_kod_from" class="col-form-label">@IDSRWTResource.title_client_kod:</label>
-                                                <input type="text" class="form-control" id="uz_cargo_client_kod_from" name="uz_cargo_client_kod_from" placeholder="CLIENT/kod" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <input type="text" class="form-control inp-epd" id="uz_cargo_client_kod_from" name="uz_cargo_client_kod_from" title="ЭПД [OTPR/CLIENT[0]/kod] -> Код грузоотправителя" data-mode="view-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -327,11 +327,11 @@
                                                 <label for="uz_cargo_client_name_from" class="col-form-label">@IDSRWTResource.title_client_name_from</label>
                                                 <div class="input-group">
                                                     @*<select class="form-control" id="uz_cargo_client_name_from" name="uz_cargo_client_name_from" placeholder="CLIENT/name" data-mode="all" data-edit="" data-form="transceiver"></select>*@
-                                                    <input type="text" class="form-control" id="uz_cargo_client_name_from" name="uz_cargo_client_name_from" placeholder="CLIENT/name" data-mode="all" data-edit="" data-form="transceiver">
+                                                    <input type="text" class="form-control inp-epd" id="uz_cargo_client_name_from" name="uz_cargo_client_name_from" title="ЭПД [OTPR/CLIENT[0]/name] -> Справочник 'Грузоотправителей' -> Название грузоотправителя" data-mode="all" data-edit="" data-form="transceiver">
                                                     <div class="invalid-feedback">
                                                     </div>
                                                     <div class="input-group-append">
-                                                        <button type="button" class="btn btn-danger btn" id="uz_cargo_client_name_from_add" data-form="transceiver">
+                                                        <button type="button" class="btn btn-danger btn" id="uz_cargo_client_name_from_add" title="Добавить нового грузоотправителя в справочник 'Грузоотправителей', информация берется автоматически из ЭПД" data-form="transceiver">
                                                             <i class="fa fa-save" aria-hidden="true"></i>
                                                         </button>
                                                     </div>
@@ -341,15 +341,14 @@
                                         <div class="form-row">
                                             <div class="col-md-3 mb-1 text-left">
                                                 <label for="uz_cargo_client_kod_on" class="col-form-label">@IDSRWTResource.title_client_kod:</label>
-                                                <input type="text" class="form-control" id="uz_cargo_client_kod_on" name="uz_cargo_client_kod_on" placeholder="CLIENT/kod" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <input type="text" class="form-control inp-epd" id="uz_cargo_client_kod_on" name="uz_cargo_client_kod_on" title="ЭПД [OTPR/CLIENT[1]/kod] -> Код грузополучателя" data-mode="view-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-9 mb-1 text-left">
                                                 <label for="uz_cargo_client_name_on" class="col-form-label">@IDSRWTResource.title_client_name_on</label>
                                                 <div class="input-group">
-                                                    @*<input type="text" class="form-control" id="uz_cargo_client_name_on" name="uz_cargo_client_name_on" placeholder="CLIENT/name" data-mode="view" data-edit="" data-form="transceiver">*@
-                                                    <select class="form-control" id="uz_cargo_client_name_on" name="uz_cargo_client_name_on" placeholder="CLIENT/name" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
+                                                    <select class="form-control inp-epd" id="uz_cargo_client_name_on" name="uz_cargo_client_name_on" title="ЭПД [OTPR/CLIENT[1]/name] -> Справочник 'Грузополучателей' -> Название грузополучателя" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
                                                     <div class="invalid-feedback">
                                                     </div>
                                                     <div class="input-group-append">
@@ -363,13 +362,13 @@
                                         <div class="form-row">
                                             <div class="col-md-6 mb-1 text-left">
                                                 <div class="custom-control custom-checkbox" style="top:50%">
-                                                    <input type="checkbox" class="custom-control-input" id="uz_cargo_returns" name="uz_cargo_returns" data-mode="edit-global" data-edit="" data-form="transceiver">
+                                                    <input type="checkbox" class="custom-control-input inp-manual" id="uz_cargo_returns" name="uz_cargo_returns" data-mode="edit-global" data-edit="" data-form="transceiver">
                                                     <label class="custom-control-label" for="uz_cargo_returns">@IDSRWTResource.title_cargo_returns</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6 mb-1 text-left">
                                                 <label for="uz_vag_station_on_amkr" class="col-form-label">@IDSRWTResource.title_station_on_amkr:</label>
-                                                <select class="form-control" id="uz_vag_station_on_amkr" name="uz_vag_station_on_amkr" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
+                                                <select class="form-control inp-manual" id="uz_vag_station_on_amkr" name="uz_vag_station_on_amkr"  title="Ручной выбор -> Справочник 'Внутрених станций АМКР'" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -381,13 +380,13 @@
                                         <div class="form-row">
                                             <div class="col-md-6 mb-1 text-left">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="uz_vag_route" name="uz_vag_route" data-mode="edit-global" data-edit="" data-form="transceiver">
+                                                    <input type="checkbox" class="custom-control-input inp-manual" id="uz_vag_route" name="uz_vag_route" data-mode="edit-global" data-edit="" data-form="transceiver">
                                                     <label class="custom-control-label" for="uz_vag_route">@IDSRWTResource.title_route</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6 mb-1 text-right">
                                                 <label class="col-form-label" for="card_vag_add">@IDSRWTResource.title_card_vag</label>
-                                                <button type="button" class="btn btn-danger btn" id="card_vag_add" data-form="transceiver">
+                                                <button type="button" class="btn btn-danger btn" id="card_vag_add" data-form="transceiver"  title="Добавить новую запись карточки вагона в справочник 'Карточка вагона', информация берется автоматически из ЭПД и БД УЗ">
                                                     <i class="fa fa-save" aria-hidden="true"></i>
                                                 </button>
                                             </div>
@@ -395,19 +394,19 @@
                                         <div class="form-row">
                                             <div class="col-md-3 mb-1 text-left">
                                                 <label for="card_vag_kod_adm" class="col-form-label">@IDSRWTResource.title_kod_adm:</label>
-                                                <input type="text" class="form-control" id="card_vag_kod_adm" name="card_vag_kod_adm" placeholder="VAGON/kod_adm" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <input type="text" class="form-control inp-epd" title="ЭПД [OTPR/VAGON/kod_adm]" id="card_vag_kod_adm" name="card_vag_kod_adm" data-mode="view-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 mb-1 text-left">
                                                 <label for="card_vag_name_adm" class="col-form-label">@IDSRWTResource.title_name_adm:</label>
-                                                <select class="form-control" id="card_vag_name_adm" name="card_vag_name_adm" data-mode="all" data-edit="" data-form="transceiver"></select>
+                                                <select class="form-control inp-epd" id="card_vag_name_adm" title="ЭПД [OTPR/VAGON/kod_adm] -> Справочник 'Стран' -> Название Администрации" name="card_vag_name_adm" data-mode="all" data-edit="" data-form="transceiver"></select>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-6 mb-1 text-left">
                                                 <label for="card_vag_name_rod_vag" class="col-form-label">@IDSRWTResource.title_name_rod_vag:</label>
-                                                <input type="text" class="form-control" id="card_vag_name_rod_vag" name="card_vag_name_rod_vag" data-mode="all" data-edit="" data-form="transceiver">
+                                                <input type="text" class="form-control inp-epd" id="card_vag_name_rod_vag" name="card_vag_name_rod_vag" title="ЭПД [OTPR/VAGON/rod_vag] -> Справочник 'Род вагона' -> Справочник 'Карточка вагона' -> Название 'Рода вагона' " data-mode="all" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -415,19 +414,19 @@
                                         <div class="form-row">
                                             <div class="col-md-4 mb-1 text-left">
                                                 <label for="card_vag_usl_tip" class="col-form-label">@IDSRWTResource.title_usl_tip:</label>
-                                                <input type="text" class="form-control" id="card_vag_usl_tip" name="card_vag_usl_tip" placeholder="VAGON/usl_tip" data-mode="all" data-edit="" data-form="transceiver">
+                                                <input type="text" class="form-control inp-epd" id="card_vag_usl_tip" name="card_vag_usl_tip" title="ЭПД [OTPR/VAGON/usl_tip] -> Справочник 'Карточка вагона' -> Шифр 'Типа цистерны'" data-mode="all" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-4 mb-1 text-left">
                                                 <label for="uz_vag_condition_arrival" class="col-form-label">@IDSRWTResource.title_wagons_condition:</label>
-                                                <select class="form-control" id="uz_vag_condition_arrival" name="uz_vag_condition_arrival" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
+                                                <select class="form-control inp-manual" id="uz_vag_condition_arrival" name="uz_vag_condition_arrival" title="Ручной выбор -> Справочник 'Годность по прибытию'" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-4 mb-1 text-left">
                                                 <label for="uz_vag_type_wagon" class="col-form-label">@IDSRWTResource.title_type_wagons:</label>
-                                                <select class="form-control" id="uz_vag_type_wagon" name="uz_vag_type_wagon" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
+                                                <select class="form-control inp-manual" id="uz_vag_type_wagon" name="uz_vag_type_wagon"  title="Ручной выбор -> Справочник 'Тип вагона'" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -435,20 +434,19 @@
                                         <div class="form-row">
                                             <div class="col-md-4 mb-1 text-left">
                                                 <label for="card_vag_kol_os" class="col-form-label">@IDSRWTResource.title_kol_os:</label>
-                                                <select class="form-control" id="card_vag_kol_os" name="card_vag_kol_os" data-mode="all" data-edit="" data-form="transceiver"></select>
-
+                                                <select class="form-control inp-epd" id="card_vag_kol_os" name="card_vag_kol_os" title="ЭПД [OTPR/VAGON/kol_os] -> Справочник 'Карточка вагона' -> Количество осей" data-mode="all" data-edit="" data-form="transceiver"></select>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-4 mb-1 text-left">
                                                 <label for="uz_vag_gruzp" class="col-form-label">@IDSRWTResource.title_gruzp_doc:</label>
-                                                <input type="number" class="form-control" id="uz_vag_gruzp" name="uz_vag_gruzp" placeholder="VAGON/gruzp" data-mode="all" data-edit="" data-form="transceiver">
+                                                <input type="number" class="form-control inp-epd" id="uz_vag_gruzp" name="uz_vag_gruzp" title="ЭПД [OTPR/VAGON/gruzp] -> Грузоподъемность по ЭПД" data-mode="all" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-4 mb-1 text-left">
                                                 <label for="card_vag_gruzp" class="col-form-label">@IDSRWTResource.title_gruzp_uz:</label>
-                                                <input type="number" class="form-control" id="card_vag_gruzp" name="card_vag_gruzp" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <input type="number" class="form-control inp-uz" id="card_vag_gruzp" name="card_vag_gruzp" title="БД УЗ [https://uz.gov.ua/car_info/index.php] -> Грузоподъемность по БД УЗ" data-mode="view-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -456,25 +454,25 @@
                                         <div class="form-row">
                                             <div class="col-md-3 mb-1 text-left">
                                                 <label for="uz_vag_ves_tary_arc" class="col-form-label">@IDSRWTResource.title_ves_tary_arc:</label>
-                                                <input type="number" class="form-control" id="uz_vag_ves_tary_arc" name="uz_vag_ves_tary_arc" placeholder="VAGON/ves_tary_arc" data-mode="all" data-edit="" data-form="transceiver">
+                                                <input type="number" class="form-control inp-epd" id="uz_vag_ves_tary_arc" name="uz_vag_ves_tary_arc" title="ЭПД [OTPR/VAGON/ves_tary_arc] -> Вес тары по ЭПД" data-mode="all" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 mb-1 text-left">
                                                 <label for="uz_vag_u_tara" class="col-form-label">@IDSRWTResource.title_u_tara:</label>
-                                                <input type="number" class="form-control" id="uz_vag_u_tara" name="uz_vag_u_tara" placeholder="VAGON/u_tara" data-mode="all" data-edit="" data-form="transceiver">
+                                                <input type="number" class="form-control inp-epd" id="uz_vag_u_tara" name="uz_vag_u_tara" title="ЭПД [OTPR/VAGON/u_tara] -> Вес уточнённой тары по ЭПД" data-mode="all" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 mb-1 text-left">
                                                 <label for="card_vag_date_rem_vag" class="col-form-label">@IDSRWTResource.title_date_rem_vag:</label>
-                                                <input type="datetime" class="form-control" id="card_vag_date_rem_vag" name="card_vag_date_rem_vag" placeholder="" data-mode="edit-global" data-edit="" data-form="transceiver">
+                                                <input type="datetime" class="form-control inp-manual" id="card_vag_date_rem_vag" name="card_vag_date_rem_vag" title="Ручной ввод (информация на вагоне) -> Справочник 'Карточка вагона' -> Дата ремонта на вагоне" data-mode="edit-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 mb-1 text-left">
                                                 <label for="card_vag_date_rem_uz" class="col-form-label">@IDSRWTResource.title_date_rem_uz:</label>
-                                                <input type="datetime" class="form-control" id="card_vag_date_rem_uz" name="card_vag_date_rem_uz" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <input type="datetime" class="form-control inp-uz" id="card_vag_date_rem_uz" name="card_vag_date_rem_uz" title="БД УЗ [https://uz.gov.ua/car_info/index.php] -> Справочник 'Карточка вагона' -> Дата ремонта по БД УЗ" data-mode="view-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -482,19 +480,19 @@
                                         <div class="form-row">
                                             <div class="col-md-4 mb-1 text-left">
                                                 <label for="card_vag_name_owner" class="col-form-label">@IDSRWTResource.title_name_owner:</label>
-                                                <input type="text" class="form-control" id="card_vag_name_owner" name="card_vag_name_owner" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <input type="text" class="form-control inp-uz" id="card_vag_name_owner" name="card_vag_name_owner" title="БД УЗ [https://uz.gov.ua/car_info/index.php] -> Справочник 'Собственников вагонов' -> Справочник 'Карточка вагона' -> Собственник вагона" data-mode="view-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-4 mb-1 text-left">
                                                 <label for="card_vag_rent_start" class="col-form-label">@IDSRWTResource.title_rent_start:</label>
-                                                <input type="datetime" class="form-control" id="card_vag_rent_start" name="card_vag_rent_start" data-mode="edit-global" data-edit="" data-form="transceiver">
+                                                <input type="datetime" class="form-control inp-manual" id="card_vag_rent_start" name="card_vag_rent_start" title="Ручной ввод (при смене собственника) -> Справочник 'Карточка вагона' -> Дата начала аренды" data-mode="edit-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-4 mb-1 text-left">
                                                 <label for="card_vag_type_ownership" class="col-form-label">@IDSRWTResource.title_type_ownership:</label>
-                                                <select class="form-control" id="card_vag_type_ownership" name="card_vag_type_ownership" data-mode="view-global" data-edit="" data-form="transceiver"></select>
+                                                <select class="form-control inp-auto" id="card_vag_type_ownership" name="card_vag_type_ownership" title="Автоматически берется из карточек собственных вагонов -> Признак собственности" data-mode="view-global" data-edit="" data-form="transceiver"></select>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -502,13 +500,13 @@
                                         <div class="form-row">
                                             <div class="col-md-5 mb-1 text-left">
                                                 <label for="card_vag_name_operator" class="col-form-label">@IDSRWTResource.title_name_operator:</label>
-                                                <input type="text" class="form-control" id="card_vag_name_operator" name="card_vag_name_operator" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <input type="text" class="form-control inp-uz" id="card_vag_name_operator" name="card_vag_name_operator" title="БД УЗ [https://uz.gov.ua/car_info/index.php] -> Справочник 'Операторов' -> Справочник 'Карточка вагона' -> Оператор вагона" data-mode="view-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-7 mb-1 text-left">
                                                 <label for="card_vag_limiting_loading" class="col-form-label">@IDSRWTResource.title_limiting_loading:</label>
-                                                <input type="number" class="form-control" id="card_vag_limiting_loading" name="card_vag_limiting_loading" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <input type="number" class="form-control inp-auto" id="card_vag_limiting_loading" name="card_vag_limiting_loading" title="Автоматически берется из справочника 'Карточка вагона' -> Ограничение погрузки" data-mode="view-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -522,13 +520,13 @@
                                         <div class="form-row">
                                             <div class="col-md-6 mb-1 text-left">
                                                 <label for="card_vag_note" class="col-form-label">@IDSRWTResource.title_note_uz:</label>
-                                                <textarea class="form-control" id="card_vag_note" name="card_vag_note" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver"></textarea>
+                                                <textarea class="form-control inp-uz" id="card_vag_note" name="card_vag_note" title="БД УЗ [https://uz.gov.ua/car_info/index.php] -> Справочник 'Карточка вагона' -> Ограничения из БД УЗ"  data-mode="view-global" data-edit="" data-form="transceiver"></textarea>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-6 mb-1 text-left">
                                                 <label for="uz_vag_note" class="col-form-label">@IDSRWTResource.title_note:</label>
-                                                <textarea class="form-control" id="uz_vag_note" name="uz_vag_note" placeholder="" data-mode="edit-global" data-edit="" data-form="transceiver"></textarea>
+                                                <textarea class="form-control inp-manual" id="uz_vag_note" name="uz_vag_note" title="Ручной ввод (примечания)" data-mode="edit-global" data-edit="" data-form="transceiver"></textarea>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -537,7 +535,7 @@
                                             <div class="card border-primary">
                                                 <div class="card-header text-left" role="tab" id="headingOne">
                                                     <div class="mb-0">
-                                                        <a data-toggle="collapse" data-parent="#accordion" href="#epd-cars" aria-expanded="false" aria-controls="epd-cars" class="collapsed">
+                                                        <a data-toggle="collapse" title="Сопроводительные документы, если в ЭПД вложены документы, тогда будет указано количество документов" data-parent="#accordion" href="#epd-cars" aria-expanded="false" aria-controls="epd-cars" class="collapsed">
                                                             <i class="fa fa-file-text-o fa-lg" aria-hidden="true"></i>
                                                             @*<h3>ЭПД</h3>*@
                                                             <p>@IDSRWTResource.title_vagon_doc<span class="badge badge-primary text-white ml-2" id="count-docs"></span></p>
@@ -554,7 +552,7 @@
                                             <div class="card border-primary">
                                                 <div class="card-header text-left" role="tab" id="headingTwo">
                                                     <div class="mb-0">
-                                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
+                                                        <a data-toggle="collapse" title="Акты на вагон, если в ЭПД на выбранный вагон вложены акты, тогда будет указано количество актов" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
                                                             <i class="fa fa-file-text-o fa-lg" aria-hidden="true"></i>
                                                             @*<h3></h3>*@
                                                             <p>@IDSRWTResource.title_vagon_act<span class="badge badge-primary text-white ml-2" id="count-acts">'</span></p>
@@ -575,18 +573,18 @@
                                         <div class="form-row">
                                             <div class="col-md-2 mb-1 text-left">
                                                 <label for="uz_rask_kod_plat" class="col-form-label">@IDSRWTResource.title_kod_plat:</label>
-                                                <input type="text" class="form-control" id="uz_rask_kod_plat" name="uz_rask_kod_plat" placeholder="PL/kod_plat" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <input type="text" class="form-control inp-epd" id="uz_rask_kod_plat" name="uz_rask_kod_plat" title="ЭПД [OTPR/PL/kod_plat] -> Код плательщика из ЭПД" data-mode="view-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-4 mb-1 text-left">
                                                 <label for="uz_rask_name_plat" class="col-form-label">@IDSRWTResource.title_name_plat</label>
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" id="uz_rask_name_plat" name="uz_rask_name_plat" placeholder="PL/name_plat" data-mode="all" data-edit="" data-form="transceiver">
+                                                    <input type="text" class="form-control inp-epd" id="uz_rask_name_plat" name="uz_rask_name_plat" title="ЭПД [OTPR/PL/name_plat] -> Справочник 'Плательщиков по прибытию' -> Название Плательщика" data-mode="all" data-edit="" data-form="transceiver">
                                                     <div class="invalid-feedback">
                                                     </div>
                                                     <div class="input-group-append">
-                                                        <button type="button" class="btn btn-danger btn" id="uz_rask_name_plat_add" data-form="transceiver">
+                                                        <button type="button" class="btn btn-danger btn" id="uz_rask_name_plat_add" title="Добавить нового плательщика в справочник 'Плательщиков по прибытию', информация берется автоматически из ЭПД" data-form="transceiver">
                                                             <i class="fa fa-save" aria-hidden="true"></i>
                                                         </button>
                                                     </div>
@@ -594,13 +592,13 @@
                                             </div>
                                             <div class="col-md-3 mb-1 text-left">
                                                 <label for="uz_rask_distance_way" class="col-form-label">@IDSRWTResource.title_distance_way:</label>
-                                                <input type="number" class="form-control" id="uz_rask_distance_way" name="uz_rask_distance_way" placeholder="OTPR/distance_way" data-mode="all" data-edit="" data-form="transceiver">
+                                                <input type="number" class="form-control inp-epd" id="uz_rask_distance_way" name="uz_rask_distance_way" title="ЭПД [OTPR/distance_way] -> Тарифное расстояние" data-mode="all" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 mb-1 text-left">
                                                 <label for="uz_rask_pl_pay_summa" class="col-form-label">@IDSRWTResource.title_tariff:</label>
-                                                <input type="number" class="form-control" id="uz_rask_pl_pay_summa" name="uz_rask_pl_pay_summa" placeholder="PL/PAY/summa" data-mode="all" data-edit="" data-form="transceiver">
+                                                <input type="number" class="form-control inp-epd" id="uz_rask_pl_pay_summa" name="uz_rask_pl_pay_summa" title="ЭПД [OTPR/VAGON/PAY_V/summa] если [OTPR/VAGON/PAY_V/kod=01 или OTPR/VAGON/PAY_V/kod=21]" data-mode="all" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -611,18 +609,18 @@
                                         <div class="form-row">
                                             <div class="col-md-3 mb-1 text-left">
                                                 <label for="uz_cargo_kod_etsng" class="col-form-label">@IDSRWTResource.title_kod_etsng:</label>
-                                                <input type="text" class="form-control" id="uz_cargo_kod_etsng" name="uz_cargo_kod_etsng" placeholder="VAGON/COLLECT_V/kod_etsng" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <input type="text" class="form-control inp-epd" id="uz_cargo_kod_etsng" name="uz_cargo_kod_etsng" title="ЭПД [OTPR/VAGON/COLLECT_V/kod_etsng] -> Код груза по ЕТ СНГ" data-mode="view-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-9 mb-1 text-left">
                                                 <label for="uz_cargo_name_etsng" class="col-form-label">@IDSRWTResource.title_name_etsng</label>
                                                 <div class="input-group">
-                                                    <textarea class="form-control" id="uz_cargo_name_etsng" name="uz_cargo_name_etsng" placeholder="VAGON/COLLECT_V/name_etsng" data-mode="all" data-edit="" data-form="transceiver"></textarea>
+                                                    <textarea class="form-control inp-epd" id="uz_cargo_name_etsng" name="uz_cargo_name_etsng" title="ЭПД [OTPR/VAGON/COLLECT_V/name_etsng] -> Справочник 'Грузов ЕТ СНГ' -> Справочник 'Грузов ИДС' -> Название груза по ЕТ СНГ" data-mode="all" data-edit="" data-form="transceiver"></textarea>
                                                     <div class="invalid-feedback">
                                                     </div>
                                                     <div class="input-group-append">
-                                                        <button type="button" class="btn btn-danger btn" id="uz_cargo_name_etsng_add" data-form="transceiver">
+                                                        <button type="button" class="btn btn-danger btn" id="uz_cargo_name_etsng_add" title="Добавить новую строку в справочник 'Грузов ЕТ СНГ' и справочник 'Грузов ИДС', информация берется автоматически из ЭПД" data-form="transceiver">
                                                             <i class="fa fa-save" aria-hidden="true"></i>
                                                         </button>
                                                     </div>
@@ -632,18 +630,18 @@
                                         <div class="form-row">
                                             <div class="col-md-3 mb-1 text-left">
                                                 <label for="uz_cargo_kod_gng" class="col-form-label">@IDSRWTResource.title_kod_gng:</label>
-                                                <input type="text" class="form-control" id="uz_cargo_kod_gng" name="uz_cargo_kod_gng" placeholder="VAGON/COLLECT_V/kod_gng" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <input type="text" class="form-control inp-epd" id="uz_cargo_kod_gng" name="uz_cargo_kod_gng" title="ЭПД [OTPR/VAGON/COLLECT_V/kod_gng] -> Код груза по ГНГ" data-mode="view-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-9 mb-1 text-left">
                                                 <label for="uz_cargo_name_gng" class="col-form-label">@IDSRWTResource.title_name_gng</label>
                                                 <div class="input-group">
-                                                    <textarea class="form-control" id="uz_cargo_name_gng" name="uz_cargo_name_gng" placeholder="VAGON/COLLECT_V/name_gng" data-mode="all" data-edit="" data-form="transceiver"></textarea>
+                                                    <textarea class="form-control inp-epd" id="uz_cargo_name_gng" name="uz_cargo_name_gng" title="ЭПД [OTPR/VAGON/COLLECT_V/name_gng] -> Справочник 'Грузов ГНГ' -> Название груза по ГНГ" data-mode="all" data-edit="" data-form="transceiver"></textarea>
                                                     <div class="invalid-feedback">
                                                     </div>
                                                     <div class="input-group-append">
-                                                        <button type="button" class="btn btn-danger btn" id="uz_cargo_name_gng_add" data-form="transceiver">
+                                                        <button type="button" class="btn btn-danger btn" id="uz_cargo_name_gng_add" title="Добавить новую строку в справочник 'Грузов ГНГ', информация берется автоматически из ЭПД" data-form="transceiver">
                                                             <i class="fa fa-save" aria-hidden="true"></i>
                                                         </button>
                                                     </div>
@@ -653,19 +651,19 @@
                                         <div class="form-row">
                                             <div class="col-md-4 mb-1 text-left">
                                                 <label for="uz_cargo_group_cargo" class="col-form-label">@IDSRWTResource.title_group_cargo</label>
-                                                <input class="form-control" id="uz_cargo_group_cargo" name="uz_cargo_group_cargo" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <input class="form-control inp-auto" id="uz_cargo_group_cargo" name="uz_cargo_group_cargo" title="Автоматически берется из справочника 'Грузов ИДС' -> Группа груза" data-mode="view-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-4 mb-1 text-left">
                                                 <label for="uz_cargo_certificate_data" class="col-form-label">@IDSRWTResource.title_certificate_data:</label>
-                                                <select class="form-control" id="uz_cargo_certificate_data" name="uz_cargo_certificate_data" placeholder="" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
+                                                <select class="form-control inp-manual" id="uz_cargo_certificate_data" name="uz_cargo_certificate_data" title="Ручной выбор -> Справочник 'Сертификатных данных'" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-4 mb-1 text-left">
                                                 <label for="uz_cargo_commercial_condition" class="col-form-label">@IDSRWTResource.title_commercial_condition:</label>
-                                                <select class="form-control" id="uz_cargo_commercial_condition" name="uz_cargo_commercial_condition" placeholder="" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
+                                                <select class="form-control inp-manual" id="uz_cargo_commercial_condition" name="uz_cargo_commercial_condition" title="Ручной выбор -> Справочник 'Коммерческого состояния вагона\груза'" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -673,8 +671,7 @@
                                         <div class="form-row">
                                             <div class="col-md-12 mb-1 text-left">
                                                 <label for="uz_cargo_cargo_analysis" class="col-form-label">@IDSRWTResource.title_cargo_analysis</label>
-                                                <textarea class="form-control" id="uz_cargo_cargo_analysis" name="uz_cargo_cargo_analysis" data-mode="edit-global" data-edit="" data-form="transceiver"></textarea>
-                                                @*placeholder="TEXT/zayava"*@
+                                                <textarea class="form-control inp-epd" id="uz_cargo_cargo_analysis" name="uz_cargo_cargo_analysis" title="ЭПД [OTPR/TEXT/zayava] -> Информация для анализа груза" data-mode="edit-global" data-edit="" data-form="transceiver"></textarea>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -682,31 +679,31 @@
                                         <div class="form-row">
                                             <div class="col-md-2 mb-1 text-left">
                                                 <label for="uz_cargo_kol_pac" class="col-form-label">@IDSRWTResource.title_kol_pac:</label>
-                                                <input type="number" class="form-control" id="uz_cargo_kol_pac" name="uz_cargo_kol_pac" placeholder="VAGON/COLLECT_V/kol_pac" data-mode="all" data-edit="" data-form="transceiver">
+                                                <input type="number" class="form-control inp-epd" id="uz_cargo_kol_pac" name="uz_cargo_kol_pac" title="ЭПД [OTPR/VAGON/COLLECT_V/kol_pac] -> Количество мест" data-mode="all" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 mb-1 text-left">
                                                 <label for="uz_cargo_vesg_doc" class="col-form-label">@IDSRWTResource.title_vesg_doc:</label>
-                                                <input type="text" class="form-control" id="uz_cargo_vesg_doc" name="uz_cargo_vesg_doc" placeholder="VAGON/COLLECT_V/vesg" data-mode="all" data-edit="" data-form="transceiver">
+                                                <input type="text" class="form-control inp-epd" id="uz_cargo_vesg_doc" name="uz_cargo_vesg_doc" title="ЭПД [OTPR/VAGON/COLLECT_V/vesg] -> Вес груза" data-mode="all" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 mb-1 text-left">
                                                 <label for="uz_cargo_vesg_reweighing" class="col-form-label">@IDSRWTResource.title_vesg_reweighing:</label>
-                                                <input type="text" class="form-control" id="uz_cargo_vesg_reweighing" name="uz_cargo_vesg_reweighing" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <input type="text" class="form-control inp-auto" id="uz_cargo_vesg_reweighing" name="uz_cargo_vesg_reweighing" title="Автоматически берется из системы ЕБД -> Вес груза после перевески" data-mode="view-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-2 mb-1 text-left">
                                                 <label for="uz_cargo_vesg_difference" class="col-form-label">@IDSRWTResource.title_vesg_difference:</label>
-                                                <input type="text" class="form-control" id="uz_cargo_vesg_difference" name="uz_cargo_vesg_difference" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <input type="text" class="form-control inp-auto" id="uz_cargo_vesg_difference" name="uz_cargo_vesg_difference" title="Автоматически вычисляется после перевески -> Разница веса" data-mode="view-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-2 mb-1 text-left">
                                                 <label for="uz_cargo_nom_zpu" class="col-form-label">@IDSRWTResource.title_nom_zpu:</label>
-                                                <input type="number" class="form-control" id="uz_cargo_nom_zpu" name="uz_cargo_nom_zpu" placeholder="ZPU_V/nom_zpu" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <input type="number" class="form-control inp-epd" id="uz_cargo_nom_zpu" name="uz_cargo_nom_zpu" title="ЭПД [OTPR/VAGON/ZPU_V/nom_zpu] -> Номер ЗПУ" data-mode="view-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -714,19 +711,19 @@
                                         <div class="form-row">
                                             <div class="col-md-2 mb-1 text-left">
                                                 <label for="uz_cargo_danger_class" class="col-form-label">@IDSRWTResource.title_danger_class:</label>
-                                                <input type="text" class="form-control" id="uz_cargo_danger_class" name="uz_cargo_danger_class" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <input type="text" class="form-control inp-epd" id="uz_cargo_danger_class" name="uz_cargo_danger_class" title="ЭПД [OTPR/VAGON/COLLECT_V/danger] -> Класс опасности" data-mode="view-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-8 mb-1 text-left">
                                                 <label for="uz_cargo_danger_name" class="col-form-label">@IDSRWTResource.title_danger_name:</label>
-                                                <select class="form-control" id="uz_cargo_danger_name" name="uz_cargo_danger_name" placeholder="VAGON/COLLECT_V/danger" data-mode="all" data-edit="" data-form="transceiver"></select>
+                                                <select class="form-control inp-epd" id="uz_cargo_danger_name" name="uz_cargo_danger_name" title="ЭПД [OTPR/VAGON/COLLECT_V/danger] -> Справочник 'Класс опасности' -> Название опасности" data-mode="all" data-edit="" data-form="transceiver"></select>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-2 mb-1 text-left">
                                                 <label for="uz_cargo_danger_kod" class="col-form-label">@IDSRWTResource.title_danger_kod:</label>
-                                                <input type="text" class="form-control" id="uz_cargo_danger_kod" name="uz_cargo_danger_kod" placeholder="VAGON/COLLECT_V/danger_kod" data-mode="all" data-edit="" data-form="transceiver">
+                                                <input type="text" class="form-control inp-epd" id="uz_cargo_danger_kod" name="uz_cargo_danger_kod" title="ЭПД [OTPR/VAGON/COLLECT_V/danger_kod] -> Код опасности" data-mode="all" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>

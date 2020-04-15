@@ -215,6 +215,7 @@
     <Compile Include="Controllers\api\Directoty\IDS_Directory_CargoETSNGController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_CommercialConditionController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_CertificationDataController.cs" />
+    <Compile Include="Controllers\api\Directoty\IDS_Directory_HazardClassController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_PayerArrivalController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_InlandRailwayController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_ExternalStationController.cs" />
