@@ -852,7 +852,7 @@
                 event.preventDefault();
                 dialog_confirm.open('Cправочник "Грузы ЕТСНГ"', 'Будет добавлена новая запись груза [ Код = ' + cars_detali.uz_cargo_kod_etsng.val() + ', Название = ' + cars_detali.uz_cargo_name_etsng.text() + ']', function (result) {
                     if (result) {
-                        cars_detali.addDirectory_CargoETSNG(cars_detali.uz_cargo_kod_etsng.val(), cars_detali.uz_cargo_name_etsng.text(), function () {
+                        cars_detali.addDirectory_CargoETSNG(cars_detali.uz_cargo_kod_etsng.val(), cars_detali.uz_cargo_name_etsng.val(), function () {
                             cars_detali.update_list_cargo_etsng(cars_detali.uz_cargo_name_etsng.val());
                             cars_detali.view_epd_cargo_etsng(cars_detali.select_otpr_vagon);
                         }, null);
@@ -1777,7 +1777,7 @@
                 cars_detali.card_vag_name_operator.val('');
                 cars_detali.card_vag_limiting_loading.val('');
                 cars_detali.card_vag_type_ownership.val(-1);
-                cars_detali.card_vag_note.text('');
+                cars_detali.card_vag_note.val('');
 
                 cars_detali.uz_vag_condition_arrival.val(-1);
                 cars_detali.uz_vag_type_wagon.val(-1);
@@ -1798,16 +1798,16 @@
                 cars_detali.uz_rask_pl_pay_summa.val('');
 
                 cars_detali.uz_cargo_kod_etsng.val('');
-                cars_detali.uz_cargo_name_etsng.text('');
+                cars_detali.uz_cargo_name_etsng.val('');
                 cars_detali.uz_cargo_name_etsng_add.hide();
                 cars_detali.uz_cargo_kod_gng.val('');
-                cars_detali.uz_cargo_name_gng.text('');
+                cars_detali.uz_cargo_name_gng.val('');
                 cars_detali.uz_cargo_name_gng_add.hide();
                 cars_detali.uz_cargo_group_cargo.val('');
 
                 cars_detali.uz_cargo_certificate_data.val(-1);
                 cars_detali.uz_cargo_commercial_condition.val(-1);
-                cars_detali.uz_cargo_cargo_analysis.text('');
+                cars_detali.uz_cargo_cargo_analysis.val('');
 
                 cars_detali.uz_cargo_kol_pac.val('');
                 cars_detali.uz_cargo_vesg_doc.val('');
@@ -2033,7 +2033,7 @@
             // Показать ограничение УЗ
             view_epd_card_vag_note: function (vagon) {
                 if (vagon) {
-                    cars_detali.card_vag_note.text(vagon.note);
+                    cars_detali.card_vag_note.val(vagon.note);
                 }
                 //!!! если вагона нет тогда наверное нужно создать в ручную
             },
@@ -2154,7 +2154,7 @@
                         cars_detali.uz_cargo_name_etsng_add.show();
                     }
                     cars_detali.uz_cargo_kod_etsng.val(code);
-                    cars_detali.uz_cargo_name_etsng.text(name);
+                    cars_detali.uz_cargo_name_etsng.val(name);
                 }
             },
             // Показать груз и группу гнг
@@ -2172,13 +2172,13 @@
                         cars_detali.uz_cargo_name_gng_add.show();
                     }
                     cars_detali.uz_cargo_kod_gng.val(code);
-                    cars_detali.uz_cargo_name_gng.text(name);
+                    cars_detali.uz_cargo_name_gng.val(name);
                 }
             },
             // Показать анализ груза
             view_epd_cargo_analysis: function (otpr) {
                 if (otpr && otpr.text) {
-                    cars_detali.uz_cargo_cargo_analysis.text(otpr.text.zayava);
+                    cars_detali.uz_cargo_cargo_analysis.val(otpr.text.zayava);
                 }
             },
             // Показать анализ груза
