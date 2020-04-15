@@ -1109,5 +1109,34 @@
     "refuse_epd": null,
     "reissue_info": null,
     "taks": { "coeff_mode": 2, "coeff_type": null, "coeff_value": 1.695, "iskl_mode": null, "iskl_tar": null },
-    "text": { "branch": null, "calc_reason": null, "carrier_from": null, "create_place": null, "create_place_de": null, "date_permit": null, "doc_grot": null, "rwc_doc_name": null, "rw_note": null, "rw_mark": null, "name_tov": null, "loader_fio": null, "loader_position": null, "marks": "ПOKУПATEЛЬ \"ATTICUS TRADING INTERNATIONAL LTD\" OFFICE 148 REGICO OFFICES THE OLD BANK 153 THE PARADE HIGH STREET WATFORD UNITED KINGDOMWD17 1NA_ ГPУЗ HA TEPPИTOPИИ УKPAИHЫ ПPEДHAЗHAЧEH ДЛЯ OOO \"ATTICUSTRADING INTERNATIONAL LTD\"", "marks_gr": null, "mount_chapter": null, "mount_para": null, "name_gr": "ДOЛOMИT CЫPOЙ ДЛЯ METAЛЛУPГИЧECKOЙ ПPOMЫШЛEHHOCTИ ФP_20 80MM_ CMEPЗAЮЩИЙCЯ ГPУЗ_", "nom_dog": "1", "nom_gr": null, "nom_permit": null, "outside_payer_code": null, "sing": null, "stn_accum": null, "stn_name_accum": null, "trans_plan": null, "zayava": "ПЛATEЖИ ПO БЧ OПЛAЧИBAET OAO \"ДOЛOMИT\"_ TAMOЖEHHЫЙ AГEHT ГП \"БTЛЦ\"_ ПЛATEЛЬЩИK TAPИФA ПO УЗ OOO \"CEЙЛ ЭKOXИM\" KOД ПЛATEЛЬЩИKA 5735885_ ГPУЗ ПEPEMOPOЖEH ПEPEЛOПAЧEH_" }
+  "text": {
+    
+    "branch": null,
+    "calc_reason": null,
+    "carrier_from": null,
+    "create_place": null,
+    "create_place_de": null,
+    "date_permit": null,
+    "doc_grot": null,
+    "rwc_doc_name": null,
+    "rw_note": null,
+    "rw_mark": null,
+    "name_tov": null,
+    "loader_fio": null,
+    "loader_position": null,
+    "marks": "ПOKУПATEЛЬ \"ATTICUS TRADING INTERNATIONAL LTD\" OFFICE 148 REGICO OFFICES THE OLD BANK 153 THE PARADE HIGH STREET WATFORD UNITED KINGDOMWD17 1NA_ ГPУЗ HA TEPPИTOPИИ УKPAИHЫ ПPEДHAЗHAЧEH ДЛЯ OOO \"ATTICUSTRADING INTERNATIONAL LTD\"",
+    "marks_gr": null,
+    "mount_chapter": null,
+    "mount_para": null,
+    "name_gr": "ДOЛOMИT CЫPOЙ ДЛЯ METAЛЛУPГИЧECKOЙ ПPOMЫШЛEHHOCTИ ФP_20 80MM_ CMEPЗAЮЩИЙCЯ ГPУЗ_",
+    "nom_dog": "1",
+    "nom_gr": null,
+    "nom_permit": null,
+    "outside_payer_code": null,
+    "sing": null,
+    "stn_accum": null,
+    "stn_name_accum": null,
+    "trans_plan": null,
+    "zayava": "ПЛATEЖИ ПO БЧ OПЛAЧИBAET OAO \"ДOЛOMИT\"_ TAMOЖEHHЫЙ AГEHT ГП \"БTЛЦ\"_ ПЛATEЛЬЩИK TAPИФA ПO УЗ OOO \"CEЙЛ ЭKOXИM\" KOД ПЛATEЛЬЩИKA 5735885_ ГPУЗ ПEPEMOPOЖEH ПEPEЛOПAЧEH_"
+  }
 }
