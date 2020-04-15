@@ -331,7 +331,7 @@ namespace IDS
                     id_owner = id_owner,
                     ban_changes_owner = false,
                     id_operator = id_operator,
-                    gruzp = (double)info.carrying_capacity,
+                    gruzp = info.carrying_capacity!=null ? (double)info.carrying_capacity : 0,
                     kol_os = kol_os,
                     usl_tip = usl_tip,
                     date_rem_uz = info.repair_date,
