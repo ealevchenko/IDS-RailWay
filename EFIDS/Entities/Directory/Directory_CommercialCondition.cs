@@ -11,12 +11,10 @@ namespace EFIDS.Entities
     {
         public int id { get; set; }
 
-        [Column("commercial condition_ru")]
         [Required]
         [StringLength(50)]
         public string commercial_condition_ru { get; set; }
 
-        [Column("commercial condition_en")]
         [Required]
         [StringLength(50)]
         public string commercial_condition_en { get; set; }

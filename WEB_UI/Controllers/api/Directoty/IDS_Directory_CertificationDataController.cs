@@ -12,7 +12,7 @@ using System.Web.Http.Description;
 namespace WEB_UI.Controllers.api
 {
     /// <summary>
-    /// СПИСОК СТРАН
+    /// СПИСОК СЕРТИФИКАЦИОННЫХ ДАННЫХ
     /// </summary>
     [RoutePrefix("api/ids/directory/certification_data")]
     public class IDS_Directory_CertificationDataController : ApiController

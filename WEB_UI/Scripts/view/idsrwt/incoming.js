@@ -834,7 +834,7 @@
                     if (result) {
                         cars_detali.addDirectory_PayerArrival(cars_detali.uz_rask_kod_plat.val(), cars_detali.uz_rask_name_plat.val(), function () {
                             cars_detali.update_list_name_plat(cars_detali.uz_rask_name_plat.val());
-                            cars_detali.view_epd_plat(cars_detali.select_otpr_vagon);
+                            cars_detali.view_epd_plat(cars_detali.select_otpr);
                         }, null);
                     }
                 });
@@ -872,8 +872,26 @@
                     }
                 });
             }),
-
             uz_cargo_group_cargo: $('input#uz_cargo_group_cargo'),
+            // Сертификационные данные
+            uz_cargo_certificate_data: $('select#uz_cargo_certificate_data'),
+            // Сертификационные данные
+            uz_cargo_commercial_condition: $('select#uz_cargo_commercial_condition'),
+            // Анализ груза
+            uz_cargo_cargo_analysis: $('textarea#uz_cargo_cargo_analysis'),
+            // Кол пас
+            uz_cargo_kol_pac: $('input#uz_cargo_kol_pac'),
+            // Вес груза по ЭПД
+            uz_cargo_vesg_doc: $('input#uz_cargo_vesg_doc'),
+            // ЗПУ
+            uz_cargo_nom_zpu: $('input#uz_cargo_nom_zpu'),
+            //----------------------------------------------------------
+            // Опасность
+            // класс опасности
+            uz_cargo_danger_class: $('input#uz_cargo_danger_class'),
+            uz_cargo_danger_name: $('select#uz_cargo_danger_name'),
+            // код опасности
+            uz_cargo_danger_kod: $('input#uz_cargo_danger_kod'),
             //---------------------------------------------------------------
             // Таблица с документами на груз
             table_dosc: {
@@ -1289,7 +1307,7 @@
             loadReference: function (callback) {
                 LockScreen(langView('mess_load', langs));
                 var count = 1;
-                cars_detali.ids_inc.load([], ['payer_arrival', 'cargo', 'cargo_gng', 'cargo_etsng', 'cargo_group', 'type_wagons', 'condition_arrival', 'type_owner_ship', 'limiting_loading', 'operators_wagons', 'owners_wagons', 'genus_wagon', 'countrys', 'railway', 'inlandrailway', 'external_station', 'station', 'consignee', 'shipper', 'border_checkpoint'], ['internal_railroad'], false, function () {
+                cars_detali.ids_inc.load([], ['commercial_condition','certification_data','payer_arrival', 'cargo', 'cargo_gng', 'cargo_etsng', 'cargo_group', 'type_wagons', 'condition_arrival', 'type_owner_ship', 'limiting_loading', 'operators_wagons', 'owners_wagons', 'genus_wagon', 'countrys', 'railway', 'inlandrailway', 'external_station', 'station', 'consignee', 'shipper', 'border_checkpoint'], ['internal_railroad'], false, function () {
                     count -= 1;
                     if (count === 0) {
                         if (typeof callback === 'function') {
@@ -1357,6 +1375,8 @@
                 cars_detali.update_list_name_plat(null);             // Плательщик по прибытию
                 cars_detali.update_list_cargo_etsng(null);           // Грузы ЕТ СНГ
                 cars_detali.update_list_cargo_gng(null);             // Грузы ЕТ ГНГ
+                cars_detali.update_list_certificate_data(-1);        // сертификационные данные
+                cars_detali.update_list_commercial_condition(-1);    // комерчиское состояние
             },
             // -------- ОБНОВЛЕНИЕ ------------------------------------------------------
             // Обновить компонент список грузоотправителей
@@ -1602,7 +1622,32 @@
                     }
                 }).val(text ? text : '');
             },
-
+            // Обновить компонент сертификационные данные
+            update_list_certificate_data: function (id) {
+                cars_detali.uz_cargo_certificate_data = cd_initSelect(
+                    $('select#uz_cargo_certificate_data'),
+                    { lang: lang },
+                    cars_detali.ids_inc.ids_dir.getListCertificationData('id', 'certification_data', cars_detali.lang, null),
+                    null,
+                    id ? Number(id) : -1,
+                    function (event) {
+                        event.preventDefault();
+                    },
+                    null);
+            },
+            // Обновить компонент комерчиские данные
+            update_list_commercial_condition: function (id) {
+                cars_detali.uz_cargo_commercial_condition = cd_initSelect(
+                    $('select#uz_cargo_commercial_condition'),
+                    { lang: lang },
+                    cars_detali.ids_inc.ids_dir.getListCommercialCondition('id', 'commercial_condition', cars_detali.lang, null),
+                    null,
+                    id ? Number(id) : -1,
+                    function (event) {
+                        event.preventDefault();
+                    },
+                    null);
+            },
             // -------- УПРАВЛЕНИЕ РЕЖИМАМИ ------------------------------------------------------
             // Возвращает свойство "редактирование разрешено" - true, запрещено -false
             is_edit_mode_of_element: function (el) {
@@ -1743,8 +1788,17 @@
                 cars_detali.uz_cargo_kod_gng.val('');
                 cars_detali.uz_cargo_name_gng.text('');
                 cars_detali.uz_cargo_name_gng_add.hide();
-
                 cars_detali.uz_cargo_group_cargo.val('');
+
+                cars_detali.uz_cargo_certificate_data.val(-1);
+                cars_detali.uz_cargo_commercial_condition.val(-1);
+                cars_detali.uz_cargo_cargo_analysis.text('');
+
+                cars_detali.uz_cargo_kol_pac.val('');
+                cars_detali.uz_cargo_vesg_doc.val('');
+                cars_detali.uz_cargo_nom_zpu.val('');
+
+                cars_detali.uz_cargo_danger_kod.val('');
 
             },
             //=================================================================================
@@ -2105,6 +2159,36 @@
                     cars_detali.uz_cargo_name_gng.text(name);
                 }
             },
+            // Показать анализ груза
+            view_epd_cargo_analysis: function (otpr) {
+                if (otpr && otpr.text) {
+                    cars_detali.uz_cargo_cargo_analysis.text(otpr.text.zayava);
+                }
+            },
+            // Показать анализ груза
+            view_epd_kol_pac: function (vagon) {
+                if (vagon && vagon.collect_v && vagon.collect_v.length>0) {
+                    cars_detali.uz_cargo_kol_pac.val(vagon.collect_v[0].kol_pac);
+                }
+            },
+            // Показать вес груза по ЭПД
+            view_epd_vesg_doc: function (vagon) {
+                if (vagon && vagon.collect_v && vagon.collect_v.length>0) {
+                    cars_detali.uz_cargo_vesg_doc.val(vagon.collect_v[0].vesg ? Number(Number(vagon.collect_v[0].vesg)/1000).toFixed(3): null);
+                }
+            },
+            // Показать вес груза по ЭПД
+            view_epd_nom_zpu: function (vagon) {
+                if (vagon && vagon.zpu_v && vagon.zpu_v.length>0) {
+                    cars_detali.uz_cargo_nom_zpu.val(vagon.zpu_v[0].nom_zpu);
+                }
+            },
+            // Показать код опасности
+            view_epd_danger_kod: function (vagon) {
+                if (vagon && vagon.collect_v && vagon.collect_v.length>0) {
+                    cars_detali.uz_cargo_danger_kod.val(vagon.collect_v[0].danger_kod);
+                }
+            },
             // показать электронно перевозочный документ
             view_cars_epd: function (num, otpr) {
                 cars_detali.select_otpr = otpr; // Сохраним документ
@@ -2155,6 +2239,12 @@
                         // Грузы
                         cars_detali.view_epd_cargo_etsng(cars_detali.select_otpr_vagon);
                         cars_detali.view_epd_cargo_gng(cars_detali.select_otpr_vagon);
+                        cars_detali.view_epd_cargo_analysis(cars_detali.select_otpr);
+                        cars_detali.view_epd_kol_pac(cars_detali.select_otpr_vagon);
+                        cars_detali.view_epd_vesg_doc(cars_detali.select_otpr_vagon);
+                        cars_detali.view_epd_nom_zpu(cars_detali.select_otpr_vagon);
+                        // Опасность
+                        cars_detali.view_epd_danger_kod(cars_detali.select_otpr_vagon);
                         LockScreenOff();
                     });
 

@@ -12,7 +12,7 @@ using System.Web.Http.Description;
 namespace WEB_UI.Controllers.api
 {
     /// <summary>
-    /// СПИСОК СТРАН
+    /// СПИСОК КОМЕРЧИСКОГО СОСТОЯНИЯ
     /// </summary>
     [RoutePrefix("api/ids/directory/commercial_condition")]
     public class IDS_Directory_CommercialConditionController : ApiController

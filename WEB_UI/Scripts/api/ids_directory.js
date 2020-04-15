@@ -64,6 +64,10 @@ IDS_DIRECTORY.list_cargo_gng = [];
 
 IDS_DIRECTORY.list_cargo = [];
 
+IDS_DIRECTORY.list_certification_data = [];
+
+IDS_DIRECTORY.list_commercial_condition = [];
+
 IDS_DIRECTORY.list_cars = [];
 
 /* ----------------------------------------------------------
@@ -410,6 +414,30 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
                 }
             });
         };
+        if (el === 'certification_data')  {
+            IDS_DIRECTORY.prototype.getCertificationData(function (result_certification_data) {
+                obj.list_certification_data = result_certification_data;
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        if (lockOff) { LockScreenOff(); }
+                        callback();
+                    }
+                }
+            });
+        };
+        if (el === 'commercial_condition')  {
+            IDS_DIRECTORY.prototype.getCommercialCondition(function (result_commercial_condition) {
+                obj.list_commercial_condition = result_commercial_condition;
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        if (lockOff) { LockScreenOff(); }
+                        callback();
+                    }
+                }
+            });
+        };
         if (el === 'cars') {
             IDS_DIRECTORY.prototype.getExternalStation(function (result_cars) {
                 obj.list_cars = result_cars;
@@ -564,7 +592,26 @@ IDS_DIRECTORY.prototype.loadCargo = function (callback) {
         }
     });
 };
-
+// Загрузка справочника сертификационных данных
+IDS_DIRECTORY.prototype.loadCertificationData = function (callback) {
+    var obj = this;
+    IDS_DIRECTORY.prototype.getCertificationData(function (result_certification_data) {
+        obj.list_certification_data = result_certification_data;
+        if (typeof callback === 'function') {
+            callback();
+        }
+    });
+};
+// Загрузка справочника комерчиское состояние 
+IDS_DIRECTORY.prototype.loadCommercialCondition = function (callback) {
+    var obj = this;
+    IDS_DIRECTORY.prototype.getCommercialCondition(function (result_commercial_condition) {
+        obj.list_commercial_condition = result_commercial_condition;
+        if (typeof callback === 'function') {
+            callback();
+        }
+    });
+};
 /* ----------------------------------------------------------
 AJAX функции
 -------------------------------------------------------------*/
@@ -727,6 +774,244 @@ IDS_DIRECTORY.prototype.postCars = function (car, callback) {
         error: function (x, y, z) {
             LockScreenOff();
             OnAJAXError("IDS_DIRECTORY.postCars", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//======= Directory_CertificationData (Справочник сертификационых данных) ======================================
+//
+IDS_DIRECTORY.prototype.getCertificationData = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/certification_data/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getCertificationData", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить по id
+IDS_DIRECTORY.prototype.getCertificationDataOfID = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/certification_data/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getCertificationDataOfID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Обновить 
+IDS_DIRECTORY.prototype.putCertificationData = function (certification, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/directory/certification_data/id/' + certification.id,
+        data: JSON.stringify(certification),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.putCertificationData", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Удалить 
+IDS_DIRECTORY.prototype.deleteCertificationData = function (id, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/certification_data/id/' + id,
+        type: 'DELETE',
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.deleteCertificationData", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Добавить 
+IDS_DIRECTORY.prototype.postCertificationData = function (certification, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/certification_data/',
+        type: 'POST',
+        data: JSON.stringify(certification),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_DIRECTORY.postCertificationData", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//======= Directory_CommercialCondition (Справочник комерчиского состояния) ======================================
+//
+IDS_DIRECTORY.prototype.getCommercialCondition = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/commercial_condition/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getCommercialCondition", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить по id
+IDS_DIRECTORY.prototype.getCommercialConditionOfID = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/commercial_condition/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getCommercialConditionOfID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Обновить 
+IDS_DIRECTORY.prototype.putCommercialCondition = function (condition, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/directory/commercial_condition/id/' + condition.id,
+        data: JSON.stringify(condition),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.putCommercialCondition", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Удалить 
+IDS_DIRECTORY.prototype.deleteCommercialCondition = function (id, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/commercial_condition/id/' + id,
+        type: 'DELETE',
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.deleteCommercialCondition", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Добавить 
+IDS_DIRECTORY.prototype.postCommercialCondition = function (condition, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/commercial_condition/',
+        type: 'POST',
+        data: JSON.stringify(condition),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_DIRECTORY.postCommercialCondition", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -3564,6 +3849,103 @@ IDS_DIRECTORY.prototype.getListCargoGroup = function (fvalue, ftext, lang, filte
     }
     return list;
 };
+//*======= IDS_DIRECTORY.list_certification_data  (Справочник сертификационных данных) ======================================
+IDS_DIRECTORY.prototype.getCertificationData_Of_ID = function (id) {
+    if (this.list_certification_data) {
+        var obj = getObjects(this.list_certification_data, 'id', id);
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getCertificationData_Internal_Of_Name = function (text, ftext, lang) {
+    if (this.list_certification_data) {
+        var obj = getObjects(this.list_certification_data, (lang ? ftext + '_' + lang : name), text);
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getID_CertificationData_Internal_Of_Name = function (text, ftext, lang) {
+    var obj = this.getCertificationData_Internal_Of_Name(text, ftext, lang);
+    return obj ? obj.id : null;
+};
+//
+IDS_DIRECTORY.prototype.getValue_CertificationData_Of_ID = function (id, name, lang) {
+    var obj = this.getCertificationData_Of_Code(id);
+    return this.getValueObj(obj, name, lang);
+};
+//
+IDS_DIRECTORY.prototype.getValueCulture_CertificationData_Of_ID = function (id, name) {
+    var obj = this.getCertificationData_Of_Code(id);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getListCertificationData = function (fvalue, ftext, lang, filter) {
+    var list = [];
+    var list_filtr = null;
+    if (this.list_certification_data) {
+        if (typeof filter === 'function') {
+            list_filtr = this.list_certification_data.filter(filter);
+        } else { list_filtr = this.list_certification_data; }
+        for (i = 0, j = list_filtr.length; i < j; i++) {
+            var l = list_filtr[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
+//*======= IDS_DIRECTORY.list_commercial_condition  (Справочник скомерчиских состояний) ======================================
+IDS_DIRECTORY.prototype.getCommercialCondition_Of_ID = function (id) {
+    if (this.list_commercial_condition) {
+        var obj = getObjects(this.list_commercial_condition, 'id', id);
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getCommercialCondition_Internal_Of_Name = function (text, ftext, lang) {
+    if (this.list_commercial_condition) {
+        var obj = getObjects(this.list_commercial_condition, (lang ? ftext + '_' + lang : name), text);
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getID_CommercialCondition_Internal_Of_Name = function (text, ftext, lang) {
+    var obj = this.getCommercialCondition_Internal_Of_Name(text, ftext, lang);
+    return obj ? obj.id : null;
+};
+//
+IDS_DIRECTORY.prototype.getValue_CommercialCondition_Of_ID = function (id, name, lang) {
+    var obj = this.getCommercialCondition_Of_Code(id);
+    return this.getValueObj(obj, name, lang);
+};
+//
+IDS_DIRECTORY.prototype.getValueCulture_CommercialCondition_Of_ID = function (id, name) {
+    var obj = this.getCommercialCondition_Of_Code(id);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getListCommercialCondition = function (fvalue, ftext, lang, filter) {
+    var list = [];
+    var list_filtr = null;
+    if (this.list_commercial_condition) {
+        if (typeof filter === 'function') {
+            list_filtr = this.list_commercial_condition.filter(filter);
+        } else { list_filtr = this.list_commercial_condition; }
+        for (i = 0, j = list_filtr.length; i < j; i++) {
+            var l = list_filtr[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
+
 //*======= IDS_DIRECTORY.list_condition_arrival  (Справочник годность по прибытию) ======================================
 IDS_DIRECTORY.prototype.getConditionArrival_Of_Code = function (id) {
     if (this.list_condition_arrival) {
