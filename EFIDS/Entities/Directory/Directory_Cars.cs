@@ -19,7 +19,7 @@ namespace EFIDS.Entities
 
         public int id_owner { get; set; }
 
-        public bool? ban_changes_owner { get; set; }
+        public bool? ban_changes_operator { get; set; }
 
         public int? id_operator { get; set; }
 

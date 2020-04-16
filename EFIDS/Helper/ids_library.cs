@@ -335,7 +335,7 @@ namespace EFIDS.Helper
                 id_countrys = c.id_countrys,
                 id_genus = c.id_genus,
                 id_owner = c.id_owner,
-                ban_changes_owner = c.ban_changes_owner,
+                ban_changes_operator = c.ban_changes_operator,
                 id_operator = c.id_operator,
                 gruzp = c.gruzp,
                 kol_os = c.kol_os,

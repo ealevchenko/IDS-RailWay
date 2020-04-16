@@ -329,8 +329,11 @@ namespace IDS
                     // если есть старая запись и она соответсвует группе род, тогда переносим, инчи новый род
                     id_genus = last_car != null && isDirectory_GenusWagons(last_car.id_genus, rod) ?   last_car.id_genus : id_genus,
                     id_owner = id_owner,
-                    ban_changes_owner = false,
-                    id_operator = id_operator,
+                    // если есть старая запись и в ней стоит блокировка изменения оператора тогда переносим блокировку, иначе нет блокировки
+                    ban_changes_operator = last_car !=null && last_car.ban_changes_operator == true ? true : false,
+                    // если есть старая запись и в ней стоит блокировка изменения оператора тогда переносим старого оператора, иначе нового оператора
+                    id_operator = last_car != null && last_car.ban_changes_operator == true ? last_car.id_operator : id_operator,
+                    // защита иногда нет значения                    
                     gruzp = info.carrying_capacity!=null ? (double)info.carrying_capacity : 0,
                     kol_os = kol_os,
                     usl_tip = usl_tip,
@@ -338,7 +341,8 @@ namespace IDS
                     date_rem_vag = last_car != null ? last_car.date_rem_vag : null, // если есть старая запись унаследуем свойсво дата ремонта на вагоне
                     id_limiting = last_car != null ? last_car.id_limiting : null,  // если есть старая запись унаследуем свойсво лимит погрузки
                     id_type_ownership = id_type_ownership,
-                    rent_start = null,
+                    // если есть старая запись и в ней стоит блокировка изменения оператора тогда переносим начало аренды, иначе пустое поле                    
+                    rent_start =  (last_car != null && last_car.ban_changes_operator == true) || (last_car != null && last_car.ban_changes_operator == false && last_car.id_operator == id_operator) ? last_car.rent_start : null,
                     rent_end = null,
                     note = "Запрет выхода:" + info.exit_ban + "; Другие запреты:" + (info.other_bans != null ? info.other_bans.Replace("<br>", "") : ""),
                     sobstv_kis = null,
@@ -350,29 +354,15 @@ namespace IDS
                 {
                     if (last_car.id_countrys != new_car.id_countrys ||
                         !isDirectory_GenusWagons(last_car.id_genus, rod) ||
-                        (last_car.ban_changes_owner == false && last_car.id_owner != new_car.id_owner) ||
-                        last_car.id_operator != new_car.id_operator ||
+                        last_car.id_owner != new_car.id_owner ||
+                        (last_car.ban_changes_operator == false && last_car.id_operator != new_car.id_operator) ||
                         last_car.gruzp != new_car.gruzp ||
                         last_car.kol_os != new_car.kol_os ||
                         last_car.date_rem_uz != new_car.date_rem_uz ||
                         last_car.id_type_ownership != new_car.id_type_ownership)
                     {
                         // Изменено
-                        // если владельцы совпадают или запрет изменения тогра старт аренды предыдущей записи
-                        if ((last_car.id_owner == new_car.id_owner))
-                        {
-                            new_car.rent_start = last_car.rent_start;
-                        }
-                        new_car.ban_changes_owner = last_car.ban_changes_owner; // Перенесем предыдущие настройки владельца
-                        // Если стоит запрет смены владельца, тогда переносим владельца предыдущего владельца и аренду
-                        if (last_car.ban_changes_owner == true)
-                        {
-                            new_car.id_owner = last_car.id_owner;
-                            new_car.rent_start = last_car.rent_start;
-                        }
                         return new_car;
-
-
                     }
                     else
                     {
