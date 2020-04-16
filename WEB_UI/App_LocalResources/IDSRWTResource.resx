@@ -328,7 +328,7 @@
     <value>Станция прибытия</value>
   </data>
   <data name="title_u_tara" xml:space="preserve">
-    <value>Вес тары (уточн.), кг</value>
+    <value>Вес тары (уточн.), т</value>
   </data>
   <data name="title_vagon" xml:space="preserve">
     <value>Вагон</value>
@@ -340,16 +340,16 @@
     <value>Сертификаты и другие документы</value>
   </data>
   <data name="title_vesg_difference" xml:space="preserve">
-    <value>Разница, кг</value>
+    <value>Разница, т</value>
   </data>
   <data name="title_vesg_doc" xml:space="preserve">
-    <value>Вес груза(накл.), кг</value>
+    <value>Вес груза(накл.), т</value>
   </data>
   <data name="title_vesg_reweighing" xml:space="preserve">
-    <value>Вес груза(перев.), кг</value>
+    <value>Вес груза(перев.), т</value>
   </data>
   <data name="title_ves_tary_arc" xml:space="preserve">
-    <value>Вес тары, кг</value>
+    <value>Вес тары, т</value>
   </data>
   <data name="title_wagons_condition" xml:space="preserve">
     <value>Разметка по прибытию</value>

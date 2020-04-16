@@ -709,7 +709,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Вес тары (уточн.), кг.
+        ///   Ищет локализованную строку, похожую на Вес тары (уточн.), т.
         /// </summary>
         public static string title_u_tara {
             get {
@@ -790,7 +790,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Вес тары, кг.
+        ///   Ищет локализованную строку, похожую на Вес тары, т.
         /// </summary>
         public static string title_ves_tary_arc {
             get {
@@ -799,7 +799,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Разница, кг.
+        ///   Ищет локализованную строку, похожую на Разница, т.
         /// </summary>
         public static string title_vesg_difference {
             get {
@@ -808,7 +808,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Вес груза(накл.), кг.
+        ///   Ищет локализованную строку, похожую на Вес груза(накл.), т.
         /// </summary>
         public static string title_vesg_doc {
             get {
@@ -817,7 +817,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Вес груза(перев.), кг.
+        ///   Ищет локализованную строку, похожую на Вес груза(перев.), т.
         /// </summary>
         public static string title_vesg_reweighing {
             get {

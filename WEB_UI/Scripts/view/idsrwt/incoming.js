@@ -1161,7 +1161,7 @@
                         id_countrys: get_select_number_value(cars_detali.card_vag_name_adm),
                         id_genus: cars_detali.ids_inc.ids_dir.getID_GenusWagons_Internal_Of_Name(cars_detali.card_vag_name_rod_vag.val(), 'genus', cars_detali.lang),
                         id_owner: cars_detali.ids_inc.ids_dir.getID_OwnersWagons_Internal_Of_Name(cars_detali.card_vag_name_owner.val(), 'owner', cars_detali.lang),
-                        ban_changes_owner: cars_detali.select_vagon.ban_changes_owner,
+                        ban_changes_operator: cars_detali.select_vagon.ban_changes_operator,
                         id_operator: cars_detali.ids_inc.ids_dir.getID_OperatorsWagons_Internal_Of_Name(cars_detali.card_vag_name_operator.val(), 'operators', cars_detali.lang),
                         gruzp: cars_detali.uz_vag_gruzp.val() !== '' ? Number(cars_detali.uz_vag_gruzp.val()) : null,
                         kol_os: Number(cars_detali.card_vag_kol_os.val()),
@@ -2057,8 +2057,8 @@
             view_epd_uz_vag: function (vagon) {
                 if (vagon) {
                     cars_detali.uz_vag_gruzp.val(vagon.gruzp);
-                    cars_detali.uz_vag_ves_tary_arc.val(vagon.ves_tary_arc);
-                    cars_detali.uz_vag_u_tara.val(vagon.u_tara);
+                    cars_detali.uz_vag_ves_tary_arc.val(vagon.ves_tary_arc ? Number(Number(vagon.ves_tary_arc)/1000).toFixed(3): null);
+                    cars_detali.uz_vag_u_tara.val(vagon.u_tara ? Number(Number(vagon.u_tara)/1000).toFixed(3): null);
                 }
 
             },
