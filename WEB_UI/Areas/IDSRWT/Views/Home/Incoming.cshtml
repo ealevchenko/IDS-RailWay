@@ -22,6 +22,7 @@
     <script src="~/Scripts/api/ids_directory.js"></script> <!-- Class API ИДС Справочники -->
     <script src="~/Scripts/api/metrans.js"></script> <!-- Class API МЕТРАНС -->
     <script src="~/Scripts/api/ids_rwt_incoming.js"></script> <!-- Class API ИДС Прием вагонов -->
+    <script src="~/Scripts/api/ids_transfer.js"></script> <!-- Class API ИДС Переносы -->
 
     <script src="~/Scripts/view/idsrwt/incoming.js"></script> <!--  -->
 }
@@ -191,6 +192,9 @@
                                                     <div class="input-group-append">
                                                         <button type="button" class="btn btn-warning btn" id="search-car-num-doc" title="Найти ЭПД по номеру вагона" disabled="disabled" data-form="transceiver">
                                                             <i class="fa fa-search" aria-hidden="true"></i>
+                                                        </button>
+                                                        <button type="button" class="btn btn-danger btn" id="edit-car-num-doc" title="Ввести данные в ручную" data-form="transceiver">
+                                                            <i class="fa fa-edit" aria-hidden="true"></i>
                                                         </button>
                                                     </div>
                                                 </div>
@@ -368,7 +372,7 @@
                                             </div>
                                             <div class="col-md-6 mb-1 text-left">
                                                 <label for="uz_vag_station_on_amkr" class="col-form-label">@IDSRWTResource.title_station_on_amkr:</label>
-                                                <select class="form-control inp-manual" id="uz_vag_station_on_amkr" name="uz_vag_station_on_amkr"  title="Ручной выбор -> Справочник 'Внутрених станций АМКР'" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
+                                                <select class="form-control inp-manual" id="uz_vag_station_on_amkr" name="uz_vag_station_on_amkr" title="Ручной выбор -> Справочник 'Внутрених станций АМКР'" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -386,7 +390,7 @@
                                             </div>
                                             <div class="col-md-6 mb-1 text-right">
                                                 <label class="col-form-label" for="card_vag_add">@IDSRWTResource.title_card_vag</label>
-                                                <button type="button" class="btn btn-danger btn" id="card_vag_add" data-form="transceiver"  title="Добавить новую запись карточки вагона в справочник 'Карточка вагона', информация берется автоматически из ЭПД и БД УЗ">
+                                                <button type="button" class="btn btn-danger btn" id="card_vag_add" data-form="transceiver" title="Добавить новую запись карточки вагона в справочник 'Карточка вагона', информация берется автоматически из ЭПД и БД УЗ">
                                                     <i class="fa fa-save" aria-hidden="true"></i>
                                                 </button>
                                             </div>
@@ -426,7 +430,7 @@
                                             </div>
                                             <div class="col-md-4 mb-1 text-left">
                                                 <label for="uz_vag_type_wagon" class="col-form-label">@IDSRWTResource.title_type_wagons:</label>
-                                                <select class="form-control inp-manual" id="uz_vag_type_wagon" name="uz_vag_type_wagon"  title="Ручной выбор -> Справочник 'Тип вагона'" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
+                                                <select class="form-control inp-manual" id="uz_vag_type_wagon" name="uz_vag_type_wagon" title="Ручной выбор -> Справочник 'Тип вагона'" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -520,7 +524,7 @@
                                         <div class="form-row">
                                             <div class="col-md-6 mb-1 text-left">
                                                 <label for="card_vag_note" class="col-form-label">@IDSRWTResource.title_note_uz:</label>
-                                                <textarea class="form-control inp-uz" id="card_vag_note" name="card_vag_note" title="БД УЗ [https://uz.gov.ua/car_info/index.php] -> Справочник 'Карточка вагона' -> Ограничения из БД УЗ"  data-mode="view-global" data-edit="" data-form="transceiver"></textarea>
+                                                <textarea class="form-control inp-uz" id="card_vag_note" name="card_vag_note" title="БД УЗ [https://uz.gov.ua/car_info/index.php] -> Справочник 'Карточка вагона' -> Ограничения из БД УЗ" data-mode="view-global" data-edit="" data-form="transceiver"></textarea>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>

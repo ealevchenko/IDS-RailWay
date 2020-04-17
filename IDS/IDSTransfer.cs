@@ -39,6 +39,7 @@ namespace IDS
         {
             this.servece_owner = servece_owner;
         }
+
         /// <summary>
         /// Добавить новый состав находящийся на станциях УЗ Кривого Рога в систему ИДС
         /// </summary>
@@ -262,7 +263,7 @@ namespace IDS
             return InsertArrivalCars(id_arrival, cars, null);
         }
         /// <summary>
-        /// Получить номер документа на вагон из УЗ
+        /// Получить номер документа на вагон из промежуточной базы УЗ
         /// </summary>
         /// <param name="num_car"></param>
         /// <returns></returns>
@@ -285,7 +286,7 @@ namespace IDS
             }
         }
         /// <summary>
-        /// Добавим или обновим документ
+        /// Добавим или обновим документ в таблице ЭПД принятых вагонов
         /// </summary>
         /// <param name="uz_doc"></param>
         /// <returns></returns>

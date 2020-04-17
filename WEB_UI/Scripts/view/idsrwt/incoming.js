@@ -690,9 +690,39 @@
             }),
             // ЭПД
             num_car: $('input#num_car'),
+            // Кнопка найти вагон в промежуточной базе
             search_cars_num_doc: $('button#search-car-num-doc').on('click', function (event) {
                 event.preventDefault();
-
+                //!!!!!!!!!!!!! тест
+                //cars_detali.select_num = 56942493;
+                LockScreen(langView('mess_searsh_epd', langs));
+                cars_detali.alert.clear_message();
+                cars_detali.ids_inc.ids_tr.getNumEPDOfIntermediateDB(cars_detali.select_num,
+                    function (result_num) {
+                        if (result_num !== null) {
+                            cars_detali.ids_inc.getOTPR_UZ_DOCOfNum(result_num, function (result_otpr) {
+                                if (result_otpr === null) {
+                                    // Документа нет пишим сообщение
+                                    cars_detali.alert.out_warning_message(langView('mess_not_searsh_epd', langs));
+                                    cars_detali.edit_car_num_doc.show();
+                                    cars_detali.search_cars_num_doc.hide();
+                                }
+                                cars_detali.view_cars_epd(cars_detali.select_num, result_otpr);
+                                //LockScreenOff();
+                            });
+                        } else {
+                            // Документа нет пишим сообщение
+                            cars_detali.alert.out_warning_message(langView('mess_not_searsh_epd', langs));
+                            cars_detali.edit_car_num_doc.show();
+                            cars_detali.search_cars_num_doc.hide();
+                            LockScreenOff();
+                        }
+                    });
+            }),
+            // Кнопка ввести данные в ручную
+            edit_car_num_doc: $('button#edit-car-num-doc').on('click', function (event) {
+                event.preventDefault();
+                cars_detali.set_mode(true);
             }),
             uz_doc_num_doc: $('input#uz_doc_num_doc'),
             uz_doc_num_new_doc: $('input#uz_doc_num_new_doc'),
@@ -870,7 +900,7 @@
                             if (cars_detali.select_otpr_cont) {
                                 cars_detali.view_epd_cargo_etsng_of_cont(cars_detali.select_otpr_cont);
                             } else {
-                            cars_detali.view_epd_cargo_etsng_of_vagon(cars_detali.select_otpr_vagon);
+                                cars_detali.view_epd_cargo_etsng_of_vagon(cars_detali.select_otpr_vagon);
                             }
                         }, null);
                     }
@@ -1104,11 +1134,11 @@
                         "nom_cont": data.nom_cont,
                         "kod_tiporazmer": data.kod_tiporazmer,
                         "gruzp": data.gruzp ? Number(data.gruzp) : null,
-                        "ves_tary_arc": data.ves_tary_arc ? Number(Number(data.ves_tary_arc)/1000).toFixed(3) : null,
-                        "vesg": data.collect_k ? Number(Number(data.collect_k.vesg)/1000).toFixed(3) : null ,
-                        "brutto": data.ves_tary_arc && data.collect_k ? Number((Number(data.ves_tary_arc) + Number(data.collect_k.vesg))/1000).toFixed(3) : null,
-                        "kod": data.pay_k && data.pay_k.length>0 ? data.pay_k[0].kod : null,
-                        "summa": data.pay_k && data.pay_k.length > 0 ? Number(Number(data.pay_k[0].summa)/100).toFixed(3) : null,
+                        "ves_tary_arc": data.ves_tary_arc ? Number(Number(data.ves_tary_arc) / 1000).toFixed(3) : null,
+                        "vesg": data.collect_k ? Number(Number(data.collect_k.vesg) / 1000).toFixed(3) : null,
+                        "brutto": data.ves_tary_arc && data.collect_k ? Number((Number(data.ves_tary_arc) + Number(data.collect_k.vesg)) / 1000).toFixed(3) : null,
+                        "kod": data.pay_k && data.pay_k.length > 0 ? data.pay_k[0].kod : null,
+                        "summa": data.pay_k && data.pay_k.length > 0 ? Number(Number(data.pay_k[0].summa) / 100).toFixed(3) : null,
                         "nom_zpu": data.zpu_k && data.zpu_k.length > 0 ? data.zpu_k[0].nom_zpu : null,
                         "kol_pac": data.collect_k ? Number(data.collect_k.kol_pac) : null,
                         "kod_etsng": data.collect_k ? Number(data.collect_k.kod_etsng) : null,
@@ -1825,6 +1855,10 @@
             },
             // Очистить ячейки ЭПД
             clear_cars_epd: function () {
+                // Показать кнопку поиска по номеру вагона
+                cars_detali.edit_car_num_doc.hide();
+                cars_detali.search_cars_num_doc.show();
+
                 cars_detali.num_car.val('');
                 cars_detali.uz_doc_num_doc.val('');
                 cars_detali.uz_doc_num_new_doc.val('');
@@ -2253,7 +2287,7 @@
             view_epd_cargo_etsng_of_cont: function (conts) {
                 var code = null, name = null;
                 if (conts && conts.length > 0) {
-                    code = conts[0].collect_k.kod_etsng ? Number(conts[0].collect_k.kod_etsng) : null; 
+                    code = conts[0].collect_k.kod_etsng ? Number(conts[0].collect_k.kod_etsng) : null;
                     name = conts[0].collect_k.name_etsng;
                     cars_detali.view_epd_cargo_etsng(code, name);
                 }
@@ -2452,6 +2486,7 @@
                         cars_detali.alert.clear_message();
                         cars_detali.ids_inc.getOTPR_UZ_DOCOfNum(car.num_doc, function (result_otpr) {
                             if (result_otpr === null) {
+                                // Документа нет пишим сообщение
                                 cars_detali.alert.out_warning_message(langView('mess_not_searsh_epd', langs));
                             }
                             cars_detali.view_cars_epd(car.num, result_otpr);
@@ -2488,6 +2523,7 @@
             //================================================================
             // Обработка ЭПД
             //=================================================================
+            // Получить из ЭПД информацию о вагоне
             get_vagon_epd: function (otpr, num) {
                 if (otpr && otpr.vagon && otpr.vagon.length > 0) {
                     for (var i = 0; i < otpr.vagon.length; i++) {
@@ -2496,6 +2532,7 @@
                     }
                 }
             },
+            // Получить из ЭПД информацию о контейнерах на вагонах
             get_vagon_cont_epd: function (otpr, num) {
                 if (otpr && otpr.cont && otpr.cont.length > 0) {
                     var conts = otpr.cont.filter(function (i) {
