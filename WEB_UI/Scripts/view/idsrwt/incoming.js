@@ -2536,7 +2536,7 @@
                             //LockScreen(langView('mess_searsh_epd', langs));
                             //cars_detali.alert.clear_message();
                             cars_detali.ids_inc.getOTPR_UZ_DOCOfNum(car.num_doc, function (result_otpr) {
-                                if (result_otpr !== null) {
+                                if (result_otpr === null) {
                                     // Документа нет пишим сообщение
                                     cars_detali.alert.out_warning_message(langView('mess_not_searsh_epd', langs));
                                 }
