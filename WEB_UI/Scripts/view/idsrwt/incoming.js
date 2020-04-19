@@ -2530,7 +2530,7 @@
                     LockScreen(langView('mess_searsh_epd', langs));
                     cars_detali.alert.clear_message();
                     cars_detali.ids_inc.getArrivalCarsOfID(id, function (car) {
-                        if (car === null) {
+                        if (car !== null) {
                             cars_detali.select_id = car.id; // Сохраним id вагона
                             // Если есть вагон найти и ЭПД документ
                             //LockScreen(langView('mess_searsh_epd', langs));
