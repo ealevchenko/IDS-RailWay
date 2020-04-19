@@ -735,7 +735,7 @@
                                     if (result_car === null) {
                                         cars_detali.alert.out_warning_message('ЭПД - найден (№ док. ' + result_num + ') и сохранен в базу данных "ЭПД по прибытию", но при обновлении информации по вагону №' + cars_detali.select_num + ' - произошла ошибка чтения записи id:' + cars_detali.select_id);
                                     } else {
-                                        cars_detali.alert.out_warning_message('ЭПД - найден (№ док. ' + result_num + ') и сохранен в базу данных "ЭПД по прибытию", но при обновлении информации по вагону №' + cars_detali.select_num + ' - произошла ошибка чтения записи id:' + cars_detali.select_id + ' номер вагона записи (' + result_car.num +') не совпадает с номер вагона обновления');
+                                        cars_detali.alert.out_warning_message('ЭПД - найден (№ док. ' + result_num + ') и сохранен в базу данных "ЭПД по прибытию", но при обновлении информации по вагону №' + cars_detali.select_num + ' - произошла ошибка чтения записи id:' + cars_detali.select_id + ' номер вагона записи (' + result_car.num + ') не совпадает с номер вагона обновления');
                                     }
                                     cars_detali.show_booton_epd_manual();
                                     LockScreenOff();
@@ -2527,21 +2527,42 @@
                 $('#list-cars-not-arrival a').on('click', function (e) {
                     e.preventDefault();
                     var id = $(this).attr('id');
-                    var car = getObjOflist(cars_detali.sostav.ArrivalCars, 'id', id);
-                    if (car !== null) {
-                        cars_detali.select_id = car.id; // Сохраним id вагона
-                        // Если есть вагон найти и ЭПД документ
-                        LockScreen(langView('mess_searsh_epd', langs));
-                        cars_detali.alert.clear_message();
-                        cars_detali.ids_inc.getOTPR_UZ_DOCOfNum(car.num_doc, function (result_otpr) {
-                            if (result_otpr === null) {
-                                // Документа нет пишим сообщение
-                                cars_detali.alert.out_warning_message(langView('mess_not_searsh_epd', langs));
-                            }
-                            cars_detali.view_cars_epd(car.num, result_otpr);
-                            //LockScreenOff();
-                        });
-                    }
+                    LockScreen(langView('mess_searsh_epd', langs));
+                    cars_detali.alert.clear_message();
+                    cars_detali.ids_inc.getArrivalCarsOfID(id, function (car) {
+                        if (car === null) {
+                            cars_detali.select_id = car.id; // Сохраним id вагона
+                            // Если есть вагон найти и ЭПД документ
+                            //LockScreen(langView('mess_searsh_epd', langs));
+                            //cars_detali.alert.clear_message();
+                            cars_detali.ids_inc.getOTPR_UZ_DOCOfNum(car.num_doc, function (result_otpr) {
+                                if (result_otpr !== null) {
+                                    // Документа нет пишим сообщение
+                                    cars_detali.alert.out_warning_message(langView('mess_not_searsh_epd', langs));
+                                }
+                                cars_detali.view_cars_epd(car.num, result_otpr);
+                                //LockScreenOff();
+                            });
+                        } else {
+                            cars_detali.alert.out_error_message('Запись по вагону id:' + id+ ' - не найдена!');
+                            LockScreenOff();
+                        }
+                    });
+                    //var car = getObjOflist(cars_detali.sostav.ArrivalCars, 'id', id);
+                    //if (car !== null) {
+                    //    cars_detali.select_id = car.id; // Сохраним id вагона
+                    //    // Если есть вагон найти и ЭПД документ
+                    //    LockScreen(langView('mess_searsh_epd', langs));
+                    //    cars_detali.alert.clear_message();
+                    //    cars_detali.ids_inc.getOTPR_UZ_DOCOfNum(car.num_doc, function (result_otpr) {
+                    //        if (result_otpr === null) {
+                    //            // Документа нет пишим сообщение
+                    //            cars_detali.alert.out_warning_message(langView('mess_not_searsh_epd', langs));
+                    //        }
+                    //        cars_detali.view_cars_epd(car.num, result_otpr);
+                    //        //LockScreenOff();
+                    //    });
+                    //}
                 });
             },
 
