@@ -190,7 +190,7 @@
                                                 <div class="input-group">
                                                     <input type="text" class="form-control col-md-8 inp-epd" id="num_car" title="Номер вагона" name="num_car" data-mode="all" data-edit="" data-form="transceiver">
                                                     <div class="input-group-append">
-                                                        <button type="button" class="btn btn-warning btn" id="search-car-num-doc" title="Найти ЭПД по номеру вагона" disabled="disabled" data-form="transceiver">
+                                                        <button type="button" class="btn btn-warning btn" id="search-car-num-doc" title="Найти ЭПД по номеру вагона" data-form="transceiver">
                                                             <i class="fa fa-search" aria-hidden="true"></i>
                                                         </button>
                                                         <button type="button" class="btn btn-danger btn" id="edit-car-num-doc" title="Ввести данные в ручную" data-form="transceiver">
@@ -845,8 +845,19 @@
                         <div class="col-md-1 mb-1">
                             <div class="card border-primary" id="card-not-arrived-cars">
                                 <div class="card-header">Подходы</div>
-                                <div class="card-body text-primary">
+                                <div class="card-body text-primary" style="padding: 0.5rem;">
+                                    <div class="form-row mb-1">
+                                        <div class="input-group">
+                                            <input type="number" class="form-control-sm" max="8" min="8" style="margin-left:0.5rem; width:75px" id="searsh-car" title="Найти вагон" name="searsh-car">
+                                            <div class="input-group-append">
+                                                <button type="button" class="btn btn-warning btn-sm" id="add-num-car" title="Добавить вагон">
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="list-group" id="list-cars-not-arrival" role="tablist">
+
                                     </div>
                                 </div>
                             </div>

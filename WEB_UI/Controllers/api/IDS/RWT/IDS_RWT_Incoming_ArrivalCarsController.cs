@@ -58,7 +58,7 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // GET: api/ids/rwt/arrival_cars/id/56
+        // GET: api/ids/rwt/arrival_cars/id/59049
         [Route("id/{id:long}")]
         [ResponseType(typeof(ArrivalCars))]
         public IHttpActionResult GetArrivalCars(long id)
@@ -67,7 +67,7 @@ namespace WEB_UI.Controllers.api
             {
                 ArrivalCars cars = this.ef_ids
                     .Context
-                    .Where(s=>s.id_arrival == id)
+                    .Where(s=>s.id == id)
                     .ToList()
                     .Select(c => c.GetArrivalCars()).FirstOrDefault();
                 return Ok(cars);
