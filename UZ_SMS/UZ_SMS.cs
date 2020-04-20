@@ -259,7 +259,7 @@ namespace UZ
                         status = GetStatus(doc.Status.ToString()),
                         sender_code = sender_code,
                         recipient_code = recipient_code,
-                        dt = doc.TimeStamp,
+                        //dt = doc.TimeStamp,
                         xml = doc.GetXmlText(),
                         xml_final = xml_final,
                         otpr = otpr
