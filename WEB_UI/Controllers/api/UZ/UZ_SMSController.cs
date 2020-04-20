@@ -11,12 +11,12 @@ using UZ;
 
 namespace WEB_UI.Controllers.api
 {
-    //[NonSerialized]
+    //[Serialized]
     [RoutePrefix("api/uz/sms")]
     public class UZ_SMSController : ApiController
     {
+        public int r = 0;
         
-        public UZ_SMS sms = new UZ_SMS(service.WebAPI_UZ);
 
         // GET: api/uz/sms/uz_doc/num_doc/41425570
         [Route("uz_doc/num_doc/{num_doc}")]
@@ -25,7 +25,7 @@ namespace WEB_UI.Controllers.api
         {
             try
             {
-                
+                UZ_SMS sms = new UZ_SMS(service.WebAPI_UZ);
                 sms.Connection();
                 List<UZ_DOC> list = sms.GetUZ_DOC_Of_NumDoc(num_doc);
                 return Ok(list);

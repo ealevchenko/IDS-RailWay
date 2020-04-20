@@ -13,22 +13,44 @@ namespace WEB_UI.App_Start
     using Ninject.Web.Common.WebHost;
     using Ninject.Web.WebApi;
     using System.Web.Http;
-    using System.ComponentModel;
+    using System.Web.Http.Dependencies;
 
-    public static class NinjectWebCommon 
+
+    //Ninject.Activation.Blocks.IActivationBlock
+
+
+    public static class NinjectWebCommon
     {
         private static readonly Bootstrapper bootstrapper = new Bootstrapper();
+
+
+        public class NinjectDependencyResolver : NinjectDependencyScope, IDependencyResolver//, IDependencyResolver
+        {
+            public const string NinjectWebApiRequestScope = "NinjectWebApiRequestScope";
+
+            protected IKernel kernel;
+
+            public NinjectDependencyResolver(IKernel kernel) : base(kernel)
+            {
+                this.kernel = kernel;
+            }
+
+            public IDependencyScope BeginScope()
+            {
+                return new NinjectDependencyScope(this.kernel.BeginBlock());
+            }
+        }
 
         /// <summary>
         /// Starts the application
         /// </summary>
-        public static void Start() 
+        public static void Start()
         {
             DynamicModuleUtility.RegisterModule(typeof(OnePerRequestHttpModule));
             DynamicModuleUtility.RegisterModule(typeof(NinjectHttpModule));
             bootstrapper.Initialize(CreateKernel);
         }
-        
+
         /// <summary>
         /// Stops the application.
         /// </summary>
@@ -41,8 +63,10 @@ namespace WEB_UI.App_Start
         /// Creates the kernel that will manage your application.
         /// </summary>
         /// <returns>The created kernel.</returns>
+
         private static IKernel CreateKernel()
         {
+
             var kernel = new StandardKernel();
             try
             {
@@ -50,7 +74,11 @@ namespace WEB_UI.App_Start
                 kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
                 RegisterServices(kernel);
 
-                //GlobalConfiguration.Configuration.DependencyResolver = new Ninject.WebApi.DependencyResolver.NinjectDependencyResolver(kernel);
+                var ninjectResolver = new NinjectDependencyResolver(kernel);
+
+                //DependencyResolver.SetResolver(ninjectResolver); // MVC 
+
+                GlobalConfiguration.Configuration.DependencyResolver = ninjectResolver;
 
                 GlobalConfiguration.Configuration.DependencyResolver = new NinjectDependencyResolver(kernel);
                 return kernel;
@@ -73,13 +101,13 @@ namespace WEB_UI.App_Start
         private static void RegisterServices(IKernel kernel)
         {
             kernel.Bind<EFMT.Abstract.IRepository<EFMT.Entities.ArrivalSostav>>().To<EFMT.Concrete.EFArrivalSostav>();
-            kernel.Bind<EFMT.Abstract.IRepository<EFMT.Entities.ArrivalCars>>().To<EFMT.Concrete.EFArrivalCars>();  
+            kernel.Bind<EFMT.Abstract.IRepository<EFMT.Entities.ArrivalCars>>().To<EFMT.Concrete.EFArrivalCars>();
             kernel.Bind<EFMT.Abstract.IRepository<EFMT.Entities.ApproachesSostav>>().To<EFMT.Concrete.EFApproachesSostav>();
-            kernel.Bind<EFMT.Abstract.IRepository<EFMT.Entities.ApproachesCars>>().To<EFMT.Concrete.EFApproachesCars>();   
-            kernel.Bind<EFMT.Abstract.IRepository<EFMT.Entities.Consignee>>().To<EFMT.Concrete.EFConsignee>();  
-            
-            kernel.Bind<EFMT.Abstract.IRepository<EFMT.Entities.WagonsTracking>>().To<EFMT.Concrete.EFWagonsTracking>();  
-            
+            kernel.Bind<EFMT.Abstract.IRepository<EFMT.Entities.ApproachesCars>>().To<EFMT.Concrete.EFApproachesCars>();
+            kernel.Bind<EFMT.Abstract.IRepository<EFMT.Entities.Consignee>>().To<EFMT.Concrete.EFConsignee>();
+
+            kernel.Bind<EFMT.Abstract.IRepository<EFMT.Entities.WagonsTracking>>().To<EFMT.Concrete.EFWagonsTracking>();
+
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_GenusWagons>>().To<EFIDS.Concrete.EFDirectory_GenusWagons>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_WagonManufacturers>>().To<EFIDS.Concrete.EFDirectory_WagonManufacturers>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_TypesRepairsWagons>>().To<EFIDS.Concrete.EFDirectory_TypesRepairsWagons>();
@@ -119,14 +147,14 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.ParksListWagons>>().To<EFIDS.Concrete.EFParksListWagons>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.WagonsMotionSignals>>().To<EFIDS.Concrete.EFWagonsMotionSignals>();
 
-            kernel.Bind<EFUZ.Abstract.IRepository<EFUZ.Entities.Directory_States>>().To<EFUZ.Concrete.EFDirectory_States>();            
+            kernel.Bind<EFUZ.Abstract.IRepository<EFUZ.Entities.Directory_States>>().To<EFUZ.Concrete.EFDirectory_States>();
             kernel.Bind<EFUZ.Abstract.IRepository<EFUZ.Entities.Directory_InternalRailroad>>().To<EFUZ.Concrete.EFDirectory_InternalRailroad>();
             kernel.Bind<EFUZ.Abstract.IRepository<EFUZ.Entities.Directory_Countrys>>().To<EFUZ.Concrete.EFDirectory_Countrys>();
             kernel.Bind<EFUZ.Abstract.IRepository<EFUZ.Entities.Directory_Stations>>().To<EFUZ.Concrete.EFDirectory_Stations>();
 
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.ArrivalSostav>>().To<EFIDS.Concrete.EFArrivalSostav>();
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.ArrivalCars>>().To<EFIDS.Concrete.EFArrivalCars>();
-            kernel.Bind<EFIDS.Abstract.IStringRepository<EFIDS.Entities.UZ_DOC>>().To<EFIDS.Concrete.EFUZ_DOC>();  
-        }        
+            kernel.Bind<EFIDS.Abstract.IStringRepository<EFIDS.Entities.UZ_DOC>>().To<EFIDS.Concrete.EFUZ_DOC>();
+        }
     }
 }

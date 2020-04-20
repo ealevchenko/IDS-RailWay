@@ -1,4 +1,8 @@
-    {
+api/uz/sms/uz_doc/num_doc/41425570    
+
+
+
+{
         "num": 50030337,
         "id_genus_wagon": 38,
         "id_state": 22,
