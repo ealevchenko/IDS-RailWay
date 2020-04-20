@@ -84,7 +84,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="TMSoft\TMSoft.gohub.client.com.tlb" />
     <None Include="TMSoft\TMSoft.gohub.client.lib" />
   </ItemGroup>
   <ItemGroup />
