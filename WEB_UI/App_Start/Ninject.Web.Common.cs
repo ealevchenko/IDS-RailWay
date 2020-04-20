@@ -13,6 +13,7 @@ namespace WEB_UI.App_Start
     using Ninject.Web.Common.WebHost;
     using Ninject.Web.WebApi;
     using System.Web.Http;
+    using System.ComponentModel;
 
     public static class NinjectWebCommon 
     {
@@ -35,7 +36,7 @@ namespace WEB_UI.App_Start
         {
             bootstrapper.ShutDown();
         }
-        
+
         /// <summary>
         /// Creates the kernel that will manage your application.
         /// </summary>
@@ -48,6 +49,9 @@ namespace WEB_UI.App_Start
                 kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
                 kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
                 RegisterServices(kernel);
+
+                //GlobalConfiguration.Configuration.DependencyResolver = new Ninject.WebApi.DependencyResolver.NinjectDependencyResolver(kernel);
+
                 GlobalConfiguration.Configuration.DependencyResolver = new NinjectDependencyResolver(kernel);
                 return kernel;
                 //kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
