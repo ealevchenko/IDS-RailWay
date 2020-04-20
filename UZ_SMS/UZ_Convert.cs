@@ -572,6 +572,8 @@ namespace UZ
         public int? kol_os { get; set; }    //	Кількість вісей
         public string measure_equip_num { get; set; }   //	Заводський номер засобу вагоно-вимірювальної техніки
         public string name_firm_owner { get; set; } //	Найменування компанії — власниці вагона
+        public string name_firm_operator { get; set; }  //	Найменування компанії — оператора вагона
+        public string name_firm_renter { get; set; }    //	Найменування компанії — renter вагона
         public int? negab_do { get; set; }  //	Індекс негабаритності додаткового обладнання
         public int? negab_rs { get; set; }  //	Індекс негабаритності рухомого складу
         public int? negab_v { get; set; }   //	Індекс негабаритності вантажу
@@ -1648,6 +1650,8 @@ namespace UZ
                 tag.kol_os = getAttributes<int?>(node, "kol_os");
                 tag.measure_equip_num = getAttributes<string>(node, "measure_equip_num");
                 tag.name_firm_owner = getAttributes<string>(node, "name_firm_owner");
+                tag.name_firm_operator = getAttributes<string>(node, "name_firm_operator");
+                tag.name_firm_renter = getAttributes<string>(node, "name_firm_renter");
                 tag.negab_do = getAttributes<int?>(node, "negab_do");
                 tag.negab_rs = getAttributes<int?>(node, "negab_rs");
                 tag.negab_v = getAttributes<int?>(node, "negab_v");

@@ -12,6 +12,7 @@ using System.Configuration;
 using TMSoft.Gohub.Client;
 using EFUZ.Concrete;
 using EFUZ.Entities;
+using gohubclientcomLib;
 //using EFUZ.Concrete;
 //using EFUZ.Entities;
 
@@ -33,6 +34,233 @@ namespace UZ
         recieved_reclaiming = 11,	//	 Вантаж отримано одержувачем і відкликається від товарного касира
         canceled = 12,	            //	 Документ зіпсований товарним касиром
         locked = 13,	            //	 Документ заблокований
+    }
+
+    public class myGohubConnection : GohubConnection, IGohubConnection
+    {
+        public myGohubConnection(string host, int port) : base(host, port) { }
+
+        public void Close()
+        {
+            throw new NotImplementedException();
+        }
+
+        GohubComDocument IGohubConnection.QueryDocument(string docId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GohubComDocument QueryNextDocument(int Revision)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IGohubConnection.OpenPrivateKey(string password)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IGohubConnection.ReclaimDocument(string docId)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IGohubConnection.DeleteDocument(string docId)
+        {
+            throw new NotImplementedException();
+        }
+
+        GohubComAttachment IGohubConnection.QueryAttachment(string attachmentId)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IGohubConnection.DeleteAttachment(string attachmentId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool ClearAllFilters()
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IGohubConnection.QueryAndSaveDocumentPrintableForm(string docId, string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IGohubConnection.QueryAndSaveFdu92PrintableForm(string docId, string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IGohubConnection.QueryAndSaveGu45PrintableForm(string docId, string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IGohubConnection.QueryAndSaveGu46PrintableForm(string docId, string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        GohubComFdu92 IGohubConnection.QueryFdu92(string Id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GohubComFdu92 QueryNextFdu92(int Revision)
+        {
+            throw new NotImplementedException();
+        }
+
+        GohubComGu46 IGohubConnection.QueryGu46(string Id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GohubComGu46 QueryNextGu46(int Revision)
+        {
+            throw new NotImplementedException();
+        }
+
+        GohubComGu45 IGohubConnection.QueryGu45(string Id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GohubComGu45 QueryNextGu45(int Revision)
+        {
+            throw new NotImplementedException();
+        }
+
+        GohubComEData IGohubConnection.QueryEData(string eDataId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GohubComEData QueryNextEData(ulong Revision)
+        {
+            throw new NotImplementedException();
+        }
+
+        GohubComPiPackage IGohubConnection.QueryPiPackage(string eDataId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GohubComPiPackage QueryNextPiPackage(ulong Revision)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GohubComPiPackage AddEDataToPiPackage(GohubComEData eData, string PiPackageId)
+        {
+            throw new NotImplementedException();
+        }
+
+        GohubComGu27 IGohubConnection.QueryGu27(string gu27Id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GohubComGu27 QueryNextGu27(int Revision)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IGohubConnection.ReclaimGu27(string gu27Id)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IGohubConnection.DeleteGu27(string gu27Id)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IGohubConnection.QueryAndSaveGu27PrintableForm(string gu27Id, string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        GohubComAttachment IGohubConnection.QueryAttachmentWithUserData(string attachmentId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetMPMonths()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void QueryAndSaveOrdersForMonthWithRelogin(string month, string login, string password, string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SaveDocumentPrintableForm(string docId, string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SaveOrdersForMonthWithRelogin(string month, string login, string password, string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        GohubComEData IGohubConnection.QueryEDataForAttachment(string attachmentId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GohubComInfServsDoc QueryInfServsDoc(ulong docId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GohubComInfServsDoc QueryNextInfServsDoc(ulong Revision)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool OpenPrivateKeyFromPath(string password, string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GohubComFdu92 QueryFdu92ByNumber(string registration_esr, string registration_num)
+        {
+            throw new NotImplementedException();
+        }
+
+        GohubComDispatchInfo IGohubConnection.QueryDispatchInfo(string dispatch_esr, string arrival_num)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GohubComGu45 QueryGu45ByNumber(string registration_esr, string registration_num, string registration_date)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GohubComGu46 QueryGu46ByNumber(string registration_esr, string registration_num)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GohubComSignerInfo Signer => throw new NotImplementedException();
+
+        public int FilterByDocumentStatus { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string FilterByDocumentNumber { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string FilterByWagonNumber { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string FilterByDepartureClientCode { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string FilterByDeparturePayerCode { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string FilterByDepartureStationCode { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string FilterByArrivalClientCode { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string FilterByArrivalPayerCode { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string FilterByArrivalStationCode { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 
     public class UZ_DOC
@@ -168,6 +396,112 @@ namespace UZ
             //return convert.FinalXMLToOTPR(convert.XMLToFinalXML(xml));
         }
 
+        /// <summary>
+        /// Получитм документ применив фильтр
+        /// </summary>
+        /// <param name="df"></param>
+        /// <returns></returns>
+        public List<GohubDocument> GetEPD_UZ_Of_Filter(string WagonNumber, string DocumentNumber, GohubDocumentStatus DocumentStatus, string DepartureClientCode,
+            string DeparturePayerCode, string DepartureStationCode, string ArrivalClientCode, string ArrivalPayerCode, string ArrivalStationCode)
+        {
+            try
+            {
+                List<GohubDocument> list = new List<GohubDocument>();
+
+                if (this.connection == null)
+                {
+                    Connection();
+                }
+                if (this.connection != null)
+                {
+                    connection.DocumentFilter.WagonNumber = WagonNumber;
+                    connection.DocumentFilter.DocumentNumber = DocumentNumber;
+                    connection.DocumentFilter.DocumentStatus = DocumentStatus;
+                    connection.DocumentFilter.DepartureClientCode = DepartureClientCode;
+                    connection.DocumentFilter.DeparturePayerCode = DeparturePayerCode;
+                    connection.DocumentFilter.DepartureStationCode = DepartureStationCode;
+                    connection.DocumentFilter.ArrivalClientCode = ArrivalClientCode;
+                    connection.DocumentFilter.ArrivalPayerCode = ArrivalPayerCode;
+                    connection.DocumentFilter.ArrivalStationCode = ArrivalStationCode;
+
+                    foreach (GohubDocument document in connection.QueryDocuments(0))
+                    {
+                        list.Add(document);
+                    }
+                }
+                return list;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetEPD_UZ_Of_Filter()"), servece_owner, eventID);
+                return null;
+            }
+        }
+        /// <summary>
+        /// Получитм документ по номеру документа
+        /// </summary>
+        /// <param name="DocumentNumber"></param>
+        /// <returns></returns>
+        public List<GohubDocument> GetEPD_UZ_Of_NumDoc(string DocumentNumber)
+        {
+            try
+            {
+                List<GohubDocument> docs = GetEPD_UZ_Of_Filter(null, DocumentNumber, GohubDocumentStatus.Unknown, null, null, null, null, null, null);
+                return docs;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetEPD_UZ_Of_NumDoc(DocumentNumber={0})", DocumentNumber), servece_owner, eventID);
+                return null;
+            }
+        }
+        /// <summary>
+        /// Получитм документ УЗ по номеру документа
+        /// </summary>
+        /// <param name="DocumentNumber"></param>
+        /// <returns></returns>
+        public List<UZ_DOC> GetUZ_DOC_Of_NumDoc(string DocumentNumber)
+        {
+            try
+            {
+                List<UZ_DOC> list = new List<UZ_DOC>();
+                List<GohubDocument> docs = GetEPD_UZ_Of_NumDoc(DocumentNumber);
+                if (docs == null) return null;
+                foreach (GohubDocument doc in docs)
+                {
+
+                    UZ_Convert convert = new UZ_Convert(this.servece_owner);
+                    string xml_final = convert.XMLToFinalXML(doc.GetXmlText());
+                    OTPR otpr = convert.FinalXMLToOTPR(xml_final);
+                    string sender_code = null;
+                    string recipient_code = null;
+                    if (otpr != null && otpr.client.Count() == 2)
+                    {
+                        sender_code = otpr.client[0].kod;
+                        recipient_code = otpr.client[1].kod;
+                    }
+                    UZ_DOC uz_doc = new UZ_DOC()
+                    {
+                        id_doc = doc.Id,
+                        revision = doc.Revision,
+                        status = GetStatus(doc.Status.ToString()),
+                        sender_code = sender_code,
+                        recipient_code = recipient_code,
+                        dt = doc.TimeStamp,
+                        xml = doc.GetXmlText(),
+                        xml_final = xml_final,
+                        otpr = otpr
+                    };
+                    list.Add(uz_doc);
+                }
+                return list;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetUZ_DOC_Of_NumDoc(DocumentNumber={0})", DocumentNumber), servece_owner, eventID);
+                return null;
+            }
+        }
 
 
         #region Работа с промежуточной базой KRR-PA-VIZ-Other_DATA

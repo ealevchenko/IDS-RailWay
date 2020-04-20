@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using TMSoft.Gohub.Client;
 using UZ;
 
 namespace Test.TestModule
@@ -43,9 +44,18 @@ namespace Test.TestModule
         {
             UZ_SMS sms = new UZ_SMS();
             sms.Connection();
-            OTPR otpr = sms.GetOTPR("69490431");
-            OTPR otpr1 = sms.GetOTPR("43000000000518178624");
-            OTPR otpr2 = sms.GetOTPR("43000000000518166808");
+            OTPR otpr = sms.GetOTPR("70358690");
+            //OTPR otpr1 = sms.GetOTPR("43000000000518178624");
+            //OTPR otpr2 = sms.GetOTPR("43000000000518166808");
+        }
+
+        public void UZ_SMS_GetUZ_DOC_Of_NumDoc()
+        {
+            UZ_SMS sms = new UZ_SMS();
+            sms.Connection();
+            List<UZ_DOC> list = sms.GetUZ_DOC_Of_NumDoc("41425570");
+
+
         }
 
         public void UZ_SMS_GetOTPROfXML()

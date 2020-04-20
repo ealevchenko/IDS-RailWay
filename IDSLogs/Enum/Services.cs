@@ -16,6 +16,8 @@ namespace IDSLogs.Enum
         Web_IDS = 101,
         WebAPI_IDS = 102,
 
+        WebAPI_UZ = 112,
+
         // сервисы Метранса
         Metrans = 200,
         Metrans_Transfer_MT_to_AMKR = 201,
