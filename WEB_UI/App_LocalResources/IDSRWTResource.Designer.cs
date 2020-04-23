@@ -322,6 +322,24 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Дата обновления.
+        /// </summary>
+        public static string title_doc_dt {
+            get {
+                return ResourceManager.GetString("title_doc_dt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Статус.
+        /// </summary>
+        public static string title_doc_status {
+            get {
+                return ResourceManager.GetString("title_doc_status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Группа груза.
         /// </summary>
         public static string title_group_cargo {

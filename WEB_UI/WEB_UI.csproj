@@ -575,6 +575,7 @@
     <Content Include="Scripts\api\metrans.js" />
     <Content Include="Scripts\api\shared.js" />
     <Content Include="Scripts\api\uz_directory.js" />
+    <Content Include="Scripts\api\uz_sms.js" />
     <Content Include="Scripts\bootstrap-input-spinner.js" />
     <Content Include="Scripts\bootstrap-select.js" />
     <Content Include="Scripts\bootstrap-select.min.js" />

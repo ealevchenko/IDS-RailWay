@@ -393,4 +393,10 @@
   <data name="title_rent_start" xml:space="preserve">
     <value>Начало аренды</value>
   </data>
+  <data name="title_doc_dt" xml:space="preserve">
+    <value>Дата обновления</value>
+  </data>
+  <data name="title_doc_status" xml:space="preserve">
+    <value>Статус</value>
+  </data>
 </root>

@@ -23,6 +23,7 @@
     <script src="~/Scripts/api/metrans.js"></script> <!-- Class API МЕТРАНС -->
     <script src="~/Scripts/api/ids_rwt_incoming.js"></script> <!-- Class API ИДС Прием вагонов -->
     <script src="~/Scripts/api/ids_transfer.js"></script> <!-- Class API ИДС Переносы -->
+    <script src="~/Scripts/api/uz_sms.js"></script> <!-- Class API Работа с модулем согласования -->
 
     <script src="~/Scripts/view/idsrwt/incoming.js"></script> <!--  -->
 }
@@ -160,7 +161,7 @@
                 <div class="card-body">
                     <div class="alert" id="car-detali-alert"></div>
                     <div class="form-row">
-                        <div class="col-md-4 mb-1">
+                        <div class="col-md-5 mb-1">
                             <div class="card border-success" id="card-arrived-cars">
                                 <div class="card-header">
                                     Принятые вагоны
@@ -732,8 +733,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
-
                                         <div id="accordion" role="tablist" aria-multiselectable="true" class="mt-1">
                                             <div class="card border-primary">
                                                 <div class="card-header text-left" role="tab" id="headingTwo">
@@ -833,29 +832,33 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-1 mb-1">
-                            <div class="card border-danger" id="card-epd-cars">
-                                <div class="card-header">Сведения ЭПД</div>
-                                <div class="card-body text-danger">
-                                    <div class="list-group" id="list-cars-epd" role="tablist">
+                        @*<div class="col-md-1 mb-1">
+                                <div class="card border-danger" id="card-epd-cars">
+                                    <div class="card-header">
+                                        Вагоны по ЭПД
+                                        <button type="button" class="btn btn-warning btn-sm" id="add-num-car-of-epd" title="Найти вагоны по ЭПД, поиск документа по номеру">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                        </button>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-1 mb-1">
-                            <div class="card border-primary" id="card-not-arrived-cars">
-                                <div class="card-header">Подходы</div>
-                                <div class="card-body text-primary" style="padding: 0.5rem;">
-                                    <div class="form-row mb-1">
-                                        <div class="input-group">
-                                            <input type="number" class="form-control-sm" max="8" min="8" style="margin-left:0.5rem; width:75px" id="searsh-car" title="Найти вагон" name="searsh-car">
-                                            <div class="input-group-append">
-                                                <button type="button" class="btn btn-warning btn-sm" id="add-num-car" title="Добавить вагон">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                </button>
-                                            </div>
+                                    <div class="card-body text-danger" style="padding: 0.5rem;">
+                                        <div class="list-group" id="list-cars-epd" role="tablist">
+
                                         </div>
                                     </div>
+                                </div>
+                            </div>*@
+                        <div class="col-md-1 mb-1">
+                            <div class="card border-primary" id="card-not-arrived-cars">
+                                <div class="card-header">
+                                    Вагоны
+                                    <button type="button" class="btn btn-warning btn-sm" id="add-num-car-of-epd" title="Найти вагоны по ЭПД, поиск документа по номеру">
+                                        <i class="fa fa-file-code-o" aria-hidden="true"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-warning btn-sm" id="add-num-car-manual" title="Добавить вагон вручную">
+                                        <i class="fa fa-train" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <div class="card-body text-primary" style="padding: 0.5rem;">
                                     <div class="list-group" id="list-cars-not-arrival" role="tablist">
 
                                     </div>
@@ -869,7 +872,49 @@
         <a href="#0" class="close cd-img-replace">Close</a>
     </div>
 
-</div> <!-- .cd-project-content -->
+</div>
+
+<div id="search-epd" title="" style="display:none">
+    <div class="alert" id="search-epd-alert"></div>
+    <form id="form-search-epd">
+        <div class="form-row">
+            <div class="col-md-4 mb-1 text-right">
+                <label for="num_epd_to_search" class="col-form-label">Номер накладной:</label>
+            </div>
+            <div class="col-md-4 mb-1 text-left">
+                <div class="input-group">
+                    <input type="number" class="form-control" id="num_epd_to_search" name="num_epd_to_search" title="Номер накладной">
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-warning btn" id="bt_num_epd_to_search" title="Найти ЭПД по номеру накладной">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="loading" style="display:none">
+                <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <fieldset class="border-primary">
+            <legend class="text-primary">Документы</legend>
+            <table class="table table-striped table-bordered mb-1" id="table-list-epd" style="width:100%; font-size:0.8rem;"></table>
+            <fieldset class="border-secondary">
+                <legend class="text-secondary">Перечень вагонов</legend>
+                <table class="table table-striped table-bordered mb-1" id="table-list-epd-car" style="width:900px; font-size:0.8rem;"></table>
+            </fieldset>
+        </fieldset>
+        <!-- Allow form submission with keyboard without duplicating the dialog button -->
+        <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </form>
+</div>
+
+
+
+
+
+
+
 @*<div id="accordion" role="tablist" aria-multiselectable="true">
         <div class="card border-primary">
             <div class="card-header text-left" role="tab" id="headingOne">
