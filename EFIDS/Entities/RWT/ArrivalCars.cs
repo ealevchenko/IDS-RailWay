@@ -24,6 +24,8 @@ namespace EFIDS.Entities
         [StringLength(50)]
         public string num_doc { get; set; }
 
+        public long? id_transfer { get; set; }
+
         [StringLength(200)]
         public string note { get; set; }
 

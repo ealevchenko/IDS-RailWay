@@ -500,8 +500,8 @@ namespace EFIDS.Helper
             if (c == null) return null;
             return new Directory_HazardClass()
             {
-                code =c.code, 
-                hazard_class_ru = c.hazard_class_ru, 
+                code = c.code,
+                hazard_class_ru = c.hazard_class_ru,
                 hazard_class_en = c.hazard_class_en,
                 create = c.create,
                 create_user = c.create_user,
@@ -649,14 +649,16 @@ namespace EFIDS.Helper
                 position_arrival = c.position_arrival,
                 consignee = c.consignee,
                 num_doc = c.num_doc,
+                id_transfer = c.id_transfer,
                 note = c.note,
+                date_adoption_act = c.date_adoption_act,
                 arrival = c.arrival,
                 arrival_user = c.arrival_user,
                 create = c.create,
                 create_user = c.create_user,
                 change = c.change,
                 change_user = c.change_user,
-                UZ_DOC = c.UZ_DOC.GetUZ_DOC(),
+                UZ_DOC = c.UZ_DOC.GetUZ_DOC(), 
             };
         }
 
