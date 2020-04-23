@@ -8,7 +8,13 @@ var IDS_RWT_INCOMING = function (lang) {
 
     this.ids_dir = new IDS_DIRECTORY(lang); // Создадим класс IDS_DIRECTORY
     this.uz_dir = new UZ_DIRECTORY(lang); // Создадим класс UZ_DIRECTORY
-  
+    // Статус сотава
+    this.list_status_arrival = [
+        { code: 0, name: 'Not', status_ru: 'Не обрабатывался', status_en: 'Not processed' },
+        { code: 1, name: 'InWork', status_ru: 'В работе', status_en: 'In work' },
+        { code: 2, name: 'Accepted', status_ru: 'Принят', status_en: 'Accepted' },
+        { code: 3, name: 'Rejected', status_ru: 'Отклонён', status_en: 'Rejected' },
+    ];
 };
 
 IDS_RWT_INCOMING.list_arrival = [];
@@ -58,16 +64,6 @@ IDS_RWT_INCOMING.prototype.load = function (list_incoming, list_ids_dir, list_uz
             });
         };
     });
-};
-/* ----------------------------------------------------------
-функции для работы с объектами
--------------------------------------------------------------*/
-IDS_RWT_INCOMING.prototype.getValueObj = function (obj, name) {
-    return obj ? obj[name] : null;
-};
-//
-IDS_RWT_INCOMING.prototype.getValueCultureObj = function (obj, name) {
-    return obj ? obj[name + '_' + this.lang] : null;
 };
 /* ----------------------------------------------------------
 AJAX функции
@@ -402,4 +398,65 @@ IDS_RWT_INCOMING.prototype.getOTPR_UZ_DOCOfNum = function (num, callback) {
             AJAXComplete();
         },
     });
+};
+/* ----------------------------------------------------------
+функции для работы с объектами
+-------------------------------------------------------------*/
+IDS_RWT_INCOMING.prototype.getValueObj = function (obj, name) {
+    return obj ? obj[name] : null;
+};
+//
+IDS_RWT_INCOMING.prototype.getValueCultureObj = function (obj, name) {
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+/* ----------------------------------------------------------
+функции для работы с внутреним массивом
+-------------------------------------------------------------*/
+//*======= IDS_RWT_INCOMING.list_status_arrival  (Справочник статусов прибытия) ======================================
+IDS_RWT_INCOMING.prototype.getStatusArrival_Internal_Of_Code = function (code) {
+    if (this.list_status_arrival) {
+        var obj = getObjects(this.list_status_arrival, 'code', code);
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+
+IDS_RWT_INCOMING.prototype.getStatusArrival_Internal_Of_Name = function (text, ftext, lang) {
+    if (this.list_status_arrival) {
+        var obj = getObjects(this.list_status_arrival, (lang ? ftext + '_' + lang : name), text);
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+
+IDS_RWT_INCOMING.prototype.getCode_StatusArrival_Internal_Of_Name = function (text, ftext, lang) {
+    var obj = this.getStatusArrival_Internal_Of_Name(text, ftext, lang);
+    return obj ? obj.code : null;
+};
+//
+IDS_RWT_INCOMING.prototype.getValue_StatusArrival_Of_Code = function (code, name, lang) {
+    var obj = this.getStatusArrival_Internal_Of_Code(code);
+    return this.getValueObj(obj, name, lang);
+};
+//
+IDS_RWT_INCOMING.prototype.getValueCulture_StatusArrival_Of_Code = function (code, name) {
+    var obj = this.getStatusArrival_Internal_Of_Code(code);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+IDS_RWT_INCOMING.prototype.getListStatusArrival = function (fvalue, ftext, lang, filter) {
+    var list = [];
+    var list_filtr = null;
+    if (this.list_status_arrival) {
+        if (typeof filter === 'function') {
+            list_filtr = this.list_status_arrival.filter(filter);
+        } else { list_filtr = this.list_status_arrival; }
+        for (i = 0, j = list_filtr.length; i < j; i++) {
+            var l = list_filtr[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
 };

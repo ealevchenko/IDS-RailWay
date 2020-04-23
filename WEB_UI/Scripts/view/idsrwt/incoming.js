@@ -1541,9 +1541,9 @@
                 cars_detali.table_acts.init();// Инициализация таблицы с акт
                 cars_detali.table_cont.init();// Инициализация таблицы с контейнера
 
-                // Инициализацияокна поиска
+                // Инициализацияокна поиска вагонов по номеру документа
                 pn_search_epd.init(cars_detali.lang, cars_detali.user, function (result_search) {
-
+                    // !!! сделать обработку результата
                 });
                 // Sumbit form
                 cars_detali.content.find("form").on("submit", function (event) {
@@ -2828,7 +2828,7 @@
                         "arrival": select_sostav && select_sostav.date_arrival ? select_sostav.date_arrival.replace(/T/g, ' ') : null,
                         "composition_index": select_sostav ? select_sostav.composition_index : null,
                         "train": select_sostav ? select_sostav.train : null,
-                        "staus": select_sostav ? select_sostav.status : 0,
+                        "staus": select_sostav ? pn_search_epd.ids_inc.getValueCulture_StatusArrival_Of_Code(select_sostav.status,'status') : 0,
                         "arrival_car": select_car && select_car.arrival ? select_car.arrival.replace(/T/g, ' ') : null,
                         "id_car": select_car ? select_car.id : null,
                         "id_arrival": select_car ? select_car.id_arrival : null,
@@ -2858,6 +2858,8 @@
                 event.preventDefault();
                 pn_search_epd.alert.clear_message();
                 if (pn_search_epd.num_epd_to_search.val() !== "") {
+                    pn_search_epd.table_epd.view([]);
+                    pn_search_epd.table_car.view([], null);
                     pn_search_epd.alert.out_warning_message("Начат поиск ЭПД в 'АС Клиент' УЗ. Ожидайте поиск этой информации может занять несколько минут...");
                     $('div#loading').show();
                     pn_search_epd.bt_num_epd_to_search.prop("disabled", true);
