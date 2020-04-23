@@ -13,6 +13,7 @@
 x64/
 build/
 bld/
+[Ll]ogs/
 [Bb]in/
 [Oo]bj/
 # [Ll]ogs/
