@@ -2700,7 +2700,7 @@
                         .on('select', function (e, dt, type, indexes) {
                             var rowData = pn_search_epd.table_epd.obj.rows(indexes).data();
                             if (rowData && rowData.length > 0) {
-                                pn_search_epd.get_list_sostav(11, function (sostav) {
+                                pn_search_epd.get_list_sostav(1, function (sostav) {
                                     // Показать вагоны
                                     pn_search_epd.table_car.view(rowData[0].otpr && rowData[0].otpr.vagon ? rowData[0].otpr.vagon : [], sostav);
                                 });

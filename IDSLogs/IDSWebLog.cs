@@ -16,9 +16,11 @@ namespace IDSLogs
 
         }
 
-        private static string GetAreas(string full_name) {
-            if (!String.IsNullOrWhiteSpace(full_name)) {
-                return full_name.Substring(full_name.IndexOf("Areas.") + 6, full_name.IndexOf(".Controllers") - (full_name.IndexOf("Areas.") + 6));               
+        private static string GetAreas(string full_name)
+        {
+            if (!String.IsNullOrWhiteSpace(full_name))
+            {
+                return full_name.Substring(full_name.IndexOf("Areas.") + 6, full_name.IndexOf(".Controllers") - (full_name.IndexOf("Areas.") + 6));
             }
             return null;
         }
@@ -34,7 +36,7 @@ namespace IDSLogs
                 filterContext.HttpContext.Request.PhysicalPath,
                 GetAreas(filterContext.ActionDescriptor.ControllerDescriptor.ControllerType.FullName.Trim()),
                 filterContext.ActionDescriptor.ControllerDescriptor.ControllerName,
-                filterContext.ActionDescriptor.ActionName, 
+                filterContext.ActionDescriptor.ActionName,
                 RolesAccess, (bool?)Access);
         }
 
@@ -43,10 +45,10 @@ namespace IDSLogs
             return filterContext.HttpContext.User.Identity.Name.SaveVisit((bool?)filterContext.HttpContext.User.Identity.IsAuthenticated,
                 filterContext.HttpContext.User.Identity.AuthenticationType, filterContext.HttpContext.Request.UserHostName,
                 filterContext.HttpContext.Request.UserHostAddress, filterContext.HttpContext.Request.Url.AbsoluteUri,
-                filterContext.HttpContext.Request.PhysicalPath, 
+                filterContext.HttpContext.Request.PhysicalPath,
                 GetAreas(filterContext.ActionDescriptor.ControllerDescriptor.ControllerType.FullName.Trim()),
                 filterContext.ActionDescriptor.ControllerDescriptor.ControllerName,
-                filterContext.ActionDescriptor.ActionName, 
+                filterContext.ActionDescriptor.ActionName,
                  RolesAccess, (bool?)Access);
         }
         #endregion
@@ -55,13 +57,29 @@ namespace IDSLogs
 
         public static long WebExceptionLog(this Exception Exception, int? HttpCode, HttpRequest Request)
         {
-            return Exception.SaveWebException(Request.LogonUserIdentity.Name, Request.IsAuthenticated, Request.LogonUserIdentity.AuthenticationType,
-                 Request.UserHostName, Request.UserHostAddress, Request.Url.AbsolutePath, Request.PhysicalPath, Request.UserAgent, Request.RequestType, HttpCode);
+            try
+            {
+                return Exception.SaveWebException(Request.LogonUserIdentity.Name, Request.IsAuthenticated, Request.LogonUserIdentity.AuthenticationType,
+                     Request.UserHostName, Request.UserHostAddress, Request.Url.AbsolutePath, Request.PhysicalPath, Request.UserAgent, Request.RequestType, HttpCode);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return -1;
+            }
         }
 
         public static long WebExceptionLog(this ErrorDescription errorDescription)
         {
-            return errorDescription.Exception.WebExceptionLog(errorDescription.HttpCode, errorDescription.Request);
+            try
+            {
+                return errorDescription.Exception.WebExceptionLog(errorDescription.HttpCode, errorDescription.Request);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return -1;
+            }
         }
 
         #endregion

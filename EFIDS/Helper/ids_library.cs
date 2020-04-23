@@ -610,6 +610,7 @@ namespace EFIDS.Helper
         #region RWT
         public static ArrivalSostav GetArrivalSostav(this ArrivalSostav s)
         {
+            if (s == null) return null;
             return new ArrivalSostav()
             {
 
