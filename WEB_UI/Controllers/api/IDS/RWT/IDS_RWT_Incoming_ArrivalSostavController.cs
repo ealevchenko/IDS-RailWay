@@ -29,7 +29,7 @@ namespace WEB_UI.Controllers.api
         {
             try
             {
-                List<ArrivalSostav> list = this.ef_ids.Context.ToList().Select(c => c.GetArrivalSostav()).ToList();
+                List<ArrivalSostav> list = this.ef_ids.Context.ToList().Select(c => c.GetArrivalSostav_ArrivalCars()).ToList();
                 return Ok(list);
             }
             catch (Exception e)
@@ -49,7 +49,7 @@ namespace WEB_UI.Controllers.api
                     .Context
                     .Where(s=>s.id == id)
                     .ToList()
-                    .Select(c => c.GetArrivalSostav()).ToList();
+                    .Select(c => c.GetArrivalSostav_ArrivalCars()).ToList();
                 return Ok(list);
             }
             catch (Exception e)
@@ -69,7 +69,7 @@ namespace WEB_UI.Controllers.api
                     .Context
                     .Where(s => s.date_arrival >= start && s.date_arrival <= stop)
                     .ToList()
-                    .Select(c => c.GetArrivalSostav()).ToList();
+                    .Select(c => c.GetArrivalSostav_ArrivalCars()).ToList();
                 return Ok(list);
             }
             catch (Exception e)

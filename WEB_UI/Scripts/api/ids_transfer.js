@@ -33,3 +33,28 @@ IDS_TRANSFER.prototype.getNumEPDOfIntermediateDB = function (num, callback) {
         },
     });
 };
+//Добавить или обновить в базе документов ИДС (документ типа промежуточной базы)
+IDS_TRANSFER.prototype.postInsertUZ_DOC = function (uz_doc, callback) {
+    $.ajax({
+        url: '../../api/ids/transfer/insert_uz_doc/',
+        type: 'POST',
+        data: JSON.stringify(uz_doc),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_TRANSFER.postInsertUZ_DOC", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};

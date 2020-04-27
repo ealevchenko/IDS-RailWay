@@ -30,5 +30,26 @@ namespace WEB_UI.Controllers.api.RWT
                 return BadRequest(e.Message);
             }
         }
+
+        // POST api/ids/transfer/insert_uz_doc
+        [HttpPost]
+        [Route("insert_uz_doc")]
+        [ResponseType(typeof(string))]
+        public IHttpActionResult PostUZ_DOC([FromBody]UZ.UZ_DOC value)
+        {
+            try
+            {
+                IDSTransfer ids_tr = new IDSTransfer(service.WebAPI_IDS);
+
+                string num_doc = ids_tr.InsertUZ_DOC(value);
+                return Ok(num_doc);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
+
+
 }

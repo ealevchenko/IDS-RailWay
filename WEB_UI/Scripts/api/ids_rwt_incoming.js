@@ -257,6 +257,29 @@ IDS_RWT_INCOMING.prototype.getArrivalCarsOfID = function (id, callback) {
         },
     });
 };
+// Получить перечень вагонов за указаный период выбранные вагоны
+IDS_RWT_INCOMING.prototype.getArrivalCarsOfPeriodNums = function (start, stop, nums, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/arrival_cars/start/' + toISOStringTZ(start).substring(0, 19) + '/stop/' + toISOStringTZ(stop).substring(0, 19)+ '/nums/' + nums,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.getArrivalCarsOfPeriodNums", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 //Обновить 
 IDS_RWT_INCOMING.prototype.putArrivalCars = function (arrival_cars, callback) {
     $.ajax({
@@ -304,6 +327,30 @@ IDS_RWT_INCOMING.prototype.deleteArrivalCars = function (id, callback) {
         },
     });
 };
+// Удалить вагоны состава
+IDS_RWT_INCOMING.prototype.deleteArrivalCarsOfSostav = function (id_sostav, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/arrival_cars/sostav/id/' + id_sostav,
+        type: 'DELETE',
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.deleteArrivalCarsOfSostav", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 //Добавить 
 IDS_RWT_INCOMING.prototype.postArrivalCars = function (arrival_cars, callback) {
     $.ajax({
@@ -317,7 +364,7 @@ IDS_RWT_INCOMING.prototype.postArrivalCars = function (arrival_cars, callback) {
         },
         success: function (data) {
             if (typeof callback === 'function') {
-                callback(data);
+                callback(data, arrival_cars);
             }
         },
         error: function (x, y, z) {
