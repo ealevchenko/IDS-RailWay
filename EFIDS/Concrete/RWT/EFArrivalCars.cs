@@ -160,9 +160,29 @@ namespace EFIDS.Concrete
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        public void Delete(IEnumerable<long> items)
+        {
+            try
+            {
+                db.Delete<ArrivalCars>(items);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
         public void Add(IEnumerable<ArrivalCars> items)
         {
-            throw new NotImplementedException();
+            try
+            {
+                db.Inserts<ArrivalCars>(items);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }

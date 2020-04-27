@@ -135,5 +135,25 @@ namespace EFIDS.Concrete
             return item;
         }
 
+        public static void Delete<TEntity>(this EFDbContext context, IEnumerable<long> entities) where TEntity : class
+        {
+
+            // Отключаем отслеживание и проверку изменений для оптимизации вставки множества полей
+            context.Configuration.AutoDetectChangesEnabled = false;
+            context.Configuration.ValidateOnSaveEnabled = false;
+
+            context.Database.Log = (s => System.Diagnostics.Debug.WriteLine(s));
+
+            foreach (long id in entities) {
+                TEntity item = context.Set<TEntity>().Find(id);
+                if (item != null)
+                    context.Entry<TEntity>(item).State = EntityState.Deleted;
+            }
+
+
+            context.Configuration.AutoDetectChangesEnabled = true;
+            context.Configuration.ValidateOnSaveEnabled = true;
+        }
+
     }
 }

@@ -163,8 +163,26 @@ namespace EFIDS.Concrete
 
         public void Add(IEnumerable<ArrivalSostav> items)
         {
-            throw new NotImplementedException();
+            try
+            {
+                db.Inserts<ArrivalSostav>(items);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
+        public void Delete(IEnumerable<long> items)
+        {
+            try
+            {
+                db.Delete<ArrivalSostav>(items);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
     }
 }
