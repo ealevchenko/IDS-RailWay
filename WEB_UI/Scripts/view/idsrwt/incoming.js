@@ -253,9 +253,9 @@
                                                     ids_inc.getArrivalSostavOfID(table_sostav.select_sostav.id, function (result_sostav) {
                                                         if (result_sostav && result_sostav.length > 0) {
                                                             var sostav = result_sostav[0];
-                                                            // Состав найден
+                                                            // Состав найден, вагоны есть?
                                                             if (sostav.ArrivalCars && sostav.ArrivalCars.length > 0) {
-                                                                // Удалим вагоны
+                                                                // Вагоны есть, удалим вагоны
                                                                 ids_inc.deleteArrivalCarsOfSostav(sostav.id, function (result_del_cars) {
                                                                     if (result_del_cars > 0) {
                                                                         // Вагоны удалены, удалим состав
@@ -272,6 +272,16 @@
                                                                         // Ошибка удаления вагонов
                                                                         incoming_alert.clear_message();
                                                                         incoming_alert.out_error_message("При удалении вагонов сотава произошла ошибка");
+                                                                    }
+                                                                });
+                                                            } else {
+                                                                // Вагонов нет удалим состав
+                                                                ids_inc.deleteArrivalSostav(sostav.id, function (result_del) {
+                                                                    if (result_del > 0) {
+                                                                        pn_sel.view(true);
+                                                                    } else {
+                                                                        incoming_alert.clear_message();
+                                                                        incoming_alert.out_error_message("При удалении сотава произошла ошибка");
                                                                     }
                                                                 });
                                                             }
@@ -3014,7 +3024,7 @@
                             pn_search_epd.loading_epd.hide();
                             stop = moment();
                             differentInSeconds = stop.diff(start, 'seconds');
-                            $('label#time-epd').text('Время выполнения : ' + differentInSeconds+'c.');
+                            $('label#time-epd').text('Время выполнения : ' + differentInSeconds + 'c.');
 
                         },
                         function (res_err) {
@@ -3227,11 +3237,11 @@
                             //}
                             // Проверим конец сахранения 
                             //if (count === 0) {
-                                if (typeof callback_ok === 'function') {
-                                    //LockScreenOff();
-                                    //pn_search_epd.obj.dialog("close");
-                                    callback_ok({ num: result_car.num, result: result_upd >= 0 ? (car.operation === 0 ? 1: 3): -1 });
-                                }
+                            if (typeof callback_ok === 'function') {
+                                //LockScreenOff();
+                                //pn_search_epd.obj.dialog("close");
+                                callback_ok({ num: result_car.num, result: result_upd >= 0 ? (car.operation === 0 ? 1 : 3) : -1 });
+                            }
                             //}
                         });
                     } else {
@@ -3239,11 +3249,11 @@
                         //count -= 1;
                         // Проверим конец сахранения 
                         //if (count === 0) {
-                            if (typeof callback_ok === 'function') {
-                                //pn_search_epd.obj.dialog("close");
-                                //LockScreenOff();
-                                callback_ok({ num: car.num, result: -1 });
-                            }
+                        if (typeof callback_ok === 'function') {
+                            //pn_search_epd.obj.dialog("close");
+                            //LockScreenOff();
+                            callback_ok({ num: car.num, result: -1 });
+                        }
                         //}
                     }
 
@@ -3261,11 +3271,11 @@
                     //}
                     // Проверим конец сахранения 
                     //if (count === 0) {
-                        if (typeof callback_ok === 'function') {
-                            //LockScreenOff();
-                            //pn_search_epd.obj.dialog("close");
-                            callback_ok({ num: car.num, result: result_add>0 ? 2 :-1 });
-                        }
+                    if (typeof callback_ok === 'function') {
+                        //LockScreenOff();
+                        //pn_search_epd.obj.dialog("close");
+                        callback_ok({ num: car.num, result: result_add > 0 ? 2 : -1 });
+                    }
                     //}
                 });
             },
