@@ -364,7 +364,7 @@ IDS_RWT_INCOMING.prototype.postArrivalCars = function (arrival_cars, callback) {
         },
         success: function (data) {
             if (typeof callback === 'function') {
-                callback(data, arrival_cars);
+                callback(data);
             }
         },
         error: function (x, y, z) {

@@ -174,7 +174,7 @@ namespace UZ
         /// <param name="df"></param>
         /// <returns></returns>
         public List<GohubDocument> GetEPD_UZ_Of_Filter(string WagonNumber, string DocumentNumber, GohubDocumentStatus DocumentStatus, string DepartureClientCode,
-            string DeparturePayerCode, string DepartureStationCode, string ArrivalClientCode, string ArrivalPayerCode, string ArrivalStationCode)
+            string DeparturePayerCode, string DepartureStationCode, string ArrivalClientCode, string ArrivalPayerCode, string ArrivalStationCode, int count)
         {
             try
             {
@@ -196,9 +196,12 @@ namespace UZ
                     connection.DocumentFilter.ArrivalPayerCode = ArrivalPayerCode;
                     connection.DocumentFilter.ArrivalStationCode = ArrivalStationCode;
 
+                    int index = 0;
                     foreach (GohubDocument document in connection.QueryDocuments(0))
                     {
+                        index++;
                         list.Add(document);
+                        if (index == count) { return list; }
                     }
                 }
                 return list;
@@ -218,7 +221,7 @@ namespace UZ
         {
             try
             {
-                List<GohubDocument> docs = GetEPD_UZ_Of_Filter(null, DocumentNumber, GohubDocumentStatus.Unknown, null, null, null, null, null, null);
+                List<GohubDocument> docs = GetEPD_UZ_Of_Filter(null, DocumentNumber, GohubDocumentStatus.Unknown, null, null, null, null, null, null, 1);
                 return docs;
             }
             catch (Exception e)
