@@ -1619,6 +1619,7 @@
                         $.each(result_search, function (i, el) {
                             var result_text = 'сотояние операции не определено.';
                             switch (el.result) {
+                                case -1: result_text = 'ошибка. операция не выполнена'; break;
                                 case 0: result_text = 'принят на АМКР, операция пропущена.'; break;
                                 case 1: result_text = 'принадлежит этому составу, обновлен только ЭПД.'; break;
                                 case 2: result_text = 'добавлен в состав как новый и обновлен ЭПД.'; break;
@@ -2810,6 +2811,7 @@
                                 // Проверим вагоны на пренадлежность текущему составу
                                 if (pn_search_epd.sostav) {
                                     // Состав определен
+                                    pn_search_epd.loading_cars.show();
                                     var select_vagon = [];
                                     for (i = 0; i < vagon.length; i++) {
                                         if (!pn_search_epd.is_car_of_arrival_sostav(vagon[i].nomer, pn_search_epd.sostav)) {
@@ -2831,7 +2833,7 @@
                                 // найдем вагоны на подходах
                                 pn_search_epd.get_list_cars_of_period(1, select_vagon, function (cars) {
                                     // Показать вагоны
-                                    pn_search_epd.loading_cars.show();
+                                    //pn_search_epd.loading_cars.show();
                                     pn_search_epd.table_car.view(select_vagon, cars);
                                 });
 
@@ -3228,7 +3230,7 @@
                                 if (typeof callback_ok === 'function') {
                                     //LockScreenOff();
                                     //pn_search_epd.obj.dialog("close");
-                                    callback_ok({ num: result_car.num, result: result_upd > 0 ? (car.operation === 0 ? 1: 3): -1 });
+                                    callback_ok({ num: result_car.num, result: result_upd >= 0 ? (car.operation === 0 ? 1: 3): -1 });
                                 }
                             //}
                         });
