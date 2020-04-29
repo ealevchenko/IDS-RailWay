@@ -59,7 +59,7 @@
                 'field_kol_pac': 'Кількість місць упаковки',
                 'field_kod_etsng': 'Код вантажу по ЄТСНВ',
 
-                'field_epd_num_doc': '№ док.',
+                'field_epd_num_doc': 'id-док.',
                 'field_epd_revision': '№ рев.',
                 'field_epd_status': 'Статус',
                 'field_epd_dt': 'Обновлен',
@@ -74,6 +74,15 @@
                 'field_epd_sostav_arrival': 'Состав прибыл',
                 'field_epd_car_staus': 'Статус состава',
                 'field_epd_car_arrival': 'Вагон принят',
+
+                'field_manual_car_num': '№ вагона',
+                'field_manual_car_operation': 'Будет прим. операц.',
+                'field_manual_car_num_epd': '№ Док.',
+                'field_manual_car_composition_index': 'Индекс состава',
+                'field_manual_car_train': 'Поезд',
+                'field_manual_sostav_arrival': 'Состав прибыл',
+                'field_manual_car_staus': 'Статус состава',
+                'field_manual_car_arrival': 'Вагон принят',
 
 
                 'title_button_buffer': 'Буфер',
@@ -778,7 +787,7 @@
             // Кнопка найти вагон вручную
             add_num_car_manual: $('button#add-num-car-manual').on('click', function (event) {
                 event.preventDefault();
-
+                pn_manual_car.Open(cars_detali.sostav);
             }),
 
             // Поля -----------------------------------------------------------------
@@ -1623,7 +1632,7 @@
 
                 // Инициализация окна поиска вагонов по номеру документа
                 pn_search_epd.init(cars_detali.lang, cars_detali.user, function (result_search) {
-                    // !!! сделать обработку результата
+                    // Обработка результатов поиска
                     cars_detali.alert.clear_message();
                     if (result_search) {
                         $.each(result_search, function (i, el) {
@@ -1643,6 +1652,29 @@
                     // Показать 
                     cars_detali.view(table_sostav.select_sostav.id, false);
                 });
+                // Инициализация окна ручного вводаномеров вагона
+                pn_manual_car.init(cars_detali.lang, cars_detali.user, function (result_search) {
+                    // !!! сделать обработку результата
+                    cars_detali.alert.clear_message();
+                    //if (result_search) {
+                    //    $.each(result_search, function (i, el) {
+                    //        var result_text = 'сотояние операции не определено.';
+                    //        switch (el.result) {
+                    //            case -1: result_text = 'ошибка. операция не выполнена'; break;
+                    //            case 0: result_text = 'принят на АМКР, операция пропущена.'; break;
+                    //            case 1: result_text = 'принадлежит этому составу, обновлен только ЭПД.'; break;
+                    //            case 2: result_text = 'добавлен в состав как новый и обновлен ЭПД.'; break;
+                    //            case 3: result_text = 'перенесен в состав из другого состава и обновлен ЭПД.'; break;
+                    //        }
+                    //        cars_detali.alert.out_warning_message("Вагон №" + el.num + " - " + result_text);
+                    //    });
+                    //    // Установить признак обновления составов
+                    //    cars_detali.update_sostav = true;
+                    //}
+                    //// Показать 
+                    cars_detali.view(table_sostav.select_sostav.id, false);
+                });
+
                 // Sumbit form
                 cars_detali.content.find("form").on("submit", function (event) {
                     event.preventDefault();
@@ -2991,7 +3023,6 @@
             },
             //
             sostav: null,       // Составы на подходах
-            //cars: null,         // Вагоны на подходах
             alert: null,        // Сообщения
             lang: null,
             user_name: null,
@@ -3044,7 +3075,7 @@
                 }
 
             }),
-            // инициализвция Диалога
+            // инициализвция Окна
             init: function (lang, user_name, callback_ok) {
                 pn_search_epd.lang = lang;
                 pn_search_epd.user_name = user_name;
@@ -3096,7 +3127,7 @@
                     event.preventDefault();
                 });
             },
-            // открыть диалоговое окно передадим состав
+            // открыть окно передав состав
             Open: function (sostav) {
                 pn_search_epd.sostav = sostav;
                 if (sostav) {
@@ -3112,7 +3143,7 @@
                     pn_search_epd.obj.dialog("open");
                 }
             },
-            // Сохранить изменения
+            // Сохранить изменения по всем вагонам
             add_cars: function (callback_ok) {
                 LockScreen(langView('mess_save', langs));
                 var index = pn_search_epd.table_car.obj.rows({ selected: true });
@@ -3224,37 +3255,15 @@
                         result_car.num_doc = num_doc;
                         result_car.change = toISOStringTZ(new Date());
                         result_car.change_user = pn_search_epd.user_name;
-                        //// Следующая позиция
-                        //position += 1;
-                        // Обновим данные
                         pn_search_epd.ids_inc.putArrivalCars(result_car, function (result_upd) {
-                            //count -= 1;
-                            //var result[result_car.num] = result_upd;
-                            //if (result_upd > 0) {
-                            //    // Ок, обновил
-                            //} else {
-                            //    // Ошибка обновления
-                            //}
-                            // Проверим конец сахранения 
-                            //if (count === 0) {
                             if (typeof callback_ok === 'function') {
-                                //LockScreenOff();
-                                //pn_search_epd.obj.dialog("close");
                                 callback_ok({ num: result_car.num, result: result_upd >= 0 ? (car.operation === 0 ? 1 : 3) : -1 });
                             }
-                            //}
                         });
                     } else {
-                        // вагон не найден
-                        //count -= 1;
-                        // Проверим конец сахранения 
-                        //if (count === 0) {
                         if (typeof callback_ok === 'function') {
-                            //pn_search_epd.obj.dialog("close");
-                            //LockScreenOff();
                             callback_ok({ num: car.num, result: -1 });
                         }
-                        //}
                     }
 
                 });
@@ -3262,21 +3271,9 @@
             // Добавим новый вагон
             add_car: function (car, callback_ok) {
                 pn_search_epd.ids_inc.postArrivalCars(car, function (result_add) {
-                    //count -= 1;
-                    //result[save_car.num] = result_add;
-                    //if (result_add > 0) {
-                    //    // Ок, обновил
-                    //} else {
-                    //    // Ошибка обновления
-                    //}
-                    // Проверим конец сахранения 
-                    //if (count === 0) {
                     if (typeof callback_ok === 'function') {
-                        //LockScreenOff();
-                        //pn_search_epd.obj.dialog("close");
                         callback_ok({ num: car.num, result: result_add > 0 ? 2 : -1 });
                     }
-                    //}
                 });
             },
             // Получить перечень составов на подходах за указаный период
@@ -3328,535 +3325,436 @@
                 } else false;
             }
 
+        },
+        //======================================================================================
+        // ОКНО ДОБАВИТЬ ВАГОН
+        //======================================================================================
+        pn_manual_car = {
+            obj: null,
+            // Таблица с вагонами документа
+            table_car: {
+                html_table: $('#table-list-manual-car'),
+                obj: null,
+                list: null,
+                // Инициализировать таблицу
+                init: function () {
+                    pn_manual_car.table_car.obj = pn_manual_car.table_car.html_table.DataTable({
+                        "paging": false,
+                        "searching": false,
+                        "ordering": true,
+                        "info": false,
+                        select: {
+                            style: 'multi'
+                        },
+                        "autoWidth": false,
+                        //"filter": true,
+                        //"scrollY": "200px",
+                        //"scrollX": true,
+                        language: language_table(langs),
+                        jQueryUI: false,
+                        "createdRow": function (row, data, index) {
+                            //var bt_xml = $('<button type="button" class="btn btn-warning btn-sm" id="add-num-car-manual" title="Показать XML"><i class="fa fa-file-code-o" aria-hidden="true" ></i></button>');
+                            //bt_xml.on('click', function (event) {
+                            //    pn_manual_car.table_car.open_xml(data.xml_final);
+                            //});
+                            //$('td', row).eq(6).text('').append(bt_xml);
+                        },
+                        columns: [
+                            { data: "num", title: langView('field_manual_car_num', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "operation_text", title: langView('field_manual_car_operation', langs), width: "300px", orderable: true, searchable: false },
+                            { data: "num_epd", title: langView('field_manual_car_num_epd', langs), width: "300px", orderable: true, searchable: false },
+                            { data: "arrival", title: langView('field_manual_sostav_arrival', langs), width: "100px", orderable: true, searchable: false },
+                            { data: "composition_index", title: langView('field_manual_car_composition_index', langs), width: "100px", orderable: true, searchable: false },
+                            { data: "train", title: langView('field_manual_car_train', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "staus", title: langView('field_manual_car_staus', langs), width: "100px", orderable: true, searchable: false },
+                            { data: "arrival_car", title: langView('field_manual_car_arrival', langs), width: "100px", orderable: true, searchable: false },
+                        ],
+                        stateSave: false,
+                    }).on('select deselect', function (e, dt, type, indexes) {
+                        // Определим количество выбранных вагонов
+                        var count = pn_manual_car.table_car.obj.rows({ selected: true }).count();
+                        // Если есть вагоны выбранные отобразим кнопку "Ок"
+                        var buttons = pn_manual_car.obj.dialog("option", "buttons");
+                        buttons[0].disabled = count > 0 ? false : true;
+                        pn_manual_car.obj.dialog("option", "buttons", buttons);
+                    });
+                },
+                // Показать таблицу с данными
+                view: function (cars, cars_arrival) {
+                    pn_manual_car.table_car.load(cars, cars_arrival);
+                    pn_manual_car.table_car.obj.draw();
+                },
+                // Загрузить данные
+                load: function (cars, cars_arrival) {
+                    //pn_manual_car.table_car.list = cars;
+                    pn_manual_car.table_car.obj.clear();
+                    for (i = 0; i < cars.length; i++) {
+                        pn_manual_car.table_car.obj.row.add(pn_manual_car.table_car.get_row(cars[i], cars_arrival));
+                    }
+                    pn_manual_car.loading_cars.hide();
+                },
+                // Получить строку для таблицы
+                get_row: function (car, cars_arrival) {
+                    var arrival_car = cars_arrival.find(function (element, index, array) {
+                        if (element.num === Number(car)) return true; else return false;
+                    });
+                    // Определим код операции.
+                    var operation = arrival_car && arrival_car.id_arrival === pn_manual_car.sostav.id ? 0 : (arrival_car ? 2 : 1);
+                    return {
+                        "num": car,
+                        "operation_text": pn_manual_car.table_car.get_operation(operation, arrival_car ? arrival_car.arrival : null),
+                        "operation": operation,
+                        "num_epd": null,
+                        "arrival": arrival_car && arrival_car.ArrivalSostav && arrival_car.ArrivalSostav.date_arrival ? arrival_car.ArrivalSostav.date_arrival.replace(/T/g, ' ') : null,
+                        "composition_index": arrival_car && arrival_car.ArrivalSostav ? arrival_car.ArrivalSostav.composition_index : null,
+                        "train": arrival_car && arrival_car.ArrivalSostav ? arrival_car.ArrivalSostav.train : null,
+                        "staus": arrival_car && arrival_car.ArrivalSostav ? pn_manual_car.ids_inc.getValueCulture_StatusArrival_Of_Code(arrival_car.ArrivalSostav.status, 'status') : null,
+                        "arrival_car": arrival_car && arrival_car.arrival ? arrival_car.arrival.replace(/T/g, ' ') : null,
+                        "id_car": arrival_car ? arrival_car.id : null,
+                        "id_arrival": arrival_car ? arrival_car.id_arrival : null,
+                    };
+                },
+                // Определим операцию над вагоном которая будет придложена
+                get_operation: function (operation, arrival) {
+                    if (arrival) {
+                        return 'Вагон принят, пропустить';
+                    }
+                    switch (operation) {
+                        case 0: return 'Вагон существует, только обновить ЭПД';
+                        case 1: return 'Добавит новый вагон и обновить ЭПД';
+                        case 2: return 'Перенести ранее принятый вагон и обновить ЭПД';
+                    }
+                },
+                // Показать XML в открытом окне
+                open_xml: function (xml) {
+                    //var xmlString = xml2Str(xml);
+                    myXmlWindow = window.open('', '', 'scrollbars=1');
+                    myXmlWindow.document.write('<!DOCTYPE xml><title>Заголовок</title>' + $.parseHTML(xml));
+                    //myXmlWindow.document.write('<?xml version="1.0" encoding="utf-8"?>'+xml);
+                    myXmlWindow.focus();
+                }
+            },
+            //
+            sostav: null,       // Составы на подходах
+            alert: null,        // Сообщения
+            lang: null,
+            user_name: null,
+            uz_sms: null,      // модуль работы с СМС
+            ids_inc: null,
+            // Поля формы
+            loading_cars: $('div#loading-cars'),
+
+            manual_num_car: $('textarea#manual_num_car'),
+            // Кнопка поиск информации в ИДС
+            bt_num_car_search: $('button#bt_num_car_search').on('click', function (event) {
+                event.preventDefault();
+                pn_manual_car.alert.clear_message();
+                if (pn_manual_car.manual_num_car.val() !== "") {
+                    pn_manual_car.table_car.view([], null);
+                    //pn_manual_car.alert.out_warning_message("Начат поиск ЭПД в 'АС Клиент' УЗ. Ожидайте поиск этой информации может занять несколько минут...");
+                    pn_manual_car.bt_num_car_search.prop("disabled", true);
+
+                    var isNumeric = function (value) {
+                        //return /^\d{8}/.test(value);
+                        return /^\d+$/.test(value);
+                    };
+                    // Провкерка на правильный ввод номеров
+                    var valid = true;
+                    var car_valid = [];
+                    var cars = pn_manual_car.manual_num_car.val().split(';');
+                    $.each(cars, function (i, el) {
+                        //pn_manual_car.alert.out_warning_message();
+                        if (!isNumeric(el) || !(Number(el) >= 10000000 && Number(el) <= 99999999)) {
+                            // Ошибка ввода
+                            pn_manual_car.alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' введен неправильный номер :' + el);
+                            valid = false;
+                        } else {
+                            car_valid.push(el);
+                        }
+                    });
+                    // Провкерка на повторяющиеся номера
+                    arr_res = [];
+                    car_valid.sort();
+                    for (var i = 1; i < car_valid.length; i++) {
+                        if (car_valid[i] === car_valid[i - 1]) {
+                            var is_unique = true;
+                            for (var k = 0; k < arr_res.length; k++) {
+                                if (arr_res[k] === car_valid[i]) {
+                                    is_unique = false;
+                                    break;
+                                }
+                            }
+                            if (is_unique) {
+                                arr_res.push(car_valid[i]);
+                            }
+                        }
+                    }
+                    // Вывод сообщений повторяющихся номеров
+                    $.each(arr_res, function (i, el) {
+                        pn_manual_car.alert.out_warning_message('Ошибка ввода, введеный номер :' + el + ' повторяется.');
+                    });
+                    // Продолжим 
+                    if (valid) {
+                        // Продолжим ввод
+                        pn_manual_car.get_list_cars_of_period(1, car_valid, function (res_cars) {
+                            pn_manual_car.table_car.view(car_valid, res_cars);
+                        });
+                    } else {
+                        pn_manual_car.alert.out_warning_message('Исправьте указанные номера в указанных позициях и попробуйте заново.');
+                    }
+                    pn_manual_car.bt_num_car_search.prop("disabled", false);
+                } else {
+                    pn_manual_car.alert.out_error_message("Введите номер вагона или несколько вагонов, разделитель номеров ';'");
+                }
+
+            }),
+            // инициализвция Окна
+            init: function (lang, user_name, callback_ok) {
+                pn_manual_car.lang = lang;
+                pn_manual_car.user_name = user_name;
+                // создадим классы               
+                pn_manual_car.alert = new ALERT($('div#manual-car-alert'));// Создадим класс ALERTG
+                pn_manual_car.uz_sms = new UZ_SMS(pn_manual_car.lang); // Создадим класс IDS_RWT_INCOMING
+                pn_manual_car.ids_inc = new IDS_RWT_INCOMING(pn_manual_car.lang); // Создадим класс IDS_RWT_INCOMING
+                pn_manual_car.table_car.init();
+
+                pn_manual_car.obj = $("div#manual-car").dialog({
+                    resizable: false,
+                    title: 'Добавить вагоны вручную',
+                    modal: true,
+                    autoOpen: false,
+                    height: "auto",
+                    width: 1000,
+                    classes: {
+                        "ui-dialog": "card",
+                        "ui-dialog-titlebar": "card-header bg-primary text-white",
+                        "ui-dialog-content": "card-body",
+                        "ui-dialog-buttonpane": "card-footer text-muted"
+                    },
+                    open: function (event, ui) {
+
+                    },
+                    buttons: [
+                        {
+
+                            disabled: true,
+                            text: "Ок",
+                            class: "btn btn-outline-primary btn",
+                            click: function () {
+                                pn_manual_car.add_cars(callback_ok);
+                            }
+                        },
+                        {
+                            text: "Отмена",
+                            class: "btn btn-outline-primary btn",
+                            click: function () {
+                                $(this).dialog("close");
+                            }
+                        },
+                    ]
+                });
+                // Sumbit form
+                pn_manual_car.obj.find("form").on("submit", function (event) {
+                    event.preventDefault();
+                });
+            },
+            // открыть окно добавмить вагоны вручную
+            Open: function (sostav) {
+                pn_manual_car.sostav = sostav;
+                if (sostav) {
+                    // если указан состав, в который нужно добавить вагоны тогда открываем диалоговое окно
+                    pn_manual_car.alert.clear_message();
+                    pn_manual_car.manual_num_car.val('');
+                    pn_manual_car.table_car.view([], null);
+                    pn_manual_car.bt_num_car_search.prop("disabled", false);
+                    pn_manual_car.obj.dialog("open");
+                }
+            },
+            // Сохранить изменения по всем вагонам
+            add_cars: function (callback_ok) {
+                // ! Пока заблокировал
+                if (typeof callback_ok === 'function') {
+                    callback_ok([]);
+                }
+                //
+                LockScreen(langView('mess_save', langs));
+                var index = pn_manual_car.table_car.obj.rows({ selected: true });
+                var row_cars = pn_manual_car.table_car.obj.rows(index[0]).data();
+                // Получим позицию для добавления
+                var position = pn_manual_car.sostav.ArrivalCars && pn_manual_car.sostav.ArrivalCars.length > 0 ? pn_manual_car.sostav.ArrivalCars.length + 1 : 1;
+
+                // Обновим документ в базе документов ИДС
+                pn_manual_car.ids_inc.ids_tr.postInsertUZ_DOC(pn_manual_car.table_epd.select_UZ_DOC, function (result_num) {
+                    if (result_num && result_num !== "") {
+                        // Определим количесво для определения конца обновления
+                        var count = row_cars.length;
+                        var result = [];
+
+                        // Документ добавлен, пройдемся по вагонам
+                        for (i = 0; i < row_cars.length; i++) {
+                            var car = row_cars[i];
+                            // Проверим. Вагон принят?
+                            if (car.arrival_car === null) {
+                                // Нет вагон не принят, проверим вагон есть на подходах
+                                if (car.id_car > 0) {
+                                    // Да, вагон наподходах
+                                    pn_manual_car.update_car(car, result_num, position, function (result_upd) {
+                                        count -= 1;
+                                        result.push(result_upd);
+                                        // Проверим конец сахранения 
+                                        if (count === 0) {
+                                            if (typeof callback_ok === 'function') {
+                                                LockScreenOff();
+                                                pn_manual_car.obj.dialog("close");
+                                                callback_ok(result, true);
+                                            }
+                                        }
+                                    });
+                                    // Следующая позиция
+                                    position += 1;
+                                } else {
+                                    // Нет, вагона  нет наподходах
+                                    var new_car = {
+                                        id: 0,
+                                        id_arrival: pn_manual_car.sostav.id,
+                                        num: car.num,
+                                        position: position,
+                                        position_arrival: null,
+                                        consignee: pn_manual_car.table_epd.select_UZ_DOC.recipient_code,
+                                        num_doc: result_num,
+                                        id_transfer: null,
+                                        note: "Добавлен (Поиск ЭПД по номеру)" + pn_manual_car.manual_num_car.val(),
+                                        date_adoption_act: null,
+                                        arrival: null,
+                                        arrival_user: null,
+                                        create: toISOStringTZ(new Date()),
+                                        create_user: pn_manual_car.user_name,
+                                    };
+                                    // Следующая позиция
+                                    position += 1;
+                                    // Добавим данные
+                                    pn_manual_car.add_car(new_car, function (result_add) {
+                                        count -= 1;
+                                        result.push(result_add);
+                                        // Проверим конец сахранения 
+                                        if (count === 0) {
+                                            if (typeof callback_ok === 'function') {
+                                                LockScreenOff();
+                                                pn_manual_car.obj.dialog("close");
+                                                callback_ok(result, true);
+                                            }
+                                        }
+                                    });
+                                }
+                            } else {
+                                // Вагон уже принят операция отменяется.
+                                count -= 1;
+                                result.push({ num: car.num, result: 0 });
+                                // Проверим конец сахранения 
+                                if (count === 0) {
+                                    if (typeof callback_ok === 'function') {
+                                        LockScreenOff();
+                                        pn_manual_car.obj.dialog("close");
+                                        callback_ok(result, true);
+                                    }
+                                }
+                            }
+                        }
+
+                    } else {
+                        // Ошибка документ не добавлен
+                        LockScreenOff();
+                        pn_manual_car.alert.clear_message();
+                        pn_manual_car.alert.out_error_message("Ошибка. Найденый ЭПД №" + pn_manual_car.manual_num_car.val() + " не сохранился в базе документов ИДС");
+                    }
+                });
+            },
+            // Обновим вагон
+            update_car: function (car, num_doc, position, callback_ok) {
+                pn_manual_car.ids_inc.getArrivalCarsOfID(car.id_car, function (result_car) {
+                    if (result_car) {
+                        if (car.operation === 0) {
+                            // только обновить эпд
+                            result_car.note = "Обновили ЭПД" + pn_manual_car.manual_num_car.val();
+                        } else {
+                            // Перенос вагона
+                            result_car.id_transfer = result_car.id_arrival;
+                            result_car.id_arrival = pn_manual_car.sostav.id;
+                            result_car.position = position;
+                            result_car.note = "Перенесен (Поиск ЭПД по номеру)" + pn_manual_car.manual_num_car.val();
+                        }
+                        // Получим вагон.
+                        result_car.num_doc = num_doc;
+                        result_car.change = toISOStringTZ(new Date());
+                        result_car.change_user = pn_manual_car.user_name;
+                        pn_manual_car.ids_inc.putArrivalCars(result_car, function (result_upd) {
+                            if (typeof callback_ok === 'function') {
+                                callback_ok({ num: result_car.num, result: result_upd >= 0 ? (car.operation === 0 ? 1 : 3) : -1 });
+                            }
+                        });
+                    } else {
+                        if (typeof callback_ok === 'function') {
+                            callback_ok({ num: car.num, result: -1 });
+                        }
+                    }
+
+                });
+            },
+            // Добавим новый вагон
+            add_car: function (car, callback_ok) {
+                pn_manual_car.ids_inc.postArrivalCars(car, function (result_add) {
+                    if (typeof callback_ok === 'function') {
+                        callback_ok({ num: car.num, result: result_add > 0 ? 2 : -1 });
+                    }
+                });
+            },
+            // Получить перечень составов на подходах за указаный период
+            get_list_cars_of_period: function (day, cars, callback) {
+                // Состав указан, дата прибытия указана
+                if (pn_manual_car.sostav && pn_manual_car.sostav.date_arrival) {
+                    // Определим период
+                    var stop = moment(pn_manual_car.sostav.date_arrival).add('days', day);
+                    var start = moment(pn_manual_car.sostav.date_arrival).add('days', -1 * day);
+                    // Определим вагоны
+                    if (cars && cars.length > 0) {
+                        // Вагоны указаны
+                        var nums = '';
+                        for (i = 0; i < cars.length; i++) {
+                            nums += cars[i] + (i !== cars.length - 1 ? ',' : '');
+                        }
+                        // Получим перечень вагонов
+                        if (nums !== '') {
+                            pn_manual_car.ids_inc.getArrivalCarsOfPeriodNums(start._d, stop._d, nums, function (cars) {
+                                if (typeof callback === 'function') {
+                                    callback(cars);
+                                }
+                            });
+                        } else {
+                            if (typeof callback === 'function') {
+                                callback([]);
+                            }
+                        }
+                    } else {
+                        // вагонов нет? нет смысла переносить
+                        pn_manual_car.alert.out_warning_message("Вагоны не указаны");
+                        if (typeof callback === 'function') {
+                            callback(null);
+                        }
+                    }
+
+                }
+            },
+            // Определить есть вагон в указаном списке
+            is_car_of_arrival_sostav: function (num, arrival_sostav) {
+                if (arrival_sostav && arrival_sostav.ArrivalCars && num) {
+                    var arrival_car = arrival_sostav.ArrivalCars.find(function (element, index, array) {
+                        if (element.num === Number(num)) return true; else return false;
+                    });
+                    if (arrival_car) return true; else return false;
+                } else false;
+            }
+
         };
-    //======================================================================================
-    // ОКНО НАЙТИ ЭПД
-    //======================================================================================
-    //pn_search_epd = {
-    //    obj: null,
-    //    // Таблица с документами
-    //    table_epd: {
-    //        html_table: $('#table-list-epd'),
-    //        obj: null,
-    //        list: null,
-    //        select_UZ_DOC: null,
-    //        // Инициализировать таблицу
-    //        init: function () {
-    //            pn_search_epd.table_epd.obj = pn_search_epd.table_epd.html_table.DataTable({
-    //                "paging": false,
-    //                "searching": false,
-    //                "ordering": true,
-    //                "info": false,
-    //                "select": {
-    //                    "style": 'single',
-    //                    "toggleable": false
-    //                },
-    //                "autoWidth": true,
-    //                //"filter": true,
-    //                //"scrollY": "600px",
-    //                //"scrollX": true,
-    //                language: language_table(langs),
-    //                jQueryUI: false,
-    //                "createdRow": function (row, data, index) {
-    //                    var bt_xml = $('<button type="button" class="btn btn-warning btn-sm" id="add-num-car-manual" title="Показать XML"><i class="fa fa-file-code-o" aria-hidden="true" ></i></button>');
-    //                    bt_xml.on('click', function (event) {
-    //                        pn_search_epd.table_epd.open_xml(data.xml_final);
-    //                    });
-    //                    $('td', row).eq(6).text('').append(bt_xml);
-    //                },
-    //                columns: [
-    //                    { data: "id_doc", title: langView('field_epd_num_doc', langs), width: "50px", orderable: true, searchable: false },
-    //                    { data: "revision", title: langView('field_epd_revision', langs), width: "50px", orderable: true, searchable: false },
-    //                    { data: "status_name", title: langView('field_epd_status', langs), width: "50px", orderable: true, searchable: false },
-    //                    { data: "dt", title: langView('field_epd_dt', langs), width: "50px", orderable: true, searchable: false },
-    //                    { data: "sender_code", title: langView('field_epd_code_from', langs), width: "50px", orderable: true, searchable: false },
-    //                    { data: "recipient_code", title: langView('field_epd_code_on', langs), width: "50px", orderable: true, searchable: false },
-    //                    { data: null, title: langView('field_epd_xml', langs), width: "50px", orderable: true, searchable: false },
-    //                ],
-    //                stateSave: false,
-    //            })
-    //                .on('select', function (e, dt, type, indexes) {
-    //                    var rowData = pn_search_epd.table_epd.obj.rows(indexes).data();
-    //                    if (rowData && rowData.length > 0) {
-    //                        pn_search_epd.table_epd.select_UZ_DOC = rowData[0];
-    //                        // Получим вагоны
-    //                        var vagon = rowData[0].otpr && rowData[0].otpr.vagon ? rowData[0].otpr.vagon : [];
-    //                        // Проверим вагоны пренадлежат они составу
-    //                        if (pn_search_epd.sostav) {
-    //                            // Состав определен
-    //                            var select_vagon = [];
-    //                            for (i = 0; i < vagon.length; i++) {
-    //                                if (!pn_search_epd.is_car_of_arrival_sostav(vagon[i].nomer, pn_search_epd.sostav)) {
-    //                                    // Вагона нет в текущем составе
-    //                                    select_vagon.push(vagon[i]);
-    //                                } else {
-    //                                    //Вагон есть в текущем составе
-    //                                    pn_search_epd.alert.out_warning_message("Вагон с номером " + vagon[i].nomer + " уже есть в составе, в который вы хотите добавить вагоны указанные найденном ЭПД УЗ.");
-    //                                }
-    //                            }
-    //                        } else {
-    //                            // Состав определен
-    //                            pn_search_epd.alert.clear_message();
-    //                            pn_search_epd.alert.out_error_message("Ошибка. Не указан составе, в который вы хотите добавить вагоны указанные найденном ЭПД УЗ");
-    //                        }
-    //                        // найдем вагоны на подходах
-    //                        pn_search_epd.get_list_cars_of_period(1, select_vagon, function (cars) {
-    //                            // Показать вагоны
-    //                            pn_search_epd.loading_cars.show();
-    //                            pn_search_epd.table_car.view(select_vagon, cars);
-    //                        });
-
-    //                    }
-    //                });
-    //        },
-    //        // Показать таблицу с данными
-    //        view: function (epds) {
-    //            pn_search_epd.table_epd.load(epds);
-    //            pn_search_epd.table_epd.obj.draw();
-    //        },
-    //        // Загрузить данные
-    //        load: function (epds) {
-    //            pn_search_epd.table_epd.list = epds;
-    //            pn_search_epd.table_epd.obj.clear();
-    //            for (i = 0; i < epds.length; i++) {
-    //                pn_search_epd.table_epd.obj.row.add(pn_search_epd.table_epd.get_row(epds[i]));
-    //            }
-    //        },
-    //        // Получить строку для таблицы
-    //        get_row: function (epds) {
-    //            return {
-    //                "id_doc": epds.id_doc,
-    //                "revision": epds.revision,
-    //                "status": epds.status,
-    //                "status_name": epds.status ? pn_search_epd.uz_sms.getValueCulture_Status_Of_Code(epds.status, 'status') : epds.status,
-    //                "dt": epds.dt !== null ? epds.dt.replace(/T/g, ' ') : null,
-    //                "sender_code": epds.sender_code,
-    //                "recipient_code": epds.recipient_code,
-    //                "xml": epds.xml,
-    //                "xml_final": epds.xml_final,
-    //                "otpr": epds.otpr
-    //            };
-    //        },
-    //        // Показать XML в открытом окне
-    //        open_xml: function (xml) {
-    //            //var xmlString = xml2Str(xml);
-    //            myXmlWindow = window.open('', '', 'scrollbars=1');
-    //            myXmlWindow.document.write('<!DOCTYPE xml><title>Заголовок</title>' + $.parseHTML(xml));
-    //            //myXmlWindow.document.write('<?xml version="1.0" encoding="utf-8"?>'+xml);
-    //            myXmlWindow.focus();
-    //        }
-    //    },
-    //    // Таблица с вагонами документа
-    //    table_car: {
-    //        html_table: $('#table-list-epd-car'),
-    //        obj: null,
-    //        list: null,
-    //        // Инициализировать таблицу
-    //        init: function () {
-    //            pn_search_epd.table_car.obj = pn_search_epd.table_car.html_table.DataTable({
-    //                "paging": false,
-    //                "searching": false,
-    //                "ordering": true,
-    //                "info": false,
-    //                select: {
-    //                    style: 'multi'
-    //                },
-    //                "autoWidth": false,
-    //                //"filter": true,
-    //                //"scrollY": "200px",
-    //                //"scrollX": true,
-    //                language: language_table(langs),
-    //                jQueryUI: false,
-    //                "createdRow": function (row, data, index) {
-    //                    //var bt_xml = $('<button type="button" class="btn btn-warning btn-sm" id="add-num-car-manual" title="Показать XML"><i class="fa fa-file-code-o" aria-hidden="true" ></i></button>');
-    //                    //bt_xml.on('click', function (event) {
-    //                    //    pn_search_epd.table_car.open_xml(data.xml_final);
-    //                    //});
-    //                    //$('td', row).eq(6).text('').append(bt_xml);
-    //                },
-    //                columns: [
-    //                    { data: "num", title: langView('field_epd_car_num', langs), width: "100px", orderable: true, searchable: false },
-    //                    { data: "arrival", title: langView('field_epd_sostav_arrival', langs), width: "150px", orderable: true, searchable: false },
-    //                    { data: "composition_index", title: langView('field_epd_car_composition_index', langs), width: "150px", orderable: true, searchable: false },
-    //                    { data: "train", title: langView('field_epd_car_train', langs), width: "100px", orderable: true, searchable: false },
-    //                    { data: "staus", title: langView('field_epd_car_staus', langs), width: "150px", orderable: true, searchable: false },
-    //                    { data: "arrival_car", title: langView('field_epd_car_arrival', langs), width: "150px", orderable: true, searchable: false },
-    //                ],
-    //                stateSave: false,
-    //            })
-    //                //.on('click', 'tbody tr', function (e) {
-    //                //    if (pn_search_epd.table_car.obj.row(this,{ selected: true }).any()) {
-    //                //        //.deselect();
-    //                //        $(pn_search_epd.table_car.obj.row(this)).removeClass('selected');
-
-    //                //    }
-    //                //    else {
-
-    //                //        var row_cars = pn_search_epd.table_car.obj.rows(this.rowIndex).data();
-    //                //        if (row_cars[0].id_car === 60346) {
-    //                //            //e.preventDefault();
-    //                //            $(pn_search_epd.table_car.obj.row(this)).removeClass('selected');
-
-    //                //        }
-    //                //        //pn_search_epd.table_car.obj.row(this).select();
-    //                //        $(pn_search_epd.table_car.obj.row(this)).addClass('selected');
-    //                //    }
-    //                //    pn_search_epd.table_car.obj.draw();
-    //                //    // Определим количество выбранных вагонов
-    //                //    var count = pn_search_epd.table_car.obj.rows({ selected: true }).count();
-    //                //    // Если есть вагоны выбранные отобразим кнопку "Ок"
-    //                //    var buttons = pn_search_epd.obj.dialog("option", "buttons");
-    //                //    buttons[0].disabled = count > 0 ? false : true;
-    //                //    pn_search_epd.obj.dialog("option", "buttons", buttons);
-    //                //});
-    //                .on('select deselect', function (e, dt, type, indexes) {
-    //                    // Определим количество выбранных вагонов
-    //                    var count = pn_search_epd.table_car.obj.rows({ selected: true }).count();
-    //                    // Если есть вагоны выбранные отобразим кнопку "Ок"
-    //                    var buttons = pn_search_epd.obj.dialog("option", "buttons");
-    //                    buttons[0].disabled = count > 0 ? false : true;
-    //                    pn_search_epd.obj.dialog("option", "buttons", buttons);
-    //                });
-    //            //.on('user-select', function (e, dt, type, cell, originalEvent) {
-
-    //            //    var data =  $(originalEvent.delegateTarget).index();
-
-    //            //    if ($(originalEvent.target).index() === 0) {
-    //            //        e.preventDefault();
-    //            //    }
-    //            //});
-    //        },
-    //        // Показать таблицу с данными
-    //        view: function (cars, cars_arrival) {
-    //            pn_search_epd.table_car.load(cars, cars_arrival);
-    //            pn_search_epd.table_car.obj.draw();
-    //        },
-    //        // Загрузить данные
-    //        load: function (cars, cars_arrival) {
-    //            //pn_search_epd.table_car.list = cars;
-    //            pn_search_epd.table_car.obj.clear();
-    //            for (i = 0; i < cars.length; i++) {
-    //                pn_search_epd.table_car.obj.row.add(pn_search_epd.table_car.get_row(cars[i], cars_arrival));
-    //            }
-    //            pn_search_epd.loading_cars.hide();
-    //        },
-    //        // Получить строку для таблицы
-    //        get_row: function (car, cars_arrival) {
-    //            var arrival_car = cars_arrival.find(function (element, index, array) {
-    //                if (element.num === Number(car.nomer)) return true; else return false;
-    //            });
-    //            return {
-    //                "num": car.nomer,
-    //                "arrival": arrival_car && arrival_car.ArrivalSostav && arrival_car.ArrivalSostav.date_arrival ? arrival_car.ArrivalSostav.date_arrival.replace(/T/g, ' ') : null,
-    //                "composition_index": arrival_car && arrival_car.ArrivalSostav ? arrival_car.ArrivalSostav.composition_index : null,
-    //                "train": arrival_car && arrival_car.ArrivalSostav ? arrival_car.ArrivalSostav.train : null,
-    //                "staus": arrival_car && arrival_car.ArrivalSostav ? pn_search_epd.ids_inc.getValueCulture_StatusArrival_Of_Code(arrival_car.ArrivalSostav.status, 'status') : null,
-    //                "arrival_car": arrival_car && arrival_car.arrival ? arrival_car.arrival.replace(/T/g, ' ') : null,
-    //                "id_car": arrival_car ? arrival_car.id : null,
-    //                "id_arrival": arrival_car ? arrival_car.id_arrival : null,
-    //            };
-    //        },
-    //        // Показать XML в открытом окне
-    //        open_xml: function (xml) {
-    //            //var xmlString = xml2Str(xml);
-    //            myXmlWindow = window.open('', '', 'scrollbars=1');
-    //            myXmlWindow.document.write('<!DOCTYPE xml><title>Заголовок</title>' + $.parseHTML(xml));
-    //            //myXmlWindow.document.write('<?xml version="1.0" encoding="utf-8"?>'+xml);
-    //            myXmlWindow.focus();
-    //        }
-    //    },
-    //    //
-    //    sostav: null,       // Составы на подходах
-    //    //cars: null,         // Вагоны на подходах
-    //    alert: null,        // Сообщения
-    //    lang: null,
-    //    user_name: null,
-    //    uz_sms: null,      // модуль работы с СМС
-    //    ids_inc: null,
-    //    // Поля формы
-    //    loading_cars: $('div#loading-cars'),
-    //    loading_epd: $('div#loading-epd'),
-
-    //    num_epd_to_search: $('input#num_epd_to_search'),
-    //    // Кнопка ввести данные в ручную
-    //    bt_num_epd_to_search: $('button#bt_num_epd_to_search').on('click', function (event) {
-    //        event.preventDefault();
-    //        pn_search_epd.alert.clear_message();
-    //        if (pn_search_epd.num_epd_to_search.val() !== "") {
-    //            pn_search_epd.table_epd.view([]);
-    //            pn_search_epd.table_car.view([], null);
-    //            pn_search_epd.alert.out_warning_message("Начат поиск ЭПД в 'АС Клиент' УЗ. Ожидайте поиск этой информации может занять несколько минут...");
-    //            pn_search_epd.loading_epd.show();
-    //            pn_search_epd.bt_num_epd_to_search.prop("disabled", true);
-    //            pn_search_epd.uz_sms.getUZ_DOC_Of_Num(pn_search_epd.num_epd_to_search.val(),
-    //                function (res_ok) {
-    //                    pn_search_epd.alert.clear_message();
-    //                    pn_search_epd.bt_num_epd_to_search.prop("disabled", false);
-    //                    pn_search_epd.table_epd.view(res_ok);
-    //                    pn_search_epd.loading_epd.hide();
-
-    //                },
-    //                function (res_err) {
-    //                    if (res_err) {
-    //                        pn_search_epd.alert.clear_message();
-    //                        pn_search_epd.alert.out_error_message("Ошибка. " + res_err.responseText);
-    //                        pn_search_epd.bt_num_epd_to_search.prop("disabled", false);
-    //                        pn_search_epd.loading_epd.hide();
-    //                    }
-    //                });
-    //        } else {
-    //            pn_search_epd.alert.out_error_message("У кажите номер документа!");
-    //            pn_search_epd.loading_epd.hide();
-    //        }
-
-    //    }),
-    //    // инициализвция Диалога
-    //    init: function (lang, user_name, callback_ok) {
-    //        pn_search_epd.lang = lang;
-    //        pn_search_epd.user_name = user_name;
-    //        // создадим классы               
-    //        pn_search_epd.alert = new ALERT($('div#search-epd-alert'));// Создадим класс ALERTG
-    //        pn_search_epd.uz_sms = new UZ_SMS(pn_search_epd.lang); // Создадим класс IDS_RWT_INCOMING
-    //        pn_search_epd.ids_inc = new IDS_RWT_INCOMING(pn_search_epd.lang); // Создадим класс IDS_RWT_INCOMING
-    //        //pn_search_epd.val = new VALIDATION(pn_search_epd.lang, pn_search_epd.alert_sostav, pn_search_epd.all_obj); // Создадим класс VALIDATION
-    //        pn_search_epd.table_epd.init();
-    //        pn_search_epd.table_car.init();
-
-    //        pn_search_epd.obj = $("div#search-epd").dialog({
-    //            resizable: false,
-    //            title: 'Найти ЭПД по номеру документа',
-    //            modal: true,
-    //            autoOpen: false,
-    //            height: "auto",
-    //            width: 1000,
-    //            classes: {
-    //                "ui-dialog": "card",
-    //                "ui-dialog-titlebar": "card-header bg-primary text-white",
-    //                "ui-dialog-content": "card-body",
-    //                "ui-dialog-buttonpane": "card-footer text-muted"
-    //            },
-    //            open: function (event, ui) {
-
-    //            },
-    //            buttons: [
-    //                {
-
-    //                    disabled: true,
-    //                    text: "Ок",
-    //                    class: "btn btn-outline-primary btn",
-    //                    click: function () {
-    //                        pn_search_epd.add_cars(callback_ok);
-    //                    }
-    //                },
-    //                {
-    //                    text: "Отмена",
-    //                    class: "btn btn-outline-primary btn",
-    //                    click: function () {
-    //                        $(this).dialog("close");
-    //                    }
-    //                },
-    //            ]
-    //        });
-    //        // Sumbit form
-    //        pn_search_epd.obj.find("form").on("submit", function (event) {
-    //            event.preventDefault();
-    //        });
-    //    },
-    //    // открыть диалоговое окно передадим состав
-    //    Open: function (sostav) {
-    //        pn_search_epd.sostav = sostav;
-    //        if (sostav) {
-    //            // если указан состав, в который нужно добавить вагоны тогда открываем диалоговое окно
-    //            pn_search_epd.alert.clear_message();
-    //            pn_search_epd.num_epd_to_search.val('');
-    //            pn_search_epd.table_epd.view([]);
-    //            pn_search_epd.table_car.view([], null);
-    //            pn_search_epd.bt_num_epd_to_search.prop("disabled", false);
-    //            // Получим списвок текущих вагонов
-
-    //            pn_search_epd.obj.dialog("open");
-    //        }
-    //    },
-    //    // Сохранить изменения
-    //    add_cars: function (callback_ok) {
-    //        LockScreen(langView('mess_save', langs));
-    //        var index = pn_search_epd.table_car.obj.rows({ selected: true });
-    //        var row_cars = pn_search_epd.table_car.obj.rows(index[0]).data();
-    //        // Получим позицию для добавления
-    //        var position = pn_search_epd.sostav.ArrivalCars && pn_search_epd.sostav.ArrivalCars.length > 0 ? pn_search_epd.sostav.ArrivalCars.length + 1 : 1;
-
-    //        // Обновим документ в базе документов ИДС
-    //        pn_search_epd.ids_inc.ids_tr.postInsertUZ_DOC(pn_search_epd.table_epd.select_UZ_DOC, function (result_num) {
-    //            if (result_num && result_num !== "") {
-    //                // Определим количесво для определения конца обновления
-    //                var count = row_cars.length;
-    //                var result = {};
-    //                // Документ добавлен, пройдемся по вагонам
-    //                for (i = 0; i < row_cars.length; i++) {
-    //                    var car = row_cars[i];
-    //                    // Проверим. Вагон принят?
-    //                    if (car.arrival_car === null) {
-    //                        // Нет вагон не принят, проверим вагон есть на подходах
-    //                        if (car.id_car > 0) {
-    //                            // Да, вагон наподходах
-    //                            pn_search_epd.ids_inc.getArrivalCarsOfID(car.id_car, function (result_car) {
-    //                                if (result_car) {
-    //                                    // Получим вагон.
-    //                                    result_car.num_doc = result_num;
-    //                                    result_car.id_transfer = result_car.id_arrival;
-    //                                    result_car.id_arrival = pn_search_epd.sostav.id;
-    //                                    result_car.position = position;
-    //                                    result_car.note = "Перенесен (Поиск ЭПД по номеру)" + pn_search_epd.num_epd_to_search.val();
-    //                                    result_car.change = toISOStringTZ(new Date());
-    //                                    result_car.change_user = pn_search_epd.user_name;
-    //                                    // Следующая позиция
-    //                                    position += 1;
-    //                                    // Обновим данные
-    //                                    pn_search_epd.ids_inc.putArrivalCars(result_car, function (result_upd) {
-    //                                        count -= 1;
-    //                                        result[result_car.num] = result_upd;
-    //                                        if (result_upd > 0) {
-    //                                            // Ок, обновил
-    //                                        } else {
-    //                                            // Ошибка обновления
-
-    //                                        }
-    //                                        // Проверим конец сахранения 
-    //                                        if (count === 0) {
-    //                                            if (typeof callback_ok === 'function') {
-    //                                                LockScreenOff();
-    //                                                pn_search_epd.obj.dialog("close");
-    //                                                callback_ok(result, true);
-    //                                            }
-    //                                        }
-    //                                    });
-    //                                } else {
-    //                                    // вагон не найден
-    //                                    count -= 1;
-    //                                    // Проверим конец сахранения 
-    //                                    if (count === 0) {
-    //                                        if (typeof callback_ok === 'function') {
-    //                                            pn_search_epd.obj.dialog("close");
-    //                                            LockScreenOff();
-    //                                            callback_ok(result, true);
-    //                                        }
-    //                                    }
-    //                                }
-
-    //                            });
-    //                        } else {
-    //                            // Нет, вагона  нет наподходах
-    //                            var new_car = {
-    //                                id: 0,
-    //                                id_arrival: pn_search_epd.sostav.id,
-    //                                num: car.num,
-    //                                position: position,
-    //                                position_arrival: null,
-    //                                consignee: pn_search_epd.table_epd.select_UZ_DOC.recipient_code,
-    //                                num_doc: result_num,
-    //                                id_transfer: null,
-    //                                note: "Добавлен (Поиск ЭПД по номеру)" + pn_search_epd.num_epd_to_search.val(),
-    //                                date_adoption_act: null,
-    //                                arrival: null,
-    //                                arrival_user: null,
-    //                                create: toISOStringTZ(new Date()),
-    //                                create_user: pn_search_epd.user_name,
-    //                            };
-    //                            // Следующая позиция
-    //                            position += 1;
-    //                            // Добавим данные
-    //                            //var numer = car.num;
-    //                            pn_search_epd.ids_inc.postArrivalCars(new_car, function (result_add, save_car) {
-    //                                count -= 1;
-    //                                result[save_car.num] = result_add;
-    //                                if (result_add > 0) {
-    //                                    // Ок, обновил
-    //                                } else {
-    //                                    // Ошибка обновления
-    //                                }
-    //                                // Проверим конец сахранения 
-    //                                if (count === 0) {
-    //                                    if (typeof callback_ok === 'function') {
-    //                                        LockScreenOff();
-    //                                        pn_search_epd.obj.dialog("close");
-    //                                        callback_ok(result, true);
-    //                                    }
-    //                                }
-
-    //                            });
-    //                        }
-
-    //                    } else {
-    //                        // Вагон уже принят операция отменяется.
-    //                        count -= 1;
-    //                        result[car.num] = 0;
-    //                        // Проверим конец сахранения 
-    //                        if (count === 0) {
-    //                            if (typeof callback_ok === 'function') {
-    //                                LockScreenOff();
-    //                                pn_search_epd.obj.dialog("close");
-    //                                callback_ok(result, true);
-    //                            }
-    //                        }
-    //                    }
-    //                }
-
-    //            } else {
-    //                // Ошибка документ не добавлен
-    //                LockScreenOff();
-    //                pn_search_epd.alert.clear_message();
-    //                pn_search_epd.alert.out_error_message("Ошибка. Найденый ЭПД №" + pn_search_epd.num_epd_to_search.val() + " не сохранился в базе документов ИДС");
-    //            }
-    //        });
-    //    },
-    //    // Получить перечень составов на подходах за указаный период
-    //    get_list_cars_of_period: function (day, vagon, callback) {
-    //        // Состав указан, дата прибытия указана
-    //        if (pn_search_epd.sostav && pn_search_epd.sostav.date_arrival) {
-    //            // Определим период
-    //            var stop = moment(pn_search_epd.sostav.date_arrival).add('days', day);
-    //            var start = moment(pn_search_epd.sostav.date_arrival).add('days', -1 * day);
-    //            // Определим вагоны
-    //            if (vagon && vagon.length > 0) {
-    //                // Вагоны указаны
-    //                var nums = '';
-    //                for (i = 0; i < vagon.length; i++) {
-    //                    nums += vagon[i].nomer + (i !== vagon.length - 1 ? ',' : '');
-    //                }
-    //                // Получим перечень вагонов
-    //                if (nums !== '') {
-    //                    pn_search_epd.ids_inc.getArrivalCarsOfPeriodNums(start._d, stop._d, nums, function (cars) {
-    //                        if (typeof callback === 'function') {
-    //                            callback(cars);
-    //                        }
-    //                    });
-    //                } else {
-    //                    if (typeof callback === 'function') {
-    //                        callback([]);
-    //                    }
-    //                }
-    //            } else {
-    //                // вагонов нет нет смысла переносить
-    //                //pn_search_epd.alert.clear_message();
-    //                pn_search_epd.alert.out_warning_message("В выбраном ЭПД нет вагонов для добавления");
-    //                if (typeof callback === 'function') {
-    //                    callback(null);
-    //                }
-    //            }
-
-    //        }
-    //    },
-    //    // Определить есть вагон в указаном списке
-    //    is_car_of_arrival_sostav: function (num, arrival_sostav) {
-    //        if (arrival_sostav && arrival_sostav.ArrivalCars && num) {
-    //            var arrival_car = arrival_sostav.ArrivalCars.find(function (element, index, array) {
-    //                if (element.num === Number(num)) return true; else return false;
-    //            });
-    //            if (arrival_car) return true; else return false;
-    //        } else false;
-    //    }
-
-    //};
 
     //================================================================
     // Основной вход
@@ -3874,9 +3772,4 @@
         table_sostav.init();
         pn_sel.view(true);
     });
-
-
-
-
-
 });
