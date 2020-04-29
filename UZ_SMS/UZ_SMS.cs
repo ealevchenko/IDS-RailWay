@@ -96,6 +96,21 @@ namespace UZ
             this.port = port;
         }
 
+        #region
+
+        public string IntsToString(int[] source, char sep)
+        {
+            if (source == null) return null;
+            string list = "";
+            foreach (int i in source)
+            {
+                list += i.ToString() + sep;
+            }
+            if (!String.IsNullOrWhiteSpace(list)) { return list.Remove(list.Length - 1); } else { return null; }
+        }
+        #endregion
+
+
         public bool Connection(string host, int port)
         {
             try
@@ -341,6 +356,58 @@ namespace UZ
             catch (Exception e)
             {
                 e.ExceptionMethodLog(String.Format("GetDocumentOfDB_Num(num={0})", num), this.servece_owner, eventID);
+                return null;
+            }
+        }
+        /// <summary>
+        /// Получить XML перевозочного документа из промежуточной базой KRR-PA-VIZ-Other_DATA по номеру вагона отправленый в адрес перечня (кодов грузополучателей 7932, 6302, 659) на перечень станций УЗ Кривого Рога
+        /// </summary>
+        /// <param name="num"></param>
+        /// <param name="consignees"></param>
+        /// <param name="stations"></param>
+        /// <param name="dt_arrival"></param>
+        /// <returns></returns>
+        public UZ_DOC GetDocumentOfDB_NumConsigneesStations(int num, int[] consignees, int[] stations,  DateTime? dt_arrival)
+        {
+            try
+            {
+                UZ_DOC doc = null;
+                EFUZ_Data ef_data = new EFUZ_Data(new EFSMSDbContext());
+                string sql = "SELECT *  FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data] " +
+                    "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = " + num.ToString() + ") and [arrived_code] in (0," + IntsToString(consignees, ',') + ") order by[dt] desc";
+                List<UZ_Data> list_uz_data = ef_data.Database.SqlQuery<UZ_Data>(sql).ToList();
+                if (list_uz_data != null && list_uz_data.Count()>0)
+                {
+                    UZ_Convert convert = new UZ_Convert(this.servece_owner);
+                    foreach (UZ_Data uzd in list_uz_data) {
+                        string xml_final = convert.XMLToFinalXML(uzd.raw_xml);
+                        OTPR otpr = convert.FinalXMLToOTPR(xml_final);
+                        if (otpr!=null && otpr.route!=null && otpr.route.Count() > 0) {
+                            if (!String.IsNullOrWhiteSpace(otpr.route[0].stn_to)) {
+                                int res = (stations != null && stations.Count()>0 ? stations.Where(s => s.ToString() == otpr.route[0].stn_to.ToString()).Count() : 0);
+                                if (res > 0) {
+                                    // Документ найден 
+                                    doc = new UZ_DOC();
+                                    doc.id_doc = uzd.doc_Id;
+                                    doc.revision = uzd.doc_Revision;
+                                    doc.status = GetStatus(uzd.doc_Status);
+                                    doc.sender_code = uzd.depart_code;
+                                    doc.recipient_code = uzd.arrived_code;
+                                    doc.dt = uzd.dt;
+                                    doc.xml = uzd.raw_xml;
+                                    doc.xml_final = xml_final;
+                                    doc.otpr = otpr;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                return doc;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetDocumentOfDB_NumConsigneesStations(num={0}, consignees={1}, stations={2},  dt_arrival={3})", num, consignees, stations, dt_arrival), this.servece_owner, eventID);
                 return null;
             }
         }

@@ -81,8 +81,9 @@ namespace Test
             //tids.IDSTransfer_AddArrival();
             //tids.IDSDirectory_GetID_Directory_StationOfCodeCS();
             //tids.IDSDirectory_GetCurrentDirectory_CarsOfNum();
-            #endregion            
-            
+            tids.IDSTransfer_GetNumDoc();
+            #endregion
+
             #region Test_Logs тест логирования
             Test_Logs tlogs = new Test_Logs();
 
@@ -109,9 +110,10 @@ namespace Test
             //tuz.UZ_WebApiClientUZWagon();
             //tuz.UZ_XML();
             //tuz.UZ_SMS_GetOTPR();
-            tuz.UZ_SMS_GetUZ_DOC_Of_NumDoc();
+            //tuz.UZ_SMS_GetUZ_DOC_Of_NumDoc();
             //tuz.UZ_SMS_GetOTPROfXML();
             //tuz.UZ_SMS_GetDocumentOfDB_Num();
+            //tuz.UZ_SMS_GetArrivalDocumentOfDB_Num();
             #endregion
 
             Console.WriteLine("Press any key to exit...");

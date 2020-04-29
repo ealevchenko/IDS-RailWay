@@ -26,6 +26,13 @@ namespace Test.TestModule
             Console.WriteLine("ID = {0}",res);
         }
 
+        public void IDSTransfer_GetNumDoc() {
+
+            IDSTransfer ids = new IDSTransfer(service.Test);
+            string res = ids.GetNumDoc(59978890);
+            Console.WriteLine("num_doc = {0}",res);
+        }
+
         #endregion
 
         #region IDSDirectory
