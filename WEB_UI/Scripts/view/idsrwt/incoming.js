@@ -77,7 +77,8 @@
 
                 'field_manual_car_num': '№ вагона',
                 'field_manual_car_operation': 'Будет прим. операц.',
-                'field_manual_car_num_epd': '№ Док.',
+                'field_manual_car_id_doc_new': 'Найденный id-док',
+                'field_manual_car_id_doc_arrival': 'Привязаный id-док',
                 'field_manual_car_composition_index': 'Индекс состава',
                 'field_manual_car_train': 'Поезд',
                 'field_manual_sostav_arrival': 'Состав прибыл',
@@ -104,7 +105,102 @@
             },
             'en':  //default language: English
             {
-                'field_train': '# train',
+                'field_train': 'train number',
+                'field_composition_index': 'Train index',
+                'field_date_arrival': 'Arrival time',
+                'field_date_adoption': 'Receive time',
+                'field_date_adoption_act': 'Actual reception time',
+                'field_station_from': 'Sent from station',
+                'field_station_on': 'Received at station',
+                'field_way': 'Accepted on the way',
+                'field_num_doc': 'Vedomosti No.',
+                'field_count': 'Qty. wagons',
+                'field_count_all': 'Accepted-Remaining wagons',
+                'field_status': 'Status',
+                'field_create': 'String created',
+                'field_create_user': 'Created',
+                'field_change': 'String changed',
+                'field_change_user': 'Rules',
+                'field_create_sostav': 'Added',
+                'field_change_sostav': 'Rules',
+
+                'field_doc_id': 'The identifier of the document at the base of Ukrzaliznytsia AT',
+                'field_description': 'Document description',
+                'field_doc_date': 'Date to document',
+                'field_doc_type': 'Code for type of supra document',
+                'field_doc_type_name': 'Name the type of superview document',
+                'field_kod_zd_use': 'Code of the document document voucher',
+                'field_kol': 'Number of instances',
+
+                'field_carrier_kod': 'Code of the re-collector',
+                'field_carrier_name': 'Sooner than the date of transfer',
+                'field_date_akt': 'Date of folding act',
+                'field_date_dved': 'Date of completion of the road-side vidomosti',
+                'field_esr_akt': 'ЄСРstation station folding act',
+                'field_stn_name_akt': 'Name of station station statement',
+                'field_nom_akt': 'Act number',
+                'field_nom_dved': 'The number of the road-side vidomosti',
+                'field_oper_date': 'Date of submission of tribute to the act of re-document',
+                'field_prichina_akt': 'Reason',
+                'field_responsible_person': 'I`m individual, individual for the entry of data on the act of the transferable document',
+                'field_ser_dved': 'Seriya dosilnoї road vіdomostі',
+                'field_type': 'Act type',
+                'field_vagon_nom': 'Wagon number',
+                'field_zd_kod': 'Code zaliznitsi re-installation',
+
+                'field_nom_cont': 'Number to container',
+                'field_kod_tiporazmer': 'Type for container',
+                'field_gruzp': 'Masa gross behind the screen (t)',
+                'field_ves_tary_arc': 'Masa tari container (kg)',
+                'field_vesg': 'Net wag wantaju (kg)',
+                'field_brutto': 'Vaga wantage gross',
+                'field_kod': 'Payment code',
+                'field_summa': 'Amount to payment (cop.)',
+                'field_nom_zpu': 'RFP number',
+                'field_kol_pac': 'Number of packages',
+                'field_kod_etsng': 'ванTSNV vantage code',
+
+                'field_epd_num_doc': 'id doc.',
+                'field_epd_revision': 'rev no.',
+                'field_epd_status': 'Status',
+                'field_epd_dt': 'Updated',
+                'field_epd_code_from': 'Shipper',
+                'field_epd_code_on': 'Consignee',
+                'field_epd_xml': 'XML',
+
+                'field_epd_car_num': 'wagon number',
+                'field_epd_car_operation': 'There will be approx. op. ',
+                'field_epd_car_composition_index': 'Composition index',
+                'field_epd_car_train': 'Train',
+                'field_epd_sostav_arrival': 'Composition has arrived',
+                'field_epd_car_staus': 'Composition status',
+                'field_epd_car_arrival': 'Wagon accepted',
+
+                'field_manual_car_num': 'wagon number',
+                'field_manual_car_operation': 'There will be approx. op. ',
+                'field_manual_car_id_doc_new': 'Found id-dock',
+                'field_manual_car_id_doc_arrival': 'Bound id-dock',
+                'field_manual_car_composition_index': 'Composition index',
+                'field_manual_car_train': 'Train',
+                'field_manual_sostav_arrival': 'Composition has arrived',
+                'field_manual_car_staus': 'Composition status',
+                'field_manual_car_arrival': 'Wagon accepted',
+
+                'title_button_buffer': 'Buffer',
+                'title_button_excel': 'Excel',
+                'title_button_field': 'Fields',
+                'title_button_field_all': 'All fields',
+                'title_button_add': 'Add',
+                'title_button_edit': 'Edit',
+                'title_button_del': 'Delete (Reject)',
+                'title_button_wagon': 'Wagons',
+                'title_button_wagon_accept': 'Take cars',
+                'title_button_wagon_view': 'Show cars',
+
+                'mess_searsh_epd': 'Search for EPD ...',
+                'mess_searsh_vagon': 'Search for a car ...',
+                'mess_not_searsh_epd': 'EPD was not found automatically, try to find the document by car number in the intermediate database (using the search button to the right of the "Car number" field) or get the car number by waybill number (column "EPD information").',
+                'mess_not_manual_epd': 'No EPD was found in the intermediate database, enter the data manually by entering the “Manual entry” mode (using the “Edit” button to the right of the “Wagon No.” field or choosing the consignee not “AMKR”) or get the wagon number by number consignment note (column "EPD Details"). ',
             }
         };
 
@@ -818,7 +914,7 @@
                 //cars_detali.select_num = 56942493;
                 LockScreen(langView('mess_searsh_epd', langs));
                 cars_detali.alert.clear_message();
-                cars_detali.ids_inc.ids_tr.getNumEPDOfIntermediateDB(cars_detali.select_num,
+                cars_detali.ids_inc.ids_tr.AddUpdateUZ_DOC_To_DB_IDS(cars_detali.select_num,
                     function (result_num) {
                         if (result_num !== null) {
                             // Документ найдент и сохранен в локальной базе
@@ -3349,7 +3445,7 @@
                         "autoWidth": false,
                         //"filter": true,
                         //"scrollY": "200px",
-                        //"scrollX": true,
+                        "scrollX": true,
                         language: language_table(langs),
                         jQueryUI: false,
                         "createdRow": function (row, data, index) {
@@ -3362,7 +3458,8 @@
                         columns: [
                             { data: "num", title: langView('field_manual_car_num', langs), width: "50px", orderable: true, searchable: false },
                             { data: "operation_text", title: langView('field_manual_car_operation', langs), width: "300px", orderable: true, searchable: false },
-                            { data: "num_epd", title: langView('field_manual_car_num_epd', langs), width: "300px", orderable: true, searchable: false },
+                            { data: "id_doc_new", title: langView('field_manual_car_id_doc_new', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "id_doc_arrival", title: langView('field_manual_car_id_doc_arrival', langs), width: "50px", orderable: true, searchable: false },
                             { data: "arrival", title: langView('field_manual_sostav_arrival', langs), width: "100px", orderable: true, searchable: false },
                             { data: "composition_index", title: langView('field_manual_car_composition_index', langs), width: "100px", orderable: true, searchable: false },
                             { data: "train", title: langView('field_manual_car_train', langs), width: "50px", orderable: true, searchable: false },
@@ -3389,6 +3486,7 @@
                     //pn_manual_car.table_car.list = cars;
                     pn_manual_car.table_car.obj.clear();
                     for (i = 0; i < cars.length; i++) {
+                        // Добавить документ в таблицу
                         pn_manual_car.table_car.obj.row.add(pn_manual_car.table_car.get_row(cars[i], cars_arrival));
                     }
                     pn_manual_car.loading_cars.hide();
@@ -3396,15 +3494,16 @@
                 // Получить строку для таблицы
                 get_row: function (car, cars_arrival) {
                     var arrival_car = cars_arrival.find(function (element, index, array) {
-                        if (element.num === Number(car)) return true; else return false;
+                        if (element.num === Number(car.num)) return true; else return false;
                     });
                     // Определим код операции.
                     var operation = arrival_car && arrival_car.id_arrival === pn_manual_car.sostav.id ? 0 : (arrival_car ? 2 : 1);
                     return {
-                        "num": car,
+                        "num": car.num,
                         "operation_text": pn_manual_car.table_car.get_operation(operation, arrival_car ? arrival_car.arrival : null),
                         "operation": operation,
-                        "num_epd": null,
+                        "id_doc_new": car.uz_doc ? car.uz_doc.id_doc : null,
+                        "id_doc_arrival": arrival_car && arrival_car.num_doc ? arrival_car.num_doc : null,
                         "arrival": arrival_car && arrival_car.ArrivalSostav && arrival_car.ArrivalSostav.date_arrival ? arrival_car.ArrivalSostav.date_arrival.replace(/T/g, ' ') : null,
                         "composition_index": arrival_car && arrival_car.ArrivalSostav ? arrival_car.ArrivalSostav.composition_index : null,
                         "train": arrival_car && arrival_car.ArrivalSostav ? arrival_car.ArrivalSostav.train : null,
@@ -3495,10 +3594,23 @@
                     });
                     // Продолжим 
                     if (valid) {
-                        // Продолжим ввод
-                        pn_manual_car.get_list_cars_of_period(1, car_valid, function (res_cars) {
-                            pn_manual_car.table_car.view(car_valid, res_cars);
-                        });
+                        var new_car = [];
+                        // Привяжим вагоны к документам из промежуточной базы
+                        var count_c = car_valid.length;
+                        for (var ic = 0; ic < car_valid.length; ic++) {
+                            //
+                            pn_manual_car.get_id_doc_new_cars(car_valid[ic], function (result_car) {
+                                new_car.push(result_car);
+                                count_c -= 1;
+                                if (count_c === 0) {
+                                    // Продолжим ввод
+                                    pn_manual_car.get_list_cars_of_period(1, new_car, function (res_cars) {
+                                        pn_manual_car.table_car.view(new_car, res_cars);
+                                    });
+                                }
+                            });
+                        }
+
                     } else {
                         pn_manual_car.alert.out_warning_message('Исправьте указанные номера в указанных позициях и попробуйте заново.');
                     }
@@ -3572,11 +3684,9 @@
             },
             // Сохранить изменения по всем вагонам
             add_cars: function (callback_ok) {
-                // ! Пока заблокировал
                 if (typeof callback_ok === 'function') {
                     callback_ok([]);
                 }
-                //
                 LockScreen(langView('mess_save', langs));
                 var index = pn_manual_car.table_car.obj.rows({ selected: true });
                 var row_cars = pn_manual_car.table_car.obj.rows(index[0]).data();
@@ -3720,7 +3830,7 @@
                         // Вагоны указаны
                         var nums = '';
                         for (i = 0; i < cars.length; i++) {
-                            nums += cars[i] + (i !== cars.length - 1 ? ',' : '');
+                            nums += cars[i].num + (i !== cars.length - 1 ? ',' : '');
                         }
                         // Получим перечень вагонов
                         if (nums !== '') {
@@ -3743,6 +3853,15 @@
                     }
 
                 }
+            },
+            // Привязать документы к вагонам
+            get_id_doc_new_cars: function (car, callback) {
+                // Найдем документ в промежуточной базе 
+                pn_manual_car.ids_inc.ids_tr.getUZ_DOC_DB_UZ_OfNum(car, function (result_uz_doc) {
+                    if (typeof callback === 'function') {
+                        callback({ num: car, uz_doc: result_uz_doc });
+                    }
+                });
             },
             // Определить есть вагон в указаном списке
             is_car_of_arrival_sostav: function (num, arrival_sostav) {
