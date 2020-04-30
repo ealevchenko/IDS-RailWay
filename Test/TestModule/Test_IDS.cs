@@ -29,7 +29,7 @@ namespace Test.TestModule
         public void IDSTransfer_GetNumDoc() {
 
             IDSTransfer ids = new IDSTransfer(service.Test);
-            string res = ids.GetNumDoc(59978890);
+            string res = ids.AddUpdateUZ_DOC_To_DB_IDS(59978890);
             Console.WriteLine("num_doc = {0}",res);
         }
 

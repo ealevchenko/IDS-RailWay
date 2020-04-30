@@ -209,7 +209,7 @@ namespace IDS
                         if (ids_directory.IsConsignee(false, car.consignee))
                         {
                             // Получатель АМКР
-                            doc_num = GetNumDoc(car.num);
+                            doc_num = AddUpdateUZ_DOC_To_DB_IDS(car.num);
                         }
                         // Создадим новый вагон
                         ArrivalCars new_car = new ArrivalCars()
@@ -263,17 +263,15 @@ namespace IDS
             return InsertArrivalCars(id_arrival, cars, null);
         }
         /// <summary>
-        /// Получить номер документа на вагон из промежуточной базы УЗ
+        /// Получить документ из промежуточной базы данных по номеру вагона добавить или обновить его в базе ИДС и вернуть id документа (УЗ)
         /// </summary>
         /// <param name="num_car"></param>
         /// <returns></returns>
-        public string GetNumDoc(int num_car)
+        public string AddUpdateUZ_DOC_To_DB_IDS(int num_car)
         {
             try
             {
-                UZ.UZ_SMS uz_sms = new UZ.UZ_SMS(this.servece_owner);
-                //UZ.UZ_DOC uz_doc = uz_sms.GetDocumentOfDB_Num(num_car);
-                UZ.UZ_DOC uz_doc = uz_sms.GetDocumentOfDB_NumConsigneesStations(num_car, new int[] { 7932, 6302, 659 }, new int[] { 457905, 466904, 466923, 467004, 467108, 467201 }, null);
+                UZ.UZ_DOC uz_doc = GetUZ_DOC_DB_UZ_OfNum(num_car);
                 if (uz_doc != null)
                 {
                     return InsertUZ_DOC(uz_doc);
@@ -282,10 +280,30 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("GetNumDoc(num_car={0})", num_car), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("AddUpdateUZ_DOC_To_DB_IDS(num_car={0})", num_car), servece_owner, eventID);
                 return null;// Ошибка
             }
         }
+        /// <summary>
+        /// Получить документ из промежуточной базы данных по номеру вагона.
+        /// </summary>
+        /// <param name="num_car"></param>
+        /// <returns></returns>
+        public UZ.UZ_DOC GetUZ_DOC_DB_UZ_OfNum(int num_car)
+        {
+            try
+            {
+                UZ.UZ_SMS uz_sms = new UZ.UZ_SMS(this.servece_owner);
+                UZ.UZ_DOC uz_doc = uz_sms.GetDocumentOfDB_NumConsigneesStations(num_car, new int[] { 7932, 6302, 659 }, new int[] { 457905, 466904, 466923, 467004, 467108, 467201 }, null);
+                return uz_doc;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetUZ_DOC_DB_UZ_OfNum(num_car={0})", num_car), servece_owner, eventID);
+                return null;// Ошибка
+            }
+        }
+
         /// <summary>
         /// Добавим или обновим документ в таблице ЭПД принятых вагонов
         /// </summary>
