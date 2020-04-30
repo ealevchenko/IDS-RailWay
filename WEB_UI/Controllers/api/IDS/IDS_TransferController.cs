@@ -47,17 +47,17 @@ namespace WEB_UI.Controllers.api.RWT
             }
         }
 
-        // POST api/ids/transfer/insert_uz_doc
+        // POST api/ids/transfer/db_ids
         [HttpPost]
-        [Route("insert_uz_doc")]
+        [Route("db_ids")]
         [ResponseType(typeof(string))]
-        public IHttpActionResult PostUZ_DOC([FromBody]UZ.UZ_DOC value)
+        public IHttpActionResult PostUZ_DOC_To_DB_IDS([FromBody]UZ.UZ_DOC value)
         {
             try
             {
                 IDSTransfer ids_tr = new IDSTransfer(service.WebAPI_IDS);
 
-                string num_doc = ids_tr.InsertUZ_DOC(value);
+                string num_doc = ids_tr.AddUpdateUZ_DOC_To_DB_IDS(value);
                 return Ok(num_doc);
             }
             catch (Exception e)
