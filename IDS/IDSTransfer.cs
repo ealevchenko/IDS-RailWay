@@ -274,7 +274,7 @@ namespace IDS
                 UZ.UZ_DOC uz_doc = GetUZ_DOC_DB_UZ_OfNum(num_car);
                 if (uz_doc != null)
                 {
-                    return InsertUZ_DOC(uz_doc);
+                    return AddUpdateUZ_DOC_To_DB_IDS(uz_doc);
                 }
                 return null;
             }
@@ -309,7 +309,7 @@ namespace IDS
         /// </summary>
         /// <param name="uz_doc"></param>
         /// <returns></returns>
-        public string InsertUZ_DOC(UZ.UZ_DOC uz_doc)
+        public string AddUpdateUZ_DOC_To_DB_IDS(UZ.UZ_DOC uz_doc)
         {
             try
             {
@@ -376,7 +376,7 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("InsertUZ_DOC(uz_doc={0})", uz_doc), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("AddUpdateUZ_DOC_To_DB_IDS(uz_doc={0})", uz_doc), servece_owner, eventID);
                 return null;// Ошибка
             }
         }

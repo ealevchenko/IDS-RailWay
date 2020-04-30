@@ -58,9 +58,9 @@ IDS_TRANSFER.prototype.getUZ_DOC_DB_UZ_OfNum = function (num, callback) {
 };
 
 //Добавить или обновить в базе документов ИДС (документ типа промежуточной базы)
-IDS_TRANSFER.prototype.postInsertUZ_DOC = function (uz_doc, callback) {
+IDS_TRANSFER.prototype.postUZ_DOC_To_DB_IDS = function (uz_doc, callback) {
     $.ajax({
-        url: '../../api/ids/transfer/insert_uz_doc/',
+        url: '../../api/ids/transfer/db_ids/',
         type: 'POST',
         data: JSON.stringify(uz_doc),
         contentType: "application/json;charset=utf-8",
@@ -75,7 +75,7 @@ IDS_TRANSFER.prototype.postInsertUZ_DOC = function (uz_doc, callback) {
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_TRANSFER.postInsertUZ_DOC", x, y, z);
+            OnAJAXError("IDS_TRANSFER.postUZ_DOC_To_DB_IDS", x, y, z);
         },
         complete: function () {
             AJAXComplete();
