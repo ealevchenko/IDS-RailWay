@@ -254,6 +254,15 @@
     <Compile Include="Controllers\api\Directoty\IDS_Directory_ModelsWagonsController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_TypesRepairsWagonsController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_WagonManufacturersController.cs" />
+    <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_Arrival_UZ_Document_DocsController.cs" />
+    <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_Arrival_UZ_Document_ActsController.cs" />
+    <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_Arrival_UZ_Document_PayController.cs" />
+    <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_Arrival_UZ_Cont_PayController.cs" />
+    <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_Arrival_UZ_VagonController.cs" />
+    <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_Arrival_UZ_Vagon_ContController.cs" />
+    <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_Arrival_UZ_Vagon_ActsController.cs" />
+    <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_Arrival_UZ_Vagon_PayController.cs" />
+    <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_Arrival_UZ_DocumentController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_UZ_DOCController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_ArrivalCarsController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_ArrivalSostavController.cs" />

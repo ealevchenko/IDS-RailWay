@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace EFIDS.Concrete
 {
 
-    public class EFArrival_UZ_Vagon_Cont : IRepository<Arrival_UZ_Vagon_Cont>
+    public class EFArrival_UZ_Vagon_Cont : ILongRepository<Arrival_UZ_Vagon_Cont>
     {
 
         private EFDbContext db;
@@ -44,7 +44,7 @@ namespace EFIDS.Concrete
             }
         }
 
-        public Arrival_UZ_Vagon_Cont Get(int id)
+        public Arrival_UZ_Vagon_Cont Get(long id)
         {
             try
             {
@@ -102,7 +102,7 @@ namespace EFIDS.Concrete
 
         }
 
-        public void Delete(int id)
+        public void Delete(long id)
         {
             try
             {
@@ -173,7 +173,7 @@ namespace EFIDS.Concrete
             }
         }
 
-        public void Delete(IEnumerable<int> items)
+        public void Delete(IEnumerable<long> items)
         {
             try
             {

@@ -152,6 +152,15 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFUZ.Abstract.IRepository<EFUZ.Entities.Directory_Countrys>>().To<EFUZ.Concrete.EFDirectory_Countrys>();
             kernel.Bind<EFUZ.Abstract.IRepository<EFUZ.Entities.Directory_Stations>>().To<EFUZ.Concrete.EFDirectory_Stations>();
 
+            kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.Arrival_UZ_Document>>().To<EFIDS.Concrete.EFArrival_UZ_Document>();
+            kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.Arrival_UZ_Vagon>>().To<EFIDS.Concrete.EFArrival_UZ_Vagon>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Arrival_UZ_Cont_Pay>>().To<EFIDS.Concrete.EFArrival_UZ_Cont_Pay>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Arrival_UZ_Document_Acts>>().To<EFIDS.Concrete.EFArrival_UZ_Document_Acts>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Arrival_UZ_Document_Docs>>().To<EFIDS.Concrete.EFArrival_UZ_Document_Docs>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Arrival_UZ_Document_Pay>>().To<EFIDS.Concrete.EFArrival_UZ_Document_Pay>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Arrival_UZ_Vagon_Acts>>().To<EFIDS.Concrete.EFArrival_UZ_Vagon_Acts>();
+            kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.Arrival_UZ_Vagon_Cont>>().To<EFIDS.Concrete.EFArrival_UZ_Vagon_Cont>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Arrival_UZ_Vagon_Pay>>().To<EFIDS.Concrete.EFArrival_UZ_Vagon_Pay>();
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.ArrivalSostav>>().To<EFIDS.Concrete.EFArrivalSostav>();
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.ArrivalCars>>().To<EFIDS.Concrete.EFArrivalCars>();
             kernel.Bind<EFIDS.Abstract.IStringRepository<EFIDS.Entities.UZ_DOC>>().To<EFIDS.Concrete.EFUZ_DOC>();
