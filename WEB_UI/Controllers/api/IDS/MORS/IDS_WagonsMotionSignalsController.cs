@@ -95,7 +95,7 @@ namespace WEB_UI.Controllers.api
         {
             try
             {
-                string sql = "select * from dbo.get_last_wms("+id.ToString()+")";
+                string sql = "select * from IDS.get_last_wms("+id.ToString()+")";
                 List<WagonsMotionSignals> list= this.ef_mors.Database.SqlQuery<WagonsMotionSignals>(sql).ToList();
                 return Ok(list);
             }
