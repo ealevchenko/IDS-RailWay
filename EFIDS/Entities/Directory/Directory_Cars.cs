@@ -9,6 +9,12 @@ namespace EFIDS.Entities
     [Table("IDS.Directory_Cars")]
     public partial class Directory_Cars
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Directory_Cars()
+        {
+            Arrival_UZ_Vagon = new HashSet<Arrival_UZ_Vagon>();
+        }
+
         public int id { get; set; }
 
         public int num { get; set; }
@@ -58,6 +64,9 @@ namespace EFIDS.Entities
 
         [StringLength(50)]
         public string change_user { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Arrival_UZ_Vagon> Arrival_UZ_Vagon { get; set; }
 
         public virtual Directory_Countrys Directory_Countrys { get; set; }
 

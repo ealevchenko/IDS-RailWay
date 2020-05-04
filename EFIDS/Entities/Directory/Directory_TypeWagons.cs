@@ -13,6 +13,7 @@ namespace EFIDS.Entities
         public Directory_TypeWagons()
         {
             CardsWagons = new HashSet<CardsWagons>();
+            Arrival_UZ_Vagon = new HashSet<Arrival_UZ_Vagon>();
         }
 
         public int id { get; set; }
@@ -27,5 +28,6 @@ namespace EFIDS.Entities
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CardsWagons> CardsWagons { get; set; }
+        public virtual ICollection<Arrival_UZ_Vagon> Arrival_UZ_Vagon { get; set; }
     }
 }

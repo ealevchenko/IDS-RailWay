@@ -9,6 +9,12 @@ namespace EFIDS.Entities
     [Table("IDS.Directory_HazardClass")]
     public partial class Directory_HazardClass
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Directory_HazardClass()
+        {
+            Arrival_UZ_Vagon = new HashSet<Arrival_UZ_Vagon>();
+        }
+
         [Key]
         [StringLength(3)]
         public string code { get; set; }
@@ -31,5 +37,8 @@ namespace EFIDS.Entities
 
         [StringLength(50)]
         public string change_user { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Arrival_UZ_Vagon> Arrival_UZ_Vagon { get; set; }
     }
 }

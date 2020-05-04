@@ -12,6 +12,7 @@ namespace EFIDS.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Directory_Station()
         {
+            Arrival_UZ_Vagon = new HashSet<Arrival_UZ_Vagon>();
             ArrivalSostav = new HashSet<ArrivalSostav>();
             ArrivalSostav1 = new HashSet<ArrivalSostav>();
         }
@@ -41,6 +42,9 @@ namespace EFIDS.Entities
         public bool? default_side { get; set; }
 
         public int? code { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Arrival_UZ_Vagon> Arrival_UZ_Vagon { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ArrivalSostav> ArrivalSostav { get; set; }

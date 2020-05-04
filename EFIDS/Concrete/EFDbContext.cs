@@ -14,11 +14,20 @@ namespace EFIDS.Concrete
         }
 
         // RWT
+        public virtual DbSet<Arrival_UZ_Cont_Pay> Arrival_UZ_Cont_Pay { get; set; }
+        public virtual DbSet<Arrival_UZ_Document> Arrival_UZ_Document { get; set; }
+        public virtual DbSet<Arrival_UZ_Document_Acts> Arrival_UZ_Document_Acts { get; set; }
+        public virtual DbSet<Arrival_UZ_Document_Docs> Arrival_UZ_Document_Docs { get; set; }
+        public virtual DbSet<Arrival_UZ_Document_Pay> Arrival_UZ_Document_Pay { get; set; }
+        public virtual DbSet<Arrival_UZ_Vagon> Arrival_UZ_Vagon { get; set; }
+        public virtual DbSet<Arrival_UZ_Vagon_Acts> Arrival_UZ_Vagon_Acts { get; set; }
+        public virtual DbSet<Arrival_UZ_Vagon_Cont> Arrival_UZ_Vagon_Cont { get; set; }
+        public virtual DbSet<Arrival_UZ_Vagon_Pay> Arrival_UZ_Vagon_Pay { get; set; }
+        
         public virtual DbSet<ArrivalCars> ArrivalCars { get; set; }
         public virtual DbSet<ArrivalSostav> ArrivalSostav { get; set; }
         public virtual DbSet<UZ_DOC> UZ_DOC { get; set; }
-
-
+        
         // MORS
         public virtual DbSet<CardsWagons> CardsWagons { get; set; }
         public virtual DbSet<CardsWagonsRepairs> CardsWagonsRepairs { get; set; }
@@ -66,18 +75,116 @@ namespace EFIDS.Concrete
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            // dir HazardClass
-            modelBuilder.Entity<Directory_HazardClass>()
-                .Property(e => e.code)
+            // RWT UZ DOC
+            modelBuilder.Entity<Arrival_UZ_Document>()
+                .HasMany(e => e.Arrival_UZ_Document_Acts)
+                .WithRequired(e => e.Arrival_UZ_Document)
+                .HasForeignKey(e => e.id_document)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Arrival_UZ_Document>()
+                .HasMany(e => e.Arrival_UZ_Document1)
+                .WithOptional(e => e.Arrival_UZ_Document2)
+                .HasForeignKey(e => e.parent_id);
+
+            modelBuilder.Entity<Arrival_UZ_Document>()
+                .HasMany(e => e.Arrival_UZ_Document_Docs)
+                .WithRequired(e => e.Arrival_UZ_Document)
+                .HasForeignKey(e => e.id_document)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Arrival_UZ_Document>()
+                .HasMany(e => e.Arrival_UZ_Document_Pay)
+                .WithRequired(e => e.Arrival_UZ_Document)
+                .HasForeignKey(e => e.id_document)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Arrival_UZ_Document>()
+                .HasMany(e => e.Arrival_UZ_Vagon)
+                .WithRequired(e => e.Arrival_UZ_Document)
+                .HasForeignKey(e => e.id_document)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Arrival_UZ_Document_Docs>()
+                .Property(e => e.doc)
+                .IsFixedLength();
+
+            modelBuilder.Entity<Arrival_UZ_Vagon>()
+                .Property(e => e.danger)
                 .IsFixedLength()
                 .IsUnicode(false);
 
-            // dir cargo
+            modelBuilder.Entity<Arrival_UZ_Vagon>()
+                .Property(e => e.danger_kod)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Arrival_UZ_Vagon>()
+                .HasMany(e => e.Arrival_UZ_Vagon_Acts)
+                .WithRequired(e => e.Arrival_UZ_Vagon)
+                .HasForeignKey(e => e.id_vagon)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Arrival_UZ_Vagon>()
+                .HasMany(e => e.Arrival_UZ_Vagon_Cont)
+                .WithRequired(e => e.Arrival_UZ_Vagon)
+                .HasForeignKey(e => e.id_vagon)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Arrival_UZ_Vagon>()
+                .HasMany(e => e.Arrival_UZ_Vagon_Pay)
+                .WithRequired(e => e.Arrival_UZ_Vagon)
+                .HasForeignKey(e => e.id_vagon)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Arrival_UZ_Vagon_Cont>()
+                .HasMany(e => e.Arrival_UZ_Cont_Pay)
+                .WithRequired(e => e.Arrival_UZ_Vagon_Cont)
+                .HasForeignKey(e => e.id_cont)
+                .WillCascadeOnDelete(false);
+
+            //
+            modelBuilder.Entity<ArrivalSostav>()
+                .HasMany(e => e.Arrival_UZ_Vagon)
+                .WithRequired(e => e.ArrivalSostav)
+                .HasForeignKey(e => e.id_arrival)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<ArrivalSostav>()
+                .HasMany(e => e.ArrivalCars)
+                .WithOptional(e => e.ArrivalSostav)
+                .HasForeignKey(e => e.id_arrival);
+
+            modelBuilder.Entity<Directory_BorderCheckpoint>()
+                .HasMany(e => e.Arrival_UZ_Document)
+                .WithOptional(e => e.Directory_BorderCheckpoint)
+                .HasForeignKey(e => e.code_border_checkpoint);
+
+            modelBuilder.Entity<Directory_Cargo>()
+                .HasMany(e => e.Arrival_UZ_Vagon)
+                .WithOptional(e => e.Directory_Cargo)
+                .HasForeignKey(e => e.id_cargo);
+
+            modelBuilder.Entity<Directory_Cargo>()
+                .HasMany(e => e.Arrival_UZ_Vagon_Cont)
+                .WithOptional(e => e.Directory_Cargo)
+                .HasForeignKey(e => e.id_cargo);
+
             modelBuilder.Entity<Directory_CargoETSNG>()
                 .HasMany(e => e.Directory_Cargo)
                 .WithRequired(e => e.Directory_CargoETSNG)
                 .HasForeignKey(e => e.id_cargo_etsng)
                 .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Directory_CargoGNG>()
+                .HasMany(e => e.Arrival_UZ_Vagon)
+                .WithOptional(e => e.Directory_CargoGNG)
+                .HasForeignKey(e => e.id_cargo_gng);
+
+            modelBuilder.Entity<Directory_CargoGNG>()
+                .HasMany(e => e.Arrival_UZ_Vagon_Cont)
+                .WithOptional(e => e.Directory_CargoGNG)
+                .HasForeignKey(e => e.id_cargo_gng);
 
             modelBuilder.Entity<Directory_CargoGroup>()
                 .HasMany(e => e.Directory_Cargo)
@@ -85,17 +192,80 @@ namespace EFIDS.Concrete
                 .HasForeignKey(e => e.id_group)
                 .WillCascadeOnDelete(false);
 
-            // dir cars
+            modelBuilder.Entity<Directory_Cars>()
+                .HasMany(e => e.Arrival_UZ_Vagon)
+                .WithRequired(e => e.Directory_Cars)
+                .HasForeignKey(e => e.id_car)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Directory_CertificationData>()
+                .HasMany(e => e.Arrival_UZ_Vagon)
+                .WithOptional(e => e.Directory_CertificationData)
+                .HasForeignKey(e => e.id_certification_data);
+
+            modelBuilder.Entity<Directory_CommercialCondition>()
+                .HasMany(e => e.Arrival_UZ_Vagon)
+                .WithOptional(e => e.Directory_CommercialCondition)
+                .HasForeignKey(e => e.id_commercial_condition);
+
+            modelBuilder.Entity<Directory_ConditionArrival>()
+                .HasMany(e => e.Arrival_UZ_Vagon)
+                .WithOptional(e => e.Directory_ConditionArrival)
+                .HasForeignKey(e => e.id_condition);
+
+            modelBuilder.Entity<Directory_Consignee>()
+                .HasMany(e => e.Arrival_UZ_Document)
+                .WithOptional(e => e.Directory_Consignee)
+                .HasForeignKey(e => e.code_consignee);
+
             modelBuilder.Entity<Directory_Countrys>()
                 .HasMany(e => e.Directory_Cars)
                 .WithRequired(e => e.Directory_Countrys)
                 .HasForeignKey(e => e.id_countrys)
                 .WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<Directory_Countrys>()
+                .HasMany(e => e.Directory_Railway)
+                .WithRequired(e => e.Directory_Countrys)
+                .HasForeignKey(e => e.id_countrys)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Directory_ExternalStation>()
+                .HasMany(e => e.Arrival_UZ_Document)
+                .WithOptional(e => e.Directory_ExternalStation)
+                .HasForeignKey(e => e.code_stn_from);
+
+            modelBuilder.Entity<Directory_ExternalStation>()
+                .HasMany(e => e.Arrival_UZ_Document1)
+                .WithOptional(e => e.Directory_ExternalStation1)
+                .HasForeignKey(e => e.code_stn_to);
+
             modelBuilder.Entity<Directory_GenusWagons>()
                 .HasMany(e => e.Directory_Cars)
                 .WithRequired(e => e.Directory_GenusWagons)
                 .HasForeignKey(e => e.id_genus)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Directory_HazardClass>()
+                .Property(e => e.code)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Directory_HazardClass>()
+                .HasMany(e => e.Arrival_UZ_Vagon)
+                .WithOptional(e => e.Directory_HazardClass)
+                .HasForeignKey(e => e.danger);
+
+            modelBuilder.Entity<Directory_InlandRailway>()
+                .HasMany(e => e.Directory_BorderCheckpoint)
+                .WithRequired(e => e.Directory_InlandRailway)
+                .HasForeignKey(e => e.code_inlandrailway)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Directory_InlandRailway>()
+                .HasMany(e => e.Directory_ExternalStation)
+                .WithRequired(e => e.Directory_InlandRailway)
+                .HasForeignKey(e => e.code_inlandrailway)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Directory_LimitingLoading>()
@@ -114,56 +284,58 @@ namespace EFIDS.Concrete
                 .HasForeignKey(e => e.id_owner)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<Directory_TypeOwnerShip>()
-                .HasMany(e => e.Directory_Cars)
-                .WithOptional(e => e.Directory_TypeOwnerShip)
-                .HasForeignKey(e => e.id_type_ownership);
-
-            // dir
-            modelBuilder.Entity<Directory_Countrys>()
-                .HasMany(e => e.Directory_Railway)
-                .WithRequired(e => e.Directory_Countrys)
-                .HasForeignKey(e => e.id_countrys)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Directory_InlandRailway>()
-                .HasMany(e => e.Directory_BorderCheckpoint)
-                .WithRequired(e => e.Directory_InlandRailway)
-                .HasForeignKey(e => e.code_inlandrailway)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Directory_InlandRailway>()
-                .HasMany(e => e.Directory_ExternalStation)
-                .WithRequired(e => e.Directory_InlandRailway)
-                .HasForeignKey(e => e.code_inlandrailway)
-                .WillCascadeOnDelete(false);
+            modelBuilder.Entity<Directory_PayerArrival>()
+                .HasMany(e => e.Arrival_UZ_Document)
+                .WithOptional(e => e.Directory_PayerArrival)
+                .HasForeignKey(e => e.code_payer_sender);
 
             modelBuilder.Entity<Directory_Railway>()
                 .HasMany(e => e.Directory_InlandRailway)
                 .WithRequired(e => e.Directory_Railway)
                 .HasForeignKey(e => e.code_railway)
                 .WillCascadeOnDelete(false);
-            // MORS
-            modelBuilder.Entity<WagonsMotionSignals>()
-                .Property(e => e.ves)
-                .HasPrecision(18, 3);
-            // RWT
-            modelBuilder.Entity<ArrivalSostav>()
-                .HasMany(e => e.ArrivalCars)
-                .WithOptional(e => e.ArrivalSostav)
-                .HasForeignKey(e => e.id_arrival);
+
+            modelBuilder.Entity<Directory_Shipper>()
+                .HasMany(e => e.Arrival_UZ_Document)
+                .WithOptional(e => e.Directory_Shipper)
+                .HasForeignKey(e => e.code_shipper);
+
+            modelBuilder.Entity<Directory_Station>()
+                .HasMany(e => e.Arrival_UZ_Vagon)
+                .WithOptional(e => e.Directory_Station)
+                .HasForeignKey(e => e.id_station_on_amkr);
 
             modelBuilder.Entity<Directory_Station>()
                 .HasMany(e => e.ArrivalSostav)
-                .WithRequired(e => e.Directory_Station)
-                .HasForeignKey(e => e.id_station_from)
-                .WillCascadeOnDelete(false);
+                .WithOptional(e => e.Directory_Station)
+                .HasForeignKey(e => e.id_station_from);
 
             modelBuilder.Entity<Directory_Station>()
                 .HasMany(e => e.ArrivalSostav1)
                 .WithOptional(e => e.Directory_Station1)
                 .HasForeignKey(e => e.id_station_on);
-            //
+
+            modelBuilder.Entity<Directory_TypeOwnerShip>()
+                .HasMany(e => e.Directory_Cars)
+                .WithOptional(e => e.Directory_TypeOwnerShip)
+                .HasForeignKey(e => e.id_type_ownership);
+
+            modelBuilder.Entity<Directory_TypeWagons>()
+                .HasMany(e => e.Arrival_UZ_Vagon)
+                .WithOptional(e => e.Directory_TypeWagons)
+                .HasForeignKey(e => e.id_type);
+
+            modelBuilder.Entity<UZ_DOC>()
+                .HasMany(e => e.Arrival_UZ_Document)
+                .WithRequired(e => e.UZ_DOC)
+                .HasForeignKey(e => e.id_doc_uz)
+                .WillCascadeOnDelete(false);
+
+            // MORS
+            modelBuilder.Entity<WagonsMotionSignals>()
+                .Property(e => e.ves)
+                .HasPrecision(18, 3);
+
             modelBuilder.Entity<CardsWagons>()
                 .HasMany(e => e.ParksListWagons)
                 .WithRequired(e => e.CardsWagons)
@@ -254,6 +426,106 @@ namespace EFIDS.Concrete
                 .HasMany(e => e.CardsWagons)
                 .WithOptional(e => e.Directory_ModelsWagons)
                 .HasForeignKey(e => e.code_model_wagon);
+
+
+            //// dir HazardClass
+            //modelBuilder.Entity<Directory_HazardClass>()
+            //    .Property(e => e.code)
+            //    .IsFixedLength()
+            //    .IsUnicode(false);
+
+            //// dir cargo
+            //modelBuilder.Entity<Directory_CargoETSNG>()
+            //    .HasMany(e => e.Directory_Cargo)
+            //    .WithRequired(e => e.Directory_CargoETSNG)
+            //    .HasForeignKey(e => e.id_cargo_etsng)
+            //    .WillCascadeOnDelete(false);
+
+            //modelBuilder.Entity<Directory_CargoGroup>()
+            //    .HasMany(e => e.Directory_Cargo)
+            //    .WithRequired(e => e.Directory_CargoGroup)
+            //    .HasForeignKey(e => e.id_group)
+            //    .WillCascadeOnDelete(false);
+
+            //// dir cars
+            //modelBuilder.Entity<Directory_Countrys>()
+            //    .HasMany(e => e.Directory_Cars)
+            //    .WithRequired(e => e.Directory_Countrys)
+            //    .HasForeignKey(e => e.id_countrys)
+            //    .WillCascadeOnDelete(false);
+
+            //modelBuilder.Entity<Directory_GenusWagons>()
+            //    .HasMany(e => e.Directory_Cars)
+            //    .WithRequired(e => e.Directory_GenusWagons)
+            //    .HasForeignKey(e => e.id_genus)
+            //    .WillCascadeOnDelete(false);
+
+            //modelBuilder.Entity<Directory_LimitingLoading>()
+            //    .HasMany(e => e.Directory_Cars)
+            //    .WithOptional(e => e.Directory_LimitingLoading)
+            //    .HasForeignKey(e => e.id_limiting);
+
+            //modelBuilder.Entity<Directory_OperatorsWagons>()
+            //    .HasMany(e => e.Directory_Cars)
+            //    .WithOptional(e => e.Directory_OperatorsWagons)
+            //    .HasForeignKey(e => e.id_operator);
+
+            //modelBuilder.Entity<Directory_OwnersWagons>()
+            //    .HasMany(e => e.Directory_Cars)
+            //    .WithRequired(e => e.Directory_OwnersWagons)
+            //    .HasForeignKey(e => e.id_owner)
+            //    .WillCascadeOnDelete(false);
+
+            //modelBuilder.Entity<Directory_TypeOwnerShip>()
+            //    .HasMany(e => e.Directory_Cars)
+            //    .WithOptional(e => e.Directory_TypeOwnerShip)
+            //    .HasForeignKey(e => e.id_type_ownership);
+
+            //// dir
+            //modelBuilder.Entity<Directory_Countrys>()
+            //    .HasMany(e => e.Directory_Railway)
+            //    .WithRequired(e => e.Directory_Countrys)
+            //    .HasForeignKey(e => e.id_countrys)
+            //    .WillCascadeOnDelete(false);
+
+            //modelBuilder.Entity<Directory_InlandRailway>()
+            //    .HasMany(e => e.Directory_BorderCheckpoint)
+            //    .WithRequired(e => e.Directory_InlandRailway)
+            //    .HasForeignKey(e => e.code_inlandrailway)
+            //    .WillCascadeOnDelete(false);
+
+            //modelBuilder.Entity<Directory_InlandRailway>()
+            //    .HasMany(e => e.Directory_ExternalStation)
+            //    .WithRequired(e => e.Directory_InlandRailway)
+            //    .HasForeignKey(e => e.code_inlandrailway)
+            //    .WillCascadeOnDelete(false);
+
+            //modelBuilder.Entity<Directory_Railway>()
+            //    .HasMany(e => e.Directory_InlandRailway)
+            //    .WithRequired(e => e.Directory_Railway)
+            //    .HasForeignKey(e => e.code_railway)
+            //    .WillCascadeOnDelete(false);
+
+            //// MORS
+
+            //// RWT
+            //modelBuilder.Entity<ArrivalSostav>()
+            //    .HasMany(e => e.ArrivalCars)
+            //    .WithOptional(e => e.ArrivalSostav)
+            //    .HasForeignKey(e => e.id_arrival);
+
+            //modelBuilder.Entity<Directory_Station>()
+            //    .HasMany(e => e.ArrivalSostav)
+            //    .WithRequired(e => e.Directory_Station)
+            //    .HasForeignKey(e => e.id_station_from)
+            //    .WillCascadeOnDelete(false);
+
+            //modelBuilder.Entity<Directory_Station>()
+            //    .HasMany(e => e.ArrivalSostav1)
+            //    .WithOptional(e => e.Directory_Station1)
+            //    .HasForeignKey(e => e.id_station_on);
+            ////
+
         }
     }
 }

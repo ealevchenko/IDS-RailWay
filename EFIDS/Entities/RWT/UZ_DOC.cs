@@ -13,6 +13,7 @@ namespace EFIDS.Entities
         public UZ_DOC()
         {
             ArrivalCars = new HashSet<ArrivalCars>();
+            Arrival_UZ_Document = new HashSet<Arrival_UZ_Document>();
         }
 
         [Key]
@@ -38,5 +39,8 @@ namespace EFIDS.Entities
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ArrivalCars> ArrivalCars { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Arrival_UZ_Document> Arrival_UZ_Document { get; set; }
     }
 }

@@ -9,6 +9,12 @@ namespace EFIDS.Entities
     [Table("IDS.Directory_BorderCheckpoint")]
     public partial class Directory_BorderCheckpoint
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Directory_BorderCheckpoint()
+        {
+            Arrival_UZ_Document = new HashSet<Arrival_UZ_Document>();
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int code { get; set; }
@@ -33,6 +39,9 @@ namespace EFIDS.Entities
 
         [StringLength(50)]
         public string change_user { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Arrival_UZ_Document> Arrival_UZ_Document { get; set; }
 
         public virtual Directory_InlandRailway Directory_InlandRailway { get; set; }
     }
