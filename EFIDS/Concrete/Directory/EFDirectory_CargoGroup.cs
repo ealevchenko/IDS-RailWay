@@ -161,12 +161,28 @@ namespace EFIDS.Concrete
             GC.SuppressFinalize(this);
         }
 
-
-
         public void Add(IEnumerable<Directory_CargoGroup> items)
         {
-            throw new NotImplementedException();
+            try
+            {
+                db.Inserts<Directory_CargoGroup>(items);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
+        public void Delete(IEnumerable<int> items)
+        {
+            try
+            {
+                db.Delete<Directory_CargoGroup>(items);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
     }
 }

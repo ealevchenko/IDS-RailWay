@@ -165,17 +165,26 @@ namespace EFIDS.Concrete
 
         public void Add(IEnumerable<CardsWagonsRepairs> items)
         {
-            throw new NotImplementedException();
+            try
+            {
+                db.Inserts<CardsWagonsRepairs>(items);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
-        public CardsWagonsRepairs Get(long id)
+        public void Delete(IEnumerable<int> items)
         {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(long id)
-        {
-            throw new NotImplementedException();
+            try
+            {
+                db.Delete<CardsWagons>(items);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }

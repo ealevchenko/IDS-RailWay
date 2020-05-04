@@ -173,5 +173,9 @@ namespace EFIDS.Concrete
             GC.SuppressFinalize(this);
         }
 
+        public void Delete(IEnumerable<int> list_id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

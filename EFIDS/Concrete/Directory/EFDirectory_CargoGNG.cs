@@ -165,7 +165,26 @@ namespace EFIDS.Concrete
 
         public void Add(IEnumerable<Directory_CargoGNG> items)
         {
-            throw new NotImplementedException();
+            try
+            {
+                db.Inserts<Directory_CargoGNG>(items);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        public void Delete(IEnumerable<int> items)
+        {
+            try
+            {
+                db.Delete<Directory_CargoGNG>(items);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }

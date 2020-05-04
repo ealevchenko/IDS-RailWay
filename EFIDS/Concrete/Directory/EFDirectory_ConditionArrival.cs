@@ -168,5 +168,9 @@ namespace EFIDS.Concrete
             throw new NotImplementedException();
         }
 
+        public void Delete(IEnumerable<int> list_id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

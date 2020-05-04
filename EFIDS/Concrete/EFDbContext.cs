@@ -5,6 +5,7 @@ namespace EFIDS.Concrete
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
     using EFIDS.Entities;
+    using System.Collections.Generic;
 
     public partial class EFDbContext : DbContext
     {

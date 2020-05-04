@@ -161,21 +161,28 @@ namespace EFIDS.Concrete
             GC.SuppressFinalize(this);
         }
 
-
-
         public void Add(IEnumerable<CardsWagons> items)
         {
-            throw new NotImplementedException();
+            try
+            {
+                db.Inserts<CardsWagons>(items);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
-        public CardsWagons Get(long id)
+        public void Delete(IEnumerable<int> items)
         {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(long id)
-        {
-            throw new NotImplementedException();
+            try
+            {
+                db.Delete<CardsWagons>(items);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }
