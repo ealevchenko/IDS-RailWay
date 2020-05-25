@@ -13,6 +13,10 @@ namespace EFIDS.Entities
 
         public long id_document { get; set; }
 
+        public int code_payer { get; set; }
+
+        public int type_payer { get; set; }
+
         [Required]
         [StringLength(3)]
         public string kod { get; set; }

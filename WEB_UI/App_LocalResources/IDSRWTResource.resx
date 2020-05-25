@@ -318,8 +318,8 @@
   <data name="title_uz_doc_num_doc" xml:space="preserve">
     <value>№ Накладной</value>
   </data>
-  <data name="title_uz_doc_num_new_doc" xml:space="preserve">
-    <value>№ Досылки</value>
+  <data name="title_uz_doc_num_deliv_doc" xml:space="preserve">
+    <value>№ Досылочной накладной</value>
   </data>
   <data name="title_uz_route_stn_from" xml:space="preserve">
     <value>Станция отправки</value>
@@ -398,5 +398,8 @@
   </data>
   <data name="title_doc_status" xml:space="preserve">
     <value>Статус</value>
+  </data>
+  <data name="title_uz_doc_num_osn_doc" xml:space="preserve">
+    <value>Номер основного документа</value>
   </data>
 </root>

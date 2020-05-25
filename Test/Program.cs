@@ -81,7 +81,9 @@ namespace Test
             //tids.IDSTransfer_AddArrival();
             //tids.IDSDirectory_GetID_Directory_StationOfCodeCS();
             //tids.IDSDirectory_GetCurrentDirectory_CarsOfNum();
-            tids.IDSTransfer_GetNumDoc();
+            //tids.IDSTransfer_GetNumDoc();
+            //tids.GetActs();
+            tids.GetDocs();
             #endregion
 
             #region Test_Logs тест логирования
@@ -94,7 +96,7 @@ namespace Test
             #endregion
 
             #region Test_Metrans тест Метранса
-            Test_Metrans tmt= new Test_Metrans();
+            Test_Metrans tmt = new Test_Metrans();
             //tmt.MTTransfer_TransferApproaches();
             //tmt.MTTransfer_TransferArrival();
             //tmt.MTThread_SFTPTransfer();

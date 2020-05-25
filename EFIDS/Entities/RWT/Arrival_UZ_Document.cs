@@ -19,6 +19,100 @@ namespace EFIDS.Entities
             Arrival_UZ_Vagon = new HashSet<Arrival_UZ_Vagon>();
         }
 
+        //public long id { get; set; }
+
+        //[Required]
+        //[StringLength(50)]
+        //public string id_doc_uz { get; set; }
+
+        //public int? nom_doc { get; set; }
+
+        //public int? nom_main_doc { get; set; }
+
+        //public DateTime? date_otpr { get; set; }
+
+        //public DateTime? date_grpol { get; set; }
+
+        //public DateTime? date_pr { get; set; }
+
+        //public DateTime? date_vid { get; set; }
+
+        //[StringLength(120)]
+        //public string representative_pib { get; set; }
+
+        //public int? vid { get; set; }
+
+        //public int? code_stn_from { get; set; }
+
+        //public int? code_stn_to { get; set; }
+
+        //public int? code_border_checkpoint { get; set; }
+
+        //public DateTime? cross_time { get; set; }
+
+        //public int? code_shipper { get; set; }
+
+        //public int? code_consignee { get; set; }
+
+        //public bool? klient { get; set; }
+
+        //public int? code_payer_sender { get; set; }
+
+        //public int? code_payer_arrival { get; set; }
+
+        //public long? osum { get; set; }
+
+        //public long? sum_deliv { get; set; }
+
+        //public int? iskl_tar { get; set; }
+
+        //public int? distance_way { get; set; }
+
+        //public int? metod { get; set; }
+
+        //[StringLength(70)]
+        //public string name_strah_komp_recipient { get; set; }
+
+        //[StringLength(35)]
+        //public string text_branch { get; set; }
+
+        //[StringLength(400)]
+        //public string text_marks { get; set; }
+
+        //[StringLength(30)]
+        //public string text_mount_chapter { get; set; }
+
+        //[StringLength(30)]
+        //public string text_mount_para { get; set; }
+
+        //[StringLength(800)]
+        //public string text_name_gr { get; set; }
+
+        //[StringLength(800)]
+        //public string text_rw_note { get; set; }
+
+        //[StringLength(200)]
+        //public string text_sing { get; set; }
+
+        //[StringLength(800)]
+        //public string text_zayava { get; set; }
+
+        //[StringLength(200)]
+        //public string note { get; set; }
+
+        //public long? parent_id { get; set; }
+
+        //public DateTime create { get; set; }
+
+        //[Required]
+        //[StringLength(50)]
+        //public string create_user { get; set; }
+
+        //public DateTime? change { get; set; }
+
+        //[StringLength(50)]
+        //public string change_user { get; set; }
+
         public long id { get; set; }
 
         [Required]
@@ -28,19 +122,6 @@ namespace EFIDS.Entities
         public int? nom_doc { get; set; }
 
         public int? nom_main_doc { get; set; }
-
-        public DateTime? date_otpr { get; set; }
-
-        public DateTime? date_grpol { get; set; }
-
-        public DateTime? date_pr { get; set; }
-
-        public DateTime? date_vid { get; set; }
-
-        [StringLength(120)]
-        public string representative_pib { get; set; }
-
-        public int? vid { get; set; }
 
         public int? code_stn_from { get; set; }
 
@@ -60,42 +141,7 @@ namespace EFIDS.Entities
 
         public int? code_payer_arrival { get; set; }
 
-        public long? osum { get; set; }
-
-        public long? sum_deliv { get; set; }
-
-        public int? iskl_tar { get; set; }
-
         public int? distance_way { get; set; }
-
-        public int? metod { get; set; }
-
-        [StringLength(70)]
-        public string name_strah_komp_recipient { get; set; }
-
-        [StringLength(35)]
-        public string text_branch { get; set; }
-
-        [StringLength(400)]
-        public string text_marks { get; set; }
-
-        [StringLength(30)]
-        public string text_mount_chapter { get; set; }
-
-        [StringLength(30)]
-        public string text_mount_para { get; set; }
-
-        [StringLength(800)]
-        public string text_name_gr { get; set; }
-
-        [StringLength(800)]
-        public string text_rw_note { get; set; }
-
-        [StringLength(200)]
-        public string text_sing { get; set; }
-
-        [StringLength(800)]
-        public string text_zayava { get; set; }
 
         [StringLength(200)]
         public string note { get; set; }

@@ -179,6 +179,7 @@
                             <div class="card border-warning" id="card-car-info">
                                 <div class="card-header">Информация о вагоне</div>
                                 <div class="card-body text-dark">
+                                    <button type="button" class="btn btn-primary btn" id="arrival-car" data-mode="edit-global" data-edit="" data-form="transceiver"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Принять вагон</button>
                                     <button type="button" class="btn btn-warning btn" id="mode-view">View</button>
                                     <button type="button" class="btn btn-warning btn" id="mode-edit">Edit</button>
                                     <button type="button" class="btn btn-success btn" id="mode-open">Open</button>
@@ -214,14 +215,15 @@
                                         </div>
                                         <div class="form-row">
                                             <div class="col-md-6 mb-1 text-left">
-                                                <label for="uz_doc_num_doc" class="col-form-label">@IDSRWTResource.title_uz_doc_num_doc:</label>
+                                                <label for="uz_doc_num_doc" id="title_num_doc" class="col-form-label">@IDSRWTResource.title_uz_doc_num_doc:</label>
+                                                <label for="uz_doc_num_doc" id="title_num_deliv_doc" class="col-form-label">@IDSRWTResource.title_uz_doc_num_deliv_doc:</label>
                                                 <input type="number" class="form-control inp-epd" id="uz_doc_num_doc" name="uz_doc_num_doc" title="ЭПД [OTPR/nom_doc] -> Номер накладной" data-mode="all" data-edit="" data-form="transceiver" required="required">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-6 mb-1 text-left">
-                                                <label for="uz_doc_num_new_doc" class="col-form-label">@IDSRWTResource.title_uz_doc_num_new_doc:</label>
-                                                <input type="text" class="form-control inp-epd" id="uz_doc_num_new_doc" name="uz_doc_num_new_doc" title="ЭПД [OTPRDP/nom_osn_doc] -> Номер досылочного документа" data-mode="all" data-edit="" data-form="transceiver" required="required">
+                                                <label for="uz_doc_num_osn_doc" id="title_num_osn_doc" class="col-form-label">@IDSRWTResource.title_uz_doc_num_osn_doc:</label>
+                                                <input type="text" class="form-control inp-epd" id="uz_doc_num_osn_doc" name="uz_doc_num_osn_doc" title="ЭПД [OTPRDP/nom_osn_doc] -> Номер досылочного документа" data-mode="all" data-edit="" data-form="transceiver" required="required">
                                                 <div class="invalid-feedback">
 
                                                 </div>
@@ -393,6 +395,8 @@
                                                 <button type="button" class="btn btn-danger btn" id="card_vag_add" data-form="transceiver" title="Добавить новую запись карточки вагона в справочник 'Карточка вагона', информация берется автоматически из ЭПД и БД УЗ">
                                                     <i class="fa fa-save" aria-hidden="true"></i>
                                                 </button>
+                                                <div class="invalid-feedback">
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="form-row">
@@ -831,21 +835,6 @@
                                 </div>
                             </div>
                         </div>
-                        @*<div class="col-md-1 mb-1">
-                                <div class="card border-danger" id="card-epd-cars">
-                                    <div class="card-header">
-                                        Вагоны по ЭПД
-                                        <button type="button" class="btn btn-warning btn-sm" id="add-num-car-of-epd" title="Найти вагоны по ЭПД, поиск документа по номеру">
-                                            <i class="fa fa-plus" aria-hidden="true"></i>
-                                        </button>
-                                    </div>
-                                    <div class="card-body text-danger" style="padding: 0.5rem;">
-                                        <div class="list-group" id="list-cars-epd" role="tablist">
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>*@
                         <div class="col-md-1 mb-1">
                             <div class="card border-primary" id="card-not-arrived-cars">
                                 <div class="card-header">

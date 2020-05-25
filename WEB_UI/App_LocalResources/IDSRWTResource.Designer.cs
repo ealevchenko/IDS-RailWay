@@ -745,6 +745,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на № Досылочной накладной.
+        /// </summary>
+        public static string title_uz_doc_num_deliv_doc {
+            get {
+                return ResourceManager.GetString("title_uz_doc_num_deliv_doc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на № Накладной.
         /// </summary>
         public static string title_uz_doc_num_doc {
@@ -754,11 +763,11 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на № Досылки.
+        ///   Ищет локализованную строку, похожую на Номер основного документа.
         /// </summary>
-        public static string title_uz_doc_num_new_doc {
+        public static string title_uz_doc_num_osn_doc {
             get {
-                return ResourceManager.GetString("title_uz_doc_num_new_doc", resourceCulture);
+                return ResourceManager.GetString("title_uz_doc_num_osn_doc", resourceCulture);
             }
         }
         

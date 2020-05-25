@@ -408,6 +408,14 @@ var get_date_value = function (s_date, lang) {
     return null;
 };
 
+var get_datetime_value = function (s_date, lang) {
+    if (s_date) {
+        var dt = moment(s_date, lang === 'ru' ? 'DD.MM.YYYY HH:mm:ss' : 'MM/DD/YYYY HH:mm:ss');
+        return dt ? dt._d : null;
+    }
+    return null;
+};
+
 var set_date_value = function (date, lang) {
     if (date) {
         var dt = moment(date, lang === 'ru' ? 'DD.MM.YYYY' : 'MM/DD/YYYY');
@@ -416,7 +424,7 @@ var set_date_value = function (date, lang) {
     return null;
 };
 
-// Врнуть значение select с проверкой
+// Врнуть значение Input с проверкой
 var get_input_value = function (obj) {
     if (obj) {
         return obj.val() !== '' ? Number(obj.val()) : null;
@@ -533,6 +541,7 @@ VALIDATION.prototype.out_info_message = function (message) {
         }
     }
 };
+
 // Установить признак ошибка
 VALIDATION.prototype.set_control_error = function (o, message) {
     o.removeClass('is-valid').addClass('is-invalid');
@@ -540,6 +549,7 @@ VALIDATION.prototype.set_control_error = function (o, message) {
         o.next(".invalid-feedback").text(message);
     }
 };
+
 // Установить признак Ok
 VALIDATION.prototype.set_control_ok = function (o, message) {
     o.removeClass('is-invalid').addClass('is-valid');
@@ -547,6 +557,21 @@ VALIDATION.prototype.set_control_ok = function (o, message) {
         o.next(".valid-feedback").text(message);
     }
 };
+
+// Установить признак ошибка
+VALIDATION.prototype.set_object_error = function (o, mes_error) {
+    this.set_control_error(o, mes_error);
+    this.out_error_message(mes_error);
+    return false;
+};
+
+// Установить признак ошибка
+VALIDATION.prototype.set_object_ok = function (o, mes_ok) {
+    this.set_control_ok(o, mes_ok);
+    this.out_info_message(mes_ok);
+    return true;
+};
+
 // Проверка на пустое значение
 VALIDATION.prototype.checkValueOfNull = function (o, val, mes_error, mes_ok) {
     if (val === '' || val === null) {
@@ -700,6 +725,46 @@ VALIDATION.prototype.checkInputOfList_IsNull = function (o, list, mes_error, mes
         var text = o.val();
         var obj = getObjects(list, 'text', text);
         if (!obj || obj.length === 0) {
+            this.set_control_error(o, mes_error);
+            this.out_error_message(mes_error);
+            return false;
+        } else {
+            this.set_control_ok(o, mes_ok);
+            this.out_info_message(mes_ok);
+            return true;
+        }
+    } else {
+        this.set_control_ok(o, mes_ok);
+        this.out_info_message(mes_ok);
+        return true;
+    }
+};
+// Проверим Input введенное значение есть в в указаном справочнике (пустое значение - не допускается)
+VALIDATION.prototype.checkInputOfDirectory = function (o, link, name_func, mes_error, mes_ok) {
+    if (o.val() !== '' && o.val() !== null) {
+        var result = null;
+        eval('result = link.' + name_func +'(Number(o.val()))');
+        if (!result || result.length === 0) {
+            this.set_control_error(o, mes_error);
+            this.out_error_message(mes_error);
+            return false;
+        } else {
+            this.set_control_ok(o, mes_ok);
+            this.out_info_message(mes_ok);
+            return true;
+        }
+    } else {
+        this.set_control_error(o, mes_error);
+        this.out_error_message(mes_error);
+        return false;
+    }
+};
+// Проверим Input введенное значение есть в в указаном справочнике (пустое значение - допускается)
+VALIDATION.prototype.checkInputOfDirectory_IsNull = function (o, link, name_func, mes_error, mes_ok) {
+    if (o.val() !== '' && o.val() !== null) {
+        var result = null;
+        eval('result = link.' + name_func +'(Number(o.val()))');
+        if (!result || result.length === 0) {
             this.set_control_error(o, mes_error);
             this.out_error_message(mes_error);
             return false;

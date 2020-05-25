@@ -55,5 +55,33 @@ namespace Test.TestModule
 
         #endregion
 
+        public void GetActs() {
+
+            UZ.UZ_Convert convert = new UZ.UZ_Convert();
+            EFIDS.Concrete.EFUZ_DOC ef_uz_doc = new EFIDS.Concrete.EFUZ_DOC(new EFIDS.Concrete.EFDbContext());
+            foreach (EFIDS.Entities.UZ_DOC doc in ef_uz_doc.Context.ToList()) {
+                string xml_final = convert.XMLToFinalXML(doc.xml_doc);
+                UZ.OTPR otpr = convert.FinalXMLToOTPR(xml_final);
+                if (otpr!=null && otpr.acts!=null && otpr.acts.Count() > 0) {
+                    Console.WriteLine("num_doc = {0}", doc.num_doc);
+                }
+            }
+        }
+
+        public void GetDocs() {
+
+            UZ.UZ_Convert convert = new UZ.UZ_Convert();
+            EFIDS.Concrete.EFUZ_DOC ef_uz_doc = new EFIDS.Concrete.EFUZ_DOC(new EFIDS.Concrete.EFDbContext());
+            foreach (EFIDS.Entities.UZ_DOC doc in ef_uz_doc.Context.ToList()) {
+                string xml_final = convert.XMLToFinalXML(doc.xml_doc);
+                UZ.OTPR otpr = convert.FinalXMLToOTPR(xml_final);
+                if (otpr!=null && otpr.sender_doc != null && otpr.sender_doc.Count() > 0) {
+                    foreach (UZ.SENDER_DOC sd in otpr.sender_doc.ToList()) { 
+                    Console.WriteLine("num_doc = {0}, сылка на документ : {1}", doc.num_doc, sd.id);
+                    }
+                }
+            }
+        }
+
     }
 }

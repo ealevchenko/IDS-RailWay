@@ -60,6 +60,26 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // GET: api/ids/rwt/arrival_uz_document/id_doc/78943
+        [Route("id_doc/{id_doc}")]
+        [ResponseType(typeof(Arrival_UZ_Document))]
+        public IHttpActionResult GetArrival_UZ_DocumentOfID_Doc_UZ(string id_doc)
+        {
+            try
+            {
+                Arrival_UZ_Document cars = this.ef_ids
+                    .Context
+                    .Where(s => s.id_doc_uz == id_doc)
+                    .ToList()
+                    .Select(c => c.GetArrival_UZ_Document()).FirstOrDefault();
+                return Ok(cars);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         // POST api/ids/rwt/arrival_uz_document/
         [HttpPost]
         [Route("")]

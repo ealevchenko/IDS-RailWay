@@ -55,7 +55,7 @@ namespace UZ
         public int? metod { get; set; }
         public int? nom_doc { get; set; }
         public int? nom_marsh_grot { get; set; }
-        public int? nom_plan { get; set; }
+        public ulong? nom_plan { get; set; }
         public int? nоm_park { get; set; }
         public int? pr_freeze { get; set; }
         public string pr_locom { get; set; }
@@ -103,21 +103,22 @@ namespace UZ
 
     public class ACTS
     {
-        public int? carrier_kod { get; set; }	//	Код перевізника
-        public string carrier_name { get; set; }	//	Скорочене найменування перевізника
-        public DateTime? date_akt { get; set; }	//	Дата складання акту
-        public DateTime? date_dved { get; set; }	//	Дата укладання досильної дорожньої відомості
-        public string esr_akt { get; set; }	//	ЄСР станції складання акту 
-        public string stn_name_akt { get; set; }	//	Найменування станції складання акту
-        public string nom_akt { get; set; }	//	Номер акту 
-        public int? nom_dved { get; set; }	//	Номер досильної дорожньої відомості
-        public DateTime? oper_date { get; set; }	//	Дата внесення даних по акту у перевізний документ
-        public string prichina_akt { get; set; }	//	Причина 
+        public int? carrier_kod { get; set; }	        //	Код перевізника
+        public string carrier_name { get; set; }	    //	Скорочене найменування перевізника
+        public DateTime? date_akt { get; set; }	        //	Дата складання акту
+        public DateTime? date_dved { get; set; }	    //	Дата укладання досильної дорожньої відомості
+        public string esr_akt { get; set; }	            //	ЄСР станції складання акту 
+        public string stn_akt { get; set; }	            //	Код станції складання акту
+        public string stn_name_akt { get; set; }	    //	Найменування станції складання акту
+        public string nom_akt { get; set; }	            //	Номер акту 
+        public int? nom_dved { get; set; }	            //	Номер досильної дорожньої відомості
+        public DateTime? oper_date { get; set; }	        //	Дата внесення даних по акту у перевізний документ
+        public string prichina_akt { get; set; }	    //	Причина 
         public string responsible_person { get; set; }	//	Ім'я особи, відповідальної за внесення данних по акту у перевізний документ
-        public string ser_dved { get; set; }	//	Серія досильної дорожньої відомості
-        public string type { get; set; }	//	Тип акту
-        public string vagon_nom { get; set; }	//	Номер вагону 
-        public int? zd_kod { get; set; }	//	Код залізниці перевантаження
+        public string ser_dved { get; set; }	        //	Серія досильної дорожньої відомості
+        public string type { get; set; }	            //	Тип акту
+        public string vagon_nom { get; set; }	        //	Номер вагону 
+        public int? zd_kod { get; set; }	        //	Код залізниці перевантаження
     }
 
     public class CARRIER
@@ -721,6 +722,22 @@ namespace UZ
                     {
                         return !String.IsNullOrWhiteSpace(attr.Value) ? (T)(object)Int32.Parse(attr.Value) : default(T);
                     }
+                    if (typeof(T) == typeof(System.Int64))
+                    {
+                        return (T)(object)Int64.Parse(attr.Value);
+                    }
+                    if (typeof(T) == typeof(System.Int64?))
+                    {
+                        return !String.IsNullOrWhiteSpace(attr.Value) ? (T)(object)Int64.Parse(attr.Value) : default(T);
+                    }
+                    if (typeof(T) == typeof(System.UInt64))
+                    {
+                        return (T)(object)UInt64.Parse(attr.Value);
+                    }
+                    if (typeof(T) == typeof(System.UInt64?))
+                    {
+                        return !String.IsNullOrWhiteSpace(attr.Value) ? (T)(object)UInt64.Parse(attr.Value) : default(T);
+                    }
                     if (typeof(T) == typeof(System.String))
                     {
                         return (T)(object)attr.Value;
@@ -801,7 +818,7 @@ namespace UZ
                     tag.metod = getAttributes<int?>(node, "metod");
                     tag.nom_doc = getAttributes<int?>(node, "nom_doc");
                     tag.nom_marsh_grot = getAttributes<int?>(node, "nom_marsh_grot");
-                    tag.nom_plan = getAttributes<int?>(node, "nom_plan");
+                    tag.nom_plan = getAttributes<ulong?>(node, "nom_plan");
                     tag.nоm_park = getAttributes<int?>(node, "nоm_park");
                     tag.pr_freeze = getAttributes<int?>(node, "pr_freeze");
                     tag.pr_locom = getAttributes<string>(node, "pr_locom");
@@ -842,6 +859,7 @@ namespace UZ
                 tag.date_akt = getAttributes<DateTime?>(node, "date_akt");
                 tag.date_dved = getAttributes<DateTime?>(node, "date_dved");
                 tag.esr_akt = getAttributes<string>(node, "esr_akt");
+                tag.stn_akt = getAttributes<string>(node, "stn_akt");
                 tag.stn_name_akt = getAttributes<string>(node, "stn_name_akt");
                 tag.nom_akt = getAttributes<string>(node, "nom_akt");
                 tag.nom_dved = getAttributes<int?>(node, "nom_dved");
