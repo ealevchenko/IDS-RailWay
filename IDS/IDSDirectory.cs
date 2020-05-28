@@ -239,11 +239,11 @@ namespace IDS
 
         #region СПРАВОЧНИК ОПЕРАТОРОВ (IDS.Directory_OperatorsWagons )
 
-        public int GetID_Directory_OperatorsWagonsOfName(string name, bool add, string user)
+        public int? GetID_Directory_OperatorsWagonsOfName(string name, bool add, string user)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(name)) return 0;
+                if (string.IsNullOrWhiteSpace(name)) return null;
                 // Проверим и скорректируем пользователя
                 if (String.IsNullOrWhiteSpace(user))
                 {
@@ -318,7 +318,7 @@ namespace IDS
                 int id_countrys = GetID_Directory_CountrysOfAdm(adm, true, user);
                 int id_genus = card != null ? card.id_genus_wagon : GetID_Directory_GenusWagonsOfRod(rod, true, user);
                 int id_owner = card != null ? card.id_owner_wagon : GetID_Directory_OwnersWagonsOfName(info.owner, true, user);
-                int id_operator = card != null && card.id_operator_wagon != null ? (int)card.id_operator_wagon : GetID_Directory_OperatorsWagonsOfName(info.operat, true, user);
+                int? id_operator = card != null && card.id_operator_wagon != null ? (int)card.id_operator_wagon : GetID_Directory_OperatorsWagonsOfName(info.operat, true, user);
                 int? id_type_ownership = card != null ? (int?)card.id_type_ownership : null;
                 // Создадим новую запись
                 Directory_Cars new_car = new Directory_Cars()

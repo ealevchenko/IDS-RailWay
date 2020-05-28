@@ -63,7 +63,7 @@ namespace WEB_UI.Controllers.api
         // GET: api/ids/rwt/arrival_uz_vagon/document/id/1
         [Route("document/id/{id:long}")]
         [ResponseType(typeof(Arrival_UZ_Vagon))]
-        public IHttpActionResult GetArrival_UZ_VagonOfVagon(long id)
+        public IHttpActionResult GetArrival_UZ_VagonOfDocument(long id)
         {
             try
             {
@@ -79,6 +79,28 @@ namespace WEB_UI.Controllers.api
                 return BadRequest(e.Message);
             }
         }
+
+        // GET: api/ids/rwt/arrival_uz_vagon/document/id/1/vagon/num/1
+        [Route("document/id/{id:long}/vagon/num/{num:int}")]
+        [ResponseType(typeof(Arrival_UZ_Vagon))]
+        public IHttpActionResult GetArrival_UZ_VagonOfDocumentNumVagon(long id, int num)
+        {
+            try
+            {
+                Arrival_UZ_Vagon vag = this.ef_ids
+                    .Context
+                    .Where(s => s.id_document == id & s.num==num)
+                    .ToList()
+                    .Select(c => c.GetArrival_UZ_Vagon())
+                    .FirstOrDefault();
+                return Ok(vag);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
 
         // POST api/ids/rwt/arrival_uz_vagon/
         [HttpPost]

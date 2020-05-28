@@ -3849,9 +3849,9 @@ IDS_DIRECTORY.prototype.getListCargo = function (fvalue, ftext, lang, filter) {
 };
 
 //*======= IDS_DIRECTORY.list_cargo_gng  (Справочник грузов ГНГ) ======================================
-IDS_DIRECTORY.prototype.getCargoGNG_Of_Code = function (id) {
+IDS_DIRECTORY.prototype.getCargoGNG_Of_Code = function (code) {
     if (this.list_cargo_gng) {
-        var obj = getObjects(this.list_cargo_gng, 'id', id);
+        var obj = getObjects(this.list_cargo_gng, 'code', code);
         return obj && obj.length > 0 ? obj[0] : null;
     }
 };
@@ -3868,13 +3868,13 @@ IDS_DIRECTORY.prototype.getID_CargoGNG_Internal_Of_Name = function (text, ftext,
     return obj ? obj.id : null;
 };
 //
-IDS_DIRECTORY.prototype.getValue_CargoGNG_Of_Code = function (id, name, lang) {
-    var obj = this.getCargoGNG_Of_Code(id);
+IDS_DIRECTORY.prototype.getValue_CargoGNG_Of_Code = function (code, name, lang) {
+    var obj = this.getCargoGNG_Of_Code(code);
     return this.getValueObj(obj, name, lang);
 };
 //
-IDS_DIRECTORY.prototype.getValueCulture_CargoGNG_Of_Code = function (id, name) {
-    var obj = this.getCargoGNG_Of_Code(id);
+IDS_DIRECTORY.prototype.getValueCulture_CargoGNG_Of_Code = function (code, name) {
+    var obj = this.getCargoGNG_Of_Code(code);
     return obj ? obj[name + '_' + this.lang] : null;
 };
 //
@@ -3897,9 +3897,9 @@ IDS_DIRECTORY.prototype.getListCargoGNG = function (fvalue, ftext, lang, filter)
     return list;
 };
 //*======= IDS_DIRECTORY.list_cargo_etsng  (Справочник грузов ЕТСНГ) ======================================
-IDS_DIRECTORY.prototype.getCargoETSNG_Of_Code = function (id) {
+IDS_DIRECTORY.prototype.getCargoETSNG_Of_Code = function (code) {
     if (this.list_cargo_etsng) {
-        var obj = getObjects(this.list_cargo_etsng, 'id', id);
+        var obj = getObjects(this.list_cargo_etsng, 'code', code);
         return obj && obj.length > 0 ? obj[0] : null;
     }
 };
@@ -3916,13 +3916,13 @@ IDS_DIRECTORY.prototype.getID_CargoETSNG_Internal_Of_Name = function (text, ftex
     return obj ? obj.id : null;
 };
 //
-IDS_DIRECTORY.prototype.getValue_CargoETSNG_Of_Code = function (id, name, lang) {
-    var obj = this.getCargoETSNG_Of_Code(id);
+IDS_DIRECTORY.prototype.getValue_CargoETSNG_Of_Code = function (code, name, lang) {
+    var obj = this.getCargoETSNG_Of_Code(code);
     return this.getValueObj(obj, name, lang);
 };
 //
-IDS_DIRECTORY.prototype.getValueCulture_CargoETSNG_Of_Code = function (id, name) {
-    var obj = this.getCargoETSNG_Of_Code(id);
+IDS_DIRECTORY.prototype.getValueCulture_CargoETSNG_Of_Code = function (code, name) {
+    var obj = this.getCargoETSNG_Of_Code(code);
     return obj ? obj[name + '_' + this.lang] : null;
 };
 //

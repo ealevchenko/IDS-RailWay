@@ -655,7 +655,7 @@ VALIDATION.prototype.checkInputOfRange_IsNull = function (o, min, max, mes_error
     } else {
         this.set_control_ok(o, mes_ok);
         this.out_info_message(mes_ok);
-        return false;
+        return true;
     }
 };
 

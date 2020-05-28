@@ -712,6 +712,198 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Document_Docs = function (id, callba
         },
     });
 };
+//======= Arrival_UZ_Vagon (ЭПД УЗ по прибытию) ======================================
+// Получить все вагоны
+IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/arrival_uz_vagon/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_Vagon", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить вагон по id
+IDS_RWT_INCOMING.prototype.getArrival_UZ_VagonOfID = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/arrival_uz_vagon/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_VagonOfID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить все вагоны пренадлежащие указаному документу
+IDS_RWT_INCOMING.prototype.getArrival_UZ_VagonOfDocument = function (id_doc, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/arrival_uz_vagon/document/id/' + id_doc,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_VagonOfDocument", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить вагон пренадлежащий указаному документу поиск по номеру вагона
+IDS_RWT_INCOMING.prototype.getArrival_UZ_VagonOfDocumentNumVagon = function (id_doc, num, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/arrival_uz_vagon/document/id/'+id_doc+'/vagon/num/' + num,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_VagonOfDocumentNumVagon", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Добавить вагон
+IDS_RWT_INCOMING.prototype.postArrival_UZ_Vagon = function (vagon, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/arrival_uz_vagon/',
+        type: 'POST',
+        data: JSON.stringify(vagon),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT_INCOMING.postArrival_UZ_Vagon", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Добавить вагоны
+IDS_RWT_INCOMING.prototype.postListArrival_UZ_Vagon = function (list_vagon, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/arrival_uz_vagon/list/',
+        type: 'POST',
+        data: JSON.stringify(list_vagon),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT_INCOMING.postListArrival_UZ_Vagon", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Обновить вагон 
+IDS_RWT_INCOMING.prototype.putArrival_UZ_Vagon = function (vagon, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/rwt/arrival_uz_vagon/id' + vagon.id,
+        data: JSON.stringify(vagon),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.putArrival_UZ_Vagon", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Удалить вагон  
+IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon = function (id, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/arrival_uz_vagon/id' + id,
+        type: 'DELETE',
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.deleteArrival_UZ_Vagon", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
+
 
 //======= ArrivalSostav (Таблица составов) ======================================
 // Получить все составы
@@ -995,7 +1187,6 @@ IDS_RWT_INCOMING.prototype.deleteArrivalCarsOfSostav = function (id_sostav, call
         },
     });
 };
-
 //Добавить 
 IDS_RWT_INCOMING.prototype.postArrivalCars = function (arrival_cars, callback) {
     $.ajax({
