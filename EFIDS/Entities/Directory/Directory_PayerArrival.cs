@@ -20,11 +20,11 @@ namespace EFIDS.Entities
         public int code { get; set; }
 
         [Required]
-        [StringLength(50)]
+        [StringLength(100)]
         public string payer_name_ru { get; set; }
 
         [Required]
-        [StringLength(50)]
+        [StringLength(100)]
         public string payer_name_en { get; set; }
 
         public DateTime create { get; set; }

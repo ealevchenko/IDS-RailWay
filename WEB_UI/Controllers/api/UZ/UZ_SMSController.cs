@@ -16,9 +16,9 @@ namespace WEB_UI.Controllers.api
     public class UZ_SMSController : ApiController
     {
         public int r = 0;
-        
 
-        // GET: api/uz/sms/uz_doc/num_doc/41425570
+
+        // GET: api/uz/sms/uz_doc/num_doc/42948810
         [Route("uz_doc/num_doc/{num_doc}")]
         [ResponseType(typeof(UZ_DOC))]
         public IHttpActionResult GetUZ_DOC_Of_Num(string num_doc)

@@ -431,6 +431,15 @@ var get_input_value = function (obj) {
     }
     return null;
 };
+
+// Врнуть значение Input с проверкой
+var get_input_string_value = function (obj) {
+    if (obj) {
+        return obj.val() !== '' ? obj.val() : null;
+    }
+    return null;
+};
+
 // Врнуть значение select с проверкой
 var get_select_value = function (select) {
     if (select) {

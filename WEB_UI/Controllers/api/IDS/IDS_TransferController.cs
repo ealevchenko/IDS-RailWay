@@ -13,7 +13,7 @@ namespace WEB_UI.Controllers.api.RWT
     [RoutePrefix("api/ids/transfer")]
     public class IDS_TransferController : ApiController
     {
-        // GET: api/ids/transfer/epd/db_uz/add_update_db_ids/num/59978890
+        // GET: api/ids/transfer/epd/db_uz/add_update_db_ids/num/71113418
         [Route("epd/db_uz/add_update_db_ids/num/{num:int}")]
         [ResponseType(typeof(string))]
         public IHttpActionResult GetAddUpdateUZ_DOC_To_DB_IDS(int num)
@@ -30,7 +30,7 @@ namespace WEB_UI.Controllers.api.RWT
             }
         }
 
-        // GET: api/ids/transfer/epd/db_uz/num/69575949
+        // GET: api/ids/transfer/epd/db_uz/num/71113418
         [Route("epd/db_uz/num/{num:int}")]
         [ResponseType(typeof(UZ.UZ_DOC))]
         public IHttpActionResult GetUZ_DOC_DB_UZ_OfNum(int num)

@@ -3847,6 +3847,20 @@ IDS_DIRECTORY.prototype.getListCargo = function (fvalue, ftext, lang, filter) {
     }
     return list;
 };
+// Получить груз по id строки ЕТСНГ
+IDS_DIRECTORY.prototype.getCargo_Of_IDETSNG = function (id_cargo_etsng) {
+    if (this.list_cargo) {
+        return getObjects(this.list_cargo, 'id_cargo_etsng', id_cargo_etsng);
+    }
+};
+// Получить груз коду ЕТ СНГ с точным уточнением по коду и названию с учетом языка
+IDS_DIRECTORY.prototype.getCargo_Of_ETSNGCodeCultureName = function (code_etsng, name_etsng, lang) {
+    var obj = this.getCargoETSNG_Of_CodeCultureName(code_etsng, name_etsng, lang);
+    if (obj && obj.length > 0) {
+        return this.getCargo_Of_IDETSNG(obj[0].id);
+    }
+};
+
 
 //*======= IDS_DIRECTORY.list_cargo_gng  (Справочник грузов ГНГ) ======================================
 IDS_DIRECTORY.prototype.getCargoGNG_Of_Code = function (code) {
@@ -3896,6 +3910,17 @@ IDS_DIRECTORY.prototype.getListCargoGNG = function (fvalue, ftext, lang, filter)
     }
     return list;
 };
+// Вернуть строки грузов ГНГ по коду ГНГ с точным уточнением по коду и названию с учетом языка
+IDS_DIRECTORY.prototype.getCargoGNG_Of_CodeCultureName = function (code, name, lang) {
+    if (this.list_cargo_gng) {
+        var obj = getObjects(this.list_cargo_gng, 'code', code);
+        if (obj && obj.length > 0) {
+            var obj_name = getObjects(this.list_cargo_gng, 'cargo_gng_name_' + lang, name);
+            return obj_name && obj_name.length > 0 ? obj_name : null;
+        }
+        return null;
+    }
+};
 //*======= IDS_DIRECTORY.list_cargo_etsng  (Справочник грузов ЕТСНГ) ======================================
 IDS_DIRECTORY.prototype.getCargoETSNG_Of_Code = function (code) {
     if (this.list_cargo_etsng) {
@@ -3944,6 +3969,20 @@ IDS_DIRECTORY.prototype.getListCargoETSNG = function (fvalue, ftext, lang, filte
     }
     return list;
 };
+// Вернуть строки грузов ЕТ СНГ по коду ЕТ СНГ с точным уточнением по коду и названию с учетом языка
+IDS_DIRECTORY.prototype.getCargoETSNG_Of_CodeCultureName = function (code, name, lang) {
+    if (this.list_cargo_etsng) {
+        var obj = getObjects(this.list_cargo_etsng, 'code', code);
+        if (obj && obj.length > 0) {
+            var obj_name = getObjects(this.list_cargo_etsng, 'cargo_etsng_name_' + lang, name);
+            return obj_name && obj_name.length > 0 ? obj_name : null;
+        }
+        return null;
+    }
+};
+
+
+
 //*======= IDS_DIRECTORY.list_cargo_group  (Справочник групп грузов) ======================================
 IDS_DIRECTORY.prototype.getCargoGroup_Of_Code = function (id) {
     if (this.list_cargo_group) {
