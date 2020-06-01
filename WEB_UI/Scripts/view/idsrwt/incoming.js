@@ -85,6 +85,9 @@
                 'field_manual_car_staus': 'Статус состава',
                 'field_manual_car_arrival': 'Вагон принят',
 
+                'field_position_arrival': '№',
+                'field_num_arrival': '№ вагона',
+
 
                 'title_button_buffer': 'Буфер',
                 'title_button_excel': 'Excel',
@@ -357,8 +360,8 @@
                                             dialog_confirm.open('Удалить?', 'Вы уверены что хотите удалить состав : ' + table_sostav.select_sostav.composition_index, function (result) {
                                                 if (result) {
                                                     ids_inc.getArrivalSostavOfID(table_sostav.select_sostav.id, function (result_sostav) {
-                                                        if (result_sostav && result_sostav.length > 0) {
-                                                            var sostav = result_sostav[0];
+                                                        if (result_sostav) {
+                                                            var sostav = result_sostav;
                                                             // Состав найден, вагоны есть?
                                                             if (sostav.ArrivalCars && sostav.ArrivalCars.length > 0) {
                                                                 // Вагоны есть, удалим вагоны
@@ -706,7 +709,7 @@
                     pn_edit_sostav.obj.dialog("option", "title", "Изменить состав");
                     // Получим текуший состав
                     pn_edit_sostav.ids_inc.getArrivalSostavOfID(pn_edit_sostav.id, function (result_sostav) {
-                        pn_edit_sostav.sostav = result_sostav[0];
+                        pn_edit_sostav.sostav = result_sostav;
                         pn_edit_sostav.train_edit.val(pn_edit_sostav.sostav.train);
                         pn_edit_sostav.composition_index_edit.val(pn_edit_sostav.sostav.composition_index);
                         pn_edit_sostav.station_from_edit.val(pn_edit_sostav.sostav.id_station_from);
@@ -933,6 +936,8 @@
                 cars_detali.table_acts.init();// Инициализация таблицы с акт
                 cars_detali.table_cont.init();// Инициализация таблицы с контейнера
 
+                cars_detali.table_arrival_cars.init();// Инициализация таблицы с принятыми вагонами
+
                 // Инициализация окна поиска вагонов по номеру документа
                 pn_search_epd.init(cars_detali.lang, cars_detali.user, function (result_search) {
                     // Обработка результатов поиска
@@ -994,8 +999,8 @@
                     event.preventDefault();
                     //// Обновлено
                     //ids_inc.getArrivalSostavOfID(table_sostav.select_sostav.id, function (result_sostav) {
-                    //    if (result_sostav && result_sostav.length > 0) {
-                    //        table_sostav.update_sostav(result_sostav[0]);
+                    //    if (result_sostav) {
+                    //        table_sostav.update_sostav(result_sostav);
                     //    }
                     //});
                     // Обновить все (Обновится тогда когда будет признак cars_detali.update_sostav=true, очень много строк неоходимо обновлять - пример перенос вагонов по прибытию)
@@ -1108,13 +1113,16 @@
                     // Получим текуший состав
                     LockScreen(langView('mess_delay', langs));
                     cars_detali.ids_inc.getArrivalSostavOfID(cars_detali.id_sostav, function (result_sostav) {
-                        cars_detali.sostav = result_sostav[0];
+                        cars_detali.sostav = result_sostav;
                         // Покаать информацию по составу
                         cars_detali.sostav_title.text('Информация по составу (№ поезда :' + cars_detali.sostav.train + ', Индекс поезда :' + cars_detali.sostav.composition_index + ', Прибыл:' + (cars_detali.sostav.date_arrival ? cars_detali.sostav.date_arrival.replace(/T/g, ' ') : null) + ')');
                         // Загрузим списочные компоненты
                         cars_detali.init_select();
                         // Показать список не принятых вагонов
                         cars_detali.view_cars_not_arrival(cars_detali.sostav.ArrivalCars.filter(function (i) { return i.arrival === null ? true : false; }).sort(function (a, b) { return Number(a.position) - Number(b.position) }));
+                        // Показать список принятых вагонов
+                        cars_detali.table_arrival_cars.view(cars_detali.sostav.ArrivalCars.filter(function (i) { return i.arrival !== null ? true : false; }).sort(function (a, b) { return Number(a.position_arrival) - Number(b.position_arrival) }))
+
                         // Показать страницу детально
                         cars_detali.content.addClass('is-visible');
                         LockScreenOff();
@@ -1234,7 +1242,15 @@
             bt_arrival_car: $('button#arrival-car').on('click', function (event) {
                 event.preventDefault();
                 // Принять вагон
-                cars_detali.arrival_vagon(cars_detali.select_id);
+                cars_detali.arrival_vagon(cars_detali.select_id, function (result) {
+                    if (result > 0) {
+                        cars_detali.alert.out_info_message('Вагон №' + cars_detali.select_num + ' - Добавлен в систему ИДС');
+                        cars_detali.update_sostav = true;
+                        // Показать 
+                        cars_detali.view(table_sostav.select_sostav.id, false);
+                    }
+                    LockScreenOff();
+                });
             }),
             // Кнопка найти вагон в промежуточной базе
             search_cars_num_doc: $('button#search-car-num-doc').on('click', function (event) {
@@ -1323,6 +1339,10 @@
             title_num_osn_doc: $('label#title_num_osn_doc').hide(),
             uz_doc_num_osn_doc: $('input#uz_doc_num_osn_doc').hide(),
             arrival_cars_position_arrival: $('input#arrival_cars_position_arrival').inputSpinner(),
+            // дата и время принятия вагона по акту
+            arrival_cars_car_date_adoption_act: cd_initDateTimeRangePicker($('input#arrival_cars_car_date_adoption_act'), { lang: lang, time: true }, function (datetime) {
+
+            }),
             // Маршруты клиенты, станция отправки
             uz_route_stn_from: $('input#uz_route_stn_from'),
             uz_route_name_from: $('input#uz_route_name_from'),
@@ -1779,6 +1799,7 @@
                 cars_detali.num_car.val('');
                 cars_detali.uz_doc_num_doc.val('');
                 cars_detali.uz_doc_num_osn_doc.val('');
+                cars_detali.arrival_cars_car_date_adoption_act.setDateTime(null); // уберем дату
 
                 cars_detali.uz_route_stn_from.val('');
                 cars_detali.uz_route_name_from.val('');
@@ -2874,7 +2895,7 @@
                             });
                         } else {
                             // Ошибка добавления
-                            cars_detali.alert.out_warning_message("Ошибка сохранения информации о вагоне в базе ИДС");
+                            cars_detali.alert.out_error_message("Ошибка сохранения информации о вагоне в базе ИДС");
                             LockScreenOff();
                             if (typeof callback === 'function') {
                                 callback(result_add_vagon);
@@ -2909,9 +2930,54 @@
 
                 });
             },
+            // Обновить информацию о принятом вагоне (перенос влево в окно принятые вагоны, изменение статуса состава "В работе")
+            update_arrival_car: function (car, callback) {
+                if (car) {
+                    car.position_arrival = get_input_value(cars_detali.arrival_cars_position_arrival);
+                    car.date_adoption_act = toISOStringTZ(get_datetime_value(cars_detali.arrival_cars_car_date_adoption_act.val(), cars_detali.lang))
+                    car.arrival = toISOStringTZ(new Date());
+                    car.arrival_user = cars_detali.user;
+                    // обновим информацию о вагоне
+                    cars_detali.ids_inc.putArrivalCars(car, function (result_update_car) {
+                        if (result_update_car > 0) {
+                            // Информация по принятому вагону обновлена, поменяем статус состава на стату "В работе"
+                            cars_detali.ids_inc.getArrivalSostavOfID(car.id_arrival, function (arrival_sostav) {
+                                if (arrival_sostav) {
+                                    // Состав определен
+                                    arrival_sostav.status = 1;
+                                    arrival_sostav.change = toISOStringTZ(new Date());
+                                    arrival_sostav.change_user = cars_detali.user;
+                                    arrival_sostav.Arrival_UZ_Vagon = null;// что-бы не вызывало ошибки
+                                    arrival_sostav.ArrivalCars = null;// что-бы не вызывало ошибки
+                                    cars_detali.ids_inc.putArrivalSostav(arrival_sostav, function (result_update_arrival_sostav) {
+                                        if (typeof callback === 'function') {
+                                            callback(result_update_arrival_sostav>0 ? result_update_car : result_update_arrival_sostav);
+                                        }
+                                    });
+                                } else {
+                                    // Состав не определен
+                                    cars_detali.alert.out_error_message("Статус состава принятого вагона №" + car.num + " - не изменен!");
+                                    //LockScreenOff();
+                                    if (typeof callback === 'function') {
+                                        callback(-1);
+                                    }
+                                }
+                            });
+                        } else {
+                            // Документ не определен
+                            cars_detali.alert.out_error_message("Информация по принятому вагону №" + car.num + " - не обновлена!");
+                            //LockScreenOff();
+                            if (typeof callback === 'function') {
+                                callback(result_update_car);
+                            }
+                        }
+                    });
+                }
 
-            // Принять вагон
-            arrival_vagon: function (id_car) {
+            },
+            
+            // Принять вагон в системе ИДС
+            arrival_vagon: function (id_car, callback) {
                 cars_detali.alert.clear_message();
                 LockScreen(langView('mess_arrival_vagon', langs));
                 if (id_car && id_car > 0) {
@@ -2920,7 +2986,7 @@
                         if (result_car) {
                             // Вагон найден, проверим режим
                             if (!result_car.arrival && cars_detali.car_status > 0) {
-                                // Вагон не принят
+                                // Вагон не принят ------------------------------------------------
                                 if (cars_detali.car_status === 1) {
                                     // Режим автомат
                                     if (result_car.num_doc && result_car.num_doc !== "") {
@@ -2947,7 +3013,12 @@
                                                                                 //--------------------------------------------------------------------------------------
                                                                                 // Обработка вагонов
                                                                                 cars_detali.add_upd_vagon(result_add_document, result_car, function (result_add_vagon) {
-
+                                                                                    // Обработка записис по принятому вагону
+                                                                                    cars_detali.update_arrival_car(result_car, function (result_add_car) {
+                                                                                        if (typeof callback === 'function') {
+                                                                                            callback(result_add_car);
+                                                                                        }
+                                                                                    });
                                                                                 });
                                                                             });
 
@@ -2955,61 +3026,86 @@
                                                                     });
                                                                 } else {
                                                                     // Ошибка добавления
-                                                                    cars_detali.alert.out_warning_message("Ошибка сохранения нового документа в базе ИДС");
-                                                                    LockScreenOff();
+                                                                    cars_detali.alert.out_error_message("Ошибка сохранения нового документа в базе ИДС");
+                                                                    //LockScreenOff();
+                                                                    if (typeof callback === 'function') {
+                                                                        callback(result_add_document);
+                                                                    }
                                                                 }
                                                             });
                                                         } else {
                                                             // Документ не определен, ошибка
-                                                            cars_detali.alert.out_warning_message("Ошибка формирования нового документа");
-                                                            LockScreenOff();
+                                                            cars_detali.alert.out_error_message("Ошибка формирования нового документа");
+                                                            //LockScreenOff();
+                                                            if (typeof callback === 'function') {
+                                                                callback(-1);
+                                                            }
                                                         }
-                                                        // Добавим к доку остальное
-
-                                                        // Добавим к доку вагон
                                                     });
                                                 } else {
+                                                    //TODO: !!! Подумать нужно обновлять документ
                                                     // Добавим к доку вагон
                                                     cars_detali.add_upd_vagon(result_document_uz.id, result_car, function (result_add_vagon) {
-
+                                                        // Обработка записис по принятому вагону
+                                                        cars_detali.update_arrival_car(result_car, function (result_add_car) {
+                                                            if (typeof callback === 'function') {
+                                                                callback(result_add_car);
+                                                            }
+                                                        });
                                                     });
                                                 }
-
                                             });
                                         } else {
                                             // Не прошло валидацию
-                                            LockScreenOff();
+                                            //LockScreenOff();
+                                            if (typeof callback === 'function') {
+                                                callback(-1);
+                                            }
                                         }
 
                                     } else {
                                         // Документ не определен
-                                        cars_detali.alert.out_warning_message("По вагону не определен ЭПД");
-                                        LockScreenOff();
+                                        cars_detali.alert.out_error_message("По вагону не определен ЭПД");
+                                        //LockScreenOff();
+                                        if (typeof callback === 'function') {
+                                            callback(-1);
+                                        }
                                     }
 
                                 }
+                                // Вагон добавляется в ручном режиме------------------------------------------------
                                 if (cars_detali.car_status === 2) {
                                     // Ручной режим
-                                    LockScreenOff();
+                                    //LockScreenOff();
+                                    //TODO: !!! нужно добавить алгоритм сохранения в ручном режиме
+                                    if (typeof callback === 'function') {
+                                        callback(0);
+                                    }
                                 }
                             } else {
                                 //Вагон уже принят
                                 cars_detali.alert.out_warning_message("Вагон принят");
-                                LockScreenOff();
+                                //LockScreenOff();
+                                if (typeof callback === 'function') {
+                                    callback(0);
+                                }
                             }
-
-
                         } else {
                             // Вагон не прочитан из БД
-                            cars_detali.alert.out_warning_message("Вагон не найден в прибытии");
-                            LockScreenOff();
+                            cars_detali.alert.out_error_message("Вагон не найден в прибытии");
+                            //LockScreenOff();
+                            if (typeof callback === 'function') {
+                                callback(-1);
+                            }
                         }
                     });
-
                 } else {
                     // Вагон не выбран
                     cars_detali.alert.out_warning_message("Вагон не выбран");
-                    LockScreenOff();
+                    //LockScreenOff();
+                    if (typeof callback === 'function') {
+                        callback(0);
+                    }
                 }
             },
             // Валидация данных перед принятием вагона
@@ -3042,6 +3138,8 @@
 
                 valid = valid & cars_detali.val_arrival_car.checkInputOfDirectory(cars_detali.uz_cargo_kod_etsng, this, 'ids_inc.ids_dir.getCargoETSNG_Of_Code', "Указаного кода груза ЕТ СНГ нет в справочнике ИДС.");
                 valid = valid & cars_detali.val_arrival_car.checkInputOfDirectory_IsNull(cars_detali.uz_cargo_kod_gng, this, 'ids_inc.ids_dir.getCargoGNG_Of_Code', "Указаного кода груза ГНГ нет в справочнике ИДС.");
+                
+                //TODO: !!!Добавить проверку на станцию АМКР, позицию, дату принятия по акту
 
                 return valid;
             },
@@ -3120,6 +3218,70 @@
 
 
             // ФУНКЦИИ РАЗДЕЛА "ПРИНЯТЫЕ ВАГОНЫ" ************************************************************************************************************************************
+
+            // Таблица c информацией о принятых вагонах
+            table_arrival_cars: {
+                html_table: $('#table-arrival-cars'),
+                obj: null,
+                list: null,
+                // Инициализировать таблицу
+                init: function () {
+                    cars_detali.table_arrival_cars.obj = cars_detali.table_arrival_cars.html_table.DataTable({
+                        "paging": false,
+                        "searching": false,
+                        "ordering": true,
+                        "info": false,
+                        "select": false,
+                        "autoWidth": true,
+                        //"filter": true,
+                        //"scrollY": "600px",
+                        "scrollX": true,
+                        language: language_table(langs),
+                        jQueryUI: false,
+                        "createdRow": function (row, data, index) {
+                            //$(row).attr('id', data.num);
+                        },
+                        columns: [
+                            { data: "position", title: langView('field_position_arrival', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "num", title: langView('field_num_arrival', langs), width: "50px", orderable: true, searchable: false },
+
+                        ],
+                        stateSave: false,
+                    });
+                },
+                // Показать таблицу с данными
+                view: function (arrival_vagons) {
+                    cars_detali.table_arrival_cars.load(arrival_vagons);
+                    cars_detali.table_arrival_cars.obj.draw();
+                },
+                // Загрузить данные
+                load: function (arrival_vagons) {
+                    cars_detali.table_arrival_cars.list = arrival_vagons;
+                    cars_detali.table_arrival_cars.obj.clear();
+                    for (i = 0; i < arrival_vagons.length; i++) {
+                        cars_detali.table_arrival_cars.obj.row.add(cars_detali.table_arrival_cars.get_row(arrival_vagons[i]));
+                    }
+                },
+                // Получить строку для таблицы
+                get_row: function (data) {
+                    return {
+                        "position": data.position_arrival,
+                        "num": data.num,
+                        //"kod_tiporazmer": data.kod_tiporazmer,
+                        //"gruzp": data.gruzp ? Number(data.gruzp) : null,
+                        //"ves_tary_arc": data.ves_tary_arc ? Number(Number(data.ves_tary_arc) / 1000).toFixed(3) : null,
+                        //"vesg": data.collect_k ? Number(Number(data.collect_k.vesg) / 1000).toFixed(3) : null,
+                        //"brutto": data.ves_tary_arc && data.collect_k ? Number((Number(data.ves_tary_arc) + Number(data.collect_k.vesg)) / 1000).toFixed(3) : null,
+                        //"kod": data.pay_k && data.pay_k.length > 0 ? data.pay_k[0].kod : null,
+                        //"summa": data.pay_k && data.pay_k.length > 0 ? Number(Number(data.pay_k[0].summa) / 100).toFixed(3) : null,
+                        //"nom_zpu": data.zpu_k && data.zpu_k.length > 0 ? data.zpu_k[0].nom_zpu : null,
+                        //"kol_pac": data.collect_k ? Number(data.collect_k.kol_pac) : null,
+                        //"kod_etsng": data.collect_k ? Number(data.collect_k.kod_etsng) : null,
+
+                    };
+                }
+            },
+
 
             // СПРАВОЧНИКИ И СПИСКИ *************************************************************************************************************************************************
             //-------------------------------------------------------------------------------------
@@ -3697,9 +3859,6 @@
                 }
                 return list_cont_pay;
             },
-
-
-
         },
 
         //*************************************************************************************

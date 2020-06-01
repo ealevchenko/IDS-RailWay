@@ -901,7 +901,7 @@ namespace EFIDS.Helper
                 change = s.change,
                 change_user = s.change_user,
                 Directory_Station = s.Directory_Station.GetDirectory_Station(),
-                Directory_Station1 = s.Directory_Station1.GetDirectory_Station()
+                Directory_Station1 = s.Directory_Station1.GetDirectory_Station(), 
             };
         }
 
@@ -926,7 +926,7 @@ namespace EFIDS.Helper
                 create_user = c.create_user,
                 change = c.change,
                 change_user = c.change_user,
-                UZ_DOC = c.UZ_DOC.GetUZ_DOC(),
+                UZ_DOC = c.UZ_DOC.GetUZ_DOC(), 
             };
         }
 

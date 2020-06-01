@@ -45,12 +45,12 @@ namespace WEB_UI.Controllers.api
         {
             try
             {
-                List<ArrivalSostav> list = this.ef_ids
+               ArrivalSostav sostav = this.ef_ids
                     .Context
                     .Where(s=>s.id == id)
                     .ToList()
-                    .Select(c => c.GetArrivalSostav_ArrivalCars()).ToList();
-                return Ok(list);
+                    .Select(c => c.GetArrivalSostav_ArrivalCars()).FirstOrDefault();
+               return Ok(sostav);
             }
             catch (Exception e)
             {
