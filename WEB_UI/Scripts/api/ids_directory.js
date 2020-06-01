@@ -3860,8 +3860,6 @@ IDS_DIRECTORY.prototype.getCargo_Of_ETSNGCodeCultureName = function (code_etsng,
         return this.getCargo_Of_IDETSNG(obj[0].id);
     }
 };
-
-
 //*======= IDS_DIRECTORY.list_cargo_gng  (Справочник грузов ГНГ) ======================================
 IDS_DIRECTORY.prototype.getCargoGNG_Of_Code = function (code) {
     if (this.list_cargo_gng) {

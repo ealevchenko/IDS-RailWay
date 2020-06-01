@@ -2808,7 +2808,7 @@
             add_vagon_cont: function (otpr_cont, id_vagon, callback) {
                 var list_vagon_cont = cars_detali.get_list_vagon_cont(otpr_cont, id_vagon);
                 if (list_vagon_cont && list_vagon_cont.length > 0) {
-                    cars_detali.ids_inc.postListArrival_UZ_Vagon_Pay(list_vagon_cont, function (result_add_vagon_conts) {
+                    cars_detali.ids_inc.postListArrival_UZ_Vagon_Cont(list_vagon_cont, function (result_add_vagon_conts) {
                         if (typeof callback === 'function') {
                             callback(result_add_vagon_conts);
                         }
@@ -2820,7 +2820,95 @@
                     }
                 }
             },
+            // Добавить платежки по контейнерам
+            add_cont_pays: function (otpr_cont, id_vagon, callback) {
+                cars_detali.ids_inc.getArrival_UZ_Vagon_ContOfID_Vagon(id_vagon, function (result_conts_of_vagon) {
+                    var list_cont_pay = [];
+                    for (var ic = 0; ic < result_conts_of_vagon.length; ic++) {
+                        list_cont_pay = list_cont_pay.concat(cars_detali.get_list_cont_pay(otpr_cont, result_conts_of_vagon[ic]));
+                    }
+                    //
+                    if (list_cont_pay && list_cont_pay.length > 0) {
+                        cars_detali.ids_inc.postListArrival_UZ_Cont_Pay(list_cont_pay, function (result_add_cont_pay) {
+                            if (typeof callback === 'function') {
+                                callback(result_add_cont_pay);
+                            }
+                        });
+                    } else {
+                        // Нечего добавлять
+                        if (typeof callback === 'function') {
+                            callback(0);
+                        }
+                    }
 
+                });
+            },
+            // Добавить вагон
+            add_vagon: function (id_document_uz, num, id_arrival, callback) {
+                result_vagon_uz = cars_detali.get_arrival_uz_vagon(id_document_uz, num, id_arrival);
+                if (result_vagon_uz) {
+                    // вагон определен добавим его в базу
+                    cars_detali.ids_inc.postArrival_UZ_Vagon(result_vagon_uz, function (result_add_vagon) {
+                        if (result_add_vagon > 0) {
+                            // Вагон добавлен, занесем платежки Pay
+                            cars_detali.add_vagon_pays(cars_detali.select_otpr_vagon, result_add_vagon, function (result_add_vagon_pays) {
+                                // Добавим акты
+                                cars_detali.add_vagon_acts(cars_detali.select_otpr, result_add_vagon, num, function (result_add_vagon_acts) {
+                                    // Добавим контейнеры
+                                    cars_detali.add_vagon_cont(cars_detali.select_otpr_cont, result_add_vagon, function (result_add_vagon_conts) {
+                                        if (result_add_vagon_conts > 0) {
+                                            // Если контейнеры есть и добавлены тогда запишим платежки
+                                            cars_detali.add_cont_pays(cars_detali.select_otpr_cont, result_add_vagon, function (result_add_cont_pays) {
+                                                if (typeof callback === 'function') {
+                                                    callback(result_add_vagon);
+                                                }
+                                            });
+                                        } else {
+                                            // Контейнеров нет
+                                            if (typeof callback === 'function') {
+                                                callback(result_add_vagon);
+                                            }
+                                        }
+                                    })
+                                });
+                            });
+                        } else {
+                            // Ошибка добавления
+                            cars_detali.alert.out_warning_message("Ошибка сохранения информации о вагоне в базе ИДС");
+                            LockScreenOff();
+                            if (typeof callback === 'function') {
+                                callback(result_add_vagon);
+                            }
+                        }
+                    });
+                }
+            },
+            // Обновим вагон
+            upd_vagon: function () {
+
+            },
+            // добавить или обновить вагон
+            add_upd_vagon: function (id_document_uz, car, callback) {
+                // Проверим вагон сохранялся ранее
+                cars_detali.ids_inc.getArrival_UZ_VagonOfDocumentNumVagon(id_document_uz, car.num, function (result_vagon_uz) {
+                    if (!result_vagon_uz) {
+                        // Вагон ранее не сохранялся, добавим его
+                        cars_detali.add_vagon(id_document_uz, car.num, car.id_arrival, function (result_add_vagon_uz) {
+                            if (typeof callback === 'function') {
+                                callback(result_add_vagon_uz);
+                            }
+                        });
+
+                    } else {
+                        // TODO:
+                        // Вагон ранее сохранялся, обновим информацию по нему
+                        if (typeof callback === 'function') {
+                            callback(0);
+                        }
+                    }
+
+                });
+            },
 
             // Принять вагон
             arrival_vagon: function (id_car) {
@@ -2858,42 +2946,9 @@
                                                                             cars_detali.add_document_docs(cars_detali.select_otpr, result_add_document, function (result_add_docs) {
                                                                                 //--------------------------------------------------------------------------------------
                                                                                 // Обработка вагонов
-                                                                                // Проверим вагон сохранялся ранее
-                                                                                cars_detali.ids_inc.getArrival_UZ_VagonOfDocumentNumVagon(result_add_document, result_car.num, function (result_vagon_uz) {
-                                                                                    if (!result_vagon_uz) {
-                                                                                        // Вагон ранее не сохранялся, добавим его
-                                                                                        result_vagon_uz = cars_detali.get_arrival_uz_vagon(result_add_document, result_car.num, result_car.id_arrival);
-                                                                                        if (result_vagon_uz) {
-                                                                                            // вагон определен добавим его в базу
-                                                                                            cars_detali.ids_inc.postArrival_UZ_Vagon(result_vagon_uz, function (result_add_vagon) {
-                                                                                                if (result_add_vagon > 0) {
-                                                                                                    // Вагон добавлен, занесем платежки Pay
-                                                                                                    cars_detali.add_vagon_pays(cars_detali.select_otpr_vagon, result_add_vagon, function (result_add_vagon_pays) {
-                                                                                                        // Добавим акты
-                                                                                                        cars_detali.add_vagon_acts(cars_detali.select_otpr, result_add_vagon, result_car.num, function (result_add_vagon_acts) {
-                                                                                                            // Добавим контейнеры
-                                                                                                            cars_detali.add_vagon_cont(cars_detali.select_otpr_cont, result_add_vagon, function (result_add_vagon_conts) {
-
-                                                                                                            })
-                                                                                                        });
-                                                                                                    });
-                                                                                                } else {
-                                                                                                    // Ошибка добавления
-                                                                                                    cars_detali.alert.out_warning_message("Ошибка сохранения информации о вагоне в базе ИДС");
-                                                                                                    LockScreenOff();
-                                                                                                }
-                                                                                            });
-                                                                                        }
-
-                                                                                    } else {
-                                                                                        // TODO:
-                                                                                        // Вагон ранее сохранялся, обновим информацию по нему
-
-                                                                                    }
+                                                                                cars_detali.add_upd_vagon(result_add_document, result_car, function (result_add_vagon) {
 
                                                                                 });
-
-
                                                                             });
 
                                                                         });
@@ -2915,6 +2970,9 @@
                                                     });
                                                 } else {
                                                     // Добавим к доку вагон
+                                                    cars_detali.add_upd_vagon(result_document_uz.id, result_car, function (result_add_vagon) {
+
+                                                    });
                                                 }
 
                                             });
@@ -3602,17 +3660,18 @@
                         var zpu_k = cont && cont.zpu_k && cont.zpu_k.length > 0 ? cont.zpu_k[0] : null;
                         var cargo = cars_detali.ids_inc.ids_dir.getCargo_Of_ETSNGCodeCultureName(collect_k.kod_etsng, collect_k.name_etsng, cars_detali.lang);
                         var gng = cars_detali.ids_inc.ids_dir.getCargoGNG_Of_CodeCultureName(collect_k.kod_gng, collect_k.name_gng, cars_detali.lang);
-                        list_vagon_cont.push({id: 0 ,
+                        list_vagon_cont.push({
+                            id: 0,
                             id_vagon: id_vagon,
                             nom_cont: cont.nom_cont,
                             kod_tiporazmer: cont.kod_tiporazmer,
                             gruzp: cont.gruzp,
                             ves_tary_arc: cont.ves_tary_arc,
-                            id_cargo: cargo && cargo.length>0 ? cargo[0].id: null,
+                            id_cargo: cargo && cargo.length > 0 ? cargo[0].id : null,
                             id_cargo_gng: gng && gng.length > 0 ? gng[0].id : null,
                             kol_pac: collect_k ? collect_k.kol_pac : null,
-                            pac:  collect_k ? collect_k.pac : null,
-                            vesg:   collect_k ? collect_k.vesg : null,
+                            pac: collect_k ? collect_k.pac : null,
+                            vesg: collect_k ? collect_k.vesg : null,
                             vesg_reweighing: null,
                             nom_zpu: zpu_k ? zpu_k.nom_zpu : null
                         });
@@ -3620,6 +3679,26 @@
                 }
                 return list_vagon_cont;
             },
+            // Получить список платежок по всем платильщикам по указаному контейнеру
+            get_list_cont_pay: function (otpr_cont, cont) {
+                var list_cont_pay = [];
+                if (otpr_cont && otpr_cont.length > 0) {
+                    for (var icr = 0; icr < otpr_cont.length; icr++) {
+                        var cont_doc = otpr_cont[icr];
+                        if (cont_doc.nom_cont === cont.nom_cont) {
+                            if (cont_doc && cont_doc.pay_k && cont_doc.pay_k.length > 0) {
+                                for (var i = 0; i < cont_doc.pay_k.length; i++) {
+                                    pay = cont_doc.pay_k[i];
+                                    list_cont_pay.push({ id: 0, id_cont: cont.id, kod: pay.kod, summa: Number(pay.summa) });
+                                }
+                            }
+                        }
+                    }
+                }
+                return list_cont_pay;
+            },
+
+
 
         },
 
