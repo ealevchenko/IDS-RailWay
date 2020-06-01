@@ -111,6 +111,11 @@ namespace EFIDS.Concrete
                 .IsFixedLength();
 
             modelBuilder.Entity<Arrival_UZ_Vagon>()
+                .HasMany(e => e.ArrivalCars)
+                .WithOptional(e => e.Arrival_UZ_Vagon)
+                .HasForeignKey(e => e.id_arrival_uz_vagon);
+
+            modelBuilder.Entity<Arrival_UZ_Vagon>()
                 .Property(e => e.danger)
                 .IsFixedLength()
                 .IsUnicode(false);

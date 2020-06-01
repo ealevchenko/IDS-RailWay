@@ -31,6 +31,8 @@ namespace EFIDS.Entities
 
         public DateTime? date_adoption_act { get; set; }
 
+        public long? id_arrival_uz_vagon { get; set; }
+
         public DateTime? arrival { get; set; }
 
         [StringLength(50)]
@@ -50,5 +52,7 @@ namespace EFIDS.Entities
         public virtual ArrivalSostav ArrivalSostav { get; set; }
 
         public virtual UZ_DOC UZ_DOC { get; set; }
+        
+        public virtual Arrival_UZ_Vagon Arrival_UZ_Vagon { get; set; }
     }
 }

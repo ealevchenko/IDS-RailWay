@@ -31,7 +31,7 @@ namespace WEB_UI.Controllers.api
         {
             try
             {
-                List<Arrival_UZ_Document> list = this.ef_ids.Context.ToList().Select(c => c.GetArrival_UZ_Document()).ToList();
+                List<Arrival_UZ_Document> list = this.ef_ids.Context.ToList().Select(c => c.GetArrival_UZ_Document_Arrival_UZ_Vagon()).ToList();
                 return Ok(list);
             }
             catch (Exception e)
@@ -51,7 +51,7 @@ namespace WEB_UI.Controllers.api
                     .Context
                     .Where(s => s.id == id)
                     .ToList()
-                    .Select(c => c.GetArrival_UZ_Document()).FirstOrDefault();
+                    .Select(c => c.GetArrival_UZ_Document_Arrival_UZ_Vagon()).FirstOrDefault();
                 return Ok(cars);
             }
             catch (Exception e)
@@ -71,7 +71,7 @@ namespace WEB_UI.Controllers.api
                     .Context
                     .Where(s => s.id_doc_uz == id_doc)
                     .ToList()
-                    .Select(c => c.GetArrival_UZ_Document()).FirstOrDefault();
+                    .Select(c => c.GetArrival_UZ_Document_Arrival_UZ_Vagon()).FirstOrDefault();
                 return Ok(cars);
             }
             catch (Exception e)

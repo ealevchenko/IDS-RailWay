@@ -86,8 +86,14 @@
                 'field_manual_car_arrival': 'Вагон принят',
 
                 'field_position_arrival': '№',
+                'field_nom_doc_arrival': '№ накл.',
                 'field_num_arrival': '№ вагона',
-
+                'field_rod_arrival': 'Род',
+                'field_gruzp_arrival': 'ГП,т',
+                'field_u_tara_arrival': 'Тара,т',
+                'field_vesg_arrival': 'Вес,т',
+                'field_cargo_arrival': 'Груз',
+                'field_station_on_amkr_arrival': 'Получатель',
 
                 'title_button_buffer': 'Буфер',
                 'title_button_excel': 'Excel',
@@ -910,7 +916,7 @@
                     .add(cars_detali.uz_vag_route)
                     .add(cars_detali.uz_vag_note)
 
-                ;
+                    ;
 
                 // Соберем все элементы в массив
                 cars_detali.all_obj_card_vag = $([])
@@ -2890,7 +2896,7 @@
                                                 callback(result_add_vagon);
                                             }
                                         }
-                                    })
+                                    });
                                 });
                             });
                         } else {
@@ -2931,10 +2937,11 @@
                 });
             },
             // Обновить информацию о принятом вагоне (перенос влево в окно принятые вагоны, изменение статуса состава "В работе")
-            update_arrival_car: function (car, callback) {
+            update_arrival_car: function (car, id_vagon, callback) {
                 if (car) {
                     car.position_arrival = get_input_value(cars_detali.arrival_cars_position_arrival);
-                    car.date_adoption_act = toISOStringTZ(get_datetime_value(cars_detali.arrival_cars_car_date_adoption_act.val(), cars_detali.lang))
+                    car.date_adoption_act = toISOStringTZ(get_datetime_value(cars_detali.arrival_cars_car_date_adoption_act.val(), cars_detali.lang));
+                    car.id_arrival_uz_vagon = id_vagon;
                     car.arrival = toISOStringTZ(new Date());
                     car.arrival_user = cars_detali.user;
                     // обновим информацию о вагоне
@@ -2951,7 +2958,7 @@
                                     arrival_sostav.ArrivalCars = null;// что-бы не вызывало ошибки
                                     cars_detali.ids_inc.putArrivalSostav(arrival_sostav, function (result_update_arrival_sostav) {
                                         if (typeof callback === 'function') {
-                                            callback(result_update_arrival_sostav>0 ? result_update_car : result_update_arrival_sostav);
+                                            callback(result_update_arrival_sostav > 0 ? result_update_car : result_update_arrival_sostav);
                                         }
                                     });
                                 } else {
@@ -2975,7 +2982,7 @@
                 }
 
             },
-            
+
             // Принять вагон в системе ИДС
             arrival_vagon: function (id_car, callback) {
                 cars_detali.alert.clear_message();
@@ -3014,14 +3021,21 @@
                                                                                 // Обработка вагонов
                                                                                 cars_detali.add_upd_vagon(result_add_document, result_car, function (result_add_vagon) {
                                                                                     // Обработка записис по принятому вагону
-                                                                                    cars_detali.update_arrival_car(result_car, function (result_add_car) {
+                                                                                    if (result_add_vagon > 0) {
+                                                                                        cars_detali.update_arrival_car(result_car, result_add_vagon, function (result_add_car) {
+                                                                                            if (typeof callback === 'function') {
+                                                                                                callback(result_add_car);
+                                                                                            }
+                                                                                        });
+                                                                                    } else {
+                                                                                        // Ошибка обновления или добавления вагона
+                                                                                        cars_detali.alert.out_error_message("Ошибка обновления или добавления вагона");
                                                                                         if (typeof callback === 'function') {
-                                                                                            callback(result_add_car);
+                                                                                            callback(result_add_vagon);
                                                                                         }
-                                                                                    });
+                                                                                    }
                                                                                 });
                                                                             });
-
                                                                         });
                                                                     });
                                                                 } else {
@@ -3047,11 +3061,19 @@
                                                     // Добавим к доку вагон
                                                     cars_detali.add_upd_vagon(result_document_uz.id, result_car, function (result_add_vagon) {
                                                         // Обработка записис по принятому вагону
-                                                        cars_detali.update_arrival_car(result_car, function (result_add_car) {
+                                                        if (result_add_vagon > 0) {
+                                                            cars_detali.update_arrival_car(result_car, result_add_vagon, function (result_add_car) {
+                                                                if (typeof callback === 'function') {
+                                                                    callback(result_add_car);
+                                                                }
+                                                            });
+                                                        } else {
+                                                            // Ошибка обновления или добавления вагона
+                                                            cars_detali.alert.out_error_message("Ошибка обновления или добавления вагона");
                                                             if (typeof callback === 'function') {
-                                                                callback(result_add_car);
+                                                                callback(result_add_vagon);
                                                             }
-                                                        });
+                                                        }
                                                     });
                                                 }
                                             });
@@ -3138,7 +3160,7 @@
 
                 valid = valid & cars_detali.val_arrival_car.checkInputOfDirectory(cars_detali.uz_cargo_kod_etsng, this, 'ids_inc.ids_dir.getCargoETSNG_Of_Code', "Указаного кода груза ЕТ СНГ нет в справочнике ИДС.");
                 valid = valid & cars_detali.val_arrival_car.checkInputOfDirectory_IsNull(cars_detali.uz_cargo_kod_gng, this, 'ids_inc.ids_dir.getCargoGNG_Of_Code', "Указаного кода груза ГНГ нет в справочнике ИДС.");
-                
+
                 //TODO: !!!Добавить проверку на станцию АМКР, позицию, дату принятия по акту
 
                 return valid;
@@ -3243,8 +3265,14 @@
                         },
                         columns: [
                             { data: "position", title: langView('field_position_arrival', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "nom_doc", title: langView('field_nom_doc_arrival', langs), width: "50px", orderable: true, searchable: false },
                             { data: "num", title: langView('field_num_arrival', langs), width: "50px", orderable: true, searchable: false },
-
+                            { data: "rod", title: langView('field_rod_arrival', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "gruzp", title: langView('field_gruzp_arrival', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "u_tara", title: langView('field_u_tara_arrival', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "vesg", title: langView('field_vesg_arrival', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "cargo", title: langView('field_cargo_arrival', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "station_on_amkr", title: langView('field_station_on_amkr_arrival', langs), width: "50px", orderable: true, searchable: false },
                         ],
                         stateSave: false,
                     });
@@ -3264,20 +3292,20 @@
                 },
                 // Получить строку для таблицы
                 get_row: function (data) {
+
+                    var doc_uz = data.Arrival_UZ_Vagon && data.Arrival_UZ_Vagon.Arrival_UZ_Document ? data.Arrival_UZ_Vagon.Arrival_UZ_Document : null;
+                    var vag_uz = data.Arrival_UZ_Vagon ? data.Arrival_UZ_Vagon : null;
+
                     return {
                         "position": data.position_arrival,
                         "num": data.num,
-                        //"kod_tiporazmer": data.kod_tiporazmer,
-                        //"gruzp": data.gruzp ? Number(data.gruzp) : null,
-                        //"ves_tary_arc": data.ves_tary_arc ? Number(Number(data.ves_tary_arc) / 1000).toFixed(3) : null,
-                        //"vesg": data.collect_k ? Number(Number(data.collect_k.vesg) / 1000).toFixed(3) : null,
-                        //"brutto": data.ves_tary_arc && data.collect_k ? Number((Number(data.ves_tary_arc) + Number(data.collect_k.vesg)) / 1000).toFixed(3) : null,
-                        //"kod": data.pay_k && data.pay_k.length > 0 ? data.pay_k[0].kod : null,
-                        //"summa": data.pay_k && data.pay_k.length > 0 ? Number(Number(data.pay_k[0].summa) / 100).toFixed(3) : null,
-                        //"nom_zpu": data.zpu_k && data.zpu_k.length > 0 ? data.zpu_k[0].nom_zpu : null,
-                        //"kol_pac": data.collect_k ? Number(data.collect_k.kol_pac) : null,
-                        //"kod_etsng": data.collect_k ? Number(data.collect_k.kod_etsng) : null,
-
+                        "nom_doc": doc_uz ? doc_uz.nom_doc : null,
+                        "rod": vag_uz && vag_uz.Directory_Cars && vag_uz.Directory_Cars.Directory_GenusWagons ? cars_detali.ids_inc.ids_dir.getValueObj(vag_uz.Directory_Cars.Directory_GenusWagons, 'abbr', cars_detali.lang) : null,
+                        "gruzp": vag_uz ? Number(vag_uz.gruzp) : null,
+                        "u_tara": vag_uz && vag_uz.u_tara ? Number(Number(vag_uz.u_tara) / 1000).toFixed(3) : null,
+                        "vesg": vag_uz && vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000).toFixed(3) : null,
+                        "cargo": vag_uz && vag_uz.Directory_Cargo ? cars_detali.ids_inc.ids_dir.getValueObj(vag_uz.Directory_Cargo, 'cargo_name', cars_detali.lang) : null,
+                        "station_on_amkr": vag_uz && vag_uz.Directory_Station ? cars_detali.ids_inc.ids_dir.getValueObj(vag_uz.Directory_Station, 'station_name', cars_detali.lang) : null
                     };
                 }
             },
