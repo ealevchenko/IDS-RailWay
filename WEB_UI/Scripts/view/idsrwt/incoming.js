@@ -1938,20 +1938,49 @@
             // Обновить компонент станция отправки
             update_list_station_name_from: function (text) {
                 cars_detali.uz_route_name_from = this.uz_route_name_from.autocomplete({
-                    minLength: 3,
+                    minLength: 2,
                     source: getAutocompleteList(cars_detali.ids_inc.ids_dir.getListExternalStation('code', 'station_name', cars_detali.lang, null), 'text'),
                     change: function (event, ui) {
-
+                        cars_detali.view_epd_station_from_manual(cars_detali.uz_route_name_from.val());
                     },
                     select: function (event, ui) {
-
+                        //if (ui.item.value)
+                        //    cars_detali.view_epd_station_from_manual(ui.item.value);
+                    },
+                    search: function (event, ui) {
+                        cars_detali.view_epd_station_from_manual(cars_detali.uz_route_name_from.val());
+                    },
+                    focus: function (event, ui) {
+                        if (ui.item.value)
+                            cars_detali.view_epd_station_from_manual(ui.item.value);
                     }
                 }).val(text ? text : '');
             },
+            //test1: function (text) {
+            //    var code = null;
+            //    var irw = null;
+            //    if (text) {
+            //        var obj = cars_detali.ids_inc.ids_dir.getExternalStation_Of_CultureName('station_name', cars_detali.lang, text)
+            //        if (obj && obj.length > 0) {
+            //            code = obj[0].code;
+            //            if (obj[0].Directory_InlandRailway) {
+            //               irw = cars_detali.ids_inc.ids_dir.getValueCultureObj(obj[0].Directory_InlandRailway, 'inlandrailway_name');
+            //            }
+            //            cars_detali.val_arrival_car.set_control_ok(cars_detali.uz_route_stn_from, "");
+            //        } else {
+            //            cars_detali.val_arrival_car.set_control_error(cars_detali.uz_route_stn_from, "Указаной станции отправки нет в справочнике ИДС.");
+            //        }
+            //    } else {
+            //        cars_detali.val_arrival_car.set_control_error(cars_detali.uz_route_stn_from, "Не указан код станции отправки");
+            //    }
+            //    cars_detali.uz_route_stn_from.val(code);
+            //    cars_detali.uz_route_name_railway_from.val(irw);
+            //},
+
             // Обновить компонент станция отправки
             update_list_station_name_on: function (text) {
                 cars_detali.uz_route_name_on = this.uz_route_name_on.autocomplete({
-                    minLength: 3,
+                    minLength: 2,
                     source: getAutocompleteList(cars_detali.ids_inc.ids_dir.getListExternalStation('code', 'station_name', cars_detali.lang, null), 'text'),
                     change: function (event, ui) {
 
@@ -2240,6 +2269,27 @@
                 cars_detali.uz_route_stn_from.val(stn_from);
                 cars_detali.uz_route_name_from.val(name_from);
                 cars_detali.uz_route_name_railway_from.val(ir_name_from);
+            },
+            // Показать станцию отправления (ручной режим)
+            view_epd_station_from_manual: function (text) {
+                var code = null;
+                var irw = null;
+                if (text) {
+                    var obj = cars_detali.ids_inc.ids_dir.getExternalStation_Of_CultureName('station_name', cars_detali.lang, text)
+                    if (obj && obj.length > 0) {
+                        code = obj[0].code;
+                        if (obj[0].Directory_InlandRailway) {
+                            irw = cars_detali.ids_inc.ids_dir.getValueCultureObj(obj[0].Directory_InlandRailway, 'inlandrailway_name');
+                        }
+                        cars_detali.val_arrival_car.set_control_ok(cars_detali.uz_route_stn_from, "");
+                    } else {
+                        cars_detali.val_arrival_car.set_control_error(cars_detali.uz_route_stn_from, "Указаной станции отправки нет в справочнике ИДС.");
+                    }
+                } else {
+                    cars_detali.val_arrival_car.set_control_error(cars_detali.uz_route_stn_from, "Не указан код станции отправки");
+                }
+                cars_detali.uz_route_stn_from.val(code);
+                cars_detali.uz_route_name_railway_from.val(irw);
             },
             // Показать станцию прибытия
             view_epd_station_on: function (otpr) {
@@ -3005,13 +3055,14 @@
                         if (result_car) {
                             // Вагон найден, проверим режим
                             if (!result_car.arrival && cars_detali.car_status > 0) {
-                                // Вагон не принят ------------------------------------------------
-                                if (cars_detali.car_status === 1) {
-                                    // Режим автомат
-                                    if (result_car.num_doc && result_car.num_doc !== "") {
-                                        // Документ определен
-                                        var valid = cars_detali.validation_arrival_car();
-                                        if (valid) {
+                                var valid = cars_detali.validation_arrival_car();
+                                if (valid) {
+                                    // Вагон не принят в автоматическом режиме ------------------------------------------------
+                                    if (cars_detali.car_status === 1) {
+                                        // Обработаем вагон согласно режима ввода авто-ручной
+                                        // Режим автомат
+                                        if (result_car.num_doc && result_car.num_doc !== "") {
+                                            // Документ определен
                                             // Определим, документ сохранялся ранее ?
                                             cars_detali.ids_inc.getArrival_UZ_DocumentOfID_DOC_UZ(result_car.num_doc, function (result_document_uz) {
                                                 if (!result_document_uz) {
@@ -3090,32 +3141,32 @@
                                                 }
                                             });
                                         } else {
-                                            // Не прошло валидацию
+                                            // Документ не определен
+                                            cars_detali.alert.out_error_message("По вагону не определен ЭПД");
                                             //LockScreenOff();
                                             if (typeof callback === 'function') {
                                                 callback(-1);
                                             }
                                         }
-
-                                    } else {
-                                        // Документ не определен
-                                        cars_detali.alert.out_error_message("По вагону не определен ЭПД");
+                                    }
+                                    // Вагон добавляется в ручном режиме------------------------------------------------
+                                    if (cars_detali.car_status === 2) {
+                                        // Ручной режим
                                         //LockScreenOff();
+                                        //TODO: !!! нужно добавить алгоритм сохранения в ручном режиме
                                         if (typeof callback === 'function') {
-                                            callback(-1);
+                                            callback(0);
                                         }
-                                    }
-
-                                }
-                                // Вагон добавляется в ручном режиме------------------------------------------------
-                                if (cars_detali.car_status === 2) {
-                                    // Ручной режим
+                                    }// {Конец. обработаем вагон согласно режима ввода авто-ручной}
+                                } else {
+                                    // Не прошло валидацию
                                     //LockScreenOff();
-                                    //TODO: !!! нужно добавить алгоритм сохранения в ручном режиме
                                     if (typeof callback === 'function') {
-                                        callback(0);
+                                        callback(-1);
                                     }
                                 }
+
+
                             } else {
                                 //Вагон уже принят
                                 cars_detali.alert.out_warning_message("Вагон принят");

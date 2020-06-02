@@ -3703,6 +3703,15 @@ IDS_DIRECTORY.prototype.getListExternalStation = function (fvalue, ftext, lang, 
     }
     return list;
 };
+
+IDS_DIRECTORY.prototype.getExternalStation_Of_CultureName = function (name, lang, text) {
+    if (this.list_external_station) {
+        var obj = getObjects(this.list_external_station, name + '_' + lang, text);
+        return obj
+    }
+return null;
+};
+
 //*======= IDS_DIRECTORY.list_limiting_loading  (Справочник ограничений погрузки) ======================================
 IDS_DIRECTORY.prototype.getLimitingLoading_Of_Code = function (id) {
     if (this.list_limiting_loading) {
