@@ -915,8 +915,12 @@
                     .add(cars_detali.uz_vag_u_tara)
                     .add(cars_detali.uz_vag_route)
                     .add(cars_detali.uz_vag_note)
-
-                    ;
+                    .add(cars_detali.uz_cargo_kod_etsng)
+                    .add(cars_detali.uz_cargo_kod_gng)
+                    .add(cars_detali.uz_vag_station_on_amkr)
+                    .add(cars_detali.arrival_cars_position_arrival)
+                    .add(cars_detali.arrival_cars_car_date_adoption_act.obj)
+                ;
 
                 // Соберем все элементы в массив
                 cars_detali.all_obj_card_vag = $([])
@@ -1358,6 +1362,7 @@
                 dialog_confirm.open('Cправочник "Внешних сетей и станций"', 'Будет добавлена новая запись внешней станции [ Код = ' + cars_detali.uz_route_stn_from.val() + ', Станция = ' + cars_detali.uz_route_name_from.val() + ', Дорога = ' + cars_detali.uz_route_name_railway_from.val() + ']', function (result) {
                     if (result) {
                         cars_detali.addDirectory_ExternalStation(cars_detali.uz_route_stn_from.val(), cars_detali.uz_route_name_from.val(), function () {
+                            cars_detali.val_arrival_car.set_control_ok(cars_detali.uz_route_stn_from, "");
                             cars_detali.update_list_station_name_from(cars_detali.uz_route_stn_from.val());
                             cars_detali.view_epd_station_from(cars_detali.select_otpr);
                         }, null);
@@ -1373,6 +1378,7 @@
                 dialog_confirm.open('Cправочник "Внешних сетей и станций"', 'Будет добавлена новая запись станции прибытия [ Код = ' + cars_detali.uz_route_stn_on.val() + ', Станция = ' + cars_detali.uz_route_name_on.val() + ', Дорога = ' + cars_detali.uz_route_name_railway_on.val() + ']', function (result) {
                     if (result) {
                         cars_detali.addDirectory_ExternalStation(cars_detali.uz_route_stn_on.val(), cars_detali.uz_route_name_on.val(), function () {
+                            cars_detali.val_arrival_car.set_control_ok(cars_detali.uz_route_stn_on, "");
                             cars_detali.update_list_station_name_on(cars_detali.uz_route_stn_on.val());
                             cars_detali.view_epd_station_on(cars_detali.select_otpr);
                         }, null);
@@ -1391,6 +1397,7 @@
                 dialog_confirm.open('Cправочник "Пограничных пунктов"', 'Будет добавлена новая запись пограничного пункта [ Код = ' + cars_detali.uz_route_stn_border.val() + ', Станция = ' + cars_detali.uz_route_stn_border_name.val() + ']', function (result) {
                     if (result) {
                         cars_detali.addDirectory_BorderCheckpoint(cars_detali.uz_route_stn_border.val(), cars_detali.uz_route_stn_border_name.val(), function () {
+                            cars_detali.val_arrival_car.set_control_ok(cars_detali.uz_route_stn_border, "");
                             cars_detali.update_list_station_border(cars_detali.uz_route_stn_border.val());
                             cars_detali.view_epd_station_border(cars_detali.select_otpr);
                         }, null);
@@ -1405,6 +1412,7 @@
                 dialog_confirm.open('Cправочник "Грузоотправителей"', 'Будет добавлена новая запись грузоотправителя [ Код = ' + cars_detali.uz_cargo_client_kod_from.val() + ', Название = ' + cars_detali.uz_cargo_client_name_from.val() + ']', function (result) {
                     if (result) {
                         cars_detali.addDirectory_Shipper(cars_detali.uz_cargo_client_kod_from.val(), cars_detali.uz_cargo_client_name_from.val(), function () {
+                            cars_detali.val_arrival_car.set_control_ok(cars_detali.uz_cargo_client_kod_from, "");
                             cars_detali.update_list_shipper(cars_detali.uz_cargo_client_kod_from.val());
                             cars_detali.view_epd_client(cars_detali.select_otpr);
                         }, null);
@@ -1435,6 +1443,7 @@
                                     } else {
                                         // Запись вагона из справочника
                                         cars_detali.bt_card_vag_add.hide();
+                                        cars_detali.val_arrival_car.set_control_ok(cars_detali.bt_card_vag_add, "");
                                     }
                                     // Показать информацию из справочника вагонов ИДС (вагон определяеется ранее)
                                     cars_detali.view_epd_card_vag(cars_detali.select_vagon);
@@ -1498,6 +1507,7 @@
                 dialog_confirm.open('Cправочник "Плательщик по прибытию"', 'Будет добавлена новая запись плательщика [ Код = ' + cars_detali.uz_rask_kod_plat.val() + ', Название = ' + cars_detali.uz_rask_name_plat.val() + ']', function (result) {
                     if (result) {
                         cars_detali.addDirectory_PayerArrival(cars_detali.uz_rask_kod_plat.val(), cars_detali.uz_rask_name_plat.val(), function () {
+                            cars_detali.val_arrival_car.set_control_ok(cars_detali.uz_rask_kod_plat, "");
                             cars_detali.update_list_name_plat(cars_detali.uz_rask_name_plat.val());
                             cars_detali.view_epd_plat(cars_detali.select_otpr);
                         }, null);
@@ -1516,6 +1526,7 @@
                 dialog_confirm.open('Cправочник "Грузы ЕТСНГ"', 'Будет добавлена новая запись груза [ Код = ' + cars_detali.uz_cargo_kod_etsng.val() + ', Название = ' + cars_detali.uz_cargo_name_etsng.text() + ']', function (result) {
                     if (result) {
                         cars_detali.addDirectory_CargoETSNG(cars_detali.uz_cargo_kod_etsng.val(), cars_detali.uz_cargo_name_etsng.val(), function () {
+                            cars_detali.val_arrival_car.set_control_ok(cars_detali.uz_cargo_kod_etsng, "");
                             cars_detali.update_list_cargo_etsng(cars_detali.uz_cargo_name_etsng.val());
                             if (cars_detali.select_otpr_cont) {
                                 cars_detali.view_epd_cargo_etsng_of_cont(cars_detali.select_otpr_cont);
@@ -1535,7 +1546,7 @@
                         cars_detali.addDirectory_CargoGNG(cars_detali.uz_cargo_kod_gng.val(), cars_detali.uz_cargo_name_gng.val(), function () {
                             cars_detali.update_list_cargo_gng(cars_detali.uz_cargo_name_gng.val());
                             //cars_detali.view_epd_cargo_gng(cars_detali.select_otpr_vagon);
-
+                            cars_detali.val_arrival_car.set_control_ok(cars_detali.uz_cargo_kod_gng, "");
                             if (cars_detali.select_otpr_cont) {
                                 cars_detali.view_epd_cargo_gng_of_cont(cars_detali.select_otpr_cont);
                             } else {
@@ -1785,8 +1796,9 @@
                 // Очистить сообщения
                 if (message) {
                     cars_detali.alert.clear_message();
-                    cars_detali.val_arrival_car.clear_all(); // Очистить ошибки если принимали вагон, с ошибкой
+                    //cars_detali.val_arrival_car.clear_all(); // Очистить ошибки если принимали вагон, с ошибкой
                 }
+                cars_detali.val_arrival_car.clear_error()
                 // Очистить не принятые вагоны.. ! добавить остальные ячейки
                 cars_detali.select_otpr = null;
                 cars_detali.select_id = null;
@@ -3161,8 +3173,21 @@
                 valid = valid & cars_detali.val_arrival_car.checkInputOfDirectory(cars_detali.uz_cargo_kod_etsng, this, 'ids_inc.ids_dir.getCargoETSNG_Of_Code', "Указаного кода груза ЕТ СНГ нет в справочнике ИДС.");
                 valid = valid & cars_detali.val_arrival_car.checkInputOfDirectory_IsNull(cars_detali.uz_cargo_kod_gng, this, 'ids_inc.ids_dir.getCargoGNG_Of_Code', "Указаного кода груза ГНГ нет в справочнике ИДС.");
 
-                //TODO: !!!Добавить проверку на станцию АМКР, позицию, дату принятия по акту
+                valid = valid & cars_detali.val_arrival_car.checkSelection(cars_detali.uz_vag_station_on_amkr, "Укажите станцию АМКР на которую будет отправлен вагон");
 
+                // Вычисление позиции
+                var pos = get_input_value(cars_detali.arrival_cars_position_arrival);
+                var result_pos = cars_detali.table_arrival_cars.list.filter(function (i) {
+                    return Number(i.position_arrival) === pos ? true : false;
+                });
+                // Проверка позиции
+                if (result_pos && result_pos.length > 0) {
+                    valid = valid & cars_detali.val_arrival_car.set_object_error(cars_detali.arrival_cars_position_arrival, "Указаная позиция уже существует");
+                } else {
+                    valid = valid & cars_detali.val_arrival_car.set_object_ok(cars_detali.arrival_cars_position_arrival, "");
+                }
+                // Проверка даты принятия по акту
+                valid = valid & cars_detali.val_card_vag.checkInputOfDateTime_IsNull(cars_detali.arrival_cars_car_date_adoption_act.obj, lang === 'ru' ? 'DD.MM.YYYY' : 'MM/DD/YYYY');
                 return valid;
             },
             // Получить документ для обновления или добавления
@@ -3820,7 +3845,7 @@
                 if (otpr && otpr.acts && otpr.acts.length > 0) {
                     for (var ia = 0; ia < otpr.acts.length; ia++) {
                         act = otpr.acts[ia];
-                        if (act.vagon_nom === num) {
+                        if (Number(act.vagon_nom) === num) {
                             // Акт по вагону
                             list_vagon_acts.push({
                                 id: 0,

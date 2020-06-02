@@ -511,6 +511,7 @@ var VALIDATION = function (lang, alert, all_obj) {
     this.lang = lang;
     this.alert = alert;
     this.all_obj = all_obj;
+    this.type_message = 0; // 0- ок 1-warning 2-error
 };
 VALIDATION.prototype.clear_all = function () {
     this.clear_message();
@@ -530,12 +531,28 @@ VALIDATION.prototype.clear_error = function (objs) {
 VALIDATION.prototype.clear_message = function () {
     if (this.alert) {
         this.alert.hide().text('');
+        this.type_message = 0;
     }
 };
 // Вывести сообщение об ошибке
 VALIDATION.prototype.out_error_message = function (message) {
     if (this.alert) {
-        this.alert.show().removeClass('alert-success').addClass('alert-danger');
+        if (this.type_message <= 1) {
+            this.alert.show().removeClass('alert-success alert-warning').addClass('alert-danger');
+            this.type_message = 2;
+        }
+        if (message) {
+            this.alert.append(message).append($('<br />'));
+        }
+    }
+};
+// Вывести сообщение внимание
+VALIDATION.prototype.out_warning_message = function (message) {
+    if (this.alert) {
+        if (this.type_message <= 0) {
+            this.alert.show().removeClass('alert-success alert-danger').addClass('alert-warning');
+            this.type_message = 1;
+        }
         if (message) {
             this.alert.append(message).append($('<br />'));
         }
@@ -544,7 +561,9 @@ VALIDATION.prototype.out_error_message = function (message) {
 // Вывести информационное сообщение
 VALIDATION.prototype.out_info_message = function (message) {
     if (this.alert) {
-        this.alert.show().removeClass('alert-danger').addClass('alert-success');
+        if (this.type_message === 0) {
+            this.alert.show().removeClass('alert-success alert-danger').addClass('alert-success');
+        }
         if (message) {
             this.alert.text(message);
         }
@@ -574,7 +593,7 @@ VALIDATION.prototype.set_object_error = function (o, mes_error) {
     return false;
 };
 
-// Установить признак ошибка
+// Установить признак ок
 VALIDATION.prototype.set_object_ok = function (o, mes_ok) {
     this.set_control_ok(o, mes_ok);
     this.out_info_message(mes_ok);
@@ -752,7 +771,7 @@ VALIDATION.prototype.checkInputOfList_IsNull = function (o, list, mes_error, mes
 VALIDATION.prototype.checkInputOfDirectory = function (o, link, name_func, mes_error, mes_ok) {
     if (o.val() !== '' && o.val() !== null) {
         var result = null;
-        eval('result = link.' + name_func +'(Number(o.val()))');
+        eval('result = link.' + name_func + '(Number(o.val()))');
         if (!result || result.length === 0) {
             this.set_control_error(o, mes_error);
             this.out_error_message(mes_error);
@@ -772,7 +791,7 @@ VALIDATION.prototype.checkInputOfDirectory = function (o, link, name_func, mes_e
 VALIDATION.prototype.checkInputOfDirectory_IsNull = function (o, link, name_func, mes_error, mes_ok) {
     if (o.val() !== '' && o.val() !== null) {
         var result = null;
-        eval('result = link.' + name_func +'(Number(o.val()))');
+        eval('result = link.' + name_func + '(Number(o.val()))');
         if (!result || result.length === 0) {
             this.set_control_error(o, mes_error);
             this.out_error_message(mes_error);
