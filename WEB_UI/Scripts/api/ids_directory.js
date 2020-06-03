@@ -710,7 +710,30 @@ IDS_DIRECTORY.prototype.getCarsOfNum= function (num, callback) {
     });
 };
 // Получить текщий вагон по номеру вагона
-IDS_DIRECTORY.prototype.getCurrentCarsOfNum= function (num, adm, rod, kol_os, usl_tip, callback) {
+IDS_DIRECTORY.prototype.getCurrentCarsOfNum = function (num, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/cars/current/num/' + num,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getCurrentCarsOfNum", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить текщий вагон по номеру вагона, администрации, роду 
+IDS_DIRECTORY.prototype.getCurrentCarsOfNumAdmRod= function (num, adm, rod, kol_os, usl_tip, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/directory/cars/current/num/'+num+'/adm/'+adm+'/rod/'+rod+'/kol_os/'+kol_os+'/usl_tip/'+usl_tip,
@@ -725,7 +748,7 @@ IDS_DIRECTORY.prototype.getCurrentCarsOfNum= function (num, adm, rod, kol_os, us
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_DIRECTORY.getCurrentCarsOfNum", x, y, z);
+            OnAJAXError("IDS_DIRECTORY.getCurrentCarsOfNumAdmRod", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2991,6 +3014,15 @@ IDS_DIRECTORY.prototype.getListGenusWagons = function (fvalue, ftext, lang, filt
     }
     return list;
 };
+// Получим список с выборкой по полю
+IDS_DIRECTORY.prototype.getGenusWagons_Of_CultureName = function (name, lang, text) {
+    if (this.list_genus_wagon) {
+        var obj = getObjects(this.list_genus_wagon, name + '_' + lang, text);
+        return obj
+    }
+    return null;
+};
+
 //*======= IDS_DIRECTORY.list_wagon_manufacturers (Справочник заводов изготовителей) ======================================
 IDS_DIRECTORY.prototype.getWagonManufacturers_Internal_Of_ID = function (id_wagon_manufacturer) {
     if (this.list_wagon_manufacturers) {
@@ -3523,6 +3555,14 @@ IDS_DIRECTORY.prototype.getListShipper = function (fvalue, ftext, lang, filter) 
     }
     return list;
 };
+// Получим список с выборкой по полю
+IDS_DIRECTORY.prototype.getShipper_Of_CultureName = function (name, lang, text) {
+    if (this.list_shipper) {
+        var obj = getObjects(this.list_shipper, name + '_' + lang, text);
+        return obj
+    }
+    return null;
+};
 //*======= IDS_DIRECTORY.list_border_checkpoint  (Справочник пограничных пунктов) ======================================
 IDS_DIRECTORY.prototype.getBorderCheckpoint_Of_Code = function (code) {
     if (this.list_border_checkpoint) {
@@ -3559,6 +3599,15 @@ IDS_DIRECTORY.prototype.getListBorderCheckpoint = function (fvalue, ftext, lang,
     }
     return list;
 };
+// Получим список с выборкой по полю
+IDS_DIRECTORY.prototype.getBorderCheckpoint_Of_CultureName = function (name, lang, text) {
+    if (this.list_border_checkpoint) {
+        var obj = getObjects(this.list_border_checkpoint, name + '_' + lang, text);
+        return obj
+    }
+    return null;
+};
+
 //*======= IDS_DIRECTORY.list_countrys  (Справочник стран) ======================================
 IDS_DIRECTORY.prototype.getCountrys_Of_Code = function (id) {
     if (this.list_countrys) {
@@ -3703,15 +3752,14 @@ IDS_DIRECTORY.prototype.getListExternalStation = function (fvalue, ftext, lang, 
     }
     return list;
 };
-
+// Получим список с выборкой по полю
 IDS_DIRECTORY.prototype.getExternalStation_Of_CultureName = function (name, lang, text) {
     if (this.list_external_station) {
         var obj = getObjects(this.list_external_station, name + '_' + lang, text);
         return obj
     }
-return null;
+    return null;
 };
-
 //*======= IDS_DIRECTORY.list_limiting_loading  (Справочник ограничений погрузки) ======================================
 IDS_DIRECTORY.prototype.getLimitingLoading_Of_Code = function (id) {
     if (this.list_limiting_loading) {
@@ -3987,9 +4035,6 @@ IDS_DIRECTORY.prototype.getCargoETSNG_Of_CodeCultureName = function (code, name,
         return null;
     }
 };
-
-
-
 //*======= IDS_DIRECTORY.list_cargo_group  (Справочник групп грузов) ======================================
 IDS_DIRECTORY.prototype.getCargoGroup_Of_Code = function (id) {
     if (this.list_cargo_group) {

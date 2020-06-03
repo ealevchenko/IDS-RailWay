@@ -361,6 +361,40 @@ var getAutocompleteListText = function (list, field_value) {
     }
     return alist;
 };
+// Инициализация компонента Input.Autocomplete
+var initAutocomplete = function (obj_input, property, source, view, text_default) {
+    var lang = 'ru';
+    var minLength = 2;
+    if (property.lang) {
+        lang = property.lang;
+    }
+    if (property.minLength) {
+        minLength = property.minLength;
+    }
+    return obj_input.autocomplete({
+        minLength: 2,
+        source: source,
+        change: function (event, ui) {
+            if (typeof view === 'function') {
+                view(obj_input.val());
+            }
+        },
+        select: function (event, ui) {
+            //if (ui.item.value)
+        },
+        search: function (event, ui) {
+            if (typeof view === 'function') {
+                view(obj_input.val());
+            }
+        },
+        focus: function (event, ui) {
+            if (ui.item.value)
+                if (typeof view === 'function') {
+                    view(ui.item.value);
+                }
+        }
+    }).val(text_default ? text_default : '');
+};
 
 /* ----------------------------------------------------------
     Спомогательные функции

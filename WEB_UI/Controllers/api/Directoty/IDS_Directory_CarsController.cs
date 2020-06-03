@@ -76,8 +76,28 @@ namespace WEB_UI.Controllers.api
                     .Context
                     .Where(w => w.num == num)
                     .ToList()
-                    .Select(m => m.GetDirectory_Cars()).ToList();
+                    .Select(m => m.GetDirectory_Cars()).OrderBy(c=>c.rent_start).ToList();
                 return Ok(cars);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // GET: api/ids/directory/cars/current/num/63958730
+        [Route("current/num/{num:int}")]
+        [ResponseType(typeof(Directory_Cars))]
+        public IHttpActionResult GetCurrentCarsOfNum(int num)
+        {
+            try
+            {
+                Directory_Cars car = this.ef_dir
+                    .Context
+                    .Where(w => w.num == num)
+                    .ToList()
+                    .Select(m => m.GetDirectory_Cars()).OrderByDescending(c=>c.rent_start).FirstOrDefault();
+                return Ok(car);
             }
             catch (Exception e)
             {
