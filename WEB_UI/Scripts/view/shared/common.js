@@ -647,26 +647,31 @@ VALIDATION.prototype.checkValueOfNull = function (o, val, mes_error, mes_ok) {
     }
 };
 // Проверка на пустой объект
-VALIDATION.prototype.checkInputOfNull = function (o, mes_error, mes_ok) {
+VALIDATION.prototype.checkInputOfNull = function (o, mes_error, mes_ok, off_message) {
     if (o.val() === '' || o.val() === null) {
         this.set_control_error(o, mes_error);
-        this.out_error_message(mes_error);
+        if (!(off_message !== undefined && off_message))
+            this.out_error_message(mes_error);
         return false;
     } else {
         this.set_control_ok(o, mes_ok);
-        this.out_info_message(mes_ok);
+        if (!(off_message !== undefined && off_message))
+            this.out_info_message(mes_ok);
         return true;
     }
 };
 // Проверка Select на выбраный раздел
-VALIDATION.prototype.checkSelection = function (o, mes_error, mes_ok) {
+VALIDATION.prototype.checkSelection = function (o, mes_error, mes_ok, off_message) {
+    //var s = Number(o.val())
     if (Number(o.val()) < 0) {
         this.set_control_error(o, mes_error);
-        this.out_error_message(mes_error);
+        if (!(off_message !== undefined && off_message))
+            this.out_error_message(mes_error);
         return false;
     } else {
         this.set_control_ok(o, mes_ok);
-        this.out_info_message(mes_ok);
+        if (!(off_message !== undefined && off_message))
+            this.out_info_message(mes_ok);
         return true;
     }
 };
@@ -762,82 +767,140 @@ VALIDATION.prototype.checkInputOfDateTime_IsNull = function (o, format, mes_ok) 
     }
 };
 // Проверим Input введенное значение есть в списке (пустое значение - не допускается)
-VALIDATION.prototype.checkInputOfList = function (o, list, mes_error, mes_ok) {
+VALIDATION.prototype.checkInputOfList = function (o, list, mes_error, mes_ok, off_message) {
     if (o.val() !== '' && o.val() !== null) {
         var text = o.val();
         var obj = getObjects(list, 'text', text);
         if (!obj || obj.length === 0) {
             this.set_control_error(o, mes_error);
-            this.out_error_message(mes_error);
+            if (!(off_message !== undefined && off_message))
+                this.out_error_message(mes_error);
             return false;
         } else {
             this.set_control_ok(o, mes_ok);
-            this.out_info_message(mes_ok);
+            if (!(off_message !== undefined && off_message))
+                this.out_info_message(mes_ok);
             return true;
         }
     } else {
         this.set_control_error(o, mes_error);
-        this.out_error_message(mes_error);
+        if (!(off_message !== undefined && off_message))
+            this.out_error_message(mes_error);
         return false;
     }
 };
 // Проверим Input введенное значение есть в списке (пустое значение - допускается)
-VALIDATION.prototype.checkInputOfList_IsNull = function (o, list, mes_error, mes_ok) {
+VALIDATION.prototype.checkInputOfList_IsNull = function (o, list, mes_error, mes_ok, off_message) {
     if (o.val() !== '' && o.val() !== null) {
         var text = o.val();
         var obj = getObjects(list, 'text', text);
         if (!obj || obj.length === 0) {
             this.set_control_error(o, mes_error);
-            this.out_error_message(mes_error);
+            if (!(off_message !== undefined && off_message))
+                this.out_error_message(mes_error);
             return false;
         } else {
             this.set_control_ok(o, mes_ok);
-            this.out_info_message(mes_ok);
+            if (!(off_message !== undefined && off_message))
+                this.out_info_message(mes_ok);
             return true;
         }
     } else {
         this.set_control_ok(o, mes_ok);
-        this.out_info_message(mes_ok);
+        if (!(off_message !== undefined && off_message))
+            this.out_info_message(mes_ok);
         return true;
     }
 };
 // Проверим Input введенное значение есть в в указаном справочнике (пустое значение - не допускается)
-VALIDATION.prototype.checkInputOfDirectory = function (o, link, name_func, mes_error, mes_ok) {
+VALIDATION.prototype.checkInputOfDirectory = function (o, link, name_func, mes_error, mes_ok, off_message) {
     if (o.val() !== '' && o.val() !== null) {
         var result = null;
         eval('result = link.' + name_func + '(Number(o.val()))');
         if (!result || result.length === 0) {
             this.set_control_error(o, mes_error);
-            this.out_error_message(mes_error);
+            if (!(off_message !== undefined && off_message))
+                this.out_error_message(mes_error);
             return false;
         } else {
             this.set_control_ok(o, mes_ok);
-            this.out_info_message(mes_ok);
+            if (!(off_message !== undefined && off_message))
+                this.out_info_message(mes_ok);
             return true;
         }
     } else {
         this.set_control_error(o, mes_error);
-        this.out_error_message(mes_error);
+        if (!(off_message !== undefined && off_message))
+            this.out_error_message(mes_error);
         return false;
     }
 };
 // Проверим Input введенное значение есть в в указаном справочнике (пустое значение - допускается)
-VALIDATION.prototype.checkInputOfDirectory_IsNull = function (o, link, name_func, mes_error, mes_ok) {
+VALIDATION.prototype.checkInputOfDirectory_IsNull = function (o, link, name_func, mes_error, mes_ok, off_message) {
     if (o.val() !== '' && o.val() !== null) {
         var result = null;
         eval('result = link.' + name_func + '(Number(o.val()))');
         if (!result || result.length === 0) {
             this.set_control_error(o, mes_error);
-            this.out_error_message(mes_error);
+            if (!(off_message !== undefined && off_message))
+                this.out_error_message(mes_error);
             return false;
         } else {
             this.set_control_ok(o, mes_ok);
-            this.out_info_message(mes_ok);
+            if (!(off_message !== undefined && off_message))
+                this.out_info_message(mes_ok);
             return true;
         }
     } else {
         this.set_control_ok(o, mes_ok);
-        this.out_info_message(mes_ok);
+        if (!(off_message !== undefined && off_message))
+            this.out_info_message(mes_ok);
+        return true;
+    }
+};
+// Проверим Input введенное значение есть в в указаном справочнике (пустое значение - не допускается)
+VALIDATION.prototype.checkInputTextOfDirectory = function (o, link, name_func, field, mes_error, mes_ok, off_message) {
+    if (o.val() !== '' && o.val() !== null) {
+        var result = null;
+        eval('result = link.' + name_func + '("' + field + '", link.lang, o.val())');
+        if (!result || result.length === 0) {
+            this.set_control_error(o, mes_error);
+            if (!(off_message !== undefined && off_message))
+                this.out_error_message(mes_error);
+            return false;
+        } else {
+            this.set_control_ok(o, mes_ok);
+            if (!(off_message !== undefined && off_message))
+                this.out_info_message(mes_ok);
+            return true;
+        }
+    } else {
+        this.set_control_error(o, mes_error);
+        if (!(off_message !== undefined && off_message))
+            this.out_error_message(mes_error);
+        return false;
+    }
+};
+// Проверим Input введенное значение есть в в указаном справочнике (пустое значение - допускается)
+VALIDATION.prototype.checkInputTextOfDirectory_IsNull = function (o, link, name_func, field, mes_error, mes_ok, off_message) {
+    if (o.val() !== '' && o.val() !== null) {
+        var result = null;
+        eval('result = link.' + name_func + '("' + field + '", link.lang, o.val())');
+        if (!result || result.length === 0) {
+            this.set_control_error(o, mes_error);
+            if (!(off_message !== undefined && off_message))
+                this.out_error_message(mes_error);
+            return false;
+        } else {
+            this.set_control_ok(o, mes_ok);
+            if (!(off_message !== undefined && off_message))
+                this.out_info_message(mes_ok);
+            return true;
+        }
+    } else {
+        this.set_control_ok(o, mes_ok);
+        if (!(off_message !== undefined && off_message))
+            this.out_info_message(mes_ok);
         return true;
     }
 };

@@ -3609,7 +3609,7 @@ IDS_DIRECTORY.prototype.getBorderCheckpoint_Of_CultureName = function (name, lan
 };
 
 //*======= IDS_DIRECTORY.list_countrys  (Справочник стран) ======================================
-IDS_DIRECTORY.prototype.getCountrys_Of_Code = function (id) {
+IDS_DIRECTORY.prototype.getCountrys_Internal_Of_ID = function (id) {
     if (this.list_countrys) {
         var obj = getObjects(this.list_countrys, 'id', id);
         return obj && obj.length > 0 ? obj[0] : null;
@@ -3617,12 +3617,12 @@ IDS_DIRECTORY.prototype.getCountrys_Of_Code = function (id) {
 };
 //
 IDS_DIRECTORY.prototype.getValue_Countrys_Of_ID = function (id, name, lang) {
-    var obj = this.getCountrys_Of_Code(id);
+    var obj = this.getCountrys_Internal_Of_ID(id);
     return this.getValueObj(obj, name, lang);
 };
 //
 IDS_DIRECTORY.prototype.getValueCulture_Countrys_Of_ID = function (id, name) {
-    var obj = this.getCountrys_Of_Code(id);
+    var obj = this.getCountrys_Internal_Of_ID(id);
     return obj ? obj[name + '_' + this.lang] : null;
 };
 //
@@ -3808,7 +3808,7 @@ IDS_DIRECTORY.prototype.getListLimitingLoading = function (fvalue, ftext, lang, 
     }
     return list;
 };
-//*======= IDS_DIRECTORY.list_payer_arrival  (Справочник платильщиков по прибытию) ======================================
+//*======= IDS_DIRECTORY.list_payer_arrival  (Справочник платильщиков по отправке) ======================================
 IDS_DIRECTORY.prototype.getPayerArrival_Of_Code = function (code) {
     if (this.list_payer_arrival) {
         var obj = getObjects(this.list_payer_arrival, 'code', code);
@@ -3856,6 +3856,15 @@ IDS_DIRECTORY.prototype.getListPayerArrival = function (fvalue, ftext, lang, fil
     }
     return list;
 };
+// Получим список с выборкой по полю
+IDS_DIRECTORY.prototype.getPayerArrival_Of_CultureName = function (name, lang, text) {
+    if (this.list_payer_arrival) {
+        var obj = getObjects(this.list_payer_arrival, name + '_' + lang, text);
+        return obj
+    }
+    return null;
+};
+
 //*======= IDS_DIRECTORY.list_cargo  (Справочник грузов ГНГ) ======================================
 IDS_DIRECTORY.prototype.getCargo_Of_Code = function (id) {
     if (this.list_cargo) {
