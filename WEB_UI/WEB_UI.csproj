@@ -235,6 +235,7 @@
     <Compile Include="Controllers\api\Directoty\IDS_Directory_CountrysController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_ShipperController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_ConsigneeController.cs" />
+    <Compile Include="Controllers\api\Directoty\UZ_Directory_CargoController.cs" />
     <Compile Include="Controllers\api\IDS\MORS\IDS_WagonsMotionSignalsController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_StationController.cs" />
     <Compile Include="Controllers\api\IDS\MORS\IDS_ParksListWagonsController.cs" />

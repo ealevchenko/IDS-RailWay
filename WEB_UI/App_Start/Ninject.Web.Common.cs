@@ -151,6 +151,8 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFUZ.Abstract.IRepository<EFUZ.Entities.Directory_InternalRailroad>>().To<EFUZ.Concrete.EFDirectory_InternalRailroad>();
             kernel.Bind<EFUZ.Abstract.IRepository<EFUZ.Entities.Directory_Countrys>>().To<EFUZ.Concrete.EFDirectory_Countrys>();
             kernel.Bind<EFUZ.Abstract.IRepository<EFUZ.Entities.Directory_Stations>>().To<EFUZ.Concrete.EFDirectory_Stations>();
+            kernel.Bind<EFUZ.Abstract.IRepository<EFUZ.Entities.Directory_Cargo>>().To<EFUZ.Concrete.EFDirectory_Cargo>();
+
 
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.Arrival_UZ_Document>>().To<EFIDS.Concrete.EFArrival_UZ_Document>();
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.Arrival_UZ_Vagon>>().To<EFIDS.Concrete.EFArrival_UZ_Vagon>();

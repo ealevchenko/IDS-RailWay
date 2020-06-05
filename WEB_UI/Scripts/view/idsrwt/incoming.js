@@ -1062,7 +1062,7 @@
             //-------------------------------------------------------------------------------------
             // Возвращает свойство "редактирование разрешено" - true, запрещено -false
             is_edit_mode_of_element: function (el) {
-                var d = $(el).attr('data-edit');
+                //var d = $(el).attr('data-edit');
                 var res = $(el).attr('data-edit') === 'open' || $(el).attr('data-edit') === '' ? true : false;
                 return res;
             },
@@ -1070,7 +1070,7 @@
             set_mode: function (mode) {
                 cars_detali.car_status = (mode ? 2 : 1);
                 $('[data-mode]').each(function (i, el) {
-                    var edit = $(el).attr('data-edit');
+                    //var edit = $(el).attr('data-edit');
                     switch ($(el).attr('data-mode')) {
                         case 'all': {
                             if (cars_detali.is_edit_mode_of_element(el)) { $(el).prop("disabled", !mode); }
@@ -1104,6 +1104,43 @@
                 });
 
             },
+            //// Устоновить режим эементов карточки вагонов (false-view; true-edit)
+            //set_mode_vagon_card: function (enable) {
+            //    $('[data-type]="vagon-gard"').each(function (i, el) {
+            //        cars_detali.car_status
+            //        switch ($(el).attr('data-mode')) {
+            //            case 'all': {
+            //                if (cars_detali.is_edit_mode_of_element(el) && cars_detali.car_status === 2) { $(el).prop("disabled", !enable); }
+            //                else { $(el).prop("disabled", true); }
+            //                break;
+            //            }
+            //            case 'view': {
+            //                $(el).prop("disabled", true);
+            //                if (cars_detali.is_edit_mode_of_element(el) && cars_detali.car_status === 2) { if (!enable) { $(el).show(); } else { $(el).hide(); } }
+            //                else { $(el).show(); }
+            //                break;
+            //            }
+            //            case 'view-global': {
+            //                $(el).prop("disabled", true);
+            //                break;
+            //            }
+            //            case 'edit': {
+            //                if (cars_detali.car_status === 2)
+            //                    $(el).prop("disabled", !enable);
+            //                if (cars_detali.is_edit_mode_of_element(el) && cars_detali.car_status === 2) { if (enable) { $(el).show(); } else { $(el).hide(); } }
+            //                else { $(el).hide(); }
+            //                break;
+            //            }
+            //            case 'edit-global': {
+            //                // Глобальный элемент для редактирования (не активный только когда - close)
+            //                //$(el).show(); убрал иза элемента bootstrap-input-spinner (он скрыт), можно добавить атрибут этого элемента и тогда пропускать
+            //                if (cars_detali.is_edit_mode_of_element(el) && cars_detali.car_status === 2) { $(el).prop("disabled", false); }
+            //                else { $(el).prop("disabled", true); }
+            //                break;
+            //            }
+            //        }
+            //    });
+            //},
             // Закрыть элементы для редактирования (вагон принят)
             set_open_edit: function () {
                 $('[data-form="transceiver"]').each(function (i, el) {
@@ -1459,6 +1496,7 @@
                                         // Запись вагона из справочника
                                         cars_detali.bt_card_vag_add.hide();
                                         cars_detali.val_arrival_car.set_control_ok(cars_detali.bt_card_vag_add, "");
+
                                     }
                                     // Показать информацию из справочника вагонов ИДС (вагон определяеется ранее)
                                     cars_detali.view_epd_card_vag(cars_detali.select_vagon);
@@ -2700,9 +2738,12 @@
             },
             // Показать груз и группу ет снг
             view_epd_cargo_etsng: function (code, name) {
-
-                //TODO: можно сократить -> cars_detali.ids_inc.ids_dir.getCargo_Of_ETSNGCodeCultureName(code, name, cars_detali.lang)
-
+                if (!name && code > 0) {
+                    var uz_cargo = cars_detali.ids_inc.uz_dir.getCargo_Internal_Of_ETSNGCode(code);
+                    if (uz_cargo && uz_cargo.length > 0) {
+                        name = uz_cargo[0].name_etsng;
+                    }
+                }
                 cars_detali.select_id_cargo = null; // сбросим выбранный груз
                 var etsng = cars_detali.ids_inc.ids_dir.list_cargo_etsng.filter(function (i) {
                     if (i.code === code && i['cargo_etsng_name_' + cars_detali.lang] === name) return true; else false;
@@ -3558,7 +3599,7 @@
             loadReference: function (callback) {
                 LockScreen(langView('mess_load', langs));
                 var count = 1;
-                cars_detali.ids_inc.load([], ['hazard_class', 'commercial_condition', 'certification_data', 'payer_arrival', 'cargo', 'cargo_gng', 'cargo_etsng', 'cargo_group', 'type_wagons', 'condition_arrival', 'type_owner_ship', 'limiting_loading', 'operators_wagons', 'owners_wagons', 'genus_wagon', 'countrys', 'railway', 'inlandrailway', 'external_station', 'station', 'consignee', 'shipper', 'border_checkpoint'], ['internal_railroad'], false, function () {
+                cars_detali.ids_inc.load([], ['hazard_class', 'commercial_condition', 'certification_data', 'payer_arrival', 'cargo', 'cargo_gng', 'cargo_etsng', 'cargo_group', 'type_wagons', 'condition_arrival', 'type_owner_ship', 'limiting_loading', 'operators_wagons', 'owners_wagons', 'genus_wagon', 'countrys', 'railway', 'inlandrailway', 'external_station', 'station', 'consignee', 'shipper', 'border_checkpoint'], ['internal_railroad', 'cargo'], false, function () {
                     count -= 1;
                     if (count === 0) {
                         if (typeof callback === 'function') {

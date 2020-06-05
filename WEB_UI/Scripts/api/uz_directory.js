@@ -12,6 +12,8 @@ UZ_DIRECTORY.list_stations = [];
 
 UZ_DIRECTORY.list_internal_railroad = [];
 
+UZ_DIRECTORY.list_cargo = [];
+
 UZ_DIRECTORY.prototype.load = function (list, lockOff, callback) {
     var count = list.length;
     var obj = this;
@@ -44,6 +46,18 @@ UZ_DIRECTORY.prototype.load = function (list, lockOff, callback) {
         if (el === 'internal_railroad') {
             UZ_DIRECTORY.prototype.getInternalRailroad(function (result_internal_railroad) {
                 obj.list_internal_railroad = result_internal_railroad;
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        if (lockOff) { LockScreenOff(); }
+                        callback();
+                    }
+                }
+            });
+        };
+        if (el === 'cargo') {
+            UZ_DIRECTORY.prototype.getCargo(function (result_cargo) {
+                obj.list_cargo = result_cargo;
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
@@ -128,6 +142,30 @@ UZ_DIRECTORY.prototype.getInternalRailroad = function (callback) {
         },
     });
 };
+//======= Directory_Cargo (Справочник грузов) ======================================
+UZ_DIRECTORY.prototype.getCargo = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/uz/directory/cargo/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("UZ_DIRECTORY.getCargo", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 
 /* ----------------------------------------------------------
 функции для работы с объектами
@@ -293,5 +331,52 @@ UZ_DIRECTORY.prototype.getInternalRailroad_Internal_Of_StationCode = function (c
             } else return false;
         });
         return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//======= UZ_DIRECTORY.list_cargo  (Справочник грузов) ======================================
+UZ_DIRECTORY.prototype.getCargo_Internal_Of_ID = function (id) {
+    if (this.list_cargo) {
+        var obj = getObjects(this.list_cargo, 'id', id);
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+UZ_DIRECTORY.prototype.getValue_Cargo_Of_ID = function (id, name) {
+    var obj = this.getCargo_Internal_Of_ID(id);
+    return obj ? obj[name] : null;
+};
+//
+UZ_DIRECTORY.prototype.getValueCulture_Cargo_Of_ID = function (id, name) {
+    var obj = this.getCargo_Internal_Of_ID(id);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+UZ_DIRECTORY.prototype.getListCargo = function (fvalue, ftext, lang) {
+    var list = [];
+    if (this.list_cargo) {
+        for (i = 0, j = this.list_cargo.length; i < j; i++) {
+            var l = this.list_cargo[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+
+        }
+    }
+    return list;
+};
+// вернуть все строки по указанному коду ЕТСНГ
+UZ_DIRECTORY.prototype.getCargo_Internal_Of_ETSNGCode = function (code) {
+    if (this.list_cargo && code !== null) {
+        var obj = getObjects(this.list_cargo, 'code_etsng', code);
+        return obj;
+    }
+};
+// вернуть все строки по указанному коду ГНГ
+UZ_DIRECTORY.prototype.getCargo_Internal_Of_GNGCode = function (code) {
+    if (this.list_cargo && code !== null) {
+        var obj = getObjects(this.list_cargo, 'code_gng', code);
+        return obj;
     }
 };
