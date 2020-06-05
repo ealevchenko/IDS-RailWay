@@ -418,7 +418,7 @@
                                             </div>
                                             <div class="col-md-6 mb-1 text-left">
                                                 <label for="card_vag_name_rod_vag" class="col-form-label">@IDSRWTResource.title_name_rod_vag:</label>
-                                                <input type="text" class="form-control inp-epd" id="card_vag_name_rod_vag" name="card_vag_name_rod_vag" title="ЭПД [OTPR/VAGON/rod_vag] -> Справочник 'Род вагона' -> Справочник 'Карточка вагона' -> Название 'Рода вагона' " data-mode="all" data-edit="" data-form="transceiver">
+                                                <input type="text" class="form-control inp-epd" id="card_vag_name_rod_vag" name="card_vag_name_rod_vag" title="ЭПД [OTPR/VAGON/rod_vag] -> Справочник 'Род вагона' -> Справочник 'Карточка вагона' -> Название 'Рода вагона' " data-mode="all" data-edit="" data-form="transceiver" data-type="vagon-card">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -426,7 +426,7 @@
                                         <div class="form-row">
                                             <div class="col-md-4 mb-1 text-left">
                                                 <label for="card_vag_usl_tip" class="col-form-label">@IDSRWTResource.title_usl_tip:</label>
-                                                <input type="text" class="form-control inp-epd" id="card_vag_usl_tip" name="card_vag_usl_tip" title="ЭПД [OTPR/VAGON/usl_tip] -> Справочник 'Карточка вагона' -> Шифр 'Типа цистерны'" data-mode="all" data-edit="" data-form="transceiver">
+                                                <input type="text" class="form-control inp-epd" id="card_vag_usl_tip" name="card_vag_usl_tip" title="ЭПД [OTPR/VAGON/usl_tip] -> Справочник 'Карточка вагона' -> Шифр 'Типа цистерны'" data-mode="all" data-edit="" data-form="transceiver" data-type="vagon-card">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -446,7 +446,7 @@
                                         <div class="form-row">
                                             <div class="col-md-4 mb-1 text-left">
                                                 <label for="card_vag_kol_os" class="col-form-label">@IDSRWTResource.title_kol_os:</label>
-                                                <select class="form-control inp-epd" id="card_vag_kol_os" name="card_vag_kol_os" title="ЭПД [OTPR/VAGON/kol_os] -> Справочник 'Карточка вагона' -> Количество осей" data-mode="all" data-edit="" data-form="transceiver"></select>
+                                                <select class="form-control inp-epd" id="card_vag_kol_os" name="card_vag_kol_os" title="ЭПД [OTPR/VAGON/kol_os] -> Справочник 'Карточка вагона' -> Количество осей" data-mode="all" data-edit="" data-form="transceiver" data-type="vagon-card"></select>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -458,7 +458,7 @@
                                             </div>
                                             <div class="col-md-4 mb-1 text-left">
                                                 <label for="card_vag_gruzp" class="col-form-label">@IDSRWTResource.title_gruzp_uz:</label>
-                                                <input type="number" class="form-control inp-uz" id="card_vag_gruzp" name="card_vag_gruzp" title="БД УЗ [https://uz.gov.ua/car_info/index.php] -> Грузоподъемность по БД УЗ" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <input type="number" class="form-control inp-uz" id="card_vag_gruzp" name="card_vag_gruzp" title="БД УЗ [https://uz.gov.ua/car_info/index.php] -> Грузоподъемность по БД УЗ" data-mode="view-global" data-edit="" data-form="transceiver" data-type="vagon-card">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -484,7 +484,7 @@
                                             </div>
                                             <div class="col-md-3 mb-1 text-left">
                                                 <label for="card_vag_date_rem_uz" class="col-form-label">@IDSRWTResource.title_date_rem_uz:</label>
-                                                <input type="datetime" class="form-control inp-uz" id="card_vag_date_rem_uz" name="card_vag_date_rem_uz" title="БД УЗ [https://uz.gov.ua/car_info/index.php] -> Справочник 'Карточка вагона' -> Дата ремонта по БД УЗ" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <input type="datetime" class="form-control inp-uz" id="card_vag_date_rem_uz" name="card_vag_date_rem_uz" title="БД УЗ [https://uz.gov.ua/car_info/index.php] -> Справочник 'Карточка вагона' -> Дата ремонта по БД УЗ" data-mode="view-global" data-edit="" data-form="transceiver" data-type="vagon-card">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -492,13 +492,13 @@
                                         <div class="form-row">
                                             <div class="col-md-4 mb-1 text-left">
                                                 <label for="card_vag_name_owner" class="col-form-label">@IDSRWTResource.title_name_owner:</label>
-                                                <input type="text" class="form-control inp-uz" id="card_vag_name_owner" name="card_vag_name_owner" title="БД УЗ [https://uz.gov.ua/car_info/index.php] -> Справочник 'Собственников вагонов' -> Справочник 'Карточка вагона' -> Собственник вагона" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <input type="text" class="form-control inp-uz" id="card_vag_name_owner" name="card_vag_name_owner" title="БД УЗ [https://uz.gov.ua/car_info/index.php] -> Справочник 'Собственников вагонов' -> Справочник 'Карточка вагона' -> Собственник вагона" data-mode="view-global" data-edit="" data-form="transceiver" data-type="vagon-card">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
                                             <div class="col-md-4 mb-1 text-left">
                                                 <label for="card_vag_rent_start" class="col-form-label">@IDSRWTResource.title_rent_start:</label>
-                                                <input type="datetime" class="form-control inp-manual" id="card_vag_rent_start" name="card_vag_rent_start" title="Ручной ввод (при смене собственника) -> Справочник 'Карточка вагона' -> Дата начала аренды" data-mode="edit-global" data-edit="" data-form="transceiver">
+                                                <input type="datetime" class="form-control inp-manual" id="card_vag_rent_start" name="card_vag_rent_start" title="Ручной ввод (при смене собственника) -> Справочник 'Карточка вагона' -> Дата начала аренды" data-mode="edit-global" data-edit="" data-form="transceiver" data-type="vagon-card">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
@@ -538,7 +538,7 @@
                                             </div>
                                             <div class="col-md-6 mb-1 text-left">
                                                 <label for="uz_vag_note" class="col-form-label">@IDSRWTResource.title_note:</label>
-                                                <textarea class="form-control inp-manual" id="uz_vag_note" name="uz_vag_note" title="Ручной ввод (примечания)" data-mode="edit-global" data-edit="" data-form="transceiver"></textarea>
+                                                <textarea class="form-control inp-manual" id="uz_vag_note" name="uz_vag_note" title="Ручной ввод (примечания)" data-mode="edit-global" data-edit="" data-form="transceiver" data-type="vagon-card"></textarea>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>

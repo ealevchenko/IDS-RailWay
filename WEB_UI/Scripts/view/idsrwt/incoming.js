@@ -1031,8 +1031,6 @@
 
                 });
             },
-
-
             // Обновить и загрузить списочные компоненты окна
             init_select: function () {
                 cars_detali.update_list_station_name_from(null);        // Станция отправитель
@@ -1066,6 +1064,14 @@
                 var res = $(el).attr('data-edit') === 'open' || $(el).attr('data-edit') === '' ? true : false;
                 return res;
             },
+            //
+            is_edit_mode_of_vagon_element: function (el) {
+                if ($(el).attr('data-type') !== 'vagon-card') {
+                    var s = "w";
+                }
+                var res = $(el).attr('data-type') !== 'vagon-card' || $(el).attr('data-type') === 'vagon-card' && (!cars_detali.select_vagon || (cars_detali.select_vagon && cars_detali.select_vagon.id === 0));
+                return res;
+            },
             // Устоновить режим эементов (false-view; true-edit)
             set_mode: function (mode) {
                 cars_detali.car_status = (mode ? 2 : 1);
@@ -1073,13 +1079,13 @@
                     //var edit = $(el).attr('data-edit');
                     switch ($(el).attr('data-mode')) {
                         case 'all': {
-                            if (cars_detali.is_edit_mode_of_element(el)) { $(el).prop("disabled", !mode); }
+                            if (cars_detali.is_edit_mode_of_element(el) && cars_detali.is_edit_mode_of_vagon_element(el)) { $(el).prop("disabled", !mode); }
                             else { $(el).prop("disabled", true); }
                             break;
                         }
                         case 'view': {
                             $(el).prop("disabled", true);
-                            if (cars_detali.is_edit_mode_of_element(el)) { if (!mode) { $(el).show(); } else { $(el).hide(); } }
+                            if (cars_detali.is_edit_mode_of_element(el) && cars_detali.is_edit_mode_of_vagon_element(el)) { if (!mode) { $(el).show(); } else { $(el).hide(); } }
                             else { $(el).show(); }
                             break;
                         }
@@ -1089,14 +1095,14 @@
                         }
                         case 'edit': {
                             $(el).prop("disabled", false);
-                            if (cars_detali.is_edit_mode_of_element(el)) { if (mode) { $(el).show(); } else { $(el).hide(); } }
+                            if (cars_detali.is_edit_mode_of_element(el) && cars_detali.is_edit_mode_of_vagon_element(el)) { if (mode) { $(el).show(); } else { $(el).hide(); } }
                             else { $(el).hide(); }
                             break;
                         }
                         case 'edit-global': {
                             // Глобальный элемент для редактирования (не активный только когда - close)
                             //$(el).show(); убрал иза элемента bootstrap-input-spinner (он скрыт), можно добавить атрибут этого элемента и тогда пропускать
-                            if (cars_detali.is_edit_mode_of_element(el)) { $(el).prop("disabled", false); }
+                            if (cars_detali.is_edit_mode_of_element(el) && cars_detali.is_edit_mode_of_vagon_element(el)) { $(el).prop("disabled", false); }
                             else { $(el).prop("disabled", true); }
                             break;
                         }
@@ -1104,43 +1110,43 @@
                 });
 
             },
-            //// Устоновить режим эементов карточки вагонов (false-view; true-edit)
-            //set_mode_vagon_card: function (enable) {
-            //    $('[data-type]="vagon-gard"').each(function (i, el) {
-            //        cars_detali.car_status
-            //        switch ($(el).attr('data-mode')) {
-            //            case 'all': {
-            //                if (cars_detali.is_edit_mode_of_element(el) && cars_detali.car_status === 2) { $(el).prop("disabled", !enable); }
-            //                else { $(el).prop("disabled", true); }
-            //                break;
-            //            }
-            //            case 'view': {
-            //                $(el).prop("disabled", true);
-            //                if (cars_detali.is_edit_mode_of_element(el) && cars_detali.car_status === 2) { if (!enable) { $(el).show(); } else { $(el).hide(); } }
-            //                else { $(el).show(); }
-            //                break;
-            //            }
-            //            case 'view-global': {
-            //                $(el).prop("disabled", true);
-            //                break;
-            //            }
-            //            case 'edit': {
-            //                if (cars_detali.car_status === 2)
-            //                    $(el).prop("disabled", !enable);
-            //                if (cars_detali.is_edit_mode_of_element(el) && cars_detali.car_status === 2) { if (enable) { $(el).show(); } else { $(el).hide(); } }
-            //                else { $(el).hide(); }
-            //                break;
-            //            }
-            //            case 'edit-global': {
-            //                // Глобальный элемент для редактирования (не активный только когда - close)
-            //                //$(el).show(); убрал иза элемента bootstrap-input-spinner (он скрыт), можно добавить атрибут этого элемента и тогда пропускать
-            //                if (cars_detali.is_edit_mode_of_element(el) && cars_detali.car_status === 2) { $(el).prop("disabled", false); }
-            //                else { $(el).prop("disabled", true); }
-            //                break;
-            //            }
-            //        }
-            //    });
-            //},
+            // Устоновить режим эементов карточки вагонов (false-view; true-edit)
+            set_mode_vagon_card: function (enable) {
+                $('[data-type="vagon-card"]').each(function (i, el) {
+                    cars_detali.car_status
+                    switch ($(el).attr('data-mode')) {
+                        case 'all': {
+                            if (cars_detali.is_edit_mode_of_element(el) && cars_detali.car_status === 2) { $(el).prop("disabled", !enable); }
+                            else { $(el).prop("disabled", true); }
+                            break;
+                        }
+                        case 'view': {
+                            $(el).prop("disabled", true);
+                            if (cars_detali.is_edit_mode_of_element(el) && cars_detali.car_status === 2) { if (!enable) { $(el).show(); } else { $(el).hide(); } }
+                            else { $(el).show(); }
+                            break;
+                        }
+                        case 'view-global': {
+                            $(el).prop("disabled", true);
+                            break;
+                        }
+                        case 'edit': {
+                            if (cars_detali.car_status === 2)
+                                $(el).prop("disabled", !enable);
+                            if (cars_detali.is_edit_mode_of_element(el) && cars_detali.car_status === 2) { if (enable) { $(el).show(); } else { $(el).hide(); } }
+                            else { $(el).hide(); }
+                            break;
+                        }
+                        case 'edit-global': {
+                            // Глобальный элемент для редактирования (не активный только когда - close)
+                            //$(el).show(); убрал иза элемента bootstrap-input-spinner (он скрыт), можно добавить атрибут этого элемента и тогда пропускать
+                            if (cars_detali.is_edit_mode_of_element(el) && cars_detali.car_status === 2) { $(el).prop("disabled", false); }
+                            else { $(el).prop("disabled", true); }
+                            break;
+                        }
+                    }
+                });
+            },
             // Закрыть элементы для редактирования (вагон принят)
             set_open_edit: function () {
                 $('[data-form="transceiver"]').each(function (i, el) {
@@ -1492,9 +1498,11 @@
                                     if (cars_detali.select_vagon && cars_detali.select_vagon.id === 0) {
                                         // Запись вагона новая 
                                         cars_detali.bt_card_vag_add.show();
+                                        cars_detali.set_mode_vagon_card(true);
                                     } else {
                                         // Запись вагона из справочника
                                         cars_detali.bt_card_vag_add.hide();
+                                        cars_detali.set_mode_vagon_card(false);
                                         cars_detali.val_arrival_car.set_control_ok(cars_detali.bt_card_vag_add, "");
 
                                     }
@@ -1509,9 +1517,11 @@
                                         if (cars_detali.select_vagon && cars_detali.select_vagon.id === 0) {
                                             // Запись вагона новая 
                                             cars_detali.bt_card_vag_add.show();
+                                            cars_detali.set_mode_vagon_card(true);
                                         } else {
                                             // Запись вагона из справочника
                                             cars_detali.bt_card_vag_add.hide();
+                                            cars_detali.set_mode_vagon_card(false);
                                             cars_detali.val_arrival_car.set_control_ok(cars_detali.bt_card_vag_add, "");
                                         }
                                         // Показать информацию из справочника вагонов ИДС (вагон определяеется ранее)
@@ -1524,7 +1534,7 @@
                     }
                 });
             }),
-
+            // Найти вагон в карточке (ручной режим)
             bt_card_vag_searsh: $('button#card_vag_searsh').on('click', function (event) {
                 event.preventDefault();
                 var valid = cars_detali.validation_searsh_card_vag();
@@ -1544,9 +1554,11 @@
                         if (cars_detali.select_vagon && cars_detali.select_vagon.id === 0) {
                             // Запись вагона новая 
                             cars_detali.bt_card_vag_add.show();
+                            cars_detali.set_mode_vagon_card(true);
                         } else {
                             // Запись вагона из справочника
                             cars_detali.bt_card_vag_add.hide();
+                            cars_detali.set_mode_vagon_card(false);
                         }
                         // Показать информацию из справочника вагонов ИДС (вагон определяеется ранее)
                         cars_detali.view_epd_card_vag(cars_detali.select_vagon);
@@ -2228,10 +2240,20 @@
                     cars_detali.view_epd_cargo_etsng_manual,
                     text
                     );
+            },
+            // Обновить компонент грузы ГНГ
+            update_list_cargo_gng: function (text) {
+                cars_detali.uz_cargo_name_gng = initAutocomplete(
+                    this.uz_cargo_name_gng,
+                    { lang: cars_detali.lang, minLength: 2 },
+                    getAutocompleteList(cars_detali.ids_inc.ids_dir.getListCargoGNG('code', 'cargo_gng_name', cars_detali.lang, null), 'text'),
+                    cars_detali.view_epd_cargo_gng_manual,
+                    text
+                    );
 
-                //cars_detali.uz_cargo_name_etsng = this.uz_cargo_name_etsng.autocomplete({
+                //cars_detali.uz_cargo_name_gng = this.uz_cargo_name_gng.autocomplete({
                 //    minLength: 2,
-                //    source: getAutocompleteList(cars_detali.ids_inc.ids_dir.getListCargoETSNG('code', 'cargo_etsng_name', cars_detali.lang, null), 'text'),
+                //    source: getAutocompleteList(cars_detali.ids_inc.ids_dir.getListCargoGNG('code', 'cargo_gng_name', cars_detali.lang, null), 'text'),
                 //    change: function (event, ui) {
 
                 //    },
@@ -2239,19 +2261,6 @@
 
                 //    }
                 //}).val(text ? text : '');
-            },
-            // Обновить компонент грузы ГНГ
-            update_list_cargo_gng: function (text) {
-                cars_detali.uz_cargo_name_gng = this.uz_cargo_name_gng.autocomplete({
-                    minLength: 2,
-                    source: getAutocompleteList(cars_detali.ids_inc.ids_dir.getListCargoGNG('code', 'cargo_gng_name', cars_detali.lang, null), 'text'),
-                    change: function (event, ui) {
-
-                    },
-                    select: function (event, ui) {
-
-                    }
-                }).val(text ? text : '');
             },
             // Обновить компонент сертификационные данные
             update_list_certificate_data: function (id) {
@@ -2826,6 +2835,44 @@
                 cars_detali.uz_cargo_name_gng.val(name);
 
             },
+            // Показать груз и группу гнг (ручной режим)
+            view_epd_cargo_gng_manual: function (text) {
+
+                var code = null;
+                if (text) {
+                    var obj = cars_detali.ids_inc.ids_dir.getCargoGNG_Of_CultureName('cargo_gng_name', cars_detali.lang, text)
+                    if (obj && obj.length > 0) {
+                        code = obj[0].code;
+                        cars_detali.val_arrival_car.set_control_ok(cars_detali.uz_cargo_kod_gng, "");
+                    } else {
+                        cars_detali.val_arrival_car.set_control_error(cars_detali.uz_cargo_kod_gng, "Указанного кода груза ГНГ нет в справочнике ИДС.");
+                    }
+                } else {
+                    //cars_detali.val_arrival_car.set_control_error(cars_detali.uz_cargo_kod_gng, "Не указан код груза ГНГ");
+                    cars_detali.val_arrival_car.set_control_ok(cars_detali.uz_cargo_kod_gng, "");
+                }
+                cars_detali.uz_cargo_kod_gng.val(code);
+
+
+                //cars_detali.select_id_cargo_gng = null; // сбросим выбранный груз гнг
+                //var gng = cars_detali.ids_inc.ids_dir.list_cargo_gng.filter(function (i) {
+                //    if (i.code === code && i['cargo_gng_name_' + cars_detali.lang] === name) return true; else false;
+                //});
+                //if (!code || (gng && gng.length > 0)) {
+                //    cars_detali.select_id_cargo_gng = gng.length > 0 ? gng[0].id : null; // добавим выбранный груз ГНГ
+                //    cars_detali.uz_cargo_name_gng_add.hide();
+                //} else {
+                //    if (gng.length > 0) {
+                //        cars_detali.select_id_cargo_gng = gng[0].id; // добавим выбранный груз ГНГ
+                //        cars_detali.uz_cargo_name_gng_add.hide();
+                //    }
+                //    cars_detali.uz_cargo_name_gng_add.show();
+                //}
+                //cars_detali.uz_cargo_kod_gng.val(code);
+                //cars_detali.uz_cargo_name_gng.val(name);
+
+            },
+
             // Показать анализ груза
             view_epd_cargo_analysis: function (otpr) {
                 //if (otpr && otpr.text) {
@@ -2915,9 +2962,11 @@
                         if (cars_detali.select_vagon && cars_detali.select_vagon.id === 0) {
                             // Запись вагона новая 
                             cars_detali.bt_card_vag_add.show();
+                            cars_detali.set_mode_vagon_card(true);
                         } else {
                             // Запись вагона из справочника
                             cars_detali.bt_card_vag_add.hide();
+                            cars_detali.set_mode_vagon_card(false);
                         }
                         //--------------------------------------------------------
                         // требования
@@ -2987,9 +3036,11 @@
                             if (cars_detali.select_vagon && cars_detali.select_vagon.id === 0) {
                                 // Запись вагона новая 
                                 cars_detali.bt_card_vag_add.show();
+                                cars_detali.set_mode_vagon_card(true);
                             } else {
                                 // Запись вагона из справочника
                                 cars_detali.bt_card_vag_add.hide();
+                                cars_detali.set_mode_vagon_card(false);
                             }
                             //-------------------------------------------------------------------
                             // Показать информацию из справочника вагонов ИДС (вагон определяеется ранее)
@@ -2998,6 +3049,7 @@
                             // Создать новую запись вагона 
                             cars_detali.bt_card_vag_searsh.show();
                             cars_detali.bt_card_vag_add.hide();
+                            cars_detali.set_mode_vagon_card(false);
                         }
                         cars_detali.show_booton_epd_search(); // Показать кнопку поиска документа
 

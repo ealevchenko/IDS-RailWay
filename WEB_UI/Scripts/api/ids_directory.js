@@ -3985,6 +3985,15 @@ IDS_DIRECTORY.prototype.getCargoGNG_Of_CodeCultureName = function (code, name, l
         return null;
     }
 };
+//
+IDS_DIRECTORY.prototype.getCargoGNG_Of_CultureName = function (name, lang, text) {
+    if (this.list_cargo_gng) {
+        var obj = getObjects(this.list_cargo_gng, name + '_' + lang, text);
+        return obj
+    }
+    return null;
+};
+
 //*======= IDS_DIRECTORY.list_cargo_etsng  (Справочник грузов ЕТСНГ) ======================================
 IDS_DIRECTORY.prototype.getCargoETSNG_Of_Code = function (code) {
     if (this.list_cargo_etsng) {
