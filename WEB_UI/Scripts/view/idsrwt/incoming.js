@@ -2180,10 +2180,20 @@
                     cars_detali.view_epd_plat_manual,
                     text
                     );
+            },
+            // Обновить компонент грузы ЕТ СНГ
+            update_list_cargo_etsng: function (text) {
+                cars_detali.uz_cargo_name_etsng = initAutocomplete(
+                    this.uz_cargo_name_etsng,
+                    { lang: cars_detali.lang, minLength: 2 },
+                    getAutocompleteList(cars_detali.ids_inc.ids_dir.getListCargoETSNG('code', 'cargo_etsng_name', cars_detali.lang, null), 'text'),
+                    cars_detali.view_epd_cargo_etsng_manual,
+                    text
+                    );
 
-                //cars_detali.uz_rask_name_plat = this.uz_rask_name_plat.autocomplete({
+                //cars_detali.uz_cargo_name_etsng = this.uz_cargo_name_etsng.autocomplete({
                 //    minLength: 2,
-                //    source: getAutocompleteList(cars_detali.ids_inc.ids_dir.getListPayerArrival('code', 'payer_name', cars_detali.lang, null), 'text'),
+                //    source: getAutocompleteList(cars_detali.ids_inc.ids_dir.getListCargoETSNG('code', 'cargo_etsng_name', cars_detali.lang, null), 'text'),
                 //    change: function (event, ui) {
 
                 //    },
@@ -2191,19 +2201,6 @@
 
                 //    }
                 //}).val(text ? text : '');
-            },
-            // Обновить компонент грузы ЕТ СНГ
-            update_list_cargo_etsng: function (text) {
-                cars_detali.uz_cargo_name_etsng = this.uz_cargo_name_etsng.autocomplete({
-                    minLength: 2,
-                    source: getAutocompleteList(cars_detali.ids_inc.ids_dir.getListCargoETSNG('code', 'cargo_etsng_name', cars_detali.lang, null), 'text'),
-                    change: function (event, ui) {
-
-                    },
-                    select: function (event, ui) {
-
-                    }
-                }).val(text ? text : '');
             },
             // Обновить компонент грузы ГНГ
             update_list_cargo_gng: function (text) {
@@ -2638,15 +2635,15 @@
                     var obj = cars_detali.ids_inc.ids_dir.getPayerArrival_Of_CultureName('payer_name', cars_detali.lang, text)
                     if (obj && obj.length > 0) {
                         code = obj[0].code;
-                        //cars_detali.val_arrival_car.set_control_ok(cars_detali.uz_rask_kod_plat, "");
+                        cars_detali.val_arrival_car.set_control_ok(cars_detali.uz_rask_kod_plat, "");
                     } else {
-                        //cars_detali.val_arrival_car.set_control_error(cars_detali.uz_rask_kod_plat, "Указанного пограничного пункта нет в справочнике ИДС.");
+                        cars_detali.val_arrival_car.set_control_error(cars_detali.uz_rask_kod_plat, "Указанного плательщика по отправке нет в справочнике ИДС.");
                     }
                 } else {
-                    //cars_detali.val_arrival_car.set_control_ok(cars_detali.uz_rask_kod_plat, "");
+                    cars_detali.val_arrival_car.set_control_error(cars_detali.uz_rask_kod_plat, "Не указан плательщик по отправке");
                 }
                 cars_detali.uz_rask_kod_plat.val(code);
-                cars_detali.validation_vagon_pay(true, true);
+                //cars_detali.validation_vagon_pay(true, true);
             },
 
             // Показать тарифное расстояние
@@ -2727,6 +2724,28 @@
                 cars_detali.uz_cargo_kod_etsng.val(code);
                 cars_detali.uz_cargo_name_etsng.val(name);
 
+            },
+            // Показать груз и группу ет снг (ручной режим)
+            view_epd_cargo_etsng_manual: function (text) {
+                var code = null;
+                if (text) {
+                    var obj = cars_detali.ids_inc.ids_dir.getCargoETSNG_Of_CultureName('cargo_etsng_name', cars_detali.lang, text)
+                    if (obj && obj.length > 0) {
+                        code = obj[0].code;
+                        var cargo = cars_detali.ids_inc.ids_dir.getCargo_Of_ETSNGCodeCultureName(code, text, cars_detali.lang);
+                        if (cargo && cargo.length > 0) {
+                            cars_detali.select_id_cargo = cargo[0].id; // сохраним выбранный груз
+                            cars_detali.val_arrival_car.set_control_ok(cars_detali.uz_cargo_kod_etsng, "");
+                        } else {
+                            cars_detali.val_arrival_car.set_control_error(cars_detali.uz_cargo_kod_etsng, "Указанного груза нет в справочнике ИДС.");
+                        }
+                    } else {
+                        cars_detali.val_arrival_car.set_control_error(cars_detali.uz_cargo_kod_etsng, "Указанного кода груза ЕТ СНГ нет в справочнике ИДС.");
+                    }
+                } else {
+                    cars_detali.val_arrival_car.set_control_error(cars_detali.uz_cargo_kod_etsng, "Не указан код груза ЕТ СНГ");
+                }
+                cars_detali.uz_cargo_kod_etsng.val(code);
             },
             // Показать груз и группу гнг вагона
             view_epd_cargo_gng_of_vagon: function (vagon) {
@@ -3351,9 +3370,6 @@
                 valid = valid & cars_detali.val_arrival_car.checkInputOfDirectory(cars_detali.uz_cargo_client_kod_from, this, 'ids_inc.ids_dir.getShipper_Of_Code', "Указанного грузоотправителя нет в справочнике ИДС.");
                 valid = valid & cars_detali.val_arrival_car.checkInputOfNull(cars_detali.uz_cargo_client_kod_on, "Не указан код грузополучателя");
                 valid = valid & cars_detali.val_arrival_car.checkInputOfDirectory(cars_detali.uz_cargo_client_kod_on, this, 'ids_inc.ids_dir.getConsignee_Of_Code', "Указанного грузополучателя нет в справочнике ИДС.");
-                //valid = valid & cars_detali.val_arrival_car.checkInputOfNull(cars_detali.uz_rask_kod_plat, "Не указан плательщик по отправке");
-                //valid = valid & cars_detali.val_arrival_car.checkInputOfDirectory(cars_detali.uz_rask_kod_plat, this, 'ids_inc.ids_dir.getPayerArrival_Of_Code', "Указанного плательщика по отправке нет в справочнике ИДС.");
-
                 valid = valid & cars_detali.validation_vagon_pay(valid, false);
 
                 valid = valid & cars_detali.val_arrival_car.checkInputOfNull(cars_detali.uz_rask_distance_way, "Не указано тарифное расстояние");
@@ -3593,7 +3609,7 @@
             },
             // Валидация поля  "Платильщик по отправке"
             validation_vagon_pay: function (valid, off_message) {
-                valid = valid & cars_detali.val_arrival_car.checkInputTextOfDirectory_IsNull(cars_detali.uz_rask_name_plat, this, 'ids_inc.ids_dir.getPayerArrival_Of_CultureName', 'payer_name', "Указанного плательщика по отправке нет в справочнике ИДС.", "", off_message);
+                //valid = valid & cars_detali.val_arrival_car.checkInputTextOfDirectory_IsNull(cars_detali.uz_rask_name_plat, this, 'ids_inc.ids_dir.getPayerArrival_Of_CultureName', 'payer_name', "Указанного плательщика по отправке нет в справочнике ИДС.", "", off_message);
                 valid_pay = cars_detali.val_arrival_car.checkInputOfNull(cars_detali.uz_rask_kod_plat, "Не указан плательщик по отправке", "", off_message);
                 valid = valid & valid_pay;
                 if (valid_pay) {
@@ -3601,8 +3617,6 @@
                 }
                 return valid;
             },
-
-
             // Валидация данных справочника "Карточки вагонов"
             validation_card_vag: function () {
                 cars_detali.val_card_vag.clear_all();

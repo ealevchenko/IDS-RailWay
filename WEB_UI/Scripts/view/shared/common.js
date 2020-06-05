@@ -89,8 +89,14 @@ var getChildObjects = function (obj, key, val) {
         if (typeof obj[i] == 'object' & false == true) {
             objects = objects.concat(getObjects(obj[i], key, val));
         } else
-            if (i == key && obj[key] == val) {
-                objects.push(obj);
+            if (typeof obj[key] === 'string') {
+                if (i == key && obj[key].toUpperCase() == val.toUpperCase()) {
+                    objects.push(obj);
+                }
+            } else {
+                if (i == key && obj[key] == val) {
+                    objects.push(obj);
+                }
             }
     }
     return objects;
@@ -885,6 +891,7 @@ VALIDATION.prototype.checkInputTextOfDirectory = function (o, link, name_func, f
 VALIDATION.prototype.checkInputTextOfDirectory_IsNull = function (o, link, name_func, field, mes_error, mes_ok, off_message) {
     if (o.val() !== '' && o.val() !== null) {
         var result = null;
+        var ss = o.val();
         eval('result = link.' + name_func + '("' + field + '", link.lang, o.val())');
         if (!result || result.length === 0) {
             this.set_control_error(o, mes_error);

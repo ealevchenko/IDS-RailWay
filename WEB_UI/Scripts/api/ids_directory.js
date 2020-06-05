@@ -4044,6 +4044,15 @@ IDS_DIRECTORY.prototype.getCargoETSNG_Of_CodeCultureName = function (code, name,
         return null;
     }
 };
+//
+IDS_DIRECTORY.prototype.getCargoETSNG_Of_CultureName = function (name, lang, text) {
+    if (this.list_cargo_etsng) {
+        var obj = getObjects(this.list_cargo_etsng, name + '_' + lang, text);
+        return obj
+    }
+    return null;
+};
+
 //*======= IDS_DIRECTORY.list_cargo_group  (Справочник групп грузов) ======================================
 IDS_DIRECTORY.prototype.getCargoGroup_Of_Code = function (id) {
     if (this.list_cargo_group) {
