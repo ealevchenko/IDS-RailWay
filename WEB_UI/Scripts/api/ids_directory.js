@@ -3491,12 +3491,12 @@ IDS_DIRECTORY.prototype.getConsignee_Of_Code = function (code) {
     }
 };
 //
-IDS_DIRECTORY.prototype.getValue_Consignee_Of_ID = function (code, name, lang) {
+IDS_DIRECTORY.prototype.getValue_Consignee_Of_Code = function (code, name, lang) {
     var obj = this.getConsignee_Of_Code(code);
     return this.getValueObj(obj, name, lang);
 };
 //
-IDS_DIRECTORY.prototype.getValueCulture_Consignee_Of_ID = function (code, name) {
+IDS_DIRECTORY.prototype.getValueCulture_Consignee_Of_Code = function (code, name) {
     var obj = this.getConsignee_Of_Code(code);
     return obj ? obj[name + '_' + this.lang] : null;
 };
@@ -3527,12 +3527,12 @@ IDS_DIRECTORY.prototype.getShipper_Of_Code = function (code) {
     }
 };
 //
-IDS_DIRECTORY.prototype.getValue_Shipper_Of_ID = function (code, name, lang) {
+IDS_DIRECTORY.prototype.getValue_Shipper_Of_Code = function (code, name, lang) {
     var obj = this.getShipper_Of_Code(code);
     return this.getValueObj(obj, name, lang);
 };
 //
-IDS_DIRECTORY.prototype.getValueCulture_Shipper_Of_ID = function (code, name) {
+IDS_DIRECTORY.prototype.getValueCulture_Shipper_Of_Code = function (code, name) {
     var obj = this.getShipper_Of_Code(code);
     return obj ? obj[name + '_' + this.lang] : null;
 };
@@ -3571,12 +3571,12 @@ IDS_DIRECTORY.prototype.getBorderCheckpoint_Of_Code = function (code) {
     }
 };
 //
-IDS_DIRECTORY.prototype.getValue_BorderCheckpoint_Of_ID = function (code, name, lang) {
+IDS_DIRECTORY.prototype.getValue_BorderCheckpoint_Of_Code = function (code, name, lang) {
     var obj = this.getBorderCheckpoint_Of_Code(code);
     return this.getValueObj(obj, name, lang);
 };
 //
-IDS_DIRECTORY.prototype.getValueCulture_BorderCheckpoint_Of_ID = function (code, name) {
+IDS_DIRECTORY.prototype.getValueCulture_BorderCheckpoint_Of_Code = function (code, name) {
     var obj = this.getBorderCheckpoint_Of_Code(code);
     return obj ? obj[name + '_' + this.lang] : null;
 };
@@ -3761,7 +3761,7 @@ IDS_DIRECTORY.prototype.getExternalStation_Of_CultureName = function (name, lang
     return null;
 };
 //*======= IDS_DIRECTORY.list_limiting_loading  (Справочник ограничений погрузки) ======================================
-IDS_DIRECTORY.prototype.getLimitingLoading_Of_Code = function (id) {
+IDS_DIRECTORY.prototype.getLimitingLoading_Of_ID = function (id) {
     if (this.list_limiting_loading) {
         var obj = getObjects(this.list_limiting_loading, 'id', id);
         return obj && obj.length > 0 ? obj[0] : null;
@@ -3781,12 +3781,12 @@ IDS_DIRECTORY.prototype.getID_LimitingLoading_Internal_Of_Name = function (text,
 };
 //
 IDS_DIRECTORY.prototype.getValue_LimitingLoading_Of_Code = function (id, name, lang) {
-    var obj = this.getLimitingLoading_Of_Code(id);
+    var obj = this.getLimitingLoading_Of_ID(id);
     return this.getValueObj(obj, name, lang);
 };
 //
 IDS_DIRECTORY.prototype.getValueCulture_LimitingLoading_Of_Code = function (id, name) {
-    var obj = this.getLimitingLoading_Of_Code(id);
+    var obj = this.getLimitingLoading_Of_ID(id);
     return obj ? obj[name + '_' + this.lang] : null;
 };
 //
@@ -4255,20 +4255,20 @@ IDS_DIRECTORY.prototype.getListHazardClass = function (fvalue, ftext, lang, filt
     return list;
 };
 //*======= IDS_DIRECTORY.list_condition_arrival  (Справочник годность по прибытию) ======================================
-IDS_DIRECTORY.prototype.getConditionArrival_Of_Code = function (id) {
+IDS_DIRECTORY.prototype.getConditionArrival_Of_ID = function (id) {
     if (this.list_condition_arrival) {
         var obj = getObjects(this.list_condition_arrival, 'id', id);
         return obj && obj.length > 0 ? obj[0] : null;
     }
 };
 //
-IDS_DIRECTORY.prototype.getValue_ConditionArrival_Of_Code = function (id, name, lang) {
-    var obj = this.getConditionArrival_Of_Code(id);
+IDS_DIRECTORY.prototype.getValue_ConditionArrival_Of_ID = function (id, name, lang) {
+    var obj = this.getConditionArrival_Of_ID(id);
     return this.getValueObj(obj, name, lang);
 };
 //
-IDS_DIRECTORY.prototype.getValueCulture_ConditionArrival_Of_Code = function (id, name) {
-    var obj = this.getConditionArrival_Of_Code(id);
+IDS_DIRECTORY.prototype.getValueCulture_ConditionArrival_Of_ID = function (id, name) {
+    var obj = this.getConditionArrival_Of_ID(id);
     return obj ? obj[name + '_' + this.lang] : null;
 };
 //

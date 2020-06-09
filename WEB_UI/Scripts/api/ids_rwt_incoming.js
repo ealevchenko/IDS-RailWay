@@ -139,6 +139,30 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_DocumentOfID_DOC_UZ = function (id_doc,
         },
     });
 };
+// Получить документ по накладной УЗ
+IDS_RWT_INCOMING.prototype.getArrival_UZ_DocumentOfNumDoc = function (num_doc, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/arrival_uz_document/num_doc/' + num_doc,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_DocumentOfNumDoc", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 //Добавить документ
 IDS_RWT_INCOMING.prototype.postArrival_UZ_Document = function (document, callback) {
     $.ajax({
@@ -1950,6 +1974,32 @@ IDS_RWT_INCOMING.prototype.getOTPR_UZ_DOCOfNum = function (num, callback) {
         },
     });
 };
+//Добавить 
+IDS_RWT_INCOMING.prototype.postUZ_DOC = function (uz_doc, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/uz_doc/',
+        type: 'POST',
+        data: JSON.stringify(uz_doc),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT_INCOMING.postUZ_DOC", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 /* ----------------------------------------------------------
 функции для работы с объектами
 -------------------------------------------------------------*/

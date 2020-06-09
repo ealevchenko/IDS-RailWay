@@ -285,6 +285,29 @@ namespace IDS
             }
         }
         /// <summary>
+        /// Получить документ из промежуточной базы данных по номеру вагона добавить или обновить его в базе ИДС и вернуть id документа (УЗ)
+        /// </summary>
+        /// <param name="num_car"></param>
+        /// <returns></returns>
+        public string AddUpdateUZ_DOC_To_DB_IDS(int num_car, UZ.uz_status restriction_status)
+        {
+            try
+            {
+                UZ.UZ_DOC uz_doc = GetUZ_DOC_DB_UZ_OfNum(num_car);
+                if (uz_doc != null && uz_doc.status <= restriction_status)
+                {
+                    return AddUpdateUZ_DOC_To_DB_IDS(uz_doc);
+                }
+                return null;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("AddUpdateUZ_DOC_To_DB_IDS(num_car={0})", num_car), servece_owner, eventID);
+                return null;// Ошибка
+            }
+        }
+
+        /// <summary>
         /// Получить документ из промежуточной базы данных по номеру вагона.
         /// </summary>
         /// <param name="num_car"></param>

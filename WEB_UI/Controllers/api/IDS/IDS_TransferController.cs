@@ -21,7 +21,7 @@ namespace WEB_UI.Controllers.api.RWT
             try
             {
                 IDSTransfer ids_tr = new IDSTransfer(service.WebAPI_IDS);
-                string num_doc = ids_tr.AddUpdateUZ_DOC_To_DB_IDS(num);
+                string num_doc = ids_tr.AddUpdateUZ_DOC_To_DB_IDS(num, UZ.uz_status.recieved); // добавить с ограничением до статуса "разкредитован"
                 return Ok(num_doc);
             }
             catch (Exception e)

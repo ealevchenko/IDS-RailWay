@@ -80,6 +80,27 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // GET: api/ids/rwt/arrival_uz_document/num_doc/29095520
+        [Route("num_doc/{num_doc:int}")]
+        [ResponseType(typeof(Arrival_UZ_Document))]
+        public IHttpActionResult GetArrival_UZ_DocumentOfNumDoc(int num_doc)
+        {
+            try
+            {
+                Arrival_UZ_Document cars = this.ef_ids
+                    .Context
+                    .Where(s => s.nom_doc == num_doc)
+                    .ToList()
+                    .Select(c => c.GetArrival_UZ_Document_Arrival_UZ_Vagon()).FirstOrDefault();
+                return Ok(cars);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+
         // POST api/ids/rwt/arrival_uz_document/
         [HttpPost]
         [Route("")]
