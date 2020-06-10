@@ -2319,10 +2319,12 @@
             },
             // Обновить класс опасности
             update_list_danger_name: function (code) {
+                var listHazardClass = cars_detali.ids_inc.ids_dir.getListHazardClass('code', 'hazard_class', cars_detali.lang, null);
+
                 cars_detali.uz_cargo_danger_name = cd_initSelect(
                     $('select#uz_cargo_danger_name'),
                     { lang: lang },
-                    cars_detali.ids_inc.ids_dir.getListHazardClass('code', 'hazard_class', cars_detali.lang, null),
+                    listHazardClass,
                     null,
                     code ? code : -1,
                     function (event) {

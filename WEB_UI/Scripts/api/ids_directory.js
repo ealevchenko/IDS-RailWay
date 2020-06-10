@@ -4246,7 +4246,7 @@ IDS_DIRECTORY.prototype.getListHazardClass = function (fvalue, ftext, lang, filt
         for (i = 0, j = list_filtr.length; i < j; i++) {
             var l = list_filtr[i];
             if (lang) {
-                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+                list.push({ value: $.trim(l[fvalue]), text: l[ftext + '_' + lang] });
             } else {
                 list.push({ value: l[fvalue], text: l[ftext] });
             }
