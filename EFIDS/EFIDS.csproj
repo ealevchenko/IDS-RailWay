@@ -165,9 +165,13 @@
     <Compile Include="Entities\Directory\Directory_Railway.cs" />
     <Compile Include="Entities\Directory\Directory_Shipper.cs" />
     <Compile Include="Entities\Directory\Directory_SpecialConditions.cs" />
-    <Compile Include="Entities\Directory\Directory_Station.cs" />
     <Compile Include="Entities\Directory\Directory_TypeOwnerShip.cs" />
     <Compile Include="Entities\Directory\Directory_TypeWagons.cs" />
+    <Compile Include="Entities\Directory\Directory_Divisions.cs" />
+    <Compile Include="Entities\Directory\Directory_ParkWay.cs" />
+    <Compile Include="Entities\Directory\Directory_Station.cs" />
+    <Compile Include="Entities\Directory\Directory_TypeDivision.cs" />
+    <Compile Include="Entities\Directory\Directory_Ways.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -15,6 +15,7 @@ namespace EFIDS.Entities
             Arrival_UZ_Vagon = new HashSet<Arrival_UZ_Vagon>();
             ArrivalSostav = new HashSet<ArrivalSostav>();
             ArrivalSostav1 = new HashSet<ArrivalSostav>();
+            Directory_Ways = new HashSet<Directory_Ways>();
         }
 
         public int id { get; set; }
@@ -51,5 +52,8 @@ namespace EFIDS.Entities
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ArrivalSostav> ArrivalSostav1 { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Directory_Ways> Directory_Ways { get; set; }
     }
 }

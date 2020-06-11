@@ -69,5 +69,7 @@ namespace EFIDS.Entities
         public virtual Directory_Station Directory_Station { get; set; }
 
         public virtual Directory_Station Directory_Station1 { get; set; }
+
+        public virtual Directory_Ways Directory_Ways { get; set; }
     }
 }
