@@ -64,6 +64,10 @@
     <Compile Include="Abstract\IWebView.cs" />
     <Compile Include="Abstract\IWebAccess.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_BorderCheckpoint.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_Ways.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_ParkWay.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_Divisions.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_TypeDivision.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_CargoGNG.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_CargoGroup.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_CommercialCondition.cs" />
@@ -179,7 +183,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Concrete\Directory\Model\" />
     <Folder Include="Model\" />
   </ItemGroup>
   <ItemGroup>
