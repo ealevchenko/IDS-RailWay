@@ -141,6 +141,11 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_CommercialCondition>>().To<EFIDS.Concrete.EFDirectory_CommercialCondition>();
             kernel.Bind<EFIDS.Abstract.IStringRepository<EFIDS.Entities.Directory_HazardClass>>().To<EFIDS.Concrete.EFDirectory_HazardClass>();
 
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_Divisions>>().To<EFIDS.Concrete.EFDirectory_Divisions>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_TypeDivision>>().To<EFIDS.Concrete.EFDirectory_TypeDivision>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_ParkWay>>().To<EFIDS.Concrete.EFDirectory_ParkWay>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_Ways>>().To<EFIDS.Concrete.EFDirectory_Ways>();
+
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.CardsWagons>>().To<EFIDS.Concrete.EFCardsWagons>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.CardsWagonsRepairs>>().To<EFIDS.Concrete.EFCardsWagonsRepairs>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.ParksWagons>>().To<EFIDS.Concrete.EFParksWagons>();

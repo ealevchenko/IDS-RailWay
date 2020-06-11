@@ -157,22 +157,22 @@ namespace EFIDS.Helper
             };
         }
 
-        public static Directory_Station GetDirectory_Station(this Directory_Station s)
-        {
-            if (s == null) return null;
-            return new Directory_Station()
-            {
-                id = s.id,
-                station_name_ru = s.station_name_ru,
-                station_name_en = s.station_name_en,
-                station_abbr_ru = s.station_abbr_ru,
-                station_abbr_en = s.station_abbr_en,
-                exit_uz = s.exit_uz,
-                station_uz = s.station_uz,
-                default_side = s.default_side,
-                code = s.code,
-            };
-        }
+        //public static Directory_Station GetDirectory_Station(this Directory_Station s)
+        //{
+        //    if (w == null) return null;
+        //    return new Directory_Station()
+        //    {
+        //        id = w.id,
+        //        station_name_ru = w.station_name_ru,
+        //        station_name_en = w.station_name_en,
+        //        station_abbr_ru = w.station_abbr_ru,
+        //        station_abbr_en = w.station_abbr_en,
+        //        exit_uz = w.exit_uz,
+        //        station_uz = w.station_uz,
+        //        default_side = w.default_side,
+        //        code = w.code,
+        //    };
+        //}
 
         public static Directory_BorderCheckpoint GetDirectory_BorderCheckpoint(this Directory_BorderCheckpoint s)
         {
@@ -509,7 +509,158 @@ namespace EFIDS.Helper
                 change_user = c.change_user,
             };
         }
+        // Справочник типов подразделений
+        public static Directory_TypeDivision GetDirectory_TypeDivision(this Directory_TypeDivision t)
+        {
+            if (t == null) return null;
+            return new Directory_TypeDivision()
+            {
+                id = t.id,
+                type_devisions_ru = t.type_devisions_ru,
+                type_devisions_en = t.type_devisions_en,
+                Directory_Divisions = null
+            };
+        }
+        // Справочник типов подразделений
+        public static Directory_TypeDivision GetDirectory_TypeDivision_Directory_Divisions(this Directory_TypeDivision t)
+        {
+            if (t == null) return null;
+            return new Directory_TypeDivision()
+            {
+                id = t.id,
+                type_devisions_ru = t.type_devisions_ru,
+                type_devisions_en = t.type_devisions_en,
+                Directory_Divisions = t.Directory_Divisions.ToList().Select(d => d.GetDirectory_Divisions()).ToList(),
+            };
+        }
+        //Справочник подразделений
+        public static Directory_Divisions GetDirectory_Divisions(this Directory_Divisions d)
+        {
+            if (d == null) return null;
+            return new Directory_Divisions()
+            {
+                id = d.id,
+                position = d.position,
+                name_division_ru = d.name_division_ru,
+                name_division_en = d.name_division_en,
+                division_abbr_ru = d.division_abbr_ru,
+                division_abbr_en = d.division_abbr_en,
+                id_type_devision = d.id_type_devision,
+                code = d.code,
+                old = d.old,
+                parent_id = d.parent_id,
+                Directory_TypeDivision = d.Directory_TypeDivision.GetDirectory_TypeDivision(),
+                Directory_Ways = null,
+                Directory_Divisions1 = null,
+                Directory_Divisions2 = null
+            };
+        }
+        // Справочник парков
+        public static Directory_ParkWay GetDirectory_ParkWay(this Directory_ParkWay p)
+        {
+            if (p == null) return null;
+            return new Directory_ParkWay()
+            {
+                id = p.id,
+                park_name_ru = p.park_name_ru,
+                park_name_en = p.park_name_en,
+                Directory_Ways = null,
+                create = p.create,
+                create_user = p.create_user,
+                change = p.change,
+                change_user = p.change_user,
+            };
+        }
+        // Справочник парков
+        public static Directory_ParkWay GetDirectory_ParkWay_Directory_Ways(this Directory_ParkWay p)
+        {
+            if (p == null) return null;
+            return new Directory_ParkWay()
+            {
+                id = p.id,
+                park_name_ru = p.park_name_ru,
+                park_name_en = p.park_name_en,
+                Directory_Ways = p.Directory_Ways.ToList().Select(w => w.GetDirectory_Ways()).ToList(),
+                create = p.create,
+                create_user = p.create_user,
+                change = p.change,
+                change_user = p.change_user,
+            };
+        }
+        // Справочник путей
+        public static Directory_Ways GetDirectory_Ways(this Directory_Ways w)
+        {
+            if (w == null) return null;
+            return new Directory_Ways()
+            {
+                id = w.id,
+                id_station = w.id_station,
+                id_park = w.id_park,
+                position = w.position,
+                way_num_ru = w.way_name_ru,
+                way_num_en = w.way_num_en,
+                way_name_ru = w.way_name_ru,
+                way_name_en = w.way_name_en,
+                capacity = w.capacity,
+                deadlock = w.deadlock,
+                crossing_uz = w.crossing_uz,
+                crossing_amkr = w.crossing_amkr,
+                id_devision = w.id_devision,
+                note = w.note,
+                Directory_Station = w.Directory_Station.GetDirectory_Station(),
+                Directory_ParkWay = w.Directory_ParkWay.GetDirectory_ParkWay(),
+                ArrivalSostav = null,
+                Directory_Divisions = w.Directory_Divisions.GetDirectory_Divisions(),
+                create = w.create,
+                create_user = w.create_user,
+                change = w.change,
+                change_user = w.change_user,
+            };
+        }
 
+        // Справочник станций
+        public static Directory_Station GetDirectory_Station(this Directory_Station s)
+        {
+            if (s == null) return null;
+            return new Directory_Station()
+            {
+                id = s.id,
+                station_name_ru = s.station_name_ru,
+                station_name_en = s.station_name_en,
+                station_abbr_ru = s.station_abbr_ru,
+                station_abbr_en = s.station_abbr_en,
+                exit_uz = s.exit_uz,
+                station_uz = s.station_uz,
+                default_side = s.default_side,
+                code = s.code,
+                Directory_Ways = null,
+                //Directory_Ways = s.Directory_Ways.ToList().Select(w => w.GetDirectory_Ways()).ToList(),
+                ArrivalSostav = null,
+                ArrivalSostav1 = null,
+                Arrival_UZ_Vagon = null
+            };
+        }
+        // Справочник станций
+        public static Directory_Station GetDirectory_Station_Directory_Ways(this Directory_Station s)
+        {
+            if (s == null) return null;
+            return new Directory_Station()
+            {
+                id = s.id,
+                station_name_ru = s.station_name_ru,
+                station_name_en = s.station_name_en,
+                station_abbr_ru = s.station_abbr_ru,
+                station_abbr_en = s.station_abbr_en,
+                exit_uz = s.exit_uz,
+                station_uz = s.station_uz,
+                default_side = s.default_side,
+                code = s.code,
+                Directory_Ways = s.Directory_Ways.ToList().Select(w => w.GetDirectory_Ways()).ToList(),
+                ArrivalSostav = null,
+                ArrivalSostav1 = null,
+                Arrival_UZ_Vagon = null
+            };
+        }
         #endregion
 
         #region MORG
@@ -1014,7 +1165,7 @@ namespace EFIDS.Helper
                 change = s.change,
                 change_user = s.change_user,
                 Directory_Station = s.Directory_Station.GetDirectory_Station(),
-                Directory_Station1 = s.Directory_Station1.GetDirectory_Station(), 
+                Directory_Station1 = s.Directory_Station1.GetDirectory_Station(),
             };
         }
 
@@ -1033,14 +1184,14 @@ namespace EFIDS.Helper
                 id_transfer = c.id_transfer,
                 note = c.note,
                 date_adoption_act = c.date_adoption_act,
-                id_arrival_uz_vagon = c.id_arrival_uz_vagon, 
+                id_arrival_uz_vagon = c.id_arrival_uz_vagon,
                 arrival = c.arrival,
                 arrival_user = c.arrival_user,
                 create = c.create,
                 create_user = c.create_user,
                 change = c.change,
                 change_user = c.change_user,
-                UZ_DOC = c.UZ_DOC.GetUZ_DOC(),  
+                UZ_DOC = c.UZ_DOC.GetUZ_DOC(),
                 Arrival_UZ_Vagon = c.Arrival_UZ_Vagon.GetArrival_UZ_Vagon_Arrival_UZ_Document()
             };
         }
