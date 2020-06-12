@@ -3400,7 +3400,7 @@
                                             cars_detali.ids_inc.getArrival_UZ_DocumentOfID_DOC_UZ(result_car.num_doc, function (result_document_uz) {
                                                 if (!result_document_uz) {
                                                     // Документа нет
-                                                    cars_detali.get_arrival_uz_document(result_car.num_doc, function (result_new_arrival_uz_document) {
+                                                    cars_detali.get_arrival_uz_document(result_car.num_doc, 1, function (result_new_arrival_uz_document) {
                                                         result_document_uz = result_new_arrival_uz_document;
                                                         // добавим документ
                                                         if (result_document_uz) {
