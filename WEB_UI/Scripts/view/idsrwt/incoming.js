@@ -134,6 +134,8 @@
                 'title_button_wagon': 'Вагоны',
                 'title_button_wagon_accept': 'Принять вагоны',
                 'title_button_wagon_view': 'Показать вагоны',
+                'title_arrival_sostav': 'Принять состав',
+
 
                 'mess_searsh_epd': 'Поиск ЭПД ...',
                 'mess_searsh_vagon': 'Поиск вагона ...',
@@ -1037,7 +1039,17 @@
                     //// Показать 
                     cars_detali.view(table_sostav.select_sostav.id, false);
                 });
-
+                // Инициализация окна принять состав
+                pn_arrival_sostav.init(cars_detali.lang, cars_detali.user, function (result_arrival_sostav) {
+                    // !!! сделать обработку результата
+                    cars_detali.alert.clear_message();
+                    if (result_arrival_sostav) {
+                        // Установить признак обновления составов
+                        cars_detali.update_sostav = true;
+                    }
+                    //// Показать 
+                    cars_detali.view(table_sostav.select_sostav.id, false);
+                });
                 // Sumbit form
                 cars_detali.content.find("form").on("submit", function (event) {
                     event.preventDefault();
@@ -3825,7 +3837,94 @@
                                 extend: 'colvisGroup',
                                 text: langView('title_button_field_all', langs),
                                 show: ':hidden'
-                            }
+                            },
+                            {
+                                text: langView('title_arrival_sostav', langs),
+                                action: function (e, dt, node, config) {
+                                    if (cars_detali.table_arrival_cars.list && cars_detali.table_arrival_cars.list.length > 0) {
+                                        pn_arrival_sostav.Open(cars_detali.id_sostav);
+                                        //if (table_sostav.select_sostav.id_arrived === null) {
+                                        //    // Состав был добавлен вручную, можно удалить
+                                        //    if (table_sostav.select_sostav.status === 0) {
+                                        //        // Состав не принимался, можно удалить
+                                        //        dialog_confirm.open('Удалить?', 'Вы уверены что хотите удалить состав : ' + table_sostav.select_sostav.composition_index, function (result) {
+                                        //            if (result) {
+                                        //                ids_inc.getArrivalSostavOfID(table_sostav.select_sostav.id, function (result_sostav) {
+                                        //                    if (result_sostav) {
+                                        //                        var sostav = result_sostav;
+                                        //                        // Состав найден, вагоны есть?
+                                        //                        if (sostav.ArrivalCars && sostav.ArrivalCars.length > 0) {
+                                        //                            // Вагоны есть, удалим вагоны
+                                        //                            ids_inc.deleteArrivalCarsOfSostav(sostav.id, function (result_del_cars) {
+                                        //                                if (result_del_cars > 0) {
+                                        //                                    // Вагоны удалены, удалим состав
+                                        //                                    ids_inc.deleteArrivalSostav(sostav.id,
+                                        //                                        function (result_del) {
+                                        //                                            if (result_del > 0) {
+                                        //                                                pn_sel.view(true);
+                                        //                                            } else {
+                                        //                                                incoming_alert.clear_message();
+                                        //                                                incoming_alert.out_error_message("При удалении сотава произошла ошибка");
+                                        //                                            }
+                                        //                                        });
+                                        //                                } else {
+                                        //                                    // Ошибка удаления вагонов
+                                        //                                    incoming_alert.clear_message();
+                                        //                                    incoming_alert.out_error_message("При удалении вагонов сотава произошла ошибка");
+                                        //                                }
+                                        //                            });
+                                        //                        } else {
+                                        //                            // Вагонов нет удалим состав
+                                        //                            ids_inc.deleteArrivalSostav(sostav.id, function (result_del) {
+                                        //                                if (result_del > 0) {
+                                        //                                    pn_sel.view(true);
+                                        //                                } else {
+                                        //                                    incoming_alert.clear_message();
+                                        //                                    incoming_alert.out_error_message("При удалении сотава произошла ошибка");
+                                        //                                }
+                                        //                            });
+                                        //                        }
+                                        //                    } else {
+                                        //                        // Состав не найден
+                                        //                        incoming_alert.clear_message();
+                                        //                        incoming_alert.out_error_message("Перед процедурой удаления, не удалось получить информацию о составе!");
+                                        //                    }
+                                        //                });
+                                        //            }
+                                        //        });
+                                        //    } else {
+                                        //        // Состав уже в работе удаление запрещено
+                                        //        incoming_alert.clear_message();
+                                        //        incoming_alert.out_error_message("Состав в работе, удаление – отклонено!");
+                                        //    }
+                                        //} else {
+                                        //    // Состав добавлен автоматически, только отклонить
+                                        //    dialog_confirm.open('Отклонить?', 'Вы уверены что хотите отклонить состав : ' + table_sostav.select_sostav.composition_index, function (result) {
+                                        //        if (result) {
+                                        //            table_sostav.select_sostav.status = 3;                          // Присвоим статус отклонить
+                                        //            table_sostav.select_sostav.change = toISOStringTZ(new Date());  // Сохраним кто менял
+                                        //            table_sostav.select_sostav.change_user = user_name;
+                                        //            ids_inc.putArrivalSostav(table_sostav.select_sostav,
+                                        //                function (result_upd) {
+                                        //                    if (result_upd > 0) {
+                                        //                        pn_sel.view(true);
+                                        //                        incoming_alert.clear_message();
+                                        //                        incoming_alert.out_info_message("Статус состава (отклонить) - установлен.");
+                                        //                    } else {
+                                        //                        incoming_alert.clear_message();
+                                        //                        incoming_alert.out_error_message("При обновлении статуса сотава произошла ошибка");
+                                        //                    }
+                                        //                });
+                                        //        }
+                                        //    });
+                                        //}
+                                    } else {
+                                        cars_detali.alert.clear_message();
+                                        cars_detali.alert.out_warning_message("Вагоны в составе не определены! Сначала добавьте вагоны.")
+                                    }
+                                },
+                                enabled: true
+                            },
                         ]
                     });
                 },
@@ -5552,6 +5651,188 @@
                     }
                 });
             },
+        },
+        //*************************************************************************************
+        // ОКНО ПРИНЯТЬ СОСТАВ
+        //*************************************************************************************
+        pn_arrival_sostav = {
+            obj: null,
+            lang: null,
+            user_name: null,
+            list_station: null,
+            id: null,                                                                       // id состава
+            sostav: null,                                                                   // состав
+            //uz_sms: null,                                                                 // модуль работы с СМС
+            ids_inc: null,
+            alert: $('div#arrival-sostav-alert'),                                           // Сообщения
+            all_obj: null,                                                                  // массив всех элементов формы 
+            val: null,                                                                      // класс валидации
+            // Поля формы
+            arrival_sostav_num_sheet: $('input#arrival_sostav_num_sheet'),
+            arrival_sostav_date_arrival: $('input#arrival_sostav_date_arrival'),
+            arrival_sostav_date_adoption: $('input#arrival_sostav_date_adoption'),
+            arrival_sostav_date_adoption_act: $('input#arrival_sostav_date_adoption_act'),
+            arrival_sostav_station_on: $('select#arrival_sostav_station_on'),
+            arrival_sostav_way_on: $('select#arrival_sostav_way_on'),
+            // загрузка библиотек
+            loadReference: function (callback) {
+                //LockScreen(langView('mess_load', langs));
+                var count = 1;
+                pn_arrival_sostav.ids_inc.load([], ['station'], [], false, function () {
+                    count -= 1;
+                    if (count === 0) {
+                        if (typeof callback === 'function') {
+                            callback();
+                        }
+                    }
+                });
+            },
+            // инициализвция Окна
+            init: function (lang, user_name, callback_ok) {
+                pn_arrival_sostav.lang = lang;
+                pn_arrival_sostav.user_name = user_name;
+                pn_arrival_sostav.ids_inc = new IDS_RWT_INCOMING(pn_arrival_sostav.lang); // Создадим класс IDS_RWT_INCOMING
+                pn_arrival_sostav.loadReference(function () {
+                    pn_arrival_sostav.list_station = pn_arrival_sostav.ids_inc.ids_dir.getListStation('id', 'station_name', pn_arrival_sostav.lang, function (i) { return i.exit_uz === true ? true : false; });
+                    // Инициализация элементов
+                    pn_arrival_sostav.arrival_sostav_station_on = cd_initSelect(
+                        pn_arrival_sostav.arrival_sostav_station_on,
+                        { lang: pn_arrival_sostav.lang },
+                        pn_arrival_sostav.list_station,
+                        null,
+                        -1,
+                        function (event) {
+                            event.preventDefault();
+                            var id = Number($(this).val());
+                            if (id > 0) {
+                                pn_arrival_sostav.arrival_sostav_way_on.prop("disabled", false);
+                                var station = pn_arrival_sostav.ids_inc.ids_dir.getStation_Internal_Of_ID(id);
+                                if (station && station.Directory_Ways && station.Directory_Ways.length > 0) {
+                                    var list_ways = pn_arrival_sostav.ids_inc.ids_dir.getListWays2TextOfAray(station.Directory_Ways, 'id', 'way_num', 'way_name', pn_arrival_sostav.lang, null);
+
+                                    pn_arrival_sostav.arrival_sostav_way_on = cd_initSelect(
+                                        pn_arrival_sostav.arrival_sostav_way_on,
+                                        { lang: pn_arrival_sostav.lang },
+                                        list_ways,
+                                        null,
+                                        -1,
+                                        function (event) {
+                                            event.preventDefault();
+                                            var id = Number($(this).val());
+                                            if (id > 0) {
+
+                                            } else {
+                                                //arrival_sostav_way_on.
+                                            }
+                                        },
+                                        null).prop("disabled", false);
+
+
+                                }
+                                //var s = 2;
+                            } else {
+                                pn_arrival_sostav.arrival_sostav_way_on.val(-1);
+                                pn_arrival_sostav.arrival_sostav_way_on.prop("disabled", true);
+                            }
+                        }, null);
+
+                    pn_arrival_sostav.arrival_sostav_way_on = cd_initSelect(
+                        pn_arrival_sostav.arrival_sostav_way_on,
+                        { lang: pn_arrival_sostav.lang },
+                        [],
+                        null,
+                        -1,
+                        function (event) {
+                            event.preventDefault();
+                            var id = Number($(this).val());
+                            if (id > 0) {
+
+                            } else {
+                                //arrival_sostav_way_on.
+                            }
+                        },
+                        null).prop("disabled", true);
+                    // настроим компонент выбора времени
+                    pn_arrival_sostav.arrival_sostav_date_arrival = cd_initDateTimeRangePicker(pn_arrival_sostav.arrival_sostav_date_arrival, { lang: pn_arrival_sostav.lang, time: true }, function (datetime) {
+
+                    });
+                    // настроим компонент выбора времени
+                    pn_arrival_sostav.arrival_sostav_date_adoption = cd_initDateTimeRangePicker(pn_arrival_sostav.arrival_sostav_date_adoption, { lang: pn_arrival_sostav.lang, time: true }, function (datetime) {
+
+                    });
+                    // настроим компонент выбора времени
+                    pn_arrival_sostav.arrival_sostav_date_adoption_act = cd_initDateTimeRangePicker(pn_arrival_sostav.arrival_sostav_date_adoption_act, { lang: pn_arrival_sostav.lang, time: true }, function (datetime) {
+
+                    });
+                    // Соберем все элементы в массив
+                    pn_arrival_sostav.all_obj = $([])
+                        .add(pn_arrival_sostav.arrival_sostav_num_sheet)
+                        .add(pn_arrival_sostav.arrival_sostav_date_arrival)
+                        .add(pn_arrival_sostav.arrival_sostav_date_adoption)
+                        .add(pn_arrival_sostav.arrival_sostav_date_adoption_act)
+                        .add(pn_arrival_sostav.arrival_sostav_station_on)
+                    ;
+                    // создадим классы 
+
+                    //pn_arrival_sostav.alert = new ALERT($('div#arrival-sostav-alert'));// Создадим класс ALERTG
+                    pn_arrival_sostav.val = new VALIDATION(pn_arrival_sostav.lang, pn_arrival_sostav.alert, pn_arrival_sostav.all_obj); // Создадим класс VALIDATION
+                    //pn_arrival_sostav.table_car.init();
+                    pn_arrival_sostav.obj = $("div#arrival-sostav").dialog({
+                        resizable: false,
+                        title: 'Принять состав на АМКР',
+                        modal: true,
+                        autoOpen: false,
+                        height: "auto",
+                        width: 600,
+                        classes: {
+                            "ui-dialog": "card",
+                            "ui-dialog-titlebar": "card-header bg-primary text-white",
+                            "ui-dialog-content": "card-body",
+                            "ui-dialog-buttonpane": "card-footer text-muted"
+                        },
+                        open: function (event, ui) {
+
+                        },
+                        buttons: [
+                            {
+
+                                disabled: true,
+                                text: "Ок",
+                                class: "btn btn-outline-primary btn",
+                                click: function () {
+                                    pn_arrival_sostav.add_cars(callback_ok);
+                                }
+                            },
+                            {
+                                text: "Отмена",
+                                class: "btn btn-outline-primary btn",
+                                click: function () {
+                                    $(this).dialog("close");
+                                }
+                            },
+                        ]
+                    });
+                    // Sumbit form
+                    pn_arrival_sostav.obj.find("form").on("submit", function (event) {
+                        event.preventDefault();
+                    });
+                });
+
+            },
+            // открыть окно добавмить вагоны вручную
+            Open: function (id) {
+                pn_arrival_sostav.id = id;
+                if (id) {
+                    // id получено, работаем...
+                    pn_arrival_sostav.ids_inc.getArrivalSostavOfID(pn_arrival_sostav.id, function (result_sostav) {
+                        // если указан состав, в который нужно добавить вагоны тогда открываем диалоговое окно
+                        pn_arrival_sostav.val.clear_all();
+                        //pn_arrival_sostav.bt_num_car_search.prop("disabled", false);
+                        pn_arrival_sostav.obj.dialog("open");
+                    });
+
+                }
+            },
         };
 
     //================================================================
@@ -5571,87 +5852,3 @@
         pn_sel.view(true);
     });
 });
-
-//update_list_station_name_from: function (text) {
-//    cars_detali.uz_route_name_from = this.uz_route_name_from.autocomplete({
-//        minLength: 2,
-//        source: getAutocompleteList(cars_detali.ids_inc.ids_dir.getListExternalStation('code', 'station_name', cars_detali.lang, null), 'text'),
-//        change: function (event, ui) {
-//            cars_detali.view_epd_station_from_manual(cars_detali.uz_route_name_from.val());
-//        },
-//        select: function (event, ui) {
-//            //if (ui.item.value)
-//            //    cars_detali.view_epd_station_from_manual(ui.item.value);
-//        },
-//        search: function (event, ui) {
-//            cars_detali.view_epd_station_from_manual(cars_detali.uz_route_name_from.val());
-//        },
-//        focus: function (event, ui) {
-//            if (ui.item.value)
-//                cars_detali.view_epd_station_from_manual(ui.item.value);
-//        }
-//    }).val(text ? text : '');
-//},
-
-
-//test1: function (text) {
-//    var code = null;
-//    var irw = null;
-//    if (text) {
-//        var obj = cars_detali.ids_inc.ids_dir.getExternalStation_Of_CultureName('station_name', cars_detali.lang, text)
-//        if (obj && obj.length > 0) {
-//            code = obj[0].code;
-//            if (obj[0].Directory_InlandRailway) {
-//               irw = cars_detali.ids_inc.ids_dir.getValueCultureObj(obj[0].Directory_InlandRailway, 'inlandrailway_name');
-//            }
-//            cars_detali.val_arrival_car.set_control_ok(cars_detali.uz_route_stn_from, "");
-//        } else {
-//            cars_detali.val_arrival_car.set_control_error(cars_detali.uz_route_stn_from, "Указаной станции отправки нет в справочнике ИДС.");
-//        }
-//    } else {
-//        cars_detali.val_arrival_car.set_control_error(cars_detali.uz_route_stn_from, "Не указан код станции отправки");
-//    }
-//    cars_detali.uz_route_stn_from.val(code);
-//    cars_detali.uz_route_name_railway_from.val(irw);
-//},
-
-
-//// Обновить компонент станция отправки
-//update_list_station_name_on: function (text) {
-//    cars_detali.uz_route_name_on = this.uz_route_name_on.autocomplete({
-//        minLength: 2,
-//        source: getAutocompleteList(cars_detali.ids_inc.ids_dir.getListExternalStation('code', 'station_name', cars_detali.lang, null), 'text'),
-//        change: function (event, ui) {
-
-//        },
-//        select: function (event, ui) {
-
-//        }
-//    }).val(text ? text : '');
-//},
-
-//update_list_station_border: function (text) {
-//    cars_detali.uz_route_stn_border_name = this.uz_route_stn_border_name.autocomplete({
-//        minLength: 3,
-//        source: getAutocompleteList(cars_detali.ids_inc.ids_dir.getListBorderCheckpoint('code', 'station_name', cars_detali.lang, null), 'text'),
-//        change: function (event, ui) {
-
-//        },
-//        select: function (event, ui) {
-
-//        }
-//    }).val(text ? text : '');
-//},
-
-//update_list_shipper: function (text) {
-//    cars_detali.uz_cargo_client_name_from = this.uz_cargo_client_name_from.autocomplete({
-//        minLength: 2,
-//        source: getAutocompleteList(cars_detali.ids_inc.ids_dir.getListShipper('code', 'shipper_name', cars_detali.lang, null), 'text'),
-//        change: function (event, ui) {
-
-//        },
-//        select: function (event, ui) {
-
-//        }
-//    }).val(text ? text : '');
-//},

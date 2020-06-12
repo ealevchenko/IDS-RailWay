@@ -597,7 +597,7 @@ namespace EFIDS.Helper
                 id_station = w.id_station,
                 id_park = w.id_park,
                 position = w.position,
-                way_num_ru = w.way_name_ru,
+                way_num_ru = w.way_num_ru,
                 way_num_en = w.way_num_en,
                 way_name_ru = w.way_name_ru,
                 way_name_en = w.way_name_en,

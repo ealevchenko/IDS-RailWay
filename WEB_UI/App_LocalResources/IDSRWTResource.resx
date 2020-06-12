@@ -402,4 +402,22 @@
   <data name="title_uz_doc_num_osn_doc" xml:space="preserve">
     <value>Номер основного документа</value>
   </data>
+  <data name="title_arrival_station_on" xml:space="preserve">
+    <value>Принять на станцию</value>
+  </data>
+  <data name="title_arrival_way_on" xml:space="preserve">
+    <value>Принять на путь</value>
+  </data>
+  <data name="title_date_adoption" xml:space="preserve">
+    <value>Время приема</value>
+  </data>
+  <data name="title_date_adoption_act" xml:space="preserve">
+    <value>Время приема по акту</value>
+  </data>
+  <data name="title_numeration" xml:space="preserve">
+    <value>Начало нумерации</value>
+  </data>
+  <data name="title_num_sheet" xml:space="preserve">
+    <value>№ Ведомости</value>
+  </data>
 </root>

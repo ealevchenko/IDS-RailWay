@@ -19,7 +19,7 @@ namespace WEB_UI.App_LocalResources {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class IDSRWTResource {
@@ -111,6 +111,24 @@ namespace WEB_UI.App_LocalResources {
         public static string system_idsrwt_title {
             get {
                 return ResourceManager.GetString("system_idsrwt_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Принять на станцию.
+        /// </summary>
+        public static string title_arrival_station_on {
+            get {
+                return ResourceManager.GetString("title_arrival_station_on", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Принять на путь.
+        /// </summary>
+        public static string title_arrival_way_on {
+            get {
+                return ResourceManager.GetString("title_arrival_way_on", resourceCulture);
             }
         }
         
@@ -273,6 +291,24 @@ namespace WEB_UI.App_LocalResources {
         public static string title_danger_name {
             get {
                 return ResourceManager.GetString("title_danger_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Время приема.
+        /// </summary>
+        public static string title_date_adoption {
+            get {
+                return ResourceManager.GetString("title_date_adoption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Время приема по акту.
+        /// </summary>
+        public static string title_date_adoption_act {
+            get {
+                return ResourceManager.GetString("title_date_adoption_act", resourceCulture);
             }
         }
         
@@ -561,6 +597,24 @@ namespace WEB_UI.App_LocalResources {
         public static string title_num_rev {
             get {
                 return ResourceManager.GetString("title_num_rev", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на № Ведомости.
+        /// </summary>
+        public static string title_num_sheet {
+            get {
+                return ResourceManager.GetString("title_num_sheet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Начало нумерации.
+        /// </summary>
+        public static string title_numeration {
+            get {
+                return ResourceManager.GetString("title_numeration", resourceCulture);
             }
         }
         

@@ -34,7 +34,7 @@ IDS_DIRECTORY.list_wagons_condition = [];
 
 IDS_DIRECTORY.list_station = [];
 
-IDS_DIRECTORY.list_external_network_station = []; // delete
+IDS_DIRECTORY.list_ways = [];
 
 IDS_DIRECTORY.list_consignee = [];
 
@@ -239,6 +239,18 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
         if (el === 'station') {
             IDS_DIRECTORY.prototype.getStation(function (result_station) {
                 obj.list_station = result_station;
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        if (lockOff) { LockScreenOff(); }
+                        callback();
+                    }
+                }
+            });
+        };
+        if (el === 'ways') {
+            IDS_DIRECTORY.prototype.getWays(function (result_ways) {
+                obj.list_ways = result_ways;
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
@@ -2690,6 +2702,29 @@ IDS_DIRECTORY.prototype.getStation = function (callback) {
         },
     });
 };
+//======= Directory_Ways (Справочник путей ИДС) ======================================
+IDS_DIRECTORY.prototype.getWays = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/ways/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getWays", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 //======= Directory_Consignee (Справочник грузополучателей) ======================================
 IDS_DIRECTORY.prototype.getConsignee = function (callback) {
     $.ajax({
@@ -3483,6 +3518,81 @@ IDS_DIRECTORY.prototype.getListStation = function (fvalue, ftext, lang, filter) 
     }
     return list;
 };
+//*======= IDS_DIRECTORY.list_ways  (Справочник путей) ======================================
+IDS_DIRECTORY.prototype.getWays_Internal_Of_ID = function (id_way) {
+    if (this.list_ways) {
+        var obj = getObjects(this.list_ways, 'id', id_way)
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getValue_Ways_Of_ID = function (id_way, name, lang) {
+    var obj = this.getWays_Internal_Of_ID(id_way);
+    return this.getValueObj(obj, name, lang);
+};
+//
+IDS_DIRECTORY.prototype.getValueCulture_Wayss_Of_ID = function (id_way, name) {
+    var obj = this.getWays_Internal_Of_ID(id_way);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getListWays = function (fvalue, ftext, lang, filter) {
+    var list = [];
+    var list_filtr = null;
+    if (this.list_ways) {
+        if (typeof filter === 'function') {
+            list_filtr = this.list_ways.filter(filter);
+        } else { list_filtr = this.list_ways; }
+        for (i = 0, j = list_filtr.length; i < j; i++) {
+            var l = list_filtr[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
+//
+IDS_DIRECTORY.prototype.getListWaysOfAray = function (aray, fvalue, ftext, lang, filter) {
+    var list = [];
+    var list_filtr = null;
+    if (aray) {
+        if (typeof filter === 'function') {
+            list_filtr = aray.filter(filter);
+        } else { list_filtr = aray; }
+        for (i = 0, j = list_filtr.length; i < j; i++) {
+            var l = list_filtr[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
+
+IDS_DIRECTORY.prototype.getListWays2TextOfAray = function (aray, fvalue, ftext1, ftext2, lang, filter) {
+    var list = [];
+    var list_filtr = null;
+    if (aray) {
+        if (typeof filter === 'function') {
+            list_filtr = aray.filter(filter);
+        } else { list_filtr = aray; }
+        for (i = 0, j = list_filtr.length; i < j; i++) {
+            var l = list_filtr[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext1 + '_' + lang] + ' - '+ l[ftext2 + '_' + lang]});
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext1] + ' - '+ l[ftext2] });
+            }
+        }
+    }
+    return list;
+};
+
 //*======= IDS_DIRECTORY.list_consignee  (Справочник грузополучателей) ======================================
 IDS_DIRECTORY.prototype.getConsignee_Of_Code = function (code) {
     if (this.list_consignee) {
