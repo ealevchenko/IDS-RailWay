@@ -420,4 +420,7 @@
   <data name="title_num_sheet" xml:space="preserve">
     <value>№ Ведомости</value>
   </data>
+  <data name="title_arrival_count_car" xml:space="preserve">
+    <value>Количество вагонов</value>
+  </data>
 </root>

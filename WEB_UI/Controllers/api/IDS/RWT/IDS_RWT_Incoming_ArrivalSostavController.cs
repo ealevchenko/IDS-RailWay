@@ -58,6 +58,26 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // GET: api/ids/rwt/arrival_sostav/current_num/station/id/6
+        [Route("current_num/station/id/{id:int}")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult GetCurrentNumArrivalSostavOfStation(int id)
+        {
+            try
+            {
+               ArrivalSostav sostav = this.ef_ids
+                    .Context
+                    .Where(s=>s.id_station_on == id & s.date_arrival.Year == DateTime.Now.Year)
+                    .ToList()
+                    .OrderByDescending(n=>n.num_doc).FirstOrDefault();
+                return Ok(sostav!=null ? sostav.num_doc : 0);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         // GET: api/ids/rwt/arrival_sostav/start/2020-03-12T00:00:00/stop/2020-03-20T23:59:59
         [Route("start/{start:datetime}/stop/{stop:datetime}")]
         [ResponseType(typeof(ArrivalSostav))]

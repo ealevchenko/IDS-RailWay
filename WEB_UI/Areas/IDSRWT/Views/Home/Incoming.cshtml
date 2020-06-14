@@ -938,16 +938,16 @@
 <div id="arrival-sostav" title="" style="display:none">
     <div class="alert" id="arrival-sostav-alert"></div>
     <form id="form-arrival-sostav">
-        <div class="form-group row">
+        <div class="form-group row" style="margin-bottom:0.5rem">
             <label for="arrival_sostav_num_sheet" class="col-sm-5 col-form-label">@IDSRWTResource.title_num_sheet:</label>
             <div class="col-sm-7">
-                <input type="number" class="form-control" id="arrival_sostav_num_sheet" name="arrival_sostav_num_sheet" required="required">
+                <input type="number" class="form-control" id="arrival_sostav_num_sheet" name="arrival_sostav_num_sheet" required="required" disabled="disabled">
                 <div class="invalid-feedback">
 
                 </div>
             </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row" style="margin-bottom:0.5rem">
             <label for="arrival_sostav_date_arrival" class="col-sm-5 col-form-label">@IDSRWTResource.title_date_arrival:</label>
             <div class="col-sm-7">
                 <input type="datetime" class="form-control" id="arrival_sostav_date_arrival" name="arrival_sostav_date_arrival" required="required">
@@ -956,7 +956,7 @@
                 </div>
             </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row" style="margin-bottom:0.5rem">
             <label for="arrival_sostav_date_adoption" class="col-sm-5 col-form-label">@IDSRWTResource.title_date_adoption:</label>
             <div class="col-sm-7">
                 <input type="datetime" class="form-control" id="arrival_sostav_date_adoption" name="arrival_sostav_date_adoption" required="required">
@@ -965,7 +965,7 @@
                 </div>
             </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row" style="margin-bottom:0.5rem">
             <label for="arrival_sostav_date_adoption_act" class="col-sm-5 col-form-label">@IDSRWTResource.title_date_adoption_act:</label>
             <div class="col-sm-7">
                 <input type="datetime" class="form-control" id="arrival_sostav_date_adoption_act" name="arrival_sostav_date_adoption_act">
@@ -974,7 +974,7 @@
                 </div>
             </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row" style="margin-bottom:0.5rem">
             <label for="arrival_sostav_station_on" class="col-sm-5 col-form-label">@IDSRWTResource.title_arrival_station_on:</label>
             <div class="col-sm-7">
                 <select class="form-control" id="arrival_sostav_station_on" name="arrival_sostav_station_on" required="required"></select>
@@ -983,7 +983,7 @@
                 </div>
             </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row" style="margin-bottom:0.5rem">
             <label for="arrival_sostav_way_on" class="col-sm-5 col-form-label">@IDSRWTResource.title_arrival_way_on:</label>
             <div class="col-sm-7">
                 <select class="form-control" id="arrival_sostav_way_on" name="arrival_sostav_way_on" required="required"></select>
@@ -992,17 +992,29 @@
                 </div>
             </div>
         </div>
-        <div class="form-group row">
-            <label for="arrival_sostav_way_on" class="col-sm-5 col-form-label">@IDSRWTResource.title_numeration:</label>
+        <div class="form-group row" style="margin-bottom:0.5rem">
+            <label for="arrival_count_car" class="col-sm-5 col-form-label">@IDSRWTResource.title_arrival_count_car:</label>
             <div class="col-sm-7">
+                <input type="number" class="form-control" id="arrival_count_car" name="arrival_count_car" disabled="disabled">
+                <div class="invalid-feedback">
+
+                </div>
+            </div>
+        </div>
+        <div class="form-group row" style="margin-bottom:0.5rem">
+            <label for="arrival_sostav_way_on" class="col-sm-5 col-form-label">@IDSRWTResource.title_numeration:</label>
+            <div class="col-sm-7" id="arrival_sostav_numeration">
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                    <label class="form-check-label" for="inlineRadio1">Голова</label>
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="arrival_sostav_head" value="option1">
+                    <label class="form-check-label" for="arrival_sostav_head">Голова</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                    <label class="form-check-label" for="inlineRadio2">Хвост</label>
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="arrival_sostav_tail" value="option2">
+                    <label class="form-check-label" for="arrival_sostav_tail">Хвост</label>
                 </div>
+            </div>
+            <div class="invalid-feedback" style="margin-left:260px">
+
             </div>
         </div>
         <!-- Allow form submission with keyboard without duplicating the dialog button -->

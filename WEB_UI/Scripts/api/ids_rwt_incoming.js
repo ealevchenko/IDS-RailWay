@@ -1594,9 +1594,6 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Cont_Pay = function (id, callback) {
         },
     });
 };
-
-
-
 //======= ArrivalSostav (Таблица составов) ======================================
 // Получить все составы
 IDS_RWT_INCOMING.prototype.getArrivalSostav = function (start, stop, callback) {
@@ -1644,6 +1641,30 @@ IDS_RWT_INCOMING.prototype.getArrivalSostavOfID = function (id, callback) {
         },
     });
 };
+// Получить последний номер по станции за текущий год
+IDS_RWT_INCOMING.prototype.getCurrentNumArrivalSostavOfStation = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/arrival_sostav/current_num/station/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.getCurrentNumArrivalSostavOfStation", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 //Обновить 
 IDS_RWT_INCOMING.prototype.putArrivalSostav = function (arrival_sostav, callback) {
     $.ajax({
