@@ -192,10 +192,10 @@
                                                 <div class="input-group">
                                                     <input type="text" class="form-control col-md-8 inp-epd" id="num_car" title="Номер вагона" name="num_car" data-mode="all" data-edit="" data-form="transceiver">
                                                     <div class="input-group-append">
-                                                        <button type="button" class="btn btn-warning btn" id="search-car-num-doc" title="Найти ЭПД по номеру вагона" data-form="transceiver">
+                                                        <button type="button" class="btn btn-warning btn" id="search-car-num-doc" title="Найти ЭПД по номеру вагона" data-mode="edit-global" data-edit="" data-form="transceiver">
                                                             <i class="fa fa-search" aria-hidden="true"></i>
                                                         </button>
-                                                        <button type="button" class="btn btn-danger btn" id="edit-car-num-doc" title="Ввести данные в ручную" data-form="transceiver">
+                                                        <button type="button" class="btn btn-danger btn" id="edit-car-num-doc" title="Ввести данные в ручную" data-mode="edit-global" data-edit="" data-form="transceiver">
                                                             <i class="fa fa-edit" aria-hidden="true"></i>
                                                         </button>
                                                     </div>
@@ -255,7 +255,7 @@
                                                         <div class="invalid-feedback">
                                                         </div>
                                                         <div class="input-group-append">
-                                                            <button type="button" class="btn btn-danger btn" id="uz_route_name_from_add" title="Добавить новую внешнюю станцию в справочник 'Внешних станций', информация берется автоматически из ЭПД" data-form="transceiver">
+                                                            <button type="button" class="btn btn-danger btn" id="uz_route_name_from_add" title="Добавить новую внешнюю станцию в справочник 'Внешних станций', информация берется автоматически из ЭПД" data-mode="edit-global" data-edit="" data-form="transceiver">
                                                                 <i class="fa fa-save" aria-hidden="true"></i>
                                                             </button>
                                                         </div>
@@ -285,7 +285,7 @@
                                                         <div class="invalid-feedback">
                                                         </div>
                                                         <div class="input-group-append">
-                                                            <button type="button" class="btn btn-danger btn" id="uz_route_name_on_add" title="Добавить новую внешнюю станцию в справочник 'Внешних станций', информация берется автоматически из ЭПД" data-form="transceiver">
+                                                            <button type="button" class="btn btn-danger btn" id="uz_route_name_on_add" title="Добавить новую внешнюю станцию в справочник 'Внешних станций', информация берется автоматически из ЭПД" data-mode="edit-global" data-edit="" data-form="transceiver">
                                                                 <i class="fa fa-save" aria-hidden="true"></i>
                                                             </button>
                                                         </div>
@@ -309,7 +309,7 @@
                                                         <div class="invalid-feedback">
                                                         </div>
                                                         <div class="input-group-append">
-                                                            <button type="button" class="btn btn-danger btn" id="uz_route_stn_border_add" title="Добавить новый погран переход в справочник 'Погран переходов', информация берется автоматически из ЭПД" data-form="transceiver">
+                                                            <button type="button" class="btn btn-danger btn" id="uz_route_stn_border_add" title="Добавить новый погран переход в справочник 'Погран переходов', информация берется автоматически из ЭПД" data-mode="edit-global" data-edit="" data-form="transceiver">
                                                                 <i class="fa fa-save" aria-hidden="true"></i>
                                                             </button>
                                                         </div>
@@ -338,7 +338,7 @@
                                                     <div class="invalid-feedback">
                                                     </div>
                                                     <div class="input-group-append">
-                                                        <button type="button" class="btn btn-danger btn" id="uz_cargo_client_name_from_add" title="Добавить нового грузоотправителя в справочник 'Грузоотправителей', информация берется автоматически из ЭПД" data-form="transceiver">
+                                                        <button type="button" class="btn btn-danger btn" id="uz_cargo_client_name_from_add" title="Добавить нового грузоотправителя в справочник 'Грузоотправителей', информация берется автоматически из ЭПД" data-mode="edit-global" data-edit="" data-form="transceiver">
                                                             <i class="fa fa-save" aria-hidden="true"></i>
                                                         </button>
                                                     </div>
@@ -399,7 +399,7 @@
                                             </div>
                                             <div class="col-md-6 mb-1 text-right">
                                                 <label class="col-form-label">@IDSRWTResource.title_card_vag</label>
-                                                <button type="button" class="btn btn-danger btn" id="card_vag_add" data-form="transceiver" title="Добавить новую запись карточки вагона в справочник 'Карточка вагона', информация берется автоматически из ЭПД и БД УЗ">
+                                                <button type="button" class="btn btn-danger btn" id="card_vag_add" data-mode="edit-global" data-edit="" data-form="transceiver" title="Добавить новую запись карточки вагона в справочник 'Карточка вагона', информация берется автоматически из ЭПД и БД УЗ">
                                                     <i class="fa fa-save" aria-hidden="true"></i>
                                                 </button>
                                                 <button type="button" class="btn btn-danger btn" id="card_vag_searsh" data-mode="all" data-edit="" data-form="transceiver" title="Получить новую запись карточки вагона для справочника 'Карточка вагона', информация берется автоматически из БД УЗ">
@@ -602,7 +602,7 @@
                                                     <div class="invalid-feedback">
                                                     </div>
                                                     <div class="input-group-append">
-                                                        <button type="button" class="btn btn-danger btn" id="uz_rask_name_plat_add" title="Добавить нового плательщика в справочник 'Плательщиков по прибытию', информация берется автоматически из ЭПД" data-form="transceiver">
+                                                        <button type="button" class="btn btn-danger btn" id="uz_rask_name_plat_add" title="Добавить нового плательщика в справочник 'Плательщиков по прибытию', информация берется автоматически из ЭПД" data-mode="edit-global" data-edit="" data-form="transceiver">
                                                             <i class="fa fa-save" aria-hidden="true"></i>
                                                         </button>
                                                     </div>
@@ -638,7 +638,7 @@
                                                     <div class="invalid-feedback">
                                                     </div>
                                                     <div class="input-group-append">
-                                                        <button type="button" class="btn btn-danger btn" id="uz_cargo_name_etsng_add" title="Добавить новую строку в справочник 'Грузов ЕТ СНГ' и справочник 'Грузов ИДС', информация берется автоматически из ЭПД" data-form="transceiver">
+                                                        <button type="button" class="btn btn-danger btn" id="uz_cargo_name_etsng_add" title="Добавить новую строку в справочник 'Грузов ЕТ СНГ' и справочник 'Грузов ИДС', информация берется автоматически из ЭПД" data-mode="edit-global" data-edit="" data-form="transceiver">
                                                             <i class="fa fa-save" aria-hidden="true"></i>
                                                         </button>
                                                     </div>
@@ -659,7 +659,7 @@
                                                     <div class="invalid-feedback">
                                                     </div>
                                                     <div class="input-group-append">
-                                                        <button type="button" class="btn btn-danger btn" id="uz_cargo_name_gng_add" title="Добавить новую строку в справочник 'Грузов ГНГ', информация берется автоматически из ЭПД" data-form="transceiver">
+                                                        <button type="button" class="btn btn-danger btn" id="uz_cargo_name_gng_add" title="Добавить новую строку в справочник 'Грузов ГНГ', информация берется автоматически из ЭПД" data-mode="edit-global" data-edit="" data-form="transceiver">
                                                             <i class="fa fa-save" aria-hidden="true"></i>
                                                         </button>
                                                     </div>
@@ -849,10 +849,10 @@
                             <div class="card border-primary" id="card-not-arrived-cars">
                                 <div class="card-header">
                                     Вагоны<br />
-                                    <button type="button" class="btn btn-warning btn-sm" id="add-num-car-of-epd" title="Найти вагоны по ЭПД, поиск документа по номеру">
+                                    <button type="button" class="btn btn-warning btn-sm" id="add-num-car-of-epd" title="Найти вагоны по ЭПД, поиск документа по номеру" data-form="transceiver">
                                         <i class="fa fa-file-code-o" aria-hidden="true"></i>
                                     </button>
-                                    <button type="button" class="btn btn-warning btn-sm" id="add-num-car-manual" title="Добавить вагон вручную">
+                                    <button type="button" class="btn btn-warning btn-sm" id="add-num-car-manual" title="Добавить вагон вручную" data-form="transceiver">
                                         <i class="fa fa-hand-paper-o" aria-hidden="true"></i>
                                     </button>
                                 </div>

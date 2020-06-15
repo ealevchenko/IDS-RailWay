@@ -864,8 +864,8 @@ namespace EFIDS.Helper
                 Directory_ConditionArrival = v.Directory_ConditionArrival.GetDirectory_ConditionArrival(),
                 Directory_HazardClass = v.Directory_HazardClass.GetDirectory_HazardClass(),
                 Directory_Station = v.Directory_Station.GetDirectory_Station(),
-                Directory_TypeWagons = v.Directory_TypeWagons.GetTypeWagons(), 
-                Directory_Divisions = v.Directory_Divisions.GetDirectory_Divisions() 
+                Directory_TypeWagons = v.Directory_TypeWagons.GetTypeWagons(),
+                Directory_Divisions = v.Directory_Divisions.GetDirectory_Divisions()
             };
         }
 
@@ -920,7 +920,7 @@ namespace EFIDS.Helper
                 Directory_HazardClass = v.Directory_HazardClass.GetDirectory_HazardClass(),
                 Directory_Station = v.Directory_Station.GetDirectory_Station(),
                 Directory_TypeWagons = v.Directory_TypeWagons.GetTypeWagons(),
-                Directory_Divisions = v.Directory_Divisions.GetDirectory_Divisions() 
+                Directory_Divisions = v.Directory_Divisions.GetDirectory_Divisions()
             };
         }
 
@@ -1115,6 +1115,7 @@ namespace EFIDS.Helper
                 id_station_from = s.id_station_from,
                 id_station_on = s.id_station_on,
                 id_way = s.id_way,
+                numeration = s.numeration,
                 num_doc = s.num_doc,
                 count = s.count,
                 status = s.status,
@@ -1122,10 +1123,12 @@ namespace EFIDS.Helper
                 create = s.create,
                 create_user = s.create_user,
                 change = s.change,
-                change_user = s.change_user,
+                change_user = s.change_user, 
                 ArrivalCars = s.ArrivalCars.ToList().Select(c => c.GetArrivalCars()).ToList(),
+                Arrival_UZ_Vagon = s.Arrival_UZ_Vagon.ToList().Select(c => c.GetArrival_UZ_Vagon()).ToList(),
                 Directory_Station = s.Directory_Station.GetDirectory_Station(),
-                Directory_Station1 = s.Directory_Station1.GetDirectory_Station()
+                Directory_Station1 = s.Directory_Station1.GetDirectory_Station(), 
+                Directory_Ways = s.Directory_Ways.GetDirectory_Ways()
             };
         }
 
@@ -1145,6 +1148,7 @@ namespace EFIDS.Helper
                 id_station_from = s.id_station_from,
                 id_station_on = s.id_station_on,
                 id_way = s.id_way,
+                numeration = s.numeration,
                 num_doc = s.num_doc,
                 count = s.count,
                 status = s.status,
@@ -1155,6 +1159,7 @@ namespace EFIDS.Helper
                 change_user = s.change_user,
                 Directory_Station = s.Directory_Station.GetDirectory_Station(),
                 Directory_Station1 = s.Directory_Station1.GetDirectory_Station(),
+                Directory_Ways = s.Directory_Ways.GetDirectory_Ways()
             };
         }
 

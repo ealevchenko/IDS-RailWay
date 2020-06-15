@@ -40,6 +40,8 @@ namespace EFIDS.Entities
 
         public int? id_way { get; set; }
 
+        public bool? numeration { get; set; }
+
         public int? num_doc { get; set; }
 
         public int? count { get; set; }
