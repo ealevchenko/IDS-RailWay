@@ -157,23 +157,6 @@ namespace EFIDS.Helper
             };
         }
 
-        //public static Directory_Station GetDirectory_Station(this Directory_Station s)
-        //{
-        //    if (w == null) return null;
-        //    return new Directory_Station()
-        //    {
-        //        id = w.id,
-        //        station_name_ru = w.station_name_ru,
-        //        station_name_en = w.station_name_en,
-        //        station_abbr_ru = w.station_abbr_ru,
-        //        station_abbr_en = w.station_abbr_en,
-        //        exit_uz = w.exit_uz,
-        //        station_uz = w.station_uz,
-        //        default_side = w.default_side,
-        //        code = w.code,
-        //    };
-        //}
-
         public static Directory_BorderCheckpoint GetDirectory_BorderCheckpoint(this Directory_BorderCheckpoint s)
         {
             if (s == null) return null;
@@ -861,6 +844,8 @@ namespace EFIDS.Helper
                 danger_kod = v.danger_kod,
                 cargo_returns = v.cargo_returns,
                 id_station_on_amkr = v.id_station_on_amkr,
+                id_division_on_amkr = v.id_division_on_amkr,
+                empty_car = v.empty_car,
                 kol_conductor = v.kol_conductor,
                 create = v.create,
                 create_user = v.create_user,
@@ -879,7 +864,8 @@ namespace EFIDS.Helper
                 Directory_ConditionArrival = v.Directory_ConditionArrival.GetDirectory_ConditionArrival(),
                 Directory_HazardClass = v.Directory_HazardClass.GetDirectory_HazardClass(),
                 Directory_Station = v.Directory_Station.GetDirectory_Station(),
-                Directory_TypeWagons = v.Directory_TypeWagons.GetTypeWagons(),
+                Directory_TypeWagons = v.Directory_TypeWagons.GetTypeWagons(), 
+                Directory_Divisions = v.Directory_Divisions.GetDirectory_Divisions() 
             };
         }
 
@@ -913,6 +899,8 @@ namespace EFIDS.Helper
                 danger_kod = v.danger_kod,
                 cargo_returns = v.cargo_returns,
                 id_station_on_amkr = v.id_station_on_amkr,
+                id_division_on_amkr = v.id_division_on_amkr,
+                empty_car = v.empty_car,
                 kol_conductor = v.kol_conductor,
                 create = v.create,
                 create_user = v.create_user,
@@ -932,6 +920,7 @@ namespace EFIDS.Helper
                 Directory_HazardClass = v.Directory_HazardClass.GetDirectory_HazardClass(),
                 Directory_Station = v.Directory_Station.GetDirectory_Station(),
                 Directory_TypeWagons = v.Directory_TypeWagons.GetTypeWagons(),
+                Directory_Divisions = v.Directory_Divisions.GetDirectory_Divisions() 
             };
         }
 

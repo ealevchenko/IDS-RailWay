@@ -248,6 +248,11 @@ namespace EFIDS.Concrete
                 .WithOptional(e => e.Directory_Divisions)
                 .HasForeignKey(e => e.id_devision);
 
+            modelBuilder.Entity<Directory_Divisions>()
+                .HasMany(e => e.Arrival_UZ_Vagon)
+                .WithOptional(e => e.Directory_Divisions)
+                .HasForeignKey(e => e.id_division_on_amkr);
+
             modelBuilder.Entity<Directory_ExternalStation>()
                 .HasMany(e => e.Arrival_UZ_Document)
                 .WithOptional(e => e.Directory_ExternalStation)

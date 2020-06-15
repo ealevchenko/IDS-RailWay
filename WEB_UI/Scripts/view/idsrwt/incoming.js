@@ -949,6 +949,7 @@
                     .add(cars_detali.uz_cargo_kod_etsng)
                     .add(cars_detali.uz_cargo_kod_gng)
                     .add(cars_detali.uz_vag_station_on_amkr)
+                    .add(cars_detali.uz_vag_devision_on_amkr)
                     .add(cars_detali.arrival_cars_position_arrival)
                     .add(cars_detali.arrival_cars_car_date_adoption_act.obj)
                     ;
@@ -2031,6 +2032,9 @@
                 cars_detali.uz_vag_condition_arrival.val(-1);
                 cars_detali.uz_vag_type_wagon.val(-1);
 
+                cars_detali.uz_vag_station_on_amkr.val(-1);
+                cars_detali.uz_vag_devision_on_amkr.val(-1);
+
                 cars_detali.uz_vag_gruzp.val('');
                 cars_detali.uz_vag_ves_tary_arc.val('');
                 cars_detali.uz_vag_u_tara.val('');
@@ -2162,7 +2166,7 @@
                 cars_detali.uz_vag_devision_on_amkr = cd_initSelect(
                     $('select#uz_vag_devision_on_amkr'),
                     { lang: lang },
-                    cars_detali.ids_inc.ids_dir.getListDivisions('id', 'name_division', cars_detali.lang, null),
+                    cars_detali.ids_inc.ids_dir.getListDivisions('id', 'name_division', cars_detali.lang, function (i) { return i.id_type_devision > 1 ? true : false; }),
                     null,
                     id ? Number(id) : -1,
                     function (event) {
@@ -2171,7 +2175,6 @@
                     },
                     null);
             },
-
             // Обновить компонент Администрации
             update_list_adm: function (id) {
                 cars_detali.card_vag_name_adm = cd_initSelect(
@@ -3739,6 +3742,9 @@
                 ves_tary_arc = ves_tary_arc !== null ? Number(ves_tary_arc * 1000) : null;
                 vesg = vesg !== null ? Number(vesg * 1000) : null;
 
+                var id_station_amkr = get_select_number_value(cars_detali.uz_vag_station_on_amkr);
+
+
                 var vagon = {
                     id: 0,
                     id_document: id_document_uz,
@@ -3764,7 +3770,9 @@
                     danger: get_input_string_value(cars_detali.uz_cargo_danger_class),
                     danger_kod: get_input_value(cars_detali.uz_cargo_danger_kod),
                     cargo_returns: cars_detali.uz_cargo_returns.prop('checked'),
-                    id_station_on_amkr: get_select_number_value(cars_detali.uz_vag_station_on_amkr),
+                    id_station_on_amkr: id_station_amkr > 0 ? id_station_amkr : null,
+                    id_division_on_amkr: get_select_number_value(cars_detali.uz_vag_devision_on_amkr),
+                    empty_car: id_station_amkr === 0 ? true : null,
                     kol_conductor: num < 2 ? cars_detali.get_epd_vagon_kol_conductor(cars_detali.select_otpr_vagon) : null, //
                     create: toISOStringTZ(new Date()),
                     create_user: cars_detali.user,
@@ -4256,7 +4264,7 @@
                             if (typeof callback_ok === 'function') {
                                 callback_ok();
                             }
-                            //LockScreenOff();
+                            LockScreenOff();
                         } else {
                             cars_detali.val_card_vag.clear_all();
                             cars_detali.out_error_message("Ошибка. При добавлении записи в справочник возникла ошибка.");
@@ -4264,7 +4272,7 @@
                             if (typeof callback_err === 'function') {
                                 callback_err();
                             }
-                            //LockScreenOff();
+                            LockScreenOff();
                         }
                     });
                 };

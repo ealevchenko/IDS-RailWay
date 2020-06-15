@@ -73,6 +73,10 @@ namespace EFIDS.Entities
 
         public int? id_station_on_amkr { get; set; }
 
+        public int? id_division_on_amkr { get; set; }
+
+        public bool? empty_car { get; set; }
+
         public int? kol_conductor { get; set; }
 
         public DateTime create { get; set; }
@@ -111,6 +115,8 @@ namespace EFIDS.Entities
         public virtual Directory_HazardClass Directory_HazardClass { get; set; }
 
         public virtual Directory_Station Directory_Station { get; set; }
+
+        public virtual Directory_Divisions Directory_Divisions { get; set; }
 
         public virtual Directory_TypeWagons Directory_TypeWagons { get; set; }
 
