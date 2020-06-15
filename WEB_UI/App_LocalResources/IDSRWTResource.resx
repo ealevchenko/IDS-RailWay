@@ -423,4 +423,7 @@
   <data name="title_arrival_count_car" xml:space="preserve">
     <value>Количество вагонов</value>
   </data>
+  <data name="title_devision_on_amkr" xml:space="preserve">
+    <value>Цех получатель</value>
+  </data>
 </root>

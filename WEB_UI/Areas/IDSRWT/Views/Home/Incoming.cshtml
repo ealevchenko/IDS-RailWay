@@ -367,15 +367,21 @@
                                             </div>
                                         </div>
                                         <div class="form-row">
-                                            <div class="col-md-6 mb-1 text-left">
+                                            @*<div class="col-md-6 mb-1 text-left">
                                                 <div class="custom-control custom-checkbox" style="top:50%">
                                                     <input type="checkbox" class="custom-control-input inp-manual" id="uz_cargo_returns" name="uz_cargo_returns" data-mode="edit-global" data-edit="" data-form="transceiver">
                                                     <label class="custom-control-label" for="uz_cargo_returns">@IDSRWTResource.title_cargo_returns</label>
                                                 </div>
-                                            </div>
+                                            </div>*@
                                             <div class="col-md-6 mb-1 text-left">
                                                 <label for="uz_vag_station_on_amkr" class="col-form-label">@IDSRWTResource.title_station_on_amkr:</label>
                                                 <select class="form-control inp-manual" id="uz_vag_station_on_amkr" name="uz_vag_station_on_amkr" title="Ручной выбор -> Справочник 'Внутрених станций АМКР'" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-1 text-left">
+                                                <label for="uz_vag_devision_on_amkr" class="col-form-label">@IDSRWTResource.title_devision_on_amkr:</label>
+                                                <select class="form-control inp-manual" id="uz_vag_devision_on_amkr" name="uz_vag_devision_on_amkr" title="Ручной выбор -> Справочник 'Подразделения АМКР'" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>

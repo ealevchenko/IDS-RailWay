@@ -1088,6 +1088,7 @@
                 cars_detali.update_list_consignee(null);                // Грузополучатели
                 cars_detali.update_list_shipper(null);                  // Грузопоотправитель
                 cars_detali.update_list_station_on_amkr(-1);            // Станция АМКР
+                cars_detali.update_list_devision_on_amkr(-1);           // Цеха АМКР
                 cars_detali.update_list_adm(-1);                        // Администрации
                 cars_detali.update_list_rod(null);                      // Род вагона
                 cars_detali.update_list_owner(null);                    // Владелец вагона
@@ -1537,6 +1538,8 @@
             uz_cargo_returns: $('input#uz_cargo_returns'),
             // Отправка на станцию АМКР
             uz_vag_station_on_amkr: $('select#uz_vag_station_on_amkr'),
+            // Отправка в цех АМКР
+            uz_vag_devision_on_amkr: $('select#uz_vag_devision_on_amkr'),
             // ВАГОН
             bt_card_vag_add: $('button#card_vag_add').on('click', function (event) {
                 event.preventDefault();
@@ -2145,7 +2148,7 @@
                 cars_detali.uz_vag_station_on_amkr = cd_initSelect(
                     $('select#uz_vag_station_on_amkr'),
                     { lang: lang },
-                    cars_detali.ids_inc.ids_dir.getListStation('id', 'station_name', cars_detali.lang, function (i) { return !i.station_uz }),
+                    [{value:0, text:'Под погрузку'}].concat(cars_detali.ids_inc.ids_dir.getListStation('id', 'station_name', cars_detali.lang, function (i) { return !i.station_uz })),
                     null,
                     id ? Number(id) : -1,
                     function (event) {
@@ -2154,6 +2157,21 @@
                     },
                     null);
             },
+            // Обновить компонент станций АМКР
+            update_list_devision_on_amkr: function (id) {
+                cars_detali.uz_vag_devision_on_amkr = cd_initSelect(
+                    $('select#uz_vag_devision_on_amkr'),
+                    { lang: lang },
+                    cars_detali.ids_inc.ids_dir.getListDivisions('id', 'name_division', cars_detali.lang, null),
+                    null,
+                    id ? Number(id) : -1,
+                    function (event) {
+                        event.preventDefault();
+                        cars_detali.validation_vag_devision_on_amkr(true, false);
+                    },
+                    null);
+            },
+
             // Обновить компонент Администрации
             update_list_adm: function (id) {
                 cars_detali.card_vag_name_adm = cd_initSelect(
@@ -3654,7 +3672,7 @@
                 if (!cars_detali.select_vagon || cars_detali.select_vagon.id === 0) {
                     valid = valid & cars_detali.val_arrival_car.set_object_error(cars_detali.bt_card_vag_add, "На выбранный вагон не заведена карточка в справочнике ИДС");
                 }
-                //valid = valid & cars_detali.val_arrival_car.checkSelection(cars_detali.uz_vag_condition_arrival, "Укажите разметку по прибытию");
+
                 valid = valid & cars_detali.validation_vag_condition_arrival(valid, false);
 
                 valid = valid & cars_detali.val_arrival_car.checkInputOfRange(cars_detali.uz_vag_gruzp, 60.0, 80.0, "Грузоподъемность должна быть в диапазоне от 60.0 до 80.0 тон.");
@@ -3665,7 +3683,7 @@
                 valid = valid & cars_detali.val_arrival_car.checkInputOfDirectory_IsNull(cars_detali.uz_cargo_kod_gng, this, 'ids_inc.ids_dir.getCargoGNG_Of_Code', "Указанного кода груза ГНГ нет в справочнике ИДС.");
 
                 valid = valid & cars_detali.validation_vag_station_on_amkr(valid, false);
-
+                valid = valid & cars_detali.validation_vag_devision_on_amkr(valid, false);
                 // Вычисление позиции
                 var pos = get_input_value(cars_detali.arrival_cars_position_arrival);
                 var result_pos = cars_detali.table_arrival_cars.list.filter(function (i) {
@@ -4017,7 +4035,7 @@
             loadReference: function (callback) {
                 LockScreen(langView('mess_load', langs));
                 var count = 1;
-                cars_detali.ids_inc.load([], ['hazard_class', 'commercial_condition', 'certification_data', 'payer_arrival', 'cargo', 'cargo_gng', 'cargo_etsng', 'cargo_group', 'type_wagons', 'condition_arrival', 'type_owner_ship', 'limiting_loading', 'operators_wagons', 'owners_wagons', 'genus_wagon', 'countrys', 'railway', 'inlandrailway', 'external_station', 'station', 'consignee', 'shipper', 'border_checkpoint'], ['internal_railroad', 'cargo'], false, function () {
+                cars_detali.ids_inc.load([], ['hazard_class', 'commercial_condition', 'certification_data', 'payer_arrival', 'cargo', 'cargo_gng', 'cargo_etsng', 'cargo_group', 'type_wagons', 'condition_arrival', 'type_owner_ship', 'limiting_loading', 'operators_wagons', 'owners_wagons', 'genus_wagon', 'countrys', 'railway', 'inlandrailway', 'external_station', 'station', 'consignee', 'shipper', 'border_checkpoint', 'divisions'], ['internal_railroad', 'cargo'], false, function () {
                     count -= 1;
                     if (count === 0) {
                         if (typeof callback === 'function') {
@@ -4064,6 +4082,11 @@
             // Валидация поля  "Станция амкр"
             validation_vag_station_on_amkr: function (valid, off_message) {
                 valid = valid & cars_detali.val_arrival_car.checkSelection(cars_detali.uz_vag_station_on_amkr, "Укажите станцию АМКР на которую будет отправлен вагон", "", off_message);
+                return valid;
+            },
+            // Валидация поля  "Цех амкр"
+            validation_vag_devision_on_amkr: function (valid, off_message) {
+                valid = valid & cars_detali.val_arrival_car.checkSelection(cars_detali.uz_vag_devision_on_amkr, "Укажите цех АМКР на который будет отправлен вагон", "", off_message);
                 return valid;
             },
             // Валидация поля  "Платильщик по отправке"
@@ -5964,6 +5987,7 @@
                         create_user: arrival_sostsv.create_user,
                         change: toISOStringTZ(new Date()),
                         change_user: pn_arrival_sostav.user_name,
+                        numeration: false
                     };
                 }
                 return null;

@@ -72,6 +72,10 @@ IDS_DIRECTORY.list_hazard_class = [];
 
 IDS_DIRECTORY.list_cars = [];
 
+IDS_DIRECTORY.list_type_division = [];
+
+IDS_DIRECTORY.list_divisions = [];
+
 /* ----------------------------------------------------------
 ЗАГРУЗКА СПРАВОЧНИКОВ
 -------------------------------------------------------------*/
@@ -467,6 +471,30 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
         if (el === 'cars') {
             IDS_DIRECTORY.prototype.getExternalStation(function (result_cars) {
                 obj.list_cars = result_cars;
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        if (lockOff) { LockScreenOff(); }
+                        callback();
+                    }
+                }
+            });
+        };
+        if (el === 'type_division') {
+            IDS_DIRECTORY.prototype.getTypeDivision(function (result_type_division) {
+                obj.list_type_division = result_type_division;
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        if (lockOff) { LockScreenOff(); }
+                        callback();
+                    }
+                }
+            });
+        };
+        if (el === 'divisions') {
+            IDS_DIRECTORY.prototype.getDivisions(function (result_divisions) {
+                obj.list_divisions = result_divisions;
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
@@ -2984,6 +3012,242 @@ IDS_DIRECTORY.prototype.postBorderCheckpoint = function (station, callback) {
         },
     });
 };
+//======= Directory_TypeDivision (Справочник типов цехов) ======================================
+IDS_DIRECTORY.prototype.getTypeDivision = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/type_division/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.GetTypeDivision", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить по коду
+IDS_DIRECTORY.prototype.getTypeDivisionOfID = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/type_division/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getTypeDivisionOfID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Обновить 
+IDS_DIRECTORY.prototype.putTypeDivision = function (type_division, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/directory/type_division/id' + type_division.id,
+        data: JSON.stringify(station),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.putTypeDivision", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Удалить 
+IDS_DIRECTORY.prototype.deleteTypeDivision = function (id, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/type_division/id' + id,
+        type: 'DELETE',
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.deleteTypeDivision", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Добавить 
+IDS_DIRECTORY.prototype.postTypeDivision = function (type_division, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/type_division/',
+        type: 'POST',
+        data: JSON.stringify(type_division),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_DIRECTORY.postTypeDivision", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//======= Directory_Divisions (Справочник цехов) ======================================
+IDS_DIRECTORY.prototype.getDivisions = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/division/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.GetDivisions", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить по коду
+IDS_DIRECTORY.prototype.getDivisionsOfID = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/division/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getDivisionsOfID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Обновить 
+IDS_DIRECTORY.prototype.putDivisions = function (division, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/directory/division/id' + division.id,
+        data: JSON.stringify(station),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.putDivisions", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Удалить 
+IDS_DIRECTORY.prototype.deleteDivisions = function (id, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/division/id' + id,
+        type: 'DELETE',
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.deleteDivisions", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Добавить 
+IDS_DIRECTORY.prototype.postDivisions = function (division, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/division/',
+        type: 'POST',
+        data: JSON.stringify(division),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_DIRECTORY.postDivisions", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 /* ----------------------------------------------------------
 функции для работы с объектами
 -------------------------------------------------------------*/
@@ -4414,6 +4678,42 @@ IDS_DIRECTORY.prototype.getList2ConditionArrival = function (fvalue, ftext1, fte
                 list.push({ value: l[fvalue], text: l[ftext1 + '_' + lang] + ' - ' + l[ftext2 + '_' + lang] });
             } else {
                 list.push({ value: l[fvalue], text: l[ftext1] + ' - ' + l[ftext2]});
+            }
+        }
+    }
+    return list;
+};
+//*======= IDS_DIRECTORY.list_divisions  (Справочник подразделений) ======================================
+IDS_DIRECTORY.prototype.getDivisions_Of_ID = function (id) {
+    if (this.list_divisions) {
+        var obj = getObjects(this.list_divisions, 'id', id);
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getValue_Divisions_Of_ID = function (id, name, lang) {
+    var obj = this.getDivisions_Of_ID(id);
+    return this.getValueObj(obj, name, lang);
+};
+//
+IDS_DIRECTORY.prototype.getValueCulture_Divisions_Of_ID = function (id, name) {
+    var obj = this.getDivisions_Of_ID(id);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getListDivisions = function (fvalue, ftext, lang, filter) {
+    var list = [];
+    var list_filtr = null;
+    if (this.list_divisions) {
+        if (typeof filter === 'function') {
+            list_filtr = this.list_divisions.filter(filter);
+        } else { list_filtr = this.list_divisions; }
+        for (i = 0, j = list_filtr.length; i < j; i++) {
+            var l = list_filtr[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
             }
         }
     }
