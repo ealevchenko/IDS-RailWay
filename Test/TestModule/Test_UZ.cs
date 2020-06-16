@@ -75,7 +75,7 @@ namespace Test.TestModule
         public void UZ_SMS_GetArrivalDocumentOfDB_Num()
         {
             UZ_SMS sms = new UZ_SMS();
-            UZ_DOC doc = sms.GetDocumentOfDB_NumConsigneesStations(59978890,new int[] { 7932, 6302, 659 },new int[] { 457905, 466904, 466923, 467004, 467108, 467201 }, null);
+            UZ_DOC doc = sms.GetDocumentOfDB_NumConsigneesStations(63360465, new int[] { 7932, 6302, 659 }, new int[] { 457905, 466904, 466923, 467004, 467108, 467201 }, null);
         }
 
 

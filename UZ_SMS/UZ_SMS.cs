@@ -374,7 +374,7 @@ namespace UZ
                 UZ_DOC doc = null;
                 EFUZ_Data ef_data = new EFUZ_Data(new EFSMSDbContext());
                 string sql = "SELECT *  FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data] " +
-                    "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = " + num.ToString() + ") and [arrived_code] in (0," + IntsToString(consignees, ',') + ") order by[dt] desc";
+                    "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = " + num.ToString() + ") and [arrived_code] in (0," + IntsToString(consignees, ',') + ",'none') order by[dt] desc";
                 List<UZ_Data> list_uz_data = ef_data.Database.SqlQuery<UZ_Data>(sql).ToList();
                 if (list_uz_data != null && list_uz_data.Count()>0)
                 {
