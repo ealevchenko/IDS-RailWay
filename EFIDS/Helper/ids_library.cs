@@ -1125,7 +1125,7 @@ namespace EFIDS.Helper
                 change = s.change,
                 change_user = s.change_user, 
                 ArrivalCars = s.ArrivalCars.ToList().Select(c => c.GetArrivalCars()).ToList(),
-                Arrival_UZ_Vagon = s.Arrival_UZ_Vagon.ToList().Select(c => c.GetArrival_UZ_Vagon()).ToList(),
+                //Arrival_UZ_Vagon = s.Arrival_UZ_Vagon.ToList().Select(c => c.GetArrival_UZ_Vagon()).ToList(),
                 Directory_Station = s.Directory_Station.GetDirectory_Station(),
                 Directory_Station1 = s.Directory_Station1.GetDirectory_Station(), 
                 Directory_Ways = s.Directory_Ways.GetDirectory_Ways()

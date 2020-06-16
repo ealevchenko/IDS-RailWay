@@ -4437,7 +4437,7 @@ IDS_DIRECTORY.prototype.getCargoETSNG_Of_CultureName = function (name, lang, tex
 };
 
 //*======= IDS_DIRECTORY.list_cargo_group  (Справочник групп грузов) ======================================
-IDS_DIRECTORY.prototype.getCargoGroup_Of_Code = function (id) {
+IDS_DIRECTORY.prototype.getCargoGroup_Of_ID = function (id) {
     if (this.list_cargo_group) {
         var obj = getObjects(this.list_cargo_group, 'id', id);
         return obj && obj.length > 0 ? obj[0] : null;
@@ -4456,13 +4456,13 @@ IDS_DIRECTORY.prototype.getID_CargoGroup_Internal_Of_Name = function (text, ftex
     return obj ? obj.id : null;
 };
 //
-IDS_DIRECTORY.prototype.getValue_CargoGroup_Of_Code = function (id, name, lang) {
-    var obj = this.getCargoGroup_Of_Code(id);
+IDS_DIRECTORY.prototype.getValue_CargoGroup_Of_ID = function (id, name, lang) {
+    var obj = this.getCargoGroup_Of_ID(id);
     return this.getValueObj(obj, name, lang);
 };
 //
-IDS_DIRECTORY.prototype.getValueCulture_CargoGroup_Of_Code = function (id, name) {
-    var obj = this.getCargoGroup_Of_Code(id);
+IDS_DIRECTORY.prototype.getValueCulture_CargoGroup_Of_ID= function (id, name) {
+    var obj = this.getCargoGroup_Of_ID(id);
     return obj ? obj[name + '_' + this.lang] : null;
 };
 //

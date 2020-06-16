@@ -160,6 +160,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_LocalResources\DirectoryResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DirectoryResource.resx</DependentUpon>
+    </Compile>
     <Compile Include="App_LocalResources\GlobalResource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -185,6 +190,8 @@
     <Compile Include="App_Start\Ninject.Web.Common.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\Directory\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Directory\DirectoryAreaRegistration.cs" />
     <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
     <Compile Include="Areas\HelpPage\App_Start\HelpPageConfig.cs" />
     <Compile Include="Areas\HelpPage\Controllers\HelpController.cs" />
@@ -509,6 +516,7 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="Content\view\directory\home.css" />
     <Content Include="Content\view\idsmors\electronic-cards.css" />
     <Content Include="Content\view\error.css" />
     <Content Include="Content\view\idsmors\report_wagons.css" />
@@ -518,6 +526,7 @@
     <Content Include="Content\view\shared\filter-menu.css" />
     <Content Include="Content\view\idsmors\home.css" />
     <Content Include="Content\view\shared\home-menu.css" />
+    <Content Include="Content\view\shared\_idsdirectory.css" />
     <Content Include="Content\view\shared\_idsmors.css" />
     <Content Include="Content\view\shared\_ids.css" />
     <Content Include="Content\view\shared\_idsrwt.css" />
@@ -551,6 +560,16 @@
     <Content Include="Images\cd-icon-check.svg" />
     <Content Include="Images\cd-icon-filter.svg" />
     <Content Include="Images\cd\cd-close-dark.svg" />
+    <Content Include="Images\directory\cd-logo.svg" />
+    <Content Include="Images\directory\img.jpg" />
+    <Content Include="Images\directory\line-icon-1.svg" />
+    <Content Include="Images\directory\line-icon-2.svg" />
+    <Content Include="Images\directory\line-icon-3.svg" />
+    <Content Include="Images\directory\line-icon-4.svg" />
+    <Content Include="Images\directory\line-icon-5.svg" />
+    <Content Include="Images\directory\line-icon-6.svg" />
+    <Content Include="Images\directory\line-icon-7.svg" />
+    <Content Include="Images\directory\line-icon-8.svg" />
     <Content Include="Images\error.jpg" />
     <Content Include="Images\Error404.png" />
     <Content Include="Images\header.jpg" />
@@ -814,6 +833,12 @@
     <Content Include="Areas\IDSMORS\Views\Home\Index.cshtml" />
     <Content Include="Areas\IDSMORS\Views\Home\ElectronicCards.cshtml" />
     <Content Include="Areas\IDSMORS\Views\Home\ReportWagons.cshtml" />
+    <Content Include="Areas\Directory\Views\web.config" />
+    <Content Include="Areas\Directory\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Directory\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Directory\Views\Home\Index.cshtml" />
+    <Content Include="Areas\Directory\Views\Shared\_IDSDirectory.cshtml" />
+    <Content Include="Areas\Directory\Views\Home\Cargo.cshtml" />
     <None Include="Areas\IDSMORS\Views\Shared\_IDSMORS1" />
     <Content Include="Content\DataTables\extensions\Buttons\css\mixins.scss" />
     <Content Include="Content\DataTables\extensions\Buttons\css\common.scss" />
@@ -1061,6 +1086,7 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
+    <Content Include="Scripts\view\directory\cargo.js" />
     <Content Include="Scripts\view\idsmors\electronic_cards.js" />
     <Content Include="Scripts\view\idsmors\report_wagons.js" />
     <Content Include="Scripts\view\idsmors\park_wagons.js" />
@@ -1068,6 +1094,7 @@
     <Content Include="Scripts\view\idsrwt\arrival.js" />
     <Content Include="Scripts\view\shared\common.js" />
     <Content Include="Scripts\view\shared\_ids.js" />
+    <Content Include="Scripts\view\shared\_idsdirectory.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -1100,6 +1127,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\Directory\Models\" />
     <Folder Include="Areas\IDSMORS\Models\" />
     <Folder Include="Areas\IDSRWT\Models\" />
     <Folder Include="Models\" />
@@ -1147,6 +1175,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="App_LocalResources\DirectoryResource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>DirectoryResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="App_LocalResources\GlobalResource.en.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>GlobalResource.en.Designer.cs</LastGenOutput>

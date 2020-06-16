@@ -2834,7 +2834,7 @@
                         if (i.id_cargo_etsng === etsng[0].id) return true; else false;
                     });
                     if (cargo && cargo.length > 0) {
-                        var cargo_group = cars_detali.ids_inc.ids_dir.getCargoGroup_Of_Code(cargo[0].id_group);
+                        var cargo_group = cars_detali.ids_inc.ids_dir.getCargoGroup_Of_ID(cargo[0].id_group);
                         cars_detali.uz_cargo_group_cargo.val(cars_detali.ids_inc.ids_dir.getValueObj(cargo_group, 'cargo_group_name', cars_detali.lang));
                         cars_detali.select_id_cargo = cargo[0].id; // сохраним выбранный груз
                     }

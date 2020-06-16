@@ -1,0 +1,39 @@
+﻿@using WEB_UI.App_LocalResources;
+@{
+    ViewBag.Title = @DirectoryResource.cargo_title;
+}
+
+@section styles {
+    @Styles.Render("~/DataTables/css")
+    <link rel="stylesheet" type="text/css" href="~/Content/view/directory/home.css">
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/Moment")
+    @Scripts.Render("~/bundles/DataTables")
+
+    <script src="~/Scripts/view/shared/common.js"></script> <!-- Общая библиотека методов программы -->
+    <script src="~/Scripts/api/shared.js"></script> <!-- Общая библиотека методов API -->
+    <script src="~/Scripts/api/ids_directory.js"></script> <!-- Class API ИДС Справочники -->
+
+    <script src="~/Scripts/view/directory/cargo.js"></script> <!--  -->
+}
+
+<input id="username" type="hidden" value="@User.Identity.Name" />
+
+<div class="alert" id="main-alert"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card border-dark mb-3">
+                <div class="card-header bg-secondary text-white">@DirectoryResource.cargo_title</div>
+                <div class="card-body text-dark pl-3 pr-3">
+                    <table class="table table-striped table-bordered" id="table-directory" style="width:100%"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

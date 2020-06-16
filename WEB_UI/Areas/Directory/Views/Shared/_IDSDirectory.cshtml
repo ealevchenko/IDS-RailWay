@@ -1,0 +1,214 @@
+﻿
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap Core CSS -->
+    @Styles.Render("~/jquery-ui/css")
+    @Styles.Render("~/bootstrap/css")
+
+    <!-- Theme CSS -->
+    <link href="~/Content/view/shared/_idsdirectory.css" rel="stylesheet">
+
+    @RenderSection("styles", required: false)
+
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    <div id="lockPanel" class="LockOff"></div>
+    <header class="cd-main-header bg-amkr">
+        <a class="cd-logo" href="#0"><img src="~/Images/amk_logo.png" alt="Logo"></a>
+        <ul class="cd-header-buttons">
+            <li><a class="cd-search-trigger" href="#cd-search">Search<span></span></a></li>
+            <li><a class="cd-nav-trigger" href="#cd-primary-nav">Menu<span></span></a></li>
+        </ul> <!-- cd-header-buttons -->
+    </header>
+    <main class="cd-main-content">
+        <!-- your content here -->
+        @RenderBody()
+        <div class="cd-overlay"></div>
+    </main>
+    <nav class="cd-nav">
+        <ul id="cd-primary-nav" class="cd-primary-nav is-fixed">
+            <li><a href='@Url.Action("Index", "Home", new { Area = "" })'>Home</a></li>
+            <li class="has-children">
+                <a href="#">Справочники ИДС</a>
+                <ul class="cd-secondary-nav is-hidden">
+                    <li class="go-back"><a href="#0">Меню</a></li>
+                    <li class="see-all"><a href="#">Все справочники ИДС</a></li>
+                    <li class="has-children">
+                        <a href="#">Вагоны</a>
+                        <ul class="is-hidden">
+                            <li class="go-back"><a href="#0">Справочники ИДС</a></li>
+                            <li class="see-all"><a href="#">Вагоны</a></li>
+                            <li><a href="#">Карточка вагона</a></li>
+                            <li><a href="#">Страны</a></li>
+                            <li><a href="#">Род вагона</a></li>
+                            <li><a href="#">Тип вагона</a></li>
+                            <li><a href="#">Разметка по прибытию</a></li>
+                            <li><a href="#">Собственики</a></li>
+                            <li><a href="#">Операторы</a></li>
+                            <li><a href="#">Признаки собственности</a></li>
+                            <li><a href="#">Ограничения погрузки</a></li>
+                        </ul>
+                    </li>
+                    <li class="has-children">
+                        <a href="#">Маршруты и клиенты</a>
+                        <ul class="is-hidden">
+                            <li class="go-back"><a href="#0">Справочники ИДС</a></li>
+                            <li class="see-all"><a href="#">Маршруты и клиенты</a></li>
+                            <li><a href="#">Внешние станции</a></li>
+                            <li><a href="#0">Пограничные пункты</a></li>
+                            <li><a href="#0">Грузоотправители</a></li>
+                            <li><a href="#0">Грузополучатели</a></li>
+                        </ul>
+                    </li>
+                    <li class="has-children">
+                        <a href="#">Грузы</a>
+                        <ul class="is-hidden">
+                            <li class="go-back"><a href="#0">Справочники ИДС</a></li>
+                            <li class="see-all"><a href="#">Грузы</a></li>
+                            <li><a href='@Url.Action("Cargo", "Home", new { Area = "Directory" })'>Грузы</a></li>
+                            <li><a href="#">Группы грузов</a></li>
+                            <li><a href="#">Грузы ЕТ СНГ</a></li>
+                            <li><a href="#">Грузы ГНГ</a></li>
+                            <li><a href="#">Сертификационные данные</a></li>
+                            <li><a href="#">Коммерчиское сотояние грузов</a></li>
+                            <li><a href="#">Класы опасности</a></li>
+                            <li><a href="#">Плательщики по отправке</a></li>
+                            <li><a href="#">Плательщики по прибытию</a></li>
+                        </ul>
+                    </li>
+                    <li class="has-children">
+                        <a href="#">Общие</a>
+                        <ul class="is-hidden">
+                            <li class="go-back"><a href="#0">Справочники ИДС</a></li>
+                            <li class="see-all"><a href="#">Общие</a></li>
+                            <li><a href="#">Внутрение станции</a></li>
+                            <li><a href="#">Парки</a></li>
+                            <li><a href="#">Пути</a></li>
+                            <li><a href="#">Подразделения</a></li>
+                            <li><a href="#">Типы подразделений</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            @*<li class="has-children">
+                <a href="#">Gallery</a>
+                <ul class="cd-nav-gallery is-hidden">
+                    <li class="go-back"><a href="#0">Menu</a></li>
+                    <li class="see-all"><a href="#">Browse Gallery</a></li>
+                    <li>
+                        <a class="cd-nav-item" href="#">
+                            <img src="img/img.jpg" alt="Product Image">
+                            <h3>Product #1</h3>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="cd-nav-item" href="#">
+                            <img src="img/img.jpg" alt="Product Image">
+                            <h3>Product #2</h3>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="cd-nav-item" href="#">
+                            <img src="img/img.jpg" alt="Product Image">
+                            <h3>Product #3</h3>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="cd-nav-item" href="#">
+                            <img src="img/img.jpg" alt="Product Image">
+                            <h3>Product #4</h3>
+                        </a>
+                    </li>
+                </ul>
+            </li>*@
+            <li class="has-children">
+                <a href="#">Сервисы</a>
+                <ul class="cd-nav-icons is-hidden">
+                    <li class="go-back"><a href="#0">Меню</a></li>
+                    <li class="see-all"><a href="#">Обзор сервисов</a></li>
+                    <li>
+                        <a class="cd-nav-item item-1" href="#">
+                            <h3>Новые вагоны</h3>
+                            <p>Поиск вагонов по которым завели новые карточки</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="cd-nav-item item-2" href="#">
+                            <h3>Новые грузы</h3>
+                            <p>Поиск грузов по которым нет определения группы</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="cd-nav-item item-3" href="#">
+                            <h3>Service #3</h3>
+                            <p>This is the item description</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="cd-nav-item item-4" href="#">
+                            <h3>Service #4</h3>
+                            <p>This is the item description</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="cd-nav-item item-5" href="#">
+                            <h3>Service #5</h3>
+                            <p>This is the item description</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="cd-nav-item item-6" href="#">
+                            <h3>Service #6</h3>
+                            <p>This is the item description</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="cd-nav-item item-7" href="#">
+                            <h3>Service #7</h3>
+                            <p>This is the item description</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="cd-nav-item item-8" href="#">
+                            <h3>Service #8</h3>
+                            <p>This is the item description</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            
+        </ul> <!-- primary-nav -->
+    </nav> <!-- cd-nav -->
+    <div id="cd-search" class="cd-search">
+        <form>
+            <input type="search" placeholder="Search...">
+        </form>
+    </div>
+
+    <!-- jQuery -->
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jquery-cookie")
+    @Scripts.Render("~/bundles/jquery-ui")
+    <!-- Bootstrap Core JavaScript -->
+    @Scripts.Render("~/bundles/bootstrap")
+
+    @Scripts.Render("~/bundles/modernizr")
+
+    @*<script src="js/jquery.mobile.custom.min.js"></script>
+    <script src="js/main.js"></script>*@ 
+    <!-- Resource jQuery -->
+
+    <!-- Theme JavaScript -->
+    <script src="~/Scripts/view/shared/_idsdirectory.js"></script>
+
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>
+
