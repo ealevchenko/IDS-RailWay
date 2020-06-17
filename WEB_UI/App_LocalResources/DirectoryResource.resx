@@ -123,4 +123,7 @@
   <data name="home_title" xml:space="preserve">
     <value>Справочники</value>
   </data>
+  <data name="title_change_group_cargo_group" xml:space="preserve">
+    <value>Группы грузов</value>
+  </data>
 </root>

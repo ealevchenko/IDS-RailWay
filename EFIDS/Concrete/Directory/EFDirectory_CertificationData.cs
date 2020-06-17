@@ -184,5 +184,11 @@ namespace EFIDS.Concrete
                 Console.WriteLine(e);
             }
         }
+
+
+        public void Update(IEnumerable<Directory_CertificationData> items)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

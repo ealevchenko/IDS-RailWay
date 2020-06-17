@@ -186,5 +186,11 @@ namespace EFIDS.Concrete
                 Console.WriteLine(e);
             }
         }
+
+
+        public void Update(IEnumerable<Directory_TypeDivision> items)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

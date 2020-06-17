@@ -172,5 +172,11 @@ namespace EFIDS.Concrete
         {
             throw new NotImplementedException();
         }
+
+
+        public void Update(IEnumerable<Directory_Countrys> items)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

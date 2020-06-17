@@ -185,5 +185,11 @@ namespace EFIDS.Concrete
             }
         }
 
+
+
+        public void Update(IEnumerable<Arrival_UZ_Vagon_Acts> items)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

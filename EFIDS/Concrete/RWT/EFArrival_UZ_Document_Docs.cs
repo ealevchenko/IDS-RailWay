@@ -185,5 +185,11 @@ namespace EFIDS.Concrete
             }
         }
 
+
+
+        public void Update(IEnumerable<Arrival_UZ_Document_Docs> items)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

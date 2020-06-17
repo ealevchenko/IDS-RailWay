@@ -77,6 +77,23 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // POST api/ids/directory/cargo/list
+        [HttpPost]
+        [Route("list")]
+        public int PostListCargo([FromBody]List<Directory_Cargo> list)
+        {
+            try
+            {
+                this.ef_dir.Add(list);
+                int res = this.ef_dir.Save();
+                return res;
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+        }
+
         // PUT api/ids/directory/cargo/id
         [HttpPut]
         [Route("id/{id:int}")]
@@ -85,6 +102,23 @@ namespace WEB_UI.Controllers.api
             try
             {
                 this.ef_dir.Update(value);
+                return this.ef_dir.Save();
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+        }
+
+
+        // PUT api/ids/directory/cargo/list
+        [HttpPut]
+        [Route("list")]
+        public int PutCargo(List<Directory_Cargo> list)
+        {
+            try
+            {
+                this.ef_dir.Update(list);
                 return this.ef_dir.Save();
             }
             catch (Exception e)

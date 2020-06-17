@@ -172,5 +172,11 @@ namespace EFIDS.Concrete
         {
             throw new NotImplementedException();
         }
+
+
+        public void Update(IEnumerable<Directory_LimitingLoading> items)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

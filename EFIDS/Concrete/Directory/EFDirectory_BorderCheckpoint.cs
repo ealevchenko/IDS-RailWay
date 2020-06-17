@@ -185,5 +185,11 @@ namespace EFIDS.Concrete
                 Console.WriteLine(e);
             }
         }
+
+
+        public void Update(IEnumerable<Directory_BorderCheckpoint> items)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

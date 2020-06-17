@@ -16,6 +16,7 @@ namespace EFIDS.Abstract
         void Add(T item);           // создание объекта
         void Add(IEnumerable<T> items);           // создание объекта
         void Update(T item);        // обновление объекта
+        void Update(IEnumerable<T> items);        // обновление объекта
         void AddOrUpdate(T item);   // добавить или обновить
         void Delete(int id);        // удаление объекта по id
         void Delete(IEnumerable<int> list_id);    // удаление объектов

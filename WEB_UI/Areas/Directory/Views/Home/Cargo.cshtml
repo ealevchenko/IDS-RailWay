@@ -36,4 +36,27 @@
     </div>
 </div>
 
+<div id="dialog-confirm" title="Empty the recycle bin?" style="display:none">
+    <p id="dialog-confirm-text">
+        <span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>
+    </p>
+</div>
+
+<div id="change_group" title="" style="display:none">
+    <div class="alert" id="change_group-alert"></div>
+    <form id="form-change_group">
+        <div class="form-group row" style="margin-bottom:0.5rem">
+            <label for="change_group_cargo_group" class="col-sm-5 col-form-label">@DirectoryResource.title_change_group_cargo_group:</label>
+            <div class="col-sm-7">
+                <select class="form-control" id="change_group_cargo_group" name="change_group_cargo_group" required="required"></select>
+                <div class="invalid-feedback">
+
+                </div>
+            </div>
+        </div>
+        <!-- Allow form submission with keyboard without duplicating the dialog button -->
+        <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </form>
+</div>
+
 

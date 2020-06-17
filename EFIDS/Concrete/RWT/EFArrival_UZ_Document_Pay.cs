@@ -185,5 +185,11 @@ namespace EFIDS.Concrete
             }
         }
 
+
+
+        public void Update(IEnumerable<Arrival_UZ_Document_Pay> items)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

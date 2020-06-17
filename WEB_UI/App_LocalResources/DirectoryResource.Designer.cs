@@ -77,5 +77,14 @@ namespace WEB_UI.App_LocalResources {
                 return ResourceManager.GetString("home_title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Группы грузов.
+        /// </summary>
+        public static string title_change_group_cargo_group {
+            get {
+                return ResourceManager.GetString("title_change_group_cargo_group", resourceCulture);
+            }
+        }
     }
 }

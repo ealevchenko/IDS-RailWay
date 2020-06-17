@@ -96,6 +96,18 @@ namespace EFIDS.Concrete
             context.Entry(entity).State = EntityState.Modified;
         }
 
+        public static void Updates<TEntity>(this EFDbContext context, IEnumerable<TEntity> entitys) where TEntity : class
+        {
+            // Здесь мы можем указывать различные настройки контекста,
+            // например выводить в отладчик сгенерированный SQL-код
+            //context.Database.Log =
+            //    (s => System.Diagnostics.Debug.WriteLine(s));
+
+            foreach (TEntity entity in entitys)
+                context.Entry(entity).State = EntityState.Modified;
+
+        }
+
         public static TEntity Delete<TEntity>(this EFDbContext context, long id) where TEntity : class
         {
             // Здесь мы можем указывать различные настройки контекста,

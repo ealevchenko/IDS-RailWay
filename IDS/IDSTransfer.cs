@@ -39,7 +39,6 @@ namespace IDS
         {
             this.servece_owner = servece_owner;
         }
-
         /// <summary>
         /// Добавить новый состав находящийся на станциях УЗ Кривого Рога в систему ИДС
         /// </summary>

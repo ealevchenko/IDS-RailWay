@@ -1295,6 +1295,30 @@ IDS_DIRECTORY.prototype.putCargo = function (cargo, callback) {
         },
     });
 };
+
+IDS_DIRECTORY.prototype.putListCargo = function (list_cargo, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/directory/cargo/list/',
+        data: JSON.stringify(list_cargo),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.putListCargo", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 // Удалить 
 IDS_DIRECTORY.prototype.deleteCargo = function (id, callback) {
     $.ajax({
@@ -4240,7 +4264,7 @@ IDS_DIRECTORY.prototype.getPayerArrival_Of_CultureName = function (name, lang, t
 };
 
 //*======= IDS_DIRECTORY.list_cargo  (Справочник грузов ГНГ) ======================================
-IDS_DIRECTORY.prototype.getCargo_Of_Code = function (id) {
+IDS_DIRECTORY.prototype.getCargo_Of_ID = function (id) {
     if (this.list_cargo) {
         var obj = getObjects(this.list_cargo, 'id', id);
         return obj && obj.length > 0 ? obj[0] : null;
@@ -4259,13 +4283,13 @@ IDS_DIRECTORY.prototype.getID_Cargo_Internal_Of_Name = function (text, ftext, la
     return obj ? obj.id : null;
 };
 //
-IDS_DIRECTORY.prototype.getValue_Cargo_Of_Code = function (id, name, lang) {
-    var obj = this.getCargo_Of_Code(id);
+IDS_DIRECTORY.prototype.getValue_Cargo_Of_ID = function (id, name, lang) {
+    var obj = this.getCargo_Of_ID(id);
     return this.getValueObj(obj, name, lang);
 };
 //
-IDS_DIRECTORY.prototype.getValueCulture_Cargo_Of_Code = function (id, name) {
-    var obj = this.getCargo_Of_Code(id);
+IDS_DIRECTORY.prototype.getValueCulture_Cargo_Of_ID = function (id, name) {
+    var obj = this.getCargo_Of_ID(id);
     return obj ? obj[name + '_' + this.lang] : null;
 };
 //

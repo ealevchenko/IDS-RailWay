@@ -177,5 +177,11 @@ namespace EFIDS.Concrete
         {
             throw new NotImplementedException();
         }
+
+
+        public void Update(IEnumerable<WagonsMotionSignals> items)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

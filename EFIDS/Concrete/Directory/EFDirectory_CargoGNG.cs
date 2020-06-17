@@ -186,5 +186,11 @@ namespace EFIDS.Concrete
                 Console.WriteLine(e);
             }
         }
+
+
+        public void Update(IEnumerable<Directory_CargoGNG> items)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

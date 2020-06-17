@@ -186,5 +186,11 @@ namespace EFIDS.Concrete
                 Console.WriteLine(e);
             }
         }
+
+
+        public void Update(IEnumerable<CardsWagonsRepairs> items)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
