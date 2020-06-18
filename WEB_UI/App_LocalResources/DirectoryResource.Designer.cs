@@ -79,6 +79,51 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Грузы справочник ЕТ СНГ.
+        /// </summary>
+        public static string title_add_edit_cargo_etsng {
+            get {
+                return ResourceManager.GetString("title_add_edit_cargo_etsng", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Наименование груза (анг.).
+        /// </summary>
+        public static string title_add_edit_cargo_name_en {
+            get {
+                return ResourceManager.GetString("title_add_edit_cargo_name_en", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Наименование груза (рус.).
+        /// </summary>
+        public static string title_add_edit_cargo_name_ru {
+            get {
+                return ResourceManager.GetString("title_add_edit_cargo_name_ru", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Код в SAP.
+        /// </summary>
+        public static string title_add_edit_code_sap {
+            get {
+                return ResourceManager.GetString("title_add_edit_code_sap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отправляемые грузы.
+        /// </summary>
+        public static string title_add_edit_sending {
+            get {
+                return ResourceManager.GetString("title_add_edit_sending", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Группы грузов.
         /// </summary>
         public static string title_change_group_cargo_group {

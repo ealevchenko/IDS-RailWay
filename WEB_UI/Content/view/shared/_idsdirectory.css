@@ -113,7 +113,7 @@ input {
 }
 
 input[type="search"]::-ms-clear {
-  /* removes close icon - IE */
+
   display: none;
 }
 

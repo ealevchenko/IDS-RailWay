@@ -123,6 +123,21 @@
   <data name="home_title" xml:space="preserve">
     <value>Справочники</value>
   </data>
+  <data name="title_add_edit_cargo_etsng" xml:space="preserve">
+    <value>Грузы справочник ЕТ СНГ</value>
+  </data>
+  <data name="title_add_edit_cargo_name_en" xml:space="preserve">
+    <value>Наименование груза (анг.)</value>
+  </data>
+  <data name="title_add_edit_cargo_name_ru" xml:space="preserve">
+    <value>Наименование груза (рус.)</value>
+  </data>
+  <data name="title_add_edit_code_sap" xml:space="preserve">
+    <value>Код в SAP</value>
+  </data>
+  <data name="title_add_edit_sending" xml:space="preserve">
+    <value>Отправляемые грузы</value>
+  </data>
   <data name="title_change_group_cargo_group" xml:space="preserve">
     <value>Группы грузов</value>
   </data>

@@ -55,6 +55,17 @@ namespace Test.TestModule
 
         #endregion
 
+        #region IDSMORS
+        // Тест Вернуть последнюю обработаную запись ID nолученую их таблицы WT
+        public void IDSMORS_GetLastIDWTWagonsMotionSignals()
+        {
+
+            IDSMORS ids = new IDSMORS(service.Test);
+            long? res = ids.GetLastIDWTWagonsMotionSignals(50030337);
+
+        }
+        #endregion
+
         public void GetActs() {
 
             UZ.UZ_Convert convert = new UZ.UZ_Convert();
