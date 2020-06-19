@@ -61,7 +61,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Справочник &quot;Грузы&quot;.
+        ///   Ищет локализованную строку, похожую на Справочник &quot;Грузы ИДС&quot;.
         /// </summary>
         public static string cargo_title {
             get {
@@ -88,7 +88,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Наименование груза (анг.).
+        ///   Ищет локализованную строку, похожую на Наименование груза в ИДС (анг.).
         /// </summary>
         public static string title_add_edit_cargo_name_en {
             get {
@@ -97,7 +97,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Наименование груза (рус.).
+        ///   Ищет локализованную строку, похожую на Наименование груза в ИДС (рус.).
         /// </summary>
         public static string title_add_edit_cargo_name_ru {
             get {
@@ -124,7 +124,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Группы грузов.
+        ///   Ищет локализованную строку, похожую на Группы грузов в ИДС.
         /// </summary>
         public static string title_change_group_cargo_group {
             get {

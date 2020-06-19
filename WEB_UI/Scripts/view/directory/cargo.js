@@ -7,15 +7,16 @@
             {
                 'field_id': 'Код',
                 'field_group': 'Группа',
-                'field_cargo_name_ru': 'Груз(рус)',
-                'field_cargo_name_en': 'Груз(анг)',
+                'field_cargo_etsng_code': 'Код ЕТ СНГ',
+                'field_cargo_etsng_name': 'Груз ЕТ СНГ',
+                'field_cargo_name_ru': 'Груз в ИДС (рус)',
+                'field_cargo_name_en': 'Груз в ИДС (анг)',
                 'field_code_sap': 'Код по САП',
                 'field_sending': 'Отправляемые',
                 'field_create': 'Строка создана',
                 'field_create_user': 'Создал строку',
                 'field_change': 'Строку правили',
                 'field_change_user': 'Правил',
-
 
                 'title_button_buffer': 'Буфер',
                 'title_button_excel': 'Excel',
@@ -497,7 +498,8 @@
             count_string: null,
             init: function () {
                 this.obj = this.html_table.DataTable({
-                    "paging": false,
+                    "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "All"]],
+                    "paging": true,
                     "searching": true,
                     "ordering": true,
                     "info": true,
@@ -528,8 +530,10 @@
                     columns: [
                         { data: "id", title: langView('field_id', langs), width: "50px", orderable: true, searchable: true },
                         { data: "group", title: langView('field_group', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "cargo_name_ru", title: langView('field_cargo_name_ru', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "cargo_name_en", title: langView('field_cargo_name_en', langs), width: "50px", orderable: true, searchable: true },
+                        { data: "cargo_etsng_code", title: langView('field_cargo_etsng_code', langs), width: "50px", orderable: true, searchable: true },
+                        { data: "cargo_etsng_name", title: langView('field_cargo_etsng_name', langs), width: "150px", orderable: true, searchable: true },
+                        { data: "cargo_name_ru", title: langView('field_cargo_name_ru', langs), width: "150px", orderable: true, searchable: true },
+                        { data: "cargo_name_en", title: langView('field_cargo_name_en', langs), width: "150px", orderable: true, searchable: true },
                         { data: "code_sap", title: langView('field_code_sap', langs), width: "50px", orderable: true, searchable: true },
                         { data: "sending", title: langView('field_sending', langs), width: "50px", orderable: true, searchable: true },
                         { data: "create", title: langView('field_create', langs), width: "50px", orderable: true, searchable: true },
@@ -614,6 +618,9 @@
                             },
                             enabled: false
                         },
+                        {
+                            extend: 'pageLength',
+                        }
                     ]
                 }).on('select', function (e, dt, type, indexes) {
                     table_directory.view_button(indexes);
@@ -671,9 +678,10 @@
                     "id": data.id,
                     //"group": (data.id_group !== null && ids_dir !== null ? ids_dir.getValue_CargoGroup_Of_ID(data.id_group, 'cargo_group_name', lang) : null),
                     "group": (data.Directory_CargoGroup ? ids_dir.getValueObj(data.Directory_CargoGroup, 'cargo_group_name', lang) : null),
-
                     "id_group": data.id_group,
                     "id_cargo_etsng": data.id_cargo_etsng,
+                    "cargo_etsng_code": (data.Directory_CargoETSNG ? ids_dir.getValueObj(data.Directory_CargoETSNG, 'code') : null),
+                    "cargo_etsng_name": (data.Directory_CargoETSNG ? ids_dir.getValueObj(data.Directory_CargoETSNG, 'cargo_etsng_name', lang) : null),
                     "cargo_name_ru": data.cargo_name_ru,
                     "cargo_name_en": data.cargo_name_en,
                     "code_sap": data.code_sap,

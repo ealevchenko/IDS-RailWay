@@ -1,18 +1,26 @@
 ﻿body {
-
+    /*font-size: 1.2rem;*/
 }
 
-.btn{
-    font-size:1.6rem;
+.btn {
+    font-size: 1.6rem;
     /*margin-left:2px;*/
 }
 
 .warning {
-    color:red;
+    color: red;
 }
 
 input {
-    margin:0;
-    padding:0;
-    font:initial;
+    margin: 0;
+    padding: 0;
+    font: initial;
+}
+
+#table-directory {
+    font-size: 1.3rem;
+}
+
+#table-directory th, #table-directory thead {
+    /*font-size: 1.3rem;*/
 }
