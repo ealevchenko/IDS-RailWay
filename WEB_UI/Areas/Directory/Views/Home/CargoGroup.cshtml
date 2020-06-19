@@ -1,0 +1,28 @@
+﻿@using WEB_UI.App_LocalResources;
+@{
+    ViewBag.Title = @DirectoryResource.cargo_group_title;
+}
+
+@section styles {
+    @Styles.Render("~/DataTables/css")
+    <link rel="stylesheet" type="text/css" href="~/Content/view/directory/home.css">
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/Moment")
+    @Scripts.Render("~/bundles/DataTables")
+
+    <script src="~/Scripts/view/shared/common.js"></script> <!-- Общая библиотека методов программы -->
+    <script src="~/Scripts/api/shared.js"></script> <!-- Общая библиотека методов API -->
+    <script src="~/Scripts/api/ids_directory.js"></script> <!-- Class API ИДС Справочники -->
+
+    <script src="~/Scripts/plugins/pl_dialog_confirm.js"></script> <!-- Плагин -->
+
+    <script src="~/Scripts/view/directory/cargo_group.js"></script> <!--  -->
+}
+
+<input id="username" type="hidden" value="@User.Identity.Name" />
+
+<div id="dc"></div>
+
+<button id="test">test</button>

@@ -61,6 +61,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Справочник &quot;Группы грузов ИДС&quot;.
+        /// </summary>
+        public static string cargo_group_title {
+            get {
+                return ResourceManager.GetString("cargo_group_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Справочник &quot;Грузы ИДС&quot;.
         /// </summary>
         public static string cargo_title {

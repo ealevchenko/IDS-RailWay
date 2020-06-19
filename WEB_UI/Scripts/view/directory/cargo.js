@@ -39,6 +39,7 @@
     var lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang')),
         langs = $.extend(true, $.extend(true, getLanguages($.Text_View, lang), getLanguages($.Text_Common, lang)), getLanguages($.Text_Table, lang)),
         user_name = $('input#username').val(),
+        dc = $('div#dialog-confirm').dialog_confirm({}),
         alert = new ALERT($('div#main-alert')),// Создадим класс ALERTG
         ids_dir = new IDS_DIRECTORY(lang), // Создадим класс IDS_DIRECTORY
         // Загрузка основных справочников приложения
@@ -54,56 +55,56 @@
                 }
             });
         },
-        //*************************************************************************************
-        // МЕНДАЛЬНОЕ ОКНО ДИАЛОГ
-        //*************************************************************************************
-        dialog_confirm = {
-            result: false,
-            callback_ok: null,
-            obj: $("#dialog-confirm").dialog({
-                resizable: false,
-                autoOpen: false,
-                height: "auto",
-                width: 500,
-                modal: true,
-                open: function (event, ui) {
-                },
-                close: function (event, ui) {
-                    if (typeof dialog_confirm.callback_ok === 'function') {
-                        dialog_confirm.callback_ok(dialog_confirm.result);
-                    }
-                },
-                classes: {
-                    "ui-dialog": "card",
-                    "ui-dialog-titlebar": "card-header bg-primary text-white",
-                    "ui-dialog-content": "card-body",
-                    "ui-dialog-buttonpane": "card-footer text-muted"
-                },
-                buttons: [
-                    {
-                        text: "Ок",
-                        class: "btn btn-outline-primary btn-sm",
-                        click: function () {
-                            dialog_confirm.result = true;
-                            $(this).dialog("close");
-                        }
-                    },
-                    {
-                        text: "Отмена",
-                        class: "btn btn-outline-primary btn-sm",
-                        click: function () {
-                            $(this).dialog("close");
-                        }
-                    }]
-            }),
-            open: function (titlt, text, callback_ok) {
-                dialog_confirm.result = false;
-                dialog_confirm.obj.dialog("option", "title", titlt);
-                $('p#dialog-confirm-text').text(text);
-                dialog_confirm.callback_ok = callback_ok;
-                dialog_confirm.obj.dialog("open");
-            }
-        },
+        ////*************************************************************************************
+        //// МЕНДАЛЬНОЕ ОКНО ДИАЛОГ
+        ////*************************************************************************************
+        //dialog_confirm = {
+        //    result: false,
+        //    callback_ok: null,
+        //    obj: $("#dialog-confirm").dialog({
+        //        resizable: false,
+        //        autoOpen: false,
+        //        height: "auto",
+        //        width: 500,
+        //        modal: true,
+        //        open: function (event, ui) {
+        //        },
+        //        close: function (event, ui) {
+        //            if (typeof dialog_confirm.callback_ok === 'function') {
+        //                dialog_confirm.callback_ok(dialog_confirm.result);
+        //            }
+        //        },
+        //        classes: {
+        //            "ui-dialog": "card",
+        //            "ui-dialog-titlebar": "card-header bg-primary text-white",
+        //            "ui-dialog-content": "card-body",
+        //            "ui-dialog-buttonpane": "card-footer text-muted"
+        //        },
+        //        buttons: [
+        //            {
+        //                text: "Ок",
+        //                class: "btn btn-outline-primary btn-sm",
+        //                click: function () {
+        //                    dialog_confirm.result = true;
+        //                    $(this).dialog("close");
+        //                }
+        //            },
+        //            {
+        //                text: "Отмена",
+        //                class: "btn btn-outline-primary btn-sm",
+        //                click: function () {
+        //                    $(this).dialog("close");
+        //                }
+        //            }]
+        //    }),
+        //    open: function (titlt, text, callback_ok) {
+        //        dialog_confirm.result = false;
+        //        dialog_confirm.obj.dialog("option", "title", titlt);
+        //        $('p#dialog-confirm-text').text(text);
+        //        dialog_confirm.callback_ok = callback_ok;
+        //        dialog_confirm.obj.dialog("open");
+        //    }
+        //},
         //*************************************************************************************
         // ОКНО ИЗМЕНИТЬ ГРУППУ
         //*************************************************************************************
@@ -589,7 +590,7 @@
                             text: langView('title_button_del', langs),
                             action: function (e, dt, node, config) {
 
-                                dialog_confirm.open('Удалить?', 'Вы уверены что хотите удалить строку : ' + table_directory.select_string.cargo_name_ru, function (result) {
+                                dc.dialog_confirm('Open','Удалить?', 'Вы уверены что хотите удалить строку : ' + table_directory.select_string.cargo_name_ru, function (result) {
                                     if (result) {
                                         ids_dir.deleteCargo(table_directory.select_string.id, function (result_del) {
                                             alert.clear_message();
@@ -606,6 +607,24 @@
                                         });
                                     }
                                 });
+
+                                //dialog_confirm.open('Удалить?', 'Вы уверены что хотите удалить строку : ' + table_directory.select_string.cargo_name_ru, function (result) {
+                                //    if (result) {
+                                //        ids_dir.deleteCargo(table_directory.select_string.id, function (result_del) {
+                                //            alert.clear_message();
+                                //            if (result_del > 0) {
+                                //                alert.out_info_message('Строка справочника - удалена!');
+                                //            } else {
+                                //                alert.out_error_message('Ошибка удаления строки справочника!');
+                                //            }
+                                //            //
+                                //            ids_dir.loadCargo(function () {
+                                //                table_directory.view(ids_dir.list_cargo);
+
+                                //            });
+                                //        });
+                                //    }
+                                //});
                             },
                             enabled: false
                         },

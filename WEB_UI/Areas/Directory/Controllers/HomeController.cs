@@ -19,5 +19,11 @@ namespace WEB_UI.Areas.Directory.Controllers
         {
             return View();
         }
+        // GET: Directory/Cargo
+        public ActionResult CargoGroup()
+        {
+            return View();
+        }
+
     }
 }

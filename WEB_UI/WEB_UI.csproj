@@ -839,6 +839,7 @@
     <Content Include="Areas\Directory\Views\Home\Index.cshtml" />
     <Content Include="Areas\Directory\Views\Shared\_IDSDirectory.cshtml" />
     <Content Include="Areas\Directory\Views\Home\Cargo.cshtml" />
+    <Content Include="Areas\Directory\Views\Home\CargoGroup.cshtml" />
     <None Include="Areas\IDSMORS\Views\Shared\_IDSMORS1" />
     <Content Include="Content\DataTables\extensions\Buttons\css\mixins.scss" />
     <Content Include="Content\DataTables\extensions\Buttons\css\common.scss" />
@@ -1013,6 +1014,7 @@
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\plugins\pl_dialog_confirm.js" />
     <Content Include="Scripts\popper-utils.js" />
     <Content Include="Scripts\popper-utils.min.js" />
     <Content Include="Scripts\popper.js" />
@@ -1087,6 +1089,7 @@
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
     <Content Include="Scripts\view\directory\cargo.js" />
+    <Content Include="Scripts\view\directory\cargo_group.js" />
     <Content Include="Scripts\view\idsmors\electronic_cards.js" />
     <Content Include="Scripts\view\idsmors\report_wagons.js" />
     <Content Include="Scripts\view\idsmors\park_wagons.js" />
