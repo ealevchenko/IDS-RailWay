@@ -3020,7 +3020,7 @@
                 if (result_pos && result_pos.length > 0) {
                     var vag_uz = result_pos[0].Arrival_UZ_Vagon ? result_pos[0].Arrival_UZ_Vagon : null;
                     // Покажем станцию назначения АМКР (с учетом признака под погрузку)
-                    cars_detali.uz_vag_station_on_amkr.val(vag_uz && vag_uz.id_station_amkr ? vag_uz.id_station_amkr : vag_uz.empty_car ? 0 : -1);
+                    cars_detali.uz_vag_station_on_amkr.val(vag_uz && vag_uz.id_station_on_amkr ? vag_uz.id_station_on_amkr : vag_uz && vag_uz.empty_car ? 0 : -1);
                     // Получим название цеха и покажем его
                     var division = vag_uz && vag_uz.Directory_Divisions ? vag_uz.Directory_Divisions : null;
                     cars_detali.view_devision_on_amkr_manual(division ? cars_detali.ids_inc.ids_dir.getValueObj(division, 'name_division', cars_detali.lang) : null);
@@ -4253,7 +4253,7 @@
                             LockScreenOff();
                         } else {
                             cars_detali.val_card_vag.clear_all();
-                            cars_detali.out_error_message("Ошибка. При добавлении записи в справочник возникла ошибка.");
+                            cars_detali.val_card_vag.out_error_message("Ошибка. При добавлении записи в справочник возникла ошибка.");
 
                             if (typeof callback_err === 'function') {
                                 callback_err();
