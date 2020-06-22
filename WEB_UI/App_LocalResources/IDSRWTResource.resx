@@ -426,4 +426,10 @@
   <data name="title_devision_on_amkr" xml:space="preserve">
     <value>Цех получатель</value>
   </data>
+  <data name="title_devision_on_amkr_kod" xml:space="preserve">
+    <value>Шифр</value>
+  </data>
+  <data name="title_devision_on_amkr_name" xml:space="preserve">
+    <value>Цех\склад</value>
+  </data>
 </root>

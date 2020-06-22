@@ -373,18 +373,35 @@
                                                     <label class="custom-control-label" for="uz_cargo_returns">@IDSRWTResource.title_cargo_returns</label>
                                                 </div>
                                             </div>*@
-                                            <div class="col-md-6 mb-1 text-left">
+                                            <div class="col-md-5 mb-1 text-left">
                                                 <label for="uz_vag_station_on_amkr" class="col-form-label">@IDSRWTResource.title_station_on_amkr:</label>
                                                 <select class="form-control inp-manual" id="uz_vag_station_on_amkr" name="uz_vag_station_on_amkr" title="Ручной выбор -> Справочник 'Внутрених станций АМКР'" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
-                                            <div class="col-md-6 mb-1 text-left">
+                                            @*<div class="col-md-6 mb-1 text-left">
                                                 <label for="uz_vag_devision_on_amkr" class="col-form-label">@IDSRWTResource.title_devision_on_amkr:</label>
                                                 <select class="form-control inp-manual" id="uz_vag_devision_on_amkr" name="uz_vag_devision_on_amkr" title="Ручной выбор -> Справочник 'Подразделения АМКР'" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
                                                 <div class="invalid-feedback">
                                                 </div>
+                                            </div>*@
+
+
+                                            <div class="col-md-2 mb-1 text-left">
+                                                <label for="uz_vag_devision_on_amkr_kod" class="col-form-label">@IDSRWTResource.title_devision_on_amkr_kod:</label>
+                                                <input type="text" class="form-control inp-auto" id="uz_vag_devision_on_amkr_kod" name="uz_vag_devision_on_amkr_kod" title="Ручной выбор -> Справочник 'Подразделений АМКР'" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <div class="invalid-feedback">
+                                                </div>
                                             </div>
+                                            <div class="col-md-5 mb-1 text-left">
+                                                <label for="uz_vag_devision_on_amkr_name" class="col-form-label">@IDSRWTResource.title_devision_on_amkr_name</label>
+                                                <input type="text" class="form-control inp-manual" id="uz_vag_devision_on_amkr_name" name="uz_vag_devision_on_amkr_name" title="Ручной выбор -> Справочник 'Подразделений АМКР'" data-mode="edit-global" data-edit="" data-form="transceiver">
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+
+
+
                                         </div>
                                     </fieldset>
                                     <fieldset class="border-primary">

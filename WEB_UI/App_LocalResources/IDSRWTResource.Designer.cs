@@ -367,6 +367,24 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Шифр.
+        /// </summary>
+        public static string title_devision_on_amkr_kod {
+            get {
+                return ResourceManager.GetString("title_devision_on_amkr_kod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Цех\склад.
+        /// </summary>
+        public static string title_devision_on_amkr_name {
+            get {
+                return ResourceManager.GetString("title_devision_on_amkr_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Тарифное расстояние.
         /// </summary>
         public static string title_distance_way {

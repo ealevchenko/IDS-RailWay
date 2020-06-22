@@ -4708,7 +4708,7 @@ IDS_DIRECTORY.prototype.getList2ConditionArrival = function (fvalue, ftext1, fte
     return list;
 };
 //*======= IDS_DIRECTORY.list_divisions  (Справочник подразделений) ======================================
-IDS_DIRECTORY.prototype.getDivisions_Of_ID = function (id) {
+IDS_DIRECTORY.prototype.getDivisions_Internal_Of_ID = function (id) {
     if (this.list_divisions) {
         var obj = getObjects(this.list_divisions, 'id', id);
         return obj && obj.length > 0 ? obj[0] : null;
@@ -4716,13 +4716,25 @@ IDS_DIRECTORY.prototype.getDivisions_Of_ID = function (id) {
 };
 //
 IDS_DIRECTORY.prototype.getValue_Divisions_Of_ID = function (id, name, lang) {
-    var obj = this.getDivisions_Of_ID(id);
+    var obj = this.getDivisions_Internal_Of_ID(id);
     return this.getValueObj(obj, name, lang);
 };
 //
 IDS_DIRECTORY.prototype.getValueCulture_Divisions_Of_ID = function (id, name) {
-    var obj = this.getDivisions_Of_ID(id);
+    var obj = this.getDivisions_Internal_Of_ID(id);
     return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getDivisions_Internal_Of_Name = function (text, ftext, lang) {
+    if (this.list_divisions) {
+        var obj = getObjects(this.list_divisions, (lang ? ftext + '_' + lang : name), text);
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getID_Divisions_Internal_Of_Name = function (text, ftext, lang) {
+    var obj = this.getDivisions_Internal_Of_Name(text, ftext, lang);
+    return obj ? obj.id : null;
 };
 //
 IDS_DIRECTORY.prototype.getListDivisions = function (fvalue, ftext, lang, filter) {
@@ -4743,3 +4755,14 @@ IDS_DIRECTORY.prototype.getListDivisions = function (fvalue, ftext, lang, filter
     }
     return list;
 };
+//
+// Получим список с выборкой по полю
+IDS_DIRECTORY.prototype.getDivisions_Of_CultureName = function (name, lang, text) {
+    if (this.list_divisions) {
+        var obj = getObjects(this.list_divisions, name + '_' + lang, text);
+        return obj
+    }
+    return null;
+};
+
+//getID_GenusWagons_Internal_Of_Name

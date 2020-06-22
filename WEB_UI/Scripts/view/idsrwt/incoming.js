@@ -122,7 +122,9 @@
                 'field_cargo_arrival': 'Груз',
                 'field_car_kol_os_arrival': 'Кол. ос.',
                 'field_car_usl_tip_arrival': 'Тип цс',
-                'field_station_on_amkr_arrival': 'Получатель',
+                'field_station_on_amkr_arrival': 'Следует на ст.',
+                'field_division_on_amkr_arrival': 'Цех получатель',
+
 
                 'title_button_buffer': 'Буфер',
                 'title_button_excel': 'Excel',
@@ -949,7 +951,8 @@
                     .add(cars_detali.uz_cargo_kod_etsng)
                     .add(cars_detali.uz_cargo_kod_gng)
                     .add(cars_detali.uz_vag_station_on_amkr)
-                    .add(cars_detali.uz_vag_devision_on_amkr)
+                    .add(cars_detali.uz_vag_devision_on_amkr_kod)
+                    .add(cars_detali.uz_vag_devision_on_amkr_name)
                     .add(cars_detali.arrival_cars_position_arrival)
                     .add(cars_detali.arrival_cars_car_date_adoption_act.obj)
                 ;
@@ -1081,7 +1084,8 @@
                 cars_detali.update_list_consignee(null);                // Грузополучатели
                 cars_detali.update_list_shipper(null);                  // Грузопоотправитель
                 cars_detali.update_list_station_on_amkr(-1);            // Станция АМКР
-                cars_detali.update_list_devision_on_amkr(-1);           // Цеха АМКР
+                //cars_detali.update_list_devision_on_amkr(-1);           // Цеха АМКР
+                cars_detali.update_list_devision_on_amkr(null);           // Цеха АМКР
                 cars_detali.update_list_adm(-1);                        // Администрации
                 cars_detali.update_list_rod(null);                      // Род вагона
                 cars_detali.update_list_owner(null);                    // Владелец вагона
@@ -1532,7 +1536,9 @@
             // Отправка на станцию АМКР
             uz_vag_station_on_amkr: $('select#uz_vag_station_on_amkr'),
             // Отправка в цех АМКР
-            uz_vag_devision_on_amkr: $('select#uz_vag_devision_on_amkr'),
+            //uz_vag_devision_on_amkr: $('select#uz_vag_devision_on_amkr'),
+            uz_vag_devision_on_amkr_kod: $('input#uz_vag_devision_on_amkr_kod'),
+            uz_vag_devision_on_amkr_name: $('input#uz_vag_devision_on_amkr_name'),
             // ВАГОН
             bt_card_vag_add: $('button#card_vag_add').on('click', function (event) {
                 event.preventDefault();
@@ -2025,7 +2031,9 @@
                 cars_detali.uz_vag_type_wagon.val(-1);
 
                 cars_detali.uz_vag_station_on_amkr.val(-1);
-                cars_detali.uz_vag_devision_on_amkr.val(-1);
+                cars_detali.uz_vag_devision_on_amkr_kod.val('');
+                cars_detali.uz_vag_devision_on_amkr_name.val('');
+                //cars_detali.uz_vag_devision_on_amkr.val(-1);
 
                 cars_detali.uz_vag_gruzp.val('');
                 cars_detali.uz_vag_ves_tary_arc.val('');
@@ -2120,6 +2128,7 @@
                     text
                 );
             },
+            //
             update_list_station_name_on: function (text) {
                 cars_detali.uz_route_name_on = initAutocomplete(
                     this.uz_route_name_on,
@@ -2154,19 +2163,30 @@
                     null);
             },
             // Обновить компонент станций АМКР
-            update_list_devision_on_amkr: function (id) {
-                cars_detali.uz_vag_devision_on_amkr = cd_initSelect(
-                    $('select#uz_vag_devision_on_amkr'),
-                    { lang: lang },
-                    cars_detali.ids_inc.ids_dir.getListDivisions('id', 'name_division', cars_detali.lang, function (i) { return i.id_type_devision > 1 ? true : false; }),
-                    null,
-                    id ? Number(id) : -1,
-                    function (event) {
-                        event.preventDefault();
-                        cars_detali.validation_vag_devision_on_amkr(true, false);
-                    },
-                    null);
+            //update_list_devision_on_amkr1: function (id) {
+            //    //cars_detali.uz_vag_devision_on_amkr = cd_initSelect(
+            //    //    $('select#uz_vag_devision_on_amkr'),
+            //    //    { lang: lang },
+            //    //    cars_detali.ids_inc.ids_dir.getListDivisions('id', 'name_division', cars_detali.lang, function (i) { return i.id_type_devision > 1 ? true : false; }),
+            //    //    null,
+            //    //    id ? Number(id) : -1,
+            //    //    function (event) {
+            //    //        event.preventDefault();
+            //    //        cars_detali.validation_vag_devision_on_amkr(true, false);
+            //    //    },
+            //    //    null);
+            //},
+            // Обновить компонент подразделения АМКР
+            update_list_devision_on_amkr: function (text) {
+                cars_detali.uz_vag_devision_on_amkr_name = initAutocomplete(
+                    this.uz_vag_devision_on_amkr_name,
+                    { lang: cars_detali.lang, minLength: 2 },
+                    getAutocompleteList(cars_detali.ids_inc.ids_dir.getListDivisions('code', 'name_division', cars_detali.lang, null), 'text'),
+                    cars_detali.view_devision_on_amkr_manual,
+                    text
+                );
             },
+
             // Обновить компонент Администрации
             update_list_adm: function (id) {
                 cars_detali.card_vag_name_adm = cd_initSelect(
@@ -2923,25 +2943,6 @@
                     cars_detali.val_arrival_car.set_control_ok(cars_detali.uz_cargo_kod_gng, "");
                 }
                 cars_detali.uz_cargo_kod_gng.val(code);
-
-
-                //cars_detali.select_id_cargo_gng = null; // сбросим выбранный груз гнг
-                //var gng = cars_detali.ids_inc.ids_dir.list_cargo_gng.filter(function (i) {
-                //    if (i.code === code && i['cargo_gng_name_' + cars_detali.lang] === name) return true; else false;
-                //});
-                //if (!code || (gng && gng.length > 0)) {
-                //    cars_detali.select_id_cargo_gng = gng.length > 0 ? gng[0].id : null; // добавим выбранный груз ГНГ
-                //    cars_detali.uz_cargo_name_gng_add.hide();
-                //} else {
-                //    if (gng.length > 0) {
-                //        cars_detali.select_id_cargo_gng = gng[0].id; // добавим выбранный груз ГНГ
-                //        cars_detali.uz_cargo_name_gng_add.hide();
-                //    }
-                //    cars_detali.uz_cargo_name_gng_add.show();
-                //}
-                //cars_detali.uz_cargo_kod_gng.val(code);
-                //cars_detali.uz_cargo_name_gng.val(name);
-
             },
             // Показать анализ груза
             view_epd_cargo_analysis: function (otpr) {
@@ -3009,14 +3010,61 @@
                     $('span#count-cont').text('');
                 }
             },
+            // Показать станцию и цех по номеру документа принятого ранее
+            view_station_devision_on_amkr: function (num_doc) {
+                // Показать позицию
+                var result_pos = cars_detali.table_arrival_cars.list.filter(function (i) {
+                    var num_doc = i.Arrival_UZ_Vagon && i.Arrival_UZ_Vagon.Arrival_UZ_Document ? i.Arrival_UZ_Vagon.Arrival_UZ_Document && i.Arrival_UZ_Vagon.Arrival_UZ_Document.nom_doc : null;
+                    return Number(i.position_arrival) > 0 && num_doc === num_doc ? true : false;
+                });
+                if (result_pos && result_pos.length > 0) {
+                    var vag_uz = result_pos[0].Arrival_UZ_Vagon ? result_pos[0].Arrival_UZ_Vagon : null;
+                    // Покажем станцию назначения АМКР (с учетом признака под погрузку)
+                    cars_detali.uz_vag_station_on_amkr.val(vag_uz && vag_uz.id_station_amkr ? vag_uz.id_station_amkr : vag_uz.empty_car ? 0 : -1);
+                    // Получим название цеха и покажем его
+                    var division = vag_uz && vag_uz.Directory_Divisions ? vag_uz.Directory_Divisions : null;
+                    cars_detali.view_devision_on_amkr_manual(division ? cars_detali.ids_inc.ids_dir.getValueObj(division, 'name_division', cars_detali.lang) : null);
+                }
+
+            },
+            // Показать подразделение на которое отправлен вагон
+            view_devision_on_amkr_manual: function (text) {
+                var code = null;
+                if (text) {
+                    var obj = cars_detali.ids_inc.ids_dir.getDivisions_Of_CultureName('name_division', cars_detali.lang, text)
+                    if (obj && obj.length > 0) {
+                        code = obj[0].code;
+                        //cars_detali.val_arrival_car.set_control_ok(cars_detali.uz_vag_devision_on_amkr_kod, "");
+                        //cars_detali.val_arrival_car.set_control_ok(cars_detali.uz_vag_devision_on_amkr_name, "");
+                    } else {
+                        //cars_detali.val_arrival_car.set_control_error(cars_detali.uz_vag_devision_on_amkr_name, "Указанного цеха нет в справочнике ИДС.");
+                    }
+                }
+                //else {
+                //    cars_detali.val_arrival_car.set_control_error(cars_detali.uz_vag_devision_on_amkr_kod, "Не указан шифр цеха");
+                //}
+                cars_detali.uz_vag_devision_on_amkr_kod.val(code);
+                cars_detali.uz_vag_devision_on_amkr_name.val(text);
+                cars_detali.validation_vag_devision_on_amkr(true, true);
+
+            },
             // показать электронно перевозочный документ
             view_cars_epd: function (num, otpr) {
                 cars_detali.select_otpr = otpr; // Сохраним документ
                 cars_detali.select_num = num;   // Сохраним номер вагона
                 cars_detali.set_open_edit();   // Перевести в режим "open-edit"
                 cars_detali.clear_cars_epd();   // Очистить параметры окна ЭПД
-
+                // Номер вагона
                 cars_detali.num_car.val(cars_detali.select_num);
+                // Показать позицию
+                var result_pos = cars_detali.table_arrival_cars.list.filter(function (i) {
+                    return Number(i.position_arrival) > 0 ? true : false;
+                }).sort(function (a, b) {
+                    return a.position_arrival - b.position_arrival
+                });
+                var np = result_pos && result_pos.length > 0 ? Number(Number(result_pos[result_pos.length - 1].position_arrival) + 1) : 1;
+                cars_detali.arrival_cars_position_arrival.val(np);
+                // Проверим наличее перевозочного документа
                 if (cars_detali.select_otpr !== null) {
                     // Документ найден
                     //--------------------------------------------------------
@@ -3055,7 +3103,7 @@
                             cars_detali.title_num_osn_doc.hide();
                             cars_detali.uz_doc_num_osn_doc.hide();
                         }
-
+                        // 
                         cars_detali.uz_doc_num_doc.val(cars_detali.select_otpr !== null ? cars_detali.select_otpr.nom_doc : null);
                         cars_detali.uz_doc_num_osn_doc.val(cars_detali.select_otpr.otprdp !== null ? cars_detali.select_otpr.otprdp.nom_osn_doc : null);
                         //---------------------------------------------------------------------------------------------
@@ -3066,6 +3114,8 @@
                         //-------------------------------------------------------------------
                         // Оределим грузоотправителя и грузополучателя OTPR\CLIENT  
                         cars_detali.view_epd_client(cars_detali.select_otpr);
+                        // Показать станцию и подразделение на которые будет отправлен вагон если по номеру документа уже принимался вагон
+                        cars_detali.view_station_devision_on_amkr(get_input_value(cars_detali.uz_doc_num_doc));
                         //-------------------------------------------------------------------
                         // Показать информацию из справочника вагонов ИДС (вагон определяеется ранее)
                         cars_detali.view_epd_card_vag(cars_detali.select_vagon);
@@ -3764,7 +3814,7 @@
                     //cargo_returns: cars_detali.uz_cargo_returns.prop('checked'),
                     cargo_returns: null, // возврат будет определен позже!
                     id_station_on_amkr: id_station_amkr > 0 ? id_station_amkr : null,
-                    id_division_on_amkr: get_select_number_value(cars_detali.uz_vag_devision_on_amkr),
+                    id_division_on_amkr: cars_detali.ids_inc.ids_dir.getID_Divisions_Internal_Of_Name(cars_detali.uz_vag_devision_on_amkr_name.val(), 'name_division', cars_detali.lang), //get_select_number_value(cars_detali.uz_vag_devision_on_amkr),
                     empty_car: id_station_amkr === 0 ? true : null,
                     kol_conductor: num < 2 ? cars_detali.get_epd_vagon_kol_conductor(cars_detali.select_otpr_vagon) : null, //
                     create: toISOStringTZ(new Date()),
@@ -3842,6 +3892,7 @@
                             { data: "cargo", title: langView('field_cargo_arrival', langs), width: "50px", orderable: true, searchable: false },
 
                             { data: "station_on_amkr", title: langView('field_station_on_amkr_arrival', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "division_on_amkr", title: langView('field_division_on_amkr_arrival', langs), width: "50px", orderable: true, searchable: false },
                         ],
                         stateSave: false,
                         dom: 'Bfrtip',
@@ -3911,6 +3962,7 @@
                     var doc_uz = data.Arrival_UZ_Vagon && data.Arrival_UZ_Vagon.Arrival_UZ_Document ? data.Arrival_UZ_Vagon.Arrival_UZ_Document : null;
                     var vag_uz = data.Arrival_UZ_Vagon ? data.Arrival_UZ_Vagon : null;
                     var dir_car = vag_uz && vag_uz.Directory_Cars ? vag_uz.Directory_Cars : null;
+                    var dir_division = vag_uz && vag_uz.Directory_Divisions ? vag_uz.Directory_Divisions : null;
 
                     return {
                         "position": data.position_arrival,
@@ -3955,7 +4007,8 @@
 
                         "vesg": vag_uz && vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000).toFixed(3) : null,
                         "cargo": vag_uz && vag_uz.Directory_Cargo ? cars_detali.ids_inc.ids_dir.getValueObj(vag_uz.Directory_Cargo, 'cargo_name', cars_detali.lang) : null,
-                        "station_on_amkr": vag_uz && vag_uz.Directory_Station ? cars_detali.ids_inc.ids_dir.getValueObj(vag_uz.Directory_Station, 'station_name', cars_detali.lang) : null
+                        "station_on_amkr": vag_uz && vag_uz.Directory_Station ? cars_detali.ids_inc.ids_dir.getValueObj(vag_uz.Directory_Station, 'station_name', cars_detali.lang) : null,
+                        "division_on_amkr": dir_division ? cars_detali.ids_inc.ids_dir.getValueObj(dir_division, 'division_abbr', cars_detali.lang) : null
                     };
                 }
             },
@@ -4020,7 +4073,14 @@
             },
             // Валидация поля  "Цех амкр"
             validation_vag_devision_on_amkr: function (valid, off_message) {
-                valid = valid & cars_detali.val_arrival_car.checkSelection(cars_detali.uz_vag_devision_on_amkr, "Укажите цех АМКР на который будет отправлен вагон", "", off_message);
+                valid_code = cars_detali.val_arrival_car.checkInputOfNull(cars_detali.uz_vag_devision_on_amkr_name, "Не указан цех получатель");
+                valid = valid & valid_code;
+                if (valid_code) {
+                    valid_name = cars_detali.val_searsh_card_vag.checkInputOfList(cars_detali.uz_vag_devision_on_amkr_name, cars_detali.ids_inc.ids_dir.getListDivisions('id', 'name_division', cars_detali.lang, null), "Указаного цеха нет в справочнике", "", off_message);
+                    valid = valid & valid_name;
+                    //if (valid_name)
+                    //    cars_detali.val_arrival_car.set_control_ok(cars_detali.uz_vag_devision_on_amkr_kod, "");
+                }
                 return valid;
             },
             // Валидация поля  "Платильщик по отправке"
@@ -4048,7 +4108,7 @@
                 valid = valid & cars_detali.val_card_vag.checkInputOfDateTime_IsNull(cars_detali.card_vag_date_rem_vag.obj, lang === 'ru' ? 'DD.MM.YYYY' : 'MM/DD/YYYY');
                 valid = valid & cars_detali.val_card_vag.checkInputOfDateTime_IsNull(cars_detali.card_vag_date_rem_uz.obj, lang === 'ru' ? 'DD.MM.YYYY' : 'MM/DD/YYYY');
                 valid = valid & cars_detali.val_card_vag.checkInputOfList_IsNull(cars_detali.card_vag_limiting_loading, cars_detali.ids_inc.ids_dir.getListLimitingLoading('id', 'limiting_name', cars_detali.lang, null), "Указаного 'Ограничения погрузки' нет в справочнике");
-                valid = valid & cars_detali.val_card_vag.checkInputOfList_IsNull(cars_detali.card_vag_type_ownership, cars_detali.ids_inc.ids_dir.getListTypeOwnerShip('id', 'type_ownership', cars_detali.lang, null), "Указаного 'Признака собственности' нет в справочнике");
+                //valid = valid & cars_detali.val_card_vag.checkInputOfList_IsNull(cars_detali.card_vag_type_ownership, cars_detali.ids_inc.ids_dir.getListTypeOwnerShip('id', 'type_ownership', cars_detali.lang, null), "Указаного 'Признака собственности' нет в справочнике");
                 valid = valid & cars_detali.val_card_vag.checkInputOfNull(cars_detali.card_vag_rent_start.obj, "Укажите время начало аренды");
                 cars_detali.val_card_vag.set_control_ok(cars_detali.card_vag_note);
                 return valid;
@@ -4175,8 +4235,8 @@
                         usl_tip: cars_detali.card_vag_usl_tip.val(),
                         date_rem_uz: toISOStringTZ(get_date_value(cars_detali.card_vag_date_rem_uz.val(), cars_detali.lang)),
                         date_rem_vag: toISOStringTZ(get_date_value(cars_detali.card_vag_date_rem_vag.val(), cars_detali.lang)),
-                        id_limiting: cars_detali.ids_inc.ids_dir.getID_LimitingLoading_Internal_Of_Name(cars_detali.card_vag_name_operator.val(), 'limiting_name', cars_detali.lang),
-                        id_type_ownership: cars_detali.ids_inc.ids_dir.getID_TypeOwnerShip_Internal_Of_Name(cars_detali.card_vag_name_operator.val(), 'type_ownership', cars_detali.lang),
+                        id_limiting: cars_detali.ids_inc.ids_dir.getID_LimitingLoading_Internal_Of_Name(cars_detali.card_vag_limiting_loading.val(), 'limiting_name', cars_detali.lang),
+                        id_type_ownership: get_select_number_value(cars_detali.card_vag_type_ownership),
                         rent_start: toISOStringTZ(get_datetime_value(cars_detali.card_vag_rent_start.val(), cars_detali.lang)),
                         rent_end: null,
                         note: cars_detali.card_vag_note.val(),
