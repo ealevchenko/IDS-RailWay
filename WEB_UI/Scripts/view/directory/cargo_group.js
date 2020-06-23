@@ -39,36 +39,39 @@
             //dae.dialog_add_edit("Open", "1", "2", function (result) {
 
             //});
-            dae.dialog_add_edit("Open");
-        })
-        ;
+            ids_dir.getCargoOfID(10, function (result_obj) {
+                if (result_obj) {
+                    dae.dialog_add_edit("Open", result_obj);
+                }
+            });
+        });
+            //================================================================
+            // Основной вход
+            //=================================================================
+            loadReference(function () {
 
-    //================================================================
-    // Основной вход
-    //=================================================================
-    loadReference(function () {
+                dae = $('div#dae').dialog_add_edit({
+                    fields: [
+                        { name: 'id', type: 'number', control: null, text: null, required: true, message_error: null},
+                        { name: 'id_group', type: 'number', control: 'select', text: 'Группа груза', required: true, list: ids_dir.getListCargoGroup('id', 'cargo_group_name', lang, null), message_error: "Выберите группу"  },
+                        { name: 'id_cargo_etsng', type: 'number', control: 'select', text: 'Груз ЕТ СНГ', required: true, list: ids_dir.getListCargoETSNG('id', 'cargo_etsng_name', lang, null), message_error: "Выберите груз из справочника ЕТ СНГ" },
+                        { name: 'cargo_name_ru', type: 'text', control: 'textarea', text: 'Наименование в ИДС (рус.)', required: true, list: null, message_error: "Не указано наименование груза в ИДС (рус.)" },
+                        { name: 'cargo_name_en', type: 'text', control: 'textarea', text: 'Наименование в ИДС (анг.)', required: true, list: null, message_error: "Не указано наименование груза в ИДС (анг.)" },
+                        { name: 'code_sap', type: 'text', control: 'input', text: 'Кол в SAP', required: false, list: null, message_error: null },
+                        { name: 'sending', type: 'bit', control: 'checkbox', text: 'Отправляемые', required: false, list: null, message_error: null  },
+                        { name: 'create', type: 'datetime', control: null, text: null, required: true, list: null, message_error: null  },
+                        { name: 'create_user', type: 'text', control: null, text: null, required: true, list: null , message_error: null },
+                        { name: 'change', type: 'datetime', control: null, text: null, required: false, list: null, message_error: null  },
+                        { name: 'change_user', type: 'text', control: null, text: null, required: false, list: null, message_error: null  }
+                    ],
+                    lang: lang,
+                    user_name: user_name,
+                    callback_ok: function (result) {
 
-        dae = $('div#dae').dialog_add_edit({
-            fields: [
-                { name: 'id', type: 'number', control: null, text: null, required: true },
-                { name: 'id_group', type: 'number', control: 'select', text: 'Группа груза', required: true, list: ids_dir.getListCargoGroup('id', 'cargo_group_name', lang, null) },
-                { name: 'id_cargo_etsng', type: 'number', control: 'select', text: 'Груз ЕТ СНГ', required: true, list: ids_dir.getListCargoETSNG('id', 'cargo_etsng_name', lang, null) },
-                { name: 'cargo_name_ru', type: 'text', control: 'input', text: 'Наименование в ИДС (рус.)', required: true, list: null },
-                { name: 'cargo_name_en', type: 'text', control: 'input', text: 'Наименование в ИДС (анг.)', required: true, list: null },
-                { name: 'code_sap', type: 'text', control: 'input', text: 'Кол в SAP', required: false, list: null },
-                { name: 'sending', type: 'bit', control: 'checkbox', text: 'Отправляемые', required: false, list: null },
-                { name: 'create', type: 'datetime', control: null, text: null, required: true, list: null },
-                { name: 'create_user', type: 'text', control: null, text: null, required: true, list: null },
-                { name: 'change', type: 'datetime', control: null, text: null, required: false, list: null },
-                { name: 'change_user', type: 'text', control: null, text: null, required: false, list: null }
-            ],
-            lang: lang,
-            user_name: user_name,
-            callback_ok: function (result) {
+                    },
+                    title : 'Справочника Грузов',
 
-            },
+                });
+            });
 
         });
-    });
-
-});

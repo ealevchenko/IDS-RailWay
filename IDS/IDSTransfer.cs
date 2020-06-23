@@ -343,12 +343,15 @@ namespace IDS
                     UZ_DOC doc = ef_uzdoc.Get(uz_doc.id_doc);
                     if (doc == null)
                     {
+
+                        string code_from = uz_doc.sender_code != null ? uz_doc.sender_code : "0";
+                        
                         doc = new UZ_DOC()
                         {
                             num_doc = uz_doc.id_doc,
                             revision = uz_doc.revision,
                             status = (int)uz_doc.status,
-                            code_from = uz_doc.sender_code,
+                            code_from = code_from,
                             code_on = uz_doc.recipient_code,
                             dt = uz_doc.dt,
                             xml_doc = uz_doc.xml,

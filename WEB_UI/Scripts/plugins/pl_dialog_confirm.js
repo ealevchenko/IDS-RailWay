@@ -72,6 +72,45 @@
         }
         return '';
     };
+    // Добавить элемент контроля
+    var add_control = function (control_field, id_name, controls, options) {
+        if (control_field) {
+            var name = id_name + '_' + control_field.name;
+            var control;
+            switch (control_field.control) {
+                case 'select': {
+                    control = cd_initSelect(
+                        $('select#' + name),
+                        { lang: options.lang },
+                        control_field.list,
+                        null,
+                        -1,
+                        function (event) {
+                            event.preventDefault();
+                            var id = Number($(this).val());
+                        }, null);
+                    controls[name] = control;
+                    return control;
+                };
+                case 'textarea': {
+                    control = $('textarea#' + name).val('');
+                    controls[name] = control;
+                    return control;
+                };
+                case 'input': {
+                    control = $('input#' + name).val('');
+                    controls[name] = control;
+                    return control;
+                };
+                case 'checkbox': {
+                    control = $('input#' + name).val('');
+                    controls[name] = control;
+                    return control;
+                };
+            }
+        }
+    };
+
     //----------------------------------------------------------------------------------------
     //
     //
@@ -214,7 +253,8 @@
             user_name: null,
             fields: [],
             callback_ok: null,
-
+            title: 'справочника',
+            validation_callback: null,
         };
 
         var methods = {
@@ -239,46 +279,20 @@
 
                         // Создадим окно
                         $this = create_html_dialog_add_edit($this, options);
-                        // Добавить элемент контроля
-                        var add_control = function (control_field, id_name) {
-                            if (control_field) {
-                                var name = id_name + '_' + control_field.name;
-                                switch (control_field.control) {
-                                    case 'select': {
-                                        var control = cd_initSelect(
-                                            $('select#' + name),
-                                            { lang: options.lang },
-                                            control_field.list,
-                                            null,
-                                            -1,
-                                            function (event) {
-                                                event.preventDefault();
-                                                var id = Number($(this).val());
-                                            }, null);
-                                        return control;
-                                    }
-                                }
-                            }
-                        };
 
                         dialog_add_edit = {
                             obj: null,
                             lang: options.lang,
                             user_name: options.user_name,
                             //ids_dir: null,
-                            alert: $('div#' + id_control + '_alert'),                                             // Сообщения
-                            all_obj: null,                                                              // массив всех элементов формы 
-                            val: null,                                                                  // класс валидации
-                            //select_id: null,                                                            // id строки
-                            //select_obj: null,                                                           // строка
+                            alert: $('div#' + id_control + '_alert'),                                       // Сообщения
+                            all_obj: null,                                                                  // массив всех элементов формы 
+                            val: null,                                                                      // класс валидации
+                            //select_id: null,                                                              // id строки
+                            row: null,                                                                          // строка
+                            list_controls: options.fields.filter(function (i) { return i.control; }),           // Список полей по которым заданы Conrols
                             // Поля формы
                             controls: [],
-                            //add_edit_cargo_group: $('select#add_edit_cargo_group'),
-                            //add_edit_cargo_etsng: $('select#add_edit_cargo_etsng'),
-                            //add_edit_cargo_name_ru: $('textarea#add_edit_cargo_name_ru'),
-                            //add_edit_cargo_name_en: $('textarea#add_edit_cargo_name_en'),
-                            //add_edit_code_sap: $('input#add_edit_code_sap'),
-                            //add_edit_sending: $('input#add_edit_sending'),
                             // инициализвция Окна
                             init: function (callback_ok) {
                                 //dialog_add_edit.lang = lang;
@@ -286,48 +300,17 @@
                                 //dialog_add_edit.ids_dir = new IDS_DIRECTORY(dialog_add_edit.lang), // Создадим класс IDS_DIRECTORY
                                 //dialog_add_edit.loadReference(function () {
                                 // Инициализация элементов
-
-                                var control = options.fields.filter(function (i) {
-                                    return i.control;
-                                });
-
-                                // Формируем поля
-                                for (icontrol = 0; icontrol < control.length; icontrol++) {
-                                    dialog_add_edit.controls.push(add_control(control[icontrol], id_control));
-                                };
-
-                                //dialog_add_edit.add_edit_cargo_group = cd_initSelect(
-                                //    dialog_add_edit.add_edit_cargo_group,
-                                //    { lang: dialog_add_edit.lang },
-                                //    dialog_add_edit.ids_dir.getListCargoGroup('id', 'cargo_group_name', dialog_add_edit.lang, null),
-                                //    null,
-                                //    -1,
-                                //    function (event) {
-                                //        event.preventDefault();
-                                //        var id = Number($(this).val());
-                                //    }, null);
-                                //dialog_add_edit.add_edit_cargo_etsng = cd_initSelect(
-                                //    dialog_add_edit.add_edit_cargo_etsng,
-                                //    { lang: dialog_add_edit.lang },
-                                //    dialog_add_edit.ids_dir.getListCargoETSNG('id', 'cargo_etsng_name', dialog_add_edit.lang, null),
-                                //    null,
-                                //    -1,
-                                //    function (event) {
-                                //        event.preventDefault();
-                                //        var id = Number($(this).val());
-                                //    }, null);
-                                //// Соберем все элементы в массив
-                                //dialog_add_edit.all_obj = $([])
-                                //    .add(dialog_add_edit.add_edit_cargo_group)
-                                //    .add(dialog_add_edit.add_edit_cargo_etsng)
-                                //    .add(dialog_add_edit.add_edit_cargo_name_ru)
-                                //    .add(dialog_add_edit.add_edit_cargo_name_en)
-                                //    .add(dialog_add_edit.add_edit_code_sap)
-                                //    .add(dialog_add_edit.add_edit_sending)
-                                //    ;
-                                //// создадим классы 
-
-                                //dialog_add_edit.val = new VALIDATION(dialog_add_edit.lang, dialog_add_edit.alert, dialog_add_edit.all_obj); // Создадим класс VALIDATION
+                                // Список всех элементов
+                                dialog_add_edit.all_obj = $([]);
+                                // Пройдемся по всем элементам выбора и инициализируем их
+                                if (dialog_add_edit.list_controls && dialog_add_edit.list_controls.length > 0) {
+                                    // Формируем элементы выбора (controls)
+                                    for (icontrol = 0; icontrol < dialog_add_edit.list_controls.length; icontrol++) {
+                                        dialog_add_edit.all_obj.push(add_control(dialog_add_edit.list_controls[icontrol], id_control, dialog_add_edit.controls, options)[0]);
+                                    };
+                                }
+                                // создадим классы 
+                                dialog_add_edit.val = new VALIDATION(dialog_add_edit.lang, dialog_add_edit.alert, dialog_add_edit.all_obj); // Создадим класс VALIDATION
                                 dialog_add_edit.obj = $this.dialog({
                                     resizable: false,
                                     //title: 'Изменить группу груза',
@@ -371,64 +354,112 @@
 
                             },
                             //// открыть окно добавмить вагоны вручную
-                            Open: function () {
+                            Open: function (row) {
+                                dialog_add_edit.row = row;
+                                if (row) {
+                                    // Правка
+                                    dialog_add_edit.obj.dialog("option", "title", "Править строку " + options.title);
+                                    // Пройдемся по всем элементам выбора и заполним их
+                                    if (dialog_add_edit.list_controls && dialog_add_edit.list_controls.length > 0) {
+                                        for (ivc = 0; ivc < dialog_add_edit.list_controls.length; ivc++) {
+                                            // получим имя элемента выбора
+                                            var name = id_control + '_' + dialog_add_edit.list_controls[ivc].name;
+                                            var value = row[dialog_add_edit.list_controls[ivc].name];
+                                            if (dialog_add_edit.list_controls[ivc].control !== 'checkbox') {
+                                                dialog_add_edit.controls[name].val(value);
+                                            } else {
+                                                dialog_add_edit.controls[name].prop('checked', value);
+                                            }
+                                        };
+                                    }
+
+                                } else {
+                                    // добавить
+                                    dialog_add_edit.obj.dialog("option", "title", "Добавить строку " + options.title);
+                                }
                                 dialog_add_edit.obj.dialog("open");
                             },
                             save: function (callback_ok) {
-                                if (typeof callback_ok === 'function') {
-                                    dialog_add_edit.obj.dialog("close");
-                                    callback_ok({ type: 0, result: 1 });
+                                var valid = dialog_add_edit.validation();
+                                if (valid) {
+                                    if (typeof callback_ok === 'function') {
+                                        dialog_add_edit.obj.dialog("close");
+                                        callback_ok({ type: 0, result: 1 });
+                                    }
                                 }
-                            }
-                            //Open: function (id) {
-                            //    dialog_add_edit.select_id = id;
-                            //    dialog_add_edit.select_obj = null;
-                            //    if (dialog_add_edit.select_id) {
-                            //        // Правим запись
-                            //        dialog_add_edit.obj.dialog("option", "title", "Править груз");
-                            //        dialog_add_edit.ids_dir.getCargoOfID(dialog_add_edit.select_id, function (result_obj) {
-                            //            if (result_obj) {
-                            //                dialog_add_edit.select_obj = result_obj;
-                            //                dialog_add_edit.add_edit_cargo_group.val(result_obj.id_group);
-                            //                dialog_add_edit.add_edit_cargo_etsng.val(result_obj.id_cargo_etsng);
-                            //                dialog_add_edit.add_edit_cargo_name_ru.val(result_obj.cargo_name_ru);
-                            //                dialog_add_edit.add_edit_cargo_name_en.val(result_obj.cargo_name_en);
-                            //                dialog_add_edit.add_edit_code_sap.val(result_obj.code_sap);
-                            //                dialog_add_edit.add_edit_sending.prop('checked', result_obj.sending);
-                            //                dialog_add_edit.obj.dialog("open");
-
-                            //            }
-                            //            //else {
-                            //            //    dialog_add_edit.val.clear_all();
-                            //            //    dialog_add_edit.val.out_error_message("Ошибка. Не могу найти строку по id = " + dialog_add_edit.select_id);
-                            //            //}
-                            //        });
 
 
+                            },
+                            // Валидация данных
+                            validation: function () {
+                                dialog_add_edit.val.clear_all();
+                                // Проверим задана функция пользовательской валидаци
+                                if (typeof options.validation_callback === 'function') {
+                                    // Да, выполним пользовательскую валидацию
+                                    return options.validation_callback();
+                                } else {
+                                    // Нет, выполним валидацию по умолчанию
+                                    var valid = true;
+                                    // Пройдемся по всем элементам выбора и выполним валидацию
+                                    if (dialog_add_edit.list_controls && dialog_add_edit.list_controls.length > 0) {
+                                        for (ivalid = 0; ivalid < dialog_add_edit.list_controls.length; ivalid++) {
+                                            var valid_control = dialog_add_edit.list_controls[ivalid];
+                                            var name = id_control + '_' + valid_control.name;
+                                            if (valid_control.required) {
+                                                // Поле обязательно тогда валидация
+                                                switch (valid_control.control) {
+                                                    case 'select': {
+                                                        valid = valid & dialog_add_edit.val.checkSelection(dialog_add_edit.controls[name], valid_control.message_error);
+                                                        break;
+                                                    }
+                                                    case 'textarea': {
+                                                        valid = valid & dialog_add_edit.val.checkInputOfNull(dialog_add_edit.controls[name], valid_control.message_error);
+                                                        break;
+                                                    }
+                                                    case 'input': {
+                                                        valid = valid & dialog_add_edit.val.checkInputOfNull(dialog_add_edit.controls[name], valid_control.message_error);
+                                                        break;
+                                                    }
+                                                    case 'checkbox': {
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    return valid;
+                                }
+                            },
+                            // Вернуть новую или обнавленную строку
+                            get_object: function () {
+                                if (dialog_add_edit.row) {
+
+                                }
+                                var new_obj;
+                                // Формируем поля
+                                for (ifo = 0; ifo < options.fields.length; ifo++) {
+                                    var fl = options.fields[ifo];
+
+                                    var name = id_control + '_' + fl.name;
+                                    //new_obj[options.fields[ifo].name] = !fl.control && dialog_add_edit.row ? dialog_add_edit.row[fl.name] : 
+                                };
+
+                                return {
+                                    id: dialog_add_edit.select_obj ? dialog_add_edit.select_obj.id : 0,
+                                    id_group: get_select_number_value(dialog_add_edit.add_edit_cargo_group),
+                                    id_cargo_etsng: get_select_number_value(dialog_add_edit.add_edit_cargo_etsng),
+                                    cargo_name_ru: dialog_add_edit.add_edit_cargo_name_ru.val(),
+                                    cargo_name_en: dialog_add_edit.add_edit_cargo_name_en.val(),
+                                    code_sap: dialog_add_edit.add_edit_code_sap.val(),
+                                    sending: dialog_add_edit.add_edit_sending.prop('checked'),
+                                    create: dialog_add_edit.select_obj ? dialog_add_edit.select_obj.create : toISOStringTZ(new Date()),
+                                    create_user: dialog_add_edit.select_obj ? dialog_add_edit.select_obj.create_user : dialog_add_edit.user_name,
+                                    change: dialog_add_edit.select_obj ? toISOStringTZ(new Date()) : null,
+                                    change_user: dialog_add_edit.select_obj ? dialog_add_edit.user_name : null,
+                                }
+                            },
 
 
-                            //    } else {
-                            //        dialog_add_edit.obj.dialog("option", "title", "Добавить груз");
-                            //        dialog_add_edit.add_edit_cargo_group.val(-1);
-                            //        dialog_add_edit.add_edit_cargo_etsng.val(-1);
-                            //        dialog_add_edit.add_edit_cargo_name_ru.val('');
-                            //        dialog_add_edit.add_edit_cargo_name_en.val('');
-                            //        dialog_add_edit.add_edit_code_sap.val('');
-                            //        dialog_add_edit.add_edit_sending.prop('checked', false);
-                            //        // Добавим запись
-                            //        dialog_add_edit.obj.dialog("open");
-                            //    }
-                            //},
-                            //// Валидация данных
-                            //validation: function () {
-                            //    dialog_add_edit.val.clear_all();
-                            //    var valid = true;
-                            //    valid = valid & dialog_add_edit.val.checkSelection(dialog_add_edit.add_edit_cargo_group, "Выберите группу");
-                            //    valid = valid & dialog_add_edit.val.checkSelection(dialog_add_edit.add_edit_cargo_etsng, "Выберите груз из справочника ЕТ СНГ");
-                            //    valid = valid & dialog_add_edit.val.checkInputOfNull(dialog_add_edit.add_edit_cargo_name_ru, "Не указано наименование груза на русском языке");
-                            //    valid = valid & dialog_add_edit.val.checkInputOfNull(dialog_add_edit.add_edit_cargo_name_en, "Не указано наименование груза на английском языке");
-                            //    return valid;
-                            //},
                             //// Сохранить прибытие состава
                             //save: function (callback_ok) {
                             //    var valid = dialog_add_edit.validation();
@@ -467,21 +498,7 @@
                             //    }
                             //},
                             //// Получить новый груз с измененной группой
-                            //get_object: function () {
-                            //    return {
-                            //        id: dialog_add_edit.select_obj ? dialog_add_edit.select_obj.id : 0,
-                            //        id_group: get_select_number_value(dialog_add_edit.add_edit_cargo_group),
-                            //        id_cargo_etsng: get_select_number_value(dialog_add_edit.add_edit_cargo_etsng),
-                            //        cargo_name_ru: dialog_add_edit.add_edit_cargo_name_ru.val(),
-                            //        cargo_name_en: dialog_add_edit.add_edit_cargo_name_en.val(),
-                            //        code_sap: dialog_add_edit.add_edit_code_sap.val(),
-                            //        sending: dialog_add_edit.add_edit_sending.prop('checked'),
-                            //        create: dialog_add_edit.select_obj ? dialog_add_edit.select_obj.create : toISOStringTZ(new Date()),
-                            //        create_user: dialog_add_edit.select_obj ? dialog_add_edit.select_obj.create_user : dialog_add_edit.user_name,
-                            //        change: dialog_add_edit.select_obj ? toISOStringTZ(new Date()) : null,
-                            //        change_user: dialog_add_edit.select_obj ? dialog_add_edit.user_name : null,
-                            //    }
-                            //},
+
                         };
 
                         dialog_add_edit.init(options.callback_ok);
@@ -563,13 +580,13 @@
 
             },
 
-            Open: function () {
+            Open: function (row) {
                 return this.each(function () {
                     var $this = $(this),
                         data = $this.data('pl_dialog_add_edit');
                     if (data) {
                         dialog_add_edit = data.dialog_add_edit;
-                        dialog_add_edit.Open();
+                        dialog_add_edit.Open(row);
                     }
 
                 });
