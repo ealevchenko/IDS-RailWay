@@ -502,6 +502,33 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Материал.
+        /// </summary>
+        public static string title_material {
+            get {
+                return ResourceManager.GetString("title_material", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Код материала.
+        /// </summary>
+        public static string title_material_code {
+            get {
+                return ResourceManager.GetString("title_material_code", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Название материала.
+        /// </summary>
+        public static string title_material_name {
+            get {
+                return ResourceManager.GetString("title_material_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Страна.
         /// </summary>
         public static string title_name_adm {

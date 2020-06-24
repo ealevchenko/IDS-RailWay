@@ -603,6 +603,8 @@
             span_range_date: $('span#select-date'),
             input_data_start: $('input#date-start'),
             input_data_stop: $('input#date-stop'),
+            report_fst: $('#report_fst'),
+
             init: function (list_station) {
                 // настроим компонент дата
                 pn_sel.dt_obj = pn_sel.span_range_date.dateRangePicker(
@@ -642,6 +644,12 @@
                         pn_sel.view(false);
                     },
                     null);
+                //
+                pn_sel.report_fst.on('click', function (event) {
+                    event.preventDefault();
+                    print_detali.view();
+
+                });
             },
             view: function (refresh) {
                 view_sostav(refresh, pn_sel.start_dt, pn_sel.stop_dt, Number(pn_sel.select_station.val()) !== -1 ? function (i) { return i.id_station_from === Number(pn_sel.select_station.val()) ? true : false; } : null);
@@ -2163,30 +2171,16 @@
                     null);
             },
             // Обновить компонент станций АМКР
-            //update_list_devision_on_amkr1: function (id) {
-            //    //cars_detali.uz_vag_devision_on_amkr = cd_initSelect(
-            //    //    $('select#uz_vag_devision_on_amkr'),
-            //    //    { lang: lang },
-            //    //    cars_detali.ids_inc.ids_dir.getListDivisions('id', 'name_division', cars_detali.lang, function (i) { return i.id_type_devision > 1 ? true : false; }),
-            //    //    null,
-            //    //    id ? Number(id) : -1,
-            //    //    function (event) {
-            //    //        event.preventDefault();
-            //    //        cars_detali.validation_vag_devision_on_amkr(true, false);
-            //    //    },
-            //    //    null);
-            //},
             // Обновить компонент подразделения АМКР
             update_list_devision_on_amkr: function (text) {
                 cars_detali.uz_vag_devision_on_amkr_name = initAutocomplete(
                     this.uz_vag_devision_on_amkr_name,
-                    { lang: cars_detali.lang, minLength: 2 },
-                    getAutocompleteList(cars_detali.ids_inc.ids_dir.getListDivisions('code', 'name_division', cars_detali.lang, null), 'text'),
+                    { lang: cars_detali.lang, minLength: 1 },
+                    getAutocompleteList(cars_detali.ids_inc.ids_dir.getListDivisions('code', 'division_abbr', cars_detali.lang, null), 'text'),
                     cars_detali.view_devision_on_amkr_manual,
                     text
                 );
             },
-
             // Обновить компонент Администрации
             update_list_adm: function (id) {
                 cars_detali.card_vag_name_adm = cd_initSelect(
@@ -3014,8 +3008,8 @@
             view_station_devision_on_amkr: function (num_doc) {
                 // Показать позицию
                 var result_pos = cars_detali.table_arrival_cars.list.filter(function (i) {
-                    var num_doc = i.Arrival_UZ_Vagon && i.Arrival_UZ_Vagon.Arrival_UZ_Document ? i.Arrival_UZ_Vagon.Arrival_UZ_Document && i.Arrival_UZ_Vagon.Arrival_UZ_Document.nom_doc : null;
-                    return Number(i.position_arrival) > 0 && num_doc === num_doc ? true : false;
+                    var num_doc_arrival = i.Arrival_UZ_Vagon && i.Arrival_UZ_Vagon.Arrival_UZ_Document ? i.Arrival_UZ_Vagon.Arrival_UZ_Document && i.Arrival_UZ_Vagon.Arrival_UZ_Document.nom_doc : null;
+                    return Number(i.position_arrival) > 0 && num_doc_arrival === num_doc ? true : false;
                 });
                 if (result_pos && result_pos.length > 0) {
                     var vag_uz = result_pos[0].Arrival_UZ_Vagon ? result_pos[0].Arrival_UZ_Vagon : null;
@@ -3023,7 +3017,7 @@
                     cars_detali.uz_vag_station_on_amkr.val(vag_uz && vag_uz.id_station_on_amkr ? vag_uz.id_station_on_amkr : vag_uz && vag_uz.empty_car ? 0 : -1);
                     // Получим название цеха и покажем его
                     var division = vag_uz && vag_uz.Directory_Divisions ? vag_uz.Directory_Divisions : null;
-                    cars_detali.view_devision_on_amkr_manual(division ? cars_detali.ids_inc.ids_dir.getValueObj(division, 'name_division', cars_detali.lang) : null);
+                    cars_detali.view_devision_on_amkr_manual(division ? cars_detali.ids_inc.ids_dir.getValueObj(division, 'division_abbr', cars_detali.lang) : null);
                 }
 
             },
@@ -3031,7 +3025,7 @@
             view_devision_on_amkr_manual: function (text) {
                 var code = null;
                 if (text) {
-                    var obj = cars_detali.ids_inc.ids_dir.getDivisions_Of_CultureName('name_division', cars_detali.lang, text)
+                    var obj = cars_detali.ids_inc.ids_dir.getDivisions_Of_CultureName('division_abbr', cars_detali.lang, text)
                     if (obj && obj.length > 0) {
                         code = obj[0].code;
                         //cars_detali.val_arrival_car.set_control_ok(cars_detali.uz_vag_devision_on_amkr_kod, "");
@@ -3721,8 +3715,8 @@
                 valid = valid & cars_detali.validation_vag_condition_arrival(valid, false);
 
                 valid = valid & cars_detali.val_arrival_car.checkInputOfRange(cars_detali.uz_vag_gruzp, 60.0, 80.0, "Грузоподъемность должна быть в диапазоне от 60.0 до 80.0 тон.");
-                valid = valid & cars_detali.val_arrival_car.checkInputOfRange(cars_detali.uz_vag_ves_tary_arc, 20.0, 30.0, "Тара должна быть в диапазоне от 20.0 до 30.0 тон.");
-                valid = valid & cars_detali.val_arrival_car.checkInputOfRange_IsNull(cars_detali.uz_vag_u_tara, 20.0, 30.0, "Тара должна быть в диапазоне от 20.0 до 30.0 тон.");
+                valid = valid & cars_detali.val_arrival_car.checkInputOfRange(cars_detali.uz_vag_ves_tary_arc, 15.0, 35.0, "Тара должна быть в диапазоне от 15.0 до 35.0 тон.");
+                valid = valid & cars_detali.val_arrival_car.checkInputOfRange_IsNull(cars_detali.uz_vag_u_tara, 15.0, 35.0, "Тара должна быть в диапазоне от 15.0 до 35.0 тон.");
 
                 valid = valid & cars_detali.val_arrival_car.checkInputOfDirectory(cars_detali.uz_cargo_kod_etsng, this, 'ids_inc.ids_dir.getCargoETSNG_Of_Code', "Указанного кода груза ЕТ СНГ нет в справочнике ИДС.");
                 valid = valid & cars_detali.val_arrival_car.checkInputOfDirectory_IsNull(cars_detali.uz_cargo_kod_gng, this, 'ids_inc.ids_dir.getCargoGNG_Of_Code', "Указанного кода груза ГНГ нет в справочнике ИДС.");
@@ -3814,7 +3808,7 @@
                     //cargo_returns: cars_detali.uz_cargo_returns.prop('checked'),
                     cargo_returns: null, // возврат будет определен позже!
                     id_station_on_amkr: id_station_amkr > 0 ? id_station_amkr : null,
-                    id_division_on_amkr: cars_detali.ids_inc.ids_dir.getID_Divisions_Internal_Of_Name(cars_detali.uz_vag_devision_on_amkr_name.val(), 'name_division', cars_detali.lang), //get_select_number_value(cars_detali.uz_vag_devision_on_amkr),
+                    id_division_on_amkr: cars_detali.ids_inc.ids_dir.getID_Divisions_Internal_Of_Name(cars_detali.uz_vag_devision_on_amkr_name.val(), 'division_abbr', cars_detali.lang), //get_select_number_value(cars_detali.uz_vag_devision_on_amkr),
                     empty_car: id_station_amkr === 0 ? true : null,
                     kol_conductor: num < 2 ? cars_detali.get_epd_vagon_kol_conductor(cars_detali.select_otpr_vagon) : null, //
                     create: toISOStringTZ(new Date()),
@@ -4076,7 +4070,7 @@
                 valid_code = cars_detali.val_arrival_car.checkInputOfNull(cars_detali.uz_vag_devision_on_amkr_name, "Не указан цех получатель");
                 valid = valid & valid_code;
                 if (valid_code) {
-                    valid_name = cars_detali.val_searsh_card_vag.checkInputOfList(cars_detali.uz_vag_devision_on_amkr_name, cars_detali.ids_inc.ids_dir.getListDivisions('id', 'name_division', cars_detali.lang, null), "Указаного цеха нет в справочнике", "", off_message);
+                    valid_name = cars_detali.val_searsh_card_vag.checkInputOfList(cars_detali.uz_vag_devision_on_amkr_name, cars_detali.ids_inc.ids_dir.getListDivisions('id', 'division_abbr', cars_detali.lang, null), "Указаного цеха нет в справочнике", "", off_message);
                     valid = valid & valid_name;
                     //if (valid_name)
                     //    cars_detali.val_arrival_car.set_control_ok(cars_detali.uz_vag_devision_on_amkr_kod, "");
@@ -5975,9 +5969,9 @@
                         id_sostav: arrival_sostsv.id_sostav,
                         train: arrival_sostsv.train,
                         composition_index: arrival_sostsv.composition_index,
-                        date_arrival: toISOStringTZ(get_date_value(pn_arrival_sostav.arrival_sostav_date_arrival.val(), pn_arrival_sostav.lang)),
-                        date_adoption: toISOStringTZ(get_date_value(pn_arrival_sostav.arrival_sostav_date_adoption.val(), pn_arrival_sostav.lang)),
-                        date_adoption_act: toISOStringTZ(get_date_value(pn_arrival_sostav.arrival_sostav_date_adoption_act.val(), pn_arrival_sostav.lang)),
+                        date_arrival: toISOStringTZ(get_datetime_value(pn_arrival_sostav.arrival_sostav_date_arrival.val(), pn_arrival_sostav.lang)),
+                        date_adoption: toISOStringTZ(get_datetime_value(pn_arrival_sostav.arrival_sostav_date_adoption.val(), pn_arrival_sostav.lang)),
+                        date_adoption_act: toISOStringTZ(get_datetime_value(pn_arrival_sostav.arrival_sostav_date_adoption_act.val(), pn_arrival_sostav.lang)),
                         id_station_from: arrival_sostsv.id_station_from,
                         id_station_on: get_input_value(pn_arrival_sostav.arrival_sostav_station_on),
                         id_way: get_input_value(pn_arrival_sostav.arrival_sostav_way_on),
@@ -5994,6 +5988,60 @@
                 }
                 return null;
             },
+        },
+        //*************************************************************************************
+        // ОКНО "ПРИНЯТЬ ВАГОНЫ"
+        //*************************************************************************************
+        print_detali = {
+            // ФУНКЦИИ ОКНА "ПРИНЯТЬ ВАГОНЫ" ****************************************************************************************************************************************
+            //---------------------------------------------------------------------------------------------------
+            // Основные переменные окна "Принять вагоны"
+            //---------------------------------------------------------------------------------------------------
+            content: $('.cd-print-detali'),
+            init: function (lang, user_name) {
+                print_detali.lang = lang;
+                print_detali.user = user_name;
+
+                $('.myprint').click(function () {             //при клике на что срабатывает печать
+                    //var html_to_print = $('.to_print').html();    //что печатаем
+                    //var iframe = $('<iframe id="print_frame">');
+                    //$('body').append(iframe);
+                    //var doc = $('#print_frame')[0].contentDocument || $('#print_frame')[0].contentWindow.document;
+                    //var win = $('#print_frame')[0].contentWindow || $('#print_frame')[0];
+                    //doc.getElementsByTagName('body')[0].innerHTML = html_to_print;
+                    //win.print();
+                    ////$('iframe').remove();
+
+
+                    var mywindow = window.open('', 'my div', 'height=400,width=600');
+                    mywindow.document.write('<html><head><title>my div</title>');
+
+                    /*optional stylesheet*/ //mywindow.document.write('<link rel="stylesheet" href="main.css" type="text/css" />');
+                    mywindow.document.write('</head><body >');
+                    mywindow.document.write($('.to_print').html());
+                    mywindow.document.write('</body></html>');
+                    mywindow.document.close(); // necessary for IE >= 10
+                    mywindow.focus(); // necessary for IE >= 10
+                    mywindow.print();
+                    mywindow.close();
+                    return true;
+
+                });
+
+                // Sumbit form
+                print_detali.content.find("form").on("submit", function (event) {
+                    event.preventDefault();
+                });
+                // Настройка закрыть детали проекта
+                print_detali.content.on('click', '.close', function (event) {
+                    event.preventDefault();
+                    print_detali.content.removeClass('is-visible');
+                });
+            },
+            view: function () {
+                // Показать страницу детально
+                print_detali.content.addClass('is-visible');
+            }
         };
 
     //================================================================
@@ -6008,6 +6056,7 @@
         pn_edit_sostav.init(lang, list_station, user_name, function (result) {
             pn_sel.view(true);
         });
+        print_detali.init(lang, user_name);
         cars_detali.init(lang, user_name);
         table_sostav.init();
         pn_sel.view(true);

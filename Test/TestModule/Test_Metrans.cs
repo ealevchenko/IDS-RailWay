@@ -42,7 +42,8 @@ namespace Test.TestModule
             //EFMetallurgTrans efmt = new EFMetallurgTrans();
             Console.WriteLine("Запрос....");
             //List<WagonsTrackingMT> list1 =  clientMT.GetWagonsTracking();
-            List<WagonsTrackingMT> list2 = clientMT.GetWagonsTracking(58647785);
+            List<WagonsTrackingMT> list2 = clientMT.GetWagonsTracking(57332215);
+            WagonsTrackingMT last = list2.OrderByDescending(d => d.dt).FirstOrDefault();
             ////List<WagonsTrackingMT> list3 = clientMT.GetWagonsTracking(56858111, DateTime.Now.AddMonths(-1));
             ////List<WagonsTrackingMT> list4 = clientMT.GetWagonsTracking(56858111, DateTime.Now.AddDays(-15), DateTime.Now.AddDays(-5));
             //foreach (WagonsTrackingMT wt in list1)

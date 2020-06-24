@@ -432,4 +432,13 @@
   <data name="title_devision_on_amkr_name" xml:space="preserve">
     <value>Цех\склад</value>
   </data>
+  <data name="title_material" xml:space="preserve">
+    <value>Материал</value>
+  </data>
+  <data name="title_material_code" xml:space="preserve">
+    <value>Код материала</value>
+  </data>
+  <data name="title_material_name" xml:space="preserve">
+    <value>Название материала</value>
+  </data>
 </root>

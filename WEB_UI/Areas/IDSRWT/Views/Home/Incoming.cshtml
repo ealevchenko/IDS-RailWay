@@ -70,9 +70,13 @@
                         Отчетная документация
                     </button>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Link 1</a>
-                        <a class="dropdown-item" href="#">Link 2</a>
-                        <a class="dropdown-item" href="#">Link 3</a>
+                        <a class="dropdown-item" href="#" id="report_fst">Натурная ведомость поезда</a>
+                        <a class="dropdown-item" href="#">Натурная ведомость коммерческого осмотра</a>
+                        <a class="dropdown-item" href="#">Отчет с данными о перевеске</a>
+                        <a class="dropdown-item" href="#">Отчет о приеме груза</a>
+                        <a class="dropdown-item" href="#">Заявка на выдачу с проверкой груза КР Главный</a>
+                        <a class="dropdown-item" href="#">Заявка на выдачу с проверкой груза КР</a>
+                        <a class="dropdown-item" href="#">Заявка на взвешивание</a>
                     </div>
                 </div>
                 <input class="form-control-sm" type="text" placeholder="Search" aria-label="Search">
@@ -167,8 +171,8 @@
                                 </div>
                                 <div class="card-body">
                                     @*<h5 class="card-title">Special title treatment</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                                    <a href="#" class="btn btn-primary">Go somewhere</a>*@
+                                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                        <a href="#" class="btn btn-primary">Go somewhere</a>*@
                                     <table class="table table-striped table-bordered" id="table-arrival-cars" style="width:100%; font-size:0.8rem;"></table>
                                 </div>
                                 <div class="card-footer text-muted">
@@ -182,9 +186,9 @@
                                 <div class="card-body text-dark">
                                     <button type="button" class="btn btn-primary btn" id="arrival-car" data-mode="edit-global" data-edit="" data-form="transceiver"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Принять вагон</button>
                                     @*<button type="button" class="btn btn-warning btn" id="mode-view">View</button>*@
-                                    <button type="button" class="btn btn-warning btn" id="mode-edit">Edit</button>
+                                    <button type="button" class="btn btn-danger btn" id="mode-edit" data-mode="edit-global" data-edit="" data-form="transceiver">Править вручную</button>
                                     @*<button type="button" class="btn btn-success btn" id="mode-open">Open</button>
-    <button type="button" class="btn btn-success btn" id="mode-close">Close</button>*@
+                                        <button type="button" class="btn btn-success btn" id="mode-close">Close</button>*@
                                     <fieldset class="border-primary">
                                         <div class="form-row">
                                             <div class="col-md-3 mb-1 text-left">
@@ -368,11 +372,11 @@
                                         </div>
                                         <div class="form-row">
                                             @*<div class="col-md-6 mb-1 text-left">
-                                                <div class="custom-control custom-checkbox" style="top:50%">
-                                                    <input type="checkbox" class="custom-control-input inp-manual" id="uz_cargo_returns" name="uz_cargo_returns" data-mode="edit-global" data-edit="" data-form="transceiver">
-                                                    <label class="custom-control-label" for="uz_cargo_returns">@IDSRWTResource.title_cargo_returns</label>
-                                                </div>
-                                            </div>*@
+                                                    <div class="custom-control custom-checkbox" style="top:50%">
+                                                        <input type="checkbox" class="custom-control-input inp-manual" id="uz_cargo_returns" name="uz_cargo_returns" data-mode="edit-global" data-edit="" data-form="transceiver">
+                                                        <label class="custom-control-label" for="uz_cargo_returns">@IDSRWTResource.title_cargo_returns</label>
+                                                    </div>
+                                                </div>*@
                                             <div class="col-md-5 mb-1 text-left">
                                                 <label for="uz_vag_station_on_amkr" class="col-form-label">@IDSRWTResource.title_station_on_amkr:</label>
                                                 <select class="form-control inp-manual" id="uz_vag_station_on_amkr" name="uz_vag_station_on_amkr" title="Ручной выбор -> Справочник 'Внутрених станций АМКР'" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
@@ -380,11 +384,11 @@
                                                 </div>
                                             </div>
                                             @*<div class="col-md-6 mb-1 text-left">
-                                                <label for="uz_vag_devision_on_amkr" class="col-form-label">@IDSRWTResource.title_devision_on_amkr:</label>
-                                                <select class="form-control inp-manual" id="uz_vag_devision_on_amkr" name="uz_vag_devision_on_amkr" title="Ручной выбор -> Справочник 'Подразделения АМКР'" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
-                                                <div class="invalid-feedback">
-                                                </div>
-                                            </div>*@
+                                                    <label for="uz_vag_devision_on_amkr" class="col-form-label">@IDSRWTResource.title_devision_on_amkr:</label>
+                                                    <select class="form-control inp-manual" id="uz_vag_devision_on_amkr" name="uz_vag_devision_on_amkr" title="Ручной выбор -> Справочник 'Подразделения АМКР'" data-mode="edit-global" data-edit="" data-form="transceiver"></select>
+                                                    <div class="invalid-feedback">
+                                                    </div>
+                                                </div>*@
 
 
                                             <div class="col-md-2 mb-1 text-left">
@@ -800,6 +804,23 @@
                                             </div>
                                         </div>
                                         <fieldset class="border-secondary">
+                                            <legend class="text-secondary">@IDSRWTResource.title_material</legend>
+                                            <div class="form-row">
+                                                <div class="col-md-4 mb-1 text-left">
+                                                    <label for="SAP_inbound_delivery_material_code" class="col-form-label">@IDSRWTResource.title_material_code:</label>
+                                                    <input type="text" class="form-control" id="SAP_inbound_delivery_material_code" name="SAP_inbound_delivery_material_code" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                    <div class="invalid-feedback">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8 mb-1 text-left">
+                                                    <label for="SAP_inbound_delivery_material_name" class="col-form-label">@IDSRWTResource.title_material_name:</label>
+                                                    <input type="text" class="form-control" id="SAP_inbound_delivery_material_name" name="SAP_inbound_delivery_material_name" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                    <div class="invalid-feedback">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="border-secondary">
                                             <legend class="text-secondary">@IDSRWTResource.title_warehouse</legend>
                                             <div class="form-row">
                                                 <div class="col-md-2 mb-1 text-left">
@@ -886,7 +907,6 @@
         </form>
         <a href="#0" class="close cd-img-replace">Close</a>
     </div>
-
 </div>
 
 <div id="search-epd" title="" style="display:none">
@@ -1045,7 +1065,25 @@
     </form>
 </div>
 
-
+<div class="cd-print-detali">
+    <div class="container-fluid">
+        <!-- Что распечатать находится внутри  .to_print -->
+        <div class='to_print'>
+            <hr>
+            <h2>Печать чека:</h2>
+            <table>
+                <tr><td>Название</td><td>Стоимость</td><td>Дата</td><td>Количество</td></tr>
+                <tr><td>Кока кола</td><td>67 руб.</td><td>12.02.2015</td><td>1 шт.</td></tr>
+                <tr><td>Сок Добрый</td><td>70 руб.</td><td>12.02.2015</td><td>1 шт.</td></tr>
+                <tr><td>Хлеб пшеничный</td><td>23 руб.</td><td>12.02.2015</td><td>2 шт.</td></tr>
+            </table>
+            <hr>
+        </div>
+        Не печатаемая область - какой-то текст или блоки сайта<br>
+        Нажмите <button class="myprint">Печать</button> чтобы напечатать
+        <a href="#0" class="close cd-img-replace">Close</a>
+    </div>
+</div>
 
 
 
