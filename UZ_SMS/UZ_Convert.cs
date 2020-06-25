@@ -66,7 +66,7 @@ namespace UZ
         public DateTime? srok_end { get; set; }
         public string type_pay { get; set; }
         public int? val_gr { get; set; }
-        public int? value { get; set; }
+        public double? value { get; set; }
         public string vid { get; set; }
         public int? vid_marsh { get; set; }
         public int? vid_nakaz_pr { get; set; }
@@ -829,7 +829,7 @@ namespace UZ
                     tag.srok_end = getAttributes<DateTime?>(node, "srok_end");
                     tag.type_pay = getAttributes<string>(node, "type_pay");
                     tag.val_gr = getAttributes<int?>(node, "val_gr");
-                    tag.value = getAttributes<int?>(node, "value");
+                    tag.value = getAttributes<double?>(node, "value");
                     tag.vid = getAttributes<string>(node, "vid");
                     tag.vid_marsh = getAttributes<int?>(node, "vid_marsh");
                     tag.vid_nakaz_pr = getAttributes<int?>(node, "vid_nakaz_pr");
