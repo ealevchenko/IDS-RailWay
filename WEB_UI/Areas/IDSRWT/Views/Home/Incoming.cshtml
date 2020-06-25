@@ -1070,18 +1070,82 @@
         <form class="cd-form bg-white">
             <!-- Что распечатать находится внутри  .to_print -->
             <div class='to_print'>
-                <hr>
-                <h1>натурная ведомость поезда</h1>
-                <table>
-                    <tr><td>Название</td><td>Стоимость</td><td>Дата</td><td>Количество</td></tr>
-                    <tr><td>Кока кола</td><td>67 руб.</td><td>12.02.2015</td><td>1 шт.</td></tr>
-                    <tr><td>Сок Добрый</td><td>70 руб.</td><td>12.02.2015</td><td>1 шт.</td></tr>
-                    <tr><td>Хлеб пшеничный</td><td>23 руб.</td><td>12.02.2015</td><td>2 шт.</td></tr>
-                </table>
-                <hr>
+                <div class="row">
+                    <div class="col-sm-12 text-center"><h2 id="name_report"></h2></div>
+                </div>
+                <div id="context_report">
+                    <div class="row">
+                        <div class="col-sm-3 text-center">Поезд прибыл на станцию - Восточная-Приемоотправочная </div>
+                        <div class="col-sm-3 text-center">Поезд № 3807 </div>
+                        <div class="col-sm-3 text-center">Прибытие: 2020-06-16 00:00:00 </div>
+                        <div class="col-sm-3 text-center">Прием: 2020-06-16 00:00:00</div>
+                    </div>
+                    <div class="row">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col">№</th>
+                                    <th scope="col">Станция отправления</th>
+                                    <th scope="col">Груз</th>
+                                    <th scope="col">Оператор</th>
+                                    <th scope="col">Собственник</th>
+                                    <th scope="col">Код</th>
+                                    <th scope="col">№ Вагона</th>
+                                    <th scope="col">№ ж.д. накладной</th>
+                                    <th scope="col">Вес. тн</th>
+                                    <th scope="col">Цех получатель</th>
+                                    <th scope="col">Разметка</th>
+                                    <th scope="col">Примечание</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>Кривой Рог- Главный</td>
+                                    <td>Аглоруда</td>
+                                    <td>ЧАО "Укрэнерготранс"</td>
+                                    <td>ООО "ИВК"</td>
+                                    <td>4556</td>
+                                    <td>56858251</td>
+                                    <td>46200150</td>
+                                    <td>65.5</td>
+                                    <td>РУ</td>
+                                    <td>МРт</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td>Кривой Рог- Главный</td>
+                                    <td>Аглоруда</td>
+                                    <td>ЧАО "Укрэнерготранс"</td>
+                                    <td>ООО "ИВК"</td>
+                                    <td>4556</td>
+                                    <td>56858252</td>
+                                    <td>46200150</td>
+                                    <td>65.5</td>
+                                    <td>РУ</td>
+                                    <td>МРт</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                @*<hr>
+
+                    <table>
+                        <tr><td>Название</td><td>Стоимость</td><td>Дата</td><td>Количество</td></tr>
+                        <tr><td>Кока кола</td><td>67 руб.</td><td>12.02.2015</td><td>1 шт.</td></tr>
+                        <tr><td>Сок Добрый</td><td>70 руб.</td><td>12.02.2015</td><td>1 шт.</td></tr>
+                        <tr><td>Хлеб пшеничный</td><td>23 руб.</td><td>12.02.2015</td><td>2 шт.</td></tr>
+                    </table>
+                    <hr>*@
+
             </div>
-            <br>
-            Нажмите <button class="myprint">Печать</button> чтобы напечатать
+            <div class="row m-0">
+                <div class="col-sm-12 text-center bg-light pt-3 pb-3">Назмите <button type="button" id="print_report" class="btn btn-primary btn">Печать</button> чтобы напечатать отчет</div>
+            </div>
+            @*Нажмите <button class="myprint">Печать</button> чтобы напечатать*@
         </form>
         <a href="#0" class="close cd-img-replace">Close</a>
     </div>

@@ -647,7 +647,8 @@
                 //
                 pn_sel.report_fst.on('click', function (event) {
                     event.preventDefault();
-                    print_detali.view();
+                    // Показать отчет
+                    print_detali.view(table_sostav.select_sostav.id, 'report_fst');
 
                 });
             },
@@ -5998,11 +5999,14 @@
             // Основные переменные окна "Принять вагоны"
             //---------------------------------------------------------------------------------------------------
             content: $('.cd-print-detali'),
+            name_report: $('h2#name_report'),
+            context_report: $('div#context_report'),
             init: function (lang, user_name) {
                 print_detali.lang = lang;
                 print_detali.user = user_name;
 
-                $('.myprint').click(function () {             //при клике на что срабатывает печать
+
+                $('button#print_report').click(function () {             //при клике на что срабатывает печать
                     //var html_to_print = $('.to_print').html();    //что печатаем
                     //var iframe = $('<iframe id="print_frame">');
                     //$('body').append(iframe);
@@ -6021,6 +6025,7 @@
 
                     mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/bootstrap.min.css">');
                     mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/bootstrap.min.css.map">');
+                    mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/view/shared/print.css">');
                     mywindow.document.write('<script src="../../Scripts/jquery-3.4.1.min.js"></script>');
                     mywindow.document.write('<script src="../../Scripts/bootstrap.min.js"></script>');
 
@@ -6052,10 +6057,27 @@
                     print_detali.content.removeClass('is-visible');
                 });
             },
-            view: function () {
-                // Показать страницу детально
-                print_detali.content.addClass('is-visible');
+            // Отобразить отчет
+            view: function (id, report) {
+                if (id) {
+                    ids_inc.getArrivalSostavOfID(id, function (result_sostav) {
+                        var sostav = result_sostav;
+                        switch (report) {
+                            case 'report_fst': print_detali.view_report_fst(sostav); break;
+                            default: break;
+                        }
+                        // Показать страницу детально
+                        print_detali.content.addClass('is-visible');
+                    });
+                }
+            },
+            // 
+            view_report_fst: function (sostav) {
+                name_report.innerHTML = "Натурная ведомость поезда";
+                
+                return;
             }
+
         };
 
     //================================================================
