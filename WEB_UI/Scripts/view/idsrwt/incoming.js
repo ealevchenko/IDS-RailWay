@@ -6013,17 +6013,31 @@
                     ////$('iframe').remove();
 
 
-                    var mywindow = window.open('', 'my div', 'height=400,width=600');
-                    mywindow.document.write('<html><head><title>my div</title>');
+                    //'@Url.Action("Report", "Home", new { area = "IDSRWT" })'
 
-                    /*optional stylesheet*/ //mywindow.document.write('<link rel="stylesheet" href="main.css" type="text/css" />');
-                    mywindow.document.write('</head><body >');
+                    //var mywindow = window.open('/IDSRWT/Home/Report', 'my div');
+                    var mywindow = window.open('', 'Отчет');
+                    mywindow.document.write('<html><head><title>Отчет</title>');
+
+                    mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/bootstrap.min.css">');
+                    mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/bootstrap.min.css.map">');
+                    mywindow.document.write('<script src="../../Scripts/jquery-3.4.1.min.js"></script>');
+                    mywindow.document.write('<script src="../../Scripts/bootstrap.min.js"></script>');
+
+                    mywindow.document.write('</head><body>');
+                    //mywindow.document.write($('.to_print').html());
+                    //mywindow.document.write('</body></html>');
+                    //mywindow.document.write('<link rel="stylesheet" href="~/Content/bootstrap.css" type="text/css" />');
+                    var txt = $('.to_print').html();
+                    //var doc = mywindow.document;
+                    //mywindow.document.getElementsByName('body')[0].innerHTML = txt
                     mywindow.document.write($('.to_print').html());
                     mywindow.document.write('</body></html>');
+
                     mywindow.document.close(); // necessary for IE >= 10
                     mywindow.focus(); // necessary for IE >= 10
-                    mywindow.print();
-                    mywindow.close();
+                    //mywindow.print();
+                    //mywindow.close();
                     return true;
 
                 });

@@ -179,7 +179,16 @@ print  detali panel
     }
 }*/
 
-#print_frame{display: none;}
+/*#print_frame{display: none;}*/
+
+/*Окно отображения текста для печати*/
+
+.to_print {
+    margin-left:20px;
+}
+/*.to_print h1{
+    fo
+}*/
 
 /* -------------------------------- 
 
