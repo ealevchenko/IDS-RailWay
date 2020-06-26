@@ -178,7 +178,7 @@ namespace IDS
                 WagonsMotionSignals wms = ef_wms.Context.Where(s => s.nvagon == num).OrderByDescending(c => c.dt).FirstOrDefault();
                 return wms != null ? new WTMotionSignals
                 {
-                    id_wt = wms.id,
+                    id_wt = wms.id_wt,
                     nvagon = wms.nvagon,
                     st_disl = wms.st_disl,
                     nst_disl = wms.nst_disl,
