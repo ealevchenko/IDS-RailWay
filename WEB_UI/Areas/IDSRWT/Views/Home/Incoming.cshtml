@@ -1070,17 +1070,21 @@
         <form class="cd-form bg-white">
             <!-- Что распечатать находится внутри  .to_print -->
             <div class='to_print'>
-                <div class="row">
+                <div class="row mb-4">
                     <div class="col-sm-12 text-center"><h2 id="name_report"></h2></div>
                 </div>
                 <div id="context_report">
-                    <div class="row">
-                        <div class="col-sm-3 text-center">Поезд прибыл на станцию - Восточная-Приемоотправочная </div>
-                        <div class="col-sm-3 text-center">Поезд № 3807 </div>
-                        <div class="col-sm-3 text-center">Прибытие: 2020-06-16 00:00:00 </div>
-                        <div class="col-sm-3 text-center">Прием: 2020-06-16 00:00:00</div>
+                    <div class="row mb-4">
+                        <div class="col-sm-2 text-right font-weight-bold">Поезд прибыл на станцию:</div>
+                        <div class="col-sm-2 text-left">Восточная-Приемоотправочная</div>
+                        <div class="col-sm-1 text-right font-weight-bold">Поезд№</div>
+                        <div class="col-sm-1 text-left">3807</div>
+                        <div class="col-sm-1 text-right font-weight-bold">Прибытие:</div>
+                        <div class="col-sm-2 text-left">2020-06-16 00:00:00</div>
+                        <div class="col-sm-1 text-right font-weight-bold">Прием:</div>
+                        <div class="col-sm-2 text-left">2020-06-16 00:00:00</div>
                     </div>
-                    <div class="row">
+                    <div class="row mb-4">
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -1130,6 +1134,15 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="row mb-4">
+                        <div class="col-sm-2 text-right font-weight-bold">Всего вагонов : </div>
+                        <div class="col-sm-2 text-left">2</div>
+                        <div class="offset-4  col-sm-2 text-right font-weight-bold">Общий вес, тн</div>
+                        <div class="col-sm-2 text-left">35.5</div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-sm-12 text-left">Подпись приемосдатчика ______________________</div>
+                    </div>
                 </div>
                 @*<hr>
 
@@ -1143,7 +1156,7 @@
 
             </div>
             <div class="row m-0">
-                <div class="col-sm-12 text-center bg-light pt-3 pb-3">Назмите <button type="button" id="print_report" class="btn btn-primary btn">Печать</button> чтобы напечатать отчет</div>
+                <div class="col-sm-12 text-center bg-light pt-3 pb-3">Нажмите <button type="button" id="print_report" class="btn btn-primary btn">Печать</button> чтобы напечатать отчет</div>
             </div>
             @*Нажмите <button class="myprint">Печать</button> чтобы напечатать*@
         </form>
