@@ -162,7 +162,6 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_DocumentOfNumDoc = function (num_doc, c
         },
     });
 };
-
 //Добавить документ
 IDS_RWT_INCOMING.prototype.postArrival_UZ_Document = function (document, callback) {
     $.ajax({
@@ -1260,7 +1259,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_Acts = function (id, callback)
         },
     });
 };
-//======= Arrival_UZ_Vagon_Cont (Акты по ЭПД УЗ по прибытию (не досылочные)) ======================================
+//======= Arrival_UZ_Vagon_Cont (Контейнеры на вагоне по ЭПД УЗ ) ======================================
 // Получить все акты
 IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_Cont = function (callback) {
     $.ajax({
@@ -1427,7 +1426,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_Cont = function (id, callback)
         },
     });
 };
-//======= Arrival_UZ_Cont_Pay (Платежки по плательщикам ЭПД УЗ по прибытию) ======================================
+//======= Arrival_UZ_Cont_Pay (Платежки по плательщикам на контейнеры ЭПД УЗ по прибытию) ======================================
 // Получить все платежки
 IDS_RWT_INCOMING.prototype.getArrival_UZ_Cont_Pay = function (callback) {
     $.ajax({
@@ -1588,6 +1587,29 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Cont_Pay = function (id, callback) {
         },
         error: function (x, y, z) {
             OnAJAXError("IDS_RWT_INCOMING.deleteArrival_UZ_Cont_Pay", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Удалить платежку по контейнеру
+IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Cont_PayOfCont = function (id, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/arrival_uz_cont_pay/cont/id' + id,
+        type: 'DELETE',
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.deleteArrival_UZ_Cont_PayOfCont", x, y, z);
         },
         complete: function () {
             AJAXComplete();

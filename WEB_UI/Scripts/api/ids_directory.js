@@ -3809,7 +3809,7 @@ IDS_DIRECTORY.prototype.getListStation = function (fvalue, ftext, lang, filter) 
 //*======= IDS_DIRECTORY.list_ways  (Справочник путей) ======================================
 IDS_DIRECTORY.prototype.getWays_Internal_Of_ID = function (id_way) {
     if (this.list_ways) {
-        var obj = getObjects(this.list_ways, 'id', id_way)
+        var obj = getObjects(this.list_ways, 'id', id_way);
         return obj && obj.length > 0 ? obj[0] : null;
     }
 };
