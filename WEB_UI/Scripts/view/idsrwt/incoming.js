@@ -144,6 +144,7 @@
                 'mess_not_searsh_epd': 'Автоматически ЭПД не найден, попробуйте найти документ по номеру вагона в промежуточной базе данных (воспользовавшись кнопкой поиска справа от поля "№ Вагона") или получите номер вагона по номеру накладной (колонка "Сведения ЭПД").',
                 'mess_not_manual_epd': 'В промежуточной базе данных ЭПД не найден, введите данные вручную перейдя в режим "Ручной ввод" (воспользовавшись кнопкой "Правка" справа от поля "№ Вагона" или выбрав грузополучателя не "АМКР") или получите номер вагона по номеру накладной (колонка "Сведения ЭПД").',
                 'mess_arrival_vagon': 'Переношу вагон в базу данных как прибывший ...',
+                'mess_clear_vagon': 'Возвращаю вагон в базу данных на подходах ...',
             },
             'en':  //default language: English
             {
@@ -964,7 +965,7 @@
                     .add(cars_detali.uz_vag_devision_on_amkr_name)
                     .add(cars_detali.arrival_cars_position_arrival)
                     .add(cars_detali.arrival_cars_car_date_adoption_act.obj)
-                    ;
+                ;
 
                 // Соберем все элементы в массив
                 cars_detali.all_obj_card_vag = $([])
@@ -3421,6 +3422,8 @@
                     car.id_arrival_uz_vagon = id_vagon;
                     car.arrival = toISOStringTZ(new Date());
                     car.arrival_user = cars_detali.user;
+                    car.change = toISOStringTZ(new Date());
+                    car.change_user = cars_detali.user;
                     // обновим информацию о вагоне
                     cars_detali.ids_inc.putArrivalCars(car, function (result_update_car) {
                         if (result_update_car > 0) {
@@ -3456,8 +3459,11 @@
                             }
                         }
                     });
+                } else {
+                    if (typeof callback === 'function') {
+                        callback(0);
+                    }
                 }
-
             },
 
             // Принять вагон в системе ИДС
@@ -3820,39 +3826,152 @@
             //-------------------------------------------------------------------------------------
             // ФУНКЦИОНАЛ ВЕРУТЬ ВАГОН (Убрать из документов как принятый)
             //-------------------------------------------------------------------------------------
-            //Удалить платежки по контейнеру
+            //Удалить платежки по контейнерам
             del_vagon_cont_pay: function (conts, callback) {
-                if ()
+                if (conts) {
+                    var list_id = [];
+                    for (ic = 0; ic < conts.length; ic++) {
+                        list_id.push(conts[ic].id);
+                    }
+                    cars_detali.ids_inc.deleteArrival_UZ_Cont_PayOfListCont(list_id, function (result_del_conts_pays) {
+                        if (typeof callback === 'function') {
+                            callback(result_del_conts_pays);
+                        }
+                    });
+                } else {
+                    if (typeof callback === 'function') {
+                        callback(0);
+                    }
+                }
                 //deleteArrival_UZ_Cont_PayOfCont
             },
             // Удалить контейнеры по вагону
             del_vagon_cont: function (id_vagon, callback) {
                 // Найдем контейнеры принадлежащие вагону
-                ids_inc.getArrival_UZ_Vagon_ContOfID_Vagon(id_vagon, function (list_count) {
-                    if (list_count) {
+                cars_detali.ids_inc.getArrival_UZ_Vagon_ContOfID_Vagon(id_vagon, function (list_count) {
+                    if (list_count && list_count.length > 0) {
                         // Контейнеры есть
+                        cars_detali.del_vagon_cont_pay(list_count, function (result_del_cont_pay) {
+                            // результаты удаления
+                            if (result_del_cont_pay >= 0) {
+                                // Платежек нет или удалены, удалим контейнера
+                                cars_detali.ids_inc.deleteArrival_UZ_Vagon_ContOfVagon(id_vagon, function (result_del_conts) {
+                                    if (typeof callback === 'function') {
+                                        callback(result_del_conts);
+                                    }
+                                });
+                            } else {
+                                // Ошибка удаления платежек
+                                if (typeof callback === 'function') {
+                                    callback(-1);
+                                }
+                            }
+                        });
                     } else {
                         // Контейнеров нет
+                        if (typeof callback === 'function') {
+                            callback(0);
+                        }
                     }
                 });
 
-                //var list_vagon_cont = cars_detali.get_list_vagon_cont(otpr_cont, id_vagon);
-                //if (list_vagon_cont && list_vagon_cont.length > 0) {
-                //    cars_detali.ids_inc.postListArrival_UZ_Vagon_Cont(list_vagon_cont, function (result_add_vagon_conts) {
-                //        if (typeof callback === 'function') {
-                //            callback(result_add_vagon_conts);
-                //        }
-                //    });
-                //} else {
-                //    // Нечего добавлять
-                //    if (typeof callback === 'function') {
-                //        callback(0);
-                //    }
-                //}
             },
-
-
-
+            // Удалить акты по вагону
+            del_vagon_acts: function (id_vagon, callback) {
+                cars_detali.ids_inc.deleteArrival_UZ_Vagon_ActsOfVagon(id_vagon, function (result_del_acts) {
+                    if (typeof callback === 'function') {
+                        callback(result_del_acts);
+                    }
+                });
+            },
+            // Удалить платежки по вагону
+            del_vagon_pays: function (id_vagon, callback) {
+                cars_detali.ids_inc.deleteArrival_UZ_Vagon_PayOfVagon(id_vagon, function (result_del_pays) {
+                    if (typeof callback === 'function') {
+                        callback(result_del_pays);
+                    }
+                });
+            },
+            // Удалить вагон
+            del_vagon: function (cars, callback) {
+                if (cars && cars.id_arrival_uz_vagon) {
+                    var id_vagon = cars.id_arrival_uz_vagon;
+                    // Удалим контейнера
+                    cars_detali.del_vagon_cont(id_vagon, function (result_del_cont) {
+                        if (result_del_cont < 0) {
+                            // Ошибка выходим
+                            if (typeof callback === 'function') {
+                                callback(result_del_cont);
+                            }
+                        } else {
+                            // Удалим акты
+                            cars_detali.del_vagon_acts(id_vagon, function (result_del_acts) {
+                                if (result_del_acts < 0) {
+                                    // Ошибка выходим
+                                    if (typeof callback === 'function') {
+                                        callback(result_del_acts);
+                                    }
+                                } else {
+                                    // Удалим платежки
+                                    cars_detali.del_vagon_pays(id_vagon, function (result_del_pays) {
+                                        if (result_del_pays < 0) {
+                                            // Ошибка выходим
+                                            if (typeof callback === 'function') {
+                                                callback(result_del_pays);
+                                            }
+                                        } else {
+                                            // Удалим вагон
+                                            cars_detali.clear_arrival_car(cars, function (result_clear_car) {
+                                                if (result_clear_car < 0) {
+                                                    // Ошибка выходим
+                                                    if (typeof callback === 'function') {
+                                                        callback(result_clear_car);
+                                                    }
+                                                } else {
+                                                    cars_detali.ids_inc.deleteArrival_UZ_Vagon(id_vagon, function (result_del_vagon) {
+                                                        if (typeof callback === 'function') {
+                                                            callback(result_del_vagon);
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    if (typeof callback === 'function') {
+                        callback(0);
+                    }
+                }
+            },
+            // Сбросить информацию о принятом вагоне (перенос в право в окно вагоны на подходе.)
+            clear_arrival_car: function (car, callback) {
+                if (car) {
+                    car.position_arrival = null;
+                    car.date_adoption_act = null;
+                    car.id_arrival_uz_vagon = null;
+                    car.arrival = null;
+                    car.arrival_user = null;
+                    car.change = toISOStringTZ(new Date());
+                    car.change_user = cars_detali.user;
+                    car.Arrival_UZ_Vagon = null;// что-бы не вызывало ошибки
+                    // обновим информацию о вагоне
+                    cars_detali.ids_inc.putArrivalCars(car, function (result_update_car) {
+                        if (result_update_car > 0) {
+                            if (typeof callback === 'function') {
+                                callback(result_update_car);
+                            }
+                        }
+                    });
+                } else {
+                    if (typeof callback === 'function') {
+                        callback(0);
+                    }
+                }
+            },
             // ФУНКЦИИ РАЗДЕЛА "ПРИНЯТЫЕ ВАГОНЫ" ************************************************************************************************************************************
 
             // Таблица c информацией о принятых вагонах
@@ -3972,16 +4091,30 @@
                                     var row_cars = cars_detali.table_arrival_cars.obj.rows(index[0]).data();
                                     if (row_cars && row_cars.length > 0) {
 
-                                        dialog_confirm.open('Вернуть вагон', 'Вы уверены что хотите вернуть вагон №' + row_cars[0].num +' в состав на подходах', function (result) {
+                                        dialog_confirm.open('Вернуть вагон', 'Вы уверены что хотите вернуть вагон №' + row_cars[0].num + ' в состав на подходах', function (result) {
                                             if (result) {
+                                                LockScreen(langView('mess_clear_vagon', langs));
                                                 var id = row_cars[0].id;
                                                 var list_cont;
                                                 // Найдем контейнеры принадлежащие вагону
-                                                ids_inc.getArrival_UZ_Vagon_ContOfID_Vagon(id, function (list_count) {
-                                                    if (list_count) {
-                                                        // Контейнеры есть
+                                                cars_detali.ids_inc.getArrivalCarsOfID(id, function (cars) {
+                                                    if (cars) {
+                                                        // вагон получен
+                                                        cars_detali.del_vagon(cars, function (result) {
+                                                            if (result > 0) {
+                                                                cars_detali.alert.out_info_message('Вагон №' + row_cars[0].num + ' - возвращен в сотав на подходах!');
+                                                                cars_detali.update_sostav = true;
+                                                                // Показать 
+                                                                cars_detali.view(table_sostav.select_sostav.id, false);
+                                                            }
+                                                            LockScreenOff();
+                                                        });
+
                                                     } else {
-                                                        // Контейнеров нет
+                                                        // вагона нет
+                                                        cars_detali.alert.clear_message();
+                                                        cars_detali.alert.out_warning_message("Вагон №" + row_cars[0].num + " в таблице [IDS].[ArrivalCars] перечня вагонов составов на подходах  - не найден!");
+                                                        LockScreenOff();
                                                     }
                                                 });
                                             }
@@ -4034,7 +4167,7 @@
                     var dir_division = vag_uz && vag_uz.Directory_Divisions ? vag_uz.Directory_Divisions : null;
 
                     return {
-                        "id": data.id,                       
+                        "id": data.id,
                         "position": data.position_arrival,
                         "num": data.num,
                         // Cars
@@ -5889,7 +6022,7 @@
                         .add(pn_arrival_sostav.arrival_sostav_way_on)
                         .add(pn_arrival_sostav.arrival_count_car)
                         .add(pn_arrival_sostav.arrival_sostav_numeration)
-                        ;
+                    ;
                     // создадим классы 
 
                     //pn_arrival_sostav.alert = new ALERT($('div#arrival-sostav-alert'));// Создадим класс ALERTG
@@ -6086,7 +6219,7 @@
             name_report: $('h2#name_report'),
             context_report: $('div#context_report'),
             row_report1: $('<div class="row mb-4"></div>'),
-            table_report: $('<table class="table table-bordered"></table>'),
+            table_report: $('<table class="print-table"></table>'),
             table_thead_report: $('<thead></thead>'),
             table_tbody_report: $('<tbody></tbody>'),
             table_tr_report: $('<tr></tr>'),
@@ -6237,7 +6370,16 @@
                         return Number(a.position_arrival) - Number(b.position_arrival)
                     });
 
+                    var div_row_total = print_detali.row_report1.clone();
+
+                    var div_row_signature = print_detali.row_report1.clone();
+                    div_row_signature.append($('<div class="col-sm-12 text-left">Подпись приемосдатчика ______________________</div>'));
+
+                    var total_vesg = 0;
+                    var group_operators = [];
+
                     if (list_cars) {
+
                         for (i = 0; i < list_cars.length; i++) {
                             var tbody_tr = print_detali.table_tr_report.clone();
 
@@ -6271,25 +6413,53 @@
                             tbody_tr.append($('<td>' + (dir_condition ? ids_inc.ids_dir.getValueObj(dir_condition, 'condition_abbr', print_detali.lang) : '') + '</td>'));
                             tbody_tr.append($('<td></td>'));
 
+                            // Подчет общего веса
+                            total_vesg += (vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000) : 0);
+                            // Группировка операторов
+                            if (dir_operator) {
+                                var opr = getObjects(group_operators, 'id', dir_operator.id)
+                                if (opr && opr.length > 0) {
+                                    opr[0].count += 1;
+                                } else {
+                                    group_operators.push({ id: dir_operator.id, operator: ids_inc.ids_dir.getValueObj(dir_operator, 'operators', print_detali.lang), count: 1 });
+                                }
+                            }
+
                             table_tbody.append(tbody_tr);
 
                         }
+
+                        var div_count_car = $('<div class="col-sm-2 text-right font-weight-bold">Всего вагонов : </div>');
+                        var div_count_car_val = $('<div class="col-sm-2 text-left">' + list_cars.length + '</div>');
+                        var div_vesg_car = $('<div class="offset-4  col-sm-2 text-right font-weight-bold">Общий вес, тн</div>');
+                        var div_vesg_car_val = $('<div class="col-sm-2 text-left">' + total_vesg.toFixed(2) + '</div>');
+                        div_row_total
+                            .append(div_count_car)
+                            .append(div_count_car_val)
+                            .append(div_vesg_car)
+                            .append(div_vesg_car_val);
+
+                        //
+                        // Заполним таблицу операторов
+                        var div_row_table_operator = print_detali.row_report1.clone();
+                        var table_operator  = print_detali.table_report.clone();
+                        var table_thead_operator  = print_detali.table_thead_report.clone();
+                        var table_tr_operator  = print_detali.table_tr_report.clone();
+                        table_tr_operator.append($('<th scope="col">Оператор</th>'));
+                        table_tr_operator.append($('<th scope="col">Кол. вагонов</th>'));
+
+                        var table_tbody_operator = print_detali.table_tbody_report.clone();
+                        for (io = 0; io < group_operators.length; io++) {
+                            var tbody_tr_operator = print_detali.table_tr_report.clone();
+                            tbody_tr_operator.append($('<th scope="row">' + group_operators[io].operator + '</th>'));
+                            tbody_tr_operator.append($('<td>' + group_operators[io].count + '</td>'));
+                            table_tbody_operator.append(tbody_tr_operator);
+                        }
+                        div_row_table_operator.append(table_operator.append(table_thead_operator.append(table_tr_operator)).append(table_tbody_operator));
                     }
-
-                    //var table_tr = print_detali.table_tr_report.clone();
-
                     div_row_table.append(table.append(table_thead.append(table_tr)).append(table_tbody));
 
-
-
-
-
-
-
-
-
-
-                    print_detali.context_report.empty().append(div_row_title1).append(div_row_title2).append(div_row_table);
+                    print_detali.context_report.empty().append(div_row_title1).append(div_row_title2).append(div_row_table).append(div_row_total).append(div_row_table_operator).append(div_row_signature);
                 }
                 return;
             }

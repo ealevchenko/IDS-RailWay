@@ -191,7 +191,7 @@ IDS_RWT_INCOMING.prototype.postArrival_UZ_Document = function (document, callbac
 IDS_RWT_INCOMING.prototype.putArrival_UZ_Document = function (document, callback) {
     $.ajax({
         type: 'PUT',
-        url: '../../api/ids/rwt/arrival_uz_document/id' + document.id,
+        url: '../../api/ids/rwt/arrival_uz_document/id/' + document.id,
         data: JSON.stringify(document),
         contentType: "application/json;charset=utf-8",
         async: true,
@@ -214,7 +214,7 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Document = function (document, callback
 // Удалить документ  
 IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Document = function (id, callback) {
     $.ajax({
-        url: '../../api/ids/rwt/arrival_uz_document/id' + id,
+        url: '../../api/ids/rwt/arrival_uz_document/id/' + id,
         type: 'DELETE',
         contentType: "application/json;charset=utf-8",
         async: true,
@@ -358,7 +358,7 @@ IDS_RWT_INCOMING.prototype.postListArrival_UZ_Document_Pay = function (list_pay,
 IDS_RWT_INCOMING.prototype.putArrival_UZ_Document_Pay = function (pay, callback) {
     $.ajax({
         type: 'PUT',
-        url: '../../api/ids/rwt/arrival_uz_document_pay/id' + pay.id,
+        url: '../../api/ids/rwt/arrival_uz_document_pay/id/' + pay.id,
         data: JSON.stringify(pay),
         contentType: "application/json;charset=utf-8",
         async: true,
@@ -381,7 +381,7 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Document_Pay = function (pay, callback)
 // Удалить платежку
 IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Document_Pay = function (id, callback) {
     $.ajax({
-        url: '../../api/ids/rwt/arrival_uz_document_pay/id' + id,
+        url: '../../api/ids/rwt/arrival_uz_document_pay/id/' + id,
         type: 'DELETE',
         contentType: "application/json;charset=utf-8",
         async: true,
@@ -525,7 +525,7 @@ IDS_RWT_INCOMING.prototype.postListArrival_UZ_Document_Acts = function (list_act
 IDS_RWT_INCOMING.prototype.putArrival_UZ_Document_Acts = function (act, callback) {
     $.ajax({
         type: 'PUT',
-        url: '../../api/ids/rwt/arrival_uz_document_acts/id' + act.id,
+        url: '../../api/ids/rwt/arrival_uz_document_acts/id/' + act.id,
         data: JSON.stringify(act),
         contentType: "application/json;charset=utf-8",
         async: true,
@@ -548,7 +548,7 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Document_Acts = function (act, callback
 // Удалить акт
 IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Document_Acts = function (id, callback) {
     $.ajax({
-        url: '../../api/ids/rwt/arrival_uz_document_acts/id' + id,
+        url: '../../api/ids/rwt/arrival_uz_document_acts/id/' + id,
         type: 'DELETE',
         contentType: "application/json;charset=utf-8",
         async: true,
@@ -692,7 +692,7 @@ IDS_RWT_INCOMING.prototype.postListArrival_UZ_Document_Docs = function (list_doc
 IDS_RWT_INCOMING.prototype.putArrival_UZ_Document_Docs = function (doc, callback) {
     $.ajax({
         type: 'PUT',
-        url: '../../api/ids/rwt/arrival_uz_document_docs/id' + doc.id,
+        url: '../../api/ids/rwt/arrival_uz_document_docs/id/' + doc.id,
         data: JSON.stringify(doc),
         contentType: "application/json;charset=utf-8",
         async: true,
@@ -715,7 +715,7 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Document_Docs = function (doc, callback
 // Удалить док
 IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Document_Docs = function (id, callback) {
     $.ajax({
-        url: '../../api/ids/rwt/arrival_uz_document_docs/id' + id,
+        url: '../../api/ids/rwt/arrival_uz_document_docs/id/' + id,
         type: 'DELETE',
         contentType: "application/json;charset=utf-8",
         async: true,
@@ -882,7 +882,7 @@ IDS_RWT_INCOMING.prototype.postListArrival_UZ_Vagon = function (list_vagon, call
 IDS_RWT_INCOMING.prototype.putArrival_UZ_Vagon = function (vagon, callback) {
     $.ajax({
         type: 'PUT',
-        url: '../../api/ids/rwt/arrival_uz_vagon/id' + vagon.id,
+        url: '../../api/ids/rwt/arrival_uz_vagon/id/' + vagon.id,
         data: JSON.stringify(vagon),
         contentType: "application/json;charset=utf-8",
         async: true,
@@ -905,7 +905,7 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Vagon = function (vagon, callback) {
 // Удалить вагон  
 IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon = function (id, callback) {
     $.ajax({
-        url: '../../api/ids/rwt/arrival_uz_vagon/id' + id,
+        url: '../../api/ids/rwt/arrival_uz_vagon/id/' + id,
         type: 'DELETE',
         contentType: "application/json;charset=utf-8",
         async: true,
@@ -1049,7 +1049,7 @@ IDS_RWT_INCOMING.prototype.postListArrival_UZ_Vagon_Pay = function (list_pay, ca
 IDS_RWT_INCOMING.prototype.putArrival_UZ_Vagon_Pay = function (pay, callback) {
     $.ajax({
         type: 'PUT',
-        url: '../../api/ids/rwt/arrival_uz_vagon_pay/id' + pay.id,
+        url: '../../api/ids/rwt/arrival_uz_vagon_pay/id/' + pay.id,
         data: JSON.stringify(pay),
         contentType: "application/json;charset=utf-8",
         async: true,
@@ -1072,7 +1072,7 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Vagon_Pay = function (pay, callback) {
 // Удалить платежку
 IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_Pay = function (id, callback) {
     $.ajax({
-        url: '../../api/ids/rwt/arrival_uz_vagon_pay/id' + id,
+        url: '../../api/ids/rwt/arrival_uz_vagon_pay/id/' + id,
         type: 'DELETE',
         contentType: "application/json;charset=utf-8",
         async: true,
@@ -1086,6 +1086,29 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_Pay = function (id, callback) 
         },
         error: function (x, y, z) {
             OnAJAXError("IDS_RWT_INCOMING.deleteArrival_UZ_Vagon_Pay", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Удалить платежки по вагону
+IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_PayOfVagon = function (id, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/arrival_uz_vagon_pay/vagon/id/' + id,
+        type: 'DELETE',
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.deleteArrival_UZ_Vagon_PayOfVagon", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1216,7 +1239,7 @@ IDS_RWT_INCOMING.prototype.postListArrival_UZ_Vagon_Acts = function (list_act, c
 IDS_RWT_INCOMING.prototype.putArrival_UZ_Vagon_Acts = function (act, callback) {
     $.ajax({
         type: 'PUT',
-        url: '../../api/ids/rwt/arrival_uz_vagon_acts/id' + act.id,
+        url: '../../api/ids/rwt/arrival_uz_vagon_acts/id/' + act.id,
         data: JSON.stringify(act),
         contentType: "application/json;charset=utf-8",
         async: true,
@@ -1239,7 +1262,7 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Vagon_Acts = function (act, callback) {
 // Удалить акт
 IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_Acts = function (id, callback) {
     $.ajax({
-        url: '../../api/ids/rwt/arrival_uz_vagon_acts/id' + id,
+        url: '../../api/ids/rwt/arrival_uz_vagon_acts/id/' + id,
         type: 'DELETE',
         contentType: "application/json;charset=utf-8",
         async: true,
@@ -1259,8 +1282,31 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_Acts = function (id, callback)
         },
     });
 };
+// Удалить акты на вагон
+IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_ActsOfVagon = function (id, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/arrival_uz_vagon_acts/vagon/id/' + id,
+        type: 'DELETE',
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.deleteArrival_UZ_Vagon_ActsOfVagon", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 //======= Arrival_UZ_Vagon_Cont (Контейнеры на вагоне по ЭПД УЗ ) ======================================
-// Получить все акты
+// Получить все контейнера
 IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_Cont = function (callback) {
     $.ajax({
         type: 'GET',
@@ -1283,7 +1329,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_Cont = function (callback) {
         },
     });
 };
-// Получить акт по id
+// Получить контейнер по id
 IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_ContOfID = function (id, callback) {
     $.ajax({
         type: 'GET',
@@ -1306,7 +1352,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_ContOfID = function (id, callback
         },
     });
 };
-// Получить акты по id вагона
+// Получить контейнера по id вагона
 IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_ContOfID_Vagon = function (id_vagon, callback) {
     $.ajax({
         type: 'GET',
@@ -1329,7 +1375,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_ContOfID_Vagon = function (id_vag
         },
     });
 };
-//Добавить акт
+//Добавить контейнер
 IDS_RWT_INCOMING.prototype.postArrival_UZ_Vagon_Cont = function (cont, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_vagon_cont/',
@@ -1354,7 +1400,7 @@ IDS_RWT_INCOMING.prototype.postArrival_UZ_Vagon_Cont = function (cont, callback)
         },
     });
 };
-//Добавить акты
+//Добавить контейнера
 IDS_RWT_INCOMING.prototype.postListArrival_UZ_Vagon_Cont = function (list_cont, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_vagon_cont/list/',
@@ -1379,11 +1425,11 @@ IDS_RWT_INCOMING.prototype.postListArrival_UZ_Vagon_Cont = function (list_cont, 
         },
     });
 };
-//Обновить акт
+//Обновить контейнер
 IDS_RWT_INCOMING.prototype.putArrival_UZ_Vagon_Cont = function (cont, callback) {
     $.ajax({
         type: 'PUT',
-        url: '../../api/ids/rwt/arrival_uz_vagon_cont/id' + cont.id,
+        url: '../../api/ids/rwt/arrival_uz_vagon_cont/id/' + cont.id,
         data: JSON.stringify(cont),
         contentType: "application/json;charset=utf-8",
         async: true,
@@ -1403,10 +1449,10 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Vagon_Cont = function (cont, callback) 
         },
     });
 };
-// Удалить акт
+// Удалить контейнер по id
 IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_Cont = function (id, callback) {
     $.ajax({
-        url: '../../api/ids/rwt/arrival_uz_vagon_cont/id' + id,
+        url: '../../api/ids/rwt/arrival_uz_vagon_cont/id/' + id,
         type: 'DELETE',
         contentType: "application/json;charset=utf-8",
         async: true,
@@ -1420,6 +1466,29 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_Cont = function (id, callback)
         },
         error: function (x, y, z) {
             OnAJAXError("IDS_RWT_INCOMING.deleteArrival_UZ_Vagon_Cont", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Удалить контейнера по id вагона
+IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_ContOfVagon = function (id, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/arrival_uz_vagon_cont/vagon/id/' + id,
+        type: 'DELETE',
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.deleteArrival_UZ_Vagon_ContOfVagon", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1550,7 +1619,7 @@ IDS_RWT_INCOMING.prototype.postListArrival_UZ_Cont_Pay = function (list_pay, cal
 IDS_RWT_INCOMING.prototype.putArrival_UZ_Cont_Pay = function (pay, callback) {
     $.ajax({
         type: 'PUT',
-        url: '../../api/ids/rwt/arrival_uz_cont_pay/id' + pay.id,
+        url: '../../api/ids/rwt/arrival_uz_cont_pay/id/' + pay.id,
         data: JSON.stringify(pay),
         contentType: "application/json;charset=utf-8",
         async: true,
@@ -1573,7 +1642,7 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Cont_Pay = function (pay, callback) {
 // Удалить платежку
 IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Cont_Pay = function (id, callback) {
     $.ajax({
-        url: '../../api/ids/rwt/arrival_uz_cont_pay/id' + id,
+        url: '../../api/ids/rwt/arrival_uz_cont_pay/id/' + id,
         type: 'DELETE',
         contentType: "application/json;charset=utf-8",
         async: true,
@@ -1596,7 +1665,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Cont_Pay = function (id, callback) {
 // Удалить платежку по контейнеру
 IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Cont_PayOfCont = function (id, callback) {
     $.ajax({
-        url: '../../api/ids/rwt/arrival_uz_cont_pay/cont/id' + id,
+        url: '../../api/ids/rwt/arrival_uz_cont_pay/cont/id/' + id,
         type: 'DELETE',
         contentType: "application/json;charset=utf-8",
         async: true,
@@ -1610,6 +1679,30 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Cont_PayOfCont = function (id, callb
         },
         error: function (x, y, z) {
             OnAJAXError("IDS_RWT_INCOMING.deleteArrival_UZ_Cont_PayOfCont", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Удалить платежки по списку id контейнеров
+IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Cont_PayOfListCont = function (list_cont, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/arrival_uz_cont_pay/cont/list/',
+        data: JSON.stringify(list_cont),
+        type: 'DELETE',
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.deleteArrival_UZ_Cont_PayOfListCont", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1686,7 +1779,6 @@ IDS_RWT_INCOMING.prototype.getCurrentNumArrivalSostavOfStation = function (id, c
         },
     });
 };
-
 //Обновить 
 IDS_RWT_INCOMING.prototype.putArrivalSostav = function (arrival_sostav, callback) {
     $.ajax({
@@ -2042,7 +2134,6 @@ IDS_RWT_INCOMING.prototype.postUZ_DOC = function (uz_doc, callback) {
         },
     });
 };
-
 /* ----------------------------------------------------------
 функции для работы с объектами
 -------------------------------------------------------------*/

@@ -147,5 +147,29 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // DELETE api/ids/rwt/arrival_uz_vagon_pay/vagon/id
+        [HttpDelete]
+        [Route("vagon/id/{id:long}")]
+        public int DeleteArrival_UZ_Vagon_PayOfVagon(long id)
+        {
+            try
+            {
+                List<Arrival_UZ_Vagon_Pay> list = this.ef_ids.Context
+                    .Where(s => s.id_vagon == id)
+                    .ToList();
+                List<int> list_del = new List<int>();
+                foreach (Arrival_UZ_Vagon_Pay pay in list)
+                {
+                    list_del.Add(pay.id);
+                }
+                this.ef_ids.Delete(list_del);
+                return this.ef_ids.Save();
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+        }
+
     }
 }

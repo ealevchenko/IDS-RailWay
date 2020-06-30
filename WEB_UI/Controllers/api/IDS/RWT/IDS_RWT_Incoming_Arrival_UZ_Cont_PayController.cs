@@ -149,8 +149,8 @@ namespace WEB_UI.Controllers.api
 
         // DELETE api/ids/rwt/arrival_uz_cont_pay/cont/id
         [HttpDelete]
-        [Route("cont/id/{id:int}")]
-        public int DeleteArrival_UZ_Cont_PayOfCont(int id)
+        [Route("cont/id/{id:long}")]
+        public int DeleteArrival_UZ_Cont_PayOfCont(long id)
         {
             try
             {
@@ -173,5 +173,34 @@ namespace WEB_UI.Controllers.api
                 return -1;
             }
         }
+
+        // DELETE api/ids/rwt/arrival_uz_cont_pay/cont/list
+        [HttpDelete]
+        [Route("cont/list/")]
+        public int DeleteArrival_UZ_Cont_PayOfListCont([FromBody]List<long> list)
+        {
+            try
+            {
+                List<int> list_del = new List<int>();
+                foreach (long id in list)
+                {
+                    List<Arrival_UZ_Cont_Pay> list_pay = this.ef_ids
+                    .Context
+                    .Where(s => s.id_cont == id)
+                    .ToList();
+                    foreach (Arrival_UZ_Cont_Pay pay in list_pay)
+                    {
+                        list_del.Add(pay.id);
+                    }
+                }
+                this.ef_ids.Delete(list_del);
+                return this.ef_ids.Save();
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+        }
+
     }
 }

@@ -1,3 +1,69 @@
-﻿body {
+﻿/*/*body {
     padding:20px
+}
+
+html,body{
+    height: 842px;
+    width: 595px;
+}
+table {
+    width:680px;
+    border:1px;
+    cellpadding:20px;
+    cellspacing:0;
+}*/
+
+html, body {
+    height: 297mm;
+    width: 210mm;
+    /*margin-left: auto;
+    margin-right: auto;*/
+}
+
+*, *:before, *:after {
+    color: #000;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+html, body {
+    font-size: 12px;
+}
+
+h1 {
+    font-size: 20px;
+}
+
+h2 {
+    font-size: 18px;
+}
+
+h3 {
+    font-size: 14px;
+}
+
+.header, .footer, .banner {
+    display: none;
+}
+
+
+.header {
+    background-color: #eee;
+    color: #000;
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+}
+
+article {
+    page-break-inside: always;
+}
+
+table, .print-table {
+    width: 200mm; /* Ширина таблицы */
+    border: 1px solid #000000;
+}
+
+.print-table td, .print-table th {
+    border: 1px solid #000000;
+    font-size: 12px;
 }
