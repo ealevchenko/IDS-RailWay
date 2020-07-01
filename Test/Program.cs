@@ -85,6 +85,7 @@ namespace Test
             //tids.GetActs();
             //tids.GetDocs();
             //tids.IDSMORS_GetLastIDWTWagonsMotionSignals();
+            tids.SetNum_UZ();
             #endregion
 
             #region Test_Logs тест логирования
@@ -105,7 +106,7 @@ namespace Test
             //tmt.MTThread_Start_TransferWT();
             //tmt.MTTransfer_InsertIDSArrivalSostav();
             //tmt.MTTransfer_TransferWagonsMotionSignals();
-            tmt.MTTransfer_TransferWagonsMotionSignalsOfNum();
+            //tmt.MTTransfer_TransferWagonsMotionSignalsOfNum();
 
             #endregion
 

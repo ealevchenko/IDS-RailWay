@@ -345,11 +345,12 @@ namespace IDS
                     {
 
                         string code_from = uz_doc.sender_code != null ? uz_doc.sender_code : "0";
-                        
+                       
                         doc = new UZ_DOC()
                         {
                             num_doc = uz_doc.id_doc,
                             revision = uz_doc.revision,
+                            num_uz = uz_doc.otpr != null ? uz_doc.otpr.nom_doc : null,
                             status = (int)uz_doc.status,
                             code_from = code_from,
                             code_on = uz_doc.recipient_code,
@@ -375,6 +376,7 @@ namespace IDS
                         {
                             doc.num_doc = uz_doc.id_doc;
                             doc.revision = uz_doc.revision;
+                            doc.num_uz = uz_doc.otpr != null ? uz_doc.otpr.nom_doc : null;
                             doc.status = (int)uz_doc.status;
                             doc.code_from = uz_doc.sender_code;
                             doc.code_on = uz_doc.recipient_code;

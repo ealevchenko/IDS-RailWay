@@ -3189,6 +3189,7 @@
                         result_manual_num_doc = {
                             num_doc: manual_num,
                             revision: 0,
+                            num_uz: get_input_value(cars_detali.uz_doc_num_doc.val()),
                             status: 6,
                             code_from: cars_detali.uz_cargo_client_kod_from.val(),
                             code_on: cars_detali.uz_cargo_client_kod_on.val(),

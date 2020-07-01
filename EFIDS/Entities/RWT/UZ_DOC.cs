@@ -24,6 +24,8 @@ namespace EFIDS.Entities
 
         public int? status { get; set; }
 
+        public int? num_uz { get; set; }
+
         [Required]
         [StringLength(4)]
         public string code_from { get; set; }

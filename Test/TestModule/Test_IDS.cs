@@ -94,5 +94,25 @@ namespace Test.TestModule
             }
         }
 
+        public void SetNum_UZ() {
+
+            UZ.UZ_Convert convert = new UZ.UZ_Convert();
+            EFIDS.Concrete.EFUZ_DOC ef_uz_doc = new EFIDS.Concrete.EFUZ_DOC(new EFIDS.Concrete.EFDbContext());
+            List<EFIDS.Entities.UZ_DOC> list_docs = ef_uz_doc.Context.ToList();
+            int count = list_docs.Count();
+            foreach (EFIDS.Entities.UZ_DOC doc in list_docs) {
+                count--;
+                string xml_final = convert.XMLToFinalXML(doc.xml_doc);
+                UZ.OTPR otpr = convert.FinalXMLToOTPR(xml_final);
+                if (otpr!=null && otpr.nom_doc!=null) {
+                    doc.num_uz = otpr.nom_doc;
+                    int result = ef_uz_doc.Save();
+                    //foreach (UZ.SENDER_DOC sd in otpr.sender_doc.ToList()) { 
+                    Console.WriteLine("num_doc = {0}, результат сохранения : {1}, осталось {2}", doc.num_doc, result, count);
+                    //}
+                }
+            }
+        }
+
     }
 }
