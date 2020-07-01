@@ -6,13 +6,78 @@
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
     <title>Ghbvth</title>
-    <link rel="stylesheet" type="text/css" href="~/Content/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="~/Content/bootstrap.min.css.map">
+    @*<link rel="stylesheet" type="text/css" href="~/Content/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="~/Content/bootstrap.min.css.map">*@
     <link rel="stylesheet" type="text/css" href="~/Content/view/shared/print.css">
-    <script src="~/Scripts/jquery-3.4.1.min.js"></script> <!-- Общая библиотека методов программы -->
-    <script src="~/Scripts/bootstrap.min.js"></script> <!-- Общая библиотека методов программы -->
+    @*<script src="~/Scripts/jquery-3.4.1.min.js"></script> <!-- Общая библиотека методов программы -->
+        <script src="~/Scripts/bootstrap.min.js"></script> <!-- Общая библиотека методов программы -->*@
 </head>
 <body>
-    @*<h1 class="display-5">натурная ведомость поезда</h1>*@
+    <div class="page">
+        <h2>Натурная ведомость поезда</h2>
+        <table class="table-title">
+            <tr>
+                <th>Индекс поезда</th>
+                <td>4001-067-4670</td>
+                <th>Прибытие</th>
+                <td>2020-03-09 17:10:00.000</td>
+                <th>Прием</th>
+                <td>2020-03-09 17:10:00.000</td>
+            </tr>
+            <tr>
+                <th>Поезд прибыл на станцию</th>
+                <td>Восточная-Приемоотправочная</td>
+                <th>Путь</th>
+                <td>1-Выгрузочный</td>
+                <th>Нумерация</th>
+                <td>с хвоста</td>
+            </tr>
+        </table>
+        <table class="table-info">
+            <tr>
+                <th scope="col">№</th>
+                <th scope="col">Станция отправления</th>
+                <th scope="col">Груз</th>
+                <th scope="col">Оператор</th>
+                <th scope="col">Собственник</th>
+                <th scope="col">Код</th>
+                <th scope="col">№ Вагона</th>
+                <th scope="col">№ ж.д. накладной</th>
+                <th scope="col">Вес. тн</th>
+                <th scope="col">Цех получатель</th>
+                <th scope="col">Разметка</th>
+                <th scope="col">Примечание</th>
+            </tr>
+            <tr>
+                <th scope="row">1</th>
+                <td>Кривой Рог- Главный</td>
+                <td>Аглоруда</td>
+                <td>ЧАО "Укрэнерготранс"</td>
+                <td>ООО "ИВК"</td>
+                <td>4556</td>
+                <td>56858251</td>
+                <td>46200150</td>
+                <td>65.5</td>
+                <td>РУ</td>
+                <td>МРт</td>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row">2</th>
+                <td>Кривой Рог- Главный</td>
+                <td>Аглоруда</td>
+                <td>ЧАО "Укрэнерготранс"</td>
+                <td>ООО "ИВК"</td>
+                <td>4556</td>
+                <td>56858252</td>
+                <td>46200150</td>
+                <td>65.5</td>
+                <td>РУ</td>
+                <td>МРт</td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+    <br />
 </body>
 </html>

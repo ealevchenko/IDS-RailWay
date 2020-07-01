@@ -145,6 +145,7 @@
                 'mess_not_manual_epd': 'В промежуточной базе данных ЭПД не найден, введите данные вручную перейдя в режим "Ручной ввод" (воспользовавшись кнопкой "Правка" справа от поля "№ Вагона" или выбрав грузополучателя не "АМКР") или получите номер вагона по номеру накладной (колонка "Сведения ЭПД").',
                 'mess_arrival_vagon': 'Переношу вагон в базу данных как прибывший ...',
                 'mess_clear_vagon': 'Возвращаю вагон в базу данных на подходах ...',
+                'mess_print': 'Готовлю документ для печати ...',
             },
             'en':  //default language: English
             {
@@ -285,6 +286,170 @@
                 });
             } else {
                 table_sostav.view(typeof filter === 'function' ? list_sostav.filter(filter) : list_sostav);
+            }
+        },
+
+        view_report = function (id, report) {
+            // Вывисти заголовок прибытия
+            var view_title = function (doc, sostav) {
+                var station_on = sostav.Directory_Station1 ? sostav.Directory_Station1 : null;
+                var way_on = sostav.Directory_Ways ? sostav.Directory_Ways : null;
+                doc.write('<h2>Натурная ведомость поезда №' + sostav.num_doc + '</h2>');
+                doc.write('<table class="table-title">');
+                doc.write('<tr>');
+                doc.write('<th>Индекс поезда</th>');
+                doc.write('<td>' + sostav.composition_index + '</td>');
+                doc.write('<th>Прибытие</th>');
+                doc.write('<td>' + sostav.date_arrival.replace(/T/g, ' ') + '</td>');
+                doc.write('<th>Прием</th>');
+                doc.write('<td>' + sostav.date_adoption.replace(/T/g, ' ') + '</td>');
+                doc.write('</tr>');
+                doc.write('<tr>');
+                doc.write('<th>Поезд прибыл на станцию</th>');
+                doc.write('<td>' + (station_on ? ids_inc.ids_dir.getValueObj(station_on, 'station_name', print_detali.lang) : '') + '</td>');
+                doc.write('<th>Путь</th>');
+                doc.write('<td>' + ((station_on ? ids_inc.ids_dir.getValueObj(way_on, 'way_num', print_detali.lang) : '') + ' - ' + (station_on ? ids_inc.ids_dir.getValueObj(way_on, 'way_name', print_detali.lang) : '')) + '</td>');
+                doc.write('<th>Нумерация</th>');
+                doc.write('<td>' + (sostav.numeration ? 'с хвоста' : sostav.numeration === false ? 'с головы' : 'не указана') + '</td>');
+                doc.write('</tr>');
+                doc.write('</table>');
+            };
+            // Вывести вагоны в составе
+            var view_table_info_car = function (doc, sostav) {
+
+                doc.write('<table class="table-info">');
+                doc.write('<tr>');
+                doc.write('<th scope="col">№</th>');
+                doc.write('<th scope="col">Станция отправления</th>');
+                doc.write('<th scope="col">Груз</th>');
+                doc.write('<th scope="col">Оператор</th>');
+                doc.write('<th scope="col">Ограничение</th>');
+                doc.write('<th scope="col">Собственник</th>');
+                doc.write('<th scope="col">Код</th>');
+                doc.write('<th scope="col">№ Вагона</th>');
+                doc.write('<th scope="col">№ ж.д. накладной</th>');
+                doc.write('<th scope="col">Вес. тн</th>');
+                doc.write('<th scope="col">Цех получатель</th>');
+                doc.write('<th scope="col">Разметка</th>');
+                doc.write('<th scope="col">Примечание</th>');
+                doc.write('</tr>');
+
+                var list_cars = sostav.ArrivalCars.filter(function (i) {
+                    return i.position_arrival
+                }).sort(function (a, b) {
+                    return Number(a.position_arrival) - Number(b.position_arrival)
+                });
+
+                var total_vesg = 0;
+                var group_operators = [];
+                // Список вагонов есть
+                if (list_cars) {
+                    for (i = 0; i < list_cars.length; i++) {
+
+                        var doc_uz = list_cars[i].Arrival_UZ_Vagon && list_cars[i].Arrival_UZ_Vagon.Arrival_UZ_Document ? list_cars[i].Arrival_UZ_Vagon.Arrival_UZ_Document : null;
+                        var vag_uz = list_cars[i].Arrival_UZ_Vagon ? list_cars[i].Arrival_UZ_Vagon : null;
+                        var dir_es = doc_uz && doc_uz.Directory_ExternalStation ? doc_uz.Directory_ExternalStation : null;
+
+                        var dir_cargo = vag_uz && vag_uz.Directory_Cargo ? vag_uz.Directory_Cargo : null;
+                        var dir_certificat = vag_uz && vag_uz.Directory_CertificationData ? vag_uz.Directory_CertificationData : null;
+
+                        var dir_condition = vag_uz && vag_uz.Directory_ConditionArrival ? vag_uz.Directory_ConditionArrival : null;
+
+                        var dir_car = vag_uz && vag_uz.Directory_Cars ? vag_uz.Directory_Cars : null;
+                        var dir_operator = dir_car && dir_car.Directory_OperatorsWagons ? dir_car.Directory_OperatorsWagons : null;
+                        var dir_ll = dir_car && dir_car.Directory_LimitingLoading ? dir_car.Directory_LimitingLoading : null;
+                        var dir_owner = dir_car && dir_car.Directory_OwnersWagons ? dir_car.Directory_OwnersWagons : null;
+                        var dir_countrys = dir_car && dir_car.Directory_Countrys ? dir_car.Directory_Countrys : null;
+
+
+                        var dir_division = vag_uz && vag_uz.Directory_Divisions ? vag_uz.Directory_Divisions : null;
+                        doc.write('<tr>');
+                        doc.write('<th>' + list_cars[i].position_arrival + '</th>');
+                        doc.write('<td>' + (dir_es ? ids_inc.ids_dir.getValueObj(dir_es, 'station_name', print_detali.lang) : '') + '</td>');
+                        doc.write('<td>' + (dir_cargo ? ids_inc.ids_dir.getValueObj(dir_cargo, 'cargo_name', print_detali.lang) + (dir_certificat ? ' (' + ids_inc.ids_dir.getValueObj(dir_certificat, 'certification_data', print_detali.lang) + ')' : '') : '') + '</td>');
+                        doc.write('<td>' + (dir_operator ? ids_inc.ids_dir.getValueObj(dir_operator, 'operators', print_detali.lang) : '') + '</td>');
+                        doc.write('<td>' + (dir_ll ? ids_inc.ids_dir.getValueObj(dir_ll, 'limiting_abbr', print_detali.lang) : '') + '</td>');
+                        doc.write('<td>' + (dir_owner ? ids_inc.ids_dir.getValueObj(dir_owner, 'owner', print_detali.lang) : '') + '</td>');
+                        doc.write('<td>' + (dir_countrys ? ids_inc.ids_dir.getValueObj(dir_countrys, 'code_sng') : '') + '</td>');
+                        doc.write('<td>' + list_cars[i].num + '</td>');
+                        doc.write('<td>' + doc_uz.nom_doc + (doc_uz.nom_main_doc ? '(' + doc_uz.nom_main_doc + ')' : '') + '</td>');
+                        doc.write('<td>' + (vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000).toFixed(2) : '0.00') + '</td>');
+                        doc.write('<td>' + (dir_division ? ids_inc.ids_dir.getValueObj(dir_division, 'name_division', print_detali.lang) : '') + '</td>');
+                        doc.write('<td>' + (dir_condition ? ids_inc.ids_dir.getValueObj(dir_condition, 'condition_abbr', print_detali.lang) : '') + '</td>');
+                        doc.write('<td></td>');
+                        doc.write('</tr>');
+                        // Подчет общего веса
+                        total_vesg += (vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000) : 0);
+                        // Группировка операторов
+                        if (dir_operator) {
+                            var opr = getObjects(group_operators, 'id', dir_operator.id)
+                            if (opr && opr.length > 0) {
+                                opr[0].count += 1;
+                                opr[0].vesg = Number(opr[0].vesg) + (vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000) : 0);
+                            } else {
+                                group_operators.push({ id: dir_operator.id, operator: ids_inc.ids_dir.getValueObj(dir_operator, 'operators', print_detali.lang), count: 1, vesg: (vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000) : 0 ) });
+                            }
+                        }
+
+                    }
+                }
+                doc.write('<tr>');
+                doc.write('<th colspan="6" class="total">Всего вагонов</th>');
+                doc.write('<td class="total">' + list_cars.length + '</td>');
+                doc.write('<th colspan="2" class="total">Общий вес</th>');
+                doc.write('<td class="total">' + total_vesg.toFixed(2) + '</td>');
+                doc.write('<th colspan="3"></td>');
+                doc.write('</tr>');
+                doc.write('<tr>');
+                doc.write('<th colspan="13">Информация по операторам</th>');
+                doc.write('</tr>');
+                if (group_operators && group_operators.length>0) {
+                    for (io = 0; io < group_operators.length; io++) {
+                        doc.write('<tr>');
+                        doc.write('<th colspan="6" class="total">' + group_operators[io].operator + '</th>');
+                        doc.write('<td class="total">' + group_operators[io].count + '</td>');
+                        doc.write('<th colspan="2"></th>');
+                        doc.write('<td class="total">' + group_operators[io].vesg.toFixed(2) + '</td>');
+                        doc.write('<th colspan="3"></td>');
+                        doc.write('</tr>');
+                    }
+                }
+                doc.write('</table>');
+
+
+            };
+
+            // Вывести отчет Натурная ведомость поезда
+            var view_report_fst = function (sostav) {
+                var mywindow = window.open('', 'Натурная ведомость поезда №' + sostav.num_doc);
+                mywindow.document.write('<html><head><title>Натурная ведомость поезда №' + sostav.num_doc + '</title>');
+                mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/view/shared/print.css">');
+                mywindow.document.write('</head><body>');
+                view_title(mywindow.document, sostav);      // Заголовок
+                view_table_info_car(mywindow.document, sostav);  // Вагоны в составе
+                mywindow.document.write('<br />');
+                mywindow.document.write('<br />');
+                mywindow.document.write('<div">Подпись приемосдатчика ______________________</div>');
+                mywindow.document.write('</body></html>');
+
+                mywindow.document.close(); // necessary for IE >= 10
+                mywindow.focus(); // necessary for IE >= 10
+            };
+
+            if (id) {
+                LockScreen(langView('mess_print', langs));
+                ids_inc.getArrivalSostavOfID(id, function (result_sostav) {
+                    LockScreenOff()
+                    if (result_sostav && result_sostav.status === 2) {
+                        // Состав принят можно показать отчет
+                        var sostav = result_sostav;
+                        switch (report) {
+                            case 'report_fst': view_report_fst(sostav); break;
+                            default: break;
+                        }
+                    }
+
+                });
             }
         },
 
@@ -648,8 +813,12 @@
                 //
                 pn_sel.report_fst.on('click', function (event) {
                     event.preventDefault();
+                    if (table_sostav.select_sostav) {
+                        view_report(table_sostav.select_sostav.id, 'report_fst');
+                    }
                     // Показать отчет
-                    print_detali.view(table_sostav.select_sostav.id, 'report_fst');
+
+                    //print_detali.view(table_sostav.select_sostav.id, 'report_fst');
 
                 });
             },
@@ -6443,9 +6612,9 @@
                         //
                         // Заполним таблицу операторов
                         var div_row_table_operator = print_detali.row_report1.clone();
-                        var table_operator  = print_detali.table_report.clone();
-                        var table_thead_operator  = print_detali.table_thead_report.clone();
-                        var table_tr_operator  = print_detali.table_tr_report.clone();
+                        var table_operator = print_detali.table_report.clone();
+                        var table_thead_operator = print_detali.table_thead_report.clone();
+                        var table_tr_operator = print_detali.table_tr_report.clone();
                         table_tr_operator.append($('<th scope="col">Оператор</th>'));
                         table_tr_operator.append($('<th scope="col">Кол. вагонов</th>'));
 
