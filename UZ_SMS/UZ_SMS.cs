@@ -367,7 +367,7 @@ namespace UZ
         /// <param name="stations"></param>
         /// <param name="dt_arrival"></param>
         /// <returns></returns>
-        public UZ_DOC GetDocumentOfDB_NumConsigneesStations(int num, int[] consignees, int[] stations,  DateTime? dt_arrival)
+        public UZ_DOC GetDocumentOfDB_NumConsigneesStations(int num, int[] consignees, int[] stations, DateTime? dt_arrival)
         {
             try
             {
@@ -376,28 +376,42 @@ namespace UZ
                 string sql = "SELECT *  FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data] " +
                     "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = " + num.ToString() + ") and [arrived_code] in (0," + IntsToString(consignees, ',') + ",'none') order by[dt] desc";
                 List<UZ_Data> list_uz_data = ef_data.Database.SqlQuery<UZ_Data>(sql).ToList();
-                if (list_uz_data != null && list_uz_data.Count()>0)
+                if (list_uz_data != null && list_uz_data.Count() > 0)
                 {
                     UZ_Convert convert = new UZ_Convert(this.servece_owner);
-                    foreach (UZ_Data uzd in list_uz_data) {
-                        string xml_final = convert.XMLToFinalXML(uzd.raw_xml);
-                        OTPR otpr = convert.FinalXMLToOTPR(xml_final);
-                        if (otpr!=null && otpr.route!=null && otpr.route.Count() > 0) {
-                            if (!String.IsNullOrWhiteSpace(otpr.route[0].stn_to)) {
-                                int res = (stations != null && stations.Count()>0 ? stations.Where(s => s.ToString() == otpr.route[0].stn_to.ToString()).Count() : 0);
-                                if (res > 0) {
-                                    // Документ найден 
-                                    doc = new UZ_DOC();
-                                    doc.id_doc = uzd.doc_Id;
-                                    doc.revision = uzd.doc_Revision;
-                                    doc.status = GetStatus(uzd.doc_Status);
-                                    doc.sender_code = uzd.depart_code;
-                                    doc.recipient_code = uzd.arrived_code;
-                                    doc.dt = uzd.dt;
-                                    doc.xml = uzd.raw_xml;
-                                    doc.xml_final = xml_final;
-                                    doc.otpr = otpr;
-                                    break;
+                    foreach (UZ_Data uzd in list_uz_data)
+                    {
+                        //DateTime new_dt = ((DateTime)dt_arrival).AddHours(-36);
+                        //!!! Проверка на старый документ на 36 часов годен затем только вручную
+                        if (dt_arrival != null && uzd.dt != null && ((DateTime)dt_arrival).AddHours(-36) <= uzd.dt)
+                        {
+                            string xml_final = convert.XMLToFinalXML(uzd.raw_xml);
+                            OTPR otpr = convert.FinalXMLToOTPR(xml_final);
+                            // Проверим есть вагон в этом документе
+                            if (otpr != null && otpr.vagon != null && otpr.vagon.Count() > 0)
+                            {
+                                int searsh_vag = otpr.vagon.Where(v => v.nomer == num.ToString()).Count();
+                                if (searsh_vag > 0 && otpr != null && otpr.route != null && otpr.route.Count() > 0)
+                                {
+                                    if (!String.IsNullOrWhiteSpace(otpr.route[0].stn_to))
+                                    {
+                                        int res = (stations != null && stations.Count() > 0 ? stations.Where(s => s.ToString() == otpr.route[0].stn_to.ToString()).Count() : 0);
+                                        if (res > 0)
+                                        {
+                                            // Документ найден 
+                                            doc = new UZ_DOC();
+                                            doc.id_doc = uzd.doc_Id;
+                                            doc.revision = uzd.doc_Revision;
+                                            doc.status = GetStatus(uzd.doc_Status);
+                                            doc.sender_code = uzd.depart_code;
+                                            doc.recipient_code = uzd.arrived_code;
+                                            doc.dt = uzd.dt;
+                                            doc.xml = uzd.raw_xml;
+                                            doc.xml_final = xml_final;
+                                            doc.otpr = otpr;
+                                            break;
+                                        }
+                                    }
                                 }
                             }
                         }

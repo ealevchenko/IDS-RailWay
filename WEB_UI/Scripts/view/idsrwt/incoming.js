@@ -142,6 +142,8 @@
                 'mess_searsh_epd': 'Поиск ЭПД ...',
                 'mess_searsh_vagon': 'Поиск вагона ...',
                 'mess_not_searsh_epd': 'Автоматически ЭПД не найден, попробуйте найти документ по номеру вагона в промежуточной базе данных (воспользовавшись кнопкой поиска справа от поля "№ Вагона") или получите номер вагона по номеру накладной (колонка "Сведения ЭПД").',
+                'mess_not_searsh_epd_vagon': 'Автоматически ЭПД найден но в нем нет выбранного вагона, попробуйте найти документ по номеру вагона в промежуточной базе данных (воспользовавшись кнопкой поиска справа от поля "№ Вагона") или получите номер вагона по номеру накладной (колонка "Сведения ЭПД").',
+
                 'mess_not_manual_epd': 'В промежуточной базе данных ЭПД не найден, введите данные вручную перейдя в режим "Ручной ввод" (воспользовавшись кнопкой "Правка" справа от поля "№ Вагона" или выбрав грузополучателя не "АМКР") или получите номер вагона по номеру накладной (колонка "Сведения ЭПД").',
                 'mess_arrival_vagon': 'Переношу вагон в базу данных как прибывший ...',
                 'mess_clear_vagon': 'Возвращаю вагон в базу данных на подходах ...',
@@ -387,7 +389,7 @@
                                 opr[0].count += 1;
                                 opr[0].vesg = Number(opr[0].vesg) + (vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000) : 0);
                             } else {
-                                group_operators.push({ id: dir_operator.id, operator: ids_inc.ids_dir.getValueObj(dir_operator, 'operators', print_detali.lang), count: 1, vesg: (vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000) : 0 ) });
+                                group_operators.push({ id: dir_operator.id, operator: ids_inc.ids_dir.getValueObj(dir_operator, 'operators', print_detali.lang), count: 1, vesg: (vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000) : 0) });
                             }
                         }
 
@@ -403,7 +405,7 @@
                 doc.write('<tr>');
                 doc.write('<th colspan="13">Информация по операторам</th>');
                 doc.write('</tr>');
-                if (group_operators && group_operators.length>0) {
+                if (group_operators && group_operators.length > 0) {
                     for (io = 0; io < group_operators.length; io++) {
                         doc.write('<tr>');
                         doc.write('<th colspan="6" class="total">' + group_operators[io].operator + '</th>');
@@ -1300,6 +1302,8 @@
             },
             // Устоновить режим эементов (false-view; true-edit)
             set_mode: function (mode) {
+                if (mode)
+                    cars_detali.clear_button_add();
                 cars_detali.car_status = (mode ? 2 : 1);
                 $('[data-mode]').each(function (i, el) {
                     //var edit = $(el).attr('data-edit');
@@ -1502,6 +1506,9 @@
             select_otpr: null,                                  // Выбранный документ
             select_otpr_vagon: null,                            // Информация по выбраному вагону эпд
             select_otpr_cont: null,                             // Информация о контейнерах выбраного вагона эпд
+            select_main_otpr: null,                             // Выбранный основной документ (заполняется если по вагону досылочный документ)
+            select_main_otpr_vagon: null,                       // Информация по выбраному вагону из основного документа эпд (заполняется если по вагону досылочный документ)
+            select_main_otpr_cont: null,                        // Информация о контейнерах выбраного вагона из основного документа эпд (заполняется если по вагону досылочный документ)
             select_vagon: null,                                 // Информация по выбраному из справочника
             // ВАЛИДАЦИЯ --------------------------------------------------------------------
             val_arrival_car: null,                              // класс валидации val_arrival_car
@@ -1554,7 +1561,7 @@
                 cars_detali.val_arrival_car.clear_all();
                 cars_detali.val_card_vag.clear_all();
                 cars_detali.set_mode(false); // вернуть режим просмотра
-                cars_detali.ids_inc.ids_tr.AddUpdateUZ_DOC_To_DB_IDS(cars_detali.select_num,
+                cars_detali.ids_inc.ids_tr.AddUpdateUZ_DOC_To_DB_IDS(cars_detali.select_num, (cars_detali.sostav ? cars_detali.sostav.date_arrival : toISOStringTZ(new Date())),
                     function (result_num) {
                         if (result_num !== null) {
                             // Документ найдент и сохранен в локальной базе
@@ -2147,6 +2154,7 @@
                 cars_detali.val_arrival_car.clear_error()
                 // Очистить не принятые вагоны.. ! добавить остальные ячейки
                 cars_detali.select_otpr = null;
+                cars_detali.select_main_otpr = null;
                 cars_detali.select_id = null;
                 cars_detali.select_num = null;
                 cars_detali.select_otpr_vagon = null;
@@ -2164,6 +2172,8 @@
                 cars_detali.uz_doc_num_doc.val('');
                 cars_detali.uz_doc_num_osn_doc.val('');
                 cars_detali.arrival_cars_car_date_adoption_act.setDateTime(null); // уберем дату
+                cars_detali.arrival_cars_position_arrival.val(1);
+
 
                 cars_detali.uz_route_stn_from.val('');
                 cars_detali.uz_route_name_from.val('');
@@ -2251,6 +2261,17 @@
 
                 cars_detali.table_cont.view([]);
                 $('span#count-cont').text('');
+            },
+            // Очистить кнопки добавить информацию в справочник
+            clear_button_add: function () {
+                cars_detali.bt_route_name_from_add.hide();
+                cars_detali.bt_route_name_on_add.hide();
+                cars_detali.bt_route_stn_border_add.hide();
+                cars_detali.bt_client_name_from_add.hide();
+                //cars_detali.bt_card_vag_add.hide();
+                cars_detali.uz_rask_name_plat_add.hide();
+                cars_detali.uz_cargo_name_etsng_add.hide();
+                cars_detali.uz_cargo_name_gng_add.hide();
             },
             //-------------------------------------------------------------------------------------
             // Обновление компонентов раздела "Информация о вагоне и ЭПД"
@@ -3229,15 +3250,27 @@
                 });
                 var np = result_pos && result_pos.length > 0 ? Number(Number(result_pos[result_pos.length - 1].position_arrival) + 1) : 1;
                 cars_detali.arrival_cars_position_arrival.val(np);
-                // Проверим наличее перевозочного документа
+                // Если есть эпд, получим эпд на выбранный вагон и контейнеры этого вагона
                 if (cars_detali.select_otpr !== null) {
+                    // Выбрать вагон
+                    cars_detali.select_otpr_vagon = cars_detali.get_vagon_epd(cars_detali.select_otpr, cars_detali.select_num);
+                    if (cars_detali.select_otpr_vagon === null) {
+                        // Документа нет пишим сообщение
+                        cars_detali.alert.out_warning_message(langView('mess_not_searsh_epd_vagon', langs));
+                    }
+                    // Выбрать контейнеры пренадлежащие вагону
+                    cars_detali.select_otpr_cont = cars_detali.get_vagon_cont_epd(cars_detali.select_otpr, cars_detali.select_num);
+                }
+
+                // Проверим наличее перевозочного документа а также в нем наличие выбранного вагона 
+                if (cars_detali.select_otpr !== null && cars_detali.select_otpr_vagon !== null) {
                     // Документ найден
                     //--------------------------------------------------------
                     // Обновим информацию о вагоне
                     // Выбрать вагон
-                    cars_detali.select_otpr_vagon = cars_detali.get_vagon_epd(cars_detali.select_otpr, cars_detali.select_num);
-                    // Выбрать контейнеры пренадлежащие вагону
-                    cars_detali.select_otpr_cont = cars_detali.get_vagon_cont_epd(cars_detali.select_otpr, cars_detali.select_num);
+                    //cars_detali.select_otpr_vagon = cars_detali.get_vagon_epd(cars_detali.select_otpr, cars_detali.select_num);
+                    //// Выбрать контейнеры пренадлежащие вагону
+                    //cars_detali.select_otpr_cont = cars_detali.get_vagon_cont_epd(cars_detali.select_otpr, cars_detali.select_num);
                     //Получить текущий вагон из справочника
                     cars_detali.get_vagon_dir(cars_detali.select_otpr_vagon, cars_detali.select_num, function (result_vagon) {
                         cars_detali.bt_card_vag_searsh.hide();
@@ -3255,59 +3288,75 @@
                         // требования
                         //cars_detali.search_cars_num_doc.prop("disabled", true);
                         cars_detali.show_booton_not(); // убрать все кнопки
-                        if (cars_detali.select_otpr.otprdp && cars_detali.select_otpr.otprdp.nom_osn_doc) {
-                            // Это досылочный документ
-                            cars_detali.title_num_doc.hide();
-                            cars_detali.title_num_deliv_doc.show();
-                            cars_detali.title_num_osn_doc.show();
-                            cars_detali.uz_doc_num_osn_doc.show();
-                        } else {
-                            // Это обычный документ
-                            cars_detali.title_num_doc.show();
-                            cars_detali.title_num_deliv_doc.hide();
-                            cars_detali.title_num_osn_doc.hide();
-                            cars_detali.uz_doc_num_osn_doc.hide();
-                        }
-                        // 
-                        cars_detali.uz_doc_num_doc.val(cars_detali.select_otpr !== null ? cars_detali.select_otpr.nom_doc : null);
-                        cars_detali.uz_doc_num_osn_doc.val(cars_detali.select_otpr.otprdp !== null ? cars_detali.select_otpr.otprdp.nom_osn_doc : null);
-                        //---------------------------------------------------------------------------------------------
-                        // Маршруты клиенты OTPR\ROUTE
-                        cars_detali.view_epd_station_from(cars_detali.select_otpr);
-                        cars_detali.view_epd_station_on(cars_detali.select_otpr);
-                        cars_detali.view_epd_station_border(cars_detali.select_otpr);
-                        //-------------------------------------------------------------------
-                        // Оределим грузоотправителя и грузополучателя OTPR\CLIENT  
-                        cars_detali.view_epd_client(cars_detali.select_otpr);
-                        // Показать станцию и подразделение на которые будет отправлен вагон если по номеру документа уже принимался вагон
-                        cars_detali.view_station_devision_on_amkr(get_input_value(cars_detali.uz_doc_num_doc));
-                        //-------------------------------------------------------------------
-                        // Показать информацию из справочника вагонов ИДС (вагон определяеется ранее)
-                        cars_detali.view_epd_card_vag(cars_detali.select_vagon);
-                        // Показать информацию из ЭПД
-                        cars_detali.view_epd_uz_vag(cars_detali.select_otpr_vagon);
-                        // Показать сопроводительные документы
-                        cars_detali.view_epd_docs(cars_detali.select_otpr);
-                        cars_detali.view_epd_acts(cars_detali.select_otpr);
-                        // Платильщик по прибытию
-                        cars_detali.view_epd_plat(cars_detali.select_otpr);
-                        cars_detali.view_epd_distance_way(cars_detali.select_otpr);
-                        cars_detali.view_epd_pay_summa_of_vagon(cars_detali.select_otpr_vagon);
-                        // Грузы
-                        //if (!cars_detali.select_otpr_cont) {
-                        cars_detali.view_epd_cargo_etsng_of_vagon(cars_detali.select_otpr_vagon);
-                        cars_detali.view_epd_cargo_gng_of_vagon(cars_detali.select_otpr_vagon);
-                        //}
-                        cars_detali.view_epd_cargo_analysis(cars_detali.select_otpr);
-                        cars_detali.view_epd_kol_pac(cars_detali.select_otpr_vagon);
-                        cars_detali.view_epd_vesg_doc_of_vagon(cars_detali.select_otpr_vagon);
-                        cars_detali.view_epd_nom_zpu(cars_detali.select_otpr_vagon);
-                        // Опасность
-                        cars_detali.view_epd_danger_class(cars_detali.select_otpr_vagon);
-                        cars_detali.view_epd_danger_kod(cars_detali.select_otpr_vagon);
-                        // Контейнер
-                        cars_detali.view_epd_cont(cars_detali.select_otpr_cont);
-                        LockScreenOff();
+
+                        // найдем основной документ
+                        cars_detali.get_main_epd((cars_detali.select_otpr.otprdp && cars_detali.select_otpr.otprdp.nom_osn_doc ? cars_detali.select_otpr.otprdp.nom_osn_doc : null), function (result_main_otpr) {
+                            // Получим основной документ
+                            cars_detali.select_main_otpr = result_main_otpr;
+
+                            // Если есть основной эпд, получим основной эпд на выбранный вагон и контейнеры этого вагона
+                            if (cars_detali.select_main_otpr !== null) {
+                                // Выбрать вагон
+                                cars_detali.select_main_otpr_vagon = cars_detali.get_vagon_epd(cars_detali.select_main_otpr, cars_detali.select_num);
+                                // Выбрать контейнеры пренадлежащие вагону
+                                cars_detali.select_main_otpr_cont = cars_detali.get_vagon_cont_epd(cars_detali.select_main_otpr, cars_detali.select_num);
+                            }
+                            // Отобразим информацию по накладной и основному документу
+                            if (cars_detali.select_otpr.otprdp && cars_detali.select_otpr.otprdp.nom_osn_doc) {
+                                // Это досылочный документ
+                                cars_detali.title_num_doc.hide();
+                                cars_detali.title_num_deliv_doc.show();
+                                cars_detali.title_num_osn_doc.show();
+                                cars_detali.uz_doc_num_osn_doc.show();
+                            } else {
+                                // Это обычный документ
+                                cars_detali.title_num_doc.show();
+                                cars_detali.title_num_deliv_doc.hide();
+                                cars_detali.title_num_osn_doc.hide();
+                                cars_detali.uz_doc_num_osn_doc.hide();
+                            }
+                            // 
+                            cars_detali.uz_doc_num_doc.val(cars_detali.select_otpr !== null ? cars_detali.select_otpr.nom_doc : null);
+                            cars_detali.uz_doc_num_osn_doc.val(cars_detali.select_otpr.otprdp !== null ? cars_detali.select_otpr.otprdp.nom_osn_doc : null);
+                            //---------------------------------------------------------------------------------------------
+                            // Маршруты клиенты OTPR\ROUTE
+                            cars_detali.view_epd_station_from(!cars_detali.select_main_otpr ? cars_detali.select_otpr : cars_detali.select_main_otpr);
+                            cars_detali.view_epd_station_on(!cars_detali.select_main_otpr ? cars_detali.select_otpr : cars_detali.select_main_otpr);
+                            cars_detali.view_epd_station_border(!cars_detali.select_main_otpr ? cars_detali.select_otpr : cars_detali.select_main_otpr);
+                            //-------------------------------------------------------------------
+                            // Оределим грузоотправителя и грузополучателя OTPR\CLIENT  
+                            cars_detali.view_epd_client(!cars_detali.select_main_otpr ? cars_detali.select_otpr : cars_detali.select_main_otpr);
+                            // Показать станцию и подразделение на которые будет отправлен вагон если по номеру документа уже принимался вагон
+                            cars_detali.view_station_devision_on_amkr(get_input_value(cars_detali.uz_doc_num_doc));
+                            //-------------------------------------------------------------------
+                            // Показать информацию из справочника вагонов ИДС (вагон определяеется ранее)
+                            cars_detali.view_epd_card_vag(cars_detali.select_vagon);
+                            // Показать информацию из ЭПД
+                            cars_detali.view_epd_uz_vag(!cars_detali.select_main_otpr_vagon ? cars_detali.select_otpr_vagon : cars_detali.select_main_otpr_vagon);
+                            // Показать сопроводительные документы
+                            cars_detali.view_epd_docs(!cars_detali.select_main_otpr ? cars_detali.select_otpr : cars_detali.select_main_otpr);
+                            cars_detali.view_epd_acts(!cars_detali.select_main_otpr ? cars_detali.select_otpr : cars_detali.select_main_otpr);
+                            // Платильщик по прибытию
+                            cars_detali.view_epd_plat(!cars_detali.select_main_otpr ? cars_detali.select_otpr : cars_detali.select_main_otpr);
+                            cars_detali.view_epd_distance_way(!cars_detali.select_main_otpr ? cars_detali.select_otpr : cars_detali.select_main_otpr);
+                            cars_detali.view_epd_pay_summa_of_vagon(!cars_detali.select_main_otpr_vagon ? cars_detali.select_otpr_vagon : cars_detali.select_main_otpr_vagon);
+                            // Грузы
+                            //if (!cars_detali.select_otpr_cont) {
+                            cars_detali.view_epd_cargo_etsng_of_vagon(!cars_detali.select_main_otpr_vagon ? cars_detali.select_otpr_vagon : cars_detali.select_main_otpr_vagon);
+                            cars_detali.view_epd_cargo_gng_of_vagon(!cars_detali.select_main_otpr_vagon ? cars_detali.select_otpr_vagon : cars_detali.select_main_otpr_vagon);
+                            //}
+                            cars_detali.view_epd_cargo_analysis(!cars_detali.select_main_otpr ? cars_detali.select_otpr : cars_detali.select_main_otpr);
+                            cars_detali.view_epd_kol_pac(!cars_detali.select_main_otpr_vagon ? cars_detali.select_otpr_vagon : cars_detali.select_main_otpr_vagon);
+                            cars_detali.view_epd_vesg_doc_of_vagon(cars_detali.select_otpr_vagon);
+                            cars_detali.view_epd_nom_zpu(!cars_detali.select_main_otpr_vagon ? cars_detali.select_otpr_vagon : cars_detali.select_main_otpr_vagon);
+                            // Опасность
+                            cars_detali.view_epd_danger_class(!cars_detali.select_main_otpr_vagon ? cars_detali.select_otpr_vagon : cars_detali.select_main_otpr_vagon);
+                            cars_detali.view_epd_danger_kod(!cars_detali.select_main_otpr_vagon ? cars_detali.select_otpr_vagon : cars_detali.select_main_otpr_vagon);
+                            // Контейнер
+                            cars_detali.view_epd_cont(!cars_detali.select_main_otpr_cont ? cars_detali.select_otpr_cont : cars_detali.select_main_otpr_cont);
+                            LockScreenOff();
+
+                        });
                     });
 
                 } else {
@@ -3358,7 +3407,7 @@
                         result_manual_num_doc = {
                             num_doc: manual_num,
                             revision: 0,
-                            num_uz: get_input_value(cars_detali.uz_doc_num_doc.val()),
+                            num_uz: get_input_value(cars_detali.uz_doc_num_doc),
                             status: 6,
                             code_from: cars_detali.uz_cargo_client_kod_from.val(),
                             code_on: cars_detali.uz_cargo_client_kod_on.val(),
@@ -4797,6 +4846,22 @@
             //-------------------------------------------------------------------------------------
             // функции обработки ЭПД
             //-------------------------------------------------------------------------------------
+            // Получить основной документ
+            get_main_epd: function (num_uz, callback) {
+                if (num_uz) {
+                    // Найдем основной документ
+                    cars_detali.ids_inc.getOTPR_UZ_DOCOfNum_UZ(num_uz, function (result_main_otpr) {
+                        if (typeof callback === 'function') {
+                            callback(result_main_otpr);
+                        }
+                    });
+                } else {
+                    if (typeof callback === 'function') {
+                        callback(null);
+                    }
+                }
+            },
+
             // Получить из ЭПД информацию о вагоне
             get_vagon_epd: function (otpr, num) {
                 if (otpr && otpr.vagon && otpr.vagon.length > 0) {
@@ -4805,6 +4870,7 @@
                             return otpr.vagon[i];
                     }
                 }
+                return null;
             },
             // Получить из ЭПД информацию о контейнерах на вагонах
             get_vagon_cont_epd: function (otpr, num) {
@@ -5529,6 +5595,7 @@
                         result_car.num_doc = num_doc;
                         result_car.change = toISOStringTZ(new Date());
                         result_car.change_user = pn_search_epd.user_name;
+                        result_car.UZ_DOC = null;
                         pn_search_epd.ids_inc.putArrivalCars(result_car, function (result_upd) {
                             if (typeof callback_ok === 'function') {
                                 callback_ok({ num: result_car.num, result: result_upd >= 0 ? (car.operation === 0 ? 1 : 3) : -1 });

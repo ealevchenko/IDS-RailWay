@@ -85,6 +85,53 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // GET: api/ids/rwt/uz_doc/num_uz/415327
+        [Route("num_uz/{num_uz:int}")]
+        [ResponseType(typeof(UZ_DOC))]
+        public IHttpActionResult GetUZ_DOCOfNum_UZ(int num_uz)
+        {
+            try
+            {
+                UZ_DOC uz_doc = this.ef_ids
+                    .Context
+                    .Where(s => s.num_uz == num_uz)
+                    .ToList()
+                    .Select(c => c.GetUZ_DOC()).FirstOrDefault();
+                return Ok(uz_doc);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // GET: api/ids/rwt/uz_doc/otpr/num_uz/415327
+        [Route("otpr/num_uz/{num_uz:int}")]
+        [ResponseType(typeof(UZ.OTPR))]
+        public IHttpActionResult GetOTPROfNum_UZ(int num_uz)
+        {
+            try
+            {
+                UZ.UZ_Convert convert = new UZ.UZ_Convert();
+                UZ.OTPR otpr = null;
+
+                UZ_DOC uz_doc = this.ef_ids
+                    .Context
+                    .Where(s => s.num_uz == num_uz)
+                    .ToList()
+                    .Select(c => c.GetUZ_DOC()).FirstOrDefault();
+                if (uz_doc != null)
+                {
+                    otpr = convert.XMLToOTPR(uz_doc.xml_doc);
+                }
+                return Ok(otpr);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         // POST api/ids/rwt/uz_doc/
         [HttpPost]
         [Route("")]

@@ -19,6 +19,7 @@ namespace IDS
     {
         public int num { get; set; }
         public int position { get; set; }
+        public DateTime? dt { get; set; }
         public int consignee { get; set; }
     }
 
@@ -208,7 +209,7 @@ namespace IDS
                         if (ids_directory.IsConsignee(false, car.consignee))
                         {
                             // Получатель АМКР
-                            doc_num = AddUpdateUZ_DOC_To_DB_IDS(car.num);
+                            doc_num = AddUpdateUZ_DOC_To_DB_IDS(car.num, car.dt);
                         }
                         // Создадим новый вагон
                         ArrivalCars new_car = new ArrivalCars()
@@ -266,11 +267,11 @@ namespace IDS
         /// </summary>
         /// <param name="num_car"></param>
         /// <returns></returns>
-        public string AddUpdateUZ_DOC_To_DB_IDS(int num_car)
+        public string AddUpdateUZ_DOC_To_DB_IDS(int num_car, DateTime? dt_arrival)
         {
             try
             {
-                UZ.UZ_DOC uz_doc = GetUZ_DOC_DB_UZ_OfNum(num_car);
+                UZ.UZ_DOC uz_doc = GetUZ_DOC_DB_UZ_OfNum(num_car, dt_arrival);
                 if (uz_doc != null)
                 {
                     return AddUpdateUZ_DOC_To_DB_IDS(uz_doc);
@@ -288,11 +289,11 @@ namespace IDS
         /// </summary>
         /// <param name="num_car"></param>
         /// <returns></returns>
-        public string AddUpdateUZ_DOC_To_DB_IDS(int num_car, UZ.uz_status restriction_status)
+        public string AddUpdateUZ_DOC_To_DB_IDS(int num_car, UZ.uz_status restriction_status, DateTime? dt_arrival)
         {
             try
             {
-                UZ.UZ_DOC uz_doc = GetUZ_DOC_DB_UZ_OfNum(num_car);
+                UZ.UZ_DOC uz_doc = GetUZ_DOC_DB_UZ_OfNum(num_car, dt_arrival);
                 if (uz_doc != null && uz_doc.status <= restriction_status)
                 {
                     return AddUpdateUZ_DOC_To_DB_IDS(uz_doc);
@@ -311,12 +312,12 @@ namespace IDS
         /// </summary>
         /// <param name="num_car"></param>
         /// <returns></returns>
-        public UZ.UZ_DOC GetUZ_DOC_DB_UZ_OfNum(int num_car)
+        public UZ.UZ_DOC GetUZ_DOC_DB_UZ_OfNum(int num_car, DateTime? dt_arrival)
         {
             try
             {
                 UZ.UZ_SMS uz_sms = new UZ.UZ_SMS(this.servece_owner);
-                UZ.UZ_DOC uz_doc = uz_sms.GetDocumentOfDB_NumConsigneesStations(num_car, new int[] { 7932, 6302, 659 }, new int[] { 457905, 466904, 466923, 467004, 467108, 467201 }, null);
+                UZ.UZ_DOC uz_doc = uz_sms.GetDocumentOfDB_NumConsigneesStations(num_car, new int[] { 7932, 6302, 659 }, new int[] { 457905, 466904, 466923, 467004, 467108, 467201 }, dt_arrival);
                 return uz_doc;
             }
             catch (Exception e)

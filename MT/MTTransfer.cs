@@ -974,7 +974,7 @@ namespace MT
                     if (id_arrival > 0)
                     {
                         List<ArrCar> arrival_cars = new List<ArrCar>();
-                        arrival_cars = cars.Select(c => new ArrCar() { num = c.num, position = c.position, consignee = c.consignee }).ToList();
+                        arrival_cars = cars.Select(c => new ArrCar() { num = c.num, position = c.position, consignee = c.consignee, dt = sostav.date_time }).ToList();
                         count = ids.InsertArrivalCars(id_arrival, arrival_cars);
                     }
                     // Сформируем сообщение и сохраним в логе

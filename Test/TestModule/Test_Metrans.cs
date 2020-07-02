@@ -58,8 +58,8 @@ namespace Test.TestModule
         public void MTTransfer_InsertIDSArrivalSostav()
         {
             MTTransfer mtt = new MTTransfer();
-            mtt.InsertIDSArrivalSostav(5620);
-            mtt.InsertIDSArrivalSostav(5621);
+            mtt.InsertIDSArrivalSostav(19475);
+            //mtt.InsertIDSArrivalSostav(5621);
         }
 
         public void MTTransfer_TransferWagonsMotionSignals()

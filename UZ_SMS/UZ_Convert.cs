@@ -2180,7 +2180,8 @@ namespace UZ
         /// </summary>
         /// <param name="xml"></param>
         /// <returns></returns>
-        public OTPR XMLToOTPR(string xml) {
+        public OTPR XMLToOTPR(string xml)
+        {
             return FinalXMLToOTPR(XMLToFinalXML(xml));
         }
 
@@ -2193,6 +2194,7 @@ namespace UZ
         {
             try
             {
+                if (String.IsNullOrWhiteSpace(xml)) return null;
                 OTPR otpr = new OTPR();
                 XmlDocument xDoc = new XmlDocument();
                 xDoc.LoadXml(xml);
@@ -2462,11 +2464,14 @@ namespace UZ
             try
             {
                 string xml_out = null;
-                XmlDocument xDoc = new XmlDocument();
-                xDoc.LoadXml(xml);
-                // получим корневой элемент
-                XmlElement xRoot = xDoc.DocumentElement;
-                UZ_XML_DOC(xRoot, ref xml_out);
+                if (!String.IsNullOrWhiteSpace(xml))
+                {
+                    XmlDocument xDoc = new XmlDocument();
+                    xDoc.LoadXml(xml);
+                    // получим корневой элемент
+                    XmlElement xRoot = xDoc.DocumentElement;
+                    UZ_XML_DOC(xRoot, ref xml_out);
+                }
                 return xml_out;
             }
             catch (Exception e)
@@ -2475,7 +2480,7 @@ namespace UZ
                 return null;
             }
         }
-        
+
         #endregion
 
 

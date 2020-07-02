@@ -29,7 +29,7 @@ namespace Test.TestModule
         public void IDSTransfer_GetNumDoc() {
 
             IDSTransfer ids = new IDSTransfer(service.Test);
-            string res = ids.AddUpdateUZ_DOC_To_DB_IDS(59978890);
+            string res = ids.AddUpdateUZ_DOC_To_DB_IDS(64566136, null);
             Console.WriteLine("num_doc = {0}",res);
         }
 
@@ -98,7 +98,7 @@ namespace Test.TestModule
 
             UZ.UZ_Convert convert = new UZ.UZ_Convert();
             EFIDS.Concrete.EFUZ_DOC ef_uz_doc = new EFIDS.Concrete.EFUZ_DOC(new EFIDS.Concrete.EFDbContext());
-            List<EFIDS.Entities.UZ_DOC> list_docs = ef_uz_doc.Context.ToList();
+            List<EFIDS.Entities.UZ_DOC> list_docs = ef_uz_doc.Context.Where(d => d.num_uz == null ).ToList();
             int count = list_docs.Count();
             foreach (EFIDS.Entities.UZ_DOC doc in list_docs) {
                 count--;

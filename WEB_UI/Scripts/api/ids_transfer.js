@@ -11,10 +11,11 @@ AJAX функции
 -------------------------------------------------------------*/
 //======= Поиск и перенос ЭПД ======================================
 // Найти документ в промежуточной базе, если есть - добавить или обновить в базе документов ИДС, если нет вернуть null
-IDS_TRANSFER.prototype.AddUpdateUZ_DOC_To_DB_IDS = function (num, callback) {
+IDS_TRANSFER.prototype.AddUpdateUZ_DOC_To_DB_IDS = function (num, datetime, callback) {
+    //var s = '../../api/ids/transfer/epd/db_uz/add_update_db_ids/num/' + num + '/datetime/' + (datetime).substring(0, 19);
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/transfer/epd/db_uz/add_update_db_ids/num/' + num,
+        url: '../../api/ids/transfer/epd/db_uz/add_update_db_ids/num/' + num + '/datetime/' + (datetime).substring(0, 19),
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -34,10 +35,10 @@ IDS_TRANSFER.prototype.AddUpdateUZ_DOC_To_DB_IDS = function (num, callback) {
     });
 };
 // Найти документ в промежуточной базе УЗ
-IDS_TRANSFER.prototype.getUZ_DOC_DB_UZ_OfNum = function (num, callback) {
+IDS_TRANSFER.prototype.getUZ_DOC_DB_UZ_OfNum = function (num, datetime, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/transfer/epd/db_uz/num/' + num,
+        url: '../../api/ids/transfer/epd/db_uz/num/' + num+ '/datetime/' + +toISOStringTZ(datetime).substring(0, 19),
         async: true,
         dataType: 'json',
         beforeSend: function () {

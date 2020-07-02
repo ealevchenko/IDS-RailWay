@@ -2063,7 +2063,7 @@ IDS_RWT_INCOMING.prototype.getUZ_DOC = function (callback) {
         },
     });
 };
-// Получить строку ЭПД принятого вагона по номеру документа
+// Получить строку ЭПД принятого вагона по номеру документа (внутренему номеру документа)
 IDS_RWT_INCOMING.prototype.getUZ_DOCOfNum = function (num, callback) {
     $.ajax({
         type: 'GET',
@@ -2109,6 +2109,53 @@ IDS_RWT_INCOMING.prototype.getOTPR_UZ_DOCOfNum = function (num, callback) {
         },
     });
 };
+//П олучить строку ЭПД принятого вагона по номеру накладной УЗ
+IDS_RWT_INCOMING.prototype.getUZ_DOCOfNum_UZ = function (num_uz, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/uz_doc/num_uz/' + num_uz,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.getUZ_DOCOfNum_UZ", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить разпарсеный ЭПД принятого вагона по номеру документа
+IDS_RWT_INCOMING.prototype.getOTPR_UZ_DOCOfNum_UZ = function (num_uz, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/uz_doc/otpr/num_uz/' + num_uz,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.getOTPR_UZ_DOCOfNum_UZ", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 //Добавить 
 IDS_RWT_INCOMING.prototype.postUZ_DOC = function (uz_doc, callback) {
     $.ajax({
