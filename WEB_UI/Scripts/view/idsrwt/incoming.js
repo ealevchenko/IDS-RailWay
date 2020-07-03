@@ -290,13 +290,12 @@
                 table_sostav.view(typeof filter === 'function' ? list_sostav.filter(filter) : list_sostav);
             }
         },
-
+        // Показать отчет
         view_report = function (id, report) {
             // Вывисти заголовок прибытия
             var view_title = function (doc, sostav) {
                 var station_on = sostav.Directory_Station1 ? sostav.Directory_Station1 : null;
                 var way_on = sostav.Directory_Ways ? sostav.Directory_Ways : null;
-                doc.write('<h2>Натурная ведомость поезда №' + sostav.num_doc + '</h2>');
                 doc.write('<table class="table-title">');
                 doc.write('<tr>');
                 doc.write('<th>Индекс поезда</th>');
@@ -308,16 +307,16 @@
                 doc.write('</tr>');
                 doc.write('<tr>');
                 doc.write('<th>Поезд прибыл на станцию</th>');
-                doc.write('<td>' + (station_on ? ids_inc.ids_dir.getValueObj(station_on, 'station_name', print_detali.lang) : '') + '</td>');
+                doc.write('<td>' + (station_on ? ids_inc.ids_dir.getValueObj(station_on, 'station_name', lang) : '') + '</td>');
                 doc.write('<th>Путь</th>');
-                doc.write('<td>' + ((station_on ? ids_inc.ids_dir.getValueObj(way_on, 'way_num', print_detali.lang) : '') + ' - ' + (station_on ? ids_inc.ids_dir.getValueObj(way_on, 'way_name', print_detali.lang) : '')) + '</td>');
+                doc.write('<td>' + ((station_on ? ids_inc.ids_dir.getValueObj(way_on, 'way_num', lang) : '') + ' - ' + (station_on ? ids_inc.ids_dir.getValueObj(way_on, 'way_name', lang) : '')) + '</td>');
                 doc.write('<th>Нумерация</th>');
                 doc.write('<td>' + (sostav.numeration ? 'с хвоста' : sostav.numeration === false ? 'с головы' : 'не указана') + '</td>');
                 doc.write('</tr>');
                 doc.write('</table>');
             };
             // Вывести вагоны в составе
-            var view_table_info_car = function (doc, sostav) {
+            var view_table_info_car_fst = function (doc, sostav) {
 
                 doc.write('<table class="table-info">');
                 doc.write('<tr>');
@@ -367,32 +366,33 @@
                         var dir_division = vag_uz && vag_uz.Directory_Divisions ? vag_uz.Directory_Divisions : null;
                         doc.write('<tr>');
                         doc.write('<th>' + list_cars[i].position_arrival + '</th>');
-                        doc.write('<td>' + (dir_es ? ids_inc.ids_dir.getValueObj(dir_es, 'station_name', print_detali.lang) : '') + '</td>');
-                        doc.write('<td>' + (dir_cargo ? ids_inc.ids_dir.getValueObj(dir_cargo, 'cargo_name', print_detali.lang) + (dir_certificat ? ' (' + ids_inc.ids_dir.getValueObj(dir_certificat, 'certification_data', print_detali.lang) + ')' : '') : '') + '</td>');
-                        doc.write('<td>' + (dir_operator ? ids_inc.ids_dir.getValueObj(dir_operator, 'operators', print_detali.lang) : '') + '</td>');
-                        doc.write('<td>' + (dir_ll ? ids_inc.ids_dir.getValueObj(dir_ll, 'limiting_abbr', print_detali.lang) : '') + '</td>');
-                        doc.write('<td>' + (dir_owner ? ids_inc.ids_dir.getValueObj(dir_owner, 'owner', print_detali.lang) : '') + '</td>');
+                        doc.write('<td>' + (dir_es ? ids_inc.ids_dir.getValueObj(dir_es, 'station_name', lang) : '') + '</td>');
+                        doc.write('<td>' + (dir_cargo ? ids_inc.ids_dir.getValueObj(dir_cargo, 'cargo_name', lang) + (dir_certificat ? ' (' + ids_inc.ids_dir.getValueObj(dir_certificat, 'certification_data', lang) + ')' : '') : '') + '</td>');
+                        doc.write('<td>' + (dir_operator ? ids_inc.ids_dir.getValueObj(dir_operator, 'operators', lang) : '') + '</td>');
+                        doc.write('<td>' + (dir_ll ? ids_inc.ids_dir.getValueObj(dir_ll, 'limiting_abbr', lang) : '') + '</td>');
+                        doc.write('<td>' + (dir_owner ? ids_inc.ids_dir.getValueObj(dir_owner, 'owner', lang) : '') + '</td>');
                         doc.write('<td>' + (dir_countrys ? ids_inc.ids_dir.getValueObj(dir_countrys, 'code_sng') : '') + '</td>');
                         doc.write('<td>' + list_cars[i].num + '</td>');
                         doc.write('<td>' + doc_uz.nom_doc + (doc_uz.nom_main_doc ? '(' + doc_uz.nom_main_doc + ')' : '') + '</td>');
                         doc.write('<td>' + (vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000).toFixed(2) : '0.00') + '</td>');
-                        doc.write('<td>' + (dir_division ? ids_inc.ids_dir.getValueObj(dir_division, 'name_division', print_detali.lang) : '') + '</td>');
-                        doc.write('<td>' + (dir_condition ? ids_inc.ids_dir.getValueObj(dir_condition, 'condition_abbr', print_detali.lang) : '') + '</td>');
+                        doc.write('<td>' + (dir_division ? ids_inc.ids_dir.getValueObj(dir_division, 'name_division', lang) : '') + '</td>');
+                        doc.write('<td>' + (dir_condition ? ids_inc.ids_dir.getValueObj(dir_condition, 'condition_abbr', lang) : '') + '</td>');
                         doc.write('<td></td>');
                         doc.write('</tr>');
                         // Подчет общего веса
                         total_vesg += (vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000) : 0);
                         // Группировка операторов
-                        if (dir_operator) {
-                            var opr = getObjects(group_operators, 'id', dir_operator.id)
-                            if (opr && opr.length > 0) {
-                                opr[0].count += 1;
-                                opr[0].vesg = Number(opr[0].vesg) + (vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000) : 0);
+                        var opr = getObjects(group_operators, 'id', dir_operator ? dir_operator.id : 0)
+                        if (opr && opr.length > 0) {
+                            opr[0].count += 1;
+                            opr[0].vesg = Number(opr[0].vesg) + (vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000) : 0);
+                        } else {
+                            if (dir_operator) {
+                                group_operators.push({ id: dir_operator.id, operator: ids_inc.ids_dir.getValueObj(dir_operator, 'operators', lang), count: 1, vesg: (vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000) : 0) });
                             } else {
-                                group_operators.push({ id: dir_operator.id, operator: ids_inc.ids_dir.getValueObj(dir_operator, 'operators', print_detali.lang), count: 1, vesg: (vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000) : 0) });
+                                group_operators.push({ id: 0, operator: 'Не определен', count: 1, vesg: (vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000) : 0) });
                             }
                         }
-
                     }
                 }
                 doc.write('<tr>');
@@ -420,15 +420,138 @@
 
 
             };
+            // Вывести вагоны в составе
+            var view_table_info_car_fsci = function (doc, sostav) {
 
+                doc.write('<table class="table-info">');
+                doc.write('<tr>');
+                doc.write('<th scope="col">№</th>');
+                doc.write('<th scope="col">Код</th>');
+                doc.write('<th scope="col">Грузоподъемность</th>');
+                doc.write('<th scope="col">Вес,тн</th>');
+                doc.write('<th scope="col">Род</th>');
+                doc.write('<th scope="col">№ вагона</th>');
+                doc.write('<th scope="col">№ ж.д. накладной</th>');
+                doc.write('<th scope="col">Груз</th>');
+                doc.write('<th scope="col">Станция отправления</th>');
+                doc.write('<th scope="col">Оператор</th>');
+                doc.write('<th scope="col">Собственник</th>');
+                doc.write('<th scope="col">Цех-получатель</th>');
+                doc.write('<th scope="col">Ограничение погрузки</th>');
+                doc.write('<th scope="col">Судно</th>');
+                doc.write('<th scope="col">Ком. состояние груза</th>');
+                doc.write('<th scope="col">Акты</th>');
+                doc.write('</tr>');
+
+                var list_cars = sostav.ArrivalCars.filter(function (i) {
+                    return i.position_arrival
+                }).sort(function (a, b) {
+                    return Number(a.position_arrival) - Number(b.position_arrival)
+                });
+
+                var total_vesg = 0;
+                var group_operators = [];
+                // Список вагонов есть
+                if (list_cars) {
+                    for (i = 0; i < list_cars.length; i++) {
+
+                        var doc_uz = list_cars[i].Arrival_UZ_Vagon && list_cars[i].Arrival_UZ_Vagon.Arrival_UZ_Document ? list_cars[i].Arrival_UZ_Vagon.Arrival_UZ_Document : null;
+                        var vag_uz = list_cars[i].Arrival_UZ_Vagon ? list_cars[i].Arrival_UZ_Vagon : null;
+                        var dir_es = doc_uz && doc_uz.Directory_ExternalStation ? doc_uz.Directory_ExternalStation : null;
+
+                        var dir_cargo = vag_uz && vag_uz.Directory_Cargo ? vag_uz.Directory_Cargo : null;
+                        var dir_certificat = vag_uz && vag_uz.Directory_CertificationData ? vag_uz.Directory_CertificationData : null;
+                        var dir_commercial = vag_uz && vag_uz.Directory_CommercialCondition ? vag_uz.Directory_CommercialCondition : null;
+                        var vag_acts_uz = vag_uz && vag_uz.Arrival_UZ_Vagon_Acts ? vag_uz.Arrival_UZ_Vagon_Acts : null;
+                        var acts_uz = null;
+                        for (ia = 0; ia < vag_acts_uz.length; ia++) {
+                            acts_uz += ('id=' + vag_acts_uz[ia].id_document + ' №' + vag_acts_uz[ia].nom_akt + ' от ' + (vag_acts_uz[ia].date_akt ? vag_acts_uz[ia].date_akt.replace(/T/g, ' ') : '') + ' ' + vag_acts_uz[ia].prichina_akt + ' ст.' + vag_acts_uz[ia].stn_name_akt + ';');
+                        }
+
+
+                        var dir_condition = vag_uz && vag_uz.Directory_ConditionArrival ? vag_uz.Directory_ConditionArrival : null;
+
+                        var dir_car = vag_uz && vag_uz.Directory_Cars ? vag_uz.Directory_Cars : null;
+                        var dir_operator = dir_car && dir_car.Directory_OperatorsWagons ? dir_car.Directory_OperatorsWagons : null;
+                        var dir_ll = dir_car && dir_car.Directory_LimitingLoading ? dir_car.Directory_LimitingLoading : null;
+
+
+                        var dir_owner = dir_car && dir_car.Directory_OwnersWagons ? dir_car.Directory_OwnersWagons : null;
+                        var dir_countrys = dir_car && dir_car.Directory_Countrys ? dir_car.Directory_Countrys : null;
+                        var dir_genus = dir_car && dir_car.Directory_GenusWagons ? dir_car.Directory_GenusWagons : null;
+
+
+
+
+                        var dir_division = vag_uz && vag_uz.Directory_Divisions ? vag_uz.Directory_Divisions : null;
+                        doc.write('<tr>');
+                        doc.write('<th>' + list_cars[i].position_arrival + '</th>');
+                        doc.write('<td>' + (dir_countrys ? ids_inc.ids_dir.getValueObj(dir_countrys, 'code_sng') : '') + '</td>');
+                        doc.write('<td>' + (dir_car.gruzp ? Number(dir_car.gruzp).toFixed(2) : '0.00') + '</td>');
+                        doc.write('<td>' + (vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000).toFixed(2) : '0.00') + '</td>');
+                        doc.write('<td>' + (dir_genus ? ids_inc.ids_dir.getValueObj(dir_genus, 'abbr', lang) : '') + '</td>');
+                        doc.write('<td>' + list_cars[i].num + '</td>');
+                        doc.write('<td>' + doc_uz.nom_doc + (doc_uz.nom_main_doc ? '(' + doc_uz.nom_main_doc + ')' : '') + '</td>');
+                        doc.write('<td>' + (dir_cargo ? ids_inc.ids_dir.getValueObj(dir_cargo, 'cargo_name', lang) + (dir_certificat ? ' (' + ids_inc.ids_dir.getValueObj(dir_certificat, 'certification_data', lang) + ')' : '') : '') + '</td>');
+                        doc.write('<td>' + (dir_es ? ids_inc.ids_dir.getValueObj(dir_es, 'station_name', lang) : '') + '</td>');
+                        doc.write('<td>' + (dir_operator ? ids_inc.ids_dir.getValueObj(dir_operator, 'operators', lang) : '') + '</td>');
+                        doc.write('<td>' + (dir_owner ? ids_inc.ids_dir.getValueObj(dir_owner, 'owner', lang) : '') + '</td>');
+                        doc.write('<td>' + (dir_division ? ids_inc.ids_dir.getValueObj(dir_division, 'name_division', lang) : '') + '</td>');
+                        doc.write('<td>' + (dir_ll ? ids_inc.ids_dir.getValueObj(dir_ll, 'limiting_abbr', lang) : '') + '</td>');
+                        doc.write('<td></td>');
+                        doc.write('<td>' + (dir_certificat ? ids_inc.ids_dir.getValueObj(dir_commercial, 'commercial_condition', lang) : '') + '</td>');
+                        doc.write('<td>' + (acts_uz ? acts_uz : '') + '</td>');
+                        doc.write('</tr>');
+                        // Подчет общего веса
+                        total_vesg += (vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000) : 0);
+                        // Группировка операторов
+                        var opr = getObjects(group_operators, 'id', dir_operator ? dir_operator.id : 0)
+                        if (opr && opr.length > 0) {
+                            opr[0].count += 1;
+                            opr[0].vesg = Number(opr[0].vesg) + (vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000) : 0);
+                        } else {
+                            if (dir_operator) {
+                                group_operators.push({ id: dir_operator.id, operator: ids_inc.ids_dir.getValueObj(dir_operator, 'operators', lang), count: 1, vesg: (vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000) : 0) });
+                            } else {
+                                group_operators.push({ id: 0, operator: 'Не определен', count: 1, vesg: (vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000) : 0) });
+                            }
+                        }
+                    }
+                }
+                doc.write('<tr>');
+                doc.write('<th colspan="3" class="total">Общий вес</th>');
+                doc.write('<td class="total">' + total_vesg.toFixed(2) + '</td>');
+                doc.write('<th class="total"></th>');
+                doc.write('<td class="total">' + list_cars.length + '</td>');
+                doc.write('<th colspan="10"></td>');
+                doc.write('</tr>');
+                //doc.write('<tr>');
+                //doc.write('<th colspan="13">Информация по операторам</th>');
+                //doc.write('</tr>');
+                //if (group_operators && group_operators.length > 0) {
+                //    for (io = 0; io < group_operators.length; io++) {
+                //        doc.write('<tr>');
+                //        doc.write('<th colspan="6" class="total">' + group_operators[io].operator + '</th>');
+                //        doc.write('<td class="total">' + group_operators[io].count + '</td>');
+                //        doc.write('<th colspan="2"></th>');
+                //        doc.write('<td class="total">' + group_operators[io].vesg.toFixed(2) + '</td>');
+                //        doc.write('<th colspan="3"></td>');
+                //        doc.write('</tr>');
+                //    }
+                //}
+                doc.write('</table>');
+
+
+            };
             // Вывести отчет Натурная ведомость поезда
             var view_report_fst = function (sostav) {
                 var mywindow = window.open('', 'Натурная ведомость поезда №' + sostav.num_doc);
                 mywindow.document.write('<html><head><title>Натурная ведомость поезда №' + sostav.num_doc + '</title>');
                 mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/view/shared/print.css">');
                 mywindow.document.write('</head><body>');
+                mywindow.document.write('<h2>Натурная ведомость поезда №' + sostav.num_doc + '</h2>');
                 view_title(mywindow.document, sostav);      // Заголовок
-                view_table_info_car(mywindow.document, sostav);  // Вагоны в составе
+                view_table_info_car_fst(mywindow.document, sostav);  // Вагоны в составе
                 mywindow.document.write('<br />');
                 mywindow.document.write('<br />');
                 mywindow.document.write('<div">Подпись приемосдатчика ______________________</div>');
@@ -437,6 +560,24 @@
                 mywindow.document.close(); // necessary for IE >= 10
                 mywindow.focus(); // necessary for IE >= 10
             };
+            // Вывести отчет Натурная ведомость коммерческого осмотра
+            var view_report_fsci = function (sostav) {
+                var mywindow = window.open('', 'Натурная ведомость коммерческого осмотра №' + sostav.num_doc);
+                mywindow.document.write('<html><head><title>Натурная ведомость коммерческого осмотра №' + sostav.num_doc + '</title>');
+                mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/view/shared/print.css">');
+                mywindow.document.write('</head><body>');
+                mywindow.document.write('<h2>Натурная ведомость коммерческого осмотра №' + sostav.num_doc + '</h2>');
+                view_title(mywindow.document, sostav);              // Заголовок
+                view_table_info_car_fsci(mywindow.document, sostav);     // Вагоны в составе
+                mywindow.document.write('<br />');
+                mywindow.document.write('<br />');
+                mywindow.document.write('<div">Подпись приемосдатчика ______________________</div>');
+                mywindow.document.write('</body></html>');
+
+                mywindow.document.close(); // necessary for IE >= 10
+                mywindow.focus(); // necessary for IE >= 10
+            };
+
 
             if (id) {
                 LockScreen(langView('mess_print', langs));
@@ -447,6 +588,7 @@
                         var sostav = result_sostav;
                         switch (report) {
                             case 'report_fst': view_report_fst(sostav); break;
+                            case 'report_fsci': view_report_fsci(sostav); break;
                             default: break;
                         }
                     }
@@ -772,6 +914,7 @@
             input_data_start: $('input#date-start'),
             input_data_stop: $('input#date-stop'),
             report_fst: $('#report_fst'),
+            report_fsci: $('#report_fsci'),
 
             init: function (list_station) {
                 // настроим компонент дата
@@ -812,16 +955,19 @@
                         pn_sel.view(false);
                     },
                     null);
-                //
+                // 
                 pn_sel.report_fst.on('click', function (event) {
                     event.preventDefault();
                     if (table_sostav.select_sostav) {
                         view_report(table_sostav.select_sostav.id, 'report_fst');
                     }
-                    // Показать отчет
-
-                    //print_detali.view(table_sostav.select_sostav.id, 'report_fst');
-
+                });
+                //
+                pn_sel.report_fsci.on('click', function (event) {
+                    event.preventDefault();
+                    if (table_sostav.select_sostav) {
+                        view_report(table_sostav.select_sostav.id, 'report_fsci');
+                    }
                 });
             },
             view: function (refresh) {
@@ -4184,7 +4330,7 @@
                             cars_detali.ids_inc.getArrivalSostavOfID(car.id_arrival, function (arrival_sostav) {
                                 if (arrival_sostav) {
 
-                                    var arrival_cars = arrival_sostav.ArrivalCars.filter(function(i){
+                                    var arrival_cars = arrival_sostav.ArrivalCars.filter(function (i) {
                                         return i.position_arrival;
                                     });
 
@@ -6474,266 +6620,266 @@
                 return null;
             }
         };
-        //*************************************************************************************
-        // ОКНО "ПРИНЯТЬ ВАГОНЫ"
-        //*************************************************************************************
-        //print_detali = {
-        //    // ФУНКЦИИ ОКНА "ПРИНЯТЬ ВАГОНЫ" ****************************************************************************************************************************************
-        //    //---------------------------------------------------------------------------------------------------
-        //    // Основные переменные окна "Принять вагоны"
-        //    //---------------------------------------------------------------------------------------------------
-        //    lang: null,
-        //    user: null,
-        //    content: $('.cd-print-detali'),
-        //    name_report: $('h2#name_report'),
-        //    context_report: $('div#context_report'),
-        //    row_report1: $('<div class="row mb-4"></div>'),
-        //    table_report: $('<table class="print-table"></table>'),
-        //    table_thead_report: $('<thead></thead>'),
-        //    table_tbody_report: $('<tbody></tbody>'),
-        //    table_tr_report: $('<tr></tr>'),
-        //    init: function (lang, user_name) {
-        //        print_detali.lang = lang;
-        //        print_detali.user = user_name;
+    //*************************************************************************************
+    // ОКНО "ПРИНЯТЬ ВАГОНЫ"
+    //*************************************************************************************
+    //print_detali = {
+    //    // ФУНКЦИИ ОКНА "ПРИНЯТЬ ВАГОНЫ" ****************************************************************************************************************************************
+    //    //---------------------------------------------------------------------------------------------------
+    //    // Основные переменные окна "Принять вагоны"
+    //    //---------------------------------------------------------------------------------------------------
+    //    lang: null,
+    //    user: null,
+    //    content: $('.cd-print-detali'),
+    //    name_report: $('h2#name_report'),
+    //    context_report: $('div#context_report'),
+    //    row_report1: $('<div class="row mb-4"></div>'),
+    //    table_report: $('<table class="print-table"></table>'),
+    //    table_thead_report: $('<thead></thead>'),
+    //    table_tbody_report: $('<tbody></tbody>'),
+    //    table_tr_report: $('<tr></tr>'),
+    //    init: function (lang, user_name) {
+    //        print_detali.lang = lang;
+    //        print_detali.user = user_name;
 
 
-        //        $('button#print_report').click(function () {             //при клике на что срабатывает печать
-        //            //var html_to_print = $('.to_print').html();    //что печатаем
-        //            //var iframe = $('<iframe id="print_frame">');
-        //            //$('body').append(iframe);
-        //            //var doc = $('#print_frame')[0].contentDocument || $('#print_frame')[0].contentWindow.document;
-        //            //var win = $('#print_frame')[0].contentWindow || $('#print_frame')[0];
-        //            //doc.getElementsByTagName('body')[0].innerHTML = html_to_print;
-        //            //win.print();
-        //            ////$('iframe').remove();
+    //        $('button#print_report').click(function () {             //при клике на что срабатывает печать
+    //            //var html_to_print = $('.to_print').html();    //что печатаем
+    //            //var iframe = $('<iframe id="print_frame">');
+    //            //$('body').append(iframe);
+    //            //var doc = $('#print_frame')[0].contentDocument || $('#print_frame')[0].contentWindow.document;
+    //            //var win = $('#print_frame')[0].contentWindow || $('#print_frame')[0];
+    //            //doc.getElementsByTagName('body')[0].innerHTML = html_to_print;
+    //            //win.print();
+    //            ////$('iframe').remove();
 
 
-        //            //'@Url.Action("Report", "Home", new { area = "IDSRWT" })'
+    //            //'@Url.Action("Report", "Home", new { area = "IDSRWT" })'
 
-        //            //var mywindow = window.open('/IDSRWT/Home/Report', 'my div');
-        //            var mywindow = window.open('', 'Отчет');
-        //            mywindow.document.write('<html><head><title>Отчет</title>');
+    //            //var mywindow = window.open('/IDSRWT/Home/Report', 'my div');
+    //            var mywindow = window.open('', 'Отчет');
+    //            mywindow.document.write('<html><head><title>Отчет</title>');
 
-        //            mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/bootstrap.min.css">');
-        //            mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/bootstrap.min.css.map">');
-        //            mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/view/shared/print.css">');
-        //            mywindow.document.write('<script src="../../Scripts/jquery-3.4.1.min.js"></script>');
-        //            mywindow.document.write('<script src="../../Scripts/bootstrap.min.js"></script>');
+    //            mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/bootstrap.min.css">');
+    //            mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/bootstrap.min.css.map">');
+    //            mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/view/shared/print.css">');
+    //            mywindow.document.write('<script src="../../Scripts/jquery-3.4.1.min.js"></script>');
+    //            mywindow.document.write('<script src="../../Scripts/bootstrap.min.js"></script>');
 
-        //            mywindow.document.write('</head><body>');
-        //            //mywindow.document.write($('.to_print').html());
-        //            //mywindow.document.write('</body></html>');
-        //            //mywindow.document.write('<link rel="stylesheet" href="~/Content/bootstrap.css" type="text/css" />');
-        //            var txt = $('.to_print').html();
-        //            //var doc = mywindow.document;
-        //            //mywindow.document.getElementsByName('body')[0].innerHTML = txt
-        //            mywindow.document.write($('.to_print').html());
-        //            mywindow.document.write('</body></html>');
+    //            mywindow.document.write('</head><body>');
+    //            //mywindow.document.write($('.to_print').html());
+    //            //mywindow.document.write('</body></html>');
+    //            //mywindow.document.write('<link rel="stylesheet" href="~/Content/bootstrap.css" type="text/css" />');
+    //            var txt = $('.to_print').html();
+    //            //var doc = mywindow.document;
+    //            //mywindow.document.getElementsByName('body')[0].innerHTML = txt
+    //            mywindow.document.write($('.to_print').html());
+    //            mywindow.document.write('</body></html>');
 
-        //            mywindow.document.close(); // necessary for IE >= 10
-        //            mywindow.focus(); // necessary for IE >= 10
-        //            //mywindow.print();
-        //            //mywindow.close();
-        //            return true;
+    //            mywindow.document.close(); // necessary for IE >= 10
+    //            mywindow.focus(); // necessary for IE >= 10
+    //            //mywindow.print();
+    //            //mywindow.close();
+    //            return true;
 
-        //        });
+    //        });
 
-        //        // Sumbit form
-        //        print_detali.content.find("form").on("submit", function (event) {
-        //            event.preventDefault();
-        //        });
-        //        // Настройка закрыть детали проекта
-        //        print_detali.content.on('click', '.close', function (event) {
-        //            event.preventDefault();
-        //            print_detali.content.removeClass('is-visible');
-        //        });
-        //    },
-        //    // Отобразить отчет
-        //    view: function (id, report) {
-        //        if (id) {
-        //            ids_inc.getArrivalSostavOfID(id, function (result_sostav) {
-        //                if (result_sostav && result_sostav.status === 2) {
-        //                    // Состав принят можно показать отчет
-        //                    var sostav = result_sostav;
-        //                    switch (report) {
-        //                        case 'report_fst': print_detali.view_report_fst(sostav); break;
-        //                        default: break;
-        //                    }
-        //                    // Показать страницу детально
-        //                    print_detali.content.addClass('is-visible');
-        //                }
+    //        // Sumbit form
+    //        print_detali.content.find("form").on("submit", function (event) {
+    //            event.preventDefault();
+    //        });
+    //        // Настройка закрыть детали проекта
+    //        print_detali.content.on('click', '.close', function (event) {
+    //            event.preventDefault();
+    //            print_detali.content.removeClass('is-visible');
+    //        });
+    //    },
+    //    // Отобразить отчет
+    //    view: function (id, report) {
+    //        if (id) {
+    //            ids_inc.getArrivalSostavOfID(id, function (result_sostav) {
+    //                if (result_sostav && result_sostav.status === 2) {
+    //                    // Состав принят можно показать отчет
+    //                    var sostav = result_sostav;
+    //                    switch (report) {
+    //                        case 'report_fst': print_detali.view_report_fst(sostav); break;
+    //                        default: break;
+    //                    }
+    //                    // Показать страницу детально
+    //                    print_detali.content.addClass('is-visible');
+    //                }
 
-        //            });
-        //        }
-        //    },
-        //    // 
-        //    view_report_fst: function (sostav) {
+    //            });
+    //        }
+    //    },
+    //    // 
+    //    view_report_fst: function (sostav) {
 
-        //        if (sostav) {
-        //            name_report.innerHTML = "Натурная ведомость поезда №" + sostav.num_doc;
-        //            var station_on = sostav.Directory_Station1 ? sostav.Directory_Station1 : null;
-        //            var way_on = sostav.Directory_Ways ? sostav.Directory_Ways : null;
-
-
-        //            var div_index = $('<div class="col-sm-2 text-right font-weight-bold">Индекс поезда</div>');
-        //            var div_composition_index = $('<div class="col-sm-2 text-left">' + sostav.composition_index + '</div>');
-
-        //            var div_dt_arrival = $('<div class="col-sm-2 text-right font-weight-bold">Прибытие:</div>');
-        //            var div_dt_arrival_datetime = $('<div class="col-sm-2 text-left">' + sostav.date_arrival.replace(/T/g, ' ') + '</div>');
-
-        //            var div_dt_adoption = $('<div class="col-sm-2 text-right font-weight-bold">Прием:</div>');
-        //            var div_dt_adoption_datetime = $('<div class="col-sm-2 text-left">' + sostav.date_adoption.replace(/T/g, ' ') + '</div>');
-
-        //            var div_station_on = $('<div class="col-sm-2 text-right font-weight-bold">Поезд прибыл на станцию:</div>');
-        //            var div_station_on_name = $('<div class="col-sm-2 text-left">' + (station_on ? ids_inc.ids_dir.getValueObj(station_on, 'station_name', print_detali.lang) : '') + '</div>');
-
-        //            var div_way_on = $('<div class="col-sm-2 text-right font-weight-bold">Путь:</div>');
-        //            var div_way_on_name = $('<div class="col-sm-2 text-left">' + ((station_on ? ids_inc.ids_dir.getValueObj(way_on, 'way_num', print_detali.lang) : '') + ' - ' + (station_on ? ids_inc.ids_dir.getValueObj(way_on, 'way_name', print_detali.lang) : '')) + '</div>');
-
-        //            var div_numeration = $('<div class="col-sm-2 text-right font-weight-bold">Нумерация :</div>');
-        //            var div_numeration_name = $('<div class="col-sm-2 text-left">' + (sostav.numeration ? 'с хвоста' : sostav.numeration === false ? 'с головы' : 'не указана') + '</div>');
+    //        if (sostav) {
+    //            name_report.innerHTML = "Натурная ведомость поезда №" + sostav.num_doc;
+    //            var station_on = sostav.Directory_Station1 ? sostav.Directory_Station1 : null;
+    //            var way_on = sostav.Directory_Ways ? sostav.Directory_Ways : null;
 
 
-        //            // Заполним первый уровень отчета
-        //            var div_row_title1 = print_detali.row_report1.clone();
-        //            var div_row_title2 = print_detali.row_report1.clone();
-        //            div_row_title1
-        //                .append(div_index)
-        //                .append(div_composition_index)
-        //                .append(div_dt_arrival)
-        //                .append(div_dt_arrival_datetime)
-        //                .append(div_dt_adoption)
-        //                .append(div_dt_adoption_datetime);
-        //            div_row_title2
-        //                .append(div_station_on)
-        //                .append(div_station_on_name)
-        //                .append(div_way_on)
-        //                .append(div_way_on_name)
-        //                .append(div_numeration)
-        //                .append(div_numeration_name);
+    //            var div_index = $('<div class="col-sm-2 text-right font-weight-bold">Индекс поезда</div>');
+    //            var div_composition_index = $('<div class="col-sm-2 text-left">' + sostav.composition_index + '</div>');
 
-        //            // Заполним второй уровень отчета (таблица)
-        //            var div_row_table = print_detali.row_report1.clone();
-        //            var table = print_detali.table_report.clone();
-        //            var table_thead = print_detali.table_thead_report.clone();
-        //            var table_tr = print_detali.table_tr_report.clone();
-        //            table_tr.append($('<th scope="col">№</th>'));
-        //            table_tr.append($('<th scope="col">Станция отправления</th>'));
-        //            table_tr.append($('<th scope="col">Груз</th>'));
-        //            table_tr.append($('<th scope="col">Оператор</th>'));
-        //            table_tr.append($('<th scope="col">Ограничение</th>'));
-        //            table_tr.append($('<th scope="col">Собственник</th>'));
-        //            table_tr.append($('<th scope="col">Код</th>'));
-        //            table_tr.append($('<th scope="col">№ Вагона</th>'));
-        //            table_tr.append($('<th scope="col">№ ж.д. накладной</th>'));
-        //            table_tr.append($('<th scope="col">Вес. тн</th>'));
-        //            table_tr.append($('<th scope="col">Цех получатель</th>'));
-        //            table_tr.append($('<th scope="col">Разметка</th>'));
-        //            table_tr.append($('<th scope="col">Примечание</th>'));
+    //            var div_dt_arrival = $('<div class="col-sm-2 text-right font-weight-bold">Прибытие:</div>');
+    //            var div_dt_arrival_datetime = $('<div class="col-sm-2 text-left">' + sostav.date_arrival.replace(/T/g, ' ') + '</div>');
 
-        //            var table_tbody = print_detali.table_tbody_report.clone();
+    //            var div_dt_adoption = $('<div class="col-sm-2 text-right font-weight-bold">Прием:</div>');
+    //            var div_dt_adoption_datetime = $('<div class="col-sm-2 text-left">' + sostav.date_adoption.replace(/T/g, ' ') + '</div>');
 
-        //            var list_cars = sostav.ArrivalCars.filter(function (i) {
-        //                return i.position_arrival
-        //            }).sort(function (a, b) {
-        //                return Number(a.position_arrival) - Number(b.position_arrival)
-        //            });
+    //            var div_station_on = $('<div class="col-sm-2 text-right font-weight-bold">Поезд прибыл на станцию:</div>');
+    //            var div_station_on_name = $('<div class="col-sm-2 text-left">' + (station_on ? ids_inc.ids_dir.getValueObj(station_on, 'station_name', print_detali.lang) : '') + '</div>');
 
-        //            var div_row_total = print_detali.row_report1.clone();
+    //            var div_way_on = $('<div class="col-sm-2 text-right font-weight-bold">Путь:</div>');
+    //            var div_way_on_name = $('<div class="col-sm-2 text-left">' + ((station_on ? ids_inc.ids_dir.getValueObj(way_on, 'way_num', print_detali.lang) : '') + ' - ' + (station_on ? ids_inc.ids_dir.getValueObj(way_on, 'way_name', print_detali.lang) : '')) + '</div>');
 
-        //            var div_row_signature = print_detali.row_report1.clone();
-        //            div_row_signature.append($('<div class="col-sm-12 text-left">Подпись приемосдатчика ______________________</div>'));
-
-        //            var total_vesg = 0;
-        //            var group_operators = [];
-
-        //            if (list_cars) {
-
-        //                for (i = 0; i < list_cars.length; i++) {
-        //                    var tbody_tr = print_detali.table_tr_report.clone();
-
-        //                    var doc_uz = list_cars[i].Arrival_UZ_Vagon && list_cars[i].Arrival_UZ_Vagon.Arrival_UZ_Document ? list_cars[i].Arrival_UZ_Vagon.Arrival_UZ_Document : null;
-        //                    var vag_uz = list_cars[i].Arrival_UZ_Vagon ? list_cars[i].Arrival_UZ_Vagon : null;
-        //                    var dir_es = doc_uz && doc_uz.Directory_ExternalStation ? doc_uz.Directory_ExternalStation : null;
-
-        //                    var dir_cargo = vag_uz && vag_uz.Directory_Cargo ? vag_uz.Directory_Cargo : null;
-        //                    var dir_condition = vag_uz && vag_uz.Directory_ConditionArrival ? vag_uz.Directory_ConditionArrival : null;
-
-        //                    var dir_car = vag_uz && vag_uz.Directory_Cars ? vag_uz.Directory_Cars : null;
-        //                    var dir_operator = dir_car && dir_car.Directory_OperatorsWagons ? dir_car.Directory_OperatorsWagons : null;
-        //                    var dir_ll = dir_car && dir_car.Directory_LimitingLoading ? dir_car.Directory_LimitingLoading : null;
-        //                    var dir_owner = dir_car && dir_car.Directory_OwnersWagons ? dir_car.Directory_OwnersWagons : null;
-        //                    var dir_countrys = dir_car && dir_car.Directory_Countrys ? dir_car.Directory_Countrys : null;
+    //            var div_numeration = $('<div class="col-sm-2 text-right font-weight-bold">Нумерация :</div>');
+    //            var div_numeration_name = $('<div class="col-sm-2 text-left">' + (sostav.numeration ? 'с хвоста' : sostav.numeration === false ? 'с головы' : 'не указана') + '</div>');
 
 
-        //                    var dir_division = vag_uz && vag_uz.Directory_Divisions ? vag_uz.Directory_Divisions : null;
+    //            // Заполним первый уровень отчета
+    //            var div_row_title1 = print_detali.row_report1.clone();
+    //            var div_row_title2 = print_detali.row_report1.clone();
+    //            div_row_title1
+    //                .append(div_index)
+    //                .append(div_composition_index)
+    //                .append(div_dt_arrival)
+    //                .append(div_dt_arrival_datetime)
+    //                .append(div_dt_adoption)
+    //                .append(div_dt_adoption_datetime);
+    //            div_row_title2
+    //                .append(div_station_on)
+    //                .append(div_station_on_name)
+    //                .append(div_way_on)
+    //                .append(div_way_on_name)
+    //                .append(div_numeration)
+    //                .append(div_numeration_name);
 
-        //                    tbody_tr.append($('<th scope="row">' + list_cars[i].position_arrival + '</th>'));
-        //                    tbody_tr.append($('<td>' + (dir_es ? ids_inc.ids_dir.getValueObj(dir_es, 'station_name', print_detali.lang) : '') + '</td>'));
-        //                    tbody_tr.append($('<td>' + (dir_cargo ? ids_inc.ids_dir.getValueObj(dir_cargo, 'cargo_name', print_detali.lang) : '') + '</td>'));
-        //                    tbody_tr.append($('<td>' + (dir_operator ? ids_inc.ids_dir.getValueObj(dir_operator, 'operators', print_detali.lang) : '') + '</td>'));
-        //                    tbody_tr.append($('<td>' + (dir_ll ? ids_inc.ids_dir.getValueObj(dir_ll, 'limiting_abbr', print_detali.lang) : '') + '</td>'));
-        //                    tbody_tr.append($('<td>' + (dir_owner ? ids_inc.ids_dir.getValueObj(dir_owner, 'owner', print_detali.lang) : '') + '</td>'));
-        //                    tbody_tr.append($('<td>' + (dir_countrys ? ids_inc.ids_dir.getValueObj(dir_countrys, 'code_sng') : '') + '</td>'));
-        //                    tbody_tr.append($('<td>' + list_cars[i].num + '</td>'));
-        //                    tbody_tr.append($('<td>' + doc_uz.nom_doc + (doc_uz.nom_main_doc ? '(' + doc_uz.nom_main_doc + ')' : '') + '</td>'));
-        //                    tbody_tr.append($('<td>' + (vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000).toFixed(2) : '0.00') + '</td>'));
-        //                    tbody_tr.append($('<td>' + (dir_division ? ids_inc.ids_dir.getValueObj(dir_division, 'name_division', print_detali.lang) : '') + '</td>'));
-        //                    tbody_tr.append($('<td>' + (dir_condition ? ids_inc.ids_dir.getValueObj(dir_condition, 'condition_abbr', print_detali.lang) : '') + '</td>'));
-        //                    tbody_tr.append($('<td></td>'));
+    //            // Заполним второй уровень отчета (таблица)
+    //            var div_row_table = print_detali.row_report1.clone();
+    //            var table = print_detali.table_report.clone();
+    //            var table_thead = print_detali.table_thead_report.clone();
+    //            var table_tr = print_detali.table_tr_report.clone();
+    //            table_tr.append($('<th scope="col">№</th>'));
+    //            table_tr.append($('<th scope="col">Станция отправления</th>'));
+    //            table_tr.append($('<th scope="col">Груз</th>'));
+    //            table_tr.append($('<th scope="col">Оператор</th>'));
+    //            table_tr.append($('<th scope="col">Ограничение</th>'));
+    //            table_tr.append($('<th scope="col">Собственник</th>'));
+    //            table_tr.append($('<th scope="col">Код</th>'));
+    //            table_tr.append($('<th scope="col">№ Вагона</th>'));
+    //            table_tr.append($('<th scope="col">№ ж.д. накладной</th>'));
+    //            table_tr.append($('<th scope="col">Вес. тн</th>'));
+    //            table_tr.append($('<th scope="col">Цех получатель</th>'));
+    //            table_tr.append($('<th scope="col">Разметка</th>'));
+    //            table_tr.append($('<th scope="col">Примечание</th>'));
 
-        //                    // Подчет общего веса
-        //                    total_vesg += (vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000) : 0);
-        //                    // Группировка операторов
-        //                    if (dir_operator) {
-        //                        var opr = getObjects(group_operators, 'id', dir_operator.id)
-        //                        if (opr && opr.length > 0) {
-        //                            opr[0].count += 1;
-        //                        } else {
-        //                            group_operators.push({ id: dir_operator.id, operator: ids_inc.ids_dir.getValueObj(dir_operator, 'operators', print_detali.lang), count: 1 });
-        //                        }
-        //                    }
+    //            var table_tbody = print_detali.table_tbody_report.clone();
 
-        //                    table_tbody.append(tbody_tr);
+    //            var list_cars = sostav.ArrivalCars.filter(function (i) {
+    //                return i.position_arrival
+    //            }).sort(function (a, b) {
+    //                return Number(a.position_arrival) - Number(b.position_arrival)
+    //            });
 
-        //                }
+    //            var div_row_total = print_detali.row_report1.clone();
 
-        //                var div_count_car = $('<div class="col-sm-2 text-right font-weight-bold">Всего вагонов : </div>');
-        //                var div_count_car_val = $('<div class="col-sm-2 text-left">' + list_cars.length + '</div>');
-        //                var div_vesg_car = $('<div class="offset-4  col-sm-2 text-right font-weight-bold">Общий вес, тн</div>');
-        //                var div_vesg_car_val = $('<div class="col-sm-2 text-left">' + total_vesg.toFixed(2) + '</div>');
-        //                div_row_total
-        //                    .append(div_count_car)
-        //                    .append(div_count_car_val)
-        //                    .append(div_vesg_car)
-        //                    .append(div_vesg_car_val);
+    //            var div_row_signature = print_detali.row_report1.clone();
+    //            div_row_signature.append($('<div class="col-sm-12 text-left">Подпись приемосдатчика ______________________</div>'));
 
-        //                //
-        //                // Заполним таблицу операторов
-        //                var div_row_table_operator = print_detali.row_report1.clone();
-        //                var table_operator = print_detali.table_report.clone();
-        //                var table_thead_operator = print_detali.table_thead_report.clone();
-        //                var table_tr_operator = print_detali.table_tr_report.clone();
-        //                table_tr_operator.append($('<th scope="col">Оператор</th>'));
-        //                table_tr_operator.append($('<th scope="col">Кол. вагонов</th>'));
+    //            var total_vesg = 0;
+    //            var group_operators = [];
 
-        //                var table_tbody_operator = print_detali.table_tbody_report.clone();
-        //                for (io = 0; io < group_operators.length; io++) {
-        //                    var tbody_tr_operator = print_detali.table_tr_report.clone();
-        //                    tbody_tr_operator.append($('<th scope="row">' + group_operators[io].operator + '</th>'));
-        //                    tbody_tr_operator.append($('<td>' + group_operators[io].count + '</td>'));
-        //                    table_tbody_operator.append(tbody_tr_operator);
-        //                }
-        //                div_row_table_operator.append(table_operator.append(table_thead_operator.append(table_tr_operator)).append(table_tbody_operator));
-        //            }
-        //            div_row_table.append(table.append(table_thead.append(table_tr)).append(table_tbody));
+    //            if (list_cars) {
 
-        //            print_detali.context_report.empty().append(div_row_title1).append(div_row_title2).append(div_row_table).append(div_row_total).append(div_row_table_operator).append(div_row_signature);
-        //        }
-        //        return;
-        //    }
+    //                for (i = 0; i < list_cars.length; i++) {
+    //                    var tbody_tr = print_detali.table_tr_report.clone();
 
-        //};
+    //                    var doc_uz = list_cars[i].Arrival_UZ_Vagon && list_cars[i].Arrival_UZ_Vagon.Arrival_UZ_Document ? list_cars[i].Arrival_UZ_Vagon.Arrival_UZ_Document : null;
+    //                    var vag_uz = list_cars[i].Arrival_UZ_Vagon ? list_cars[i].Arrival_UZ_Vagon : null;
+    //                    var dir_es = doc_uz && doc_uz.Directory_ExternalStation ? doc_uz.Directory_ExternalStation : null;
+
+    //                    var dir_cargo = vag_uz && vag_uz.Directory_Cargo ? vag_uz.Directory_Cargo : null;
+    //                    var dir_condition = vag_uz && vag_uz.Directory_ConditionArrival ? vag_uz.Directory_ConditionArrival : null;
+
+    //                    var dir_car = vag_uz && vag_uz.Directory_Cars ? vag_uz.Directory_Cars : null;
+    //                    var dir_operator = dir_car && dir_car.Directory_OperatorsWagons ? dir_car.Directory_OperatorsWagons : null;
+    //                    var dir_ll = dir_car && dir_car.Directory_LimitingLoading ? dir_car.Directory_LimitingLoading : null;
+    //                    var dir_owner = dir_car && dir_car.Directory_OwnersWagons ? dir_car.Directory_OwnersWagons : null;
+    //                    var dir_countrys = dir_car && dir_car.Directory_Countrys ? dir_car.Directory_Countrys : null;
+
+
+    //                    var dir_division = vag_uz && vag_uz.Directory_Divisions ? vag_uz.Directory_Divisions : null;
+
+    //                    tbody_tr.append($('<th scope="row">' + list_cars[i].position_arrival + '</th>'));
+    //                    tbody_tr.append($('<td>' + (dir_es ? ids_inc.ids_dir.getValueObj(dir_es, 'station_name', print_detali.lang) : '') + '</td>'));
+    //                    tbody_tr.append($('<td>' + (dir_cargo ? ids_inc.ids_dir.getValueObj(dir_cargo, 'cargo_name', print_detali.lang) : '') + '</td>'));
+    //                    tbody_tr.append($('<td>' + (dir_operator ? ids_inc.ids_dir.getValueObj(dir_operator, 'operators', print_detali.lang) : '') + '</td>'));
+    //                    tbody_tr.append($('<td>' + (dir_ll ? ids_inc.ids_dir.getValueObj(dir_ll, 'limiting_abbr', print_detali.lang) : '') + '</td>'));
+    //                    tbody_tr.append($('<td>' + (dir_owner ? ids_inc.ids_dir.getValueObj(dir_owner, 'owner', print_detali.lang) : '') + '</td>'));
+    //                    tbody_tr.append($('<td>' + (dir_countrys ? ids_inc.ids_dir.getValueObj(dir_countrys, 'code_sng') : '') + '</td>'));
+    //                    tbody_tr.append($('<td>' + list_cars[i].num + '</td>'));
+    //                    tbody_tr.append($('<td>' + doc_uz.nom_doc + (doc_uz.nom_main_doc ? '(' + doc_uz.nom_main_doc + ')' : '') + '</td>'));
+    //                    tbody_tr.append($('<td>' + (vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000).toFixed(2) : '0.00') + '</td>'));
+    //                    tbody_tr.append($('<td>' + (dir_division ? ids_inc.ids_dir.getValueObj(dir_division, 'name_division', print_detali.lang) : '') + '</td>'));
+    //                    tbody_tr.append($('<td>' + (dir_condition ? ids_inc.ids_dir.getValueObj(dir_condition, 'condition_abbr', print_detali.lang) : '') + '</td>'));
+    //                    tbody_tr.append($('<td></td>'));
+
+    //                    // Подчет общего веса
+    //                    total_vesg += (vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000) : 0);
+    //                    // Группировка операторов
+    //                    if (dir_operator) {
+    //                        var opr = getObjects(group_operators, 'id', dir_operator.id)
+    //                        if (opr && opr.length > 0) {
+    //                            opr[0].count += 1;
+    //                        } else {
+    //                            group_operators.push({ id: dir_operator.id, operator: ids_inc.ids_dir.getValueObj(dir_operator, 'operators', print_detali.lang), count: 1 });
+    //                        }
+    //                    }
+
+    //                    table_tbody.append(tbody_tr);
+
+    //                }
+
+    //                var div_count_car = $('<div class="col-sm-2 text-right font-weight-bold">Всего вагонов : </div>');
+    //                var div_count_car_val = $('<div class="col-sm-2 text-left">' + list_cars.length + '</div>');
+    //                var div_vesg_car = $('<div class="offset-4  col-sm-2 text-right font-weight-bold">Общий вес, тн</div>');
+    //                var div_vesg_car_val = $('<div class="col-sm-2 text-left">' + total_vesg.toFixed(2) + '</div>');
+    //                div_row_total
+    //                    .append(div_count_car)
+    //                    .append(div_count_car_val)
+    //                    .append(div_vesg_car)
+    //                    .append(div_vesg_car_val);
+
+    //                //
+    //                // Заполним таблицу операторов
+    //                var div_row_table_operator = print_detali.row_report1.clone();
+    //                var table_operator = print_detali.table_report.clone();
+    //                var table_thead_operator = print_detali.table_thead_report.clone();
+    //                var table_tr_operator = print_detali.table_tr_report.clone();
+    //                table_tr_operator.append($('<th scope="col">Оператор</th>'));
+    //                table_tr_operator.append($('<th scope="col">Кол. вагонов</th>'));
+
+    //                var table_tbody_operator = print_detali.table_tbody_report.clone();
+    //                for (io = 0; io < group_operators.length; io++) {
+    //                    var tbody_tr_operator = print_detali.table_tr_report.clone();
+    //                    tbody_tr_operator.append($('<th scope="row">' + group_operators[io].operator + '</th>'));
+    //                    tbody_tr_operator.append($('<td>' + group_operators[io].count + '</td>'));
+    //                    table_tbody_operator.append(tbody_tr_operator);
+    //                }
+    //                div_row_table_operator.append(table_operator.append(table_thead_operator.append(table_tr_operator)).append(table_tbody_operator));
+    //            }
+    //            div_row_table.append(table.append(table_thead.append(table_tr)).append(table_tbody));
+
+    //            print_detali.context_report.empty().append(div_row_title1).append(div_row_title2).append(div_row_table).append(div_row_total).append(div_row_table_operator).append(div_row_signature);
+    //        }
+    //        return;
+    //    }
+
+    //};
 
     //================================================================
     // Основной вход
