@@ -104,9 +104,11 @@ namespace Test
             //tmt.MTThread_SFTPTransfer();
             //tmt.MTTransfer_WebApiClientMT();
             //tmt.MTThread_Start_TransferWT();
-            tmt.MTTransfer_InsertIDSArrivalSostav();
+            //tmt.MTTransfer_InsertIDSArrivalSostav();
             //tmt.MTTransfer_TransferWagonsMotionSignals();
-            //tmt.MTTransfer_TransferWagonsMotionSignalsOfNum();
+            tmt.MTTransfer_TransferWagonsMotionSignalsOfNum();
+            //tmt.MTTransfer_RewriteIDSArrivalSostav();
+
 
             #endregion
 

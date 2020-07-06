@@ -382,8 +382,9 @@ namespace UZ
                     foreach (UZ_Data uzd in list_uz_data)
                     {
                         //DateTime new_dt = ((DateTime)dt_arrival).AddHours(-36);
+                        int period = -36;
                         //!!! Проверка на старый документ на 36 часов годен затем только вручную
-                        if (dt_arrival != null && uzd.dt != null && ((DateTime)dt_arrival).AddHours(-36) <= uzd.dt)
+                        if ((dt_arrival != null && uzd.update_dt != null && ((DateTime)dt_arrival).AddHours(period) <= uzd.update_dt) || (dt_arrival != null && uzd.update_dt == null  && uzd.dt != null && ((DateTime)dt_arrival).AddHours(period) <= uzd.dt))
                         {
                             string xml_final = convert.XMLToFinalXML(uzd.raw_xml);
                             OTPR otpr = convert.FinalXMLToOTPR(xml_final);

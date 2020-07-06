@@ -92,35 +92,61 @@ namespace WebApiClient
         // создаем http-клиента с токеном 
         public HttpClient CreateClient(string accessToken = "")
         {
-            var client = new HttpClient();
-            client.Timeout = TimeSpan.FromMinutes(10); // Добавил таймаут 10 мин
-            if (!string.IsNullOrWhiteSpace(accessToken))
+            try
             {
-                client.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+                var client = new HttpClient();
+                client.Timeout = TimeSpan.FromMinutes(10); // Добавил таймаут 10 мин
+                if (!string.IsNullOrWhiteSpace(accessToken))
+                {
+                    client.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+                }
+                return client;
             }
-            return client;
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("CreateClient(accessToken={0})", accessToken), eventID);
+                return null;
+            }
         }
 
         // получаем информацию о клиенте 
         public string GetUserInfo(string token)
         {
-            if (String.IsNullOrWhiteSpace(APP_PATH)) return null;
-            using (var client = CreateClient(token))
+            try
             {
-                var response = client.GetAsync(APP_PATH + "/api/Account/UserInfo").Result;
-                return response.Content.ReadAsStringAsync().Result;
+                if (String.IsNullOrWhiteSpace(APP_PATH)) return null;
+                using (var client = CreateClient(token))
+                {
+                    if (client == null) return null;
+                    var response = client.GetAsync(APP_PATH + "/api/Account/UserInfo").Result;
+                    return response.Content.ReadAsStringAsync().Result;
+                }
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetUserInfo(token={0})", token), eventID);
+                return null;
             }
         }
 
         // обращаемся по маршруту api/values 
         public string GetValues(string token)
         {
-            if (String.IsNullOrWhiteSpace(APP_PATH)) return null;
-            using (var client = CreateClient(token))
+            try
             {
-                var response = client.GetAsync(APP_PATH + "/api/WagonsTracking?note&st_form&nsost&st_nazn&from=2&st_disl&dt1&dt2&vagonlg_id").Result;
-                return response.Content.ReadAsStringAsync().Result;
+                if (String.IsNullOrWhiteSpace(APP_PATH)) return null;
+                using (var client = CreateClient(token))
+                {
+                    if (client == null) return null;
+                    var response = client.GetAsync(APP_PATH + "/api/WagonsTracking?note&st_form&nsost&st_nazn&from=2&st_disl&dt1&dt2&vagonlg_id").Result;
+                    return response.Content.ReadAsStringAsync().Result;
+                }
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetValues(token={0})", token), eventID);
+                return null; 
             }
         }
 
@@ -131,6 +157,7 @@ namespace WebApiClient
                 if (String.IsNullOrWhiteSpace(APP_PATH)) return null;
                 using (var client = CreateClient(token))
                 {
+                    if (client == null) return null;
                     var response = client.GetAsync(APP_PATH + api_comand).Result;
                     String.Format("Web API METRANS GetAsync [requestUri :{0}, status:{1}", APP_PATH + api_comand, response.StatusCode).WarningLog(eventID);
                     if (response.StatusCode != HttpStatusCode.OK)
@@ -168,7 +195,15 @@ namespace WebApiClient
 
         public T GetJSONSelect<T>(string api_comand)
         {
-            return JSONStringToClass<T>(GetApiValues(api_comand));
+            try
+            {
+                return JSONStringToClass<T>(GetApiValues(api_comand));
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetJSONSelect<T>(api_comand={0})", api_comand), eventID);
+                return default(T);
+            }
         }
 
     }

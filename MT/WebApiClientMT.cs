@@ -82,7 +82,7 @@ namespace MT
         }
     }
 
-    public class WebApiClientMT 
+    public class WebApiClientMT
     {
         private eventID eventID = eventID.MT_WebApiClient;
         protected service servece_owner = service.Null;
@@ -90,9 +90,10 @@ namespace MT
         private string url;
         private string user;
         private string psw;
-        private string api; 
-       
-        public WebApiClientMT(service servece_owner){
+        private string api;
+
+        public WebApiClientMT(service servece_owner)
+        {
             try
             {
                 this.servece_owner = servece_owner;
@@ -101,7 +102,7 @@ namespace MT
                 this.psw = ConfigurationManager.AppSettings["WebApiMTPSW"].ToString();
                 this.api = ConfigurationManager.AppSettings["WebApiMTApi"].ToString();
                 wapi = new WebApiToken(url, user, psw);
-             }
+            }
             catch (Exception e)
             {
                 e.ExceptionMethodLog(String.Format("WebApiClientMetallurgTrans()"), this.servece_owner, eventID);
@@ -118,7 +119,7 @@ namespace MT
                 this.psw = psw;
                 this.api = api;
                 wapi = new WebApiToken(url, user, psw);
-             }
+            }
             catch (Exception e)
             {
                 e.ExceptionMethodLog(String.Format("WebApiClientMetallurgTrans(url={0},user={1},psw={2},api={3})", url, user, psw, api), this.servece_owner, eventID);
@@ -130,29 +131,71 @@ namespace MT
         /// <returns></returns>
         public List<WagonsTrackingMT> GetWagonsTracking()
         {
-            return wapi.GetJSONSelect<List<WagonsTrackingMT>>(this.api+"?nvagon=0");
+            try
+            {
+                return wapi.GetJSONSelect<List<WagonsTrackingMT>>(this.api + "?nvagon=0");
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetWagonsTracking()"), this.servece_owner, eventID);                
+                return null;
+            }
         }
 
         public List<WagonsTrackingMT> GetWagonsTracking(int num_vag)
         {
-            return wapi.GetJSONSelect<List<WagonsTrackingMT>>(this.api + "?nvagon=" + num_vag.ToString());
+            try
+            {
+                return wapi.GetJSONSelect<List<WagonsTrackingMT>>(this.api + "?nvagon=" + num_vag.ToString());
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetWagonsTracking(num_vag={0})", num_vag), this.servece_owner, eventID);                
+                return null;
+            }
         }
 
         public List<WagonsTrackingMT> GetWagonsTracking(int num_vag, DateTime date_start)
         {
-            string select = String.Format(this.api + "?nvagon={0}&dt1={1}", num_vag, date_start.ToString("yyyy-MM-dd HH:mm:ss"));
-            return wapi.GetJSONSelect<List<WagonsTrackingMT>>(select);
+            try
+            {
+                string select = String.Format(this.api + "?nvagon={0}&dt1={1}", num_vag, date_start.ToString("yyyy-MM-dd HH:mm:ss"));
+                return wapi.GetJSONSelect<List<WagonsTrackingMT>>(select);
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetWagonsTracking(num_vag={0}, date_start={1})", num_vag, date_start), this.servece_owner, eventID);                
+                return null;
+            }
+
         }
 
         public List<WagonsTrackingMT> GetWagonsTracking(int num_vag, DateTime date_start, DateTime date_stop)
         {
-            string select = String.Format(this.api + "?nvagon={0}&dt1={1}&dt2={2}", num_vag, date_start.ToString("yyyy-MM-dd HH:mm:ss"), date_stop.ToString("yyyy-MM-dd HH:mm:ss"));
-            return wapi.GetJSONSelect<List<WagonsTrackingMT>>(select);
+            try
+            {
+                string select = String.Format(this.api + "?nvagon={0}&dt1={1}&dt2={2}", num_vag, date_start.ToString("yyyy-MM-dd HH:mm:ss"), date_stop.ToString("yyyy-MM-dd HH:mm:ss"));
+                return wapi.GetJSONSelect<List<WagonsTrackingMT>>(select);
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetWagonsTracking(num_vag={0}, date_start={1}, date_stop={2})", num_vag, date_start, date_stop), this.servece_owner, eventID);                
+                return null;
+            }
         }
 
         public string GetJSONWagonsTracking()
         {
-            return wapi.GetApiValues(this.api + "?nvagon=0");
+            try
+            {
+                return wapi.GetApiValues(this.api + "?nvagon=0");
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetJSONWagonsTracking()"), this.servece_owner, eventID);                
+                return null;
+            }
+
         }
     }
 }

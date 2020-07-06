@@ -11,8 +11,9 @@ namespace Test.TestModule
 {
     public class Test_Metrans
     {
-        public Test_Metrans() { 
-        
+        public Test_Metrans()
+        {
+
         }
 
         #region MTTransfer
@@ -28,8 +29,8 @@ namespace Test.TestModule
         public void MTTransfer_TransferArrival()
         {
             MTTransfer mtt = new MTTransfer();
-            mtt.DayRangeArrivalCars = 10; 
-            mtt.ArrivalToRailWay = false;        
+            mtt.DayRangeArrivalCars = 10;
+            mtt.ArrivalToRailWay = false;
             mtt.FromPath = @"D:\xlm_new";
             mtt.DeleteFile = true;
             int res_transfer = mtt.TransferArrival();
@@ -58,8 +59,8 @@ namespace Test.TestModule
         public void MTTransfer_InsertIDSArrivalSostav()
         {
             MTTransfer mtt = new MTTransfer();
-            mtt.InsertIDSArrivalSostav(19494);
-            mtt.InsertIDSArrivalSostav(19495);
+            mtt.InsertIDSArrivalSostav(19587);
+            mtt.InsertIDSArrivalSostav(19588);
         }
 
         public void MTTransfer_TransferWagonsMotionSignals()
@@ -72,7 +73,53 @@ namespace Test.TestModule
         {
 
             MTTransfer mtt = new MTTransfer();
-            int result = mtt.TransferWagonsMotionSignals(63532220);
+            int result = mtt.TransferWagonsMotionSignals(63664585);
+        }
+        /// <summary>
+        /// Переписать в прибытие системы ИДС составы и вагоны старт с id_arrived
+        /// </summary>
+        public void MTTransfer_RewriteIDSArrivalSostav()
+        {
+            MTTransfer mtt = new MTTransfer();
+
+            long id_arrived_start = 3124;
+
+            EFMT.Concrete.EFArrivalSostav ef_as = new EFMT.Concrete.EFArrivalSostav(new EFMT.Concrete.EFDbContext());
+            EFIDS.Concrete.EFArrivalSostav ef_ids_as = new EFIDS.Concrete.EFArrivalSostav(new EFIDS.Concrete.EFDbContext());
+            EFIDS.Concrete.EFArrivalCars ef_ids_ac = new EFIDS.Concrete.EFArrivalCars(new EFIDS.Concrete.EFDbContext());
+
+
+            List<EFMT.Entities.ArrivalSostav> list = ef_as.Context.Where(s => s.id_arrived >= id_arrived_start && s.close == null).OrderBy(c => c.id_arrived).ToList();
+            // Удалим сотавы и вагоны
+            foreach (EFMT.Entities.ArrivalSostav mt_sost in list)
+            {
+
+                EFIDS.Entities.ArrivalSostav ids_st = ef_ids_as.Context.Where(s => s.id_sostav == mt_sost.id).FirstOrDefault();
+                if (ids_st != null)
+                {
+                    List<EFIDS.Entities.ArrivalCars> list_ids_car = ef_ids_ac.Context.Where(c => c.id_arrival == ids_st.id).ToList();
+
+                    List<long> list_id_car = list_ids_car.Select(c => c.id).ToList();
+
+                    ef_ids_ac.Delete(list_id_car);
+                    int res_del_cars = ef_ids_ac.Save();
+                    ef_ids_as.Delete(ids_st.id);
+                    int res_del_sost = ef_ids_as.Save();
+                    Console.WriteLine("Удалил вагоны {0}, удалил состав {1}", res_del_cars, res_del_sost);
+                }
+                else
+                {
+                    Console.WriteLine("Состава {0}, нет в системе ИДС", mt_sost.id);
+                }
+            }
+
+            // Перезапишим составы и вагоны 
+            foreach (EFMT.Entities.ArrivalSostav mt_sost in list)
+            {
+                int res_rew = mtt.InsertIDSArrivalSostav(mt_sost.id);
+                Console.WriteLine("Состав {0}, перезаписан в системе ИДС, результат {1}", mt_sost.id, res_rew);
+
+            }
         }
 
 
@@ -112,10 +159,11 @@ namespace Test.TestModule
             List<int> count_copy = csftp.CopyToDir(listProperty);
         }
 
-        public void MTThread_Start_TransferWT() { 
+        public void MTThread_Start_TransferWT()
+        {
             MTThread mtt = new MTThread(service.Metrans);
             mtt.Start_TransferWT();
-        
+
         }
 
         #endregion

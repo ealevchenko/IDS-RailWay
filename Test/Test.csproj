@@ -88,6 +88,10 @@
       <Project>{07A94BBB-16A5-4817-87EA-BB7BAEA844A7}</Project>
       <Name>EFIDS</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EFMT\EFMT.csproj">
+      <Project>{0ef55f70-8933-4553-a6d9-407d54b61b49}</Project>
+      <Name>EFMT</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ELOG\ELOG.csproj">
       <Project>{513e1e72-406a-4309-92dd-fb8c079c9bbd}</Project>
       <Name>ELOG</Name>

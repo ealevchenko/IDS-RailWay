@@ -219,7 +219,7 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("GetLastIDWTWagonsMotionSignals(num={0})", num), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("GetLastWTMotionSignals(num={0})", num), servece_owner, eventID);
                 return null;
             }
         }

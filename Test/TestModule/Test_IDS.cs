@@ -61,7 +61,7 @@ namespace Test.TestModule
         {
 
             IDSMORS ids = new IDSMORS(service.Test);
-            long? res = ids.GetLastIDWTWagonsMotionSignals(50030337);
+            long? res = ids.GetLastIDWTWagonsMotionSignals(63664585);
 
         }
         #endregion
