@@ -74,6 +74,8 @@ namespace EFIDS.Concrete
         public virtual DbSet<Directory_DEPO> Directory_DEPO { get; set; }
         public virtual DbSet<Directory_TypesRepairsWagons> Directory_TypesRepairsWagons { get; set; }
         public virtual DbSet<Directory_WagonManufacturers> Directory_WagonManufacturers { get; set; }
+        // !!! временно для совмещения справочника КИС и ИДС
+        public virtual DbSet<Directory_Cars_KIS> Directory_Cars_KIS { get; set; }
         // Доступ к сайту
         public virtual DbSet<WebAccess> WebAccess { get; set; }
         public virtual DbSet<WebView> WebView { get; set; }

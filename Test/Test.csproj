@@ -50,6 +50,14 @@
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Oracle.ManagedDataAccess, Version=4.122.19.1, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
+      <HintPath>..\packages\Oracle.ManagedDataAccess.19.7.0\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Oracle.ManagedDataAccess.EntityFramework, Version=6.122.19.1, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
+      <HintPath>..\packages\Oracle.ManagedDataAccess.EntityFramework.19.7.0\lib\net45\Oracle.ManagedDataAccess.EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -67,6 +75,7 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestModule\Test_KIS.cs" />
     <Compile Include="TestModule\Test_IDS.cs" />
     <Compile Include="TestModule\Test_Logs.cs" />
     <Compile Include="TestModule\Test_Metrans.cs" />
@@ -88,6 +97,10 @@
       <Project>{07A94BBB-16A5-4817-87EA-BB7BAEA844A7}</Project>
       <Name>EFIDS</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EFKIS\EFKIS.csproj">
+      <Project>{1def3df1-f167-42f0-8a87-5ce6f144ec7e}</Project>
+      <Name>EFKIS</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EFMT\EFMT.csproj">
       <Project>{0ef55f70-8933-4553-a6d9-407d54b61b49}</Project>
       <Name>EFMT</Name>
@@ -107,6 +120,10 @@
     <ProjectReference Include="..\IDS\IDS.csproj">
       <Project>{5929fe8f-0a9b-4eed-80e4-624705795d02}</Project>
       <Name>IDS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KIS\KIS.csproj">
+      <Project>{93477563-45b7-4c49-a5e7-f8aedee05bd8}</Project>
+      <Name>KIS</Name>
     </ProjectReference>
     <ProjectReference Include="..\MT\MT.csproj">
       <Project>{165bfdab-435f-42eb-8b6c-120f910a62e8}</Project>

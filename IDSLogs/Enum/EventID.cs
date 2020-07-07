@@ -39,7 +39,7 @@ namespace IDSLogs.Enum
         MT_WebApiClient = 2600,         // Библиотека доступа к WEB API
         #endregion
 
-        #region Служба Информационно диспечерской системы 2000
+        #region Служба Информационно диспечерской системы 3000
 
         IDS = 3000,
         EFIDS = 3100,               // Библиотека базы данных IDS
@@ -47,6 +47,15 @@ namespace IDSLogs.Enum
         IDS_IDSTransfer = 3400,     // Сервис переноса даных из файлов в БД IDS
         IDS_IDSMORS = 3500,         // Сервис ИДС "УСПС"
 
+        #endregion
+
+        #region Служба КИС 4000
+
+        KIS = 4000,
+        EFKIS = 4100,               // Библиотека базы данных EFKIS
+            EFKIS_VAGON_SOB = 4101,     // Таблица аренда вагонов
+
+        KIS_Directory = 4200,       // Сервис справочников КИС
         #endregion
     }
 }

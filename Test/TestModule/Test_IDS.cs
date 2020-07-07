@@ -53,6 +53,14 @@ namespace Test.TestModule
 
         }
 
+        public void IDSDirectory_CreateDirectory_CarsInKIS()
+        {
+
+            IDSDirectory ids = new IDSDirectory(service.Test);
+            int res = ids.CreateDirectory_CarsInKIS();
+
+        }
+
         #endregion
 
         #region IDSMORS

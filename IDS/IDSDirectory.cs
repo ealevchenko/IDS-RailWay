@@ -3,6 +3,7 @@ using EFIDS.Entities;
 using EFIDS.Helper;
 using IDSLogs;
 using IDSLogs.Enum;
+using KIS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,8 @@ namespace IDS
         EFDirectory_GenusWagons ef_genus = new EFDirectory_GenusWagons(new EFDbContext());
         EFDirectory_OwnersWagons ef_owner = new EFDirectory_OwnersWagons(new EFDbContext());
         EFDirectory_OperatorsWagons ef_operator = new EFDirectory_OperatorsWagons(new EFDbContext());
+        EFDirectory_Railway ef_rw = new EFDirectory_Railway(new EFDbContext());
+
 
         public IDSDirectory()
         {
@@ -327,14 +330,14 @@ namespace IDS
                     num = num,
                     id_countrys = id_countrys,
                     // если есть старая запись и она соответсвует группе род, тогда переносим, инчи новый род
-                    id_genus = last_car != null && isDirectory_GenusWagons(last_car.id_genus, rod) ?   last_car.id_genus : id_genus,
+                    id_genus = last_car != null && isDirectory_GenusWagons(last_car.id_genus, rod) ? last_car.id_genus : id_genus,
                     id_owner = id_owner,
                     // если есть старая запись и в ней стоит блокировка изменения оператора тогда переносим блокировку, иначе нет блокировки
-                    ban_changes_operator = last_car !=null && last_car.ban_changes_operator == true ? true : false,
+                    ban_changes_operator = last_car != null && last_car.ban_changes_operator == true ? true : false,
                     // если есть старая запись и в ней стоит блокировка изменения оператора тогда переносим старого оператора, иначе нового оператора
                     id_operator = last_car != null && last_car.ban_changes_operator == true ? last_car.id_operator : id_operator,
                     // защита иногда нет значения                    
-                    gruzp = info.carrying_capacity!=null ? (double)info.carrying_capacity : 0,
+                    gruzp = info.carrying_capacity != null ? (double)info.carrying_capacity : 0,
                     kol_os = kol_os,
                     usl_tip = usl_tip,
                     date_rem_uz = info.repair_date,
@@ -342,7 +345,7 @@ namespace IDS
                     id_limiting = last_car != null ? last_car.id_limiting : null,  // если есть старая запись унаследуем свойсво лимит погрузки
                     id_type_ownership = id_type_ownership,
                     // если есть старая запись и в ней стоит блокировка изменения оператора тогда переносим начало аренды, иначе пустое поле                    
-                    rent_start =  (last_car != null && last_car.ban_changes_operator == true) || (last_car != null && last_car.ban_changes_operator == false && last_car.id_operator == id_operator) ? last_car.rent_start : null,
+                    rent_start = (last_car != null && last_car.ban_changes_operator == true) || (last_car != null && last_car.ban_changes_operator == false && last_car.id_operator == id_operator) ? last_car.rent_start : null,
                     rent_end = null,
                     note = "Запрет выхода:" + info.exit_ban + "; Другие запреты:" + (info.other_bans != null ? info.other_bans.Replace("<br>", "") : ""),
                     sobstv_kis = null,
@@ -379,6 +382,122 @@ namespace IDS
                 return null;
             }
         }
+        /// <summary>
+        /// Создать справочник вагонов по данным КИС
+        /// </summary>
+        /// <returns></returns>
+        public int CreateDirectory_CarsInKIS()
+        {
+
+            KISDirectory uz_directory = new KISDirectory(this.servece_owner);// Подключим библиотеку КИС
+            EFDirectory_Cars_KIS ef_car_kis = new EFDirectory_Cars_KIS(new EFDbContext());
+            WebAPIClientUZ client = new WebAPIClientUZ(this.servece_owner);
+
+            List<KOMETA_VAGON_SOB> list_cars_kis = uz_directory.GetCurrent_KOMETA_VAGON_SOB();
+            //List<Directory_Cars_KIS> list_cars_kis_to_ids = ef_car_kis.Context.ToList();
+
+            foreach (KOMETA_VAGON_SOB vag_kis in list_cars_kis.ToList())
+            {
+                Directory_Cars_KIS dir_car_kis = ef_car_kis.Context.Where(c => c.num == vag_kis.N_VAGON).FirstOrDefault();
+                // Получим информацию из БД УЗ
+                UZWagonInfo info = client.GetInfoWagonOfNum(vag_kis.N_VAGON);
+                int id_countrys = 0;
+
+                //int id_owner = card != null ? card.id_owner_wagon : GetID_Directory_OwnersWagonsOfName(info.owner, true, user);
+                //int? id_operator = card != null && card.id_operator_wagon != null ? (int)card.id_operator_wagon : GetID_Directory_OperatorsWagonsOfName(info.operat, true, user);
+
+
+
+                if (info != null)
+                {
+                    Directory_Railway dir_rw = GetDirectory_RailwayOfNameAdm(info.admin);
+                    id_countrys = dir_rw.id_countrys;
+
+
+                }
+
+                if (dir_car_kis != null)
+                {
+                    // Вагон обработан Ирой
+                    if (info != null)
+                    {
+                        // Есть информация по УЗ
+                        Directory_Cars new_car = new Directory_Cars()
+                        {
+                            id = 0,
+                            num = vag_kis.N_VAGON,
+                            id_countrys = id_countrys,
+                            id_genus = (int)dir_car_kis.id_genus,
+                            id_owner = id_owner,
+                            // если есть старая запись и в ней стоит блокировка изменения оператора тогда переносим блокировку, иначе нет блокировки
+                            ban_changes_operator = last_car != null && last_car.ban_changes_operator == true ? true : false,
+                            // если есть старая запись и в ней стоит блокировка изменения оператора тогда переносим старого оператора, иначе нового оператора
+                            id_operator = last_car != null && last_car.ban_changes_operator == true ? last_car.id_operator : id_operator,
+                            // защита иногда нет значения                    
+                            gruzp = info.carrying_capacity != null ? (double)info.carrying_capacity : 0,
+                            kol_os = kol_os,
+                            usl_tip = usl_tip,
+                            date_rem_uz = info.repair_date,
+                            date_rem_vag = last_car != null ? last_car.date_rem_vag : null, // если есть старая запись унаследуем свойсво дата ремонта на вагоне
+                            id_limiting = last_car != null ? last_car.id_limiting : null,  // если есть старая запись унаследуем свойсво лимит погрузки
+                            id_type_ownership = id_type_ownership,
+                            // если есть старая запись и в ней стоит блокировка изменения оператора тогда переносим начало аренды, иначе пустое поле                    
+                            rent_start = (last_car != null && last_car.ban_changes_operator == true) || (last_car != null && last_car.ban_changes_operator == false && last_car.id_operator == id_operator) ? last_car.rent_start : null,
+                            rent_end = null,
+                            note = "Запрет выхода:" + info.exit_ban + "; Другие запреты:" + (info.other_bans != null ? info.other_bans.Replace("<br>", "") : ""),
+                            sobstv_kis = null,
+                            create = DateTime.Now,
+                            create_user = user,
+                        };
+
+
+                    }
+                    else
+                    {
+                        // Нет информации по уз
+
+                    }
+                }
+                else
+                {
+                    // Это новый вагон
+                }
+            }
+
+            return 0;
+
+        }
+
         #endregion
+
+
+        #region СПРАВОЧНИК ЖЕЛЕЗНЫХ ДОРОГ (IDS.Directory_Railway)
+        /// <summary>
+        /// Получить строку справочника железных дорог по имени администрации
+        /// </summary>
+        /// <param name="adm"></param>
+        /// <returns></returns>
+        public Directory_Railway GetDirectory_RailwayOfNameAdm(string adm)
+        {
+            try
+            {
+                // Проверим название администрации
+                if (!String.IsNullOrWhiteSpace(adm))
+                {
+                    Directory_Railway dir_rw = ef_rw.Context.Where(r => r.railway_abbr_ru == adm).FirstOrDefault();
+                    return dir_rw;
+                }
+                return null;
+
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetCode_Directory_RailwayOfNameAdm(adm={0})", adm), servece_owner, eventID);
+                return null;
+            }
+        }
+
+        #endregion
+
     }
 }

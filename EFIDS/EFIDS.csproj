@@ -64,6 +64,7 @@
     <Compile Include="Abstract\IWebView.cs" />
     <Compile Include="Abstract\IWebAccess.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_BorderCheckpoint.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_Cars_KIS.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Ways.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_ParkWay.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Divisions.cs" />
@@ -176,6 +177,7 @@
     <Compile Include="Entities\Directory\Directory_Station.cs" />
     <Compile Include="Entities\Directory\Directory_TypeDivision.cs" />
     <Compile Include="Entities\Directory\Directory_Ways.cs" />
+    <Compile Include="Entities\Directory\Directory_Cars_KIS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -73,7 +73,12 @@ namespace Test
 
 
 
-
+            #region Test_KIS Тест Кис
+            Test_KIS tkis = new Test_KIS();
+            //tkis.EFKIS_Vagon_Sob();
+            //tkis.EFKIS_GetCurrentVAGON_SOB();
+            //tkis.KISDirectory_GetCurrent_KOMETA_VAGON_SOB();
+            #endregion
 
 
             #region Test_IDS Тест ИДС
@@ -86,6 +91,7 @@ namespace Test
             //tids.GetDocs();
             //tids.IDSMORS_GetLastIDWTWagonsMotionSignals();
             //tids.SetNum_UZ();
+            tids.IDSDirectory_CreateDirectory_CarsInKIS();
             #endregion
 
             #region Test_Logs тест логирования
@@ -106,7 +112,7 @@ namespace Test
             //tmt.MTThread_Start_TransferWT();
             //tmt.MTTransfer_InsertIDSArrivalSostav();
             //tmt.MTTransfer_TransferWagonsMotionSignals();
-            tmt.MTTransfer_TransferWagonsMotionSignalsOfNum();
+            //tmt.MTTransfer_TransferWagonsMotionSignalsOfNum();
             //tmt.MTTransfer_RewriteIDSArrivalSostav();
 
 
