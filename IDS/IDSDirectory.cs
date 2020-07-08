@@ -421,34 +421,34 @@ namespace IDS
                     // Вагон обработан Ирой
                     if (info != null)
                     {
-                        // Есть информация по УЗ
-                        Directory_Cars new_car = new Directory_Cars()
-                        {
-                            id = 0,
-                            num = vag_kis.N_VAGON,
-                            id_countrys = id_countrys,
-                            id_genus = (int)dir_car_kis.id_genus,
-                            id_owner = id_owner,
-                            // если есть старая запись и в ней стоит блокировка изменения оператора тогда переносим блокировку, иначе нет блокировки
-                            ban_changes_operator = last_car != null && last_car.ban_changes_operator == true ? true : false,
-                            // если есть старая запись и в ней стоит блокировка изменения оператора тогда переносим старого оператора, иначе нового оператора
-                            id_operator = last_car != null && last_car.ban_changes_operator == true ? last_car.id_operator : id_operator,
-                            // защита иногда нет значения                    
-                            gruzp = info.carrying_capacity != null ? (double)info.carrying_capacity : 0,
-                            kol_os = kol_os,
-                            usl_tip = usl_tip,
-                            date_rem_uz = info.repair_date,
-                            date_rem_vag = last_car != null ? last_car.date_rem_vag : null, // если есть старая запись унаследуем свойсво дата ремонта на вагоне
-                            id_limiting = last_car != null ? last_car.id_limiting : null,  // если есть старая запись унаследуем свойсво лимит погрузки
-                            id_type_ownership = id_type_ownership,
-                            // если есть старая запись и в ней стоит блокировка изменения оператора тогда переносим начало аренды, иначе пустое поле                    
-                            rent_start = (last_car != null && last_car.ban_changes_operator == true) || (last_car != null && last_car.ban_changes_operator == false && last_car.id_operator == id_operator) ? last_car.rent_start : null,
-                            rent_end = null,
-                            note = "Запрет выхода:" + info.exit_ban + "; Другие запреты:" + (info.other_bans != null ? info.other_bans.Replace("<br>", "") : ""),
-                            sobstv_kis = null,
-                            create = DateTime.Now,
-                            create_user = user,
-                        };
+                        //// Есть информация по УЗ
+                        //Directory_Cars new_car = new Directory_Cars()
+                        //{
+                        //    id = 0,
+                        //    num = vag_kis.N_VAGON,
+                        //    id_countrys = id_countrys,
+                        //    id_genus = (int)dir_car_kis.id_genus,
+                        //    id_owner = id_owner,
+                        //    // если есть старая запись и в ней стоит блокировка изменения оператора тогда переносим блокировку, иначе нет блокировки
+                        //    ban_changes_operator = last_car != null && last_car.ban_changes_operator == true ? true : false,
+                        //    // если есть старая запись и в ней стоит блокировка изменения оператора тогда переносим старого оператора, иначе нового оператора
+                        //    id_operator = last_car != null && last_car.ban_changes_operator == true ? last_car.id_operator : id_operator,
+                        //    // защита иногда нет значения                    
+                        //    gruzp = info.carrying_capacity != null ? (double)info.carrying_capacity : 0,
+                        //    kol_os = kol_os,
+                        //    usl_tip = usl_tip,
+                        //    date_rem_uz = info.repair_date,
+                        //    date_rem_vag = last_car != null ? last_car.date_rem_vag : null, // если есть старая запись унаследуем свойсво дата ремонта на вагоне
+                        //    id_limiting = last_car != null ? last_car.id_limiting : null,  // если есть старая запись унаследуем свойсво лимит погрузки
+                        //    id_type_ownership = id_type_ownership,
+                        //    // если есть старая запись и в ней стоит блокировка изменения оператора тогда переносим начало аренды, иначе пустое поле                    
+                        //    rent_start = (last_car != null && last_car.ban_changes_operator == true) || (last_car != null && last_car.ban_changes_operator == false && last_car.id_operator == id_operator) ? last_car.rent_start : null,
+                        //    rent_end = null,
+                        //    note = "Запрет выхода:" + info.exit_ban + "; Другие запреты:" + (info.other_bans != null ? info.other_bans.Replace("<br>", "") : ""),
+                        //    sobstv_kis = null,
+                        //    create = DateTime.Now,
+                        //    create_user = user,
+                        //};
 
 
                     }
