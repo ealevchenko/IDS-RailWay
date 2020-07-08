@@ -15,6 +15,7 @@ namespace EFKIS.Abstract
         IQueryable<VAGON_SOB> GetVAGON_SOB(int num);
         VAGON_SOB GetVAGON_SOB(int num, DateTime dt);
         IQueryable<VAGON_SOB> GetCurrentVAGON_SOB();
+        VAGON_SOB GetCurrentVAGON_SOB(int num);
 
         #endregion
     }

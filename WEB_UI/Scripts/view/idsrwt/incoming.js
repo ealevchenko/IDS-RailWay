@@ -3006,7 +3006,8 @@
             // Показать ограничения погрузки
             view_epd_limiting_loading: function (vagon) {
                 if (vagon) {
-                    cars_detali.card_vag_limiting_loading.val(cars_detali.ids_inc.ids_dir.getValueCulture_LimitingLoading_Of_Code(vagon.id_limiting, 'limiting_name'));
+                    var res = cars_detali.ids_inc.ids_dir.getValueCulture_LimitingLoading_Of_Code(vagon.id_limiting, 'limiting_name');
+                    cars_detali.card_vag_limiting_loading.val(res);
                 }
                 //!!! если вагона нет тогда наверное нужно создать в ручную
             },

@@ -25,6 +25,8 @@ namespace EFIDS.Entities
 
         public int id_owner { get; set; }
 
+        public int? id_operator_uz { get; set; }
+
         public bool? ban_changes_operator { get; set; }
 
         public int? id_operator { get; set; }
@@ -48,8 +50,10 @@ namespace EFIDS.Entities
 
         public DateTime? rent_end { get; set; }
 
+        public int? sign { get; set; }
+
         [Required]
-        [StringLength(200)]
+        [StringLength(1000)]
         public string note { get; set; }
 
         public int? sobstv_kis { get; set; }

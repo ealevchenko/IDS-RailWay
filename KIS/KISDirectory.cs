@@ -1,4 +1,5 @@
 ﻿using EFKIS.Concrete.KOMETA;
+using EFKIS.Entities.KOMETA;
 using IDSLogs.Enum;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,25 @@ namespace KIS
         public DateTime? DATE_REM { get; set; }
         public string PRIM { get; set; }
         public int? CODE { get; set; }
+    }
+
+    public static class kis_library
+    {
+        public static KOMETA_VAGON_SOB GetGenusWagons(this VAGON_SOB v)
+        {
+            if (v == null) return null;
+            return new KOMETA_VAGON_SOB()
+            {
+                N_VAGON = v.N_VAGON,
+                SOB = v.SOB,
+                DATE_AR = v.DATE_AR,
+                DATE_END = v.DATE_END,
+                ROD = v.ROD,
+                DATE_REM = v.DATE_REM,
+                PRIM = v.PRIM,
+                CODE = v.CODE,
+            };
+        }
     }
 
     public class KISDirectory
@@ -55,6 +75,13 @@ namespace KIS
                 PRIM = v.PRIM,
                 CODE = v.CODE,
             }).ToList();
+            //return ef_vagon_sob.GetCurrentVAGON_SOB().Select(v => v.GetGenusWagons()).ToList();
+
+        }
+
+        public KOMETA_VAGON_SOB GetCurrent_KOMETA_VAGON_SOB(int num)
+        {
+            return ef_vagon_sob.GetCurrentVAGON_SOB(num).GetGenusWagons();
         }
 
         #endregion

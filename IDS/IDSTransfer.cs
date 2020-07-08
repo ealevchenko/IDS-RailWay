@@ -210,6 +210,11 @@ namespace IDS
                         {
                             // Получатель АМКР
                             doc_num = AddUpdateUZ_DOC_To_DB_IDS(car.num, car.dt);
+                            //int res_ins_new_car = ids_directory.InsertNewDirectory_Cars(car.num);
+                            //if (res_ins_new_car != 0)
+                            //{
+                            //    String.Format("В справочник 'ВАГОНОВ ИДС' - добавлен новый вагон №{0}, код выполнения : {1}", car.num, res_ins_new_car).WarningLog(servece_owner, this.eventID);
+                            //}
                         }
                         // Создадим новый вагон
                         ArrivalCars new_car = new ArrivalCars()
@@ -346,7 +351,7 @@ namespace IDS
                     {
 
                         string code_from = uz_doc.sender_code != null ? uz_doc.sender_code : "0";
-                       
+
                         doc = new UZ_DOC()
                         {
                             num_doc = uz_doc.id_doc,

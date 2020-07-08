@@ -75,5 +75,18 @@ namespace EFKIS.Concrete.KOMETA
                 return null;
             }
         }
+
+        public VAGON_SOB GetCurrentVAGON_SOB(int num)
+        {
+            try
+            {
+                return VAGON_SOB.Where(v => v.N_VAGON== num && v.DATE_AR != null && v.DATE_END == null).FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetCurrentVAGON_SOB(num={0})", num), eventID);
+                return null;
+            }
+        }
     }
 }
