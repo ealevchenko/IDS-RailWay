@@ -4849,7 +4849,7 @@
                         rent_end: null,
                         sign: cars_detali.select_vagon.sign,
                         note: cars_detali.card_vag_note.val(),
-                        sobstv_kis: null,
+                        sobstv_kis: cars_detali.select_vagon.sobstv_kis,
                         create: toISOStringTZ(new Date()),
                         create_user: cars_detali.user
                     };

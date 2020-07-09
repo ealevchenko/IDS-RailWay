@@ -360,13 +360,19 @@ namespace IDS
                 int? id_operator_uz = (info != null ? GetID_Directory_OperatorsWagonsOfName(info.operat, true, user) : null);
                 // Оператор ручной , если есть предыдущая запись берем ее иначе читаем текущий по ГИС
                 int? id_operator = (last_car != null ? last_car.id_operator : info != null ? GetID_Directory_OperatorsWagonsOfName(info.operat, true, user) : null);
-                // Признак изменения оператора
-                bool ban_changes_operator = false;
+                // Признак изменения оператора (по умалчанию предыдущий могли не прореагировать на смену оператора а помянялась колосная пара)
+                bool ban_changes_operator = last_car!=null ? (bool)last_car.ban_changes_operator : false;
                 // Не определен оператор в ручную, новый оператор по ГИС отличается от старого
                 if (id_operator == null || (last_car != null && last_car.id_operator_uz != id_operator_uz))
                 {
                     ban_changes_operator = true;
                 }
+                // Проверка на род вагона
+                if ((last_car != null && rod == null) || (last_car != null && rod != null && isDirectory_GenusWagons(last_car.id_genus, rod)))
+                {
+                    id_genus = last_car.id_genus;
+                }
+
                 int? id_type_ownership = card != null ? (int?)card.id_type_ownership : null;
                 // Создадим новую запись
                 Directory_Cars new_car = new Directory_Cars()
@@ -375,7 +381,7 @@ namespace IDS
                     num = num,
                     id_countrys = id_countrys,
                     // если есть старая запись и она соответсвует группе род, тогда переносим, инчи новый род
-                    id_genus = last_car != null && isDirectory_GenusWagons(last_car.id_genus, rod) ? last_car.id_genus : id_genus,
+                    id_genus = id_genus,
                     id_owner = id_owner,
                     id_operator_uz = id_operator_uz,
                     ban_changes_operator = ban_changes_operator,
@@ -401,7 +407,7 @@ namespace IDS
                 {
                     if (
                         last_car.id_countrys != new_car.id_countrys ||
-                        !isDirectory_GenusWagons(last_car.id_genus, rod) ||
+                        (rod!=null && !isDirectory_GenusWagons(last_car.id_genus, rod)) ||
                         last_car.id_owner != new_car.id_owner ||
                         last_car.id_operator_uz != new_car.id_operator_uz ||
                         last_car.gruzp != new_car.gruzp ||
@@ -521,7 +527,7 @@ namespace IDS
                                 id_countrys = id_countrys,
                                 id_genus = (int)dir_car_kis.id_genus,
                                 id_owner = id_owner,
-                                ban_changes_operator = false,
+                                ban_changes_operator = vag_kis != null ? vag_kis.SOB != dir_car_kis.id_sob_kis ? true: false : false,
                                 id_operator = id_operator,
                                 id_operator_uz = id_operator_uz,
                                 gruzp = info.carrying_capacity != null ? (double)info.carrying_capacity : 0,
@@ -531,11 +537,11 @@ namespace IDS
                                 date_rem_vag = null,
                                 id_limiting = dir_car_kis.id_limiting,
                                 id_type_ownership = id_type_ownership,
-                                rent_start = vag_kis.DATE_AR,
+                                rent_start = (vag_kis != null ? (DateTime?)vag_kis.DATE_AR : null),
                                 rent_end = null,
                                 sign = null,
                                 note = "Запрет выхода:" + (info.exit_ban != null ? info.exit_ban : "нет") + "; Другие запреты:" + (info.other_bans != null ? info.other_bans.Replace("<br>", "") : ""),
-                                sobstv_kis = vag_kis.SOB,
+                                sobstv_kis = dir_car_kis.id_sob_kis, //vag_kis.SOB,
                                 create = DateTime.Now,
                                 create_user = user,
                             };
