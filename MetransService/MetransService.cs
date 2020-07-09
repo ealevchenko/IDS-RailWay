@@ -45,25 +45,21 @@ namespace MetransService
         private service thread_file= service.Metrans_Transfer_MT_to_AMKR;
         private service thread_approaches = service.Metrans_TransferApproaches;
         private service thread_arrival = service.Metrans_TransferArrival;
-        private service thread_tracking = service.Metrans_TransferWT;
 
         private int interval_transfer_file = 300; // секунд
         private int interval_transfer_approaches = 300; // секунд
         private int interval_transfer_arrival = 300; // секунд
-        private int interval_transfer_tracking = 600; // секунд
         //private int interval_close_approaches = 3600; // 1раз в час
 
         bool active_transfer_host = true;
         bool active_transfer_approaches = true;
         bool active_transfer_arrival = true;
-        bool active_transfer_tracking = true;
         //bool active_close_approaches = true;
 
         //System.Timers.Timer timer_services = new System.Timers.Timer();
         System.Timers.Timer timer_services_file = new System.Timers.Timer();
         System.Timers.Timer timer_services_approaches = new System.Timers.Timer();
         System.Timers.Timer timer_services_arrival = new System.Timers.Timer();
-        System.Timers.Timer timer_services_tracking = new System.Timers.Timer();
         //System.Timers.Timer timer_services_close_approaches = new System.Timers.Timer();
 
         private MTThread mtt = new MTThread(service.Metrans);
@@ -89,14 +85,12 @@ namespace MetransService
                 this.interval_transfer_file = int.Parse(ConfigurationManager.AppSettings["IntervalTransferFile"].ToString());
                 this.interval_transfer_approaches = int.Parse(ConfigurationManager.AppSettings["IntervalTransferApproaches"].ToString());
                 this.interval_transfer_arrival = int.Parse(ConfigurationManager.AppSettings["IntervalTransferArrival"].ToString());
-                this.interval_transfer_tracking = int.Parse(ConfigurationManager.AppSettings["IntervalTransferWT"].ToString());
                 //this.interval_close_approaches = RWSetting.GetDB_Config_DefaultSetting("IntervalCloseApproachesCars", this.thread_close_approaches, this.interval_close_approaches, true);
 
                 // состояние активности
                 this.active_transfer_host = bool.Parse(ConfigurationManager.AppSettings["ActiveTransferFile"].ToString());
                 this.active_transfer_approaches = bool.Parse(ConfigurationManager.AppSettings["ActiveTransferApproaches"].ToString());
                 this.active_transfer_arrival = bool.Parse(ConfigurationManager.AppSettings["ActiveTransferArrival"].ToString());
-                this.active_transfer_tracking = bool.Parse(ConfigurationManager.AppSettings["ActiveTransferWT"].ToString());
                 //this.active_close_approaches = RWSetting.GetDB_Config_DefaultSetting("ActiveCloseApproachesCars", this.thread_close_approaches, this.active_close_approaches, true);
 
                 // Настроем таймер контроля выполнения сервиса
@@ -111,9 +105,6 @@ namespace MetransService
 
                 timer_services_arrival.Interval = this.interval_transfer_arrival * 1000;
                 timer_services_arrival.Elapsed += new System.Timers.ElapsedEventHandler(this.OnTimerServices_TransferArrival);
-
-                timer_services_tracking.Interval = this.interval_transfer_tracking * 1000;
-                timer_services_tracking.Elapsed += new System.Timers.ElapsedEventHandler(this.OnTimerServices_TransferWT);
 
                 //timer_services_close_approaches.Interval = this.interval_close_approaches * 1000;
                 //timer_services_close_approaches.Elapsed += new System.Timers.ElapsedEventHandler(this.OnTimerServicesCloseApproachesCars);
@@ -142,7 +133,6 @@ namespace MetransService
             RunTimer_Transfer_MT_to_AMKR();
             RunTimer_TransferApproaches();
             RunTimer_TransferArrival();
-            RunTimer_TransferWT();
             //RunTimerCloseApproachesCars();
             //TODO: Добавить запуск других таймеров
             //...............
@@ -160,8 +150,6 @@ namespace MetransService
             message = String.Format("Интервал выполнения сервиса {0}-{1} сек.", this.thread_approaches, this.interval_transfer_approaches);
             message.WarningLog(servece_name, eventID);message.EventLog(EventStatus.Ok, servece_name, eventID);
             message = String.Format("Интервал выполнения сервиса {0}-{1} сек.", this.thread_arrival, this.interval_transfer_arrival);
-            message.WarningLog(servece_name, eventID);message.EventLog(EventStatus.Ok, servece_name, eventID);
-            message = String.Format("Интервал выполнения сервиса {0}-{1} сек.", this.thread_tracking, this.interval_transfer_tracking);
             message.WarningLog(servece_name, eventID);message.EventLog(EventStatus.Ok, servece_name, eventID);
             //String.Format(" сервиса {0}-{1} сек.,", this.thread_close_approaches, this.interval_close_approaches);
             // лог запуска
@@ -318,48 +306,6 @@ namespace MetransService
             catch (Exception e)
             {
                 e.ExceptionLog(String.Format("OnTimerServicesArrival(sender={0}, args={1})", sender, args.ToString()), this.servece_name, eventID);
-            }
-        }
-        #endregion
-
-        #region Metrans_TransferWT
-        protected void Start_TransferWT(bool active)
-        {
-            if (active)
-            {
-                mtt.Start_TransferWT();
-            }
-        }
-
-        protected void Start_TransferWT()
-        {
-            bool active = bool.Parse(ConfigurationManager.AppSettings["ActiveTransferWT"].ToString());
-            Start_TransferWT(active);
-        }
-
-        protected void RunTimer_TransferWT()
-        {
-            Start_TransferWT();
-            timer_services_tracking.Start();
-        }
-
-        private void OnTimerServices_TransferWT(object sender, System.Timers.ElapsedEventArgs args)
-        {
-            //String.Format("Сервис : {0} сработал таймер OnTimerServicesArrival.", this.servece_name).WriteInformation(servece_name, eventID);
-            try
-            {
-                bool active = bool.Parse(ConfigurationManager.AppSettings["ActiveTransferWT"].ToString());
-                Start_TransferWT(active);
-                if (active != this.active_transfer_tracking)
-                {
-                    this.active_transfer_tracking = active;
-                    string mes_service_start = String.Format("Сервис : {0}, выполнение потока {1} - {2}", this.servece_name, this.thread_tracking, active ? "возабновленно" : "остановленно");
-                    mes_service_start.EventLog(EventStatus.Ok, servece_name, eventID);
-                }
-            }
-            catch (Exception e)
-            {
-                e.ExceptionMethodLog(String.Format("OnTimerServicesTracking(sender={0}, args={1})", sender, args.ToString()), this.servece_name, eventID);
             }
         }
         #endregion
