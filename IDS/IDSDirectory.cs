@@ -17,6 +17,8 @@ namespace IDS
     {
         private eventID eventID = eventID.IDS_Directory;
         protected service servece_owner = service.Null;
+        private bool transfer_new_car_of_kis = false;
+        public bool Transfer_new_car_of_kis { get { return this.transfer_new_car_of_kis; } set { this.transfer_new_car_of_kis = value; } }
 
         EFDirectory_Station ef_station = new EFDirectory_Station(new EFDbContext());
         EFDirectory_Consignee ef_сonsignee = new EFDirectory_Consignee(new EFDbContext());
@@ -283,6 +285,32 @@ namespace IDS
         #endregion
 
         #region СПРАВОЧНИК ВАГОНОВ (IDS.Directory_Cars )
+
+        public Directory_Cars GetCurrentDirectory_CarsOfNum(int num, string user)
+        {
+            try
+            {
+                if (this.transfer_new_car_of_kis)
+                {
+                    int result_add_new_car = InsertNewDirectory_Cars(num, user);
+                    if (result_add_new_car != 0)
+                    {
+                        String.Format("В справочник 'ВАГОНОВ ИДС' - добавлен новый вагон №{0}, код выполнения : {1}", num, result_add_new_car).WarningLog(servece_owner, this.eventID);
+                    }
+                }
+                Directory_Cars car = this.ef_car
+                    .Context
+                    .Where(w => w.num == num)
+                    .ToList()
+                    .Select(m => m.GetDirectory_Cars()).OrderByDescending(c => c.rent_start).FirstOrDefault();
+                return car;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetCurrentDirectory_CarsOfNum(num={0})", num), servece_owner, eventID);
+                return null;
+            }
+        }
         /// <summary>
         /// Получить актуальную запись из карточки по вагону
         /// </summary>
@@ -303,6 +331,14 @@ namespace IDS
                 {
                     user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
                 }
+                if (this.transfer_new_car_of_kis)
+                {
+                    int result_add_new_car = InsertNewDirectory_Cars(num, user);
+                    if (result_add_new_car != 0)
+                    {
+                        String.Format("В справочник 'ВАГОНОВ ИДС' - добавлен новый вагон №{0}, код выполнения : {1}", num, result_add_new_car).WarningLog(servece_owner, this.eventID);
+                    }
+                }
                 WebAPIClientUZ client = new WebAPIClientUZ(this.servece_owner);
                 IDSMORS mors = new IDSMORS(this.servece_owner);
                 // Получим информацию из БД УЗ
@@ -319,10 +355,18 @@ namespace IDS
                 // Определим справочные данные
                 CardsWagons card = mors.GetCardsWagonsOfNum(num);
                 int id_countrys = GetID_Directory_CountrysOfAdm(adm, true, user);
-                int id_genus = card != null ? card.id_genus_wagon : GetID_Directory_GenusWagonsOfRod(rod, true, user);
-                int id_owner = card != null ? card.id_owner_wagon : GetID_Directory_OwnersWagonsOfName(info.owner, true, user);
-                int? id_operator_uz = info != null ? GetID_Directory_OperatorsWagonsOfName(info.operat, true, user) : null;
-                int? id_operator = card != null && card.id_operator_wagon != null ? (int)card.id_operator_wagon : GetID_Directory_OperatorsWagonsOfName(info.operat, true, user);
+                int id_genus = GetID_Directory_GenusWagonsOfRod(rod, true, user);
+                int id_owner = GetID_Directory_OwnersWagonsOfName(info.owner, true, user);
+                int? id_operator_uz = (info != null ? GetID_Directory_OperatorsWagonsOfName(info.operat, true, user) : null);
+                // Оператор ручной , если есть предыдущая запись берем ее иначе читаем текущий по ГИС
+                int? id_operator = (last_car != null ? last_car.id_operator : info != null ? GetID_Directory_OperatorsWagonsOfName(info.operat, true, user) : null);
+                // Признак изменения оператора
+                bool ban_changes_operator = false;
+                // Не определен оператор в ручную, новый оператор по ГИС отличается от старого
+                if (id_operator == null || (last_car != null && last_car.id_operator_uz != id_operator_uz))
+                {
+                    ban_changes_operator = true;
+                }
                 int? id_type_ownership = card != null ? (int?)card.id_type_ownership : null;
                 // Создадим новую запись
                 Directory_Cars new_car = new Directory_Cars()
@@ -334,24 +378,21 @@ namespace IDS
                     id_genus = last_car != null && isDirectory_GenusWagons(last_car.id_genus, rod) ? last_car.id_genus : id_genus,
                     id_owner = id_owner,
                     id_operator_uz = id_operator_uz,
-                    // если есть старая запись и в ней стоит блокировка изменения оператора тогда переносим блокировку, иначе нет блокировки
-                    ban_changes_operator = last_car != null && last_car.ban_changes_operator == true ? true : false,
-                    // если есть старая запись и в ней стоит блокировка изменения оператора тогда переносим старого оператора, иначе нового оператора
-                    id_operator = last_car != null && last_car.ban_changes_operator == true ? last_car.id_operator : id_operator,
+                    ban_changes_operator = ban_changes_operator,
+                    id_operator = id_operator,                                      // !! Меняем по изменению - в ручную
                     // защита иногда нет значения                    
                     gruzp = info.carrying_capacity != null ? (double)info.carrying_capacity : 0,
                     kol_os = kol_os,
-                    usl_tip = usl_tip,
+                    usl_tip = (usl_tip == "" ? null : usl_tip),
                     date_rem_uz = info.repair_date,
                     date_rem_vag = last_car != null ? last_car.date_rem_vag : null, // если есть старая запись унаследуем свойсво дата ремонта на вагоне
-                    id_limiting = last_car != null ? last_car.id_limiting : null,  // если есть старая запись унаследуем свойсво лимит погрузки
+                    id_limiting = last_car != null ? last_car.id_limiting : null,   // !! Меняем по изменению id_operator - в ручную
                     id_type_ownership = id_type_ownership,
-                    // если есть старая запись и в ней стоит блокировка изменения оператора тогда переносим начало аренды, иначе пустое поле                    
-                    rent_start = (last_car != null && last_car.ban_changes_operator == true) || (last_car != null && last_car.ban_changes_operator == false && last_car.id_operator == id_operator) ? last_car.rent_start : null,
+                    rent_start = (last_car != null ? last_car.rent_start : null),   // !! Меняем по изменению id_operator - в ручную
                     rent_end = null,
-                    sign = last_car != null ? last_car.sign : null,
+                    sign = (last_car != null ? last_car.sign : null),               // !! Меняем по изменению id_operator - в ручную
                     note = "Запрет выхода:" + (info.exit_ban != null ? info.exit_ban : "нет") + "; Другие запреты:" + (info.other_bans != null ? info.other_bans.Replace("<br>", "") : ""),
-                    sobstv_kis = null,
+                    sobstv_kis = (last_car != null ? last_car.sobstv_kis : null),   // !! Меняем по изменению id_operator - в ручную
                     create = DateTime.Now,
                     create_user = user,
                 };
@@ -362,12 +403,11 @@ namespace IDS
                         last_car.id_countrys != new_car.id_countrys ||
                         !isDirectory_GenusWagons(last_car.id_genus, rod) ||
                         last_car.id_owner != new_car.id_owner ||
-                        (last_car.ban_changes_operator == false && last_car.id_operator != new_car.id_operator) ||
+                        last_car.id_operator_uz != new_car.id_operator_uz ||
                         last_car.gruzp != new_car.gruzp ||
                         last_car.kol_os != new_car.kol_os ||
                         last_car.date_rem_uz != new_car.date_rem_uz ||
-                        last_car.id_type_ownership != new_car.id_type_ownership ||
-                        last_car.id_operator_uz != new_car.id_operator_uz
+                        last_car.id_type_ownership != new_car.id_type_ownership
                         )
                     {
                         // Изменено
@@ -397,6 +437,7 @@ namespace IDS
 
             try
             {
+                string user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
                 KISDirectory kis_dir = new KISDirectory(this.servece_owner);// Подключим библиотеку КИС
 
 
@@ -406,7 +447,7 @@ namespace IDS
                 foreach (KOMETA_VAGON_SOB vag_kis in list_cars_kis.ToList())
                 {
                     //EFDirectory_Cars ef_car = new EFDirectory_Cars(new EFDbContext());
-                    int result = InsertNewDirectory_Cars(vag_kis.N_VAGON);
+                    int result = InsertNewDirectory_Cars(vag_kis.N_VAGON, user);
                     count--;
                     Console.WriteLine("Перенес вагон №{0}, код {1}, осталось перенести {2}", vag_kis.N_VAGON, result, count);
                 }
@@ -425,7 +466,7 @@ namespace IDS
         /// </summary>
         /// <param name="num"></param>
         /// <returns></returns>
-        public int InsertNewDirectory_Cars(int num)
+        public int InsertNewDirectory_Cars(int num, string user)
         {
             try
             {
@@ -433,7 +474,11 @@ namespace IDS
                 IDSMORS mors = new IDSMORS(this.servece_owner);
                 EFDirectory_Cars_KIS ef_car_kis = new EFDirectory_Cars_KIS(new EFDbContext());
                 WebAPIClientUZ client = new WebAPIClientUZ(this.servece_owner);
-                string user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
 
                 KOMETA_VAGON_SOB vag_kis = kis_dir.GetCurrent_KOMETA_VAGON_SOB(num);
 
