@@ -849,6 +849,7 @@
     <Content Include="Areas\Directory\Views\Shared\_IDSDirectory.cshtml" />
     <Content Include="Areas\Directory\Views\Home\Cargo.cshtml" />
     <Content Include="Areas\Directory\Views\Home\CargoGroup.cshtml" />
+    <Content Include="Areas\Directory\Views\Home\Cars.cshtml" />
     <None Include="Areas\IDSMORS\Views\Shared\_IDSMORS1" />
     <Content Include="Content\DataTables\extensions\Buttons\css\mixins.scss" />
     <Content Include="Content\DataTables\extensions\Buttons\css\common.scss" />
@@ -1100,6 +1101,7 @@
     <Content Include="Scripts\umd\popper.min.js" />
     <Content Include="Scripts\view\directory\cargo.js" />
     <Content Include="Scripts\view\directory\cargo_group.js" />
+    <Content Include="Scripts\view\directory\cars.js" />
     <Content Include="Scripts\view\idsmors\electronic_cards.js" />
     <Content Include="Scripts\view\idsmors\report_wagons.js" />
     <Content Include="Scripts\view\idsmors\park_wagons.js" />

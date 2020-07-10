@@ -123,6 +123,9 @@
   <data name="cargo_title" xml:space="preserve">
     <value>Справочник "Грузы ИДС"</value>
   </data>
+  <data name="cars_title" xml:space="preserve">
+    <value>Справочник "Вагонов ИДС"</value>
+  </data>
   <data name="home_title" xml:space="preserve">
     <value>Справочники</value>
   </data>

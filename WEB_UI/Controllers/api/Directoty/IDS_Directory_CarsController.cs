@@ -22,6 +22,8 @@ namespace WEB_UI.Controllers.api
     public class IDS_Directory_CarsController : ApiController
     {
         protected IRepository<Directory_Cars> ef_dir;
+        private string field = " [id],[num],[id_countrys],[id_genus],[id_owner],[id_operator_uz],[ban_changes_operator],[id_operator],[gruzp],[kol_os],[usl_tip],[date_rem_uz],[date_rem_vag],[id_limiting],[id_type_ownership],[rent_start],[rent_end],[sign],[note],[sobstv_kis],[create],[create_user],[change],[change_user] ";
+        private string table = " [IDS].[Directory_Cars] ";
 
         public IDS_Directory_CarsController(IRepository<Directory_Cars> dir)
         {
@@ -76,7 +78,7 @@ namespace WEB_UI.Controllers.api
                     .Context
                     .Where(w => w.num == num)
                     .ToList()
-                    .Select(m => m.GetDirectory_Cars()).OrderBy(c=>c.rent_start).ToList();
+                    .Select(m => m.GetDirectory_Cars()).OrderBy(c => c.rent_start).ToList();
                 return Ok(cars);
             }
             catch (Exception e)
@@ -85,6 +87,9 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+
+
+
         // GET: api/ids/directory/cars/current/num/63958730
         [Route("current/num/{num:int}")]
         [ResponseType(typeof(Directory_Cars))]
@@ -92,19 +97,42 @@ namespace WEB_UI.Controllers.api
         {
             try
             {
-                //Directory_Cars car = this.ef_dir
-                //    .Context
-                //    .Where(w => w.num == num)
-                //    .ToList()
-                //    .Select(m => m.GetDirectory_Cars()).OrderByDescending(c=>c.rent_start).FirstOrDefault();
-                //return Ok(car);
                 string user = base.User.Identity.Name;
                 IDSDirectory ids_dir = new IDSDirectory(service.WebAPI_IDS);
                 ids_dir.Transfer_new_car_of_kis = true; // Признак создавать вагоны в справочнике ИДС по данным КИС и ИРЫ если вагон новый
-                //Directory_Cars car = ids_dir.GetCurrentDirectory_CarsOfNum(num, 22, 60, 4, null, true, user);
                 Directory_Cars car = ids_dir.GetCurrentDirectory_CarsOfNum(num, user);
                 return Ok(car);
 
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // GET: api/ids/directory/cars/current/change_operator/
+        [Route("current/change_operator")]
+        [ResponseType(typeof(Directory_Cars))]
+        public IHttpActionResult GetCurrentCarsOfChangeOperator()
+        {
+            try
+            {
+                var cars = this.ef_dir
+                    .Context
+                    .Where(w => w.ban_changes_operator == true)
+                    .ToList()
+                    .Select(m => m.GetDirectory_Cars())
+                    .GroupBy(p => p.num)
+                    .ToList()
+                    .Select(p => p.Select(m => m).OrderByDescending(x => x.id).FirstOrDefault()).ToList();
+                     //.Select(g => new
+                     //   {
+                     //       num = g.Key,
+                     //       cars = g.Select(p => p).OrderByDescending(p => p.id).FirstOrDefault()
+                     //   }).ToList();
+
+                //.ToDictionary(p=>p.Key, i=>i.Select(m=>m.GetDirectory_Cars())).ToList();
+                return Ok(cars);
             }
             catch (Exception e)
             {
@@ -123,7 +151,7 @@ namespace WEB_UI.Controllers.api
                 IDSDirectory ids_dir = new IDSDirectory(service.WebAPI_IDS);
                 ids_dir.Transfer_new_car_of_kis = true; // Признак создавать вагоны в справочнике ИДС по данным КИС и ИРЫ если вагон новый
                 //Directory_Cars car = ids_dir.GetCurrentDirectory_CarsOfNum(num, 22, 60, 4, null, true, user);
-                Directory_Cars car = ids_dir.GetCurrentDirectory_CarsOfNum(num, adm, (rod=="null"? null : (int?)int.Parse(rod)), kol_os, (usl_tip=="null" ? null: usl_tip), true, user);
+                Directory_Cars car = ids_dir.GetCurrentDirectory_CarsOfNum(num, adm, (rod == "null" ? null : (int?)int.Parse(rod)), kol_os, (usl_tip == "null" ? null : usl_tip), true, user);
                 return Ok(car);
             }
             catch (Exception e)

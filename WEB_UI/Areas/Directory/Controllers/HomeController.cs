@@ -24,6 +24,10 @@ namespace WEB_UI.Areas.Directory.Controllers
         {
             return View();
         }
-
+        // GET: Directory/Cars
+        public ActionResult Cars()
+        {
+            return View();
+        }
     }
 }

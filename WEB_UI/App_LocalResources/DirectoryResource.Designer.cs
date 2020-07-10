@@ -79,6 +79,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Справочник &quot;Вагонов ИДС&quot;.
+        /// </summary>
+        public static string cars_title {
+            get {
+                return ResourceManager.GetString("cars_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Справочники.
         /// </summary>
         public static string home_title {

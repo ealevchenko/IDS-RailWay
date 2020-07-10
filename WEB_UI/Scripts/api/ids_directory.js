@@ -82,6 +82,12 @@ IDS_DIRECTORY.list_divisions = [];
 // Загрузка списка справочников
 IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
     var count = list.length;
+    if (count === 0) {
+        if (typeof callback === 'function') {
+            if (lockOff) { LockScreenOff(); }
+            callback();
+        }
+    }
     var obj = this;
     $.each(list, function (i, el) {
         if (el === 'genus_wagon') {
@@ -372,7 +378,7 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
                 }
             });
         };
-        if (el === 'payer_arrival')  {
+        if (el === 'payer_arrival') {
             IDS_DIRECTORY.prototype.getPayerArrival(function (result_payer_arrival) {
                 obj.list_payer_arrival = result_payer_arrival;
                 count -= 1;
@@ -384,7 +390,7 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
                 }
             });
         };
-        if (el === 'cargo_group')  {
+        if (el === 'cargo_group') {
             IDS_DIRECTORY.prototype.getCargoGroup(function (result_cargo_group) {
                 obj.list_cargo_group = result_cargo_group;
                 count -= 1;
@@ -396,7 +402,7 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
                 }
             });
         };
-        if (el === 'cargo_etsng')  {
+        if (el === 'cargo_etsng') {
             IDS_DIRECTORY.prototype.getCargoETSNG(function (result_cargo_etsng) {
                 obj.list_cargo_etsng = result_cargo_etsng;
                 count -= 1;
@@ -408,7 +414,7 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
                 }
             });
         };
-        if (el === 'cargo_gng')  {
+        if (el === 'cargo_gng') {
             IDS_DIRECTORY.prototype.getCargoGNG(function (result_cargo_gng) {
                 obj.list_cargo_gng = result_cargo_gng;
                 count -= 1;
@@ -420,7 +426,7 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
                 }
             });
         };
-        if (el === 'cargo')  {
+        if (el === 'cargo') {
             IDS_DIRECTORY.prototype.getCargo(function (result_cargo) {
                 obj.list_cargo = result_cargo;
                 count -= 1;
@@ -432,7 +438,7 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
                 }
             });
         };
-        if (el === 'certification_data')  {
+        if (el === 'certification_data') {
             IDS_DIRECTORY.prototype.getCertificationData(function (result_certification_data) {
                 obj.list_certification_data = result_certification_data;
                 count -= 1;
@@ -444,7 +450,7 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
                 }
             });
         };
-        if (el === 'commercial_condition')  {
+        if (el === 'commercial_condition') {
             IDS_DIRECTORY.prototype.getCommercialCondition(function (result_commercial_condition) {
                 obj.list_commercial_condition = result_commercial_condition;
                 count -= 1;
@@ -456,7 +462,7 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
                 }
             });
         };
-        if (el === 'hazard_class')  {
+        if (el === 'hazard_class') {
             IDS_DIRECTORY.prototype.getHazardClass(function (result_hazard_class) {
                 obj.list_hazard_class = result_hazard_class;
                 count -= 1;
@@ -469,7 +475,7 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
             });
         };
         if (el === 'cars') {
-            IDS_DIRECTORY.prototype.getExternalStation(function (result_cars) {
+            IDS_DIRECTORY.prototype.getCars(function (result_cars) {
                 obj.list_cars = result_cars;
                 count -= 1;
                 if (count === 0) {
@@ -707,7 +713,7 @@ IDS_DIRECTORY.prototype.getCars = function (callback) {
 IDS_DIRECTORY.prototype.getCarsOfID = function (id, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/directory/cars/id/'+id,
+        url: '../../api/ids/directory/cars/id/' + id,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -727,10 +733,10 @@ IDS_DIRECTORY.prototype.getCarsOfID = function (id, callback) {
     });
 };
 // Получить по номеру вагона
-IDS_DIRECTORY.prototype.getCarsOfNum= function (num, callback) {
+IDS_DIRECTORY.prototype.getCarsOfNum = function (num, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/directory/cars/num/'+num,
+        url: '../../api/ids/directory/cars/num/' + num,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -773,10 +779,10 @@ IDS_DIRECTORY.prototype.getCurrentCarsOfNum = function (num, callback) {
     });
 };
 // Получить текщий вагон по номеру вагона, администрации, роду 
-IDS_DIRECTORY.prototype.getCurrentCarsOfNumAdmRod= function (num, adm, rod, kol_os, usl_tip, callback) {
+IDS_DIRECTORY.prototype.getCurrentCarsOfNumAdmRod = function (num, adm, rod, kol_os, usl_tip, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/directory/cars/current/num/'+num+'/adm/'+adm+'/rod/'+rod+'/kol_os/'+kol_os+'/usl_tip/'+usl_tip,
+        url: '../../api/ids/directory/cars/current/num/' + num + '/adm/' + adm + '/rod/' + rod + '/kol_os/' + kol_os + '/usl_tip/' + usl_tip,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -795,6 +801,31 @@ IDS_DIRECTORY.prototype.getCurrentCarsOfNumAdmRod= function (num, adm, rod, kol_
         },
     });
 };
+//
+IDS_DIRECTORY.prototype.getCurrentCarsOfChangeOperator = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/cars/current/change_operator',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getCurrentCarsOfChangeOperator", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
+
 //Обновить 
 IDS_DIRECTORY.prototype.putCars = function (car, callback) {
     $.ajax({
@@ -1395,7 +1426,7 @@ IDS_DIRECTORY.prototype.getCargoGNG = function (callback) {
 IDS_DIRECTORY.prototype.getCargoGNGOfID = function (id, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/directory/cargo_gng/id/'+id,
+        url: '../../api/ids/directory/cargo_gng/id/' + id,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -1418,7 +1449,7 @@ IDS_DIRECTORY.prototype.getCargoGNGOfID = function (id, callback) {
 IDS_DIRECTORY.prototype.getCargoGNGOfCode = function (code, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/directory/cargo_gng/code/'+code,
+        url: '../../api/ids/directory/cargo_gng/code/' + code,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -1537,7 +1568,7 @@ IDS_DIRECTORY.prototype.getCargoETSNG = function (callback) {
 IDS_DIRECTORY.prototype.getCargoETSNGOfID = function (id, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/directory/cargo_etsng/id/'+id,
+        url: '../../api/ids/directory/cargo_etsng/id/' + id,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -1560,7 +1591,7 @@ IDS_DIRECTORY.prototype.getCargoETSNGOfID = function (id, callback) {
 IDS_DIRECTORY.prototype.getCargoETSNGOfCode = function (code, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/directory/cargo_etsng/code/'+code,
+        url: '../../api/ids/directory/cargo_etsng/code/' + code,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -1679,7 +1710,7 @@ IDS_DIRECTORY.prototype.getCargoGroup = function (callback) {
 IDS_DIRECTORY.prototype.getCargoGroupOfID = function (id, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/directory/cargo_group/id/'+id,
+        url: '../../api/ids/directory/cargo_group/id/' + id,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -1917,7 +1948,7 @@ IDS_DIRECTORY.prototype.getConditionArrival = function (callback) {
 IDS_DIRECTORY.prototype.getConditionArrivalOfID = function (id, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/directory/condition_arrival/id/'+id,
+        url: '../../api/ids/directory/condition_arrival/id/' + id,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -2036,7 +2067,7 @@ IDS_DIRECTORY.prototype.getLimitingLoading = function (callback) {
 IDS_DIRECTORY.prototype.getLimitingLoadingOfID = function (id, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/directory/limiting_loading/id/'+id,
+        url: '../../api/ids/directory/limiting_loading/id/' + id,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -2154,7 +2185,7 @@ IDS_DIRECTORY.prototype.getCountrys = function (callback) {
 IDS_DIRECTORY.prototype.getCountrysOfID = function (id, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/directory/countrys/id/'+id,
+        url: '../../api/ids/directory/countrys/id/' + id,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -2827,7 +2858,7 @@ IDS_DIRECTORY.prototype.getShipper = function (callback) {
 IDS_DIRECTORY.prototype.getShipperOfCode = function (code, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/directory/shipper/code/'+code,
+        url: '../../api/ids/directory/shipper/code/' + code,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -3872,9 +3903,9 @@ IDS_DIRECTORY.prototype.getListWays2TextOfAray = function (aray, fvalue, ftext1,
         for (i = 0, j = list_filtr.length; i < j; i++) {
             var l = list_filtr[i];
             if (lang) {
-                list.push({ value: l[fvalue], text: l[ftext1 + '_' + lang] + ' - '+ l[ftext2 + '_' + lang]});
+                list.push({ value: l[fvalue], text: l[ftext1 + '_' + lang] + ' - ' + l[ftext2 + '_' + lang] });
             } else {
-                list.push({ value: l[fvalue], text: l[ftext1] + ' - '+ l[ftext2] });
+                list.push({ value: l[fvalue], text: l[ftext1] + ' - ' + l[ftext2] });
             }
         }
     }
@@ -4485,7 +4516,7 @@ IDS_DIRECTORY.prototype.getValue_CargoGroup_Of_ID = function (id, name, lang) {
     return this.getValueObj(obj, name, lang);
 };
 //
-IDS_DIRECTORY.prototype.getValueCulture_CargoGroup_Of_ID= function (id, name) {
+IDS_DIRECTORY.prototype.getValueCulture_CargoGroup_Of_ID = function (id, name) {
     var obj = this.getCargoGroup_Of_ID(id);
     return obj ? obj[name + '_' + this.lang] : null;
 };
@@ -4701,7 +4732,7 @@ IDS_DIRECTORY.prototype.getList2ConditionArrival = function (fvalue, ftext1, fte
             if (lang) {
                 list.push({ value: l[fvalue], text: l[ftext1 + '_' + lang] + ' - ' + l[ftext2 + '_' + lang] });
             } else {
-                list.push({ value: l[fvalue], text: l[ftext1] + ' - ' + l[ftext2]});
+                list.push({ value: l[fvalue], text: l[ftext1] + ' - ' + l[ftext2] });
             }
         }
     }
