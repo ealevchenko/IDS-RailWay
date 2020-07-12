@@ -747,7 +747,14 @@
         ids_dir.getCurrentCarsOfChangeOperator(function (cars) {
             table_directory.view(cars);
         });
-        
+        // обработка события show.bs.tab
+        $('[data-toggle="tab"]').on('show.bs.tab', function (e) {
+            var
+                activeTab = $(e.target), // активная вкладка
+                previousTab = $(e.relatedTarget); // предыдущая вкладка, которая до этого была активной
+            // выведем в консоль название активной вкладки
+            $('#type-search').text(activeTab.text());
+        });
     });
 
 
