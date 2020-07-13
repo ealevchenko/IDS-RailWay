@@ -778,6 +778,55 @@ IDS_DIRECTORY.prototype.getCurrentCarsOfNum = function (num, callback) {
         },
     });
 };
+// Получить текщие вагоны по оператору
+IDS_DIRECTORY.prototype.getCurrentCarsOfOperator = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/cars/current/operator/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getCurrentCarsOfOperator", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
+// Получить текщий вагоны по спискуномеров вагона
+IDS_DIRECTORY.prototype.postCurrentCarsOfNums = function (list_num, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/cars/current/nums/',
+        type: 'POST',
+        data: JSON.stringify(list_num),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getCurrentCarsOfNums", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 // Получить текщий вагон по номеру вагона, администрации, роду 
 IDS_DIRECTORY.prototype.getCurrentCarsOfNumAdmRod = function (num, adm, rod, kol_os, usl_tip, callback) {
     $.ajax({

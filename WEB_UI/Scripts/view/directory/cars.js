@@ -57,7 +57,7 @@
         loadReference = function (callback) {
             LockScreen(langView('mess_load', langs));
             var count = 1;
-            ids_dir.load([], false, function () {
+            ids_dir.load(['operators_wagons'], false, function () {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
@@ -65,6 +65,138 @@
                     }
                 }
             });
+        },
+        pn_search = {
+            num_car: $('textarea#num_cars'),
+            bt_cars_warning: $('button#cars_warning'),
+            bt_cars_search_num: $('button#cars_search_num'),
+            bt_cars_search_operator: $('button#cars_search_operator'),
+            wagon_operator: $('select#wagon_operator'),
+            init: function () {
+                // обработка события show.bs.tab переключение панелей выбора
+                $('[data-toggle="tab"]').on('show.bs.tab', function (e) {
+                    var activeTab = $(e.target);                 // активная вкладка
+                    $('#type-search').text(activeTab.text());
+
+                    if (e.target.hash === "#cars-search-operator") {
+                        LockScreen(langView('mess_load', langs));
+                        var id = Number(pn_search.wagon_operator.val());
+                        ids_dir.getCurrentCarsOfOperator(id, function (cars) {
+                            table_directory.view(cars);
+                        });
+                    } else {
+                        table_directory.view([]);
+                    }
+                });
+
+                // Инициализация элементов
+                pn_search.wagon_operator = cd_initSelect(
+                    pn_search.wagon_operator,
+                    { lang: lang },
+                    ids_dir.getListOperatorsWagons('id', 'operators', lang, null),
+                    null,
+                    -1,
+                    function (event) {
+                        event.preventDefault();
+                        LockScreen(langView('mess_load', langs));
+                        var id = Number($(this).val());
+                        ids_dir.getCurrentCarsOfOperator(id, function (cars) {
+                            table_directory.view(cars);
+                        });
+                    }, null);
+
+                // Кнопка найти вагон требующий изменения
+                pn_search.bt_cars_warning.on('click', function (event) {
+                    event.preventDefault();
+                    LockScreen(langView('mess_load', langs));
+                    alert.clear_message();
+                    ids_dir.getCurrentCarsOfChangeOperator(function (cars) {
+                        table_directory.view(cars);
+                    });
+                });
+                // Кнопка найти вагон по номеру
+                pn_search.bt_cars_search_num.on('click', function (event) {
+                    event.preventDefault();
+                    LockScreen(langView('mess_load', langs));
+                    alert.clear_message();
+                    if (pn_search.num_car.val() !== "") {
+                        pn_search.bt_cars_search_num.prop("disabled", true);
+
+                        var isNumeric = function (value) {
+                            //return /^\d{8}/.test(value);
+                            return /^\d+$/.test(value);
+                        };
+                        // Провкерка на правильный ввод номеров
+                        var valid = true;
+                        var car_valid = [];
+                        var cars = pn_search.num_car.val().split(';');
+                        $.each(cars, function (i, el) {
+                            if (!isNumeric(el) || !(Number(el) >= 10000000 && Number(el) <= 99999999)) {
+                                // Ошибка ввода
+                                alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' введен неправильный номер :' + el);
+                                valid = false;
+                            } else {
+                                car_valid.push(Number(el));
+                            }
+                        });
+                        // Провкерка на повторяющиеся номера
+                        arr_res = [];
+                        car_valid.sort();
+                        for (var i = 1; i < car_valid.length; i++) {
+                            if (car_valid[i] === car_valid[i - 1]) {
+                                var is_unique = true;
+                                for (var k = 0; k < arr_res.length; k++) {
+                                    if (arr_res[k] === car_valid[i]) {
+                                        is_unique = false;
+                                        break;
+                                    }
+                                }
+                                if (is_unique) {
+                                    arr_res.push(car_valid[i]);
+                                }
+                            }
+                        }
+                        // Вывод сообщений повторяющихся номеров
+                        $.each(arr_res, function (i, el) {
+                            alert.out_warning_message('Ошибка ввода, введеный номер :' + el + ' повторяется.');
+                            LockScreenOff();
+                        });
+                        // Продолжим 
+                        if (valid) {
+                            ids_dir.postCurrentCarsOfNums(car_valid, function (cars) {
+                                var not_car = car_valid.filter(function (i) {
+                                    var not = true;
+                                    for (var ci = 0; ci < cars.length; ci++) {
+                                        if (i === cars[ci].num) not = false;
+                                    }
+                                    return not;
+                                });
+                                table_directory.view(cars);
+                                $.each(not_car, function (i, el) {
+                                    alert.out_warning_message('Вагон № :' + el + ' - не найден!');
+                                });
+                                pn_search.bt_cars_search_num.prop("disabled", false);
+                            });
+                        } else {
+                            alert.out_warning_message('Исправьте указанные номера в указанных позициях и попробуйте заново.');
+                            pn_search.bt_cars_search_num.prop("disabled", false);
+                            LockScreenOff();
+                        }
+
+                    } else {
+                        alert.out_error_message("Введите номер вагона или несколько вагонов, разделитель номеров ';'");
+                        LockScreenOff();
+                    }
+                });
+                //// Кнопка найти вагон по оператору
+                //pn_search.bt_cars_search_operator.on('click', function (event) {
+                //    event.preventDefault();
+                //    var id = Number(pn_search.wagon_operator.val());
+                //    ids_dir.getCurrentCarsOfOperator(id, function (cars) {
+                //        table_directory.view(cars);
+                //    });
+                //});
+            },
         },
         //*************************************************************************************
         // ОКНО ИЗМЕНИТЬ ГРУППУ
@@ -472,7 +604,10 @@
                     "autoWidth": true,
                     //"filter": true,
                     //"scrollY": "600px",
-                    "scrollX": true,
+                    sScrollX: "100%",
+                    scrollX: true,
+                    //"responsive": true,
+                    //"bAutoWidth": false,
                     language: language_table(langs),
                     jQueryUI: false,
                     "createdRow": function (row, data, index) {
@@ -490,29 +625,29 @@
                         //} else { $('td', row).eq(1).addClass('icon-user'); }
                     },
                     columns: [
-                        { data: "num", title: langView('field_num', langs), width: "50px", orderable: false, searchable: true },
+                        { data: "num", title: langView('field_num', langs), width: "50px", orderable: true, searchable: true },
                         { data: "countrys", title: langView('field_countrys', langs), width: "50px", orderable: false, searchable: false },
                         { data: "genus", title: langView('field_genus', langs), width: "50px", orderable: false, searchable: false },
-                        { data: "owner", title: langView('field_owner', langs), width: "50px", orderable: false, searchable: false },
-                        { data: "operator_uz", title: langView('field_operator_uz', langs), width: "50px", orderable: true, searchable: false },
-                        { data: "ban_changes_operator", title: langView('field_ban_changes_operator', langs), width: "50px", orderable: true, searchable: false },
-                        { data: "operator", title: langView('field_operator', langs), width: "50px", orderable: true, searchable: false },
+                        { data: "owner", title: langView('field_owner', langs), width: "150px", orderable: false, searchable: false },
+                        { data: "operator_uz", title: langView('field_operator_uz', langs), width: "150px", orderable: true, searchable: false },
+                        //{ data: "ban_changes_operator", title: langView('field_ban_changes_operator', langs), width: "50px", orderable: true, searchable: false },
+                        { data: "operator", title: langView('field_operator', langs), width: "150px", orderable: true, searchable: false },
                         { data: "gruzp", title: langView('field_gruzp', langs), width: "50px", orderable: false, searchable: false },
                         { data: "kol_os", title: langView('field_kol_os', langs), width: "50px", orderable: false, searchable: false },
                         { data: "usl_tip", title: langView('field_usl_tip', langs), width: "50px", orderable: false, searchable: false },
-                        { data: "date_rem_uz", title: langView('field_date_rem_uz', langs), width: "50px", orderable: false, searchable: false },
-                        { data: "date_rem_vag", title: langView('field_date_rem_vag', langs), width: "50px", orderable: false, searchable: false },
-                        { data: "limiting", title: langView('field_limiting', langs), width: "50px", orderable: false, searchable: false },
-                        { data: "type_ownership", title: langView('field_type_ownership', langs), width: "50px", orderable: false, searchable: false },
-                        { data: "rent_start", title: langView('field_rent_start', langs), width: "50px", orderable: false, searchable: false },
-                        { data: "rent_end", title: langView('field_rent_end', langs), width: "50px", orderable: false, searchable: false },
-                        { data: "sign", title: langView('field_sign', langs), width: "50px", orderable: false, searchable: false },
-                        { data: "note", title: langView('field_note', langs), width: "50px", orderable: false, searchable: false },
+                        { data: "date_rem_uz", title: langView('field_date_rem_uz', langs), width: "100px", orderable: false, searchable: false },
+                        { data: "date_rem_vag", title: langView('field_date_rem_vag', langs), width: "100px", orderable: false, searchable: false },
+                        { data: "limiting", title: langView('field_limiting', langs), width: "150px", orderable: false, searchable: false },
+                        { data: "type_ownership", title: langView('field_type_ownership', langs), width: "100px", orderable: false, searchable: false },
+                        { data: "rent_start", title: langView('field_rent_start', langs), width: "100px", orderable: false, searchable: false },
+                        { data: "rent_end", title: langView('field_rent_end', langs), width: "100px", orderable: false, searchable: false },
+                        { data: "sign", title: langView('field_sign', langs), width: "100px", orderable: false, searchable: false },
+                        { data: "note", title: langView('field_note', langs), width: "300px", orderable: false, searchable: false },
                         { data: "sobstv_kis", title: langView('field_sobstv_kis', langs), width: "50px", orderable: false, searchable: false },
-                        { data: "create", title: langView('field_create', langs), width: "50px", orderable: false, searchable: false },
-                        { data: "create_user", title: langView('field_create_user', langs), width: "50px", orderable: false, searchable: false },
-                        { data: "change", title: langView('field_change', langs), width: "50px", orderable: false, searchable: false },
-                        { data: "change_user", title: langView('field_change_user', langs), width: "50px", orderable: false, searchable: false },
+                        { data: "create", title: langView('field_create', langs), width: "100px", orderable: false, searchable: false },
+                        { data: "create_user", title: langView('field_create_user', langs), width: "100px", orderable: false, searchable: false },
+                        { data: "change", title: langView('field_change', langs), width: "100px", orderable: false, searchable: false },
+                        { data: "change_user", title: langView('field_change_user', langs), width: "100px", orderable: false, searchable: false },
                     ],
                     dom: 'Bfrtip',
                     stateSave: false,
@@ -713,6 +848,7 @@
     //=================================================================
     // Загрузка основных библиотек
     loadReference(function (result) {
+        pn_search.init();
         //// Инициализация окна править группу грузов
         //pn_change_group.init(lang, user_name, function (result_change_group) {
         //    if (result_change_group > 0) {
@@ -744,17 +880,9 @@
         //    }
         //});
         table_directory.init();
-        ids_dir.getCurrentCarsOfChangeOperator(function (cars) {
-            table_directory.view(cars);
-        });
-        // обработка события show.bs.tab
-        $('[data-toggle="tab"]').on('show.bs.tab', function (e) {
-            var
-                activeTab = $(e.target), // активная вкладка
-                previousTab = $(e.relatedTarget); // предыдущая вкладка, которая до этого была активной
-            // выведем в консоль название активной вкладки
-            $('#type-search').text(activeTab.text());
-        });
+        LockScreenOff();
+
+
     });
 
 

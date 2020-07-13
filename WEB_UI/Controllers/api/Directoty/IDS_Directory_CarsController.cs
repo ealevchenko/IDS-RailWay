@@ -11,6 +11,7 @@ using System.Net.Http;
 using System.Security.Principal;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.Http.ModelBinding;
 using WEB_UI.Infrastructure;
 
 namespace WEB_UI.Controllers.api
@@ -87,9 +88,6 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-
-
-
         // GET: api/ids/directory/cars/current/num/63958730
         [Route("current/num/{num:int}")]
         [ResponseType(typeof(Directory_Cars))]
@@ -102,6 +100,40 @@ namespace WEB_UI.Controllers.api
                 ids_dir.Transfer_new_car_of_kis = true; // Признак создавать вагоны в справочнике ИДС по данным КИС и ИРЫ если вагон новый
                 Directory_Cars car = ids_dir.GetCurrentDirectory_CarsOfNum(num, user);
                 return Ok(car);
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST: api/ids/directory/cars/current/nums/
+        [HttpPost]
+        [Route("current/nums/")]
+        [ResponseType(typeof(Directory_Cars))]
+        public IHttpActionResult GetCurrentCarsOfNums([FromBody] List<int> nums)
+        {
+            try
+            {
+                List<Directory_Cars> cars = new List<Directory_Cars>();
+
+                foreach (int num in nums)
+                {
+                    Directory_Cars car = this.ef_dir
+                        .Context
+                        .Where(c => c.num == num)
+                        .ToList()
+                        .Select(m => m.GetDirectory_Cars())
+                        .OrderByDescending(i => i.id)
+                        .FirstOrDefault();
+                    if (car != null)
+                    {
+                        cars.Add(car);
+                    }
+                }
+
+                return Ok(cars);
 
             }
             catch (Exception e)
@@ -125,13 +157,36 @@ namespace WEB_UI.Controllers.api
                     .GroupBy(p => p.num)
                     .ToList()
                     .Select(p => p.Select(m => m).OrderByDescending(x => x.id).FirstOrDefault()).ToList();
-                     //.Select(g => new
-                     //   {
-                     //       num = g.Key,
-                     //       cars = g.Select(p => p).OrderByDescending(p => p.id).FirstOrDefault()
-                     //   }).ToList();
+                //.Select(g => new
+                //   {
+                //       num = g.Key,
+                //       cars = g.Select(p => p).OrderByDescending(p => p.id).FirstOrDefault()
+                //   }).ToList();
 
                 //.ToDictionary(p=>p.Key, i=>i.Select(m=>m.GetDirectory_Cars())).ToList();
+                return Ok(cars);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // GET: api/ids/directory/cars/current/operator/id
+        [Route("current/operator/id/{id:int}")]
+        [ResponseType(typeof(Directory_Cars))]
+        public IHttpActionResult GetCurrentCarsOfOperator(int? id)
+        {
+            try
+            {
+                var cars = this.ef_dir
+                    .Context
+                    .Where(w => w.id_operator == id)
+                    .ToList()
+                    .Select(m => m.GetDirectory_Cars())
+                    .GroupBy(p => p.num)
+                    .ToList()
+                    .Select(p => p.Select(m => m).OrderByDescending(x => x.id).FirstOrDefault()).ToList();
                 return Ok(cars);
             }
             catch (Exception e)
