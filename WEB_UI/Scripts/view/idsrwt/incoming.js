@@ -5390,13 +5390,36 @@
                                 } else {
                                     // Состав не определен
                                     pn_search_epd.alert.clear_message();
-                                    pn_search_epd.alert.out_error_message("Ошибка. Не указан составе, в который вы хотите добавить вагоны указанные найденном ЭПД УЗ");
+                                    pn_search_epd.alert.out_error_message("Ошибка. Не указан состав, в который вы хотите добавить вагоны указанные найденном ЭПД УЗ");
                                 }
                                 // найдем вагоны на подходах
                                 pn_search_epd.get_list_cars_of_period(1, select_vagon, function (cars) {
+                                    // Отфильтруем вагоны в приоритете вагоны из текущего состава
+                                    var cars_select = [];
+
+                                    for (isv = 0; isv < select_vagon.length; isv++) {
+                                        var cars_is_num = cars.filter(function (i) {
+                                            if (i.num === Number(select_vagon[isv].nomer)) return true; else return false;
+                                        });
+
+                                        // Вагон есть в текущем составе, поэтому проверим если с подходов вернуло 2 вагона выбераем по id_sostava
+                                        if (select_vagon[isv].operation === 0 && cars_is_num && cars_is_num.length > 1) {
+                                            for (iin = 0; iin < cars_is_num.length; iin++) {
+                                                if (cars_is_num[iin].id_arrival === pn_search_epd.sostav.id) {
+                                                    cars_select.push(cars_is_num[iin]);
+                                                }
+                                            }
+                                        } else {
+                                            cars_select.push(cars_is_num[0]);
+                                        }
+                                    }
+
+
+
+
                                     // Показать вагоны
                                     //pn_search_epd.loading_cars.show();
-                                    pn_search_epd.table_car.view(select_vagon, cars);
+                                    pn_search_epd.table_car.view(select_vagon, cars_select);
                                 });
 
                             }

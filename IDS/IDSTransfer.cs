@@ -380,11 +380,13 @@ namespace IDS
                         // Ревизия документа выше чем ревизия сохраненного документа
                         if (doc.revision <= uz_doc.revision)
                         {
+                            string code_from = uz_doc.sender_code != null ? uz_doc.sender_code : "0";
+                            
                             doc.num_doc = uz_doc.id_doc;
                             doc.revision = uz_doc.revision;
                             doc.num_uz = uz_doc.otpr != null ? uz_doc.otpr.nom_doc : null;
                             doc.status = (int)uz_doc.status;
-                            doc.code_from = uz_doc.sender_code;
+                            doc.code_from = code_from;
                             doc.code_on = uz_doc.recipient_code;
                             doc.dt = uz_doc.dt;
                             doc.xml_doc = uz_doc.xml;
