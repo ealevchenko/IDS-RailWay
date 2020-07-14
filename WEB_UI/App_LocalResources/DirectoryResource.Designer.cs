@@ -97,6 +97,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Кол. ос..
+        /// </summary>
+        public static string title_add_add_edit_kol_os {
+            get {
+                return ResourceManager.GetString("title_add_add_edit_kol_os", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Грузы справочник ЕТ СНГ.
         /// </summary>
         public static string title_add_edit_cargo_etsng {
@@ -133,11 +142,191 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Дата рем. (УЗ).
+        /// </summary>
+        public static string title_add_edit_date_rem_uz {
+            get {
+                return ResourceManager.GetString("title_add_edit_date_rem_uz", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Дата рем. вагон.
+        /// </summary>
+        public static string title_add_edit_date_rem_vag {
+            get {
+                return ResourceManager.GetString("title_add_edit_date_rem_vag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Груз-сть (УЗ).
+        /// </summary>
+        public static string title_add_edit_gruzp {
+            get {
+                return ResourceManager.GetString("title_add_edit_gruzp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Код.
+        /// </summary>
+        public static string title_add_edit_kod_adm {
+            get {
+                return ResourceManager.GetString("title_add_edit_kod_adm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Код.
+        /// </summary>
+        public static string title_add_edit_kod_rod {
+            get {
+                return ResourceManager.GetString("title_add_edit_kod_rod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ограничение (АМКР).
+        /// </summary>
+        public static string title_add_edit_limiting {
+            get {
+                return ResourceManager.GetString("title_add_edit_limiting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на При изменении оператора (АМКР) будет создана новая строка, с новым оператором и определена дата начало аренды. По старой строке окончание аренды будет выставлено автоматически по дате начала новой аренды..
+        /// </summary>
+        public static string title_add_edit_message_new_operator {
+            get {
+                return ResourceManager.GetString("title_add_edit_message_new_operator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Админ..
+        /// </summary>
+        public static string title_add_edit_name_adm {
+            get {
+                return ResourceManager.GetString("title_add_edit_name_adm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Род вагона.
+        /// </summary>
+        public static string title_add_edit_name_rod {
+            get {
+                return ResourceManager.GetString("title_add_edit_name_rod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Род (абр.).
+        /// </summary>
+        public static string title_add_edit_name_rod_abbr {
+            get {
+                return ResourceManager.GetString("title_add_edit_name_rod_abbr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Примечание.
+        /// </summary>
+        public static string title_add_edit_note {
+            get {
+                return ResourceManager.GetString("title_add_edit_note", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Номер вагона.
+        /// </summary>
+        public static string title_add_edit_num {
+            get {
+                return ResourceManager.GetString("title_add_edit_num", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Оператор (АМКР).
+        /// </summary>
+        public static string title_add_edit_operator_car {
+            get {
+                return ResourceManager.GetString("title_add_edit_operator_car", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Новый оператор (АМКР).
+        /// </summary>
+        public static string title_add_edit_operator_car_new {
+            get {
+                return ResourceManager.GetString("title_add_edit_operator_car_new", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Начало аренды.
+        /// </summary>
+        public static string title_add_edit_operator_car_rent_start {
+            get {
+                return ResourceManager.GetString("title_add_edit_operator_car_rent_start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Оператор (УЗ).
+        /// </summary>
+        public static string title_add_edit_operator_uz_car {
+            get {
+                return ResourceManager.GetString("title_add_edit_operator_uz_car", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Собственник.
+        /// </summary>
+        public static string title_add_edit_owner_car {
+            get {
+                return ResourceManager.GetString("title_add_edit_owner_car", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Отправляемые грузы.
         /// </summary>
         public static string title_add_edit_sending {
             get {
                 return ResourceManager.GetString("title_add_edit_sending", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Призн. сход\не груз..
+        /// </summary>
+        public static string title_add_edit_sign {
+            get {
+                return ResourceManager.GetString("title_add_edit_sign", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Призн. собст..
+        /// </summary>
+        public static string title_add_edit_type_ownership {
+            get {
+                return ResourceManager.GetString("title_add_edit_type_ownership", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Тип цист..
+        /// </summary>
+        public static string title_add_edit_usl_tip {
+            get {
+                return ResourceManager.GetString("title_add_edit_usl_tip", resourceCulture);
             }
         }
         

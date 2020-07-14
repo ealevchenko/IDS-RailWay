@@ -129,6 +129,9 @@
   <data name="home_title" xml:space="preserve">
     <value>Справочники</value>
   </data>
+  <data name="title_add_add_edit_kol_os" xml:space="preserve">
+    <value>Кол. ос.</value>
+  </data>
   <data name="title_add_edit_cargo_etsng" xml:space="preserve">
     <value>Грузы справочник ЕТ СНГ</value>
   </data>
@@ -141,8 +144,68 @@
   <data name="title_add_edit_code_sap" xml:space="preserve">
     <value>Код в SAP</value>
   </data>
+  <data name="title_add_edit_date_rem_uz" xml:space="preserve">
+    <value>Дата рем. (УЗ)</value>
+  </data>
+  <data name="title_add_edit_date_rem_vag" xml:space="preserve">
+    <value>Дата рем. вагон</value>
+  </data>
+  <data name="title_add_edit_gruzp" xml:space="preserve">
+    <value>Груз-сть (УЗ)</value>
+  </data>
+  <data name="title_add_edit_kod_adm" xml:space="preserve">
+    <value>Код</value>
+  </data>
+  <data name="title_add_edit_kod_rod" xml:space="preserve">
+    <value>Код</value>
+  </data>
+  <data name="title_add_edit_limiting" xml:space="preserve">
+    <value>Ограничение (АМКР)</value>
+  </data>
+  <data name="title_add_edit_message_new_operator" xml:space="preserve">
+    <value>При изменении оператора (АМКР) будет создана новая строка, с новым оператором и определена дата начало аренды. По старой строке окончание аренды будет выставлено автоматически по дате начала новой аренды.</value>
+  </data>
+  <data name="title_add_edit_name_adm" xml:space="preserve">
+    <value>Админ.</value>
+  </data>
+  <data name="title_add_edit_name_rod" xml:space="preserve">
+    <value>Род вагона</value>
+  </data>
+  <data name="title_add_edit_name_rod_abbr" xml:space="preserve">
+    <value>Род (абр.)</value>
+  </data>
+  <data name="title_add_edit_note" xml:space="preserve">
+    <value>Примечание</value>
+  </data>
+  <data name="title_add_edit_num" xml:space="preserve">
+    <value>Номер вагона</value>
+  </data>
+  <data name="title_add_edit_operator_car" xml:space="preserve">
+    <value>Оператор (АМКР)</value>
+  </data>
+  <data name="title_add_edit_operator_car_new" xml:space="preserve">
+    <value>Новый оператор (АМКР)</value>
+  </data>
+  <data name="title_add_edit_operator_car_rent_start" xml:space="preserve">
+    <value>Начало аренды</value>
+  </data>
+  <data name="title_add_edit_operator_uz_car" xml:space="preserve">
+    <value>Оператор (УЗ)</value>
+  </data>
+  <data name="title_add_edit_owner_car" xml:space="preserve">
+    <value>Собственник</value>
+  </data>
   <data name="title_add_edit_sending" xml:space="preserve">
     <value>Отправляемые грузы</value>
+  </data>
+  <data name="title_add_edit_sign" xml:space="preserve">
+    <value>Призн. сход\не груз.</value>
+  </data>
+  <data name="title_add_edit_type_ownership" xml:space="preserve">
+    <value>Призн. собст.</value>
+  </data>
+  <data name="title_add_edit_usl_tip" xml:space="preserve">
+    <value>Тип цист.</value>
   </data>
   <data name="title_change_group_cargo_group" xml:space="preserve">
     <value>Группы грузов в ИДС</value>
