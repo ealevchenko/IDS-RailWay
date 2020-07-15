@@ -5,18 +5,14 @@
 
 @section styles {
     @Styles.Render("~/DataTables/css")
+    @Styles.Render("~/DateTime/css")
     <link rel="stylesheet" type="text/css" href="~/Content/view/directory/home.css">
-
-    @*<style>
-            table.dataTable tbody th, table.dataTable tbody td {
-                white-space: nowrap;
-            }
-        </style>*@
 }
 
 @section scripts {
     @Scripts.Render("~/bundles/Moment")
     @Scripts.Render("~/bundles/DataTables")
+    @Scripts.Render("~/bundles/DateTime")
 
     <script src="~/Scripts/view/shared/common.js"></script> <!-- Общая библиотека методов программы -->
     <script src="~/Scripts/api/shared.js"></script> <!-- Общая библиотека методов API -->
@@ -135,13 +131,6 @@
     <div class="alert" id="add_edit_alert"></div>
     <form id="form_add_edit">
         <div class="row" style="margin-bottom:0.5rem">
-            @*<label for="add_edit_num" class="col-md-2 col-form-label">@DirectoryResource.title_add_edit_num:</label>
-                <div class="col-md-4">
-                    <input type="number" class="form-control" id="add_edit_num" name="add_edit_num" disabled="disabled">
-                    <div class="invalid-feedback">
-
-                    </div>
-                </div>*@
             <div class="col-md-6 mb-1 text-left">
                 <label for="add_edit_num" class="col-form-label">@DirectoryResource.title_add_edit_num:</label>
                 <input type="number" class="form-control" id="add_edit_num" name="add_edit_num" disabled="disabled">
@@ -162,15 +151,6 @@
                 </div>
             </div>
         </div>
-        @*<div class="form-group row" style="margin-bottom:0.5rem">
-                <label for="add_edit_num" class="col-sm-3 col-form-label">@DirectoryResource.title_add_edit_num:</label>
-                <div class="col-sm-4">
-                    <input type="number" class="form-control" id="add_edit_num" name="add_edit_num" disabled="disabled">
-                    <div class="invalid-feedback">
-
-                    </div>
-                </div>
-            </div>*@
         <div class="row" style="margin-bottom:0.5rem">
 
             @*<div class="col-md-1 mb-1 text-left">
@@ -195,31 +175,15 @@
             </div>
             <div class="col-md-2 mb-1 text-left">
                 <label for="add_edit_kol_os" class="col-form-label">@DirectoryResource.title_add_add_edit_kol_os:</label>
-                <input type="text" class="form-control" id="add_edit_kol_os" name="add_edit_kol_os">
+                <select class="form-control" id="add_edit_kol_os" name="add_edit_kol_os"></select>
                 <div class="invalid-feedback">
                 </div>
             </div>
             <div class="col-md-2 mb-1 text-left">
                 <label for="add_edit_gruzp" class="col-form-label">@DirectoryResource.title_add_edit_gruzp:</label>
-                <input type="text" class="form-control" id="add_edit_gruzp" name="add_edit_gruzp" disabled="disabled">
+                <input type="number" class="form-control" id="add_edit_gruzp" name="add_edit_gruzp" disabled="disabled">
             </div>
         </div>
-        @*<div class="row" style="margin-bottom:0.5rem">
-                <div class="col-md-3 mb-1 text-left">
-                    <label for="add_edit_kod_rod" class="col-form-label">@DirectoryResource.title_add_edit_kod_rod:</label>
-                    <input type="text" class="form-control" id="add_edit_kod_rod" name="add_edit_kod_rod" disabled="disabled">
-                </div>
-                <div class="col-md-6 mb-1 text-left">
-                    <label for="add_edit_name_rod" class="col-form-label">@DirectoryResource.title_add_edit_name_rod:</label>
-                    <select class="form-control" id="add_edit_name_rod" name="add_edit_name_rod"></select>
-                    <div class="invalid-feedback">
-                    </div>
-                </div>
-                <div class="col-md-3 mb-1 text-left">
-                    <label for="add_edit_name_rod_abbr" class="col-form-label">@DirectoryResource.title_add_edit_name_rod_abbr:</label>
-                    <input type="text" class="form-control" id="add_edit_name_rod_abbr" name="add_edit_name_rod_abbr" disabled="disabled">
-                </div>
-            </div>*@
         <div class="row" style="margin-bottom:0.5rem">
             <div class="col-md-6 mb-1 text-left">
                 <label for="add_edit_owner_car" class="col-form-label">@DirectoryResource.title_add_edit_owner_car:</label>
@@ -287,25 +251,6 @@
                 </div>
             </div>
         </div>
-
-        @*<div class="row" style="margin-bottom:0.5rem">
-                <div class="col-md-4 mb-1 text-left">
-                    <label for="add_edit_usl_tip" class="col-form-label">@DirectoryResource.title_add_edit_usl_tip:</label>
-                    <input type="text" class="form-control" id="add_edit_usl_tip" name="add_edit_usl_tip">
-                    <div class="invalid-feedback">
-                    </div>
-                </div>
-                <div class="col-md-4 mb-1 text-left">
-                    <label for="add_edit_kol_os" class="col-form-label">@DirectoryResource.title_add_add_edit_kol_os:</label>
-                    <input type="text" class="form-control" id="add_edit_kol_os" name="add_edit_kol_os">
-                    <div class="invalid-feedback">
-                    </div>
-                </div>
-                <div class="col-md-4 mb-1 text-left">
-                    <label for="add_edit_gruzp" class="col-form-label">@DirectoryResource.title_add_edit_gruzp:</label>
-                    <input type="text" class="form-control" id="add_edit_gruzp" name="add_edit_gruzp" disabled="disabled">
-                </div>
-            </div>*@
         <div class="row" style="margin-bottom:0.5rem">
             <div class="col-md-6 mb-1 text-left">
                 <label for="add_edit_date_rem_uz" class="col-form-label">@DirectoryResource.title_add_edit_date_rem_uz:</label>

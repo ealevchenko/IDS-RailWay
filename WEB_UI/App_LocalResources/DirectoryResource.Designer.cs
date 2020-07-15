@@ -151,7 +151,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Дата рем. вагон.
+        ///   Ищет локализованную строку, похожую на Дата рем. (Вагон).
         /// </summary>
         public static string title_add_edit_date_rem_vag {
             get {
@@ -232,7 +232,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Примечание.
+        ///   Ищет локализованную строку, похожую на Ограничения (УЗ).
         /// </summary>
         public static string title_add_edit_note {
             get {
@@ -286,7 +286,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Собственник.
+        ///   Ищет локализованную строку, похожую на Собственник (УЗ).
         /// </summary>
         public static string title_add_edit_owner_car {
             get {

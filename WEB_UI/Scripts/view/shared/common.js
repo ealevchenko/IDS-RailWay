@@ -489,7 +489,7 @@ var get_select_value = function (select) {
 };
 var get_select_number_value = function (select) {
     if (select) {
-        //var s = select.val();
+        var s = select.val();
         return select.val() === null || Number(select.val()) === -1? null : Number(select.val());
     }
     return null;

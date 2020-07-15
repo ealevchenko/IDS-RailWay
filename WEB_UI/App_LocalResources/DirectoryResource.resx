@@ -148,7 +148,7 @@
     <value>Дата рем. (УЗ)</value>
   </data>
   <data name="title_add_edit_date_rem_vag" xml:space="preserve">
-    <value>Дата рем. вагон</value>
+    <value>Дата рем. (Вагон)</value>
   </data>
   <data name="title_add_edit_gruzp" xml:space="preserve">
     <value>Груз-сть (УЗ)</value>
@@ -175,7 +175,7 @@
     <value>Род (абр.)</value>
   </data>
   <data name="title_add_edit_note" xml:space="preserve">
-    <value>Примечание</value>
+    <value>Ограничения (УЗ)</value>
   </data>
   <data name="title_add_edit_num" xml:space="preserve">
     <value>Номер вагона</value>
@@ -193,7 +193,7 @@
     <value>Оператор (УЗ)</value>
   </data>
   <data name="title_add_edit_owner_car" xml:space="preserve">
-    <value>Собственник</value>
+    <value>Собственник (УЗ)</value>
   </data>
   <data name="title_add_edit_sending" xml:space="preserve">
     <value>Отправляемые грузы</value>
