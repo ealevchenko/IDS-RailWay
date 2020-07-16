@@ -88,6 +88,26 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // GET: api/ids/directory/cars/num/60173705/rent/start/2018-12-12T00:00:00
+        [Route("num/{num:int}/rent/start/{start:datetime}")]
+        [ResponseType(typeof(Directory_Cars))]
+        public IHttpActionResult GetOpenRent_CarsOfNumRentStart(int num, DateTime start)
+        {
+            try
+            {
+                List<Directory_Cars> cars = this.ef_dir
+                    .Context
+                    .Where(w => w.num == num & w.rent_start == start & w.rent_end == null)
+                    .ToList()
+                    .Select(m => m.GetDirectory_Cars()).OrderBy(c => c.rent_start).ToList();
+                return Ok(cars);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         // GET: api/ids/directory/cars/current/num/63958730
         [Route("current/num/{num:int}")]
         [ResponseType(typeof(Directory_Cars))]
@@ -242,6 +262,23 @@ namespace WEB_UI.Controllers.api
                 this.ef_dir.Update(value);
                 int result = this.ef_dir.Save();
                 return result > 0 ? value.id : result;
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+        }
+
+        // PUT api/ids/directory/cars/list
+        [HttpPut]
+        [Route("list")]
+        public int PutListCars([FromBody]List<Directory_Cars> list)
+        {
+            try
+            {
+                this.ef_dir.Update(list);
+                int res = this.ef_dir.Save();
+                return res;
             }
             catch (Exception e)
             {

@@ -755,6 +755,30 @@ IDS_DIRECTORY.prototype.getCarsOfNum = function (num, callback) {
         },
     });
 };
+// Получить строки с открытой арендой по номеру вагона и начало ренты
+IDS_DIRECTORY.prototype.getOpenRent_CarsOfNumRentStart = function (num, rent_start, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/cars/num/' + num + '/rent/start/' + rent_start.substring(0, 19),
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getOpenRent_CarsOfNumRentStart", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 // Получить текщий вагон по номеру вагона
 IDS_DIRECTORY.prototype.getCurrentCarsOfNum = function (num, callback) {
     $.ajax({
@@ -873,9 +897,7 @@ IDS_DIRECTORY.prototype.getCurrentCarsOfChangeOperator = function (callback) {
         },
     });
 };
-
-
-//Обновить 
+//Обновить вагон
 IDS_DIRECTORY.prototype.putCars = function (car, callback) {
     $.ajax({
         type: 'PUT',
@@ -893,6 +915,30 @@ IDS_DIRECTORY.prototype.putCars = function (car, callback) {
         },
         error: function (x, y, z) {
             OnAJAXError("IDS_DIRECTORY.putCars", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Обновить вагоны
+IDS_DIRECTORY.prototype.putListCars = function (car_list, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/directory/cars/list/',
+        data: JSON.stringify(car_list),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.putListCars", x, y, z);
         },
         complete: function () {
             AJAXComplete();
