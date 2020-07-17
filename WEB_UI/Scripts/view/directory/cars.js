@@ -377,6 +377,11 @@
             select_obj: null,                                                           // строка
             // Поля формы
             add_edit_num: $('input#add_edit_num'),
+            // Поиск и определение вагона
+            add_search_car: $('button#add_search_car').on('click', function (event) {
+                event.preventDefault();
+
+            }),
             add_edit_kod_adm: $('input#add_edit_kod_adm'),
             add_edit_name_adm: $('select#add_edit_name_adm'),
             //add_edit_kod_rod: $('input#add_edit_kod_rod'),
@@ -636,6 +641,7 @@
                         if (result_obj) {
                             pn_add_edit.select_obj = result_obj;
                             pn_add_edit.add_edit_num.val(pn_add_edit.select_obj.num).prop('disabled', true);
+                            pn_add_edit.add_search_car.prop('disabled', true);
                             pn_add_edit.add_edit_kod_adm.val(pn_add_edit.ids_dir.getValue_Countrys_Of_ID(Number(pn_add_edit.select_obj.id_countrys), 'code_sng'));
                             pn_add_edit.add_edit_name_adm.val(Number(pn_add_edit.select_obj.id_countrys));
                             //pn_add_edit.add_edit_kod_rod.val(pn_add_edit.ids_dir.getValue_GenusWagons_Of_ID(Number(pn_add_edit.select_obj.id_genus), 'rod_uz'));
@@ -671,6 +677,7 @@
                 } else {
                     pn_add_edit.obj.dialog("option", "title", "Добавить вагон");
                     pn_add_edit.add_edit_num.val('').prop('disabled', false);
+                    pn_add_edit.add_search_car.prop('disabled', false);
                     //pn_add_edit.add_edit_cargo_group.val(-1);
                     //pn_add_edit.add_edit_cargo_etsng.val(-1);
                     //pn_add_edit.add_edit_cargo_name_ru.val('');
