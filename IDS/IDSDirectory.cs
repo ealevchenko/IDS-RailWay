@@ -632,16 +632,14 @@ namespace IDS
                     // Если вагон добавлен вернем новые данные
                     if (result_add_new_car > 0)
                     {
-                        //ef_wag.Refresh();
                         wagon = ef_wag.Context.Where(c => c.num == num).FirstOrDefault();
-                        //ef_wag.Refresh(wagon);
-                        //EFDirectory_Wagons ef_wag1 = new EFDirectory_Wagons(new EFDbContext());
-                        //wagon = ef_wag1.Context.Where(c => c.num == num).FirstOrDefault();
                     }
+                    return wagon;
                 }
-                else {
+                else
+                {
                     // Если вагон есть обновим информацию
-                    //wagon = GetAdd_Update_Directory_Wagons(num, id_genus, kol_os, usl_tip, wagon.sobstv_kis, user);
+                    wagon = GetAdd_Update_Directory_Wagons(num, id_genus, kol_os, usl_tip, wagon.sobstv_kis, user);
                 }
                 return wagon;
             }
@@ -692,7 +690,7 @@ namespace IDS
                         id_limiting = null;
                         id_sob_kis = null;
                     }
-                    int result = CreateFirstNew_Directory_Wagons_Directory_WagonsRent(num, id_genus,kol_os, usl_tip, id_operator_amkr, rent_start, id_limiting, id_sob_kis, user);
+                    int result = CreateFirstNew_Directory_Wagons_Directory_WagonsRent(num, id_genus, kol_os, usl_tip, id_operator_amkr, rent_start, id_limiting, id_sob_kis, user);
                     return result;
                 }
                 else
@@ -727,30 +725,46 @@ namespace IDS
                 {
                     user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
                 }
-                Directory_Wagons new_wagon = GetFirstNewDirectory_Wagons(num, id_genus,kol_os,usl_tip , sobstv_kis, user);
+
+
+                Directory_Wagons new_wagon = GetFirstNewDirectory_Wagons(num, id_genus, kol_os, usl_tip, sobstv_kis, user);
                 if (new_wagon != null)
                 {
+                    // Строка создана, добавим аренду
+                    Directory_WagonsRent new_wag_rent = new Directory_WagonsRent()
+                    {
+                        id = 0,
+                        num = num,
+                        id_operator = id_operator_amkr,
+                        id_limiting = id_limiting,
+                        rent_start = rent_start,
+                        rent_end = null,
+                        create = DateTime.Now,
+                        create_user = user,
+                        parent_id = null,
+                    };
+                    new_wagon.Directory_WagonsRent.Add(new_wag_rent);
                     ef_wag.AddOrUpdate(new_wagon);
                     int res = ef_wag.Save();
-                    if (res > 0)
-                    {
-                        // Строка создана, добавим аренду
-                        Directory_WagonsRent new_wag_rent = new Directory_WagonsRent()
-                        {
-                            id = 0,
-                            num = new_wagon.num,
-                            id_operator = id_operator_amkr,
-                            id_limiting = id_limiting,
-                            rent_start = rent_start,
-                            rent_end = null,
-                            create = DateTime.Now,
-                            create_user = user,
-                            parent_id = null,
-                        };
-                        ef_wag_rent.Add(new_wag_rent);
-                        int res_rent = ef_wag_rent.Save();
-                        return res_rent;
-                    }
+                    //if (res > 0)
+                    //{
+                    //    // Строка создана, добавим аренду
+                    //    Directory_WagonsRent new_wag_rent = new Directory_WagonsRent()
+                    //    {
+                    //        id = 0,
+                    //        num = new_wagon.num,
+                    //        id_operator = id_operator_amkr,
+                    //        id_limiting = id_limiting,
+                    //        rent_start = rent_start,
+                    //        rent_end = null,
+                    //        create = DateTime.Now,
+                    //        create_user = user,
+                    //        parent_id = null,
+                    //    };
+                    //    ef_wag_rent.Add(new_wag_rent);
+                    //    int res_rent = ef_wag_rent.Save();
+                    //    return res_rent;
+                    //}
                     return res;
                 }
                 else
@@ -931,7 +945,8 @@ namespace IDS
                         };
                         return new_wagon;
                     }
-                    else {
+                    else
+                    {
                         // Обновим информацию
                         wagon_old.id_countrys = (wagon_old.id_countrys == 0 && id_countrys > 0 ? id_countrys : wagon_old.id_countrys);
                         wagon_old.id_genus = (wagon_old.id_genus == 0 && id_genus > 0 ? id_genus : wagon_old.id_genus);
@@ -952,6 +967,7 @@ namespace IDS
                         wagon_old.change = DateTime.Now;
                         wagon_old.change_user = user;
                         return wagon_old;
+                        
                     }
                 }
                 else
