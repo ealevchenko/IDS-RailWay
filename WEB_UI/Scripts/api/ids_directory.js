@@ -70,7 +70,11 @@ IDS_DIRECTORY.list_commercial_condition = [];
 
 IDS_DIRECTORY.list_hazard_class = [];
 
-IDS_DIRECTORY.list_cars = [];
+IDS_DIRECTORY.list_cars = []; // Удалить
+
+IDS_DIRECTORY.list_wagon = [];
+
+IDS_DIRECTORY.list_wagon_rent = [];
 
 IDS_DIRECTORY.list_type_division = [];
 
@@ -486,6 +490,19 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
                 }
             });
         };
+        if (el === 'wagon') {
+            IDS_DIRECTORY.prototype.getWagon(function (result_wagon) {
+                obj.list_wagon = result_wagon;
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        if (lockOff) { LockScreenOff(); }
+                        callback();
+                    }
+                }
+            });
+        };
+
         if (el === 'type_division') {
             IDS_DIRECTORY.prototype.getTypeDivision(function (result_type_division) {
                 obj.list_type_division = result_type_division;
@@ -557,6 +574,16 @@ IDS_DIRECTORY.prototype.loadCars = function (callback) {
     var obj = this;
     IDS_DIRECTORY.prototype.getCars(function (result_cars) {
         obj.list_cars = result_cars;
+        if (typeof callback === 'function') {
+            callback();
+        }
+    });
+};
+// Загрузка справочника вагонов новый
+IDS_DIRECTORY.prototype.loadWagon = function (callback) {
+    var obj = this;
+    IDS_DIRECTORY.prototype.getWagon(function (result_cars) {
+        obj.list_wagon = result_cars;
         if (typeof callback === 'function') {
             callback();
         }
@@ -685,6 +712,77 @@ IDS_DIRECTORY.prototype.loadHazardClass = function (callback) {
 /* ----------------------------------------------------------
 AJAX функции
 -------------------------------------------------------------*/
+//======= Directory_Wagon (Справочник вагонов) ======================================
+IDS_DIRECTORY.prototype.getWagon = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/wagon/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getWagon", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить по номеру вагона
+IDS_DIRECTORY.prototype.getWagonOfNum = function (num, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/wagon/num/' + num,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getWagonOfNum", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить текщий вагон по номеру вагона, администрации, роду 
+IDS_DIRECTORY.prototype.getWagonOfNumAdmRod = function (num, adm, rod, kol_os, usl_tip, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/wagon/num/' + num + '/adm/' + adm + '/rod/' + rod + '/kol_os/' + kol_os + '/usl_tip/' + usl_tip,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getWagonOfNumAdmRod", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
+
 //======= Directory_Cars (Справочник вагонов) ======================================
 //
 IDS_DIRECTORY.prototype.getCars = function (callback) {
@@ -851,29 +949,29 @@ IDS_DIRECTORY.prototype.postCurrentCarsOfNums = function (list_num, callback) {
     });
 };
 
-// Получить текщий вагон по номеру вагона, администрации, роду 
-IDS_DIRECTORY.prototype.getCurrentCarsOfNumAdmRod = function (num, adm, rod, kol_os, usl_tip, callback) {
-    $.ajax({
-        type: 'GET',
-        url: '../../api/ids/directory/cars/current/num/' + num + '/adm/' + adm + '/rod/' + rod + '/kol_os/' + kol_os + '/usl_tip/' + usl_tip,
-        async: true,
-        dataType: 'json',
-        beforeSend: function () {
-            AJAXBeforeSend();
-        },
-        success: function (data) {
-            if (typeof callback === 'function') {
-                callback(data);
-            }
-        },
-        error: function (x, y, z) {
-            OnAJAXError("IDS_DIRECTORY.getCurrentCarsOfNumAdmRod", x, y, z);
-        },
-        complete: function () {
-            AJAXComplete();
-        },
-    });
-};
+//// Получить текщий вагон по номеру вагона, администрации, роду 
+//IDS_DIRECTORY.prototype.getCurrentCarsOfNumAdmRod = function (num, adm, rod, kol_os, usl_tip, callback) {
+//    $.ajax({
+//        type: 'GET',
+//        url: '../../api/ids/directory/cars/current/num/' + num + '/adm/' + adm + '/rod/' + rod + '/kol_os/' + kol_os + '/usl_tip/' + usl_tip,
+//        async: true,
+//        dataType: 'json',
+//        beforeSend: function () {
+//            AJAXBeforeSend();
+//        },
+//        success: function (data) {
+//            if (typeof callback === 'function') {
+//                callback(data);
+//            }
+//        },
+//        error: function (x, y, z) {
+//            OnAJAXError("IDS_DIRECTORY.getCurrentCarsOfNumAdmRod", x, y, z);
+//        },
+//        complete: function () {
+//            AJAXComplete();
+//        },
+//    });
+//};
 //
 IDS_DIRECTORY.prototype.getCurrentCarsOfChangeOperator = function (callback) {
     $.ajax({

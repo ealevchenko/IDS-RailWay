@@ -4990,7 +4990,7 @@
             },
             // Получить текущий вагон из справочника
             get_vagon_dir: function (vagon, num, callback) {
-                cars_detali.ids_inc.ids_dir.getCurrentCarsOfNumAdmRod(num, vagon.kod_adm, vagon.rod_vag, vagon.kol_os, vagon.usl_tip, function (result_card) {
+                cars_detali.ids_inc.ids_dir.getWagonOfNumAdmRod(num, vagon.kod_adm, vagon.rod_vag, vagon.kol_os, vagon.usl_tip, function (result_card) {
                     if (typeof callback === 'function') {
                         callback(result_card);
                     }
@@ -5005,7 +5005,7 @@
                         var adm = cars_detali.ids_inc.ids_dir.getCountrys_Internal_Of_ID(vagon.id_countrys);
                         var rod = cars_detali.ids_inc.ids_dir.getGenusWagons_Internal_Of_ID(vagon.id_genus);
                         // Обновим информацию о нем и покажем
-                        cars_detali.ids_inc.ids_dir.getCurrentCarsOfNumAdmRod(num, (adm ? adm.code_sng : 0), (rod ? rod.rod_uz : 0), vagon.kol_os, (vagon.usl_tip === "" ? null : vagon.usl_tip), function (result_card) {
+                        cars_detali.ids_inc.ids_dir.getWagonOfNumAdmRod(num, (adm ? adm.code_sng : 0), (rod ? rod.rod_uz : 0), vagon.kol_os, (vagon.usl_tip === "" ? null : vagon.usl_tip), function (result_card) {
                             if (typeof callback === 'function') {
                                 callback(result_card);
                             }

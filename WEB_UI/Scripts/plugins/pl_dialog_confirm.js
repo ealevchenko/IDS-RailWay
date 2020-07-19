@@ -433,7 +433,7 @@
                             // Вернуть новую или обнавленную строку
                             get_object: function () {
                                 if (dialog_add_edit.row) {
-
+                                    //
                                 }
                                 var new_obj;
                                 // Формируем поля

@@ -42,6 +42,8 @@ namespace EFIDS.Entities
 
         public virtual Directory_LimitingLoading Directory_LimitingLoading { get; set; }
 
+        public virtual Directory_OperatorsWagons Directory_OperatorsWagons { get; set; }
+
         public virtual Directory_Wagons Directory_Wagons { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -404,6 +404,11 @@ namespace EFIDS.Concrete
                 .WithOptional(e => e.Directory_OperatorsWagons)
                 .HasForeignKey(e => e.id_operator);
 
+            modelBuilder.Entity<Directory_OperatorsWagons>()
+                .HasMany(e => e.Directory_WagonsRent)
+                .WithOptional(e => e.Directory_OperatorsWagons)
+                .HasForeignKey(e => e.id_operator);
+
             modelBuilder.Entity<Directory_OwnersWagons>()
                 .HasMany(e => e.Directory_Wagons)
                 .WithRequired(e => e.Directory_OwnersWagons)

@@ -307,7 +307,7 @@ namespace EFIDS.Helper
                 change_user = l.change_user
             };
         }
-        // Справочник вагонов
+        //TODO: !!!Удалить Справочник вагонов внедрил новый Directory_Wagons
         public static Directory_Cars GetDirectory_Cars(this Directory_Cars c)
         {
             if (c == null) return null;
@@ -329,7 +329,7 @@ namespace EFIDS.Helper
                 id_limiting = c.id_limiting,
                 id_type_ownership = c.id_type_ownership,
                 rent_start = c.rent_start,
-                rent_end = c.rent_end, 
+                rent_end = c.rent_end,
                 sign = c.sign,
                 note = c.note,
                 sobstv_kis = c.sobstv_kis,
@@ -343,6 +343,64 @@ namespace EFIDS.Helper
                 Directory_OperatorsWagons = c.Directory_OperatorsWagons.GetOperatorsWagons(),
                 Directory_LimitingLoading = c.Directory_LimitingLoading.GetDirectory_LimitingLoading(),
                 Directory_TypeOwnerShip = c.Directory_TypeOwnerShip.GetTypeOwnerShip(),
+            };
+        }
+        // Справочник вагонов новый.
+        public static Directory_Wagons GetDirectory_Wagons(this Directory_Wagons w)
+        {
+            if (w == null) return null;
+            return new Directory_Wagons()
+            {
+                num = w.num,
+                id_countrys = w.id_countrys,
+                id_genus = w.id_genus,
+                id_owner = w.id_owner,
+                id_operator = w.id_operator,
+                change_operator = w.change_operator,
+                gruzp = w.gruzp,
+                kol_os = w.kol_os,
+                usl_tip = w.usl_tip,
+                date_rem_uz = w.date_rem_uz,
+                date_rem_vag = w.date_rem_vag,
+                id_type_ownership = w.id_type_ownership,
+                sign = w.sign,
+                note = w.note,
+                sobstv_kis = w.sobstv_kis,
+                bit_warning = w.bit_warning,
+                create = w.create,
+                create_user = w.create_user,
+                change = w.change,
+                change_user = w.change_user,
+                Directory_Countrys = w.Directory_Countrys.GetDirectory_Countrys(),
+                Directory_GenusWagons = w.Directory_GenusWagons.GetGenusWagons(),
+                Directory_OwnersWagons = w.Directory_OwnersWagons.GetOwnersWagons(),
+                Directory_OperatorsWagons = w.Directory_OperatorsWagons.GetOperatorsWagons(),
+                Directory_TypeOwnerShip = w.Directory_TypeOwnerShip.GetTypeOwnerShip(), 
+                Directory_WagonsRent =w.Directory_WagonsRent.ToList().Select(r => r.GetDirectory_WagonsRent()).ToList(),
+            };
+        }
+        // Справочник аренд вагонов.
+        public static Directory_WagonsRent GetDirectory_WagonsRent(this Directory_WagonsRent r)
+        {
+            if (r == null) return null;
+            return new Directory_WagonsRent()
+            {
+                id = r.id,
+                num = r.num,
+                id_operator = r.id_operator,
+                id_limiting = r.id_limiting,
+                rent_start = r.rent_start,
+                rent_end = r.rent_end,
+                parent_id = r.parent_id,
+                create = r.create,
+                create_user = r.create_user,
+                change = r.change,
+                change_user = r.change_user,
+                Directory_LimitingLoading = r.Directory_LimitingLoading.GetDirectory_LimitingLoading(), 
+                Directory_OperatorsWagons = r.Directory_OperatorsWagons.GetOperatorsWagons(),
+                Directory_Wagons = null,
+                Directory_WagonsRent1 = null,
+                Directory_WagonsRent2 = null,
             };
         }
         // Справочник годность по прибытию
@@ -1102,36 +1160,42 @@ namespace EFIDS.Helper
 
         public static ArrivalSostav GetArrivalSostav_ArrivalCars(this ArrivalSostav s)
         {
-            if (s == null) return null;
-            return new ArrivalSostav()
+            try
             {
-
-                id = s.id,
-                id_arrived = s.id_arrived,
-                id_sostav = s.id_sostav,
-                train = s.train,
-                composition_index = s.composition_index,
-                date_arrival = s.date_arrival,
-                date_adoption = s.date_adoption,
-                date_adoption_act = s.date_adoption_act,
-                id_station_from = s.id_station_from,
-                id_station_on = s.id_station_on,
-                id_way = s.id_way,
-                numeration = s.numeration,
-                num_doc = s.num_doc,
-                count = s.count,
-                status = s.status,
-                note = s.note,
-                create = s.create,
-                create_user = s.create_user,
-                change = s.change,
-                change_user = s.change_user,
-                ArrivalCars = s.ArrivalCars.ToList().Select(c => c.GetArrivalCars()).ToList(),
-                Arrival_UZ_Vagon = s.Arrival_UZ_Vagon.ToList().Select(c => c.GetArrival_UZ_Vagon()).ToList(),
-                Directory_Station = s.Directory_Station.GetDirectory_Station(),
-                Directory_Station1 = s.Directory_Station1.GetDirectory_Station(),
-                Directory_Ways = s.Directory_Ways.GetDirectory_Ways()
-            };
+                if (s == null) return null;
+                return new ArrivalSostav()
+                {
+                    id = s.id,
+                    id_arrived = s.id_arrived,
+                    id_sostav = s.id_sostav,
+                    train = s.train,
+                    composition_index = s.composition_index,
+                    date_arrival = s.date_arrival,
+                    date_adoption = s.date_adoption,
+                    date_adoption_act = s.date_adoption_act,
+                    id_station_from = s.id_station_from,
+                    id_station_on = s.id_station_on,
+                    id_way = s.id_way,
+                    numeration = s.numeration,
+                    num_doc = s.num_doc,
+                    count = s.count,
+                    status = s.status,
+                    note = s.note,
+                    create = s.create,
+                    create_user = s.create_user,
+                    change = s.change,
+                    change_user = s.change_user,
+                    ArrivalCars = s.ArrivalCars.ToList().Select(c => c.GetArrivalCars()).ToList(),
+                    Arrival_UZ_Vagon = s.Arrival_UZ_Vagon.ToList().Select(c => c.GetArrival_UZ_Vagon()).ToList(),
+                    Directory_Station = s.Directory_Station.GetDirectory_Station(),
+                    Directory_Station1 = s.Directory_Station1.GetDirectory_Station(),
+                    Directory_Ways = s.Directory_Ways.GetDirectory_Ways()
+                };
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         public static ArrivalSostav GetArrivalSostav(this ArrivalSostav s)

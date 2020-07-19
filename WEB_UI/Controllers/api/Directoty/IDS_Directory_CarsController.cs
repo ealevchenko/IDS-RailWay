@@ -215,25 +215,25 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // GET: api/ids/directory/cars/current/num/53185617/adm/22/rod/60/kol_os/4/usl_tip/null
-        [Route("current/num/{num:int}/adm/{adm:int}/rod/{rod}/kol_os/{kol_os:int}/usl_tip/{usl_tip}")]
-        [ResponseType(typeof(Directory_Cars))]
-        public IHttpActionResult GetCurrentCarsOfNum(int num, int adm, string rod, int kol_os, string usl_tip)
-        {
-            try
-            {
-                string user = base.User.Identity.Name;
-                IDSDirectory ids_dir = new IDSDirectory(service.WebAPI_IDS);
-                ids_dir.Transfer_new_car_of_kis = true; // Признак создавать вагоны в справочнике ИДС по данным КИС и ИРЫ если вагон новый
-                //Directory_Cars car = ids_dir.GetCurrentDirectory_CarsOfNum(num, 22, 60, 4, null, true, user);
-                Directory_Cars car = ids_dir.GetCurrentDirectory_CarsOfNum(num, adm, (rod == "null" ? null : (int?)int.Parse(rod)), kol_os, (usl_tip == "null" ? null : usl_tip), true, user);
-                return Ok(car);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
+        //// GET: api/ids/directory/cars/current/num/53185617/adm/22/rod/60/kol_os/4/usl_tip/null
+        //[Route("current/num/{num:int}/adm/{adm:int}/rod/{rod}/kol_os/{kol_os:int}/usl_tip/{usl_tip}")]
+        //[ResponseType(typeof(Directory_Cars))]
+        //public IHttpActionResult GetCurrentCarsOfNum(int num, int adm, string rod, int kol_os, string usl_tip)
+        //{
+        //    try
+        //    {
+        //        string user = base.User.Identity.Name;
+        //        IDSDirectory ids_dir = new IDSDirectory(service.WebAPI_IDS);
+        //        ids_dir.Transfer_new_car_of_kis = true; // Признак создавать вагоны в справочнике ИДС по данным КИС и ИРЫ если вагон новый
+        //        //Directory_Cars car = ids_dir.GetCurrentDirectory_CarsOfNum(num, 22, 60, 4, null, true, user);
+        //        Directory_Cars car = ids_dir.GetCurrentDirectory_CarsOfNum(num, adm, (rod == "null" ? null : (int?)int.Parse(rod)), kol_os, (usl_tip == "null" ? null : usl_tip), true, user);
+        //        return Ok(car);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest(e.Message);
+        //    }
+        //}
 
         // POST api/ids/directory/cars/
         [HttpPost]

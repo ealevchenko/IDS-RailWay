@@ -49,7 +49,7 @@ namespace Test.TestModule
         {
 
             IDSDirectory ids = new IDSDirectory(service.Test);
-            Directory_Cars res = ids.GetCurrentDirectory_CarsOfNum(50030584, 22,60, 4, "", true, @"EUROPE\ealevchenko");
+            //Directory_Wagons res = ids.GetDirectory_WagonsOfNum(50030584, 22,60, 4, "", true, @"EUROPE\ealevchenko", false);
 
         }
 

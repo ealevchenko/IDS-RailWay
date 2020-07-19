@@ -61,6 +61,8 @@
     <Compile Include="Abstract\IWebView.cs" />
     <Compile Include="Abstract\IWebAccess.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_BorderCheckpoint.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_WagonsRent.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_Wagons.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Cars_KIS.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Ways.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_ParkWay.cs" />
