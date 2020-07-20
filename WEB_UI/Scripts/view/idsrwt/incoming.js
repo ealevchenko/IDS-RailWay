@@ -2978,46 +2978,67 @@
             },
             // Показать дату начала аренды
             view_epd_rent_start: function (vagon) {
-                if (vagon && vagon.Directory_WagonsRent && vagon.Directory_WagonsRent.length > 0) {
-                    var rent = vagon.Directory_WagonsRent.filter(function (i) {
-                        return (i.rent_end) ? false : true;
-                    });
-
-                    if (rent && rent.length > 0) {
-                        cars_detali.card_vag_rent_start.setDateTime(rent[0].rent_start !== null ? rent[0].rent_start.replace(/T/g, ' ') : null);
-                        cars_detali.card_vag_rent_start.enable(false);
-                    }
-
-                    //if (vagon.rent_start) {
-                    //    cars_detali.card_vag_rent_start.setDateTime(vagon.rent_start !== null ? vagon.rent_start.replace(/T/g, ' ') : null);
-                    //    cars_detali.card_vag_rent_start.enable(false);
-                    //} else {
-                    //    cars_detali.card_vag_rent_start.setDateTime(null);
-                    //    cars_detali.card_vag_rent_start.enable(cars_detali.is_edit_mode_of_element(cars_detali.card_vag_rent_start.obj));
-                    //}
+                // Получим текущую ренту
+                var current_rent = cars_detali.get_current_rent(vagon);
+                if (current_rent) {
+                    cars_detali.card_vag_rent_start.setDateTime(current_rent.rent_start !== null ? current_rent.rent_start.replace(/T/g, ' ') : null);
+                    cars_detali.card_vag_rent_start.enable(false);
                 }
+
+                //if (vagon.rent_start) {
+                //    cars_detali.card_vag_rent_start.setDateTime(vagon.rent_start !== null ? vagon.rent_start.replace(/T/g, ' ') : null);
+                //    cars_detali.card_vag_rent_start.enable(false);
+                //} else {
+                //    cars_detali.card_vag_rent_start.setDateTime(null);
+                //    cars_detali.card_vag_rent_start.enable(cars_detali.is_edit_mode_of_element(cars_detali.card_vag_rent_start.obj));
+                //}
+
                 //!!! если вагона нет тогда наверное нужно создать в ручную
             },
             // Показать оператор
             view_epd_operator: function (vagon) {
-                if (vagon) {
-                    if (vagon.id === 0) {
-                        // Обновить справочник
-                        cars_detali.ids_inc.ids_dir.loadOperatorsWagons(function () {
-                            cars_detali.card_vag_name_operator.val(cars_detali.ids_inc.ids_dir.getValueCulture_OperatorsWagons_Of_ID(vagon.id_operator, 'operators'));
-                        });
-                    } else {
-                        cars_detali.card_vag_name_operator.val(cars_detali.ids_inc.ids_dir.getValueCulture_OperatorsWagons_Of_ID(vagon.id_operator, 'operators'));
-                    }
+                // Получим текущую ренту
+                var current_rent = cars_detali.get_current_rent(vagon);
+                if (current_rent) {
+                    cars_detali.ids_inc.ids_dir.loadOperatorsWagons(function () {
+                        cars_detali.card_vag_name_operator.val(cars_detali.ids_inc.ids_dir.getValueCulture_OperatorsWagons_Of_ID(current_rent.id_operator, 'operators'));
+                    });
                 }
+                //if (vagon) {
+                //    if (vagon.id === 0) {
+                //        // Обновить справочник
+                //        cars_detali.ids_inc.ids_dir.loadOperatorsWagons(function () {
+                //            cars_detali.card_vag_name_operator.val(cars_detali.ids_inc.ids_dir.getValueCulture_OperatorsWagons_Of_ID(vagon.id_operator, 'operators'));
+                //        });
+                //    } else {
+                //        cars_detali.card_vag_name_operator.val(cars_detali.ids_inc.ids_dir.getValueCulture_OperatorsWagons_Of_ID(vagon.id_operator, 'operators'));
+                //    }
+                //}
                 //!!! если вагона нет тогда наверное нужно создать в ручную
             },
             // Показать ограничения погрузки
             view_epd_limiting_loading: function (vagon) {
-                if (vagon) {
-                    var res = cars_detali.ids_inc.ids_dir.getValueCulture_LimitingLoading_Of_Code(vagon.id_limiting, 'limiting_name');
+                // Получим текущую ренту
+                var current_rent = cars_detali.get_current_rent(vagon);
+                if (current_rent) {
+                    var res = cars_detali.ids_inc.ids_dir.getValueCulture_LimitingLoading_Of_Code(current_rent.id_limiting, 'limiting_name');
                     cars_detali.card_vag_limiting_loading.val(res);
                 }
+
+                //if (vagon && vagon.Directory_WagonsRent && vagon.Directory_WagonsRent.length > 0) {
+                //    var rent = vagon.Directory_WagonsRent.filter(function (i) {
+                //        return (i.rent_end) ? false : true;
+                //    });
+
+                //    if (rent && rent.length > 0) {
+                //        var res = cars_detali.ids_inc.ids_dir.getValueCulture_LimitingLoading_Of_Code(rent[0].id_limiting, 'limiting_name');
+                //        cars_detali.card_vag_limiting_loading.val(res);
+                //    }
+                //}
+                //if (vagon) {
+                //    var res = cars_detali.ids_inc.ids_dir.getValueCulture_LimitingLoading_Of_Code(vagon.id_limiting, 'limiting_name');
+                //    cars_detali.card_vag_limiting_loading.val(res);
+                //}
                 //!!! если вагона нет тогда наверное нужно создать в ручную
             },
             // Показать признак собственности
@@ -4626,7 +4647,6 @@
                     var count = cars_detali.table_arrival_cars.obj.rows({ selected: true }).count();
                     cars_detali.table_arrival_cars.obj.button(5).enable(count > 0 && cars_detali.sostav && cars_detali.sostav.status < 2 ? true : false);
                 }
-
             },
 
 
@@ -5029,6 +5049,18 @@
                 });
 
 
+            },
+            // Вернуть текущую аренду вагона
+            get_current_rent: function (vagon) {
+                if (vagon && vagon.Directory_WagonsRent && vagon.Directory_WagonsRent.length > 0) {
+                    var rent = vagon.Directory_WagonsRent.filter(function (i) {
+                        return (i.rent_end) ? false : true;
+                    });
+                    if (rent && rent.length > 0) {
+                        return rent[0];
+                    }
+                }
+                return null;
             },
             // ЭЛЕКТРОННО ПЕРЕВОЗОЧНЫЙ ДОКУМЕНТ ************************************************************************************************************************************
             // !!! можно перенести в отдельный класс

@@ -1011,7 +1011,7 @@ namespace IDS
                         wagon = CreateDirectory_Wagons(num, id_genus, kol_os, usl_tip, null, null, null, null, user);
                     }
                     // Сохраним изменения
-                    ef_wag.AddOrUpdate(wagon);
+                    ef_wag.Add(wagon);
                     int result_create = ef_wag.Save();
                     String.Format("В справочник 'ВАГОНОВ ИДС' - добавлен новый вагон №{0}, код выполнения : {1}", num, result_create).WarningLog(servece_owner, this.eventID);
                 }
@@ -1020,6 +1020,9 @@ namespace IDS
                     // Если вагон есть обновим информацию
                     Directory_WagonsRent current_wagon_rent = wagon.Directory_WagonsRent.Where(r => r.rent_end == null).OrderByDescending(r => r.rent_start).FirstOrDefault();
                     wagon = UpdateDirectory_Wagons(num, id_genus, kol_os, usl_tip, (current_wagon_rent != null ? current_wagon_rent.id_operator : null), (current_wagon_rent != null ? current_wagon_rent.rent_start : null), (current_wagon_rent != null ? current_wagon_rent.id_limiting : null), wagon.sobstv_kis, user);
+                    // Сохраним изменения
+                    ef_wag.Update(wagon);
+                    int result_create = ef_wag.Save();
                 }
                 // Обновим информацию и верем
                 wagon = ef_wag.Context.Where(c => c.num == num).FirstOrDefault();
