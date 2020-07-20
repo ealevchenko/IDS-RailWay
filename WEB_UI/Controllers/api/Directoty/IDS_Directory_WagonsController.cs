@@ -39,7 +39,7 @@ namespace WEB_UI.Controllers.api
             try
             {
                 List<Directory_Wagons> list = this.ef_dir.Context.ToList()
-                    .Select(m => m.GetDirectory_Wagons()).ToList();
+                    .Select(m => m.GetDirectory_Wagons_Directory_WagonsRent()).ToList();
                 return Ok(list);
             }
             catch (Exception e)
@@ -59,7 +59,7 @@ namespace WEB_UI.Controllers.api
                     .Context
                     .Where(w => w.num == num)
                     .ToList()
-                    .Select(m => m.GetDirectory_Wagons()).FirstOrDefault();
+                    .Select(m => m.GetDirectory_Wagons_Directory_WagonsRent()).FirstOrDefault();
                 return Ok(wagon);
             }
             catch (Exception e)
@@ -204,11 +204,11 @@ namespace WEB_UI.Controllers.api
             {
                 string user = base.User.Identity.Name;
                 IDSDirectory ids_dir = new IDSDirectory(service.WebAPI_IDS);
-                //ids_dir.Transfer_new_car_of_kis = true; // Признак создавать вагоны в справочнике ИДС по данным КИС и ИРЫ если вагон новый
-                ids_dir.Transfer_new_car_of_kis = false; // Признак создавать вагоны в справочнике ИДС по данным КИС и ИРЫ если вагон новый
+                ids_dir.Transfer_new_car_of_kis = true; // Признак создавать вагоны в справочнике ИДС по данным КИС и ИРЫ если вагон новый
+                //ids_dir.Transfer_new_car_of_kis = false; // Признак создавать вагоны в справочнике ИДС по данным КИС и ИРЫ если вагон новый
                 //Directory_Wagons car = ids_dir.GetCurrentDirectory_WagonsOfNum(num, 22, 60, 4, null, true, user);
-                Directory_Wagons car = ids_dir.GetDirectory_WagonsOfNum(num, adm, (rod == "null" ? null : (int?)int.Parse(rod)), kol_os, (usl_tip == "null" ? null : usl_tip), user).GetDirectory_Wagons();
-                return Ok(car.GetDirectory_Wagons());
+                Directory_Wagons car = ids_dir.GetDirectory_WagonsOfNum(num, adm, (rod == "null" ? null : (int?)int.Parse(rod)), kol_os, (usl_tip == "null" ? null : usl_tip), user).GetDirectory_Wagons_Directory_WagonsRent();
+                return Ok(car.GetDirectory_Wagons_Directory_WagonsRent());
             }
             catch (Exception e)
             {

@@ -345,8 +345,41 @@ namespace EFIDS.Helper
                 Directory_TypeOwnerShip = c.Directory_TypeOwnerShip.GetTypeOwnerShip(),
             };
         }
-        // Справочник вагонов новый.
         public static Directory_Wagons GetDirectory_Wagons(this Directory_Wagons w)
+        {
+            if (w == null) return null;
+            return new Directory_Wagons()
+            {
+                num = w.num,
+                id_countrys = w.id_countrys,
+                id_genus = w.id_genus,
+                id_owner = w.id_owner,
+                id_operator = w.id_operator,
+                change_operator = w.change_operator,
+                gruzp = w.gruzp,
+                kol_os = w.kol_os,
+                usl_tip = w.usl_tip,
+                date_rem_uz = w.date_rem_uz,
+                date_rem_vag = w.date_rem_vag,
+                id_type_ownership = w.id_type_ownership,
+                sign = w.sign,
+                note = w.note,
+                sobstv_kis = w.sobstv_kis,
+                bit_warning = w.bit_warning,
+                create = w.create,
+                create_user = w.create_user,
+                change = w.change,
+                change_user = w.change_user,
+                Directory_Countrys = w.Directory_Countrys.GetDirectory_Countrys(),
+                Directory_GenusWagons = w.Directory_GenusWagons.GetGenusWagons(),
+                Directory_OwnersWagons = w.Directory_OwnersWagons.GetOwnersWagons(),
+                Directory_OperatorsWagons = w.Directory_OperatorsWagons.GetOperatorsWagons(),
+                Directory_TypeOwnerShip = w.Directory_TypeOwnerShip.GetTypeOwnerShip(), 
+                Directory_WagonsRent =null,
+            };
+        }
+        // Справочник вагонов новый.
+        public static Directory_Wagons GetDirectory_Wagons_Directory_WagonsRent(this Directory_Wagons w)
         {
             if (w == null) return null;
             return new Directory_Wagons()
@@ -398,7 +431,7 @@ namespace EFIDS.Helper
                 change_user = r.change_user,
                 Directory_LimitingLoading = r.Directory_LimitingLoading.GetDirectory_LimitingLoading(), 
                 Directory_OperatorsWagons = r.Directory_OperatorsWagons.GetOperatorsWagons(),
-                Directory_Wagons = null,
+                Directory_Wagons = r.Directory_Wagons.GetDirectory_Wagons(),
                 Directory_WagonsRent1 = null,
                 Directory_WagonsRent2 = null,
             };

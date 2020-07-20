@@ -2978,14 +2978,23 @@
             },
             // Показать дату начала аренды
             view_epd_rent_start: function (vagon) {
-                if (vagon) {
-                    if (vagon.rent_start) {
-                        cars_detali.card_vag_rent_start.setDateTime(vagon.rent_start !== null ? vagon.rent_start.replace(/T/g, ' ') : null);
+                if (vagon && vagon.Directory_WagonsRent && vagon.Directory_WagonsRent.length > 0) {
+                    var rent = vagon.Directory_WagonsRent.filter(function (i) {
+                        return (i.rent_end) ? false : true;
+                    });
+
+                    if (rent && rent.length > 0) {
+                        cars_detali.card_vag_rent_start.setDateTime(rent[0].rent_start !== null ? rent[0].rent_start.replace(/T/g, ' ') : null);
                         cars_detali.card_vag_rent_start.enable(false);
-                    } else {
-                        cars_detali.card_vag_rent_start.setDateTime(null);
-                        cars_detali.card_vag_rent_start.enable(cars_detali.is_edit_mode_of_element(cars_detali.card_vag_rent_start.obj));
                     }
+
+                    //if (vagon.rent_start) {
+                    //    cars_detali.card_vag_rent_start.setDateTime(vagon.rent_start !== null ? vagon.rent_start.replace(/T/g, ' ') : null);
+                    //    cars_detali.card_vag_rent_start.enable(false);
+                    //} else {
+                    //    cars_detali.card_vag_rent_start.setDateTime(null);
+                    //    cars_detali.card_vag_rent_start.enable(cars_detali.is_edit_mode_of_element(cars_detali.card_vag_rent_start.obj));
+                    //}
                 }
                 //!!! если вагона нет тогда наверное нужно создать в ручную
             },
