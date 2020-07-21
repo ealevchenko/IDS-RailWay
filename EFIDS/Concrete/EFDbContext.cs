@@ -53,7 +53,6 @@ namespace EFIDS.Concrete
         public virtual DbSet<Directory_Railway> Directory_Railway { get; set; }
         public virtual DbSet<Directory_BorderCheckpoint> Directory_BorderCheckpoint { get; set; }
         public virtual DbSet<Directory_PayerArrival> Directory_PayerArrival { get; set; }
-        public virtual DbSet<Directory_Cars> Directory_Cars { get; set; } // ! Удалим заменили на Directory_Wagons и Directory_WagonsRent
         public virtual DbSet<Directory_Wagons> Directory_Wagons { get; set; }
         public virtual DbSet<Directory_WagonsRent> Directory_WagonsRent { get; set; }
         public virtual DbSet<Directory_Countrys> Directory_Countrys { get; set; }
@@ -204,12 +203,6 @@ namespace EFIDS.Concrete
                 .HasForeignKey(e => e.id_group)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<Directory_Cars>()
-                .HasMany(e => e.Arrival_UZ_Vagon)
-                .WithRequired(e => e.Directory_Cars)
-                .HasForeignKey(e => e.id_car)
-                .WillCascadeOnDelete(false);
-
             modelBuilder.Entity<Directory_CertificationData>()
                 .HasMany(e => e.Arrival_UZ_Vagon)
                 .WithOptional(e => e.Directory_CertificationData)
@@ -229,12 +222,6 @@ namespace EFIDS.Concrete
                 .HasMany(e => e.Arrival_UZ_Document)
                 .WithOptional(e => e.Directory_Consignee)
                 .HasForeignKey(e => e.code_consignee);
-
-            modelBuilder.Entity<Directory_Countrys>()
-                .HasMany(e => e.Directory_Cars)
-                .WithRequired(e => e.Directory_Countrys)
-                .HasForeignKey(e => e.id_countrys)
-                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Directory_Countrys>()
                 .HasMany(e => e.Directory_Railway)
@@ -267,12 +254,6 @@ namespace EFIDS.Concrete
                 .WithOptional(e => e.Directory_ExternalStation1)
                 .HasForeignKey(e => e.code_stn_to);
 
-            modelBuilder.Entity<Directory_GenusWagons>()
-                .HasMany(e => e.Directory_Cars)
-                .WithRequired(e => e.Directory_GenusWagons)
-                .HasForeignKey(e => e.id_genus)
-                .WillCascadeOnDelete(false);
-
             modelBuilder.Entity<Directory_HazardClass>()
                 .Property(e => e.code)
                 .IsFixedLength()
@@ -293,22 +274,6 @@ namespace EFIDS.Concrete
                 .HasMany(e => e.Directory_ExternalStation)
                 .WithRequired(e => e.Directory_InlandRailway)
                 .HasForeignKey(e => e.code_inlandrailway)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Directory_LimitingLoading>()
-                .HasMany(e => e.Directory_Cars)
-                .WithOptional(e => e.Directory_LimitingLoading)
-                .HasForeignKey(e => e.id_limiting);
-
-            modelBuilder.Entity<Directory_OperatorsWagons>()
-                .HasMany(e => e.Directory_Cars)
-                .WithOptional(e => e.Directory_OperatorsWagons)
-                .HasForeignKey(e => e.id_operator);
-
-            modelBuilder.Entity<Directory_OwnersWagons>()
-                .HasMany(e => e.Directory_Cars)
-                .WithRequired(e => e.Directory_OwnersWagons)
-                .HasForeignKey(e => e.id_owner)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Directory_ParkWay>()
@@ -359,11 +324,6 @@ namespace EFIDS.Concrete
                 .WithRequired(e => e.Directory_TypeDivision)
                 .HasForeignKey(e => e.id_type_devision)
                 .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Directory_TypeOwnerShip>()
-                .HasMany(e => e.Directory_Cars)
-                .WithOptional(e => e.Directory_TypeOwnerShip)
-                .HasForeignKey(e => e.id_type_ownership);
 
             modelBuilder.Entity<Directory_TypeWagons>()
                 .HasMany(e => e.Arrival_UZ_Vagon)

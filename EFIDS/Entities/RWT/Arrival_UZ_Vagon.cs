@@ -15,7 +15,6 @@ namespace EFIDS.Entities
             Arrival_UZ_Vagon_Acts = new HashSet<Arrival_UZ_Vagon_Acts>();
             Arrival_UZ_Vagon_Cont = new HashSet<Arrival_UZ_Vagon_Cont>();
             Arrival_UZ_Vagon_Pay = new HashSet<Arrival_UZ_Vagon_Pay>();
-            ArrivalCars = new HashSet<ArrivalCars>();
         }
 
         public long id { get; set; }
@@ -103,8 +102,6 @@ namespace EFIDS.Entities
         public virtual Directory_Cargo Directory_Cargo { get; set; }
 
         public virtual Directory_CargoGNG Directory_CargoGNG { get; set; }
-
-        public virtual Directory_Cars Directory_Cars { get; set; }
 
         public virtual Directory_CertificationData Directory_CertificationData { get; set; }
 

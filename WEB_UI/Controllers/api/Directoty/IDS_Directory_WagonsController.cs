@@ -216,7 +216,37 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // POST api/ids/directory/cars/
+        public class WagonSpecification {
+            public int adm { get; set; }
+            public string rod { get; set; }
+            public int kol_os { get; set; }
+            public string usl_tip { get; set; }
+        }
+
+
+        // POST: api/ids/directory/wagon/num/53185617/specification/
+        [HttpPost]
+        [Route("num/{num:int}/specification/")]
+        [ResponseType(typeof(Directory_Wagons))]
+        public IHttpActionResult POSTWagonOfNumSpecification(int num, [FromBody]WagonSpecification specification)
+        {
+            try
+            {
+                string user = base.User.Identity.Name;
+                IDSDirectory ids_dir = new IDSDirectory(service.WebAPI_IDS);
+                ids_dir.Transfer_new_car_of_kis = true; // Признак создавать вагоны в справочнике ИДС по данным КИС и ИРЫ если вагон новый
+                //ids_dir.Transfer_new_car_of_kis = false; // Признак создавать вагоны в справочнике ИДС по данным КИС и ИРЫ если вагон новый
+                //Directory_Wagons car = ids_dir.GetCurrentDirectory_WagonsOfNum(num, 22, 60, 4, null, true, user);
+                Directory_Wagons car = ids_dir.GetDirectory_WagonsOfNum(num, specification.adm, (specification.rod == null ? null : (int?)int.Parse(specification.rod)), specification.kol_os, specification.usl_tip, user).GetDirectory_Wagons_Directory_WagonsRent();
+                return Ok(car.GetDirectory_Wagons_Directory_WagonsRent());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST api/ids/directory/wagon/
         [HttpPost]
         [Route("")]
         public int PostWagon([FromBody]Directory_Wagons value)

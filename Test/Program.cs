@@ -91,7 +91,6 @@ namespace Test
             //tids.GetDocs();
             //tids.IDSMORS_GetLastIDWTWagonsMotionSignals();
             //tids.SetNum_UZ();
-            tids.IDSDirectory_CreateDirectory_CarsInKIS();
             #endregion
 
             #region Test_Logs тест логирования

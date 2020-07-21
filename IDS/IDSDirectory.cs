@@ -22,7 +22,6 @@ namespace IDS
 
         EFDirectory_Station ef_station = new EFDirectory_Station(new EFDbContext());
         EFDirectory_Consignee ef_сonsignee = new EFDirectory_Consignee(new EFDbContext());
-        EFDirectory_Cars ef_car = new EFDirectory_Cars(new EFDbContext()); // Удалить
         EFDirectory_Wagons ef_wag = new EFDirectory_Wagons(new EFDbContext());
         EFDirectory_WagonsRent ef_wag_rent = new EFDirectory_WagonsRent(new EFDbContext());
         EFDirectory_Countrys ef_countrys = new EFDirectory_Countrys(new EFDbContext());
@@ -287,31 +286,31 @@ namespace IDS
         #endregion
 
         #region СПРАВОЧНИК ВАГОНОВ СТАРЫЙ -УДАЛИТЬ (IDS.Directory_Cars )
-        public Directory_Cars GetCurrentDirectory_CarsOfNum(int num, string user)
-        {
-            try
-            {
-                if (this.transfer_new_car_of_kis)
-                {
-                    int result_add_new_car = InsertNewDirectory_Cars(num, user);
-                    if (result_add_new_car != 0)
-                    {
-                        String.Format("В справочник 'ВАГОНОВ ИДС' - добавлен новый вагон №{0}, код выполнения : {1}", num, result_add_new_car).WarningLog(servece_owner, this.eventID);
-                    }
-                }
-                Directory_Cars car = this.ef_car
-                    .Context
-                    .Where(w => w.num == num)
-                    .ToList()
-                    .Select(m => m.GetDirectory_Cars()).OrderByDescending(c => c.rent_start).FirstOrDefault();
-                return car;
-            }
-            catch (Exception e)
-            {
-                e.ExceptionMethodLog(String.Format("GetCurrentDirectory_CarsOfNum(num={0})", num), servece_owner, eventID);
-                return null;
-            }
-        }
+        //public Directory_Cars GetCurrentDirectory_CarsOfNum(int num, string user)
+        //{
+        //    try
+        //    {
+        //        if (this.transfer_new_car_of_kis)
+        //        {
+        //            int result_add_new_car = InsertNewDirectory_Cars(num, user);
+        //            if (result_add_new_car != 0)
+        //            {
+        //                String.Format("В справочник 'ВАГОНОВ ИДС' - добавлен новый вагон №{0}, код выполнения : {1}", num, result_add_new_car).WarningLog(servece_owner, this.eventID);
+        //            }
+        //        }
+        //        Directory_Cars car = this.ef_car
+        //            .Context
+        //            .Where(w => w.num == num)
+        //            .ToList()
+        //            .Select(m => m.GetDirectory_Cars()).OrderByDescending(c => c.rent_start).FirstOrDefault();
+        //        return car;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        e.ExceptionMethodLog(String.Format("GetCurrentDirectory_CarsOfNum(num={0})", num), servece_owner, eventID);
+        //        return null;
+        //    }
+        //}
         /// <summary>
         /// Получить актуальную запись из карточки по вагону
         /// </summary>
@@ -439,145 +438,145 @@ namespace IDS
         /// Создать справочник вагонов по данным КИС
         /// </summary>
         /// <returns></returns>
-        public int CreateDirectory_CarsInKIS()
-        {
+        //public int CreateDirectory_CarsInKIS()
+        //{
 
-            try
-            {
-                string user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
-                KISDirectory kis_dir = new KISDirectory(this.servece_owner);// Подключим библиотеку КИС
+        //    try
+        //    {
+        //        string user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+        //        KISDirectory kis_dir = new KISDirectory(this.servece_owner);// Подключим библиотеку КИС
 
 
-                List<KOMETA_VAGON_SOB> list_cars_kis = kis_dir.GetCurrent_KOMETA_VAGON_SOB();
+        //        List<KOMETA_VAGON_SOB> list_cars_kis = kis_dir.GetCurrent_KOMETA_VAGON_SOB();
 
-                int count = list_cars_kis.Count();
-                foreach (KOMETA_VAGON_SOB vag_kis in list_cars_kis.ToList())
-                {
-                    //EFDirectory_Cars ef_car = new EFDirectory_Cars(new EFDbContext());
-                    int result = InsertNewDirectory_Cars(vag_kis.N_VAGON, user);
-                    count--;
-                    Console.WriteLine("Перенес вагон №{0}, код {1}, осталось перенести {2}", vag_kis.N_VAGON, result, count);
-                }
+        //        int count = list_cars_kis.Count();
+        //        foreach (KOMETA_VAGON_SOB vag_kis in list_cars_kis.ToList())
+        //        {
+        //            //EFDirectory_Cars ef_car = new EFDirectory_Cars(new EFDbContext());
+        //            int result = InsertNewDirectory_Cars(vag_kis.N_VAGON, user);
+        //            count--;
+        //            Console.WriteLine("Перенес вагон №{0}, код {1}, осталось перенести {2}", vag_kis.N_VAGON, result, count);
+        //        }
 
-                return 0;
-            }
-            catch (Exception e)
-            {
-                e.ExceptionMethodLog(String.Format("CreateDirectory_CarsInKIS()"), servece_owner, eventID);
-                return -1;
-            }
+        //        return 0;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        e.ExceptionMethodLog(String.Format("CreateDirectory_CarsInKIS()"), servece_owner, eventID);
+        //        return -1;
+        //    }
 
-        }
+        //}
         /// <summary>
         /// Добавить в справочник новый вагон (по справочнику КИС и справочнику операторов и ограничений ИРЫ)
         /// </summary>
         /// <param name="num"></param>
         /// <returns></returns>
-        public int InsertNewDirectory_Cars(int num, string user)
-        {
-            try
-            {
-                KISDirectory kis_dir = new KISDirectory(this.servece_owner);// Подключим библиотеку КИС
-                IDSMORS mors = new IDSMORS(this.servece_owner);
-                EFDirectory_Cars_KIS ef_car_kis = new EFDirectory_Cars_KIS(new EFDbContext());
-                WebAPIClientUZ client = new WebAPIClientUZ(this.servece_owner);
-                // Проверим и скорректируем пользователя
-                if (String.IsNullOrWhiteSpace(user))
-                {
-                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
-                }
+        //public int InsertNewDirectory_Cars(int num, string user)
+        //{
+        //    try
+        //    {
+        //        KISDirectory kis_dir = new KISDirectory(this.servece_owner);// Подключим библиотеку КИС
+        //        IDSMORS mors = new IDSMORS(this.servece_owner);
+        //        EFDirectory_Cars_KIS ef_car_kis = new EFDirectory_Cars_KIS(new EFDbContext());
+        //        WebAPIClientUZ client = new WebAPIClientUZ(this.servece_owner);
+        //        // Проверим и скорректируем пользователя
+        //        if (String.IsNullOrWhiteSpace(user))
+        //        {
+        //            user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+        //        }
 
-                KOMETA_VAGON_SOB vag_kis = kis_dir.GetCurrent_KOMETA_VAGON_SOB(num);
+        //        KOMETA_VAGON_SOB vag_kis = kis_dir.GetCurrent_KOMETA_VAGON_SOB(num);
 
 
-                Directory_Cars car_old = ef_car.Context.Where(c => c.num == num).FirstOrDefault();
-                if (car_old == null)
-                {
-                    //Console.WriteLine("Переношу вагон №{0}", num);
-                    // Определим справочные данные
-                    CardsWagons card = mors.GetCardsWagonsOfNum(num);
-                    // Получим строку из справочника Иры
-                    Directory_Cars_KIS dir_car_kis = ef_car_kis.Context.Where(c => c.num == num).FirstOrDefault();
-                    // Получим информацию из БД УЗ
-                    UZWagonInfo info = client.GetInfoWagonOfNum(num);
-                    int id_countrys = 0;
-                    int id_owner = 0;   // Владелец
-                    int? id_operator = dir_car_kis != null ? dir_car_kis.id_operator : null; // Оператор по справочнику ИДС (выставлен Ирой)
-                    int? id_operator_uz = null; // Оператор по справочнику УЗ
-                    int? id_type_ownership = card != null ? (int?)card.id_type_ownership : null;
+        //        Directory_Cars car_old = ef_car.Context.Where(c => c.num == num).FirstOrDefault();
+        //        if (car_old == null)
+        //        {
+        //            //Console.WriteLine("Переношу вагон №{0}", num);
+        //            // Определим справочные данные
+        //            CardsWagons card = mors.GetCardsWagonsOfNum(num);
+        //            // Получим строку из справочника Иры
+        //            Directory_Cars_KIS dir_car_kis = ef_car_kis.Context.Where(c => c.num == num).FirstOrDefault();
+        //            // Получим информацию из БД УЗ
+        //            UZWagonInfo info = client.GetInfoWagonOfNum(num);
+        //            int id_countrys = 0;
+        //            int id_owner = 0;   // Владелец
+        //            int? id_operator = dir_car_kis != null ? dir_car_kis.id_operator : null; // Оператор по справочнику ИДС (выставлен Ирой)
+        //            int? id_operator_uz = null; // Оператор по справочнику УЗ
+        //            int? id_type_ownership = card != null ? (int?)card.id_type_ownership : null;
 
-                    // Обработаем информацию из БД УЗ
-                    if (info != null)
-                    {
-                        Directory_Railway dir_rw = GetDirectory_RailwayOfNameAdm(info.admin);
-                        id_countrys = dir_rw != null ? dir_rw.id_countrys : 0;
-                        id_owner = GetID_Directory_OwnersWagonsOfName(info.owner, true, user);
-                        id_operator_uz = GetID_Directory_OperatorsWagonsOfName(info.operat, true, user);
-                    }
+        //            // Обработаем информацию из БД УЗ
+        //            if (info != null)
+        //            {
+        //                Directory_Railway dir_rw = GetDirectory_RailwayOfNameAdm(info.admin);
+        //                id_countrys = dir_rw != null ? dir_rw.id_countrys : 0;
+        //                id_owner = GetID_Directory_OwnersWagonsOfName(info.owner, true, user);
+        //                id_operator_uz = GetID_Directory_OperatorsWagonsOfName(info.operat, true, user);
+        //            }
 
-                    if (dir_car_kis != null)
-                    {
-                        // Вагон обработан Ирой
-                        if (info != null)
-                        {
-                            // Есть информация по УЗ
-                            Directory_Cars new_car = new Directory_Cars()
-                            {
-                                id = 0,
-                                num = num,
-                                id_countrys = id_countrys,
-                                id_genus = (int)dir_car_kis.id_genus,
-                                id_owner = id_owner,
-                                ban_changes_operator = vag_kis != null ? vag_kis.SOB != dir_car_kis.id_sob_kis ? true : false : false,
-                                id_operator = id_operator,
-                                id_operator_uz = id_operator_uz,
-                                gruzp = info.carrying_capacity != null ? (double)info.carrying_capacity : 0,
-                                kol_os = 0,
-                                usl_tip = null,
-                                date_rem_uz = info.repair_date,
-                                date_rem_vag = null,
-                                id_limiting = dir_car_kis.id_limiting,
-                                id_type_ownership = id_type_ownership,
-                                rent_start = (vag_kis != null ? (DateTime?)vag_kis.DATE_AR : null),
-                                rent_end = null,
-                                sign = null,
-                                note = "Запрет выхода:" + (info.exit_ban != null ? info.exit_ban : "нет") + "; Другие запреты:" + (info.other_bans != null ? info.other_bans.Replace("<br>", "") : ""),
-                                sobstv_kis = dir_car_kis.id_sob_kis, //vag_kis.SOB,
-                                create = DateTime.Now,
-                                create_user = user,
-                            };
-                            //Console.WriteLine("Записываю вагон №{0}, id_owner = {1}", num, id_owner);
-                            ef_car.Add(new_car);
-                            int res = ef_car.Save();
-                            return res;
-                        }
-                        else
-                        {
-                            // Нет информации по уз
-                            Console.WriteLine("Нет информации по УЗ на вагон №{0}", num);
-                            return 0;
-                        }
-                    }
-                    else
-                    {
-                        // Это новый вагон
-                        Console.WriteLine("Нет информации в справочнике ИРЫ на вагон №{0}", num);
-                        return 0;
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Вагон №{0} - уже перенесен, пропускаю", num);
-                    return 0;
-                }
-            }
-            catch (Exception e)
-            {
-                e.ExceptionMethodLog(String.Format("CreateDirectory_CarsInKIS()"), servece_owner, eventID);
-                return -1;
-            }
+        //            if (dir_car_kis != null)
+        //            {
+        //                // Вагон обработан Ирой
+        //                if (info != null)
+        //                {
+        //                    // Есть информация по УЗ
+        //                    Directory_Cars new_car = new Directory_Cars()
+        //                    {
+        //                        id = 0,
+        //                        num = num,
+        //                        id_countrys = id_countrys,
+        //                        id_genus = (int)dir_car_kis.id_genus,
+        //                        id_owner = id_owner,
+        //                        ban_changes_operator = vag_kis != null ? vag_kis.SOB != dir_car_kis.id_sob_kis ? true : false : false,
+        //                        id_operator = id_operator,
+        //                        id_operator_uz = id_operator_uz,
+        //                        gruzp = info.carrying_capacity != null ? (double)info.carrying_capacity : 0,
+        //                        kol_os = 0,
+        //                        usl_tip = null,
+        //                        date_rem_uz = info.repair_date,
+        //                        date_rem_vag = null,
+        //                        id_limiting = dir_car_kis.id_limiting,
+        //                        id_type_ownership = id_type_ownership,
+        //                        rent_start = (vag_kis != null ? (DateTime?)vag_kis.DATE_AR : null),
+        //                        rent_end = null,
+        //                        sign = null,
+        //                        note = "Запрет выхода:" + (info.exit_ban != null ? info.exit_ban : "нет") + "; Другие запреты:" + (info.other_bans != null ? info.other_bans.Replace("<br>", "") : ""),
+        //                        sobstv_kis = dir_car_kis.id_sob_kis, //vag_kis.SOB,
+        //                        create = DateTime.Now,
+        //                        create_user = user,
+        //                    };
+        //                    //Console.WriteLine("Записываю вагон №{0}, id_owner = {1}", num, id_owner);
+        //                    ef_car.Add(new_car);
+        //                    int res = ef_car.Save();
+        //                    return res;
+        //                }
+        //                else
+        //                {
+        //                    // Нет информации по уз
+        //                    Console.WriteLine("Нет информации по УЗ на вагон №{0}", num);
+        //                    return 0;
+        //                }
+        //            }
+        //            else
+        //            {
+        //                // Это новый вагон
+        //                Console.WriteLine("Нет информации в справочнике ИРЫ на вагон №{0}", num);
+        //                return 0;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            Console.WriteLine("Вагон №{0} - уже перенесен, пропускаю", num);
+        //            return 0;
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        e.ExceptionMethodLog(String.Format("CreateDirectory_CarsInKIS()"), servece_owner, eventID);
+        //        return -1;
+        //    }
 
-        }
+        //}
         #endregion
 
         #region СПРАВОЧНИК ВАГОНОВ НОВЫЙ (IDS.Directory_Wagons)
@@ -1004,7 +1003,7 @@ namespace IDS
                 {
                     if (this.transfer_new_car_of_kis)
                     {
-                        wagon = CreateDirectory_Wagons_IN_KIS(num, kol_os, usl_tip, user);
+                        wagon = CreateDirectory_Wagons_IN_KIS(num, id_genus, kol_os, usl_tip, user);
                     }
                     else
                     {
@@ -1035,7 +1034,7 @@ namespace IDS
             }
         }
 
-        public Directory_Wagons CreateDirectory_Wagons_IN_KIS(int num, int kol_os, string usl_tip, string user)
+        public Directory_Wagons CreateDirectory_Wagons_IN_KIS(int num, int id_genus, int kol_os, string usl_tip, string user)
         {
             try
             {
@@ -1053,7 +1052,7 @@ namespace IDS
                 KOMETA_VAGON_SOB vag_kis = kis_dir.GetCurrent_KOMETA_VAGON_SOB(num);// Получим текущего оператора по КИС
 
                 //Console.WriteLine("Записываю вагон №{0}, id_owner = {1}", num, id_owner);
-                int id_genus = dir_car_kis != null ? (int)dir_car_kis.id_genus : 0;
+                id_genus = dir_car_kis != null ? (int)dir_car_kis.id_genus : id_genus;
                 // Определим оператора АМКР и начало аренды
                 int? id_operator_amkr = dir_car_kis != null ? dir_car_kis.id_operator : null;   // Оператор по справочнику ИДС (выставлен Ирой)
                 DateTime? rent_start = (vag_kis != null ? (DateTime?)vag_kis.DATE_AR : null);   // Начало аренды из справочника КИС

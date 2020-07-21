@@ -759,12 +759,36 @@ IDS_DIRECTORY.prototype.getWagonOfNum = function (num, callback) {
     });
 };
 // Получить текщий вагон по номеру вагона, администрации, роду 
-IDS_DIRECTORY.prototype.getWagonOfNumAdmRod = function (num, adm, rod, kol_os, usl_tip, callback) {
+//IDS_DIRECTORY.prototype.getWagonOfNumAdmRod = function (num, adm, rod, kol_os, usl_tip, callback) {
+//    $.ajax({
+//        type: 'GET',
+//        url: '../../api/ids/directory/wagon/num/' + num + '/adm/' + adm + '/rod/' + rod + '/kol_os/' + kol_os + '/usl_tip/' + usl_tip,
+//        async: true,
+//        dataType: 'json',
+//        beforeSend: function () {
+//            AJAXBeforeSend();
+//        },
+//        success: function (data) {
+//            if (typeof callback === 'function') {
+//                callback(data);
+//            }
+//        },
+//        error: function (x, y, z) {
+//            OnAJAXError("IDS_DIRECTORY.getWagonOfNumAdmRod", x, y, z);
+//        },
+//        complete: function () {
+//            AJAXComplete();
+//        },
+//    });
+//};
+IDS_DIRECTORY.prototype.getWagonOfNumSpecification = function (num, specification, callback) {
     $.ajax({
-        type: 'GET',
-        url: '../../api/ids/directory/wagon/num/' + num + '/adm/' + adm + '/rod/' + rod + '/kol_os/' + kol_os + '/usl_tip/' + usl_tip,
+        type: 'POST',
+        url: '../../api/ids/directory/wagon/num/' + num + '/specification/',
+        data: JSON.stringify(specification),
+        contentType: "application/json;charset=utf-8",
         async: true,
-        dataType: 'json',
+        //dataType: 'json',
         beforeSend: function () {
             AJAXBeforeSend();
         },
@@ -774,7 +798,7 @@ IDS_DIRECTORY.prototype.getWagonOfNumAdmRod = function (num, adm, rod, kol_os, u
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_DIRECTORY.getWagonOfNumAdmRod", x, y, z);
+            OnAJAXError("IDS_DIRECTORY.getWagonOfNumSpecification", x, y, z);
         },
         complete: function () {
             AJAXComplete();

@@ -5090,7 +5090,9 @@
             },
             // Получить текущий вагон из справочника
             get_vagon_dir: function (vagon, num, callback) {
-                cars_detali.ids_inc.ids_dir.getWagonOfNumAdmRod(num, vagon.kod_adm, vagon.rod_vag, vagon.kol_os, vagon.usl_tip, function (result_card) {
+                var specification = {adm:vagon.kod_adm,rod:vagon.rod_vag, kol_os:vagon.kol_os, usl_tip:vagon.usl_tip}
+                cars_detali.ids_inc.ids_dir.getWagonOfNumSpecification(num, specification, function (result_card) {
+                //cars_detali.ids_inc.ids_dir.getWagonOfNumAdmRod(num, vagon.kod_adm, vagon.rod_vag, vagon.kol_os, vagon.usl_tip, function (result_card) {
                     //result_card = null;
                     if (typeof callback === 'function') {
                         callback(result_card);
@@ -5113,7 +5115,9 @@
                         usl_tip = vagon.usl_tip;
                     }
                     // Создадим первую запись или обновим строку вагона в справочнике вагонов и аренд
-                    cars_detali.ids_inc.ids_dir.getWagonOfNumAdmRod(num, (adm ? adm.code_sng : 0), (rod ? rod.rod_uz : 0), kol_os, (usl_tip === "" ? null : usl_tip), function (result_card) {
+                    var specification = { adm: (adm ? adm.code_sng : 0), rod: (rod ? rod.rod_uz : 0), kol_os: kol_os, usl_tip: (usl_tip === "" ? null : usl_tip) }
+                    cars_detali.ids_inc.ids_dir.getWagonOfNumSpecification(num, specification, function (result_card) {
+                    //cars_detali.ids_inc.ids_dir.getWagonOfNumAdmRod(num, (adm ? adm.code_sng : 0), (rod ? rod.rod_uz : 0), kol_os, (usl_tip === "" ? null : usl_tip), function (result_card) {
                         if (typeof callback === 'function') {
                             callback(result_card);
                         }

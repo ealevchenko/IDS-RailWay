@@ -308,43 +308,44 @@ namespace EFIDS.Helper
             };
         }
         //TODO: !!!Удалить Справочник вагонов внедрил новый Directory_Wagons
-        public static Directory_Cars GetDirectory_Cars(this Directory_Cars c)
-        {
-            if (c == null) return null;
-            return new Directory_Cars()
-            {
-                id = c.id,
-                num = c.num,
-                id_countrys = c.id_countrys,
-                id_genus = c.id_genus,
-                id_owner = c.id_owner,
-                id_operator_uz = c.id_operator_uz,
-                ban_changes_operator = c.ban_changes_operator,
-                id_operator = c.id_operator,
-                gruzp = c.gruzp,
-                kol_os = c.kol_os,
-                usl_tip = c.usl_tip,
-                date_rem_uz = c.date_rem_uz,
-                date_rem_vag = c.date_rem_vag,
-                id_limiting = c.id_limiting,
-                id_type_ownership = c.id_type_ownership,
-                rent_start = c.rent_start,
-                rent_end = c.rent_end,
-                sign = c.sign,
-                note = c.note,
-                sobstv_kis = c.sobstv_kis,
-                create = c.create,
-                create_user = c.create_user,
-                change = c.change,
-                change_user = c.change_user,
-                Directory_Countrys = c.Directory_Countrys.GetDirectory_Countrys(),
-                Directory_GenusWagons = c.Directory_GenusWagons.GetGenusWagons(),
-                Directory_OwnersWagons = c.Directory_OwnersWagons.GetOwnersWagons(),
-                Directory_OperatorsWagons = c.Directory_OperatorsWagons.GetOperatorsWagons(),
-                Directory_LimitingLoading = c.Directory_LimitingLoading.GetDirectory_LimitingLoading(),
-                Directory_TypeOwnerShip = c.Directory_TypeOwnerShip.GetTypeOwnerShip(),
-            };
-        }
+        //public static Directory_Cars GetDirectory_Cars(this Directory_Cars c)
+        //{
+        //    if (c == null) return null;
+        //    return new Directory_Cars()
+        //    {
+        //        id = c.id,
+        //        num = c.num,
+        //        id_countrys = c.id_countrys,
+        //        id_genus = c.id_genus,
+        //        id_owner = c.id_owner,
+        //        id_operator_uz = c.id_operator_uz,
+        //        ban_changes_operator = c.ban_changes_operator,
+        //        id_operator = c.id_operator,
+        //        gruzp = c.gruzp,
+        //        kol_os = c.kol_os,
+        //        usl_tip = c.usl_tip,
+        //        date_rem_uz = c.date_rem_uz,
+        //        date_rem_vag = c.date_rem_vag,
+        //        id_limiting = c.id_limiting,
+        //        id_type_ownership = c.id_type_ownership,
+        //        rent_start = c.rent_start,
+        //        rent_end = c.rent_end,
+        //        sign = c.sign,
+        //        note = c.note,
+        //        sobstv_kis = c.sobstv_kis,
+        //        create = c.create,
+        //        create_user = c.create_user,
+        //        change = c.change,
+        //        change_user = c.change_user,
+        //        Directory_Countrys = c.Directory_Countrys.GetDirectory_Countrys(),
+        //        Directory_GenusWagons = c.Directory_GenusWagons.GetGenusWagons(),
+        //        Directory_OwnersWagons = c.Directory_OwnersWagons.GetOwnersWagons(),
+        //        Directory_OperatorsWagons = c.Directory_OperatorsWagons.GetOperatorsWagons(),
+        //        Directory_LimitingLoading = c.Directory_LimitingLoading.GetDirectory_LimitingLoading(),
+        //        Directory_TypeOwnerShip = c.Directory_TypeOwnerShip.GetTypeOwnerShip(),
+        //    };
+        //}
+
         public static Directory_Wagons GetDirectory_Wagons(this Directory_Wagons w)
         {
             if (w == null) return null;
@@ -946,7 +947,7 @@ namespace EFIDS.Helper
                 change_user = v.change_user,
                 ArrivalSostav = null,
                 Arrival_UZ_Document = null,
-                Directory_Cars = v.Directory_Cars.GetDirectory_Cars(),
+                //Directory_Cars = v.Directory_Cars.GetDirectory_Cars(), // Добавить вагон
                 Arrival_UZ_Vagon_Acts = v.Arrival_UZ_Vagon_Acts.ToList().Select(a => a.GetArrival_UZ_Vagon_Acts()).ToList(),
                 Arrival_UZ_Vagon_Pay = v.Arrival_UZ_Vagon_Pay.ToList().Select(p => p.GetArrival_UZ_Vagon_Pay()).ToList(),
                 Arrival_UZ_Vagon_Cont = v.Arrival_UZ_Vagon_Cont.ToList().Select(c => c.GetArrival_UZ_Vagon_Cont()).ToList(),
@@ -1001,7 +1002,7 @@ namespace EFIDS.Helper
                 change_user = v.change_user,
                 ArrivalSostav = null,
                 Arrival_UZ_Document = v.Arrival_UZ_Document.GetArrival_UZ_Document(),
-                Directory_Cars = v.Directory_Cars.GetDirectory_Cars(),
+                //Directory_Cars = v.Directory_Cars.GetDirectory_Cars(), // Добавить вагон
                 Arrival_UZ_Vagon_Acts = v.Arrival_UZ_Vagon_Acts.ToList().Select(a => a.GetArrival_UZ_Vagon_Acts()).ToList(),
                 Arrival_UZ_Vagon_Pay = v.Arrival_UZ_Vagon_Pay.ToList().Select(p => p.GetArrival_UZ_Vagon_Pay()).ToList(),
                 Arrival_UZ_Vagon_Cont = v.Arrival_UZ_Vagon_Cont.ToList().Select(c => c.GetArrival_UZ_Vagon_Cont()).ToList(),
