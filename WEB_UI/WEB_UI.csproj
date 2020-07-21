@@ -228,6 +228,7 @@
     <Compile Include="Controllers\api\Directoty\IDS_Directory_BorderCheckpointController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_CargoGNGController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_CargoController.cs" />
+    <Compile Include="Controllers\api\Directoty\IDS_Directory_WagonsRentController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_WagonsController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_CarsController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_CargoGroupController.cs" />

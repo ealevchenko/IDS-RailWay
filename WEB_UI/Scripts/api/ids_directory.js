@@ -478,18 +478,18 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
                 }
             });
         };
-        if (el === 'cars') {
-            IDS_DIRECTORY.prototype.getCars(function (result_cars) {
-                obj.list_cars = result_cars;
-                count -= 1;
-                if (count === 0) {
-                    if (typeof callback === 'function') {
-                        if (lockOff) { LockScreenOff(); }
-                        callback();
-                    }
-                }
-            });
-        };
+        //if (el === 'cars') {
+        //    IDS_DIRECTORY.prototype.getCars(function (result_cars) {
+        //        obj.list_cars = result_cars;
+        //        count -= 1;
+        //        if (count === 0) {
+        //            if (typeof callback === 'function') {
+        //                if (lockOff) { LockScreenOff(); }
+        //                callback();
+        //            }
+        //        }
+        //    });
+        //};
         if (el === 'wagon') {
             IDS_DIRECTORY.prototype.getWagon(function (result_wagon) {
                 obj.list_wagon = result_wagon;
@@ -569,16 +569,16 @@ IDS_DIRECTORY.prototype.loadExternalStation = function (callback) {
         }
     });
 };
-// Загрузка справочника вагонов
-IDS_DIRECTORY.prototype.loadCars = function (callback) {
-    var obj = this;
-    IDS_DIRECTORY.prototype.getCars(function (result_cars) {
-        obj.list_cars = result_cars;
-        if (typeof callback === 'function') {
-            callback();
-        }
-    });
-};
+//// Загрузка справочника вагонов
+//IDS_DIRECTORY.prototype.loadCars = function (callback) {
+//    var obj = this;
+//    IDS_DIRECTORY.prototype.getCars(function (result_cars) {
+//        obj.list_cars = result_cars;
+//        if (typeof callback === 'function') {
+//            callback();
+//        }
+//    });
+//};
 // Загрузка справочника вагонов новый
 IDS_DIRECTORY.prototype.loadWagon = function (callback) {
     var obj = this;
@@ -712,7 +712,7 @@ IDS_DIRECTORY.prototype.loadHazardClass = function (callback) {
 /* ----------------------------------------------------------
 AJAX функции
 -------------------------------------------------------------*/
-//======= Directory_Wagon (Справочник вагонов) ======================================
+//======= Directory_Wagons (Справочник вагонов) ======================================
 IDS_DIRECTORY.prototype.getWagon = function (callback) {
     $.ajax({
         type: 'GET',
@@ -781,155 +781,12 @@ IDS_DIRECTORY.prototype.getWagonOfNumAdmRod = function (num, adm, rod, kol_os, u
         },
     });
 };
-
-
-//======= Directory_Cars (Справочник вагонов) ======================================
-//
-IDS_DIRECTORY.prototype.getCars = function (callback) {
+//Добавить вагон
+IDS_DIRECTORY.prototype.postWagon = function (wagon, callback) {
     $.ajax({
-        type: 'GET',
-        url: '../../api/ids/directory/cars/all',
-        async: true,
-        dataType: 'json',
-        beforeSend: function () {
-            AJAXBeforeSend();
-        },
-        success: function (data) {
-            if (typeof callback === 'function') {
-                callback(data);
-            }
-        },
-        error: function (x, y, z) {
-            OnAJAXError("IDS_DIRECTORY.getCars", x, y, z);
-        },
-        complete: function () {
-            AJAXComplete();
-        },
-    });
-};
-// Получить по ID
-IDS_DIRECTORY.prototype.getCarsOfID = function (id, callback) {
-    $.ajax({
-        type: 'GET',
-        url: '../../api/ids/directory/cars/id/' + id,
-        async: true,
-        dataType: 'json',
-        beforeSend: function () {
-            AJAXBeforeSend();
-        },
-        success: function (data) {
-            if (typeof callback === 'function') {
-                callback(data);
-            }
-        },
-        error: function (x, y, z) {
-            OnAJAXError("IDS_DIRECTORY.getCarsOfID", x, y, z);
-        },
-        complete: function () {
-            AJAXComplete();
-        },
-    });
-};
-// Получить по номеру вагона
-IDS_DIRECTORY.prototype.getCarsOfNum = function (num, callback) {
-    $.ajax({
-        type: 'GET',
-        url: '../../api/ids/directory/cars/num/' + num,
-        async: true,
-        dataType: 'json',
-        beforeSend: function () {
-            AJAXBeforeSend();
-        },
-        success: function (data) {
-            if (typeof callback === 'function') {
-                callback(data);
-            }
-        },
-        error: function (x, y, z) {
-            OnAJAXError("IDS_DIRECTORY.getCarsOfNum", x, y, z);
-        },
-        complete: function () {
-            AJAXComplete();
-        },
-    });
-};
-// Получить строки с открытой арендой по номеру вагона и начало ренты
-IDS_DIRECTORY.prototype.getOpenRent_CarsOfNumRentStart = function (num, rent_start, callback) {
-    $.ajax({
-        type: 'GET',
-        url: '../../api/ids/directory/cars/num/' + num + '/rent/start/' + rent_start.substring(0, 19),
-        async: true,
-        dataType: 'json',
-        beforeSend: function () {
-            AJAXBeforeSend();
-        },
-        success: function (data) {
-            if (typeof callback === 'function') {
-                callback(data);
-            }
-        },
-        error: function (x, y, z) {
-            OnAJAXError("IDS_DIRECTORY.getOpenRent_CarsOfNumRentStart", x, y, z);
-        },
-        complete: function () {
-            AJAXComplete();
-        },
-    });
-};
-
-// Получить текщий вагон по номеру вагона
-IDS_DIRECTORY.prototype.getCurrentCarsOfNum = function (num, callback) {
-    $.ajax({
-        type: 'GET',
-        url: '../../api/ids/directory/cars/current/num/' + num,
-        async: true,
-        dataType: 'json',
-        beforeSend: function () {
-            AJAXBeforeSend();
-        },
-        success: function (data) {
-            if (typeof callback === 'function') {
-                callback(data);
-            }
-        },
-        error: function (x, y, z) {
-            OnAJAXError("IDS_DIRECTORY.getCurrentCarsOfNum", x, y, z);
-        },
-        complete: function () {
-            AJAXComplete();
-        },
-    });
-};
-// Получить текщие вагоны по оператору
-IDS_DIRECTORY.prototype.getCurrentCarsOfOperator = function (id, callback) {
-    $.ajax({
-        type: 'GET',
-        url: '../../api/ids/directory/cars/current/operator/id/' + id,
-        async: true,
-        dataType: 'json',
-        beforeSend: function () {
-            AJAXBeforeSend();
-        },
-        success: function (data) {
-            if (typeof callback === 'function') {
-                callback(data);
-            }
-        },
-        error: function (x, y, z) {
-            OnAJAXError("IDS_DIRECTORY.getCurrentCarsOfOperator", x, y, z);
-        },
-        complete: function () {
-            AJAXComplete();
-        },
-    });
-};
-
-// Получить текщий вагоны по спискуномеров вагона
-IDS_DIRECTORY.prototype.postCurrentCarsOfNums = function (list_num, callback) {
-    $.ajax({
-        url: '../../api/ids/directory/cars/current/nums/',
+        url: '../../api/ids/directory/wagon/',
         type: 'POST',
-        data: JSON.stringify(list_num),
+        data: JSON.stringify(wagon),
         contentType: "application/json;charset=utf-8",
         async: true,
         beforeSend: function () {
@@ -941,13 +798,232 @@ IDS_DIRECTORY.prototype.postCurrentCarsOfNums = function (list_num, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_DIRECTORY.getCurrentCarsOfNums", x, y, z);
+            LockScreenOff();
+            OnAJAXError("IDS_DIRECTORY.postWagon", x, y, z);
         },
         complete: function () {
             AJAXComplete();
         },
     });
 };
+//======= Directory_WagonsRent (Справочник аренд вагонов) ======================================
+IDS_DIRECTORY.prototype.getWagonsRent = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/wagon_rent/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getWagonsRent", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
+//Добавить аренду вагона вагона
+IDS_DIRECTORY.prototype.postWagonsRent = function (wagon, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/wagon_rent/',
+        type: 'POST',
+        data: JSON.stringify(wagon),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_DIRECTORY.postWagonsRent", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
+
+//======= Directory_Cars (Справочник вагонов) ======================================
+//
+//IDS_DIRECTORY.prototype.getCars = function (callback) {
+//    $.ajax({
+//        type: 'GET',
+//        url: '../../api/ids/directory/cars/all',
+//        async: true,
+//        dataType: 'json',
+//        beforeSend: function () {
+//            AJAXBeforeSend();
+//        },
+//        success: function (data) {
+//            if (typeof callback === 'function') {
+//                callback(data);
+//            }
+//        },
+//        error: function (x, y, z) {
+//            OnAJAXError("IDS_DIRECTORY.getCars", x, y, z);
+//        },
+//        complete: function () {
+//            AJAXComplete();
+//        },
+//    });
+//};
+// Получить по ID
+//IDS_DIRECTORY.prototype.getCarsOfID = function (id, callback) {
+//    $.ajax({
+//        type: 'GET',
+//        url: '../../api/ids/directory/cars/id/' + id,
+//        async: true,
+//        dataType: 'json',
+//        beforeSend: function () {
+//            AJAXBeforeSend();
+//        },
+//        success: function (data) {
+//            if (typeof callback === 'function') {
+//                callback(data);
+//            }
+//        },
+//        error: function (x, y, z) {
+//            OnAJAXError("IDS_DIRECTORY.getCarsOfID", x, y, z);
+//        },
+//        complete: function () {
+//            AJAXComplete();
+//        },
+//    });
+//};
+// Получить по номеру вагона
+//IDS_DIRECTORY.prototype.getCarsOfNum = function (num, callback) {
+//    $.ajax({
+//        type: 'GET',
+//        url: '../../api/ids/directory/cars/num/' + num,
+//        async: true,
+//        dataType: 'json',
+//        beforeSend: function () {
+//            AJAXBeforeSend();
+//        },
+//        success: function (data) {
+//            if (typeof callback === 'function') {
+//                callback(data);
+//            }
+//        },
+//        error: function (x, y, z) {
+//            OnAJAXError("IDS_DIRECTORY.getCarsOfNum", x, y, z);
+//        },
+//        complete: function () {
+//            AJAXComplete();
+//        },
+//    });
+//};
+//// Получить строки с открытой арендой по номеру вагона и начало ренты
+//IDS_DIRECTORY.prototype.getOpenRent_CarsOfNumRentStart = function (num, rent_start, callback) {
+//    $.ajax({
+//        type: 'GET',
+//        url: '../../api/ids/directory/cars/num/' + num + '/rent/start/' + rent_start.substring(0, 19),
+//        async: true,
+//        dataType: 'json',
+//        beforeSend: function () {
+//            AJAXBeforeSend();
+//        },
+//        success: function (data) {
+//            if (typeof callback === 'function') {
+//                callback(data);
+//            }
+//        },
+//        error: function (x, y, z) {
+//            OnAJAXError("IDS_DIRECTORY.getOpenRent_CarsOfNumRentStart", x, y, z);
+//        },
+//        complete: function () {
+//            AJAXComplete();
+//        },
+//    });
+//};
+
+
+
+// Получить текщий вагон по номеру вагона
+//IDS_DIRECTORY.prototype.getCurrentCarsOfNum = function (num, callback) {
+//    $.ajax({
+//        type: 'GET',
+//        url: '../../api/ids/directory/cars/current/num/' + num,
+//        async: true,
+//        dataType: 'json',
+//        beforeSend: function () {
+//            AJAXBeforeSend();
+//        },
+//        success: function (data) {
+//            if (typeof callback === 'function') {
+//                callback(data);
+//            }
+//        },
+//        error: function (x, y, z) {
+//            OnAJAXError("IDS_DIRECTORY.getCurrentCarsOfNum", x, y, z);
+//        },
+//        complete: function () {
+//            AJAXComplete();
+//        },
+//    });
+//};
+// Получить текщие вагоны по оператору
+//IDS_DIRECTORY.prototype.getCurrentCarsOfOperator = function (id, callback) {
+//    $.ajax({
+//        type: 'GET',
+//        url: '../../api/ids/directory/cars/current/operator/id/' + id,
+//        async: true,
+//        dataType: 'json',
+//        beforeSend: function () {
+//            AJAXBeforeSend();
+//        },
+//        success: function (data) {
+//            if (typeof callback === 'function') {
+//                callback(data);
+//            }
+//        },
+//        error: function (x, y, z) {
+//            OnAJAXError("IDS_DIRECTORY.getCurrentCarsOfOperator", x, y, z);
+//        },
+//        complete: function () {
+//            AJAXComplete();
+//        },
+//    });
+//};
+
+// Получить текщий вагоны по спискуномеров вагона
+//IDS_DIRECTORY.prototype.postCurrentCarsOfNums = function (list_num, callback) {
+//    $.ajax({
+//        url: '../../api/ids/directory/cars/current/nums/',
+//        type: 'POST',
+//        data: JSON.stringify(list_num),
+//        contentType: "application/json;charset=utf-8",
+//        async: true,
+//        beforeSend: function () {
+//            AJAXBeforeSend();
+//        },
+//        success: function (data) {
+//            if (typeof callback === 'function') {
+//                callback(data);
+//            }
+//        },
+//        error: function (x, y, z) {
+//            OnAJAXError("IDS_DIRECTORY.getCurrentCarsOfNums", x, y, z);
+//        },
+//        complete: function () {
+//            AJAXComplete();
+//        },
+//    });
+//};
 
 //// Получить текщий вагон по номеру вагона, администрации, роду 
 //IDS_DIRECTORY.prototype.getCurrentCarsOfNumAdmRod = function (num, adm, rod, kol_os, usl_tip, callback) {
@@ -973,124 +1049,124 @@ IDS_DIRECTORY.prototype.postCurrentCarsOfNums = function (list_num, callback) {
 //    });
 //};
 //
-IDS_DIRECTORY.prototype.getCurrentCarsOfChangeOperator = function (callback) {
-    $.ajax({
-        type: 'GET',
-        url: '../../api/ids/directory/cars/current/change_operator',
-        async: true,
-        dataType: 'json',
-        beforeSend: function () {
-            AJAXBeforeSend();
-        },
-        success: function (data) {
-            if (typeof callback === 'function') {
-                callback(data);
-            }
-        },
-        error: function (x, y, z) {
-            OnAJAXError("IDS_DIRECTORY.getCurrentCarsOfChangeOperator", x, y, z);
-        },
-        complete: function () {
-            AJAXComplete();
-        },
-    });
-};
+//IDS_DIRECTORY.prototype.getCurrentCarsOfChangeOperator = function (callback) {
+//    $.ajax({
+//        type: 'GET',
+//        url: '../../api/ids/directory/cars/current/change_operator',
+//        async: true,
+//        dataType: 'json',
+//        beforeSend: function () {
+//            AJAXBeforeSend();
+//        },
+//        success: function (data) {
+//            if (typeof callback === 'function') {
+//                callback(data);
+//            }
+//        },
+//        error: function (x, y, z) {
+//            OnAJAXError("IDS_DIRECTORY.getCurrentCarsOfChangeOperator", x, y, z);
+//        },
+//        complete: function () {
+//            AJAXComplete();
+//        },
+//    });
+//};
 //Обновить вагон
-IDS_DIRECTORY.prototype.putCars = function (car, callback) {
-    $.ajax({
-        type: 'PUT',
-        url: '../../api/ids/directory/cars/id/' + car.id,
-        data: JSON.stringify(car),
-        contentType: "application/json;charset=utf-8",
-        async: true,
-        beforeSend: function () {
-            AJAXBeforeSend();
-        },
-        success: function (data) {
-            if (typeof callback === 'function') {
-                callback(data);
-            }
-        },
-        error: function (x, y, z) {
-            OnAJAXError("IDS_DIRECTORY.putCars", x, y, z);
-        },
-        complete: function () {
-            AJAXComplete();
-        },
-    });
-};
+//IDS_DIRECTORY.prototype.putCars = function (car, callback) {
+//    $.ajax({
+//        type: 'PUT',
+//        url: '../../api/ids/directory/cars/id/' + car.id,
+//        data: JSON.stringify(car),
+//        contentType: "application/json;charset=utf-8",
+//        async: true,
+//        beforeSend: function () {
+//            AJAXBeforeSend();
+//        },
+//        success: function (data) {
+//            if (typeof callback === 'function') {
+//                callback(data);
+//            }
+//        },
+//        error: function (x, y, z) {
+//            OnAJAXError("IDS_DIRECTORY.putCars", x, y, z);
+//        },
+//        complete: function () {
+//            AJAXComplete();
+//        },
+//    });
+//};
 //Обновить вагоны
-IDS_DIRECTORY.prototype.putListCars = function (car_list, callback) {
-    $.ajax({
-        type: 'PUT',
-        url: '../../api/ids/directory/cars/list/',
-        data: JSON.stringify(car_list),
-        contentType: "application/json;charset=utf-8",
-        async: true,
-        beforeSend: function () {
-            AJAXBeforeSend();
-        },
-        success: function (data) {
-            if (typeof callback === 'function') {
-                callback(data);
-            }
-        },
-        error: function (x, y, z) {
-            OnAJAXError("IDS_DIRECTORY.putListCars", x, y, z);
-        },
-        complete: function () {
-            AJAXComplete();
-        },
-    });
-};
+//IDS_DIRECTORY.prototype.putListCars = function (car_list, callback) {
+//    $.ajax({
+//        type: 'PUT',
+//        url: '../../api/ids/directory/cars/list/',
+//        data: JSON.stringify(car_list),
+//        contentType: "application/json;charset=utf-8",
+//        async: true,
+//        beforeSend: function () {
+//            AJAXBeforeSend();
+//        },
+//        success: function (data) {
+//            if (typeof callback === 'function') {
+//                callback(data);
+//            }
+//        },
+//        error: function (x, y, z) {
+//            OnAJAXError("IDS_DIRECTORY.putListCars", x, y, z);
+//        },
+//        complete: function () {
+//            AJAXComplete();
+//        },
+//    });
+//};
 // Удалить 
-IDS_DIRECTORY.prototype.deleteCars = function (id, callback) {
-    $.ajax({
-        url: '../../api/ids/directory/cars/id/' + id,
-        type: 'DELETE',
-        contentType: "application/json;charset=utf-8",
-        async: true,
-        beforeSend: function () {
-            AJAXBeforeSend();
-        },
-        success: function (data) {
-            if (typeof callback === 'function') {
-                callback(data);
-            }
-        },
-        error: function (x, y, z) {
-            OnAJAXError("IDS_DIRECTORY.deleteCars", x, y, z);
-        },
-        complete: function () {
-            AJAXComplete();
-        },
-    });
-};
+//IDS_DIRECTORY.prototype.deleteCars = function (id, callback) {
+//    $.ajax({
+//        url: '../../api/ids/directory/cars/id/' + id,
+//        type: 'DELETE',
+//        contentType: "application/json;charset=utf-8",
+//        async: true,
+//        beforeSend: function () {
+//            AJAXBeforeSend();
+//        },
+//        success: function (data) {
+//            if (typeof callback === 'function') {
+//                callback(data);
+//            }
+//        },
+//        error: function (x, y, z) {
+//            OnAJAXError("IDS_DIRECTORY.deleteCars", x, y, z);
+//        },
+//        complete: function () {
+//            AJAXComplete();
+//        },
+//    });
+//};
 //Добавить 
-IDS_DIRECTORY.prototype.postCars = function (car, callback) {
-    $.ajax({
-        url: '../../api/ids/directory/cars/',
-        type: 'POST',
-        data: JSON.stringify(car),
-        contentType: "application/json;charset=utf-8",
-        async: true,
-        beforeSend: function () {
-            AJAXBeforeSend();
-        },
-        success: function (data) {
-            if (typeof callback === 'function') {
-                callback(data);
-            }
-        },
-        error: function (x, y, z) {
-            LockScreenOff();
-            OnAJAXError("IDS_DIRECTORY.postCars", x, y, z);
-        },
-        complete: function () {
-            AJAXComplete();
-        },
-    });
-};
+//IDS_DIRECTORY.prototype.postCars = function (car, callback) {
+//    $.ajax({
+//        url: '../../api/ids/directory/cars/',
+//        type: 'POST',
+//        data: JSON.stringify(car),
+//        contentType: "application/json;charset=utf-8",
+//        async: true,
+//        beforeSend: function () {
+//            AJAXBeforeSend();
+//        },
+//        success: function (data) {
+//            if (typeof callback === 'function') {
+//                callback(data);
+//            }
+//        },
+//        error: function (x, y, z) {
+//            LockScreenOff();
+//            OnAJAXError("IDS_DIRECTORY.postCars", x, y, z);
+//        },
+//        complete: function () {
+//            AJAXComplete();
+//        },
+//    });
+//};
 //======= Directory_HazardClass (Справочник класов опасности) ======================================
 //
 IDS_DIRECTORY.prototype.getHazardClass = function (callback) {
