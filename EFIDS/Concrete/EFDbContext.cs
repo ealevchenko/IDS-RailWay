@@ -341,7 +341,6 @@ namespace EFIDS.Concrete
                 .HasForeignKey(e => e.id_doc_uz)
                 .WillCascadeOnDelete(false);
 
-            // Directory_Wagons & Directory_WagonsRent вместо Directory_Cars (Directory_Cars-убрать вообще!!!) 
             modelBuilder.Entity<Directory_Countrys>()
                 .HasMany(e => e.Directory_Wagons)
                 .WithRequired(e => e.Directory_Countrys)
@@ -379,6 +378,11 @@ namespace EFIDS.Concrete
                 .HasMany(e => e.Directory_Wagons)
                 .WithOptional(e => e.Directory_TypeOwnerShip)
                 .HasForeignKey(e => e.id_type_ownership);
+
+            modelBuilder.Entity<Directory_Wagons>()
+                .HasMany(e => e.Arrival_UZ_Vagon)
+                .WithRequired(e => e.Directory_Wagons)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Directory_Wagons>()
                 .HasMany(e => e.Directory_WagonsRent)

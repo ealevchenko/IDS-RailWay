@@ -946,8 +946,8 @@ namespace EFIDS.Helper
                 change = v.change,
                 change_user = v.change_user,
                 ArrivalSostav = null,
-                Arrival_UZ_Document = null,
-                //Directory_Cars = v.Directory_Cars.GetDirectory_Cars(), // Добавить вагон
+                Arrival_UZ_Document = null, 
+                Directory_Wagons = v.Directory_Wagons.GetDirectory_Wagons_Directory_WagonsRent(),
                 Arrival_UZ_Vagon_Acts = v.Arrival_UZ_Vagon_Acts.ToList().Select(a => a.GetArrival_UZ_Vagon_Acts()).ToList(),
                 Arrival_UZ_Vagon_Pay = v.Arrival_UZ_Vagon_Pay.ToList().Select(p => p.GetArrival_UZ_Vagon_Pay()).ToList(),
                 Arrival_UZ_Vagon_Cont = v.Arrival_UZ_Vagon_Cont.ToList().Select(c => c.GetArrival_UZ_Vagon_Cont()).ToList(),
@@ -1002,7 +1002,7 @@ namespace EFIDS.Helper
                 change_user = v.change_user,
                 ArrivalSostav = null,
                 Arrival_UZ_Document = v.Arrival_UZ_Document.GetArrival_UZ_Document(),
-                //Directory_Cars = v.Directory_Cars.GetDirectory_Cars(), // Добавить вагон
+                Directory_Wagons = v.Directory_Wagons.GetDirectory_Wagons_Directory_WagonsRent(),
                 Arrival_UZ_Vagon_Acts = v.Arrival_UZ_Vagon_Acts.ToList().Select(a => a.GetArrival_UZ_Vagon_Acts()).ToList(),
                 Arrival_UZ_Vagon_Pay = v.Arrival_UZ_Vagon_Pay.ToList().Select(p => p.GetArrival_UZ_Vagon_Pay()).ToList(),
                 Arrival_UZ_Vagon_Cont = v.Arrival_UZ_Vagon_Cont.ToList().Select(c => c.GetArrival_UZ_Vagon_Cont()).ToList(),

@@ -356,9 +356,11 @@
 
                         var dir_condition = vag_uz && vag_uz.Directory_ConditionArrival ? vag_uz.Directory_ConditionArrival : null;
 
-                        var dir_car = vag_uz && vag_uz.Directory_Cars ? vag_uz.Directory_Cars : null;
-                        var dir_operator = dir_car && dir_car.Directory_OperatorsWagons ? dir_car.Directory_OperatorsWagons : null;
-                        var dir_ll = dir_car && dir_car.Directory_LimitingLoading ? dir_car.Directory_LimitingLoading : null;
+                        var dir_car = vag_uz && vag_uz.Directory_Wagons ? vag_uz.Directory_Wagons : null;
+                        var current_rent = cars_detali.get_current_rent(dir_car);
+
+                        var dir_operator = current_rent && current_rent.Directory_OperatorsWagons ? current_rent.Directory_OperatorsWagons : null;
+                        var dir_ll = current_rent && current_rent.Directory_LimitingLoading ? current_rent.Directory_LimitingLoading : null;
                         var dir_owner = dir_car && dir_car.Directory_OwnersWagons ? dir_car.Directory_OwnersWagons : null;
                         var dir_countrys = dir_car && dir_car.Directory_Countrys ? dir_car.Directory_Countrys : null;
 
@@ -471,9 +473,10 @@
 
                         var dir_condition = vag_uz && vag_uz.Directory_ConditionArrival ? vag_uz.Directory_ConditionArrival : null;
 
-                        var dir_car = vag_uz && vag_uz.Directory_Cars ? vag_uz.Directory_Cars : null;
-                        var dir_operator = dir_car && dir_car.Directory_OperatorsWagons ? dir_car.Directory_OperatorsWagons : null;
-                        var dir_ll = dir_car && dir_car.Directory_LimitingLoading ? dir_car.Directory_LimitingLoading : null;
+                        var dir_car = vag_uz && vag_uz.Directory_Wagons ? vag_uz.Directory_Wagons : null;
+                        var current_rent = cars_detali.get_current_rent(dir_car);
+                        var dir_operator = current_rent && current_rent.Directory_OperatorsWagons ? current_rent.Directory_OperatorsWagons : null;
+                        var dir_ll = current_rent && current_rent.Directory_LimitingLoading ? current_rent.Directory_LimitingLoading : null;
 
 
                         var dir_owner = dir_car && dir_car.Directory_OwnersWagons ? dir_car.Directory_OwnersWagons : null;
@@ -4634,7 +4637,11 @@
 
                     var doc_uz = data.Arrival_UZ_Vagon && data.Arrival_UZ_Vagon.Arrival_UZ_Document ? data.Arrival_UZ_Vagon.Arrival_UZ_Document : null;
                     var vag_uz = data.Arrival_UZ_Vagon ? data.Arrival_UZ_Vagon : null;
-                    var dir_car = vag_uz && vag_uz.Directory_Cars ? vag_uz.Directory_Cars : null;
+                    // Вагон
+                    var dir_car = vag_uz && vag_uz.Directory_Wagons ? vag_uz.Directory_Wagons : null;
+                    // Последняяаренда
+                    var current_rent = cars_detali.get_current_rent(dir_car);
+
                     var dir_division = vag_uz && vag_uz.Directory_Divisions ? vag_uz.Directory_Divisions : null;
 
                     return {
@@ -4650,8 +4657,8 @@
                         "car_date_rem_uz": dir_car && dir_car.date_rem_uz ? dir_car.date_rem_uz.replace(/T/g, ' ') : null,
                         "car_date_rem_vag": dir_car && dir_car.date_rem_vag ? dir_car.date_rem_vag.replace(/T/g, ' ') : null,
                         "car_owner": dir_car && dir_car.Directory_OwnersWagons ? cars_detali.ids_inc.ids_dir.getValueObj(dir_car.Directory_OwnersWagons, 'abbr', cars_detali.lang) : null,
-                        "car_operator": dir_car && dir_car.Directory_OperatorsWagons ? cars_detali.ids_inc.ids_dir.getValueObj(dir_car.Directory_OperatorsWagons, 'abbr', cars_detali.lang) : null,
-                        //"limiting": dir_car ? cars_detali.ids_inc.ids_dir.getValue_LimitingLoading_Of_Code(dir_car.limiting, 'abbr', cars_detali.lang) : null,
+                        "car_operator": current_rent && current_rent.Directory_OperatorsWagons ? cars_detali.ids_inc.ids_dir.getValueObj(current_rent.Directory_OperatorsWagons, 'abbr', cars_detali.lang) : null,
+                        //"limiting": current_rent ? cars_detali.ids_inc.ids_dir.getValue_LimitingLoading_Of_Code(current_rent.limiting, 'abbr', cars_detali.lang) : null,
                         "car_rent_start": doc_uz && doc_uz.rent_start ? doc_uz.rent_start.replace(/T/g, ' ') : null,
 
                         // По документу

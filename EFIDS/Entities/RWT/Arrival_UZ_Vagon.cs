@@ -117,6 +117,8 @@ namespace EFIDS.Entities
 
         public virtual Directory_TypeWagons Directory_TypeWagons { get; set; }
 
+        public virtual Directory_Wagons Directory_Wagons { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Arrival_UZ_Vagon_Pay> Arrival_UZ_Vagon_Pay { get; set; }
 
