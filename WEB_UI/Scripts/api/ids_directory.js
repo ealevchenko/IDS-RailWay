@@ -758,29 +758,78 @@ IDS_DIRECTORY.prototype.getWagonOfNum = function (num, callback) {
         },
     });
 };
-// Получить текщий вагон по номеру вагона, администрации, роду 
-//IDS_DIRECTORY.prototype.getWagonOfNumAdmRod = function (num, adm, rod, kol_os, usl_tip, callback) {
-//    $.ajax({
-//        type: 'GET',
-//        url: '../../api/ids/directory/wagon/num/' + num + '/adm/' + adm + '/rod/' + rod + '/kol_os/' + kol_os + '/usl_tip/' + usl_tip,
-//        async: true,
-//        dataType: 'json',
-//        beforeSend: function () {
-//            AJAXBeforeSend();
-//        },
-//        success: function (data) {
-//            if (typeof callback === 'function') {
-//                callback(data);
-//            }
-//        },
-//        error: function (x, y, z) {
-//            OnAJAXError("IDS_DIRECTORY.getWagonOfNumAdmRod", x, y, z);
-//        },
-//        complete: function () {
-//            AJAXComplete();
-//        },
-//    });
-//};
+
+IDS_DIRECTORY.prototype.getWagonOfNums = function (list_nums, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/wagon/list_nums/',
+        type: 'POST',
+        data: JSON.stringify(list_nums),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_DIRECTORY.getWagonOfNums", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
+IDS_DIRECTORY.prototype.getWagonOfOperator = function (id_operator, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/wagon/operator/id/' + id_operator,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getWagonOfOperator", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
+IDS_DIRECTORY.prototype.getWarningWagons = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/wagon/warning',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getWarningWagons", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 IDS_DIRECTORY.prototype.getWagonOfNumSpecification = function (num, specification, callback) {
     $.ajax({
         type: 'POST',
@@ -853,7 +902,6 @@ IDS_DIRECTORY.prototype.getWagonsRent = function (callback) {
         },
     });
 };
-
 //Добавить аренду вагона вагона
 IDS_DIRECTORY.prototype.postWagonsRent = function (wagon, callback) {
     $.ajax({
@@ -5088,5 +5136,41 @@ IDS_DIRECTORY.prototype.getDivisions_Of_CultureName = function (name, lang, text
     }
     return null;
 };
-
-//getID_GenusWagons_Internal_Of_Name
+//*======= IDS_DIRECTORY.list_wagon  (Справочник вагонов) ======================================
+IDS_DIRECTORY.prototype.getWagons_Of_num = function (num) {
+    if (this.list_wagon) {
+        var obj = getObjects(this.list_wagon, 'num', num);
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getListWagons = function (fvalue, ftext, lang, filter) {
+    var list = [];
+    var list_filtr = null;
+    if (this.list_wagon) {
+        if (typeof filter === 'function') {
+            list_filtr = this.list_wagon.filter(filter);
+        } else { list_filtr = this.list_wagon; }
+        for (i = 0, j = list_filtr.length; i < j; i++) {
+            var l = list_filtr[i];
+            if (lang) {
+                list.push({ value: $.trim(l[fvalue]), text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
+// Вернуть текущую аренду вагона
+IDS_DIRECTORY.prototype.getCurrentRentOfWagon = function (vagon) {
+    if (vagon && vagon.Directory_WagonsRent && vagon.Directory_WagonsRent.length > 0) {
+        var rent = vagon.Directory_WagonsRent.filter(function (i) {
+            return (i.rent_end) ? false : true;
+        });
+        if (rent && rent.length > 0) {
+            return rent[0];
+        }
+    }
+    return null;
+};

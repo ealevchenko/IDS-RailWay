@@ -982,10 +982,6 @@ namespace IDS
         //        return null;
         //    }
         //}
-
-
-
-
         public Directory_Wagons GetDirectory_WagonsOfNum(int num, int adm, int? rod, int kol_os, string usl_tip, string user)
         {
             try

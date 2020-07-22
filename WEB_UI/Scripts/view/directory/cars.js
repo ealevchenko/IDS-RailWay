@@ -10,7 +10,7 @@
                 'field_genus': 'Род',
                 'field_owner': 'Владелец',
                 'field_operator_uz': 'Оператор (УЗ)',
-                'field_ban_changes_operator': 'Приз. см. оператора',
+                'field_change_operator': 'Опер. измен.',
                 'field_operator': 'Оператор (АМКР)',
                 'field_gruzp': 'Грузопод.т',
                 'field_kol_os': 'Кол. осей',
@@ -373,8 +373,9 @@
             alert: $('div#add_edit_alert'),                                             // Сообщения
             all_obj: null,                                                              // массив всех элементов формы 
             val: null,                                                                  // класс валидации
-            select_id: null,                                                            // id строки
+            select_num: null,                                                           // номер вагона
             select_obj: null,                                                           // строка
+            select_rent: null,                                                           // строка
             // Поля формы
             add_edit_num: $('input#add_edit_num'),
             // Поиск и определение вагона
@@ -630,16 +631,18 @@
 
             },
             // открыть окно добавмить вагоны вручную
-            Open: function (id) {
+            Open: function (num) {
                 pn_add_edit.val.clear_all();
-                pn_add_edit.select_id = id;
+                pn_add_edit.select_num = num;
                 pn_add_edit.select_obj = null;
-                if (pn_add_edit.select_id) {
+                if (pn_add_edit.select_num) {
                     // Правим запись
                     pn_add_edit.obj.dialog("option", "title", "Править вагон");
-                    pn_add_edit.ids_dir.getCarsOfID(pn_add_edit.select_id, function (result_obj) {
+                    pn_add_edit.ids_dir.getWagonOfNum(pn_add_edit.select_num, function (result_obj) {
                         if (result_obj) {
                             pn_add_edit.select_obj = result_obj;
+                            pn_add_edit.select_rent = pn_add_edit.ids_dir.getCurrentRentOfWagon(result_obj)
+
                             pn_add_edit.add_edit_num.val(pn_add_edit.select_obj.num).prop('disabled', true);
                             pn_add_edit.add_search_car.prop('disabled', true);
                             pn_add_edit.add_edit_kod_adm.val(pn_add_edit.ids_dir.getValue_Countrys_Of_ID(Number(pn_add_edit.select_obj.id_countrys), 'code_sng'));
@@ -653,13 +656,13 @@
                             pn_add_edit.add_edit_owner_car.val(Number(pn_add_edit.select_obj.id_owner));
                             pn_add_edit.add_edit_operator_uz_car.val(Number(pn_add_edit.select_obj.id_operator_uz));
 
-                            pn_add_edit.add_edit_operator_car.val(Number(pn_add_edit.select_obj.id_operator));
-                            pn_add_edit.add_edit_operator_car_rent_start.setDateTime(pn_add_edit.select_obj.rent_start !== null ? pn_add_edit.select_obj.rent_start.replace(/T/g, ' ') : null);
+                            pn_add_edit.add_edit_operator_car.val(Number(pn_add_edit.select_rent.id_operator));
+                            pn_add_edit.add_edit_operator_car_rent_start.setDateTime(pn_add_edit.select_rent.rent_start !== null ? pn_add_edit.select_rent.rent_start.replace(/T/g, ' ') : null);
                             pn_add_edit.add_edit_type_ownership.val(pn_add_edit.select_obj.id_type_ownership);
 
                             pn_add_edit.add_edit_operator_car_new.val(-1);
                             pn_add_edit.add_edit_operator_car_rent_start_now.setDateTime(null);
-                            pn_add_edit.add_edit_limiting.val(Number(pn_add_edit.select_obj.id_limiting));
+                            pn_add_edit.add_edit_limiting.val(Number(pn_add_edit.select_rent.id_limiting));
                             pn_add_edit.add_edit_sign.val(pn_add_edit.select_obj.sign !== null ? pn_add_edit.select_obj.sign : -1);
 
                             pn_add_edit.add_edit_date_rem_uz.setDateTime(pn_add_edit.select_obj.date_rem_uz !== null ? pn_add_edit.select_obj.date_rem_uz.replace(/T/g, ' ') : null);
@@ -671,7 +674,7 @@
                         }
                         else {
                             pn_add_edit.val.clear_all();
-                            pn_add_edit.val.out_error_message("Ошибка. Не могу найти строку по id = " + pn_add_edit.select_id);
+                            pn_add_edit.val.out_error_message("Ошибка. Не могу найти строку по id = " + pn_add_edit.select_num);
                         }
                     });
                 } else {
@@ -954,9 +957,9 @@
                 return new_car;
             },
         },
-//*************************************************************************************
-// ОСНОВНАЯ ТАБЛИЦА СОСТАВОВ
-//*************************************************************************************
+        //*************************************************************************************
+        // ОСНОВНАЯ ТАБЛИЦА СОСТАВОВ
+        //*************************************************************************************
         table_directory = {
             html_table: $('table#table-directory'),
             obj: null,
@@ -1002,20 +1005,20 @@
                         { data: "genus", title: langView('field_genus', langs), width: "50px", orderable: false, searchable: false },
                         { data: "owner", title: langView('field_owner', langs), width: "150px", orderable: false, searchable: false },
                         { data: "operator_uz", title: langView('field_operator_uz', langs), width: "150px", orderable: true, searchable: false },
-                        //{ data: "ban_changes_operator", title: langView('field_ban_changes_operator', langs), width: "50px", orderable: true, searchable: false },
+                        { data: "change_operator", title: langView('field_change_operator', langs), width: "50px", orderable: true, searchable: false },
                         { data: "operator", title: langView('field_operator', langs), width: "150px", orderable: true, searchable: false },
+                        { data: "rent_start", title: langView('field_rent_start', langs), width: "100px", orderable: false, searchable: false },
+                        { data: "rent_end", title: langView('field_rent_end', langs), width: "100px", orderable: false, searchable: false },
+                        { data: "limiting", title: langView('field_limiting', langs), width: "150px", orderable: false, searchable: false },
+                        { data: "sign", title: langView('field_sign', langs), width: "100px", orderable: false, searchable: false },
                         { data: "gruzp", title: langView('field_gruzp', langs), width: "50px", orderable: false, searchable: false },
                         { data: "kol_os", title: langView('field_kol_os', langs), width: "50px", orderable: false, searchable: false },
                         { data: "usl_tip", title: langView('field_usl_tip', langs), width: "50px", orderable: false, searchable: false },
                         { data: "date_rem_uz", title: langView('field_date_rem_uz', langs), width: "100px", orderable: false, searchable: false },
                         { data: "date_rem_vag", title: langView('field_date_rem_vag', langs), width: "100px", orderable: false, searchable: false },
-                        { data: "limiting", title: langView('field_limiting', langs), width: "150px", orderable: false, searchable: false },
                         { data: "type_ownership", title: langView('field_type_ownership', langs), width: "100px", orderable: false, searchable: false },
-                        { data: "rent_start", title: langView('field_rent_start', langs), width: "100px", orderable: false, searchable: false },
-                        { data: "rent_end", title: langView('field_rent_end', langs), width: "100px", orderable: false, searchable: false },
-                        { data: "sign", title: langView('field_sign', langs), width: "100px", orderable: false, searchable: false },
                         { data: "note", title: langView('field_note', langs), width: "300px", orderable: false, searchable: false },
-                        { data: "sobstv_kis", title: langView('field_sobstv_kis', langs), width: "50px", orderable: false, searchable: false },
+                        //{ data: "sobstv_kis", title: langView('field_sobstv_kis', langs), width: "50px", orderable: false, searchable: false },
                         { data: "create", title: langView('field_create', langs), width: "100px", orderable: false, searchable: false },
                         { data: "create_user", title: langView('field_create_user', langs), width: "100px", orderable: false, searchable: false },
                         { data: "change", title: langView('field_change', langs), width: "100px", orderable: false, searchable: false },
@@ -1066,7 +1069,7 @@
                             text: langView('title_button_edit', langs),
                             action: function (e, dt, node, config) {
                                 if (table_directory.select_string) {
-                                    pn_add_edit.Open(table_directory.select_string.id);
+                                    pn_add_edit.Open(table_directory.select_string.num);
                                 }
                             },
                             enabled: false
@@ -1137,21 +1140,21 @@
             // Показать вагоны требующие внимания
             view_cars_warning: function () {
                 alert.clear_message();
-                ids_dir.getCurrentCarsOfChangeOperator(function (cars) {
-                    table_directory.view(cars);
+                ids_dir.getWarningWagons(function (wagons) {
+                    table_directory.view(wagons);
                 });
             },
             // Показать вагоны по списку номеров
             view_cars_search_num: function (car_valid, callback) {
-                ids_dir.postCurrentCarsOfNums(car_valid, function (cars) {
+                ids_dir.getWagonOfNums(car_valid, function (wagon) {
                     var not_car = car_valid.filter(function (i) {
                         var not = true;
-                        for (var ci = 0; ci < cars.length; ci++) {
-                            if (i === cars[ci].num) not = false;
+                        for (var ci = 0; ci < wagon.length; ci++) {
+                            if (i === wagon[ci].num) not = false;
                         }
                         return not;
                     });
-                    table_directory.view(cars);
+                    table_directory.view(wagon);
                     $.each(not_car, function (i, el) {
                         alert.out_warning_message('Вагон № :' + el + ' - не найден!');
                     });
@@ -1164,7 +1167,7 @@
             // Показать вагоны по оператору
             view_cars_search_operator: function () {
                 var id = Number(pn_search.wagon_operator.val());
-                ids_dir.getCurrentCarsOfOperator(id, function (cars) {
+                ids_dir.getWagonOfOperator(id, function (cars) {
                     table_directory.view(cars);
                 });
             },
@@ -1186,13 +1189,14 @@
             // Получить полную информацию по составау
             get_string: function (data) {
 
+                var corrent_rent = ids_dir.getCurrentRentOfWagon(data);
                 var countrys = data ? data.Directory_Countrys : null;
                 var genus = data ? data.Directory_GenusWagons : null;
                 var owner = data ? data.Directory_OwnersWagons : null;
                 var operator_uz = data ? data.Directory_OperatorsWagons : null;
-                var operator = data ? data.Directory_OperatorsWagons : null;
-                var limiting = data ? data.Directory_LimitingLoading : null;
                 var type_ownership = data ? data.Directory_TypeOwnerShip : null;
+                var operator = corrent_rent ? corrent_rent.Directory_OperatorsWagons : null;
+                var limiting = corrent_rent ? corrent_rent.Directory_LimitingLoading : null;
 
                 return {
                     "id": data.id,
@@ -1204,21 +1208,22 @@
                     "id_owner": data.id_owner,
                     "owner": owner ? ids_dir.getValueObj(owner, 'owner', lang) : '',
                     "id_operator_uz": data.id_operator_uz,
+                    "change_operator": data.change_operator !== null ? data.change_operator.replace(/T/g, ' ') : null,
                     "operator_uz": operator_uz ? ids_dir.getValueObj(operator_uz, 'operators', lang) : '',
-                    "ban_changes_operator": data.ban_changes_operator,
-                    "id_operator": data.id_operator,
-                    "operator": operator_uz ? ids_dir.getValueObj(operator_uz, 'operators', lang) : '',
+                    "bit_warning": data.bit_warning,
+                    "id_operator": corrent_rent ? corrent_rent.id_operator : null,
+                    "operator": operator ? ids_dir.getValueObj(operator, 'operators', lang) : '',
                     "gruzp": data.gruzp,
                     "kol_os": data.kol_os,
                     "usl_tip": data.usl_tip,
                     "date_rem_uz": data.date_rem_uz !== null ? data.date_rem_uz.replace(/T/g, ' ') : null,
                     "date_rem_vag": data.date_rem_vag !== null ? data.date_rem_vag.replace(/T/g, ' ') : null,
-                    "id_limiting": data.id_limiting,
+                    "id_limiting": corrent_rent ? corrent_rent.id_limiting : null,
                     "limiting": limiting ? ids_dir.getValueObj(limiting, 'limiting_abbr', lang) : '',
                     "id_type_ownership": data.id_type_ownership,
                     "type_ownership": type_ownership ? ids_dir.getValueObj(type_ownership, 'type_ownership', lang) : '',
-                    "rent_start": data.rent_start !== null ? data.rent_start.replace(/T/g, ' ') : null,
-                    "rent_end": data.rent_end !== null ? data.rent_end.replace(/T/g, ' ') : null,
+                    "rent_start": corrent_rent && corrent_rent.rent_start !== null ? corrent_rent.rent_start.replace(/T/g, ' ') : null,
+                    "rent_end": corrent_rent && corrent_rent.rent_end !== null ? corrent_rent.rent_end.replace(/T/g, ' ') : null,
                     "sign": data.sign,
                     "note": data.note,
                     "sobstv_kis": data.sobstv_kis,
