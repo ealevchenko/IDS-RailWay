@@ -5097,9 +5097,9 @@
             },
             // Получить текущий вагон из справочника
             get_vagon_dir: function (vagon, num, callback) {
-                var specification = {adm:vagon.kod_adm,rod:vagon.rod_vag, kol_os:vagon.kol_os, usl_tip:vagon.usl_tip}
+                var specification = { adm: vagon.kod_adm, rod: vagon.rod_vag, kol_os: vagon.kol_os, usl_tip: vagon.usl_tip }
                 cars_detali.ids_inc.ids_dir.getWagonOfNumSpecification(num, specification, function (result_card) {
-                //cars_detali.ids_inc.ids_dir.getWagonOfNumAdmRod(num, vagon.kod_adm, vagon.rod_vag, vagon.kol_os, vagon.usl_tip, function (result_card) {
+                    //cars_detali.ids_inc.ids_dir.getWagonOfNumAdmRod(num, vagon.kod_adm, vagon.rod_vag, vagon.kol_os, vagon.usl_tip, function (result_card) {
                     //result_card = null;
                     if (typeof callback === 'function') {
                         callback(result_card);
@@ -5124,7 +5124,7 @@
                     // Создадим первую запись или обновим строку вагона в справочнике вагонов и аренд
                     var specification = { adm: (adm ? adm.code_sng : 0), rod: (rod ? rod.rod_uz : 0), kol_os: kol_os, usl_tip: (usl_tip === "" ? null : usl_tip) }
                     cars_detali.ids_inc.ids_dir.getWagonOfNumSpecification(num, specification, function (result_card) {
-                    //cars_detali.ids_inc.ids_dir.getWagonOfNumAdmRod(num, (adm ? adm.code_sng : 0), (rod ? rod.rod_uz : 0), kol_os, (usl_tip === "" ? null : usl_tip), function (result_card) {
+                        //cars_detali.ids_inc.ids_dir.getWagonOfNumAdmRod(num, (adm ? adm.code_sng : 0), (rod ? rod.rod_uz : 0), kol_os, (usl_tip === "" ? null : usl_tip), function (result_card) {
                         if (typeof callback === 'function') {
                             callback(result_card);
                         }
@@ -5532,13 +5532,11 @@
                                                     }
                                                 }
                                             } else {
-                                                cars_select.push(cars_is_num[0]);
+                                                if (cars_is_num && cars_is_num.length > 0) {
+                                                    cars_select.push(cars_is_num[0]);
+                                                }
                                             }
                                         }
-
-
-
-
                                         // Показать вагоны
                                         //pn_search_epd.loading_cars.show();
                                         pn_search_epd.table_car.view(select_vagon, cars_select);
@@ -5633,8 +5631,21 @@
                     },
                     // Показать таблицу с данными
                     view: function (cars, cars_arrival) {
-                        pn_search_epd.table_car.load(cars, cars_arrival);
-                        pn_search_epd.table_car.obj.draw();
+                        if (cars_arrival && cars_arrival.length > 0) {
+                            pn_search_epd.table_car.load(cars, cars_arrival);
+                            pn_search_epd.table_car.obj.draw();
+                        } else {
+                            if (cars_arrival && cars_arrival.length === 0) {
+                                var nums = '';
+                                for (i = 0; i < cars.length; i++) {
+                                    nums += cars[i].nomer + ((i < cars.length - 1) ? ',' : '');
+                                }
+                                pn_search_epd.alert.clear_message();
+                                pn_search_epd.alert.out_warning_message("Вагон(ы) № [" + nums + "], перечисленные в документе не найдены в текущем составе или на подходах, добавьте вагоны вручную.");
+
+                            }
+                            pn_search_epd.loading_cars.hide();
+                        }
                     },
                     // Загрузить данные
                     load: function (cars, cars_arrival) {
@@ -5650,7 +5661,6 @@
                         var arrival_car = cars_arrival.find(function (element, index, array) {
                             if (element.num === Number(car.nomer)) return true; else return false;
                         });
-
                         var operation = Number(car.operation === 0 ? 0 : (arrival_car ? 2 : 1));
                         return {
                             "num": car.nomer,
