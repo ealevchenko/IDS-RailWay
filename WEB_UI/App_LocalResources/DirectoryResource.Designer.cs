@@ -133,6 +133,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Изм. (УЗ).
+        /// </summary>
+        public static string title_add_edit_change_operator {
+            get {
+                return ResourceManager.GetString("title_add_edit_change_operator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Код в SAP.
         /// </summary>
         public static string title_add_edit_code_sap {

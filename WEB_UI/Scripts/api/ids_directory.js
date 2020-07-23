@@ -502,7 +502,18 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
                 }
             });
         };
-
+        if (el === 'wagon_rent') {
+            IDS_DIRECTORY.prototype.getWagonRent(function (result_wagon_rent) {
+                obj.list_wagon_rent = result_wagon_rent;
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        if (lockOff) { LockScreenOff(); }
+                        callback();
+                    }
+                }
+            });
+        };
         if (el === 'type_division') {
             IDS_DIRECTORY.prototype.getTypeDivision(function (result_type_division) {
                 obj.list_type_division = result_type_division;
@@ -589,6 +600,17 @@ IDS_DIRECTORY.prototype.loadWagon = function (callback) {
         }
     });
 };
+// Загрузка справочника аренд вагонов новый
+IDS_DIRECTORY.prototype.loadWagonRent = function (callback) {
+    var obj = this;
+    IDS_DIRECTORY.prototype.getWagonRent(function (result_cars) {
+        obj.getWagonRent = result_cars;
+        if (typeof callback === 'function') {
+            callback();
+        }
+    });
+};
+
 // Загрузка справочника владельцев вагонов
 IDS_DIRECTORY.prototype.loadOwnersWagons = function (callback) {
     var obj = this;
@@ -5162,6 +5184,9 @@ IDS_DIRECTORY.prototype.getListWagons = function (fvalue, ftext, lang, filter) {
     }
     return list;
 };
+
+
+//*======= IDS_DIRECTORY.list_wagon_rent  (Справочник аренд вагонов) ======================================
 // Вернуть текущую аренду вагона
 IDS_DIRECTORY.prototype.getCurrentRentOfWagon = function (vagon) {
     if (vagon && vagon.Directory_WagonsRent && vagon.Directory_WagonsRent.length > 0) {
@@ -5174,3 +5199,20 @@ IDS_DIRECTORY.prototype.getCurrentRentOfWagon = function (vagon) {
     }
     return null;
 };
+// Вернуть копию без связй
+IDS_DIRECTORY.prototype.getCloneWagonsRent = function (wagon_rent) {
+    if (!wagon_rent) return null;
+    return {
+        "id": wagon_rent.id,
+        "num": wagon_rent.num,
+        "id_operator": wagon_rent.id_operator,
+        "id_limiting": wagon_rent.id_limiting,
+        "rent_start": wagon_rent.rent_start,
+        "rent_end": wagon_rent.rent_end,
+        "create": wagon_rent.create,
+        "create_user": wagon_rent.create_user,
+        "change": wagon_rent.change,
+        "change_user": wagon_rent.change_user,
+        "parent_id": wagon_rent.parent_id
+    }
+}

@@ -395,8 +395,9 @@
 
             add_edit_owner_car: $('select#add_edit_owner_car'),
             add_edit_operator_uz_car: $('select#add_edit_operator_uz_car'),
-            add_edit_operator_car: $('select#add_edit_operator_car'),
+            add_edit_change_operator: $('input#add_edit_change_operator'),
 
+            add_edit_operator_car: $('select#add_edit_operator_car'),
             add_edit_operator_car_rent_start: $('input#add_edit_operator_car_rent_start'),
             add_edit_type_ownership: $('select#add_edit_type_ownership'),
 
@@ -488,6 +489,10 @@
                             event.preventDefault();
                             var id = Number($(this).val());
                         }, null);
+                    // Дата изменения оператора
+                    pn_add_edit.add_edit_change_operator = cd_initDateTimeRangePicker(pn_add_edit.add_edit_change_operator, { lang: lang, time: true }, function (datetime) {
+
+                    }),
                     // Оператор УЗ
                     pn_add_edit.add_edit_operator_car = cd_initSelect(
                         pn_add_edit.add_edit_operator_car,
@@ -655,6 +660,7 @@
                             pn_add_edit.add_edit_gruzp.val(pn_add_edit.select_obj.gruzp);
                             pn_add_edit.add_edit_owner_car.val(Number(pn_add_edit.select_obj.id_owner));
                             pn_add_edit.add_edit_operator_uz_car.val(Number(pn_add_edit.select_obj.id_operator_uz));
+                            pn_add_edit.add_edit_change_operator.setDateTime(pn_add_edit.select_obj.change_operator !== null ? pn_add_edit.select_obj.change_operator.replace(/T/g, ' ') : null);
 
                             pn_add_edit.add_edit_operator_car.val(Number(pn_add_edit.select_rent.id_operator));
                             pn_add_edit.add_edit_operator_car_rent_start.setDateTime(pn_add_edit.select_rent.rent_start !== null ? pn_add_edit.select_rent.rent_start.replace(/T/g, ' ') : null);
@@ -747,7 +753,7 @@
                     // Проверять только если меняется оператор
                     if (id_operator_car_amkr && id_operator_car_amkr > 0) {
                         var rent_start_now = moment(get_datetime_value(pn_add_edit.add_edit_operator_car_rent_start_now.val(), pn_add_edit.lang));
-                        var rent_start_old = moment(pn_add_edit.select_obj.rent_start);
+                        var rent_start_old = moment(pn_add_edit.select_rent.rent_start);
                         // Проверка на вводиую дату 
                         if (rent_start_now.isBefore(rent_start_old)) {
                             valid = false;
@@ -854,107 +860,121 @@
             save: function (callback_ok) {
                 var valid = pn_add_edit.validation();
                 if (valid) {
-                    LockScreen(langView('mess_save', langs));
+                    //LockScreen(langView('mess_save', langs));
                     var new_object = pn_add_edit.get_object();
-                    if (new_object.id === 0) {
-                        // Добавить
-                        pn_add_edit.ids_dir.postCars(new_object, function (result_add) {
-                            if (result_add > 0) {
-                                // Закроем старые аренды все
-                                // Сбросим признак ban_changes_operator по всем старым записям
-                                // Закрыть предыдущие записи
-                                pn_add_edit.close_rent(pn_add_edit.select_obj.num, pn_add_edit.select_obj.rent_start, new_object.rent_start, function (result_close) {
-                                    pn_add_edit.clear_bit_warning(pn_add_edit.select_obj.num, result_add, function (result_clear) {
-                                        if (typeof callback_ok === 'function') {
-                                            pn_add_edit.obj.dialog("close");
-                                            callback_ok({ type: 1, result: result_add, close: result_close, clear: result_clear });
-                                        }
-                                    });
-                                });
-                            } else {
-                                pn_add_edit.val.clear_all();
-                                pn_add_edit.val.out_error_message("Ошибка. При добавления строки вагона, произошла ошибка!");
-                                LockScreenOff();
-                            }
-                        });
-                    } else {
-                        //Править старую
-                        pn_add_edit.ids_dir.putCars(new_object, function (result_upd) {
-                            if (result_upd > 0) {
-                                // Сбросим признак ban_changes_operator по всем старым записям
-                                pn_add_edit.clear_bit_warning(pn_add_edit.select_obj.num, pn_add_edit.select_obj.id, function (result_clear) {
-                                    if (typeof callback_ok === 'function') {
-                                        pn_add_edit.obj.dialog("close");
-                                        callback_ok({ type: 0, result: result_upd, close: 0, clear: result_clear });
-                                    }
-                                });
-                            } else {
-                                pn_add_edit.val.clear_all();
-                                pn_add_edit.val.out_error_message("Ошибка. При обновлении строки вагона, произошла ошибка!");
-                                LockScreenOff();
-                            }
-                        });
-                    }
+                    var f = 1;
+                    //if (new_object.id === 0) {
+                    //    // Добавить
+                    //    pn_add_edit.ids_dir.postCars(new_object, function (result_add) {
+                    //        if (result_add > 0) {
+                    //            // Закроем старые аренды все
+                    //            // Сбросим признак ban_changes_operator по всем старым записям
+                    //            // Закрыть предыдущие записи
+                    //            pn_add_edit.close_rent(pn_add_edit.select_obj.num, pn_add_edit.select_obj.rent_start, new_object.rent_start, function (result_close) {
+                    //                pn_add_edit.clear_bit_warning(pn_add_edit.select_obj.num, result_add, function (result_clear) {
+                    //                    if (typeof callback_ok === 'function') {
+                    //                        pn_add_edit.obj.dialog("close");
+                    //                        callback_ok({ type: 1, result: result_add, close: result_close, clear: result_clear });
+                    //                    }
+                    //                });
+                    //            });
+                    //        } else {
+                    //            pn_add_edit.val.clear_all();
+                    //            pn_add_edit.val.out_error_message("Ошибка. При добавления строки вагона, произошла ошибка!");
+                    //            LockScreenOff();
+                    //        }
+                    //    });
+                    //} else {
+                    //    //Править старую
+                    //    pn_add_edit.ids_dir.putCars(new_object, function (result_upd) {
+                    //        if (result_upd > 0) {
+                    //            // Сбросим признак ban_changes_operator по всем старым записям
+                    //            pn_add_edit.clear_bit_warning(pn_add_edit.select_obj.num, pn_add_edit.select_obj.id, function (result_clear) {
+                    //                if (typeof callback_ok === 'function') {
+                    //                    pn_add_edit.obj.dialog("close");
+                    //                    callback_ok({ type: 0, result: result_upd, close: 0, clear: result_clear });
+                    //                }
+                    //            });
+                    //        } else {
+                    //            pn_add_edit.val.clear_all();
+                    //            pn_add_edit.val.out_error_message("Ошибка. При обновлении строки вагона, произошла ошибка!");
+                    //            LockScreenOff();
+                    //        }
+                    //    });
+                    //}
                 }
             },
             // Получить строку по вагону (если новый оператор тогда новая строка)
             get_object: function () {
                 // Определим новый оператор назначен
-                var ban_changes_operator = false; // Опрелелим (определен род, определен адм выбран оператор)
+                var bit_warning = false; // Опрелелим (определен род, определен адм выбран оператор)
                 var id_countrys = get_select_number_value(pn_add_edit.add_edit_name_adm);
                 var id_genus = get_select_number_value(pn_add_edit.add_edit_name_rod);
                 var id_new_operator = get_select_number_value(pn_add_edit.add_edit_operator_car_new);
                 var id_operator_car_amkr = get_select_number_value(pn_add_edit.add_edit_operator_car);
 
                 // Если не определен род или адм.
-                if (id_genus === 0 || id_countrys === 0) {
-                    ban_changes_operator = true;
+                if (id_genus === 0 || id_countrys === 0 || (pn_add_edit.select_rent && pn_add_edit.select_rent.id_operator === null) || (pn_add_edit.select_rent && pn_add_edit.select_rent.rent_start === null)) {
+                    bit_warning = true;
                 }
-                var new_car = {
-                    id: pn_add_edit.select_obj.id,
-                    num: pn_add_edit.select_obj.num,
-                    id_countrys: get_select_number_value(pn_add_edit.add_edit_name_adm),
-                    id_genus: get_select_number_value(pn_add_edit.add_edit_name_rod),
-                    id_owner: pn_add_edit.select_obj.id_owner,
-                    id_operator_uz: pn_add_edit.select_obj.id_operator_uz,
-                    ban_changes_operator: ban_changes_operator,
-                    id_operator: pn_add_edit.select_obj.id_operator,
-                    gruzp: pn_add_edit.select_obj.gruzp,
-                    kol_os: get_select_number_value(pn_add_edit.add_edit_kol_os),
-                    usl_tip: get_input_string_value(pn_add_edit.add_edit_usl_tip),
-                    date_rem_uz: pn_add_edit.select_obj.date_rem_uz,
-                    date_rem_vag: toISOStringTZ(get_date_value(pn_add_edit.add_edit_date_rem_vag.val(), pn_add_edit.lang)),
-                    id_limiting: get_select_number_value(pn_add_edit.add_edit_limiting),
-                    id_type_ownership: get_select_number_value(pn_add_edit.add_edit_type_ownership),
-                    rent_start: pn_add_edit.select_obj.rent_start,
-                    rent_end: null,
-                    sign: get_select_number_value(pn_add_edit.add_edit_sign),
-                    note: pn_add_edit.select_obj.note,
-                    sobstv_kis: pn_add_edit.select_obj.sobstv_kis,
-                    create: pn_add_edit.select_obj.create,
-                    create_user: pn_add_edit.select_obj.create_user,
-                    change: toISOStringTZ(new Date()),
-                    change_user: pn_add_edit.user_name
+                var new_wagon = {
+                    "num": pn_add_edit.select_obj.num,
+                    "id_countrys": get_select_number_value(pn_add_edit.add_edit_name_adm),
+                    "id_genus": get_select_number_value(pn_add_edit.add_edit_name_rod),
+                    "id_owner": pn_add_edit.select_obj.id_owner,
+                    "id_operator": pn_add_edit.select_obj.id_operator,
+                    "change_operator": pn_add_edit.select_obj.change_operator,
+                    "gruzp": pn_add_edit.select_obj.gruzp,
+                    "kol_os": get_select_number_value(pn_add_edit.add_edit_kol_os),
+                    "usl_tip": get_input_string_value(pn_add_edit.add_edit_usl_tip),
+                    "date_rem_uz": pn_add_edit.select_obj.date_rem_uz,
+                    "date_rem_vag": toISOStringTZ(get_date_value(pn_add_edit.add_edit_date_rem_vag.val(), pn_add_edit.lang)),
+                    "id_type_ownership": get_select_number_value(pn_add_edit.add_edit_type_ownership),
+                    "sign": get_select_number_value(pn_add_edit.add_edit_sign),
+                    "note": pn_add_edit.select_obj.note,
+                    "sobstv_kis": pn_add_edit.select_obj.sobstv_kis,
+                    "bit_warning": bit_warning,
+                    "create": pn_add_edit.select_obj.create,
+                    "create_user": pn_add_edit.select_obj.create_user,
+                    "change": toISOStringTZ(new Date()),
+                    "change_user": pn_add_edit.user_name,
                 }
-                // Определим новый оператор назначен ?
-                if (id_new_operator && id_new_operator >= 0) {
-
-                    // Оператор АМКР был определен (создадим новую строку иначе обновим запись назначив оператора)
-                    if (pn_add_edit.select_obj.id_operator && pn_add_edit.select_obj.id_operator > 0) {
-                        // Да определен новый оператор скорректируем запись
-                        new_car.id = 0;
-
-                        new_car.create = toISOStringTZ(new Date());
-                        new_car.create_user = pn_add_edit.user_name;
-                        new_car.change = null;
-                        new_car.change_user = null;
+                var new_wagon_rent = null;
+                var old_wagon_rent = pn_add_edit.ids_dir.getCloneWagonsRent(pn_add_edit.select_rent);
+                // Определим сотояние строки аренда (Новая строка создается, если аренды нет или изменился оператор в строке аренда)
+                if ((!pn_add_edit.select_rent) ||
+                    ((id_new_operator && id_new_operator >= 0) && (pn_add_edit.select_rent && pn_add_edit.select_rent.id_operator && pn_add_edit.select_rent.id_operator > 0 && pn_add_edit.select_rent.id_operator !== id_new_operator))) {
+                    // Закроем старую
+                    old_wagon_rent.rent_end = toISOStringTZ(get_datetime_value(pn_add_edit.add_edit_operator_car_rent_start_now.val(), pn_add_edit.lang));
+                    old_wagon_rent.change = toISOStringTZ(new Date());
+                    old_wagon_rent.change_user = pn_add_edit.user_name;
+                    // Создадим новую
+                    new_wagon_rent = {
+                        "id": 0,
+                        "num": pn_add_edit.select_obj.num,
+                        "id_operator": id_new_operator,
+                        "id_limiting": get_select_number_value(pn_add_edit.add_edit_limiting),
+                        "rent_start": toISOStringTZ(get_datetime_value(pn_add_edit.add_edit_operator_car_rent_start_now.val(), pn_add_edit.lang)),
+                        "rent_end": null,
+                        "create": toISOStringTZ(new Date()),
+                        "create_user": pn_add_edit.user_name,
+                        "change": null,
+                        "change_user": null,
+                        "parent_id": pn_add_edit.select_rent !== null ? pn_add_edit.select_rent.id : null,
                     }
-                    new_car.id_operator = id_new_operator;
-                    new_car.rent_start = toISOStringTZ(get_datetime_value(pn_add_edit.add_edit_operator_car_rent_start_now.val(), pn_add_edit.lang));
-                    new_car.sobstv_kis = null;
-
+                } else {
+                    // Откорректируем старую
+                    old_wagon_rent.id_operator = id_new_operator && id_new_operator >= 0 ? id_new_operator : old_wagon_rent.id_operator;
+                    old_wagon_rent.id_limiting = get_select_number_value(pn_add_edit.add_edit_limiting);
+                    var new_date_rent = get_datetime_value(pn_add_edit.add_edit_operator_car_rent_start_now.val(), pn_add_edit.lang);
+                    if ((old_wagon_rent.rent_start === null && new_date_rent !== null) || (old_wagon_rent.rent_start !== null && new_date_rent !== null && old_wagon_rent.rent_start !== new_date_rent)) {
+                        old_wagon_rent.rent_start = toISOStringTZ(new_date_rent);
+                    }
+                    old_wagon_rent.rent_end = null;
+                    old_wagon_rent.change = toISOStringTZ(new Date());
+                    old_wagon_rent.change_user = pn_add_edit.user_name;
                 }
-                return new_car;
+                return { wagon: new_wagon, old_wagon_rent: old_wagon_rent, new_wagon_rent: new_wagon_rent };
             },
         },
         //*************************************************************************************

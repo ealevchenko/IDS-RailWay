@@ -141,6 +141,9 @@
   <data name="title_add_edit_cargo_name_ru" xml:space="preserve">
     <value>Наименование груза в ИДС (рус.)</value>
   </data>
+  <data name="title_add_edit_change_operator" xml:space="preserve">
+    <value>Изм. (УЗ)</value>
+  </data>
   <data name="title_add_edit_code_sap" xml:space="preserve">
     <value>Код в SAP</value>
   </data>
