@@ -421,7 +421,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Грузоподъемность(ЭПД),т.
+        ///   Ищет локализованную строку, похожую на Грузоп. (ЭПД),т.
         /// </summary>
         public static string title_gruzp_doc {
             get {
@@ -430,7 +430,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Грузоподъемность(БД УЗ),т.
+        ///   Ищет локализованную строку, похожую на Грузоп. (УЗ),т.
         /// </summary>
         public static string title_gruzp_uz {
             get {
@@ -799,6 +799,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Тара (УЗ),т.
+        /// </summary>
+        public static string title_tara_uz {
+            get {
+                return ResourceManager.GetString("title_tara_uz", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Тариф при выдаче.
         /// </summary>
         public static string title_tariff {
@@ -844,7 +853,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Вес тары (уточн.), т.
+        ///   Ищет локализованную строку, похожую на Вес тары (ут. ЭПД), т.
         /// </summary>
         public static string title_u_tara {
             get {
@@ -934,7 +943,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Вес тары, т.
+        ///   Ищет локализованную строку, похожую на Вес тары (ЭПД), т.
         /// </summary>
         public static string title_ves_tary_arc {
             get {

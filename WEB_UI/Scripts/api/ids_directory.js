@@ -901,6 +901,31 @@ IDS_DIRECTORY.prototype.postWagon = function (wagon, callback) {
         },
     });
 };
+//Обновить вагон
+IDS_DIRECTORY.prototype.putWagon = function (wagon, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/directory/wagon/num/' + wagon.num,
+        data: JSON.stringify(wagon),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.putWagon", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 //======= Directory_WagonsRent (Справочник аренд вагонов) ======================================
 IDS_DIRECTORY.prototype.getWagonsRent = function (callback) {
     $.ajax({
@@ -924,12 +949,12 @@ IDS_DIRECTORY.prototype.getWagonsRent = function (callback) {
         },
     });
 };
-//Добавить аренду вагона вагона
-IDS_DIRECTORY.prototype.postWagonsRent = function (wagon, callback) {
+//Добавить аренду вагона
+IDS_DIRECTORY.prototype.postWagonsRent = function (wagon_rent, callback) {
     $.ajax({
         url: '../../api/ids/directory/wagon_rent/',
         type: 'POST',
-        data: JSON.stringify(wagon),
+        data: JSON.stringify(wagon_rent),
         contentType: "application/json;charset=utf-8",
         async: true,
         beforeSend: function () {
@@ -949,7 +974,30 @@ IDS_DIRECTORY.prototype.postWagonsRent = function (wagon, callback) {
         },
     });
 };
-
+//Обновить аренду вагон
+IDS_DIRECTORY.prototype.putWagonsRent = function (wagon_rent, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/directory/wagon_rent/id/' + wagon_rent.id,
+        data: JSON.stringify(wagon_rent),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.putWagonsRent", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 
 //======= Directory_Cars (Справочник вагонов) ======================================
 //

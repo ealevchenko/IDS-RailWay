@@ -32,7 +32,7 @@ namespace WEB_UI.Controllers.api
         // GET: api/ids/directory/wagon_rent/all
         [Route("all")]
         [ResponseType(typeof(Directory_WagonsRent))]
-        public IHttpActionResult GetWagons()
+        public IHttpActionResult GetWagonsRent()
         {
             try
             {
@@ -49,7 +49,7 @@ namespace WEB_UI.Controllers.api
         // GET: api/ids/directory/wagon_rent/id/1
         [Route("id/{id:int}")]
         [ResponseType(typeof(Directory_WagonsRent))]
-        public IHttpActionResult GetWagonsOfID(int id)
+        public IHttpActionResult GetWagonsRentOfID(int id)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace WEB_UI.Controllers.api
         // GET: api/ids/directory/wagon_rent/num/65201857
         [Route("num/{num:int}")]
         [ResponseType(typeof(Directory_WagonsRent))]
-        public IHttpActionResult GetWagonsOfNum(int num)
+        public IHttpActionResult GetWagonsRentOfNum(int num)
         {
             try
             {
@@ -88,7 +88,7 @@ namespace WEB_UI.Controllers.api
         // POST api/ids/directory/wagon_rent/
         [HttpPost]
         [Route("")]
-        public int PostWagon([FromBody]Directory_WagonsRent value)
+        public int PostWagonsRent([FromBody]Directory_WagonsRent value)
         {
             try
             {
@@ -105,7 +105,7 @@ namespace WEB_UI.Controllers.api
         // PUT api/ids/directory/wagon_rent/id
         [HttpPut]
         [Route("id/{id:int}")]
-        public int PutWagon(int num, [FromBody]Directory_WagonsRent value)
+        public int PutWagonsRent(int id, [FromBody]Directory_WagonsRent value)
         {
             try
             {
@@ -122,7 +122,7 @@ namespace WEB_UI.Controllers.api
         // DELETE api/ids/directory/wagon_rent/id
         [HttpDelete]
         [Route("id/{id:int}")]
-        public int DeleteWagon(int id)
+        public int DeleteWagonsRent(int id)
         {
             try
             {

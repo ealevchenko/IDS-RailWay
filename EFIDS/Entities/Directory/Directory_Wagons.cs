@@ -32,6 +32,8 @@ namespace EFIDS.Entities
 
         public double gruzp { get; set; }
 
+        public double? tara { get; set; }
+
         public int kol_os { get; set; }
 
         [StringLength(10)]

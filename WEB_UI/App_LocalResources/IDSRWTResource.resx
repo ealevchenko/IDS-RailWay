@@ -205,10 +205,10 @@
     <value>Группа груза</value>
   </data>
   <data name="title_gruzp_doc" xml:space="preserve">
-    <value>Грузоподъемность(ЭПД),т</value>
+    <value>Грузоп. (ЭПД),т</value>
   </data>
   <data name="title_gruzp_uz" xml:space="preserve">
-    <value>Грузоподъемность(БД УЗ),т</value>
+    <value>Грузоп. (УЗ),т</value>
   </data>
   <data name="title_kod_etsng" xml:space="preserve">
     <value>Код ЕТСНГ</value>
@@ -328,7 +328,7 @@
     <value>Станция прибытия</value>
   </data>
   <data name="title_u_tara" xml:space="preserve">
-    <value>Вес тары (уточн.), т</value>
+    <value>Вес тары (ут. ЭПД), т</value>
   </data>
   <data name="title_vagon" xml:space="preserve">
     <value>Вагон</value>
@@ -349,7 +349,7 @@
     <value>Вес груза(перев.), т</value>
   </data>
   <data name="title_ves_tary_arc" xml:space="preserve">
-    <value>Вес тары, т</value>
+    <value>Вес тары (ЭПД), т</value>
   </data>
   <data name="title_wagons_condition" xml:space="preserve">
     <value>Разметка по прибытию</value>
@@ -440,5 +440,8 @@
   </data>
   <data name="title_material_name" xml:space="preserve">
     <value>Название материала</value>
+  </data>
+  <data name="title_tara_uz" xml:space="preserve">
+    <value>Тара (УЗ),т</value>
   </data>
 </root>

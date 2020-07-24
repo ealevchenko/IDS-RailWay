@@ -97,7 +97,7 @@
                 'field_car_date_rem_vag_arrival': 'Рем. вагон',
                 'field_car_owner_arrival': 'Собств.',
                 'field_car_operator_arrival': 'Операт.',
-                //'field_limiting_arrival': 'Огран.',
+                'field_limiting_arrival': 'Огран.',
                 'field_car_rent_start_arrival': 'Нач. аренды',
 
                 'field_condition_arrival': 'Разм. по приб.',
@@ -620,7 +620,8 @@
                     "autoWidth": true,
                     //"filter": true,
                     //"scrollY": "600px",
-                    "scrollX": true,
+                    sScrollX: "100%",
+                    scrollX: true,
                     language: language_table(langs),
                     jQueryUI: false,
                     "createdRow": function (row, data, index) {
@@ -1295,6 +1296,7 @@
                     .add(cars_detali.card_vag_name_owner)
                     .add(cars_detali.card_vag_name_operator)
                     .add(cars_detali.card_vag_gruzp)
+                    .add(cars_detali.card_vag_tara)
                     .add(cars_detali.card_vag_kol_os)
                     .add(cars_detali.card_vag_usl_tip)
                     .add(cars_detali.card_vag_date_rem_vag.obj)
@@ -2006,6 +2008,8 @@
             card_vag_type_ownership: $('select#card_vag_type_ownership'),
             // Ограничение уз
             card_vag_note: $('textarea#card_vag_note'),
+            // Вес тары УЗ
+            card_vag_tara: $('input#card_vag_tara'),
             // Грузоподъемность эпд
             uz_vag_gruzp: $('input#uz_vag_gruzp'),
             // Весы тары
@@ -2375,6 +2379,7 @@
                 cars_detali.card_vag_usl_tip.val('');
                 cars_detali.card_vag_kol_os.val(-1);
                 cars_detali.card_vag_gruzp.val('');
+                cars_detali.card_vag_tara.val('');
                 cars_detali.card_vag_date_rem_vag.setDateTime(null); // уберем дату
                 cars_detali.card_vag_date_rem_uz.setDateTime(null); // уберем дату
                 cars_detali.card_vag_name_owner.val('');
@@ -2988,6 +2993,18 @@
                     }
                 }
             },
+            // Показать тару
+            view_epd_tara_uz: function (vagon) {
+                if (vagon) {
+                    cars_detali.card_vag_tara.val(vagon.tara);
+                } else {
+                    // Тогда проверим режим, вагон вводится в ручную
+                    if (cars_detali.select_vagon_mode) {
+                        cars_detali.card_vag_tara.val(0);
+                    }
+                }
+            },
+
             // Показать дату ремонта вагона по уз
             view_epd_date_rem_vag: function (vagon) {
                 if (vagon) {
@@ -3111,6 +3128,7 @@
                 cars_detali.view_epd_usl_tip(vagon);
                 cars_detali.view_epd_kol_os(vagon);
                 cars_detali.view_epd_gruzp_uz(vagon);
+                cars_detali.view_epd_tara_uz(vagon);
                 cars_detali.view_epd_date_rem_vag(vagon);
                 cars_detali.view_epd_date_rem_uz(vagon);
                 cars_detali.view_epd_owner(vagon);
@@ -3287,6 +3305,8 @@
                         code = obj[0].code;
                         var cargo = cars_detali.ids_inc.ids_dir.getCargo_Of_ETSNGCodeCultureName(code, text, cars_detali.lang);
                         if (cargo && cargo.length > 0) {
+                            var cargo_group = cars_detali.ids_inc.ids_dir.getCargoGroup_Of_ID(cargo[0].id_group);
+                            cars_detali.uz_cargo_group_cargo.val(cars_detali.ids_inc.ids_dir.getValueObj(cargo_group, 'cargo_group_name', cars_detali.lang));
                             cars_detali.select_id_cargo = cargo[0].id; // сохраним выбранный груз
                             cars_detali.val_arrival_car.set_control_ok(cars_detali.uz_cargo_kod_etsng, "");
                         } else {
@@ -4489,7 +4509,7 @@
 
                             { data: "car_owner", title: langView('field_car_owner_arrival', langs), width: "50px", orderable: true, searchable: false },
                             { data: "car_operator", title: langView('field_car_operator_arrival', langs), width: "50px", orderable: true, searchable: false },
-                            //{ data: "limiting", title: langView('field_limiting_arrival', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "limiting", title: langView('field_limiting_arrival', langs), width: "50px", orderable: true, searchable: false },
                             { data: "car_rent_start", title: langView('field_car_rent_start_arrival', langs), width: "50px", orderable: true, searchable: false },
 
                             { data: "condition", title: langView('field_condition_arrival', langs), width: "50px", orderable: true, searchable: false },
@@ -4658,7 +4678,7 @@
                         "car_date_rem_vag": dir_car && dir_car.date_rem_vag ? dir_car.date_rem_vag.replace(/T/g, ' ') : null,
                         "car_owner": dir_car && dir_car.Directory_OwnersWagons ? cars_detali.ids_inc.ids_dir.getValueObj(dir_car.Directory_OwnersWagons, 'abbr', cars_detali.lang) : null,
                         "car_operator": current_rent && current_rent.Directory_OperatorsWagons ? cars_detali.ids_inc.ids_dir.getValueObj(current_rent.Directory_OperatorsWagons, 'abbr', cars_detali.lang) : null,
-                        //"limiting": current_rent ? cars_detali.ids_inc.ids_dir.getValue_LimitingLoading_Of_Code(current_rent.limiting, 'abbr', cars_detali.lang) : null,
+                        "limiting": current_rent ? cars_detali.ids_inc.ids_dir.getValue_LimitingLoading_Of_Code(current_rent.limiting, 'abbr', cars_detali.lang) : null,
                         "car_rent_start": doc_uz && doc_uz.rent_start ? doc_uz.rent_start.replace(/T/g, ' ') : null,
 
                         // По документу
@@ -4920,6 +4940,7 @@
                         id_operator: null,
                         change_operator: null,
                         gruzp: cars_detali.card_vag_gruzp.val() !== '' ? Number(cars_detali.card_vag_gruzp.val()) : null,
+                        tara: cars_detali.card_vag_tara.val() !== '' ? Number(cars_detali.card_vag_tara.val()) : null,
                         kol_os: Number(cars_detali.card_vag_kol_os.val()),
                         usl_tip: get_input_string_value(cars_detali.card_vag_usl_tip),
                         date_rem_uz: toISOStringTZ(get_date_value(cars_detali.card_vag_date_rem_uz.val(), cars_detali.lang)),
@@ -6674,10 +6695,7 @@
                                 //pn_arrival_sostav.bt_num_car_search.prop("disabled", false);
                                 pn_arrival_sostav.obj.dialog("open");
                             }
-
-
                         });
-
                     }
                 },
                 // Валидация данных

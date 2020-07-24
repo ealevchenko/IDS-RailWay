@@ -539,7 +539,7 @@ ALERT.prototype.out_info_message = function (message) {
     if (this.alert) {
         this.alert.show().removeClass('alert-danger alert-warning').addClass('alert-success');
         if (message) {
-            this.alert.text(message);
+            this.alert.append(message).append($('<br />'));
         }
     }
 };

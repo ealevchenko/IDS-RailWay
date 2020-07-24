@@ -1025,7 +1025,7 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("GetCurrentDirectory_CarsOfNum(num={0})", num), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("GetCurrentDirectory_CarsOfNum(num={0}, adm={1}, rod={2}, kol_os={3}, usl_tip={4}, user={5})", num, adm, rod, kol_os, usl_tip, user), servece_owner, eventID);
                 return null;
             }
         }
@@ -1067,7 +1067,7 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("CreateFirstNewDirectory_Wagons(num={0}, user={1})", num, user), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("CreateFirstNewDirectory_Wagons(num={0}, id_genus={1}, kol_os={2}, usl_tip={3}, user={4})", num, id_genus, kol_os, usl_tip, user), servece_owner, eventID);
                 return null;
             }
         }
@@ -1132,6 +1132,7 @@ namespace IDS
                             id_operator = id_operator_uz,
                             change_operator = DateTime.Now,
                             gruzp = info.carrying_capacity != null ? (double)info.carrying_capacity : 0,
+                            tara = info.tara != null ? (double?)info.tara : null,
                             kol_os = kol_os,
                             usl_tip = usl_tip,
                             date_rem_uz = info.repair_date,
@@ -1230,25 +1231,25 @@ namespace IDS
                         //    (wagon.kol_os == 0 && kol_os > 0) || (wagon.kol_os > 0 && wagon.kol_os != kol_os) ||
                         //    )
                         //{
-                            // Обновим информацию
-                            wagon.id_countrys = (wagon.id_countrys == 0 && id_countrys > 0 ? id_countrys : wagon.id_countrys);
-                            wagon.id_genus = (wagon.id_genus == 0 && id_genus > 0 ? id_genus : wagon.id_genus);
-                            wagon.id_owner = (wagon.id_owner != id_owner ? id_owner : wagon.id_owner);
-                            wagon.bit_warning = bit_warning;
-                            wagon.change_operator = (wagon.id_operator != id_operator_uz ? DateTime.Now : wagon.change_operator);
-                            wagon.sobstv_kis = (wagon.id_operator != id_operator_uz ? null : wagon.sobstv_kis);
-                            wagon.id_operator = (wagon.id_operator != id_operator_uz ? id_operator_uz : wagon.id_operator);
-                            wagon.gruzp = info.carrying_capacity != null ? (double)info.carrying_capacity : wagon.gruzp;
-
-                            wagon.kol_os = (wagon.kol_os == 0 && kol_os > 0 ? kol_os : wagon.kol_os);
-                            wagon.usl_tip = (wagon.usl_tip == null && usl_tip != null ? usl_tip : wagon.usl_tip);
-                            wagon.date_rem_uz = info.repair_date;
-                            //wagon.date_rem_vag = wagon.date_rem_vag;
-                            wagon.id_type_ownership = id_type_ownership;
-                            //wagon.sign = wagon.sign;
-                            wagon.note = "Запрет выхода:" + (info.exit_ban != null ? info.exit_ban : "нет") + "; Другие запреты:" + (info.other_bans != null ? info.other_bans.Replace("<br>", "") : "");
-                            wagon.change = DateTime.Now;
-                            wagon.change_user = user;
+                        // Обновим информацию
+                        wagon.id_countrys = (wagon.id_countrys == 0 && id_countrys > 0 ? id_countrys : wagon.id_countrys);
+                        wagon.id_genus = (wagon.id_genus == 0 && id_genus > 0 ? id_genus : wagon.id_genus);
+                        wagon.id_owner = (wagon.id_owner != id_owner ? id_owner : wagon.id_owner);
+                        wagon.bit_warning = bit_warning;
+                        wagon.change_operator = (wagon.id_operator != id_operator_uz ? DateTime.Now : wagon.change_operator);
+                        wagon.sobstv_kis = (wagon.id_operator != id_operator_uz ? null : wagon.sobstv_kis);
+                        wagon.id_operator = (wagon.id_operator != id_operator_uz ? id_operator_uz : wagon.id_operator);
+                        wagon.gruzp = info.carrying_capacity != null ? (double)info.carrying_capacity : wagon.gruzp;
+                        wagon.tara = info.tara != null ? (double?)info.tara : wagon.tara;
+                        wagon.kol_os = (wagon.kol_os == 0 && kol_os > 0 ? kol_os : wagon.kol_os);
+                        wagon.usl_tip = (wagon.usl_tip == null && usl_tip != null ? usl_tip : wagon.usl_tip);
+                        wagon.date_rem_uz = info.repair_date;
+                        //wagon.date_rem_vag = wagon.date_rem_vag;
+                        wagon.id_type_ownership = id_type_ownership;
+                        //wagon.sign = wagon.sign;
+                        wagon.note = "Запрет выхода:" + (info.exit_ban != null ? info.exit_ban : "нет") + "; Другие запреты:" + (info.other_bans != null ? info.other_bans.Replace("<br>", "") : "");
+                        wagon.change = DateTime.Now;
+                        wagon.change_user = user;
                         //}
                         List<Directory_WagonsRent> list_wagon_rent = UpdateDirectory_WagonsRent(wagon.Directory_WagonsRent.ToList(), num, id_operator_amkr, rent_start, id_limiting, user);
                         wagon.Directory_WagonsRent = list_wagon_rent != null ? list_wagon_rent : new List<Directory_WagonsRent>();
@@ -1356,7 +1357,8 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("AddDirectory_WagonsRent(wagon_rent={0}, user={1})", list_wagon_rent, user), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("AddDirectory_WagonsRent(list_wagon_rent={0}, num={1}, id_operator_amkr={2}, rent_start={3}, id_limiting={4}, user={5})",
+                    list_wagon_rent, num, id_operator_amkr, rent_start, id_limiting, user), servece_owner, eventID);
                 return null;
             }
         }
