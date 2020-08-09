@@ -3870,7 +3870,7 @@
                         // TODO:
                         // Вагон ранее сохранялся, обновим информацию по нему
                         if (typeof callback === 'function') {
-                            callback(0);
+                            callback(result_vagon_uz.id);
                         }
                     }
 
