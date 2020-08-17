@@ -34,6 +34,24 @@ namespace WEB_UI.Controllers.api
             this.ef_dir_rent = dir_rent;
         }
 
+        // GET: api/ids/directory/wagon/is_correct/num/24119703
+        [Route("is_correct/num/{num:int}")]
+        [ResponseType(typeof(bool))]
+        public IHttpActionResult GetCorrectNumCar(int num)
+        {
+            try
+            {
+                IDSDirectory ids_dir = new IDSDirectory(service.WebAPI_IDS);
+                bool correct = ids_dir.IsCorrectNumCar(num);
+                return Ok(correct);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }        
+        
+        
         // GET: api/ids/directory/wagon/all
         [Route("all")]
         [ResponseType(typeof(Directory_Wagons))]

@@ -757,6 +757,30 @@ IDS_DIRECTORY.prototype.getWagon = function (callback) {
         },
     });
 };
+
+// Получить по номеру вагона
+IDS_DIRECTORY.prototype.IsCorrectNumCar = function (num, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/wagon/is_correct/num/' + num,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.IsCorrectNumCar", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 // Получить по номеру вагона
 IDS_DIRECTORY.prototype.getWagonOfNum = function (num, callback) {
     $.ajax({
