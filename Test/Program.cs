@@ -87,6 +87,7 @@ namespace Test
             //tids.IDSDirectory_GetID_Directory_StationOfCodeCS();
             //tids.IDSDirectory_GetCurrentDirectory_CarsOfNum();
             //tids.IDSTransfer_GetNumDoc();
+            tids.IDSDirectory_IsCorrectNumCar();
             //tids.GetActs();
             //tids.GetDocs();
             //tids.IDSMORS_GetLastIDWTWagonsMotionSignals();

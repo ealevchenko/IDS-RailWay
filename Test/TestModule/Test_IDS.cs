@@ -53,6 +53,14 @@ namespace Test.TestModule
 
         }
 
+        public void IDSDirectory_IsCorrectNumCar()
+        {
+
+            IDSDirectory ids = new IDSDirectory(service.Test);
+            bool res = ids.IsCorrectNumCar(12345678);
+
+        }
+
         #endregion
 
         #region IDSMORS
