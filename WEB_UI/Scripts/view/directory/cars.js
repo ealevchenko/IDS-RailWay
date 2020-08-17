@@ -382,7 +382,21 @@
             // Поиск и определение вагона
             add_search_car: $('button#add_search_car').on('click', function (event) {
                 event.preventDefault();
+                pn_add_edit.val.clear_message();
 
+                var num = pn_add_edit.add_edit_num.val()
+
+                pn_add_edit.add_wagon(Number(num), function (result_car) {
+                    if (result_car) {
+                        pn_add_edit.val.out_warning_message(' Можете откорректировать информацию, включен режим - править');
+                        pn_add_edit.select_num = Number(num);
+                        pn_add_edit.obj.dialog("option", "title", "Править вагон");
+                        pn_add_edit.view_car(result_car)
+                    } else {
+                        pn_add_edit.val.out_error_message('Не удалось добавить в справочник строку по вагону');
+                    }
+                    LockScreenOff();
+                });
             }),
             add_edit_kod_adm: $('input#add_edit_kod_adm'),
             add_edit_name_adm: $('select#add_edit_name_adm'),
@@ -591,7 +605,7 @@
                     ;
                     // создадим классы 
 
-                    //pn_add_edit.alert = new ALERT($('div#arrival-sostav-alert'));// Создадим класс ALERTG
+                    //pn_add_edit.alert = new ALERT($('div#add_edit_alert'));// Создадим класс ALERTG
                     pn_add_edit.val = new VALIDATION(pn_add_edit.lang, pn_add_edit.alert, pn_add_edit.all_obj); // Создадим класс VALIDATION
                     //pn_add_edit.table_car.init();
                     pn_add_edit.obj = $("div#add_edit").dialog({
@@ -636,6 +650,41 @@
                 });
 
             },
+            //  вывести информацию о вагоне
+            view_car: function (car) {
+                if (car) {
+                    pn_add_edit.select_obj = car;
+                    pn_add_edit.select_rent = pn_add_edit.ids_dir.getCurrentRentOfWagon(car)
+
+                    pn_add_edit.add_edit_num.val(pn_add_edit.select_obj.num).prop('disabled', true);
+                    pn_add_edit.add_search_car.prop('disabled', true);
+                    pn_add_edit.add_edit_kod_adm.val(pn_add_edit.ids_dir.getValue_Countrys_Of_ID(Number(pn_add_edit.select_obj.id_countrys), 'code_sng'));
+                    pn_add_edit.add_edit_name_adm.val(Number(pn_add_edit.select_obj.id_countrys)).prop('disabled', false);
+                    //pn_add_edit.add_edit_kod_rod.val(pn_add_edit.ids_dir.getValue_GenusWagons_Of_ID(Number(pn_add_edit.select_obj.id_genus), 'rod_uz'));
+                    pn_add_edit.add_edit_name_rod.val(Number(pn_add_edit.select_obj.id_genus)).prop('disabled', false);
+                    pn_add_edit.add_edit_name_rod_abbr.val(pn_add_edit.ids_dir.getValue_GenusWagons_Of_ID(Number(pn_add_edit.select_obj.id_genus), 'abbr', pn_add_edit.lang));
+                    pn_add_edit.add_edit_usl_tip.val(pn_add_edit.select_obj.usl_tip).prop('disabled', false);
+                    pn_add_edit.add_edit_kol_os.val(pn_add_edit.select_obj.kol_os).prop('disabled', false);
+                    pn_add_edit.add_edit_gruzp.val(pn_add_edit.select_obj.gruzp);
+                    pn_add_edit.add_edit_owner_car.val(Number(pn_add_edit.select_obj.id_owner));
+                    pn_add_edit.add_edit_operator_uz_car.val(Number(pn_add_edit.select_obj.id_operator_uz));
+                    pn_add_edit.add_edit_change_operator.setDateTime(pn_add_edit.select_obj.change_operator !== null ? pn_add_edit.select_obj.change_operator.replace(/T/g, ' ') : null);
+
+                    pn_add_edit.add_edit_operator_car.val(Number(pn_add_edit.select_rent.id_operator));
+                    pn_add_edit.add_edit_operator_car_rent_start.setDateTime(pn_add_edit.select_rent.rent_start !== null ? pn_add_edit.select_rent.rent_start.replace(/T/g, ' ') : null);
+                    pn_add_edit.add_edit_type_ownership.val(pn_add_edit.select_obj.id_type_ownership);
+
+                    pn_add_edit.add_edit_operator_car_new.val(-1).prop('disabled', false);
+                    pn_add_edit.add_edit_operator_car_rent_start_now.setDateTime(null); pn_add_edit.add_edit_operator_car_rent_start_now.obj.prop('disabled', false);
+                    pn_add_edit.add_edit_limiting.val(Number(pn_add_edit.select_rent.id_limiting)).prop('disabled', false);
+                    pn_add_edit.add_edit_sign.val(pn_add_edit.select_obj.sign !== null ? pn_add_edit.select_obj.sign : -1).prop('disabled', false);
+
+                    pn_add_edit.add_edit_date_rem_uz.setDateTime(pn_add_edit.select_obj.date_rem_uz !== null ? pn_add_edit.select_obj.date_rem_uz.replace(/T/g, ' ') : null);
+                    pn_add_edit.add_edit_date_rem_vag.setDateTime(pn_add_edit.select_obj.date_rem_vag !== null ? pn_add_edit.select_obj.date_rem_vag.replace(/T/g, ' ') : null);
+
+                    pn_add_edit.add_edit_note.text(pn_add_edit.select_obj.note);
+                }
+            },
             // открыть окно добавмить вагоны вручную
             Open: function (num) {
                 pn_add_edit.val.clear_all();
@@ -646,36 +695,37 @@
                     pn_add_edit.obj.dialog("option", "title", "Править вагон");
                     pn_add_edit.ids_dir.getWagonOfNum(pn_add_edit.select_num, function (result_obj) {
                         if (result_obj) {
-                            pn_add_edit.select_obj = result_obj;
-                            pn_add_edit.select_rent = pn_add_edit.ids_dir.getCurrentRentOfWagon(result_obj)
+                            pn_add_edit.view_car(result_obj);
+                            //    pn_add_edit.select_obj = result_obj;
+                            //    pn_add_edit.select_rent = pn_add_edit.ids_dir.getCurrentRentOfWagon(result_obj)
 
-                            pn_add_edit.add_edit_num.val(pn_add_edit.select_obj.num).prop('disabled', true);
-                            pn_add_edit.add_search_car.prop('disabled', true);
-                            pn_add_edit.add_edit_kod_adm.val(pn_add_edit.ids_dir.getValue_Countrys_Of_ID(Number(pn_add_edit.select_obj.id_countrys), 'code_sng'));
-                            pn_add_edit.add_edit_name_adm.val(Number(pn_add_edit.select_obj.id_countrys));
-                            //pn_add_edit.add_edit_kod_rod.val(pn_add_edit.ids_dir.getValue_GenusWagons_Of_ID(Number(pn_add_edit.select_obj.id_genus), 'rod_uz'));
-                            pn_add_edit.add_edit_name_rod.val(Number(pn_add_edit.select_obj.id_genus));
-                            pn_add_edit.add_edit_name_rod_abbr.val(pn_add_edit.ids_dir.getValue_GenusWagons_Of_ID(Number(pn_add_edit.select_obj.id_genus), 'abbr', pn_add_edit.lang));
-                            pn_add_edit.add_edit_usl_tip.val(pn_add_edit.select_obj.usl_tip);
-                            pn_add_edit.add_edit_kol_os.val(pn_add_edit.select_obj.kol_os);
-                            pn_add_edit.add_edit_gruzp.val(pn_add_edit.select_obj.gruzp);
-                            pn_add_edit.add_edit_owner_car.val(Number(pn_add_edit.select_obj.id_owner));
-                            pn_add_edit.add_edit_operator_uz_car.val(Number(pn_add_edit.select_obj.id_operator_uz));
-                            pn_add_edit.add_edit_change_operator.setDateTime(pn_add_edit.select_obj.change_operator !== null ? pn_add_edit.select_obj.change_operator.replace(/T/g, ' ') : null);
+                            //    pn_add_edit.add_edit_num.val(pn_add_edit.select_obj.num).prop('disabled', true);
+                            //    pn_add_edit.add_search_car.prop('disabled', true);
+                            //    pn_add_edit.add_edit_kod_adm.val(pn_add_edit.ids_dir.getValue_Countrys_Of_ID(Number(pn_add_edit.select_obj.id_countrys), 'code_sng'));
+                            //    pn_add_edit.add_edit_name_adm.val(Number(pn_add_edit.select_obj.id_countrys));
+                            //    //pn_add_edit.add_edit_kod_rod.val(pn_add_edit.ids_dir.getValue_GenusWagons_Of_ID(Number(pn_add_edit.select_obj.id_genus), 'rod_uz'));
+                            //    pn_add_edit.add_edit_name_rod.val(Number(pn_add_edit.select_obj.id_genus));
+                            //    pn_add_edit.add_edit_name_rod_abbr.val(pn_add_edit.ids_dir.getValue_GenusWagons_Of_ID(Number(pn_add_edit.select_obj.id_genus), 'abbr', pn_add_edit.lang));
+                            //    pn_add_edit.add_edit_usl_tip.val(pn_add_edit.select_obj.usl_tip);
+                            //    pn_add_edit.add_edit_kol_os.val(pn_add_edit.select_obj.kol_os);
+                            //    pn_add_edit.add_edit_gruzp.val(pn_add_edit.select_obj.gruzp);
+                            //    pn_add_edit.add_edit_owner_car.val(Number(pn_add_edit.select_obj.id_owner));
+                            //    pn_add_edit.add_edit_operator_uz_car.val(Number(pn_add_edit.select_obj.id_operator_uz));
+                            //    pn_add_edit.add_edit_change_operator.setDateTime(pn_add_edit.select_obj.change_operator !== null ? pn_add_edit.select_obj.change_operator.replace(/T/g, ' ') : null);
 
-                            pn_add_edit.add_edit_operator_car.val(Number(pn_add_edit.select_rent.id_operator));
-                            pn_add_edit.add_edit_operator_car_rent_start.setDateTime(pn_add_edit.select_rent.rent_start !== null ? pn_add_edit.select_rent.rent_start.replace(/T/g, ' ') : null);
-                            pn_add_edit.add_edit_type_ownership.val(pn_add_edit.select_obj.id_type_ownership);
+                            //    pn_add_edit.add_edit_operator_car.val(Number(pn_add_edit.select_rent.id_operator));
+                            //    pn_add_edit.add_edit_operator_car_rent_start.setDateTime(pn_add_edit.select_rent.rent_start !== null ? pn_add_edit.select_rent.rent_start.replace(/T/g, ' ') : null);
+                            //    pn_add_edit.add_edit_type_ownership.val(pn_add_edit.select_obj.id_type_ownership);
 
-                            pn_add_edit.add_edit_operator_car_new.val(-1);
-                            pn_add_edit.add_edit_operator_car_rent_start_now.setDateTime(null);
-                            pn_add_edit.add_edit_limiting.val(Number(pn_add_edit.select_rent.id_limiting));
-                            pn_add_edit.add_edit_sign.val(pn_add_edit.select_obj.sign !== null ? pn_add_edit.select_obj.sign : -1);
+                            //    pn_add_edit.add_edit_operator_car_new.val(-1);
+                            //    pn_add_edit.add_edit_operator_car_rent_start_now.setDateTime(null);
+                            //    pn_add_edit.add_edit_limiting.val(Number(pn_add_edit.select_rent.id_limiting));
+                            //    pn_add_edit.add_edit_sign.val(pn_add_edit.select_obj.sign !== null ? pn_add_edit.select_obj.sign : -1);
 
-                            pn_add_edit.add_edit_date_rem_uz.setDateTime(pn_add_edit.select_obj.date_rem_uz !== null ? pn_add_edit.select_obj.date_rem_uz.replace(/T/g, ' ') : null);
-                            pn_add_edit.add_edit_date_rem_vag.setDateTime(pn_add_edit.select_obj.date_rem_vag !== null ? pn_add_edit.select_obj.date_rem_vag.replace(/T/g, ' ') : null);
+                            //    pn_add_edit.add_edit_date_rem_uz.setDateTime(pn_add_edit.select_obj.date_rem_uz !== null ? pn_add_edit.select_obj.date_rem_uz.replace(/T/g, ' ') : null);
+                            //    pn_add_edit.add_edit_date_rem_vag.setDateTime(pn_add_edit.select_obj.date_rem_vag !== null ? pn_add_edit.select_obj.date_rem_vag.replace(/T/g, ' ') : null);
 
-                            pn_add_edit.add_edit_note.text(pn_add_edit.select_obj.note);
+                            //    pn_add_edit.add_edit_note.text(pn_add_edit.select_obj.note);
                             pn_add_edit.obj.dialog("open");
 
                         }
@@ -688,6 +738,7 @@
                     pn_add_edit.obj.dialog("option", "title", "Добавить вагон");
                     pn_add_edit.add_edit_num.val('').prop('disabled', false);
                     pn_add_edit.add_search_car.prop('disabled', false);
+                    pn_add_edit.disabled_element();
 
                     //pn_add_edit.add_edit_cargo_group.val(-1);
                     //pn_add_edit.add_edit_cargo_etsng.val(-1);
@@ -700,6 +751,38 @@
                 }
             },
 
+
+            // Сделать не активными все элементы
+            disabled_element: function () {
+                pn_add_edit.add_edit_kod_adm.prop('disabled', true);
+                pn_add_edit.add_edit_name_adm.prop('disabled', true);
+                pn_add_edit.add_edit_name_rod.prop('disabled', true);
+                pn_add_edit.add_edit_name_rod_abbr.prop('disabled', true);
+                pn_add_edit.add_edit_usl_tip.prop('disabled', true);
+                pn_add_edit.add_edit_kol_os.prop('disabled', true);
+                pn_add_edit.add_edit_gruzp.prop('disabled', true);
+                pn_add_edit.add_edit_owner_car.prop('disabled', true);
+                pn_add_edit.add_edit_operator_uz_car.prop('disabled', true);
+                pn_add_edit.add_edit_change_operator.obj.prop('disabled', true);
+
+                pn_add_edit.add_edit_operator_car.prop('disabled', true);
+                pn_add_edit.add_edit_operator_car_rent_start.obj.prop('disabled', true);
+                pn_add_edit.add_edit_type_ownership.prop('disabled', true);
+
+                pn_add_edit.add_edit_operator_car_new.prop('disabled', true);
+                pn_add_edit.add_edit_operator_car_rent_start_now.obj.prop('disabled', true);
+                pn_add_edit.add_edit_limiting.prop('disabled', true);
+                pn_add_edit.add_edit_sign.prop('disabled', true);
+
+                pn_add_edit.add_edit_date_rem_uz.obj.prop('disabled', true);
+                pn_add_edit.add_edit_date_rem_vag.obj.prop('disabled', true);
+
+                pn_add_edit.add_edit_note.prop('disabled', true);
+            },
+            // Сделать не активными все элементы для дабавления
+            enabled_add_element: function () {
+
+            },
             // Валидация поля  "администрация вагона"
             validation_adm: function (valid, off_message) {
                 //valid = valid & pn_add_edit.val.checkInputOfNull(pn_add_edit.add_edit_kod_adm, "Укажите код администрации", "", off_message);
@@ -858,6 +941,54 @@
                     }
                 }
             },
+            // Добавить первую строку вагона с проверкой
+            add_wagon: function (num, callback) {
+                LockScreen(langView('mess_delay', langs));
+
+                var isNumeric = function (value) {
+                    return /^\d+$/.test(value);
+                };
+
+                // Проверка на число
+                if (!isNumeric(num)) {
+                    pn_add_edit.val.out_error_message('Ошибка ввода номера вагона. Номер вагона состоит из 8 цифр');
+                    if (typeof callback === 'function') {
+                        callback(null);
+                    }
+                } else {
+                    // Проверка на контрольную сумму
+                    pn_add_edit.ids_dir.IsCorrectNumCar(num, function (result_correct) {
+                        if (result_correct) {
+                            pn_add_edit.ids_dir.getWagonOfNum(num, function (result_obj) {
+                                if (result_obj) {
+                                    // Вагон найден
+                                    pn_add_edit.val.out_warning_message('Вагон уже существует в справочнике.');
+                                    if (typeof callback === 'function') {
+                                        callback(result_obj);
+                                    }
+                                } else {
+                                    // Вагон не найден, добавить
+                                    // Создадим первую запись или обновим строку вагона в справочнике вагонов и аренд
+                                    var specification = { adm: 0, rod: 0, kol_os: 0, usl_tip: null }
+                                    pn_add_edit.ids_dir.getWagonOfNumSpecification(num, specification, function (result_obj) {
+                                        if (result_obj) {
+                                            pn_add_edit.val.out_info_message('Первая строка по вагону добавлена в справочник.');
+                                        }
+                                        if (typeof callback === 'function') {
+                                            callback(result_obj);
+                                        }
+                                    });
+                                }
+                            });
+                        } else {
+                            pn_add_edit.val.out_error_message('Ошибка ввода номера вагона. Такого номера не существует.');
+                            if (typeof callback === 'function') {
+                                callback(null);
+                            }
+                        }
+                    });
+                }
+            },
             // Сохранить прибытие состава
             save: function (callback_ok) {
                 var valid = pn_add_edit.validation();
@@ -872,7 +1003,7 @@
                                         if (result_new_wagon_rent >= 0) {
                                             if (typeof callback_ok === 'function') {
                                                 pn_add_edit.obj.dialog("close");
-                                                callback_ok({num: new_object.wagon.num, type_vagon: result_wagon.type, type_vagon_rent: result_old_wagon_rent.type, result_vagon_rent: result_old_wagon_rent.result, result_new_wagon_rent: result_new_wagon_rent });
+                                                callback_ok({ num: new_object.wagon.num, type_vagon: result_wagon.type, type_vagon_rent: result_old_wagon_rent.type, result_vagon_rent: result_old_wagon_rent.result, result_new_wagon_rent: result_new_wagon_rent });
                                             }
                                         } else {
                                             pn_add_edit.val.clear_all();
@@ -1131,7 +1262,7 @@
                         {
                             text: langView('title_button_add', langs),
                             action: function (e, dt, node, config) {
-                                //pn_add_edit.Open(null);
+                                pn_add_edit.Open(null);
                             },
                             enabled: true
                         },
@@ -1361,7 +1492,7 @@
                 pn_search.view_cars();
                 var num = result_add_edit.num;
                 if (result_add_edit.type_vagon === 1) {
-                    alert.out_info_message('Строка справочника вагона №'+num+' - обновлена!');
+                    alert.out_info_message('Строка справочника вагона №' + num + ' - обновлена!');
                 }
                 if (result_add_edit.type_vagon === 0) {
                     alert.out_info_message('Строка справочника вагона №' + num + ' - добавлена!');
