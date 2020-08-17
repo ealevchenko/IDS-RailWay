@@ -370,14 +370,14 @@
                         doc.write('<th>' + list_cars[i].position_arrival + '</th>');
                         doc.write('<td>' + (dir_es ? ids_inc.ids_dir.getValueObj(dir_es, 'station_name', lang) : '') + '</td>');
                         doc.write('<td>' + (dir_cargo ? ids_inc.ids_dir.getValueObj(dir_cargo, 'cargo_name', lang) + (dir_certificat ? ' (' + ids_inc.ids_dir.getValueObj(dir_certificat, 'certification_data', lang) + ')' : '') : '') + '</td>');
-                        doc.write('<td>' + (dir_operator ? ids_inc.ids_dir.getValueObj(dir_operator, 'operators', lang) : '') + '</td>');
+                        doc.write('<td>' + (dir_operator ? ids_inc.ids_dir.getValueObj(dir_operator, 'abbr', lang) : '') + '</td>');
                         doc.write('<td>' + (dir_ll ? ids_inc.ids_dir.getValueObj(dir_ll, 'limiting_abbr', lang) : '') + '</td>');
                         doc.write('<td>' + (dir_owner ? ids_inc.ids_dir.getValueObj(dir_owner, 'owner', lang) : '') + '</td>');
                         doc.write('<td>' + (dir_countrys ? ids_inc.ids_dir.getValueObj(dir_countrys, 'code_sng') : '') + '</td>');
                         doc.write('<td>' + list_cars[i].num + '</td>');
                         doc.write('<td>' + doc_uz.nom_doc + (doc_uz.nom_main_doc ? '(' + doc_uz.nom_main_doc + ')' : '') + '</td>');
                         doc.write('<td>' + (vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000).toFixed(2) : '0.00') + '</td>');
-                        doc.write('<td>' + (dir_division ? ids_inc.ids_dir.getValueObj(dir_division, 'name_division', lang) : '') + '</td>');
+                        doc.write('<td>' + (dir_division ? ids_inc.ids_dir.getValueObj(dir_division, 'division_abbr', lang) : '') + '</td>');
                         doc.write('<td>' + (dir_condition ? ids_inc.ids_dir.getValueObj(dir_condition, 'condition_abbr', lang) : '') + '</td>');
                         doc.write('<td></td>');
                         doc.write('</tr>');
@@ -1019,7 +1019,7 @@
                     },
                     null);
                 // настроим компонент выбора времени
-                pn_edit_sostav.date_arrival = cd_initDateTimeRangePicker(pn_edit_sostav.date_arrival_edit, { lang: pn_edit_sostav.lang }, function (datetime) {
+                pn_edit_sostav.date_arrival = cd_initDateTimeRangePicker(pn_edit_sostav.date_arrival_edit, { lang: pn_edit_sostav.lang, time: true  }, function (datetime) {
 
                 });
                 // Соберем все элементы в массив
@@ -2711,7 +2711,13 @@
                 cars_detali.uz_cargo_certificate_data = cd_initSelect(
                     $('select#uz_cargo_certificate_data'),
                     { lang: lang },
-                    cars_detali.ids_inc.ids_dir.getListCertificationData('id', 'certification_data', cars_detali.lang, null),
+                    cars_detali.ids_inc.ids_dir.getListCertificationData('id', 'certification_data', cars_detali.lang, null).sort(function (a, b) {
+                        if (a.text < b.text)
+                            return -1
+                        if (a.text > b.text)
+                            return 1
+                        return 0
+                    }),
                     null,
                     id ? Number(id) : -1,
                     function (event) {
@@ -2996,7 +3002,7 @@
             // Показать тару
             view_epd_tara_uz: function (vagon) {
                 if (vagon) {
-                    cars_detali.card_vag_tara.val(vagon.tara);
+                    cars_detali.card_vag_tara.val(Number(vagon.tara).toFixed(2));
                 } else {
                     // Тогда проверим режим, вагон вводится в ручную
                     if (cars_detali.select_vagon_mode) {
