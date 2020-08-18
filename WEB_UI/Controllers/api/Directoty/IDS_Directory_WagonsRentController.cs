@@ -85,6 +85,38 @@ namespace WEB_UI.Controllers.api
                 return BadRequest(e.Message);
             }
         }
+
+        // POST: api/ids/directory/wagon_rent/current/list_nums/
+        [HttpPost]
+        [Route("current/list_nums/")]
+        [ResponseType(typeof(Directory_Wagons))]
+        public IHttpActionResult PostCurrentWagonsRentOfNums([FromBody] List<int> nums)
+        {
+            try
+            {
+                List<Directory_WagonsRent> wagons = new List<Directory_WagonsRent>();
+
+                foreach (int num in nums)
+                {
+                    Directory_WagonsRent rent = this.ef_dir
+                        .Context
+                        .Where(r => r.num == num & r.rent_end == null)
+                        .ToList()
+                        .Select(m => m.GetDirectory_WagonsRent()).FirstOrDefault();
+
+                    if (rent != null)
+                    {
+                        wagons.Add(rent);
+                    }
+                }
+                return Ok(wagons);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         // POST api/ids/directory/wagon_rent/
         [HttpPost]
         [Route("")]
@@ -102,6 +134,23 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // POST api/ids/directory/wagon_rent/list
+        [HttpPost]
+        [Route("list")]
+        public int PostListWagonsRent([FromBody]List<Directory_WagonsRent> list)
+        {
+            try
+            {
+                this.ef_dir.Add(list);
+                int res = this.ef_dir.Save();
+                return res;
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+        }
+
         // PUT api/ids/directory/wagon_rent/id
         [HttpPut]
         [Route("id/{id:int}")]
@@ -112,6 +161,22 @@ namespace WEB_UI.Controllers.api
                 this.ef_dir.Update(value);
                 int result = this.ef_dir.Save();
                 return result > 0 ? value.id : result;
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+        }
+
+        // PUT api/ids/directory/wagon_rent/list
+        [HttpPut]
+        [Route("list")]
+        public int PutWagonsRent(List<Directory_WagonsRent> list)
+        {
+            try
+            {
+                this.ef_dir.Update(list);
+                return this.ef_dir.Save();
             }
             catch (Exception e)
             {

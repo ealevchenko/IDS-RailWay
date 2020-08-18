@@ -757,7 +757,6 @@ IDS_DIRECTORY.prototype.getWagon = function (callback) {
         },
     });
 };
-
 // Получить по номеру вагона
 IDS_DIRECTORY.prototype.IsCorrectNumCar = function (num, callback) {
     $.ajax({
@@ -949,6 +948,30 @@ IDS_DIRECTORY.prototype.putWagon = function (wagon, callback) {
         },
     });
 };
+//Обновить аренду вагонов
+IDS_DIRECTORY.prototype.putListWagon = function (list_wagon, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/directory/wagon/list/',
+        data: JSON.stringify(list_wagon),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.putListWagon", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 
 //======= Directory_WagonsRent (Справочник аренд вагонов) ======================================
 IDS_DIRECTORY.prototype.getWagonsRent = function (callback) {
@@ -973,6 +996,32 @@ IDS_DIRECTORY.prototype.getWagonsRent = function (callback) {
         },
     });
 };
+// Получить список текуших аренд по номеру вагона
+IDS_DIRECTORY.prototype.getCurrentWagonsRentOfNums = function (list_nums, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/wagon_rent/current/list_nums/',
+        type: 'POST',
+        data: JSON.stringify(list_nums),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_DIRECTORY.getCurrentWagonsRentOfNums", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 //Добавить аренду вагона
 IDS_DIRECTORY.prototype.postWagonsRent = function (wagon_rent, callback) {
     $.ajax({
@@ -992,6 +1041,31 @@ IDS_DIRECTORY.prototype.postWagonsRent = function (wagon_rent, callback) {
         error: function (x, y, z) {
             LockScreenOff();
             OnAJAXError("IDS_DIRECTORY.postWagonsRent", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Добавить аренды вагонов
+IDS_DIRECTORY.prototype.postListWagonsRent = function (list_rent, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/wagon_rent/list/',
+        type: 'POST',
+        data: JSON.stringify(list_rent),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_DIRECTORY.postListWagonsRent", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1022,6 +1096,31 @@ IDS_DIRECTORY.prototype.putWagonsRent = function (wagon_rent, callback) {
         },
     });
 };
+//Обновить аренду вагонов
+IDS_DIRECTORY.prototype.putListWagonsRent = function (list_rent, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/directory/wagon_rent/list/',
+        data: JSON.stringify(list_rent),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.putListWagonsRent", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 
 //======= Directory_Cars (Справочник вагонов) ======================================
 //
@@ -5256,6 +5355,33 @@ IDS_DIRECTORY.prototype.getListWagons = function (fvalue, ftext, lang, filter) {
     }
     return list;
 };
+// Вернуть копию без связей
+IDS_DIRECTORY.prototype.getCloneWagons = function (wagon) {
+    if (!wagon) return null;
+    return {
+        num: wagon.num ,
+        id_countrys: wagon.id_countrys ,
+        id_genus: wagon.id_genus ,
+        id_owner: wagon. id_owner,
+        id_operator: wagon.id_operator ,
+        change_operator: wagon.change_operator ,
+        gruzp: wagon.gruzp,
+        tara: wagon.tara ,
+        kol_os: wagon.kol_os ,
+        usl_tip: wagon.usl_tip ,
+        date_rem_uz: wagon.date_rem_uz ,
+        date_rem_vag: wagon.date_rem_vag ,
+        id_type_ownership: wagon.id_type_ownership ,
+        sign: wagon.sign ,
+        note: wagon.note ,
+        sobstv_kis: wagon.sobstv_kis ,
+        bit_warning: wagon.bit_warning ,
+        create: wagon.create ,
+        create_user: wagon.create_user ,
+        change: wagon.change ,
+        change_user: wagon.change_user ,
+    };
+}
 
 
 //*======= IDS_DIRECTORY.list_wagon_rent  (Справочник аренд вагонов) ======================================
