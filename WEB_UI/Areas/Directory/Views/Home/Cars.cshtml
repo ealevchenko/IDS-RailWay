@@ -46,13 +46,16 @@
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#cars-search-operator">По оператору</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#cars-search-comparison">По соответствию</a>
+                        </li>
                     </ul>
                     <div class="tab-content p-3">
                         <div class="tab-pane fade show active" id="cars-warning">
                             <div class="row mt-2">
                                 <div class="col-xl-10">
                                     <p>
-                                        Найти вагоны в справочнике, по которым требуется вмешательство оператора в уточнении характеристик (Вагоны, зашедшие в первый раз, вагоны по которым изменился оператор по данным УЗ)
+                                        Найти вагоны в справочнике, по которым требуется вмешательство оператора в уточнении характеристик (вагоны, зашедшие в первый раз, вагоны по которым изменился оператор по данным УЗ, вагоны по которым не определен оператор «До выяснения», вагоны по которым не определен род вагона, вагоны по которым не определена администрация.)
                                     </p>
                                 </div>
                                 <div class="col-xl-2">
@@ -63,7 +66,8 @@
                         <div class="tab-pane fade" id="cars-search-num">
                             <div class="form-row">
                                 <div class="col-xl-12">
-                                    <p>Найти вагон(ы) в справочнике по номеру вагона, если вагона нет в справочнике вагон создается по данным КИС и УЗ.</p>
+                                    @*                              <p>Найти вагон(ы) в справочнике по номеру вагона, если вагона нет в справочнике вагон создается по данным КИС и УЗ.</p>*@
+                                    <p>Найти вагон(ы) в справочнике по номеру вагона(ов), если указывается перечень вагонов - вагоны разделяются ";".</p>
                                 </div>
                             </div>
                             <div class="form-row mt-2">
@@ -88,6 +92,32 @@
                                 </div>
                                 @*<button type="button" class="btn btn-primary mb-2 ml-3" id="cars_search_operator">Поиск</button>*@
                             </form>
+                        </div>
+                        <div class="tab-pane fade" id="cars-search-comparison">
+                            <div class="form-row">
+                                <div class="col-xl-12">
+                                    <p>Провести сравнение соответствия указанного перечня вагонов указанному оператору в справочнике «Вагонов ИДС».</p>
+                                </div>
+                            </div>
+                            <div class="form-row mt-2">
+                                <div class="col-xl-1">
+                                    <label for="wagon-wagon_operator_comparison" class="col-form-label">Оператор:</label>
+                                </div>
+                                <div class="col-xl-3">
+                                    <select class="form-control" id="wagon_operator_comparison" style="font-size:inherit"></select>
+                                </div>
+                            </div>
+                            <div class="form-row mt-2">
+                                <div class="col-xl-1">
+                                    <label for="wagon-wagon_operator_comparison" class="col-form-label">Перечень:</label>
+                                </div>
+                                <div class="col-xl-9">
+                                    <textarea class="form-control" id="num_cars_comparison" name="num_cars_comparison" rows="3" style="font-size:inherit"></textarea>
+                                </div>
+                                <div class="col-xl-2">
+                                    <button type="button" class="btn btn-primary" id="cars_comparison_num">Сравнить</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
