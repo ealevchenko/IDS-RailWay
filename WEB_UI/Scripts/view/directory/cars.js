@@ -77,10 +77,19 @@
         pn_search = {
             num_car: $('textarea#num_cars'),
             num_cars_comparison: $('textarea#num_cars_comparison'),
+            num_cars_comparison_not: $('textarea#num_cars_comparison_not'),
+            num_cars_comparison_yes: $('textarea#num_cars_comparison_yes'),
+            num_cars_comparison_no: $('textarea#num_cars_comparison_no'),
+            num_cars_comparison_change: $('textarea#num_cars_comparison_change'),
+
             bt_cars_warning: $('button#cars_warning'),
             bt_cars_search_num: $('button#cars_search_num'),
             bt_cars_search_operator: $('button#cars_search_operator'),
-            cars_comparison_num: $('button#cars_comparison_num'),
+            bt_cars_comparison_num: $('button#cars_comparison_num'),
+            bt_cars_comparison_num_not: $('button#cars_comparison_num_not'),
+            bt_cars_comparison_num_yes: $('button#cars_comparison_num_yes'),
+            bt_cars_comparison_num_no: $('button#cars_comparison_num_no'),
+            bt_cars_comparison_num_change: $('button#cars_comparison_num_change'),
             wagon_operator: $('select#wagon_operator'),
             wagon_operator_comparison: $('select#wagon_operator_comparison'),
             text_type_searsh: $('#type-search').text(''),
@@ -203,19 +212,24 @@
                     }
                 });
                 // Кнопка сравнить вагон по номеру и оператору
-                pn_search.cars_comparison_num.on('click', function (event) {
+                pn_search.bt_cars_comparison_num.on('click', function (event) {
                     event.preventDefault();
                     LockScreen(langView('mess_delay', langs));
                     alert.clear_message();
+                    pn_search.num_cars_comparison_not.text();
+                    pn_search.num_cars_comparison_yes.text();
+                    pn_search.num_cars_comparison_no.text();
+                    pn_search.num_cars_comparison_change.text();
+
                     // Проверим оператора
                     var id_operator = get_select_number_value(pn_search.wagon_operator_comparison);
                     if (id_operator === null) {
                         alert.out_warning_message('Выберите оператора.');
-                        //pn_search.cars_comparison_num.prop("disabled", false);
+                        //pn_search.bt_cars_comparison_num.prop("disabled", false);
                         LockScreenOff();
                     }
                     if (pn_search.num_cars_comparison.val() !== "") {
-                        pn_search.cars_comparison_num.prop("disabled", true);
+                        pn_search.bt_cars_comparison_num.prop("disabled", true);
 
                         var isNumeric = function (value) {
                             return /^\d+$/.test(value);
@@ -253,24 +267,99 @@
                         // Вывод сообщений повторяющихся номеров
                         $.each(arr_res, function (i, el) {
                             alert.out_warning_message('Ошибка ввода, введеный номер :' + el + ' повторяется.');
-                            pn_search.cars_comparison_num.prop("disabled", false);
+                            pn_search.bt_cars_comparison_num.prop("disabled", false);
                             LockScreenOff();
                         });
                         // Продолжим 
                         if (valid) {
+                            //var wagon_nums = pn_search.num_cars_comparison_valid; // Номера вагонов со списка
+                            var wagon_list = null; // Вагоны со списка которые есть базе
+                            var wagon_operator = null;
+                            // 
+                            var arr_not = [];
+                            var arr_yes = [];
+                            var arr_yes_operator = [];
+                            var arr_no_operator = [];
+                            var arr_change_operator = [];
+
+                            // функция возрата номеров вагонов из массива
+                            var get_arr_nums = function (arr) {
+                                var arr_result = [];
+                                for (var ia = 0; ia < arr.length; ia++) {
+                                    arr_result.push(arr[ia].num);
+                                }
+                                return arr_result;
+                            };
+                            // Показать результаты
+                            var view_result = function (textarea, nums) {
+                                var result = '';
+                                for (var iw = 0; iw < nums.length; iw++) {
+                                    result += nums[iw] + (iw < (nums.length - 1) ? ';' : '');
+                                }
+                                if (textarea) {
+                                    textarea.text(result);
+                                }
+                            };
+
                             // Сохраним номера вагонов для выбора
                             pn_search.num_cars_comparison_valid = car_valid;
+                            // Проведем сравнение
+                            // Получим вагоны со списка
+                            ids_dir.getWagonOfNums(pn_search.num_cars_comparison_valid, function (result_wagon_list) {
+                                wagon_list = result_wagon_list;
+                                // Получить вагоны по оператору
+                                ids_dir.getWagonOfOperator(id_operator, function (result_wagon_operator) {
+                                    wagon_operator = result_wagon_operator;
+                                    // Определим вагоны которые есть в базе и нет
+                                    var nums = get_arr_nums(wagon_list);
+                                    for (var i = 0; i < pn_search.num_cars_comparison_valid.length; i++) {
+                                        if (nums.indexOf(pn_search.num_cars_comparison_valid[i]) === -1) {
+                                            arr_not.push(pn_search.num_cars_comparison_valid[i]);
+                                        } else {
+                                            arr_yes.push(pn_search.num_cars_comparison_valid[i]);
+                                        }
+                                    }
+                                    // Вагоны которые есть в базе, проверим на соответсвие оператору
+                                    for (var io = 0; io < arr_yes.length; io++) {
+                                        var res = wagon_list.find(function (item, index, array) {
+                                            return item.num === arr_yes[io] ? true : false;
+                                        });
+                                        if (res) {
+                                            var current_rent = ids_dir.getCurrentRentOfWagon(res);
+                                            if (current_rent.id_operator === id_operator) {
+                                                arr_yes_operator.push(arr_yes[io]);
+                                            } else {
+                                                arr_no_operator.push(arr_yes[io]);
+                                            }
+                                        }
+                                    }
+                                    // Определим вагоны которые теперь не пренадлежат оператору
+                                    var nums = get_arr_nums(wagon_operator);
+                                    for (var i = 0; i < nums.length; i++) {
+                                        if (arr_yes_operator.indexOf(nums[i]) === -1) {
+                                            arr_change_operator.push(nums[i]);
+                                        }
+                                    }
+                                    // Покажем результат
+                                    view_result(pn_search.num_cars_comparison_not, arr_not);
+                                    view_result(pn_search.num_cars_comparison_yes, arr_yes_operator);
+                                    view_result(pn_search.num_cars_comparison_no, arr_no_operator);
+                                    view_result(pn_search.num_cars_comparison_change, arr_change_operator);
+                                    pn_search.bt_cars_comparison_num.prop("disabled", false);
+                                    alert.out_info_message('Проверено ' + pn_search.num_cars_comparison_valid.length + ' номеров вагонов, в справочнике найдено ' + arr_yes.length + ' вагона(ов), нет в справочнике ' + arr_not.length + ' вагона(ов), к указанному оператору в справочнике найдено ' + wagon_operator.length + ' вагона(ов) из них соответствует ' + arr_yes_operator.length + ' вагона(ов), не соответствует ' + arr_no_operator.length + ' вагона(ов), уже не соответствует ' + arr_change_operator.length + ' вагона(ов).');
+                                    LockScreenOff();
 
-                            //pn_search.view_cars();
+                                });
+                            });
                         } else {
                             alert.out_warning_message('Исправьте указанные номера в указанных позициях и попробуйте заново.');
-                            pn_search.cars_comparison_num.prop("disabled", false);
+                            pn_search.bt_cars_comparison_num.prop("disabled", false);
                             LockScreenOff();
                         }
 
                     } else {
                         alert.out_error_message("Введите номер вагона или несколько вагонов, разделитель номеров ';'");
-                        pn_search.cars_comparison_num.prop("disabled", false);
+                        pn_search.bt_cars_comparison_num.prop("disabled", false);
                         LockScreenOff();
                     }
                 });
@@ -283,7 +372,7 @@
                         pn_search.bt_cars_search_num.prop("disabled", false);
                     }); break;
                     case 2: table_directory.view_cars_search_operator(); break;
-                    //case 3: table_directory.view_cars_search_operator(); break;
+                        //case 3: table_directory.view_cars_search_operator(); break;
                 }
             }
         },
@@ -336,7 +425,7 @@
                         // Соберем все элементы в массив
                         pn_change_group_limit.all_obj = $([])
                             .add(pn_change_group_limit.change_group_limiting)
-                            ;
+                        ;
                         // создадим классы 
 
                         //pn_change_group_limit.alert = new ALERT($('div#arrival-sostav-alert'));// Создадим класс ALERTG
@@ -512,11 +601,11 @@
                         pn_change_group_operator.change_group_rent_start = cd_initDateTimeRangePicker(pn_change_group_operator.change_group_rent_start, { lang: lang, time: true }, function (datetime) {
 
                         }),
-                            // Соберем все элементы в массив
+                        // Соберем все элементы в массив
                             pn_change_group_operator.all_obj = $([])
                                 .add(pn_change_group_operator.change_group_operator)
                                 .add(pn_change_group_operator.change_group_rent_start.obj)
-                            ;
+                        ;
                         // создадим классы 
 
                         //pn_change_group_operator.alert = new ALERT($('div#arrival-sostav-alert'));// Создадим класс ALERTG
@@ -837,7 +926,7 @@
                         pn_add_edit.add_edit_change_operator = cd_initDateTimeRangePicker(pn_add_edit.add_edit_change_operator, { lang: lang, time: true }, function (datetime) {
 
                         }),
-                            // Оператор УЗ
+                        // Оператор УЗ
                             pn_add_edit.add_edit_operator_car = cd_initSelect(
                                 pn_add_edit.add_edit_operator_car,
                                 {
@@ -854,7 +943,7 @@
                         pn_add_edit.add_edit_operator_car_rent_start = cd_initDateTimeRangePicker(pn_add_edit.add_edit_operator_car_rent_start, { lang: lang, time: true }, function (datetime) {
 
                         }),
-                            // Признак собственности
+                        // Признак собственности
                             pn_add_edit.add_edit_type_ownership = cd_initSelect(
                                 pn_add_edit.add_edit_type_ownership,
                                 {
@@ -884,7 +973,7 @@
                         pn_add_edit.add_edit_operator_car_rent_start_now = cd_initDateTimeRangePicker(pn_add_edit.add_edit_operator_car_rent_start_now, { lang: lang, time: true }, function (datetime) {
 
                         }),
-                            // ограничение ограничения
+                        // ограничение ограничения
                             pn_add_edit.add_edit_limiting = cd_initSelect(
                                 pn_add_edit.add_edit_limiting,
                                 {
@@ -918,11 +1007,11 @@
                         pn_add_edit.add_edit_date_rem_uz = cd_initDateTimeRangePicker(pn_add_edit.add_edit_date_rem_uz, { lang: lang, time: false }, function (datetime) {
 
                         }),
-                            // Дата ремонта вагона
+                        // Дата ремонта вагона
                             pn_add_edit.add_edit_date_rem_vag = cd_initDateTimeRangePicker(pn_add_edit.add_edit_date_rem_vag, { lang: lang, time: false }, function (datetime) {
 
                             }),
-                            // Соберем все элементы в массив
+                        // Соберем все элементы в массив
                             pn_add_edit.all_obj = $([])
                                 .add(pn_add_edit.add_edit_num)
                                 .add(pn_add_edit.add_edit_kod_adm)
@@ -945,7 +1034,7 @@
                                 .add(pn_add_edit.add_edit_date_rem_uz.obj)
                                 .add(pn_add_edit.add_edit_date_rem_vag.obj)
                                 .add(pn_add_edit.add_edit_note)
-                            ;
+                        ;
                         // создадим классы 
 
                         //pn_add_edit.alert = new ALERT($('div#add_edit_alert'));// Создадим класс ALERTG
