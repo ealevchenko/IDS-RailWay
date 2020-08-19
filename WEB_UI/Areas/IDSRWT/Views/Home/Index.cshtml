@@ -46,5 +46,24 @@
                 </div>
             </a>
         </li>
+        <li>
+            @*<a href='@Url.Action("Internal", "Home", new { area = "IDSRWT" })'>*@
+            <a href='#'>
+                <span class="ca-icon">J</span>
+                <div class="ca-content">
+                    <h2 class="ca-main">@IDSRWTResource.internal_title</h2>
+                    <h3 class="ca-sub">@IDSRWTResource.internal_description</h3>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href='@Url.Action("Outgoing", "Home", new { area = "IDSRWT" })'>
+                <span class="ca-icon">h</span>
+                <div class="ca-content">
+                    <h2 class="ca-main">@IDSRWTResource.outgoing_title</h2>
+                    <h3 class="ca-sub">@IDSRWTResource.outgoing_description</h3>
+                </div>
+            </a>
+        </li>
     </ul>
 </div>

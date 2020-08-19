@@ -1,0 +1,74 @@
+﻿@import url("../../font-awesome/css/font-awesome.min.css");
+
+body {
+}
+/**/
+td.icon-right {
+    background: url('../../../Images/idsrwt/right.png') no-repeat left center;
+}
+
+td.icon-user {
+    background: url('../../../Images/idsrwt/user.png') no-repeat left center;
+}
+
+td.icon-ok {
+    background: url('../../../Images/idsrwt/ok.png') no-repeat center center;
+}
+
+td.icon-warning {
+    background: url('../../../Images/idsrwt/warning.png') no-repeat center center;
+}
+
+td.icon-delete {
+    background: url('../../../Images/idsrwt/delete.png') no-repeat center center;
+}
+/**/
+table.dataTable tbody tr:not(.selected).status-in-work.odd, table.dataTable tbody tr:not(.selected).status-in-work.even {
+    background-color: #fcf2ba;
+}
+
+table.dataTable tbody tr:not(.selected).status-accepted.odd, table.dataTable tbody tr:not(.selected).status-accepted.even {
+    background-color: #aeffb9;
+}
+
+table.dataTable tbody tr:not(.selected).status-rejected.odd, table.dataTable tbody tr:not(.selected).status-rejected.even {
+    background-color: #fbcfcf;
+}
+
+div.dt-buttons a {
+    margin-right: 2px;
+}
+
+/*Коррекция отображения компонента дата и время*/
+.date-picker {
+    z-index: 202;
+}
+
+.date-picker-wrapper {
+    z-index: 201;
+}
+
+    .date-picker-wrapper .gap {
+        z-index: 201;
+    }
+
+        .date-picker-wrapper .gap .gap-line .gap-1 {
+            z-index: 201;
+        }
+
+        .date-picker-wrapper .gap .gap-line .gap-2 {
+            z-index: 202;
+        }
+
+        .date-picker-wrapper .gap .gap-line .gap-3 {
+            z-index: 202;
+        }
+
+        .date-picker-wrapper .gap .gap-top-mask {
+            z-index: 203;
+        }
+
+        .date-picker-wrapper .gap .gap-bottom-mask {
+            z-index: 203;
+        }
+

@@ -1,0 +1,88 @@
+﻿@using WEB_UI.App_LocalResources;
+@{
+    ViewBag.Title = @IDSRWTResource.outgoing_title;
+}
+
+@section styles {
+    @Styles.Render("~/DataTables/css")
+    @Styles.Render("~/DateTime/css")
+    <link rel="stylesheet" type="text/css" href="~/Content/view/idsrwt/outgoing.css">
+
+
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/Moment")
+    @Scripts.Render("~/bundles/DataTables")
+    @Scripts.Render("~/bundles/DateTime")
+
+    <script src="~/Scripts/view/shared/common.js"></script> <!-- Общая библиотека методов программы -->
+    <script src="~/Scripts/api/shared.js"></script> <!-- Общая библиотека методов API -->
+    <script src="~/Scripts/api/uz_directory.js"></script> <!-- Class API УЗ Справочники -->
+    <script src="~/Scripts/api/ids_directory.js"></script> <!-- Class API ИДС Справочники -->
+    <script src="~/Scripts/api/metrans.js"></script> <!-- Class API МЕТРАНС -->
+    <script src="~/Scripts/api/ids_rwt_incoming.js"></script> <!-- Class API ИДС Прием вагонов -->
+    <script src="~/Scripts/api/ids_transfer.js"></script> <!-- Class API ИДС Переносы -->
+    <script src="~/Scripts/api/uz_sms.js"></script> <!-- Class API Работа с модулем согласования -->
+
+    <script src="~/Scripts/view/idsrwt/outgoing.js"></script> <!--  -->
+}
+
+<input id="username" type="hidden" value="@User.Identity.Name" />
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsExample07">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <div class="input-group mr-3" style="display:block">
+                        <label class="col-form-label text-white mr-2" for="select-station">Отправить со станции: </label>
+                        <select type="text" id="select-station" name="select-station" class="form-control-sm"></select>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <div class="input-group">
+                        <label class="col-form-label text-white mr-2" for="select-date">Выбрать период: </label>
+                        <span id="select-date">
+                            <input type="datetime" class="form-control-sm" id="date-start" name="date-start">
+                            <input type="datetime" class="form-control-sm" id="date-stop" name="date-stop">
+                        </span>
+                    </div>
+
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-md-0">
+                <div class="dropdown  mr-3">
+                    <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
+                        Отчетная документация
+                    </button>
+                    <div class="dropdown-menu">
+                        @*<a class="dropdown-item" href="#" id="report_fst">Натурная ведомость поезда</a>
+                        <a class="dropdown-item" href="#" id="report_fsci">Натурная ведомость коммерческого осмотра</a>
+                        <a class="dropdown-item" href="#">Отчет с данными о перевеске</a>
+                        <a class="dropdown-item" href="#">Отчет о приеме груза</a>
+                        <a class="dropdown-item" href="#">Заявка на выдачу с проверкой груза КР Главный</a>
+                        <a class="dropdown-item" href="#">Заявка на выдачу с проверкой груза КР</a>
+                        <a class="dropdown-item" href="#">Заявка на взвешивание</a>*@
+                    </div>
+                </div>
+                <input class="form-control-sm" type="text" placeholder="Search" aria-label="Search">
+            </form>
+        </div>
+    </div>
+</nav>
+<div class="alert" id="outgoing-alert"></div>
+<div class="row">
+    <div class="col-xl-12 mb-3 mt-2">
+        <div class="card border-dark mb-3">
+            <div class="card-header bg-secondary text-white">Поезда по отправлению</div>
+            <div class="card-body text-dark pl-3 pr-3">
+                <table class="table table-striped table-bordered" id="table-sostav-arrival" style="width:100%;"></table>
+            </div>
+        </div>
+    </div>
+</div>

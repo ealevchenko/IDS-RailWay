@@ -97,6 +97,42 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Номерной учет вагонов, на территории предприятия..
+        /// </summary>
+        public static string internal_description {
+            get {
+                return ResourceManager.GetString("internal_description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на АРМ диспетчера.
+        /// </summary>
+        public static string internal_title {
+            get {
+                return ResourceManager.GetString("internal_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Номерной учет вагонов, отправляемых из АМКР на внешнюю сеть (УЗ).
+        /// </summary>
+        public static string outgoing_description {
+            get {
+                return ResourceManager.GetString("outgoing_description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отправить на УЗ.
+        /// </summary>
+        public static string outgoing_title {
+            get {
+                return ResourceManager.GetString("outgoing_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на «Железнодорожный транспорт АМКР» - внутренняя диспетчерская система оперативного управления перевозочным процессом на железнодорожном транспорте  внутри предприятияПАО «АРСЕЛОРМИТТАЛ КРИВОЙ РОГ».
         /// </summary>
         public static string system_idsrwt_description {
