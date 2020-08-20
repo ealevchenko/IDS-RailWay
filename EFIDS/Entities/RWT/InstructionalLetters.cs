@@ -17,7 +17,9 @@ namespace EFIDS.Entities
 
         public int id { get; set; }
 
-        public int num { get; set; }
+        [Required]
+        [StringLength(20)]
+        public string num { get; set; }
 
         public DateTime dt { get; set; }
 
