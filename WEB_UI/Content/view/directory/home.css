@@ -32,6 +32,17 @@ input {
 Коррекция отображения компонента дата и время
 
 -------------------------------- */
+
+.ui-autocomplete{
+	z-index: 202;
+}
+
+/*.ui-selectable-helper {
+	position: absolute;
+	z-index: 200;
+	border: 1px dotted black;
+}*/
+
 .date-picker {
     z-index: 202;
 }

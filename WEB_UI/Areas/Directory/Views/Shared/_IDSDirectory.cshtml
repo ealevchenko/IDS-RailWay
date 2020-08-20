@@ -1,4 +1,6 @@
-﻿<!doctype html>
+﻿@using WEB_UI.App_LocalResources;
+
+<!doctype html>
 <html lang="en" class="no-js">
 <head>
     <meta charset="utf-8">
@@ -132,9 +134,9 @@
                     <li class="go-back"><a href="#0">Меню</a></li>
                     <li class="see-all"><a href="#">Обзор сервисов</a></li>
                     <li>
-                        <a class="cd-nav-item item-1" href="#">
-                            <h3>Новые вагоны</h3>
-                            <p>Поиск вагонов по которым завели новые карточки</p>
+                        <a class="cd-nav-item item-1" href='@Url.Action("InstructionalLetters", "Home", new { Area = "Directory" })'>
+                            <h3>@DirectoryResource.instructional_letters_title</h3>
+                            <p>@DirectoryResource.instructional_letters_description</p>
                         </a>
                     </li>
                     <li>

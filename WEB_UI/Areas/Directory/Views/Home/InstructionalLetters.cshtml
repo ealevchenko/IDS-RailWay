@@ -1,0 +1,118 @@
+﻿@using WEB_UI.App_LocalResources;
+@{
+    ViewBag.Title = @DirectoryResource.instructional_letters_title;
+}
+
+@section styles {
+    @Styles.Render("~/DataTables/css")
+    @Styles.Render("~/DateTime/css")
+    <link rel="stylesheet" type="text/css" href="~/Content/view/directory/home.css">
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/Moment")
+    @Scripts.Render("~/bundles/DataTables")
+    @Scripts.Render("~/bundles/DateTime")
+
+    <script src="~/Scripts/view/shared/common.js"></script> <!-- Общая библиотека методов программы -->
+    <script src="~/Scripts/api/shared.js"></script> <!-- Общая библиотека методов API -->
+    <script src="~/Scripts/api/ids_directory.js"></script> <!-- Class API ИДС Справочники -->
+
+    <script src="~/Scripts/plugins/pl_dialog_confirm.js"></script> <!-- Плагин -->
+    <script src="~/Scripts/view/directory/instructional_letters.js"></script> <!--  -->
+}
+
+<input id="username" type="hidden" value="@User.Identity.Name" />
+
+<div class="container-fluid">
+    <div class="alert mt-3" id="main-alert"></div>
+    <div class="card">
+        <div class="card-body">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#tab-letters">Письма</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#tab-wagon">Вагоны</a>
+                </li>
+            </ul>
+            <div class="tab-content p-3">
+                <div class="tab-pane fade show active" id="tab-letters">
+                    <div class="row mt-2">
+                        <div class="col-xl-12">
+                            <div class="card border-dark">
+                                <div class="card-header bg-secondary text-white text-uppercase">Перечень писем</div>
+                                <div class="card-body text-dark pl-3 pr-3">
+                                    <table class="display table-bordered" id="table-letters" style="width:100%; table-layout: fixed"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="tab-wagon">
+                    <div class="row mt-2">
+                        <div class="col-xl-12">
+                            <div class="card border-dark">
+                                <div class="card-header bg-secondary text-white text-uppercase">Перечень вагонов</div>
+                                <div class="card-body text-dark pl-3 pr-3">
+                                    <table class="display table-bordered" id="table-wagon" style="width:100%; table-layout: fixed"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="text" class="form-control" id="add_edit_destination_station1" name="add_edit_destination_station1">
+
+<div id="add_edit" title="" style="display:none">
+    <div class="alert" id="add_edit_alert"></div>
+    <form id="form_add_edit">
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="add_edit_num" class="col-form-label">№ письма</label>
+                <input type="text" class="form-control" id="add_edit_num" name="add_edit_num">
+                <div class="invalid-feedback"></div>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="add_edit_datetime" class="col-form-label">Дата письма</label>
+                <input type="datetime" class="form-control" id="add_edit_datetime" name="add_edit_datetime">
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="add_edit_destination_station" class="col-form-label">Станция назначения</label>
+                <input type="text" class="form-control" id="add_edit_destination_station" name="add_edit_destination_station">
+                <div class="invalid-feedback"></div>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="add_edit_owner" class="col-form-label">Собственник (по письму)</label>
+                <input type="text" class="form-control" id="add_edit_owner" name="add_edit_owner">
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label for="add_edit_wagons" class="col-form-label">№ вагона(ов), разделитель ";"</label>
+                <textarea class="form-control" rows="2" id="add_edit_wagons" name="add_edit_wagons"></textarea>
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label for="add_edit_note" class="col-form-label">Примечание</label>
+                <textarea class="form-control" rows="2" id="add_edit_note" name="add_edit_note"></textarea>
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+        <!-- Allow form submission with keyboard without duplicating the dialog button -->
+        <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </form>
+</div>
+
+

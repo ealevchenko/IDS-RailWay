@@ -129,6 +129,12 @@
   <data name="home_title" xml:space="preserve">
     <value>Справочники</value>
   </data>
+  <data name="instructional_letters_description" xml:space="preserve">
+    <value>Инструктивные письма по оформлению ЭПД на отправляемые вагоны.</value>
+  </data>
+  <data name="instructional_letters_title" xml:space="preserve">
+    <value>Инструктивные письма</value>
+  </data>
   <data name="title_add_add_edit_kol_os" xml:space="preserve">
     <value>Кол. ос.</value>
   </data>

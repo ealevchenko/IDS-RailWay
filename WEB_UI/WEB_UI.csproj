@@ -566,6 +566,7 @@
     <Content Include="Images\cd-icon-filter.svg" />
     <Content Include="Images\cd\cd-close-dark.svg" />
     <Content Include="Images\directory\cd-logo.svg" />
+    <Content Include="Images\directory\il.svg" />
     <Content Include="Images\directory\img.jpg" />
     <Content Include="Images\directory\line-icon-1.svg" />
     <Content Include="Images\directory\line-icon-2.svg" />
@@ -844,6 +845,7 @@
     <Content Include="Areas\Directory\Views\Home\Cargo.cshtml" />
     <Content Include="Areas\Directory\Views\Home\CargoGroup.cshtml" />
     <Content Include="Areas\Directory\Views\Home\Cars.cshtml" />
+    <Content Include="Areas\Directory\Views\Home\InstructionalLetters.cshtml" />
     <None Include="Areas\IDSMORS\Views\Shared\_IDSMORS1" />
     <Content Include="Content\DataTables\extensions\Buttons\css\mixins.scss" />
     <Content Include="Content\DataTables\extensions\Buttons\css\common.scss" />
@@ -1107,6 +1109,7 @@
     <Content Include="Scripts\view\directory\cargo.js" />
     <Content Include="Scripts\view\directory\cargo_group.js" />
     <Content Include="Scripts\view\directory\cars.js" />
+    <Content Include="Scripts\view\directory\instructional_letters.js" />
     <Content Include="Scripts\view\idsmors\electronic_cards.js" />
     <Content Include="Scripts\view\idsmors\report_wagons.js" />
     <Content Include="Scripts\view\idsmors\park_wagons.js" />

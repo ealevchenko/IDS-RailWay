@@ -124,7 +124,7 @@
     <value>Подходы</value>
   </data>
   <data name="incoming_description" xml:space="preserve">
-    <value>Номерной учет по прибытию, прием груза (раскредитация)</value>
+    <value>Номерной учет по прибытию, прием груза</value>
   </data>
   <data name="incoming_title" xml:space="preserve">
     <value>Принять на АМКР</value>

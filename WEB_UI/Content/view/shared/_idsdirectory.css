@@ -561,9 +561,13 @@ Main components
   background-position: center center;
   background-size: 40px 40px;
 }
-.cd-primary-nav .cd-nav-icons .cd-nav-item.item-1::before {
+/*.cd-primary-nav .cd-nav-icons .cd-nav-item.item-1::before {
   background-image: url("../../../Images/directory/line-icon-1.svg");
+}*/
+.cd-primary-nav .cd-nav-icons .cd-nav-item.item-1::before {
+  background-image: url("../../../Images/directory/il.svg");
 }
+
 .cd-primary-nav .cd-nav-icons .cd-nav-item.item-2::before {
   background-image: url("../../../Images/directory/line-icon-2.svg");
 }

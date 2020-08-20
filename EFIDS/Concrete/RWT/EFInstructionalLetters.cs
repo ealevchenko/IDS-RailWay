@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 namespace EFIDS.Concrete
 {
 
-    public class EFInstructionalLettersWagon : IRepository<InstructionalLettersWagon>
+    public class EFInstructionalLetters : IRepository<InstructionalLetters>
     {
 
         private EFDbContext db;
 
-        public EFInstructionalLettersWagon(EFDbContext db)
+        public EFInstructionalLetters(EFDbContext db)
         {
 
             this.db = db;
@@ -26,16 +26,16 @@ namespace EFIDS.Concrete
             get { return this.db.Database; }
         }
 
-        public IQueryable<InstructionalLettersWagon> Context
+        public IQueryable<InstructionalLetters> Context
         {
-            get { return db.InstructionalLettersWagon; }
+            get { return db.InstructionalLetters; }
         }
 
-        public IEnumerable<InstructionalLettersWagon> Get()
+        public IEnumerable<InstructionalLetters> Get()
         {
             try
             {
-                return db.Select<InstructionalLettersWagon>();
+                return db.Select<InstructionalLetters>();
             }
             catch (Exception e)
             {
@@ -44,11 +44,11 @@ namespace EFIDS.Concrete
             }
         }
 
-        public InstructionalLettersWagon Get(int id)
+        public InstructionalLetters Get(int id)
         {
             try
             {
-                return db.Select<InstructionalLettersWagon>(id);
+                return db.Select<InstructionalLetters>(id);
             }
             catch (Exception e)
             {
@@ -57,11 +57,11 @@ namespace EFIDS.Concrete
             }
         }
 
-        public void Add(InstructionalLettersWagon item)
+        public void Add(InstructionalLetters item)
         {
             try
             {
-                db.Insert<InstructionalLettersWagon>(item);
+                db.Insert<InstructionalLetters>(item);
             }
             catch (Exception e)
             {
@@ -69,11 +69,11 @@ namespace EFIDS.Concrete
             }
         }
 
-        public void Update(InstructionalLettersWagon item)
+        public void Update(InstructionalLetters item)
         {
             try
             {
-                db.Update<InstructionalLettersWagon>(item);
+                db.Update<InstructionalLetters>(item);
             }
             catch (Exception e)
             {
@@ -81,11 +81,11 @@ namespace EFIDS.Concrete
             }
         }
 
-        public void AddOrUpdate(InstructionalLettersWagon item)
+        public void AddOrUpdate(InstructionalLetters item)
         {
             try
             {
-                InstructionalLettersWagon dbEntry = db.InstructionalLettersWagon.Find(item.id);
+                InstructionalLetters dbEntry = db.InstructionalLetters.Find(item.id);
                 if (dbEntry == null)
                 {
                     Add(item);
@@ -106,7 +106,7 @@ namespace EFIDS.Concrete
         {
             try
             {
-                InstructionalLettersWagon item = db.Delete<InstructionalLettersWagon>(id);
+                InstructionalLetters item = db.Delete<InstructionalLetters>(id);
             }
             catch (Exception e)
             {
@@ -127,12 +127,12 @@ namespace EFIDS.Concrete
             }
         }
 
-        public InstructionalLettersWagon Refresh(InstructionalLettersWagon item)
+        public InstructionalLetters Refresh(InstructionalLetters item)
         {
             try
             {
                 db.Entry(item).State = EntityState.Detached;
-                return db.Select<InstructionalLettersWagon>(item.id);
+                return db.Select<InstructionalLetters>(item.id);
             }
             catch (Exception e)
             {
@@ -161,11 +161,11 @@ namespace EFIDS.Concrete
             GC.SuppressFinalize(this);
         }
 
-        public void Add(IEnumerable<InstructionalLettersWagon> items)
+        public void Add(IEnumerable<InstructionalLetters> items)
         {
             try
             {
-                db.Inserts<InstructionalLettersWagon>(items);
+                db.Inserts<InstructionalLetters>(items);
             }
             catch (Exception e)
             {
@@ -177,7 +177,7 @@ namespace EFIDS.Concrete
         {
             try
             {
-                db.Delete<InstructionalLettersWagon>(items);
+                db.Delete<InstructionalLetters>(items);
             }
             catch (Exception e)
             {
@@ -185,11 +185,11 @@ namespace EFIDS.Concrete
             }
         }
 
-        public void Update(IEnumerable<InstructionalLettersWagon> items)
+        public void Update(IEnumerable<InstructionalLetters> items)
         {
             try
             {
-                db.Updates<InstructionalLettersWagon>(items);
+                db.Updates<InstructionalLetters>(items);
             }
             catch (Exception e)
             {

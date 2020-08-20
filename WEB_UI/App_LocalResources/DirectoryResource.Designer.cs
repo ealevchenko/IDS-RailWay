@@ -97,6 +97,24 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Инструктивные письма по оформлению ЭПД на отправляемые вагоны..
+        /// </summary>
+        public static string instructional_letters_description {
+            get {
+                return ResourceManager.GetString("instructional_letters_description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Инструктивные письма.
+        /// </summary>
+        public static string instructional_letters_title {
+            get {
+                return ResourceManager.GetString("instructional_letters_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Кол. ос..
         /// </summary>
         public static string title_add_add_edit_kol_os {

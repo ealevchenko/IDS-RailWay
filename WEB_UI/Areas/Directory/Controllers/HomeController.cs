@@ -29,5 +29,15 @@ namespace WEB_UI.Areas.Directory.Controllers
         {
             return View();
         }
+
+        //******************************************************
+        // СЕРВИСЫ
+        //******************************************************
+
+        // Инструктивные письма
+        public ActionResult InstructionalLetters()
+        {
+            return View();
+        }
     }
 }

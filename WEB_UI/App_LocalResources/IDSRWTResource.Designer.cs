@@ -79,7 +79,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Номерной учет по прибытию, прием груза (раскредитация).
+        ///   Ищет локализованную строку, похожую на Номерной учет по прибытию, прием груза.
         /// </summary>
         public static string incoming_description {
             get {
