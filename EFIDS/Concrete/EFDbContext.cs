@@ -28,6 +28,9 @@ namespace EFIDS.Concrete
         public virtual DbSet<ArrivalCars> ArrivalCars { get; set; }
         public virtual DbSet<ArrivalSostav> ArrivalSostav { get; set; }
         public virtual DbSet<UZ_DOC> UZ_DOC { get; set; }
+        // Письма
+        public virtual DbSet<InstructionalLetters> InstructionalLetters { get; set; }
+        public virtual DbSet<InstructionalLettersWagon> InstructionalLettersWagon { get; set; }
         
         // MORS
         public virtual DbSet<CardsWagons> CardsWagons { get; set; }
@@ -83,6 +86,13 @@ namespace EFIDS.Concrete
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            // Письма
+            modelBuilder.Entity<InstructionalLetters>()
+                .HasMany(e => e.InstructionalLettersWagon)
+                .WithRequired(e => e.InstructionalLetters)
+                .HasForeignKey(e => e.id_instructional_letters)
+                .WillCascadeOnDelete(false);
+            // Прием
             modelBuilder.Entity<Arrival_UZ_Document>()
                 .HasMany(e => e.Arrival_UZ_Document_Acts)
                 .WithRequired(e => e.Arrival_UZ_Document)
