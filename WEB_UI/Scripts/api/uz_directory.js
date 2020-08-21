@@ -231,22 +231,41 @@ UZ_DIRECTORY.prototype.getStations_Internal_Of_CodeCS = function (code_cs) {
     return null;
 };
 //
+UZ_DIRECTORY.prototype.getStations_Internal_Of_Code = function (code) {
+    if (this.list_stations && code) {
+        var obj_buff = getObjects(this.list_stations_buff, 'code', code);
+        if (!obj_buff || obj_buff.length === 0) {
+            var obj = getObjects(this.list_stations, 'code', code);
+            if (obj && obj.length > 0) {
+                this.list_stations_buff.push(obj[0]);
+                return obj[0];
+            }
+        } else {
+            return obj_buff[0];
+        }
+    }
+    return null;
+};
+//
 UZ_DIRECTORY.prototype.getValue_Station_Of_CodeCS = function (code_cs, name) {
     var obj = this.getStations_Internal_Of_CodeCS(code_cs);
     return obj ? obj[name] : null;
 };
 //
-UZ_DIRECTORY.prototype.getListStation = function (fvalue, ftext, lang) {
+UZ_DIRECTORY.prototype.getListStation = function (fvalue, ftext, lang, filter) {
     var list = [];
+    var list_filtr = null;
     if (this.list_stations) {
-        for (i = 0, j = this.list_stations.length; i < j; i++) {
-            var l = this.list_stations[i];
+        if (typeof filter === 'function') {
+            list_filtr = this.list_stations.filter(filter);
+        } else { list_filtr = this.list_stations; }
+        for (i = 0, j = list_filtr.length; i < j; i++) {
+            var l = list_filtr[i];
             if (lang) {
                 list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
             } else {
                 list.push({ value: l[fvalue], text: l[ftext] });
             }
-
         }
     }
     return list;
@@ -273,6 +292,15 @@ UZ_DIRECTORY.prototype.getStations_Internal_Correct_Code = function (code) {
     }
     return null;
 };
+// Получим список с выборкой по полю
+UZ_DIRECTORY.prototype.getStations_Of_Name = function (name, text) {
+    if (this.list_stations) {
+        var obj = getObjects(this.list_stations, name, text);
+        return obj
+    }
+    return null;
+};
+
 //======= UZ_DIRECTORY.list_internal_railroad  (Справочник Стран и железных дорог) ======================================
 UZ_DIRECTORY.prototype.getInternalRailroad_Internal_Of_ID = function (id_internal_railroad) {
     if (this.list_internal_railroad) {

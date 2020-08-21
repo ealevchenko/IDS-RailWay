@@ -378,7 +378,7 @@ var initAutocomplete = function (obj_input, property, source, view, text_default
         minLength = property.minLength;
     }
     return obj_input.autocomplete({
-        minLength: 2,
+        minLength: minLength,
         source: source,
         change: function (event, ui) {
             if (typeof view === 'function') {

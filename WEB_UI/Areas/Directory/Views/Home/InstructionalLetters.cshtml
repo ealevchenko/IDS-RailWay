@@ -16,8 +16,10 @@
 
     <script src="~/Scripts/view/shared/common.js"></script> <!-- Общая библиотека методов программы -->
     <script src="~/Scripts/api/shared.js"></script> <!-- Общая библиотека методов API -->
+    <script src="~/Scripts/api/uz_directory.js"></script> <!-- Class API УЗ Справочники -->
     <script src="~/Scripts/api/ids_directory.js"></script> <!-- Class API ИДС Справочники -->
-
+    <script src="~/Scripts/api/ids_transfer.js"></script> <!-- Class API ИДС Переносы -->
+    <script src="~/Scripts/api/ids_rwt_incoming.js"></script> <!-- Class API ИДС Прием вагонов -->
     <script src="~/Scripts/plugins/pl_dialog_confirm.js"></script> <!-- Плагин -->
     <script src="~/Scripts/view/directory/instructional_letters.js"></script> <!--  -->
 }
@@ -85,12 +87,17 @@
             </div>
         </div>
         <div class="form-row">
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-2">
+                <label for="add_edit_destination_station_code" class="col-form-label">Код</label>
+                <input type="text" class="form-control" id="add_edit_destination_station_code" name="add_edit_destination_station_code" disabled="disabled">
+                <div class="invalid-feedback"></div>
+            </div>
+            <div class="form-group col-md-5">
                 <label for="add_edit_destination_station" class="col-form-label">Станция назначения</label>
                 <input type="text" class="form-control" id="add_edit_destination_station" name="add_edit_destination_station">
                 <div class="invalid-feedback"></div>
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-5">
                 <label for="add_edit_owner" class="col-form-label">Собственник (по письму)</label>
                 <input type="text" class="form-control" id="add_edit_owner" name="add_edit_owner">
                 <div class="invalid-feedback"></div>

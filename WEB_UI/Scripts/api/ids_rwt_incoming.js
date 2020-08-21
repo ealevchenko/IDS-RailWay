@@ -30,25 +30,29 @@ IDS_RWT_INCOMING.prototype.load = function (list_incoming, list_ids_dir, list_uz
     }
     var obj = this;
     // Загрузка справочников ИДС
-    obj.ids_dir.load(list_ids_dir, lockOff, function () {
-        count -= 1;
-        if (count === 0) {
-            if (typeof callback === 'function') {
-                if (lockOff) { LockScreenOff(); }
-                callback();
+    if (list_ids_dir.length > 0) {
+        obj.ids_dir.load(list_ids_dir, lockOff, function () {
+            count -= 1;
+            if (count === 0) {
+                if (typeof callback === 'function') {
+                    if (lockOff) { LockScreenOff(); }
+                    callback();
+                }
             }
-        }
-    });
+        });
+    }
     // Загрузка справочников УЗ
-    obj.uz_dir.load(list_uz_dir, lockOff, function () {
-        count -= 1;
-        if (count === 0) {
-            if (typeof callback === 'function') {
-                if (lockOff) { LockScreenOff(); }
-                callback();
+    if (list_uz_dir.length > 0) {
+        obj.uz_dir.load(list_uz_dir, lockOff, function () {
+            count -= 1;
+            if (count === 0) {
+                if (typeof callback === 'function') {
+                    if (lockOff) { LockScreenOff(); }
+                    callback();
+                }
             }
-        }
-    });
+        });
+    }
     // Згрузка собственных таблиц
     $.each(list_incoming, function (i, el) {
         if (el === 'arrival') {
@@ -809,7 +813,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_VagonOfDocument = function (id_doc, cal
 IDS_RWT_INCOMING.prototype.getArrival_UZ_VagonOfDocumentNumVagon = function (id_doc, num, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/rwt/arrival_uz_vagon/document/id/'+id_doc+'/vagon/num/' + num,
+        url: '../../api/ids/rwt/arrival_uz_vagon/document/id/' + id_doc + '/vagon/num/' + num,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -1925,7 +1929,7 @@ IDS_RWT_INCOMING.prototype.getArrivalCarsOfID = function (id, callback) {
 IDS_RWT_INCOMING.prototype.getArrivalCarsOfPeriodNums = function (start, stop, nums, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/rwt/arrival_cars/start/' + toISOStringTZ(start).substring(0, 19) + '/stop/' + toISOStringTZ(stop).substring(0, 19)+ '/nums/' + nums,
+        url: '../../api/ids/rwt/arrival_cars/start/' + toISOStringTZ(start).substring(0, 19) + '/stop/' + toISOStringTZ(stop).substring(0, 19) + '/nums/' + nums,
         async: true,
         dataType: 'json',
         beforeSend: function () {
