@@ -171,7 +171,7 @@ namespace WEB_UI.Controllers.api
         // PUT api/ids/directory/wagon_rent/list
         [HttpPut]
         [Route("list")]
-        public int PutWagonsRent(List<Directory_WagonsRent> list)
+        public int PutListWagonsRent(List<Directory_WagonsRent> list)
         {
             try
             {

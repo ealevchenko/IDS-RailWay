@@ -307,45 +307,7 @@ namespace EFIDS.Helper
                 change_user = l.change_user
             };
         }
-        //TODO: !!!Удалить Справочник вагонов внедрил новый Directory_Wagons
-        //public static Directory_Cars GetDirectory_Cars(this Directory_Cars c)
-        //{
-        //    if (c == null) return null;
-        //    return new Directory_Cars()
-        //    {
-        //        id = c.id,
-        //        num = c.num,
-        //        id_countrys = c.id_countrys,
-        //        id_genus = c.id_genus,
-        //        id_owner = c.id_owner,
-        //        id_operator_uz = c.id_operator_uz,
-        //        ban_changes_operator = c.ban_changes_operator,
-        //        id_operator = c.id_operator,
-        //        gruzp = c.gruzp,
-        //        kol_os = c.kol_os,
-        //        usl_tip = c.usl_tip,
-        //        date_rem_uz = c.date_rem_uz,
-        //        date_rem_vag = c.date_rem_vag,
-        //        id_limiting = c.id_limiting,
-        //        id_type_ownership = c.id_type_ownership,
-        //        rent_start = c.rent_start,
-        //        rent_end = c.rent_end,
-        //        sign = c.sign,
-        //        note = c.note,
-        //        sobstv_kis = c.sobstv_kis,
-        //        create = c.create,
-        //        create_user = c.create_user,
-        //        change = c.change,
-        //        change_user = c.change_user,
-        //        Directory_Countrys = c.Directory_Countrys.GetDirectory_Countrys(),
-        //        Directory_GenusWagons = c.Directory_GenusWagons.GetGenusWagons(),
-        //        Directory_OwnersWagons = c.Directory_OwnersWagons.GetOwnersWagons(),
-        //        Directory_OperatorsWagons = c.Directory_OperatorsWagons.GetOperatorsWagons(),
-        //        Directory_LimitingLoading = c.Directory_LimitingLoading.GetDirectory_LimitingLoading(),
-        //        Directory_TypeOwnerShip = c.Directory_TypeOwnerShip.GetTypeOwnerShip(),
-        //    };
-        //}
-
+        // Справочник вагон
         public static Directory_Wagons GetDirectory_Wagons(this Directory_Wagons w)
         {
             if (w == null) return null;
@@ -357,7 +319,7 @@ namespace EFIDS.Helper
                 id_owner = w.id_owner,
                 id_operator = w.id_operator,
                 change_operator = w.change_operator,
-                gruzp = w.gruzp, 
+                gruzp = w.gruzp,
                 tara = w.tara,
                 kol_os = w.kol_os,
                 usl_tip = w.usl_tip,
@@ -376,8 +338,8 @@ namespace EFIDS.Helper
                 Directory_GenusWagons = w.Directory_GenusWagons.GetGenusWagons(),
                 Directory_OwnersWagons = w.Directory_OwnersWagons.GetOwnersWagons(),
                 Directory_OperatorsWagons = w.Directory_OperatorsWagons.GetOperatorsWagons(),
-                Directory_TypeOwnerShip = w.Directory_TypeOwnerShip.GetTypeOwnerShip(), 
-                Directory_WagonsRent =null,
+                Directory_TypeOwnerShip = w.Directory_TypeOwnerShip.GetTypeOwnerShip(),
+                Directory_WagonsRent = null,
             };
         }
         // Справочник вагонов новый.
@@ -392,7 +354,7 @@ namespace EFIDS.Helper
                 id_owner = w.id_owner,
                 id_operator = w.id_operator,
                 change_operator = w.change_operator,
-                gruzp = w.gruzp, 
+                gruzp = w.gruzp,
                 tara = w.tara,
                 kol_os = w.kol_os,
                 usl_tip = w.usl_tip,
@@ -411,8 +373,8 @@ namespace EFIDS.Helper
                 Directory_GenusWagons = w.Directory_GenusWagons.GetGenusWagons(),
                 Directory_OwnersWagons = w.Directory_OwnersWagons.GetOwnersWagons(),
                 Directory_OperatorsWagons = w.Directory_OperatorsWagons.GetOperatorsWagons(),
-                Directory_TypeOwnerShip = w.Directory_TypeOwnerShip.GetTypeOwnerShip(), 
-                Directory_WagonsRent =w.Directory_WagonsRent.ToList().Select(r => r.GetDirectory_WagonsRent()).ToList(),
+                Directory_TypeOwnerShip = w.Directory_TypeOwnerShip.GetTypeOwnerShip(),
+                Directory_WagonsRent = w.Directory_WagonsRent.ToList().Select(r => r.GetDirectory_WagonsRent()).ToList(),
             };
         }
         // Справочник аренд вагонов.
@@ -432,7 +394,7 @@ namespace EFIDS.Helper
                 create_user = r.create_user,
                 change = r.change,
                 change_user = r.change_user,
-                Directory_LimitingLoading = r.Directory_LimitingLoading.GetDirectory_LimitingLoading(), 
+                Directory_LimitingLoading = r.Directory_LimitingLoading.GetDirectory_LimitingLoading(),
                 Directory_OperatorsWagons = r.Directory_OperatorsWagons.GetOperatorsWagons(),
                 Directory_Wagons = r.Directory_Wagons.GetDirectory_Wagons(),
                 Directory_WagonsRent1 = null,
@@ -948,7 +910,7 @@ namespace EFIDS.Helper
                 change = v.change,
                 change_user = v.change_user,
                 ArrivalSostav = null,
-                Arrival_UZ_Document = null, 
+                Arrival_UZ_Document = null,
                 Directory_Wagons = v.Directory_Wagons.GetDirectory_Wagons_Directory_WagonsRent(),
                 Arrival_UZ_Vagon_Acts = v.Arrival_UZ_Vagon_Acts.ToList().Select(a => a.GetArrival_UZ_Vagon_Acts()).ToList(),
                 Arrival_UZ_Vagon_Pay = v.Arrival_UZ_Vagon_Pay.ToList().Select(p => p.GetArrival_UZ_Vagon_Pay()).ToList(),
@@ -1331,6 +1293,44 @@ namespace EFIDS.Helper
                 code_on = d.code_on,
                 dt = d.dt,
                 xml_doc = d.xml_doc,
+            };
+        }
+
+        public static InstructionalLettersWagon GetInstructionalLettersWagon(this InstructionalLettersWagon w)
+        {
+            if (w == null) return null;
+            return new InstructionalLettersWagon()
+            {
+                id = w.id,
+                id_instructional_letters = w.id_instructional_letters,
+                num = w.num,
+                close = w.close,
+                close_status = w.close_status,
+                note = w.note,
+                create = w.create,
+                create_user = w.create_user,
+                change = w.change,
+                change_user = w.change_user,
+                InstructionalLetters = null,
+            };
+        }
+
+         public static InstructionalLetters GetInstructionalLetters(this InstructionalLetters l)
+        {
+            if (l == null) return null;
+            return new InstructionalLetters()
+            {
+                id = l.id,
+                num = l.num,
+                dt = l.dt,
+                owner = l.owner,
+                destination_station = l.destination_station,
+                note = l.note,
+                create = l.create,
+                create_user = l.create_user,
+                change = l.change,
+                change_user = l.change_user,
+                InstructionalLettersWagon =l.InstructionalLettersWagon.ToList().Select(c => c.GetInstructionalLettersWagon()).ToList(),
             };
         }
         #endregion

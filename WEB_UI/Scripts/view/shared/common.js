@@ -1,8 +1,6 @@
 ﻿/* ----------------------------------------------------------
     Список слов
 -------------------------------------------------------------*/
-
-
 $.Text_Common =
     {
         'default':  //default language: ru
@@ -19,7 +17,7 @@ $.Text_Common =
         }
 
     };
-
+//==============================================================================================
 /* ----------------------------------------------------------
     Вывод текста согласно региональных настроек
 -------------------------------------------------------------*/
@@ -49,8 +47,7 @@ var langView = function (t, langs) {
     var re = (t in langs) ? langs[t] : (_t in langs) ? langs[_t] : null;
     return re;
 };
-
-
+//==============================================================================================
 /* ----------------------------------------------------------
     Функции работы с масивами
 -------------------------------------------------------------*/
@@ -108,7 +105,7 @@ var getObjOflist = function (list, field, value) {
         return res[0];
     }
 };
-
+//==============================================================================================
 /* ----------------------------------------------------------
     Блокировка экрана
 -------------------------------------------------------------*/
@@ -125,7 +122,7 @@ var LockScreenOff = function () {
     if (lock)
         lock.className = 'LockOff';
 };
-
+//==============================================================================================
 /* ----------------------------------------------------------
     DataTables Вывод текста согласно региональных настроек
 -------------------------------------------------------------*/
@@ -205,6 +202,7 @@ var language_table = function (langs) {
         "aria": langView('dt_aria', langs),
     };
 };
+//==============================================================================================
 /* ----------------------------------------------------------
     Компоненты UI
 -------------------------------------------------------------*/
@@ -255,7 +253,7 @@ var cd_initSelect = function (obj_select, property, data, callback_option, value
     obj_select.on("change", event_change);
     return obj_select;
 };
-
+//
 var cd_initDateTimeRangePicker = function (obj_select, property, close_function) {
     var dtrp = {
         obj: null,
@@ -323,7 +321,7 @@ var cd_initDateTimeRangePicker = function (obj_select, property, close_function)
     dtrp.init(obj_select, property, close_function);
     return dtrp;
 }
-
+//==============================================================================================
 /* ----------------------------------------------------------
     Компоненты JQUERY UI
 -------------------------------------------------------------*/
@@ -401,9 +399,9 @@ var initAutocomplete = function (obj_input, property, source, view, text_default
         }
     }).val(text_default ? text_default : '');
 };
-
+//==============================================================================================
 /* ----------------------------------------------------------
-    Спомогательные функции
+    Вспомогательные функции
 -------------------------------------------------------------*/
 // Коррекция вывода даты с учетом зоны
 var toISOStringTZ = function (date) {
@@ -495,17 +493,13 @@ var get_select_number_value = function (select) {
     return null;
 };
 
-// Вернуть режим
-var outOperation = function (i) {
-    if (i === null) return null;
-    switch (Number(i)) {
-        case 1: return "ПРИБЫТИЕ";
-        case 2: return "ТСП";
-        default: return i;
-    }
+var isNumeric = function (value) {
+    return /^\d+$/.test(value);
 };
+
+//==============================================================================================
 /* ----------------------------------------------------------
-    Функции валидации и вывода сообщений
+    Функции вывода сообщений
 -------------------------------------------------------------*/
 var ALERT = function (alert) {
     this.alert = alert;
@@ -543,10 +537,10 @@ ALERT.prototype.out_info_message = function (message) {
         }
     }
 };
+//==============================================================================================
 /* ----------------------------------------------------------
     Функции валидации и вывода сообщений
 -------------------------------------------------------------*/
-
 var VALIDATION = function (lang, alert, all_obj) {
 
     this.lang = lang;
@@ -558,7 +552,6 @@ VALIDATION.prototype.clear_all = function () {
     this.clear_message();
     this.clear_error();
 };
-
 // Очистить все ошибки
 VALIDATION.prototype.clear_error = function (objs) {
     if (objs) {
@@ -567,7 +560,6 @@ VALIDATION.prototype.clear_error = function (objs) {
         this.all_obj.removeClass('is-valid is-invalid');
     }
 };
-
 // Очистить сообщения
 VALIDATION.prototype.clear_message = function () {
     if (this.alert) {
@@ -610,7 +602,6 @@ VALIDATION.prototype.out_info_message = function (message) {
         }
     }
 };
-
 // Установить признак ошибка
 VALIDATION.prototype.set_control_error = function (o, message) {
     o.removeClass('is-valid').addClass('is-invalid');
@@ -618,7 +609,6 @@ VALIDATION.prototype.set_control_error = function (o, message) {
         o.next(".invalid-feedback").text(message);
     }
 };
-
 // Установить признак Ok
 VALIDATION.prototype.set_control_ok = function (o, message) {
     o.removeClass('is-invalid').addClass('is-valid');
@@ -626,21 +616,18 @@ VALIDATION.prototype.set_control_ok = function (o, message) {
         o.next(".valid-feedback").text(message);
     }
 };
-
 // Установить признак ошибка
 VALIDATION.prototype.set_object_error = function (o, mes_error) {
     this.set_control_error(o, mes_error);
     this.out_error_message(mes_error);
     return false;
 };
-
 // Установить признак ок
 VALIDATION.prototype.set_object_ok = function (o, mes_ok) {
     this.set_control_ok(o, mes_ok);
     this.out_info_message(mes_ok);
     return true;
 };
-
 // Проверка на пустое значение
 VALIDATION.prototype.checkValueOfNull = function (o, val, mes_error, mes_ok) {
     if (val === '' || val === null) {
@@ -732,7 +719,6 @@ VALIDATION.prototype.checkInputOfRange_IsNull = function (o, min, max, mes_error
         return true;
     }
 };
-
 // Проверим Input введенное значение соответствует формату даты и времени (пустое значение - не допускается)
 VALIDATION.prototype.checkInputOfDateTime = function (o, format, mes_ok) {
     if (o.val() !== '' && o.val() !== null) {
@@ -910,5 +896,43 @@ VALIDATION.prototype.checkInputTextOfDirectory_IsNull = function (o, link, name_
         if (!(off_message !== undefined && off_message))
             this.out_info_message(mes_ok);
         return true;
+    }
+};
+//==============================================================================================
+/* ----------------------------------------------------------
+    Функции УЗ
+-------------------------------------------------------------*/
+var is_valid_num_wagon = function (num) {
+    if (num) {
+        if (!isNumeric(num)) return false;
+        if (!(Number(num) >= 10000000 && Number(num) <= 99999999)) return false;
+        var symbols = num.split(""); // разбиваем на массив символов
+        if (symbols.length !== 8) return false;
+        var cs = Number(symbols[7]);
+        symbols.length--;
+        var kof = [2, 1, 2, 1, 2, 1, 2];
+        var result = 0;
+        for (ni = 0; ni < symbols.length; ni++) {
+            var res_k = symbols[ni] * kof[ni];
+            if (res_k > 9) {
+                var symbols_k = String(res_k).split(""); // разбиваем на массив символов
+                res_k = Number(symbols_k[0]) + Number(symbols_k[1]);
+            }
+            result += Number(res_k);
+        }
+        result = Number(result) + cs;
+        var res = result % 10;
+        if (res === 0) { return true; } else { return false; }
+    }
+    return false;
+};
+
+// Вернуть режим
+var outOperation = function (i) {
+    if (i === null) return null;
+    switch (Number(i)) {
+        case 1: return "ПРИБЫТИЕ";
+        case 2: return "ТСП";
+        default: return i;
     }
 };

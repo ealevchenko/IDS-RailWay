@@ -18,6 +18,8 @@ var IDS_RWT_INCOMING = function (lang) {
 };
 
 IDS_RWT_INCOMING.list_arrival = [];
+IDS_RWT_INCOMING.list_instructional_letters = [];
+IDS_RWT_INCOMING.list_instructional_letters_wagon = [];
 
 // Загрузить указаные справочники
 IDS_RWT_INCOMING.prototype.load = function (list_incoming, list_ids_dir, list_uz_dir, lockOff, callback) {
@@ -67,12 +69,398 @@ IDS_RWT_INCOMING.prototype.load = function (list_incoming, list_ids_dir, list_uz
                 }
             });
         };
+        if (el === 'instructional_letters') {
+            IDS_RWT_INCOMING.prototype.getInstructionalLetters(function (result_instructional_letters) {
+                obj.list_instructional_letters = result_instructional_letters;
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        if (lockOff) { LockScreenOff(); }
+                        callback(result_instructional_letters);
+                    }
+                }
+            });
+        };
+        if (el === 'instructional_letters_wagon') {
+            IDS_RWT_INCOMING.prototype.getInstructionalLettersWagon(function (result_instructional_letters_wagon) {
+                obj.list_instructional_letters_wagon = result_instructional_letters_wagon;
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        if (lockOff) { LockScreenOff(); }
+                        callback(result_instructional_letters_wagon);
+                    }
+                }
+            });
+        };
     });
 };
 /* ----------------------------------------------------------
 AJAX функции
 
 -------------------------------------------------------------*/
+//======= InstructionalLetters (Инструктивные письма) ======================================
+// Получить все письма
+IDS_RWT_INCOMING.prototype.getInstructionalLetters = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/instructional_letters/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.getInstructionalLetters", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить письмо
+IDS_RWT_INCOMING.prototype.getInstructionalLettersOfID = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/instructional_letters/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.getInstructionalLettersOfID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить письмо
+IDS_RWT_INCOMING.prototype.getInstructionalLettersOfNumDate = function (num, date, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/instructional_letters/num/' + num + '/date/' + toISOStringTZ(date).substring(0, 19),
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.getInstructionalLettersOfNumDate", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
+//Добавить письмо
+IDS_RWT_INCOMING.prototype.postInstructionalLetters = function (letters, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/instructional_letters/',
+        type: 'POST',
+        data: JSON.stringify(letters),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT_INCOMING.postInstructionalLetters", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Обновить письмо
+IDS_RWT_INCOMING.prototype.putInstructionalLetters = function (letters, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/rwt/instructional_letters/id/' + letters.id,
+        data: JSON.stringify(letters),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.putInstructionalLetters", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Удалить письмо
+IDS_RWT_INCOMING.prototype.deleteInstructionalLetters = function (id, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/instructional_letters/id/' + id,
+        type: 'DELETE',
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.deleteInstructionalLetters", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//======= InstructionalLettersWagon (Инструктивные письма - вагоны) ======================================
+// Получить все вагоны по всем письмам
+IDS_RWT_INCOMING.prototype.getInstructionalLettersWagon = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/instructional_letters_wagon/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.getInstructionalLettersWagon", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить вагон по id
+IDS_RWT_INCOMING.prototype.getInstructionalLettersWagonOfID = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/instructional_letters_wagon/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.getInstructionalLettersWagonOfID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить вагоны по id письма
+IDS_RWT_INCOMING.prototype.getInstructionalLettersWagonOfIDLetter = function (id_letter, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/instructional_letters_wagon/letter/id/' + id_letter,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.getInstructionalLettersWagonOfIDLetter", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
+// Получить вагоны с открытыми письмами по номерам
+IDS_RWT_INCOMING.prototype.getOpenInstructionalLettersWagonOfNums = function (list_nums, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/instructional_letters_wagon/open/list_nums/',
+        type: 'POST',
+        data: JSON.stringify(list_nums),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT_INCOMING.getInstructionalLettersWagonOfNums", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Добавить вагон
+IDS_RWT_INCOMING.prototype.postInstructionalLettersWagon = function (wagon, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/instructional_letters_wagon/',
+        type: 'POST',
+        data: JSON.stringify(wagon),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT_INCOMING.postInstructionalLettersWagon", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Добавить вагоны
+IDS_RWT_INCOMING.prototype.postListInstructionalLettersWagon = function (list_wagon, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/instructional_letters_wagon/list/',
+        type: 'POST',
+        data: JSON.stringify(list_wagon),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT_INCOMING.postListInstructionalLettersWagon", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Обновить вагон
+IDS_RWT_INCOMING.prototype.putInstructionalLettersWagon = function (wagon, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/rwt/instructional_letters_wagon/id/' + wagon.id,
+        data: JSON.stringify(wagon),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.putInstructionalLettersWagon", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Обновить вагоны
+IDS_RWT_INCOMING.prototype.putListInstructionalLettersWagon = function (list_wagon, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/rwt/instructional_letters_wagon/list/',
+        data: JSON.stringify(list_wagon),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.putListInstructionalLettersWagon", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
+// Удалить вагон
+IDS_RWT_INCOMING.prototype.deleteInstructionalLettersWagon = function (id, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/instructional_letters_wagon/id/' + id,
+        type: 'DELETE',
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.deleteInstructionalLettersWagon", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 //======= Arrival_UZ_Document (ЭПД УЗ по прибытию) ======================================
 // Получить все документы
 IDS_RWT_INCOMING.prototype.getArrival_UZ_Document = function (callback) {
@@ -2198,6 +2586,24 @@ IDS_RWT_INCOMING.prototype.getValueCultureObj = function (obj, name) {
 /* ----------------------------------------------------------
 функции для работы с внутреним массивом
 -------------------------------------------------------------*/
+//*======= IDS_RWT_INCOMING.list_instructional_letters_wagon  (Список вагонов) ======================================
+// Вернуть копию без связей
+IDS_RWT_INCOMING.prototype.getCloneInstructionalLettersWagon = function (wagon) {
+    if (!wagon) return null;
+    return {
+        id : wagon.id,
+        id_instructional_letters: wagon.id_instructional_letters,
+        num: wagon.num,
+        close: wagon.close,
+        close_status: wagon.close_status,
+        note: wagon.note,
+        create: wagon.create,
+        create_user: wagon.create_user,
+        change: wagon.change,
+        change_user: wagon.change_user,
+    };
+};
+
 //*======= IDS_RWT_INCOMING.list_status_arrival  (Справочник статусов прибытия) ======================================
 IDS_RWT_INCOMING.prototype.getStatusArrival_Internal_Of_Code = function (code) {
     if (this.list_status_arrival) {

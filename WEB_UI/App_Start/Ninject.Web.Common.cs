@@ -174,6 +174,9 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.ArrivalSostav>>().To<EFIDS.Concrete.EFArrivalSostav>();
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.ArrivalCars>>().To<EFIDS.Concrete.EFArrivalCars>();
             kernel.Bind<EFIDS.Abstract.IStringRepository<EFIDS.Entities.UZ_DOC>>().To<EFIDS.Concrete.EFUZ_DOC>();
+
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.InstructionalLetters>>().To<EFIDS.Concrete.EFInstructionalLetters>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.InstructionalLettersWagon>>().To<EFIDS.Concrete.EFInstructionalLettersWagon>();
         }
     }
 }

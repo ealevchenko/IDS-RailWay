@@ -79,3 +79,12 @@ input {
         .date-picker-wrapper .gap .gap-bottom-mask {
             z-index: 303;
         }
+
+td.details-control {
+    background: url('../../../Content/DataTables/media/images1/details_open.png') no-repeat center center;
+    cursor: pointer;
+}
+
+tr.shown td.details-control {
+    background: url('../../../Content/DataTables/media/images1/details_close.png') no-repeat center center;
+}

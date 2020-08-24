@@ -269,6 +269,8 @@
     <Compile Include="Controllers\api\Directoty\IDS_Directory_ModelsWagonsController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_TypesRepairsWagonsController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_WagonManufacturersController.cs" />
+    <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_InstructionalLettersWagonController.cs" />
+    <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_InstructionalLettersController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_Arrival_UZ_Document_DocsController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_Arrival_UZ_Document_ActsController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_Arrival_UZ_Document_PayController.cs" />
@@ -458,6 +460,8 @@
     <Content Include="Content\DataTables\media\css\dataTables.semanticui.min.css" />
     <Content Include="Content\DataTables\media\css\jquery.dataTables.css" />
     <Content Include="Content\DataTables\media\css\jquery.dataTables.min.css" />
+    <Content Include="Content\DataTables\media\images1\details_close.png" />
+    <Content Include="Content\DataTables\media\images1\details_open.png" />
     <Content Include="Content\DataTables\media\images1\sort_asc.png" />
     <Content Include="Content\DataTables\media\images1\sort_asc_disabled.png" />
     <Content Include="Content\DataTables\media\images1\sort_both.png" />

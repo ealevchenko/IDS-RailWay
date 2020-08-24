@@ -5325,7 +5325,7 @@ IDS_DIRECTORY.prototype.getListDivisions = function (fvalue, ftext, lang, filter
 IDS_DIRECTORY.prototype.getDivisions_Of_CultureName = function (name, lang, text) {
     if (this.list_divisions) {
         var obj = getObjects(this.list_divisions, name + '_' + lang, text);
-        return obj
+        return obj;
     }
     return null;
 };
