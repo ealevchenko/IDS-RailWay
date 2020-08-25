@@ -2586,7 +2586,24 @@ IDS_RWT_INCOMING.prototype.getValueCultureObj = function (obj, name) {
 /* ----------------------------------------------------------
 функции для работы с внутреним массивом
 -------------------------------------------------------------*/
-//*======= IDS_RWT_INCOMING.list_instructional_letters_wagon  (Список вагонов) ======================================
+//*======= IDS_RWT_INCOMING.list_instructional_letters  (Список писем) ======================================
+// Вернуть копию без связей
+IDS_RWT_INCOMING.prototype.getCloneInstructionalLetters = function (letter) {
+    if (!letter) return null;
+    return {
+        id: letter.id,
+        num: letter.num,
+        dt: letter.dt,
+        owner: letter.owner,
+        destination_station: letter.destination_station,
+        note: letter.note,
+        create: letter.create,
+        create_user: letter.create_user,
+        change: letter.change,
+        change_user: letter.change_user,
+    };
+};
+//*======= IDS_RWT_INCOMING.list_instructional_letters_wagon  (Список вагонов по письмам) ======================================
 // Вернуть копию без связей
 IDS_RWT_INCOMING.prototype.getCloneInstructionalLettersWagon = function (wagon) {
     if (!wagon) return null;

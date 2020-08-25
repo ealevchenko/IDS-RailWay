@@ -105,6 +105,24 @@ var getObjOflist = function (list, field, value) {
         return res[0];
     }
 };
+// вернуть масив свойств выбранных в масиве
+var getArrOfNameObjArr = function (list, name) {
+    var result = [];
+    if (!list || !name) return null;
+    for (ia = 0; ia < list.length; ia++) {
+        result.push(list[ia][name]);
+    };
+    return result;
+};
+
+var getStringArr = function (list, sep) {
+    var result = '';
+    if (!list) return result;
+    list.forEach(function (item, index, array) {
+        result += item + (index < list.length-1 ? String(sep) : '');
+    });
+    return result;
+};
 //==============================================================================================
 /* ----------------------------------------------------------
     Блокировка экрана

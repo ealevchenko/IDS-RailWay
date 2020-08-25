@@ -169,7 +169,7 @@
                             .add(pn_add_edit.add_edit_owner)
                             .add(pn_add_edit.add_edit_wagons)
                             .add(pn_add_edit.add_edit_note)
-                            ;
+                        ;
                         // создадим классы 
                         pn_add_edit.val = new VALIDATION(pn_add_edit.lang, pn_add_edit.alert, pn_add_edit.all_obj); // Создадим класс VALIDATION
                         pn_add_edit.obj = $("div#add_edit").dialog({
@@ -222,8 +222,22 @@
                 if (pn_add_edit.select_id) {
                     pn_add_edit.obj.dialog("option", "title", "Править письмо");
                     // редактировать письмо
-                    pn_add_edit.add_edit_note.val('').prop('disabled', true);
-                    pn_add_edit.obj.dialog("open");
+                    pn_add_edit.ids_inc.getInstructionalLettersOfID(pn_add_edit.select_id, function (result_il) {
+                        if (result_il) {
+                            pn_add_edit.select_obj = result_il;
+                            pn_add_edit.add_edit_num.val(result_il.num);
+                            pn_add_edit.add_edit_datetime.setDateTime(result_il.dt);
+                            pn_add_edit.add_edit_destination_station_code.val(result_il.destination_station);
+                            var station = pn_add_edit.ids_inc.uz_dir.getStations_Internal_Of_Code(result_il.destination_station)
+                            pn_add_edit.add_edit_destination_station.val(station.station);
+                            pn_add_edit.add_edit_owner.val(result_il.owner);
+                            pn_add_edit.add_edit_wagons.val(getStringArr(getArrOfNameObjArr(result_il.InstructionalLettersWagon, 'num'), ';')).prop('disabled', true);
+                            pn_add_edit.add_edit_note.val(result_il.note);
+                            pn_add_edit.obj.dialog("open");
+                        } else {
+                            alert.out_error_message('Ошибка чтения строки письма с id=' + pn_add_edit.select_id);
+                        }
+                    });
                 } else {
                     // Создать новое письмо
                     pn_add_edit.obj.dialog("option", "title", "Добавить новое письмо");
@@ -236,67 +250,6 @@
                     pn_add_edit.add_edit_note.val('').prop('disabled', false);
                     pn_add_edit.obj.dialog("open");
                 }
-
-
-                //if (pn_add_edit.select_num) {
-                //    // Правим запись
-                //    pn_add_edit.obj.dialog("option", "title", "Править вагон");
-                //    pn_add_edit.ids_dir.getWagonOfNum(pn_add_edit.select_num, function (result_obj) {
-                //        if (result_obj) {
-                //            pn_add_edit.view_car(result_obj);
-                //            //    pn_add_edit.select_obj = result_obj;
-                //            //    pn_add_edit.select_rent = pn_add_edit.ids_dir.getCurrentRentOfWagon(result_obj)
-
-                //            //    pn_add_edit.add_edit_num.val(pn_add_edit.select_obj.num).prop('disabled', true);
-                //            //    pn_add_edit.add_search_car.prop('disabled', true);
-                //            //    pn_add_edit.add_edit_kod_adm.val(pn_add_edit.ids_dir.getValue_Countrys_Of_ID(Number(pn_add_edit.select_obj.id_countrys), 'code_sng'));
-                //            //    pn_add_edit.add_edit_name_adm.val(Number(pn_add_edit.select_obj.id_countrys));
-                //            //    //pn_add_edit.add_edit_kod_rod.val(pn_add_edit.ids_dir.getValue_GenusWagons_Of_ID(Number(pn_add_edit.select_obj.id_genus), 'rod_uz'));
-                //            //    pn_add_edit.add_edit_name_rod.val(Number(pn_add_edit.select_obj.id_genus));
-                //            //    pn_add_edit.add_edit_name_rod_abbr.val(pn_add_edit.ids_dir.getValue_GenusWagons_Of_ID(Number(pn_add_edit.select_obj.id_genus), 'abbr', pn_add_edit.lang));
-                //            //    pn_add_edit.add_edit_usl_tip.val(pn_add_edit.select_obj.usl_tip);
-                //            //    pn_add_edit.add_edit_kol_os.val(pn_add_edit.select_obj.kol_os);
-                //            //    pn_add_edit.add_edit_gruzp.val(pn_add_edit.select_obj.gruzp);
-                //            //    pn_add_edit.add_edit_owner_car.val(Number(pn_add_edit.select_obj.id_owner));
-                //            //    pn_add_edit.add_edit_operator_uz_car.val(Number(pn_add_edit.select_obj.id_operator_uz));
-                //            //    pn_add_edit.add_edit_change_operator.setDateTime(pn_add_edit.select_obj.change_operator !== null ? pn_add_edit.select_obj.change_operator.replace(/T/g, ' ') : null);
-
-                //            //    pn_add_edit.add_edit_operator_car.val(Number(pn_add_edit.select_rent.id_operator));
-                //            //    pn_add_edit.add_edit_operator_car_rent_start.setDateTime(pn_add_edit.select_rent.rent_start !== null ? pn_add_edit.select_rent.rent_start.replace(/T/g, ' ') : null);
-                //            //    pn_add_edit.add_edit_type_ownership.val(pn_add_edit.select_obj.id_type_ownership);
-
-                //            //    pn_add_edit.add_edit_operator_car_new.val(-1);
-                //            //    pn_add_edit.add_edit_operator_car_rent_start_now.setDateTime(null);
-                //            //    pn_add_edit.add_edit_limiting.val(Number(pn_add_edit.select_rent.id_limiting));
-                //            //    pn_add_edit.add_edit_sign.val(pn_add_edit.select_obj.sign !== null ? pn_add_edit.select_obj.sign : -1);
-
-                //            //    pn_add_edit.add_edit_date_rem_uz.setDateTime(pn_add_edit.select_obj.date_rem_uz !== null ? pn_add_edit.select_obj.date_rem_uz.replace(/T/g, ' ') : null);
-                //            //    pn_add_edit.add_edit_date_rem_vag.setDateTime(pn_add_edit.select_obj.date_rem_vag !== null ? pn_add_edit.select_obj.date_rem_vag.replace(/T/g, ' ') : null);
-
-                //            //    pn_add_edit.add_edit_note.text(pn_add_edit.select_obj.note);
-                //            pn_add_edit.obj.dialog("open");
-
-                //        }
-                //        else {
-                //            pn_add_edit.val.clear_all();
-                //            pn_add_edit.val.out_error_message("Ошибка. Не могу найти строку по id = " + pn_add_edit.select_num);
-                //        }
-                //    });
-                //} else {
-                //    pn_add_edit.obj.dialog("option", "title", "Добавить вагон");
-                //    pn_add_edit.add_edit_num.val('').prop('disabled', false);
-                //    pn_add_edit.add_search_car.prop('disabled', false);
-                //    pn_add_edit.disabled_element();
-
-                //    //pn_add_edit.add_edit_cargo_group.val(-1);
-                //    //pn_add_edit.add_edit_cargo_etsng.val(-1);
-                //    //pn_add_edit.add_edit_cargo_name_ru.val('');
-                //    //pn_add_edit.add_edit_cargo_name_en.val('');
-                //    //pn_add_edit.add_edit_code_sap.val('');
-                //    //pn_add_edit.add_edit_sending.prop('checked', false);
-                //    // Добавим запись
-                //    pn_add_edit.obj.dialog("open");
-                //}
             },
             // Валидация введенных номеров
             validation_list_nums: function (valid, list) {
@@ -370,35 +323,61 @@
             save: function (callback_ok) {
                 var valid = pn_add_edit.validation();
                 if (valid) {
-                    var new_il = pn_add_edit.get_new_instructional_letters();
-                    pn_add_edit.validation_dublicat(new_il, function (result) {
-                        if (result) {
-                            LockScreen(langView('mess_save', langs));
-                            pn_add_edit.ids_inc.postInstructionalLetters(new_il, function (result_il) {
-                                if (result_il > 0) {
-                                    // Строка с письмом создана, добавим вагоны.
-                                    var arr_num = pn_add_edit.add_edit_wagons.val().split(';');
-                                    pn_add_edit.add_wagons(result_il, arr_num, function (result_add) {
-                                        //letter: id_letters, close: result_upd_ilw, new: -1
-                                        if (result_add.letter >= 0 && result_add.close >= 0 && result_add.new >= 0) {
-                                            if (typeof callback_ok === 'function') {
-                                                pn_add_edit.obj.dialog("close");
-                                                callback_ok({ mode: 0, letter: result_add.letter, close: result_add.close, new: result_add.new });
-                                            }
-                                        } else {
-                                            pn_add_edit.val.clear_all();
-                                            pn_add_edit.val.out_error_message("Ошибка. Не могу добавить вагоны по новому письму.");
-                                            LockScreenOff();
-                                        }
-                                    });
-                                } else {
-                                    pn_add_edit.val.clear_all();
-                                    pn_add_edit.val.out_error_message("Ошибка. Не могу создать строку с новым письмом.");
-                                    LockScreenOff();
+                    if (pn_add_edit.select_id > 0) {
+                        // править
+                        LockScreen(langView('mess_save', langs));
+                        var litter = pn_add_edit.ids_inc.getCloneInstructionalLetters(pn_add_edit.select_obj);
+                        litter.num = get_input_string_value(pn_add_edit.add_edit_num);
+                        litter.dt = toISOStringTZ(get_date_value(pn_add_edit.add_edit_datetime.val(), pn_add_edit.lang));
+                        litter.owner = get_input_string_value(pn_add_edit.add_edit_owner);
+                        litter.destination_station = get_select_number_value(pn_add_edit.add_edit_destination_station_code);
+                        litter.note = pn_add_edit.add_edit_note.val();
+                        litter.change = toISOStringTZ(new Date());
+                        litter.change_user = pn_add_edit.user_name;
+                        pn_add_edit.ids_inc.putInstructionalLetters(litter, function (result_upd) {
+                            if (result_upd >= 0) {
+                                if (typeof callback_ok === 'function') {
+                                    pn_add_edit.obj.dialog("close");
+                                    callback_ok({ mode: 1, letter: result_upd, close: 0, new: 0 });
                                 }
-                            });
-                        }
-                    });
+                            } else {
+                                pn_add_edit.val.clear_all();
+                                pn_add_edit.val.out_error_message("Ошибка. Не могу обновить информацию по письму");
+                                LockScreenOff();
+                            }
+                        });
+                    } else {
+                        // добавить
+                        var new_il = pn_add_edit.get_new_instructional_letters();
+                        pn_add_edit.validation_dublicat(new_il, function (result) {
+                            if (result) {
+                                LockScreen(langView('mess_save', langs));
+                                pn_add_edit.ids_inc.postInstructionalLetters(new_il, function (result_il) {
+                                    if (result_il > 0) {
+                                        // Строка с письмом создана, добавим вагоны.
+                                        var arr_num = pn_add_edit.add_edit_wagons.val().split(';');
+                                        pn_add_edit.add_wagons(result_il, arr_num, function (result_add) {
+                                            //letter: id_letters, close: result_upd_ilw, new: -1
+                                            if (result_add.letter >= 0 && result_add.close >= 0 && result_add.new >= 0) {
+                                                if (typeof callback_ok === 'function') {
+                                                    pn_add_edit.obj.dialog("close");
+                                                    callback_ok({ mode: 0, letter: result_add.letter, close: result_add.close, new: result_add.new });
+                                                }
+                                            } else {
+                                                pn_add_edit.val.clear_all();
+                                                pn_add_edit.val.out_error_message("Ошибка. Не могу добавить вагоны по новому письму.");
+                                                LockScreenOff();
+                                            }
+                                        });
+                                    } else {
+                                        pn_add_edit.val.clear_all();
+                                        pn_add_edit.val.out_error_message("Ошибка. Не могу создать строку с новым письмом.");
+                                        LockScreenOff();
+                                    }
+                                });
+                            }
+                        });
+                    }
                 }
             },
             // Добавим вагоны по письму 
@@ -474,7 +453,7 @@
                     dt: toISOStringTZ(get_date_value(pn_add_edit.add_edit_datetime.val(), pn_add_edit.lang)),
                     owner: get_input_string_value(pn_add_edit.add_edit_owner),
                     destination_station: get_select_number_value(pn_add_edit.add_edit_destination_station_code),
-                    note: pn_add_edit.add_edit_note.text(),
+                    note: pn_add_edit.add_edit_note.val(),
                     create: toISOStringTZ(new Date()),
                     create_user: pn_add_edit.user_name,
                 };
@@ -563,17 +542,6 @@
                             }
                         },
                         {
-                            extend: 'colvis',
-                            text: langView('title_button_field', langs),
-                            collectionLayout: 'fixed two-column',
-                            //postfixButtons: ['colvisRestore']
-                        },
-                        {
-                            extend: 'colvisGroup',
-                            text: langView('title_button_field_all', langs),
-                            show: ':hidden'
-                        },
-                        {
                             text: langView('title_button_add', langs),
                             action: function (e, dt, node, config) {
                                 pn_add_edit.Open(null);
@@ -584,7 +552,7 @@
                             text: langView('title_button_edit', langs),
                             action: function (e, dt, node, config) {
                                 if (table_letters.select_string) {
-                                    pn_add_edit.Open(table_letters.select_string.num);
+                                    pn_add_edit.Open(table_letters.select_string.id);
                                 }
                             },
                             enabled: false
@@ -593,7 +561,7 @@
                             text: langView('title_button_close', langs),
                             action: function (e, dt, node, config) {
                                 if (table_letters.select_string) {
-                                    pn_add_edit.Open(table_letters.select_string.num);
+                                    //pn_add_edit.Open(table_letters.select_string.num);
                                 }
                             },
                             enabled: false
@@ -603,10 +571,10 @@
                         }
                     ]
                 }).on('select', function (e, dt, type, indexes) {
-                    //table_letters.view_button(indexes);
+                    table_letters.view_button(indexes);
 
                 }).on('deselect', function (e, dt, type, indexes) {
-                    //table_letters.view_button(indexes);
+                    table_letters.view_button(indexes);
                 });
                 table_letters.initEventSelectChild();
             },
@@ -616,16 +584,8 @@
                 table_letters.count_string = items ? items.count() : 0;
                 table_letters.select_string = items && items.count() === 1 ? table_letters.obj.rows(items[0]).data()[0] : null;
                 if (table_letters.count_string > 0) {
-                    table_letters.obj.button(8).enable(true);
-                    table_letters.obj.button(9).enable(true);
-                    if (table_letters.count_string === 1) {
-                        table_letters.obj.button(7).enable(true);
-                        //table_letters.obj.button(8).enable(true);
-                    } else {
-
-                        table_letters.obj.button(7).enable(false);
-                        //table_letters.obj.button(8).enable(false);
-                    }
+                    table_letters.obj.button(3).enable(true);
+                    table_letters.obj.button(4).enable(true);
                 } else {
                     table_letters.deselect();
                 }
@@ -693,11 +653,9 @@
             },
             // Deselect
             deselect: function () {
-                //table_letters.select_string = null;
-                ////table_letters.obj.button(6).enable(false);
-                //table_letters.obj.button(7).enable(false);
-                //table_letters.obj.button(8).enable(false);
-                //table_letters.obj.button(9).enable(false);
+                table_letters.select_string = null;
+                table_letters.obj.button(3).enable(false);
+                table_letters.obj.button(4).enable(false);
             },
             // Инициализация события выборки детально
             initEventSelectChild: function () {
@@ -823,10 +781,52 @@
                         }
                     ]
                 }).on('select', function (e, dt, type, indexes) {
-                    //table_letters.view_button(indexes);
+
+                    var table_wagons_letter = e.target;
+
+                    table_wagons_letter = $(e.target.id).DataTable();
+                    //var table_wagons_letter = $(this);
+
+                    //var items = table_wagons_letter[0].rows({ selected: true });
+                    //table_wagons_letter.count_string = items ? items.count() : 0;
+                    //table_wagons_letter.select_string = items && items.count() === 1 ? table_wagons_letter.obj.rows(items[0]).data()[0] : null;
+                    //if (table_wagons_letter.count_string > 0) {
+                    //    table_wagons_letter.obj.button(3).enable(true);
+                    //    table_wagons_letter.obj.button(4).enable(true);
+                    //} else {
+                    //    table_wagons_letter.select_string = null;
+                    //    table_wagons_letter.obj.button(3).enable(false);
+                    //    table_wagons_letter.obj.button(4).enable(false);
+                    //}
+
+                    //var items = table_wagons_letter.rows({ selected: true });
+                    ////table_wagons_letter.count_string = items ? items.count() : 0;
+                    ////table_wagons_letter.select_string = items && items.count() === 1 ? table_wagons_letter.obj.rows(items[0]).data()[0] : null;
+                    //if (items.length > 0) {
+                    //    table_wagons_letter.button(3).enable(true);
+                    //    table_wagons_letter.button(4).enable(true);
+                    //} else {
+                    //    //table_wagons_letter.select_string = null;
+                    //    table_wagons_letter.button(3).enable(false);
+                    //    table_wagons_letter.button(4).enable(false);
+                    //}
+
+
 
                 }).on('deselect', function (e, dt, type, indexes) {
-                    //table_letters.view_button(indexes);
+
+                    //var table_wagons_letter = $(this);
+                    //var items = table_wagons_letter.obj.rows({ selected: true });
+                    //table_wagons_letter.count_string = items ? items.count() : 0;
+                    //table_wagons_letter.select_string = items && items.count() === 1 ? table_wagons_letter.obj.rows(items[0]).data()[0] : null;
+                    //if (table_wagons_letter.count_string > 0) {
+                    //    table_wagons_letter.obj.button(3).enable(true);
+                    //    table_wagons_letter.obj.button(4).enable(true);
+                    //} else {
+                    //    table_wagons_letter.select_string = null;
+                    //    table_wagons_letter.obj.button(3).enable(false);
+                    //    table_wagons_letter.obj.button(4).enable(false);
+                    //}
                 });
             },
             // Получить вагон по письму
@@ -875,13 +875,13 @@
                 if (result_add_edit.mode === 0) {
                     alert.out_info_message('Строка с новым письмом добавлена id=' + result_add_edit.letter + ' , закрыто вагонов ' + result_add_edit.close + ', добавлено новых ' + result_add_edit.new + '.');
                 }
-                //if (result_add_edit.mode === 1) {
-                //    alert.out_info_message('Строка с новым письмом добавлена id= , закрыто вагонов 0, добавлено новых 0.');
-                //}
+                if (result_add_edit.mode === 1) {
+                    alert.out_info_message('Строка с письмом обновлена id=' + result_add_edit.letter);
+                }
             }
         });
         table_letters.init();
         table_letters.load();
-        LockScreenOff();
+        //LockScreenOff();
     });
 });
