@@ -57,8 +57,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\IKOMETA.cs" />
+    <Compile Include="Abstract\IPROM_SOSTAV.cs" />
     <Compile Include="Concrete\EFDbContext.cs" />
     <Compile Include="Concrete\KOMETA\EFVAGON_SOB.cs" />
+    <Compile Include="Concrete\PROM_SOSTAV\EFPROM_SOSTAV.cs" />
+    <Compile Include="Entities\PROM_SOSTAV\Prom_Sostav.cs" />
     <Compile Include="Entities\KOMETA\VAGON_SOB.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

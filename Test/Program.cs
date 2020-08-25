@@ -78,6 +78,7 @@ namespace Test
             //tkis.EFKIS_Vagon_Sob();
             //tkis.EFKIS_GetCurrentVAGON_SOB();
             //tkis.KISDirectory_GetCurrent_KOMETA_VAGON_SOB();
+            tkis.EFKIS_PROM_SOSTAV_GetProm_SostavAndCount();
             #endregion
 
 
@@ -87,7 +88,7 @@ namespace Test
             //tids.IDSDirectory_GetID_Directory_StationOfCodeCS();
             //tids.IDSDirectory_GetCurrentDirectory_CarsOfNum();
             //tids.IDSTransfer_GetNumDoc();
-            tids.IDSDirectory_IsCorrectNumCar();
+            //tids.IDSDirectory_IsCorrectNumCar();
             //tids.GetActs();
             //tids.GetDocs();
             //tids.IDSMORS_GetLastIDWTWagonsMotionSignals();

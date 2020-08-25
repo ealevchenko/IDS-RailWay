@@ -53,7 +53,8 @@ namespace IDSLogs.Enum
 
         KIS = 4000,
         EFKIS = 4100,               // Библиотека базы данных EFKIS
-            EFKIS_VAGON_SOB = 4101,     // Таблица аренда вагонов
+        EFKIS_VAGON_SOB = 4101,     // Таблица аренда вагонов
+        EFKIS_PROM_SOSTAV = 4102,   // Таблица прибывших и отправленных вагонов
 
         KIS_Directory = 4200,       // Сервис справочников КИС
         #endregion

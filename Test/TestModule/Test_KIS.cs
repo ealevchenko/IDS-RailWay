@@ -1,6 +1,8 @@
 ﻿using EFIDS.Entities;
 using EFKIS.Concrete.KOMETA;
+using EFKIS.Concrete.PROM_SOSTAV;
 using EFKIS.Entities.KOMETA;
+using EFKIS.Entities.PROM_SOSTAV;
 using IDS;
 using IDSLogs.Enum;
 using KIS;
@@ -64,6 +66,23 @@ namespace Test.TestModule
             Console.WriteLine("N_VAGON: {0},\t SOB: {1},\t DATE_AR: {2},\t DATE_END: {3},\t ROD: {4},\t DATE_REM: {5},\t PRIM: {6},\t CODE: {7}",
                     t.N_VAGON, t.SOB, t.DATE_AR, t.DATE_END, t.ROD, t.DATE_REM, t.PRIM, t.CODE);
         }
+
+        public void EFKIS_PROM_SOSTAV_GetProm_SostavAndCount()
+        {
+            try
+            {
+                EFPROM_SOSTAV ef_wag = new EFPROM_SOSTAV();
+                List<Prom_SostavAndCount> list_psc1 = ef_wag.GetProm_SostavAndCount(new DateTime(2020, 08, 24, 0, 0, 0), new DateTime(2020, 08, 24, 23, 59, 59)).ToList();
+                List<Prom_SostavAndCount> list_out = list_psc1.Where(p => p.P_OT == 1).OrderBy(p => p.DT_PR).ToList();
+            }
+            catch (Exception e)
+            {
+
+                return;
+            }
+        }
+
+
 
         #endregion
 
