@@ -14,6 +14,7 @@ namespace EFIDS.Entities
         {
             Directory_WagonsRent = new HashSet<Directory_WagonsRent>();
             Arrival_UZ_Vagon = new HashSet<Arrival_UZ_Vagon>();
+            OutgoingCars = new HashSet<OutgoingCars>();
         }
 
         [Key]
@@ -81,5 +82,8 @@ namespace EFIDS.Entities
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Arrival_UZ_Vagon> Arrival_UZ_Vagon { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OutgoingCars> OutgoingCars { get; set; }
     }
 }

@@ -28,6 +28,10 @@ namespace EFIDS.Concrete
         public virtual DbSet<ArrivalCars> ArrivalCars { get; set; }
         public virtual DbSet<ArrivalSostav> ArrivalSostav { get; set; }
         public virtual DbSet<UZ_DOC> UZ_DOC { get; set; }
+
+        public virtual DbSet<OutgoingCars> OutgoingCars { get; set; }
+        public virtual DbSet<OutgoingSostav> OutgoingSostav { get; set; }
+
         // Письма
         public virtual DbSet<InstructionalLetters> InstructionalLetters { get; set; }
         public virtual DbSet<InstructionalLettersWagon> InstructionalLettersWagon { get; set; }
@@ -86,6 +90,34 @@ namespace EFIDS.Concrete
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+
+            // Сдача
+            modelBuilder.Entity<Directory_Station>()
+                .HasMany(e => e.OutgoingSostav)
+                .WithRequired(e => e.Directory_Station)
+                .HasForeignKey(e => e.id_station_from)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Directory_Station>()
+                .HasMany(e => e.OutgoingSostav1)
+                .WithOptional(e => e.Directory_Station1)
+                .HasForeignKey(e => e.id_station_on);
+
+            modelBuilder.Entity<Directory_Wagons>()
+                .HasMany(e => e.OutgoingCars)
+                .WithRequired(e => e.Directory_Wagons)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Directory_Ways>()
+                .HasMany(e => e.OutgoingSostav)
+                .WithRequired(e => e.Directory_Ways)
+                .HasForeignKey(e => e.id_way_from)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<OutgoingSostav>()
+                .HasMany(e => e.OutgoingCars)
+                .WithOptional(e => e.OutgoingSostav)
+                .HasForeignKey(e => e.id_outgoing);
             // Письма
             modelBuilder.Entity<InstructionalLetters>()
                 .HasMany(e => e.InstructionalLettersWagon)

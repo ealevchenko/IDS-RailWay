@@ -100,6 +100,8 @@
     <Compile Include="Concrete\Directory\EFDirectory_WagonManufacturers.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_GenusWagons.cs" />
     <Compile Include="Concrete\EFRepository.cs" />
+    <Compile Include="Concrete\RWT\EFOutgoingCars.cs" />
+    <Compile Include="Concrete\RWT\EFOutgoingSostav.cs" />
     <Compile Include="Concrete\RWT\EFInstructionalLetters.cs" />
     <Compile Include="Concrete\RWT\EFInstructionalLettersWagon.cs" />
     <Compile Include="Concrete\RWT\EFArrival_UZ_Vagon_Pay.cs" />
@@ -177,6 +179,8 @@
     <Compile Include="Entities\Directory\Directory_WagonsRent.cs" />
     <Compile Include="Entities\RWT\InstructionalLetters.cs" />
     <Compile Include="Entities\RWT\InstructionalLettersWagon.cs" />
+    <Compile Include="Entities\RWT\OutgoingCars.cs" />
+    <Compile Include="Entities\RWT\OutgoingSostav.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

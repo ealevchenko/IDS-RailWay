@@ -13,6 +13,7 @@ namespace EFIDS.Entities
         public Directory_Ways()
         {
             ArrivalSostav = new HashSet<ArrivalSostav>();
+            OutgoingSostav = new HashSet<OutgoingSostav>();
         }
 
         public int id { get; set; }
@@ -72,5 +73,8 @@ namespace EFIDS.Entities
         public virtual Directory_ParkWay Directory_ParkWay { get; set; }
 
         public virtual Directory_Station Directory_Station { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OutgoingSostav> OutgoingSostav { get; set; }
     }
 }
