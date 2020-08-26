@@ -70,11 +70,27 @@ h3 {
     page-break-inside: always;
 }*/
 
-  table { page-break-after:auto }
-  table tr    { page-break-inside:avoid; page-break-after:auto }
-  table td    { page-break-inside:avoid; page-break-after:auto }
-  table thead { display:table-header-group }
-  table tfoot { display:table-footer-group }
+table {
+    page-break-after: auto;
+}
+
+    table tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+
+    table td {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+
+    table thead {
+        display: table-header-group;
+    }
+
+    table tfoot {
+        display: table-footer-group;
+    }
 
 
 .table-title {
@@ -113,9 +129,9 @@ h3 {
     }
 
         .table-info td.total {
-            font-weight:600;
+            font-weight: 600;
         }
 
         .table-info th.total {
-            text-align:right;
+            text-align: right;
         }

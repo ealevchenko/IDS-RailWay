@@ -534,6 +534,7 @@
     <Content Include="Content\view\shared\filter-menu.css" />
     <Content Include="Content\view\idsmors\home.css" />
     <Content Include="Content\view\shared\home-menu.css" />
+    <Content Include="Content\view\shared\print_aica_kr.css" />
     <Content Include="Content\view\shared\print.css" />
     <Content Include="Content\view\shared\_idsdirectory.css" />
     <Content Include="Content\view\shared\_idsmors.css" />

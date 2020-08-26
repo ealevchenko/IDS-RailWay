@@ -580,7 +580,119 @@
                 mywindow.document.close(); // necessary for IE >= 10
                 mywindow.focus(); // necessary for IE >= 10
             };
+            // Вывести отчет Заявка на выдачу коммерческого акта ст. КР.
+            var view_report_aica_kr = function (sostav) {
 
+                var list_cars = sostav.ArrivalCars.filter(function (i) {
+                    return i.position_arrival
+                })
+
+                var nums = getArrOfNameObjArr(list_cars, 'num');
+                pn_sel_wagon.init(function (select_nums) {
+                    // Получить отчет
+                    if (select_nums && select_nums.length > 0) {
+
+                        var mywindow = window.open('', 'Заявка на выдачу коммерческого акта ст. Кривой Рог');
+                        mywindow.document.write('<html><head><title>Заявка на выдачу коммерческого акта ст. Кривой Рог</title>');
+                        mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/view/shared/print_aica_kr.css">');
+                        mywindow.document.write('</head><body>');
+                        mywindow.document.write('<div class=WordSection1>');
+                        mywindow.document.write('<br />');
+                        mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;text-indent:14.0cm"><span lang=UK style="font-size:14.0pt;line-height:107%;">Начальнику станції</span></p>');
+                        mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;text-indent:14.0cm"><span lang=UK style="font-size:14.0pt;line-height:107%;">Кривий Ріг</span></p>');
+                        mywindow.document.write('<br />');
+                        mywindow.document.write('<br />');
+                        mywindow.document.write('<br />');
+                        mywindow.document.write('<p class=MsoNormal align=center style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:center"><span style="font-size:14.0pt;line-height:107%;">ЗАЯВКА№________</span></p>');
+                        mywindow.document.write('<p class=MsoNormal align=center style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:center"><span style="font-size:14.0pt;line-height:107%;">на видачу комерційного акту</span></p>');
+                        mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span style="font-size:14.0pt;line-height:107%;">від__________ 20     р.</span></p>');
+                        mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span style="font-size:14.0pt;line-height:107%;">________год.________хв.</span></p>');
+                        mywindow.document.write('<br />');
+                        mywindow.document.write('<br />');
+                        mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span lang=UK style="font-size:14.0pt;line-height:107%;">Згідно зі ст. 129 Статуту залізниць України прошу скласти та надати комерційний акт на вантаж , що прибув потягом № ­­­­­­­ ­­­­­­­­­­­­­­_______________(дата)</span></p>');
+                        mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span lang=UK style="font-size:14.0pt;line-height:107%;">__________(год./хв.) з невідповідності маси вантажу натурою з даними, зазначеними у залізничній накладній</span></p>');
+
+                        mywindow.document.write('<br />');
+                        mywindow.document.write('<br />');
+                        mywindow.document.write('<table border=1 cellspacing=0 cellpadding=0 width=95% style="border-collapse:collapse;border:none">');
+                        mywindow.document.write('<tr>');
+
+                        mywindow.document.write('<td>');
+                        mywindow.document.write('Вагон №');
+                        mywindow.document.write('</td>');
+
+                        mywindow.document.write('<td>');
+                        mywindow.document.write('Найменування вантажу');
+                        mywindow.document.write('</td>');
+
+                        mywindow.document.write('<td>');
+                        mywindow.document.write('Станція відправлення');
+                        mywindow.document.write('</td>');
+
+                        mywindow.document.write('<td>');
+                        mywindow.document.write('Відправник');
+                        mywindow.document.write('</td>');
+                        mywindow.document.write('</tr>');
+
+                        select_nums.forEach(function (item, index, array) {
+                            var wag = getObjOflist(sostav.ArrivalCars, 'num', item);
+
+                            var doc_uz = wag.Arrival_UZ_Vagon && wag.Arrival_UZ_Vagon.Arrival_UZ_Document ? wag.Arrival_UZ_Vagon.Arrival_UZ_Document : null;
+                            var vag_uz = wag.Arrival_UZ_Vagon ? wag.Arrival_UZ_Vagon : null;
+                            var dir_cargo = vag_uz && vag_uz.Directory_Cargo ? vag_uz.Directory_Cargo : null;
+                            var dir_es = doc_uz && doc_uz.Directory_ExternalStation ? doc_uz.Directory_ExternalStation : null;
+                            var dir_ship = doc_uz && doc_uz.Directory_Shipper ? doc_uz.Directory_Shipper : null;
+
+                            mywindow.document.write('<tr>');
+                            mywindow.document.write('<td>');
+                            mywindow.document.write(wag.num);
+                            mywindow.document.write('</td>');
+                            mywindow.document.write('<td>');
+                            mywindow.document.write(dir_cargo ? ids_inc.ids_dir.getValueObj(dir_cargo, 'cargo_name', lang) : '');
+                            mywindow.document.write('</td>');
+                            mywindow.document.write('<td>');
+                            mywindow.document.write(dir_es ? ids_inc.ids_dir.getValueObj(dir_es, 'station_name', lang) : '');
+                            mywindow.document.write('</td>');
+                            mywindow.document.write('<td class="shipper">');
+                            mywindow.document.write(dir_ship ? ids_inc.ids_dir.getValueObj(dir_ship, 'shipper_name', lang) : '');
+                            mywindow.document.write('</td>');
+                            mywindow.document.write('</tr>');
+
+                        });
+                        mywindow.document.write('</table>');
+                        mywindow.document.write('<br />');
+                        mywindow.document.write('<br />');
+                        mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span lang=UK style="font-size:14.0pt;line-height:107%;">Представник</span></p>');
+                        mywindow.document.write('</div>');
+
+                        //mywindow.document.write('<h2>Натурная ведомость коммерческого осмотра №' + sostav.num_doc + '</h2>');
+                        //view_title(mywindow.document, sostav);              // Заголовок
+                        //view_table_info_car_fsci(mywindow.document, sostav);     // Вагоны в составе
+                        //mywindow.document.write('<br />');
+                        //mywindow.document.write('<br />');
+                        //mywindow.document.write('<div">Подпись приемосдатчика ______________________</div>');
+                        mywindow.document.write('</body></html>');
+
+                        mywindow.document.close(); // necessary for IE >= 10
+                        mywindow.focus(); // necessary for IE >= 10
+                    }
+                });
+                pn_sel_wagon.Open(nums);
+                //var mywindow = window.open('', 'Натурная ведомость коммерческого осмотра №' + sostav.num_doc);
+                //mywindow.document.write('<html><head><title>Натурная ведомость коммерческого осмотра №' + sostav.num_doc + '</title>');
+                //mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/view/shared/print.css">');
+                //mywindow.document.write('</head><body>');
+                //mywindow.document.write('<h2>Натурная ведомость коммерческого осмотра №' + sostav.num_doc + '</h2>');
+                //view_title(mywindow.document, sostav);              // Заголовок
+                //view_table_info_car_fsci(mywindow.document, sostav);     // Вагоны в составе
+                //mywindow.document.write('<br />');
+                //mywindow.document.write('<br />');
+                //mywindow.document.write('<div">Подпись приемосдатчика ______________________</div>');
+                //mywindow.document.write('</body></html>');
+
+                //mywindow.document.close(); // necessary for IE >= 10
+                //mywindow.focus(); // necessary for IE >= 10
+            };
 
             if (id) {
                 LockScreen(langView('mess_print', langs));
@@ -592,6 +704,7 @@
                         switch (report) {
                             case 'report_fst': view_report_fst(sostav); break;
                             case 'report_fsci': view_report_fsci(sostav); break;
+                            case 'report_aica_kr': view_report_aica_kr(sostav); break;
                             default: break;
                         }
                     }
@@ -919,6 +1032,7 @@
             input_data_stop: $('input#date-stop'),
             report_fst: $('#report_fst'),
             report_fsci: $('#report_fsci'),
+            report_aica_kr: $('#report_aica_kr'),
 
             init: function (list_station) {
                 // настроим компонент дата
@@ -973,6 +1087,14 @@
                         view_report(table_sostav.select_sostav.id, 'report_fsci');
                     }
                 });
+                //
+                pn_sel.report_aica_kr.on('click', function (event) {
+                    event.preventDefault();
+                    if (table_sostav.select_sostav) {
+                        view_report(table_sostav.select_sostav.id, 'report_aica_kr');
+                    }
+                });
+
             },
             view: function (refresh) {
                 view_sostav(refresh, pn_sel.start_dt, pn_sel.stop_dt, Number(pn_sel.select_station.val()) !== -1 ? function (i) { return i.id_station_from === Number(pn_sel.select_station.val()) ? true : false; } : null);
@@ -980,11 +1102,183 @@
         },
 
         //*************************************************************************************
+        // ОСНОВНАЯ ПАНЕЛЬ ВЫБОРА ВАГОНОВ
+        //*************************************************************************************
+        pn_sel_wagon = {
+            obj: null,
+            //Таблица с вагонами документа
+            table_wagon: {
+                html_table: $('#table-list-wagons'),
+                obj: null,
+                list: null,
+                // Инициализировать таблицу
+                init: function (callback_ok) {
+                    pn_sel_wagon.table_wagon.obj = pn_sel_wagon.table_wagon.html_table.DataTable({
+                        "paging": false,
+                        "searching": false,
+                        "ordering": false,
+                        "info": true,
+                        select: {
+                            //style: 'multi',
+                            style: 'multi',
+                            selector: 'td:first-child'
+                        },
+                        "autoWidth": false,
+                        //"filter": true,
+                        "scrollY": "400px",
+                        "scrollX": true,
+                        language: language_table(langs),
+                        jQueryUI: false,
+                        "createdRow": function (row, data, index) {
+                            //var bt_xml = $('<button type="button" class="btn btn-warning btn-sm" id="add-num-car-manual" title="Показать XML"><i class="fa fa-file-code-o" aria-hidden="true" ></i></button>');
+                            //bt_xml.on('click', function (event) {
+                            //    pn_sel_wagon.table_wagon.open_xml(data.xml_final);
+                            //});
+                            //$('td', row).eq(6).text('').append(bt_xml);
+                        },
+                        //columnDefs: [{
+                        //    orderable: false,
+                        //    className: 'select-checkbox',
+                        //    targets: 0
+                        //}],
+                        columns: [
+                            {
+                                targets: 0,
+                                data: null,
+                                defaultContent: '',
+                                orderable: false,
+                                className: 'select-checkbox',
+                                width: "50px"
+                            },
+                            { data: "num", title: langView('field_manual_car_num', langs), width: "100px", orderable: false, searchable: false },
+                        ],
+                        dom: 'Bfrtip',
+                        stateSave: false,
+                        buttons: [
+                            {
+                                extend: 'selectAll',
+                                text: 'Select All',
+                            },
+                            {
+                                extend: 'selectNone',
+                                text: 'Deselect All',
+                            }]
+                    }).on('select deselect', function (e, dt, type, indexes) {
+                        // Определим количество выбранных вагонов
+                        var count = pn_sel_wagon.table_wagon.obj.rows({ selected: true }).count();
+                        // Если есть вагоны выбранные отобразим кнопку "Ок"
+                        var buttons = pn_sel_wagon.obj.dialog("option", "buttons");
+                        buttons[0].disabled = count > 0 ? false : true;
+                        pn_sel_wagon.obj.dialog("option", "buttons", buttons);
+                    });
+                },
+                // Показать таблицу с данными
+                view: function (list) {
+                    pn_sel_wagon.table_wagon.obj.clear();
+                    for (i = 0; i < list.length; i++) {
+                        // Добавить документ в таблицу
+                        pn_sel_wagon.table_wagon.obj.row.add({ num: list[i] });
+                    }
+                    pn_sel_wagon.table_wagon.obj.draw();
+                },
+            },
+            init: function (callback_ok) {
+                pn_sel_wagon.obj = $("div#select-wagons").dialog({
+                    resizable: false,
+                    title: 'Укажите вагоны',
+                    modal: true,
+                    autoOpen: false,
+                    height: "auto",
+                    width: 500,
+                    classes: {
+                        "ui-dialog": "card",
+                        "ui-dialog-titlebar": "card-header bg-primary text-white",
+                        "ui-dialog-content": "card-body",
+                        "ui-dialog-buttonpane": "card-footer text-muted"
+                    },
+                    open: function (event, ui) {
+
+                    },
+                    buttons: [
+                        {
+                            disabled: true,
+                            text: "Ок",
+                            class: "btn btn-outline-primary btn",
+                            click: function () {
+                                pn_sel_wagon.select(callback_ok);
+                            }
+                        },
+                        {
+                            text: "Отмена",
+                            class: "btn btn-outline-primary btn",
+                            click: function () {
+                                $(this).dialog("close");
+                            }
+                        },
+                    ]
+                });
+                pn_sel_wagon.table_wagon.init();
+            },
+            //
+            Open: function (list_num) {
+                if (list_num && list_num.length > 0) {
+                    pn_sel_wagon.table_wagon.view(list_num);
+                }
+                pn_sel_wagon.obj.dialog("open");
+            },
+            // Сохранить изменения
+            select: function (callback_ok) {
+                var index = pn_sel_wagon.table_wagon.obj.rows({ selected: true });
+                var row_select_wagon = pn_sel_wagon.table_wagon.obj.rows(index[0]).data();
+                // Ок
+                pn_sel_wagon.obj.dialog("close");
+                if (typeof callback_ok === 'function') {
+                    callback_ok(getArrOfNameObjArr(row_select_wagon, 'num'));
+                }
+
+                //var valid = pn_edit_sostav.validation();
+                //if (valid) {
+                //    var arrival_sostav = pn_edit_sostav.getArrivalSostav();
+                //    if (pn_edit_sostav.id) {
+                //        // Править
+                //        pn_edit_sostav.ids_inc.putArrivalSostav(arrival_sostav,
+                //            function (result_edit) {
+                //                if (result_edit > 0) {
+                //                    // Ок
+                //                    pn_edit_sostav.obj.dialog("close");
+                //                    if (typeof callback_ok === 'function') {
+                //                        callback_ok(pn_edit_sostav.id, false);
+                //                    }
+                //                } else {
+                //                    pn_edit_sostav.val.clear_message();
+                //                    pn_edit_sostav.val.out_error_message("При обновлении состава произошла ошибка!");
+                //                }
+                //            });
+                //    } else {
+                //        // Добавить
+                //        pn_edit_sostav.ids_inc.postArrivalSostav(arrival_sostav,
+                //            function (result_add) {
+                //                if (result_add > 0) {
+                //                    // Ок
+                //                    pn_edit_sostav.obj.dialog("close");
+                //                    if (typeof callback_ok === 'function') {
+                //                        callback_ok(result_add, true);
+                //                    }
+                //                } else {
+                //                    pn_edit_sostav.val.clear_message();
+                //                    pn_edit_sostav.val.out_error_message("При добавлении состава произошла ошибка!");
+                //                }
+                //            });
+                //    }
+                //}
+            },
+        },
+        //*************************************************************************************
         // ДИАЛОГОВОЕ ОКНО "ДОБАВИТЬ/ПРАВИТЬ СОСТАВ"
         //*************************************************************************************
         pn_edit_sostav = {
             obj: null,
-            table: null,
+            //table: null,
             lang: null,
             list_station: null,
             user_name: null,
@@ -1019,7 +1313,7 @@
                     },
                     null);
                 // настроим компонент выбора времени
-                pn_edit_sostav.date_arrival = cd_initDateTimeRangePicker(pn_edit_sostav.date_arrival_edit, { lang: pn_edit_sostav.lang, time: true  }, function (datetime) {
+                pn_edit_sostav.date_arrival = cd_initDateTimeRangePicker(pn_edit_sostav.date_arrival_edit, { lang: pn_edit_sostav.lang, time: true }, function (datetime) {
 
                 });
                 // Соберем все элементы в массив
