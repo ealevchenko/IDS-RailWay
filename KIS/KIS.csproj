@@ -52,6 +52,8 @@
   <ItemGroup>
     <Compile Include="KISDirectory.cs" />
     <Compile Include="KISTransfer.cs" />
+    <Compile Include="KISWagon.cs" />
+    <Compile Include="kis_library.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

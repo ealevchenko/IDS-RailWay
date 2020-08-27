@@ -1,12 +1,11 @@
 ﻿using EFIDS.Entities;
 using EFKIS.Concrete.KOMETA;
-using EFKIS.Concrete.PROM_SOSTAV;
+using EFKIS.Concrete.PROM;
 using EFKIS.Entities.KOMETA;
-using EFKIS.Entities.PROM_SOSTAV;
+using EFKIS.Entities.PROM;
 using IDS;
 using IDSLogs.Enum;
 using KIS;
-using KIS.Directory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,7 +71,7 @@ namespace Test.TestModule
         {
             try
             {
-                EFPROM_SOSTAV ef_wag = new EFPROM_SOSTAV();
+                EFPROM ef_wag = new EFPROM();
                 List<Prom_SostavAndCount> list_psc1 = ef_wag.GetProm_SostavAndCount(new DateTime(2020, 08, 24, 0, 0, 0), new DateTime(2020, 08, 24, 23, 59, 59)).ToList();
                 List<Prom_SostavAndCount> list_out = list_psc1.Where(p => p.P_OT == 1).OrderBy(p => p.DT_PR).ToList();
             }

@@ -1,5 +1,4 @@
-﻿using IDS;
-using IDSLogs;
+﻿using IDSLogs;
 using IDSLogs.Enum;
 using System;
 using System.Collections.Generic;

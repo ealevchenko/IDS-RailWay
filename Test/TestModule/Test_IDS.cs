@@ -32,6 +32,15 @@ namespace Test.TestModule
             string res = ids.AddUpdateUZ_DOC_To_DB_IDS(64566136, null);
             Console.WriteLine("num_doc = {0}",res);
         }
+        /// <summary>
+        /// Тест переноса составов на отправление на УЗ по данным КИС
+        /// </summary>
+        public void IDSTransfer_InsertOutgoingSostavOfKis()
+        {
+
+            IDSTransfer ids = new IDSTransfer(service.Test);
+            ids.InsertOutgoingSostavOfKis();
+        }
 
         #endregion
 

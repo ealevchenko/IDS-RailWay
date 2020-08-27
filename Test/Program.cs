@@ -79,7 +79,7 @@ namespace Test
             //tkis.EFKIS_GetCurrentVAGON_SOB();
             //tkis.KISDirectory_GetCurrent_KOMETA_VAGON_SOB();
             //tkis.EFKIS_PROM_SOSTAV_GetProm_SostavAndCount();
-            tkis.KISTransfer_TransferOutgoingIDSOfKis();
+            //tkis.KISTransfer_TransferOutgoingIDSOfKis();
             #endregion
 
 
@@ -94,6 +94,7 @@ namespace Test
             //tids.GetDocs();
             //tids.IDSMORS_GetLastIDWTWagonsMotionSignals();
             //tids.SetNum_UZ();
+            tids.IDSTransfer_InsertOutgoingSostavOfKis();
             #endregion
 
             #region Test_Logs тест логирования

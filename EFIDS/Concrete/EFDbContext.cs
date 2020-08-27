@@ -103,10 +103,10 @@ namespace EFIDS.Concrete
                 .WithOptional(e => e.Directory_Station1)
                 .HasForeignKey(e => e.id_station_on);
 
-            modelBuilder.Entity<Directory_Wagons>()
-                .HasMany(e => e.OutgoingCars)
-                .WithRequired(e => e.Directory_Wagons)
-                .WillCascadeOnDelete(false);
+            //modelBuilder.Entity<Directory_Wagons>()
+            //    .HasMany(e => e.OutgoingCars)
+            //    .WithRequired(e => e.Directory_Wagons)
+            //    .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Directory_Ways>()
                 .HasMany(e => e.OutgoingSostav)

@@ -7,6 +7,7 @@ using IDSLogs;
 using IDSLogs.Enum;
 using EFIDS.Concrete;
 using EFIDS.Entities;
+using KIS;
 
 namespace IDS
 {
@@ -387,7 +388,7 @@ namespace IDS
                         if (doc.revision <= uz_doc.revision)
                         {
                             string code_from = uz_doc.sender_code != null ? uz_doc.sender_code : "0";
-                            
+
                             doc.num_doc = uz_doc.id_doc;
                             doc.revision = uz_doc.revision;
                             doc.num_uz = uz_doc.otpr != null ? uz_doc.otpr.nom_doc : null;
@@ -424,33 +425,141 @@ namespace IDS
         #endregion
 
         #region OutgoingSostav
-        /// <summary>
-        /// Вернуть последнюю запись составов отправляемых на УЗ по дате готовности АМКР
-        /// </summary>
-        /// <returns></returns>
-        public OutgoingSostav GetLastOutgoingSostavOfReadinessAMKR() { 
-            try{
-                EFOutgoingSostav ef_sostav = new EFOutgoingSostav(new EFDbContext());
-                return ef_sostav.Context.OrderByDescending(s => s.date_readiness_amkr).FirstOrDefault();
-            }
-            catch (Exception e)
+
+
+        public int GetIDStationIDSOfIDKis(int? id)
+        {
+            switch (id)
             {
-                e.ExceptionMethodLog(String.Format("GetLastOutgoingSostavOfReadinessAMKR()"), servece_owner, eventID);
-                return null;// Ошибка
-            }        
+                case 1: return 6;
+                case 29: return 16;
+                case 18: return 27;
+                case 23: return 19;
+                case 28: return 14;
+                case 30: return 15;
+                case 31: return 3;
+                case 36: return 18;
+                case 39: return 29;
+                default: return 0;
+            }
+        }
+        public int GetIDWayIDSOfIDKis(int? id)
+        {
+            switch (id)
+            {
+                case 1: return 105;
+                case 18: return 788;
+                case 23: return 462;
+                default: return 105;
+            }
         }
 
-        public DateTime? GetReadinessAMKRLastOutgoingSostavOfReadinessAMKR() {
+        /// <summary>
+        /// Перенос составов на отправление УЗ по данным КИС
+        /// </summary>
+        /// <returns></returns>
+        public int InsertOutgoingSostavOfKis()
+        {
             try
             {
-                OutgoingSostav outgoing = GetLastOutgoingSostavOfReadinessAMKR();
-                return outgoing != null ? (DateTime?)outgoing.date_readiness_amkr : null;
+                EFOutgoingSostav ef_sostav = new EFOutgoingSostav(new EFDbContext());
+                EFOutgoingCars ef_car = new EFOutgoingCars(new EFDbContext());
+                KISWagon kis_wagon = new KISWagon(this.servece_owner);
+
+                int add_sostav = 0;
+
+                // Определим время начало и конца выборки для переноса
+                DateTime td_start = DateTime.Now.AddDays(-1);
+                DateTime td_stop = DateTime.Now;
+                // Определим последнюю запись в ИДС и уточним начало выборки
+                OutgoingSostav outgoing = ef_sostav.Context.OrderByDescending(s => s.date_readiness_amkr).FirstOrDefault();
+                if (outgoing != null && outgoing.date_readiness_amkr != null)
+                {
+                    td_start = ((DateTime)outgoing.date_readiness_amkr).AddDays(-1);
+
+                }
+                // Получим вагоны из КИС
+                List<PROM_SOSTAV> out_sostav = kis_wagon.GetOutSostavOfKis(td_start, td_stop);
+                // Получим вагоны которые уже перенесеры
+                List<OutgoingSostav> list_ids_sostav = ef_sostav.Context.OrderByDescending(s => s.date_readiness_amkr >= td_start & s.date_readiness_amkr <= td_stop).ToList();
+                // Перенесем в ИДС
+                foreach (PROM_SOSTAV sostav in out_sostav)
+                {
+                    // Определим состав с такой натуркой есть ?
+                    OutgoingSostav ids_sostav = list_ids_sostav.Where(s => s.num_doc == sostav.N_NATUR).FirstOrDefault();
+                    List<OutgoingCars> list_cars = new List<OutgoingCars>();
+                    if (ids_sostav == null)
+                    {
+                        // состава нет добавим
+                        ids_sostav = new OutgoingSostav()
+                        {
+                            id = 0,
+                            num_doc = sostav.N_NATUR,
+                            id_station_from = GetIDStationIDSOfIDKis(sostav.K_ST),
+                            id_way_from = sostav.N_PUT != null ? (int)sostav.N_PUT : GetIDWayIDSOfIDKis(sostav.K_ST),
+                            id_station_on = sostav.K_ST_PR != null ? (int?)GetIDStationIDSOfIDKis(sostav.K_ST_PR) : null,
+                            date_readiness_amkr = sostav.DT_PR,
+                            date_show_wagons = null,
+                            date_readiness_uz = null,
+                            date_outgoing = null,
+                            date_outgoing_act = null,
+                            composition_index = null,
+                            status = 0,
+                            note = "Перенесен по данным КИС",
+                            create = DateTime.Now,
+                            create_user = System.Environment.UserDomainName + @"\" + System.Environment.UserName
+                        };
+                        ef_sostav.Add(ids_sostav);
+                        int res = ef_sostav.Save();
+                        if (res > 0)
+                        {
+                            try
+                            {
+                                // Теперь добавим вагоны
+                                List<PROM_NATHIST> list_car = kis_wagon.GetOutProm_NatHistOfNaturDateTime(sostav.N_NATUR, (int)sostav.D_DD, (int)sostav.D_MM, (int)sostav.D_YY, (int)sostav.T_HH, (int)sostav.T_MI, false);
+                                if (list_car != null && list_car.Count() > 0)
+                                {
+                                    foreach (PROM_NATHIST pnh in list_car)
+                                    {
+                                        OutgoingCars car = new OutgoingCars()
+                                        {
+                                            id = 0,
+                                            id_outgoing = ids_sostav.id,
+                                            num = pnh.N_VAG,
+                                            position = pnh.NPP != null ? (int)pnh.NPP : 0,
+                                            position_outgoing = null,
+                                            note = null,
+                                            date_outgoing_act = null,
+                                            outgoing = null,
+                                            outgoing_user = null,
+                                            create = DateTime.Now,
+                                            create_user = System.Environment.UserDomainName + @"\" + System.Environment.UserName,
+                                            id_outgoing_uz_vagon = null,
+                                        };
+                                        list_cars.Add(car);
+                                    }
+                                    ef_car.Add(list_cars);
+                                    int res_car = ef_car.Save();
+                                    if (res_car >= 0)
+                                    {
+                                        add_sostav++;
+                                    }
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                e.ExceptionLog(String.Format("Метод InsertOutgoingSostavOfKis(), ошибка добавления вагонов состава id={0}", ids_sostav.id), servece_owner, eventID);
+                            }
+                        }
+                    }
+                }
+                return add_sostav;
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("GetLastOutgoingSostavOfReadinessAMKR()"), servece_owner, eventID);
-                return null;// Ошибка
-            } 
+                e.ExceptionMethodLog(String.Format("InsertOutgoingSostavOfKis()"), servece_owner, eventID);
+                return -1;// Возвращаем id=-1 , Ошибка
+            }
         }
 
 

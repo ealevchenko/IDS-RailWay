@@ -3,7 +3,7 @@ using EFIDS.Entities;
 using EFIDS.Helper;
 using IDSLogs;
 using IDSLogs.Enum;
-using KIS.Directory;
+using KIS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
