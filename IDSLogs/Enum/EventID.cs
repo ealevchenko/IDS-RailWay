@@ -57,6 +57,8 @@ namespace IDSLogs.Enum
         EFKIS_PROM_SOSTAV = 4102,   // Таблица прибывших и отправленных вагонов
 
         KIS_Directory = 4200,       // Сервис справочников КИС
+        KIS_IDSTransfer = 4300,       // Сервис переноса даных из файлов в ИДС
+
         #endregion
     }
 }

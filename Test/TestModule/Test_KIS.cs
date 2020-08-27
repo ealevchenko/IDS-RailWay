@@ -6,6 +6,7 @@ using EFKIS.Entities.PROM_SOSTAV;
 using IDS;
 using IDSLogs.Enum;
 using KIS;
+using KIS.Directory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -102,6 +103,22 @@ namespace Test.TestModule
         }
         #endregion
 
-
+        #region KISTransfer
+        /// <summary>
+        /// тест переноса составов по отправке из КИС в ИДС
+        /// </summary>
+        public void KISTransfer_TransferOutgoingIDSOfKis()
+        {
+            try
+            {
+                KISTransfer kis_tr = new KISTransfer();
+                kis_tr.TransferOutgoingIDSOfKis();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+        #endregion
     }
 }

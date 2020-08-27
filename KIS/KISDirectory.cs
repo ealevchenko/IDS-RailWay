@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KIS
+namespace KIS.Directory
 {
 
     public class KOMETA_VAGON_SOB

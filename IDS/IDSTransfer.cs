@@ -40,6 +40,8 @@ namespace IDS
         {
             this.servece_owner = servece_owner;
         }
+
+        #region ArrivalSostav
         /// <summary>
         /// Добавить новый состав находящийся на станциях УЗ Кривого Рога в систему ИДС
         /// </summary>
@@ -159,6 +161,9 @@ namespace IDS
         {
             return InsertArrivalSostav(id_arrived, id_sostav, train, composition_index, date_arrival, null);
         }
+        #endregion
+
+        #region ArrivalCars
         /// <summary>
         /// Добавить новые вагоны находящийся в сотаве прибывших на станциях УЗ Кривого Рога в систему ИДС
         /// </summary>
@@ -267,6 +272,9 @@ namespace IDS
         {
             return InsertArrivalCars(id_arrival, cars, null);
         }
+        #endregion
+
+        #region UZ_DOC
         /// <summary>
         /// Получить документ из промежуточной базы данных по номеру вагона добавить или обновить его в базе ИДС и вернуть id документа (УЗ)
         /// </summary>
@@ -311,7 +319,6 @@ namespace IDS
                 return null;// Ошибка
             }
         }
-
         /// <summary>
         /// Получить документ из промежуточной базы данных по номеру вагона.
         /// </summary>
@@ -331,7 +338,6 @@ namespace IDS
                 return null;// Ошибка
             }
         }
-
         /// <summary>
         /// Добавим или обновим документ в таблице ЭПД принятых вагонов
         /// </summary>
@@ -415,8 +421,40 @@ namespace IDS
                 return null;// Ошибка
             }
         }
+        #endregion
+
+        #region OutgoingSostav
+        /// <summary>
+        /// Вернуть последнюю запись составов отправляемых на УЗ по дате готовности АМКР
+        /// </summary>
+        /// <returns></returns>
+        public OutgoingSostav GetLastOutgoingSostavOfReadinessAMKR() { 
+            try{
+                EFOutgoingSostav ef_sostav = new EFOutgoingSostav(new EFDbContext());
+                return ef_sostav.Context.OrderByDescending(s => s.date_readiness_amkr).FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetLastOutgoingSostavOfReadinessAMKR()"), servece_owner, eventID);
+                return null;// Ошибка
+            }        
+        }
+
+        public DateTime? GetReadinessAMKRLastOutgoingSostavOfReadinessAMKR() {
+            try
+            {
+                OutgoingSostav outgoing = GetLastOutgoingSostavOfReadinessAMKR();
+                return outgoing != null ? (DateTime?)outgoing.date_readiness_amkr : null;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetLastOutgoingSostavOfReadinessAMKR()"), servece_owner, eventID);
+                return null;// Ошибка
+            } 
+        }
 
 
+        #endregion
 
     }
 }

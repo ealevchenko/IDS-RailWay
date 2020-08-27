@@ -78,7 +78,8 @@ namespace Test
             //tkis.EFKIS_Vagon_Sob();
             //tkis.EFKIS_GetCurrentVAGON_SOB();
             //tkis.KISDirectory_GetCurrent_KOMETA_VAGON_SOB();
-            tkis.EFKIS_PROM_SOSTAV_GetProm_SostavAndCount();
+            //tkis.EFKIS_PROM_SOSTAV_GetProm_SostavAndCount();
+            tkis.KISTransfer_TransferOutgoingIDSOfKis();
             #endregion
 
 
