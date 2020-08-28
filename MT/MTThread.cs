@@ -246,7 +246,7 @@ namespace MT
                     thTransferArrival.Name = service.ToString();
                     thTransferArrival.Start();
                 }
-                return thTransferApproaches.IsAlive;
+                return thTransferArrival.IsAlive;
             }
             catch (Exception ex)
             {
@@ -393,8 +393,6 @@ namespace MT
             }
         }
         #endregion
-
-
 
     }
 }

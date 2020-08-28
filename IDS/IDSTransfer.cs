@@ -29,6 +29,9 @@ namespace IDS
         private eventID eventID = eventID.IDS_IDSTransfer;
         protected service servece_owner = service.Null;
 
+        private int transfer_control_time_interval_kis = 12; // Интервал часов контроля до и после текущего времени при переное данных из КИС
+        public int TransferControlTimeIntervalKIS { get { return this.transfer_control_time_interval_kis; } set { this.transfer_control_time_interval_kis = value; } }
+
         public IDSTransfer()
         {
 
@@ -426,7 +429,11 @@ namespace IDS
 
         #region OutgoingSostav
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public int GetIDStationIDSOfIDKis(int? id)
         {
             switch (id)
@@ -443,6 +450,11 @@ namespace IDS
                 default: return 0;
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public int GetIDWayIDSOfIDKis(int? id)
         {
             switch (id)
@@ -467,15 +479,17 @@ namespace IDS
                 KISWagon kis_wagon = new KISWagon(this.servece_owner);
 
                 int add_sostav = 0;
+                int skip_sostav = 0;
+                int err_sostav = 0;
 
                 // Определим время начало и конца выборки для переноса
-                DateTime td_start = DateTime.Now.AddDays(-1);
+                DateTime td_start = DateTime.Now.AddHours(-1 * this.transfer_control_time_interval_kis);
                 DateTime td_stop = DateTime.Now;
                 // Определим последнюю запись в ИДС и уточним начало выборки
                 OutgoingSostav outgoing = ef_sostav.Context.OrderByDescending(s => s.date_readiness_amkr).FirstOrDefault();
                 if (outgoing != null && outgoing.date_readiness_amkr != null)
                 {
-                    td_start = ((DateTime)outgoing.date_readiness_amkr).AddDays(-1);
+                    td_start = ((DateTime)outgoing.date_readiness_amkr).AddHours(-1 * this.transfer_control_time_interval_kis);
 
                 }
                 // Получим вагоны из КИС
@@ -485,74 +499,116 @@ namespace IDS
                 // Перенесем в ИДС
                 foreach (PROM_SOSTAV sostav in out_sostav)
                 {
-                    // Определим состав с такой натуркой есть ?
-                    OutgoingSostav ids_sostav = list_ids_sostav.Where(s => s.num_doc == sostav.N_NATUR).FirstOrDefault();
-                    List<OutgoingCars> list_cars = new List<OutgoingCars>();
-                    if (ids_sostav == null)
+                    if (sostav.D_DD != null && sostav.D_MM != null && sostav.D_YY != null && sostav.T_HH != null && sostav.T_MI != null)
                     {
-                        // состава нет добавим
-                        ids_sostav = new OutgoingSostav()
+                        int res;
+                        // Дата и время заолнены можно получить перечень вагонов
+                        // Определим состав с такой натуркой есть ?
+                        OutgoingSostav ids_sostav = list_ids_sostav.Where(s => s.num_doc == sostav.N_NATUR).FirstOrDefault();
+                        List<OutgoingCars> list_cars = new List<OutgoingCars>();
+                        // Проверим состав в ИДС есть
+                        // Если нет добавим и добавим вагоны
+                        // Если есть проверим на кол вагонов, если =0, тогда добавим вагоны
+                        if (ids_sostav == null || (ids_sostav != null && ids_sostav.OutgoingCars.Count() == 0))
                         {
-                            id = 0,
-                            num_doc = sostav.N_NATUR,
-                            id_station_from = GetIDStationIDSOfIDKis(sostav.K_ST),
-                            id_way_from = sostav.N_PUT != null ? (int)sostav.N_PUT : GetIDWayIDSOfIDKis(sostav.K_ST),
-                            id_station_on = sostav.K_ST_PR != null ? (int?)GetIDStationIDSOfIDKis(sostav.K_ST_PR) : null,
-                            date_readiness_amkr = sostav.DT_PR,
-                            date_show_wagons = null,
-                            date_readiness_uz = null,
-                            date_outgoing = null,
-                            date_outgoing_act = null,
-                            composition_index = null,
-                            status = 0,
-                            note = "Перенесен по данным КИС",
-                            create = DateTime.Now,
-                            create_user = System.Environment.UserDomainName + @"\" + System.Environment.UserName
-                        };
-                        ef_sostav.Add(ids_sostav);
-                        int res = ef_sostav.Save();
-                        if (res > 0)
-                        {
-                            try
+                            if (ids_sostav == null)
                             {
-                                // Теперь добавим вагоны
-                                List<PROM_NATHIST> list_car = kis_wagon.GetOutProm_NatHistOfNaturDateTime(sostav.N_NATUR, (int)sostav.D_DD, (int)sostav.D_MM, (int)sostav.D_YY, (int)sostav.T_HH, (int)sostav.T_MI, false);
-                                if (list_car != null && list_car.Count() > 0)
+                                // состава нет добавим
+                                ids_sostav = new OutgoingSostav()
                                 {
-                                    foreach (PROM_NATHIST pnh in list_car)
+                                    id = 0,
+                                    num_doc = sostav.N_NATUR,
+                                    id_station_from = GetIDStationIDSOfIDKis(sostav.K_ST),
+                                    id_way_from = sostav.N_PUT != null ? (int)sostav.N_PUT : GetIDWayIDSOfIDKis(sostav.K_ST),
+                                    id_station_on = sostav.K_ST_PR != null ? (int?)GetIDStationIDSOfIDKis(sostav.K_ST_PR) : null,
+                                    date_readiness_amkr = sostav.DT_PR,
+                                    date_show_wagons = null,
+                                    date_readiness_uz = null,
+                                    date_outgoing = null,
+                                    date_outgoing_act = null,
+                                    composition_index = null,
+                                    status = 0,
+                                    note = "Перенесен по данным КИС",
+                                    create = DateTime.Now,
+                                    create_user = System.Environment.UserDomainName + @"\" + System.Environment.UserName
+                                };
+                                ef_sostav.Add(ids_sostav);
+                                res = ef_sostav.Save();
+                            }
+                            else
+                            {
+                                res = 1; // Состав добавлен ранее
+                            }
+                            if (res > 0)
+                            {
+                                try
+                                {
+                                    // Теперь добавим вагоны
+                                    List<PROM_NATHIST> list_car = kis_wagon.GetOutProm_NatHistOfNaturDateTime(sostav.N_NATUR, (int)sostav.D_DD, (int)sostav.D_MM, (int)sostav.D_YY, (int)sostav.T_HH, (int)sostav.T_MI, false);
+                                    if (list_car != null && list_car.Count() > 0)
                                     {
-                                        OutgoingCars car = new OutgoingCars()
+                                        foreach (PROM_NATHIST pnh in list_car)
                                         {
-                                            id = 0,
-                                            id_outgoing = ids_sostav.id,
-                                            num = pnh.N_VAG,
-                                            position = pnh.NPP != null ? (int)pnh.NPP : 0,
-                                            position_outgoing = null,
-                                            note = null,
-                                            date_outgoing_act = null,
-                                            outgoing = null,
-                                            outgoing_user = null,
-                                            create = DateTime.Now,
-                                            create_user = System.Environment.UserDomainName + @"\" + System.Environment.UserName,
-                                            id_outgoing_uz_vagon = null,
-                                        };
-                                        list_cars.Add(car);
+                                            OutgoingCars car = new OutgoingCars()
+                                            {
+                                                id = 0,
+                                                id_outgoing = ids_sostav.id,
+                                                num = pnh.N_VAG,
+                                                position = pnh.NPP != null ? (int)pnh.NPP : 0,
+                                                position_outgoing = null,
+                                                note = null,
+                                                date_outgoing_act = null,
+                                                outgoing = null,
+                                                outgoing_user = null,
+                                                create = DateTime.Now,
+                                                create_user = System.Environment.UserDomainName + @"\" + System.Environment.UserName,
+                                                id_outgoing_uz_vagon = null,
+                                            };
+                                            list_cars.Add(car);
+                                        }
+                                        ef_car.Add(list_cars);
+                                        int res_car = ef_car.Save();
+                                        if (res_car >= 0)
+                                        {
+                                            add_sostav++;
+                                        }
                                     }
-                                    ef_car.Add(list_cars);
-                                    int res_car = ef_car.Save();
-                                    if (res_car >= 0)
-                                    {
-                                        add_sostav++;
+                                    else { 
+                                    String.Format("Метод InsertOutgoingSostavOfKis(), ошибка добавления вагонов состава id={0}, По натурке №{1} за {2} - отсутсвует информация о вагонах!", ids_sostav.id, sostav.N_NATUR, sostav.DT).ErrorLog(servece_owner, this.eventID);
+                                    // Счетчик ошибок
+                                    err_sostav++;                                    
                                     }
                                 }
+                                catch (Exception e)
+                                {
+                                    String.Format("Метод InsertOutgoingSostavOfKis(), ошибка добавления вагонов состава id={0}, Натурка:{1}, Дата={2}", ids_sostav.id, sostav.N_NATUR, sostav.DT).ErrorLog(servece_owner, this.eventID);
+                                    // Счетчик ошибок
+                                    err_sostav++;
+                                }
                             }
-                            catch (Exception e)
+                            else
                             {
-                                e.ExceptionLog(String.Format("Метод InsertOutgoingSostavOfKis(), ошибка добавления вагонов состава id={0}", ids_sostav.id), servece_owner, eventID);
+                                // Счетчик ошибок
+                                err_sostav++;
+                                String.Format("Метод InsertOutgoingSostavOfKis(), ошибка переноса состава в ИДС Натурка:{0}, Дата={1}, Код ошибки={2}",sostav.N_NATUR, sostav.DT, res).ErrorLog(servece_owner, this.eventID);
                             }
                         }
+                        else
+                        {
+                            // Счетчик пропущеных
+                            skip_sostav++;
+                        }
+                    }
+                    else
+                    {
+                        // Дата и время не заполнены не могу получить вагоны
+                        err_sostav++;
+                        String.Format("Метод InsertOutgoingSostavOfKis(), ошибка определения даты и времени Натурка:{0}, D_DD={1},D_MM={2},D_YY={3},T_HH={4},T_MI={5}",
+                          sostav.N_NATUR, sostav.D_DD, sostav.D_MM, sostav.D_YY, sostav.T_HH, sostav.T_MI).ErrorLog(servece_owner, this.eventID);
                     }
                 }
+                String.Format("Перенос составов из системы КИС «Транспорт», определено для переноса: {0} составов, перенесено: {1} , пропущено: {2} , ошибок переноса:{3}.",
+                    out_sostav.Count(), add_sostav, skip_sostav, err_sostav).InformationLog(servece_owner, this.eventID);
                 return add_sostav;
             }
             catch (Exception e)
@@ -561,7 +617,6 @@ namespace IDS
                 return -1;// Возвращаем id=-1 , Ошибка
             }
         }
-
 
         #endregion
 

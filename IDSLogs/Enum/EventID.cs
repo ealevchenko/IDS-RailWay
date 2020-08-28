@@ -46,6 +46,7 @@ namespace IDSLogs.Enum
         IDS_Directory = 3300,       // Сервис справочников ИДС
         IDS_IDSTransfer = 3400,     // Сервис переноса даных из файлов в БД IDS
         IDS_IDSMORS = 3500,         // Сервис ИДС "УСПС"
+        IDS_IDSThread = 3600,       // Библиотека потоков выполнения сервисов IDS
 
         #endregion
 
