@@ -2771,7 +2771,7 @@
                     cars_detali.alert.clear_message();
                     //cars_detali.val_arrival_car.clear_all(); // Очистить ошибки если принимали вагон, с ошибкой
                 }
-                cars_detali.val_arrival_car.clear_error()
+                cars_detali.val_arrival_car.clear_error();
                 // Очистить не принятые вагоны.. ! добавить остальные ячейки
                 cars_detali.select_otpr = null;
                 cars_detali.select_main_otpr = null;

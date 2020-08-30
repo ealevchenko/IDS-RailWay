@@ -1315,7 +1315,7 @@ namespace EFIDS.Helper
             };
         }
 
-         public static InstructionalLetters GetInstructionalLetters(this InstructionalLetters l)
+        public static InstructionalLetters GetInstructionalLetters(this InstructionalLetters l)
         {
             if (l == null) return null;
             return new InstructionalLetters()
@@ -1330,9 +1330,77 @@ namespace EFIDS.Helper
                 create_user = l.create_user,
                 change = l.change,
                 change_user = l.change_user,
-                InstructionalLettersWagon =l.InstructionalLettersWagon.ToList().Select(c => c.GetInstructionalLettersWagon()).ToList(),
+                InstructionalLettersWagon = l.InstructionalLettersWagon.ToList().Select(c => c.GetInstructionalLettersWagon()).ToList(),
             };
         }
+
+        public static OutgoingSostav GetOutgoingSostav_OutgoingCars(this OutgoingSostav s)
+        {
+            try
+            {
+                if (s == null) return null;
+                return new OutgoingSostav()
+                {
+                    id = s.id,
+                    num_doc = s.num_doc,
+                    id_station_from = s.id_station_from,
+                    id_way_from = s.id_way_from,
+                    id_station_on = s.id_station_on,
+                    date_readiness_amkr = s.date_readiness_amkr,
+                    date_show_wagons = s.date_show_wagons,
+                    date_readiness_uz = s.date_readiness_uz,
+                    date_outgoing = s.date_outgoing,
+                    date_outgoing_act = s.date_outgoing_act,
+                    composition_index = s.composition_index,
+                    status = s.status,
+                    note = s.note,
+                    create = s.create,
+                    create_user = s.create_user,
+                    change = s.change,
+                    change_user = s.change_user,
+                    OutgoingCars = s.OutgoingCars.ToList().Select(c => c.GetOutgoingCars()).ToList(),
+                    Directory_Station = s.Directory_Station.GetDirectory_Station(),
+                    Directory_Station1 = s.Directory_Station1.GetDirectory_Station(),
+                    Directory_Ways = s.Directory_Ways.GetDirectory_Ways()
+                };
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        public static OutgoingCars GetOutgoingCars(this OutgoingCars c)
+        {
+            try
+            {
+                if (c == null) return null;
+                return new OutgoingCars()
+                {
+                    id = c.id,
+                    id_outgoing = c.id_outgoing,
+                    num = c.num,
+                    position = c.position,
+                    position_outgoing = c.position_outgoing,
+                    note = c.note,
+                    date_outgoing_act = c.date_outgoing_act,
+                    outgoing = c.outgoing,
+                    outgoing_user = c.outgoing_user,
+                    create = c.create,
+                    create_user = c.create_user,
+                    change = c.change,
+                    change_user = c.change_user,
+                    id_outgoing_uz_vagon = c.id_outgoing_uz_vagon,
+                    Directory_Wagons = null,
+                    OutgoingSostav = null,
+                };
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
         #endregion
     }
 }

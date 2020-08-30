@@ -25,6 +25,8 @@
     <script src="~/Scripts/api/ids_transfer.js"></script> <!-- Class API ИДС Переносы -->
     <script src="~/Scripts/api/uz_sms.js"></script> <!-- Class API Работа с модулем согласования -->
 
+    <script src="~/Scripts/plugins/pl_dialog_confirm.js"></script> <!-- Плагин -->
+
     <script src="~/Scripts/view/idsrwt/outgoing.js"></script> <!--  -->
 }
 
@@ -62,12 +64,12 @@
                     </button>
                     <div class="dropdown-menu">
                         @*<a class="dropdown-item" href="#" id="report_fst">Натурная ведомость поезда</a>
-                        <a class="dropdown-item" href="#" id="report_fsci">Натурная ведомость коммерческого осмотра</a>
-                        <a class="dropdown-item" href="#">Отчет с данными о перевеске</a>
-                        <a class="dropdown-item" href="#">Отчет о приеме груза</a>
-                        <a class="dropdown-item" href="#">Заявка на выдачу с проверкой груза КР Главный</a>
-                        <a class="dropdown-item" href="#">Заявка на выдачу с проверкой груза КР</a>
-                        <a class="dropdown-item" href="#">Заявка на взвешивание</a>*@
+                            <a class="dropdown-item" href="#" id="report_fsci">Натурная ведомость коммерческого осмотра</a>
+                            <a class="dropdown-item" href="#">Отчет с данными о перевеске</a>
+                            <a class="dropdown-item" href="#">Отчет о приеме груза</a>
+                            <a class="dropdown-item" href="#">Заявка на выдачу с проверкой груза КР Главный</a>
+                            <a class="dropdown-item" href="#">Заявка на выдачу с проверкой груза КР</a>
+                            <a class="dropdown-item" href="#">Заявка на взвешивание</a>*@
                     </div>
                 </div>
                 <input class="form-control-sm" type="text" placeholder="Search" aria-label="Search">
@@ -84,5 +86,114 @@
                 <table class="table table-striped table-bordered" id="table-sostav-arrival" style="width:100%;"></table>
             </div>
         </div>
+    </div>
+</div>
+
+<div id="dialog-confirm"></div>
+
+<div class="cd-cars-detali">
+    <div class="container-fluid">
+        <form class="cd-form">
+            <div class="card border-secondary">
+                <div class="card-header bg-secondary text-white" id="sostav-info">
+                    <h1 id="sostav-title"></h1>
+                </div>
+                <div class="card-body">
+                    <div class="alert" id="car-detali-alert"></div>
+                    <div class="form-row">
+                        <div class="col-md-5 mb-1">
+                            <div class="card border-success" id="card-arrived-cars">
+                                <div class="card-header">
+                                    Отправленные вагоны
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-striped table-bordered" id="table-arrival-cars" style="width:100%; font-size:0.8rem;"></table>
+                                </div>
+                                <div class="card-footer text-muted">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-1">
+                            <div class="card border-warning" id="card-car-info">
+                                <div class="card-header">Информация о вагоне</div>
+                                <div class="card-body text-dark">
+                                    <button type="button" class="btn btn-primary btn" id="arrival-car" data-mode="edit-global" data-edit="" data-form="transceiver"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Принять вагон</button>
+                                    @*<button type="button" class="btn btn-warning btn" id="mode-view">View</button>*@
+                                    <button type="button" class="btn btn-danger btn" id="mode-edit" data-mode="edit-global" data-edit="" data-form="transceiver">Править вручную</button>
+                                    @*<button type="button" class="btn btn-success btn" id="mode-open">Open</button>
+                                        <button type="button" class="btn btn-success btn" id="mode-close">Close</button>*@
+                                    <fieldset class="border-primary">
+                                        <div class="form-row">
+                                            <div class="col-md-3 mb-1 text-left">
+                                                <label for="num_car" class="col-form-label">@IDSRWTResource.title_num_car:</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control col-md-8 inp-epd" id="num_car" title="Номер вагона" name="num_car" data-mode="all" data-edit="" data-form="transceiver">
+                                                    <div class="input-group-append">
+                                                        <button type="button" class="btn btn-warning btn" id="search-car-num-doc" title="Найти ЭПД по номеру вагона" data-mode="edit-global" data-edit="" data-form="transceiver">
+                                                            <i class="fa fa-search" aria-hidden="true"></i>
+                                                        </button>
+                                                        <button type="button" class="btn btn-danger btn" id="edit-car-num-doc" title="Ввести данные в ручную" data-mode="edit-global" data-edit="" data-form="transceiver">
+                                                            <i class="fa fa-edit" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mb-1 text-left">
+                                                <label for="arrival_cars_position_arrival" class="col-form-label">@IDSRWTResource.title_position_arrival:</label>
+                                                <input type="number" value="1" class="form-control inp-manual" min="1" max="120" step="1" id="arrival_cars_position_arrival" name="arrival_cars_position_arrival" title="Ручной ввод (номер вагона в составе)" data-mode="edit-global" data-edit="" data-form="transceiver" />
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-1 text-left">
+                                                <label for="arrival_cars_car_date_adoption_act" class="col-form-label">@IDSRWTResource.title_car_date_adoption_act:</label>
+                                                <input type="datetime" class="form-control inp-manual" id="arrival_cars_car_date_adoption_act" name="arrival_cars_car_date_adoption_act" title="Ручной ввод (если вагон принимается по акту)" data-mode="edit-global" data-edit="" data-form="transceiver">
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-6 mb-1 text-left">
+                                                <label for="uz_doc_num_doc" id="title_num_doc" class="col-form-label">@IDSRWTResource.title_uz_doc_num_doc:</label>
+                                                <label for="uz_doc_num_doc" id="title_num_deliv_doc" class="col-form-label">@IDSRWTResource.title_uz_doc_num_deliv_doc:</label>
+                                                <input type="number" class="form-control inp-epd" id="uz_doc_num_doc" name="uz_doc_num_doc" title="ЭПД [OTPR/nom_doc] -> Номер накладной" data-mode="all" data-edit="" data-form="transceiver" required="required">
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-1 text-left">
+                                                <label for="uz_doc_num_osn_doc" id="title_num_osn_doc" class="col-form-label">@IDSRWTResource.title_uz_doc_num_osn_doc:</label>
+                                                <input type="text" class="form-control inp-epd" id="uz_doc_num_osn_doc" name="uz_doc_num_osn_doc" title="ЭПД [OTPRDP/nom_osn_doc] -> Номер досылочного документа" data-mode="all" data-edit="" data-form="transceiver" required="required">
+                                                <div class="invalid-feedback">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1 mb-1">
+                            <div class="card border-primary" id="card-not-arrived-cars">
+                                <div class="card-header">
+                                    Вагоны
+                                    @*<button type="button" class="btn btn-warning btn-sm" id="add-num-car-of-epd" title="Найти вагоны по ЭПД, поиск документа по номеру" data-form="transceiver">
+                                        <i class="fa fa-file-code-o" aria-hidden="true"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-warning btn-sm" id="add-num-car-manual" title="Добавить вагон вручную" data-form="transceiver">
+                                        <i class="fa fa-hand-paper-o" aria-hidden="true"></i>
+                                    </button>*@
+                                </div>
+                                <div class="card-body text-primary" style="padding: 0.5rem;">
+                                    <div class="list-group" id="list-cars-not-outgoing" role="tablist">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <a href="#0" class="close cd-img-replace">Close</a>
     </div>
 </div>

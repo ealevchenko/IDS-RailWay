@@ -436,7 +436,6 @@ IDS_RWT_INCOMING.prototype.putListInstructionalLettersWagon = function (list_wag
         },
     });
 };
-
 // Удалить вагон
 IDS_RWT_INCOMING.prototype.deleteInstructionalLettersWagon = function (id, callback) {
     $.ajax({
@@ -460,7 +459,6 @@ IDS_RWT_INCOMING.prototype.deleteInstructionalLettersWagon = function (id, callb
         },
     });
 };
-
 //======= Arrival_UZ_Document (ЭПД УЗ по прибытию) ======================================
 // Получить все документы
 IDS_RWT_INCOMING.prototype.getArrival_UZ_Document = function (callback) {
@@ -2547,7 +2545,6 @@ IDS_RWT_INCOMING.prototype.getOTPR_UZ_DOCOfNum_UZ = function (num_uz, callback) 
         },
     });
 };
-
 //Добавить 
 IDS_RWT_INCOMING.prototype.postUZ_DOC = function (uz_doc, callback) {
     $.ajax({
@@ -2573,6 +2570,127 @@ IDS_RWT_INCOMING.prototype.postUZ_DOC = function (uz_doc, callback) {
         },
     });
 };
+//======= OutgoingSostav (Таблица составов на отправку) ======================================
+// Получить все составы
+IDS_RWT_INCOMING.prototype.getOutgoingSostav = function (start, stop, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/outgoing_sostav/start/' + toISOStringTZ(start).substring(0, 19) + '/stop/' + toISOStringTZ(stop).substring(0, 19),
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.getOutgoingSostav", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить состав
+IDS_RWT_INCOMING.prototype.getOutgoingSostavOfID = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/outgoing_sostav/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.getOutgoingSostavOfID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Обновить 
+IDS_RWT_INCOMING.prototype.putOutgoingSostav = function (outgoing_sostav, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/rwt/outgoing_sostav/id/' + outgoing_sostav.id,
+        data: JSON.stringify(outgoing_sostav),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.putOutgoingSostav", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Удалить 
+IDS_RWT_INCOMING.prototype.deleteOutgoingSostav = function (id, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/outgoing_sostav/id/' + id,
+        type: 'DELETE',
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.deleteOutgoingSostav", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Добавить 
+IDS_RWT_INCOMING.prototype.postOutgoingSostav = function (outgoing_sostav, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/outgoing_sostav/',
+        type: 'POST',
+        data: JSON.stringify(outgoing_sostav),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT_INCOMING.postOutgoingSostav", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
+
 /* ----------------------------------------------------------
 функции для работы с объектами
 -------------------------------------------------------------*/
