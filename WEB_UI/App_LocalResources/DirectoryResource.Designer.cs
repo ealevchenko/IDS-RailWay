@@ -19,7 +19,7 @@ namespace WEB_UI.App_LocalResources {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class DirectoryResource {
@@ -111,6 +111,24 @@ namespace WEB_UI.App_LocalResources {
         public static string instructional_letters_title {
             get {
                 return ResourceManager.GetString("instructional_letters_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Найти вагон, показать историю перемещения..
+        /// </summary>
+        public static string search_wagon_description {
+            get {
+                return ResourceManager.GetString("search_wagon_description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Найти вагон.
+        /// </summary>
+        public static string search_wagon_title {
+            get {
+                return ResourceManager.GetString("search_wagon_title", resourceCulture);
             }
         }
         

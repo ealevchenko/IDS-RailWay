@@ -135,6 +135,12 @@
   <data name="instructional_letters_title" xml:space="preserve">
     <value>Инструктивные письма</value>
   </data>
+  <data name="search_wagon_description" xml:space="preserve">
+    <value>Найти вагон, показать историю перемещения.</value>
+  </data>
+  <data name="search_wagon_title" xml:space="preserve">
+    <value>Найти вагон</value>
+  </data>
   <data name="title_add_add_edit_kol_os" xml:space="preserve">
     <value>Кол. ос.</value>
   </data>

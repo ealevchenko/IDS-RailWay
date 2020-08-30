@@ -852,6 +852,7 @@
     <Content Include="Areas\Directory\Views\Home\CargoGroup.cshtml" />
     <Content Include="Areas\Directory\Views\Home\Cars.cshtml" />
     <Content Include="Areas\Directory\Views\Home\InstructionalLetters.cshtml" />
+    <Content Include="Areas\Directory\Views\Home\SearchWagon.cshtml" />
     <None Include="Areas\IDSMORS\Views\Shared\_IDSMORS1" />
     <Content Include="Content\DataTables\extensions\Buttons\css\mixins.scss" />
     <Content Include="Content\DataTables\extensions\Buttons\css\common.scss" />
@@ -1116,6 +1117,7 @@
     <Content Include="Scripts\view\directory\cargo_group.js" />
     <Content Include="Scripts\view\directory\cars.js" />
     <Content Include="Scripts\view\directory\instructional_letters.js" />
+    <Content Include="Scripts\view\directory\search_wagon.js" />
     <Content Include="Scripts\view\idsmors\electronic_cards.js" />
     <Content Include="Scripts\view\idsmors\report_wagons.js" />
     <Content Include="Scripts\view\idsmors\park_wagons.js" />

@@ -39,5 +39,11 @@ namespace WEB_UI.Areas.Directory.Controllers
         {
             return View();
         }
+        // Инструктивные письма
+        public ActionResult SearchWagon()
+        {
+            return View();
+        }
+
     }
 }
