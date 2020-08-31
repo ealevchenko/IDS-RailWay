@@ -78,6 +78,27 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // GET: api/ids/rwt/arrival_cars/num/63303077
+        [Route("num/{num:int}")]
+        [ResponseType(typeof(ArrivalCars))]
+        public IHttpActionResult GetArrivalCarsOfNum(int num)
+        {
+            try
+            {
+                List<ArrivalCars> list = this.ef_ids
+                    .Context
+                    .Where(s => s.num == num)
+                    .ToList()
+                    .OrderBy(s=>s.id_arrival)
+                    .Select(c => c.GetArrivalCars_ArrivalSostav()).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         // GET: api/ids/rwt/arrival_cars/start/2020-03-13T00:00:00/stop/2020-03-13T23:59:59/nums/56681562,52740883
         [Route("start/{start:datetime}/stop/{stop:datetime}/nums/{nums}")]
         [ResponseType(typeof(ArrivalCars))]

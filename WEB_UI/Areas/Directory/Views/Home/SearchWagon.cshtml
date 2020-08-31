@@ -23,10 +23,15 @@
     <script src="~/Scripts/api/ids_rwt_incoming.js"></script> <!-- Class API ИДС Прием вагонов -->
 
     <script src="~/Scripts/view/directory/search_wagon.js"></script> <!--  -->
+    <script>
+        var url_incoming = '@Url.Action("Incoming", "Home", new { area = "IDSRWT" })';
+    </script>
+
 }
 
 <input id="username" type="hidden" value="@User.Identity.Name" />
 
+<div class="alert" id="main-alert"></div>
 <div class="row">
     <div class="col-xl-12 mb-3 mt-2">
         <div class="card border-dark mb-3">
@@ -35,14 +40,91 @@
                     <div class="col-xl-12 text-center">
                         <form class="form-inline">
                             Найти вагон:
-                            <input class="form-control mr-sm-2" type="search" style="font-size:1.6rem;" placeholder="Номер вагона" aria-label="Search">
-                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                            <input class="form-control mr-sm-2" id="num_wagon" name="num_wagon" type="number" style="font-size:1.6rem;" placeholder="Номер вагона" aria-label="Search">
+                            <button class="btn btn-outline-success my-2 my-sm-0" id="bt_search_wagon" name="bt_search_wagon" type="submit">Search</button>
                         </form>
                     </div>
                 </div>
             </div>
             <div class="card-body text-dark pl-3 pr-3">
-                <table class="table table-striped table-bordered" id="table-sostav-arrival" style="width:100%;"></table>
+                <div class="row mb-3">
+                    <div class="col-xl-12">
+                        <div class="card border-success mt-3">
+                            <!-- Шапка -->
+                            <div class="card-header bg-success text-white">
+                                <button class="btn btn-link text-light text-uppercase" data-toggle="collapse" data-target="#info_wagon">Карточка вагона</button>
+                            </div>
+                            <!-- Текстовый контент -->
+                            <div class="card-body collapse show" id="info_wagon">
+                                <fieldset class="border-primary"></fieldset>
+                            </div>
+                        </div><!-- Конец карточки -->
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-xl-12">
+                        <div class="card border-secondary mt-3">
+                            <!-- Шапка -->
+                            <div class="card-header bg-secondary text-white">
+                                <button class="btn btn-link text-light text-uppercase" data-toggle="collapse" data-target="#approaches_wagon">Подходы</button><span id="type-search" class="badge badge-primary"></span>
+                            </div>
+                            <!-- Текстовый контент -->
+                            <div class="card-body collapse show" id="approaches_wagon">
+                                <fieldset class="border-primary">
+                                    <table class="table table-striped table-bordered" id="table_approaches_wagon" style="width:100%;"></table>
+                                </fieldset>
+                            </div>
+                        </div><!-- Конец карточки -->
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-xl-12">
+                        <div class="card border-primary mt-3">
+                            <!-- Шапка -->
+                            <div class="card-header bg-primary text-white">
+                                <button class="btn btn-link text-light text-uppercase" data-toggle="collapse" data-target="#arrival_wagon">Прибытие на АМКР</button><span id="type-search" class="badge badge-primary"></span>
+                            </div>
+                            <!-- Текстовый контент -->
+                            <div class="card-body collapse show" id="arrival_wagon">
+                                <fieldset class="border-primary">
+                                    <table class="table table-striped table-bordered" id="table_arrival_wagon" style="width:100%;"></table>
+                                </fieldset>
+                            </div>
+                        </div><!-- Конец карточки -->
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-xl-12">
+                        <div class="card border-info mt-3">
+                            <!-- Шапка -->
+                            <div class="card-header bg-info text-white">
+                                <button class="btn btn-link text-light text-uppercase" data-toggle="collapse" data-target="#internal_wagon">На АМКР</button><span id="type-search" class="badge badge-primary"></span>
+                            </div>
+                            <!-- Текстовый контент -->
+                            <div class="card-body collapse show" id="internal_wagon">
+                                <fieldset class="border-primary">
+                                    <table class="table table-striped table-bordered" id="table_internal_wagon" style="width:100%;"></table>
+                                </fieldset>
+                            </div>
+                        </div><!-- Конец карточки -->
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card border-primary mt-3">
+                            <!-- Шапка -->
+                            <div class="card-header bg-primary text-white">
+                                <button class="btn btn-link text-light text-uppercase" data-toggle="collapse" data-target="#outgoing_wagon">Отправление на УЗ</button><span id="type-search" class="badge badge-primary"></span>
+                            </div>
+                            <!-- Текстовый контент -->
+                            <div class="card-body collapse show" id="outgoing_wagon">
+                                <fieldset class="border-primary">
+                                    <table class="table table-striped table-bordered" id="table_outgoing_wagon" style="width:100%;"></table>
+                                </fieldset>
+                            </div>
+                        </div><!-- Конец карточки -->
+                    </div>
+                </div>
             </div>
         </div>
     </div>

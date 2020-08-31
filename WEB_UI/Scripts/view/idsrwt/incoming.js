@@ -261,6 +261,7 @@
         list_sostav = null,
         data_start = null,
         data_stop = null,
+        start_id_sostav = null, // Выбираемый состав по умолчанию
         // Загрузка основных справочников приложения
         loadReference = function (callback) {
             LockScreen(langView('mess_load', langs));
@@ -275,7 +276,7 @@
             });
         },
         // Показать составы
-        view_sostav = function (refresh, start, stop, filter) {
+        view_sostav = function (refresh, start, stop, filter, id_sostav) {
             incoming_alert.clear_message();
             LockScreen(langView('mess_delay', langs));
             if (refresh || data_start === null || data_stop === null || data_start !== start || data_stop !== stop) {
@@ -284,10 +285,10 @@
                     list_sostav = data;
                     data_start = start;
                     data_stop = stop;
-                    table_sostav.view(typeof filter === 'function' ? list_sostav.filter(filter) : list_sostav);
+                    table_sostav.view(typeof filter === 'function' ? list_sostav.filter(filter) : list_sostav, id_sostav);
                 });
             } else {
-                table_sostav.view(typeof filter === 'function' ? list_sostav.filter(filter) : list_sostav);
+                table_sostav.view(typeof filter === 'function' ? list_sostav.filter(filter) : list_sostav, id_sostav);
             }
         },
         // Показать отчет
@@ -593,13 +594,13 @@
                     if (select_nums && select_nums.length > 0) {
 
                         var mywindow = window.open('', 'Заявка на выдачу коммерческого акта ст. ' + station_name);
-                        mywindow.document.write('<html><head><title>Заявка на выдачу коммерческого акта ст. ' + station_name+'</title>');
+                        mywindow.document.write('<html><head><title>Заявка на выдачу коммерческого акта ст. ' + station_name + '</title>');
                         mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/view/shared/print_aica.css">');
                         mywindow.document.write('</head><body>');
                         mywindow.document.write('<div class=WordSection1>');
                         mywindow.document.write('<br />');
                         mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;text-indent:14.0cm"><span lang=UK style="font-size:14.0pt;line-height:107%;">Начальнику станції</span></p>');
-                        mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;text-indent:14.0cm"><span lang=UK style="font-size:14.0pt;line-height:107%;">' + station_name +'</span></p>');
+                        mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;text-indent:14.0cm"><span lang=UK style="font-size:14.0pt;line-height:107%;">' + station_name + '</span></p>');
                         mywindow.document.write('<br />');
                         mywindow.document.write('<br />');
                         mywindow.document.write('<br />');
@@ -672,13 +673,13 @@
                     if (select_nums && select_nums.length > 0) {
 
                         var mywindow = window.open('', 'Заявка на участие в выдаче ст. ' + station_name);
-                        mywindow.document.write('<html><head><title>Заявка на участие в выдаче ст. ' + station_name+'</title>');
+                        mywindow.document.write('<html><head><title>Заявка на участие в выдаче ст. ' + station_name + '</title>');
                         mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/view/shared/print_aica.css">');
                         mywindow.document.write('</head><body>');
                         mywindow.document.write('<div class=WordSection1>');
                         mywindow.document.write('<br />');
                         mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;text-indent:14.0cm"><span lang=UK style="font-size:14.0pt;line-height:107%;">Начальнику станції</span></p>');
-                        mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;text-indent:14.0cm"><span lang=UK style="font-size:14.0pt;line-height:107%;">' + station_name +'</span></p>');
+                        mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;text-indent:14.0cm"><span lang=UK style="font-size:14.0pt;line-height:107%;">' + station_name + '</span></p>');
                         mywindow.document.write('<br />');
                         mywindow.document.write('<br />');
                         mywindow.document.write('<br />');
@@ -725,7 +726,7 @@
                             mywindow.document.write(dir_es ? ids_inc.ids_dir.getValueObj(dir_es, 'station_name', lang) : '');
                             mywindow.document.write('</td>');
                             mywindow.document.write('<td>');
-                            mywindow.document.write(vag_uz && vag_uz.vesg ? Number(Number(vag_uz.vesg)/1000).toFixed(2) : '');
+                            mywindow.document.write(vag_uz && vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000).toFixed(2) : '');
                             mywindow.document.write('</td>');
                             mywindow.document.write('</tr>');
                         });
@@ -760,7 +761,7 @@
                     if (select_nums && select_nums.length > 0) {
 
                         var mywindow = window.open('', 'Заявка на участие с попутным коммерческим Актом ст. ' + station_name);
-                        mywindow.document.write('<html><head><title>Заявка на участие с попутным коммерческим Актом ст. ' + station_name+'</title>');
+                        mywindow.document.write('<html><head><title>Заявка на участие с попутным коммерческим Актом ст. ' + station_name + '</title>');
                         mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/view/shared/print_aica.css">');
                         mywindow.document.write('</head><body>');
                         mywindow.document.write('<div class=WordSection1>');
@@ -775,7 +776,7 @@
                         mywindow.document.write('<p class=MsoNormal align=center style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:center"><span style="font-size:14.0pt;line-height:107%;">ЗАЯВКА№________</span></p>');
                         mywindow.document.write('<br />');
                         mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span style="font-size:14.0pt;line-height:107%;">від__________ 20     р.</span></p>');
-                        mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span style="font-size:14.0pt;line-height:107%;">________год. ________хв.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ст. ' + station_name +'</span></p>');
+                        mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span style="font-size:14.0pt;line-height:107%;">________год. ________хв.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ст. ' + station_name + '</span></p>');
                         mywindow.document.write('<br />');
                         mywindow.document.write('<br />');
                         mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span lang=UK style="font-size:14.0pt;line-height:107%;">Відповідно до ст. 52 Статуту залізниць України , прошу подати вагон(и), якій (які) прибув( ли) з попутним комерційним актом, для перевірки маси вантажу . Прибули на адресу ПАТ «« АрселорМіттал  Кривий Ріг» поїздом №_____________</span></p>');
@@ -822,7 +823,7 @@
                         mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span lang=UK style="font-size:14.0pt;line-height:107%;">ПП « Стіл Сервіс»&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______________________( П.І.Б)</span></p>');
                         mywindow.document.write('<br />');
                         mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span lang=UK style="font-size:14.0pt;line-height:107%;">Прийомоздавальник вантажу та багажу</span></p>');
-                        mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span lang=UK style="font-size:14.0pt;line-height:107%;">Ст. ' + station_name +'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______________________( П.І.Б)</span></p>');
+                        mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span lang=UK style="font-size:14.0pt;line-height:107%;">Ст. ' + station_name + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______________________( П.І.Б)</span></p>');
                         mywindow.document.write('<br />');
                         mywindow.document.write('</div>');
                         mywindow.document.write('</body></html>');
@@ -1078,8 +1079,8 @@
                 });
             },
             // Показать таблицу с данными
-            view: function (data) {
-                var id_select = table_sostav.select_sostav ? table_sostav.select_sostav.id : 0;
+            view: function (data, id_sostav) {
+                var id_select = id_sostav ? id_sostav : table_sostav.select_sostav ? table_sostav.select_sostav.id : 0;
                 table_sostav.obj.clear();
                 // Сбросить выделенный состав
                 table_sostav.deselect();
@@ -1279,8 +1280,8 @@
                 });
 
             },
-            view: function (refresh) {
-                view_sostav(refresh, pn_sel.start_dt, pn_sel.stop_dt, Number(pn_sel.select_station.val()) !== -1 ? function (i) { return i.id_station_from === Number(pn_sel.select_station.val()) ? true : false; } : null);
+            view: function (refresh, id_sostav) {
+                view_sostav(refresh, pn_sel.start_dt, pn_sel.stop_dt, Number(pn_sel.select_station.val()) !== -1 ? function (i) { return i.id_station_from === Number(pn_sel.select_station.val()) ? true : false; } : null, id_sostav);
             }
         },
 
@@ -1410,7 +1411,7 @@
                 if (typeof callback_ok === 'function') {
                     pn_sel_wagon.callback_ok = callback_ok;
                 }
-                
+
                 if (list_num && list_num.length > 0) {
                     pn_sel_wagon.table_wagon.view(list_num);
                 }
@@ -7258,6 +7259,14 @@
         // Инициализация
         if (lang === 'ru') $.datepicker.setDefaults($.datepicker.regional.ru);
         var list_station = ids_inc.ids_dir.getListStation('id', 'station_name', lang, function (i) { return i.station_uz === true ? true : false; });
+        // Считаем строку с дополнительными параметрами
+        var id_arrival = getUrlVar('id_arrival');
+        var arrival = getUrlVar('arrival');
+        if (id_arrival && arrival) {
+            pn_sel.cur_dt = moment(arrival).set({ 'hour': 0, 'minute': 0, 'second': 0, 'millisecond': 0 });
+            start_id_sostav = Number(id_arrival);
+        }
+
         pn_sel.init(list_station);
         pn_sel_wagon.init();
         pn_edit_sostav.init(lang, list_station, user_name, function (result) {
@@ -7266,6 +7275,6 @@
         //print_detali.init(lang, user_name);
         cars_detali.init(lang, user_name);
         table_sostav.init();
-        pn_sel.view(true);
+        pn_sel.view(true, start_id_sostav);
     });
 });

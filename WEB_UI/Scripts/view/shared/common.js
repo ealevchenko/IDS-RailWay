@@ -154,24 +154,8 @@ var getUrlVars = function () {
     return vars;
 };
 var getUrlVar = function (name) {
-    return $.getUrlVars()[name];
+    return getUrlVars()[name];
 };
-
-$.extend({
-    getUrlVars: function () {
-        var vars = [], hash;
-        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-        for (var i = 0; i < hashes.length; i++) {
-            hash = hashes[i].split('=');
-            vars.push(hash[0]);
-            vars[hash[0]] = hash[1];
-        }
-        return vars;
-    },
-    getUrlVar: function (name) {
-        return $.getUrlVars()[name];
-    }
-});
 //==============================================================================================
 /* ----------------------------------------------------------
     DataTables Вывод текста согласно региональных настроек
@@ -983,6 +967,18 @@ var outOperation = function (i) {
     switch (Number(i)) {
         case 1: return "ПРИБЫТИЕ";
         case 2: return "ТСП";
+        default: return i;
+    }
+};
+
+// Вернуть режим
+var outStatusArrivalSostav = function (i) {
+    if (i === null) return null;
+    switch (Number(i)) {
+        case 0: return "Не обработан";
+        case 1: return "В работе";
+        case 2: return "Принят";
+        case 2: return "Отклонен";
         default: return i;
     }
 };

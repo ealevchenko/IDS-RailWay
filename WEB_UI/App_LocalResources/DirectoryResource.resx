@@ -225,4 +225,10 @@
   <data name="title_change_group_cargo_group" xml:space="preserve">
     <value>Группы грузов в ИДС</value>
   </data>
+  <data name="wagon_marking_description" xml:space="preserve">
+    <value>Выбрать прибывший состав и произвести разметку вагонов</value>
+  </data>
+  <data name="wagon_marking_title" xml:space="preserve">
+    <value>Разметить вагоны</value>
+  </data>
 </root>

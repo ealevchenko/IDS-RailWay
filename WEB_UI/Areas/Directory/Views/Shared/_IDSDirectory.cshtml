@@ -140,9 +140,9 @@
                         </a>
                     </li>
                     <li>
-                        <a class="cd-nav-item item-2" href="#">
-                            <h3>Новые грузы</h3>
-                            <p>Поиск грузов по которым нет определения группы</p>
+                        <a class="cd-nav-item item-2" href='@Url.Action("SearchWagon", "Home", new { Area = "Directory" })'>
+                            <h3>@DirectoryResource.search_wagon_title</h3>
+                            <p>@DirectoryResource.search_wagon_description</p>
                         </a>
                     </li>
                     <li>
@@ -152,9 +152,9 @@
                         </a>
                     </li>
                     <li>
-                        <a class="cd-nav-item item-4" href='@Url.Action("SearchWagon", "Home", new { Area = "Directory" })'>
-                            <h3>@DirectoryResource.search_wagon_title</h3>
-                            <p>@DirectoryResource.search_wagon_description</p>
+                        <a class="cd-nav-item item-4" href='@Url.Action("WagonMarking", "Home", new { Area = "Directory" })'>
+                            <h3>@DirectoryResource.wagon_marking_title</h3>
+                            <p>@DirectoryResource.wagon_marking_description</p>
                         </a>
                     </li>
                     <li>
