@@ -47,8 +47,7 @@
         loadReference = function (callback) {
             LockScreen(langView('mess_load', langs));
             var count = 1;
-            //ids_inc.load([], ['station', 'ways'], [], false, function () {
-            ids_inc.load([], [], [], false, function () {
+            ids_inc.load([], ['station', 'ways'], [], false, function () {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
