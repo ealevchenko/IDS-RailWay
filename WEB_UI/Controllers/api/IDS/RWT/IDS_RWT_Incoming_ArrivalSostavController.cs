@@ -98,6 +98,35 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // GET: api/ids/rwt/arrival_sostav/start/2020-09-01T00:00:00/stop/2020-09-01T23:59:59/station/amkr/id/6
+        [Route("start/{start:datetime}/stop/{stop:datetime}/station/amkr/id/{id:int}")]
+        [ResponseType(typeof(ArrivalSostav))]
+        public IHttpActionResult GetDocsArrivalSostav(DateTime start, DateTime stop, int id)
+        {
+            try
+            {
+                string sql = "SELECT [id],[id_arrived],[id_sostav],[train],[composition_index],[date_arrival],[date_adoption],[date_adoption_act],[id_station_from],[id_station_on],[id_way],[numeration],[num_doc],[count],[status],[note],[create],[create_user],[change],[change_user] " +
+                "FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalSostav] where [date_arrival]>=convert(datetime, '" + start.ToString("yyyy-MM-dd HH:mm:ss") + "',120) and [date_arrival]<=convert(datetime, '" + stop.ToString("yyyy-MM-dd HH:mm:ss") + "',120) and [id_station_on]=" + id.ToString();
+                List<ArrivalSostav> list = this.ef_ids.Database.SqlQuery<ArrivalSostav>(sql).ToList();
+                
+                //List<ArrivalSostav> list = this.ef_ids
+                //    .Context
+                //    .Where(s => s.date_arrival >= start && s.date_arrival <= stop && s.id_station_on == id)
+                //    .ToList()
+                //    .Select(c => c.GetArrivalSostav_ArrivalCars()).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+
+
+            //        string sql = "SELECT " + field + " FROM " + table + " where [Num]= " + num.ToString() + " order by [id] desc";
+            //return this.db.Database.SqlQuery<ApproachesCars>(sql).FirstOrDefault();
+
         // POST api/ids/rwt/arrival_sostav/
         [HttpPost]
         [Route("")]

@@ -1,0 +1,64 @@
+﻿@using WEB_UI.App_LocalResources;
+@{
+    ViewBag.Title = @DirectoryResource.wagon_marking_title;
+}
+
+@section styles {
+    @Styles.Render("~/DataTables/css")
+    @Styles.Render("~/DateTime/css")
+    <link rel="stylesheet" type="text/css" href="~/Content/view/directory/home.css">
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/Moment")
+    @Scripts.Render("~/bundles/DataTables")
+    @Scripts.Render("~/bundles/DateTime")
+
+    <script src="~/Scripts/view/shared/common.js"></script> <!-- Общая библиотека методов программы -->
+    <script src="~/Scripts/api/shared.js"></script> <!-- Общая библиотека методов API -->
+    <script src="~/Scripts/api/uz_directory.js"></script> <!-- Class API УЗ Справочники -->
+    <script src="~/Scripts/api/ids_directory.js"></script> <!-- Class API ИДС Справочники -->
+    <script src="~/Scripts/api/metrans.js"></script> <!-- Class API МЕТРАНС -->
+    <script src="~/Scripts/api/ids_transfer.js"></script> <!-- Class API ИДС Переносы -->
+    <script src="~/Scripts/api/ids_rwt_incoming.js"></script> <!-- Class API ИДС Прием вагонов -->
+
+    <script src="~/Scripts/view/directory/wagon_marking.js"></script> <!--  -->
+}
+
+<input id="username" type="hidden" value="@User.Identity.Name" />
+
+<div class="container-fluid">
+    <div class="alert" id="main-alert"></div>
+    <div class="row">
+        <div class="col-xl-12 mb-3 mt-2">
+            <div class="card border-dark mb-3">
+                <div class="card-header bg-secondary text-white">
+                    <div class="row">
+                        <div class="col-xl-12 text-center">
+                            <div class="container-fluid">
+                                <form class="form-inline">
+                                    <label class="col-form-label text-white mr-2" for="select_date">Выбрать период: </label>
+                                    <span id="select_date">
+                                        <input type="datetime" class="form-control" id="date_start" name="date_start" style="font-size:1.5rem">
+                                        <input type="datetime" class="form-control" id="date_stop" name="date_stop" style="font-size:1.5rem">
+                                    </span>
+                                    <label class="col-form-label text-white mr-2" for="select_station">Станция прибытия: </label>
+                                    <select type="text" id="select_station" name="select_station" class="form-control" style="font-size:1.5rem"></select>
+                                    <label class="col-form-label text-white mr-2" for="select_doc">Номер документа: </label>
+                                    <select type="text" id="select_doc" name="select_doc" class="form-control" style="font-size:1.5rem"></select>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body text-dark pl-3 pr-3" style="font-size:1.3rem">
+                    <table class="display compact table-bordered" id="table-wagon" style="width:100%; table-layout: fixed"></table>
+                </div>
+                <div class="card-footer bg-transparent border-dark">Footer</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

@@ -8,12 +8,14 @@ $.Text_Common =
             'mess_delay': 'Мы обрабатываем ваш запрос...',
             'mess_load': 'Загрузка справочников...',
             'mess_save': 'Запись и обновление данных...',
+            'mess_load_data': 'Получение запрашиваемых данных...',
         },
         'en':  //default language: English
         {
             'mess_delay': 'We are processing your request ...',
             'mess_load': 'Downloading reference books...',
             'mess_save': 'Writing and updating data ...',
+            'mess_load_data': 'Receiving the requested data...',
         }
 
     };

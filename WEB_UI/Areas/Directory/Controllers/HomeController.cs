@@ -39,11 +39,15 @@ namespace WEB_UI.Areas.Directory.Controllers
         {
             return View();
         }
-        // Инструктивные письма
+        // Поиск вагонов
         public ActionResult SearchWagon()
         {
             return View();
         }
-
+        // Разметка по прибытию
+        public ActionResult WagonMarking()
+        {
+            return View();
+        }
     }
 }

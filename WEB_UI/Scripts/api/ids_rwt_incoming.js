@@ -169,7 +169,6 @@ IDS_RWT_INCOMING.prototype.getInstructionalLettersOfNumDate = function (num, dat
         },
     });
 };
-
 //Добавить письмо
 IDS_RWT_INCOMING.prototype.postInstructionalLetters = function (letters, callback) {
     $.ajax({
@@ -312,7 +311,6 @@ IDS_RWT_INCOMING.prototype.getInstructionalLettersWagonOfIDLetter = function (id
         },
     });
 };
-
 // Получить вагоны с открытыми письмами по номерам
 IDS_RWT_INCOMING.prototype.getOpenInstructionalLettersWagonOfNums = function (list_nums, callback) {
     $.ajax({
@@ -459,6 +457,8 @@ IDS_RWT_INCOMING.prototype.deleteInstructionalLettersWagon = function (id, callb
         },
     });
 };
+//======================================================================================================
+//                                  РАЗДЕЛ ДОКУМЕНТЫ ПРИНЯТЫХ ВАГОНОВ
 //======= Arrival_UZ_Document (ЭПД УЗ по прибытию) ======================================
 // Получить все документы
 IDS_RWT_INCOMING.prototype.getArrival_UZ_Document = function (callback) {
@@ -2099,7 +2099,9 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Cont_PayOfListCont = function (list_
         },
     });
 };
-//======= ArrivalSostav (Таблица составов) ======================================
+//======================================================================================================
+//                                  РАЗДЕЛ ПРИБЫТИЕ ОТПРАВКА
+//======= ArrivalSostav (Таблица составов) =============================================================
 // Получить все составы
 IDS_RWT_INCOMING.prototype.getArrivalSostav = function (start, stop, callback) {
     $.ajax({
@@ -2117,6 +2119,29 @@ IDS_RWT_INCOMING.prototype.getArrivalSostav = function (start, stop, callback) {
         },
         error: function (x, y, z) {
             OnAJAXError("IDS_RWT_INCOMING.getArrivalSostav", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить все составы за период времени принятые на станцию
+IDS_RWT_INCOMING.prototype.getArrivalSostavOfDatePeriodIDStationOn = function (start, stop, id_station, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/arrival_sostav/start/' + toISOStringTZ(start).substring(0, 19) + '/stop/' + toISOStringTZ(stop).substring(0, 19) + '/station/amkr/id/'+id_station,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.getArrivalSostavOfDatePeriodIDStationOn", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2334,7 +2359,6 @@ IDS_RWT_INCOMING.prototype.getArrivalCarsOfNum= function (num, callback) {
         },
     });
 };
-
 // Получить перечень вагонов за указаный период выбранные вагоны
 IDS_RWT_INCOMING.prototype.getArrivalCarsOfPeriodNums = function (start, stop, nums, callback) {
     $.ajax({
