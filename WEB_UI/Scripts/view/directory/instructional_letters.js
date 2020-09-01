@@ -143,13 +143,13 @@
                             pn_add_edit.add_edit_destination_station = initAutocomplete(
                                 pn_add_edit.add_edit_destination_station,
                                 { lang: pn_add_edit.lang, minLength: 3 },
-                                getAutocompleteList(pn_add_edit.ids_inc.uz_dir.getListStation('code', 'station', null, null), 'text'),
+                                getAutocompleteList(pn_add_edit.ids_inc.uz_dir.getListStation('code_cs', 'station', null, null), 'text'),
                                 function (text) {
                                     pn_add_edit.add_edit_destination_station_code.val(null);
                                     if (text) {
                                         var obj = pn_add_edit.ids_inc.uz_dir.getStations_Of_Name('station', text)
                                         if (obj && obj.length > 0) {
-                                            var code = obj[0].code;
+                                            var code = obj[0].code_cs;
                                             pn_add_edit.add_edit_destination_station_code.val(code);
                                         }
                                     }
@@ -297,7 +297,7 @@
                 valid = valid & pn_add_edit.val.checkInputOfNull(pn_add_edit.add_edit_num, "Укажите номер письма");
                 valid = valid & pn_add_edit.val.checkInputOfNull(pn_add_edit.add_edit_datetime.obj, "Укажите дату письма");
                 valid = valid & pn_add_edit.val.checkInputOfDateTime(pn_add_edit.add_edit_datetime.obj, lang === 'ru' ? 'DD.MM.YYYY' : 'MM/DD/YYYY');
-                valid = valid & pn_add_edit.val.checkInputOfDirectory(pn_add_edit.add_edit_destination_station_code, this, 'ids_inc.uz_dir.getStations_Internal_Of_Code', "Указанной станции нет в справочнике УЗ");
+                valid = valid & pn_add_edit.val.checkInputOfDirectory(pn_add_edit.add_edit_destination_station_code, this, 'ids_inc.uz_dir.getStations_Internal_Of_CodeCS', "Указанной станции нет в справочнике УЗ");
                 valid = valid & pn_add_edit.val.checkInputOfNull(pn_add_edit.add_edit_owner, "Укажите владельца");
                 valid = valid & pn_add_edit.val.checkInputOfNull(pn_add_edit.add_edit_wagons, "Укажите вагон или перечень вагонов, разделитель ';'");
                 valid = valid & pn_add_edit.validation_list_nums(valid, pn_add_edit.add_edit_wagons.val());
@@ -614,7 +614,7 @@
             },
             // Получить полную информацию по составау
             get_letter: function (data) {
-                var station = ids_inc.uz_dir.getStations_Internal_Of_Code(data.destination_station);
+                var station = ids_inc.uz_dir.getStations_Internal_Of_CodeCS(data.destination_station);
 
                 return {
                     "id": data.id,
