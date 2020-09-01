@@ -107,7 +107,7 @@
                         {
                             targets: 0,
                             data: null,
-                            defaultContent: '<button type="button" class="btn btn-primary btn-sm">Показать</button>',
+                            defaultContent: '<button type="button" class="btn btn-outline-primary btn-sm">Показать</button>',
                             orderable: false,
                             //className: 'select-checkbox',
                             width: "50px"
