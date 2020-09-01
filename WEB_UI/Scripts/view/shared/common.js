@@ -246,15 +246,15 @@ var language_table = function (langs) {
 var cd_initSelect = function (obj_select, property, data, callback_option, value_select, event_change, exceptions_value) {
     var options = [];
     var lang = 'ru';
-    var select = true;
+    //var select = true;
     if (property.lang) {
         lang = property.lang;
     }
-    if (property.select) {
-        select = property.select;
-    }
+    //if (property.select) {
+    //    select = property.select;
+    //}
     // Проверка выбор неопределен
-    if (value_select === -1 | select) {
+    if (value_select === -1 ) {
         options.push("<option value='-1' >" + (lang === 'en' ? 'Select...' : 'Выберите...') + "</option>");
     }
     if (data !== null) {
@@ -287,6 +287,40 @@ var cd_initSelect = function (obj_select, property, data, callback_option, value
     //    .selectmenu("refresh");
     obj_select.append(options.join("")).val(value_select);
     obj_select.on("change", event_change);
+    return obj_select;
+};
+
+var cd_updateSelect = function (obj_select, property, data, callback_option, value_select, exceptions_value) {
+    var options = [];
+    var lang = 'ru';
+    //var select = true;
+    if (property.lang) {
+        lang = property.lang;
+    }
+    // Проверка выбор неопределен
+    if (value_select === -1 ) {
+        options.push("<option value='-1' >" + (lang === 'en' ? 'Select...' : 'Выберите...') + "</option>");
+    }
+    if (data !== null) {
+        for (i = 0, count_data_select = data.length; i < count_data_select; i++) {
+            var option = { value: data[i].value, text: data[i].text, disabled: data[i].disabled };
+            // Преобразовать формат
+            if (typeof callback_option === 'function') {
+                option = callback_option(data[i]);
+            }
+            if (option !== null) {
+                if (exceptions_value !== null) {
+                    if (exceptions_value.indexOf(option.value) === -1) {
+                        options.push("<option value='" + option.value + "' " + (option.disabled ? "disabled='disabled'" : "") + ">" + option.text + "</option>");
+                    }
+                } else {
+                    options.push("<option value='" + option.value + "' " + (option.disabled ? "disabled='disabled'" : "") + ">" + option.text + "</option>");
+                }
+            }
+        }
+    }
+    obj_select.empty();
+    obj_select.append(options.join("")).val(value_select);
     return obj_select;
 };
 //
