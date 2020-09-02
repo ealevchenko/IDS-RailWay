@@ -1126,7 +1126,7 @@
                     "count": data.count,
                     "count_arrival": data.count_arrival,
                     "count_not_arrival": data.count_not_arrival,
-                    "count_all": data.count_all,
+                    "count_all": data.count_arrival + ' - ' + data.count_not_arrival,
                     "status": data.status,
                     "note": data.note,
                     "create": data.create !== null ? data.create.replace(/T/g, ' ') : null,
