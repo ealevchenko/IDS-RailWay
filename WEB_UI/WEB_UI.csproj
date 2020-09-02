@@ -532,6 +532,7 @@
     <Content Include="Content\view\idsrwt\outgoing.css" />
     <Content Include="Content\view\idsrwt\incoming.css" />
     <Content Include="Content\view\idsrwt\arrival.css" />
+    <Content Include="Content\view\idsrwt\wsd.css" />
     <Content Include="Content\view\shared\filter-menu.css" />
     <Content Include="Content\view\idsmors\home.css" />
     <Content Include="Content\view\shared\home-menu.css" />
@@ -1017,6 +1018,7 @@
     <Content Include="Scripts\bootstrap-select.js.map" />
     <Content Include="Content\bootstrap-select.css.map" />
     <Content Include="Areas\IDSRWT\Views\Home\Outgoing.cshtml" />
+    <Content Include="Areas\IDSRWT\Views\Home\WSD.cshtml" />
     <None Include="Scripts\jquery-3.5.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.5.1.js" />
     <Content Include="Scripts\jquery-3.5.1.min.js" />
@@ -1126,6 +1128,7 @@
     <Content Include="Scripts\view\idsrwt\outgoing.js" />
     <Content Include="Scripts\view\idsrwt\incoming.js" />
     <Content Include="Scripts\view\idsrwt\arrival.js" />
+    <Content Include="Scripts\view\idsrwt\wsd.js" />
     <Content Include="Scripts\view\shared\common.js" />
     <Content Include="Scripts\view\shared\_ids.js" />
     <Content Include="Scripts\view\shared\_idsdirectory.js" />

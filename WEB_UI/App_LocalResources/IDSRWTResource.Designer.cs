@@ -97,24 +97,6 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Номерной учет вагонов, на территории предприятия..
-        /// </summary>
-        public static string internal_description {
-            get {
-                return ResourceManager.GetString("internal_description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на АРМ диспетчера.
-        /// </summary>
-        public static string internal_title {
-            get {
-                return ResourceManager.GetString("internal_title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на Номерной учет вагонов, отправляемых из АМКР на внешнюю сеть (УЗ).
         /// </summary>
         public static string outgoing_description {
@@ -1074,6 +1056,24 @@ namespace WEB_UI.App_LocalResources {
         public static string title_warehouse_shop {
             get {
                 return ResourceManager.GetString("title_warehouse_shop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Номерной учет вагонов, на территории предприятия..
+        /// </summary>
+        public static string wsd_description {
+            get {
+                return ResourceManager.GetString("wsd_description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на АРМ диспетчера.
+        /// </summary>
+        public static string wsd_title {
+            get {
+                return ResourceManager.GetString("wsd_title", resourceCulture);
             }
         }
     }

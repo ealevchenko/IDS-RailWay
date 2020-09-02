@@ -444,10 +444,10 @@
   <data name="title_tara_uz" xml:space="preserve">
     <value>Тара (УЗ),т</value>
   </data>
-  <data name="internal_description" xml:space="preserve">
+  <data name="wsd_description" xml:space="preserve">
     <value>Номерной учет вагонов, на территории предприятия.</value>
   </data>
-  <data name="internal_title" xml:space="preserve">
+  <data name="wsd_title" xml:space="preserve">
     <value>АРМ диспетчера</value>
   </data>
   <data name="outgoing_description" xml:space="preserve">

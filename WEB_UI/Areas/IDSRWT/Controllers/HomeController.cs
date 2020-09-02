@@ -34,10 +34,14 @@ namespace WEB_UI.Areas.IDSRWT.Controllers
         {
             return View();
         }
-        //public ActionResult Outgoing()
-        //{
-        //    return View();
-        //}
+        /// <summary>
+        /// АРМ Диспетчера
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult WSD()
+        {
+            return View();
+        }
 
 
     }
