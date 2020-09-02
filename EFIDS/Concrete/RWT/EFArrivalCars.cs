@@ -184,5 +184,17 @@ namespace EFIDS.Concrete
                 Console.WriteLine(e);
             }
         }
+
+        public void Update(IEnumerable<ArrivalCars> items)
+        {
+            try
+            {
+                db.Updates<ArrivalCars>(items);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
     }
 }

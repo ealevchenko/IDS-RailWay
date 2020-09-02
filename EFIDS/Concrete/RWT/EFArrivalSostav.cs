@@ -184,5 +184,17 @@ namespace EFIDS.Concrete
                 Console.WriteLine(e);
             }
         }
+
+        public void Update(IEnumerable<ArrivalSostav> items)
+        {
+            try
+            {
+                db.Updates<ArrivalSostav>(items);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
     }
 }

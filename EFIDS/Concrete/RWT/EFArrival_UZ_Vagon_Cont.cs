@@ -185,5 +185,17 @@ namespace EFIDS.Concrete
             }
         }
 
+        public void Update(IEnumerable<Arrival_UZ_Vagon_Cont> items)
+        {
+            try
+            {
+                db.Updates<Arrival_UZ_Vagon_Cont>(items);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
     }
 }
