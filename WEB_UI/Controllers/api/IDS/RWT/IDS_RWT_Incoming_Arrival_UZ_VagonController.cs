@@ -153,6 +153,23 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+
+        // PUT api/ids/rwt/arrival_uz_vagon/list
+        [HttpPut]
+        [Route("list")]
+        public int PutListArrival_UZ_Vagon(List<Arrival_UZ_Vagon> list)
+        {
+            try
+            {
+                this.ef_ids.Update(list);
+                return this.ef_ids.Save();
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+        }
+
         // DELETE api/ids/rwt/arrival_uz_vagon/id
         [HttpDelete]
         [Route("id/{id:long}")]

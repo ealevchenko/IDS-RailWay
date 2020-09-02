@@ -1292,6 +1292,31 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Vagon = function (vagon, callback) {
         },
     });
 };
+//Обновить вагоны
+IDS_RWT_INCOMING.prototype.putListArrival_UZ_Vagon = function (list_wagon, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/rwt/arrival_uz_vagon/list/',
+        data: JSON.stringify(list_wagon),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.putListArrival_UZ_Vagon", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 // Удалить вагон  
 IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon = function (id, callback) {
     $.ajax({
@@ -1315,6 +1340,45 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon = function (id, callback) {
         },
     });
 };
+// Вернуть копию без связей
+IDS_RWT_INCOMING.prototype.getCloneArrival_UZ_Vagon = function (vagon) {
+    if (!vagon) return null;
+    return {
+        id : vagon.id ,
+        id_document : vagon.id_document ,
+        num : vagon.num ,
+        id_arrival : vagon.id_arrival ,
+        id_car : vagon.id_car ,
+        id_condition : vagon.id_condition ,
+        id_type : vagon.id_type ,
+        gruzp : vagon.gruzp ,
+        u_tara : vagon.u_tara ,
+        ves_tary_arc : vagon.ves_tary_arc ,
+        route : vagon.route ,
+        note_vagon : vagon.note_vagon ,
+        id_cargo : vagon.id_cargo ,
+        id_cargo_gng : vagon.id_cargo_gng ,
+        id_certification_data : vagon.id_certification_data ,
+        id_commercial_condition : vagon.id_commercial_condition ,
+        kol_pac : vagon.kol_pac ,
+        pac : vagon.pac ,
+        vesg : vagon.vesg ,
+        vesg_reweighing : vagon.vesg_reweighing ,
+        nom_zpu : vagon.nom_zpu ,
+        danger : vagon.danger ,
+        danger_kod : vagon.danger_kod ,
+        cargo_returns : vagon.cargo_returns ,
+        id_station_on_amkr : vagon.id_station_on_amkr ,
+        id_division_on_amkr : vagon.id_division_on_amkr ,
+        empty_car : vagon.empty_car ,
+        kol_conductor : vagon.kol_conductor ,
+        create : vagon.create ,
+        create_user : vagon.create_user ,
+        change : vagon.change ,
+        change_user : vagon.change_user ,
+    };
+}
+
 //======= Arrival_UZ_Vagon_Pay (Платежки по плательщикам ЭПД УЗ по прибытию) ======================================
 // Получить все платежки
 IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_Pay = function (callback) {
@@ -2737,8 +2801,6 @@ IDS_RWT_INCOMING.prototype.postOutgoingSostav = function (outgoing_sostav, callb
         },
     });
 };
-
-
 /* ----------------------------------------------------------
 функции для работы с объектами
 -------------------------------------------------------------*/

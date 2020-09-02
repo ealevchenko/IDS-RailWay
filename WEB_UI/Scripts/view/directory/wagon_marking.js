@@ -36,7 +36,7 @@
         user_name = $('input#username').val(),
         alert = new ALERT($('div#main-alert')),// Создадим класс ALERTG
         ids_inc = new IDS_RWT_INCOMING(lang), // Создадим класс IDS_RWT_INCOMING
-        
+
         //bt_search_wagon = $('button#bt_search_wagon').on('click', function (event) {
         //    event.preventDefault();
         //    search_wagon();
@@ -69,7 +69,7 @@
             date_start: $('input#date_start'),
             date_stop: $('input#date_stop'),
             select_station: $('select#select_station'),
-            select_doc : $('select#select_doc'),
+            select_doc: $('select#select_doc'),
             sostav_info: $('#sostav_info'),
             //
             init: function (lang, list_station) {
@@ -199,7 +199,9 @@
                 });
             }
         },
-        // Таблица вагоны на подходах
+        //*************************************************************************************
+        // ТАБЛИЦА ВАГОНОВ ПРИНЯТОГО СОСТАВА
+        //*************************************************************************************
         table_arrival_wagon = {
             html_table: $('table#table-wagon'),
             obj: null,
@@ -266,7 +268,7 @@
                             action: function (e, dt, node, config) {
                                 var items = table_arrival_wagon.obj.rows({ selected: true });
                                 var row_wagon = table_arrival_wagon.obj.rows(items[0]).data();
-                                //pn_change_group_limit.Open(row_cargo);
+                                pn_change_group_condition.Open(row_wagon);
                             },
                             enabled: false
                         },
@@ -289,16 +291,16 @@
             },
             // Показать таблицу с данными
             view: function (data) {
-                var id_select = table_arrival_wagon.select_string ? table_arrival_wagon.select_string.id : 0;
+                //var id_select = table_arrival_wagon.select_string ? table_arrival_wagon.select_string.id : 0;
                 table_arrival_wagon.obj.clear();
                 // Сбросить выделенный состав
                 table_arrival_wagon.deselect();
                 $.each(data, function (i, el) {
                     table_arrival_wagon.obj.row.add(table_arrival_wagon.get_string(el));
                 });
-                if (table_arrival_wagon.count_string === 1) {
-                    table_arrival_wagon.obj.row('#' + id_select).select();
-                }
+                //if (table_arrival_wagon.count_string === 1) {
+                //    table_arrival_wagon.obj.row('#' + id_select).select();
+                //}
                 table_arrival_wagon.obj.order([0, 'asc']);
                 table_arrival_wagon.obj.draw();
                 LockScreenOff();
@@ -315,6 +317,7 @@
                 var condition = vag_uz && vag_uz.Directory_ConditionArrival ? vag_uz.Directory_ConditionArrival : null;
                 return {
                     "id": data.id,
+                    "id_arrival_uz_vagon": data.id_arrival_uz_vagon,
                     "num": data.num,
                     "position": data.position_arrival,
                     "cargo": dir_cargo ? ids_inc.ids_dir.getValueObj(dir_cargo, 'cargo_name', lang) : null,
@@ -323,13 +326,160 @@
                     "renovation_date": dir_wagon && dir_wagon.date_rem_uz ? dir_wagon.date_rem_uz.replace(/T/g, ' ') : null,
                     "condition": condition ? ids_inc.ids_dir.getValueObj(condition, 'condition_abbr', lang) : null,
                     "create_wagon": data.create !== null && data.create_user !== null ? data.create_user + ' (' + data.create.replace(/T/g, ' ') + ')' : null,
-                    "change_wagon": data.change !== null && data.change_user !== null ? data.change_user + ' (' + data.change.replace(/T/g, ' ') + ')' : null
+                    "change_wagon": data.change !== null && data.change_user !== null ? data.change_user + ' (' + data.change.replace(/T/g, ' ') + ')' : null,
+                    "vag_uz": vag_uz
                 };
             },
             // Deselect
             deselect: function () {
-                table_arrival_wagon.select_string = null;
+                //table_arrival_wagon.select_string = null;
+                table_arrival_wagon.obj.button(4).enable(false);
             }
+        },
+        //*************************************************************************************
+        // ОКНО ИЗМЕНИТЬ ГОДНОСТЬ ПО ПРИБЫТИЮ
+        //*************************************************************************************
+        pn_change_group_condition = {
+            obj: null,
+            lang: null,
+            user_name: null,
+            ids_inc: null,
+            alert: $('div#change_group_condition_alert'),                                             // Сообщения
+            all_obj: null,                                                                  // массив всех элементов формы 
+            val: null,                                                                      // класс валидации
+            list_group: null,
+            rows: null,
+            // Поля формы
+            change_group_condition_arrival: $('select#change_group_condition_arrival'),
+            // загрузка библиотек
+            loadReference: function (callback) {
+                //LockScreen(langView('mess_load', langs));
+                var count = 1;
+                pn_change_group_condition.ids_inc.ids_dir.load(['condition_arrival'], false, function () {
+                    count -= 1;
+                    if (count === 0) {
+                        if (typeof callback === 'function') {
+                            callback();
+                        }
+                    }
+                });
+            },
+            // инициализвция Окна
+            init: function (lang, user_name, callback_ok) {
+                pn_change_group_condition.lang = lang;
+                pn_change_group_condition.user_name = user_name;
+                pn_change_group_condition.ids_inc = new IDS_RWT_INCOMING(lang), // Создадим класс IDS_RWT_INCOMING
+                    pn_change_group_condition.loadReference(function () {
+                        //pn_change_group_condition.list_group = pn_change_group_condition.ids_dir.getListLimitingLoading('id', 'limiting_name', pn_change_group_condition.lang, null);
+                        // Инициализация элементов
+
+                        pn_change_group_condition.change_group_condition_arrival = cd_initSelect(
+                            pn_change_group_condition.change_group_condition_arrival,
+                            { lang: pn_change_group_condition.lang },
+                            pn_change_group_condition.ids_inc.ids_dir.getList2ConditionArrival('id', 'condition_abbr', 'condition_name', pn_change_group_condition.lang, null),
+                            null,
+                            -1,
+                            function (event) {
+                                event.preventDefault();
+                                var id = Number($(this).val());
+                            },
+                            null);
+                        // Соберем все элементы в массив
+                        pn_change_group_condition.all_obj = $([])
+                            .add(pn_change_group_condition.change_group_condition_arrival)
+                        ;
+                        // создадим классы 
+                        pn_change_group_condition.val = new VALIDATION(pn_change_group_condition.lang, pn_change_group_condition.alert, pn_change_group_condition.all_obj); // Создадим класс VALIDATION
+                        //pn_change_group_condition.table_car.init();
+                        pn_change_group_condition.obj = $("div#change_group_condition").dialog({
+                            resizable: false,
+                            title: 'Изменить годность по прибытию',
+                            modal: true,
+                            autoOpen: false,
+                            height: "auto",
+                            width: 600,
+                            classes: {
+                                "ui-dialog": "card",
+                                "ui-dialog-titlebar": "card-header bg-primary text-white",
+                                "ui-dialog-content": "card-body",
+                                "ui-dialog-buttonpane": "card-footer text-muted"
+                            },
+                            open: function (event, ui) {
+
+                            },
+                            buttons: [
+                                {
+
+                                    disabled: false,
+                                    text: "Ок",
+                                    class: "btn btn-outline-primary btn",
+                                    click: function () {
+                                        pn_change_group_condition.save(callback_ok);
+                                    }
+                                },
+                                {
+                                    text: "Отмена",
+                                    class: "btn btn-outline-primary btn",
+                                    click: function () {
+                                        $(this).dialog("close");
+                                    }
+                                },
+                            ]
+                        });
+                        // Sumbit form
+                        pn_change_group_condition.obj.find("form").on("submit", function (event) {
+                            event.preventDefault();
+                        });
+                    });
+
+            },
+            // открыть окно добавмить вагоны вручную
+            Open: function (rows) {
+                pn_change_group_condition.val.clear_all();
+                pn_change_group_condition.change_group_condition_arrival.val(-1); // сбросить выбор
+                pn_change_group_condition.rows = rows;
+                if (rows && rows.length > 0) {
+                    pn_change_group_condition.obj.dialog("open");
+                }
+            },
+            // Валидация данных
+            validation: function () {
+                pn_change_group_condition.val.clear_all();
+                var valid = true;
+                valid = valid & pn_change_group_condition.val.checkSelection(pn_change_group_condition.change_group_condition_arrival, "Выберите годность");
+                return valid;
+            },
+            // Сохранить прибытие состава
+            save: function (callback_ok) {
+                var list_uz_vagon = [];
+                var valid = pn_change_group_condition.validation();
+                if (valid) {
+                    pn_change_group_condition.val.clear_all();
+                    LockScreen(langView('mess_save', langs));
+                    //// Получимсписок номеров вагонов
+                    for (inum = 0; inum < pn_change_group_condition.rows.length; inum++) {
+                        var vag = pn_change_group_condition.ids_inc.getCloneArrival_UZ_Vagon(pn_change_group_condition.rows[inum].vag_uz);
+                        if (vag) {
+                            vag.id_condition = get_select_number_value(pn_change_group_condition.change_group_condition_arrival);
+                            vag.change = toISOStringTZ(new Date());
+                            vag.change_user = pn_change_group_condition.user_name;
+                        }
+                        list_uz_vagon.push(vag);
+                    }
+                    // Обновим информацию в документах на прибывший вагон
+                    pn_change_group_condition.ids_inc.putListArrival_UZ_Vagon(list_uz_vagon, function (result_upd) {
+                        if (result_upd >= 0) {
+                            if (typeof callback_ok === 'function') {
+                                pn_change_group_condition.obj.dialog("close");
+                                callback_ok(result_upd);
+                            }
+                        } else {
+                            pn_change_group_condition.val.out_error_message("При обновлении разметки по прибитию по группе вагонов произошла ошибка!");
+                            LockScreenOff();
+                        }
+                    });
+                }
+            },
         };
 
     //================================================================
@@ -340,7 +490,14 @@
         var list_station = ids_inc.ids_dir.getListStation('id', 'station_name', lang, function (i) { return i.station_uz === false && i.exit_uz === true ? true : false; });
         pn_select.init(lang, list_station);
         table_arrival_wagon.init();
-
+        // Инициализация окна править группу ограничений
+        pn_change_group_condition.init(lang, user_name, function (result_change_group) {
+            if (result_change_group > 0) {
+                // Показать после изменения
+                pn_select.view_arrival_wagon(get_select_number_value(pn_select.select_doc));
+                alert.out_info_message('Обновлены готовности по группе вагонов в количестве - ' + result_change_group + ' записей');
+            }
+        });
         //LockScreenOff();
     });
 
