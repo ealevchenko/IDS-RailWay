@@ -281,7 +281,7 @@
             LockScreen(langView('mess_delay', langs));
             if (refresh || data_start === null || data_stop === null || data_start !== start || data_stop !== stop) {
 
-                ids_inc.getArrivalSostav(start, stop, function (data) {
+                ids_inc.getViewArrivalSostav(start, stop, function (data) {
                     list_sostav = data;
                     data_start = start;
                     data_stop = stop;
@@ -1096,12 +1096,12 @@
             get_sostav: function (data) {
 
                 //var cs = mt.getConsignee_Internal_Of_ID(data.consignee);
-                var car_arrival = data.ArrivalCars !== null ? data.ArrivalCars.filter(function (i) {
-                    return i.arrival ? true : false;
-                }) : [];
-                var car_not_arrival = data.ArrivalCars !== null ? data.ArrivalCars.filter(function (i) {
-                    return !i.arrival ? true : false;
-                }) : [];
+                //var car_arrival = data.ArrivalCars !== null ? data.ArrivalCars.filter(function (i) {
+                //    return i.arrival ? true : false;
+                //}) : [];
+                //var car_not_arrival = data.ArrivalCars !== null ? data.ArrivalCars.filter(function (i) {
+                //    return !i.arrival ? true : false;
+                //}) : [];
                 return {
                     "id": data.id,
                     "id_arrived": data.id_arrived,
@@ -1112,15 +1112,21 @@
                     "date_adoption": data.date_adoption !== null ? data.date_adoption.replace(/T/g, ' ') : null,
                     "date_adoption_act": data.date_adoption_act !== null ? data.date_adoption_act.replace(/T/g, ' ') : null,
                     "id_station_from": data.id_station_from,
-                    "station_from": data.id_station_from !== null && ids_inc !== null ? ids_inc.ids_dir.getValue_Station_Of_ID(data.id_station_from, 'station_name', lang) : '',
+                    //"station_from": data.id_station_from !== null && ids_inc !== null ? ids_inc.ids_dir.getValue_Station_Of_ID(data.id_station_from, 'station_name', lang) : '',
+                    "station_from": data.id_station_from !== null ? ids_inc.getValueCultureObj(data,'station_from_name') : '',
+
+
                     "id_station_on": data.id_station_on,
-                    "station_on": data.id_station_on !== null && ids_inc !== null ? ids_inc.ids_dir.getValue_Station_Of_ID(data.id_station_on, 'station_name', lang) : '',
-                    "id_way": data.id_way !== null && ids_inc !== null ? ids_inc.ids_dir.getValue_Ways_Of_ID(data.id_way, 'way_num', lang) : '',
+                    //"station_on": data.id_station_on !== null && ids_inc !== null ? ids_inc.ids_dir.getValue_Station_Of_ID(data.id_station_on, 'station_name', lang) : '',
+                    "station_on": data.id_station_on !== null ? ids_inc.getValueCultureObj(data, 'station_on_name') : '',
+
+                    //"id_way": data.id_way !== null && ids_inc !== null ? ids_inc.ids_dir.getValue_Ways_Of_ID(data.id_way, 'way_num', lang) : '',
+                    "id_way": data.id_way !== null ? ids_inc.getValueCultureObj(data, 'way_num') : '',
                     "num_doc": data.num_doc,
-                    "count": data.ArrivalCars !== null ? data.ArrivalCars.length : 0,
-                    "count_arrival": car_arrival !== null ? car_arrival.length : 0,
-                    "count_not_arrival": car_not_arrival !== null ? car_not_arrival.length : 0,
-                    "count_all": (car_arrival !== null ? car_arrival.length : 0) + ' - ' + (car_not_arrival !== null ? car_not_arrival.length : 0),
+                    "count": data.count,
+                    "count_arrival": data.count_arrival,
+                    "count_not_arrival": data.count_not_arrival,
+                    "count_all": data.count_all,
                     "status": data.status,
                     "note": data.note,
                     "create": data.create !== null ? data.create.replace(/T/g, ' ') : null,

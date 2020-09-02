@@ -2189,6 +2189,29 @@ IDS_RWT_INCOMING.prototype.getArrivalSostav = function (start, stop, callback) {
         },
     });
 };
+// Получить все составы представление 
+IDS_RWT_INCOMING.prototype.getViewArrivalSostav = function (start, stop, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/arrival_sostav/view/start/' + toISOStringTZ(start).substring(0, 19) + '/stop/' + toISOStringTZ(stop).substring(0, 19),
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.getViewArrivalSostav", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 // Получить все составы за период времени принятые на станцию
 IDS_RWT_INCOMING.prototype.getArrivalSostavOfDatePeriodIDStationOn = function (start, stop, id_station, callback) {
     $.ajax({
@@ -2809,7 +2832,8 @@ IDS_RWT_INCOMING.prototype.getValueObj = function (obj, name) {
 };
 //
 IDS_RWT_INCOMING.prototype.getValueCultureObj = function (obj, name) {
-    return obj ? obj[name + '_' + this.lang] : null;
+    var res = obj ? obj[name + '_' + this.lang] : null;
+    return res;
 };
 /* ----------------------------------------------------------
 функции для работы с внутреним массивом

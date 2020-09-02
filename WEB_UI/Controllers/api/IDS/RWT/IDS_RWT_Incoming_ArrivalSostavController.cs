@@ -11,6 +11,47 @@ using EFIDS.Entities;
 
 namespace WEB_UI.Controllers.api
 {
+    public class ViewArrivalSostav
+    {
+        public long id { get; set; }
+        public long? id_arrived { get; set; }
+        public long? id_sostav { get; set; }
+        public int train { get; set; }
+        public string composition_index { get; set; }
+        public DateTime date_arrival { get; set; }
+        public DateTime? date_adoption { get; set; }
+        public DateTime? date_adoption_act { get; set; }
+        public int? id_station_from { get; set; }
+        public int? id_station_on { get; set; }
+        public int? id_way { get; set; }
+        public bool? numeration { get; set; }
+        public int? num_doc { get; set; }
+        public int? count { get; set; }
+        public int status { get; set; }
+        public string note { get; set; }
+        public DateTime create { get; set; }
+        public string create_user { get; set; }
+        public DateTime? change { get; set; }
+        public string change_user { get; set; }
+        public string station_from_name_ru { get; set; }
+        public string station_from_name_en { get; set; }
+        public string station_from_abbr_ru { get; set; }
+        public string station_from_abbr_en { get; set; }
+        public string station_on_name_ru { get; set; }
+        public string station_on_name_en { get; set; }
+        public string station_on_abbr_ru { get; set; }
+        public string station_on_abbr_en { get; set; }
+        public string way_num_ru { get; set; }
+        public string way_num_en { get; set; }
+        public string way_name_ru { get; set; }
+        public string way_name_en { get; set; }
+        public int count_all { get; set; }
+        public int count_arrival { get; set; }
+        public int count_not_arrival { get; set; }
+    }
+
+
+
     [RoutePrefix("api/ids/rwt/arrival_sostav")]
     public class IDS_RWT_Incoming_ArrivalSostavController : ApiController
     {
@@ -98,6 +139,25 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // GET: api/ids/rwt/arrival_sostav/view/start/2020-06-01T00:00:00/stop/2020-07-01T23:59:59
+        [Route("view/start/{start:datetime}/stop/{stop:datetime}")]
+        [ResponseType(typeof(ViewArrivalSostav))]
+        public IHttpActionResult GetArrivalSostavOfPeriod(DateTime start, DateTime stop)
+        {
+            try
+            {
+                string sql = "declare @start datetime = convert(datetime, '" + start.ToString("yyyy-MM-dd HH:mm:ss") + "',120) " +
+                    "declare @stop datetime = convert(datetime, '" + stop.ToString("yyyy-MM-dd HH:mm:ss") + "', 120) " +
+                    "EXEC[IDS].[get_arrival_sostav_of_period] @start, @stop";
+                List<ViewArrivalSostav> list = this.ef_ids.Database.SqlQuery<ViewArrivalSostav>(sql).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         // GET: api/ids/rwt/arrival_sostav/start/2020-09-01T00:00:00/stop/2020-09-01T23:59:59/station/amkr/id/6
         [Route("start/{start:datetime}/stop/{stop:datetime}/station/amkr/id/{id:int}")]
         [ResponseType(typeof(ArrivalSostav))]
@@ -108,12 +168,6 @@ namespace WEB_UI.Controllers.api
                 string sql = "SELECT [id],[id_arrived],[id_sostav],[train],[composition_index],[date_arrival],[date_adoption],[date_adoption_act],[id_station_from],[id_station_on],[id_way],[numeration],[num_doc],[count],[status],[note],[create],[create_user],[change],[change_user] " +
                 "FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalSostav] where [date_arrival]>=convert(datetime, '" + start.ToString("yyyy-MM-dd HH:mm:ss") + "',120) and [date_arrival]<=convert(datetime, '" + stop.ToString("yyyy-MM-dd HH:mm:ss") + "',120) and [id_station_on]=" + id.ToString();
                 List<ArrivalSostav> list = this.ef_ids.Database.SqlQuery<ArrivalSostav>(sql).ToList();
-                
-                //List<ArrivalSostav> list = this.ef_ids
-                //    .Context
-                //    .Where(s => s.date_arrival >= start && s.date_arrival <= stop && s.id_station_on == id)
-                //    .ToList()
-                //    .Select(c => c.GetArrivalSostav_ArrivalCars()).ToList();
                 return Ok(list);
             }
             catch (Exception e)
@@ -121,11 +175,6 @@ namespace WEB_UI.Controllers.api
                 return BadRequest(e.Message);
             }
         }
-
-
-
-            //        string sql = "SELECT " + field + " FROM " + table + " where [Num]= " + num.ToString() + " order by [id] desc";
-            //return this.db.Database.SqlQuery<ApproachesCars>(sql).FirstOrDefault();
 
         // POST api/ids/rwt/arrival_sostav/
         [HttpPost]
