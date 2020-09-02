@@ -1,7 +1,7 @@
 USE [KRR-PA-CNT-Railway]
 GO
 
-/****** Object:  StoredProcedure [IDS].[get_arrival_sostav_of_period]    Script Date: 02.09.2020 21:42:24 ******/
+/****** Object:  StoredProcedure [IDS].[get_arrival_sostav_of_period]    Script Date: 02.09.2020 22:30:00 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -43,11 +43,11 @@ ARS.change_user,
 SF.station_name_ru as station_from_name_ru, 
 SF.station_name_en as station_from_name_en, 
 SF.station_abbr_ru as station_from_abbr_ru, 
-SF.station_abbr_en as station_from_abbr_ru,
+SF.station_abbr_en as station_from_abbr_en,
 SON.station_name_ru AS station_on_name_ru, 
 SON.station_name_en AS station_on_name_en, 
 SON.station_abbr_ru AS station_on_abbr_ru, 
-SON.station_abbr_en AS station_on_abbr_ru, 
+SON.station_abbr_en AS station_on_abbr_en, 
 WS.way_num_ru,
 WS.way_num_en,
 WS.way_name_ru,
