@@ -61,6 +61,23 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // GET: api/ids/directory/park_way/view/station/id/1
+        [Route("view/station/id/{id:int}")]
+        [ResponseType(typeof(Directory_ParkWay))]
+        public IHttpActionResult GetParkWayOfStation(int id)
+        {
+            try
+            {
+                string sql = "SELECT [id] ,[park_name_ru] ,[park_name_en] ,[create] ,[create_user],[change] ,[change_user] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_ParkWay] where [id] in (SELECT distinct [id_park] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] where id_station = " + id.ToString()+")";
+                List<Directory_ParkWay> list = this.ef_dir.Database.SqlQuery<Directory_ParkWay>(sql).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         // POST api/ids/directory/park_way/
         [HttpPost]
         [Route("")]

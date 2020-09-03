@@ -2,3 +2,37 @@
 
 body {
 }
+
+td.station-control {
+    background: url('../../../Content/DataTables/media/images1/details_open.png') no-repeat center center;
+    width:20px;
+    cursor: pointer;
+}
+
+tr.shown td.station-control {
+    background: url('../../../Content/DataTables/media/images1/details_close.png') no-repeat center center;
+    width:20px;
+}
+
+td.park-control {
+    background: url('../../../Content/DataTables/media/images1/details_open.png') no-repeat center center;
+    width:20px;
+    cursor: pointer;
+}
+
+tr.shown td.park-control {
+    background: url('../../../Content/DataTables/media/images1/details_close.png') no-repeat center center;
+    width:20px;
+}
+
+td.station-name {
+    text-align:left
+}
+
+td.park-name {
+    text-align:left
+}
+
+td.way-name {
+    text-align:left
+}

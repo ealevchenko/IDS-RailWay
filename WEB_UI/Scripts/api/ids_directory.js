@@ -3320,6 +3320,7 @@ IDS_DIRECTORY.prototype.getStation = function (callback) {
     });
 };
 //======= Directory_Ways (Справочник путей ИДС) ======================================
+//
 IDS_DIRECTORY.prototype.getWays = function (callback) {
     $.ajax({
         type: 'GET',
@@ -3336,6 +3337,76 @@ IDS_DIRECTORY.prototype.getWays = function (callback) {
         },
         error: function (x, y, z) {
             OnAJAXError("IDS_DIRECTORY.getWays", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить пити по указаной станции и парку
+IDS_DIRECTORY.prototype.getWaysOfStationIDParkID = function (id_station, id_park, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/ways/view/station/id/' + id_station + '/park/id/' + id_park,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getWaysOfStationIDParkID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//======= Directory_ParkWay (Справочник путей ИДС) ======================================
+// Получить все парки
+IDS_DIRECTORY.prototype.getParkWay = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/park_way/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getParkWay", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить парки по указаной станции
+IDS_DIRECTORY.prototype.getParkWayOfStationID = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/park_way/view/station/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getParkWayOfStationID", x, y, z);
         },
         complete: function () {
             AJAXComplete();

@@ -61,6 +61,24 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // GET: api/ids/directory/ways/view/station/id/1/park/id/69
+        [Route("view/station/id/{id_station:int}/park/id/{id_park:int}")]
+        [ResponseType(typeof(Directory_Ways))]
+        public IHttpActionResult GetWayOfStationPark(int id_station, int id_park)
+        {
+            try
+            {
+                string sql = "SELECT [id] ,[id_station],[id_park],[position] ,[way_num_ru],[way_num_en],[way_name_ru],[way_name_en],[capacity],[deadlock],[crossing_uz],[crossing_amkr],[id_devision],[note],[create],[create_user],[change],[change_user] "+
+                    "FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] where [id_station]="+ id_station.ToString()+" AND [id_park]=" + id_park.ToString() + " ORDER BY [position]";
+                List<Directory_Ways> list = this.ef_dir.Database.SqlQuery<Directory_Ways>(sql).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         // POST api/ids/directory/ways/
         [HttpPost]
         [Route("")]
