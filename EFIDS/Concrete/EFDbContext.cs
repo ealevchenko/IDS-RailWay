@@ -14,6 +14,9 @@ namespace EFIDS.Concrete
         {
         }
 
+        // SAP Входящая поставка
+        public virtual DbSet<SAPIncomingSupply> SAPIncomingSupply { get; set; }
+
         // RWT
         public virtual DbSet<Arrival_UZ_Cont_Pay> Arrival_UZ_Cont_Pay { get; set; }
         public virtual DbSet<Arrival_UZ_Document> Arrival_UZ_Document { get; set; }
@@ -90,6 +93,82 @@ namespace EFIDS.Concrete
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            // САП вх поставка
+            modelBuilder.Entity<ArrivalCars>()
+                .HasMany(e => e.SAPIncomingSupply)
+                .WithRequired(e => e.ArrivalCars)
+                .HasForeignKey(e => e.id_arrival_car)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<SAPIncomingSupply>()
+                .Property(e => e.num_doc_uz)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<SAPIncomingSupply>()
+                .Property(e => e.code_border_checkpoint)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<SAPIncomingSupply>()
+                .Property(e => e.name_border_checkpoint)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<SAPIncomingSupply>()
+                .Property(e => e.VBELN)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<SAPIncomingSupply>()
+                .Property(e => e.NUM_VBELN)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<SAPIncomingSupply>()
+                .Property(e => e.WERKS)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<SAPIncomingSupply>()
+                .Property(e => e.LGORT)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<SAPIncomingSupply>()
+                .Property(e => e.LGOBE)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<SAPIncomingSupply>()
+                .Property(e => e.LGORT_10)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<SAPIncomingSupply>()
+                .Property(e => e.LGOBE_10)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<SAPIncomingSupply>()
+                .Property(e => e.MATNR)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<SAPIncomingSupply>()
+                .Property(e => e.MAKTX)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<SAPIncomingSupply>()
+                .Property(e => e.NAME_SH)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<SAPIncomingSupply>()
+                .Property(e => e.KOD_R_10)
+                .IsFixedLength()
+                .IsUnicode(false);
 
             // Сдача
             modelBuilder.Entity<Directory_Station>()

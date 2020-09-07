@@ -181,6 +181,7 @@
     <Compile Include="Entities\RWT\InstructionalLettersWagon.cs" />
     <Compile Include="Entities\RWT\OutgoingCars.cs" />
     <Compile Include="Entities\RWT\OutgoingSostav.cs" />
+    <Compile Include="Entities\RWT\SAPIncomingSupply.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -9,6 +9,12 @@ namespace EFIDS.Entities
     [Table("IDS.ArrivalCars")]
     public partial class ArrivalCars
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public ArrivalCars()
+        {
+            SAPIncomingSupply = new HashSet<SAPIncomingSupply>();
+        }
+
         public long id { get; set; }
 
         public long? id_arrival { get; set; }
@@ -54,5 +60,8 @@ namespace EFIDS.Entities
         public virtual UZ_DOC UZ_DOC { get; set; }
         
         public virtual Arrival_UZ_Vagon Arrival_UZ_Vagon { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SAPIncomingSupply> SAPIncomingSupply { get; set; }
     }
 }
