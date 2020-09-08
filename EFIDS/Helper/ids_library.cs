@@ -1401,6 +1401,52 @@ namespace EFIDS.Helper
             }
         }
 
+        public static SAPIncomingSupply GetSAPIncomingSupply(this SAPIncomingSupply s)
+        {
+            try
+            {
+                if (s == null) return null;
+                return new SAPIncomingSupply()
+                {
+                    id = s.id,
+                    id_arrival_car = s.id_arrival_car,
+                    num = s.num,
+                    num_doc_uz = s.num_doc_uz,
+                    date_doc_uz = s.date_doc_uz,
+                    code_border_checkpoint = s.code_border_checkpoint,
+                    name_border_checkpoint = s.name_border_checkpoint,
+                    cross_time = s.cross_time,
+                    VBELN = s.VBELN,
+                    NUM_VBELN = s.NUM_VBELN,
+                    WERKS = s.WERKS,
+                    LGORT = s.LGORT,
+                    LGOBE = s.LGOBE,
+                    ERDAT = s.ERDAT,
+                    ETIME = s.ETIME,
+                    LGORT_10 = s.LGORT_10,
+                    LGOBE_10 = s.LGOBE_10,
+                    MATNR = s.MATNR,
+                    MAKTX = s.MAKTX,
+                    NAME_SH = s.NAME_SH,
+                    KOD_R_10 = s.KOD_R_10,
+                    note = s.note,
+                    term = s.term,
+                    attempt = s.attempt,
+                    create = s.create,
+                    create_user = s.create_user,
+                    change = s.change,
+                    change_user = s.change_user,
+                    close = s.close,
+                    close_user = s.close_user,
+                    ArrivalCars = null
+                };
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
         #endregion
     }
 }

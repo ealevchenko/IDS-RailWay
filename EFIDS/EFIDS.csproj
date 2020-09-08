@@ -100,6 +100,7 @@
     <Compile Include="Concrete\Directory\EFDirectory_WagonManufacturers.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_GenusWagons.cs" />
     <Compile Include="Concrete\EFRepository.cs" />
+    <Compile Include="Concrete\RWT\EFSAPIncomingSupply.cs" />
     <Compile Include="Concrete\RWT\EFOutgoingCars.cs" />
     <Compile Include="Concrete\RWT\EFOutgoingSostav.cs" />
     <Compile Include="Concrete\RWT\EFInstructionalLetters.cs" />
