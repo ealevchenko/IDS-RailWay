@@ -269,6 +269,7 @@
     <Compile Include="Controllers\api\Directoty\IDS_Directory_ModelsWagonsController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_TypesRepairsWagonsController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_WagonManufacturersController.cs" />
+    <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_SAPIncomingSupplyController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_OutgoingSostavController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_InstructionalLettersWagonController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_InstructionalLettersController.cs" />

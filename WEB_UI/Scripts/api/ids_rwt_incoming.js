@@ -97,8 +97,172 @@ IDS_RWT_INCOMING.prototype.load = function (list_incoming, list_ids_dir, list_uz
 };
 /* ----------------------------------------------------------
 AJAX функции
-
 -------------------------------------------------------------*/
+//======= SAPIncomingSupply (SAP Входящие поставки) ======================================
+// Получить все поставки
+IDS_RWT_INCOMING.prototype.getSAPIncomingSupply = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/sap/incoming_supply/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.getSAPIncomingSupply", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить поставку по id
+IDS_RWT_INCOMING.prototype.getSAPIncomingSupplyOfID = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/sap/incoming_supply/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.getSAPIncomingSupplyOfID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить поставку по id_arrival_car
+IDS_RWT_INCOMING.prototype.getSAPIncomingSupplyOfIDArrivalCar = function (id_arrival_car, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/sap/incoming_supply/arrival_car/id/' + id_arrival_car,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.getSAPIncomingSupplyOfIDArrivalCar", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить поставки по номеру вагона
+IDS_RWT_INCOMING.prototype.getSAPIncomingSupplyOfNum = function (num, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/sap/incoming_supply/num/' + num,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.getSAPIncomingSupplyOfNum", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Добавить поставку
+IDS_RWT_INCOMING.prototype.postSAPIncomingSupply = function (sap, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/sap/incoming_supply/',
+        type: 'POST',
+        data: JSON.stringify(sap),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT_INCOMING.postSAPIncomingSupply", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Обновить поставку
+IDS_RWT_INCOMING.prototype.putSAPIncomingSupply = function (sap, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/rwt/sap/incoming_supply/id/' + sap.id,
+        data: JSON.stringify(sap),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.putSAPIncomingSupply", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Удалить поставку
+IDS_RWT_INCOMING.prototype.deleteSAPIncomingSupply = function (id, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/sap/incoming_supply/id/' + id,
+        type: 'DELETE',
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT_INCOMING.deleteSAPIncomingSupply", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 //======= InstructionalLetters (Инструктивные письма) ======================================
 // Получить все письма
 IDS_RWT_INCOMING.prototype.getInstructionalLetters = function (callback) {
