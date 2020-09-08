@@ -73,7 +73,7 @@
                         <a class="dropdown-item" href="#" id="report_fst">Натурная ведомость поезда</a>
                         <a class="dropdown-item" href="#" id="report_fsci">Натурная ведомость коммерческого осмотра</a>
                         @*<a class="dropdown-item" href="#">Отчет с данными о перевеске</a>
-                        <a class="dropdown-item" href="#">Отчет о приеме груза</a>*@
+                            <a class="dropdown-item" href="#">Отчет о приеме груза</a>*@
                         <a class="dropdown-item" href="#" id="report_aica_kr">Заявка на выдачу коммерческого акта ст. КР.</a>
                         <a class="dropdown-item" href="#" id="report_aica_kr_gl">Заявка на выдачу коммерческого акта ст. КР Гл.</a>
                         <a class="dropdown-item" href="#" id="report_api_kr">Заявка на участие в выдаче ст. КР.</a>
@@ -85,8 +85,8 @@
                         <a class="dropdown-item" href="#" id="">Накладная предприятия ДГ-20</a>
                         <a class="dropdown-item" href="#" id="">Накладная предприятия ДГ-20</a>
                         @*<a class="dropdown-item" href="#">Заявка на выдачу с проверкой груза КР Главный</a>
-                        <a class="dropdown-item" href="#">Заявка на выдачу с проверкой груза КР</a>
-                        <a class="dropdown-item" href="#">Заявка на взвешивание</a>*@
+                            <a class="dropdown-item" href="#">Заявка на выдачу с проверкой груза КР</a>
+                            <a class="dropdown-item" href="#">Заявка на взвешивание</a>*@
                     </div>
                 </div>
                 <input class="form-control-sm" type="text" placeholder="Search" aria-label="Search">
@@ -808,11 +808,39 @@
                                         <div class="form-row">
                                             <div class="col-md-6 mb-1 text-left">
                                                 <label for="SAP_inbound_delivery_num_input_sipply" class="col-form-label">@IDSRWTResource.title_num_input_sipply:</label>
-                                                <input type="text" class="form-control" id="SAP_inbound_delivery_num_input_sipply" name="SAP_inbound_delivery_num_input_sipply" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <button type="button" class="btn btn-warning btn" id="SAP_inbound_delivery_add" title="Получить строку САП входящие поставки" data-mode="edit-global" data-edit="" data-form="transceiver">
+                                                            <i class="fa fa-archive" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                    <input type="text" class="form-control" id="SAP_inbound_delivery_num_input_sipply" name="SAP_inbound_delivery_num_input_sipply" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                    <div class="invalid-feedback">
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-2 mb-1 text-left">
+                                                <label for="SAP_inbound_delivery_num_pos_sipply" class="col-form-label">@IDSRWTResource.title_pos_input_sipply:</label>
+                                                <input type="text" class="form-control" id="SAP_inbound_delivery_num_pos_sipply" name="SAP_inbound_delivery_num_pos_sipply" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
-                                            <div class="col-md-6 mb-1 text-left">
+                                            <div class="col-md-4 mb-1 text-left">
+                                                <label for="SAP_inbound_delivery_dt_sipply" class="col-form-label">@IDSRWTResource.title_dt_input_sipply:</label>
+                                                <input type="text" class="form-control" id="SAP_inbound_delivery_dt_sipply" name="SAP_inbound_delivery_dt_sipply" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-3 mb-1 text-left">
+                                                <label for="SAP_inbound_delivery_unloading_ban" class="col-form-label">@IDSRWTResource.title_unloading_ban:</label>
+                                                <input type="text" class="form-control" id="SAP_inbound_delivery_unloading_ban" name="SAP_inbound_delivery_unloading_ban" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9 mb-1 text-left">
                                                 <label for="SAP_inbound_delivery_ship" class="col-form-label">@IDSRWTResource.title_ship:</label>
                                                 <input type="text" class="form-control" id="SAP_inbound_delivery_ship" name="SAP_inbound_delivery_ship" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
                                                 <div class="invalid-feedback">
@@ -839,19 +867,19 @@
                                         <fieldset class="border-secondary">
                                             <legend class="text-secondary">@IDSRWTResource.title_warehouse</legend>
                                             <div class="form-row">
-                                                <div class="col-md-2 mb-1 text-left">
+                                                <div class="col-md-3 mb-1 text-left">
                                                     <label for="SAP_inbound_delivery_warehouse_code" class="col-form-label">@IDSRWTResource.title_warehouse_code:</label>
                                                     <input type="text" class="form-control" id="SAP_inbound_delivery_warehouse_code" name="SAP_inbound_delivery_warehouse_code" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
                                                     <div class="invalid-feedback">
                                                     </div>
                                                 </div>
-                                                <div class="col-md-4 mb-1 text-left">
+                                                <div class="col-md-9 mb-1 text-left">
                                                     <label for="SAP_inbound_delivery_warehouse_name" class="col-form-label">@IDSRWTResource.title_warehouse_name:</label>
                                                     <input type="text" class="form-control" id="SAP_inbound_delivery_warehouse_name" name="SAP_inbound_delivery_warehouse_name" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
                                                     <div class="invalid-feedback">
                                                     </div>
                                                 </div>
-                                                <div class="col-md-4 mb-1 text-left">
+                                                @*<div class="col-md-4 mb-1 text-left">
                                                     <label for="SAP_inbound_delivery_warehouse_shop" class="col-form-label">@IDSRWTResource.title_warehouse_shop:</label>
                                                     <input type="text" class="form-control" id="SAP_inbound_delivery_warehouse_shop" name="SAP_inbound_delivery_warehouse_shop" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
                                                     <div class="invalid-feedback">
@@ -862,25 +890,25 @@
                                                     <input type="text" class="form-control" id="SAP_inbound_delivery_warehouse_date" name="SAP_inbound_delivery_warehouse_date" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
                                                     <div class="invalid-feedback">
                                                     </div>
-                                                </div>
+                                                </div>*@
                                             </div>
                                         </fieldset>
                                         <fieldset class="border-secondary">
                                             <legend class="text-secondary">@IDSRWTResource.title_warehouse_new</legend>
                                             <div class="form-row">
-                                                <div class="col-md-2 mb-1 text-left">
+                                                <div class="col-md-3 mb-1 text-left">
                                                     <label for="SAP_inbound_delivery_warehouse_code_new" class="col-form-label">@IDSRWTResource.title_warehouse_code:</label>
                                                     <input type="text" class="form-control" id="SAP_inbound_delivery_warehouse_code_new" name="SAP_inbound_delivery_warehouse_code_new" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
                                                     <div class="invalid-feedback">
                                                     </div>
                                                 </div>
-                                                <div class="col-md-4 mb-1 text-left">
+                                                <div class="col-md-9 mb-1 text-left">
                                                     <label for="SAP_inbound_delivery_warehouse_name_new" class="col-form-label">@IDSRWTResource.title_warehouse_name:</label>
                                                     <input type="text" class="form-control" id="SAP_inbound_delivery_warehouse_name_new" name="SAP_inbound_delivery_warehouse_name_new" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
                                                     <div class="invalid-feedback">
                                                     </div>
                                                 </div>
-                                                <div class="col-md-4 mb-1 text-left">
+                                                @*<div class="col-md-4 mb-1 text-left">
                                                     <label for="SAP_inbound_delivery_warehouse_shop_new" class="col-form-label">@IDSRWTResource.title_warehouse_shop:</label>
                                                     <input type="text" class="form-control" id="SAP_inbound_delivery_warehouse_shop_new" name="SAP_inbound_delivery_warehouse_shop_new" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
                                                     <div class="invalid-feedback">
@@ -891,7 +919,7 @@
                                                     <input type="text" class="form-control" id="SAP_inbound_delivery_warehouse_date_new" name="SAP_inbound_delivery_warehouse_date_new" placeholder="" data-mode="view-global" data-edit="" data-form="transceiver">
                                                     <div class="invalid-feedback">
                                                     </div>
-                                                </div>
+                                                </div>*@
                                             </div>
                                         </fieldset>
                                     </fieldset>

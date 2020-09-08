@@ -430,6 +430,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Создана.
+        /// </summary>
+        public static string title_dt_input_sipply {
+            get {
+                return ResourceManager.GetString("title_dt_input_sipply", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Группа груза.
         /// </summary>
         public static string title_group_cargo {
@@ -709,6 +718,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на № позиции.
+        /// </summary>
+        public static string title_pos_input_sipply {
+            get {
+                return ResourceManager.GetString("title_pos_input_sipply", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на № в поезде.
         /// </summary>
         public static string title_position_arrival {
@@ -876,6 +894,15 @@ namespace WEB_UI.App_LocalResources {
         public static string title_u_tara {
             get {
                 return ResourceManager.GetString("title_u_tara", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Запрет выгр..
+        /// </summary>
+        public static string title_unloading_ban {
+            get {
+                return ResourceManager.GetString("title_unloading_ban", resourceCulture);
             }
         }
         

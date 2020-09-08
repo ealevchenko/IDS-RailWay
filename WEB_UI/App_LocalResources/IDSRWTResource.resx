@@ -456,4 +456,13 @@
   <data name="outgoing_title" xml:space="preserve">
     <value>Отправить на УЗ</value>
   </data>
+  <data name="title_dt_input_sipply" xml:space="preserve">
+    <value>Создана</value>
+  </data>
+  <data name="title_pos_input_sipply" xml:space="preserve">
+    <value>№ позиции</value>
+  </data>
+  <data name="title_unloading_ban" xml:space="preserve">
+    <value>Запрет выгр.</value>
+  </data>
 </root>
