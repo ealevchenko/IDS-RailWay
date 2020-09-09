@@ -1170,6 +1170,7 @@
     <Folder Include="Areas\Directory\Models\" />
     <Folder Include="Areas\IDSMORS\Models\" />
     <Folder Include="Areas\IDSRWT\Models\" />
+    <Folder Include="Controllers\api\SAP\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>

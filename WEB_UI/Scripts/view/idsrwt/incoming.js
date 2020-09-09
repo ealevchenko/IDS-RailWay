@@ -1113,7 +1113,7 @@
                     "date_adoption_act": data.date_adoption_act !== null ? data.date_adoption_act.replace(/T/g, ' ') : null,
                     "id_station_from": data.id_station_from,
                     //"station_from": data.id_station_from !== null && ids_inc !== null ? ids_inc.ids_dir.getValue_Station_Of_ID(data.id_station_from, 'station_name', lang) : '',
-                    "station_from": data.id_station_from !== null ? ids_inc.getValueCultureObj(data,'station_from_name') : '',
+                    "station_from": data.id_station_from !== null ? ids_inc.getValueCultureObj(data, 'station_from_name') : '',
 
 
                     "id_station_on": data.id_station_on,
@@ -1712,6 +1712,7 @@
                 // создадим классы
                 cars_detali.ids_inc = new IDS_RWT_INCOMING(cars_detali.lang); // Создадим класс IDS_RWT_INCOMING
                 cars_detali.alert = new ALERT($('div#car-detali-alert'));// Создадим класс ALERTG
+                cars_detali.alert_sap_is = new ALERT($('div#sap-is-alert'));// Создадим класс ALERTG
                 //
                 // Соберем все элементы для валидации принятия вагона в массив 
                 cars_detali.all_obj_arrival_car = $([])
@@ -2078,11 +2079,22 @@
                     LockScreen(langView('mess_searsh_epd', langs));
                     cars_detali.alert.clear_message();
                     cars_detali.val_arrival_car.clear_all(); // Очистить ошибки если принимали вагон, с ошибкой
-
+                    cars_detali.alert_sap_is.clear_message();// Очистить сообщения по САП
                     cars_detali.ids_inc.getArrivalCarsOfID(id, function (car) {
                         if (car !== null) {
                             cars_detali.select_id = car.id; // Сохраним id вагона
-                            // Если есть вагон найти и ЭПД документ
+                            // !! Два запроса выполняются паралельно
+                            // 1. Прочесть информацию по САП
+                            cars_detali.ids_inc.getSAPIncomingSupplyOfIDArrivalCar(car.id, function (sap_is) {
+                                cars_detali.select_sap_is = sap_is;
+                                // Активируем кнопку запрос в САП
+                                cars_detali.bt_SAP_inbound_delivery_add.prop('disabled', sap_is);
+                                if (!sap_is) {
+                                    cars_detali.alert_sap_is.out_warning_message('Запрос на информацию по входящей поставки созданной САП – не выполнялся, вы можете сделать запрос вручную, нажав кнопку ниже или запрос будет выполнен автоматически по каждому вагону, после принятия всего состава.');
+                                }
+                            });
+
+                            // 2. Если есть вагон найти и ЭПД документ
                             cars_detali.ids_inc.getOTPR_UZ_DOCOfNum(car.num_doc, function (result_otpr) {
                                 if (result_otpr === null) {
                                     // Документа нет пишим сообщение
@@ -2108,6 +2120,7 @@
             // 2-ручной ввод (выбран и не принят и вся информация вводится в ручную и из существующих справочников)
             select_id: null,                                    // Выбранный id вагона
             select_num: null,                                   // Выбранный вагон
+            select_sap_is: null,                               // Информация по САП
             select_id_cargo: null,                              // Выбранный груз (таблица [KRR-PA-CNT-Railway].[IDS].[Directory_Cargo])
             select_id_cargo_gng: null,                          // Выбранный груз (таблица [KRR-PA-CNT-Railway].[IDS].[Directory_CargoGNG])
             select_otpr: null,                                  // Выбранный документ
@@ -2124,8 +2137,10 @@
             val_searsh_card_vag: null,                          // класс валидации searsh_card_vag
             alert_arrival_car: $('div#car-detali-alert'),       // класс сообщений alert_arrival_car
             alert_card_vag: $('div#card-vag-alert'),            // класс сообщений card_vag
+            alert_sap_is: null,                                 // класс сообщений card_vag
             all_obj_arrival_car: null,                          // массив всех элементов валидации all_obj_arrival_car
             all_obj_card_vag: null,                             // массив всех элементов валидации card_vag
+
             //-------------------------------------------------------------------------------------
             // Переменные раздела "Информация о вагоне и ЭПД" 
             //-------------------------------------------------------------------------------------
@@ -2399,37 +2414,7 @@
                     }
                 });
             }),
-            //// Найти вагон в карточке (ручной режим)
-            //bt_card_vag_searsh: $('button#card_vag_searsh').on('click', function (event) {
-            //    event.preventDefault();
-            //    var valid = cars_detali.validation_searsh_card_vag();
-            //    if (valid) {
-            //        //// Определим основные 4 критерия
-            //        //var genus = cars_detali.ids_inc.ids_dir.getGenusWagons_Of_CultureName('genus', cars_detali.lang, cars_detali.card_vag_name_rod_vag.val());
-            //        //var vagon = {
-            //        //    kod_adm: get_input_value(cars_detali.card_vag_kod_adm),
-            //        //    rod_vag: genus && genus.length > 0 ? genus[0].rod_uz : null,
-            //        //    kol_os: Number(cars_detali.card_vag_kol_os.val()),
-            //        //    usl_tip: get_input_string_value(cars_detali.card_vag_usl_tip.val())
-            //        //};
-            //        //// Получим уточненую строку по вагону
-            //        //cars_detali.get_vagon_dir(vagon, cars_detali.select_num, function (result_vagon) {
-            //        //    cars_detali.bt_card_vag_searsh.hide();
-            //        //    cars_detali.select_vagon = result_vagon;
-            //        //    if (cars_detali.select_vagon && cars_detali.select_vagon.id === 0) {
-            //        //        // Запись вагона новая 
-            //        //        cars_detali.bt_card_vag_add.show();
-            //        //        cars_detali.set_mode_vagon_card(true);
-            //        //    } else {
-            //        //        // Запись вагона из справочника
-            //        //        cars_detali.bt_card_vag_add.hide();
-            //        //        cars_detali.set_mode_vagon_card(false);
-            //        //    }
-            //        //    // Показать информацию из справочника вагонов ИДС (вагон определяеется ранее)
-            //        //    cars_detali.view_epd_card_vag(cars_detali.select_vagon);
-            //        //});
-            //    }
-            //}),
+            // 
             uz_vag_route: $('input#uz_vag_route'), // Признак маршрута
             // Админ.
             card_vag_kod_adm: $('input#card_vag_kod_adm'),
@@ -2765,7 +2750,115 @@
                     };
                 }
             },
+            // SAP
+            SAP_inbound_delivery_num_input_sipply: $('input#SAP_inbound_delivery_num_input_sipply'),
+            // Кнопка выполнить запрос в САП
+            bt_SAP_inbound_delivery_add: $('button#SAP_inbound_delivery_add').on('click', function (event) {
+                event.preventDefault();
+                cars_detali.alert_sap_is.clear_message();
+                var num_uz = get_input_value(cars_detali.uz_doc_num_doc);
+                if (num_uz) {
+                    var new_sap_is = {
+                        id: 0,
+                        id_arrival_car: cars_detali.select_id,
+                        num: cars_detali.select_num,
+                        num_doc_uz: num_uz,
+                        date_doc_uz: null,
+                        code_border_checkpoint: get_input_value(cars_detali.uz_route_stn_border),
+                        name_border_checkpoint: get_input_string_value(cars_detali.uz_route_stn_border_name),
+                        cross_time: toISOStringTZ(get_datetime_value(cars_detali.uz_route_border_cross_time.val(), cars_detali.lang)),
+                        VBELN: null,
+                        NUM_VBELN: null,
+                        WERKS: null,
+                        LGORT: null,
+                        LGOBE: null,
+                        ERDAT: null,
+                        ETIME: null,
+                        LGORT_10: null,
+                        LGOBE_10: null,
+                        MATNR: null,
+                        MAKTX: null,
+                        NAME_SH: null,
+                        KOD_R_10: null,
+                        note: null,
+                        term: null,
+                        attempt: 0,
+                        create: toISOStringTZ(new Date()),
+                        create_user: cars_detali.user,
+                        change: null,
+                        change_user: null,
+                        close: null,
+                        close_user: null
+                    }
+                    // Выполнить запрос в САП
 
+
+                } else {
+                    cars_detali.alert_sap_is.out_warning_message('Укажите номер накладной');
+                }
+                //dialog_confirm.open('Cправочник "Справочник вагонов"', 'Будет добавлена новая запись в карточку вагона №' + cars_detali.select_num + '', function (result) {
+                //    if (result) {
+                //        cars_detali.addDirectory_Cars(function () {
+                //            cars_detali.get_vagon_dir(cars_detali.select_otpr_vagon, cars_detali.select_num,
+                //                function (result_vagon) {
+                //                    cars_detali.select_vagon = result_vagon;
+                //                    if (!cars_detali.select_vagon) {
+                //                        // Вагон не найден в справочнике
+                //                        //cars_detali.val_card_vag.out_warning_message("Вагон №" + cars_detali.select_num + " не найден в справочнике вагонов ИДС, также не удалось создать строку справочника по данным УЗ, если вы уверены, что номер вагона указан правильно, создайте строку справочника вагона в ручном режиме или обратитесь к администратору ИДС. ");
+                //                        cars_detali.bt_card_vag_add.show();
+                //                        cars_detali.set_mode_vagon_card(true);
+                //                    } else {
+                //                        // Запись вагона из справочника
+                //                        cars_detali.bt_card_vag_add.hide();
+                //                        cars_detali.set_mode_vagon_card(false);
+                //                        cars_detali.val_arrival_car.set_control_ok(cars_detali.bt_card_vag_add, "");
+                //                    }
+                //                    cars_detali.view_epd_card_vag(cars_detali.select_vagon);
+                //                });
+
+                //            //if (cars_detali.car_status === 2) {
+                //            //    // Ручной режим
+                //            //    cars_detali.get_vagon_of_num_dir(cars_detali.select_num, function (result_vagon) {
+                //            //        cars_detali.select_vagon = result_vagon;
+                //            //        if (cars_detali.select_vagon && cars_detali.select_vagon.id === 0) {
+                //            //            // Запись вагона новая 
+                //            //            cars_detali.bt_card_vag_add.show();
+                //            //            cars_detali.set_mode_vagon_card(true);
+                //            //        } else {
+                //            //            // Запись вагона из справочника
+                //            //            cars_detali.bt_card_vag_add.hide();
+                //            //            cars_detali.set_mode_vagon_card(false);
+                //            //            cars_detali.val_arrival_car.set_control_ok(cars_detali.bt_card_vag_add, "");
+
+                //            //        }
+                //            //        // Показать информацию из справочника вагонов ИДС (вагон определяеется ранее)
+                //            //        cars_detali.view_epd_card_vag(cars_detali.select_vagon);
+                //            //    });
+                //            //} else {
+                //            //    // Не ручной режим
+                //            //    cars_detali.get_vagon_dir(cars_detali.select_otpr_vagon, cars_detali.select_num,
+                //            //        function (result_vagon) {
+                //            //            cars_detali.select_vagon = result_vagon;
+                //            //            if (cars_detali.select_vagon && cars_detali.select_vagon.id === 0) {
+                //            //                // Запись вагона новая 
+                //            //                cars_detali.bt_card_vag_add.show();
+                //            //                cars_detali.set_mode_vagon_card(true);
+                //            //            } else {
+                //            //                // Запись вагона из справочника
+                //            //                cars_detali.bt_card_vag_add.hide();
+                //            //                cars_detali.set_mode_vagon_card(false);
+                //            //                cars_detali.val_arrival_car.set_control_ok(cars_detali.bt_card_vag_add, "");
+                //            //            }
+                //            //            // Показать информацию из справочника вагонов ИДС (вагон определяеется ранее)
+                //            //            cars_detali.view_epd_card_vag(cars_detali.select_vagon);
+                //            //        });
+                //            //}
+
+
+                //        }, null);
+                //    }
+                //});
+            }),
             //-------------------------------------------------------------------------------------
             // КОМПОНЕНТЫ РАЗДЕЛА
             //-------------------------------------------------------------------------------------
@@ -5679,38 +5772,6 @@
                 }
                 return null;
             },
-
-            //// Получить из ЭПД информацию о Дата отправления
-            //get_date_otpr_epd: function (otpr) {
-            //    return otpr ? otpr.date_otpr : null;
-            //},
-            //// Получить из ЭПД информацию о Дата уведомдления
-            //get_date_grpol_epd: function (otpr) {
-            //    return otpr ? otpr.date_grpol : null;
-            //},
-            //// Получить из ЭПД информацию о Дата прибуття вантажу
-            //get_date_pr_epd: function (otpr) {
-            //    return otpr ? otpr.date_pr : null;
-            //},
-            //// Получить из ЭПД информацию о Дата раскредитовки
-            //get_date_vid_epd: function (otpr) {
-            //    return otpr ? otpr.date_vid : null;
-            //},
-            //// Получить ответсвенного за прием груза
-            //get_representative_pib_on_epd: function (otpr) {
-            //    if (otpr && otpr.client && otpr.client.length > 0) {
-            //        for (var i = 0; i < otpr.client.length; i++) {
-            //            if (Number(otpr.client[i].type) === 2) {
-            //                return otpr.client[i].representative_pib;
-            //            }
-            //        }
-            //    }
-            //    return null;
-            //},
-            //// Получить из ЭПД информацию Категорія відправки 
-            //get_vid_epd: function (otpr) {
-            //    return otpr ? otpr.vid : null;
-            //},
             // Получить плательщика по пребытию
             get_kod_pl_arrival_epd: function (otpr) {
                 if (otpr && otpr.pl && otpr.pl.length > 0) {
