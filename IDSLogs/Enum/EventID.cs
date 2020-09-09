@@ -16,6 +16,7 @@ namespace IDSLogs.Enum
         WebApiToken = 101,
         WebApiURL = 102,
 
+
         #endregion
 
 
@@ -47,6 +48,7 @@ namespace IDSLogs.Enum
         IDS_IDSTransfer = 3400,     // Сервис переноса даных из файлов в БД IDS
         IDS_IDSMORS = 3500,         // Сервис ИДС "УСПС"
         IDS_IDSThread = 3600,       // Библиотека потоков выполнения сервисов IDS
+        IDS_IDSSAP = 3700,     // Сервис работы с данными SAP MII
 
         #endregion
 
@@ -60,6 +62,14 @@ namespace IDSLogs.Enum
         KIS_Directory = 4200,       // Сервис справочников КИС
         KIS_IDSTransfer = 4300,     // Сервис переноса даных из файлов в ИДС (пока не использую)
         KIS_IDSWagon = 4400,        // Сервис системы КИС номерного учета Wagon
+
+        #endregion
+
+        #region Служба SAP 5000
+
+        SAP = 5000,
+
+        SAP_Client = 5100,          // Библиотека запросов в САП
 
         #endregion
     }
