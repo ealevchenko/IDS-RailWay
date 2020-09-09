@@ -13,6 +13,7 @@ namespace IDS
     public class WebAPIClientSAP
     {
         private eventID eventID = eventID.SAP_Client;
+        protected service servece_owner = service.Null;
         
         protected string url = null;
         protected string transaction_reservation = null;
@@ -25,6 +26,25 @@ namespace IDS
         {
             try
             {
+                this.url = ConfigurationManager.AppSettings["sap_url"].ToString();
+                this.transaction_reservation = ConfigurationManager.AppSettings["sap_transaction_reservation"].ToString();
+                this.transaction_supply = ConfigurationManager.AppSettings["sap_transaction_supply"].ToString();
+                this.login = ConfigurationManager.AppSettings["sap_login"].ToString();
+                this.pass = ConfigurationManager.AppSettings["sap_pass"].ToString();
+                this.sttn = ConfigurationManager.AppSettings["STTN"].ToString();
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Ошибка чтения настроек {0}", e);
+            }
+        }
+
+        public WebAPIClientSAP(service servece_owner)
+        {
+            try
+            {
+                this.servece_owner = servece_owner;
                 this.url = ConfigurationManager.AppSettings["sap_url"].ToString();
                 this.transaction_reservation = ConfigurationManager.AppSettings["sap_transaction_reservation"].ToString();
                 this.transaction_supply = ConfigurationManager.AppSettings["sap_transaction_supply"].ToString();
@@ -67,20 +87,20 @@ namespace IDS
                         }
                         catch (Exception e)
                         {
-                            e.ExceptionLog(String.Format("Ошибка создания StreamReader ответа, message {0}, метод {1}, accept {2}",message, metod, accept), this.eventID);
+                            e.ExceptionLog(String.Format("Ошибка создания StreamReader ответа, message {0}, метод {1}, accept {2}",message, metod, accept), this.servece_owner, this.eventID);
                             return null;
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    e.ExceptionLog(String.Format("Ошибка получения ответа WebResponse, message {0}, метод {1}, accept {2}", message, metod, accept), this.eventID);
+                    e.ExceptionLog(String.Format("Ошибка получения ответа WebResponse, message {0}, метод {1}, accept {2}", message, metod, accept), this.servece_owner, this.eventID);
                     return null;                    
                 }
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("Select(message={0}, metod={1}, accept={2})", message, metod, accept), this.eventID);
+                e.ExceptionMethodLog(String.Format("Select(message={0}, metod={1}, accept={2})", message, metod, accept), this.servece_owner, this.eventID);
                 return null;
             }
         }
