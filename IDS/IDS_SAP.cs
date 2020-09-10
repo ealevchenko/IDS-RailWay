@@ -27,20 +27,44 @@ namespace IDS
             this.servece_owner = servece_owner;
         }
         /// <summary>
-        /// Метод выполняет запрсос в САП получает ответ, и возвращает скорректированую строку SAPIncomingSupply
+        /// 
         /// </summary>
         /// <param name="sap_is"></param>
         /// <returns></returns>
-        public SAPIncomingSupply GetCurrentIncomingSupplyOfWebSAP(SAPIncomingSupply sap_is) {
+        public SAPIncomingSupply GetCurrentIncomingSupplyOfWebSAP(SAPIncomingSupply sap_is)
+        {
             try
             {
                 //TODO: Заглушка пока не будет реализован интерфейс с САП
-                sap_is.attempt = sap_is.attempt+1;
+                sap_is.attempt = sap_is.attempt + 1;
                 return sap_is;
             }
             catch (Exception e)
             {
                 e.ExceptionMethodLog(String.Format("GetCurrentIncomingSupplyOfWebSAP(sap_is={0})", sap_is), servece_owner, eventID);
+                return null;// Ошибка
+            }
+        }
+        /// <summary>
+        /// Метод выполняет списочный запрсос в САП получает ответ, и возвращает скорректированую строку SAPIncomingSupply
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public List<SAPIncomingSupply> GetCurrentIncomingSupplyOfWebSAP(List<SAPIncomingSupply> list)
+        {
+            try
+            {
+                List<SAPIncomingSupply> new_list = new List<SAPIncomingSupply>();
+                foreach (SAPIncomingSupply sap_is in list)
+                {
+                    SAPIncomingSupply new_sap_is = GetCurrentIncomingSupplyOfWebSAP(sap_is);
+                    new_list.Add(new_sap_is);
+                }
+                return new_list;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetCurrentIncomingSupplyOfWebSAP(list={0})", list), servece_owner, eventID);
                 return null;// Ошибка
             }
         }

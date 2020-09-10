@@ -23,8 +23,8 @@ IDS_RWT.list_instructional_letters = [];
 IDS_RWT.list_instructional_letters_wagon = [];
 
 // Загрузить указаные справочники
-IDS_RWT.prototype.load = function (list_incoming, list_ids_dir, list_uz_dir, lockOff, callback) {
-    var count = list_incoming.length + (list_ids_dir.length > 0 ? 1 : 0) + (list_uz_dir.length > 0 ? 1 : 0);
+IDS_RWT.prototype.load = function (list_rwt, list_ids_dir, list_uz_dir, lockOff, callback) {
+    var count = list_rwt.length + (list_ids_dir.length > 0 ? 1 : 0) + (list_uz_dir.length > 0 ? 1 : 0);
     if (count === 0) {
         if (typeof callback === 'function') {
             if (lockOff) { LockScreenOff(); }
@@ -57,7 +57,7 @@ IDS_RWT.prototype.load = function (list_incoming, list_ids_dir, list_uz_dir, loc
         });
     }
     // Згрузка собственных таблиц
-    $.each(list_incoming, function (i, el) {
+    $.each(list_rwt, function (i, el) {
         if (el === 'arrival') {
             IDS_RWT.prototype.getArrivalSostav(function (result_arrival) {
                 obj.list_arrival = result_arrival;
