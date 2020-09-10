@@ -2,12 +2,13 @@
 // Подключите shared.js
 
 
-var IDS_RWT_INCOMING = function (lang) {
+var IDS_RWT = function (lang) {
     this.lang = lang;
-    this.ids_tr = new IDS_TRANSFER(lang); // Создадим класс IDS_TRANSFER 
+    this.ids_tr = new IDS_TRANSFER(lang);   // Создадим класс IDS_TRANSFER 
+    this.ids_sap = new IDS_SAP(lang);       // Создадим класс IDS_SAP 
 
     this.ids_dir = new IDS_DIRECTORY(lang); // Создадим класс IDS_DIRECTORY
-    this.uz_dir = new UZ_DIRECTORY(lang); // Создадим класс UZ_DIRECTORY
+    this.uz_dir = new UZ_DIRECTORY(lang);   // Создадим класс UZ_DIRECTORY
     // Статус сотава
     this.list_status_arrival = [
         { code: 0, name: 'Not', status_ru: 'Не обрабатывался', status_en: 'Not processed' },
@@ -17,12 +18,12 @@ var IDS_RWT_INCOMING = function (lang) {
     ];
 };
 
-IDS_RWT_INCOMING.list_arrival = [];
-IDS_RWT_INCOMING.list_instructional_letters = [];
-IDS_RWT_INCOMING.list_instructional_letters_wagon = [];
+IDS_RWT.list_arrival = [];
+IDS_RWT.list_instructional_letters = [];
+IDS_RWT.list_instructional_letters_wagon = [];
 
 // Загрузить указаные справочники
-IDS_RWT_INCOMING.prototype.load = function (list_incoming, list_ids_dir, list_uz_dir, lockOff, callback) {
+IDS_RWT.prototype.load = function (list_incoming, list_ids_dir, list_uz_dir, lockOff, callback) {
     var count = list_incoming.length + (list_ids_dir.length > 0 ? 1 : 0) + (list_uz_dir.length > 0 ? 1 : 0);
     if (count === 0) {
         if (typeof callback === 'function') {
@@ -58,7 +59,7 @@ IDS_RWT_INCOMING.prototype.load = function (list_incoming, list_ids_dir, list_uz
     // Згрузка собственных таблиц
     $.each(list_incoming, function (i, el) {
         if (el === 'arrival') {
-            IDS_RWT_INCOMING.prototype.getArrivalSostav(function (result_arrival) {
+            IDS_RWT.prototype.getArrivalSostav(function (result_arrival) {
                 obj.list_arrival = result_arrival;
                 count -= 1;
                 if (count === 0) {
@@ -70,7 +71,7 @@ IDS_RWT_INCOMING.prototype.load = function (list_incoming, list_ids_dir, list_uz
             });
         };
         if (el === 'instructional_letters') {
-            IDS_RWT_INCOMING.prototype.getInstructionalLetters(function (result_instructional_letters) {
+            IDS_RWT.prototype.getInstructionalLetters(function (result_instructional_letters) {
                 obj.list_instructional_letters = result_instructional_letters;
                 count -= 1;
                 if (count === 0) {
@@ -82,7 +83,7 @@ IDS_RWT_INCOMING.prototype.load = function (list_incoming, list_ids_dir, list_uz
             });
         };
         if (el === 'instructional_letters_wagon') {
-            IDS_RWT_INCOMING.prototype.getInstructionalLettersWagon(function (result_instructional_letters_wagon) {
+            IDS_RWT.prototype.getInstructionalLettersWagon(function (result_instructional_letters_wagon) {
                 obj.list_instructional_letters_wagon = result_instructional_letters_wagon;
                 count -= 1;
                 if (count === 0) {
@@ -100,7 +101,7 @@ AJAX функции
 -------------------------------------------------------------*/
 //======= SAPIncomingSupply (SAP Входящие поставки) ======================================
 // Получить все поставки
-IDS_RWT_INCOMING.prototype.getSAPIncomingSupply = function (callback) {
+IDS_RWT.prototype.getSAPIncomingSupply = function (callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/sap/incoming_supply/all',
@@ -115,7 +116,7 @@ IDS_RWT_INCOMING.prototype.getSAPIncomingSupply = function (callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getSAPIncomingSupply", x, y, z);
+            OnAJAXError("IDS_RWT.getSAPIncomingSupply", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -123,7 +124,7 @@ IDS_RWT_INCOMING.prototype.getSAPIncomingSupply = function (callback) {
     });
 };
 // Получить поставку по id
-IDS_RWT_INCOMING.prototype.getSAPIncomingSupplyOfID = function (id, callback) {
+IDS_RWT.prototype.getSAPIncomingSupplyOfID = function (id, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/sap/incoming_supply/id/' + id,
@@ -138,7 +139,7 @@ IDS_RWT_INCOMING.prototype.getSAPIncomingSupplyOfID = function (id, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getSAPIncomingSupplyOfID", x, y, z);
+            OnAJAXError("IDS_RWT.getSAPIncomingSupplyOfID", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -146,7 +147,7 @@ IDS_RWT_INCOMING.prototype.getSAPIncomingSupplyOfID = function (id, callback) {
     });
 };
 // Получить поставку по id_arrival_car
-IDS_RWT_INCOMING.prototype.getSAPIncomingSupplyOfIDArrivalCar = function (id_arrival_car, callback) {
+IDS_RWT.prototype.getSAPIncomingSupplyOfIDArrivalCar = function (id_arrival_car, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/sap/incoming_supply/arrival_car/id/' + id_arrival_car,
@@ -161,7 +162,7 @@ IDS_RWT_INCOMING.prototype.getSAPIncomingSupplyOfIDArrivalCar = function (id_arr
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getSAPIncomingSupplyOfIDArrivalCar", x, y, z);
+            OnAJAXError("IDS_RWT.getSAPIncomingSupplyOfIDArrivalCar", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -169,7 +170,7 @@ IDS_RWT_INCOMING.prototype.getSAPIncomingSupplyOfIDArrivalCar = function (id_arr
     });
 };
 // Получить поставки по номеру вагона
-IDS_RWT_INCOMING.prototype.getSAPIncomingSupplyOfNum = function (num, callback) {
+IDS_RWT.prototype.getSAPIncomingSupplyOfNum = function (num, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/sap/incoming_supply/num/' + num,
@@ -184,7 +185,7 @@ IDS_RWT_INCOMING.prototype.getSAPIncomingSupplyOfNum = function (num, callback) 
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getSAPIncomingSupplyOfNum", x, y, z);
+            OnAJAXError("IDS_RWT.getSAPIncomingSupplyOfNum", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -192,7 +193,7 @@ IDS_RWT_INCOMING.prototype.getSAPIncomingSupplyOfNum = function (num, callback) 
     });
 };
 //Добавить поставку
-IDS_RWT_INCOMING.prototype.postSAPIncomingSupply = function (sap, callback) {
+IDS_RWT.prototype.postSAPIncomingSupply = function (sap, callback) {
     $.ajax({
         url: '../../api/ids/rwt/sap/incoming_supply/',
         type: 'POST',
@@ -209,7 +210,7 @@ IDS_RWT_INCOMING.prototype.postSAPIncomingSupply = function (sap, callback) {
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_RWT_INCOMING.postSAPIncomingSupply", x, y, z);
+            OnAJAXError("IDS_RWT.postSAPIncomingSupply", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -217,7 +218,7 @@ IDS_RWT_INCOMING.prototype.postSAPIncomingSupply = function (sap, callback) {
     });
 };
 //Обновить поставку
-IDS_RWT_INCOMING.prototype.putSAPIncomingSupply = function (sap, callback) {
+IDS_RWT.prototype.putSAPIncomingSupply = function (sap, callback) {
     $.ajax({
         type: 'PUT',
         url: '../../api/ids/rwt/sap/incoming_supply/id/' + sap.id,
@@ -233,7 +234,7 @@ IDS_RWT_INCOMING.prototype.putSAPIncomingSupply = function (sap, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.putSAPIncomingSupply", x, y, z);
+            OnAJAXError("IDS_RWT.putSAPIncomingSupply", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -241,7 +242,7 @@ IDS_RWT_INCOMING.prototype.putSAPIncomingSupply = function (sap, callback) {
     });
 };
 // Удалить поставку
-IDS_RWT_INCOMING.prototype.deleteSAPIncomingSupply = function (id, callback) {
+IDS_RWT.prototype.deleteSAPIncomingSupply = function (id, callback) {
     $.ajax({
         url: '../../api/ids/rwt/sap/incoming_supply/id/' + id,
         type: 'DELETE',
@@ -256,7 +257,7 @@ IDS_RWT_INCOMING.prototype.deleteSAPIncomingSupply = function (id, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.deleteSAPIncomingSupply", x, y, z);
+            OnAJAXError("IDS_RWT.deleteSAPIncomingSupply", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -265,7 +266,7 @@ IDS_RWT_INCOMING.prototype.deleteSAPIncomingSupply = function (id, callback) {
 };
 //======= InstructionalLetters (Инструктивные письма) ======================================
 // Получить все письма
-IDS_RWT_INCOMING.prototype.getInstructionalLetters = function (callback) {
+IDS_RWT.prototype.getInstructionalLetters = function (callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/instructional_letters/all',
@@ -280,7 +281,7 @@ IDS_RWT_INCOMING.prototype.getInstructionalLetters = function (callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getInstructionalLetters", x, y, z);
+            OnAJAXError("IDS_RWT.getInstructionalLetters", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -288,7 +289,7 @@ IDS_RWT_INCOMING.prototype.getInstructionalLetters = function (callback) {
     });
 };
 // Получить письмо
-IDS_RWT_INCOMING.prototype.getInstructionalLettersOfID = function (id, callback) {
+IDS_RWT.prototype.getInstructionalLettersOfID = function (id, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/instructional_letters/id/' + id,
@@ -303,7 +304,7 @@ IDS_RWT_INCOMING.prototype.getInstructionalLettersOfID = function (id, callback)
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getInstructionalLettersOfID", x, y, z);
+            OnAJAXError("IDS_RWT.getInstructionalLettersOfID", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -311,7 +312,7 @@ IDS_RWT_INCOMING.prototype.getInstructionalLettersOfID = function (id, callback)
     });
 };
 // Получить письмо
-IDS_RWT_INCOMING.prototype.getInstructionalLettersOfNumDate = function (num, date, callback) {
+IDS_RWT.prototype.getInstructionalLettersOfNumDate = function (num, date, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/instructional_letters/num/' + num + '/date/' + toISOStringTZ(date).substring(0, 19),
@@ -326,7 +327,7 @@ IDS_RWT_INCOMING.prototype.getInstructionalLettersOfNumDate = function (num, dat
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getInstructionalLettersOfNumDate", x, y, z);
+            OnAJAXError("IDS_RWT.getInstructionalLettersOfNumDate", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -334,7 +335,7 @@ IDS_RWT_INCOMING.prototype.getInstructionalLettersOfNumDate = function (num, dat
     });
 };
 //Добавить письмо
-IDS_RWT_INCOMING.prototype.postInstructionalLetters = function (letters, callback) {
+IDS_RWT.prototype.postInstructionalLetters = function (letters, callback) {
     $.ajax({
         url: '../../api/ids/rwt/instructional_letters/',
         type: 'POST',
@@ -351,7 +352,7 @@ IDS_RWT_INCOMING.prototype.postInstructionalLetters = function (letters, callbac
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_RWT_INCOMING.postInstructionalLetters", x, y, z);
+            OnAJAXError("IDS_RWT.postInstructionalLetters", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -359,7 +360,7 @@ IDS_RWT_INCOMING.prototype.postInstructionalLetters = function (letters, callbac
     });
 };
 //Обновить письмо
-IDS_RWT_INCOMING.prototype.putInstructionalLetters = function (letters, callback) {
+IDS_RWT.prototype.putInstructionalLetters = function (letters, callback) {
     $.ajax({
         type: 'PUT',
         url: '../../api/ids/rwt/instructional_letters/id/' + letters.id,
@@ -375,7 +376,7 @@ IDS_RWT_INCOMING.prototype.putInstructionalLetters = function (letters, callback
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.putInstructionalLetters", x, y, z);
+            OnAJAXError("IDS_RWT.putInstructionalLetters", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -383,7 +384,7 @@ IDS_RWT_INCOMING.prototype.putInstructionalLetters = function (letters, callback
     });
 };
 // Удалить письмо
-IDS_RWT_INCOMING.prototype.deleteInstructionalLetters = function (id, callback) {
+IDS_RWT.prototype.deleteInstructionalLetters = function (id, callback) {
     $.ajax({
         url: '../../api/ids/rwt/instructional_letters/id/' + id,
         type: 'DELETE',
@@ -398,7 +399,7 @@ IDS_RWT_INCOMING.prototype.deleteInstructionalLetters = function (id, callback) 
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.deleteInstructionalLetters", x, y, z);
+            OnAJAXError("IDS_RWT.deleteInstructionalLetters", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -407,7 +408,7 @@ IDS_RWT_INCOMING.prototype.deleteInstructionalLetters = function (id, callback) 
 };
 //======= InstructionalLettersWagon (Инструктивные письма - вагоны) ======================================
 // Получить все вагоны по всем письмам
-IDS_RWT_INCOMING.prototype.getInstructionalLettersWagon = function (callback) {
+IDS_RWT.prototype.getInstructionalLettersWagon = function (callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/instructional_letters_wagon/all',
@@ -422,7 +423,7 @@ IDS_RWT_INCOMING.prototype.getInstructionalLettersWagon = function (callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getInstructionalLettersWagon", x, y, z);
+            OnAJAXError("IDS_RWT.getInstructionalLettersWagon", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -430,7 +431,7 @@ IDS_RWT_INCOMING.prototype.getInstructionalLettersWagon = function (callback) {
     });
 };
 // Получить вагон по id
-IDS_RWT_INCOMING.prototype.getInstructionalLettersWagonOfID = function (id, callback) {
+IDS_RWT.prototype.getInstructionalLettersWagonOfID = function (id, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/instructional_letters_wagon/id/' + id,
@@ -445,7 +446,7 @@ IDS_RWT_INCOMING.prototype.getInstructionalLettersWagonOfID = function (id, call
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getInstructionalLettersWagonOfID", x, y, z);
+            OnAJAXError("IDS_RWT.getInstructionalLettersWagonOfID", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -453,7 +454,7 @@ IDS_RWT_INCOMING.prototype.getInstructionalLettersWagonOfID = function (id, call
     });
 };
 // Получить вагоны по id письма
-IDS_RWT_INCOMING.prototype.getInstructionalLettersWagonOfIDLetter = function (id_letter, callback) {
+IDS_RWT.prototype.getInstructionalLettersWagonOfIDLetter = function (id_letter, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/instructional_letters_wagon/letter/id/' + id_letter,
@@ -468,7 +469,7 @@ IDS_RWT_INCOMING.prototype.getInstructionalLettersWagonOfIDLetter = function (id
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getInstructionalLettersWagonOfIDLetter", x, y, z);
+            OnAJAXError("IDS_RWT.getInstructionalLettersWagonOfIDLetter", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -476,7 +477,7 @@ IDS_RWT_INCOMING.prototype.getInstructionalLettersWagonOfIDLetter = function (id
     });
 };
 // Получить вагоны с открытыми письмами по номерам
-IDS_RWT_INCOMING.prototype.getOpenInstructionalLettersWagonOfNums = function (list_nums, callback) {
+IDS_RWT.prototype.getOpenInstructionalLettersWagonOfNums = function (list_nums, callback) {
     $.ajax({
         url: '../../api/ids/rwt/instructional_letters_wagon/open/list_nums/',
         type: 'POST',
@@ -493,7 +494,7 @@ IDS_RWT_INCOMING.prototype.getOpenInstructionalLettersWagonOfNums = function (li
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_RWT_INCOMING.getInstructionalLettersWagonOfNums", x, y, z);
+            OnAJAXError("IDS_RWT.getInstructionalLettersWagonOfNums", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -501,7 +502,7 @@ IDS_RWT_INCOMING.prototype.getOpenInstructionalLettersWagonOfNums = function (li
     });
 };
 //Добавить вагон
-IDS_RWT_INCOMING.prototype.postInstructionalLettersWagon = function (wagon, callback) {
+IDS_RWT.prototype.postInstructionalLettersWagon = function (wagon, callback) {
     $.ajax({
         url: '../../api/ids/rwt/instructional_letters_wagon/',
         type: 'POST',
@@ -518,7 +519,7 @@ IDS_RWT_INCOMING.prototype.postInstructionalLettersWagon = function (wagon, call
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_RWT_INCOMING.postInstructionalLettersWagon", x, y, z);
+            OnAJAXError("IDS_RWT.postInstructionalLettersWagon", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -526,7 +527,7 @@ IDS_RWT_INCOMING.prototype.postInstructionalLettersWagon = function (wagon, call
     });
 };
 //Добавить вагоны
-IDS_RWT_INCOMING.prototype.postListInstructionalLettersWagon = function (list_wagon, callback) {
+IDS_RWT.prototype.postListInstructionalLettersWagon = function (list_wagon, callback) {
     $.ajax({
         url: '../../api/ids/rwt/instructional_letters_wagon/list/',
         type: 'POST',
@@ -543,7 +544,7 @@ IDS_RWT_INCOMING.prototype.postListInstructionalLettersWagon = function (list_wa
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_RWT_INCOMING.postListInstructionalLettersWagon", x, y, z);
+            OnAJAXError("IDS_RWT.postListInstructionalLettersWagon", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -551,7 +552,7 @@ IDS_RWT_INCOMING.prototype.postListInstructionalLettersWagon = function (list_wa
     });
 };
 //Обновить вагон
-IDS_RWT_INCOMING.prototype.putInstructionalLettersWagon = function (wagon, callback) {
+IDS_RWT.prototype.putInstructionalLettersWagon = function (wagon, callback) {
     $.ajax({
         type: 'PUT',
         url: '../../api/ids/rwt/instructional_letters_wagon/id/' + wagon.id,
@@ -567,7 +568,7 @@ IDS_RWT_INCOMING.prototype.putInstructionalLettersWagon = function (wagon, callb
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.putInstructionalLettersWagon", x, y, z);
+            OnAJAXError("IDS_RWT.putInstructionalLettersWagon", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -575,7 +576,7 @@ IDS_RWT_INCOMING.prototype.putInstructionalLettersWagon = function (wagon, callb
     });
 };
 //Обновить вагоны
-IDS_RWT_INCOMING.prototype.putListInstructionalLettersWagon = function (list_wagon, callback) {
+IDS_RWT.prototype.putListInstructionalLettersWagon = function (list_wagon, callback) {
     $.ajax({
         type: 'PUT',
         url: '../../api/ids/rwt/instructional_letters_wagon/list/',
@@ -599,7 +600,7 @@ IDS_RWT_INCOMING.prototype.putListInstructionalLettersWagon = function (list_wag
     });
 };
 // Удалить вагон
-IDS_RWT_INCOMING.prototype.deleteInstructionalLettersWagon = function (id, callback) {
+IDS_RWT.prototype.deleteInstructionalLettersWagon = function (id, callback) {
     $.ajax({
         url: '../../api/ids/rwt/instructional_letters_wagon/id/' + id,
         type: 'DELETE',
@@ -614,7 +615,7 @@ IDS_RWT_INCOMING.prototype.deleteInstructionalLettersWagon = function (id, callb
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.deleteInstructionalLettersWagon", x, y, z);
+            OnAJAXError("IDS_RWT.deleteInstructionalLettersWagon", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -625,7 +626,7 @@ IDS_RWT_INCOMING.prototype.deleteInstructionalLettersWagon = function (id, callb
 //                                  РАЗДЕЛ ДОКУМЕНТЫ ПРИНЯТЫХ ВАГОНОВ
 //======= Arrival_UZ_Document (ЭПД УЗ по прибытию) ======================================
 // Получить все документы
-IDS_RWT_INCOMING.prototype.getArrival_UZ_Document = function (callback) {
+IDS_RWT.prototype.getArrival_UZ_Document = function (callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_document/all',
@@ -640,7 +641,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Document = function (callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_Document", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_Document", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -648,7 +649,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Document = function (callback) {
     });
 };
 // Получить документ
-IDS_RWT_INCOMING.prototype.getArrival_UZ_DocumentOfID = function (id, callback) {
+IDS_RWT.prototype.getArrival_UZ_DocumentOfID = function (id, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_document/id/' + id,
@@ -663,7 +664,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_DocumentOfID = function (id, callback) 
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_DocumentOfID", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_DocumentOfID", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -671,7 +672,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_DocumentOfID = function (id, callback) 
     });
 };
 // Получить документ по id_doc УЗ
-IDS_RWT_INCOMING.prototype.getArrival_UZ_DocumentOfID_DOC_UZ = function (id_doc, callback) {
+IDS_RWT.prototype.getArrival_UZ_DocumentOfID_DOC_UZ = function (id_doc, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_document/id_doc/' + id_doc,
@@ -686,7 +687,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_DocumentOfID_DOC_UZ = function (id_doc,
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_DocumentOfID_DOC_UZ", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_DocumentOfID_DOC_UZ", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -694,7 +695,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_DocumentOfID_DOC_UZ = function (id_doc,
     });
 };
 // Получить документ по накладной УЗ
-IDS_RWT_INCOMING.prototype.getArrival_UZ_DocumentOfNumDoc = function (num_doc, callback) {
+IDS_RWT.prototype.getArrival_UZ_DocumentOfNumDoc = function (num_doc, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_document/num_doc/' + num_doc,
@@ -709,7 +710,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_DocumentOfNumDoc = function (num_doc, c
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_DocumentOfNumDoc", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_DocumentOfNumDoc", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -717,7 +718,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_DocumentOfNumDoc = function (num_doc, c
     });
 };
 //Добавить документ
-IDS_RWT_INCOMING.prototype.postArrival_UZ_Document = function (document, callback) {
+IDS_RWT.prototype.postArrival_UZ_Document = function (document, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_document/',
         type: 'POST',
@@ -734,7 +735,7 @@ IDS_RWT_INCOMING.prototype.postArrival_UZ_Document = function (document, callbac
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_RWT_INCOMING.postArrival_UZ_Document", x, y, z);
+            OnAJAXError("IDS_RWT.postArrival_UZ_Document", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -742,7 +743,7 @@ IDS_RWT_INCOMING.prototype.postArrival_UZ_Document = function (document, callbac
     });
 };
 //Обновить документ 
-IDS_RWT_INCOMING.prototype.putArrival_UZ_Document = function (document, callback) {
+IDS_RWT.prototype.putArrival_UZ_Document = function (document, callback) {
     $.ajax({
         type: 'PUT',
         url: '../../api/ids/rwt/arrival_uz_document/id/' + document.id,
@@ -758,7 +759,7 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Document = function (document, callback
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.putArrival_UZ_Document", x, y, z);
+            OnAJAXError("IDS_RWT.putArrival_UZ_Document", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -766,7 +767,7 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Document = function (document, callback
     });
 };
 // Удалить документ  
-IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Document = function (id, callback) {
+IDS_RWT.prototype.deleteArrival_UZ_Document = function (id, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_document/id/' + id,
         type: 'DELETE',
@@ -781,7 +782,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Document = function (id, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.deleteArrival_UZ_Document", x, y, z);
+            OnAJAXError("IDS_RWT.deleteArrival_UZ_Document", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -790,7 +791,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Document = function (id, callback) {
 };
 //======= Arrival_UZ_Document_Pay (Платежки по плательщикам ЭПД УЗ по прибытию) ======================================
 // Получить все платежки
-IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_Pay = function (callback) {
+IDS_RWT.prototype.getArrival_UZ_Document_Pay = function (callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_document_pay/all',
@@ -805,7 +806,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_Pay = function (callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_Document_Pay", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_Document_Pay", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -813,7 +814,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_Pay = function (callback) {
     });
 };
 // Получить платежку по id
-IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_PayOfID = function (id, callback) {
+IDS_RWT.prototype.getArrival_UZ_Document_PayOfID = function (id, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_document_pay/id/' + id,
@@ -828,7 +829,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_PayOfID = function (id, callba
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_Document_PayOfID", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_Document_PayOfID", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -836,7 +837,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_PayOfID = function (id, callba
     });
 };
 // Получить платежку по id документа
-IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_PayOfID_Document = function (id_document, callback) {
+IDS_RWT.prototype.getArrival_UZ_Document_PayOfID_Document = function (id_document, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_document_pay/document/id/' + id_document,
@@ -851,7 +852,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_PayOfID_Document = function (i
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_Document_PayOfID_DOC_UZ", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_Document_PayOfID_DOC_UZ", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -859,7 +860,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_PayOfID_Document = function (i
     });
 };
 //Добавить платежку
-IDS_RWT_INCOMING.prototype.postArrival_UZ_Document_Pay = function (pay, callback) {
+IDS_RWT.prototype.postArrival_UZ_Document_Pay = function (pay, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_document_pay/',
         type: 'POST',
@@ -876,7 +877,7 @@ IDS_RWT_INCOMING.prototype.postArrival_UZ_Document_Pay = function (pay, callback
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_RWT_INCOMING.postArrival_UZ_Document_Pay", x, y, z);
+            OnAJAXError("IDS_RWT.postArrival_UZ_Document_Pay", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -884,7 +885,7 @@ IDS_RWT_INCOMING.prototype.postArrival_UZ_Document_Pay = function (pay, callback
     });
 };
 //Добавить платежки
-IDS_RWT_INCOMING.prototype.postListArrival_UZ_Document_Pay = function (list_pay, callback) {
+IDS_RWT.prototype.postListArrival_UZ_Document_Pay = function (list_pay, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_document_pay/list/',
         type: 'POST',
@@ -901,7 +902,7 @@ IDS_RWT_INCOMING.prototype.postListArrival_UZ_Document_Pay = function (list_pay,
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_RWT_INCOMING.postListArrival_UZ_Document_Pay", x, y, z);
+            OnAJAXError("IDS_RWT.postListArrival_UZ_Document_Pay", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -909,7 +910,7 @@ IDS_RWT_INCOMING.prototype.postListArrival_UZ_Document_Pay = function (list_pay,
     });
 };
 //Обновить платежку
-IDS_RWT_INCOMING.prototype.putArrival_UZ_Document_Pay = function (pay, callback) {
+IDS_RWT.prototype.putArrival_UZ_Document_Pay = function (pay, callback) {
     $.ajax({
         type: 'PUT',
         url: '../../api/ids/rwt/arrival_uz_document_pay/id/' + pay.id,
@@ -925,7 +926,7 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Document_Pay = function (pay, callback)
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.putArrival_UZ_Document_Pay", x, y, z);
+            OnAJAXError("IDS_RWT.putArrival_UZ_Document_Pay", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -933,7 +934,7 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Document_Pay = function (pay, callback)
     });
 };
 // Удалить платежку
-IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Document_Pay = function (id, callback) {
+IDS_RWT.prototype.deleteArrival_UZ_Document_Pay = function (id, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_document_pay/id/' + id,
         type: 'DELETE',
@@ -948,7 +949,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Document_Pay = function (id, callbac
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.deleteArrival_UZ_Document_Pay", x, y, z);
+            OnAJAXError("IDS_RWT.deleteArrival_UZ_Document_Pay", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -957,7 +958,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Document_Pay = function (id, callbac
 };
 //======= Arrival_UZ_Document_Acts (Акты по ЭПД УЗ по прибытию (не досылочные)) ======================================
 // Получить все акты
-IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_Acts = function (callback) {
+IDS_RWT.prototype.getArrival_UZ_Document_Acts = function (callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_document_acts/all',
@@ -972,7 +973,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_Acts = function (callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_Document_Acts", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_Document_Acts", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -980,7 +981,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_Acts = function (callback) {
     });
 };
 // Получить акт по id
-IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_ActsOfID = function (id, callback) {
+IDS_RWT.prototype.getArrival_UZ_Document_ActsOfID = function (id, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_document_acts/id/' + id,
@@ -995,7 +996,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_ActsOfID = function (id, callb
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_Document_ActsOfID", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_Document_ActsOfID", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1003,7 +1004,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_ActsOfID = function (id, callb
     });
 };
 // Получить акты по id документа
-IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_ActsOfID_Document = function (id_document, callback) {
+IDS_RWT.prototype.getArrival_UZ_Document_ActsOfID_Document = function (id_document, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_document_acts/document/id/' + id_document,
@@ -1018,7 +1019,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_ActsOfID_Document = function (
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_Document_ActsOfID_DOC_UZ", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_Document_ActsOfID_DOC_UZ", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1026,7 +1027,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_ActsOfID_Document = function (
     });
 };
 //Добавить акт
-IDS_RWT_INCOMING.prototype.postArrival_UZ_Document_Acts = function (act, callback) {
+IDS_RWT.prototype.postArrival_UZ_Document_Acts = function (act, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_document_acts/',
         type: 'POST',
@@ -1043,7 +1044,7 @@ IDS_RWT_INCOMING.prototype.postArrival_UZ_Document_Acts = function (act, callbac
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_RWT_INCOMING.postArrival_UZ_Document_Acts", x, y, z);
+            OnAJAXError("IDS_RWT.postArrival_UZ_Document_Acts", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1051,7 +1052,7 @@ IDS_RWT_INCOMING.prototype.postArrival_UZ_Document_Acts = function (act, callbac
     });
 };
 //Добавить акты
-IDS_RWT_INCOMING.prototype.postListArrival_UZ_Document_Acts = function (list_act, callback) {
+IDS_RWT.prototype.postListArrival_UZ_Document_Acts = function (list_act, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_document_acts/list/',
         type: 'POST',
@@ -1068,7 +1069,7 @@ IDS_RWT_INCOMING.prototype.postListArrival_UZ_Document_Acts = function (list_act
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_RWT_INCOMING.postListArrival_UZ_Document_Acts", x, y, z);
+            OnAJAXError("IDS_RWT.postListArrival_UZ_Document_Acts", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1076,7 +1077,7 @@ IDS_RWT_INCOMING.prototype.postListArrival_UZ_Document_Acts = function (list_act
     });
 };
 //Обновить акт
-IDS_RWT_INCOMING.prototype.putArrival_UZ_Document_Acts = function (act, callback) {
+IDS_RWT.prototype.putArrival_UZ_Document_Acts = function (act, callback) {
     $.ajax({
         type: 'PUT',
         url: '../../api/ids/rwt/arrival_uz_document_acts/id/' + act.id,
@@ -1092,7 +1093,7 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Document_Acts = function (act, callback
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.putArrival_UZ_Document_Acts", x, y, z);
+            OnAJAXError("IDS_RWT.putArrival_UZ_Document_Acts", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1100,7 +1101,7 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Document_Acts = function (act, callback
     });
 };
 // Удалить акт
-IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Document_Acts = function (id, callback) {
+IDS_RWT.prototype.deleteArrival_UZ_Document_Acts = function (id, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_document_acts/id/' + id,
         type: 'DELETE',
@@ -1115,7 +1116,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Document_Acts = function (id, callba
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.deleteArrival_UZ_Document_Acts", x, y, z);
+            OnAJAXError("IDS_RWT.deleteArrival_UZ_Document_Acts", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1124,7 +1125,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Document_Acts = function (id, callba
 };
 //======= Arrival_UZ_Document_Docs (Доки по ЭПД УЗ по прибытию (не досылочные)) ======================================
 // Получить все доки
-IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_Docs = function (callback) {
+IDS_RWT.prototype.getArrival_UZ_Document_Docs = function (callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_document_docs/all',
@@ -1139,7 +1140,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_Docs = function (callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_Document_Docs", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_Document_Docs", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1147,7 +1148,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_Docs = function (callback) {
     });
 };
 // Получить док по id
-IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_DocsOfID = function (id, callback) {
+IDS_RWT.prototype.getArrival_UZ_Document_DocsOfID = function (id, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_document/id/' + id,
@@ -1162,7 +1163,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_DocsOfID = function (id, callb
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_Document_DocsOfID", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_Document_DocsOfID", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1170,7 +1171,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_DocsOfID = function (id, callb
     });
 };
 // Получить доки по id документа
-IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_DocsOfID_Document = function (id_document, callback) {
+IDS_RWT.prototype.getArrival_UZ_Document_DocsOfID_Document = function (id_document, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_document_docs/document/id/' + id_document,
@@ -1185,7 +1186,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_DocsOfID_Document = function (
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_Document_DocsOfID_DOC_UZ", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_Document_DocsOfID_DOC_UZ", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1193,7 +1194,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Document_DocsOfID_Document = function (
     });
 };
 //Добавить док
-IDS_RWT_INCOMING.prototype.postArrival_UZ_Document_Docs = function (doc, callback) {
+IDS_RWT.prototype.postArrival_UZ_Document_Docs = function (doc, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_document_docs/',
         type: 'POST',
@@ -1210,7 +1211,7 @@ IDS_RWT_INCOMING.prototype.postArrival_UZ_Document_Docs = function (doc, callbac
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_RWT_INCOMING.postArrival_UZ_Document_Docs", x, y, z);
+            OnAJAXError("IDS_RWT.postArrival_UZ_Document_Docs", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1218,7 +1219,7 @@ IDS_RWT_INCOMING.prototype.postArrival_UZ_Document_Docs = function (doc, callbac
     });
 };
 //Добавить доки
-IDS_RWT_INCOMING.prototype.postListArrival_UZ_Document_Docs = function (list_doc, callback) {
+IDS_RWT.prototype.postListArrival_UZ_Document_Docs = function (list_doc, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_document_docs/list/',
         type: 'POST',
@@ -1235,7 +1236,7 @@ IDS_RWT_INCOMING.prototype.postListArrival_UZ_Document_Docs = function (list_doc
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_RWT_INCOMING.postListArrival_UZ_Document_Docs", x, y, z);
+            OnAJAXError("IDS_RWT.postListArrival_UZ_Document_Docs", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1243,7 +1244,7 @@ IDS_RWT_INCOMING.prototype.postListArrival_UZ_Document_Docs = function (list_doc
     });
 };
 //Обновить док
-IDS_RWT_INCOMING.prototype.putArrival_UZ_Document_Docs = function (doc, callback) {
+IDS_RWT.prototype.putArrival_UZ_Document_Docs = function (doc, callback) {
     $.ajax({
         type: 'PUT',
         url: '../../api/ids/rwt/arrival_uz_document_docs/id/' + doc.id,
@@ -1259,7 +1260,7 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Document_Docs = function (doc, callback
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.putArrival_UZ_Document_Docs", x, y, z);
+            OnAJAXError("IDS_RWT.putArrival_UZ_Document_Docs", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1267,7 +1268,7 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Document_Docs = function (doc, callback
     });
 };
 // Удалить док
-IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Document_Docs = function (id, callback) {
+IDS_RWT.prototype.deleteArrival_UZ_Document_Docs = function (id, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_document_docs/id/' + id,
         type: 'DELETE',
@@ -1282,7 +1283,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Document_Docs = function (id, callba
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.deleteArrival_UZ_Document_Docs", x, y, z);
+            OnAJAXError("IDS_RWT.deleteArrival_UZ_Document_Docs", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1291,7 +1292,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Document_Docs = function (id, callba
 };
 //======= Arrival_UZ_Vagon (ЭПД УЗ по прибытию) ======================================
 // Получить все вагоны
-IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon = function (callback) {
+IDS_RWT.prototype.getArrival_UZ_Vagon = function (callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_vagon/all',
@@ -1306,7 +1307,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon = function (callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_Vagon", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_Vagon", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1314,7 +1315,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon = function (callback) {
     });
 };
 // Получить вагон по id
-IDS_RWT_INCOMING.prototype.getArrival_UZ_VagonOfID = function (id, callback) {
+IDS_RWT.prototype.getArrival_UZ_VagonOfID = function (id, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_vagon/id/' + id,
@@ -1329,7 +1330,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_VagonOfID = function (id, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_VagonOfID", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_VagonOfID", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1337,7 +1338,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_VagonOfID = function (id, callback) {
     });
 };
 // Получить все вагоны пренадлежащие указаному документу
-IDS_RWT_INCOMING.prototype.getArrival_UZ_VagonOfDocument = function (id_doc, callback) {
+IDS_RWT.prototype.getArrival_UZ_VagonOfDocument = function (id_doc, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_vagon/document/id/' + id_doc,
@@ -1352,7 +1353,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_VagonOfDocument = function (id_doc, cal
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_VagonOfDocument", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_VagonOfDocument", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1360,7 +1361,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_VagonOfDocument = function (id_doc, cal
     });
 };
 // Получить вагон пренадлежащий указаному документу поиск по номеру вагона
-IDS_RWT_INCOMING.prototype.getArrival_UZ_VagonOfDocumentNumVagon = function (id_doc, num, callback) {
+IDS_RWT.prototype.getArrival_UZ_VagonOfDocumentNumVagon = function (id_doc, num, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_vagon/document/id/' + id_doc + '/vagon/num/' + num,
@@ -1375,7 +1376,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_VagonOfDocumentNumVagon = function (id_
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_VagonOfDocumentNumVagon", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_VagonOfDocumentNumVagon", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1383,7 +1384,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_VagonOfDocumentNumVagon = function (id_
     });
 };
 //Добавить вагон
-IDS_RWT_INCOMING.prototype.postArrival_UZ_Vagon = function (vagon, callback) {
+IDS_RWT.prototype.postArrival_UZ_Vagon = function (vagon, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_vagon/',
         type: 'POST',
@@ -1400,7 +1401,7 @@ IDS_RWT_INCOMING.prototype.postArrival_UZ_Vagon = function (vagon, callback) {
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_RWT_INCOMING.postArrival_UZ_Vagon", x, y, z);
+            OnAJAXError("IDS_RWT.postArrival_UZ_Vagon", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1408,7 +1409,7 @@ IDS_RWT_INCOMING.prototype.postArrival_UZ_Vagon = function (vagon, callback) {
     });
 };
 //Добавить вагоны
-IDS_RWT_INCOMING.prototype.postListArrival_UZ_Vagon = function (list_vagon, callback) {
+IDS_RWT.prototype.postListArrival_UZ_Vagon = function (list_vagon, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_vagon/list/',
         type: 'POST',
@@ -1425,7 +1426,7 @@ IDS_RWT_INCOMING.prototype.postListArrival_UZ_Vagon = function (list_vagon, call
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_RWT_INCOMING.postListArrival_UZ_Vagon", x, y, z);
+            OnAJAXError("IDS_RWT.postListArrival_UZ_Vagon", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1433,7 +1434,7 @@ IDS_RWT_INCOMING.prototype.postListArrival_UZ_Vagon = function (list_vagon, call
     });
 };
 //Обновить вагон 
-IDS_RWT_INCOMING.prototype.putArrival_UZ_Vagon = function (vagon, callback) {
+IDS_RWT.prototype.putArrival_UZ_Vagon = function (vagon, callback) {
     $.ajax({
         type: 'PUT',
         url: '../../api/ids/rwt/arrival_uz_vagon/id/' + vagon.id,
@@ -1449,7 +1450,7 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Vagon = function (vagon, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.putArrival_UZ_Vagon", x, y, z);
+            OnAJAXError("IDS_RWT.putArrival_UZ_Vagon", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1457,7 +1458,7 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Vagon = function (vagon, callback) {
     });
 };
 //Обновить вагоны
-IDS_RWT_INCOMING.prototype.putListArrival_UZ_Vagon = function (list_wagon, callback) {
+IDS_RWT.prototype.putListArrival_UZ_Vagon = function (list_wagon, callback) {
     $.ajax({
         type: 'PUT',
         url: '../../api/ids/rwt/arrival_uz_vagon/list/',
@@ -1482,7 +1483,7 @@ IDS_RWT_INCOMING.prototype.putListArrival_UZ_Vagon = function (list_wagon, callb
 };
 
 // Удалить вагон  
-IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon = function (id, callback) {
+IDS_RWT.prototype.deleteArrival_UZ_Vagon = function (id, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_vagon/id/' + id,
         type: 'DELETE',
@@ -1497,7 +1498,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon = function (id, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.deleteArrival_UZ_Vagon", x, y, z);
+            OnAJAXError("IDS_RWT.deleteArrival_UZ_Vagon", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1505,7 +1506,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon = function (id, callback) {
     });
 };
 // Вернуть копию без связей
-IDS_RWT_INCOMING.prototype.getCloneArrival_UZ_Vagon = function (vagon) {
+IDS_RWT.prototype.getCloneArrival_UZ_Vagon = function (vagon) {
     if (!vagon) return null;
     return {
         id : vagon.id ,
@@ -1545,7 +1546,7 @@ IDS_RWT_INCOMING.prototype.getCloneArrival_UZ_Vagon = function (vagon) {
 
 //======= Arrival_UZ_Vagon_Pay (Платежки по плательщикам ЭПД УЗ по прибытию) ======================================
 // Получить все платежки
-IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_Pay = function (callback) {
+IDS_RWT.prototype.getArrival_UZ_Vagon_Pay = function (callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_vagon_pay/all',
@@ -1560,7 +1561,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_Pay = function (callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_Vagon_Pay", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_Vagon_Pay", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1568,7 +1569,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_Pay = function (callback) {
     });
 };
 // Получить платежку по id
-IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_PayOfID = function (id, callback) {
+IDS_RWT.prototype.getArrival_UZ_Vagon_PayOfID = function (id, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_vagon_pay/id/' + id,
@@ -1583,7 +1584,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_PayOfID = function (id, callback)
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_Vagon_PayOfID", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_Vagon_PayOfID", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1591,7 +1592,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_PayOfID = function (id, callback)
     });
 };
 // Получить платежку по id вагона
-IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_PayOfID_Vagon = function (id_vagon, callback) {
+IDS_RWT.prototype.getArrival_UZ_Vagon_PayOfID_Vagon = function (id_vagon, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_vagon_pay/vagon/id/' + id_vagon,
@@ -1606,7 +1607,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_PayOfID_Vagon = function (id_vago
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_Vagon_PayOfID_Vagon", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_Vagon_PayOfID_Vagon", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1614,7 +1615,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_PayOfID_Vagon = function (id_vago
     });
 };
 //Добавить платежку
-IDS_RWT_INCOMING.prototype.postArrival_UZ_Vagon_Pay = function (pay, callback) {
+IDS_RWT.prototype.postArrival_UZ_Vagon_Pay = function (pay, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_vagon_pay/',
         type: 'POST',
@@ -1631,7 +1632,7 @@ IDS_RWT_INCOMING.prototype.postArrival_UZ_Vagon_Pay = function (pay, callback) {
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_RWT_INCOMING.postArrival_UZ_Vagon_Pay", x, y, z);
+            OnAJAXError("IDS_RWT.postArrival_UZ_Vagon_Pay", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1639,7 +1640,7 @@ IDS_RWT_INCOMING.prototype.postArrival_UZ_Vagon_Pay = function (pay, callback) {
     });
 };
 //Добавить платежки
-IDS_RWT_INCOMING.prototype.postListArrival_UZ_Vagon_Pay = function (list_pay, callback) {
+IDS_RWT.prototype.postListArrival_UZ_Vagon_Pay = function (list_pay, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_vagon_pay/list/',
         type: 'POST',
@@ -1656,7 +1657,7 @@ IDS_RWT_INCOMING.prototype.postListArrival_UZ_Vagon_Pay = function (list_pay, ca
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_RWT_INCOMING.postListArrival_UZ_Vagon_Pay", x, y, z);
+            OnAJAXError("IDS_RWT.postListArrival_UZ_Vagon_Pay", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1664,7 +1665,7 @@ IDS_RWT_INCOMING.prototype.postListArrival_UZ_Vagon_Pay = function (list_pay, ca
     });
 };
 //Обновить платежку
-IDS_RWT_INCOMING.prototype.putArrival_UZ_Vagon_Pay = function (pay, callback) {
+IDS_RWT.prototype.putArrival_UZ_Vagon_Pay = function (pay, callback) {
     $.ajax({
         type: 'PUT',
         url: '../../api/ids/rwt/arrival_uz_vagon_pay/id/' + pay.id,
@@ -1680,7 +1681,7 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Vagon_Pay = function (pay, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.putArrival_UZ_Vagon_Pay", x, y, z);
+            OnAJAXError("IDS_RWT.putArrival_UZ_Vagon_Pay", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1688,7 +1689,7 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Vagon_Pay = function (pay, callback) {
     });
 };
 // Удалить платежку
-IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_Pay = function (id, callback) {
+IDS_RWT.prototype.deleteArrival_UZ_Vagon_Pay = function (id, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_vagon_pay/id/' + id,
         type: 'DELETE',
@@ -1703,7 +1704,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_Pay = function (id, callback) 
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.deleteArrival_UZ_Vagon_Pay", x, y, z);
+            OnAJAXError("IDS_RWT.deleteArrival_UZ_Vagon_Pay", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1711,7 +1712,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_Pay = function (id, callback) 
     });
 };
 // Удалить платежки по вагону
-IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_PayOfVagon = function (id, callback) {
+IDS_RWT.prototype.deleteArrival_UZ_Vagon_PayOfVagon = function (id, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_vagon_pay/vagon/id/' + id,
         type: 'DELETE',
@@ -1726,7 +1727,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_PayOfVagon = function (id, cal
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.deleteArrival_UZ_Vagon_PayOfVagon", x, y, z);
+            OnAJAXError("IDS_RWT.deleteArrival_UZ_Vagon_PayOfVagon", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1735,7 +1736,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_PayOfVagon = function (id, cal
 };
 //======= Arrival_UZ_Vagon_Acts (Акты по ЭПД УЗ по прибытию (не досылочные)) ======================================
 // Получить все акты
-IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_Acts = function (callback) {
+IDS_RWT.prototype.getArrival_UZ_Vagon_Acts = function (callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_vagon_acts/all',
@@ -1750,7 +1751,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_Acts = function (callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_Vagon_Acts", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_Vagon_Acts", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1758,7 +1759,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_Acts = function (callback) {
     });
 };
 // Получить акт по id
-IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_ActsOfID = function (id, callback) {
+IDS_RWT.prototype.getArrival_UZ_Vagon_ActsOfID = function (id, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_vagon_acts/id/' + id,
@@ -1773,7 +1774,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_ActsOfID = function (id, callback
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_Vagon_ActsOfID", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_Vagon_ActsOfID", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1781,7 +1782,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_ActsOfID = function (id, callback
     });
 };
 // Получить акты по id вагона
-IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_ActsOfID_Vagon = function (id_vagon, callback) {
+IDS_RWT.prototype.getArrival_UZ_Vagon_ActsOfID_Vagon = function (id_vagon, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_vagon_acts/vagon/id/' + id_vagon,
@@ -1796,7 +1797,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_ActsOfID_Vagon = function (id_vag
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_Vagon_ActsOfID_Vagon", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_Vagon_ActsOfID_Vagon", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1804,7 +1805,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_ActsOfID_Vagon = function (id_vag
     });
 };
 //Добавить акт
-IDS_RWT_INCOMING.prototype.postArrival_UZ_Vagon_Acts = function (act, callback) {
+IDS_RWT.prototype.postArrival_UZ_Vagon_Acts = function (act, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_vagon_acts/',
         type: 'POST',
@@ -1821,7 +1822,7 @@ IDS_RWT_INCOMING.prototype.postArrival_UZ_Vagon_Acts = function (act, callback) 
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_RWT_INCOMING.postArrival_UZ_Vagon_Acts", x, y, z);
+            OnAJAXError("IDS_RWT.postArrival_UZ_Vagon_Acts", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1829,7 +1830,7 @@ IDS_RWT_INCOMING.prototype.postArrival_UZ_Vagon_Acts = function (act, callback) 
     });
 };
 //Добавить акты
-IDS_RWT_INCOMING.prototype.postListArrival_UZ_Vagon_Acts = function (list_act, callback) {
+IDS_RWT.prototype.postListArrival_UZ_Vagon_Acts = function (list_act, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_vagon_acts/list/',
         type: 'POST',
@@ -1846,7 +1847,7 @@ IDS_RWT_INCOMING.prototype.postListArrival_UZ_Vagon_Acts = function (list_act, c
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_RWT_INCOMING.postListArrival_UZ_Vagon_Acts", x, y, z);
+            OnAJAXError("IDS_RWT.postListArrival_UZ_Vagon_Acts", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1854,7 +1855,7 @@ IDS_RWT_INCOMING.prototype.postListArrival_UZ_Vagon_Acts = function (list_act, c
     });
 };
 //Обновить акт
-IDS_RWT_INCOMING.prototype.putArrival_UZ_Vagon_Acts = function (act, callback) {
+IDS_RWT.prototype.putArrival_UZ_Vagon_Acts = function (act, callback) {
     $.ajax({
         type: 'PUT',
         url: '../../api/ids/rwt/arrival_uz_vagon_acts/id/' + act.id,
@@ -1870,7 +1871,7 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Vagon_Acts = function (act, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.putArrival_UZ_Vagon_Acts", x, y, z);
+            OnAJAXError("IDS_RWT.putArrival_UZ_Vagon_Acts", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1878,7 +1879,7 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Vagon_Acts = function (act, callback) {
     });
 };
 // Удалить акт
-IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_Acts = function (id, callback) {
+IDS_RWT.prototype.deleteArrival_UZ_Vagon_Acts = function (id, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_vagon_acts/id/' + id,
         type: 'DELETE',
@@ -1893,7 +1894,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_Acts = function (id, callback)
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.deleteArrival_UZ_Vagon_Acts", x, y, z);
+            OnAJAXError("IDS_RWT.deleteArrival_UZ_Vagon_Acts", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1901,7 +1902,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_Acts = function (id, callback)
     });
 };
 // Удалить акты на вагон
-IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_ActsOfVagon = function (id, callback) {
+IDS_RWT.prototype.deleteArrival_UZ_Vagon_ActsOfVagon = function (id, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_vagon_acts/vagon/id/' + id,
         type: 'DELETE',
@@ -1916,7 +1917,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_ActsOfVagon = function (id, ca
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.deleteArrival_UZ_Vagon_ActsOfVagon", x, y, z);
+            OnAJAXError("IDS_RWT.deleteArrival_UZ_Vagon_ActsOfVagon", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1925,7 +1926,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_ActsOfVagon = function (id, ca
 };
 //======= Arrival_UZ_Vagon_Cont (Контейнеры на вагоне по ЭПД УЗ ) ======================================
 // Получить все контейнера
-IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_Cont = function (callback) {
+IDS_RWT.prototype.getArrival_UZ_Vagon_Cont = function (callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_vagon_cont/all',
@@ -1940,7 +1941,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_Cont = function (callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_Vagon_Cont", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_Vagon_Cont", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1948,7 +1949,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_Cont = function (callback) {
     });
 };
 // Получить контейнер по id
-IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_ContOfID = function (id, callback) {
+IDS_RWT.prototype.getArrival_UZ_Vagon_ContOfID = function (id, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_vagon_cont/id/' + id,
@@ -1963,7 +1964,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_ContOfID = function (id, callback
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_Vagon_ContOfID", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_Vagon_ContOfID", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1971,7 +1972,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_ContOfID = function (id, callback
     });
 };
 // Получить контейнера по id вагона
-IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_ContOfID_Vagon = function (id_vagon, callback) {
+IDS_RWT.prototype.getArrival_UZ_Vagon_ContOfID_Vagon = function (id_vagon, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_vagon_cont/vagon/id/' + id_vagon,
@@ -1986,7 +1987,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_ContOfID_Vagon = function (id_vag
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_Vagon_ContOfID_Vagon", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_Vagon_ContOfID_Vagon", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1994,7 +1995,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Vagon_ContOfID_Vagon = function (id_vag
     });
 };
 //Добавить контейнер
-IDS_RWT_INCOMING.prototype.postArrival_UZ_Vagon_Cont = function (cont, callback) {
+IDS_RWT.prototype.postArrival_UZ_Vagon_Cont = function (cont, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_vagon_cont/',
         type: 'POST',
@@ -2011,7 +2012,7 @@ IDS_RWT_INCOMING.prototype.postArrival_UZ_Vagon_Cont = function (cont, callback)
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_RWT_INCOMING.postArrival_UZ_Vagon_Cont", x, y, z);
+            OnAJAXError("IDS_RWT.postArrival_UZ_Vagon_Cont", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2019,7 +2020,7 @@ IDS_RWT_INCOMING.prototype.postArrival_UZ_Vagon_Cont = function (cont, callback)
     });
 };
 //Добавить контейнера
-IDS_RWT_INCOMING.prototype.postListArrival_UZ_Vagon_Cont = function (list_cont, callback) {
+IDS_RWT.prototype.postListArrival_UZ_Vagon_Cont = function (list_cont, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_vagon_cont/list/',
         type: 'POST',
@@ -2036,7 +2037,7 @@ IDS_RWT_INCOMING.prototype.postListArrival_UZ_Vagon_Cont = function (list_cont, 
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_RWT_INCOMING.postListArrival_UZ_Vagon_Cont", x, y, z);
+            OnAJAXError("IDS_RWT.postListArrival_UZ_Vagon_Cont", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2044,7 +2045,7 @@ IDS_RWT_INCOMING.prototype.postListArrival_UZ_Vagon_Cont = function (list_cont, 
     });
 };
 //Обновить контейнер
-IDS_RWT_INCOMING.prototype.putArrival_UZ_Vagon_Cont = function (cont, callback) {
+IDS_RWT.prototype.putArrival_UZ_Vagon_Cont = function (cont, callback) {
     $.ajax({
         type: 'PUT',
         url: '../../api/ids/rwt/arrival_uz_vagon_cont/id/' + cont.id,
@@ -2060,7 +2061,7 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Vagon_Cont = function (cont, callback) 
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.putArrival_UZ_Vagon_Cont", x, y, z);
+            OnAJAXError("IDS_RWT.putArrival_UZ_Vagon_Cont", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2068,7 +2069,7 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Vagon_Cont = function (cont, callback) 
     });
 };
 // Удалить контейнер по id
-IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_Cont = function (id, callback) {
+IDS_RWT.prototype.deleteArrival_UZ_Vagon_Cont = function (id, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_vagon_cont/id/' + id,
         type: 'DELETE',
@@ -2083,7 +2084,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_Cont = function (id, callback)
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.deleteArrival_UZ_Vagon_Cont", x, y, z);
+            OnAJAXError("IDS_RWT.deleteArrival_UZ_Vagon_Cont", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2091,7 +2092,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_Cont = function (id, callback)
     });
 };
 // Удалить контейнера по id вагона
-IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_ContOfVagon = function (id, callback) {
+IDS_RWT.prototype.deleteArrival_UZ_Vagon_ContOfVagon = function (id, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_vagon_cont/vagon/id/' + id,
         type: 'DELETE',
@@ -2106,7 +2107,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_ContOfVagon = function (id, ca
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.deleteArrival_UZ_Vagon_ContOfVagon", x, y, z);
+            OnAJAXError("IDS_RWT.deleteArrival_UZ_Vagon_ContOfVagon", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2115,7 +2116,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Vagon_ContOfVagon = function (id, ca
 };
 //======= Arrival_UZ_Cont_Pay (Платежки по плательщикам на контейнеры ЭПД УЗ по прибытию) ======================================
 // Получить все платежки
-IDS_RWT_INCOMING.prototype.getArrival_UZ_Cont_Pay = function (callback) {
+IDS_RWT.prototype.getArrival_UZ_Cont_Pay = function (callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_cont_pay/all',
@@ -2130,7 +2131,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Cont_Pay = function (callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_Cont_Pay", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_Cont_Pay", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2138,7 +2139,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Cont_Pay = function (callback) {
     });
 };
 // Получить платежку по id
-IDS_RWT_INCOMING.prototype.getArrival_UZ_Cont_PayOfID = function (id, callback) {
+IDS_RWT.prototype.getArrival_UZ_Cont_PayOfID = function (id, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_cont_pay/id/' + id,
@@ -2153,7 +2154,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Cont_PayOfID = function (id, callback) 
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_Cont_PayOfID", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_Cont_PayOfID", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2161,7 +2162,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Cont_PayOfID = function (id, callback) 
     });
 };
 // Получить платежку по id контейнера
-IDS_RWT_INCOMING.prototype.getArrival_UZ_Cont_PayOfID_Cont = function (id_cont, callback) {
+IDS_RWT.prototype.getArrival_UZ_Cont_PayOfID_Cont = function (id_cont, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_uz_cont_pay/cont/id/' + id_cont,
@@ -2176,7 +2177,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Cont_PayOfID_Cont = function (id_cont, 
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrival_UZ_Cont_PayOfID_Cont", x, y, z);
+            OnAJAXError("IDS_RWT.getArrival_UZ_Cont_PayOfID_Cont", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2184,7 +2185,7 @@ IDS_RWT_INCOMING.prototype.getArrival_UZ_Cont_PayOfID_Cont = function (id_cont, 
     });
 };
 //Добавить платежку
-IDS_RWT_INCOMING.prototype.postArrival_UZ_Cont_Pay = function (pay, callback) {
+IDS_RWT.prototype.postArrival_UZ_Cont_Pay = function (pay, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_cont_pay/',
         type: 'POST',
@@ -2201,7 +2202,7 @@ IDS_RWT_INCOMING.prototype.postArrival_UZ_Cont_Pay = function (pay, callback) {
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_RWT_INCOMING.postArrival_UZ_Cont_Pay", x, y, z);
+            OnAJAXError("IDS_RWT.postArrival_UZ_Cont_Pay", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2209,7 +2210,7 @@ IDS_RWT_INCOMING.prototype.postArrival_UZ_Cont_Pay = function (pay, callback) {
     });
 };
 //Добавить платежки
-IDS_RWT_INCOMING.prototype.postListArrival_UZ_Cont_Pay = function (list_pay, callback) {
+IDS_RWT.prototype.postListArrival_UZ_Cont_Pay = function (list_pay, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_cont_pay/list/',
         type: 'POST',
@@ -2226,7 +2227,7 @@ IDS_RWT_INCOMING.prototype.postListArrival_UZ_Cont_Pay = function (list_pay, cal
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_RWT_INCOMING.postListArrival_UZ_Cont_Pay", x, y, z);
+            OnAJAXError("IDS_RWT.postListArrival_UZ_Cont_Pay", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2234,7 +2235,7 @@ IDS_RWT_INCOMING.prototype.postListArrival_UZ_Cont_Pay = function (list_pay, cal
     });
 };
 //Обновить платежку
-IDS_RWT_INCOMING.prototype.putArrival_UZ_Cont_Pay = function (pay, callback) {
+IDS_RWT.prototype.putArrival_UZ_Cont_Pay = function (pay, callback) {
     $.ajax({
         type: 'PUT',
         url: '../../api/ids/rwt/arrival_uz_cont_pay/id/' + pay.id,
@@ -2250,7 +2251,7 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Cont_Pay = function (pay, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.putArrival_UZ_Cont_Pay", x, y, z);
+            OnAJAXError("IDS_RWT.putArrival_UZ_Cont_Pay", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2258,7 +2259,7 @@ IDS_RWT_INCOMING.prototype.putArrival_UZ_Cont_Pay = function (pay, callback) {
     });
 };
 // Удалить платежку
-IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Cont_Pay = function (id, callback) {
+IDS_RWT.prototype.deleteArrival_UZ_Cont_Pay = function (id, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_cont_pay/id/' + id,
         type: 'DELETE',
@@ -2273,7 +2274,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Cont_Pay = function (id, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.deleteArrival_UZ_Cont_Pay", x, y, z);
+            OnAJAXError("IDS_RWT.deleteArrival_UZ_Cont_Pay", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2281,7 +2282,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Cont_Pay = function (id, callback) {
     });
 };
 // Удалить платежку по контейнеру
-IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Cont_PayOfCont = function (id, callback) {
+IDS_RWT.prototype.deleteArrival_UZ_Cont_PayOfCont = function (id, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_cont_pay/cont/id/' + id,
         type: 'DELETE',
@@ -2296,7 +2297,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Cont_PayOfCont = function (id, callb
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.deleteArrival_UZ_Cont_PayOfCont", x, y, z);
+            OnAJAXError("IDS_RWT.deleteArrival_UZ_Cont_PayOfCont", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2304,7 +2305,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Cont_PayOfCont = function (id, callb
     });
 };
 // Удалить платежки по списку id контейнеров
-IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Cont_PayOfListCont = function (list_cont, callback) {
+IDS_RWT.prototype.deleteArrival_UZ_Cont_PayOfListCont = function (list_cont, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_uz_cont_pay/cont/list/',
         data: JSON.stringify(list_cont),
@@ -2320,7 +2321,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Cont_PayOfListCont = function (list_
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.deleteArrival_UZ_Cont_PayOfListCont", x, y, z);
+            OnAJAXError("IDS_RWT.deleteArrival_UZ_Cont_PayOfListCont", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2331,7 +2332,7 @@ IDS_RWT_INCOMING.prototype.deleteArrival_UZ_Cont_PayOfListCont = function (list_
 //                                  РАЗДЕЛ ПРИБЫТИЕ ОТПРАВКА
 //======= ArrivalSostav (Таблица составов) =============================================================
 // Получить все составы
-IDS_RWT_INCOMING.prototype.getArrivalSostav = function (start, stop, callback) {
+IDS_RWT.prototype.getArrivalSostav = function (start, stop, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_sostav/start/' + toISOStringTZ(start).substring(0, 19) + '/stop/' + toISOStringTZ(stop).substring(0, 19),
@@ -2346,7 +2347,7 @@ IDS_RWT_INCOMING.prototype.getArrivalSostav = function (start, stop, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrivalSostav", x, y, z);
+            OnAJAXError("IDS_RWT.getArrivalSostav", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2354,7 +2355,7 @@ IDS_RWT_INCOMING.prototype.getArrivalSostav = function (start, stop, callback) {
     });
 };
 // Получить все составы представление 
-IDS_RWT_INCOMING.prototype.getViewArrivalSostav = function (start, stop, callback) {
+IDS_RWT.prototype.getViewArrivalSostav = function (start, stop, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_sostav/view/start/' + toISOStringTZ(start).substring(0, 19) + '/stop/' + toISOStringTZ(stop).substring(0, 19),
@@ -2369,7 +2370,7 @@ IDS_RWT_INCOMING.prototype.getViewArrivalSostav = function (start, stop, callbac
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getViewArrivalSostav", x, y, z);
+            OnAJAXError("IDS_RWT.getViewArrivalSostav", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2377,7 +2378,7 @@ IDS_RWT_INCOMING.prototype.getViewArrivalSostav = function (start, stop, callbac
     });
 };
 // Получить все составы за период времени принятые на станцию
-IDS_RWT_INCOMING.prototype.getArrivalSostavOfDatePeriodIDStationOn = function (start, stop, id_station, callback) {
+IDS_RWT.prototype.getArrivalSostavOfDatePeriodIDStationOn = function (start, stop, id_station, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_sostav/start/' + toISOStringTZ(start).substring(0, 19) + '/stop/' + toISOStringTZ(stop).substring(0, 19) + '/station/amkr/id/'+id_station,
@@ -2392,7 +2393,7 @@ IDS_RWT_INCOMING.prototype.getArrivalSostavOfDatePeriodIDStationOn = function (s
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrivalSostavOfDatePeriodIDStationOn", x, y, z);
+            OnAJAXError("IDS_RWT.getArrivalSostavOfDatePeriodIDStationOn", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2400,7 +2401,7 @@ IDS_RWT_INCOMING.prototype.getArrivalSostavOfDatePeriodIDStationOn = function (s
     });
 };
 // Получить состав
-IDS_RWT_INCOMING.prototype.getArrivalSostavOfID = function (id, callback) {
+IDS_RWT.prototype.getArrivalSostavOfID = function (id, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_sostav/id/' + id,
@@ -2415,7 +2416,7 @@ IDS_RWT_INCOMING.prototype.getArrivalSostavOfID = function (id, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrivalSostavOfID", x, y, z);
+            OnAJAXError("IDS_RWT.getArrivalSostavOfID", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2423,7 +2424,7 @@ IDS_RWT_INCOMING.prototype.getArrivalSostavOfID = function (id, callback) {
     });
 };
 // Получить последний номер по станции за текущий год
-IDS_RWT_INCOMING.prototype.getCurrentNumArrivalSostavOfStation = function (id, callback) {
+IDS_RWT.prototype.getCurrentNumArrivalSostavOfStation = function (id, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_sostav/current_num/station/id/' + id,
@@ -2438,7 +2439,7 @@ IDS_RWT_INCOMING.prototype.getCurrentNumArrivalSostavOfStation = function (id, c
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getCurrentNumArrivalSostavOfStation", x, y, z);
+            OnAJAXError("IDS_RWT.getCurrentNumArrivalSostavOfStation", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2446,7 +2447,7 @@ IDS_RWT_INCOMING.prototype.getCurrentNumArrivalSostavOfStation = function (id, c
     });
 };
 //Обновить 
-IDS_RWT_INCOMING.prototype.putArrivalSostav = function (arrival_sostav, callback) {
+IDS_RWT.prototype.putArrivalSostav = function (arrival_sostav, callback) {
     $.ajax({
         type: 'PUT',
         url: '../../api/ids/rwt/arrival_sostav/id/' + arrival_sostav.id,
@@ -2462,7 +2463,7 @@ IDS_RWT_INCOMING.prototype.putArrivalSostav = function (arrival_sostav, callback
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.putArrivalSostav", x, y, z);
+            OnAJAXError("IDS_RWT.putArrivalSostav", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2470,7 +2471,7 @@ IDS_RWT_INCOMING.prototype.putArrivalSostav = function (arrival_sostav, callback
     });
 };
 // Удалить 
-IDS_RWT_INCOMING.prototype.deleteArrivalSostav = function (id, callback) {
+IDS_RWT.prototype.deleteArrivalSostav = function (id, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_sostav/id/' + id,
         type: 'DELETE',
@@ -2485,7 +2486,7 @@ IDS_RWT_INCOMING.prototype.deleteArrivalSostav = function (id, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.deleteArrivalSostav", x, y, z);
+            OnAJAXError("IDS_RWT.deleteArrivalSostav", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2493,7 +2494,7 @@ IDS_RWT_INCOMING.prototype.deleteArrivalSostav = function (id, callback) {
     });
 };
 //Добавить 
-IDS_RWT_INCOMING.prototype.postArrivalSostav = function (arrival_sostav, callback) {
+IDS_RWT.prototype.postArrivalSostav = function (arrival_sostav, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_sostav/',
         type: 'POST',
@@ -2510,7 +2511,7 @@ IDS_RWT_INCOMING.prototype.postArrivalSostav = function (arrival_sostav, callbac
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_RWT_INCOMING.postArrivalSostav", x, y, z);
+            OnAJAXError("IDS_RWT.postArrivalSostav", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2519,7 +2520,7 @@ IDS_RWT_INCOMING.prototype.postArrivalSostav = function (arrival_sostav, callbac
 };
 //======= ArrivalCars (Таблица вагонов состава) ======================================
 // Получить все вагоны
-IDS_RWT_INCOMING.prototype.getArrivalCars = function (callback) {
+IDS_RWT.prototype.getArrivalCars = function (callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_cars/all',
@@ -2534,7 +2535,7 @@ IDS_RWT_INCOMING.prototype.getArrivalCars = function (callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrivalCars", x, y, z);
+            OnAJAXError("IDS_RWT.getArrivalCars", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2542,7 +2543,7 @@ IDS_RWT_INCOMING.prototype.getArrivalCars = function (callback) {
     });
 };
 // Получить вагоны сотава
-IDS_RWT_INCOMING.prototype.getArrivalCarsOfSostav = function (id, callback) {
+IDS_RWT.prototype.getArrivalCarsOfSostav = function (id, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_cars/sostav/id/' + id,
@@ -2557,7 +2558,7 @@ IDS_RWT_INCOMING.prototype.getArrivalCarsOfSostav = function (id, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrivalCarsOfSostav", x, y, z);
+            OnAJAXError("IDS_RWT.getArrivalCarsOfSostav", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2565,7 +2566,7 @@ IDS_RWT_INCOMING.prototype.getArrivalCarsOfSostav = function (id, callback) {
     });
 };
 // Получить вагон
-IDS_RWT_INCOMING.prototype.getArrivalCarsOfID = function (id, callback) {
+IDS_RWT.prototype.getArrivalCarsOfID = function (id, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_cars/id/' + id,
@@ -2580,7 +2581,7 @@ IDS_RWT_INCOMING.prototype.getArrivalCarsOfID = function (id, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrivalCarsOfID", x, y, z);
+            OnAJAXError("IDS_RWT.getArrivalCarsOfID", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2588,7 +2589,7 @@ IDS_RWT_INCOMING.prototype.getArrivalCarsOfID = function (id, callback) {
     });
 };
 // Получить вагон
-IDS_RWT_INCOMING.prototype.getArrivalCarsOfNum= function (num, callback) {
+IDS_RWT.prototype.getArrivalCarsOfNum= function (num, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_cars/num/' + num,
@@ -2603,7 +2604,7 @@ IDS_RWT_INCOMING.prototype.getArrivalCarsOfNum= function (num, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrivalCarsOfNum", x, y, z);
+            OnAJAXError("IDS_RWT.getArrivalCarsOfNum", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2611,7 +2612,7 @@ IDS_RWT_INCOMING.prototype.getArrivalCarsOfNum= function (num, callback) {
     });
 };
 // Получить перечень вагонов за указаный период выбранные вагоны
-IDS_RWT_INCOMING.prototype.getArrivalCarsOfPeriodNums = function (start, stop, nums, callback) {
+IDS_RWT.prototype.getArrivalCarsOfPeriodNums = function (start, stop, nums, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_cars/start/' + toISOStringTZ(start).substring(0, 19) + '/stop/' + toISOStringTZ(stop).substring(0, 19) + '/nums/' + nums,
@@ -2626,7 +2627,7 @@ IDS_RWT_INCOMING.prototype.getArrivalCarsOfPeriodNums = function (start, stop, n
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getArrivalCarsOfPeriodNums", x, y, z);
+            OnAJAXError("IDS_RWT.getArrivalCarsOfPeriodNums", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2634,7 +2635,7 @@ IDS_RWT_INCOMING.prototype.getArrivalCarsOfPeriodNums = function (start, stop, n
     });
 };
 //Обновить 
-IDS_RWT_INCOMING.prototype.putArrivalCars = function (arrival_cars, callback) {
+IDS_RWT.prototype.putArrivalCars = function (arrival_cars, callback) {
     $.ajax({
         type: 'PUT',
         url: '../../api/ids/rwt/arrival_cars/id/' + arrival_cars.id,
@@ -2650,7 +2651,7 @@ IDS_RWT_INCOMING.prototype.putArrivalCars = function (arrival_cars, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.putArrivalCars", x, y, z);
+            OnAJAXError("IDS_RWT.putArrivalCars", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2658,7 +2659,7 @@ IDS_RWT_INCOMING.prototype.putArrivalCars = function (arrival_cars, callback) {
     });
 };
 // Удалить 
-IDS_RWT_INCOMING.prototype.deleteArrivalCars = function (id, callback) {
+IDS_RWT.prototype.deleteArrivalCars = function (id, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_cars/id/' + id,
         type: 'DELETE',
@@ -2673,7 +2674,7 @@ IDS_RWT_INCOMING.prototype.deleteArrivalCars = function (id, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.deleteArrivalCars", x, y, z);
+            OnAJAXError("IDS_RWT.deleteArrivalCars", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2681,7 +2682,7 @@ IDS_RWT_INCOMING.prototype.deleteArrivalCars = function (id, callback) {
     });
 };
 // Удалить вагоны состава
-IDS_RWT_INCOMING.prototype.deleteArrivalCarsOfSostav = function (id_sostav, callback) {
+IDS_RWT.prototype.deleteArrivalCarsOfSostav = function (id_sostav, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_cars/sostav/id/' + id_sostav,
         type: 'DELETE',
@@ -2696,7 +2697,7 @@ IDS_RWT_INCOMING.prototype.deleteArrivalCarsOfSostav = function (id_sostav, call
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.deleteArrivalCarsOfSostav", x, y, z);
+            OnAJAXError("IDS_RWT.deleteArrivalCarsOfSostav", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2704,7 +2705,7 @@ IDS_RWT_INCOMING.prototype.deleteArrivalCarsOfSostav = function (id_sostav, call
     });
 };
 //Добавить 
-IDS_RWT_INCOMING.prototype.postArrivalCars = function (arrival_cars, callback) {
+IDS_RWT.prototype.postArrivalCars = function (arrival_cars, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_cars/',
         type: 'POST',
@@ -2721,7 +2722,7 @@ IDS_RWT_INCOMING.prototype.postArrivalCars = function (arrival_cars, callback) {
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_RWT_INCOMING.postArrivalCars", x, y, z);
+            OnAJAXError("IDS_RWT.postArrivalCars", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2730,7 +2731,7 @@ IDS_RWT_INCOMING.prototype.postArrivalCars = function (arrival_cars, callback) {
 };
 //======= UZ_DOC (Таблица ЭПД принятых вагонов) ======================================
 // Получить все документы
-IDS_RWT_INCOMING.prototype.getUZ_DOC = function (callback) {
+IDS_RWT.prototype.getUZ_DOC = function (callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/uz_doc/all',
@@ -2745,7 +2746,7 @@ IDS_RWT_INCOMING.prototype.getUZ_DOC = function (callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getUZ_DOC", x, y, z);
+            OnAJAXError("IDS_RWT.getUZ_DOC", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2753,7 +2754,7 @@ IDS_RWT_INCOMING.prototype.getUZ_DOC = function (callback) {
     });
 };
 // Получить строку ЭПД принятого вагона по номеру документа (внутренему номеру документа)
-IDS_RWT_INCOMING.prototype.getUZ_DOCOfNum = function (num, callback) {
+IDS_RWT.prototype.getUZ_DOCOfNum = function (num, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/uz_doc/num/' + num,
@@ -2768,7 +2769,7 @@ IDS_RWT_INCOMING.prototype.getUZ_DOCOfNum = function (num, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getUZ_DOCOfNum", x, y, z);
+            OnAJAXError("IDS_RWT.getUZ_DOCOfNum", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2776,7 +2777,7 @@ IDS_RWT_INCOMING.prototype.getUZ_DOCOfNum = function (num, callback) {
     });
 };
 // Получить разпарсеный ЭПД принятого вагона по номеру документа
-IDS_RWT_INCOMING.prototype.getOTPR_UZ_DOCOfNum = function (num, callback) {
+IDS_RWT.prototype.getOTPR_UZ_DOCOfNum = function (num, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/uz_doc/otpr/num/' + num,
@@ -2791,7 +2792,7 @@ IDS_RWT_INCOMING.prototype.getOTPR_UZ_DOCOfNum = function (num, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getOTPR_UZ_DOCOfNum", x, y, z);
+            OnAJAXError("IDS_RWT.getOTPR_UZ_DOCOfNum", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2799,7 +2800,7 @@ IDS_RWT_INCOMING.prototype.getOTPR_UZ_DOCOfNum = function (num, callback) {
     });
 };
 //П олучить строку ЭПД принятого вагона по номеру накладной УЗ
-IDS_RWT_INCOMING.prototype.getUZ_DOCOfNum_UZ = function (num_uz, callback) {
+IDS_RWT.prototype.getUZ_DOCOfNum_UZ = function (num_uz, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/uz_doc/num_uz/' + num_uz,
@@ -2814,7 +2815,7 @@ IDS_RWT_INCOMING.prototype.getUZ_DOCOfNum_UZ = function (num_uz, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getUZ_DOCOfNum_UZ", x, y, z);
+            OnAJAXError("IDS_RWT.getUZ_DOCOfNum_UZ", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2822,7 +2823,7 @@ IDS_RWT_INCOMING.prototype.getUZ_DOCOfNum_UZ = function (num_uz, callback) {
     });
 };
 // Получить разпарсеный ЭПД принятого вагона по номеру документа
-IDS_RWT_INCOMING.prototype.getOTPR_UZ_DOCOfNum_UZ = function (num_uz, callback) {
+IDS_RWT.prototype.getOTPR_UZ_DOCOfNum_UZ = function (num_uz, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/uz_doc/otpr/num_uz/' + num_uz,
@@ -2837,7 +2838,7 @@ IDS_RWT_INCOMING.prototype.getOTPR_UZ_DOCOfNum_UZ = function (num_uz, callback) 
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getOTPR_UZ_DOCOfNum_UZ", x, y, z);
+            OnAJAXError("IDS_RWT.getOTPR_UZ_DOCOfNum_UZ", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2845,7 +2846,7 @@ IDS_RWT_INCOMING.prototype.getOTPR_UZ_DOCOfNum_UZ = function (num_uz, callback) 
     });
 };
 //Добавить 
-IDS_RWT_INCOMING.prototype.postUZ_DOC = function (uz_doc, callback) {
+IDS_RWT.prototype.postUZ_DOC = function (uz_doc, callback) {
     $.ajax({
         url: '../../api/ids/rwt/uz_doc/',
         type: 'POST',
@@ -2862,7 +2863,7 @@ IDS_RWT_INCOMING.prototype.postUZ_DOC = function (uz_doc, callback) {
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_RWT_INCOMING.postUZ_DOC", x, y, z);
+            OnAJAXError("IDS_RWT.postUZ_DOC", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2871,7 +2872,7 @@ IDS_RWT_INCOMING.prototype.postUZ_DOC = function (uz_doc, callback) {
 };
 //======= OutgoingSostav (Таблица составов на отправку) ======================================
 // Получить все составы
-IDS_RWT_INCOMING.prototype.getOutgoingSostav = function (start, stop, callback) {
+IDS_RWT.prototype.getOutgoingSostav = function (start, stop, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/outgoing_sostav/start/' + toISOStringTZ(start).substring(0, 19) + '/stop/' + toISOStringTZ(stop).substring(0, 19),
@@ -2886,7 +2887,7 @@ IDS_RWT_INCOMING.prototype.getOutgoingSostav = function (start, stop, callback) 
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getOutgoingSostav", x, y, z);
+            OnAJAXError("IDS_RWT.getOutgoingSostav", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2894,7 +2895,7 @@ IDS_RWT_INCOMING.prototype.getOutgoingSostav = function (start, stop, callback) 
     });
 };
 // Получить состав
-IDS_RWT_INCOMING.prototype.getOutgoingSostavOfID = function (id, callback) {
+IDS_RWT.prototype.getOutgoingSostavOfID = function (id, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/outgoing_sostav/id/' + id,
@@ -2909,7 +2910,7 @@ IDS_RWT_INCOMING.prototype.getOutgoingSostavOfID = function (id, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.getOutgoingSostavOfID", x, y, z);
+            OnAJAXError("IDS_RWT.getOutgoingSostavOfID", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2917,7 +2918,7 @@ IDS_RWT_INCOMING.prototype.getOutgoingSostavOfID = function (id, callback) {
     });
 };
 //Обновить 
-IDS_RWT_INCOMING.prototype.putOutgoingSostav = function (outgoing_sostav, callback) {
+IDS_RWT.prototype.putOutgoingSostav = function (outgoing_sostav, callback) {
     $.ajax({
         type: 'PUT',
         url: '../../api/ids/rwt/outgoing_sostav/id/' + outgoing_sostav.id,
@@ -2933,7 +2934,7 @@ IDS_RWT_INCOMING.prototype.putOutgoingSostav = function (outgoing_sostav, callba
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.putOutgoingSostav", x, y, z);
+            OnAJAXError("IDS_RWT.putOutgoingSostav", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2941,7 +2942,7 @@ IDS_RWT_INCOMING.prototype.putOutgoingSostav = function (outgoing_sostav, callba
     });
 };
 // Удалить 
-IDS_RWT_INCOMING.prototype.deleteOutgoingSostav = function (id, callback) {
+IDS_RWT.prototype.deleteOutgoingSostav = function (id, callback) {
     $.ajax({
         url: '../../api/ids/rwt/outgoing_sostav/id/' + id,
         type: 'DELETE',
@@ -2956,7 +2957,7 @@ IDS_RWT_INCOMING.prototype.deleteOutgoingSostav = function (id, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_RWT_INCOMING.deleteOutgoingSostav", x, y, z);
+            OnAJAXError("IDS_RWT.deleteOutgoingSostav", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2964,7 +2965,7 @@ IDS_RWT_INCOMING.prototype.deleteOutgoingSostav = function (id, callback) {
     });
 };
 //Добавить 
-IDS_RWT_INCOMING.prototype.postOutgoingSostav = function (outgoing_sostav, callback) {
+IDS_RWT.prototype.postOutgoingSostav = function (outgoing_sostav, callback) {
     $.ajax({
         url: '../../api/ids/rwt/outgoing_sostav/',
         type: 'POST',
@@ -2981,7 +2982,7 @@ IDS_RWT_INCOMING.prototype.postOutgoingSostav = function (outgoing_sostav, callb
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_RWT_INCOMING.postOutgoingSostav", x, y, z);
+            OnAJAXError("IDS_RWT.postOutgoingSostav", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -2991,20 +2992,20 @@ IDS_RWT_INCOMING.prototype.postOutgoingSostav = function (outgoing_sostav, callb
 /* ----------------------------------------------------------
 функции для работы с объектами
 -------------------------------------------------------------*/
-IDS_RWT_INCOMING.prototype.getValueObj = function (obj, name) {
+IDS_RWT.prototype.getValueObj = function (obj, name) {
     return obj ? obj[name] : null;
 };
 //
-IDS_RWT_INCOMING.prototype.getValueCultureObj = function (obj, name) {
+IDS_RWT.prototype.getValueCultureObj = function (obj, name) {
     var res = obj ? obj[name + '_' + this.lang] : null;
     return res;
 };
 /* ----------------------------------------------------------
 функции для работы с внутреним массивом
 -------------------------------------------------------------*/
-//*======= IDS_RWT_INCOMING.list_instructional_letters  (Список писем) ======================================
+//*======= IDS_RWT.list_instructional_letters  (Список писем) ======================================
 // Вернуть копию без связей
-IDS_RWT_INCOMING.prototype.getCloneInstructionalLetters = function (letter) {
+IDS_RWT.prototype.getCloneInstructionalLetters = function (letter) {
     if (!letter) return null;
     return {
         id: letter.id,
@@ -3019,9 +3020,9 @@ IDS_RWT_INCOMING.prototype.getCloneInstructionalLetters = function (letter) {
         change_user: letter.change_user,
     };
 };
-//*======= IDS_RWT_INCOMING.list_instructional_letters_wagon  (Список вагонов по письмам) ======================================
+//*======= IDS_RWT.list_instructional_letters_wagon  (Список вагонов по письмам) ======================================
 // Вернуть копию без связей
-IDS_RWT_INCOMING.prototype.getCloneInstructionalLettersWagon = function (wagon) {
+IDS_RWT.prototype.getCloneInstructionalLettersWagon = function (wagon) {
     if (!wagon) return null;
     return {
         id : wagon.id,
@@ -3037,37 +3038,37 @@ IDS_RWT_INCOMING.prototype.getCloneInstructionalLettersWagon = function (wagon) 
     };
 };
 
-//*======= IDS_RWT_INCOMING.list_status_arrival  (Справочник статусов прибытия) ======================================
-IDS_RWT_INCOMING.prototype.getStatusArrival_Internal_Of_Code = function (code) {
+//*======= IDS_RWT.list_status_arrival  (Справочник статусов прибытия) ======================================
+IDS_RWT.prototype.getStatusArrival_Internal_Of_Code = function (code) {
     if (this.list_status_arrival) {
         var obj = getObjects(this.list_status_arrival, 'code', code);
         return obj && obj.length > 0 ? obj[0] : null;
     }
 };
 
-IDS_RWT_INCOMING.prototype.getStatusArrival_Internal_Of_Name = function (text, ftext, lang) {
+IDS_RWT.prototype.getStatusArrival_Internal_Of_Name = function (text, ftext, lang) {
     if (this.list_status_arrival) {
         var obj = getObjects(this.list_status_arrival, (lang ? ftext + '_' + lang : name), text);
         return obj && obj.length > 0 ? obj[0] : null;
     }
 };
 
-IDS_RWT_INCOMING.prototype.getCode_StatusArrival_Internal_Of_Name = function (text, ftext, lang) {
+IDS_RWT.prototype.getCode_StatusArrival_Internal_Of_Name = function (text, ftext, lang) {
     var obj = this.getStatusArrival_Internal_Of_Name(text, ftext, lang);
     return obj ? obj.code : null;
 };
 //
-IDS_RWT_INCOMING.prototype.getValue_StatusArrival_Of_Code = function (code, name, lang) {
+IDS_RWT.prototype.getValue_StatusArrival_Of_Code = function (code, name, lang) {
     var obj = this.getStatusArrival_Internal_Of_Code(code);
     return this.getValueObj(obj, name, lang);
 };
 //
-IDS_RWT_INCOMING.prototype.getValueCulture_StatusArrival_Of_Code = function (code, name) {
+IDS_RWT.prototype.getValueCulture_StatusArrival_Of_Code = function (code, name) {
     var obj = this.getStatusArrival_Internal_Of_Code(code);
     return obj ? obj[name + '_' + this.lang] : null;
 };
 //
-IDS_RWT_INCOMING.prototype.getListStatusArrival = function (fvalue, ftext, lang, filter) {
+IDS_RWT.prototype.getListStatusArrival = function (fvalue, ftext, lang, filter) {
     var list = [];
     var list_filtr = null;
     if (this.list_status_arrival) {

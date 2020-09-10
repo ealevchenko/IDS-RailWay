@@ -250,6 +250,7 @@
     <Compile Include="Controllers\api\Directoty\IDS_Directory_ShipperController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_ConsigneeController.cs" />
     <Compile Include="Controllers\api\Directoty\UZ_Directory_CargoController.cs" />
+    <Compile Include="Controllers\api\IDS\IDS_SAPController.cs" />
     <Compile Include="Controllers\api\IDS\MORS\IDS_WagonsMotionSignalsController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_StationController.cs" />
     <Compile Include="Controllers\api\IDS\MORS\IDS_ParksListWagonsController.cs" />
@@ -617,7 +618,8 @@
     <Content Include="Images\portfolio\thumbnails\6.jpg" />
     <Content Include="Scripts\api\ids_directory.js" />
     <Content Include="Scripts\api\ids_mors.js" />
-    <Content Include="Scripts\api\ids_rwt_incoming.js" />
+    <Content Include="Scripts\api\ids_rwt.js" />
+    <Content Include="Scripts\api\ids_sap.js" />
     <Content Include="Scripts\api\ids_transfer.js" />
     <Content Include="Scripts\api\metrans.js" />
     <Content Include="Scripts\api\shared.js" />
@@ -1170,7 +1172,6 @@
     <Folder Include="Areas\Directory\Models\" />
     <Folder Include="Areas\IDSMORS\Models\" />
     <Folder Include="Areas\IDSRWT\Models\" />
-    <Folder Include="Controllers\api\SAP\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>

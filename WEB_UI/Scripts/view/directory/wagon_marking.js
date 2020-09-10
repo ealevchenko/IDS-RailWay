@@ -35,7 +35,7 @@
         langs = $.extend(true, $.extend(true, getLanguages($.Text_View, lang), getLanguages($.Text_Common, lang)), getLanguages($.Text_Table, lang)),
         user_name = $('input#username').val(),
         alert = new ALERT($('div#main-alert')),// Создадим класс ALERTG
-        ids_inc = new IDS_RWT_INCOMING(lang), // Создадим класс IDS_RWT_INCOMING
+        ids_inc = new IDS_RWT(lang), // Создадим класс IDS_RWT
 
         //bt_search_wagon = $('button#bt_search_wagon').on('click', function (event) {
         //    event.preventDefault();
@@ -368,7 +368,7 @@
             init: function (lang, user_name, callback_ok) {
                 pn_change_group_condition.lang = lang;
                 pn_change_group_condition.user_name = user_name;
-                pn_change_group_condition.ids_inc = new IDS_RWT_INCOMING(lang), // Создадим класс IDS_RWT_INCOMING
+                pn_change_group_condition.ids_inc = new IDS_RWT(lang), // Создадим класс IDS_RWT
                     pn_change_group_condition.loadReference(function () {
                         //pn_change_group_condition.list_group = pn_change_group_condition.ids_dir.getListLimitingLoading('id', 'limiting_name', pn_change_group_condition.lang, null);
                         // Инициализация элементов

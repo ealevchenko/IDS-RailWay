@@ -257,7 +257,7 @@
         langs = $.extend(true, $.extend(true, getLanguages($.Text_View, lang), getLanguages($.Text_Common, lang)), getLanguages($.Text_Table, lang)),
         user_name = $('input#username').val(),
         incoming_alert = new ALERT($('div#incoming-alert')),// Создадим класс ALERTG
-        ids_inc = new IDS_RWT_INCOMING(lang), // Создадим класс IDS_RWT_INCOMING
+        ids_inc = new IDS_RWT(lang), // Создадим класс IDS_RWT
         list_sostav = null,
         data_start = null,
         data_stop = null,
@@ -1486,7 +1486,7 @@
                     .add(pn_edit_sostav.note_edit)
                     .add(pn_edit_sostav.alert_park_wagon);
                 // создадим классы
-                pn_edit_sostav.ids_inc = new IDS_RWT_INCOMING(lang); // Создадим класс IDS_RWT_INCOMING
+                pn_edit_sostav.ids_inc = new IDS_RWT(lang); // Создадим класс IDS_RWT
                 pn_edit_sostav.val = new VALIDATION(pn_edit_sostav.lang, pn_edit_sostav.alert_sostav, pn_edit_sostav.all_obj); // Создадим класс VALIDATION
                 pn_edit_sostav.obj = $("div#edit-sostav").dialog({
                     resizable: false,
@@ -1710,7 +1710,7 @@
                 cars_detali.lang = lang;
                 cars_detali.user = user_name;
                 // создадим классы
-                cars_detali.ids_inc = new IDS_RWT_INCOMING(cars_detali.lang); // Создадим класс IDS_RWT_INCOMING
+                cars_detali.ids_inc = new IDS_RWT(cars_detali.lang); // Создадим класс IDS_RWT
                 cars_detali.alert = new ALERT($('div#car-detali-alert'));// Создадим класс ALERTG
                 cars_detali.alert_sap_is = new ALERT($('div#sap-is-alert'));// Создадим класс ALERTG
                 //
@@ -6299,8 +6299,8 @@
                     pn_search_epd.user_name = user_name;
                     // создадим классы               
                     pn_search_epd.alert = new ALERT($('div#search-epd-alert'));// Создадим класс ALERTG
-                    pn_search_epd.uz_sms = new UZ_SMS(pn_search_epd.lang); // Создадим класс IDS_RWT_INCOMING
-                    pn_search_epd.ids_inc = new IDS_RWT_INCOMING(pn_search_epd.lang); // Создадим класс IDS_RWT_INCOMING
+                    pn_search_epd.uz_sms = new UZ_SMS(pn_search_epd.lang); // Создадим класс IDS_RWT
+                    pn_search_epd.ids_inc = new IDS_RWT(pn_search_epd.lang); // Создадим класс IDS_RWT
                     //pn_search_epd.val = new VALIDATION(pn_search_epd.lang, pn_search_epd.alert_sostav, pn_search_epd.all_obj); // Создадим класс VALIDATION
                     pn_search_epd.table_epd.init();
                     pn_search_epd.table_car.init();
@@ -6753,8 +6753,8 @@
                     pn_manual_car.user_name = user_name;
                     // создадим классы               
                     pn_manual_car.alert = new ALERT($('div#manual-car-alert'));// Создадим класс ALERTG
-                    pn_manual_car.uz_sms = new UZ_SMS(pn_manual_car.lang); // Создадим класс IDS_RWT_INCOMING
-                    pn_manual_car.ids_inc = new IDS_RWT_INCOMING(pn_manual_car.lang); // Создадим класс IDS_RWT_INCOMING
+                    pn_manual_car.uz_sms = new UZ_SMS(pn_manual_car.lang); // Создадим класс IDS_RWT
+                    pn_manual_car.ids_inc = new IDS_RWT(pn_manual_car.lang); // Создадим класс IDS_RWT
                     pn_manual_car.table_car.init();
 
                     pn_manual_car.obj = $("div#manual-car").dialog({
@@ -7051,7 +7051,7 @@
                 init: function (lang, user_name, callback_ok) {
                     pn_arrival_sostav.lang = lang;
                     pn_arrival_sostav.user_name = user_name;
-                    pn_arrival_sostav.ids_inc = new IDS_RWT_INCOMING(pn_arrival_sostav.lang); // Создадим класс IDS_RWT_INCOMING
+                    pn_arrival_sostav.ids_inc = new IDS_RWT(pn_arrival_sostav.lang); // Создадим класс IDS_RWT
                     pn_arrival_sostav.loadReference(function () {
                         pn_arrival_sostav.list_station = pn_arrival_sostav.ids_inc.ids_dir.getListStation('id', 'station_name', pn_arrival_sostav.lang, function (i) { return i.exit_uz === true ? true : false; });
                         // Инициализация элементов

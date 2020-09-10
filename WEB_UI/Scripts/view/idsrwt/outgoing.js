@@ -260,7 +260,7 @@
         user_name = $('input#username').val(),
         dc = $('div#dialog-confirm').dialog_confirm({}),
         outgoing_alert = new ALERT($('div#outgoing-alert')),// Создадим класс ALERTG
-        ids_inc = new IDS_RWT_INCOMING(lang), // Создадим класс IDS_RWT_INCOMING
+        ids_inc = new IDS_RWT(lang), // Создадим класс IDS_RWT
         list_sostav = null,
         data_start = null,
         data_stop = null,
@@ -701,7 +701,7 @@
                 cars_detali.lang = lang;
                 cars_detali.user = user_name;
                 // создадим классы
-                cars_detali.ids_inc = new IDS_RWT_INCOMING(cars_detali.lang); // Создадим класс IDS_RWT_INCOMING
+                cars_detali.ids_inc = new IDS_RWT(cars_detali.lang); // Создадим класс IDS_RWT
                 cars_detali.alert = new ALERT($('div#car-detali-alert'));// Создадим класс ALERTG
                 //
                 // Соберем все элементы для валидации принятия вагона в массив 

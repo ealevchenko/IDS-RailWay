@@ -37,7 +37,7 @@
         langs = $.extend(true, $.extend(true, getLanguages($.Text_View, lang), getLanguages($.Text_Common, lang)), getLanguages($.Text_Table, lang)),
         user_name = $('input#username').val(),
         alert = new ALERT($('div#main-alert')),// Создадим класс ALERTG
-        ids_inc = new IDS_RWT_INCOMING(lang), // Создадим класс IDS_RWT_INCOMING
+        ids_inc = new IDS_RWT(lang), // Создадим класс IDS_RWT
         num_wagon = $('input#num_wagon').val(''),
         bt_search_wagon = $('button#bt_search_wagon').on('click', function (event) {
             event.preventDefault();

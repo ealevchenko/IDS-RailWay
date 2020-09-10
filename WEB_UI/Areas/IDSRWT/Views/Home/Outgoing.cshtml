@@ -18,10 +18,11 @@
 
     <script src="~/Scripts/view/shared/common.js"></script> <!-- Общая библиотека методов программы -->
     <script src="~/Scripts/api/shared.js"></script> <!-- Общая библиотека методов API -->
+    <script src="~/Scripts/api/ids_sap.js"></script> <!-- Class API SAP функции для работы с САП -->
     <script src="~/Scripts/api/uz_directory.js"></script> <!-- Class API УЗ Справочники -->
     <script src="~/Scripts/api/ids_directory.js"></script> <!-- Class API ИДС Справочники -->
     <script src="~/Scripts/api/metrans.js"></script> <!-- Class API МЕТРАНС -->
-    <script src="~/Scripts/api/ids_rwt_incoming.js"></script> <!-- Class API ИДС Прием вагонов -->
+    <script src="~/Scripts/api/ids_rwt.js"></script> <!-- Class API ИДС Прием вагонов -->
     <script src="~/Scripts/api/ids_transfer.js"></script> <!-- Class API ИДС Переносы -->
     <script src="~/Scripts/api/uz_sms.js"></script> <!-- Class API Работа с модулем согласования -->
 
@@ -177,11 +178,11 @@
                                 <div class="card-header">
                                     Вагоны
                                     @*<button type="button" class="btn btn-warning btn-sm" id="add-num-car-of-epd" title="Найти вагоны по ЭПД, поиск документа по номеру" data-form="transceiver">
-                                        <i class="fa fa-file-code-o" aria-hidden="true"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-warning btn-sm" id="add-num-car-manual" title="Добавить вагон вручную" data-form="transceiver">
-                                        <i class="fa fa-hand-paper-o" aria-hidden="true"></i>
-                                    </button>*@
+                                            <i class="fa fa-file-code-o" aria-hidden="true"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-warning btn-sm" id="add-num-car-manual" title="Добавить вагон вручную" data-form="transceiver">
+                                            <i class="fa fa-hand-paper-o" aria-hidden="true"></i>
+                                        </button>*@
                                 </div>
                                 <div class="card-body text-primary" style="padding: 0.5rem;">
                                     <div class="list-group" id="list-cars-not-outgoing" role="tablist">

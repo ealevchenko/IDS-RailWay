@@ -46,7 +46,7 @@
         dc = $('div#dialog-confirm').dialog_confirm({}),
         alert = new ALERT($('div#main-alert')),// Создадим класс ALERTG
         //ids_dir = new IDS_DIRECTORY(lang), // Создадим класс IDS_DIRECTORY
-        ids_inc = new IDS_RWT_INCOMING(lang),
+        ids_inc = new IDS_RWT(lang),
         // Загрузка основных справочников приложения
         loadReference = function (callback) {
             LockScreen(langView('mess_load', langs));
@@ -131,7 +131,7 @@
                 pn_add_edit.lang = lang;
                 pn_add_edit.user_name = user_name;
                 //pn_add_edit.ids_dir = new IDS_DIRECTORY(pn_add_edit.lang), // Создадим класс IDS_DIRECTORY
-                pn_add_edit.ids_inc = new IDS_RWT_INCOMING(pn_add_edit.lang), // Создадим класс IDS_RWT_INCOMING
+                pn_add_edit.ids_inc = new IDS_RWT(pn_add_edit.lang), // Создадим класс IDS_RWT
                     pn_add_edit.loadReference(function () {
                         // Инициализация элементов
                         // Дата письма
