@@ -19,7 +19,7 @@ namespace EFIDS.Entities
         [StringLength(35)]
         public string num_doc_uz { get; set; }
 
-        public DateTime date_doc_uz { get; set; }
+        public DateTime? date_doc_uz { get; set; }
 
         [StringLength(6)]
         public string code_border_checkpoint { get; set; }

@@ -105,15 +105,15 @@ namespace EFIDS.Concrete
                 .IsFixedLength()
                 .IsUnicode(false);
 
-            modelBuilder.Entity<SAPIncomingSupply>()
-                .Property(e => e.code_border_checkpoint)
-                .IsFixedLength()
-                .IsUnicode(false);
+            //modelBuilder.Entity<SAPIncomingSupply>()
+            //    .Property(e => e.code_border_checkpoint)
+            //    .IsFixedLength()
+            //    .IsUnicode(false);
 
-            modelBuilder.Entity<SAPIncomingSupply>()
-                .Property(e => e.name_border_checkpoint)
-                .IsFixedLength()
-                .IsUnicode(false);
+            //modelBuilder.Entity<SAPIncomingSupply>()
+            //    .Property(e => e.name_border_checkpoint)
+            //    .IsFixedLength()
+            //    .IsUnicode(false);
 
             modelBuilder.Entity<SAPIncomingSupply>()
                 .Property(e => e.VBELN)
