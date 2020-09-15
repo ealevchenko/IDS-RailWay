@@ -46,6 +46,8 @@ namespace EFIDS.Entities
 
         public int? code { get; set; }
 
+        public int? idle_time { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Arrival_UZ_Vagon> Arrival_UZ_Vagon { get; set; }
 

@@ -62,7 +62,7 @@ namespace EFIDS.Concrete
         public virtual DbSet<Directory_InlandRailway> Directory_InlandRailway { get; set; }
         public virtual DbSet<Directory_Railway> Directory_Railway { get; set; }
         public virtual DbSet<Directory_BorderCheckpoint> Directory_BorderCheckpoint { get; set; }
-        public virtual DbSet<Directory_PayerArrival> Directory_PayerArrival { get; set; }
+        //public virtual DbSet<Directory_PayerArrival> Directory_PayerArrival { get; set; }
         public virtual DbSet<Directory_PayerSender> Directory_PayerSender { get; set; }
         public virtual DbSet<Directory_Wagons> Directory_Wagons { get; set; }
         public virtual DbSet<Directory_WagonsRent> Directory_WagonsRent { get; set; }

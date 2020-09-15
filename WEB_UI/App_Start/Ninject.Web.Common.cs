@@ -131,7 +131,7 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_ExternalStation>>().To<EFIDS.Concrete.EFDirectory_ExternalStation>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_LimitingLoading>>().To<EFIDS.Concrete.EFDirectory_LimitingLoading>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_ConditionArrival>>().To<EFIDS.Concrete.EFDirectory_ConditionArrival>();
-            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_PayerArrival>>().To<EFIDS.Concrete.EFDirectory_PayerArrival>();
+            //kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_PayerArrival>>().To<EFIDS.Concrete.EFDirectory_PayerArrival>();
             kernel.Bind<EFIDS.Abstract.IStringRepository<EFIDS.Entities.Directory_PayerSender>>().To<EFIDS.Concrete.EFDirectory_PayerSender>();
             //kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_Cars>>().To<EFIDS.Concrete.EFDirectory_Cars>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_Wagons>>().To<EFIDS.Concrete.EFDirectory_Wagons>();
