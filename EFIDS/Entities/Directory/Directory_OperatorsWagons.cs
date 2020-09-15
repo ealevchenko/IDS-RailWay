@@ -41,6 +41,9 @@ namespace EFIDS.Entities
 
         public bool local_use { get; set; }
 
+        [StringLength(10)]
+        public string color { get; set; }
+
         public DateTime create { get; set; }
 
         [Required]

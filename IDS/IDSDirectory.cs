@@ -267,7 +267,8 @@ namespace IDS
                         abbr_en = name.Substring(0, name.Length > 20 ? 20 : name.Length).Trim(),
                         local_use = false,
                         paid = false,
-                        rop = false,
+                        rop = false, 
+                        color = null,
                         create = DateTime.Now,
                         create_user = user,
                     };

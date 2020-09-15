@@ -10,7 +10,7 @@ using System.Web.Http.Description;
 
 namespace WEB_UI.Controllers.api
 {
-    
+
     /// <summary>
     /// Оперативное управление
     /// </summary>
@@ -41,7 +41,12 @@ namespace WEB_UI.Controllers.api
                         operators_en = o.operators_en,
                         paid = o.paid,
                         rop = o.rop,
-                        local_use = o.local_use
+                        local_use = o.local_use,
+                        color = o.color,
+                        create = o.create,
+                        create_user = o.create_user,
+                        change = o.change,
+                        change_user = o.change_user
                     }).ToList();
                 if (list == null || list.Count() == 0)
                 {

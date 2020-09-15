@@ -3558,17 +3558,6 @@
                         cars_detali.card_vag_name_operator.val(cars_detali.ids_inc.ids_dir.getValueCulture_OperatorsWagons_Of_ID(current_rent.id_operator, 'operators'));
                     });
                 }
-                //if (vagon) {
-                //    if (vagon.id === 0) {
-                //        // Обновить справочник
-                //        cars_detali.ids_inc.ids_dir.loadOperatorsWagons(function () {
-                //            cars_detali.card_vag_name_operator.val(cars_detali.ids_inc.ids_dir.getValueCulture_OperatorsWagons_Of_ID(vagon.id_operator, 'operators'));
-                //        });
-                //    } else {
-                //        cars_detali.card_vag_name_operator.val(cars_detali.ids_inc.ids_dir.getValueCulture_OperatorsWagons_Of_ID(vagon.id_operator, 'operators'));
-                //    }
-                //}
-                //!!! если вагона нет тогда наверное нужно создать в ручную
             },
             // Показать ограничения погрузки
             view_epd_limiting_loading: function (vagon) {

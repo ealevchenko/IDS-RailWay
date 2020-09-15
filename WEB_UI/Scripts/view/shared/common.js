@@ -89,7 +89,7 @@ var getChildObjects = function (obj, key, val) {
             objects = objects.concat(getObjects(obj[i], key, val));
         } else
             if (typeof obj[key] === 'string') {
-                if (i == key && obj[key].toUpperCase() == val.toUpperCase()) {
+                if (i == key && obj[key].toUpperCase() == String(val).toUpperCase()) {
                     objects.push(obj);
                 }
             } else {

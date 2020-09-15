@@ -129,7 +129,15 @@ namespace EFIDS.Helper
                 operators_en = o.operators_en,
                 paid = o.paid,
                 rop = o.rop,
-                local_use = o.local_use
+                local_use = o.local_use,
+                color = o.color,
+                create = o.create,
+                create_user = o.create_user,
+                change = o.change,
+                change_user = o.change_user,
+                CardsWagons = null,
+                Directory_Wagons = null,
+                Directory_WagonsRent = null
             };
         }
 
