@@ -10,6 +10,7 @@ namespace WEB_UI.Areas.IDSRWT.Controllers
     public class HomeController : Controller
     {
         // GET: IDSRWT/Home
+        [AccessOfDB(LogVisit = true)]
         public ActionResult Index()
         {
             return View();
@@ -20,11 +21,12 @@ namespace WEB_UI.Areas.IDSRWT.Controllers
         {
             return View();
         }
+        [AccessOfDB(LogVisit = true)]
         public ActionResult Incoming()
         {
             return View();
         }
-
+        [AccessOfDB(LogVisit = true)]
         public ActionResult Outgoing()
         {
             return View();
@@ -38,6 +40,7 @@ namespace WEB_UI.Areas.IDSRWT.Controllers
         /// АРМ Диспетчера
         /// </summary>
         /// <returns></returns>
+        [AccessOfDB(LogVisit = true)]
         public ActionResult WSD()
         {
             return View();
