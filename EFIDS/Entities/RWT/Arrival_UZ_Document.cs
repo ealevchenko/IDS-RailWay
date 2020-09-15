@@ -43,9 +43,11 @@ namespace EFIDS.Entities
 
         public bool? klient { get; set; }
 
-        public int? code_payer_sender { get; set; }
+        [StringLength(20)]
+        public string code_payer_sender { get; set; }
 
-        public int? code_payer_arrival { get; set; }
+        [StringLength(20)]
+        public string code_payer_arrival { get; set; }
 
         public int? distance_way { get; set; }
 
@@ -81,7 +83,9 @@ namespace EFIDS.Entities
 
         public virtual Directory_ExternalStation Directory_ExternalStation1 { get; set; }
 
-        public virtual Directory_PayerArrival Directory_PayerArrival { get; set; }
+        //public virtual Directory_PayerArrival Directory_PayerArrival { get; set; }
+
+        public virtual Directory_PayerSender Directory_PayerSender { get; set; }
 
         public virtual Directory_Shipper Directory_Shipper { get; set; }
 

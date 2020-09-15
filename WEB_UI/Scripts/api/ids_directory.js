@@ -56,6 +56,8 @@ IDS_DIRECTORY.list_condition_arrival = [];
 
 IDS_DIRECTORY.list_payer_arrival = [];
 
+IDS_DIRECTORY.list_payer_sender = [];
+
 IDS_DIRECTORY.list_cargo_group = [];
 
 IDS_DIRECTORY.list_cargo_etsng = [];
@@ -382,6 +384,18 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
                 }
             });
         };
+        if (el === 'payer_sender') {
+            IDS_DIRECTORY.prototype.getPayerSender(function (result_payer_sender) {
+                obj.list_payer_sender = result_payer_sender;
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        if (lockOff) { LockScreenOff(); }
+                        callback();
+                    }
+                }
+            });
+        };
         if (el === 'payer_arrival') {
             IDS_DIRECTORY.prototype.getPayerArrival(function (result_payer_arrival) {
                 obj.list_payer_arrival = result_payer_arrival;
@@ -646,6 +660,16 @@ IDS_DIRECTORY.prototype.loadConditionArrival = function (callback) {
     var obj = this;
     IDS_DIRECTORY.prototype.getConditionArrival(function (result_condition_arrival) {
         obj.list_condition_arrival = result_condition_arrival;
+        if (typeof callback === 'function') {
+            callback();
+        }
+    });
+};
+// Загрузка справочника платильщик по отправке
+IDS_DIRECTORY.prototype.loadPayerSender = function (callback) {
+    var obj = this;
+    IDS_DIRECTORY.prototype.getPayerSender(function (result_payer_sender) {
+        obj.list_payer_sender = result_payer_sender;
         if (typeof callback === 'function') {
             callback();
         }
@@ -2335,6 +2359,125 @@ IDS_DIRECTORY.prototype.postCargoGroup = function (cargo, callback) {
         },
     });
 };
+//======= Directory_PayerSender (Справочник платильщиков по отправке) ======================================
+//
+IDS_DIRECTORY.prototype.getPayerSender = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/payer_sender/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getPayerSender", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить по id
+IDS_DIRECTORY.prototype.getPayerSenderOfCode = function (code, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/payer_sender/code/' + code,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getPayerSenderOfCode", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Обновить 
+IDS_DIRECTORY.prototype.putPayerSender = function (payer, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/directory/payer_sender/code/' + payer.code,
+        data: JSON.stringify(payer),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.putPayerSender", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Удалить 
+IDS_DIRECTORY.prototype.deletePayerSender = function (code, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/payer_sender/code/' + code,
+        type: 'DELETE',
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.deletePayerSender", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Добавить 
+IDS_DIRECTORY.prototype.postPayerSender = function (payer, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/payer_sender/',
+        type: 'POST',
+        data: JSON.stringify(payer),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_DIRECTORY.postPayerSender", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 //======= Directory_PayerArrival (Справочник платильщиков по прибытию) ======================================
 //
 IDS_DIRECTORY.prototype.getPayerArrival = function (callback) {
@@ -2375,7 +2518,7 @@ IDS_DIRECTORY.prototype.getPayerArrivalOfCode = function (code, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_DIRECTORY.getPayerArrivalOfID", x, y, z);
+            OnAJAXError("IDS_DIRECTORY.getPayerArrivalOfCode", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -4842,7 +4985,64 @@ IDS_DIRECTORY.prototype.getListLimitingLoading = function (fvalue, ftext, lang, 
     }
     return list;
 };
-//*======= IDS_DIRECTORY.list_payer_arrival  (Справочник платильщиков по отправке) ======================================
+//*======= IDS_DIRECTORY.list_payer_sender  (Справочник платильщиков по отправке) ======================================
+IDS_DIRECTORY.prototype.getPayerSender_Of_Code = function (code) {
+    if (this.list_payer_sender) {
+        var obj = getObjects(this.list_payer_sender, 'code', code);
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getPayerSender_Internal_Of_Name = function (text, ftext, lang) {
+    if (this.list_payer_sender) {
+        var obj = getObjects(this.list_payer_sender, (lang ? ftext + '_' + lang : name), text);
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getID_PayerSender_Internal_Of_Name = function (text, ftext, lang) {
+    var obj = this.getPayerSender_Internal_Of_Name(text, ftext, lang);
+    return obj ? obj.id : null;
+};
+//
+IDS_DIRECTORY.prototype.getValue_PayerSender_Of_Code = function (code, name, lang) {
+    var obj = this.getPayerSender_Of_Code(code);
+    return this.getValueObj(obj, name, lang);
+};
+//
+IDS_DIRECTORY.prototype.getValueCulture_PayerSender_Of_Code = function (id, name) {
+    var obj = this.getPayerSender_Of_Code(id);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getListPayerSender = function (fvalue, ftext, lang, filter) {
+    var list = [];
+    var list_filtr = null;
+    if (this.list_payer_sender) {
+        if (typeof filter === 'function') {
+            list_filtr = this.list_payer_sender.filter(filter);
+        } else { list_filtr = this.list_payer_sender; }
+        for (i = 0, j = list_filtr.length; i < j; i++) {
+            var l = list_filtr[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
+// Получим список с выборкой по полю
+IDS_DIRECTORY.prototype.getPayerSender_Of_CultureName = function (name, lang, text) {
+    if (this.list_payer_sender) {
+        var obj = getObjects(this.list_payer_sender, name + '_' + lang, text);
+        return obj
+    }
+    return null;
+};
+
+//*======= IDS_DIRECTORY.list_payer_arrival  (Справочник платильщиков по прибытию) ======================================
 IDS_DIRECTORY.prototype.getPayerArrival_Of_Code = function (code) {
     if (this.list_payer_arrival) {
         var obj = getObjects(this.list_payer_arrival, 'code', code);

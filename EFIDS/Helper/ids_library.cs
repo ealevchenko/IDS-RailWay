@@ -419,6 +419,21 @@ namespace EFIDS.Helper
                 change_user = c.change_user,
             };
         }
+        // Справочник годность по отправке
+        public static Directory_PayerSender GetDirectory_PayerSender(this Directory_PayerSender p)
+        {
+            if (p == null) return null;
+            return new Directory_PayerSender()
+            {
+                code = p.code,
+                payer_name_ru = p.payer_name_ru,
+                payer_name_en = p.payer_name_en,
+                create = p.create,
+                create_user = p.create_user,
+                change = p.change,
+                change_user = p.change_user,
+            };
+        }
         // Справочник годность по прибытию
         public static Directory_PayerArrival GetDirectory_PayerArrival(this Directory_PayerArrival p)
         {
@@ -1087,7 +1102,8 @@ namespace EFIDS.Helper
                 Directory_BorderCheckpoint = d.Directory_BorderCheckpoint.GetDirectory_BorderCheckpoint(),
                 Directory_Shipper = d.Directory_Shipper.GetDirectory_Shipper(),
                 Directory_Consignee = d.Directory_Consignee.GetDirectory_Consignee(),
-                Directory_PayerArrival = d.Directory_PayerArrival.GetDirectory_PayerArrival(),
+                Directory_PayerSender = d.Directory_PayerSender.GetDirectory_PayerSender(),
+                //Directory_PayerArrival = d.Directory_PayerArrival.GetDirectory_PayerArrival(),
                 Arrival_UZ_Document_Acts = d.Arrival_UZ_Document_Acts.ToList().Select(a => a.GetArrival_UZ_Document_Acts()).ToList(),
                 Arrival_UZ_Document_Docs = d.Arrival_UZ_Document_Docs.ToList().Select(s => s.GetArrival_UZ_Document_Docs()).ToList(),
                 Arrival_UZ_Document_Pay = d.Arrival_UZ_Document_Pay.ToList().Select(p => p.GetArrival_UZ_Document_Pay()).ToList(),
@@ -1148,7 +1164,8 @@ namespace EFIDS.Helper
                 Directory_BorderCheckpoint = d.Directory_BorderCheckpoint.GetDirectory_BorderCheckpoint(),
                 Directory_Shipper = d.Directory_Shipper.GetDirectory_Shipper(),
                 Directory_Consignee = d.Directory_Consignee.GetDirectory_Consignee(),
-                Directory_PayerArrival = d.Directory_PayerArrival.GetDirectory_PayerArrival(),
+                Directory_PayerSender = d.Directory_PayerSender.GetDirectory_PayerSender(),
+                //Directory_PayerArrival = d.Directory_PayerArrival.GetDirectory_PayerArrival(),
                 Arrival_UZ_Document_Acts = d.Arrival_UZ_Document_Acts.ToList().Select(a => a.GetArrival_UZ_Document_Acts()).ToList(),
                 Arrival_UZ_Document_Docs = d.Arrival_UZ_Document_Docs.ToList().Select(s => s.GetArrival_UZ_Document_Docs()).ToList(),
                 Arrival_UZ_Document_Pay = d.Arrival_UZ_Document_Pay.ToList().Select(p => p.GetArrival_UZ_Document_Pay()).ToList(),

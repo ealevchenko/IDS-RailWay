@@ -228,6 +228,7 @@
     <Compile Include="Controllers\api\Directoty\IDS_Directory_BorderCheckpointController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_CargoGNGController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_CargoController.cs" />
+    <Compile Include="Controllers\api\Directoty\IDS_Directory_PayerSenderController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_WagonsRentController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_WagonsController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_CarsController.cs" />
@@ -308,6 +309,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="_app_offline.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />

@@ -2465,7 +2465,7 @@
                 event.preventDefault();
                 dialog_confirm.open('Cправочник "Плательщик по прибытию"', 'Будет добавлена новая запись плательщика [ Код = ' + cars_detali.uz_rask_kod_plat.val() + ', Название = ' + cars_detali.uz_rask_name_plat.val() + ']', function (result) {
                     if (result) {
-                        cars_detali.addDirectory_PayerArrival(cars_detali.uz_rask_kod_plat.val(), cars_detali.uz_rask_name_plat.val(), function () {
+                        cars_detali.addDirectory_PayerSender(cars_detali.uz_rask_kod_plat.val(), cars_detali.uz_rask_name_plat.val(), function () {
                             cars_detali.val_arrival_car.set_control_ok(cars_detali.uz_rask_kod_plat, "");
                             cars_detali.update_list_name_plat(cars_detali.uz_rask_name_plat.val());
                             cars_detali.view_epd_plat(cars_detali.select_otpr);
@@ -3153,7 +3153,7 @@
                 cars_detali.uz_rask_name_plat = initAutocomplete(
                     this.uz_rask_name_plat,
                     { lang: cars_detali.lang, minLength: 2 },
-                    getAutocompleteList(cars_detali.ids_inc.ids_dir.getListPayerArrival('code', 'payer_name', cars_detali.lang, null), 'text'),
+                    getAutocompleteList(cars_detali.ids_inc.ids_dir.getListPayerSender('code', 'payer_name', cars_detali.lang, null), 'text'),
                     cars_detali.view_epd_plat_manual,
                     text
                 );
@@ -3674,7 +3674,7 @@
                     }
                     // Если опрелен платильщик отобразим его
                     if (pl) {
-                        var plat = cars_detali.ids_inc.ids_dir.getPayerArrival_Of_Code(pl.kod_plat); // Определим запись в справочнике
+                        var plat = cars_detali.ids_inc.ids_dir.getPayerSender_Of_Code(pl.kod_plat); // Определим запись в справочнике
                         if (plat) {
                             cars_detali.uz_rask_name_plat_add.hide();
                         } else {
@@ -3689,7 +3689,7 @@
             view_epd_plat_manual: function (text) {
                 var code = null;
                 if (text) {
-                    var obj = cars_detali.ids_inc.ids_dir.getPayerArrival_Of_CultureName('payer_name', cars_detali.lang, text)
+                    var obj = cars_detali.ids_inc.ids_dir.getPayerSender_Of_CultureName('payer_name', cars_detali.lang, text)
                     if (obj && obj.length > 0) {
                         code = obj[0].code;
                         cars_detali.val_arrival_car.set_control_ok(cars_detali.uz_rask_kod_plat, "");
@@ -4865,7 +4865,7 @@
                         code_shipper: get_input_value(cars_detali.uz_cargo_client_kod_from),
                         code_consignee: get_input_value(cars_detali.uz_cargo_client_kod_on),
                         klient: get_input_value(cars_detali.uz_cargo_client_kod_on) === 7932 ? false : true,
-                        code_payer_sender: get_input_value(cars_detali.uz_rask_kod_plat),
+                        code_payer_sender: get_input_string_value(cars_detali.uz_rask_kod_plat),
                         code_payer_arrival: mode < 2 ? cars_detali.get_kod_pl_arrival_epd(cars_detali.select_otpr) : null, // после раскредитации
                         distance_way: get_input_value(cars_detali.uz_rask_distance_way),
                         note: null,
@@ -5346,7 +5346,7 @@
                         "name_consignee": doc_uz ? cars_detali.ids_inc.ids_dir.getValue_Consignee_Of_Code(doc_uz.code_consignee, 'name', null) : null,
 
                         "code_payer_sender": doc_uz ? doc_uz.code_payer_sender : null,
-                        "name_payer_sender": doc_uz ? cars_detali.ids_inc.ids_dir.getValue_PayerArrival_Of_Code(doc_uz.code_payer_sender, 'payer_name', cars_detali.lang) : null,
+                        "name_payer_sender": doc_uz ? cars_detali.ids_inc.ids_dir.getValue_PayerSender_Of_Code(doc_uz.code_payer_sender, 'payer_name', cars_detali.lang) : null,
                         "distance_way": doc_uz ? doc_uz.distance_way : null,
                         "note": doc_uz ? doc_uz.note : null,
 
@@ -5372,7 +5372,7 @@
             loadReference: function (callback) {
                 LockScreen(langView('mess_load', langs));
                 var count = 1;
-                cars_detali.ids_inc.load([], ['hazard_class', 'commercial_condition', 'certification_data', 'payer_arrival', 'cargo', 'cargo_gng', 'cargo_etsng', 'cargo_group', 'type_wagons', 'condition_arrival', 'type_owner_ship', 'limiting_loading', 'operators_wagons', 'owners_wagons', 'genus_wagon', 'countrys', 'railway', 'inlandrailway', 'external_station', 'station', 'consignee', 'shipper', 'border_checkpoint', 'divisions'], ['internal_railroad', 'cargo'], false, function () {
+                cars_detali.ids_inc.load([], ['hazard_class', 'commercial_condition', 'certification_data', 'payer_sender', 'payer_arrival', 'cargo', 'cargo_gng', 'cargo_etsng', 'cargo_group', 'type_wagons', 'condition_arrival', 'type_owner_ship', 'limiting_loading', 'operators_wagons', 'owners_wagons', 'genus_wagon', 'countrys', 'railway', 'inlandrailway', 'external_station', 'station', 'consignee', 'shipper', 'border_checkpoint', 'divisions'], ['internal_railroad', 'cargo'], false, function () {
                     count -= 1;
                     if (count === 0) {
                         if (typeof callback === 'function') {
@@ -5435,11 +5435,11 @@
             },
             // Валидация поля  "Платильщик по отправке"
             validation_vagon_pay: function (valid, off_message) {
-                //valid = valid & cars_detali.val_arrival_car.checkInputTextOfDirectory_IsNull(cars_detali.uz_rask_name_plat, this, 'ids_inc.ids_dir.getPayerArrival_Of_CultureName', 'payer_name', "Указанного плательщика по отправке нет в справочнике ИДС.", "", off_message);
+                //valid = valid & cars_detali.val_arrival_car.checkInputTextOfDirectory_IsNull(cars_detali.uz_rask_name_plat, this, 'ids_inc.ids_dir.getPayerSender_Of_CultureName', 'payer_name', "Указанного плательщика по отправке нет в справочнике ИДС.", "", off_message);
                 valid_pay = cars_detali.val_arrival_car.checkInputOfNull(cars_detali.uz_rask_kod_plat, "Не указан плательщик по отправке", "", off_message);
                 valid = valid & valid_pay;
                 if (valid_pay) {
-                    valid = valid & cars_detali.val_arrival_car.checkInputOfDirectory(cars_detali.uz_rask_kod_plat, this, 'ids_inc.ids_dir.getPayerArrival_Of_Code', "Указанного плательщика по отправке нет в справочнике ИДС.", "", off_message);
+                    valid = valid & cars_detali.val_arrival_car.checkInputOfDirectory(cars_detali.uz_rask_kod_plat, this, 'ids_inc.ids_dir.getPayerSender_Of_Code', "Указанного плательщика по отправке нет в справочнике ИДС.", "", off_message);
                 }
                 return valid;
             },
@@ -5643,10 +5643,10 @@
                     });
                 };
             },
-            // Добавить запись в справочник PayerArrival
-            addDirectory_PayerArrival: function (code, name, callback_ok, callback_err) {
+            // Добавить запись в справочник PayerSender
+            addDirectory_PayerSender: function (code, name, callback_ok, callback_err) {
                 LockScreen(langView('mess_save', langs));
-                cars_detali.ids_inc.ids_dir.postPayerArrival({
+                cars_detali.ids_inc.ids_dir.postPayerSender({
                     code: code,
                     payer_name_ru: name,
                     payer_name_en: name,
@@ -5655,7 +5655,7 @@
                 }, function (result_add) {
                     if (result_add > 0) {
                         // Ок
-                        cars_detali.ids_inc.ids_dir.loadPayerArrival(function () {
+                        cars_detali.ids_inc.ids_dir.loadPayerSender(function () {
                             if (typeof callback_ok === 'function') {
                                 callback_ok();
                             }
@@ -5866,7 +5866,8 @@
                 if (otpr && otpr.pl && otpr.pl.length > 0) {
                     for (var i = 0; i < otpr.pl.length; i++) {
                         if (Number(otpr.pl[i].type) === 1) {
-                            return otpr.pl[i].kod_plat ? Number(otpr.pl[i].kod_plat) : null;
+                            //return otpr.pl[i].kod_plat ? Number(otpr.pl[i].kod_plat) : null;
+                            return otpr.pl[i].kod_plat ? otpr.pl[i].kod_plat : null;
                         }
                     }
                 }
