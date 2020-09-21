@@ -147,7 +147,7 @@
                                     $.each(park.sort(function (a, b) { return b.id - a.id; }), function (i, el) {
 
 
-                                        $(tr).after("<tr id='station-" + row.data().id + "'><td></td><td class='park-control' park='" + el.id + "' station='" + row.data().id + "'></td><td colspan='2' class='park-name'>" + el.park_name_ru + "</td><td></td><td></td><td></td></tr>");
+                                        $(tr).after("<tr id='station-" + row.data().id + "'><td></td><td class='park-control' park='" + el.id + "' station='" + row.data().id + "'></td><td colspan='2' class='park-name'>" + el.park_abbr_ru + "</td><td></td><td></td><td></td></tr>");
                                         // Прикрепим событие выбора парка
 
                                         var el_ev = table_tree_way.html_table.find('tbody td[park="' + el.id + '"]');
@@ -170,9 +170,9 @@
                                                 table_tree_way.load_way(id_station, id_park, function (ways) {
                                                     if (ways && ways.length > 0) {
                                                         $(tr_park).addClass('shown');
-                                                        $.each(ways.sort(function (a, b) { return b.position - a.position;}), function (i, el) {
+                                                        $.each(ways.sort(function (a, b) { return b.position_way - a.position_way; }), function (i, el) {
 
-                                                            $(tr_park).after("<tr id='station-" + id_station + "' park='" + id_park + "' way='" + el.id + "'><td></td><td></td><td></td><td class='way-name'>" + el.way_num_ru + " - " + el.way_name_ru + "</td><td></td><td>0</td><td>" + el.capacity + "</td></tr>");
+                                                            $(tr_park).after("<tr id='station-" + id_station + "' park='" + id_park + "' way='" + el.id + "'><td></td><td></td><td></td><td class='way-name'>" + el.way_num_ru + " - " + el.way_abbr_ru + "</td><td></td><td>0</td><td>" + el.capacity + "</td></tr>");
                                                         })
                                                     }
                                                     LockScreenOff();
@@ -191,7 +191,7 @@
             // Загрузить парки
             load_park: function (row, callback) {
                 LockScreen(langView('mess_delay', langs));
-                ids_inc.ids_dir.getParkWayOfStationID(row.data().id, function (park) {
+                ids_inc.ids_dir.getParkWaysOfStationID(row.data().id, function (park) {
                     if (typeof callback === 'function') {
                         callback(park);
                     }

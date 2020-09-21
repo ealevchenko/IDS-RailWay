@@ -147,7 +147,7 @@ namespace WEB_UI.App_Start
 
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_Divisions>>().To<EFIDS.Concrete.EFDirectory_Divisions>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_TypeDivision>>().To<EFIDS.Concrete.EFDirectory_TypeDivision>();
-            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_ParkWay>>().To<EFIDS.Concrete.EFDirectory_ParkWay>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_ParkWays>>().To<EFIDS.Concrete.EFDirectory_ParkWays>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_Ways>>().To<EFIDS.Concrete.EFDirectory_Ways>();
 
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.CardsWagons>>().To<EFIDS.Concrete.EFCardsWagons>();

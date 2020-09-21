@@ -15,14 +15,15 @@ namespace EFIDS.Entities
             ArrivalSostav = new HashSet<ArrivalSostav>();
             OutgoingSostav = new HashSet<OutgoingSostav>();
         }
-
         public int id { get; set; }
 
         public int id_station { get; set; }
 
         public int id_park { get; set; }
 
-        public int position { get; set; }
+        public int position_park { get; set; }
+
+        public int position_way { get; set; }
 
         [Required]
         [StringLength(20)]
@@ -39,6 +40,14 @@ namespace EFIDS.Entities
         [Required]
         [StringLength(100)]
         public string way_name_en { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string way_abbr_ru { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string way_abbr_en { get; set; }
 
         public int? capacity { get; set; }
 
@@ -70,7 +79,7 @@ namespace EFIDS.Entities
 
         public virtual Directory_Divisions Directory_Divisions { get; set; }
 
-        public virtual Directory_ParkWay Directory_ParkWay { get; set; }
+        public virtual Directory_ParkWays Directory_ParkWays { get; set; }
 
         public virtual Directory_Station Directory_Station { get; set; }
 

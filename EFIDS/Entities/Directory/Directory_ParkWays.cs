@@ -6,11 +6,11 @@ namespace EFIDS.Entities
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("IDS.Directory_ParkWay")]
-    public partial class Directory_ParkWay
+    [Table("IDS.Directory_ParkWays")]
+    public partial class Directory_ParkWays
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Directory_ParkWay()
+        public Directory_ParkWays()
         {
             Directory_Ways = new HashSet<Directory_Ways>();
         }
@@ -24,6 +24,14 @@ namespace EFIDS.Entities
         [Required]
         [StringLength(100)]
         public string park_name_en { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string park_abbr_ru { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string park_abbr_en { get; set; }
 
         public DateTime create { get; set; }
 

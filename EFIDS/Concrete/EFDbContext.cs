@@ -50,7 +50,8 @@ namespace EFIDS.Concrete
         public virtual DbSet<Directory_Divisions> Directory_Divisions { get; set; }
         public virtual DbSet<Directory_TypeDivision> Directory_TypeDivision { get; set; }
         public virtual DbSet<Directory_Station> Directory_Station { get; set; }
-        public virtual DbSet<Directory_ParkWay> Directory_ParkWay { get; set; }
+        //public virtual DbSet<Directory_ParkWay> Directory_ParkWay { get; set; }
+        public virtual DbSet<Directory_ParkWays> Directory_ParkWays { get; set; }
         public virtual DbSet<Directory_Ways> Directory_Ways { get; set; }
         public virtual DbSet<Directory_Cargo> Directory_Cargo { get; set; }
         public virtual DbSet<Directory_CargoETSNG> Directory_CargoETSNG { get; set; }
@@ -398,9 +399,9 @@ namespace EFIDS.Concrete
                 .HasForeignKey(e => e.code_inlandrailway)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<Directory_ParkWay>()
+            modelBuilder.Entity<Directory_ParkWays>()
                 .HasMany(e => e.Directory_Ways)
-                .WithRequired(e => e.Directory_ParkWay)
+                .WithRequired(e => e.Directory_ParkWays)
                 .HasForeignKey(e => e.id_park)
                 .WillCascadeOnDelete(false);
 

@@ -620,14 +620,16 @@ namespace EFIDS.Helper
             };
         }
         // Справочник парков
-        public static Directory_ParkWay GetDirectory_ParkWay(this Directory_ParkWay p)
+        public static Directory_ParkWays GetDirectory_ParkWays(this Directory_ParkWays p)
         {
             if (p == null) return null;
-            return new Directory_ParkWay()
+            return new Directory_ParkWays()
             {
                 id = p.id,
                 park_name_ru = p.park_name_ru,
                 park_name_en = p.park_name_en,
+                park_abbr_ru = p.park_abbr_ru,
+                park_abbr_en = p.park_abbr_en,
                 Directory_Ways = null,
                 create = p.create,
                 create_user = p.create_user,
@@ -636,14 +638,16 @@ namespace EFIDS.Helper
             };
         }
         // Справочник парков
-        public static Directory_ParkWay GetDirectory_ParkWay_Directory_Ways(this Directory_ParkWay p)
+        public static Directory_ParkWays GetDirectory_ParkWays_Directory_Ways(this Directory_ParkWays p)
         {
             if (p == null) return null;
-            return new Directory_ParkWay()
+            return new Directory_ParkWays()
             {
                 id = p.id,
                 park_name_ru = p.park_name_ru,
                 park_name_en = p.park_name_en,
+                park_abbr_ru = p.park_abbr_ru,
+                park_abbr_en = p.park_abbr_en,
                 Directory_Ways = p.Directory_Ways.ToList().Select(w => w.GetDirectory_Ways()).ToList(),
                 create = p.create,
                 create_user = p.create_user,
@@ -660,11 +664,14 @@ namespace EFIDS.Helper
                 id = w.id,
                 id_station = w.id_station,
                 id_park = w.id_park,
-                position = w.position,
+                position_park = w.position_park,
+                position_way = w.position_way,
                 way_num_ru = w.way_num_ru,
                 way_num_en = w.way_num_en,
                 way_name_ru = w.way_name_ru,
                 way_name_en = w.way_name_en,
+                way_abbr_ru = w.way_abbr_ru,
+                way_abbr_en = w.way_abbr_en,
                 capacity = w.capacity,
                 deadlock = w.deadlock,
                 crossing_uz = w.crossing_uz,
@@ -672,7 +679,7 @@ namespace EFIDS.Helper
                 id_devision = w.id_devision,
                 note = w.note,
                 Directory_Station = w.Directory_Station.GetDirectory_Station(),
-                Directory_ParkWay = w.Directory_ParkWay.GetDirectory_ParkWay(),
+                Directory_ParkWays = w.Directory_ParkWays.GetDirectory_ParkWays(),
                 ArrivalSostav = null,
                 Directory_Divisions = w.Directory_Divisions.GetDirectory_Divisions(),
                 create = w.create,

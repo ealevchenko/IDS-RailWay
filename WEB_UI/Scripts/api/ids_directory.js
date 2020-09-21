@@ -3511,10 +3511,10 @@ IDS_DIRECTORY.prototype.getWaysOfStationIDParkID = function (id_station, id_park
 };
 //======= Directory_ParkWay (Справочник путей ИДС) ======================================
 // Получить все парки
-IDS_DIRECTORY.prototype.getParkWay = function (callback) {
+IDS_DIRECTORY.prototype.getParkWays = function (callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/directory/park_way/all',
+        url: '../../api/ids/directory/park_ways/all',
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -3526,7 +3526,7 @@ IDS_DIRECTORY.prototype.getParkWay = function (callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_DIRECTORY.getParkWay", x, y, z);
+            OnAJAXError("IDS_DIRECTORY.getParkWays", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -3534,10 +3534,10 @@ IDS_DIRECTORY.prototype.getParkWay = function (callback) {
     });
 };
 // Получить парки по указаной станции
-IDS_DIRECTORY.prototype.getParkWayOfStationID = function (id, callback) {
+IDS_DIRECTORY.prototype.getParkWaysOfStationID = function (id, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/directory/park_way/view/station/id/' + id,
+        url: '../../api/ids/directory/park_ways/view/station/id/' + id,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -3549,7 +3549,7 @@ IDS_DIRECTORY.prototype.getParkWayOfStationID = function (id, callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_DIRECTORY.getParkWayOfStationID", x, y, z);
+            OnAJAXError("IDS_DIRECTORY.getParkWaysOfStationID", x, y, z);
         },
         complete: function () {
             AJAXComplete();

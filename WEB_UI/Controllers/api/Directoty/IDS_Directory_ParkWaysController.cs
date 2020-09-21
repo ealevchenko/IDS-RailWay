@@ -14,25 +14,25 @@ namespace WEB_UI.Controllers.api
     /// <summary>
     /// СПИСОК ПАРКОВ
     /// </summary>
-    [RoutePrefix("api/ids/directory/park_way")]
-    public class IDS_Directory_ParkWayController : ApiController
+    [RoutePrefix("api/ids/directory/park_ways")]
+    public class IDS_Directory_ParkWaysController : ApiController
     {
-        protected IRepository<Directory_ParkWay> ef_dir;
+        protected IRepository<Directory_ParkWays> ef_dir;
 
-        public IDS_Directory_ParkWayController(IRepository<Directory_ParkWay> dir)
+        public IDS_Directory_ParkWaysController(IRepository<Directory_ParkWays> dir)
         {
             this.ef_dir = dir;
         }
 
-        // GET: api/ids/directory/park_way/all
+        // GET: api/ids/directory/park_ways/all
         [Route("all")]
-        [ResponseType(typeof(Directory_ParkWay))]
-        public IHttpActionResult GetParkWay()
+        [ResponseType(typeof(Directory_ParkWays))]
+        public IHttpActionResult GetParkWays()
         {
             try
             {
-                List<Directory_ParkWay> list = this.ef_dir.Context.ToList()
-                    .Select(m => m.GetDirectory_ParkWay_Directory_Ways()).ToList();
+                List<Directory_ParkWays> list = this.ef_dir.Context.ToList()
+                    .Select(m => m.GetDirectory_ParkWays_Directory_Ways()).ToList();
                 return Ok(list);
             }
             catch (Exception e)
@@ -41,18 +41,18 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // GET: api/ids/directory/park_way/id/
+        // GET: api/ids/directory/park_ways/id/
         [Route("id/{id:int}")]
-        [ResponseType(typeof(Directory_ParkWay))]
-        public IHttpActionResult GetParkWayOfID(int id)
+        [ResponseType(typeof(Directory_ParkWays))]
+        public IHttpActionResult GetParkWaysOfID(int id)
         {
             try
             {
-                Directory_ParkWay ens = this.ef_dir
+                Directory_ParkWays ens = this.ef_dir
                     .Context
                     .Where(w => w.id == id)
                     .ToList()
-                    .Select(m => m.GetDirectory_ParkWay_Directory_Ways()).FirstOrDefault();
+                    .Select(m => m.GetDirectory_ParkWays_Directory_Ways()).FirstOrDefault();
                 return Ok(ens);
             }
             catch (Exception e)
@@ -61,15 +61,15 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // GET: api/ids/directory/park_way/view/station/id/1
+        // GET: api/ids/directory/park_ways/view/station/id/1
         [Route("view/station/id/{id:int}")]
-        [ResponseType(typeof(Directory_ParkWay))]
-        public IHttpActionResult GetParkWayOfStation(int id)
+        [ResponseType(typeof(Directory_ParkWays))]
+        public IHttpActionResult GetParkWaysOfStation(int id)
         {
             try
             {
-                string sql = "SELECT [id] ,[park_name_ru] ,[park_name_en] ,[create] ,[create_user],[change] ,[change_user] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_ParkWay] where [id] in (SELECT distinct [id_park] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] where id_station = " + id.ToString()+")";
-                List<Directory_ParkWay> list = this.ef_dir.Database.SqlQuery<Directory_ParkWay>(sql).ToList();
+                string sql = "SELECT [id] ,[park_name_ru] ,[park_name_en] ,[park_abbr_ru]  ,[park_abbr_en] ,[create] ,[create_user],[change] ,[change_user] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_ParkWays] where [id] in (SELECT distinct [id_park] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] where id_station = " + id.ToString()+")";
+                List<Directory_ParkWays> list = this.ef_dir.Database.SqlQuery<Directory_ParkWays>(sql).ToList();
                 return Ok(list);
             }
             catch (Exception e)
@@ -78,10 +78,10 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // POST api/ids/directory/park_way/
+        // POST api/ids/directory/park_ways/
         [HttpPost]
         [Route("")]
-        public int PostParkWay([FromBody]Directory_ParkWay value)
+        public int PostParkWays([FromBody]Directory_ParkWays value)
         {
             try
             {
@@ -94,10 +94,10 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // PUT api/ids/directory/park_way/id
+        // PUT api/ids/directory/park_ways/id
         [HttpPut]
         [Route("id/{id:int}")]
-        public int PutParkWay(int id, [FromBody]Directory_ParkWay value)
+        public int PutParkWays(int id, [FromBody]Directory_ParkWays value)
         {
             try
             {
@@ -110,10 +110,10 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // DELETE api/ids/directory/park_way/id
+        // DELETE api/ids/directory/park_ways/id
         [HttpDelete]
         [Route("id/{id:int}")]
-        public int DeleteParkWay(int id)
+        public int DeleteParkWays(int id)
         {
             try
             {

@@ -68,8 +68,8 @@ namespace WEB_UI.Controllers.api
         {
             try
             {
-                string sql = "SELECT [id] ,[id_station],[id_park],[position] ,[way_num_ru],[way_num_en],[way_name_ru],[way_name_en],[capacity],[deadlock],[crossing_uz],[crossing_amkr],[id_devision],[note],[create],[create_user],[change],[change_user] "+
-                    "FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] where [id_station]="+ id_station.ToString()+" AND [id_park]=" + id_park.ToString() + " ORDER BY [position]";
+                string sql = "SELECT [id] ,[id_station],[id_park],[position_park] ,[position_way] ,[way_num_ru],[way_num_en],[way_name_ru],[way_name_en], [way_abbr_ru] ,[way_abbr_en], [capacity], [deadlock], [crossing_uz], [crossing_amkr], [id_devision], [note], [create], [create_user], [change], [change_user] "+
+                    "FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] where [id_station]=" + id_station.ToString() + " AND [id_park]=" + id_park.ToString() + " ORDER BY [position_way]";
                 List<Directory_Ways> list = this.ef_dir.Database.SqlQuery<Directory_Ways>(sql).ToList();
                 return Ok(list);
             }

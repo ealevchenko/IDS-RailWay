@@ -57,12 +57,12 @@
     <Compile Include="Abstract\IWebView.cs" />
     <Compile Include="Abstract\IWebAccess.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_BorderCheckpoint.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_ParkWays.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_PayerSender.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_WagonsRent.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Wagons.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Cars_KIS.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Ways.cs" />
-    <Compile Include="Concrete\Directory\EFDirectory_ParkWay.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Divisions.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_TypeDivision.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_CargoGNG.cs" />
@@ -172,7 +172,6 @@
     <Compile Include="Entities\Directory\Directory_TypeOwnerShip.cs" />
     <Compile Include="Entities\Directory\Directory_TypeWagons.cs" />
     <Compile Include="Entities\Directory\Directory_Divisions.cs" />
-    <Compile Include="Entities\Directory\Directory_ParkWay.cs" />
     <Compile Include="Entities\Directory\Directory_Station.cs" />
     <Compile Include="Entities\Directory\Directory_TypeDivision.cs" />
     <Compile Include="Entities\Directory\Directory_Ways.cs" />
@@ -185,6 +184,7 @@
     <Compile Include="Entities\RWT\OutgoingSostav.cs" />
     <Compile Include="Entities\RWT\SAPIncomingSupply.cs" />
     <Compile Include="Entities\Directory\Directory_PayerSender.cs" />
+    <Compile Include="Entities\Directory\Directory_ParkWays.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
