@@ -972,7 +972,7 @@ IDS_DIRECTORY.prototype.putWagon = function (wagon, callback) {
         },
     });
 };
-//Обновить аренду вагонов
+//Обновить вагоны
 IDS_DIRECTORY.prototype.putListWagon = function (list_wagon, callback) {
     $.ajax({
         type: 'PUT',
@@ -5643,7 +5643,11 @@ IDS_DIRECTORY.prototype.getCloneWagons = function (wagon) {
         date_rem_uz: wagon.date_rem_uz ,
         date_rem_vag: wagon.date_rem_vag ,
         id_type_ownership: wagon.id_type_ownership ,
-        sign: wagon.sign ,
+        sign: wagon.sign,
+        factory_number: wagon.factory_number,
+        inventory_number: wagon.inventory_number,
+        year_built: wagon.year_built,
+        exit_ban: wagon.exit_ban,
         note: wagon.note ,
         sobstv_kis: wagon.sobstv_kis ,
         bit_warning: wagon.bit_warning ,

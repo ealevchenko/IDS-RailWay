@@ -23,6 +23,10 @@
                 'field_rent_start': 'Начало аренды',
                 'field_rent_end': 'Конец аренды',
                 'field_sign': 'Признаки',
+                'field_factory_number': 'Заводской №',
+                'field_inventory_number': 'Инвентарный №',
+                'field_year_built': 'Год постройки',
+                'field_exit_ban': 'запрет на выезд',
                 'field_note': 'Примечание',
                 'field_sobstv_kis': 'Оператор (КИС)',
                 'field_create': 'Строка создана',
@@ -810,6 +814,12 @@
             add_edit_kol_os: $('select#add_edit_kol_os'),
             add_edit_gruzp: $('input#add_edit_gruzp'),
 
+            add_edit_tara : $('input#add_edit_tara'),
+            add_edit_year_built: $('input#add_edit_year_built'),
+            add_edit_factory_number: $('input#add_edit_factory_number'),
+            add_edit_inventory_number: $('input#add_edit_inventory_number'),
+            add_edit_exit_ban: $('input#add_edit_exit_ban'),
+
             add_edit_owner_car: $('select#add_edit_owner_car'),
             add_edit_operator_uz_car: $('select#add_edit_operator_uz_car'),
             add_edit_change_operator: $('input#add_edit_change_operator'),
@@ -1022,6 +1032,11 @@
                                 .add(pn_add_edit.add_edit_usl_tip)
                                 .add(pn_add_edit.add_edit_kol_os)
                                 .add(pn_add_edit.add_edit_gruzp)
+                                .add(pn_add_edit.add_edit_tara)
+                                .add(pn_add_edit.add_edit_year_built)
+                                .add(pn_add_edit.add_edit_factory_number)
+                                .add(pn_add_edit.add_edit_inventory_number)
+                                .add(pn_add_edit.add_edit_exit_ban)
                                 .add(pn_add_edit.add_edit_owner_car)
                                 .add(pn_add_edit.add_edit_operator_uz_car)
                                 .add(pn_add_edit.add_edit_operator_car)
@@ -1097,7 +1112,14 @@
                     pn_add_edit.add_edit_name_rod_abbr.val(pn_add_edit.ids_dir.getValue_GenusWagons_Of_ID(Number(pn_add_edit.select_obj.id_genus), 'abbr', pn_add_edit.lang));
                     pn_add_edit.add_edit_usl_tip.val(pn_add_edit.select_obj.usl_tip).prop('disabled', false);
                     pn_add_edit.add_edit_kol_os.val(pn_add_edit.select_obj.kol_os).prop('disabled', false);
-                    pn_add_edit.add_edit_gruzp.val(pn_add_edit.select_obj.gruzp);
+                    pn_add_edit.add_edit_gruzp.val(pn_add_edit.select_obj.gruzp).prop('disabled', false);
+
+                    pn_add_edit.add_edit_tara.val(pn_add_edit.select_obj.tara !== null ? pn_add_edit.select_obj.tara : 0).prop('disabled', false);
+                    pn_add_edit.add_edit_year_built.val(pn_add_edit.select_obj.year_built).prop('disabled', false);
+                    pn_add_edit.add_edit_factory_number.val(pn_add_edit.select_obj.factory_number).prop('disabled', false);
+                    pn_add_edit.add_edit_inventory_number.val(pn_add_edit.select_obj.inventory_number).prop('disabled', false);
+                    pn_add_edit.add_edit_exit_ban.prop('checked', pn_add_edit.select_obj.exit_ban !== null ? pn_add_edit.select_obj.exit_ban : false).prop('disabled', false);
+
                     pn_add_edit.add_edit_owner_car.val(Number(pn_add_edit.select_obj.id_owner));
                     pn_add_edit.add_edit_operator_uz_car.val(Number(pn_add_edit.select_obj.id_operator_uz));
                     pn_add_edit.add_edit_change_operator.setDateTime(pn_add_edit.select_obj.change_operator !== null ? pn_add_edit.select_obj.change_operator.replace(/T/g, ' ') : null);
@@ -1193,6 +1215,13 @@
                 pn_add_edit.add_edit_usl_tip.prop('disabled', true);
                 pn_add_edit.add_edit_kol_os.prop('disabled', true);
                 pn_add_edit.add_edit_gruzp.prop('disabled', true);
+
+                pn_add_edit.add_edit_tara.prop('disabled', true);
+                pn_add_edit.add_edit_year_built.prop('disabled', true);
+                pn_add_edit.add_edit_factory_number.prop('disabled', true);
+                pn_add_edit.add_edit_inventory_number.prop('disabled', true);
+                pn_add_edit.add_edit_exit_ban.prop('disabled', true);
+
                 pn_add_edit.add_edit_owner_car.prop('disabled', true);
                 pn_add_edit.add_edit_operator_uz_car.prop('disabled', true);
                 pn_add_edit.add_edit_change_operator.obj.prop('disabled', true);
@@ -1233,10 +1262,14 @@
             },
             // Валидация поля  "Грузоподъемность"
             validation_vag_gruzp: function (valid, off_message) {
-                valid = valid & pn_add_edit.val.checkInputOfRange(pn_add_edit.add_edit_gruzp, 60.0, 80.0, "Грузоподъемность должна быть в диапазоне от 60.0 до 80.0 тон.", "", off_message);
+                valid = valid & pn_add_edit.val.checkInputOfRange(pn_add_edit.add_edit_gruzp, 0.0, 80.0, "Грузоподъемность должна быть в диапазоне от 0.0 до 80.0 тон.", "", off_message);
                 return valid;
             },
-
+            // Валидация поля  "Тара"
+            validation_vag_tara: function (valid, off_message) {
+                valid = valid & pn_add_edit.val.checkInputOfRange(pn_add_edit.add_edit_tara, 0.0, 30.0, "Тара должна быть в диапазоне от 0.0 до 30.0 тон.", "", off_message);
+                return valid;
+            },
             // Валидация данных вагона
             validation: function () {
                 pn_add_edit.val.clear_all();
@@ -1246,8 +1279,8 @@
                 valid = valid & pn_add_edit.validation_rod_vag(valid, false);
                 pn_add_edit.val.set_control_ok(pn_add_edit.add_edit_usl_tip);
                 valid = valid & pn_add_edit.validation_vag_kol_os(valid, false);
-                //valid = valid & pn_add_edit.validation_vag_gruzp(valid, false);
-
+                valid = valid & pn_add_edit.validation_vag_gruzp(valid, false);
+                valid = valid & pn_add_edit.validation_vag_tara(valid, false);
                 //valid = valid & pn_add_edit.val.checkInputOfNull(pn_add_edit.add_edit_owner_car, "Укажите собственника");
                 //pn_add_edit.val.set_control_ok(pn_add_edit.add_edit_operator_uz_car);
                 //pn_add_edit.val.set_control_ok(pn_add_edit.add_edit_operator_car);
@@ -1547,13 +1580,19 @@
                     "id_owner": pn_add_edit.select_obj.id_owner,
                     "id_operator": pn_add_edit.select_obj.id_operator,
                     "change_operator": pn_add_edit.select_obj.change_operator,
-                    "gruzp": pn_add_edit.select_obj.gruzp,
-                    "tara": pn_add_edit.select_obj.tara,
+                    //"gruzp": pn_add_edit.select_obj.gruzp,
+                    "gruzp": get_select_number_value(pn_add_edit.add_edit_gruzp),
+                    //"tara": pn_add_edit.select_obj.tara,
+                    "tara": get_select_number_value(pn_add_edit.add_edit_tara),
                     "kol_os": get_select_number_value(pn_add_edit.add_edit_kol_os),
                     "usl_tip": get_input_string_value(pn_add_edit.add_edit_usl_tip),
                     "date_rem_uz": pn_add_edit.select_obj.date_rem_uz,
                     "date_rem_vag": toISOStringTZ(get_date_value(pn_add_edit.add_edit_date_rem_vag.val(), pn_add_edit.lang)),
                     "id_type_ownership": get_select_number_value(pn_add_edit.add_edit_type_ownership),
+                    "factory_number": get_input_string_value(pn_add_edit.add_edit_factory_number),
+                    "inventory_number": get_input_string_value(pn_add_edit.add_edit_inventory_number),
+                    "year_built": get_select_number_value(pn_add_edit.add_edit_year_built),
+                    "exit_ban": pn_add_edit.add_edit_exit_ban.prop('checked'),
                     "sign": get_select_number_value(pn_add_edit.add_edit_sign),
                     "note": pn_add_edit.select_obj.note,
                     "sobstv_kis": pn_add_edit.select_obj.sobstv_kis,
@@ -1697,6 +1736,18 @@
                         },
                         {
                             data: "type_ownership", title: langView('field_type_ownership', langs), width: "100px", orderable: false, searchable: false
+                        },
+                        {
+                            data: "factory_number", title: langView('field_factory_number', langs), width: "50px", orderable: false, searchable: false
+                        },
+                        {
+                            data: "inventory_number", title: langView('field_inventory_number', langs), width: "50px", orderable: false, searchable: false
+                        },
+                        {
+                            data: "year_built", title: langView('field_year_built', langs), width: "50px", orderable: false, searchable: false
+                        },
+                        {
+                            data: "exit_ban", title: langView('field_exit_ban', langs), width: "50px", orderable: false, searchable: false
                         },
                         {
                             data: "note", title: langView('field_note', langs), width: "300px", orderable: false, searchable: false
@@ -1927,6 +1978,10 @@
                     "rent_start": corrent_rent && corrent_rent.rent_start !== null ? corrent_rent.rent_start.replace(/T/g, ' ') : null,
                     "rent_end": corrent_rent && corrent_rent.rent_end !== null ? corrent_rent.rent_end.replace(/T/g, ' ') : null,
                     "sign": data.sign,
+                    "factory_number": data.factory_number,
+                    "inventory_number": data.inventory_number,
+                    "year_built": data.year_built,
+                    "exit_ban": data.exit_ban,
                     "note": data.note,
                     "sobstv_kis": data.sobstv_kis,
                     "create": data.create !== null ? data.create.replace(/T/g, ' ') : null,

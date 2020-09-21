@@ -460,8 +460,8 @@ namespace IDS
             switch (id)
             {
                 case 1: return 105;
-                case 18: return 788;
-                case 23: return 462;
+                case 18: return 777;
+                case 23: return 464;
                 default: return 105;
             }
         }

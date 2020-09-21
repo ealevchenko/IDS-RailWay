@@ -267,7 +267,7 @@ namespace IDS
                         abbr_en = name.Substring(0, name.Length > 20 ? 20 : name.Length).Trim(),
                         local_use = false,
                         paid = false,
-                        rop = false, 
+                        rop = false,
                         color = null,
                         create = DateTime.Now,
                         create_user = user,
@@ -596,15 +596,17 @@ namespace IDS
                 string number = num.ToString().Remove(num.ToString().Length - 1);
                 int cs = int.Parse(num.ToString().Remove(0, num.ToString().Length - 1));
                 char[] array = number.ToCharArray();
-                int[] kof = new int[7] {2,1,2,1,2,1,2};
+                int[] kof = new int[7] { 2, 1, 2, 1, 2, 1, 2 };
                 int result = 0;
                 int index = 0;
-                foreach(char n in array){
+                foreach (char n in array)
+                {
                     int n_i = int.Parse(n.ToString());
                     int res_i = n_i * kof[index];
                     index++;
                     // скорректируем
-                    if (res_i > 9) { 
+                    if (res_i > 9)
+                    {
                         string res_kor_i = res_i.ToString();
                         res_i = int.Parse(res_kor_i[0].ToString()) + int.Parse(res_kor_i[1].ToString());
                     }
@@ -1181,6 +1183,10 @@ namespace IDS
                             date_rem_uz = info.repair_date,
                             date_rem_vag = null,
                             id_type_ownership = id_type_ownership,
+                            factory_number = null,
+                            inventory_number = null,
+                            year_built = null,
+                            exit_ban = null,
                             sign = null,
                             note = "Запрет выхода:" + (info.exit_ban != null ? info.exit_ban : "нет") + "; Другие запреты:" + (info.other_bans != null ? info.other_bans.Replace("<br>", "") : ""),
                             sobstv_kis = sobstv_kis,

@@ -205,11 +205,38 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Запрет выхода на УЗ (перемещение только по АМКР).
+        /// </summary>
+        public static string title_add_edit_exit_ban {
+            get {
+                return ResourceManager.GetString("title_add_edit_exit_ban", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Заводской №.
+        /// </summary>
+        public static string title_add_edit_factory_number {
+            get {
+                return ResourceManager.GetString("title_add_edit_factory_number", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Груз-сть (УЗ).
         /// </summary>
         public static string title_add_edit_gruzp {
             get {
                 return ResourceManager.GetString("title_add_edit_gruzp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Инвентарный №.
+        /// </summary>
+        public static string title_add_edit_inventory_number {
+            get {
+                return ResourceManager.GetString("title_add_edit_inventory_number", resourceCulture);
             }
         }
         
@@ -358,6 +385,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Тара (УЗ).
+        /// </summary>
+        public static string title_add_edit_tara {
+            get {
+                return ResourceManager.GetString("title_add_edit_tara", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Призн. собст..
         /// </summary>
         public static string title_add_edit_type_ownership {
@@ -372,6 +408,15 @@ namespace WEB_UI.App_LocalResources {
         public static string title_add_edit_usl_tip {
             get {
                 return ResourceManager.GetString("title_add_edit_usl_tip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Год постр..
+        /// </summary>
+        public static string title_add_edit_year_built {
+            get {
+                return ResourceManager.GetString("title_add_edit_year_built", resourceCulture);
             }
         }
         

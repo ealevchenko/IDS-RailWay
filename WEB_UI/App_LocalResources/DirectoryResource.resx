@@ -165,8 +165,17 @@
   <data name="title_add_edit_date_rem_vag" xml:space="preserve">
     <value>Дата рем. (Вагон)</value>
   </data>
+  <data name="title_add_edit_exit_ban" xml:space="preserve">
+    <value>Запрет выхода на УЗ (перемещение только по АМКР)</value>
+  </data>
+  <data name="title_add_edit_factory_number" xml:space="preserve">
+    <value>Заводской №</value>
+  </data>
   <data name="title_add_edit_gruzp" xml:space="preserve">
     <value>Груз-сть (УЗ)</value>
+  </data>
+  <data name="title_add_edit_inventory_number" xml:space="preserve">
+    <value>Инвентарный №</value>
   </data>
   <data name="title_add_edit_kod_adm" xml:space="preserve">
     <value>Код</value>
@@ -216,11 +225,17 @@
   <data name="title_add_edit_sign" xml:space="preserve">
     <value>Призн. сход\не груз.</value>
   </data>
+  <data name="title_add_edit_tara" xml:space="preserve">
+    <value>Тара (УЗ)</value>
+  </data>
   <data name="title_add_edit_type_ownership" xml:space="preserve">
     <value>Призн. собст.</value>
   </data>
   <data name="title_add_edit_usl_tip" xml:space="preserve">
     <value>Тип цист.</value>
+  </data>
+  <data name="title_add_edit_year_built" xml:space="preserve">
+    <value>Год постр.</value>
   </data>
   <data name="title_change_group_cargo_group" xml:space="preserve">
     <value>Группы грузов в ИДС</value>

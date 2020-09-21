@@ -290,6 +290,24 @@
             </div>
         </div>
         <div class="row" style="margin-bottom:0.5rem">
+            <div class="col-md-2 mb-1 text-left">
+                <label for="add_edit_tara" class="col-form-label">@DirectoryResource.title_add_edit_tara:</label>
+                <input type="number" class="form-control" id="add_edit_tara" name="add_edit_tara">
+            </div>
+            <div class="col-md-2 mb-1 text-left">
+                <label for="add_edit_year_built" class="col-form-label">@DirectoryResource.title_add_edit_year_built:</label>
+                <input type="number" class="form-control" id="add_edit_year_built" name="add_edit_year_built">
+            </div>
+            <div class="col-md-4 mb-1 text-left">
+                <label for="add_edit_factory_number" class="col-form-label">@DirectoryResource.title_add_edit_factory_number:</label>
+                <input type="text" class="form-control" id="add_edit_factory_number" name="add_edit_factory_number">
+            </div>
+            <div class="col-md-4 mb-1 text-left">
+                <label for="add_edit_inventory_number" class="col-form-label">@DirectoryResource.title_add_edit_inventory_number:</label>
+                <input type="text" class="form-control" id="add_edit_inventory_number" name="add_edit_inventory_number">
+            </div>
+        </div>
+        <div class="row" style="margin-bottom:0.5rem">
             <div class="col-md-5 mb-1 text-left">
                 <label for="add_edit_owner_car" class="col-form-label">@DirectoryResource.title_add_edit_owner_car:</label>
                 <select class="form-control" id="add_edit_owner_car" name="add_edit_owner_car" disabled="disabled"></select>
@@ -379,6 +397,10 @@
                 <label for="add_edit_note" class="col-form-label">@DirectoryResource.title_add_edit_note:</label>
                 <textarea class="form-control" rows="3" id="add_edit_note" name="add_edit_note" disabled="disabled"></textarea>
             </div>
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="add_edit_exit_ban" style="position:relative">
+            <label class="form-check-label" for="add_edit_exit_ban">@DirectoryResource.title_add_edit_exit_ban</label>
         </div>
         <!-- Allow form submission with keyboard without duplicating the dialog button -->
         <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">

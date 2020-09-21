@@ -48,6 +48,16 @@ namespace EFIDS.Entities
 
         public int? sign { get; set; }
 
+        [StringLength(10)]
+        public string factory_number { get; set; }
+
+        [StringLength(10)]
+        public string inventory_number { get; set; }
+
+        public int? year_built { get; set; }
+
+        public bool? exit_ban { get; set; }
+
         [Required]
         [StringLength(1000)]
         public string note { get; set; }
