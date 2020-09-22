@@ -185,15 +185,25 @@
     <Compile Include="Entities\RWT\SAPIncomingSupply.cs" />
     <Compile Include="Entities\Directory\Directory_PayerSender.cs" />
     <Compile Include="Entities\Directory\Directory_ParkWays.cs" />
+    <Compile Include="Model\Directory_ConditionArrival.cs" />
+    <Compile Include="Model\Directory_Station.cs" />
+    <Compile Include="Entities\Directory\Directory_WagonLoadingStatus.cs" />
+    <Compile Include="Entities\Directory\Directory_WagonOperations.cs" />
+    <Compile Include="Model\Directory_Wagons.cs" />
+    <Compile Include="Model\Directory_WagonsRent.cs" />
+    <Compile Include="Model\Directory_Ways.cs" />
+    <Compile Include="Model\Model1.cs" />
+    <Compile Include="Model\OutgoingCars.cs" />
+    <Compile Include="Entities\RWT\WagonInternalMovement.cs" />
+    <Compile Include="Entities\RWT\WagonInternalOperation.cs" />
+    <Compile Include="Entities\RWT\WagonInternalRoutes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>

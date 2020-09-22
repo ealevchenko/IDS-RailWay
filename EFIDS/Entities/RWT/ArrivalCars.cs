@@ -13,6 +13,7 @@ namespace EFIDS.Entities
         public ArrivalCars()
         {
             SAPIncomingSupply = new HashSet<SAPIncomingSupply>();
+            WagonInternalRoutes = new HashSet<WagonInternalRoutes>();
         }
 
         public long id { get; set; }
@@ -63,5 +64,8 @@ namespace EFIDS.Entities
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SAPIncomingSupply> SAPIncomingSupply { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<WagonInternalRoutes> WagonInternalRoutes { get; set; }
     }
 }

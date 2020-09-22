@@ -9,6 +9,12 @@ namespace EFIDS.Entities
     [Table("IDS.OutgoingCars")]
     public partial class OutgoingCars
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public OutgoingCars()
+        {
+            WagonInternalRoutes = new HashSet<WagonInternalRoutes>();
+        }
+        
         public long id { get; set; }
 
         public long? id_outgoing { get; set; }
@@ -45,5 +51,8 @@ namespace EFIDS.Entities
         public virtual Directory_Wagons Directory_Wagons { get; set; }
 
         public virtual OutgoingSostav OutgoingSostav { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<WagonInternalRoutes> WagonInternalRoutes { get; set; }
     }
 }

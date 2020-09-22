@@ -9,6 +9,13 @@ namespace EFIDS.Entities
     [Table("IDS.SAPIncomingSupply")]
     public partial class SAPIncomingSupply
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public SAPIncomingSupply()
+        {
+            WagonInternalRoutes = new HashSet<WagonInternalRoutes>();
+        }
+
+        
         public long id { get; set; }
 
         public long id_arrival_car { get; set; }
@@ -91,5 +98,8 @@ namespace EFIDS.Entities
         public string close_user { get; set; }
 
         public virtual ArrivalCars ArrivalCars { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<WagonInternalRoutes> WagonInternalRoutes { get; set; }
     }
 }
