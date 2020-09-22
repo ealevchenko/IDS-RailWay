@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace EFIDS.Concrete
 {
 
-    public class EFSAPIncomingSupply : IRepository<SAPIncomingSupply>
+    public class EFSAPIncomingSupply : ILongRepository<SAPIncomingSupply>
     {
 
         private EFDbContext db;
@@ -44,7 +44,7 @@ namespace EFIDS.Concrete
             }
         }
 
-        public SAPIncomingSupply Get(int id)
+        public SAPIncomingSupply Get(long id)
         {
             try
             {
@@ -102,7 +102,7 @@ namespace EFIDS.Concrete
 
         }
 
-        public void Delete(int id)
+        public void Delete(long id)
         {
             try
             {
@@ -173,7 +173,7 @@ namespace EFIDS.Concrete
             }
         }
 
-        public void Delete(IEnumerable<int> items)
+        public void Delete(IEnumerable<long> items)
         {
             try
             {

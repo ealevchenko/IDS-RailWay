@@ -9,7 +9,7 @@ namespace EFIDS.Entities
     [Table("IDS.SAPIncomingSupply")]
     public partial class SAPIncomingSupply
     {
-        public int id { get; set; }
+        public long id { get; set; }
 
         public long id_arrival_car { get; set; }
 

@@ -17,9 +17,9 @@ namespace WEB_UI.Controllers.api
     [RoutePrefix("api/ids/rwt/sap/incoming_supply")]
     public class IDS_RWT_Incoming_SAPIncomingSupplyController : ApiController
     {
-        protected IRepository<SAPIncomingSupply> ef_ids;
+        protected ILongRepository<SAPIncomingSupply> ef_ids;
 
-        public IDS_RWT_Incoming_SAPIncomingSupplyController(IRepository<SAPIncomingSupply> ids)
+        public IDS_RWT_Incoming_SAPIncomingSupplyController(ILongRepository<SAPIncomingSupply> ids)
         {
             this.ef_ids = ids;
         }
@@ -104,7 +104,7 @@ namespace WEB_UI.Controllers.api
         // POST api/ids/rwt/sap/incoming_supply/
         [HttpPost]
         [Route("")]
-        public int PostSAPIncomingSupply([FromBody]SAPIncomingSupply value)
+        public long PostSAPIncomingSupply([FromBody]SAPIncomingSupply value)
         {
             try
             {
@@ -121,7 +121,7 @@ namespace WEB_UI.Controllers.api
         // PUT api/ids/rwt/sap/incoming_supply/id
         [HttpPut]
         [Route("id/{id:int}")]
-        public int PutSAPIncomingSupply(int id, [FromBody]SAPIncomingSupply value)
+        public long PutSAPIncomingSupply(int id, [FromBody]SAPIncomingSupply value)
         {
             try
             {
