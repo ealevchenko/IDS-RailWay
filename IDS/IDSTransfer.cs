@@ -276,6 +276,8 @@ namespace IDS
         {
             return InsertArrivalCars(id_arrival, cars, null);
         }
+
+
         #endregion
 
         #region UZ_DOC
@@ -573,10 +575,11 @@ namespace IDS
                                             add_sostav++;
                                         }
                                     }
-                                    else { 
-                                    String.Format("Метод InsertOutgoingSostavOfKis(), ошибка добавления вагонов состава id={0}, По натурке №{1} за {2} - отсутсвует информация о вагонах!", ids_sostav.id, sostav.N_NATUR, sostav.DT).ErrorLog(servece_owner, this.eventID);
-                                    // Счетчик ошибок
-                                    err_sostav++;                                    
+                                    else
+                                    {
+                                        String.Format("Метод InsertOutgoingSostavOfKis(), ошибка добавления вагонов состава id={0}, По натурке №{1} за {2} - отсутсвует информация о вагонах!", ids_sostav.id, sostav.N_NATUR, sostav.DT).ErrorLog(servece_owner, this.eventID);
+                                        // Счетчик ошибок
+                                        err_sostav++;
                                     }
                                 }
                                 catch (Exception e)
@@ -590,7 +593,7 @@ namespace IDS
                             {
                                 // Счетчик ошибок
                                 err_sostav++;
-                                String.Format("Метод InsertOutgoingSostavOfKis(), ошибка переноса состава в ИДС Натурка:{0}, Дата={1}, Код ошибки={2}",sostav.N_NATUR, sostav.DT, res).ErrorLog(servece_owner, this.eventID);
+                                String.Format("Метод InsertOutgoingSostavOfKis(), ошибка переноса состава в ИДС Натурка:{0}, Дата={1}, Код ошибки={2}", sostav.N_NATUR, sostav.DT, res).ErrorLog(servece_owner, this.eventID);
                             }
                         }
                         else
@@ -619,6 +622,66 @@ namespace IDS
         }
 
         #endregion
+
+        /// <summary>
+        /// Принять состав на станцию АМКР примыкающую с УЗ 
+        /// </summary>
+        /// <param name="id_arrival"></param>
+        /// <returns></returns>
+        public int IncomingArrivalSostav(long id_arrival, string user)
+        {
+            try
+            {
+                EFArrivalSostav ef_sostav = new EFArrivalSostav(new EFDbContext());
+                EFArrivalCars ef_car = new EFArrivalCars(new EFDbContext());
+
+                ArrivalSostav sostav = ef_sostav.Context.Where(s => s.id == id_arrival).FirstOrDefault();
+                if (sostav == null) return -1;                                                      // Нет состава
+                if (sostav.date_adoption == null) return -1;                                        // Состав не принят
+                if (sostav.ArrivalCars == null || sostav.ArrivalCars.Count() == 0) return -1;        // В составе нет вагонов
+                List<ArrivalCars> list_wagon = sostav.ArrivalCars.Where(c => c.position_arrival != null).ToList();
+                if (list_wagon == null || list_wagon.Count() == 0) return -1;                       // В составе нет принятых вагонов
+                // Состав определен, принятые вагоны определены
+
+                int id_station = (int)sostav.id_station_on;
+                int id_way = (int)sostav.id_way;
+                DateTime date_arrival = sostav.date_arrival;
+                int res = IncomingArrivalCars(id_station, id_way, date_arrival, list_wagon, (bool)sostav.numeration, user);
+                //
+
+                return 0;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("IncomingArrivalSostav(id_arrived={0})", id_arrival), servece_owner, eventID);
+                return -1;// Возвращаем id=-1 , Ошибка
+            }
+        }
+        /// <summary>
+        /// Поставить вагоны на путь станции
+        /// </summary>
+        /// <param name="id_station"></param>
+        /// <param name="id_way"></param>
+        /// <param name="date_start"></param>
+        /// <param name="list_wagon"></param>
+        /// <param name="numeration"></param>
+        /// <returns></returns>
+        public int IncomingArrivalCars(int id_station, int id_way, DateTime date_start, List<ArrivalCars> list_wagon, bool numeration, string user)
+        {
+            try
+            {
+                EFDbContext curent = new EFDbContext();
+                //EFDbContext curent = null;
+                IDS_WIR wir = new IDS_WIR(this.servece_owner);
+                int res = wir.IncomingWagons(ref curent, id_station, id_way, date_start, list_wagon, numeration, user);
+                return 0;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("IncomingArrivalCars(id_station={0}, id_way={1}, date_start={2}, list_wagon={3})", id_station, id_way, date_start, list_wagon), servece_owner, eventID);
+                return -1;// Возвращаем id=-1 , Ошибка
+            }
+        }
 
     }
 }

@@ -404,11 +404,11 @@ namespace EFIDS.Concrete
                 .WithOptional(e => e.Directory_ConditionArrival)
                 .HasForeignKey(e => e.id_condition);
 
-            //modelBuilder.Entity<Directory_ConditionArrival>()
-            //    .HasMany(e => e.WagonInternalOperation)
-            //    .WithRequired(e => e.Directory_ConditionArrival)
-            //    .HasForeignKey(e => e.id_condition)
-            //    .WillCascadeOnDelete(false);
+            modelBuilder.Entity<Directory_ConditionArrival>()
+                .HasMany(e => e.WagonInternalOperation)
+                .WithRequired(e => e.Directory_ConditionArrival)
+                .HasForeignKey(e => e.id_condition)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Directory_Consignee>()
                 .HasMany(e => e.Arrival_UZ_Document)

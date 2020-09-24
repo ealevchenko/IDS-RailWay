@@ -48,7 +48,8 @@ namespace IDSLogs.Enum
         IDS_IDSTransfer = 3400,     // Сервис переноса даных из файлов в БД IDS
         IDS_IDSMORS = 3500,         // Сервис ИДС "УСПС"
         IDS_IDSThread = 3600,       // Библиотека потоков выполнения сервисов IDS
-        IDS_IDSSAP = 3700,     // Сервис работы с данными SAP MII
+        IDS_IDSSAP = 3700,          // Сервис работы с данными SAP MII
+        IDS_IDSWIR = 3800,          // Сервис работы с вагонами внутренего перемещения
 
         #endregion
 
