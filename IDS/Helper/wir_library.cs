@@ -16,13 +16,17 @@ namespace IDS.Helper
             return context.WagonInternalRoutes.Where(r => r.num == num).OrderByDescending(w => w.id).FirstOrDefault();
         }
 
-        public static WagonInternalRoutes CloseWagon(this WagonInternalRoutes wir, DateTime date_end, string user)
+        public static long? CloseWagon(this WagonInternalRoutes wir, DateTime date_end, string user)
         {
-            wir.close = date_end;
-            wir.close_user = user;
-            wir.GetLastMovement().CloseMovement(date_end, user);
-            wir.GetLastOperation().CloseOperation(date_end, user);
-            return wir;
+            if (wir == null) return null;
+            if (wir.close == null)
+            {
+                wir.close = date_end;
+                wir.close_user = user;
+                wir.GetLastMovement().CloseMovement(date_end, user);
+                wir.GetLastOperation().CloseOperation(date_end, user);
+            }
+            return wir.id;
         }
 
         public static WagonInternalRoutes SetStationWagon(this WagonInternalRoutes wir, int id_station, int id_way, DateTime date_start, int position, string user)
@@ -47,6 +51,39 @@ namespace IDS.Helper
             }
             return wir;
         }
+
+        public static WagonInternalRoutes SetOpenOperation(this WagonInternalRoutes wir, int id_operation, DateTime date_start, int? id_condition, int? id_loading_status, string locomotive1, string locomotive2, string user)
+        {
+            if (wir != null && wir.close == null)
+            {
+                WagonInternalOperation wio_last = wir.GetLastOperation();
+                WagonInternalOperation wio_new = new WagonInternalOperation()
+                {
+                    id = 0,
+                    id_operation = id_operation,
+                    operation_start = date_start,
+                    id_condition = (id_condition != null ? (int)id_condition : (wio_last != null ? wio_last.id_condition : 0)),
+                    id_loading_status = (id_loading_status != null ? (int)id_loading_status : (wio_last != null ? wio_last.id_loading_status : 0)),
+                    locomotive1 = locomotive1,
+                    locomotive2 = locomotive2,
+                    create = DateTime.Now,
+                    create_user = user, 
+                    parent_id = wio_last.CloseOperation(date_start, user)
+                };
+
+                wir.WagonInternalOperation.Add(wio_new);
+            }
+            return wir;
+        }
+
+        public static WagonInternalRoutes SetCloseOperation(this WagonInternalRoutes wir, DateTime date_end, string user)
+        {
+            if (wir != null && wir.close == null)
+            {
+                wir.GetLastOperation().CloseOperation(date_end,user);
+            }
+            return wir;
+        }        
         #endregion
 
 
@@ -91,16 +128,19 @@ namespace IDS.Helper
             return wir.WagonInternalOperation.OrderByDescending(o => o.id).FirstOrDefault();
         }
 
-        public static WagonInternalOperation CloseOperation(this WagonInternalOperation wio, DateTime date_end, string user)
+        public static long? CloseOperation(this WagonInternalOperation wio, DateTime date_end, string user)
         {
-            if (wio != null && wio.close == null)
+            if (wio == null) return null;
+            if (wio.close == null)
             {
                 wio.operation_end = wio.operation_end == null ? date_end : wio.operation_end;
                 wio.close = date_end;
                 wio.create_user = user;
             }
-            return wio;
+            return wio.id;
         }
+
+        //public static WagonInternalOperation OpenOperation(this WagonInternalOperation wio, DateTime date_end, string user)
         #endregion
     }
 }

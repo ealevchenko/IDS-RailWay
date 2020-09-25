@@ -48,27 +48,21 @@ namespace IDS
         {
             try
             {
-                //EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(this.wir_context);
-                // Получим последнюю запись по этому номеру вагона
-                //WagonInternalRoutes last_wir = ef_wir.Context.Where(r => r.num == wagon.num).OrderByDescending(w=>w.id).FirstOrDefault();
                 long? parent_id = null;
-
+                // Получим последнюю запись по вагону
                 WagonInternalRoutes last_wir = context.GetLastWagon(wagon.num);
                 if (last_wir != null)
                 {
                     // Запись есть проверим, для этого прибытия была создана запись
                     if (last_wir.id_arrival_car == wagon.id) return 0; // Строка для вагона уже создана
                     // Запись не закрыта (!Заись перед созданием должна быть закрыта, вагон выйти из АМКР)
-                    if (last_wir.close == null)
-                    {
-                        // Закрываем запись и делаем сообщение вагон закрыли принудительно, разбирайтесь
-                        last_wir.CloseWagon(date_start, user);
-                        parent_id = last_wir.id;
-                    }
+                    parent_id = last_wir.CloseWagon(date_start, user);
                     context.Update(last_wir); // Обновим контекст
                 }
                 // Определим входящую поставку
                 List<SAPIncomingSupply> sap_is = wagon.SAPIncomingSupply.ToList();
+                Arrival_UZ_Vagon vag_doc = wagon.Arrival_UZ_Vagon;
+
                 // Создадим новую строкку
                 WagonInternalRoutes new_wir = new WagonInternalRoutes()
                 {
@@ -82,8 +76,9 @@ namespace IDS
                  
                 };
                 new_wir.SetStationWagon(id_station, id_way, date_start, position, user);
+                new_wir.SetOpenOperation(1, date_start, (int)vag_doc.id_condition, vag_doc.vesg>0 ? 1 : 0, null, null, user).SetCloseOperation(date_start,user);
                 context.Insert(new_wir); // Обновим контекст
-                return 0;
+                return 1;
             }
             catch (Exception e)
             {
@@ -112,7 +107,7 @@ namespace IDS
                 int position = context.GetNextPosition(id_way);
                 foreach (ArrivalCars wagon in numeration ? wagons.OrderByDescending(w => w.position_arrival) : wagons.OrderBy(w => w.position_arrival))
                 {
-                    IncomingWagon(ref context, id_station, id_way, date_start, position, wagon, user);
+                    int result = IncomingWagon(ref context, id_station, id_way, date_start, position, wagon, user);
                     position++;
                 }
 

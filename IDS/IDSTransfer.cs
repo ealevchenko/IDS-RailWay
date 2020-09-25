@@ -646,10 +646,12 @@ namespace IDS
                 int id_station = (int)sostav.id_station_on;
                 int id_way = (int)sostav.id_way;
                 DateTime date_arrival = sostav.date_arrival;
-                int res = IncomingArrivalCars(id_station, id_way, date_arrival, list_wagon, (bool)sostav.numeration, user);
-                //
 
-                return 0;
+                EFDbContext curent = new EFDbContext();
+                //EFDbContext curent = null;
+                IDS_WIR wir = new IDS_WIR(this.servece_owner);
+                int res = wir.IncomingWagons(ref curent, id_station, id_way, date_arrival, list_wagon, (bool)sostav.numeration, user);
+                return res;
             }
             catch (Exception e)
             {
@@ -657,31 +659,5 @@ namespace IDS
                 return -1;// Возвращаем id=-1 , Ошибка
             }
         }
-        /// <summary>
-        /// Поставить вагоны на путь станции
-        /// </summary>
-        /// <param name="id_station"></param>
-        /// <param name="id_way"></param>
-        /// <param name="date_start"></param>
-        /// <param name="list_wagon"></param>
-        /// <param name="numeration"></param>
-        /// <returns></returns>
-        public int IncomingArrivalCars(int id_station, int id_way, DateTime date_start, List<ArrivalCars> list_wagon, bool numeration, string user)
-        {
-            try
-            {
-                EFDbContext curent = new EFDbContext();
-                //EFDbContext curent = null;
-                IDS_WIR wir = new IDS_WIR(this.servece_owner);
-                int res = wir.IncomingWagons(ref curent, id_station, id_way, date_start, list_wagon, numeration, user);
-                return 0;
-            }
-            catch (Exception e)
-            {
-                e.ExceptionMethodLog(String.Format("IncomingArrivalCars(id_station={0}, id_way={1}, date_start={2}, list_wagon={3})", id_station, id_way, date_start, list_wagon), servece_owner, eventID);
-                return -1;// Возвращаем id=-1 , Ошибка
-            }
-        }
-
     }
 }
