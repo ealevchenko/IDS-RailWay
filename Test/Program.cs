@@ -95,7 +95,8 @@ namespace Test
             //tids.IDSMORS_GetLastIDWTWagonsMotionSignals();
             //tids.SetNum_UZ();
             //tids.IDSTransfer_InsertOutgoingSostavOfKis();
-            tids.IDSTransfer_IncomingArrivalSostav();
+            //tids.IDSTransfer_IncomingArrivalSostav();
+            tids.IDSTransfer_IncomingArrivalSostav_All();
             #endregion
 
             #region Test_Logs тест логирования

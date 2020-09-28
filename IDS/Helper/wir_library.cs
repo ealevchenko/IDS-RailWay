@@ -21,10 +21,11 @@ namespace IDS.Helper
             if (wir == null) return null;
             if (wir.close == null)
             {
-                wir.close = date_end;
+                wir.close = DateTime.Now;
                 wir.close_user = user;
                 wir.GetLastMovement().CloseMovement(date_end, user);
                 wir.GetLastOperation().CloseOperation(date_end, user);
+                // Далее добавить закрытие перемещений по требованию
             }
             return wir.id;
         }
@@ -33,21 +34,26 @@ namespace IDS.Helper
         {
             if (wir != null && wir.close == null)
             {
-                WagonInternalMovement wim_new = new WagonInternalMovement()
+                WagonInternalMovement wim = wir.GetLastMovement();
+                // Исключим попытку поставить дублирования записи постановки на путь
+                if (wim != null && (wim.id_station != id_station || wim.id_way != id_way || wim.position != position))
                 {
-                    id = 0,
-                    //id_wagon_internal_routes = wir.id,
-                    id_station = id_station,
-                    station_start = date_start,
-                    id_way = id_way,
-                    way_start = date_start,
-                    position = position,
-                    create = DateTime.Now,
-                    create_user = user,
-                    parent_id = wir.GetLastMovement().CloseMovement(date_start, user)
-                };
+                    WagonInternalMovement wim_new = new WagonInternalMovement()
+                    {
+                        id = 0,
+                        //id_wagon_internal_routes = wir.id,
+                        id_station = id_station,
+                        station_start = date_start,
+                        id_way = id_way,
+                        way_start = date_start,
+                        position = position,
+                        create = DateTime.Now,
+                        create_user = user,
+                        parent_id = wim.CloseMovement(date_start, user)
+                    };
+                    wir.WagonInternalMovement.Add(wim_new);
+                }
 
-                wir.WagonInternalMovement.Add(wim_new);
             }
             return wir;
         }
@@ -57,6 +63,11 @@ namespace IDS.Helper
             if (wir != null && wir.close == null)
             {
                 WagonInternalOperation wio_last = wir.GetLastOperation();
+                // Исключим попытку дублирования операции
+                //if (wio_last != null && (wio_last.id_operation != id_operation || wim.id_way != id_way || wim.position != position))
+                //{ 
+                
+                //}
                 WagonInternalOperation wio_new = new WagonInternalOperation()
                 {
                     id = 0,
@@ -67,7 +78,7 @@ namespace IDS.Helper
                     locomotive1 = locomotive1,
                     locomotive2 = locomotive2,
                     create = DateTime.Now,
-                    create_user = user, 
+                    create_user = user,
                     parent_id = wio_last.CloseOperation(date_start, user)
                 };
 
@@ -80,10 +91,10 @@ namespace IDS.Helper
         {
             if (wir != null && wir.close == null)
             {
-                wir.GetLastOperation().CloseOperation(date_end,user);
+                wir.GetLastOperation().CloseOperation(date_end, user);
             }
             return wir;
-        }        
+        }
         #endregion
 
 

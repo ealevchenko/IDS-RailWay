@@ -1,13 +1,13 @@
-﻿using System;
+﻿using EFIDS.Concrete;
+using EFIDS.Entities;
+using IDSLogs;
+using IDSLogs.Enum;
+using KIS;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using IDSLogs;
-using IDSLogs.Enum;
-using EFIDS.Concrete;
-using EFIDS.Entities;
-using KIS;
 
 namespace IDS
 {
@@ -632,30 +632,158 @@ namespace IDS
         {
             try
             {
+                DateTime start = DateTime.Now;
+
+                ResultTransfer res = new ResultTransfer(0);
+
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+
                 EFArrivalSostav ef_sostav = new EFArrivalSostav(new EFDbContext());
                 EFArrivalCars ef_car = new EFArrivalCars(new EFDbContext());
 
                 ArrivalSostav sostav = ef_sostav.Context.Where(s => s.id == id_arrival).FirstOrDefault();
-                if (sostav == null) return -1;                                                      // Нет состава
-                if (sostav.date_adoption == null) return -1;                                        // Состав не принят
-                if (sostav.ArrivalCars == null || sostav.ArrivalCars.Count() == 0) return -1;        // В составе нет вагонов
-                List<ArrivalCars> list_wagon = sostav.ArrivalCars.Where(c => c.position_arrival != null).ToList();
-                if (list_wagon == null || list_wagon.Count() == 0) return -1;                       // В составе нет принятых вагонов
-                // Состав определен, принятые вагоны определены
 
-                int id_station = (int)sostav.id_station_on;
-                int id_way = (int)sostav.id_way;
-                DateTime date_arrival = sostav.date_arrival;
+                if (sostav != null && sostav.date_adoption != null && (sostav.ArrivalCars != null && sostav.ArrivalCars.Count() > 0))
+                {
+                    List<ArrivalCars> list_wagon = sostav.ArrivalCars.Where(c => c.position_arrival != null).ToList();
+                    if (list_wagon != null && list_wagon.Count() > 0)
+                    {
+                        // Переносим 
+                        // Состав определен, принятые вагоны определены
 
-                EFDbContext curent = new EFDbContext();
-                //EFDbContext curent = null;
-                IDS_WIR wir = new IDS_WIR(this.servece_owner);
-                int res = wir.IncomingWagons(ref curent, id_station, id_way, date_arrival, list_wagon, (bool)sostav.numeration, user);
-                return res;
+                        int id_station = (int)sostav.id_station_on;
+                        int id_way = (int)sostav.id_way;
+                        DateTime date_arrival = sostav.date_arrival;
+
+                        EFDbContext curent = new EFDbContext();
+                        //EFDbContext curent = null;
+                        IDS_WIR wir = new IDS_WIR(this.servece_owner);
+                        res = wir.IncomingWagons(ref curent, id_station, id_way, date_arrival, list_wagon, (bool)sostav.numeration, user);
+
+                    }
+                    else
+                    {
+                        res.SetResult((int)errors_wir.not_wagon);
+                    }
+                }
+                else
+                {
+                    res.SetResult((int)errors_wir.not_sostav);
+                }
+
+                string mess = String.Format("Операция переноса прибывшего с УЗ состава на станцию АМКР. Код выполнения = {0}. Состав [id = {1}, Индекс поезда = {2}, прибыл = {3}, станция отправитель = {4}, станция прибытия = {5}, количество вагонов = {6}]. Результат переноса [выбрано для переноса = {7}, перенесено = {8}, пропущено = {9}, ошибок переноса = {10}].",
+                    res.result, id_arrival, sostav.composition_index, sostav.date_arrival, (sostav.Directory_Station != null ? sostav.Directory_Station.station_name_ru : null), (sostav.Directory_Station1 != null ? sostav.Directory_Station1.station_name_ru : null), res.count,
+                    res.count, res.moved, res.skip, res.error);
+                mess.WarningLog(servece_owner, eventID);
+                mess.EventLog(res.result < 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
+                DateTime stop = DateTime.Now;
+                servece_owner.ServicesToLog(eventID, String.Format("Перенос состава на ст АМКР, id={0} - перенесен.", id_arrival), start, stop, res.result);
+
+                return res.result;
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("IncomingArrivalSostav(id_arrived={0})", id_arrival), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("IncomingArrivalSostav(id_arrival={0}, user={1})", id_arrival, user), servece_owner, eventID);
+                return -1;// Возвращаем id=-1 , Ошибка
+            }
+        }
+
+        public int IncomingArrivalSostav()
+        {
+            try
+            {
+                EFArrivalSostav ef_sostav = new EFArrivalSostav(new EFDbContext());
+                List<ArrivalSostav> sostav_list = ef_sostav.Context.Where(s => s.date_adoption != null).OrderBy(c => c.date_adoption).ToList();
+                int moving = 0;
+                int error = 0;
+                int skip = 0;
+                Console.WriteLine(String.Format("Определено для переноса {0} составов", sostav_list.Count()));
+                foreach (ArrivalSostav sost in sostav_list)
+                {
+
+                    Console.WriteLine(String.Format("Переношу состав id={0}, осталось {1}, Ошибок переноса {2}, пропущено {3}", sost.id, (sostav_list.Count() - moving), error, skip));
+                    int res = IncomingArrivalSostav(sost.id, null);
+                    if (res < 0)
+                    {
+                        error++;
+                    }
+                    if (res == 0) { skip++; }
+                    moving++;
+
+                }
+                return 0;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("IncomingArrivalSostav()"), servece_owner, eventID);
+                return -1;// Возвращаем id=-1 , Ошибка
+            }
+        }
+
+        public int OutgoingArrivalSostav(long id_outgoing, string user)
+        {
+            try
+            {
+                DateTime start = DateTime.Now;
+
+                ResultTransfer res = new ResultTransfer(0);
+
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+
+                EFOutgoingSostav ef_sostav = new EFOutgoingSostav(new EFDbContext());
+                EFOutgoingCars ef_car = new EFOutgoingCars(new EFDbContext());
+
+                OutgoingSostav sostav = ef_sostav.Context.Where(s => s.id == id_outgoing).FirstOrDefault();
+
+                if (sostav != null && sostav.date_outgoing != null && (sostav.OutgoingCars != null && sostav.OutgoingCars.Count() > 0))
+                {
+                    List<OutgoingCars> list_wagon = sostav.OutgoingCars.Where(c => c.position_outgoing != null).ToList();
+                    if (list_wagon != null && list_wagon.Count() > 0)
+                    {
+                        // Переносим 
+                        // Состав определен, принятые вагоны определены
+
+                        int id_station = (int)sostav.id_station_on;
+                        int id_way = (int)sostav.id_way;
+                        DateTime date_arrival = sostav.date_arrival;
+
+                        EFDbContext curent = new EFDbContext();
+                        //EFDbContext curent = null;
+                        IDS_WIR wir = new IDS_WIR(this.servece_owner);
+                        res = wir.OutgoingWagons(ref curent, id_station, id_way, date_arrival, list_wagon, (bool)sostav.numeration, user);
+
+                    }
+                    else
+                    {
+                        res.SetResult((int)errors_wir.not_wagon);
+                    }
+                }
+                else
+                {
+                    res.SetResult((int)errors_wir.not_sostav);
+                }
+
+                string mess = String.Format("Операция переноса прибывшего с УЗ состава на станцию АМКР. Код выполнения = {0}. Состав [id = {1}, Индекс поезда = {2}, прибыл = {3}, станция отправитель = {4}, станция прибытия = {5}, количество вагонов = {6}]. Результат переноса [выбрано для переноса = {7}, перенесено = {8}, пропущено = {9}, ошибок переноса = {10}].",
+                    res.result, id_arrival, sostav.composition_index, sostav.date_arrival, (sostav.Directory_Station != null ? sostav.Directory_Station.station_name_ru : null), (sostav.Directory_Station1 != null ? sostav.Directory_Station1.station_name_ru : null), res.count,
+                    res.count, res.moved, res.skip, res.error);
+                mess.WarningLog(servece_owner, eventID);
+                mess.EventLog(res.result < 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
+                DateTime stop = DateTime.Now;
+                servece_owner.ServicesToLog(eventID, String.Format("Перенос состава на ст АМКР, id={0} - перенесен.", id_arrival), start, stop, res.result);
+
+                return res.result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("IncomingArrivalSostav(id_arrival={0}, user={1})", id_arrival, user), servece_owner, eventID);
                 return -1;// Возвращаем id=-1 , Ошибка
             }
         }

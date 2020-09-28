@@ -61,6 +61,10 @@
     <Compile Include="WebAPIClientSAP.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DBLOG\DBLOG.csproj">
+      <Project>{5a44478b-12a2-410f-be17-4e3ad2331c5c}</Project>
+      <Name>DBLOG</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EFIDS\EFIDS.csproj">
       <Project>{07a94bbb-16a5-4817-87ea-bb7baea844a7}</Project>
       <Name>EFIDS</Name>

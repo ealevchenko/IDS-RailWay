@@ -49,6 +49,13 @@ namespace Test.TestModule
             int res = ids.IncomingArrivalSostav(42551, @"EUROPE\ealevchenko");
         }
 
+        public void IDSTransfer_IncomingArrivalSostav_All()
+        {
+
+            IDSTransfer ids = new IDSTransfer(service.Test);
+            int res = ids.IncomingArrivalSostav();
+        }
+
         #endregion
 
         #region IDSDirectory
