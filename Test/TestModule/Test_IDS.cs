@@ -46,7 +46,7 @@ namespace Test.TestModule
         {
 
             IDSTransfer ids = new IDSTransfer(service.Test);
-            int res = ids.IncomingArrivalSostav(42551, @"EUROPE\ealevchenko");
+            int res = ids.IncomingArrivalSostav(42551, @"EUROPE\test");
         }
 
         public void IDSTransfer_IncomingArrivalSostav_All()
@@ -54,6 +54,29 @@ namespace Test.TestModule
 
             IDSTransfer ids = new IDSTransfer(service.Test);
             int res = ids.IncomingArrivalSostav();
+        }
+        public void IDSTransfer_SetStationOutgoingWagonsOfKIS()
+        {
+
+            IDSTransfer ids = new IDSTransfer(service.Test);
+            int res = ids.SetStationOutgoingWagonsOfKIS(505, @"EUROPE\test");
+        }
+
+        /// <summary>
+        /// Перенос состава на УЗ и закрытие WIR
+        /// </summary>
+        public void IDSTransfer_SendingOutgoingSostav()
+        {
+
+            IDSTransfer ids = new IDSTransfer(service.Test);
+            int res = ids.SendingOutgoingSostav(499, @"EUROPE\test");
+        }
+        // чтение и обновление сап
+        public void IDS_SAP_GetCurrentIncomingSupplyOfWebSAP()
+        {
+
+            IDS_SAP ids = new IDS_SAP(service.Test);
+            //int res = ids.GetCurrentIncomingSupplyOfWebSAP(492, @"EUROPE\ealevchenko");
         }
 
         #endregion

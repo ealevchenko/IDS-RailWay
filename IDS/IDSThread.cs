@@ -67,11 +67,13 @@ namespace IDS
             try
             {
                 int transfer_control_time_interval_kis = 10;
+                bool transfer_set_outgoing_wagon_of_kis = true;
                 // считать настройки
                 try
                 {
                     // Интервал часов контроля до и после текущего времени при переное данных из КИС
                     transfer_control_time_interval_kis = int.Parse(ConfigurationManager.AppSettings["TransferControlTimeIntervalKIS"].ToString());
+                    transfer_set_outgoing_wagon_of_kis = bool.Parse(ConfigurationManager.AppSettings["TransferSetOutgoingWagonOfKis"].ToString());
                 }
                 catch (Exception ex)
                 {
@@ -82,6 +84,7 @@ namespace IDS
                 {
                     IDSTransfer ids_tr = new IDSTransfer(service);
                     ids_tr.TransferControlTimeIntervalKIS = transfer_control_time_interval_kis;
+                    ids_tr.TransferSetOutgoingWagonOfKis = transfer_set_outgoing_wagon_of_kis;
                     res_transfer = ids_tr.InsertOutgoingSostavOfKis();
                 }
                 TimeSpan ts = DateTime.Now - dt_start;
