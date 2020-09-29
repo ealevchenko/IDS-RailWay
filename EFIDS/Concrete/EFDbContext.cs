@@ -34,6 +34,7 @@ namespace EFIDS.Concrete
 
         public virtual DbSet<OutgoingCars> OutgoingCars { get; set; }
         public virtual DbSet<OutgoingSostav> OutgoingSostav { get; set; }
+        public virtual DbSet<UZ_DOC_OUT> UZ_DOC_OUT { get; set; }
 
         // Письма
         public virtual DbSet<InstructionalLetters> InstructionalLetters { get; set; }

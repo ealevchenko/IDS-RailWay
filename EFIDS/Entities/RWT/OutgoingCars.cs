@@ -25,6 +25,9 @@ namespace EFIDS.Entities
 
         public int? position_outgoing { get; set; }
 
+        [StringLength(50)]
+        public string num_doc { get; set; }
+
         [StringLength(200)]
         public string note { get; set; }
 
@@ -47,6 +50,8 @@ namespace EFIDS.Entities
         public string change_user { get; set; }
 
         public long? id_outgoing_uz_vagon { get; set; }
+
+        public virtual UZ_DOC_OUT UZ_DOC_OUT { get; set; }
 
         public virtual Directory_Wagons Directory_Wagons { get; set; }
 

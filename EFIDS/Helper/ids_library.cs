@@ -1371,42 +1371,50 @@ namespace EFIDS.Helper
             };
         }
 
-        public static InstructionalLettersWagon GetInstructionalLettersWagon(this InstructionalLettersWagon w)
+        public static SAPIncomingSupply GetSAPIncomingSupply(this SAPIncomingSupply s)
         {
-            if (w == null) return null;
-            return new InstructionalLettersWagon()
+            try
             {
-                id = w.id,
-                id_instructional_letters = w.id_instructional_letters,
-                num = w.num,
-                close = w.close,
-                close_status = w.close_status,
-                note = w.note,
-                create = w.create,
-                create_user = w.create_user,
-                change = w.change,
-                change_user = w.change_user,
-                InstructionalLetters = null,
-            };
-        }
-
-        public static InstructionalLetters GetInstructionalLetters(this InstructionalLetters l)
-        {
-            if (l == null) return null;
-            return new InstructionalLetters()
+                if (s == null) return null;
+                return new SAPIncomingSupply()
+                {
+                    id = s.id,
+                    id_arrival_car = s.id_arrival_car,
+                    num = s.num,
+                    num_doc_uz = s.num_doc_uz,
+                    date_doc_uz = s.date_doc_uz,
+                    code_border_checkpoint = s.code_border_checkpoint,
+                    name_border_checkpoint = s.name_border_checkpoint,
+                    cross_time = s.cross_time,
+                    VBELN = s.VBELN,
+                    NUM_VBELN = s.NUM_VBELN,
+                    WERKS = s.WERKS,
+                    LGORT = s.LGORT,
+                    LGOBE = s.LGOBE,
+                    ERDAT = s.ERDAT,
+                    ETIME = s.ETIME,
+                    LGORT_10 = s.LGORT_10,
+                    LGOBE_10 = s.LGOBE_10,
+                    MATNR = s.MATNR,
+                    MAKTX = s.MAKTX,
+                    NAME_SH = s.NAME_SH,
+                    KOD_R_10 = s.KOD_R_10,
+                    note = s.note,
+                    term = s.term,
+                    attempt = s.attempt,
+                    create = s.create,
+                    create_user = s.create_user,
+                    change = s.change,
+                    change_user = s.change_user,
+                    close = s.close,
+                    close_user = s.close_user,
+                    ArrivalCars = null
+                };
+            }
+            catch (Exception e)
             {
-                id = l.id,
-                num = l.num,
-                dt = l.dt,
-                owner = l.owner,
-                destination_station = l.destination_station,
-                note = l.note,
-                create = l.create,
-                create_user = l.create_user,
-                change = l.change,
-                change_user = l.change_user,
-                InstructionalLettersWagon = l.InstructionalLettersWagon.ToList().Select(c => c.GetInstructionalLettersWagon()).ToList(),
-            };
+                return null;
+            }
         }
 
         public static OutgoingSostav GetOutgoingSostav_OutgoingCars(this OutgoingSostav s)
@@ -1456,7 +1464,8 @@ namespace EFIDS.Helper
                     id_outgoing = c.id_outgoing,
                     num = c.num,
                     position = c.position,
-                    position_outgoing = c.position_outgoing,
+                    position_outgoing = c.position_outgoing, 
+                    num_doc = c.num_doc,
                     note = c.note,
                     date_outgoing_act = c.date_outgoing_act,
                     outgoing = c.outgoing,
@@ -1466,6 +1475,7 @@ namespace EFIDS.Helper
                     change = c.change,
                     change_user = c.change_user,
                     id_outgoing_uz_vagon = c.id_outgoing_uz_vagon,
+                    UZ_DOC_OUT = c.UZ_DOC_OUT.GetUZ_DOC_OUT(),
                     Directory_Wagons = null,
                     OutgoingSostav = null,
                 };
@@ -1476,50 +1486,58 @@ namespace EFIDS.Helper
             }
         }
 
-        public static SAPIncomingSupply GetSAPIncomingSupply(this SAPIncomingSupply s)
+        public static UZ_DOC_OUT GetUZ_DOC_OUT(this UZ_DOC_OUT d)
         {
-            try
+            if (d == null) return null;
+            return new UZ_DOC_OUT()
             {
-                if (s == null) return null;
-                return new SAPIncomingSupply()
-                {
-                    id = s.id,
-                    id_arrival_car = s.id_arrival_car,
-                    num = s.num,
-                    num_doc_uz = s.num_doc_uz,
-                    date_doc_uz = s.date_doc_uz,
-                    code_border_checkpoint = s.code_border_checkpoint,
-                    name_border_checkpoint = s.name_border_checkpoint,
-                    cross_time = s.cross_time,
-                    VBELN = s.VBELN,
-                    NUM_VBELN = s.NUM_VBELN,
-                    WERKS = s.WERKS,
-                    LGORT = s.LGORT,
-                    LGOBE = s.LGOBE,
-                    ERDAT = s.ERDAT,
-                    ETIME = s.ETIME,
-                    LGORT_10 = s.LGORT_10,
-                    LGOBE_10 = s.LGOBE_10,
-                    MATNR = s.MATNR,
-                    MAKTX = s.MAKTX,
-                    NAME_SH = s.NAME_SH,
-                    KOD_R_10 = s.KOD_R_10,
-                    note = s.note,
-                    term = s.term,
-                    attempt = s.attempt,
-                    create = s.create,
-                    create_user = s.create_user,
-                    change = s.change,
-                    change_user = s.change_user,
-                    close = s.close,
-                    close_user = s.close_user,
-                    ArrivalCars = null
-                };
-            }
-            catch (Exception e)
+                num_doc = d.num_doc,
+                revision = d.revision,
+                num_uz = d.num_uz,
+                status = d.status,
+                code_from = d.code_from,
+                code_on = d.code_on,
+                dt = d.dt,
+                xml_doc = d.xml_doc, 
+            };
+        }
+
+        public static InstructionalLettersWagon GetInstructionalLettersWagon(this InstructionalLettersWagon w)
+        {
+            if (w == null) return null;
+            return new InstructionalLettersWagon()
             {
-                return null;
-            }
+                id = w.id,
+                id_instructional_letters = w.id_instructional_letters,
+                num = w.num,
+                close = w.close,
+                close_status = w.close_status,
+                note = w.note,
+                create = w.create,
+                create_user = w.create_user,
+                change = w.change,
+                change_user = w.change_user,
+                InstructionalLetters = null,
+            };
+        }
+
+        public static InstructionalLetters GetInstructionalLetters(this InstructionalLetters l)
+        {
+            if (l == null) return null;
+            return new InstructionalLetters()
+            {
+                id = l.id,
+                num = l.num,
+                dt = l.dt,
+                owner = l.owner,
+                destination_station = l.destination_station,
+                note = l.note,
+                create = l.create,
+                create_user = l.create_user,
+                change = l.change,
+                change_user = l.change_user,
+                InstructionalLettersWagon = l.InstructionalLettersWagon.ToList().Select(c => c.GetInstructionalLettersWagon()).ToList(),
+            };
         }
 
         #endregion
