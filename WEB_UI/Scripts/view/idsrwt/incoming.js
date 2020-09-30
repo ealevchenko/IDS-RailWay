@@ -1926,7 +1926,6 @@
                     cars_detali.alert.out_info_message('Состав (№ поезда :' + cars_detali.sostav.train + ', Индекс поезда :' + cars_detali.sostav.composition_index + ') - Принят на АМКР');
                     // Установить признак обновления составов
                     cars_detali.update_sostav = true;
-
                     // Показать 
                     cars_detali.view(table_sostav.select_sostav.id, false);
                 });
@@ -4820,7 +4819,7 @@
                                     callback(0);
                                 }
                             }
-                       } else {
+                        } else {
                             // Вагон не прочитан из БД
                             cars_detali.alert.out_error_message("Вагон не найден в прибытии");
                             //LockScreenOff();
@@ -5006,7 +5005,7 @@
             //-------------------------------------------------------------------------------------
             // ФУНКЦИОНАЛ ВЕРУТЬ ВАГОН (Убрать из документов как принятый)
             //-------------------------------------------------------------------------------------
-            
+
             //Удалить платежки по контейнерам
             del_vagon_cont_pay: function (conts, callback) {
                 if (conts) {
@@ -7429,12 +7428,23 @@
                         if (arr_sostav) {
                             pn_arrival_sostav.ids_inc.putArrivalSostav(arr_sostav, function (result_upd) {
                                 if (result_upd > 0) {
-                                    //!!!TODO: ПЕРЕНОС ВАГОНОВ В ПРИБЫТИЕ
-                                    if (typeof callback_ok === 'function') {
-                                        pn_arrival_sostav.obj.dialog("close");
-                                        LockScreenOff();
-                                        callback_ok(result_upd);
-                                    }
+                                    //ПЕРЕНОС ВАГОНОВ В ПРИБЫТИЕ
+                                    var transfer_sostav = { id: arr_sostav.id, user: pn_arrival_sostav.user_name };
+                                    pn_arrival_sostav.ids_inc.ids_tr.postIncomingArrivalSostav(transfer_sostav, function (result_transfer) {
+                                        if (result_transfer > 0) {
+
+                                            if (typeof callback_ok === 'function') {
+                                                pn_arrival_sostav.obj.dialog("close");
+                                                LockScreenOff();
+                                                callback_ok(result_upd);
+                                            }
+                                        } else {
+                                            pn_arrival_sostav.val.clear_all();
+                                            pn_arrival_sostav.val.out_error_message("Ошибка. При переносе вагонов на станцию прибытия АМКР - возникла ошибка!");
+                                            LockScreenOff();
+                                        }
+                                    });
+
                                 } else {
                                     pn_arrival_sostav.val.clear_all();
                                     pn_arrival_sostav.val.out_error_message("Ошибка. При обновлении записи состава возникла ошибка.");

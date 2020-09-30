@@ -10,6 +10,12 @@ using System.Web.Http.Description;
 
 namespace WEB_UI.Controllers.api.RWT
 {
+    public class TransferObject
+    {
+        public int id { get; set; }
+        public string user { get; set; }
+    }
+
     [RoutePrefix("api/ids/transfer")]
     public class IDS_TransferController : ApiController
     {
@@ -59,6 +65,30 @@ namespace WEB_UI.Controllers.api.RWT
 
                 string num_doc = ids_tr.AddUpdateUZ_DOC_To_DB_IDS(value);
                 return Ok(num_doc);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        
+        // POST api/ids/transfer/incoming/arrival_sostav/
+        /// <summary>
+        /// Перенести принятый состав на станцию парибытия состав на станцию прибытия АМКР
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("incoming/arrival_sostav")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostIncomingArrivalSostav([FromBody]TransferObject value)
+        {
+            try
+            {
+                IDSTransfer ids_tr = new IDSTransfer(service.WebAPI_IDS);
+                int result = ids_tr.IncomingArrivalSostav(value.id, value.user);
+                return Ok(result);
             }
             catch (Exception e)
             {

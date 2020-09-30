@@ -9,7 +9,7 @@ var IDS_TRANSFER = function (lang) {
 /* ----------------------------------------------------------
 AJAX функции
 -------------------------------------------------------------*/
-//======= Поиск и перенос ЭПД ======================================
+//======= Поиск и перенос ЭПД ========================================================================================================
 // Найти документ в промежуточной базе, если есть - добавить или обновить в базе документов ИДС, если нет вернуть null
 IDS_TRANSFER.prototype.AddUpdateUZ_DOC_To_DB_IDS = function (num, datetime, callback) {
     //var s = '../../api/ids/transfer/epd/db_uz/add_update_db_ids/num/' + num + '/datetime/' + (datetime).substring(0, 19);
@@ -77,6 +77,33 @@ IDS_TRANSFER.prototype.postUZ_DOC_To_DB_IDS = function (uz_doc, callback) {
         error: function (x, y, z) {
             LockScreenOff();
             OnAJAXError("IDS_TRANSFER.postUZ_DOC_To_DB_IDS", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
+//======= Перенос сотавов по прибытию и отправке (ИДС-Прибытие, ИДС-АРМ диспетчера, ИДС-Отправка ======================================
+// Перенести принятый состав на станцию парибытия состав на станцию прибытия АМКР
+IDS_TRANSFER.prototype.postIncomingArrivalSostav = function (transfer_sostav, callback) {
+    $.ajax({
+        url: '../../api/ids/transfer/incoming/arrival_sostav/',
+        type: 'POST',
+        data: JSON.stringify(transfer_sostav),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_TRANSFER.postIncomingArrivalSostav", x, y, z);
         },
         complete: function () {
             AJAXComplete();
