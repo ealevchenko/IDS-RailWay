@@ -8,6 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+//using System.Data;
+//using System.Data.Entity.Infrastructure;
+//using System.Data.Entity.Core.Objects;
 
 namespace IDS
 {
@@ -115,7 +118,6 @@ namespace IDS
         {
             this.servece_owner = servece_owner;
         }
-
         #region ПРИБЫТИЕ ВАГОНОВ АРМ ДИСПЕТЧЕРА
         /// <summary>
         /// Принять вагон
@@ -244,8 +246,9 @@ namespace IDS
                     //foreach (Directory_Wagons dir in context.Directory_Wagons) {
                     //    context.Entry(dir).Reload();
                     //}
-                    context.Insert(wag_new);
-                    
+                    //var s = context.Directory_Wagons;   //.Database Refresh(RefreshMode, Object);
+                    //context.Entry(s).Reload();
+                    //((IObjectContextAdapter)context).ObjectContext.Refresh(RefreshMode.ClientWins, context.Directory_Wagons);
                 }
 
 
@@ -297,7 +300,17 @@ namespace IDS
                 return -1;// Возвращаем id=-1 , Ошибка
             }
         }
-
+        /// <summary>
+        /// Метод переносит вагоны на станцию отправки по данным КИС (!временный метод)
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_station"></param>
+        /// <param name="id_way"></param>
+        /// <param name="date_start"></param>
+        /// <param name="wagons"></param>
+        /// <param name="numeration"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public ResultTransfer SetStationOutgoingWagonsOfKIS(ref EFDbContext context, int id_station, int id_way, DateTime date_start, List<OutgoingCars> wagons, bool numeration, string user)
         {
             ResultTransfer rt = new ResultTransfer(wagons.Count());
@@ -328,7 +341,6 @@ namespace IDS
                 return rt;// Возвращаем id=-1 , Ошибка
             }
         }
-
         /// <summary>
         /// Выполнить отправку вагона
         /// </summary>

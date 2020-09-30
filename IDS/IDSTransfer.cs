@@ -478,6 +478,8 @@ namespace IDS
         {
             try
             {
+
+                string user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
                 EFOutgoingSostav ef_sostav = new EFOutgoingSostav(new EFDbContext());
                 EFOutgoingCars ef_car = new EFOutgoingCars(new EFDbContext());
                 KISWagon kis_wagon = new KISWagon(this.servece_owner);
@@ -525,7 +527,7 @@ namespace IDS
                                     id = 0,
                                     num_doc = sostav.N_NATUR,
                                     id_station_from = GetIDStationIDSOfIDKis(sostav.K_ST),
-                                    id_way_from = sostav.N_PUT != null ? (int)sostav.N_PUT : GetIDWayIDSOfIDKis(sostav.K_ST),
+                                    id_way_from = GetIDWayIDSOfIDKis(sostav.K_ST),
                                     id_station_on = sostav.K_ST_PR != null ? (int?)GetIDStationIDSOfIDKis(sostav.K_ST_PR) : null,
                                     date_readiness_amkr = sostav.DT_PR,
                                     date_show_wagons = this.transfer_set_outgoing_wagon_of_kis == true ? (DateTime?)sostav.DT : null,
@@ -535,8 +537,8 @@ namespace IDS
                                     composition_index = null,
                                     status = this.transfer_set_outgoing_wagon_of_kis == true ? 2 : 0,
                                     note = "Перенесен по данным КИС" + (this.transfer_set_outgoing_wagon_of_kis == true ? "(и сдан на УЗ автоматически)" : ""),
-                                    create = sostav.DAT_VVOD!=null ? (DateTime)sostav.DAT_VVOD : DateTime.Now,
-                                    create_user = System.Environment.UserDomainName + @"\" + System.Environment.UserName, 
+                                    create = sostav.DAT_VVOD != null ? (DateTime)sostav.DAT_VVOD : DateTime.Now,
+                                    create_user = user,
                                 };
                                 ef_sostav.Add(ids_sostav);
                                 res = ef_sostav.Save();
@@ -566,9 +568,9 @@ namespace IDS
                                                 note = "Перенесен по данным КИС" + (this.transfer_set_outgoing_wagon_of_kis == true ? "(и сдан на УЗ автоматически)" : ""),
                                                 date_outgoing_act = null,
                                                 outgoing = this.transfer_set_outgoing_wagon_of_kis == true ? (DateTime?)sostav.DT : null,
-                                                outgoing_user = this.transfer_set_outgoing_wagon_of_kis == true ? System.Environment.UserDomainName + @"\" + System.Environment.UserName : null,
+                                                outgoing_user = this.transfer_set_outgoing_wagon_of_kis == true ? user : null,
                                                 create = sostav.DAT_VVOD != null ? (DateTime)sostav.DAT_VVOD : DateTime.Now,
-                                                create_user = System.Environment.UserDomainName + @"\" + System.Environment.UserName,
+                                                create_user = user,
                                                 id_outgoing_uz_vagon = null,
                                             };
                                             list_cars.Add(car);
@@ -578,6 +580,14 @@ namespace IDS
                                         if (res_car >= 0)
                                         {
                                             add_sostav++;
+                                            // Поставить вагоны та путь
+                                            int result_set = SetStationOutgoingWagonsOfKIS(ids_sostav.id, user);
+                                            // Проверим вагоны перенесены на станцию отправки и бит закрывать автоматом = true, тогда закроем
+                                            if (result_set > 0 && this.transfer_set_outgoing_wagon_of_kis == true)
+                                            {
+                                                int result_sending = SendingOutgoingSostav(ids_sostav.id, user);
+                                            }
+
                                         }
                                     }
                                     else
@@ -769,10 +779,8 @@ namespace IDS
                         DateTime date_arrival = sostav.date_readiness_amkr;
 
                         EFDbContext curent = new EFDbContext();
-                        //EFDbContext curent = null;
                         IDS_WIR wir = new IDS_WIR(this.servece_owner);
                         res = wir.SetStationOutgoingWagonsOfKIS(ref curent, id_station, id_way, date_arrival, list_wagon, false, user);
-
                     }
                     else
                     {
@@ -784,13 +792,13 @@ namespace IDS
                     res.SetResult((int)errors_wir.not_sostav);
                 }
 
-                string mess = String.Format("Операция закрытия отправляемых на УЗ составов. Код выполнения = {0}. Состав [id = {1}, готовность АМКР = {2}, отправлен = {3}, станция отправитель АМКР = {4}, станция УЗ = {5}, количество вагонов = {6}]. Результат переноса [выбрано для переноса = {7}, перенесено = {8}, пропущено = {9}, ошибок переноса = {10}].",
-                    res.result, id_outgoing, sostav.date_readiness_amkr, sostav.date_outgoing, (sostav.Directory_Station != null ? sostav.Directory_Station.station_name_ru : null), (sostav.Directory_Station1 != null ? sostav.Directory_Station1.station_name_ru : null), res.count,
+                string mess = String.Format("Операция переноса вагонов в составе (отправляемого на УЗ) на станцию и путь отправки АМКР. Код выполнения = {0}. Состав [id = {1}, готовность АМКР = {2}, станция отправитель АМКР = {3}, станция УЗ = {4}, количество вагонов = {5}]. Результат переноса [выбрано для переноса = {6}, перенесено = {7}, пропущено = {8}, ошибок переноса = {9}].",
+                    res.result, id_outgoing, sostav.date_readiness_amkr, (sostav.Directory_Station != null ? sostav.Directory_Station.station_name_ru : null), (sostav.Directory_Station1 != null ? sostav.Directory_Station1.station_name_ru : null), res.count,
                     res.count, res.moved, res.skip, res.error);
                 mess.WarningLog(servece_owner, eventID);
                 mess.EventLog(res.result < 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
                 DateTime stop = DateTime.Now;
-                servece_owner.ServicesToLog(eventID, String.Format("Перенос состава на ст УЗ, id={0} - перенесен.", id_outgoing), start, stop, res.result);
+                servece_owner.ServicesToLog(eventID, String.Format("Перенос состава на ст АМКР для отправки на УЗ, id={0} - перенесен.", id_outgoing), start, stop, res.result);
 
                 return res.result;
             }
@@ -835,7 +843,7 @@ namespace IDS
 
                         int id_station = (int)sostav.id_station_from;
                         int id_way = (int)sostav.id_way_from;
-                        DateTime date_arrival = (DateTime)sostav.date_outgoing; 
+                        DateTime date_arrival = (DateTime)sostav.date_outgoing;
 
                         EFDbContext curent = new EFDbContext();
                         //EFDbContext curent = null;
