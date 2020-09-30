@@ -59,7 +59,7 @@ namespace Test.TestModule
         {
 
             IDSTransfer ids = new IDSTransfer(service.Test);
-            int res = ids.SetStationOutgoingWagonsOfKIS(505, @"EUROPE\test");
+            int res = ids.SetStationOutgoingWagonsOfKIS(513, @"EUROPE\test");
         }
 
         /// <summary>
