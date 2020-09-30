@@ -715,7 +715,8 @@ namespace IDS
             try
             {
                 EFArrivalSostav ef_sostav = new EFArrivalSostav(new EFDbContext());
-                List<ArrivalSostav> sostav_list = ef_sostav.Context.Where(s => s.date_adoption != null).OrderBy(c => c.date_adoption).ToList();
+                DateTime dt_start = new DateTime(2020,9,15,0,0,0);
+                List<ArrivalSostav> sostav_list = ef_sostav.Context.Where(s => s.date_adoption != null && s.date_adoption >= dt_start).OrderBy(c => c.date_adoption).ToList();
                 int moving = 0;
                 int error = 0;
                 int skip = 0;
