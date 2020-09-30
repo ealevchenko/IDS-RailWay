@@ -7,32 +7,49 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace IDS
 {
+    public class IncomingSupply
+    {
+        public string ID { get; set; }
+        public string NOM_VAG { get; set; }
+        public string NOM_NAKL { get; set; }
+        public string DATE_NAKL { get; set; }
+        public string VBELN { get; set; }
+        public string PSNR { get; set; }
+        public string WERKS { get; set; }
+        public string LGORT { get; set; }
+        public string LGOBE { get; set; }
+        public string ERDAT { get; set; }
+        public string ETIME { get; set; }
+        public string LGORT_10 { get; set; }
+        public string LGOBE_10 { get; set; }
+        public string MATNR { get; set; }
+        public string MAKTX { get; set; }
+        public string NAME_SH { get; set; }
+        public string KOD_R_10 { get; set; }
+    }
+
     public class WebAPIClientSAP
     {
         private eventID eventID = eventID.SAP_Client;
         protected service servece_owner = service.Null;
-        
+
         protected string url = null;
-        protected string transaction_reservation = null;
-        protected string transaction_supply = null;
+        protected string transaction_is = null;
         protected string login;
         protected string pass;
-        protected string sttn;
 
         public WebAPIClientSAP()
         {
             try
             {
                 this.url = ConfigurationManager.AppSettings["sap_url"].ToString();
-                this.transaction_reservation = ConfigurationManager.AppSettings["sap_transaction_reservation"].ToString();
-                this.transaction_supply = ConfigurationManager.AppSettings["sap_transaction_supply"].ToString();
+                this.transaction_is = ConfigurationManager.AppSettings["sap_transaction_is"].ToString();
                 this.login = ConfigurationManager.AppSettings["sap_login"].ToString();
                 this.pass = ConfigurationManager.AppSettings["sap_pass"].ToString();
-                this.sttn = ConfigurationManager.AppSettings["STTN"].ToString();
-
             }
             catch (Exception e)
             {
@@ -46,12 +63,9 @@ namespace IDS
             {
                 this.servece_owner = servece_owner;
                 this.url = ConfigurationManager.AppSettings["sap_url"].ToString();
-                this.transaction_reservation = ConfigurationManager.AppSettings["sap_transaction_reservation"].ToString();
-                this.transaction_supply = ConfigurationManager.AppSettings["sap_transaction_supply"].ToString();
+                this.transaction_is = ConfigurationManager.AppSettings["sap_transaction_is"].ToString();
                 this.login = ConfigurationManager.AppSettings["sap_login"].ToString();
                 this.pass = ConfigurationManager.AppSettings["sap_pass"].ToString();
-                this.sttn = ConfigurationManager.AppSettings["STTN"].ToString();
-
             }
             catch (Exception e)
             {
@@ -87,7 +101,7 @@ namespace IDS
                         }
                         catch (Exception e)
                         {
-                            e.ExceptionLog(String.Format("Ошибка создания StreamReader ответа, message {0}, метод {1}, accept {2}",message, metod, accept), this.servece_owner, this.eventID);
+                            e.ExceptionLog(String.Format("Ошибка создания StreamReader ответа, message {0}, метод {1}, accept {2}", message, metod, accept), this.servece_owner, this.eventID);
                             return null;
                         }
                     }
@@ -95,7 +109,7 @@ namespace IDS
                 catch (Exception e)
                 {
                     e.ExceptionLog(String.Format("Ошибка получения ответа WebResponse, message {0}, метод {1}, accept {2}", message, metod, accept), this.servece_owner, this.eventID);
-                    return null;                    
+                    return null;
                 }
             }
             catch (Exception e)
@@ -104,355 +118,59 @@ namespace IDS
                 return null;
             }
         }
-        ///// <summary>
-        ///// Получить информацию по резервированию
-        ///// </summary>
-        ///// <param name="num"></param>
-        ///// <param name="pos"></param>
-        ///// <returns></returns>
-        //public Reservation GetReservation(string num, string pos, string mode)
-        //{
-        //    try
-        //    {
 
-        //        string message = this.url + this.transaction_reservation +
-        //            "&RSNUM=" + num +
-        //            "&RSPOS=" + pos +
-        //            "&STTN=" + this.sttn +
-        //            "&FLAG_R=" + mode +
-        //            "&OutputParameter=RSLT" +
-        //            "&XacuteLoginName=" + this.login +
-        //            "&XacuteLoginPassword=" + this.pass;
+        public List<IncomingSupply> GetIncomingSupply(long ID, string NOM_NAKL, string NOM_VAG)
+        {
+            try
+            {
+                string message = this.url + this.transaction_is +
+                                    "&ID=" + ID.ToString() +
+                                    "&NOM_NAKL=" + NOM_NAKL +
+                                    "&NOM_VAG=" + NOM_VAG +
+                    "&XacuteLoginName=" + this.login +
+                    "&XacuteLoginPassword=" + this.pass;
 
-        //        string response = Select(message, "GET", "text/xml");
-        //        String.Format("\r\n Выполнение метода GetReservation(num={0}, pos={1}, mode={2}) \r\nurl={3} \r\nxml={4}", num, pos, mode, message, response).SaveDebug();
+                string response = Select(message, "GET", "text/xml");
 
-        //        if (String.IsNullOrWhiteSpace(response)) return null;
-        //        //Console.WriteLine("Result text/xml = {0}", response);
+                String.Format("\r\n Выполнение метода GetIncomingSupply(ID={0}, NOM_NAKL={1}, NOM_VAG={2}) \r\nurl={3} \r\nxml={4}", ID, NOM_NAKL, NOM_VAG, message, response).WarningLog();
 
-        //        XDocument doc = XDocument.Parse(response);
+                if (String.IsNullOrWhiteSpace(response)) return null;
+                XDocument doc = XDocument.Parse(response);
 
-        //        XElement element = doc.Element("Rowsets").Element("Rowset").Elements("Row").FirstOrDefault();
+                List<IncomingSupply> list_supply = new List<IncomingSupply>();
 
-        //        Reservation reserv = new Reservation()
-        //        {
-        //            RSNUM = (string)element.Element("RSNUM"),
-        //            RSPOS = (string)element.Element("RSPOS"),
-        //            MATNR = (string)element.Element("MATNR"),
-        //            WERKS = (string)element.Element("WERKS"),
-        //            LGORT = (string)element.Element("LGORT"),
-        //            UMLGO = (string)element.Element("UMLGO"),
-        //            UMWRK = (string)element.Element("UMWRK"),
-        //            BDMNG = (string)element.Element("BDMNG"),
-        //            ENMNG = (string)element.Element("ENMNG"),
-        //            LGOBE = (string)element.Element("LGOBE"),
-        //            MEINS = (string)element.Element("MEINS"),
-        //            BWART = (string)element.Element("BWART"),
-        //        };
+                foreach (XElement element in doc.Element("Rowsets").Element("Rowset").Elements("Row"))
+                {
+                    IncomingSupply sypply = new IncomingSupply()
+                    {
+                        ID = (string)element.Element("ID"),
+                        NOM_VAG = (string)element.Element("NOM_VAG"),
+                        NOM_NAKL = (string)element.Element("NOM_NAKL"),
+                        DATE_NAKL = (string)element.Element("DATE_NAKL"),
+                        VBELN = (string)element.Element("VBELN"),
+                        PSNR = (string)element.Element("PSNR"),
+                        WERKS = (string)element.Element("WERKS"),
+                        LGORT = (string)element.Element("LGORT"),
+                        LGOBE = (string)element.Element("LGOBE"),
+                        ERDAT = (string)element.Element("ERDAT"),
+                        ETIME = (string)element.Element("ETIME"),
+                        LGORT_10 = (string)element.Element("LGORT_10"),
+                        LGOBE_10 = (string)element.Element("LGOBE_10"),
+                        MATNR = (string)element.Element("MATNR"),
+                        MAKTX = (string)element.Element("MAKTX"),
+                        NAME_SH = (string)element.Element("NAME_SH"),
+                        KOD_R_10 = (string)element.Element("KOD_R_10"),
+                    };
+                    list_supply.Add(sypply);
+                }
 
-        //        return reserv;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        String.Format("GetReservation(num={0}, pos={1}, mode={2})", num, pos, mode).SaveError(e);
-        //        Console.WriteLine("Ошибка выполнения метода GetReservation(num={0}, pos={1},  mode={2}, e {3}", num, pos, mode, e);
-        //        return null;
-        //    }
-        //}
-        //// Вернуть 
-        //public List<Reservation> GetReservationMatrn(string num, string matrn, string mode)
-        //{
-        //    try
-        //    {
-
-        //        string message = this.url + this.transaction_reservation +
-        //            "&RSNUM=" + num +
-        //            "&RSPOS=" +
-        //            "&STTN=" + this.sttn +
-        //            "&MATNR=" + matrn +
-        //            "&FLAG_R=" + mode +
-        //            "&OutputParameter=RSLT" +
-        //            "&XacuteLoginName=" + this.login +
-        //            "&XacuteLoginPassword=" + this.pass;
-
-        //        string response = Select(message, "GET", "text/xml");
-        //        String.Format("\r\n Выполнение метода GetReservation(num={0}, mode={1}) \r\nurl={2} \r\nxml={3}", num, mode, message, response).SaveDebug();
-
-        //        if (String.IsNullOrWhiteSpace(response)) return null;
-        //        //Console.WriteLine("Result text/xml = {0}", response);
-
-        //        XDocument doc = XDocument.Parse(response);
-
-        //        List<Reservation> list_reserv = new List<Reservation>();
-
-        //        foreach (XElement element in doc.Element("Rowsets").Element("Rowset").Elements("Row"))
-        //        {
-        //            Reservation reserv = new Reservation()
-        //            {
-        //                RSNUM = (string)element.Element("RSNUM"),
-        //                RSPOS = (string)element.Element("RSPOS"),
-        //                MATNR = (string)element.Element("MATNR"),
-        //                WERKS = (string)element.Element("WERKS"),
-        //                LGORT = (string)element.Element("LGORT"),
-        //                UMLGO = (string)element.Element("UMLGO"),
-        //                UMWRK = (string)element.Element("UMWRK"),
-        //                BDMNG = (string)element.Element("BDMNG"),
-        //                ENMNG = (string)element.Element("ENMNG"),
-        //                LGOBE = (string)element.Element("LGOBE"),
-        //                MEINS = (string)element.Element("MEINS"),
-        //                BWART = (string)element.Element("BWART"),
-        //            };
-        //            list_reserv.Add(reserv);
-        //        }
-
-        //        return list_reserv;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        String.Format("GetReservation(num={0}, mode={1})", num, mode).SaveError(e);
-        //        Console.WriteLine("Ошибка выполнения метода GetReservation(num={0}, mode={1}, e {2}", num, mode, e);
-        //        return null;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Получить информацию по поставкам
-        ///// </summary>
-        ///// <param name="post"></param>
-        ///// <returns></returns>
-        //public List<Supply> GetSupply(string post)
-        //{
-        //    try
-        //    {
-        //        string message = this.url + this.transaction_supply +
-        //                            "&VBELN=" + post +
-        //                            "&RSNUM=1" +
-        //                            "&OutputParameter=RSLT" +
-        //            "&XacuteLoginName=" + this.login +
-        //            "&XacuteLoginPassword=" + this.pass;
-
-        //        string response = Select(message, "GET", "text/xml");
-
-        //        String.Format("\r\n Выполнение метода GetSupply(post={0}) \r\nurl={1} \r\nxml={2}", post, message, response).SaveDebug();
-
-        //        if (String.IsNullOrWhiteSpace(response)) return null;
-        //        //Console.WriteLine("Result text/xml = {0}", response);
-        //        XDocument doc = XDocument.Parse(response);
-
-        //        List<Supply> list_supply = new List<Supply>();
-
-        //        foreach (XElement element in doc.Element("Rowsets").Element("Rowset").Elements("Row"))
-        //        {
-        //            Supply sypply = new Supply()
-        //            {
-        //                VBELN = (string)element.Element("VBELN"),
-        //                POSNR = (string)element.Element("POSNR"),
-        //                MATNR = (string)element.Element("MATNR"),
-        //                WERKS = (string)element.Element("WERKS"),
-        //                LGORT = (string)element.Element("LGORT"),
-        //                KUNNR = (string)element.Element("KUNNR"),
-        //                LFIMG = (string)element.Element("LFIMG"),
-        //                LGOBE = (string)element.Element("LGOBE"),
-        //                MEINS = (string)element.Element("MEINS"),
-        //                BWART = (string)element.Element("BWART"),
-        //            };
-        //            list_supply.Add(sypply);
-        //        }
-
-        //        return list_supply;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        String.Format("GetSupply(post={0})", post).SaveError(e);
-        //        Console.WriteLine("Ошибка выполнения метода GetSupply(post={0}) e={1}", post, e);
-        //        return null;
-        //    }
-        //}
-        ///// <summary>
-        ///// Получить резервирование по дебитору, ОЗМ, режиму
-        ///// </summary>
-        ///// <param name="debitor"></param>
-        ///// <param name="ozm"></param>
-        ///// <param name="mode"></param>
-        ///// <returns></returns>
-        //public Reservation GetReservationOfDebitor(string debitor, string ozm, string mode)
-        //{
-        //    try
-        //    {
-
-        //        string message = this.url + this.transaction_reservation +
-        //            //"&RSNUM=" +
-        //            //"&RSPOS=" +
-        //            ////"&RSNUM=3052703" +
-        //            ////"&RSPOS=1" +
-        //            "&KUNNR=" + debitor +
-        //            "&MATNR=" + ozm +
-        //            "&STTN=" + this.sttn +
-        //            "&FLAG_R=" + mode +
-        //            "&OutputParameter=RSLT" +
-        //            "&XacuteLoginName=" + this.login +
-        //            "&XacuteLoginPassword=" + this.pass;
-
-        //        string response = Select(message, "GET", "text/xml");
-
-        //        String.Format("\r\n Выполнение метода GetReservationOfDebitor(debitor={0}, ozm={1}, mode={2}) \r\nurl={3} \r\nxml={4}", debitor, ozm, mode, message, response).SaveDebug();
-
-        //        if (String.IsNullOrWhiteSpace(response)) return null;
-        //        //Console.WriteLine("Result text/xml = {0}", response);
-
-        //        XDocument doc = XDocument.Parse(response);
-
-        //        XElement element = doc.Element("Rowsets").Element("Rowset").Elements("Row").FirstOrDefault();
-
-        //        Reservation reserv = new Reservation()
-        //        {
-        //            RSNUM = (string)element.Element("RSNUM"), //Номер резервирования
-        //            RSPOS = (string)element.Element("RSPOS"), // Позиция резервирования
-        //            MATNR = (string)element.Element("MATNR"), //ОЗМ
-        //            WERKS = (string)element.Element("WERKS"), //Завод
-        //            LGORT = (string)element.Element("LGORT"), //Склад-отправитель
-        //            UMLGO = (string)element.Element("UMLGO"), //Склад-получатель
-        //            UMWRK = (string)element.Element("UMWRK"), //
-        //            BDMNG = (string)element.Element("BDMNG"), //Количество требуемое
-        //            //ENMNG = (string)element.Element("ENMNG"), //
-        //            LGOBE = (string)element.Element("LGOBE"), //
-        //            MEINS = (string)element.Element("MEINS"), //базисная единица
-        //            BWART = (string)element.Element("BWART"), //Вид движения"
-
-        //        };
-
-        //        return reserv;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        String.Format("GetReservationOfDebitor(debitor={0}, ozm={1}, mode={2})", debitor, ozm, mode).SaveError(e);
-        //        Console.WriteLine("Ошибка выполнения метода GetReservationOfDebitor(debitor={0}, ozm={1}, mode={2}, e {3}", debitor, ozm, mode, e);
-        //        return null;
-        //    }
-        //}
-        ///// <summary>
-        ///// Получить резервирование по объему, массе, дебитору, ОЗМ, режиму
-        ///// </summary>
-        ///// <param name="valume"></param>
-        ///// <param name="mass"></param>
-        ///// <param name="debitor"></param>
-        ///// <param name="ozm"></param>
-        ///// <param name="mode"></param>
-        ///// <returns></returns>
-        //public Reservation GetReservationOfValumeMassDebitor(double valume, double mass, string debitor, string ozm, string mode)
-        //{
-        //    try
-        //    {
-        //        string message = this.url + this.transaction_reservation +
-        //            "&RSNUM=" +
-        //            "&RSPOS=" +
-        //            "&KUNNR=" + debitor +
-        //            "&MATNR=" + ozm +
-        //            "&STTN=" + this.sttn +
-        //            "&FLAG_R=" + mode +
-        //            "&MENGE=" + mass.ToString("0.##") +
-        //            "&MENGE_L=" + valume.ToString("0.##") +
-        //            "&OutputParameter=RSLT" +
-        //            "&XacuteLoginName=" + this.login +
-        //            "&XacuteLoginPassword=" + this.pass;
-
-        //        string response = Select(message, "GET", "text/xml");
-
-        //        String.Format("\r\n Выполнение метода GetReservationOfValumeMassDebitor(valume={0}, mass={1}, debitor={2}, ozm={3}, mode={4}) \r\nurl={5} \r\nxml={6}", valume, mass, debitor, ozm, mode, message, response).SaveDebug();
-
-        //        if (String.IsNullOrWhiteSpace(response)) return null;
-        //        //Console.WriteLine("Result text/xml = {0}", response);
-
-        //        XDocument doc = XDocument.Parse(response);
-
-        //        XElement element = doc.Element("Rowsets").Element("Rowset").Elements("Row").FirstOrDefault();
-
-        //        Reservation reserv = new Reservation()
-        //        {
-        //            RSNUM = (string)element.Element("RSNUM"), //Номер резервирования
-        //            RSPOS = (string)element.Element("RSPOS"), // Позиция резервирования
-        //            MATNR = (string)element.Element("MATNR"), //ОЗМ
-        //            WERKS = (string)element.Element("WERKS"), //Завод
-        //            LGORT = (string)element.Element("LGORT"), //Склад-отправитель
-        //            UMLGO = (string)element.Element("UMLGO"), //Склад-получатель
-        //            UMWRK = (string)element.Element("UMWRK"), //
-        //            BDMNG = (string)element.Element("BDMNG"), //Количество требуемое
-        //            //ENMNG = (string)element.Element("ENMNG"), //
-        //            LGOBE = (string)element.Element("LGOBE"), //
-        //            MEINS = (string)element.Element("MEINS"), //базисная единица
-        //            BWART = (string)element.Element("BWART"), //Вид движения"
-
-        //        };
-
-        //        return reserv;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        String.Format("GetReservationOfValumeMassDebitor(valume={0}, mass={1}, debitor={2}, ozm={3}, mode={4})", valume, mass, debitor, ozm, mode).SaveError(e);
-        //        Console.WriteLine("Ошибка выполнения метода GetReservationOfValumeMassDebitor(debitor={0}, ozm={1}, mode={2}, e {3}", debitor, ozm, mode, e);
-        //        return null;
-        //    }
-        //}
-        ///// <summary>
-        ///// Получить резервирование по наряд допуску
-        ///// </summary>
-        ///// <param name="num"></param>
-        ///// <returns></returns>
-        //public Reservation GetReservationOfNDopusk(string num, string mode)
-        //{
-        //    try
-        //    {
-        //        string message = this.url + this.transaction_reservation +
-        //            "&RSNUM=" +
-        //            "&RSPOS=" +
-        //            "&KUNNR=" +
-        //            "&MATNR=" +
-        //            "&OTFT=" + num +
-        //            "&STTN=" + this.sttn +
-        //            "&FLAG_R=" + mode +
-        //            "&MENGE=" +
-        //            "&MENGE_L=" +
-        //            "&OutputParameter=RSLT" +
-        //            "&XacuteLoginName=" + this.login +
-        //            "&XacuteLoginPassword=" + this.pass;
-
-        //        string response = Select(message, "GET", "text/xml");
-
-        //        String.Format("\r\n Выполнение метода GetReservationOfNDopusk(num={0}, mode={1}) \r\nurl={2} \r\nxml={3}", num, mode, message, response).SaveDebug();
-
-        //        if (String.IsNullOrWhiteSpace(response)) return null;
-        //        //Console.WriteLine("Result text/xml = {0}", response);
-
-        //        XDocument doc = XDocument.Parse(response);
-
-        //        XElement element = doc.Element("Rowsets").Element("Rowset").Elements("Row").FirstOrDefault();
-
-        //        Reservation reserv = new Reservation()
-        //        {
-        //            RSNUM = (string)element.Element("RSNUM"), //Номер резервирования
-        //            RSPOS = (string)element.Element("RSPOS"), // Позиция резервирования
-        //            MATNR = (string)element.Element("MATNR"), //ОЗМ
-        //            WERKS = (string)element.Element("WERKS"), //Завод
-        //            LGORT = (string)element.Element("LGORT"), //Склад-отправитель
-        //            UMLGO = (string)element.Element("UMLGO"), //Склад-получатель
-        //            UMWRK = (string)element.Element("UMWRK"), //
-        //            BDMNG = (string)element.Element("BDMNG"), //Количество требуемое
-        //            //ENMNG = (string)element.Element("ENMNG"), //
-        //            LGOBE = (string)element.Element("LGOBE"), //
-        //            MEINS = (string)element.Element("MEINS"), //базисная единица
-        //            BWART = (string)element.Element("BWART"), //Вид движения"
-
-        //        };
-
-        //        return reserv;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        String.Format("GetReservationOfNDopusk(num={0})", num).SaveError(e);
-        //        Console.WriteLine("Ошибка выполнения метода GetReservationOfNDopusk(num={0}), e={1}", num, e);
-        //        return null;
-        //    }
-        //}
-
+                return list_supply;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetIncomingSupply(ID={0}, NOM_NAKL={1}, NOM_VAG={2})", ID, NOM_NAKL, NOM_VAG), servece_owner, eventID);
+                return null;
+            }
+        }
     }
 }

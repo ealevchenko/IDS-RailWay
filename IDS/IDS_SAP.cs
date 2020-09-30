@@ -3,12 +3,14 @@ using IDSLogs;
 using IDSLogs.Enum;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace IDS
 {
+
     public class IDS_SAP
     {
         private eventID eventID = eventID.IDS_IDSSAP;
@@ -24,8 +26,9 @@ namespace IDS
         /// <param name="servece_owner"></param>
         public IDS_SAP(service servece_owner)
         {
-            this.servece_owner = servece_owner;
+
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -35,7 +38,8 @@ namespace IDS
         {
             try
             {
-                //TODO: Заглушка пока не будет реализован интерфейс с САП
+                //WebAPIClientSAP web_sap = new WebAPIClientSAP(this.servece_owner);
+                //List<IncomingSupply> incoming_supply = web_sap.GetIncomingSupply(sap_is.id, sap_is.num_doc_uz.Trim(), sap_is.num.ToString().Trim());
                 sap_is.attempt = sap_is.attempt + 1;
                 return sap_is;
             }

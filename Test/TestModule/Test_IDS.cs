@@ -1,4 +1,5 @@
-﻿using EFIDS.Entities;
+﻿using EFIDS.Concrete;
+using EFIDS.Entities;
 using IDS;
 using IDSLogs.Enum;
 using System;
@@ -76,7 +77,10 @@ namespace Test.TestModule
         {
 
             IDS_SAP ids = new IDS_SAP(service.Test);
-            //int res = ids.GetCurrentIncomingSupplyOfWebSAP(492, @"EUROPE\ealevchenko");
+
+            EFSAPIncomingSupply ef_sap = new EFSAPIncomingSupply(new EFDbContext());
+            SAPIncomingSupply sap = ef_sap.Context.Where(s => s.id == 8091).FirstOrDefault();
+            SAPIncomingSupply res = ids.GetCurrentIncomingSupplyOfWebSAP(sap);
         }
 
         #endregion
