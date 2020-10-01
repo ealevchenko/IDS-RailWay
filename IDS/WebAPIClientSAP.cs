@@ -119,7 +119,7 @@ namespace IDS
             }
         }
 
-        public List<IncomingSupply> GetIncomingSupply(long ID, string NOM_NAKL, string NOM_VAG)
+        public IncomingSupply GetIncomingSupply(long ID, string NOM_NAKL, string NOM_VAG)
         {
             try
             {
@@ -127,6 +127,7 @@ namespace IDS
                                     "&ID=" + ID.ToString() +
                                     "&NOM_NAKL=" + NOM_NAKL +
                                     "&NOM_VAG=" + NOM_VAG +
+                                    "&OutputParameter=RSLT" +
                     "&XacuteLoginName=" + this.login +
                     "&XacuteLoginPassword=" + this.pass;
 
@@ -137,7 +138,7 @@ namespace IDS
                 if (String.IsNullOrWhiteSpace(response)) return null;
                 XDocument doc = XDocument.Parse(response);
 
-                List<IncomingSupply> list_supply = new List<IncomingSupply>();
+                //List<IncomingSupply> list_supply = new List<IncomingSupply>();
 
                 foreach (XElement element in doc.Element("Rowsets").Element("Rowset").Elements("Row"))
                 {
@@ -161,10 +162,11 @@ namespace IDS
                         NAME_SH = (string)element.Element("NAME_SH"),
                         KOD_R_10 = (string)element.Element("KOD_R_10"),
                     };
-                    list_supply.Add(sypply);
+                    //list_supply.Add(sypply);
+                    return sypply;
                 }
-
-                return list_supply;
+                return null;
+                //return list_supply;
             }
             catch (Exception e)
             {

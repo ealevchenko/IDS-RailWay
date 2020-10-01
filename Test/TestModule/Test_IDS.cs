@@ -80,6 +80,8 @@ namespace Test.TestModule
 
             EFSAPIncomingSupply ef_sap = new EFSAPIncomingSupply(new EFDbContext());
             SAPIncomingSupply sap = ef_sap.Context.Where(s => s.id == 8091).FirstOrDefault();
+            sap.num = 52206182;
+            sap.num_doc_uz = "29382214";
             SAPIncomingSupply res = ids.GetCurrentIncomingSupplyOfWebSAP(sap);
         }
 

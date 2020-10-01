@@ -4202,6 +4202,18 @@
             },
             // Показать информацию по сап
             view_sap_incoming_supply: function (id_arrival_car, callback) {
+                // Очистим ячейки
+                cars_detali.SAP_inbound_delivery_num_input_sipply.val('');
+                cars_detali.SAP_inbound_delivery_num_pos_sipply.val('');
+                cars_detali.SAP_inbound_delivery_dt_sipply.val('');
+                cars_detali.SAP_inbound_delivery_unloading_ban.val('');
+                cars_detali.SAP_inbound_delivery_ship.val('');
+                cars_detali.SAP_inbound_delivery_material_code.val('');
+                cars_detali.SAP_inbound_delivery_material_name.val('');
+                cars_detali.SAP_inbound_delivery_warehouse_code.val('');
+                cars_detali.SAP_inbound_delivery_warehouse_name.val('');
+                cars_detali.SAP_inbound_delivery_warehouse_code_new.val('');
+                cars_detali.SAP_inbound_delivery_warehouse_name_new.val('');
                 if (id_arrival_car) {
                     cars_detali.ids_inc.getSAPIncomingSupplyOfIDArrivalCar(id_arrival_car, function (sap_is) {
                         cars_detali.select_sap_is = sap_is;
