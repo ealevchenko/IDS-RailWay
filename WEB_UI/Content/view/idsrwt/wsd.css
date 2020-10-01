@@ -36,3 +36,24 @@ td.park-name {
 td.way-name {
     text-align:left
 }
+
+.icon-station {
+    background-image:url("../../../Images/idsrwt/wsd/station.svg");
+    width:16px;
+    height:16px;
+    margin-right:5px;
+}
+
+.icon-park {
+    background-image:url("../../../Images/idsrwt/wsd/park.svg");
+    width:16px;
+    height:16px;
+    margin-right:5px;
+}
+
+.icon-way {
+    background-image:url("../../../Images/idsrwt/wsd/way.png");
+    width:16px;
+    height:16px;
+    margin-right:5px;
+}

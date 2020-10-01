@@ -11,6 +11,33 @@ using System.Web.Http.Description;
 
 namespace WEB_UI.Controllers.api
 {
+    public class Way_View
+    {
+        public int id { get; set; }
+        public int id_station { get; set; }
+        public int id_park { get; set; }
+        public int position_park { get; set; }
+        public int position_way { get; set; }
+        public string way_num_ru { get; set; }
+        public string way_num_en { get; set; }
+        public string way_name_ru { get; set; }
+        public string way_name_en { get; set; }
+        public string way_abbr_ru { get; set; }
+        public string way_abbr_en { get; set; }
+        public int? capacity { get; set; }
+        public int count_wagon { get; set; }
+        public bool? deadlock { get; set; }
+        public bool? crossing_uz { get; set; }
+        public bool? crossing_amkr { get; set; }
+        public int? id_devision { get; set; }
+        public string note { get; set; }
+        public DateTime create { get; set; }
+        public string create_user { get; set; }
+        public DateTime? change { get; set; }
+        public string change_user { get; set; }
+    }
+    
+    
     /// <summary>
     /// СПИСОК ПУТЕЙ
     /// </summary>
@@ -63,14 +90,16 @@ namespace WEB_UI.Controllers.api
 
         // GET: api/ids/directory/ways/view/station/id/1/park/id/69
         [Route("view/station/id/{id_station:int}/park/id/{id_park:int}")]
-        [ResponseType(typeof(Directory_Ways))]
+        [ResponseType(typeof(Way_View))]
         public IHttpActionResult GetWayOfStationPark(int id_station, int id_park)
         {
             try
             {
-                string sql = "SELECT [id] ,[id_station],[id_park],[position_park] ,[position_way] ,[way_num_ru],[way_num_en],[way_name_ru],[way_name_en], [way_abbr_ru] ,[way_abbr_en], [capacity], [deadlock], [crossing_uz], [crossing_amkr], [id_devision], [note], [create], [create_user], [change], [change_user] "+
-                    "FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] where [id_station]=" + id_station.ToString() + " AND [id_park]=" + id_park.ToString() + " ORDER BY [position_way]";
-                List<Directory_Ways> list = this.ef_dir.Database.SqlQuery<Directory_Ways>(sql).ToList();
+                string sql = "SELECT w.[id],w.[id_station],w.[id_park],w.[position_park],w.[position_way],w.[way_num_ru],w.[way_num_en],w.[way_name_ru],w.[way_name_en],w.[way_abbr_ru],w.[way_abbr_en],w.[capacity],[count_wagon] = (SELECT count(id) FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_way] =w.[id] and [way_end] is null),w.[deadlock],w.[crossing_uz],w.[crossing_amkr],w.[id_devision],w.[note],w.[create],w.[create_user],w.[change],w.[change_user] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] as w where [id_station]=" + id_station.ToString() + " AND [id_park]=" + id_park.ToString() + " ORDER BY [position_way]";
+                
+                //string sql = "SELECT [id] ,[id_station],[id_park],[position_park] ,[position_way] ,[way_num_ru],[way_num_en],[way_name_ru],[way_name_en], [way_abbr_ru] ,[way_abbr_en], [capacity], [deadlock], [crossing_uz], [crossing_amkr], [id_devision], [note], [create], [create_user], [change], [change_user] "+
+                //    "FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] where [id_station]=" + id_station.ToString() + " AND [id_park]=" + id_park.ToString() + " ORDER BY [position_way]";
+                List<Way_View> list = this.ef_dir.Database.SqlQuery<Way_View>(sql).ToList();
                 return Ok(list);
             }
             catch (Exception e)

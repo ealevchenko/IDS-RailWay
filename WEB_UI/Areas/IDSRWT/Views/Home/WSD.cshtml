@@ -26,9 +26,13 @@
     <script src="~/Scripts/api/ids_transfer.js"></script> <!-- Class API ИДС Переносы -->
     <script src="~/Scripts/api/uz_sms.js"></script> <!-- Class API Работа с модулем согласования -->
 
+    <script src="~/Scripts/plugins/pl_dialog_confirm.js"></script> <!-- Плагин -->
+
     <script src="~/Scripts/view/idsrwt/wsd.js"></script> <!--  -->
 }
 <input id="username" type="hidden" value="@User.Identity.Name" />
+
+<div id="dialog-confirm"></div>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
@@ -132,3 +136,12 @@
         </div>
     </div>
 </div>
+
+<div id="loading_way_detail" title="" style="display:none">
+    <form id="form_loading_way_detail">
+        
+        <!-- Allow form submission with keyboard without duplicating the dialog button -->
+        <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </form>
+</div>
+

@@ -1,0 +1,3 @@
+SELECT w.[id],w.[id_station],w.[id_park],w.[position_park],w.[position_way],w.[way_num_ru],w.[way_num_en],w.[way_name_ru],w.[way_name_en],w.[way_abbr_ru],w.[way_abbr_en],w.[capacity],[count_wagon] = (SELECT count(id) FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_way] =w.[id] and [way_end] is null),w.[deadlock],w.[crossing_uz],w.[crossing_amkr],w.[id_devision],w.[note],w.[create],w.[create_user],w.[change],w.[change_user] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] as w where [id_station]=6 AND [id_park]=71 ORDER BY [position_way] 
+
+ SELECT count(id) FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_way] =105 and [way_end] is null
