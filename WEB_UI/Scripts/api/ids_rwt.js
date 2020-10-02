@@ -1481,7 +1481,6 @@ IDS_RWT.prototype.putListArrival_UZ_Vagon = function (list_wagon, callback) {
         },
     });
 };
-
 // Удалить вагон  
 IDS_RWT.prototype.deleteArrival_UZ_Vagon = function (id, callback) {
     $.ajax({
@@ -1543,7 +1542,6 @@ IDS_RWT.prototype.getCloneArrival_UZ_Vagon = function (vagon) {
         change_user : vagon.change_user ,
     };
 }
-
 //======= Arrival_UZ_Vagon_Pay (Платежки по плательщикам ЭПД УЗ по прибытию) ======================================
 // Получить все платежки
 IDS_RWT.prototype.getArrival_UZ_Vagon_Pay = function (callback) {
@@ -2989,6 +2987,11 @@ IDS_RWT.prototype.postOutgoingSostav = function (outgoing_sostav, callback) {
         },
     });
 };
+//======================================================================================================
+//                                  РАЗДЕЛ АРМ ДИСПЕТЧЕРА
+//======= WSD (АРМ диспетчера) =========================================================================
+
+
 /* ----------------------------------------------------------
 функции для работы с объектами
 -------------------------------------------------------------*/

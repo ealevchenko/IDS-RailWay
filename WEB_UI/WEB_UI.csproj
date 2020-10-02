@@ -287,6 +287,7 @@
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_UZ_DOCController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_ArrivalCarsController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_ArrivalSostavController.cs" />
+    <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_WSDController.cs" />
     <Compile Include="Controllers\api\Metrans\Metrans_ConsigneeController.cs" />
     <Compile Include="Controllers\api\Metrans\Metrans_ArrivalSostavController.cs" />
     <Compile Include="Controllers\api\Directoty\UZ_Directory_InternalRailroadController.cs" />
