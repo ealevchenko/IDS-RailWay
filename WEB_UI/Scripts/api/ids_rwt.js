@@ -2990,7 +2990,29 @@ IDS_RWT.prototype.postOutgoingSostav = function (outgoing_sostav, callback) {
 //======================================================================================================
 //                                  РАЗДЕЛ АРМ ДИСПЕТЧЕРА
 //======= WSD (АРМ диспетчера) =========================================================================
-
+// Получить список вагонов на пути
+IDS_RWT.prototype.getViewWagonsOfWay = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/wsd/view/vagons/way/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getViewWagonsOfWay", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 
 /* ----------------------------------------------------------
 функции для работы с объектами

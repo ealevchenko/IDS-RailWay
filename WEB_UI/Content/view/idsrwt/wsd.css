@@ -57,3 +57,12 @@ td.way-name {
     height:16px;
     margin-right:5px;
 }
+table#wagons-way th {
+    font-size:13px;
+    /*white-space: nowrap;*/
+}
+
+table#wagons-way tbody td {
+    font-size:13px;
+    white-space: nowrap;
+}
