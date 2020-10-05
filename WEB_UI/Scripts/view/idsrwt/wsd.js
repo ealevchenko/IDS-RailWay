@@ -19,6 +19,23 @@
                 'field_current_operation_wagon_name': 'Последняя операция',
                 'field_current_operation_wagon_end': 'Дата вып. опер.',
                 'field_arrival_division_amkr_abbr': 'Цех получатель',
+                'field_arrival_duration': 'Простой УЗ ч.',
+                'field_pb_station_duration': 'Инд. пр. ст',
+                'field_current_station_amkr_duration': 'Прост. ст',
+                'field_current_station_amkr_idle_time': 'Прост. норм.',
+                'field_sap_is_num': '№ Вх поставки',
+                'field_sap_is_create_num': 'Дата созд. вх. пост.',
+                'field_sap_is_create_date': 'Дата созд. вх. пост.',
+                'field_sap_is_create_time': 'Время созд. вх. пост.',
+                'field_instructional_letters_num': '№ Инст. письма',
+                'field_instructional_letters_datetime': 'Дата Инст. письма',
+                'field_instructional_letters_station_name': 'Станция Инст. письма',
+                'title_button_buffer': 'Буфер',
+                'title_button_excel': 'Excel',
+                'title_button_field': 'Поля',
+                'title_button_field_all': 'Все поля',
+                'title_button_select_all': 'Выбрать все',
+                'title_button_select_none': 'Убрать все',
             },
             'en':  //default language: English
             {
@@ -207,7 +224,7 @@
                                                             // событие нажатия на прогресс бар
                                                             pb_way.on('click', function () {
                                                                 var id_way = Number($(this).attr("way"));
-                                                                pn_loading_way_detail.Open(id_way);
+                                                                //pn_loading_way_detail.Open(id_way);
                                                             });
                                                             // определим строку путь
                                                             var tr_way = $("<tr id='station-" + id_station + "' station='" + id_station + "' park='" + id_park + "' way='" + el.id + "'><td></td><td></td><td></td><td class='way-name'><img class='icon-way'/>" + el.way_num_ru + " - " + el.way_abbr_ru + "</td><td></td><td>" + el.count_wagon + "</td><td>" + el.capacity + "</td></tr>");
@@ -269,7 +286,8 @@
             obj: null,
             init: function () {
                 this.obj = this.html_table.DataTable({
-                    "paging": false,
+                    "lengthMenu": [[-1, 20, 50, 100], ["All", 20, 50, 100]],
+                    "paging": true,
                     "searching": true,
                     "ordering": true,
                     "info": true,
@@ -285,28 +303,94 @@
                     jQueryUI: false,
                     "createdRow": function (row, data, index) {
                         //$(row).attr('id', data.id);
-                        //$('td:eq(1)', row).attr('colspan', 3);
+                        // Определим компонент прогресс бар
+                        var max = data.current_station_amkr_idle_time ? Number(data.current_station_amkr_idle_time) : 0
+                        var duration = data.current_station_amkr_duration ? Number(data.current_station_amkr_duration) : 0
+                        var progress = Number(duration > max ? 100.0 : max === 0 ? 0.0 : (duration * 100.0) / max);
+                        var progress_collor = "";
+                        if (progress <= 25) {
+                            progress_collor = 'bg-success';
+                        } else {
+                            if (progress <= 50) {
+                                progress_collor = 'bg-info';
+                            } else {
+                                if (progress <= 75) {
+                                    progress_collor = 'bg-warning';
+                                } else {
+                                    progress_collor = 'bg-danger';
+                                }
+                            }
+                        }
+                        var pb_duration = $("<div class='progress'><div class='progress-bar " + progress_collor + "' role='progressbar' style='width: " + progress.toFixed(0) + "%;' aria-valuenow='" + data.current_station_amkr_duration + "' aria-valuemin='0' aria-valuemax='" + data.current_station_amkr_idle_time + "'>" + progress.toFixed(1) + "%</div></div>")
+                        $('td:eq(16)', row).append(pb_duration)
                         //$('td:eq(1)', row).prepend($('<img class="icon-station" />')).addClass("station-name")
                     },
                     columns: [
-                        { data: "position", title: langView('field_wagons_position', langs), width: "30px", orderable: false, searchable: false },
-                        { data: "num", title: langView('field_wagons_num', langs), width: "60px", orderable: false, searchable: false },
-                        { data: "operator", title: langView('field_wagons_operator', langs), width: "50px", orderable: false, searchable: false },
-                        { data: "operators_paid", title: langView('field_wagons_operators_paid', langs), width: "50px", orderable: false, searchable: false },
+                        { data: "position", title: langView('field_wagons_position', langs), width: "30px", orderable: true, searchable: false },
+                        { data: "num", title: langView('field_wagons_num', langs), width: "60px", orderable: true, searchable: true },
+                        { data: "operator", title: langView('field_wagons_operator', langs), width: "50px", orderable: true, searchable: true },
+                        { data: "operators_paid", title: langView('field_wagons_operators_paid', langs), width: "50px", orderable: true, searchable: true },
                         { data: "current_operation_wagon_busy", title: langView('field_current_operation_wagon_busy', langs), width: "50px", orderable: false, searchable: false },
-                        { data: "wagon_rod", title: langView('field_wagon_rod', langs), width: "50px", orderable: false, searchable: false },
+                        { data: "wagon_rod", title: langView('field_wagon_rod', langs), width: "50px", orderable: true, searchable: true },
                         { data: "wagon_gruzp_doc", title: langView('field_wagon_gruzp_doc', langs), width: "50px", orderable: false, searchable: false },
-                        { data: "wagon_adm", title: langView('field_wagon_adm', langs), width: "50px", orderable: false, searchable: false },
-                        { data: "current_loading_status", title: langView('field_current_loading_status', langs), width: "150px", orderable: false, searchable: false },
+                        { data: "wagon_adm", title: langView('field_wagon_adm', langs), width: "50px", orderable: true, searchable: true },
+                        { data: "current_loading_status", title: langView('field_current_loading_status', langs), width: "150px", orderable: true, searchable: true },
                         { data: "arrival_cargo_name", title: langView('field_arrival_cargo_name', langs), width: "200px", orderable: false, searchable: false },
-                        { data: "arrival_station_from_name", title: langView('field_arrival_station_from_name', langs), width: "100px", orderable: false, searchable: false },
-                        { data: "arrival_station_amkr_name", title: langView('field_arrival_station_amkr_name', langs), width: "100px", orderable: false, searchable: false },
-                        { data: "current_operation_wagon_name", title: langView('field_current_operation_wagon_name', langs), width: "150px", orderable: false, searchable: false },
-                        { data: "current_operation_wagon_end", title: langView('field_current_operation_wagon_end', langs), width: "150px", orderable: false, searchable: false },
-                        { data: "arrival_division_amkr_abbr", title: langView('field_arrival_division_amkr_abbr', langs), width: "100px", orderable: false, searchable: false },
+                        { data: "arrival_station_from_name", title: langView('field_arrival_station_from_name', langs), width: "150px", orderable: true, searchable: true },
+                        { data: "arrival_station_amkr_name", title: langView('field_arrival_station_amkr_name', langs), width: "150px", orderable: true, searchable: true },
+                        { data: "current_operation_wagon_name", title: langView('field_current_operation_wagon_name', langs), width: "150px", orderable: true, searchable: true },
+                        { data: "current_operation_wagon_end", title: langView('field_current_operation_wagon_end', langs), width: "150px", orderable: true, searchable: false },
+                        { data: "arrival_division_amkr_abbr", title: langView('field_arrival_division_amkr_abbr', langs), width: "100px", orderable: true, searchable: true },
+                        { data: "arrival_duration", title: langView('field_arrival_duration', langs), width: "100px", orderable: true, searchable: false },
+                        { data: null, defaultContent: '', title: langView('field_pb_station_duration', langs), width: "50px", orderable: false, searchable: false },
+                        { data: "current_station_amkr_duration", title: langView('field_current_station_amkr_duration', langs), width: "100px", orderable: true, searchable: false },
+                        { data: "current_station_amkr_idle_time", title: langView('field_current_station_amkr_idle_time', langs), width: "100px", orderable: false, searchable: false },
+                        { data: "sap_is_num", title: langView('field_sap_is_num', langs), width: "50px", orderable: true, searchable: true },
+                        //{ data: "sap_is_create_num", title: langView('field_sap_is_create_num', langs), width: "50px", orderable: true, searchable: true },
+                        { data: "sap_is_create_date", title: langView('field_sap_is_create_date', langs), width: "50px", orderable: true, searchable: false },
+                        { data: "sap_is_create_time", title: langView('field_sap_is_create_time', langs), width: "50px", orderable: true, searchable: false },
+                        { data: "instructional_letters_num", title: langView('field_instructional_letters_num', langs), width: "50px", orderable: true, searchable: true },
+                        { data: "instructional_letters_datetime", title: langView('field_instructional_letters_datetime', langs), width: "150px", orderable: true, searchable: false },
+                        { data: "instructional_letters_station_name", title: langView('field_instructional_letters_station_name', langs), width: "150px", orderable: true, searchable: false },
+
                     ],
-                    //dom: 'Bfrtip',
+                    dom: 'Bfrtip',
                     stateSave: false,
+                    buttons: [
+                        {
+                            text: langView('title_button_buffer', langs),
+                            extend: 'copyHtml5',
+                        },
+                        {
+                            text: langView('title_button_excel', langs),
+                            extend: 'excelHtml5',
+                            sheetName: 'Список вагонов',
+                            messageTop: function () {
+                                return '';
+                            }
+                        },
+                        {
+                            extend: 'colvis',
+                            text: langView('title_button_field', langs),
+                            collectionLayout: 'fixed two-column',
+                        },
+                        {
+                            extend: 'colvisGroup',
+                            text: langView('title_button_field_all', langs),
+                            show: ':hidden'
+                        },
+                        //{
+                        //    extend: 'selectAll',
+                        //    text: langView('title_button_select_all', langs),
+                        //},
+                        //{
+                        //    extend: 'selectNone',
+                        //    text: langView('title_button_select_none', langs),
+                        //},
+                        {
+                            extend: 'pageLength',
+                        }
+                    ]
                 });
 
             },
@@ -348,6 +432,16 @@
                     "current_operation_wagon_name": wagon["current_operation_wagon_name_" + lang],
                     "current_operation_wagon_end": wagon.current_operation_wagon_end !== null ? wagon.current_operation_wagon_end.replace(/T/g, ' ') : null,
                     "arrival_division_amkr_abbr": wagon["arrival_division_amkr_abbr_" + lang],
+                    "arrival_duration": wagon.arrival_duration,
+                    "current_station_amkr_duration": wagon.current_station_amkr_duration,
+                    "current_station_amkr_idle_time": wagon.current_station_amkr_idle_time,
+                    "sap_is_num": wagon.sap_is_num,
+                    //"sap_is_create_num": wagon.sap_is_create_date && wagon.sap_is_create_time ? 
+                    "sap_is_create_date": wagon.sap_is_create_date,
+                    "sap_is_create_time": wagon.sap_is_create_time,
+                    "instructional_letters_num": wagon.instructional_letters_num,
+                    "instructional_letters_datetime": wagon.instructional_letters_datetime !== null ? wagon.instructional_letters_datetime.replace(/T/g, ' ') : null,
+                    "instructional_letters_station_name": wagon.instructional_letters_station_name,
                 };
 
             }
