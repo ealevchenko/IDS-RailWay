@@ -3,6 +3,10 @@
 body {
 }
 
+.ui-dialog {
+    position: fixed !important;
+}
+
 td.station-control {
     background: url('../../../Content/DataTables/media/images1/details_open.png') no-repeat center center;
     width:20px;

@@ -485,6 +485,7 @@
                 autoOpen: false,
                 height: "auto",
                 width: 600,
+                
                 classes: {
                     "ui-dialog": "card",
                     "ui-dialog-titlebar": "card-header bg-primary text-white",
@@ -515,7 +516,7 @@
         Open: function (id) {
             pn_loading_way_detail.obj.dialog("option", "title", "Загрузка пути №" + id + " - детально:");
             pn_loading_way_detail.obj.dialog("open");
-        },
+        }
     };
 
 
