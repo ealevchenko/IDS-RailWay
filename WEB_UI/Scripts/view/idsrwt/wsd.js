@@ -11,10 +11,13 @@
                 'field_wagons_operators_paid': 'Приз. плат.',
                 'field_current_operation_wagon_busy': 'Занят?',
                 'field_wagon_rod': 'Род',
+                'field_wagon_type': 'Тип',
                 'field_wagon_gruzp_doc': 'Г\п т.',
                 'field_wagon_adm': 'Адм.',
+                'field_current_condition_abbr': 'Размет.',
                 'field_current_loading_status': 'Статус',
                 'field_arrival_cargo_name': 'Груз по прибытию',
+                'field_arrival_certification_data': 'Сертиф. данные',
                 'field_arrival_station_from_name': 'Станция отправления',
                 'field_arrival_station_amkr_name': 'Станция назначения',
                 'field_current_operation_wagon_name': 'Последняя операция',
@@ -31,6 +34,8 @@
                 'field_instructional_letters_num': '№ Инст. письма',
                 'field_instructional_letters_datetime': 'Дата Инст. письма',
                 'field_instructional_letters_station_name': 'Станция Инст. письма',
+                'field_wagon_date_rem_uz': 'ДПО-ой ремонт',
+
                 'title_button_buffer': 'Буфер',
                 'title_button_excel': 'Excel',
                 'title_button_field': 'Поля',
@@ -331,7 +336,7 @@
                         }
                     }
                     var pb_duration = $("<div class='progress'><div class='progress-bar " + progress_collor + "' role='progressbar' style='width: " + progress.toFixed(0) + "%;' aria-valuenow='" + data.current_station_amkr_duration + "' aria-valuemin='0' aria-valuemax='" + data.current_station_amkr_idle_time + "'>" + progress.toFixed(1) + "%</div></div>")
-                    $('td:eq(16)', row).append(pb_duration)
+                    $('td:eq(20)', row).append(pb_duration)
                     //$('td:eq(1)', row).prepend($('<img class="icon-station" />')).addClass("station-name")
                 },
                 columns: [
@@ -342,10 +347,13 @@
                     { data: "operators_paid", title: langView('field_wagons_operators_paid', langs), width: "50px", orderable: true, searchable: true },
                     { data: "current_operation_wagon_busy", title: langView('field_current_operation_wagon_busy', langs), width: "50px", orderable: false, searchable: false },
                     { data: "wagon_rod", title: langView('field_wagon_rod', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "wagon_type", title: langView('field_wagon_type', langs), width: "50px", orderable: true, searchable: true },
                     { data: "wagon_gruzp_doc", title: langView('field_wagon_gruzp_doc', langs), width: "50px", orderable: false, searchable: false },
                     { data: "wagon_adm", title: langView('field_wagon_adm', langs), width: "50px", orderable: true, searchable: true },
+                    { data: "current_condition_abbr", title: langView('field_current_condition_abbr', langs), width: "50px", orderable: true, searchable: true },
                     { data: "current_loading_status", title: langView('field_current_loading_status', langs), width: "150px", orderable: true, searchable: true },
                     { data: "arrival_cargo_name", title: langView('field_arrival_cargo_name', langs), width: "200px", orderable: false, searchable: false },
+                    { data: "arrival_certification_data", title: langView('field_arrival_certification_data', langs), width: "150px", orderable: false, searchable: false },
                     { data: "arrival_station_from_name", title: langView('field_arrival_station_from_name', langs), width: "150px", orderable: true, searchable: true },
                     { data: "arrival_station_amkr_name", title: langView('field_arrival_station_amkr_name', langs), width: "150px", orderable: true, searchable: true },
                     { data: "current_operation_wagon_name", title: langView('field_current_operation_wagon_name', langs), width: "150px", orderable: true, searchable: true },
@@ -362,7 +370,7 @@
                     { data: "instructional_letters_num", title: langView('field_instructional_letters_num', langs), width: "50px", orderable: true, searchable: true },
                     { data: "instructional_letters_datetime", title: langView('field_instructional_letters_datetime', langs), width: "150px", orderable: true, searchable: false },
                     { data: "instructional_letters_station_name", title: langView('field_instructional_letters_station_name', langs), width: "150px", orderable: true, searchable: false },
-
+                    { data: "wagon_date_rem_uz", title: langView('field_wagon_date_rem_uz', langs), width: "100px", orderable: true, searchable: false },
                 ],
                 dom: 'Bfrtip',
                 stateSave: false,
@@ -444,10 +452,13 @@
                 "operators_paid": wagon.wagon_operators_paid ? "Платный" : "-",
                 "current_operation_wagon_busy": wagon.current_operation_wagon_busy ? "Да" : "Нет",
                 "wagon_rod": wagon["wagon_rod_abbr_" + lang],
+                "wagon_type": wagon["wagon_type_" + lang],
                 "wagon_gruzp_doc": wagon.wagon_gruzp_doc,
                 "wagon_adm": wagon.wagon_adm,
+                "current_condition_abbr": wagon["current_condition_abbr_" + lang],
                 "current_loading_status": wagon["current_loading_status_" + lang],
                 "arrival_cargo_name": wagon["arrival_cargo_name_" + lang],
+                "arrival_certification_data": wagon["arrival_certification_data_" + lang],
                 "arrival_station_from_name": wagon["arrival_station_from_name_" + lang],
                 "arrival_station_amkr_name": wagon["arrival_station_amkr_name_" + lang],
                 "current_operation_wagon_name": wagon["current_operation_wagon_name_" + lang],
@@ -463,6 +474,7 @@
                 "instructional_letters_num": wagon.instructional_letters_num,
                 "instructional_letters_datetime": wagon.instructional_letters_datetime !== null ? wagon.instructional_letters_datetime.replace(/T/g, ' ') : null,
                 "instructional_letters_station_name": wagon.instructional_letters_station_name,
+                "wagon_date_rem_uz": wagon.wagon_date_rem_uz,
             };
 
         }
