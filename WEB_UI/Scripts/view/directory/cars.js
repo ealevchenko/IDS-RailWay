@@ -477,7 +477,7 @@
                     });
 
             },
-            // открыть окно добавмить вагоны вручную
+            // открыть окно 
             Open: function (rows) {
                 pn_change_group_limit.val.clear_all();
                 pn_change_group_limit.change_group_limiting.val(-1); // сбросить выбор
@@ -493,7 +493,7 @@
                 valid = valid & pn_change_group_limit.val.checkSelection(pn_change_group_limit.change_group_limiting, "Выберите ограничение");
                 return valid;
             },
-            // Сохранить прибытие состава
+            // Сохранить 
             save: function (callback_ok) {
                 var list_cars = [];
                 var list_nums = [];
@@ -657,7 +657,7 @@
                     });
 
             },
-            // открыть окно добавмить вагоны вручную
+            // открыть окно
             Open: function (rows) {
                 pn_change_group_operator.val.clear_all();
                 pn_change_group_operator.change_group_operator.val(-1);                 // Сбросить
@@ -676,7 +676,7 @@
                 valid = valid & pn_change_group_operator.val.checkInputOfDateTime(pn_change_group_operator.change_group_rent_start.obj, lang === 'ru' ? 'DD.MM.YYYY HH:mm:ss' : 'MM/DD/YYYY HH:mm:ss');
                 return valid;
             },
-            // Сохранить прибытие состава
+            // Сохранить
             save: function (callback_ok) {
                 var list_nums = [];
                 var list_cars = [];
@@ -719,6 +719,11 @@
                                     "parent_id": old_rent.id,
                                 }
                                 list_new_rent.push(new_rent);
+                            } else {
+                                // Оператор равен, обновим начало аренды
+                                old_rent.rent_start = toISOStringTZ(get_datetime_value(pn_change_group_operator.change_group_rent_start.val(), pn_change_group_operator.lang));
+                                old_rent.change = toISOStringTZ(new Date());
+                                old_rent.change_user = pn_change_group_operator.user_name;
                             }
                             list_old_rent.push(old_rent);
                             // Определим бит "требует внимание"
