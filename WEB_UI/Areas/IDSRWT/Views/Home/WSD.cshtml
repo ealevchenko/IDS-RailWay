@@ -162,3 +162,17 @@
     </form>
 </div>
 
+<div id="select_wagon" title="" style="display:none">
+    <form id="form_select_wagon" class="form-inline">
+        <label class="sr-only" for="select_wagon_side">Сторона:</label>
+        <select class="custom-select mb-2 mr-sm-2" id="select_wagon_side" name="select_wagon_side">
+            <option selected value="1">Голова</option>
+            <option value="2">Хвост</option>
+        </select>
+        <label class="sr-only" for="select_wagon_count">Количество:</label>
+        <input type="number" class="form-control mb-2 mr-sm-2" id="select_wagon_count" name="select_wagon_count" placeholder="">
+        <!-- Allow form submission with keyboard without duplicating the dialog button -->
+        <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </form>
+</div>
+

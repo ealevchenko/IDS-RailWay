@@ -40,8 +40,9 @@
                 'title_button_excel': 'Excel',
                 'title_button_field': 'Поля',
                 'title_button_field_all': 'Все поля',
-                'title_button_select_all': 'Выбрать все',
-                'title_button_select_none': 'Убрать все',
+                'title_button_select': 'Выбрать вагоны',
+                'title_button_select_all': 'Все вагоны',
+                'title_button_select_none': 'Убрать выбор',
             },
             'en':  //default language: English
             {
@@ -397,14 +398,21 @@
                         text: langView('title_button_field_all', langs),
                         show: ':hidden'
                     },
-                    //{
-                    //    extend: 'selectAll',
-                    //    text: langView('title_button_select_all', langs),
-                    //},
-                    //{
-                    //    extend: 'selectNone',
-                    //    text: langView('title_button_select_none', langs),
-                    //},
+                    {
+                        text: langView('title_button_select', langs),
+                        action: function (e, dt, node, config) {
+                            pn_select_wagon.Open(table_wagons.obj.row.length)
+                        },
+                        enabled: true
+                    },
+                    {
+                        extend: 'selectAll',
+                        text: langView('title_button_select_all', langs),
+                    },
+                    {
+                        extend: 'selectNone',
+                        text: langView('title_button_select_none', langs),
+                    },
                     {
                         extend: 'pageLength',
                     }
@@ -500,7 +508,7 @@
                 autoOpen: false,
                 height: "auto",
                 width: 600,
-                
+
                 classes: {
                     "ui-dialog": "card",
                     "ui-dialog-titlebar": "card-header bg-primary text-white",
@@ -528,9 +536,60 @@
 
         },
         // открыть окно добавмить вагоны вручную
-        Open: function (id) {
+        Open: function (max) {
             pn_loading_way_detail.obj.dialog("option", "title", "Загрузка пути №" + id + " - детально:");
             pn_loading_way_detail.obj.dialog("open");
+        }
+    },
+    //*************************************************************************************
+    // ОКНО ВЫБРАТЬ ВАГОНЫ
+    //*************************************************************************************
+    pn_select_wagon = {
+        obj: null,
+        lang: null,
+        user_name: null,
+        // Поля формы
+        // инициализвция Окна
+        init: function (lang) {
+            pn_select_wagon.lang = lang;
+            pn_select_wagon.obj = $("div#select_wagon").dialog({
+                resizable: false,
+                title: 'Выберите кол. вагонов',
+                modal: false,
+                autoOpen: false,
+                height: "auto",
+                width: 500,
+
+                classes: {
+                    "ui-dialog": "card",
+                    "ui-dialog-titlebar": "card-header bg-primary text-white",
+                    "ui-dialog-content": "card-body",
+                    "ui-dialog-buttonpane": "card-footer text-muted"
+                },
+                open: function (event, ui) {
+
+                },
+                //buttons: [
+                //{
+                //    text: "Закрыть",
+                //    class: "btn btn-outline-primary btn",
+                //    click: function () {
+                //        $(this).dialog("close");
+                //    }
+                //},
+                //]
+            });
+            // Sumbit form
+            pn_select_wagon.obj.find("form").on("submit", function (event) {
+                event.preventDefault();
+            });
+            //});
+
+        },
+        // открыть окно добавмить вагоны вручную
+        Open: function (id) {
+            //pn_select_wagon.obj.dialog("option", "title", "Загрузка пути №" + id + " - детально:");
+            pn_select_wagon.obj.dialog("open");
         }
     };
 
@@ -543,6 +602,7 @@
         table_tree_way.init();
         table_wagons.init();
         pn_loading_way_detail.init(lang);
+        pn_select_wagon.init(lang);
         table_tree_way.load_station();
         LockScreenOff();
     });
