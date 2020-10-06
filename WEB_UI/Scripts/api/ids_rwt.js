@@ -311,13 +311,37 @@ IDS_RWT.prototype.getInstructionalLettersOfID = function (id, callback) {
         },
     });
 };
+//// Получить письмо
+//IDS_RWT.prototype.getInstructionalLettersOfNumDate = function (num, date, callback) {
+//    $.ajax({
+//        type: 'GET',
+//        url: '../../api/ids/rwt/instructional_letters/num/' + num + '/date/' + toISOStringTZ(date).substring(0, 19),
+//        async: true,
+//        dataType: 'json',
+//        beforeSend: function () {
+//            AJAXBeforeSend();
+//        },
+//        success: function (data) {
+//            if (typeof callback === 'function') {
+//                callback(data);
+//            }
+//        },
+//        error: function (x, y, z) {
+//            OnAJAXError("IDS_RWT.getInstructionalLettersOfNumDate", x, y, z);
+//        },
+//        complete: function () {
+//            AJAXComplete();
+//        },
+//    });
+//};
 // Получить письмо
 IDS_RWT.prototype.getInstructionalLettersOfNumDate = function (num, date, callback) {
     $.ajax({
-        type: 'GET',
-        url: '../../api/ids/rwt/instructional_letters/num/' + num + '/date/' + toISOStringTZ(date).substring(0, 19),
+        url: '../../api/ids/rwt/instructional_letters/num_date/',
+        type: 'POST',
+        data: JSON.stringify({num:num, date:date}),
+        contentType: "application/json;charset=utf-8",
         async: true,
-        dataType: 'json',
         beforeSend: function () {
             AJAXBeforeSend();
         },
@@ -327,6 +351,7 @@ IDS_RWT.prototype.getInstructionalLettersOfNumDate = function (num, date, callba
             }
         },
         error: function (x, y, z) {
+            LockScreenOff();
             OnAJAXError("IDS_RWT.getInstructionalLettersOfNumDate", x, y, z);
         },
         complete: function () {
@@ -334,7 +359,7 @@ IDS_RWT.prototype.getInstructionalLettersOfNumDate = function (num, date, callba
         },
     });
 };
-//Добавить письмо
+// Добавить письмо
 IDS_RWT.prototype.postInstructionalLetters = function (letters, callback) {
     $.ajax({
         url: '../../api/ids/rwt/instructional_letters/',
@@ -359,6 +384,8 @@ IDS_RWT.prototype.postInstructionalLetters = function (letters, callback) {
         },
     });
 };
+
+
 //Обновить письмо
 IDS_RWT.prototype.putInstructionalLetters = function (letters, callback) {
     $.ajax({

@@ -11,6 +11,11 @@ using EFIDS.Entities;
 
 namespace WEB_UI.Controllers.api
 {
+    public class IL_Num {
+        public string num { get; set; }
+        public DateTime date { get; set; }
+    }
+    
     /// <summary>
     /// ЭПД - по прибытию
     /// </summary>
@@ -40,16 +45,38 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // GET: api/ids/rwt/instructional_letters/num/1/date/2020-08-24T00:00:00
-        [Route("num/{num}/date/{date:datetime}")]
+        //// GET: api/ids/rwt/instructional_letters/num/1/date/2020-08-24T00:00:00
+        //[Route("num/{num}/date/{date:datetime}")]
+        //[ResponseType(typeof(InstructionalLetters))]
+        //public IHttpActionResult GetInstructionalLettersOfNumDate(string num, DateTime date)
+        //{
+        //    try
+        //    {
+        //        InstructionalLetters list = this.ef_ids
+        //            .Context
+        //            .Where(s => s.num == num & s.dt == date)
+        //            .ToList()
+        //            .OrderByDescending(s => s.id)
+        //            .Select(c => c.GetInstructionalLetters()).FirstOrDefault();
+        //        return Ok(list);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest(e.Message);
+        //    }
+        //}
+
+        // POST api/ids/rwt/instructional_letters/num_date/
+        [HttpPost]
+        [Route("num_date")]
         [ResponseType(typeof(InstructionalLetters))]
-        public IHttpActionResult GetInstructionalLettersOfNumDate(string num, DateTime date)
+        public IHttpActionResult PostInstructionalLettersOfNumDate([FromBody]IL_Num value)
         {
             try
             {
                 InstructionalLetters list = this.ef_ids
                     .Context
-                    .Where(s => s.num == num & s.dt == date)
+                    .Where(s => s.num == value.num & s.dt == value.date)
                     .ToList()
                     .OrderByDescending(s => s.id)
                     .Select(c => c.GetInstructionalLetters()).FirstOrDefault();
@@ -60,6 +87,7 @@ namespace WEB_UI.Controllers.api
                 return BadRequest(e.Message);
             }
         }
+
 
         // GET: api/ids/rwt/instructional_letters/id/1
         [Route("id/{id:int}")]
