@@ -298,6 +298,7 @@
     //*************************************************************************************
     table_wagons = {
         html_table: $('table#wagons-way'),
+        count_wagon: 0,
         obj: null,
         init: function () {
             this.obj = this.html_table.DataTable({
@@ -401,7 +402,9 @@
                     {
                         text: langView('title_button_select', langs),
                         action: function (e, dt, node, config) {
-                            pn_select_wagon.Open(table_wagons.obj.row.length)
+                            if (table_wagons.count_wagon > 0) {
+                                pn_select_wagon.Open(table_wagons.count_wagon)
+                            }
                         },
                         enabled: true
                     },
@@ -430,6 +433,7 @@
         // Показать таблицу с данными
         view: function (wagons) {
             table_wagons.obj.clear();
+            table_wagons.count_wagon = wagons ? wagons.length : 0;
             $.each(wagons, function (i, el) {
                 table_wagons.obj.row.add(table_wagons.get_wagon(el));
             });
@@ -547,11 +551,23 @@
     pn_select_wagon = {
         obj: null,
         lang: null,
-        user_name: null,
+        max: 0,
         // Поля формы
+        select_wagon_side: $('select#select_wagon_side'),
+        select_wagon_count: $('input#select_wagon_count'),
+        bt_ok: $('button#select_ok').on('click',
+            function (event) {
+                event.preventDefault();
+                if (pn_select_wagon.select_wagon_count.val() <= pn_select_wagon.max) {
+                    // закроем
+                    pn_select_wagon.obj.dialog("close");
+                }
+
+            }),
         // инициализвция Окна
         init: function (lang) {
             pn_select_wagon.lang = lang;
+            //
             pn_select_wagon.obj = $("div#select_wagon").dialog({
                 resizable: false,
                 title: 'Выберите кол. вагонов',
@@ -569,16 +585,24 @@
                 open: function (event, ui) {
 
                 },
-                //buttons: [
-                //{
-                //    text: "Закрыть",
-                //    class: "btn btn-outline-primary btn",
-                //    click: function () {
-                //        $(this).dialog("close");
-                //    }
-                //},
-                //]
             });
+            // Выбор голова хвост
+            pn_select_wagon.select_wagon_side = cd_initSelect(
+                        pn_select_wagon.select_wagon_side,
+                        { lang: pn_select_wagon.lang },
+                        [{ value: 0, text: "Голова" }, { value: 1, text: "Хвост" }],
+                        null,
+                        0,
+                        function (event) {
+                            event.preventDefault();
+                            var id = Number($(this).val());
+                            if (id > 0) {
+
+                            } else {
+                                //arrival_sostav_way_on.
+                            }
+                        },
+                        null);
             // Sumbit form
             pn_select_wagon.obj.find("form").on("submit", function (event) {
                 event.preventDefault();
@@ -587,7 +611,9 @@
 
         },
         // открыть окно добавмить вагоны вручную
-        Open: function (id) {
+        Open: function (max) {
+            pn_select_wagon.max = max;
+            pn_select_wagon.select_wagon_count.val(0);
             //pn_select_wagon.obj.dialog("option", "title", "Загрузка пути №" + id + " - детально:");
             pn_select_wagon.obj.dialog("open");
         }
