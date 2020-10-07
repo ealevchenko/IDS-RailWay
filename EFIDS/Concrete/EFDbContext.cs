@@ -161,65 +161,65 @@ namespace EFIDS.Concrete
                 .HasForeignKey(e => e.id_arrival_car);
 
             // САП вх поставка
-            modelBuilder.Entity<SAPIncomingSupply>()
-                .Property(e => e.num_doc_uz)
-                .IsFixedLength()
-                .IsUnicode(false);
+            //modelBuilder.Entity<SAPIncomingSupply>()
+            //    .Property(e => e.num_doc_uz)
+            //    .IsFixedLength()
+            //    .IsUnicode(false);
 
-            modelBuilder.Entity<SAPIncomingSupply>()
-                .Property(e => e.VBELN)
-                .IsFixedLength()
-                .IsUnicode(false);
+            //modelBuilder.Entity<SAPIncomingSupply>()
+            //    .Property(e => e.VBELN)
+            //    .IsFixedLength()
+            //    .IsUnicode(false);
 
-            modelBuilder.Entity<SAPIncomingSupply>()
-                .Property(e => e.NUM_VBELN)
-                .IsFixedLength()
-                .IsUnicode(false);
+            //modelBuilder.Entity<SAPIncomingSupply>()
+            //    .Property(e => e.NUM_VBELN)
+            //    .IsFixedLength()
+            //    .IsUnicode(false);
 
-            modelBuilder.Entity<SAPIncomingSupply>()
-                .Property(e => e.WERKS)
-                .IsFixedLength()
-                .IsUnicode(false);
+            //modelBuilder.Entity<SAPIncomingSupply>()
+            //    .Property(e => e.WERKS)
+            //    .IsFixedLength()
+            //    .IsUnicode(false);
 
-            modelBuilder.Entity<SAPIncomingSupply>()
-                .Property(e => e.LGORT)
-                .IsFixedLength()
-                .IsUnicode(false);
+            //modelBuilder.Entity<SAPIncomingSupply>()
+            //    .Property(e => e.LGORT)
+            //    .IsFixedLength()
+            //    .IsUnicode(false);
 
-            modelBuilder.Entity<SAPIncomingSupply>()
-                .Property(e => e.LGOBE)
-                .IsFixedLength()
-                .IsUnicode(false);
+            //modelBuilder.Entity<SAPIncomingSupply>()
+            //    .Property(e => e.LGOBE)
+            //    .IsFixedLength()
+            //    .IsUnicode(false);
 
-            modelBuilder.Entity<SAPIncomingSupply>()
-                .Property(e => e.LGORT_10)
-                .IsFixedLength()
-                .IsUnicode(false);
+            //modelBuilder.Entity<SAPIncomingSupply>()
+            //    .Property(e => e.LGORT_10)
+            //    .IsFixedLength()
+            //    .IsUnicode(false);
 
-            modelBuilder.Entity<SAPIncomingSupply>()
-                .Property(e => e.LGOBE_10)
-                .IsFixedLength()
-                .IsUnicode(false);
+            //modelBuilder.Entity<SAPIncomingSupply>()
+            //    .Property(e => e.LGOBE_10)
+            //    .IsFixedLength()
+            //    .IsUnicode(false);
 
-            modelBuilder.Entity<SAPIncomingSupply>()
-                .Property(e => e.MATNR)
-                .IsFixedLength()
-                .IsUnicode(false);
+            //modelBuilder.Entity<SAPIncomingSupply>()
+            //    .Property(e => e.MATNR)
+            //    .IsFixedLength()
+            //    .IsUnicode(false);
 
-            modelBuilder.Entity<SAPIncomingSupply>()
-                .Property(e => e.MAKTX)
-                .IsFixedLength()
-                .IsUnicode(false);
+            //modelBuilder.Entity<SAPIncomingSupply>()
+            //    .Property(e => e.MAKTX)
+            //    .IsFixedLength()
+            //    .IsUnicode(false);
 
-            modelBuilder.Entity<SAPIncomingSupply>()
-                .Property(e => e.NAME_SH)
-                .IsFixedLength()
-                .IsUnicode(false);
+            //modelBuilder.Entity<SAPIncomingSupply>()
+            //    .Property(e => e.NAME_SH)
+            //    .IsFixedLength()
+            //    .IsUnicode(false);
 
-            modelBuilder.Entity<SAPIncomingSupply>()
-                .Property(e => e.KOD_R_10)
-                .IsFixedLength()
-                .IsUnicode(false);
+            //modelBuilder.Entity<SAPIncomingSupply>()
+            //    .Property(e => e.KOD_R_10)
+            //    .IsFixedLength()
+            //    .IsUnicode(false);
 
             modelBuilder.Entity<SAPIncomingSupply>()
                 .HasMany(e => e.WagonInternalRoutes)

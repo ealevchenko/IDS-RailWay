@@ -39,7 +39,7 @@ namespace EFIDS.Entities
         [StringLength(10)]
         public string VBELN { get; set; }
 
-        [StringLength(3)]
+        [StringLength(10)]
         public string NUM_VBELN { get; set; }
 
         [StringLength(4)]
