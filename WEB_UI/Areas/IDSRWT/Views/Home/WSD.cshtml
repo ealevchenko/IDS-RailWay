@@ -162,15 +162,22 @@
     </form>
 </div>
 
-<div id="select_wagon" title="" style="display:none">
-    <form id="form_select_wagon" class="form-inline">
-        <label class="sr-only" for="select_wagon_side">Сторона:</label>
-        <select class="custom-select mb-2 mr-sm-2" id="select_wagon_side" name="select_wagon_side">
-            <option selected value="1">Голова</option>
-            <option value="2">Хвост</option>
-        </select>
-        <label class="sr-only" for="select_wagon_count">Количество:</label>
-        <input type="number" class="form-control mb-2 mr-sm-2" id="select_wagon_count" name="select_wagon_count" placeholder="">
+<div id="select_wagon" title="" style="min-height:0px;overflow:hidden;display:none">
+    <form id="form_select_wagon" class="form-inline"style="font-size:12px">
+        <div class="form-group">
+            <label for="select_wagon_side">Сторона:</label>
+            @*<input type="password" id="inputPassword6" class="form-control mx-sm-3" aria-describedby="passwordHelpInline">*@
+            <select class="custom-select form-control mx-sm-3" id="select_wagon_side" name="select_wagon_side">
+                <option selected value="1">Голова</option>
+                <option value="2">Хвост</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="select_wagon_side">Кол:</label>
+            <input type="number" class="form-control mx-sm-3" id="select_wagon_count" style="width:70px" name="select_wagon_count" placeholder="">
+            <button type="submit" class="btn btn-primary">Ок</button>
+        </div>
+        
         <!-- Allow form submission with keyboard without duplicating the dialog button -->
         <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
     </form>

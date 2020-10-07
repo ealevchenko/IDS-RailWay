@@ -558,13 +558,13 @@
                 modal: false,
                 autoOpen: false,
                 height: "auto",
-                width: 500,
-
+                width: 400,
+                minHeight: 0,
                 classes: {
                     "ui-dialog": "card",
                     "ui-dialog-titlebar": "card-header bg-primary text-white",
                     "ui-dialog-content": "card-body",
-                    "ui-dialog-buttonpane": "card-footer text-muted"
+                    //"ui-dialog-buttonpane": "card-footer text-muted"
                 },
                 open: function (event, ui) {
 
