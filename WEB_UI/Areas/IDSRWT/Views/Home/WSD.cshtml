@@ -70,7 +70,7 @@
     </div>
 </nav>
 <div class="container-fluid">
-    <div class="alert" id="main-alert">Внимание сообщение</div>
+    <div class="alert" id="main-alert"></div>
     <div class="row">
         <div class="col-xl-12 mb-3 mt-2">
             <div class="card border-secondary mb-3">
@@ -83,7 +83,7 @@
                                         <div class="btn-group mr-2" role="group" aria-label="First group">
                                             <button type="button" class="btn btn-outline-secondary">Приб.</button>
                                             <button type="button" class="btn btn-outline-secondary">Отпр.</button>
-                                            <button type="button" class="btn btn-outline-secondary">Дисл.</button>
+                                            <button type="button" class="btn btn-outline-secondary" id="dislocation">Дисл.</button>
                                             <button type="button" class="btn btn-outline-secondary">Выгр.</button>
                                             <button type="button" class="btn btn-outline-secondary">Погр.</button>
                                             <button type="button" class="btn btn-outline-secondary">Весы.</button>
@@ -163,13 +163,13 @@
 </div>
 
 <div id="select_wagon" title="" style="min-height:0px;overflow:hidden;display:none">
-    <form id="form_select_wagon" class="form-inline"style="font-size:12px">
+    <form id="form_select_wagon" class="form-inline" style="font-size:12px">
         <div class="form-group">
             <label for="select_wagon_side">Сторона:</label>
             @*<input type="password" id="inputPassword6" class="form-control mx-sm-3" aria-describedby="passwordHelpInline">*@
             <select class="custom-select form-control mx-sm-3" id="select_wagon_side" name="select_wagon_side">
                 @*<option selected value="1">Голова</option>
-                <option value="2">Хвост</option>*@
+                    <option value="2">Хвост</option>*@
             </select>
         </div>
         <div class="form-group">
@@ -177,7 +177,50 @@
             <input type="number" class="form-control mx-sm-3" id="select_wagon_count" name="select_wagon_count" style="width:70px" placeholder="">
             <button class="btn btn-primary" id="select_ok">Ок</button>
         </div>
-        
+
+        <!-- Allow form submission with keyboard without duplicating the dialog button -->
+        <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </form>
+</div>
+
+<div id="dislocation_wagon" title="" style="display:none">
+    <div class="alert" id="dislocation_wagon_alert"></div>
+    <form id="form_dislocation_wagon">
+        <div class="form-row">
+            <div class="col-md-9 mb-2">
+                <label for="dislocation_wagon_way" class="col-form-label">@IDSRWTResource.title_dislocation_wagon_way:</label>
+                <select class="form-control" id="dislocation_wagon_way" name="dislocation_wagon_way" required="required"></select>
+                <div class="invalid-feedback">
+
+                </div>
+            </div>
+            <div class="col-md-3 mb-2">
+                <label for="dislocation_wagon_side" class="col-form-label">@IDSRWTResource.title_dislocation_wagon_side:</label>
+                <select class="form-control" id="dislocation_wagon_side" name="dislocation_wagon_side" required="required"></select>
+                <div class="invalid-feedback">
+
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-6 mb-2">
+                <label for="dislocation_wagon_start" class="col-form-label">@IDSRWTResource.title_dislocation_wagon_start:</label>
+                <input type="datetime" class="form-control" id="dislocation_wagon_start" name="dislocation_wagon_start" />
+                <div class="invalid-feedback">
+
+                </div>
+            </div>
+            <div class="col-md-6 mb-2">
+                <label for="dislocation_wagon_stop" class="col-form-label">@IDSRWTResource.title_dislocation_wagon_stop:</label>
+                <input type="datetime" class="form-control" id="dislocation_wagon_stop" name="dislocation_wagon_stop" />
+                <div class="invalid-feedback">
+
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+
+        </div>
         <!-- Allow form submission with keyboard without duplicating the dialog button -->
         <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
     </form>

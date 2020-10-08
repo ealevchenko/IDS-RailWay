@@ -403,6 +403,42 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Сторона.
+        /// </summary>
+        public static string title_dislocation_wagon_side {
+            get {
+                return ResourceManager.GetString("title_dislocation_wagon_side", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Начало дислокации.
+        /// </summary>
+        public static string title_dislocation_wagon_start {
+            get {
+                return ResourceManager.GetString("title_dislocation_wagon_start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Конец дислокации.
+        /// </summary>
+        public static string title_dislocation_wagon_stop {
+            get {
+                return ResourceManager.GetString("title_dislocation_wagon_stop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Путь назначения.
+        /// </summary>
+        public static string title_dislocation_wagon_way {
+            get {
+                return ResourceManager.GetString("title_dislocation_wagon_way", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Тарифное расстояние.
         /// </summary>
         public static string title_distance_way {

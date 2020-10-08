@@ -465,4 +465,16 @@
   <data name="title_unloading_ban" xml:space="preserve">
     <value>Запрет выгр.</value>
   </data>
+  <data name="title_dislocation_wagon_side" xml:space="preserve">
+    <value>Сторона</value>
+  </data>
+  <data name="title_dislocation_wagon_start" xml:space="preserve">
+    <value>Начало дислокации</value>
+  </data>
+  <data name="title_dislocation_wagon_stop" xml:space="preserve">
+    <value>Конец дислокации</value>
+  </data>
+  <data name="title_dislocation_wagon_way" xml:space="preserve">
+    <value>Путь назначения</value>
+  </data>
 </root>

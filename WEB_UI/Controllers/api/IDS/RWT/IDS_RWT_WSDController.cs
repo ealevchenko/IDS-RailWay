@@ -130,7 +130,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         {
             try
             {
-                string sql = "select * from [IDS].[get_view_wagons_of_way](" + id_way.ToString() + ")";
+                string sql = "select * from [IDS].[get_view_wagons_of_way](" + id_way.ToString() + ") order by position";
                 List<view_wagons> list = db.Database.SqlQuery<view_wagons>(sql).ToList();
                 return Ok(list);
             }
