@@ -188,6 +188,18 @@
     <form id="form_dislocation_wagon">
         <div class="form-row">
             <div class="col-md-9 mb-2">
+                <label for="dislocation_wagon_way_from" class="col-form-label">@IDSRWTResource.title_dislocation_wagon_way_from:</label>
+                <input type="text" class="form-control" id="dislocation_wagon_way_from" name="dislocation_wagon_way_from"  disabled="disabled"/>
+            </div>
+            <div class="col-md-3 mb-2">
+                <div class="form-check" style="margin-top:35%">
+                    <input type="checkbox" class="form-check-input" id="dislocation_wagon_reverse">
+                    <label class="form-check-label" for="dislocation_wagon_reverse">@IDSRWTResource.title_dislocation_wagon_reverse:</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-9 mb-2">
                 <label for="dislocation_wagon_way" class="col-form-label">@IDSRWTResource.title_dislocation_wagon_way:</label>
                 <select class="form-control" id="dislocation_wagon_way" name="dislocation_wagon_way" required="required"></select>
                 <div class="invalid-feedback">

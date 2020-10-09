@@ -403,6 +403,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Реверс.
+        /// </summary>
+        public static string title_dislocation_wagon_reverse {
+            get {
+                return ResourceManager.GetString("title_dislocation_wagon_reverse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Сторона.
         /// </summary>
         public static string title_dislocation_wagon_side {
@@ -435,6 +444,15 @@ namespace WEB_UI.App_LocalResources {
         public static string title_dislocation_wagon_way {
             get {
                 return ResourceManager.GetString("title_dislocation_wagon_way", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Путь отпраки..
+        /// </summary>
+        public static string title_dislocation_wagon_way_from {
+            get {
+                return ResourceManager.GetString("title_dislocation_wagon_way_from", resourceCulture);
             }
         }
         

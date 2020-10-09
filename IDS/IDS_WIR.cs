@@ -217,6 +217,155 @@ namespace IDS
 
         #endregion
 
+        #region АРМ ДИСПЕТЧЕРА
+        /// <summary>
+        /// Перенумерация вагонов по указаному пути с указаной начальной позиции
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_way"></param>
+        /// <param name="position_start"></param>
+        /// <returns></returns>
+        public int RenumberingWagons(ref EFDbContext context, int id_way, int position_start)
+        {
+            try
+            {
+                int count = 0;
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                List<WagonInternalMovement> list_wim = context.WagonInternalMovement.Where(m => m.id_way == id_way & m.station_end == null & m.way_end == null).OrderBy(p => p.position).ToList();
+                if (list_wim != null)
+                {
+                    count = list_wim.Count();
+                    foreach (WagonInternalMovement wim in list_wim)
+                    {
+                        wim.position = position_start++;
+                    }
+                }
+                return count;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("DislocationWagons(context={0}, id_way={1}, position_start={2})", context, id_way, position_start), servece_owner, eventID);
+                return -1;// Возвращаем id=-1 , Ошибка
+            }
+        }
+
+        /// <summary>
+        /// Выполнить дислокацию по вагону
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_way_from"></param>
+        /// <param name="id_way_on"></param>
+        /// <param name="position_on"></param>
+        /// <param name="date_start"></param>
+        /// <param name="date_stop"></param>
+        /// <param name="wagon"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int DislocationWagon(ref EFDbContext context, int id_way_from, int id_way_on, int position_on, DateTime date_start, DateTime date_stop, WagonInternalRoutes wagon, string user)
+        {
+            try
+            {
+                //long? parent_id = null;
+                //// Получим последнюю запись по вагону
+                //WagonInternalRoutes last_wir = context.GetLastWagon(wagon.num);
+                //if (last_wir != null)
+                //{
+                //    // Запись есть проверим, для этого прибытия была создана запись
+                //    if (last_wir.id_arrival_car == wagon.id) return 0; // Строка для вагона уже создана
+                //    // Запись не закрыта (!Заись перед созданием должна быть закрыта, вагон выйти из АМКР)
+                //    parent_id = last_wir.CloseWagon(date_start, "Закрыта принудительно, вагон зашел с новым составом.", user);
+                //    context.Update(last_wir); // Обновим контекст
+                //}
+                //// Определим входящую поставку
+                //List<SAPIncomingSupply> sap_is = wagon.SAPIncomingSupply.ToList();
+                //Arrival_UZ_Vagon vag_doc = wagon.Arrival_UZ_Vagon;
+
+                //// Создадим новую строкку
+                //WagonInternalRoutes new_wir = new WagonInternalRoutes()
+                //{
+                //    id = 0,
+                //    num = wagon.num,
+                //    id_arrival_car = wagon.id,
+                //    id_sap_incoming_supply = sap_is != null && sap_is.Count() > 0 ? (long?)sap_is[0].id : null,
+                //    create = DateTime.Now,
+                //    create_user = user,
+                //    parent_id = parent_id
+
+                //};
+                //new_wir.SetStationWagon(id_station, id_way, date_start, position, null, user);
+                //new_wir.SetOpenOperation(1, date_start, (int)vag_doc.id_condition, vag_doc.vesg > 0 ? 1 : 0, null, null, null, user).SetCloseOperation(date_start, null, user);
+                //context.Insert(new_wir); // Обновим контекст
+                return 1;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("DislocationWagon(context={0}, id_way_from={1}, id_way_on={2}, position_on={3}, date_start={4}, date_stop={5}, wagon={6}, user={6})",
+                    context, id_way_from, id_way_on, position_on, date_start, date_stop, wagon, user), servece_owner, eventID);
+                return -1;// Возвращаем id=-1 , Ошибка
+            }
+        }
+
+        /// <summary>
+        /// Дислокация вагонов на станции
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_way_from"></param>
+        /// <param name="reverse"></param>
+        /// <param name="id_way_on"></param>
+        /// <param name="side_on"></param>
+        /// <param name="date_start"></param>
+        /// <param name="date_stop"></param>
+        /// <param name="wagons"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public ResultTransfer DislocationWagons(ref EFDbContext context, int id_way_from, bool reverse, int id_way_on, bool side_on, DateTime date_start, DateTime date_stop, List<WagonInternalRoutes> wagons, string user)
+        {
+            ResultTransfer rt = new ResultTransfer(wagons.Count());
+            try
+            {
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+
+
+                if (wagons != null && wagons.Count() > 0)
+                {
+                    // Определим сортировку (реверс)
+                    List<WagonInternalRoutes> wagon_position = reverse == true ? wagons.OrderByDescending(w => w.GetLastMovement().position).ToList() : wagons.OrderBy(w => w.GetLastMovement().position).ToList();
+                    // Подготовим путь приема (перестроим позиции)
+                    int res_renum = RenumberingWagons(ref context, id_way_on, (side_on == false ? (wagons.Count() + 1) : 1));
+                    // Определим позицию переноса вагонов
+                    int position = side_on == false ? 1 : context.GetNextPosition(id_way_on);
+
+                    foreach (WagonInternalRoutes wagon in wagon_position)
+                    {
+                        int result = DislocationWagon(ref context, id_way_from, id_way_on, position, date_start, date_stop, wagon, user);
+                        rt.SetMovedResult(result, wagon.num);
+                        position++;                       
+                    }
+                }
+                rt.SetResult(context.SaveChanges());
+                return rt;
+
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("DislocationWagons(context={0}, id_way_from={1}, reverse={2}, id_way_on={3}, side={4}, date_start={5}, date_stop={6}, wagons={7}, user={8})",
+                    context, id_way_from, reverse, id_way_on, side_on, date_start, date_stop, wagons, user), servece_owner, eventID);
+                rt.SetResult(-1);
+                return rt;// Возвращаем id=-1 , Ошибка
+            }
+        }
+
+
+
+        #endregion
+
+
         #region ОТПРАВКА ВАГОНОВ АРМ ДИСПЕТЧЕРА
         /// <summary>
         /// Метод переносит вагон на станцию отправки по данным КИС (!временный метод)

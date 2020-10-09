@@ -676,6 +676,8 @@
             list_ways: null,
             //rows: null,
             // Поля формы
+            dislocation_wagon_way_from: $('input#dislocation_wagon_way_from'),
+            dislocation_wagon_reverse: $('input#dislocation_wagon_reverse'),
             dislocation_wagon_way: $('select#dislocation_wagon_way'),
             dislocation_wagon_side: $('select#dislocation_wagon_side'),
             dislocation_wagon_start: $('input#dislocation_wagon_start'),
@@ -708,6 +710,7 @@
                 });
                 // Соберем все элементы в массив
                 pn_dislocation_wagon.all_obj = $([])
+                    .add(pn_dislocation_wagon.dislocation_wagon_reverse)
                     .add(pn_dislocation_wagon.dislocation_wagon_way)
                     .add(pn_dislocation_wagon.dislocation_wagon_side)
                     .add(pn_dislocation_wagon.dislocation_wagon_start)
@@ -769,6 +772,10 @@
                 if (rows && rows.length > 0) {
 
                     pn_dislocation_wagon.list_ways = ids_inc.ids_dir.getListWays2TextOfAray(ids_inc.ids_dir.list_ways.filter(function (i) { return i.id_station === id_station }), 'id', 'way_num', 'way_name', pn_dislocation_wagon.lang, null);
+
+                    var way_from = getObjects(pn_dislocation_wagon.list_ways, 'value', id_way)
+                    pn_dislocation_wagon.dislocation_wagon_way_from.val(way_from && way_from.length > 0 ? way_from[0].text : '?')
+
                     //var exceptions_value = [];
                     //exceptions_value.push(id_way);
                     pn_dislocation_wagon.dislocation_wagon_way = cd_initSelect(
@@ -788,9 +795,21 @@
             validation: function () {
                 pn_dislocation_wagon.val.clear_all();
                 var valid = true;
-                valid = valid & pn_dislocation_wagon.val.checkSelection(pn_dislocation_wagon.dislocation_wagon_way, "Выберите путь дислокации");
-                valid = valid & pn_dislocation_wagon.val.checkInputOfNull(pn_dislocation_wagon.dislocation_wagon_start.obj, "Укажите время начала дислокации");
-                valid = valid & pn_dislocation_wagon.val.checkInputOfNull(pn_dislocation_wagon.dislocation_wagon_stop.obj, "Укажите время конца дислокации");
+                valid = valid & pn_dislocation_wagon.val.checkSelection(pn_dislocation_wagon.dislocation_wagon_way, "Выберите путь дислокации.");
+                valid = valid & pn_dislocation_wagon.val.checkInputOfNull(pn_dislocation_wagon.dislocation_wagon_start.obj, "Укажите время начала дислокации.");
+                valid = valid & pn_dislocation_wagon.val.checkInputOfNull(pn_dislocation_wagon.dislocation_wagon_stop.obj, "Укажите время конца дислокации.");
+                if (valid) {
+                    var start = moment(pn_dislocation_wagon.dislocation_wagon_stop.getDateTime());
+                    var stop = moment(pn_dislocation_wagon.dislocation_wagon_start.getDateTime());
+                    if (stop.isBefore(start)) {  //|| !start.isSame(stop)
+                        valid = valid & true;
+                    } else {
+                        pn_dislocation_wagon.val.set_object_error(pn_dislocation_wagon.dislocation_wagon_start.obj, "Время начала должно быть меньше времени конца.");
+                        pn_dislocation_wagon.val.set_object_error(pn_dislocation_wagon.dislocation_wagon_stop.obj, "Время начала должно быть меньше времени конца.");
+                        valid = valid & false;
+                    }
+                }
+
                 return valid;
             },
             // Сохранить 

@@ -101,7 +101,10 @@ namespace Test
             //tids.IDSTransfer_SetStationOutgoingWagonsOfKIS();       // Найти и поставить все вагоны по отправляемому составу на станцию и путь отправки АМКР (По данным КИС, операция перед закрытием WIR отправка состава на УЗ)
             //tids.IDSTransfer_SendingOutgoingSostav();             // Закрытие WIR отправка состава на УЗ
             
-            tids.IDS_SAP_GetCurrentIncomingSupplyOfWebSAP();      // Чтение и обновление строки САП входящие поставки
+            //tids.IDS_SAP_GetCurrentIncomingSupplyOfWebSAP();      // Чтение и обновление строки САП входящие поставки
+            
+            tids.IDS_WIR_RenumberingWagons();                       // Перенумерация с указанной позиции
+
 
             #endregion
 

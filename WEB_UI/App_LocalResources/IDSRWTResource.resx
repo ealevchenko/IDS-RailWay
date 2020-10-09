@@ -477,4 +477,10 @@
   <data name="title_dislocation_wagon_way" xml:space="preserve">
     <value>Путь назначения</value>
   </data>
+  <data name="title_dislocation_wagon_reverse" xml:space="preserve">
+    <value>Реверс</value>
+  </data>
+  <data name="title_dislocation_wagon_way_from" xml:space="preserve">
+    <value>Путь отпраки.</value>
+  </data>
 </root>

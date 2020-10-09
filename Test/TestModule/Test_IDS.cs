@@ -12,26 +12,27 @@ namespace Test.TestModule
 {
     public class Test_IDS
     {
-        public Test_IDS() { 
-        
+        public Test_IDS()
+        {
+
         }
 
         #region IDSTransfer
-
-
-        public void IDSTransfer_AddArrival() {
+        public void IDSTransfer_AddArrival()
+        {
 
             IDSTransfer ids = new IDSTransfer(service.Test);
-            long res = ids.InsertArrivalSostav(1608, 5620, 3609, "4577-038-4670", new DateTime(2020, 3, 5, 10, 40, 0),null);
-            long res1 = ids.InsertArrivalSostav(1608, 5621, 3609, "4577-038-4670", new DateTime(2020, 3, 5, 10, 45, 0),null);
-            Console.WriteLine("ID = {0}",res);
+            long res = ids.InsertArrivalSostav(1608, 5620, 3609, "4577-038-4670", new DateTime(2020, 3, 5, 10, 40, 0), null);
+            long res1 = ids.InsertArrivalSostav(1608, 5621, 3609, "4577-038-4670", new DateTime(2020, 3, 5, 10, 45, 0), null);
+            Console.WriteLine("ID = {0}", res);
         }
 
-        public void IDSTransfer_GetNumDoc() {
+        public void IDSTransfer_GetNumDoc()
+        {
 
             IDSTransfer ids = new IDSTransfer(service.Test);
             string res = ids.AddUpdateUZ_DOC_To_DB_IDS(64566136, null);
-            Console.WriteLine("num_doc = {0}",res);
+            Console.WriteLine("num_doc = {0}", res);
         }
         /// <summary>
         /// Тест переноса составов на отправление на УЗ по данным КИС
@@ -72,6 +73,9 @@ namespace Test.TestModule
             IDSTransfer ids = new IDSTransfer(service.Test);
             int res = ids.SendingOutgoingSostav(499, @"EUROPE\test");
         }
+        #endregion
+
+        #region IDS_SAP
         // чтение и обновление сап
         public void IDS_SAP_GetCurrentIncomingSupplyOfWebSAP()
         {
@@ -126,45 +130,73 @@ namespace Test.TestModule
         }
         #endregion
 
-        public void GetActs() {
+        #region IDS_WIR
+        /// <summary>
+        /// Перенкмерация с указаной позиции
+        /// </summary>
+        public void IDS_WIR_RenumberingWagons()
+        {
+
+            IDS_WIR ids = new IDS_WIR(service.Test);
+
+            EFDbContext context = new EFDbContext();
+
+            int res = ids.RenumberingWagons(ref context, 111, 1);
+            int res_save = context.SaveChanges();
+
+        }
+
+        #endregion
+
+        public void GetActs()
+        {
 
             UZ.UZ_Convert convert = new UZ.UZ_Convert();
             EFIDS.Concrete.EFUZ_DOC ef_uz_doc = new EFIDS.Concrete.EFUZ_DOC(new EFIDS.Concrete.EFDbContext());
-            foreach (EFIDS.Entities.UZ_DOC doc in ef_uz_doc.Context.ToList()) {
+            foreach (EFIDS.Entities.UZ_DOC doc in ef_uz_doc.Context.ToList())
+            {
                 string xml_final = convert.XMLToFinalXML(doc.xml_doc);
                 UZ.OTPR otpr = convert.FinalXMLToOTPR(xml_final);
-                if (otpr!=null && otpr.acts!=null && otpr.acts.Count() > 0) {
+                if (otpr != null && otpr.acts != null && otpr.acts.Count() > 0)
+                {
                     Console.WriteLine("num_doc = {0}", doc.num_doc);
                 }
             }
         }
 
-        public void GetDocs() {
+        public void GetDocs()
+        {
 
             UZ.UZ_Convert convert = new UZ.UZ_Convert();
             EFIDS.Concrete.EFUZ_DOC ef_uz_doc = new EFIDS.Concrete.EFUZ_DOC(new EFIDS.Concrete.EFDbContext());
-            foreach (EFIDS.Entities.UZ_DOC doc in ef_uz_doc.Context.ToList()) {
+            foreach (EFIDS.Entities.UZ_DOC doc in ef_uz_doc.Context.ToList())
+            {
                 string xml_final = convert.XMLToFinalXML(doc.xml_doc);
                 UZ.OTPR otpr = convert.FinalXMLToOTPR(xml_final);
-                if (otpr!=null && otpr.sender_doc != null && otpr.sender_doc.Count() > 0) {
-                    foreach (UZ.SENDER_DOC sd in otpr.sender_doc.ToList()) { 
-                    Console.WriteLine("num_doc = {0}, сылка на документ : {1}", doc.num_doc, sd.id);
+                if (otpr != null && otpr.sender_doc != null && otpr.sender_doc.Count() > 0)
+                {
+                    foreach (UZ.SENDER_DOC sd in otpr.sender_doc.ToList())
+                    {
+                        Console.WriteLine("num_doc = {0}, сылка на документ : {1}", doc.num_doc, sd.id);
                     }
                 }
             }
         }
 
-        public void SetNum_UZ() {
+        public void SetNum_UZ()
+        {
 
             UZ.UZ_Convert convert = new UZ.UZ_Convert();
             EFIDS.Concrete.EFUZ_DOC ef_uz_doc = new EFIDS.Concrete.EFUZ_DOC(new EFIDS.Concrete.EFDbContext());
-            List<EFIDS.Entities.UZ_DOC> list_docs = ef_uz_doc.Context.Where(d => d.num_uz == null ).ToList();
+            List<EFIDS.Entities.UZ_DOC> list_docs = ef_uz_doc.Context.Where(d => d.num_uz == null).ToList();
             int count = list_docs.Count();
-            foreach (EFIDS.Entities.UZ_DOC doc in list_docs) {
+            foreach (EFIDS.Entities.UZ_DOC doc in list_docs)
+            {
                 count--;
                 string xml_final = convert.XMLToFinalXML(doc.xml_doc);
                 UZ.OTPR otpr = convert.FinalXMLToOTPR(xml_final);
-                if (otpr!=null && otpr.nom_doc!=null) {
+                if (otpr != null && otpr.nom_doc != null)
+                {
                     doc.num_uz = otpr.nom_doc;
                     int result = ef_uz_doc.Save();
                     //foreach (UZ.SENDER_DOC sd in otpr.sender_doc.ToList()) { 
