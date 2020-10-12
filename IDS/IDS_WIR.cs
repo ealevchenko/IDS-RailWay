@@ -17,10 +17,13 @@ namespace IDS
     public enum errors_wir : int
     {
         global = -1,
+        cancel_save_changes = -2,       // Отмена сохранений изменений в базе данных (были ошибки по ходу выполнения всей операции)
         not_input_value = -100,
         not_sostav = -101, //...
         not_wagon = -102,
-        not_arrival_wir = -103,  // Нет записи [WagonInternalRoutes] зашедшей на АМКР
+        not_arrival_wir = -103,         // Нет записи [WagonInternalRoutes] зашедшей на АМКР
+        not_open_wir = -104,            // Нет открытой записи положения вагона. (Если вагон защел тогда вагон всегда должен гдето стоять!)
+        not_set_way_wir = -105,         // Нет вагон стоит не натом пути по которому нужно провести маневры.
     }
 
     public class ResultWagon
@@ -251,7 +254,6 @@ namespace IDS
                 return -1;// Возвращаем id=-1 , Ошибка
             }
         }
-
         /// <summary>
         /// Выполнить дислокацию по вагону
         /// </summary>
@@ -268,36 +270,16 @@ namespace IDS
         {
             try
             {
-                //long? parent_id = null;
-                //// Получим последнюю запись по вагону
-                //WagonInternalRoutes last_wir = context.GetLastWagon(wagon.num);
-                //if (last_wir != null)
-                //{
-                //    // Запись есть проверим, для этого прибытия была создана запись
-                //    if (last_wir.id_arrival_car == wagon.id) return 0; // Строка для вагона уже создана
-                //    // Запись не закрыта (!Заись перед созданием должна быть закрыта, вагон выйти из АМКР)
-                //    parent_id = last_wir.CloseWagon(date_start, "Закрыта принудительно, вагон зашел с новым составом.", user);
-                //    context.Update(last_wir); // Обновим контекст
-                //}
-                //// Определим входящую поставку
-                //List<SAPIncomingSupply> sap_is = wagon.SAPIncomingSupply.ToList();
-                //Arrival_UZ_Vagon vag_doc = wagon.Arrival_UZ_Vagon;
 
-                //// Создадим новую строкку
-                //WagonInternalRoutes new_wir = new WagonInternalRoutes()
-                //{
-                //    id = 0,
-                //    num = wagon.num,
-                //    id_arrival_car = wagon.id,
-                //    id_sap_incoming_supply = sap_is != null && sap_is.Count() > 0 ? (long?)sap_is[0].id : null,
-                //    create = DateTime.Now,
-                //    create_user = user,
-                //    parent_id = parent_id
-
-                //};
-                //new_wir.SetStationWagon(id_station, id_way, date_start, position, null, user);
-                //new_wir.SetOpenOperation(1, date_start, (int)vag_doc.id_condition, vag_doc.vesg > 0 ? 1 : 0, null, null, null, user).SetCloseOperation(date_start, null, user);
-                //context.Insert(new_wir); // Обновим контекст
+                if (wagon == null) return (int)errors_wir.not_arrival_wir;
+                // Получим текущее положение вагона
+                WagonInternalMovement wim = wagon.GetLastMovement();
+                if (wim == null) return (int)errors_wir.not_open_wir;
+                if (wim.id_way != id_way_from) return (int)errors_wir.not_set_way_wir;
+                wagon.SetStationWagon(wim.id_station, id_way_on, date_stop, position_on, null, user);
+                // Установим и закроем операцию дислокация -3              
+                wagon.SetOpenOperation(3, date_start, null, null, null, null, null, user).SetCloseOperation(date_stop, null, user);
+                //context.Update(wagon); // Обновим контекст
                 return 1;
             }
             catch (Exception e)
@@ -307,7 +289,6 @@ namespace IDS
                 return -1;// Возвращаем id=-1 , Ошибка
             }
         }
-
         /// <summary>
         /// Дислокация вагонов на станции
         /// </summary>
@@ -345,10 +326,16 @@ namespace IDS
                     {
                         int result = DislocationWagon(ref context, id_way_from, id_way_on, position, date_start, date_stop, wagon, user);
                         rt.SetMovedResult(result, wagon.num);
-                        position++;                       
+                        position++;
                     }
                 }
-                rt.SetResult(context.SaveChanges());
+                if (rt.error == 0)
+                {
+                    rt.SetResult(context.SaveChanges());
+                }
+                else {
+                    rt.SetResult((int)errors_wir.cancel_save_changes);
+                }
                 return rt;
 
             }
@@ -360,9 +347,65 @@ namespace IDS
                 return rt;// Возвращаем id=-1 , Ошибка
             }
         }
+        /// <summary>
+        /// Операция дислокации вагонов на станции АМКР
+        /// </summary>
+        /// <param name="list_wir"></param>
+        /// <param name="id_way_from"></param>
+        /// <param name="reverse"></param>
+        /// <param name="id_way_on"></param>
+        /// <param name="side_on"></param>
+        /// <param name="date_start"></param>
+        /// <param name="date_stop"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int DislocationWagonsOfStation(List<long> list_wir, int id_way_from, bool reverse, int id_way_on, bool side_on, DateTime date_start, DateTime date_stop, string user)
+        {
+            try
+            {
+                DateTime start = DateTime.Now;
+                ResultTransfer res = new ResultTransfer(0);
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
 
+                EFDbContext context = new EFDbContext();
+                List<WagonInternalRoutes> wagons = new List<WagonInternalRoutes>();
+                foreach (long id in list_wir)
+                {
+                    wagons.Add(context.WagonInternalRoutes.Where(r => r.id == id).FirstOrDefault());
+                }
+                // Перенесем вагоны 
+                res = DislocationWagons(ref context, id_way_from, reverse, id_way_on, side_on, date_start, date_stop, wagons, user);
+                // Если операция успешна, перенумеруем позиции на пути с которого ушли вагоны
+                if (res.result > 0) {
+                    int result_rnw = RenumberingWagons(ref context, id_way_from, 1);
+                    if (result_rnw > 0) {
+                        // Применим перенумерацию
+                        context.SaveChanges();
+                    }
+                }
+                string mess = String.Format("Операция дислокации вагонов на станции АМКР. Код выполнения = {0}. Путь отправки = {1}, реверс = {2}, путь приема = {3}, сторона = {4}, время начала операции = {5}, время конца операции = {6}. Результат переноса [выбрано для переноса = {7}, перенесено = {8}, пропущено = {9}, ошибок переноса = {10}].",
+                    res.result, id_way_from, reverse, id_way_on, side_on, date_start, date_stop, res.count,
+                    res.count, res.moved, res.skip, res.error);
+                mess.WarningLog(servece_owner, eventID);
+                mess.EventLog(res.result < 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
+                DateTime stop = DateTime.Now;
+                servece_owner.ServicesToLog(eventID, String.Format("Операция дислокации вагонов на станции АМКР."), start, stop, res.result);
 
-
+                return res.result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("DislocationWagonsOfStation(list_wir={0}, id_way_from={1}, reverse={2}, id_way_on={3}, side_on={4}, date_start={5}, date_stop={6}, user={7})",
+                    list_wir, id_way_from, reverse, id_way_on, side_on, date_start, date_stop, user), servece_owner, eventID);
+                return -1;// Возвращаем id=-1 , Ошибка
+            }
+        }
+        
+        
         #endregion
 
 

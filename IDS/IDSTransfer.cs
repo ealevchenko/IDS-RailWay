@@ -638,6 +638,7 @@ namespace IDS
 
         #endregion
 
+        #region IncomingArrivalSostav
         /// <summary>
         /// Принять состав на станцию АМКР примыкающую с УЗ 
         /// </summary>
@@ -742,6 +743,9 @@ namespace IDS
                 return -1;// Возвращаем id=-1 , Ошибка
             }
         }
+        #endregion
+
+        #region SendingOutgoingSostav
         /// <summary>
         /// Перенести все вагоны состава принятого по КИС (сдача на УЗ) на станцию и путь отправки АМКР (! временная работает по отпраке КИС)
         /// </summary>
@@ -878,5 +882,7 @@ namespace IDS
                 return -1;// Возвращаем id=-1 , Ошибка
             }
         }
+        #endregion
+
     }
 }

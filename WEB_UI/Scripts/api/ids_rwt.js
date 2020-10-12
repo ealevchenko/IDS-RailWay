@@ -3040,6 +3040,31 @@ IDS_RWT.prototype.getViewWagonsOfWay = function (id, callback) {
         },
     });
 };
+//Операция дислокации 
+IDS_RWT.prototype.postDislocationWagonsOfStation = function (operation_dislocation, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/wsd/operation/dislocation/',
+        type: 'POST',
+        data: JSON.stringify(operation_dislocation),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postDislocationWagonsOfStation", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 
 /* ----------------------------------------------------------
 функции для работы с объектами

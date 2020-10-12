@@ -103,7 +103,9 @@ namespace Test
             
             //tids.IDS_SAP_GetCurrentIncomingSupplyOfWebSAP();      // Чтение и обновление строки САП входящие поставки
             
-            tids.IDS_WIR_RenumberingWagons();                       // Перенумерация с указанной позиции
+            //tids.IDS_WIR_RenumberingWagons();                       // Перенумерация с указанной позиции
+            //tids.IDS_WIR_DislocationWagons();                       // Операция дислокация
+            tids.IDS_WIR_DislocationWagonsOfStation();                // Операция дислокация
 
 
             #endregion

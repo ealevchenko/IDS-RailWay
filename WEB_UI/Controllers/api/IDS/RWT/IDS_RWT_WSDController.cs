@@ -1,4 +1,6 @@
 ﻿using EFIDS.Concrete;
+using IDS;
+using IDSLogs.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -118,11 +120,23 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public bool? sap_os_doc_outgoing_car { get; set; }
     }
 
+    public class OperationDislocationWagons
+    {
+        public List<long> list_wir_id { get; set; }
+        public int id_way_from { get; set; }
+        public bool reverse { get; set; }
+        public int id_way_on { get; set; }
+        public bool side_on { get; set; }
+        public DateTime date_start { get; set; }
+        public DateTime date_stop { get; set; }
+        public string user { get; set; }
+    }
+
     [RoutePrefix("api/ids/rwt/wsd")]
     public class IDS_RWT_WSDController : ApiController
     {
         private EFDbContext db = new EFDbContext();
-        
+
         // GET: api/ids/rwt/wsd/view/vagons/way/id/111
         [Route("view/vagons/way/id/{id_way:int}")]
         [ResponseType(typeof(view_wagons))]
@@ -139,5 +153,25 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 return BadRequest(e.Message);
             }
         }
+
+
+        // POST api/ids/rwt/wsd/operation/dislocation
+        [HttpPost]
+        [Route("operation/dislocation")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostDislocationWagonsOfStation([FromBody]OperationDislocationWagons value)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                int result = ids_wir.DislocationWagonsOfStation(value.list_wir_id, value.id_way_from, value.reverse, value.id_way_on, value.side_on, value.date_start, value.date_stop, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
     }
 }

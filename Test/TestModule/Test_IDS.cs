@@ -2,6 +2,7 @@
 using EFIDS.Entities;
 using IDS;
 using IDSLogs.Enum;
+using IDS.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -143,6 +144,55 @@ namespace Test.TestModule
 
             int res = ids.RenumberingWagons(ref context, 111, 1);
             int res_save = context.SaveChanges();
+
+        }
+        /// <summary>
+        /// операция дислокация
+        /// </summary>
+        public void IDS_WIR_DislocationWagons()
+        {
+
+            IDS_WIR ids = new IDS_WIR(service.Test);
+
+            EFDbContext context = new EFDbContext();
+
+            List<WagonInternalRoutes> wagons = new List<WagonInternalRoutes>();
+            List<WagonInternalMovement> list_wim = context.WagonInternalMovement.Where(m => m.id_way == 111 && m.way_end == null).OrderBy(m=>m.position).ToList();
+
+            foreach (WagonInternalMovement wim in list_wim) {
+                if (wim.WagonInternalRoutes.num == 58481748 || wim.WagonInternalRoutes.num == 60381712)
+                
+                wagons.Add(wim.WagonInternalRoutes);
+
+            }
+
+            ResultTransfer res = new ResultTransfer(0);
+
+            res = ids.DislocationWagons(ref context, 111, false, 115, false , DateTime.Now.AddMinutes(-30), DateTime.Now, wagons, "TEST");
+            //int res_save = context.SaveChanges();
+
+        }
+
+        public void IDS_WIR_DislocationWagonsOfStation()
+        {
+
+            IDS_WIR ids = new IDS_WIR(service.Test);
+
+            EFDbContext context = new EFDbContext();
+
+            List<long> wagons = new List<long>();
+            List<WagonInternalMovement> list_wim = context.WagonInternalMovement.Where(m => m.id_way == 111 && m.way_end == null).OrderBy(m=>m.position).ToList();
+
+            foreach (WagonInternalMovement wim in list_wim) {
+                if (wim.WagonInternalRoutes.num == 58484320 || wim.WagonInternalRoutes.num == 53779476)
+                
+                wagons.Add(wim.WagonInternalRoutes.id);
+
+            }
+
+
+            int res = ids.DislocationWagonsOfStation(wagons, 111, false, 115, false, DateTime.Now.AddMinutes(-30), DateTime.Now, "TEST");
+            //int res_save = context.SaveChanges();
 
         }
 

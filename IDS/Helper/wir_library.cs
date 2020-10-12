@@ -30,7 +30,17 @@ namespace IDS.Helper
             }
             return wir.id;
         }
-
+        /// <summary>
+        /// Установить вагон на станцию на путь
+        /// </summary>
+        /// <param name="wir"></param>
+        /// <param name="id_station"></param>
+        /// <param name="id_way"></param>
+        /// <param name="date_start"></param>
+        /// <param name="position"></param>
+        /// <param name="note"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public static WagonInternalRoutes SetStationWagon(this WagonInternalRoutes wir, int id_station, int id_way, DateTime date_start, int position, string note, string user)
         {
             if (wir != null && wir.close == null)
@@ -59,18 +69,45 @@ namespace IDS.Helper
             }
             return wir;
         }
+        // Открыть новую операцию
+        //public static WagonInternalRoutes SetOpenOperation(this WagonInternalRoutes wir, int id_operation, DateTime date_start, int? id_condition, int? id_loading_status, string locomotive1, string locomotive2, string note, string user)
+        //{
+        //    if (wir != null && wir.close == null)
+        //    {
+        //        WagonInternalOperation wio_last = wir.GetLastOperation();
+        //        // Исключим попытку дублирования операции
+        //        //if (wio_last != null && (wio_last.id_operation != id_operation || wim.id_way != id_way || wim.position != position))
+        //        //{ 
+                
+        //        //}
+        //        WagonInternalOperation wio_new = new WagonInternalOperation()
+        //        {
+        //            id = 0,
+        //            id_operation = id_operation,
+        //            operation_start = date_start,
+        //            id_condition = (id_condition != null ? (int)id_condition : (wio_last != null ? wio_last.id_condition : 0)),
+        //            id_loading_status = (id_loading_status != null ? (int)id_loading_status : (wio_last != null ? wio_last.id_loading_status : 0)),
+        //            locomotive1 = locomotive1,
+        //            locomotive2 = locomotive2,
+        //            note = note,
+        //            create = DateTime.Now,
+        //            create_user = user,
+        //            parent_id = wio_last.CloseOperation(date_start, null, user)
+        //        };
 
-        public static WagonInternalRoutes SetOpenOperation(this WagonInternalRoutes wir, int id_operation, DateTime date_start, int? id_condition, int? id_loading_status, string locomotive1, string locomotive2, string note, string user)
+        //        wir.WagonInternalOperation.Add(wio_new);
+        //    }
+        //    return wir;
+        //}
+
+        public static WagonInternalOperation SetOpenOperation(this WagonInternalRoutes wir, int id_operation, DateTime date_start, int? id_condition, int? id_loading_status, string locomotive1, string locomotive2, string note, string user)
         {
+            WagonInternalOperation wio_new = null;
+            
             if (wir != null && wir.close == null)
             {
                 WagonInternalOperation wio_last = wir.GetLastOperation();
-                // Исключим попытку дублирования операции
-                //if (wio_last != null && (wio_last.id_operation != id_operation || wim.id_way != id_way || wim.position != position))
-                //{ 
-                
-                //}
-                WagonInternalOperation wio_new = new WagonInternalOperation()
+                wio_new = new WagonInternalOperation()
                 {
                     id = 0,
                     id_operation = id_operation,
@@ -87,16 +124,25 @@ namespace IDS.Helper
 
                 wir.WagonInternalOperation.Add(wio_new);
             }
-            return wir;
+            return wio_new;
         }
 
-        public static WagonInternalRoutes SetCloseOperation(this WagonInternalRoutes wir, DateTime date_end, string note, string user)
+        //public static WagonInternalRoutes SetCloseOperation(this WagonInternalRoutes wir, DateTime date_end, string note, string user)
+        //{
+        //    if (wir != null && wir.close == null)
+        //    {
+        //        wir.GetLastOperation().CloseOperation(date_end,note, user);
+        //    }
+        //    return wir;
+        //}
+
+        public static WagonInternalOperation SetCloseOperation(this WagonInternalOperation wio, DateTime date_end, string note, string user)
         {
-            if (wir != null && wir.close == null)
+            if (wio != null && wio.close == null)
             {
-                wir.GetLastOperation().CloseOperation(date_end,note, user);
+                wio.CloseOperation(date_end, note, user);
             }
-            return wir;
+            return wio;
         }
         #endregion
 
@@ -113,13 +159,24 @@ namespace IDS.Helper
             }
             return position;
         }
-
+        /// <summary>
+        /// Вернуть последнюю запись позиции вагона
+        /// </summary>
+        /// <param name="wir"></param>
+        /// <returns></returns>
         public static WagonInternalMovement GetLastMovement(this WagonInternalRoutes wir)
         {
             if (wir.WagonInternalMovement == null) return null;
             return wir.WagonInternalMovement.OrderByDescending(m => m.id).FirstOrDefault();
         }
-
+        /// <summary>
+        /// Закрыть запись позиции вагона
+        /// </summary>
+        /// <param name="wim"></param>
+        /// <param name="date_end"></param>
+        /// <param name="note"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public static long? CloseMovement(this WagonInternalMovement wim, DateTime date_end, string note, string user)
         {
             if (wim == null) return null;
@@ -133,6 +190,18 @@ namespace IDS.Helper
             }
             return wim.id;
         }
+        /// <summary>
+        /// Вернуть станцию на которой стоит вагон
+        /// </summary>
+        /// <param name="wir"></param>
+        /// <returns></returns>
+        public static int? GetCurrentStation(this WagonInternalRoutes wir)
+        {
+            if (wir == null || wir.WagonInternalMovement == null) return null;
+            WagonInternalMovement wim = wir.GetLastMovement();
+            return wim != null ? (int?)wim.id_station : null;
+        }
+
         #endregion
 
 

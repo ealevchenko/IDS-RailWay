@@ -3486,7 +3486,7 @@ IDS_DIRECTORY.prototype.getWays = function (callback) {
         },
     });
 };
-// Получить пити по указаной станции и парку
+// Получить пути по указаной станции и парку
 IDS_DIRECTORY.prototype.getWaysOfStationIDParkID = function (id_station, id_park, callback) {
     $.ajax({
         type: 'GET',
@@ -3509,6 +3509,30 @@ IDS_DIRECTORY.prototype.getWaysOfStationIDParkID = function (id_station, id_park
         },
     });
 };
+// Получить путь по id
+IDS_DIRECTORY.prototype.getWaysOfWayID = function (id_way, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/ways/view/way/id/' + id_way,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getWaysOfWayID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 //======= Directory_ParkWay (Справочник путей ИДС) ======================================
 // Получить все парки
 IDS_DIRECTORY.prototype.getParkWays = function (callback) {
