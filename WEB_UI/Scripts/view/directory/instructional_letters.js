@@ -228,8 +228,8 @@
                             pn_add_edit.add_edit_num.val(result_il.num);
                             pn_add_edit.add_edit_datetime.setDateTime(result_il.dt);
                             pn_add_edit.add_edit_destination_station_code.val(result_il.destination_station);
-                            var station = pn_add_edit.ids_inc.uz_dir.getStations_Internal_Of_Code(result_il.destination_station)
-                            pn_add_edit.add_edit_destination_station.val(station.station);
+                            var station = pn_add_edit.ids_inc.uz_dir.getStations_Internal_Of_CodeCS(result_il.destination_station)
+                            pn_add_edit.add_edit_destination_station.val(station ? station.station : null);
                             pn_add_edit.add_edit_owner.val(result_il.owner);
                             pn_add_edit.add_edit_wagons.val(getStringArr(getArrOfNameObjArr(result_il.InstructionalLettersWagon, 'num'), ';')).prop('disabled', true);
                             pn_add_edit.add_edit_note.val(result_il.note);
