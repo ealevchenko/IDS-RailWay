@@ -545,6 +545,7 @@
     <Content Include="Content\view\shared\home-menu.css" />
     <Content Include="Content\view\shared\print_aica.css" />
     <Content Include="Content\view\shared\print.css" />
+    <Content Include="Content\view\shared\print_dg20.css" />
     <Content Include="Content\view\shared\_idsdirectory.css" />
     <Content Include="Content\view\shared\_idsmors.css" />
     <Content Include="Content\view\shared\_ids.css" />
