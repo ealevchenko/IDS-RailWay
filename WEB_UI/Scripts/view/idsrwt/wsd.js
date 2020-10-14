@@ -566,7 +566,7 @@
                     "instructional_letters_num": wagon.instructional_letters_num,
                     "instructional_letters_datetime": wagon.instructional_letters_datetime !== null ? wagon.instructional_letters_datetime.replace(/T/g, ' ') : null,
                     "instructional_letters_station_name": wagon.instructional_letters_station_name,
-                    "wagon_date_rem_uz": wagon.wagon_date_rem_uz,
+                    "wagon_date_rem_uz": wagon.wagon_date_rem_uz != null ? wagon.wagon_date_rem_uz.substr(0,10):null,
                 };
 
             }
