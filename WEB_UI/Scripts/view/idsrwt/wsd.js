@@ -90,6 +90,27 @@
                     alert.out_warning_message("Операция новой дислокации не доступна, нет выбранных вагонов для дислокации!");
                 }
             }),
+        // Выполнить роспуск
+        bt_dissolution = $('button#dissolution').on('click',
+            function (event) {
+                alert.clear_message();
+                event.preventDefault();
+                var select_row = table_tree_way.html_table.find('tr.selected');
+                if (select_row && select_row.length > 0) {
+                    var id_station = Number($(select_row[0]).attr("station"));
+                    var id_park = Number($(select_row[0]).attr("park"));
+                    var id_way = Number($(select_row[0]).attr("way"));
+                    // Проверка выбранного пути
+                    if ((id_way >= 104 && id_way <= 113) || (id_way >= 118 && id_way <= 122)) {
+                        operation_detali.view_dissolution(id_way);
+                    } else {
+                        alert.out_warning_message("Выбранный путь не поддерживает операцию роспуска.");
+                    }
+                } else {
+                    alert.out_warning_message("Выберите путь, по которому нужно провести роспуск.");
+                }
+            }),
+
         //*************************************************************************************
         // ОСНОВНАЯ ТАБЛИЦА СОСТАВОВ
         //*************************************************************************************
@@ -228,29 +249,8 @@
                                                     if (ways && ways.length > 0) {
                                                         $(tr_park).addClass('shown');
                                                         $.each(ways.sort(function (a, b) { return b.position_way - a.position_way; }), function (i, el) {
-                                                            //// Определим компонент прогресс бар
-                                                            //var max_capacity = el.capacity ? Number(el.capacity) : 0
-                                                            //var count_wagon = el.count_wagon ? Number(el.count_wagon) : 0
-                                                            //var progress = Number(count_wagon > max_capacity ? 100.0 : max_capacity === 0 ? 0.0 : (count_wagon * 100.0) / max_capacity);
-                                                            //var progress_collor = "";
-                                                            //if (progress <= 25) {
-                                                            //    progress_collor = 'bg-success';
-                                                            //} else {
-                                                            //    if (progress <= 50) {
-                                                            //        progress_collor = 'bg-info';
-                                                            //    } else {
-                                                            //        if (progress <= 75) {
-                                                            //            progress_collor = 'bg-warning';
-                                                            //        } else {
-                                                            //            progress_collor = 'bg-danger';
-                                                            //        }
-                                                            //    }
-                                                            //}
-                                                            //var pb_way = $("<div class='progress' title='Информация детально' way='" + el.id + "'><div class='progress-bar " + progress_collor + "' role='progressbar' style='width: " + progress.toFixed(0) + "%;' aria-valuenow='" + el.count_wagon + "' aria-valuemin='0' aria-valuemax='" + el.capacity + "'>" + progress.toFixed(1) + "%</div></div>")
-
                                                             // Получим компонент pb
                                                             var pb_way = table_tree_way.get_pb(el.id, el.capacity, el.count_wagon);
-
                                                             // определим строку путь
                                                             var tr_way = $("<tr id='station-" + id_station + "' station='" + id_station + "' park='" + id_park + "' way='" + el.id + "'><td></td><td></td><td></td><td class='way-name'><img class='icon-way'/>" + el.way_num_ru + " - " + el.way_abbr_ru + "</td><td></td><td>" + el.count_wagon + "</td><td>" + el.capacity + "</td></tr>");
                                                             var td = tr_way.find('td:eq(4)');
@@ -260,7 +260,7 @@
                                                                 // Проверим наличие запрета выбора пути
                                                                 if (!not_event_select_way) {
                                                                     event.preventDefault();
-
+                                                                    alert.clear_message();
                                                                     $('tr[way]').removeClass('selected'); // Убрать выбор
                                                                     $(this).addClass('selected'); // Применитьт выбор
 
@@ -566,7 +566,7 @@
                     "instructional_letters_num": wagon.instructional_letters_num,
                     "instructional_letters_datetime": wagon.instructional_letters_datetime !== null ? wagon.instructional_letters_datetime.replace(/T/g, ' ') : null,
                     "instructional_letters_station_name": wagon.instructional_letters_station_name,
-                    "wagon_date_rem_uz": wagon.wagon_date_rem_uz != null ? wagon.wagon_date_rem_uz.substr(0,10):null,
+                    "wagon_date_rem_uz": wagon.wagon_date_rem_uz != null ? wagon.wagon_date_rem_uz.substr(0, 10) : null,
                 };
 
             }
@@ -915,6 +915,45 @@
                     });
                 }
             },
+        },
+        //*************************************************************************************
+        // ОКНО "Операции детально"
+        //*************************************************************************************                
+        operation_detali = {
+            content: $('.cd-operation-detali'),
+            lang: null,
+            user: null,
+            alert: null,
+            ids_rwt: null,
+            bit_update: false,
+            callback_close: null,                               // Функция обратного вызова при закрытии проекта
+            // Инициализация
+            init: function (lang, user_name, callback_close) {
+                operation_detali.lang = lang;
+                operation_detali.user = user_name;
+                operation_detali.callback_close = callback_close;
+                // создадим классы
+                operation_detali.ids_rwt = new IDS_RWT(operation_detali.lang); // Создадим класс IDS_RWT
+                operation_detali.alert = new ALERT($('div#car-operation-alert'));// Создадим класс ALERTG
+
+                // Sumbit form
+                operation_detali.content.find("form").on("submit", function (event) {
+                    event.preventDefault();
+                });
+                // Настройка закрыть операции детально
+                operation_detali.content.on('click', '.close', function (event) {
+                    event.preventDefault();
+                    if (typeof operation_detali.callback_close === 'function') {
+                        operation_detali.callback_close(operation_detali.bit_update);
+                    }
+                    operation_detali.content.removeClass('is-visible');
+                });
+            },
+            // Показать роспуск
+            view_dissolution: function (id_way) {
+                // Показать операцию детально
+                operation_detali.content.addClass('is-visible');
+            }
         };
 
 
@@ -925,8 +964,13 @@
     loadReference(function (result) {
         table_tree_way.init();
         table_wagons.init();
-
-
+        // Инициализация окон
+        operation_detali.init(lang, user_name, function (bit_update) {
+            // Проверим требуется обновление путей
+            if (bit_update) {
+                // !!!! Отработать обновление
+            }
+        });
         pn_loading_way_detail.init(lang);
         pn_select_wagon.init(lang);
         // Инициализация панели дислокация
