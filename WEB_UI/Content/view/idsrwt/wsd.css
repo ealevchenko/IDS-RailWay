@@ -3,6 +3,10 @@
 body {
 }
 
+.operator-detali-tables {
+    font-size:12px;
+}
+
 /*Коррекция отображения компонента дата и время*/
 .date-picker {
     z-index: 202;
@@ -199,3 +203,31 @@ cars detali panel
     /*max-width: 600px;*/
     margin: 4em auto;
 }
+
+/*fieldset legend*/
+legend {
+    display: block;
+    width: auto;
+    padding: 0 5px;
+    margin-bottom: 0;
+    font-size: inherit;
+    line-height: inherit;
+    border-bottom: none;
+    text-transform: uppercase;
+}
+
+fieldset {
+    border: 2px groove threedface;
+    padding: 10px;
+    border-radius: 3px;
+}
+
+    fieldset > fieldset {
+        border: 1px groove threedface;
+        padding: 5px;
+        border-radius: 3px;
+    }
+
+        fieldset > fieldset legend {
+            text-transform: none;
+        }

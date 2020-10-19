@@ -243,7 +243,7 @@
     <div class="container-fluid">
         <form class="cd-form">
             <div class="alert" id="car-operation-alert"></div>
-            <div class="row">
+            <div class="row operation-dissolution">
                 <div class="col-xl-12 mb-1 mt-1">
                     <div class="card border-secondary mb-1">
                         <div class="card-header">
@@ -257,18 +257,26 @@
                         </div>
                         <div class="card-body text-dark pl-3 pr-3">
                             <div class="row mb-1">
-                                <div class="col-xl-4">
+                                <div class="col-xl-12">
                                     <div class="card border-primary">
-                                        <div class="card-header">Пути роспуска</div>
+                                        <div class="card-header text-left">ПУТИ РОСПУСКА</div>
                                         <div class="card-body">
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-8">
-                                    <div class="card border-primary">
-                                        <div class="card-header">Вагоны на путях роспуска</div>
-                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-xl-3">
+                                                    <fieldset class="border-primary">
+                                                        <legend class="text-primary">Список путей</legend>
+                                                        <div class="operator-detali-tables">
+                                                            <table id="way-dissolution" class="compact table table-striped table-hover" style="width:100%; table-layout: fixed"></table>
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
+                                                <div class="col-xl-9">
+                                                    <fieldset class="border-primary">
+                                                        <legend class="text-primary">Вагоны на путях роспуска</legend>
+                                                        <table id="wagons-way-dissolution" class="compact table table-striped table-hover" style="width:100%; table-layout: fixed"></table>
+                                                    </fieldset>
+                                                </div>
+                                            </div>
 
                                         </div>
                                     </div>
@@ -276,10 +284,10 @@
                             </div>
                             <div class="row mb-1">
                                 <div class="col-xl-12">
-                                    <div class="card border-primary">
-                                        <div class="card-header">Вагоны для руспуска</div>
-                                        <div class="card-body">
-
+                                    <div class="card border-info">
+                                        <div class="card-header text-left">ВАГОНЫ ДЛЯ РОСПУСКА</div>
+                                        <div class="card-body operator-detali-tables">
+                                            <table id="wagons-way-from" class="compact table table-striped table-hover" style="width:100%; table-layout: fixed"></table>
                                         </div>
                                     </div>
                                 </div>

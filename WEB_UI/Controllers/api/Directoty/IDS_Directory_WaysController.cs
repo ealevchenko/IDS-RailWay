@@ -30,6 +30,8 @@ namespace WEB_UI.Controllers.api
         public bool? crossing_uz { get; set; }
         public bool? crossing_amkr { get; set; }
         public int? id_devision { get; set; }
+        public bool? dissolution { get; set; }
+        public bool? output_dissolution { get; set; }
         public string note { get; set; }
         public DateTime create { get; set; }
         public string create_user { get; set; }
@@ -95,7 +97,7 @@ namespace WEB_UI.Controllers.api
         {
             try
             {
-                string sql = "SELECT w.[id],w.[id_station],w.[id_park],w.[position_park],w.[position_way],w.[way_num_ru],w.[way_num_en],w.[way_name_ru],w.[way_name_en],w.[way_abbr_ru],w.[way_abbr_en],w.[capacity],[count_wagon] = (SELECT count(id) FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_way] =w.[id] and [way_end] is null),w.[deadlock],w.[crossing_uz],w.[crossing_amkr],w.[id_devision],w.[note],w.[create],w.[create_user],w.[change],w.[change_user] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] as w where [id_station]=" + id_station.ToString() + " AND [id_park]=" + id_park.ToString() + " ORDER BY [position_way]";
+                string sql = "SELECT w.[id],w.[id_station],w.[id_park],w.[position_park],w.[position_way],w.[way_num_ru],w.[way_num_en],w.[way_name_ru],w.[way_name_en],w.[way_abbr_ru],w.[way_abbr_en],w.[capacity],[count_wagon] = (SELECT count(id) FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_way] =w.[id] and [way_end] is null),w.[deadlock],w.[crossing_uz],w.[crossing_amkr],w.[id_devision], w.[dissolution], w.[output_dissolution], w.[note],w.[create],w.[create_user],w.[change],w.[change_user] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] as w where [id_station]=" + id_station.ToString() + " AND [id_park]=" + id_park.ToString() + " ORDER BY [position_way]";
                 List<Way_View> list = this.ef_dir.Database.SqlQuery<Way_View>(sql).ToList();
                 return Ok(list);
             }
@@ -112,7 +114,7 @@ namespace WEB_UI.Controllers.api
         {
             try
             {
-                string sql = "SELECT w.[id],w.[id_station],w.[id_park],w.[position_park],w.[position_way],w.[way_num_ru],w.[way_num_en],w.[way_name_ru],w.[way_name_en],w.[way_abbr_ru],w.[way_abbr_en],w.[capacity],[count_wagon] = (SELECT count(id) FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_way] =w.[id] and [way_end] is null),w.[deadlock],w.[crossing_uz],w.[crossing_amkr],w.[id_devision],w.[note],w.[create],w.[create_user],w.[change],w.[change_user] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] as w where w.[id]=" + id_way.ToString();
+                string sql = "SELECT w.[id],w.[id_station],w.[id_park],w.[position_park],w.[position_way],w.[way_num_ru],w.[way_num_en],w.[way_name_ru],w.[way_name_en],w.[way_abbr_ru],w.[way_abbr_en],w.[capacity],[count_wagon] = (SELECT count(id) FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_way] =w.[id] and [way_end] is null),w.[deadlock],w.[crossing_uz],w.[crossing_amkr],w.[id_devision], w.[dissolution], w.[output_dissolution], w.[note],w.[create],w.[create_user],w.[change],w.[change_user] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] as w where w.[id]=" + id_way.ToString();
                 Way_View way = this.ef_dir.Database.SqlQuery<Way_View>(sql).FirstOrDefault();
                 return Ok(way);
             }
@@ -122,6 +124,22 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // GET: api/ids/directory/ways/view/way/dissolution/
+        [Route("view/way/dissolution")]
+        [ResponseType(typeof(Way_View))]
+        public IHttpActionResult GetWayOfDissolution()
+        {
+            try
+            {
+                string sql = "SELECT w.[id],w.[id_station],w.[id_park],w.[position_park],w.[position_way],w.[way_num_ru],w.[way_num_en],w.[way_name_ru],w.[way_name_en],w.[way_abbr_ru],w.[way_abbr_en],w.[capacity],[count_wagon] = (SELECT count(id) FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_way] =w.[id] and [way_end] is null),w.[deadlock],w.[crossing_uz],w.[crossing_amkr],w.[id_devision], w.[dissolution], w.[output_dissolution], w.[note],w.[create],w.[create_user],w.[change],w.[change_user] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] as w where w.[dissolution]=1 ORDER BY [position_park], [position_way]";
+                List<Way_View> list = this.ef_dir.Database.SqlQuery<Way_View>(sql).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
         // POST api/ids/directory/ways/
         [HttpPost]

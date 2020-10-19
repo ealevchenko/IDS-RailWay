@@ -3532,6 +3532,30 @@ IDS_DIRECTORY.prototype.getWaysOfWayID = function (id_way, callback) {
         },
     });
 };
+// Получить пути роспуска
+IDS_DIRECTORY.prototype.getWaysOfDissolution = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/ways/view/way/dissolution/',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getWaysOfDissolution", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 
 //======= Directory_ParkWay (Справочник путей ИДС) ======================================
 // Получить все парки

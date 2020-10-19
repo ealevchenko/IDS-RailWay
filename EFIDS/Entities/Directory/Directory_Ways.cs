@@ -64,6 +64,10 @@ namespace EFIDS.Entities
         [StringLength(100)]
         public string note { get; set; }
 
+        public bool? dissolution { get; set; }
+
+        public bool? output_dissolution { get; set; }
+
         public DateTime create { get; set; }
 
         [Required]
