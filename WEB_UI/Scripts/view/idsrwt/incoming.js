@@ -2454,6 +2454,8 @@
                                 if (result_car !== null && result_car.num === cars_detali.select_num) {
                                     // Номера вагонов совподают, добавим номер документа и штамп изменений
                                     result_car.num_doc = result_num;
+                                    result_car.UZ_DOC = null;
+                                    //result_car.Arrival_UZ_Vagon = null;
                                     result_car.change = toISOStringTZ(new Date());
                                     result_car.change_user = cars_detali.user;
                                     // Сохраним изменения 
