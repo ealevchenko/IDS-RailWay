@@ -105,7 +105,7 @@ namespace Test
             
             //tids.IDS_WIR_RenumberingWagons();                       // Перенумерация с указанной позиции
             //tids.IDS_WIR_DislocationWagons();                       // Операция дислокация
-            tids.IDS_WIR_DislocationWagonsOfStation();                // Операция дислокация
+            //tids.IDS_WIR_DislocationWagonsOfStation();                // Операция дислокация
 
 
             #endregion
@@ -139,7 +139,7 @@ namespace Test
             //tuz.UZ_WebApiClientUZWagon();
             //tuz.UZ_XML();
             //tuz.UZ_SMS_GetOTPR();
-            //tuz.UZ_SMS_GetUZ_DOC_Of_NumDoc();
+            tuz.UZ_SMS_GetUZ_DOC_Of_NumDoc();  // Поиск в УЗ по номеру документа
             //tuz.UZ_SMS_GetOTPROfXML();
             //tuz.UZ_SMS_GetDocumentOfDB_Num();
             //tuz.UZ_SMS_GetArrivalDocumentOfDB_Num();

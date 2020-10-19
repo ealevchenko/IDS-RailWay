@@ -53,7 +53,7 @@ namespace Test.TestModule
         {
             UZ_SMS sms = new UZ_SMS();
             sms.Connection();
-            List<UZ_DOC> list = sms.GetUZ_DOC_Of_NumDoc("41425570");
+            List<UZ_DOC> list = sms.GetUZ_DOC_Of_NumDoc("74089598");
 
 
         }
