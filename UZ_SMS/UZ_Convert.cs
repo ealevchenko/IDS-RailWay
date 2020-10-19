@@ -2476,7 +2476,7 @@ namespace UZ
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("GetFinalXML(xml)"), this.servece_owner, this.eventID);
+                e.ExceptionMethodLog(String.Format("GetFinalXML(xml)", xml), this.servece_owner, this.eventID);
                 return null;
             }
         }

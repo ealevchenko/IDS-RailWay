@@ -179,6 +179,10 @@ namespace IDSLogs
         {
             try
             {
+                if (!String.IsNullOrWhiteSpace(message) && message.Length > 2000) {
+                    message = message.Substring(0, 1999);
+                }
+
 
                 if (e.InnerException != null)
                 {
