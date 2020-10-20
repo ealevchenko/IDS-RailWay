@@ -231,3 +231,8 @@ fieldset {
         fieldset > fieldset legend {
             text-transform: none;
         }
+
+.not-select-wagon {
+    background-color:#fcca93;
+    text-decoration:line-through;
+}

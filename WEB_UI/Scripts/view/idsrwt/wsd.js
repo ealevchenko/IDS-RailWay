@@ -50,6 +50,11 @@
                 'title_button_select': 'Выбрать вагоны',
                 'title_button_select_all': 'Все вагоны',
                 'title_button_select_none': 'Убрать выбор',
+
+                'title_button_add_way_dissolution': 'Добавить на путь роспуска',
+                'title_button_clear_wagon': 'Очистить путь роспуска',
+                'title_button_clear_all': 'Сбросить все',
+
             },
             'en':  //default language: English
             {
@@ -939,7 +944,8 @@
                         "info": false,
                         "keys": true,
                         select: {
-                            style: "single"
+                            style: "single",
+                            toggleable: false,
                         },
                         "autoWidth": false,
                         //sScrollX: "100%",
@@ -948,26 +954,6 @@
                         jQueryUI: false,
                         "createdRow": function (row, data, index) {
                             //$(row).attr('id', index + 1);
-                            //// Определим компонент прогресс бар
-                            //var max = data.current_station_amkr_idle_time ? Number(data.current_station_amkr_idle_time) : 0
-                            //var duration = data.current_station_amkr_duration ? Number(data.current_station_amkr_duration) : 0
-                            //var progress = Number(duration > max ? 100.0 : max === 0 ? 0.0 : (duration * 100.0) / max);
-                            //var progress_collor = "";
-                            //if (progress <= 25) {
-                            //    progress_collor = 'bg-success';
-                            //} else {
-                            //    if (progress <= 50) {
-                            //        progress_collor = 'bg-info';
-                            //    } else {
-                            //        if (progress <= 75) {
-                            //            progress_collor = 'bg-warning';
-                            //        } else {
-                            //            progress_collor = 'bg-danger';
-                            //        }
-                            //    }
-                            //}
-                            //var pb_duration = $("<div class='progress'><div class='progress-bar " + progress_collor + "' role='progressbar' style='width: " + progress.toFixed(0) + "%;' aria-valuenow='" + data.current_station_amkr_duration + "' aria-valuemin='0' aria-valuemax='" + data.current_station_amkr_idle_time + "'>" + progress.toFixed(1) + "%</div></div>")
-                            //$('td:eq(20)', row).append(pb_duration)
                         },
                         columns: [
                             { data: "way_name", title: langView('field_way_name', langs), width: "100px", orderable: false, searchable: false },
@@ -975,8 +961,16 @@
                             { data: "way_count", title: langView('field_way_count', langs), width: "30px", orderable: false, searchable: false },
                             { data: "way_capacity", title: langView('field_way_capacity', langs), width: "30px", orderable: false, searchable: false },
                         ],
+                    }).on('user-select', function (e, dt, type, cell, originalEvent) {
+                        var indexes = cell && cell.length > 0 ? cell[0][0].row : null;
+                        var rowData = operation_detali.table_way_dissolution.obj.rows(indexes).data().toArray();
+                        var index = operation_detali.table_wagons_way_from.obj.rows({ selected: true });
+                    }).on('select', function (e, dt, type, indexes) {
+                        operation_detali.table_wagons_way_from.active_button_add();
+                        var rowData = operation_detali.table_way_dissolution.obj.rows(indexes).data().toArray();
+                        // Показать вагоны на пути роспуска
+                        operation_detali.table_wagons_way_on.view(rowData[0].id)
                     });
-
                 },
                 // Загрузить информацию
                 load: function () {
@@ -1025,7 +1019,7 @@
                         "info": false,
                         "keys": true,
                         select: {
-                            style: "single"
+                            style: "multi"
                         },
                         "autoWidth": false,
                         sScrollX: "100%",
@@ -1033,7 +1027,10 @@
                         language: language_table(langs),
                         jQueryUI: false,
                         "createdRow": function (row, data, index) {
-                            //$(row).attr('id', index + 1);
+                            if (data.id_way_dissolution !== null) {
+                                $('td:eq(1)', row).addClass('not-select-wagon');
+                            }
+
                         },
                         columns: [
                         { data: "position", title: langView('field_wagons_position', langs), width: "30px", orderable: false, searchable: false },
@@ -1069,6 +1066,85 @@
                         //{ data: "instructional_letters_station_name", title: langView('field_instructional_letters_station_name', langs), width: "150px", orderable: true, searchable: false },
                         //{ data: "wagon_date_rem_uz", title: langView('field_wagon_date_rem_uz', langs), width: "100px", orderable: true, searchable: false },
                         ],
+                        dom: 'Bfrtip',
+                        buttons: [
+                            //{
+                            //    extend: 'selectAll',
+                            //    text: langView('title_button_select_all', langs),
+                            //},
+                            {
+                                extend: 'selectNone',
+                                text: langView('title_button_select_none', langs),
+                            },
+                            {
+                                text: langView('title_button_add_way_dissolution', langs),
+                                action: function (e, dt, node, config) {
+                                    LockScreen(langView('mess_save', langs));
+                                    // Определим путь
+                                    var index_way = operation_detali.table_way_dissolution.obj.rows({ selected: true });
+                                    var way = operation_detali.table_way_dissolution.obj.rows(index_way[0]).data().toArray();
+
+                                    // Выделим выбранные вагоны
+                                    var index_wagon = operation_detali.table_wagons_way_from.obj.rows({ selected: true });
+                                    var row_select_wagon = operation_detali.table_wagons_way_from.obj.rows(index_wagon[0]).data();
+                                    // Проставим по ним путь
+                                    if (row_select_wagon && row_select_wagon.length > 0) {
+                                        $.each(row_select_wagon, function (i, el) {
+
+                                            var wagon = getObjects(operation_detali.wagons_dissolution_from, 'wir_id', el.wir_id);
+                                            if (wagon && wagon.length > 0) {
+                                                wagon[0].id_way_dissolution = way[0].id;
+                                            }
+
+                                        });
+                                        operation_detali.table_wagons_way_from.view(operation_detali.wagons_dissolution_from);
+                                        operation_detali.table_wagons_way_on.view(way[0].id);
+                                    }
+                                },
+                                enabled: false
+                            },
+                            {
+                                text: langView('title_button_clear_all', langs),
+                                action: function (e, dt, node, config) {
+                                    var wagons = operation_detali.wagons_dissolution_from.filter(function (i) {
+                                        return i.id_way_dissolution !== null ? true : false;
+                                    })
+                                    if (wagons && wagons.length > 0) {
+                                        dc.dialog_confirm('Open', 'Сбросить?', 'Вы уверены что хотите сбросить все настройки роспуска по всем путям?', function (result) {
+                                            if (result) {
+                                                LockScreen(langView('mess_save', langs));
+                                                // Добавим поле путь роспуска
+                                                if (operation_detali.wagons_dissolution_from) {
+                                                    $.each(operation_detali.wagons_dissolution_from, function (i, el) {
+                                                        el.id_way_dissolution = null;
+                                                    });
+                                                }
+                                                // Отобразим изменения
+                                                operation_detali.table_wagons_way_from.view(operation_detali.wagons_dissolution_from);
+                                                // Определим путь, и сбросим по нему
+                                                var index_way = operation_detali.table_way_dissolution.obj.rows({ selected: true });
+                                                var way = operation_detali.table_way_dissolution.obj.rows(index_way[0]).data().toArray();
+                                                operation_detali.table_wagons_way_on.view(way && way.length > 0 ? way[0].id : 0);
+                                            }
+                                        });
+                                    }
+                                },
+                                enabled: true
+                            }
+                        ]
+                    }).on('user-select', function (e, dt, type, cell, originalEvent) {
+                        var indexes = cell && cell.length > 0 ? cell[0][0].row : null;
+                        var wagon = operation_detali.table_wagons_way_from.obj.rows(indexes).data().toArray();
+                        if (wagon && wagon.length > 0 && wagon[0].way_dissolution !== "") {
+                            e.preventDefault();
+                        }
+                    }).on('select', function (e, dt, type, indexes) {
+                        var rowData = operation_detali.table_wagons_way_from.obj.rows(indexes).data().toArray();
+                        operation_detali.table_wagons_way_from.active_button_add();
+
+                    }).on('deselect', function (e, dt, type, indexes) {
+                        var rowData = operation_detali.table_wagons_way_from.obj.rows(indexes).data().toArray();
+                        operation_detali.table_wagons_way_from.active_button_add();
                     });
 
                 },
@@ -1094,6 +1170,161 @@
                         operation_detali.table_wagons_way_from.obj.row.add(operation_detali.table_wagons_way_from.get_wagon(el));
                     });
                     operation_detali.table_wagons_way_from.obj.draw();
+                    operation_detali.table_wagons_way_from.obj.button(1).enable(false);
+                    LockScreenOff();
+                },
+                // Определить вагон
+                get_wagon: function (wagon) {
+                    var way_dissolution = getObjects(operation_detali.table_way_dissolution.ways, 'id', wagon.id_way_dissolution);
+                    return {
+                        "wir_id": wagon.wir_id,
+                        "wim_id": wagon.wim_id,
+                        "wio_id": wagon.wio_id,
+                        "position": wagon.position,
+                        "num": wagon.num,
+                        "id_way_dissolution": wagon.id_way_dissolution,
+                        "way_dissolution": way_dissolution && way_dissolution.length > 0 ? way_dissolution[0]["way_num_" + lang] : "",
+                        "operator": wagon["wagon_operators_abbr_" + lang],
+                        "limiting_abbr": wagon["wagon_limiting_abbr_" + lang],
+                        "operators_paid": wagon.wagon_operators_paid ? "Платный" : "-",
+                        "current_operation_wagon_busy": wagon.current_operation_wagon_busy ? "Да" : "Нет",
+                        "wagon_rod": wagon["wagon_rod_abbr_" + lang],
+                        "wagon_type": wagon["wagon_type_" + lang],
+                        "wagon_gruzp_doc": wagon.wagon_gruzp_doc,
+                        "wagon_adm": wagon.wagon_adm,
+                        "current_condition_abbr": wagon["current_condition_abbr_" + lang],
+                        "current_loading_status": wagon["current_loading_status_" + lang],
+                        "arrival_cargo_name": wagon["arrival_cargo_name_" + lang],
+                        "arrival_certification_data": wagon["arrival_certification_data_" + lang],
+                        "arrival_station_from_name": wagon["arrival_station_from_name_" + lang],
+                        "arrival_station_amkr_name": wagon["arrival_station_amkr_name_" + lang],
+                        "current_operation_wagon_name": wagon["current_operation_wagon_name_" + lang],
+                        "current_operation_wagon_end": wagon.current_operation_wagon_end !== null ? wagon.current_operation_wagon_end.replace(/T/g, ' ') : null,
+                        "arrival_division_amkr_abbr": wagon["arrival_division_amkr_abbr_" + lang],
+                        //"arrival_duration": wagon.arrival_duration,
+                        //"current_station_amkr_duration": wagon.current_station_amkr_duration,
+                        //"current_station_amkr_idle_time": wagon.current_station_amkr_idle_time,
+                        "sap_is_num": wagon.sap_is_num,
+                        //"sap_is_create_num": wagon.sap_is_create_date && wagon.sap_is_create_time ? 
+                        "sap_is_create_date": wagon.sap_is_create_date,
+                        "sap_is_create_time": wagon.sap_is_create_time,
+                        //"instructional_letters_num": wagon.instructional_letters_num,
+                        //"instructional_letters_datetime": wagon.instructional_letters_datetime !== null ? wagon.instructional_letters_datetime.replace(/T/g, ' ') : null,
+                        //"instructional_letters_station_name": wagon.instructional_letters_station_name,
+                        //"wagon_date_rem_uz": wagon.wagon_date_rem_uz != null ? wagon.wagon_date_rem_uz.substr(0, 10) : null,
+                    };
+
+                },
+                // Активировать кнопку добавить
+                active_button_add: function () {
+                    var index_way = operation_detali.table_way_dissolution.obj.rows({ selected: true });
+                    var row_way = operation_detali.table_way_dissolution.obj.rows(index_way).data().toArray();
+                    var wagons = [];
+                    if (row_way && row_way.length > 0) {
+                        wagons = getObjects(operation_detali.wagons_dissolution_from, 'id_way_dissolution', row_way[0].id);
+                    }
+
+                    var index_wagon = operation_detali.table_wagons_way_from.obj.rows({ selected: true });
+                    if (index_way && index_way[0].length > 0 && wagons && wagons.length === 0 && index_wagon && index_wagon[0].length > 0) {
+                        operation_detali.table_wagons_way_from.obj.button(1).enable(true);
+                    } else {
+                        operation_detali.table_wagons_way_from.obj.button(1).enable(false);
+                    }
+
+                }
+            },
+            // Таблица вагонов выбранные для роспуска
+            table_wagons_way_on: {
+                html_table: $('table#wagons-way-on'),
+                obj: null,
+                id_way: null,
+                init: function () {
+                    this.obj = this.html_table.DataTable({
+                        "paging": false,
+                        "searching": false,
+                        "ordering": false,
+                        "info": false,
+                        "keys": true,
+                        select: false,
+                        "autoWidth": false,
+                        sScrollX: "100%",
+                        scrollX: true,
+                        language: language_table(langs),
+                        jQueryUI: false,
+                        "createdRow": function (row, data, index) {
+                        },
+                        columns: [
+                        { data: "position", title: langView('field_wagons_position', langs), width: "30px", orderable: false, searchable: false },
+                        { data: "num", title: langView('field_wagons_num', langs), width: "60px", orderable: false, searchable: false },
+                        //{ data: "way_dissolution", title: langView('field_way_dissolution', langs), width: "60px", orderable: false, searchable: false },
+                        { data: "operator", title: langView('field_wagons_operator', langs), width: "50px", orderable: false, searchable: false },
+                        { data: "limiting_abbr", title: langView('field_wagon_limiting_abbr', langs), width: "50px", orderable: false, searchable: false },
+                        { data: "operators_paid", title: langView('field_wagons_operators_paid', langs), width: "50px", orderable: false, searchable: false },
+                        { data: "current_operation_wagon_busy", title: langView('field_current_operation_wagon_busy', langs), width: "50px", orderable: false, searchable: false },
+                        { data: "wagon_rod", title: langView('field_wagon_rod', langs), width: "50px", orderable: false, searchable: false },
+                        { data: "wagon_type", title: langView('field_wagon_type', langs), width: "50px", orderable: false, searchable: false },
+                        { data: "wagon_gruzp_doc", title: langView('field_wagon_gruzp_doc', langs), width: "50px", orderable: false, searchable: false },
+                        { data: "wagon_adm", title: langView('field_wagon_adm', langs), width: "50px", orderable: false, searchable: false },
+                        { data: "current_condition_abbr", title: langView('field_current_condition_abbr', langs), width: "50px", orderable: false, searchable: false },
+                        { data: "current_loading_status", title: langView('field_current_loading_status', langs), width: "150px", orderable: false, searchable: false },
+                        { data: "arrival_cargo_name", title: langView('field_arrival_cargo_name', langs), width: "200px", orderable: false, searchable: false },
+                        { data: "arrival_certification_data", title: langView('field_arrival_certification_data', langs), width: "150px", orderable: false, searchable: false },
+                        { data: "arrival_station_from_name", title: langView('field_arrival_station_from_name', langs), width: "150px", orderable: false, searchable: false },
+                        { data: "arrival_station_amkr_name", title: langView('field_arrival_station_amkr_name', langs), width: "150px", orderable: false, searchable: false },
+                        { data: "current_operation_wagon_name", title: langView('field_current_operation_wagon_name', langs), width: "150px", orderable: false, searchable: false },
+                        { data: "current_operation_wagon_end", title: langView('field_current_operation_wagon_end', langs), width: "150px", orderable: false, searchable: false },
+                        { data: "arrival_division_amkr_abbr", title: langView('field_arrival_division_amkr_abbr', langs), width: "100px", orderable: false, searchable: false },
+                        //{ data: "arrival_duration", title: langView('field_arrival_duration', langs), width: "100px", orderable: true, searchable: false },
+                        //{ data: null, defaultContent: '', title: langView('field_pb_station_duration', langs), width: "50px", orderable: false, searchable: false },
+                        //{ data: "current_station_amkr_duration", title: langView('field_current_station_amkr_duration', langs), width: "100px", orderable: true, searchable: false },
+                        //{ data: "current_station_amkr_idle_time", title: langView('field_current_station_amkr_idle_time', langs), width: "100px", orderable: false, searchable: false },
+                        //{ data: "sap_is_num", title: langView('field_sap_is_num', langs), width: "50px", orderable: false, searchable: false },
+                        ////{ data: "sap_is_create_num", title: langView('field_sap_is_create_num', langs), width: "50px", orderable: true, searchable: true },
+                        //{ data: "sap_is_create_date", title: langView('field_sap_is_create_date', langs), width: "50px", orderable: false, searchable: false },
+                        //{ data: "sap_is_create_time", title: langView('field_sap_is_create_time', langs), width: "50px", orderable: false, searchable: false },
+                        //{ data: "instructional_letters_num", title: langView('field_instructional_letters_num', langs), width: "50px", orderable: true, searchable: true },
+                        //{ data: "instructional_letters_datetime", title: langView('field_instructional_letters_datetime', langs), width: "150px", orderable: true, searchable: false },
+                        //{ data: "instructional_letters_station_name", title: langView('field_instructional_letters_station_name', langs), width: "150px", orderable: true, searchable: false },
+                        //{ data: "wagon_date_rem_uz", title: langView('field_wagon_date_rem_uz', langs), width: "100px", orderable: true, searchable: false },
+                        ],
+                        dom: 'Bfrtip',
+                        buttons: [
+                            {
+                                text: langView('title_button_clear_wagon', langs),
+                                action: function (e, dt, node, config) {
+                                    if (operation_detali.table_wagons_way_on.id_way) {
+                                        LockScreen(langView('mess_save', langs));
+                                        wagons = getObjects(operation_detali.wagons_dissolution_from, 'id_way_dissolution', operation_detali.table_wagons_way_on.id_way);
+                                        $.each(wagons, function (i, el) {
+                                            el.id_way_dissolution = null;
+                                        });
+                                        operation_detali.table_wagons_way_from.view(operation_detali.wagons_dissolution_from);
+                                        operation_detali.table_wagons_way_on.view(operation_detali.table_wagons_way_on.id_way)
+                                    }
+                                },
+                                enabled: false,
+                            }
+                        ]
+                    });
+
+                },
+                // Показать таблицу с данными
+                view: function (id_way) {
+                    operation_detali.table_wagons_way_on.id_way = id_way;
+                    LockScreen(langView('mess_delay', langs));
+                    if (operation_detali.wagons_dissolution_from) {
+                        wagons = getObjects(operation_detali.wagons_dissolution_from, 'id_way_dissolution', id_way);
+                        if (wagons && wagons.length > 0) {
+                            operation_detali.table_wagons_way_on.obj.button(0).enable(true);
+                        } else {
+                            operation_detali.table_wagons_way_on.obj.button(0).enable(false);
+                        }
+                        operation_detali.table_wagons_way_on.obj.clear();
+                        $.each(wagons, function (i, el) {
+                            operation_detali.table_wagons_way_on.obj.row.add(operation_detali.table_wagons_way_on.get_wagon(el));
+                        });
+                        operation_detali.table_wagons_way_on.obj.draw();
+                    }
                     LockScreenOff();
                 },
                 // Определить вагон
@@ -1105,7 +1336,8 @@
                         "wio_id": wagon.wio_id,
                         "position": wagon.position,
                         "num": wagon.num,
-                        "way_dissolution": wagon.way_dissolution ? wagon.way_dissolution : "",
+                        "id_way_dissolution": wagon.id_way_dissolution,
+                        "way_dissolution": wagon.id_way_dissolution ? wagon.id_way_dissolution : "",
                         "operator": wagon["wagon_operators_abbr_" + lang],
                         "limiting_abbr": wagon["wagon_limiting_abbr_" + lang],
                         "operators_paid": wagon.wagon_operators_paid ? "Платный" : "-",
@@ -1150,7 +1382,9 @@
 
                 // Инициализация элементов операции "Роспуска"
                 operation_detali.table_way_dissolution.init();
+                operation_detali.table_wagons_way_on.init();
                 operation_detali.table_wagons_way_from.init();
+
 
                 // Sumbit form
                 operation_detali.content.find("form").on("submit", function (event) {
