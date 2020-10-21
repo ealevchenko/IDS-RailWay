@@ -41,6 +41,7 @@
                 'field_way_name': 'Путь',
                 'field_way_pb': 'Сост.',
                 'field_way_count': 'Стоит',
+                'field_count_wagon_dissolution': 'План.',
                 'field_way_capacity': 'Вмещ.',
 
                 'title_button_buffer': 'Буфер',
@@ -927,6 +928,7 @@
             // -------------------------------------------------------------------------------------------------
             // Операция роспуск
             operation_dissolution: $('.operation-dissolution').hide(),
+            ways_dissolution: null,                             // Список путей с которых производится роспуск
             id_way_from_dissolution: null,                      // Путь с которого будет производится роспуск
             wagons_way_from_dissolution: null,                  // Список вагонов которые стоят на пути для роспуска (исходник)
             wagons_dissolution_from: null,                      // Список вагонов дислокации рабочий 
@@ -959,6 +961,7 @@
                             { data: "way_name", title: langView('field_way_name', langs), width: "100px", orderable: false, searchable: false },
                             //{ data: "way_pb", title: langView('field_way_pb', langs), width: "50px", orderable: false, searchable: false },
                             { data: "way_count", title: langView('field_way_count', langs), width: "30px", orderable: false, searchable: false },
+                            { data: "count_wagon_dissolution", title: langView('field_count_wagon_dissolution', langs), width: "30px", orderable: false, searchable: false },
                             { data: "way_capacity", title: langView('field_way_capacity', langs), width: "30px", orderable: false, searchable: false },
                         ],
                     }).on('user-select', function (e, dt, type, cell, originalEvent) {
@@ -976,7 +979,15 @@
                 load: function () {
                     LockScreen(langView('mess_delay', langs));
                     ids_inc.ids_dir.getWaysOfDissolution(function (ways) {
-                        operation_detali.table_way_dissolution.view(ways);
+                        operation_detali.ways_dissolution = ways;
+                        // Добавим поле количество вагонов для роспуска на пути
+                        if (operation_detali.ways_dissolution) {
+                            $.each(operation_detali.ways_dissolution, function (i, el) {
+                                el['count_wagon_dissolution'] = 0;
+                            });
+                        }
+                        // Покажем пути                        
+                        operation_detali.table_way_dissolution.view(operation_detali.ways_dissolution);
                     });
                 },
                 // Показать таблицу с данными
@@ -1002,6 +1013,7 @@
                         "way_name": name_way,
                         //"way_pb": "",
                         "way_count": way.count_wagon,
+                        "count_wagon_dissolution" : way.count_wagon_dissolution,
                         "way_capacity": way.capacity,
                     };
 
