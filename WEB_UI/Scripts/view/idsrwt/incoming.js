@@ -6551,6 +6551,10 @@
                             pn_search_epd.alert.clear_message();
                             pn_search_epd.alert.out_warning_message("Вагон(ы) № [" + nums + "], перечисленные в документе не найдены в текущем составе или на подходах, добавьте вагоны вручную.");
 
+                        } else {
+                            // Просто Очистим окно
+                            pn_search_epd.table_car.obj.clear();
+                            pn_search_epd.table_car.obj.draw();
                         }
                         pn_search_epd.loading_cars.hide();
                     }

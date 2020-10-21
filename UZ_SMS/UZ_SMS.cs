@@ -304,13 +304,20 @@ namespace UZ
         {
             switch (status)
             {
-                case "Recieved": return uz_status.recieved;
-                case "Uncredited": return uz_status.uncredited;
-                case "Accepted": return uz_status.accepted;
-                case "Delivered": return uz_status.delivered;
-                case "Draft": return uz_status.draft;
-                case "Registered": return uz_status.registered;
-                case "Canceled": return uz_status.canceled;
+                case "Unknown": return uz_status.unknown;                   //Статус неизвестен
+                case "Draft": return uz_status.draft;                       // Черновик
+                case "Sending": return uz_status.sending;                   // Документ передается товарному кассиру
+                case "Registered": return uz_status.registered;             //	 Документ переданий товарному касиру
+                case "Reclaiming": return uz_status.reclaiming;             //	 Документ відкликається від товарного касира
+                case "Accepted": return uz_status.accepted;                 //	 Вантаж прийнято до перевезення
+                case "Delivered": return uz_status.delivered;               //	 Вантаж прибув
+                case "Recieved": return uz_status.recieved;                 //	 Вантаж отримано одержувачем
+                case "Uncredited": return uz_status.uncredited;             //	 Документ розкредитовано товарним касиром
+                case "RecDraft": return uz_status.recieved_draft;           //	 Вантаж отримано одержувачем і редагується                  
+                case "RecSending": return uz_status.recieved_sending;       //	 Вантаж отримано одержувачем і переданий товарному касиру 
+                case "RecReclaiming": return uz_status.recieved_reclaiming; //	 Вантаж отримано одержувачем і відкликається від товарного касира              
+                case "Canceled": return uz_status.canceled;                 //	 Документ зіпсований товарним касиром
+                // locked = 13,	            //	 Документ заблокований
                 default: return null;
             }
         }
@@ -389,7 +396,7 @@ namespace UZ
                         OTPR otpr = convert.FinalXMLToOTPR(xml_final);
                         DateTime? end_date = otpr != null ? otpr.srok_end : null;
 
-                        if ((dt_arrival != null && end_date!=null && dt_arrival<=end_date) || (dt_arrival != null && uzd.update_dt != null && ((DateTime)dt_arrival).AddHours(period) <= uzd.update_dt) || (dt_arrival != null && uzd.update_dt == null  && uzd.dt != null && ((DateTime)dt_arrival).AddHours(period) <= uzd.dt))
+                        if ((dt_arrival != null && end_date != null && dt_arrival <= end_date) || (dt_arrival != null && uzd.update_dt != null && ((DateTime)dt_arrival).AddHours(period) <= uzd.update_dt) || (dt_arrival != null && uzd.update_dt == null && uzd.dt != null && ((DateTime)dt_arrival).AddHours(period) <= uzd.dt))
                         {
                             // Проверим есть вагон в этом документе
                             if (otpr != null && otpr.vagon != null && otpr.vagon.Count() > 0)
