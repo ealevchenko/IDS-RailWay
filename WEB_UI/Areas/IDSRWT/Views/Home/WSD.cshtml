@@ -242,7 +242,7 @@
 <div class="cd-operation-detali">
     <div class="container-fluid">
         <form class="cd-form">
-            <div class="alert" id="car-operation-alert"></div>
+            <div class="alert" id="operation-alert"></div>
             <div class="row operation-dissolution">
                 <div class="col-xl-12 mb-1 mt-1">
                     <div class="card border-secondary mb-1">
@@ -261,6 +261,26 @@
                                     <div class="card border-primary">
                                         <div class="card-header text-left">ПУТИ РОСПУСКА</div>
                                         <div class="card-body">
+                                            <fieldset class="border-primary">
+                                                <div class="form-group row">
+
+                                                    <label for="operation_detali_dissolution_start" class="col-xl-2 col-form-label text-right">@IDSRWTResource.title_operation_start:</label>
+                                                    <div class="col-xl-2">
+                                                        <input type="datetime" class="form-control" id="operation_detali_dissolution_start" name="operation_detali_dissolution_start" />
+                                                        <div class="invalid-feedback"></div>
+                                                    </div>
+                                                    <label for="operation_detali_dissolution_stop" class="col-xl-2 col-form-label text-right">@IDSRWTResource.title_operation_stop:</label>
+                                                    <div class="col-xl-2">
+                                                        <input type="datetime" class="form-control" id="operation_detali_dissolution_stop" name="operation_detali_dissolution_stop" />
+                                                        <div class="invalid-feedback"></div>
+                                                    </div>
+                                                    <div class="col-xl-3 text-center">
+                                                        <button class="btn btn-primary" id="operation_dissolution_run" disabled="disabled">@IDSRWTResource.title_operation_dissolution_run</button>
+                                                    </div>
+
+
+                                                </div>
+                                            </fieldset>
                                             <div class="row">
                                                 <div class="col-xl-3">
                                                     <fieldset class="border-primary">

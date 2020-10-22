@@ -763,6 +763,33 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Начать роспуск.
+        /// </summary>
+        public static string title_operation_dissolution_run {
+            get {
+                return ResourceManager.GetString("title_operation_dissolution_run", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Операция начата.
+        /// </summary>
+        public static string title_operation_start {
+            get {
+                return ResourceManager.GetString("title_operation_start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Операция закончена.
+        /// </summary>
+        public static string title_operation_stop {
+            get {
+                return ResourceManager.GetString("title_operation_stop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Оплата.
         /// </summary>
         public static string title_payer {

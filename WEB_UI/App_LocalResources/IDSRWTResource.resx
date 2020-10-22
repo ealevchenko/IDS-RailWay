@@ -483,4 +483,13 @@
   <data name="title_dislocation_wagon_way_from" xml:space="preserve">
     <value>Путь отпраки.</value>
   </data>
+  <data name="title_operation_dissolution_run" xml:space="preserve">
+    <value>Начать роспуск</value>
+  </data>
+  <data name="title_operation_start" xml:space="preserve">
+    <value>Операция начата</value>
+  </data>
+  <data name="title_operation_stop" xml:space="preserve">
+    <value>Операция закончена</value>
+  </data>
 </root>
