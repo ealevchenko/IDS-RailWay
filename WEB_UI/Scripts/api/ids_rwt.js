@@ -3065,7 +3065,31 @@ IDS_RWT.prototype.postDislocationWagonsOfStation = function (operation_dislocati
         },
     });
 };
-
+//Операция роспуска 
+IDS_RWT.prototype.postDissolutionWagonsOfStation = function (operation_dissolution, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/wsd/operation/dissolution/',
+        type: 'POST',
+        data: JSON.stringify(operation_dissolution),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postDissolutionWagonsOfStation", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 /* ----------------------------------------------------------
 функции для работы с объектами
 -------------------------------------------------------------*/

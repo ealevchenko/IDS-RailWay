@@ -132,6 +132,18 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string user { get; set; }
     }
 
+    public class OperationDissolutionWagons
+    {
+        public int id_way_from { get; set; }
+        public List<DissolutionWagon> list_dissolution { get; set; }
+        public int id_way_on { get; set; }
+        public DateTime date_start { get; set; }
+        public DateTime date_stop { get; set; }
+        public string user { get; set; }
+    }
+
+
+
     [RoutePrefix("api/ids/rwt/wsd")]
     public class IDS_RWT_WSDController : ApiController
     {
@@ -165,6 +177,24 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             {
                 IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
                 int result = ids_wir.DislocationWagonsOfStation(value.list_wir_id, value.id_way_from, value.reverse, value.id_way_on, value.side_on, value.date_start, value.date_stop, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST api/ids/rwt/wsd/operation/dissolution
+        [HttpPost]
+        [Route("operation/dissolution")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostDissolutionWagonsOfStation([FromBody]OperationDissolutionWagons value)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                int result = ids_wir.DissolutionWagonsOfStation(value.id_way_from, value.list_dissolution, value.date_start, value.date_stop, value.user);
                 return Ok(result);
             }
             catch (Exception e)

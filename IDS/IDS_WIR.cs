@@ -14,6 +14,13 @@ using System.Threading.Tasks;
 
 namespace IDS
 {
+    public class DissolutionWagon
+    {
+        public long wir_id { get; set; }
+        public int position { get; set; }
+        public int id_way_dissolution { get; set; }
+    }
+
     public enum errors_wir : int
     {
         global = -1,
@@ -23,7 +30,9 @@ namespace IDS
         not_wagon = -102,
         not_arrival_wir = -103,         // Нет записи [WagonInternalRoutes] зашедшей на АМКР
         not_open_wir = -104,            // Нет открытой записи положения вагона. (Если вагон защел тогда вагон всегда должен гдето стоять!)
-        not_set_way_wir = -105,         // Нет вагон стоит не натом пути по которому нужно провести маневры.
+        not_set_way_wir = -105,         // Нет вагон стоит не натом пути по которому нужно провести операцию.
+        not_way_on = -106,              // Неуказан путь приема
+
     }
 
     public class ResultWagon
@@ -31,7 +40,9 @@ namespace IDS
         public int num { get; set; }
         public int result { get; set; }
     }
-
+    /// <summary>
+    /// Класс данных результата выполнения переноса
+    /// </summary>
     public class ResultTransfer
     {
         public int result { get; set; } // Глобальный ресурс выполнения всего переноса
@@ -99,6 +110,45 @@ namespace IDS
         {
             this.error++;
         }
+    }
+    /// <summary>
+    /// Класс данных результатов выполнения нескольких переносов.
+    /// </summary>
+    public class ListResultTransfer
+    {
+        public int result { get; set; } // Глобальный ресурс выполнения всего переноса
+        public int count { get; set; }
+        public int moved { get; set; }
+        public int skip { get; set; }
+        public int error { get; set; }
+        public List<ResultTransfer> list_rs = new List<ResultTransfer>();
+
+        public ListResultTransfer()
+        {
+            this.count = 0;
+            this.result = 0;
+            this.moved = 0;
+            this.skip = 0;
+            this.error = 0;
+            list_rs.Clear();
+        }
+
+        public void AddResultTransfer(ResultTransfer rs)
+        {
+            if (rs == null) return;
+            list_rs.Add(rs);
+            this.count += rs.count;
+            this.result = rs.result < 0 ? rs.result : (this.result+rs.result); // Заменим если ошибка
+            this.moved += rs.moved;
+            this.skip += rs.skip;
+            this.error += rs.error;
+            return;
+        }
+        public void SetResult(int code)
+        {
+            this.result = code;
+        }
+
     }
 
 
@@ -254,6 +304,8 @@ namespace IDS
                 return -1;// Возвращаем id=-1 , Ошибка
             }
         }
+
+        #region Операции "Дислокации"
         /// <summary>
         /// Выполнить дислокацию по вагону
         /// </summary>
@@ -333,7 +385,8 @@ namespace IDS
                 {
                     rt.SetResult(context.SaveChanges());
                 }
-                else {
+                else
+                {
                     rt.SetResult((int)errors_wir.cancel_save_changes);
                 }
                 return rt;
@@ -380,9 +433,11 @@ namespace IDS
                 // Перенесем вагоны 
                 res = DislocationWagons(ref context, id_way_from, reverse, id_way_on, side_on, date_start, date_stop, wagons, user);
                 // Если операция успешна, перенумеруем позиции на пути с которого ушли вагоны
-                if (res.result > 0) {
+                if (res.result > 0)
+                {
                     int result_rnw = RenumberingWagons(ref context, id_way_from, 1);
-                    if (result_rnw > 0) {
+                    if (result_rnw > 0)
+                    {
                         // Применим перенумерацию
                         context.SaveChanges();
                     }
@@ -404,8 +459,198 @@ namespace IDS
                 return -1;// Возвращаем id=-1 , Ошибка
             }
         }
-        
-        
+        #endregion
+
+        #region Операции "Роспуска"
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_way_from"></param>
+        /// <param name="id_way_on"></param>
+        /// <param name="position_on"></param>
+        /// <param name="date_start"></param>
+        /// <param name="date_stop"></param>
+        /// <param name="wagon"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int DissolutionWagon(ref EFDbContext context, int id_way_from, int id_way_on, int position_on, DateTime date_start, DateTime date_stop, WagonInternalRoutes wagon, string user)
+        {
+            try
+            {
+                if (wagon == null) return (int)errors_wir.not_arrival_wir;  // Нет перечня вагонов
+                Directory_Ways way = context.Directory_Ways.Where(w => w.id == id_way_on).FirstOrDefault();
+                if (way == null) return (int)errors_wir.not_way_on;         // Неуказан путь приема
+                int id_station_on = way.id_station;
+                // Получим текущее положение вагона
+                WagonInternalMovement wim = wagon.GetLastMovement();
+                if (wim == null) return (int)errors_wir.not_open_wir;       //  Нет открытой записи положения вагона. (Если вагон защел тогда вагон всегда должен гдето стоять!)
+                if (wim.id_way != id_way_from) return (int)errors_wir.not_set_way_wir; // Нет вагон стоит не натом пути по которому нужно провести операцию.
+                wagon.SetStationWagon(id_station_on, id_way_on, date_stop, position_on, null, user);
+                // Установим и закроем операцию роспуск -4              
+                wagon.SetOpenOperation(4, date_start, null, null, null, null, null, user).SetCloseOperation(date_stop, null, user);
+                //context.Update(wagon); // Обновим контекст
+                return 1;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("DissolutionWagon(context={0}, id_way_from={1}, id_way_on={2}, position_on={3}, date_start={4}, date_stop={5}, wagon={6}, user={6})",
+                    context, id_way_from, id_way_on, position_on, date_start, date_stop, wagon, user), servece_owner, eventID);
+                return -1;// Возвращаем id=-1 , Ошибка
+            }
+        }
+        /// <summary>
+        /// Роспуск вагонов
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_way_from"></param>
+        /// <param name="id_way_on"></param>
+        /// <param name="date_start"></param>
+        /// <param name="date_stop"></param>
+        /// <param name="wagons"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public ResultTransfer DissolutionWagons(ref EFDbContext context, int id_way_from, int id_way_on, DateTime date_start, DateTime date_stop, List<WagonInternalRoutes> wagons, string user)
+        {
+            ResultTransfer rt = new ResultTransfer(wagons.Count());
+            try
+            {
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+
+
+                if (wagons != null && wagons.Count() > 0)
+                {
+                    // Отсортируем вагоны по позиции
+                    bool reverse = false;
+                    bool side_on = true; // false -голова
+
+                    List<WagonInternalRoutes> wagon_position = reverse == true ? wagons.OrderByDescending(w => w.GetLastMovement().position).ToList() : wagons.OrderBy(w => w.GetLastMovement().position).ToList();
+                    // Подготовим путь приема (перестроим позиции)
+                    int res_renum = RenumberingWagons(ref context, id_way_on, (side_on == false ? (wagons.Count() + 1) : 1));
+                    // Определим позицию переноса вагонов
+                    int position = side_on == false ? 1 : context.GetNextPosition(id_way_on);
+
+                    foreach (WagonInternalRoutes wagon in wagon_position)
+                    {
+                        int result = DissolutionWagon(ref context, id_way_from, id_way_on, position, date_start, date_stop, wagon, user);
+                        rt.SetMovedResult(result, wagon.num);
+                        if (result > 0 && rt.result >= 0)
+                        {
+                            rt.result += 1;
+                        }
+                        if (result < 0)
+                        {
+                            rt.result = result;
+                        }
+                        position++;
+                    }
+                }
+                return rt;
+
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("DissolutionWagons(context={0}, id_way_from={1}, id_way_on={2}, date_start={3}, date_stop={4}, wagons={5}, user={6})",
+                    context, id_way_from, id_way_on, date_start, date_stop, wagons, user), servece_owner, eventID);
+                rt.SetResult(-1);
+                return rt;// Возвращаем id=-1 , Ошибка
+            }
+        }
+        /// <summary>
+        /// Операция дислокации вагонов на станции АМКР
+        /// </summary>
+        /// <param name="list_wir"></param>
+        /// <param name="id_way_from"></param>
+        /// <param name="reverse"></param>
+        /// <param name="id_way_on"></param>
+        /// <param name="side_on"></param>
+        /// <param name="date_start"></param>
+        /// <param name="date_stop"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int DissolutionWagonsOfStation(int id_way_from, List<DissolutionWagon> list_dissolution, DateTime date_start, DateTime date_stop, string user)
+        {
+            try
+            {
+                DateTime start = DateTime.Now;
+                string s_id_way_on = "";
+                ListResultTransfer lrt = new ListResultTransfer();
+
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                // Сгруппируем по путям роспуска
+                List<IGrouping<int, DissolutionWagon>> group_dissolution = list_dissolution
+                                .ToList()
+                                .GroupBy(w => w.id_way_dissolution)
+                                .ToList();
+
+                EFDbContext context = new EFDbContext();
+                // Пройдемся по путям роспуска
+                foreach (IGrouping<int, DissolutionWagon> gr_dw in group_dissolution.ToList())
+                {
+
+                    int id_way_dissolution = gr_dw.Key;
+                    s_id_way_on += id_way_dissolution.ToString() + ";";
+                    List<DissolutionWagon> list_dw = gr_dw.OrderBy(w => w.position).ToList();
+                    List<WagonInternalRoutes> wagons = new List<WagonInternalRoutes>();
+                    foreach (DissolutionWagon dw in list_dw)
+                    {
+                        wagons.Add(context.WagonInternalRoutes.Where(r => r.id == dw.wir_id).FirstOrDefault());
+                    }
+                    ResultTransfer res = new ResultTransfer(wagons.Count);
+                    // Перенесем вагоны 
+                    res = DissolutionWagons(ref context, id_way_from, id_way_dissolution, date_start, date_stop, wagons, user);
+                    lrt.AddResultTransfer(res);
+                    // Проверим на ошибки
+                    if (lrt.result < 0)
+                    {
+                        lrt.SetResult((int)errors_wir.cancel_save_changes);
+                        break;
+                    }
+                    // добавим результат
+                    
+                }
+                // Все вагоны перенесены, сохраним изменения если небыло ошибок
+                if (lrt.result > 0)
+                {
+                    lrt.SetResult(context.SaveChanges());
+                    // Если все прошло сделаем перенумерацию на пути отправки
+                    if (lrt.result > 0)
+                    {
+                        int result_rnw = RenumberingWagons(ref context, id_way_from, 1);
+                        if (result_rnw > 0)
+                        {
+                            // Применим перенумерацию
+                            lrt.SetResult(context.SaveChanges());
+                        }
+                    }
+                }
+
+                string mess = String.Format("Операция роспуска вагонов на станциях АМКР. Код выполнения = {0}. Путь отправки = {1}, пути приема = {2}, время начала операции = {3}, время конца операции = {4}. Результат переноса [выбрано для переноса = {5}, перенесено = {6}, пропущено = {7}, ошибок переноса = {8}].",
+                    lrt.result, id_way_from, s_id_way_on, date_start, date_stop,
+                    lrt.count, lrt.moved, lrt.skip, lrt.error);
+                mess.WarningLog(servece_owner, eventID);
+                mess.EventLog(lrt.result < 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
+                DateTime stop = DateTime.Now;
+                servece_owner.ServicesToLog(eventID, String.Format("Операция роспуска вагонов на станции АМКР."), start, stop, lrt.result);
+                return lrt.result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("DissolutionWagonsOfStation(id_way_from={0}, list_dissolution={1}, date_start={2}, date_stop={3}, user={4})",
+                    id_way_from, list_dissolution, date_start, date_stop, user), servece_owner, eventID);
+                return -1;// Возвращаем id=-1 , Ошибка
+            }
+        }
+        #endregion
+
+
         #endregion
 
 

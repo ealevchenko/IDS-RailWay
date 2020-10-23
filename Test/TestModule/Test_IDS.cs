@@ -157,22 +157,23 @@ namespace Test.TestModule
             EFDbContext context = new EFDbContext();
 
             List<WagonInternalRoutes> wagons = new List<WagonInternalRoutes>();
-            List<WagonInternalMovement> list_wim = context.WagonInternalMovement.Where(m => m.id_way == 111 && m.way_end == null).OrderBy(m=>m.position).ToList();
+            List<WagonInternalMovement> list_wim = context.WagonInternalMovement.Where(m => m.id_way == 111 && m.way_end == null).OrderBy(m => m.position).ToList();
 
-            foreach (WagonInternalMovement wim in list_wim) {
+            foreach (WagonInternalMovement wim in list_wim)
+            {
                 if (wim.WagonInternalRoutes.num == 58481748 || wim.WagonInternalRoutes.num == 60381712)
-                
-                wagons.Add(wim.WagonInternalRoutes);
+
+                    wagons.Add(wim.WagonInternalRoutes);
 
             }
 
             ResultTransfer res = new ResultTransfer(0);
 
-            res = ids.DislocationWagons(ref context, 111, false, 115, false , DateTime.Now.AddMinutes(-30), DateTime.Now, wagons, "TEST");
+            res = ids.DislocationWagons(ref context, 111, false, 115, false, DateTime.Now.AddMinutes(-30), DateTime.Now, wagons, "TEST");
             //int res_save = context.SaveChanges();
 
         }
-
+        // Тест операции дислокации
         public void IDS_WIR_DislocationWagonsOfStation()
         {
 
@@ -181,12 +182,13 @@ namespace Test.TestModule
             EFDbContext context = new EFDbContext();
 
             List<long> wagons = new List<long>();
-            List<WagonInternalMovement> list_wim = context.WagonInternalMovement.Where(m => m.id_way == 111 && m.way_end == null).OrderBy(m=>m.position).ToList();
+            List<WagonInternalMovement> list_wim = context.WagonInternalMovement.Where(m => m.id_way == 111 && m.way_end == null).OrderBy(m => m.position).ToList();
 
-            foreach (WagonInternalMovement wim in list_wim) {
+            foreach (WagonInternalMovement wim in list_wim)
+            {
                 if (wim.WagonInternalRoutes.num == 58484320 || wim.WagonInternalRoutes.num == 53779476)
-                
-                wagons.Add(wim.WagonInternalRoutes.id);
+
+                    wagons.Add(wim.WagonInternalRoutes.id);
 
             }
 
@@ -195,6 +197,30 @@ namespace Test.TestModule
             //int res_save = context.SaveChanges();
 
         }
+        // Тест операции роспуск
+        public void IDS_WIR_DissolutionWagonsOfStation()
+        {
+
+            IDS_WIR ids = new IDS_WIR(service.Test);
+
+            EFDbContext context = new EFDbContext();
+
+            List<DissolutionWagon> list_dissolution = new List<DissolutionWagon>();
+            list_dissolution.Add(new DissolutionWagon() { wir_id = 41794, position = 2, id_way_dissolution = 214 });
+            list_dissolution.Add(new DissolutionWagon() { wir_id = 41795, position = 3, id_way_dissolution = 214 });
+            list_dissolution.Add(new DissolutionWagon() { wir_id = 41796, position = 4, id_way_dissolution = 213 });
+            list_dissolution.Add(new DissolutionWagon() { wir_id = 41797, position = 5, id_way_dissolution = 214 });
+            list_dissolution.Add(new DissolutionWagon() { wir_id = 41798, position = 6, id_way_dissolution = 213 });
+            list_dissolution.Add(new DissolutionWagon() { wir_id = 41799, position = 7, id_way_dissolution = 214 });
+            list_dissolution.Add(new DissolutionWagon() { wir_id = 41800, position = 8, id_way_dissolution = 213 });
+
+
+
+            int res = ids.DissolutionWagonsOfStation(105, list_dissolution, DateTime.Now.AddMinutes(-30), DateTime.Now, "TEST");
+            //int res_save = context.SaveChanges();
+
+        }
+
 
         #endregion
 

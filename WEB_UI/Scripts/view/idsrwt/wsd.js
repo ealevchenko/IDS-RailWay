@@ -339,9 +339,6 @@
                     }
 
                 });
-
-
-
             },
             // Получить прогрес бар
             get_pb: function (id, max, count) {
@@ -923,7 +920,8 @@
             user: null,
             alert: $('div#operation-alert'),
             ids_rwt: null,
-            bit_update: false,
+            bit_update: false,                                  // Признак необходимости обновления основного экрана
+            rows_update: null,                                   // Пути для обновления на общем окне арма
             callback_close: null,                               // Функция обратного вызова при закрытии проекта
             // -------------------------------------------------------------------------------------------------
             // Операция роспуск
@@ -945,8 +943,9 @@
                                 return i.id_way_dissolution !== null ? true : false;
                             })
                             $.each(wagons_dissolution, function (i, el) {
-                                list_dissolution.push({ wir_id: el.wir_id , position: el.position, id_way_dissolution: el.id_way_dissolution})
+                                list_dissolution.push({ wir_id: el.wir_id, position: el.position, id_way_dissolution: el.id_way_dissolution })
                             });
+
                         }
 
                         var operation_dissolution = {
@@ -957,6 +956,30 @@
                             user: operation_detali.user,
                         }
                         // Выполнить операцию роспуска
+                        ids_inc.postDissolutionWagonsOfStation(operation_dissolution, function (result_dissolution) {
+                            if (result_dissolution >= 0) {
+                                operation_detali.val_dissolution.out_info_message("Операция 'Роспуска' - Выполнена");
+                                operation_detali.bit_update = true;
+                                $.each(operation_dissolution.list_dissolution, function (i, el) {
+                                    var way_dissolution = getObjects(operation_detali.table_way_dissolution.ways, 'id', el.id_way_dissolution);
+                                    if (way_dissolution && way_dissolution.length > 0) {
+                                        // Список путей обновления добавляется каждый раз (даже если был выполнен роспуск а затем не закрыв окно выполнили еще, обновлятся все списки)
+                                        var find_ru = operation_detali.rows_update.find(
+                                            function (element, index, array) {
+                                                return element.id_way === el.id_way_dissolution ? true : false;
+                                            })
+                                        if (!find_ru || find_ru.length === 0) {
+                                            operation_detali.rows_update.push({ id_station: way_dissolution[0].id_station, id_park: way_dissolution[0].id_park, id_way: el.id_way_dissolution });
+                                        }
+
+                                    }
+                                });
+                                operation_detali.refresh_dissolution();
+                            } else {
+                                operation_detali.val_dissolution.out_error_message("При выполнении операции 'Роспуска' - произошла ошибка. Код ошибки =" + result_dislocation);
+                            }
+                            LockScreenOff();
+                        });
                     }
                 }),
             ways_dissolution: null,                             // Список путей с которых производится роспуск
@@ -1008,6 +1031,7 @@
                         operation_detali.table_wagons_way_from.active_button_add();
                         // Показать вагоны на пути роспуска
                         operation_detali.table_wagons_way_on.view(operation_detali.table_way_dissolution.select_way ? operation_detali.table_way_dissolution.select_way.id : null);
+                        LockScreenOff();
                     });
                     //    .on('user-select', function (e, dt, type, cell, originalEvent) {
                     //    // Событие нажатия на путь (до выбора пути, можно отменить выбор пути
@@ -1041,13 +1065,15 @@
                     operation_detali.table_way_dissolution.obj.draw();
                     // Сбросить вагоны на пути роспуска
                     operation_detali.table_wagons_way_on.view(null);
-                    LockScreenOff();
+                    //LockScreenOff();
                 },
                 // Определить вагон
                 get_ways: function (way) {
                     var name_way = operation_detali.ids_rwt.ids_dir.getValueObj(way, 'way_num', operation_detali.lang) + ' - ' + operation_detali.ids_rwt.ids_dir.getValueObj(way, 'way_name', operation_detali.lang);
                     return {
                         "id": way.id,
+                        //"id_park": way.id_park,
+                        //"id_station": way.id_station,
                         "way_name": name_way,
                         //"way_pb": "",
                         "way_count": way.count_wagon,
@@ -1141,6 +1167,7 @@
                             {
                                 text: langView('title_button_add_way_dissolution', langs),
                                 action: function (e, dt, node, config) {
+                                    //LockScreen(langView('mess_delay', langs));
                                     LockScreen(langView('mess_save', langs));
                                     // Определим путь
                                     //var index_way = operation_detali.table_way_dissolution.obj.rows({ selected: true });
@@ -1150,7 +1177,7 @@
 
                                     // Выделим выбранные вагоны
                                     var index_wagon = operation_detali.table_wagons_way_from.index_select_wagons;
-                                        //operation_detali.table_wagons_way_from.obj.rows({ selected: true });
+                                    //operation_detali.table_wagons_way_from.obj.rows({ selected: true });
                                     var row_select_wagon = operation_detali.table_wagons_way_from.obj.rows(index_wagon).data();
                                     // Проставим по ним путь роспуска
                                     if (row_select_wagon && row_select_wagon.length > 0) {
@@ -1162,13 +1189,18 @@
                                             }
 
                                         });
-                                        // Отобразим вагоны на пути для роспуска (будут указан путь роспуска)
-                                        operation_detali.table_wagons_way_from.view(operation_detali.wagons_dissolution_from);
                                         // Отобразим вагоны на пути роспуска
                                         operation_detali.table_wagons_way_on.view(id_way_on);
                                         // Обновим количество
                                         operation_detali.table_way_dissolution.update_count_dissolution(row_select_wagon.length);
+                                        // Отобразим вагоны на пути для роспуска (будут указан путь роспуска)
+                                        operation_detali.table_wagons_way_from.view(operation_detali.wagons_dissolution_from, function () {
+                                            LockScreenOff();
+                                        });
+                                    } else {
+                                        LockScreenOff();
                                     }
+
                                 },
                                 enabled: false
                             },
@@ -1196,18 +1228,11 @@
                                                 }
 
                                                 // Отобразим изменения
-                                                operation_detali.table_wagons_way_from.view(operation_detali.wagons_dissolution_from);
                                                 operation_detali.table_way_dissolution.view(operation_detali.ways_dissolution);
+                                                operation_detali.table_wagons_way_from.view(operation_detali.wagons_dissolution_from, function () {
+                                                    LockScreenOff();
+                                                });
 
-                                                // Определим путь, и сбросим по нему
-                                                //var index_way = operation_detali.table_way_dissolution.index_select_way;
-                                                    //operation_detali.table_way_dissolution.obj.rows({ selected: true });
-                                                //var way = operation_detali.table_way_dissolution.obj.rows(index_way[0]).data().toArray();
-                                                //operation_detali.table_wagons_way_on.view(way && way.length > 0 ? way[0].id : 0);
-
-
-                                                // Показать вагоны на пути роспуска
-                                                //operation_detali.table_wagons_way_on.view(null);
                                             }
                                         });
                                     }
@@ -1236,7 +1261,7 @@
 
                 },
                 // Загрузить информацию
-                load: function (id_way) {
+                load: function (id_way, callback) {
                     LockScreen(langView('mess_delay', langs));
                     ids_inc.getViewWagonsOfWay(id_way, function (wagons) {
                         operation_detali.wagons_way_from_dissolution = wagons;
@@ -1247,11 +1272,11 @@
                                 el['id_way_dissolution'] = null;
                             });
                         }
-                        operation_detali.table_wagons_way_from.view(operation_detali.wagons_dissolution_from);
+                        operation_detali.table_wagons_way_from.view(operation_detali.wagons_dissolution_from, callback);
                     });
                 },
                 // Показать таблицу с данными
-                view: function (wagons) {
+                view: function (wagons, callback) {
                     operation_detali.table_wagons_way_from.obj.clear();
                     $.each(wagons, function (i, el) {
                         operation_detali.table_wagons_way_from.obj.row.add(operation_detali.table_wagons_way_from.get_wagon(el));
@@ -1260,7 +1285,9 @@
                     operation_detali.table_wagons_way_from.obj.button(1).enable(false);
                     // Кнопка выполнить операцию роспуска
                     operation_detali.active_button_dissolution_run();
-                    LockScreenOff();
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
                 },
                 // Определить вагон
                 get_wagon: function (wagon) {
@@ -1311,7 +1338,7 @@
                     var row_way = operation_detali.table_way_dissolution.select_way;
                     var index_wagon = operation_detali.table_wagons_way_from.index_select_wagons;
                     // Отобразим кнопку
-                    if (index_way >=0 && row_way && row_way.count_wagon_dissolution === 0 && index_wagon) {
+                    if (index_way >= 0 && row_way && row_way.count_wagon_dissolution === 0 && index_wagon) {
                         operation_detali.table_wagons_way_from.obj.button(1).enable(true);
                     } else {
                         operation_detali.table_wagons_way_from.obj.button(1).enable(false);
@@ -1384,12 +1411,13 @@
                                         $.each(wagons, function (i, el) {
                                             el.id_way_dissolution = null;
                                         });
-                                        // Отобразим вагоны на пути для роспуска (будут указан путь роспуска)
-                                        operation_detali.table_wagons_way_from.view(operation_detali.wagons_dissolution_from);
-
                                         operation_detali.table_wagons_way_on.view(operation_detali.table_wagons_way_on.id_way)
                                         // Обновим количество
                                         operation_detali.table_way_dissolution.update_count_dissolution(0);
+                                        // Отобразим вагоны на пути для роспуска (будут указан путь роспуска)
+                                        operation_detali.table_wagons_way_from.view(operation_detali.wagons_dissolution_from, function () {
+                                            LockScreenOff();
+                                        });
                                     }
                                 },
                                 enabled: false,
@@ -1418,7 +1446,7 @@
                         operation_detali.table_wagons_way_on.obj.button(0).enable(false);
                     }
                     operation_detali.table_wagons_way_on.obj.draw();
-                    LockScreenOff();
+                    //LockScreenOff();
                 },
                 // Определить вагон
                 get_wagon: function (wagon) {
@@ -1463,6 +1491,58 @@
 
                 },
             },
+            // Показать роспуск
+            view_dissolution: function (id_way) {
+                operation_detali.val_dissolution.clear_all();
+                operation_detali.id_way_from_dissolution = id_way;
+                // Сбросим бит обновления и список путей обновления
+                operation_detali.bit_update = false;
+                operation_detali.rows_update = [];
+
+                operation_detali.refresh_dissolution();
+                // Показать операцию детально
+                operation_detali.content.addClass('is-visible');
+            },
+            // Показать роспуск
+            refresh_dissolution: function () {
+                operation_detali.table_way_dissolution.load();
+                operation_detali.table_wagons_way_from.load(operation_detali.id_way_from_dissolution,function () {
+                    LockScreenOff();
+                });
+                operation_detali.operation_dissolution.show();
+                //LockScreenOff();
+            },
+            // Отобразить кнопку выполнить роспуск
+            active_button_dissolution_run: function () {
+                var wagons = operation_detali.wagons_dissolution_from.filter(function (i) {
+                    return i.id_way_dissolution !== null ? true : false;
+                })
+                if (wagons && wagons.length > 0) {
+                    operation_detali.bt_operation_dissolution_run.prop("disabled", false);
+                } else {
+                    operation_detali.bt_operation_dissolution_run.prop("disabled", true);
+                }
+            },
+            // Валидация данных
+            validation_dissolution: function () {
+                operation_detali.val_dissolution.clear_all();
+                var valid = true;
+                valid = valid & operation_detali.val_dissolution.checkInputOfNull(operation_detali.operation_detali_dissolution_start.obj, "Укажите время начала роспуска.");
+                valid = valid & operation_detali.val_dissolution.checkInputOfNull(operation_detali.operation_detali_dissolution_stop.obj, "Укажите время конца роспуска.");
+                if (valid) {
+                    var start = moment(operation_detali.operation_detali_dissolution_start.getDateTime());
+                    var stop = moment(operation_detali.operation_detali_dissolution_stop.getDateTime());
+                    if (start.isBefore(stop)) {  //|| !start.isSame(stop)
+                        valid = valid & true;
+                    } else {
+                        operation_detali.val_dissolution.set_object_error(operation_detali.operation_detali_dissolution_start.obj, "Время начала должно быть меньше времени конца.");
+                        operation_detali.val_dissolution.set_object_error(operation_detali.operation_detali_dissolution_stop.obj, "Время начала должно быть меньше времени конца.");
+                        valid = valid & false;
+                    }
+                }
+                return valid;
+            },
+            // -------------------------------------------------------------------------------------------------
             // Инициализация
             init: function (lang, user_name, callback_close) {
                 operation_detali.lang = lang;
@@ -1499,51 +1579,10 @@
                 operation_detali.content.on('click', '.close', function (event) {
                     event.preventDefault();
                     if (typeof operation_detali.callback_close === 'function') {
-                        operation_detali.callback_close(operation_detali.bit_update);
+                        operation_detali.callback_close(operation_detali.bit_update, operation_detali.rows_update);
                     }
                     operation_detali.content.removeClass('is-visible');
                 });
-            },
-            // Показать роспуск
-            view_dissolution: function (id_way) {
-                operation_detali.val_dissolution.clear_all();
-                operation_detali.id_way_from_dissolution = id_way;
-
-                operation_detali.table_way_dissolution.load();
-                operation_detali.table_wagons_way_from.load(id_way);
-                operation_detali.operation_dissolution.show();
-                // Показать операцию детально
-                operation_detali.content.addClass('is-visible');
-            },
-            // Отобразить кнопку выполнить роспуск
-            active_button_dissolution_run: function () {
-                var wagons = operation_detali.wagons_dissolution_from.filter(function (i) {
-                    return i.id_way_dissolution !== null ? true : false;
-                })
-                if (wagons && wagons.length > 0) {
-                    operation_detali.bt_operation_dissolution_run.prop("disabled", false);
-                } else {
-                    operation_detali.bt_operation_dissolution_run.prop("disabled", true);
-                }
-            },
-            // Валидация данных
-            validation_dissolution: function () {
-                operation_detali.val_dissolution.clear_all();
-                var valid = true;
-                valid = valid & operation_detali.val_dissolution.checkInputOfNull(operation_detali.operation_detali_dissolution_start.obj, "Укажите время начала роспуска.");
-                valid = valid & operation_detali.val_dissolution.checkInputOfNull(operation_detali.operation_detali_dissolution_stop.obj, "Укажите время конца роспуска.");
-                if (valid) {
-                    var start = moment(operation_detali.operation_detali_dissolution_start.getDateTime());
-                    var stop = moment(operation_detali.operation_detali_dissolution_stop.getDateTime());
-                    if (start.isBefore(stop)) {  //|| !start.isSame(stop)
-                        valid = valid & true;
-                    } else {
-                        operation_detali.val_dissolution.set_object_error(operation_detali.operation_detali_dissolution_start.obj, "Время начала должно быть меньше времени конца.");
-                        operation_detali.val_dissolution.set_object_error(operation_detali.operation_detali_dissolution_stop.obj, "Время начала должно быть меньше времени конца.");
-                        valid = valid & false;
-                    }
-                }
-                return valid;
             },
         };
 
@@ -1556,10 +1595,21 @@
         table_tree_way.init();
         table_wagons.init();
         // Инициализация окон
-        operation_detali.init(lang, user_name, function (bit_update) {
+        operation_detali.init(lang, user_name, function (bit_update, rows_update) {
             // Проверим требуется обновление путей
             if (bit_update) {
-                // !!!! Отработать обновление
+                // Отработать обновление
+                if (rows_update && rows_update.length > 0) {
+                    // Обновим путь приема
+                    $.each(rows_update, function (i, el) {
+                        table_tree_way.update_way(el.id_station, el.id_park, el.id_way, function () { });
+                    });
+                }
+                // Обновим путь отправки
+                table_tree_way.update_way(current_id_station, current_id_park, current_id_way, function () {
+                    // Обновим информацию по пути
+                    table_wagons.load(current_id_way);
+                })
             }
         });
         pn_loading_way_detail.init(lang);
