@@ -29,10 +29,10 @@ namespace EFIDS.Entities
 
         public int id_loading_status { get; set; }
 
-        [StringLength(10)]
+        [StringLength(20)]
         public string locomotive1 { get; set; }
 
-        [StringLength(10)]
+        [StringLength(20)]
         public string locomotive2 { get; set; }
 
         [StringLength(250)]

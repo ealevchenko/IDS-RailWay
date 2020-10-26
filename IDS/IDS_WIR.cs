@@ -287,7 +287,7 @@ namespace IDS
                 {
                     context = new EFDbContext();
                 }
-                List<WagonInternalMovement> list_wim = context.WagonInternalMovement.Where(m => m.id_way == id_way & m.station_end == null & m.way_end == null).OrderBy(p => p.position).ToList();
+                List<WagonInternalMovement> list_wim = context.WagonInternalMovement.Where(m => m.id_way == id_way & m.id_outer_way == null & m.way_end == null).OrderBy(p => p.position).ToList();
                 if (list_wim != null)
                 {
                     count = list_wim.Count();

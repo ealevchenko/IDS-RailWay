@@ -97,7 +97,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string current_station_amkr_abbr_ru { get; set; }
         public string current_station_amkr_abbr_en { get; set; }
         public int? current_station_amkr_idle_time { get; set; }
-        public DateTime current_station_amkr_start { get; set; }
+        public DateTime? current_station_amkr_start { get; set; }
         public int? current_station_amkr_duration { get; set; }
         public string current_way_amkr_num_ru { get; set; }
         public string current_way_amkr_num_en { get; set; }

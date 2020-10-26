@@ -54,12 +54,15 @@ namespace IDS.Helper
                         id = 0,
                         //id_wagon_internal_routes = wir.id,
                         id_station = id_station,
-                        station_start = date_start,
+                        //station_start = date_start,
                         id_way = id_way,
                         way_start = date_start,
+                        id_outer_way = null,
+                        outer_way_start = null,
+                        outer_way_end = null,
                         position = position,
                         create = DateTime.Now,
-                        create_user = user, 
+                        create_user = user,
                         note = note,
                         parent_id = wim.CloseMovement(date_start, null, user)
                     };
@@ -78,7 +81,7 @@ namespace IDS.Helper
         //        // Исключим попытку дублирования операции
         //        //if (wio_last != null && (wio_last.id_operation != id_operation || wim.id_way != id_way || wim.position != position))
         //        //{ 
-                
+
         //        //}
         //        WagonInternalOperation wio_new = new WagonInternalOperation()
         //        {
@@ -103,7 +106,7 @@ namespace IDS.Helper
         public static WagonInternalOperation SetOpenOperation(this WagonInternalRoutes wir, int id_operation, DateTime date_start, int? id_condition, int? id_loading_status, string locomotive1, string locomotive2, string note, string user)
         {
             WagonInternalOperation wio_new = null;
-            
+
             if (wir != null && wir.close == null)
             {
                 WagonInternalOperation wio_last = wir.GetLastOperation();
@@ -182,8 +185,19 @@ namespace IDS.Helper
             if (wim == null) return null;
             if (wim.close == null)
             {
-                wim.way_end = wim.way_end == null ? date_end : wim.way_end;
-                wim.station_end = wim.station_end == null ? date_end : wim.station_end;
+                // Определим какой путь закрывать Внутрений или внешний
+                if (wim.id_outer_way == null)
+                {
+                    // Закроем внутрений
+                    wim.way_end = wim.way_end == null ? date_end : wim.way_end;
+                    //wim.station_end = wim.station_end == null ? date_end : wim.station_end;
+
+                }
+                else {
+                    // Закроем внешний путь
+                    wim.outer_way_end = wim.outer_way_end == null ? date_end : wim.outer_way_end;
+                }
+
                 wim.note = note != null ? note : wim.note;
                 wim.close = DateTime.Now;
                 wim.close_user = user;
@@ -218,7 +232,7 @@ namespace IDS.Helper
             if (wio.close == null)
             {
                 wio.operation_end = wio.operation_end == null ? date_end : wio.operation_end;
-                wio.note = note!=null ? note : wio.note;
+                wio.note = note != null ? note : wio.note;
                 wio.close = date_end;
                 wio.close_user = user;
             }

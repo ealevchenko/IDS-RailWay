@@ -21,15 +21,21 @@ namespace EFIDS.Entities
 
         public int id_station { get; set; }
 
-        public DateTime station_start { get; set; }
+        //public DateTime station_start { get; set; }
 
-        public DateTime? station_end { get; set; }
+        //public DateTime? station_end { get; set; }
 
         public int id_way { get; set; }
 
         public DateTime way_start { get; set; }
 
         public DateTime? way_end { get; set; }
+
+        public int? id_outer_way { get; set; }
+
+        public DateTime? outer_way_start { get; set; }
+
+        public DateTime? outer_way_end { get; set; }
 
         public int position { get; set; }
 
