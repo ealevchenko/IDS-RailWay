@@ -932,6 +932,7 @@
             // Изменить дислокацию
             bt_operation_dissolution_run: $('button#operation_dissolution_run').on('click',
                 function (event) {
+                    operation_detali.bt_operation_dissolution_run.prop("disabled", true);
                     operation_detali.val_dissolution.clear_all();
                     event.preventDefault();
                     var valid = operation_detali.validation_dissolution();
@@ -974,12 +975,16 @@
 
                                     }
                                 });
+
                                 operation_detali.refresh_dissolution();
+                                //operation_detali.bt_operation_dissolution_run.prop("disabled", false);
                             } else {
                                 operation_detali.val_dissolution.out_error_message("При выполнении операции 'Роспуска' - произошла ошибка. Код ошибки =" + result_dislocation);
                             }
                             LockScreenOff();
                         });
+                    } else {
+                        operation_detali.bt_operation_dissolution_run.prop("disabled", false);
                     }
                 }),
             ways_dissolution: null,                             // Список путей с которых производится роспуск
@@ -1493,18 +1498,19 @@
             },
             // Показать роспуск
             view_dissolution: function (id_way) {
-                operation_detali.val_dissolution.clear_all();
                 operation_detali.id_way_from_dissolution = id_way;
                 // Сбросим бит обновления и список путей обновления
                 operation_detali.bit_update = false;
                 operation_detali.rows_update = [];
-
                 operation_detali.refresh_dissolution();
                 // Показать операцию детально
                 operation_detali.content.addClass('is-visible');
             },
             // Показать роспуск
             refresh_dissolution: function () {
+                operation_detali.val_dissolution.clear_all();
+                operation_detali.operation_detali_dissolution_start.setDateTime(null);
+                operation_detali.operation_detali_dissolution_stop.setDateTime(null);
                 operation_detali.table_way_dissolution.load();
                 operation_detali.table_wagons_way_from.load(operation_detali.id_way_from_dissolution,function () {
                     LockScreenOff();
@@ -1566,8 +1572,8 @@
 
                 // Соберем все элементы в массив
                 operation_detali.all_obj_dissolution = $([])
-                    .add(operation_detali.operation_detali_dissolution_start)
-                    .add(operation_detali.operation_detali_dissolution_stop);
+                    .add(operation_detali.operation_detali_dissolution_start.obj)
+                    .add(operation_detali.operation_detali_dissolution_stop.obj);
 
                 operation_detali.val_dissolution = new VALIDATION(operation_detali.lang, operation_detali.alert, operation_detali.all_obj_dissolution); // Создадим класс VALIDATION
 
