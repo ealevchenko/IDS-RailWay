@@ -32,9 +32,13 @@ IDS_DIRECTORY.list_depo = [];
 
 IDS_DIRECTORY.list_wagons_condition = [];
 
+IDS_DIRECTORY.list_locomotive = [];
+
 IDS_DIRECTORY.list_station = [];
 
 IDS_DIRECTORY.list_ways = [];
+
+IDS_DIRECTORY.list_outer_ways = [];
 
 IDS_DIRECTORY.list_consignee = [];
 
@@ -252,6 +256,18 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
                 }
             });
         };
+        if (el === 'locomotive') {
+            IDS_DIRECTORY.prototype.getLocomotive(function (result_locomotive) {
+                obj.list_locomotive = result_locomotive;
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        if (lockOff) { LockScreenOff(); }
+                        callback();
+                    }
+                }
+            });
+        };
         if (el === 'station') {
             IDS_DIRECTORY.prototype.getStation(function (result_station) {
                 obj.list_station = result_station;
@@ -267,6 +283,18 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
         if (el === 'ways') {
             IDS_DIRECTORY.prototype.getWays(function (result_ways) {
                 obj.list_ways = result_ways;
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        if (lockOff) { LockScreenOff(); }
+                        callback();
+                    }
+                }
+            });
+        };
+        if (el === 'outer_ways') {
+            IDS_DIRECTORY.prototype.getOuterWays(function (result_outer_ways) {
+                obj.list_outer_ways = result_outer_ways;
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
@@ -3439,6 +3467,30 @@ IDS_DIRECTORY.prototype.getWagonsCondition = function (callback) {
         },
     });
 };
+//======= Directory_Locomotive (Справочник локомотивов ИДС) ======================================
+IDS_DIRECTORY.prototype.getLocomotive = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/locomotive/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getLocomotive", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 //======= Directory_Station (Справочник станций ИДС) ======================================
 IDS_DIRECTORY.prototype.getStation = function (callback) {
     $.ajax({
@@ -3604,6 +3656,55 @@ IDS_DIRECTORY.prototype.getParkWaysOfStationID = function (id, callback) {
         },
     });
 };
+
+//======= Directory_OuterWays (Справочник внешних путей ИДС) ======================================
+// Получить все пути
+IDS_DIRECTORY.prototype.getOuterWays = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/outer_ways/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getOuterWays", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить путь по id
+IDS_DIRECTORY.prototype.getOuterWaysOfID = function (id_way, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/outer_ways/id/' + id_way,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getOuterWaysOfID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 //======= Directory_Consignee (Справочник грузополучателей) ======================================
 IDS_DIRECTORY.prototype.getConsignee = function (callback) {
     $.ajax({
@@ -4597,6 +4698,44 @@ IDS_DIRECTORY.prototype.getListWagonsCondition = function (fvalue, ftext, lang) 
     }
     return list;
 };
+//*======= IDS_DIRECTORY.list_locomotive  (Справочник локомотивов) ======================================
+IDS_DIRECTORY.prototype.getLocomotive_Internal_Of_Locomotive = function (locomotive) {
+    if (this.list_locomotive) {
+        var obj = getObjects(this.list_locomotive, 'locomotive', locomotive)
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getValue_Locomotive_Of_Locomotive = function (locomotive, name, lang) {
+    var obj = this.getLocomotive_Internal_Of_Locomotive(locomotive);
+    return this.getValueObj(obj, name, lang);
+};
+//
+IDS_DIRECTORY.prototype.getValueCulture_Locomotive_Of_Locomotive = function (locomotive, name) {
+    var obj = this.getLocomotive_Internal_Of_Locomotive(locomotive);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getListLocomotive = function (fvalue, ftext, lang, filter) {
+    var list = [];
+    var list_filtr = null;
+    if (this.list_locomotive) {
+        if (typeof filter === 'function') {
+            list_filtr = this.list_locomotive.filter(filter);
+        } else { list_filtr = this.list_locomotive; }
+        for (i = 0, j = list_filtr.length; i < j; i++) {
+            var l = list_filtr[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
+
+
 //*======= IDS_DIRECTORY.list_station  (Справочник станций) ======================================
 IDS_DIRECTORY.prototype.getStation_Internal_Of_ID = function (id_station) {
     if (this.list_station) {
