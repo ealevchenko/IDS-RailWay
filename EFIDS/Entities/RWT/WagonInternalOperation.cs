@@ -51,6 +51,10 @@ namespace EFIDS.Entities
 
         public long? parent_id { get; set; }
 
+        public virtual Directory_Locomotive Directory_Locomotive { get; set; }
+
+        public virtual Directory_Locomotive Directory_Locomotive1 { get; set; }
+
         public virtual Directory_ConditionArrival Directory_ConditionArrival { get; set; }
 
         public virtual Directory_WagonLoadingStatus Directory_WagonLoadingStatus { get; set; }

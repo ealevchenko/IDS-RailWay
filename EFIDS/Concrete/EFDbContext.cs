@@ -55,10 +55,16 @@ namespace EFIDS.Concrete
         // Справочники
         public virtual DbSet<Directory_Divisions> Directory_Divisions { get; set; }
         public virtual DbSet<Directory_TypeDivision> Directory_TypeDivision { get; set; }
+
         public virtual DbSet<Directory_Station> Directory_Station { get; set; }
         //public virtual DbSet<Directory_ParkWay> Directory_ParkWay { get; set; }
         public virtual DbSet<Directory_ParkWays> Directory_ParkWays { get; set; }
         public virtual DbSet<Directory_Ways> Directory_Ways { get; set; }
+        public virtual DbSet<Directory_OuterWays> Directory_OuterWays { get; set; }
+        // Локомотивы
+        public virtual DbSet<Directory_Locomotive> Directory_Locomotive { get; set; }
+        public virtual DbSet<Directory_LocomotiveStatus> Directory_LocomotiveStatus { get; set; }
+
         public virtual DbSet<Directory_Cargo> Directory_Cargo { get; set; }
         public virtual DbSet<Directory_CargoETSNG> Directory_CargoETSNG { get; set; }
         public virtual DbSet<Directory_CargoGNG> Directory_CargoGNG { get; set; }
@@ -105,6 +111,57 @@ namespace EFIDS.Concrete
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            // Локомотивы
+            modelBuilder.Entity<Directory_Locomotive>()
+                .HasMany(e => e.WagonInternalOperation)
+                .WithOptional(e => e.Directory_Locomotive)
+                .HasForeignKey(e => e.locomotive1);
+
+            modelBuilder.Entity<Directory_Locomotive>()
+                .HasMany(e => e.WagonInternalOperation1)
+                .WithOptional(e => e.Directory_Locomotive1)
+                .HasForeignKey(e => e.locomotive2);
+
+            modelBuilder.Entity<Directory_LocomotiveStatus>()
+                .HasMany(e => e.Directory_Locomotive)
+                .WithRequired(e => e.Directory_LocomotiveStatus)
+                .HasForeignKey(e => e.id_locomotive_status)
+                .WillCascadeOnDelete(false);
+
+            // Внешние пути
+            modelBuilder.Entity<Directory_ParkWays>()
+                .HasMany(e => e.Directory_OuterWays)
+                .WithOptional(e => e.Directory_ParkWays)
+                .HasForeignKey(e => e.id_park_from);
+
+            modelBuilder.Entity<Directory_ParkWays>()
+                .HasMany(e => e.Directory_OuterWays1)
+                .WithOptional(e => e.Directory_ParkWays1)
+                .HasForeignKey(e => e.id_park_on);
+
+
+            modelBuilder.Entity<Directory_Station>()
+                .HasMany(e => e.Directory_OuterWays)
+                .WithRequired(e => e.Directory_Station)
+                .HasForeignKey(e => e.id_station_on)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Directory_Station>()
+                .HasMany(e => e.Directory_OuterWays1)
+                .WithRequired(e => e.Directory_Station1)
+                .HasForeignKey(e => e.id_station_from)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Directory_Ways>()
+                .HasMany(e => e.Directory_OuterWays)
+                .WithOptional(e => e.Directory_Ways)
+                .HasForeignKey(e => e.id_way_from);
+
+            modelBuilder.Entity<Directory_Ways>()
+                .HasMany(e => e.Directory_OuterWays1)
+                .WithOptional(e => e.Directory_Ways1)
+                .HasForeignKey(e => e.id_way_on);
+
             // Внутренее перемещение
             modelBuilder.Entity<WagonInternalMovement>()
                 .HasMany(e => e.WagonInternalMovement1)

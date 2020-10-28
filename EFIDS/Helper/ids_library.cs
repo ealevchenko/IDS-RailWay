@@ -627,6 +627,93 @@ namespace EFIDS.Helper
                 Directory_Divisions2 = null
             };
         }
+
+        // Справочник статусов локомотивов
+        public static Directory_LocomotiveStatus GetDirectory_LocomotiveStatus(this Directory_LocomotiveStatus s)
+        {
+            if (s == null) return null;
+            return new Directory_LocomotiveStatus()
+            {
+                id = s.id,
+                locomotive_status_ru = s.locomotive_status_ru,
+                locomotive_status_en = s.locomotive_status_en,
+                create = s.create,
+                create_user = s.create_user,
+                change = s.change,
+                change_user = s.change_user,
+                Directory_Locomotive = null,
+            };
+        }
+        // Справочник локомотивов
+        public static Directory_Locomotive GetDirectory_Locomotive(this Directory_Locomotive l)
+        {
+            if (l == null) return null;
+            return new Directory_Locomotive()
+            {
+                locomotive = l.locomotive,
+                id_locomotive_status = l.id_locomotive_status,
+                factory_number = l.factory_number,
+                inventory_number = l.inventory_number,
+                note = l.note,
+                create = l.create,
+                create_user = l.create_user,
+                change = l.change,
+                change_user = l.change_user,
+                Directory_LocomotiveStatus = l.Directory_LocomotiveStatus.GetDirectory_LocomotiveStatus(),
+                WagonInternalOperation = null,
+                WagonInternalOperation1 = null,
+            };
+        }
+        // Справочник станций
+        public static Directory_Station GetDirectory_Station(this Directory_Station s)
+        {
+            if (s == null) return null;
+            return new Directory_Station()
+            {
+                id = s.id,
+                station_name_ru = s.station_name_ru,
+                station_name_en = s.station_name_en,
+                station_abbr_ru = s.station_abbr_ru,
+                station_abbr_en = s.station_abbr_en,
+                exit_uz = s.exit_uz,
+                station_uz = s.station_uz,
+                default_side = s.default_side,
+                code = s.code,
+                idle_time = s.idle_time,
+                Directory_Ways = null,
+                //Directory_Ways = s.Directory_Ways.ToList().Select(w => w.GetDirectory_Ways()).ToList(),
+                ArrivalSostav = null,
+                ArrivalSostav1 = null,
+                Arrival_UZ_Vagon = null,
+                OutgoingSostav = null,
+                OutgoingSostav1 = null
+            };
+        }
+        // Справочник станций
+        public static Directory_Station GetDirectory_Station_Directory_Ways(this Directory_Station s)
+        {
+            if (s == null) return null;
+            return new Directory_Station()
+            {
+                id = s.id,
+                station_name_ru = s.station_name_ru,
+                station_name_en = s.station_name_en,
+                station_abbr_ru = s.station_abbr_ru,
+                station_abbr_en = s.station_abbr_en,
+                exit_uz = s.exit_uz,
+                station_uz = s.station_uz,
+                default_side = s.default_side,
+                code = s.code,
+                idle_time = s.idle_time,
+                Directory_Ways = s.Directory_Ways.ToList().Select(w => w.GetDirectory_Ways()).ToList(),
+                ArrivalSostav = null,
+                ArrivalSostav1 = null,
+                Arrival_UZ_Vagon = null,
+                OutgoingSostav = null,
+                OutgoingSostav1 = null
+
+            };
+        }
         // Справочник парков
         public static Directory_ParkWays GetDirectory_ParkWays(this Directory_ParkWays p)
         {
@@ -684,9 +771,9 @@ namespace EFIDS.Helper
                 deadlock = w.deadlock,
                 crossing_uz = w.crossing_uz,
                 crossing_amkr = w.crossing_amkr,
-                id_devision = w.id_devision, 
-                dissolution = w.dissolution, 
-                output_dissolution = w.output_dissolution, 
+                id_devision = w.id_devision,
+                dissolution = w.dissolution,
+                output_dissolution = w.output_dissolution,
                 note = w.note,
                 Directory_Station = w.Directory_Station.GetDirectory_Station(),
                 Directory_ParkWays = w.Directory_ParkWays.GetDirectory_ParkWays(),
@@ -698,57 +785,38 @@ namespace EFIDS.Helper
                 change_user = w.change_user,
             };
         }
-
-        // Справочник станций
-        public static Directory_Station GetDirectory_Station(this Directory_Station s)
+        // Справочник внешних путей
+        public static Directory_OuterWays GetDirectory_OuterWays(this Directory_OuterWays w)
         {
-            if (s == null) return null;
-            return new Directory_Station()
+            if (w == null) return null;
+            return new Directory_OuterWays()
             {
-                id = s.id,
-                station_name_ru = s.station_name_ru,
-                station_name_en = s.station_name_en,
-                station_abbr_ru = s.station_abbr_ru,
-                station_abbr_en = s.station_abbr_en,
-                exit_uz = s.exit_uz,
-                station_uz = s.station_uz,
-                default_side = s.default_side,
-                code = s.code,
-                idle_time = s.idle_time,
-                Directory_Ways = null,
-                //Directory_Ways = s.Directory_Ways.ToList().Select(w => w.GetDirectory_Ways()).ToList(),
-                ArrivalSostav = null,
-                ArrivalSostav1 = null,
-                Arrival_UZ_Vagon = null,
-                OutgoingSostav = null,
-                OutgoingSostav1 = null
+                id = w.id,
+                name_outer_way_ru = w.name_outer_way_ru,
+                name_outer_way_en = w.name_outer_way_en,
+                id_station_from = w.id_station_from,
+                id_park_from = w.id_park_from,
+                id_way_from = w.id_way_from,
+                side_from = w.side_from,
+                id_station_on = w.id_station_on,
+                id_park_on = w.id_park_on,
+                id_way_on = w.id_way_on,
+                side_on = w.side_on,
+                working_way = w.working_way,
+                note = w.note,
+                Directory_Station = w.Directory_Station.GetDirectory_Station(),
+                Directory_ParkWays = w.Directory_ParkWays.GetDirectory_ParkWays(),
+                Directory_Ways = w.Directory_Ways.GetDirectory_Ways(),
+                Directory_Station1 = w.Directory_Station1.GetDirectory_Station(),
+                Directory_ParkWays1 = w.Directory_ParkWays1.GetDirectory_ParkWays(),
+                Directory_Ways1 = w.Directory_Ways1.GetDirectory_Ways(),
+                create = w.create,
+                create_user = w.create_user,
+                change = w.change,
+                change_user = w.change_user,
             };
         }
-        // Справочник станций
-        public static Directory_Station GetDirectory_Station_Directory_Ways(this Directory_Station s)
-        {
-            if (s == null) return null;
-            return new Directory_Station()
-            {
-                id = s.id,
-                station_name_ru = s.station_name_ru,
-                station_name_en = s.station_name_en,
-                station_abbr_ru = s.station_abbr_ru,
-                station_abbr_en = s.station_abbr_en,
-                exit_uz = s.exit_uz,
-                station_uz = s.station_uz,
-                default_side = s.default_side,
-                code = s.code,
-                idle_time = s.idle_time,
-                Directory_Ways = s.Directory_Ways.ToList().Select(w => w.GetDirectory_Ways()).ToList(),
-                ArrivalSostav = null,
-                ArrivalSostav1 = null,
-                Arrival_UZ_Vagon = null,
-                OutgoingSostav = null,
-                OutgoingSostav1 = null
 
-            };
-        }
         #endregion
 
         #region MORG
@@ -1466,7 +1534,7 @@ namespace EFIDS.Helper
                     id_outgoing = c.id_outgoing,
                     num = c.num,
                     position = c.position,
-                    position_outgoing = c.position_outgoing, 
+                    position_outgoing = c.position_outgoing,
                     num_doc = c.num_doc,
                     note = c.note,
                     date_outgoing_act = c.date_outgoing_act,
@@ -1500,7 +1568,7 @@ namespace EFIDS.Helper
                 code_from = d.code_from,
                 code_on = d.code_on,
                 dt = d.dt,
-                xml_doc = d.xml_doc, 
+                xml_doc = d.xml_doc,
             };
         }
 

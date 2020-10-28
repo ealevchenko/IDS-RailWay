@@ -15,6 +15,8 @@ namespace EFIDS.Entities
             ArrivalSostav = new HashSet<ArrivalSostav>();
             OutgoingSostav = new HashSet<OutgoingSostav>();
             WagonInternalMovement = new HashSet<WagonInternalMovement>();
+            Directory_OuterWays = new HashSet<Directory_OuterWays>();
+            Directory_OuterWays1 = new HashSet<Directory_OuterWays>();
         }
         public int id { get; set; }
 
@@ -93,5 +95,11 @@ namespace EFIDS.Entities
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WagonInternalMovement> WagonInternalMovement { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Directory_OuterWays> Directory_OuterWays { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Directory_OuterWays> Directory_OuterWays1 { get; set; }
     }
 }

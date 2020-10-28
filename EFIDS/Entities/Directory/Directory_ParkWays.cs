@@ -12,6 +12,8 @@ namespace EFIDS.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Directory_ParkWays()
         {
+            Directory_OuterWays = new HashSet<Directory_OuterWays>();
+            Directory_OuterWays1 = new HashSet<Directory_OuterWays>();
             Directory_Ways = new HashSet<Directory_Ways>();
         }
 
@@ -43,6 +45,13 @@ namespace EFIDS.Entities
 
         [StringLength(50)]
         public string change_user { get; set; }
+
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Directory_OuterWays> Directory_OuterWays { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Directory_OuterWays> Directory_OuterWays1 { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Directory_Ways> Directory_Ways { get; set; }
