@@ -228,6 +228,7 @@
     <Compile Include="Controllers\api\Directoty\IDS_Directory_BorderCheckpointController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_CargoGNGController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_CargoController.cs" />
+    <Compile Include="Controllers\api\Directoty\IDS_Directory_LocomotiveController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_PayerSenderController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_WagonsRentController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_WagonsController.cs" />
@@ -237,6 +238,7 @@
     <Compile Include="Controllers\api\Directoty\IDS_Directory_CommercialConditionController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_CertificationDataController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_ParkWaysController.cs" />
+    <Compile Include="Controllers\api\Directoty\IDS_Directory_OuterWaysController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_WaysController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_DivisionsController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_TypeDivisionController.cs" />
