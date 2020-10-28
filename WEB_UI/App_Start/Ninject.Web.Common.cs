@@ -121,7 +121,7 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_SpecialConditions>>().To<EFIDS.Concrete.EFDirectory_SpecialConditions>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_DEPO>>().To<EFIDS.Concrete.EFDirectory_DEPO>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_WagonsCondition>>().To<EFIDS.Concrete.EFDirectory_WagonsCondition>();
-            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_Station>>().To<EFIDS.Concrete.EFDirectory_Station>();
+
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_Consignee>>().To<EFIDS.Concrete.EFDirectory_Consignee>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_Shipper>>().To<EFIDS.Concrete.EFDirectory_Shipper>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_BorderCheckpoint>>().To<EFIDS.Concrete.EFDirectory_BorderCheckpoint>();
@@ -131,9 +131,7 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_ExternalStation>>().To<EFIDS.Concrete.EFDirectory_ExternalStation>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_LimitingLoading>>().To<EFIDS.Concrete.EFDirectory_LimitingLoading>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_ConditionArrival>>().To<EFIDS.Concrete.EFDirectory_ConditionArrival>();
-            //kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_PayerArrival>>().To<EFIDS.Concrete.EFDirectory_PayerArrival>();
             kernel.Bind<EFIDS.Abstract.IStringRepository<EFIDS.Entities.Directory_PayerSender>>().To<EFIDS.Concrete.EFDirectory_PayerSender>();
-            //kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_Cars>>().To<EFIDS.Concrete.EFDirectory_Cars>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_Wagons>>().To<EFIDS.Concrete.EFDirectory_Wagons>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_WagonsRent>>().To<EFIDS.Concrete.EFDirectory_WagonsRent>();
 
@@ -147,8 +145,14 @@ namespace WEB_UI.App_Start
 
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_Divisions>>().To<EFIDS.Concrete.EFDirectory_Divisions>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_TypeDivision>>().To<EFIDS.Concrete.EFDirectory_TypeDivision>();
+
+            kernel.Bind<EFIDS.Abstract.IStringRepository<EFIDS.Entities.Directory_Locomotive>>().To<EFIDS.Concrete.EFDirectory_Locomotive>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_LocomotiveStatus>>().To<EFIDS.Concrete.EFDirectory_LocomotiveStatus>();
+
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_Station>>().To<EFIDS.Concrete.EFDirectory_Station>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_ParkWays>>().To<EFIDS.Concrete.EFDirectory_ParkWays>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_Ways>>().To<EFIDS.Concrete.EFDirectory_Ways>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_OuterWays>>().To<EFIDS.Concrete.EFDirectory_OuterWays>();
 
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.CardsWagons>>().To<EFIDS.Concrete.EFCardsWagons>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.CardsWagonsRepairs>>().To<EFIDS.Concrete.EFCardsWagonsRepairs>();

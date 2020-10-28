@@ -19,7 +19,7 @@ namespace WEB_UI.App_LocalResources {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class IDSRWTResource {
@@ -763,11 +763,56 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Локомотив.
+        /// </summary>
+        public static string title_operation_detali_sending_locomotive {
+            get {
+                return ResourceManager.GetString("title_operation_detali_sending_locomotive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Номер поезда.
+        /// </summary>
+        public static string title_operation_detali_sending_num_train {
+            get {
+                return ResourceManager.GetString("title_operation_detali_sending_num_train", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Перегон.
+        /// </summary>
+        public static string title_operation_detali_sending_outer_ways {
+            get {
+                return ResourceManager.GetString("title_operation_detali_sending_outer_ways", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отправить на станцию.
+        /// </summary>
+        public static string title_operation_detali_sending_station {
+            get {
+                return ResourceManager.GetString("title_operation_detali_sending_station", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Начать роспуск.
         /// </summary>
         public static string title_operation_dissolution_run {
             get {
                 return ResourceManager.GetString("title_operation_dissolution_run", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отправить вагоны.
+        /// </summary>
+        public static string title_operation_sending_run {
+            get {
+                return ResourceManager.GetString("title_operation_sending_run", resourceCulture);
             }
         }
         

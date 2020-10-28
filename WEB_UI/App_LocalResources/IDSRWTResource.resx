@@ -492,4 +492,19 @@
   <data name="title_operation_stop" xml:space="preserve">
     <value>Операция закончена</value>
   </data>
+  <data name="title_operation_detali_sending_locomotive" xml:space="preserve">
+    <value>Локомотив</value>
+  </data>
+  <data name="title_operation_detali_sending_num_train" xml:space="preserve">
+    <value>Номер поезда</value>
+  </data>
+  <data name="title_operation_detali_sending_outer_ways" xml:space="preserve">
+    <value>Перегон</value>
+  </data>
+  <data name="title_operation_detali_sending_station" xml:space="preserve">
+    <value>Отправить на станцию</value>
+  </data>
+  <data name="title_operation_sending_run" xml:space="preserve">
+    <value>Отправить вагоны</value>
+  </data>
 </root>
