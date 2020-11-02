@@ -86,6 +86,7 @@ cur_dir_operation.operation_name_ru as current_operation_wagon_name_ru,
 cur_dir_operation.operation_name_en as current_operation_wagon_name_en,
 cur_wio.operation_start as current_operation_wagon_start,
 cur_wio.operation_end as current_operation_wagon_end,
+cur_wio.note as current_operation_note,
 cur_dir_operation.busy as current_operation_wagon_busy,
 cur_wio.[create] as current_operation_wagon_create,
 cur_wio.create_user as current_operation_wagon_create_user,
@@ -101,23 +102,23 @@ cur_dir_cond.condition_abbr_ru as current_condition_abbr_ru,
 cur_dir_cond.condition_abbr_en as current_condition_abbr_en,
 cur_dir_cond.red as current_condition_red,
 --> ТЕКУЩАЯ ДИСЛОКАЦИЯ
--- Текущая станция
-cur_dir_station.station_name_ru as current_station_amkr_name_ru,
-cur_dir_station.station_name_en as current_station_amkr_name_en,
-cur_dir_station.station_abbr_ru as current_station_amkr_abbr_ru,
-cur_dir_station.station_abbr_en as current_station_amkr_abbr_en,
-cur_dir_station.idle_time as current_station_amkr_idle_time,
-current_station_amkr_start = null,      -- !!! Определить по началу пути
-[current_station_amkr_duration] = 0, --!!! переделать расчет DATEDIFF (hour, wim.station_start, getdate()),
---> текущий путь
-cur_dir_ways.way_num_ru as current_way_amkr_num_ru,
-cur_dir_ways.way_num_en as current_way_amkr_num_en,
-cur_dir_ways.way_name_ru as current_way_amkr_name_ru,
-cur_dir_ways.way_name_en as current_way_amkr_name_en,
-cur_dir_ways.way_abbr_ru as current_way_amkr_abbr_ru, 
-cur_dir_ways.way_abbr_en as current_way_amkr_abbr_en,
-wim.way_start as current_way_amkr_start,
-[current_way_amkr_duration] = DATEDIFF (hour, wim.way_start, getdate()),
+-- Станция отпраки
+from_dir_station.station_name_ru as from_station_amkr_name_ru,
+from_dir_station.station_name_en as from_station_amkr_name_en,
+from_dir_station.station_abbr_ru as from_station_amkr_abbr_ru,
+from_dir_station.station_abbr_en as from_station_amkr_abbr_en,
+--> Текущий внешний путь
+cur_dir_ways.name_outer_way_ru as current_outer_way_name_ru,
+cur_dir_ways.name_outer_way_ru as current_outer_way_name_en,
+wim.outer_way_start as current_outer_way_amkr_start,
+cur_dir_ways.note as current_outer_way_note,
+[current_outer_way_amkr_duration] = DATEDIFF (hour, wim.outer_way_start, getdate()),
+-- Станция прибытия
+on_dir_station.station_name_ru as on_station_amkr_name_ru,
+on_dir_station.station_name_en as on_station_amkr_name_en,
+on_dir_station.station_abbr_ru as on_station_amkr_abbr_ru,
+on_dir_station.station_abbr_en as on_station_amkr_abbr_en,
+
 wim.[create] as current_wim_create,
 wim.create_user as current_wim_create_user,
 -- Оплата
@@ -135,7 +136,7 @@ sap_is.ETIME as sap_is_create_time,
 -- Документ SAP по отправке
 wir.doc_outgoing_car as sap_os_doc_outgoing_car
 --......
---into view_wagon
+--into view_wagon_outer_way
 FROM IDS.WagonInternalMovement as wim INNER JOIN
 	IDS.WagonInternalRoutes as wir ON wim.id_wagon_internal_routes = wir.id Left JOIN
 	IDS.WagonInternalOperation as cur_wio ON cur_wio.id = (SELECT TOP (1) [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalOperation] where [id_wagon_internal_routes]= wim.id_wagon_internal_routes order by id desc)  INNER JOIN
@@ -168,12 +169,12 @@ FROM IDS.WagonInternalMovement as wim INNER JOIN
 	IDS.Directory_Divisions as arr_dir_division_amkr ON ar_doc_vag.id_division_on_amkr =  arr_dir_division_amkr.id Left JOIN    --> Цех назначения АМКР по прибытию
 	IDS.Directory_WagonOperations as cur_dir_operation ON cur_wio.id_operation =  cur_dir_operation.id Left JOIN                --> Текущая операция над вагоном
 	IDS.Directory_WagonLoadingStatus as cur_dir_load_status ON cur_wio.id_loading_status =  cur_dir_load_status.id Left JOIN    --> Текущее состояние загрузки вагона
-	IDS.Directory_Station as cur_dir_station ON wim.id_station =  cur_dir_station.id Left JOIN                                  --> Текущая станция дислокации вагона
+	IDS.Directory_Station as from_dir_station ON wim.id_station =  from_dir_station.id Left JOIN                                  --> Текущая станция дислокации вагона
 	IDS.Directory_ConditionArrival as cur_dir_cond ON cur_wio.id_condition =  cur_dir_cond.id  Left JOIN						--> Текущее техническое сотояние
-	IDS.Directory_Ways as cur_dir_ways ON wim.id_way =  cur_dir_ways.id Left JOIN
-
+	IDS.Directory_OuterWays as cur_dir_ways ON wim.id_outer_way =  cur_dir_ways.id Left JOIN
+	IDS.Directory_Station as on_dir_station ON cur_dir_ways.id_station_on =  on_dir_station.id Left JOIN 
 
 	UZ.Directory_Stations as let_station_uz ON  il.destination_station = let_station_uz.code_cs									--> Станция УЗ по письму
 
-WHERE	(wim.id_way = 111) AND (wim.way_end IS NULL)
-order by wim.position
+WHERE (wim.id_outer_way = 12) AND (wim.outer_way_end IS NULL)
+order by wim.outer_way_start, wim.position

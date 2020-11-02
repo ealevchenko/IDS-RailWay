@@ -613,6 +613,9 @@
     <Content Include="Images\idsrwt\warning.png" />
     <Content Include="Images\idsrwt\wsd\park.svg" />
     <Content Include="Images\idsrwt\wsd\station.svg" />
+    <Content Include="Images\idsrwt\wsd\tree_detali.png" />
+    <Content Include="Images\idsrwt\wsd\tree_end.png" />
+    <Content Include="Images\idsrwt\wsd\tree_skeep.png" />
     <Content Include="Images\idsrwt\wsd\way.png" />
     <Content Include="Images\logo.png" />
     <Content Include="Images\portfolio\fullsize\1.jpg" />

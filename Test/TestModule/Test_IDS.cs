@@ -220,6 +220,41 @@ namespace Test.TestModule
             //int res_save = context.SaveChanges();
 
         }
+        // Тест операции отправки
+        public void IDS_WIR_SendingWagonsOfStation()
+        {
+
+            IDS_WIR ids = new IDS_WIR(service.Test);
+
+            EFDbContext context = new EFDbContext();
+
+            List<ListOperationWagon> list_sending = new List<ListOperationWagon>();
+            list_sending.Add(new ListOperationWagon() { wir_id = 45153, position = 1});
+            list_sending.Add(new ListOperationWagon() { wir_id = 45157, position = 2});
+            list_sending.Add(new ListOperationWagon() { wir_id = 45162, position = 3});
+            list_sending.Add(new ListOperationWagon() { wir_id = 45165, position = 4});
+
+            int res = ids.SendingWagonsOfStation(105, list_sending, 12, 123, DateTime.Now, "TЭM18-183", "TЭM18-184", "TEST");
+            //int res_save = context.SaveChanges();
+
+        }
+        // Тест операции отправки
+        public void IDS_WIR_ArrivalWagonsOfStation()
+        {
+
+            IDS_WIR ids = new IDS_WIR(service.Test);
+
+            EFDbContext context = new EFDbContext();
+
+            List<ListOperationWagon> list_sending = new List<ListOperationWagon>();
+            list_sending.Add(new ListOperationWagon() { wir_id = 45152, position = 1});
+            list_sending.Add(new ListOperationWagon() { wir_id = 45154, position = 2});
+            list_sending.Add(new ListOperationWagon() { wir_id = 45156, position = 3});
+
+            int res = ids.ArrivalWagonsOfStation(12, true, list_sending, 494, true, DateTime.Now, "TЭM18-183", "TЭM18-184", "TEST");
+            //int res_save = context.SaveChanges();
+
+        }
 
 
         #endregion

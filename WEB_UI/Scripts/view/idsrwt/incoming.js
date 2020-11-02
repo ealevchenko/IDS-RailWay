@@ -3043,7 +3043,7 @@
                 event.preventDefault();
                 LockScreen(langView('mess_save', langs));
                 cars_detali.alert_sap_is.clear_message();
-                var num_uz = get_input_value(cars_detali.uz_doc_num_doc);
+                var num_uz = get_input_number_value(cars_detali.uz_doc_num_doc);
                 if (num_uz) {
                     cars_detali.add_sap_incoming_supply(cars_detali.select_id, function (result_add_upd_sap_is) {
                         //if (result_add_upd_sap_is && result_add_upd_sap_is.select === true && (result_add_upd_sap_is.add !== -1 && result_add_upd_sap_is.update !== -1)) {
@@ -4317,7 +4317,7 @@
                             // Оределим грузоотправителя и грузополучателя OTPR\CLIENT  
                             cars_detali.view_epd_client(!cars_detali.select_main_otpr ? cars_detali.select_otpr : cars_detali.select_main_otpr);
                             // Показать станцию и подразделение на которые будет отправлен вагон если по номеру документа уже принимался вагон
-                            cars_detali.view_station_devision_on_amkr(get_input_value(cars_detali.uz_doc_num_doc));
+                            cars_detali.view_station_devision_on_amkr(get_input_number_value(cars_detali.uz_doc_num_doc));
                             //-------------------------------------------------------------------
                             // Показать информацию из справочника вагонов ИДС (вагон определяеется ранее)
                             cars_detali.view_epd_card_vag(cars_detali.select_vagon);
@@ -4515,7 +4515,7 @@
                         result_manual_num_doc = {
                             num_doc: manual_num,
                             revision: 0,
-                            num_uz: get_input_value(cars_detali.uz_doc_num_doc),
+                            num_uz: get_input_number_value(cars_detali.uz_doc_num_doc),
                             status: 6,
                             code_from: cars_detali.uz_cargo_client_kod_from.val(),
                             code_on: cars_detali.uz_cargo_client_kod_on.val(),
@@ -4744,7 +4744,7 @@
             // Обновить информацию о принятом вагоне (перенос влево в окно принятые вагоны, изменение статуса состава "В работе")
             update_arrival_car: function (car, id_vagon, callback) {
                 if (car) {
-                    car.position_arrival = get_input_value(cars_detali.arrival_cars_position_arrival);
+                    car.position_arrival = get_input_number_value(cars_detali.arrival_cars_position_arrival);
                     car.date_adoption_act = toISOStringTZ(get_datetime_value(cars_detali.arrival_cars_car_date_adoption_act.val(), cars_detali.lang));
                     car.id_arrival_uz_vagon = id_vagon;
                     car.arrival = toISOStringTZ(new Date());
@@ -5068,7 +5068,7 @@
                 valid = valid & cars_detali.validation_vag_station_on_amkr(valid, false);
                 valid = valid & cars_detali.validation_vag_devision_on_amkr(valid, false);
                 // Вычисление позиции
-                var pos = get_input_value(cars_detali.arrival_cars_position_arrival);
+                var pos = get_input_number_value(cars_detali.arrival_cars_position_arrival);
                 var result_pos = cars_detali.table_arrival_cars.list.filter(function (i) {
                     return Number(i.position_arrival) === pos ? true : false;
                 });
@@ -5089,9 +5089,9 @@
                     id: 0,
                     id_arrival_car: cars_detali.select_id,
                     num: cars_detali.select_num,
-                    num_doc_uz: get_input_value(cars_detali.uz_doc_num_doc),
+                    num_doc_uz: get_input_number_value(cars_detali.uz_doc_num_doc),
                     date_doc_uz: null,
-                    code_border_checkpoint: get_input_value(cars_detali.uz_route_stn_border),
+                    code_border_checkpoint: get_input_number_value(cars_detali.uz_route_stn_border),
                     name_border_checkpoint: get_input_string_value(cars_detali.uz_route_stn_border_name),
                     cross_time: toISOStringTZ(get_datetime_value(cars_detali.uz_route_border_cross_time.val(), cars_detali.lang)),
                     VBELN: null,
@@ -5122,23 +5122,23 @@
             // Получить документ для обновления или добавления
             get_arrival_uz_document: function (id_doc_uz, mode, callback) {
                 // Если это досылочный документ, найдем основной
-                cars_detali.ids_inc.getArrival_UZ_DocumentOfID_DOC_UZ(get_input_value(cars_detali.uz_doc_num_osn_doc), function (result_main_document_uz) {
+                cars_detali.ids_inc.getArrival_UZ_DocumentOfID_DOC_UZ(get_input_number_value(cars_detali.uz_doc_num_osn_doc), function (result_main_document_uz) {
                     // Получим  документ
                     var document = {
                         id: 0,
                         id_doc_uz: id_doc_uz,
-                        nom_doc: get_input_value(cars_detali.uz_doc_num_doc),
-                        nom_main_doc: get_input_value(cars_detali.uz_doc_num_osn_doc),
-                        code_stn_from: get_input_value(cars_detali.uz_route_stn_from),
-                        code_stn_to: get_input_value(cars_detali.uz_route_stn_on),
-                        code_border_checkpoint: get_input_value(cars_detali.uz_route_stn_border),
+                        nom_doc: get_input_number_value(cars_detali.uz_doc_num_doc),
+                        nom_main_doc: get_input_number_value(cars_detali.uz_doc_num_osn_doc),
+                        code_stn_from: get_input_number_value(cars_detali.uz_route_stn_from),
+                        code_stn_to: get_input_number_value(cars_detali.uz_route_stn_on),
+                        code_border_checkpoint: get_input_number_value(cars_detali.uz_route_stn_border),
                         cross_time: toISOStringTZ(get_datetime_value(cars_detali.uz_route_border_cross_time.val(), cars_detali.lang)),
-                        code_shipper: get_input_value(cars_detali.uz_cargo_client_kod_from),
-                        code_consignee: get_input_value(cars_detali.uz_cargo_client_kod_on),
-                        klient: get_input_value(cars_detali.uz_cargo_client_kod_on) === 7932 ? false : true,
+                        code_shipper: get_input_number_value(cars_detali.uz_cargo_client_kod_from),
+                        code_consignee: get_input_number_value(cars_detali.uz_cargo_client_kod_on),
+                        klient: get_input_number_value(cars_detali.uz_cargo_client_kod_on) === 7932 ? false : true,
                         code_payer_sender: get_input_string_value(cars_detali.uz_rask_kod_plat),
                         code_payer_arrival: mode < 2 ? cars_detali.get_kod_pl_arrival_epd(cars_detali.select_otpr) : null, // после раскредитации
-                        distance_way: get_input_value(cars_detali.uz_rask_distance_way),
+                        distance_way: get_input_number_value(cars_detali.uz_rask_distance_way),
                         note: null,
                         parent_id: result_main_document_uz ? result_main_document_uz.id : null,
                         create: toISOStringTZ(new Date()),
@@ -5152,9 +5152,9 @@
             // Получить вагон для обновления или добавления
             get_arrival_uz_vagon: function (id_document_uz, num, id_arrival, mode) {
                 // Вернуть назать преобразование тары и уточненой тары
-                var u_tara = get_input_value(cars_detali.uz_vag_ves_tary_arc);
-                var ves_tary_arc = get_input_value(cars_detali.uz_vag_u_tara);
-                var vesg = get_input_value(cars_detali.uz_cargo_vesg_doc);
+                var u_tara = get_input_number_value(cars_detali.uz_vag_ves_tary_arc);
+                var ves_tary_arc = get_input_number_value(cars_detali.uz_vag_u_tara);
+                var vesg = get_input_number_value(cars_detali.uz_cargo_vesg_doc);
                 u_tara = u_tara !== null ? Number(u_tara * 1000) : null;
                 ves_tary_arc = ves_tary_arc !== null ? Number(ves_tary_arc * 1000) : null;
                 vesg = vesg !== null ? Number(vesg * 1000) : null;
@@ -5170,7 +5170,7 @@
                     id_car: 0, // Нет необходимости номер информация о вагоне по номеру вагона cars_detali.select_vagon.id,
                     id_condition: get_select_number_value(cars_detali.uz_vag_condition_arrival),
                     id_type: get_select_number_value(cars_detali.uz_vag_type_wagon),
-                    gruzp: get_input_value(cars_detali.uz_vag_gruzp),
+                    gruzp: V(cars_detali.uz_vag_gruzp),
                     u_tara: u_tara,
                     ves_tary_arc: ves_tary_arc,
                     route: cars_detali.uz_vag_route.prop('checked'),
@@ -5179,13 +5179,13 @@
                     id_cargo_gng: cars_detali.select_id_cargo_gng,
                     id_certification_data: get_select_number_value(cars_detali.uz_cargo_certificate_data),
                     id_commercial_condition: get_select_number_value(cars_detali.uz_cargo_commercial_condition),
-                    kol_pac: get_input_value(cars_detali.uz_cargo_kol_pac),
+                    kol_pac: get_input_number_value(cars_detali.uz_cargo_kol_pac),
                     pac: num < 2 ? cars_detali.get_epd_vagon_collect_v_pac(cars_detali.select_otpr_vagon) : null, //
                     vesg: vesg,
-                    vesg_reweighing: get_input_value(cars_detali.uz_cargo_vesg_reweighing),
+                    vesg_reweighing: get_input_number_value(cars_detali.uz_cargo_vesg_reweighing),
                     nom_zpu: cars_detali.uz_cargo_nom_zpu.val(),
                     danger: get_input_string_value(cars_detali.uz_cargo_danger_class),
-                    danger_kod: get_input_value(cars_detali.uz_cargo_danger_kod),
+                    danger_kod: get_input_number_value(cars_detali.uz_cargo_danger_kod),
                     //cargo_returns: cars_detali.uz_cargo_returns.prop('checked'),
                     cargo_returns: null, // возврат будет определен позже!
                     id_station_on_amkr: id_station_amkr > 0 ? id_station_amkr : null,
@@ -7674,10 +7674,10 @@
                         date_adoption: toISOStringTZ(get_datetime_value(pn_arrival_sostav.arrival_sostav_date_adoption.val(), pn_arrival_sostav.lang)),
                         date_adoption_act: toISOStringTZ(get_datetime_value(pn_arrival_sostav.arrival_sostav_date_adoption_act.val(), pn_arrival_sostav.lang)),
                         id_station_from: arrival_sostsv.id_station_from,
-                        id_station_on: get_input_value(pn_arrival_sostav.arrival_sostav_station_on),
-                        id_way: get_input_value(pn_arrival_sostav.arrival_sostav_way_on),
-                        num_doc: get_input_value(pn_arrival_sostav.arrival_sostav_num_sheet),
-                        count: get_input_value(pn_arrival_sostav.arrival_count_car),
+                        id_station_on: get_input_number_value(pn_arrival_sostav.arrival_sostav_station_on),
+                        id_way: get_input_number_value(pn_arrival_sostav.arrival_sostav_way_on),
+                        num_doc: get_input_number_value(pn_arrival_sostav.arrival_sostav_num_sheet),
+                        count: get_input_number_value(pn_arrival_sostav.arrival_count_car),
                         status: 2,
                         note: arrival_sostsv.note,
                         create: arrival_sostsv.create,

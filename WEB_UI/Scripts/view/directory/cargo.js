@@ -224,7 +224,7 @@
                     // Получим список грузов для изменения
                     for (ir = 0; ir < pn_change_group.rows.length; ir++) {
                         var old_cargo = pn_change_group.ids_dir.getCargo_Of_ID(pn_change_group.rows[ir].id);
-                        var new_cargo = pn_change_group.get_object(old_cargo, get_input_value(pn_change_group.change_group_cargo_group));
+                        var new_cargo = pn_change_group.get_object(old_cargo, get_input_number_value(pn_change_group.change_group_cargo_group));
                         if (new_cargo) {
                             list_cargo.push(new_cargo);
                         }

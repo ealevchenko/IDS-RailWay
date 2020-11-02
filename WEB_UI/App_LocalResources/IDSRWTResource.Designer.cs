@@ -763,11 +763,65 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Принять состав.
+        /// </summary>
+        public static string title_operation_arrival_run {
+            get {
+                return ResourceManager.GetString("title_operation_arrival_run", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Прибывает с внешнего пути.
+        /// </summary>
+        public static string title_operation_detali_arrival_outer_ways {
+            get {
+                return ResourceManager.GetString("title_operation_detali_arrival_outer_ways", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выполнить реверс.
+        /// </summary>
+        public static string title_operation_detali_arrival_reverse {
+            get {
+                return ResourceManager.GetString("title_operation_detali_arrival_reverse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Прибывает на станцию.
+        /// </summary>
+        public static string title_operation_detali_arrival_station {
+            get {
+                return ResourceManager.GetString("title_operation_detali_arrival_station", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Путь приема состава.
+        /// </summary>
+        public static string title_operation_detali_arrival_way {
+            get {
+                return ResourceManager.GetString("title_operation_detali_arrival_way", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Время выполнения.
+        /// </summary>
+        public static string title_operation_detali_lead_time {
+            get {
+                return ResourceManager.GetString("title_operation_detali_lead_time", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Локомотив.
         /// </summary>
-        public static string title_operation_detali_sending_locomotive {
+        public static string title_operation_detali_locomotive {
             get {
-                return ResourceManager.GetString("title_operation_detali_sending_locomotive", resourceCulture);
+                return ResourceManager.GetString("title_operation_detali_locomotive", resourceCulture);
             }
         }
         

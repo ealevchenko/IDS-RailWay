@@ -203,15 +203,15 @@
     <Compile Include="Entities\Directory\Directory_OuterWays.cs" />
     <Compile Include="Entities\Directory\Directory_Locomotive.cs" />
     <Compile Include="Entities\Directory\Directory_LocomotiveStatus.cs" />
+    <Compile Include="Model\Model1.cs" />
+    <Compile Include="Model\view_wagon_outer_way.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>

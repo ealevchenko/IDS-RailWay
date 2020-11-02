@@ -3040,6 +3040,98 @@ IDS_RWT.prototype.getViewWagonsOfWay = function (id, callback) {
         },
     });
 };
+// Получить список вагонов на внешнем пути
+IDS_RWT.prototype.getViewWagonsOfOuterWay = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/wsd/view/vagons/outer_way/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getViewWagonsOfOuterWay", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить состояние всех станций
+IDS_RWT.prototype.getViewStationStatus = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/wsd/view/station/status/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getViewStationStatus", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить состояние станции по id
+IDS_RWT.prototype.getViewStationStatusOfIDStation= function (id_station, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/wsd/view/station/status/id/'+ id_station,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getViewStationStatusOfIDStation", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить список составов на указаном внешнем пути
+IDS_RWT.prototype.getViewArrivalSostavOfIDOuterWay = function (id_outer_way, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/wsd/view/arrival/sostav/outer_way/id/' + id_outer_way,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getViewArrivalSostavOfIDOuterWay", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 //Операция дислокации 
 IDS_RWT.prototype.postDislocationWagonsOfStation = function (operation_dislocation, callback) {
     $.ajax({
@@ -3090,6 +3182,57 @@ IDS_RWT.prototype.postDissolutionWagonsOfStation = function (operation_dissoluti
         },
     });
 };
+//Операция отправки 
+IDS_RWT.prototype.postSendingWagonsOfStation = function (operation_sending, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/wsd/operation/sending/',
+        type: 'POST',
+        data: JSON.stringify(operation_sending),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postSendingWagonsOfStation", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Операция прибытия 
+IDS_RWT.prototype.postArrivalWagonsOfStation = function (operation_arrival, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/wsd/operation/arrival/',
+        type: 'POST',
+        data: JSON.stringify(operation_arrival),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postArrivalWagonsOfStation", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 /* ----------------------------------------------------------
 функции для работы с объектами
 -------------------------------------------------------------*/

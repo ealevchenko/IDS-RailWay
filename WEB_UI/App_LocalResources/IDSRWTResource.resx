@@ -492,7 +492,7 @@
   <data name="title_operation_stop" xml:space="preserve">
     <value>Операция закончена</value>
   </data>
-  <data name="title_operation_detali_sending_locomotive" xml:space="preserve">
+  <data name="title_operation_detali_locomotive" xml:space="preserve">
     <value>Локомотив</value>
   </data>
   <data name="title_operation_detali_sending_num_train" xml:space="preserve">
@@ -506,5 +506,23 @@
   </data>
   <data name="title_operation_sending_run" xml:space="preserve">
     <value>Отправить вагоны</value>
+  </data>
+  <data name="title_operation_arrival_run" xml:space="preserve">
+    <value>Принять состав</value>
+  </data>
+  <data name="title_operation_detali_arrival_outer_ways" xml:space="preserve">
+    <value>Прибывает с внешнего пути</value>
+  </data>
+  <data name="title_operation_detali_arrival_station" xml:space="preserve">
+    <value>Прибывает на станцию</value>
+  </data>
+  <data name="title_operation_detali_lead_time" xml:space="preserve">
+    <value>Время выполнения</value>
+  </data>
+  <data name="title_operation_detali_arrival_reverse" xml:space="preserve">
+    <value>Выполнить реверс</value>
+  </data>
+  <data name="title_operation_detali_arrival_way" xml:space="preserve">
+    <value>Путь приема состава</value>
   </data>
 </root>

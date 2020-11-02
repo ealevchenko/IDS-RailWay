@@ -106,7 +106,10 @@ namespace Test
             //tids.IDS_WIR_RenumberingWagons();                       // Перенумерация с указанной позиции
             //tids.IDS_WIR_DislocationWagons();                       // Операция дислокация
             //tids.IDS_WIR_DislocationWagonsOfStation();                // Операция дислокация
-            tids.IDS_WIR_DissolutionWagonsOfStation();                // Операция роспуск
+            //tids.IDS_WIR_DissolutionWagonsOfStation();                // Операция роспуск
+            //tids.IDS_WIR_SendingWagonsOfStation();                // Операция роспуск
+            tids.IDS_WIR_ArrivalWagonsOfStation();                // Операция роспуск
+
 
             #endregion
 
