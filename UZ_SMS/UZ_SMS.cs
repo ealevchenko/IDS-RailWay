@@ -223,7 +223,7 @@ namespace UZ
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("GetEPD_UZ_Of_Filter()"), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("GetEPD_UZ_Of_Filter(WagonNumber={0}, DocumentNumber={1})",WagonNumber, DocumentNumber), servece_owner, eventID);
                 return null;
             }
         }

@@ -5170,7 +5170,7 @@
                     id_car: 0, // Нет необходимости номер информация о вагоне по номеру вагона cars_detali.select_vagon.id,
                     id_condition: get_select_number_value(cars_detali.uz_vag_condition_arrival),
                     id_type: get_select_number_value(cars_detali.uz_vag_type_wagon),
-                    gruzp: V(cars_detali.uz_vag_gruzp),
+                    gruzp: get_input_number_value(cars_detali.uz_vag_gruzp),
                     u_tara: u_tara,
                     ves_tary_arc: ves_tary_arc,
                     route: cars_detali.uz_vag_route.prop('checked'),
@@ -6462,7 +6462,7 @@
                 load: function (epds) {
                     pn_search_epd.table_epd.list = epds;
                     pn_search_epd.table_epd.obj.clear();
-                    if (epds !== null) {
+                    if (epds && epds.length>0) {
                         for (i = 0; i < epds.length; i++) {
                             pn_search_epd.table_epd.obj.row.add(pn_search_epd.table_epd.get_row(epds[i]));
                         }
