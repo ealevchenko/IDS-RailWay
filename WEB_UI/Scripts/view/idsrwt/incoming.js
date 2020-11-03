@@ -845,7 +845,7 @@
                     return result;
                 }
                 // Добавить документ
-                var add_document = function (mywindow , nums, num_doc) {
+                var add_document = function (mywindow, nums, num_doc) {
                     var vagons_page1 = [];
                     if (nums && nums.length > 0) {
                         for (iw = 0; iw < nums.length; iw++) {
@@ -6462,8 +6462,13 @@
                 load: function (epds) {
                     pn_search_epd.table_epd.list = epds;
                     pn_search_epd.table_epd.obj.clear();
-                    for (i = 0; i < epds.length; i++) {
-                        pn_search_epd.table_epd.obj.row.add(pn_search_epd.table_epd.get_row(epds[i]));
+                    if (epds !== null) {
+                        for (i = 0; i < epds.length; i++) {
+                            pn_search_epd.table_epd.obj.row.add(pn_search_epd.table_epd.get_row(epds[i]));
+                        }
+                    } else {
+                        pn_search_epd.alert.out_warning_message("При попытке получить документ с УЗ, произошла ошибка.");
+
                     }
                 },
                 // Получить строку для таблицы
