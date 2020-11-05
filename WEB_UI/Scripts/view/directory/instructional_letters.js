@@ -258,7 +258,7 @@
                 var car_valid = [];
                 var cars = list.split(';');
                 $.each(cars, function (i, el) {
-                    if (!isNumeric(el) || !is_valid_num_wagon(el)) {
+                    if (!isNumeric($.trim(el)) || !is_valid_num_wagon($.trim(el))) {
                         // Ошибка ввода
                         pn_add_edit.val.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' введен неправильный номер :' + el);
                         valid = false;
