@@ -853,11 +853,47 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Станция.
+        /// </summary>
+        public static string title_operation_detali_station {
+            get {
+                return ResourceManager.GetString("title_operation_detali_station", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Путь.
+        /// </summary>
+        public static string title_operation_detali_way {
+            get {
+                return ResourceManager.GetString("title_operation_detali_way", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Путь приема.
+        /// </summary>
+        public static string title_operation_detali_way_on {
+            get {
+                return ResourceManager.GetString("title_operation_detali_way_on", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Начать роспуск.
         /// </summary>
         public static string title_operation_dissolution_run {
             get {
                 return ResourceManager.GetString("title_operation_dissolution_run", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на ВЫПОЛНИТЬ.
+        /// </summary>
+        public static string title_operation_run {
+            get {
+                return ResourceManager.GetString("title_operation_run", resourceCulture);
             }
         }
         

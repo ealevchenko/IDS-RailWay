@@ -81,18 +81,18 @@
                                 <form class="form-inline">
                                     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                                         <div class="btn-group mr-2" role="group" aria-label="First group">
-                                            <button type="button" class="btn btn-outline-secondary" id="arrival">Приб.</button>
-                                            <button type="button" class="btn btn-outline-secondary" id="sending">Отпр.</button>
-                                            <button type="button" class="btn btn-outline-secondary" id="dislocation">Дисл.</button>
-                                            <button type="button" class="btn btn-outline-secondary" id="dissolution">Росп.</button>
-                                            <button type="button" class="btn btn-outline-secondary">Выгр.</button>
-                                            <button type="button" class="btn btn-outline-secondary">Погр.</button>
-                                            <button type="button" class="btn btn-outline-secondary">Весы.</button>
+                                            <button type="button" class="btn btn-outline-secondary" title="Принять состав на станцию" id="arrival">Приб.</button>
+                                            <button type="button" class="btn btn-outline-secondary" title="Отправить состав со станции" id="sending">Отпр.</button>
+                                            <button type="button" class="btn btn-outline-secondary" title="Дислокация вагонов по станции" id="dislocation">Дисл.</button>
+                                            <button type="button" class="btn btn-outline-secondary" title="Роспуск вагонов" id="dissolution">Росп.</button>
+                                            <button type="button" class="btn btn-outline-secondary" title="">Выгр.</button>
+                                            <button type="button" class="btn btn-outline-secondary" title="">Погр.</button>
+                                            <button type="button" class="btn btn-outline-secondary" title="">Весы.</button>
                                         </div>
                                         <div class="btn-group mr-2" role="group" aria-label="Second group">
-                                            <button type="button" class="btn btn-outline-secondary">Авто</button>
-                                            <button type="button" class="btn btn-outline-secondary">Ручная</button>
-                                            <button type="button" class="btn btn-outline-secondary">Реверс</button>
+                                            <button type="button" class="btn btn-outline-secondary" title="">Авто</button>
+                                            <button type="button" class="btn btn-outline-secondary" title="">Ручная</button>
+                                            <button type="button" class="btn btn-outline-secondary" title="">Реверс</button>
                                         </div>
                                         @*<div class="btn-group" role="group" aria-label="Third group">
 
@@ -244,6 +244,138 @@
     <div class="container-fluid">
         <form class="cd-form">
             <div class="alert" id="operation-alert"></div>
+            <div class="row operation-dislocation">
+                <div class="col-xl-12 mb-1 mt-1">
+                    <div class="card border-secondary mb-1">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-xl-12 text-center">
+                                    <div class="container-fluid">
+                                        ОПЕРАЦИЯ "ДИСЛОКАЦИЯ ВАГОНОВ НА СТАНЦИИ"
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body text-dark pl-3 pr-3">
+                            <div class="row mb-1">
+                                <div class="col-xl-12">
+                                    <div class="card border-primary">
+                                        <div class="card-header text-left">ДИСЛОКАЦИЯ НА СТАНЦИИ</div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-xl-4">
+                                                    <fieldset class="border-primary">
+                                                        <div class="form-row text-center ">
+                                                            <div class="col-xl-12 mb-1 text-left">
+                                                                <button class="btn btn-primary" id="operation_dislocation_run" disabled="disabled">@IDSRWTResource.title_operation_run</button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-row">
+                                                            <div class="col-xl-12 mb-1 text-left">
+                                                                <label for="operation_detali_dislocation_way_on" class="col-form-label">@IDSRWTResource.title_operation_detali_way_on:</label>
+                                                                <select class="form-control" id="operation_detali_dislocation_way_on" name="operation_detali_dislocation_way_on" required="required"></select>
+                                                                <div class="invalid-feedback"></div>
+                                                            </div>
+                                                        </div>
+
+                                                        @*<div class="form-row">
+            <div class="col-xl-12 mb-1 text-left">
+                <label for="operation_detali_dislocation_way" class="col-form-label">@IDSRWTResource.title_operation_detali_dislocation_way:</label>
+                <select class="form-control" id="operation_detali_dislocation_way" name="operation_detali_dislocation_way" required="required"></select>
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-xl-6 mb-1 text-left">
+                <div class="form-check" style="margin-top:20%">
+                    <input type="checkbox" class="form-check-input" id="operation_detali_dislocation_reverse">
+                    <label class="form-check-label" for="operation_detali_dislocation_reverse">@IDSRWTResource.title_operation_detali_dislocation_reverse:</label>
+                </div>
+            </div>
+            <div class="col-xl-6 mb-1 text-left">
+                <label for="operation_detali_dislocation_side" class="col-form-label">@IDSRWTResource.title_dislocation_wagon_side:</label>
+                <select class="form-control" id="operation_detali_dislocation_side" name="operation_detali_dislocation_side" required="required"></select>
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>*@
+                                                        <div class="form-row">
+                                                            <div class="col-xl-6 mb-1 text-left">
+                                                                <label for="operation_detali_dislocation_locomotive1" class="col-form-label">@IDSRWTResource.title_operation_detali_locomotive №1:</label>
+                                                                <select class="form-control" id="operation_detali_dislocation_locomotive1" name="operation_detali_dislocation_locomotive1" required="required"></select>
+                                                                <div class="invalid-feedback"></div>
+                                                            </div>
+                                                            <div class="col-xl-6 mb-1 text-left">
+                                                                <label for="operation_detali_dislocation_locomotive2" class="col-form-label">@IDSRWTResource.title_operation_detali_locomotive №2:</label>
+                                                                <select class="form-control" id="operation_detali_dislocation_locomotive2" name="operation_detali_dislocation_locomotive2" required="required"></select>
+                                                                <div class="invalid-feedback"></div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-row">
+                                                            <div class="col-xl-6 mb-1 text-left">
+                                                                <label for="operation_detali_dislocation_lead_time" class="col-form-label">@IDSRWTResource.title_operation_detali_lead_time</label>
+                                                                <input type="datetime" class="form-control" id="operation_detali_dislocation_lead_time" name="operation_detali_dislocation_lead_time" />
+                                                                <div class="invalid-feedback"></div>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
+                                                <div class="col-xl-8">
+                                                    <fieldset class="border-primary">
+                                                        <legend class="text-primary">Вагоны для дислокации</legend>
+                                                        <div class="operator-detali-tables">
+                                                            <table id="wagons-dislocation-on" class="compact table table-striped table-hover" style="width:100%; table-layout: fixed"></table>
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <div class="col-xl-12">
+                                    <div class="card border-info">
+                                        <div class="card-header text-left">ВАГОНЫ НА ПУТИ</div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-xl-4">
+                                                    <fieldset class="border-primary">
+                                                        <div class="form-row text-center ">
+                                                            <div class="col-xl-12 mb-1 text-left">
+                                                                <div class="form-row">
+                                                                    <div class="col-xl-12 mb-1 text-left">
+                                                                        <label for="operation_detali_dislocation_station" class="col-form-label">@IDSRWTResource.title_operation_detali_station:</label>
+                                                                        <select class="form-control" id="operation_detali_dislocation_station" name="operation_detali_dislocation_station" required="required"></select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <div class="col-xl-12 mb-1 text-left">
+                                                                        <label for="operation_detali_dislocation_way" class="col-form-label">@IDSRWTResource.title_operation_detali_way:</label>
+                                                                        <select class="form-control" id="operation_detali_dislocation_way" name="operation_detali_dislocation_way" required="required"></select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
+                                                <div class="col-xl-8">
+                                                    <fieldset class="border-primary">
+                                                        <legend class="text-primary">Вагоны на пути</legend>
+                                                        <div class="operator-detali-tables">
+                                                            <table id="wagons-dislocation-from" class="compact table table-striped table-hover" style="width:100%; table-layout: fixed"></table>
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="row operation-dissolution">
                 <div class="col-xl-12 mb-1 mt-1">
                     <div class="card border-secondary mb-1">
@@ -389,10 +521,10 @@
                                                                 <div class="invalid-feedback"></div>
                                                             </div>
                                                             @*<div class="col-xl-6 mb-1 text-left">
-                                                                <label for="operation_detali_sending_stop" class="col-form-label">@IDSRWTResource.title_operation_stop</label>
-                                                                <input type="datetime" class="form-control" id="operation_detali_sending_stop" name="operation_detali_sending_stop" />
-                                                                <div class="invalid-feedback"></div>
-                                                            </div>*@
+                                                            <label for="operation_detali_sending_stop" class="col-form-label">@IDSRWTResource.title_operation_stop</label>
+                                                            <input type="datetime" class="form-control" id="operation_detali_sending_stop" name="operation_detali_sending_stop" />
+                                                            <div class="invalid-feedback"></div>
+                                                        </div>*@
                                                         </div>
                                                     </fieldset>
                                                 </div>

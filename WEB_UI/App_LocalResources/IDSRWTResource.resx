@@ -525,4 +525,16 @@
   <data name="title_operation_detali_arrival_way" xml:space="preserve">
     <value>Путь приема состава</value>
   </data>
+  <data name="title_operation_run" xml:space="preserve">
+    <value>ВЫПОЛНИТЬ</value>
+  </data>
+  <data name="title_operation_detali_station" xml:space="preserve">
+    <value>Станция</value>
+  </data>
+  <data name="title_operation_detali_way" xml:space="preserve">
+    <value>Путь</value>
+  </data>
+  <data name="title_operation_detali_way_on" xml:space="preserve">
+    <value>Путь приема</value>
+  </data>
 </root>
