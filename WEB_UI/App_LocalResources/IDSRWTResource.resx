@@ -468,9 +468,6 @@
   <data name="title_operation_detali_side" xml:space="preserve">
     <value>Сторона</value>
   </data>
-  <data name="title_operation_dissolution_run" xml:space="preserve">
-    <value>Начать роспуск</value>
-  </data>
   <data name="title_operation_start" xml:space="preserve">
     <value>Операция начата</value>
   </data>

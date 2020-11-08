@@ -844,15 +844,6 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Начать роспуск.
-        /// </summary>
-        public static string title_operation_dissolution_run {
-            get {
-                return ResourceManager.GetString("title_operation_dissolution_run", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на ВЫПОЛНИТЬ.
         /// </summary>
         public static string title_operation_run {
