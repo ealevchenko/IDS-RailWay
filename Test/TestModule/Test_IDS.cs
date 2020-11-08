@@ -169,7 +169,7 @@ namespace Test.TestModule
 
             ResultTransfer res = new ResultTransfer(0);
 
-            res = ids.DislocationWagons(ref context, 111, false, 115, false, DateTime.Now.AddMinutes(-30), DateTime.Now, wagons, "TEST");
+            res = ids.DislocationWagons(ref context, 111, false, 115, false, DateTime.Now, wagons, "TЭM18-183", "TЭM18-184",  "TEST");
             //int res_save = context.SaveChanges();
 
         }
@@ -193,7 +193,7 @@ namespace Test.TestModule
             }
 
 
-            int res = ids.DislocationWagonsOfStation(wagons, 111, false, 115, false, DateTime.Now.AddMinutes(-30), DateTime.Now, "TEST");
+            //int res = ids.DislocationWagonsOfStation(wagons, 111, false, 115, false, DateTime.Now, "TЭM18-183", "TЭM18-184", "TEST");
             //int res_save = context.SaveChanges();
 
         }
