@@ -121,17 +121,6 @@
                 }
                 // Откроем окно
                 operation_detali.view_dislocation(id_station, id_way);
-
-                //alert.clear_message();
-                //event.preventDefault();
-                //var items = table_wagons.obj.rows({ selected: true });
-                //if (items && items.count() > 0) {
-                //    // ести выбранные вагоны для новой дислокации
-                //    var rows_wagons = table_wagons.obj.rows(items[0]).data();
-                //    pn_dislocation_wagon.Open(rows_wagons, current_id_station, current_id_way)
-                //} else {
-                //    alert.out_warning_message("Операция новой дислокации не доступна, нет выбранных вагонов для дислокации!");
-                //}
             }),
         // Выполнить роспуск
         bt_dissolution = $('button#dissolution').on('click',
@@ -476,10 +465,9 @@
                     "ordering": true,
                     "info": true,
                     "keys": true,
-                    //select: {
-                    //    style: "single"
-                    //},
-                    select: false,
+                    select: {
+                        style: "single"
+                    },
                     "autoWidth": false,
                     sScrollX: "100%",
                     scrollX: true,
@@ -543,7 +531,7 @@
                         { data: "wagon_date_rem_uz", title: langView('field_wagon_date_rem_uz', langs), width: "100px", orderable: true, searchable: false },
                     ],
                     dom: 'Bfrtip',
-                    stateSave: false,
+                    stateSave: true,
                     buttons: [
                         {
                             text: langView('title_button_buffer', langs),
@@ -568,28 +556,10 @@
                             show: ':hidden'
                         },
                         {
-                            text: langView('title_button_select', langs),
-                            action: function (e, dt, node, config) {
-                                if (table_wagons.count_wagon > 0) {
-                                    pn_select_wagon.Open(table_wagons.count_wagon)
-                                }
-                            },
-                            enabled: true
-                        },
-                        {
-                            extend: 'selectAll',
-                            text: langView('title_button_select_all', langs),
-                        },
-                        {
-                            extend: 'selectNone',
-                            text: langView('title_button_select_none', langs),
-                        },
-                        {
                             extend: 'pageLength',
                         }
                     ]
                 });
-
             },
             // Загрузить информацию
             load: function (id_way) {
@@ -704,297 +674,6 @@
             }
         },
         //*************************************************************************************
-        // ОКНО ВЫБРАТЬ ВАГОНЫ
-        //*************************************************************************************
-        pn_select_wagon = {
-            obj: null,
-            lang: null,
-            max: 0,
-            // Поля формы
-            select_wagon_side: $('select#select_wagon_side'),
-            select_wagon_count: $('input#select_wagon_count'),
-            bt_ok: $('button#select_ok').on('click',
-                function (event) {
-                    event.preventDefault();
-                    var count = Number(pn_select_wagon.select_wagon_count.val());
-                    if (count <= pn_select_wagon.max) {
-                        // закроем
-                        // Сбросим выделения
-                        table_wagons.obj.rows({ selected: true }).deselect();
-                        var side = Number(pn_select_wagon.select_wagon_side.val())
-                        var idrows = [];
-                        if (side === 0) {
-                            for (var i = 1; i < count + 1; i++) {
-                                idrows.push('#' + i);
-                            }
-                        } else {
-                            for (var i = pn_select_wagon.max - (count - 1); i < pn_select_wagon.max + 1; i++) {
-                                idrows.push('#' + i);
-                            }
-                        }
-                        //var rows = table_wagons.obj.rows(['#1', '#3']);
-                        var rows = table_wagons.obj.rows(idrows);
-                        rows.select();
-                        pn_select_wagon.obj.dialog("close");
-                    }
-
-                }),
-            // инициализвция Окна
-            init: function (lang) {
-                pn_select_wagon.lang = lang;
-                //
-                pn_select_wagon.obj = $("div#select_wagon").dialog({
-                    resizable: false,
-                    title: 'Выберите кол. вагонов',
-                    modal: false,
-                    autoOpen: false,
-                    height: "auto",
-                    width: 400,
-                    minHeight: 0,
-                    classes: {
-                        "ui-dialog": "card",
-                        "ui-dialog-titlebar": "card-header bg-primary text-white",
-                        "ui-dialog-content": "card-body",
-                        //"ui-dialog-buttonpane": "card-footer text-muted"
-                    },
-                    open: function (event, ui) {
-
-                    },
-                });
-                // Выбор голова хвост
-                pn_select_wagon.select_wagon_side = cd_initSelect(
-                    pn_select_wagon.select_wagon_side,
-                    { lang: pn_select_wagon.lang },
-                    [{ value: 0, text: "Голова" }, { value: 1, text: "Хвост" }],
-                    null,
-                    0,
-                    function (event) {
-                        event.preventDefault();
-                        var id = Number($(this).val());
-                        if (id > 0) {
-
-                        } else {
-                            //arrival_sostav_way_on.
-                        }
-                    },
-                    null);
-                // Sumbit form
-                pn_select_wagon.obj.find("form").on("submit", function (event) {
-                    event.preventDefault();
-                });
-                //});
-
-            },
-            // открыть окно добавмить вагоны вручную
-            Open: function (max) {
-                pn_select_wagon.max = max;
-                pn_select_wagon.select_wagon_count.val(0);
-                //pn_select_wagon.obj.dialog("option", "title", "Загрузка пути №" + id + " - детально:");
-                pn_select_wagon.obj.dialog("open");
-            }
-        },
-        //*************************************************************************************
-        // ОКНО ДИСЛОКАЦИЯ
-        //*************************************************************************************
-        pn_dislocation_wagon = {
-            obj: null,
-            lang: null,
-            user_name: null,
-            //ids_dir: null,
-            alert: $('div#dislocation_wagon_alert'),                                             // Сообщения
-            all_obj: null,                                                                  // массив всех элементов формы 
-            val: null,                                                                      // класс валидации
-            list_ways: null,
-            rows_wagon: null,
-            id_way_from: null,
-            // Поля формы
-            dislocation_wagon_way_from: $('input#dislocation_wagon_way_from'),
-            dislocation_wagon_reverse: $('input#dislocation_wagon_reverse'),
-            dislocation_wagon_way: $('select#dislocation_wagon_way'),
-            dislocation_wagon_side: $('select#dislocation_wagon_side'),
-            dislocation_wagon_start: $('input#dislocation_wagon_start'),
-            dislocation_wagon_stop: $('input#dislocation_wagon_stop'),
-            // инициализвция Окна
-            init: function (lang, user_name, callback_ok) {
-                pn_dislocation_wagon.lang = lang;
-                pn_dislocation_wagon.user_name = user_name;
-
-                //pn_dislocation_wagon.list_ways = ids_inc.ids_dir.getListWays2TextOfAray(ids_inc.ids_dir.list_ways.filter(function (i) { i.id_station ===}), 'id', 'way_num', 'way_name', pn_arrival_sostav.lang, null);
-                // Инициализация элементов
-
-                pn_dislocation_wagon.dislocation_wagon_side = cd_initSelect(
-                    pn_dislocation_wagon.dislocation_wagon_side,
-                    { lang: pn_dislocation_wagon.lang },
-                    [{ value: 0, text: "Голова" }, { value: 1, text: "Хвост" }],
-                    null,
-                    0,
-                    function (event) {
-                        event.preventDefault();
-                        //var id = Number($(this).val());
-                    }, null);
-                // настроим компонент выбора времени начала
-                pn_dislocation_wagon.dislocation_wagon_start = cd_initDateTimeRangePicker(pn_dislocation_wagon.dislocation_wagon_start, { lang: pn_dislocation_wagon.lang, time: true }, function (datetime) {
-
-                });
-                // настроим компонент выбора времени начала
-                pn_dislocation_wagon.dislocation_wagon_stop = cd_initDateTimeRangePicker(pn_dislocation_wagon.dislocation_wagon_stop, { lang: pn_dislocation_wagon.lang, time: true }, function (datetime) {
-
-                });
-                // Соберем все элементы в массив
-                pn_dislocation_wagon.all_obj = $([])
-                    .add(pn_dislocation_wagon.dislocation_wagon_reverse)
-                    .add(pn_dislocation_wagon.dislocation_wagon_way)
-                    .add(pn_dislocation_wagon.dislocation_wagon_side)
-                    .add(pn_dislocation_wagon.dislocation_wagon_start)
-                    .add(pn_dislocation_wagon.dislocation_wagon_stop)
-                    ;
-                // создадим классы 
-
-                //pn_dislocation_wagon.alert = new ALERT($('div#arrival-sostav-alert'));// Создадим класс ALERTG
-                pn_dislocation_wagon.val = new VALIDATION(pn_dislocation_wagon.lang, pn_dislocation_wagon.alert, pn_dislocation_wagon.all_obj); // Создадим класс VALIDATION
-                //pn_dislocation_wagon.table_car.init();
-                pn_dislocation_wagon.obj = $("div#dislocation_wagon").dialog({
-                    resizable: false,
-                    title: 'Операция "Новая дислокация"',
-                    modal: true,
-                    autoOpen: false,
-                    height: "auto",
-                    width: 600,
-                    classes: {
-                        "ui-dialog": "card",
-                        "ui-dialog-titlebar": "card-header bg-primary text-white",
-                        "ui-dialog-content": "card-body",
-                        "ui-dialog-buttonpane": "card-footer text-muted"
-                    },
-                    open: function (event, ui) {
-
-                    },
-                    buttons: [
-                        {
-
-                            disabled: false,
-                            text: "Ок",
-                            class: "btn btn-outline-primary btn",
-                            click: function () {
-                                pn_dislocation_wagon.save(callback_ok);
-                            }
-                        },
-                        {
-                            text: "Отмена",
-                            class: "btn btn-outline-primary btn",
-                            click: function () {
-                                $(this).dialog("close");
-                            }
-                        },
-                    ]
-                });
-                // Sumbit form
-                pn_dislocation_wagon.obj.find("form").on("submit", function (event) {
-                    event.preventDefault();
-                });
-
-
-            },
-            // открыть окно 
-            Open: function (rows, id_station, id_way) {
-                pn_dislocation_wagon.val.clear_all();
-                pn_dislocation_wagon.dislocation_wagon_way_from.val(""); // сбросить выбор
-                pn_dislocation_wagon.dislocation_wagon_reverse.prop('checked', false);
-                pn_dislocation_wagon.dislocation_wagon_way.val(-1); // сбросить выбор
-                pn_dislocation_wagon.dislocation_wagon_side.val(0); // сбросить выбор
-                pn_dislocation_wagon.dislocation_wagon_start.setDateTime(null);
-                pn_dislocation_wagon.dislocation_wagon_stop.setDateTime(null);
-
-                pn_dislocation_wagon.rows_wagon = rows;
-                pn_dislocation_wagon.id_way_from = id_way;
-                if (rows && rows.length > 0) {
-                    pn_dislocation_wagon.list_ways = ids_inc.ids_dir.getListWays2TextOfAray(ids_inc.ids_dir.list_ways.filter(function (i) { return i.id_station === id_station }), 'id', 'way_num', 'way_name', pn_dislocation_wagon.lang, null);
-
-                    var way_from = getObjects(pn_dislocation_wagon.list_ways, 'value', id_way)
-                    pn_dislocation_wagon.dislocation_wagon_way_from.val(way_from && way_from.length > 0 ? way_from[0].text : '?')
-
-                    //var exceptions_value = [];
-                    //exceptions_value.push(id_way);
-                    pn_dislocation_wagon.dislocation_wagon_way = cd_initSelect(
-                        pn_dislocation_wagon.dislocation_wagon_way,
-                        { lang: pn_dislocation_wagon.lang },
-                        pn_dislocation_wagon.list_ways,
-                        null,
-                        -1,
-                        function (event) {
-                            event.preventDefault();
-                            //var id = Number($(this).val());
-                        }, null);
-                    pn_dislocation_wagon.obj.dialog("open");
-                }
-            },
-            // Валидация данных
-            validation: function () {
-                pn_dislocation_wagon.val.clear_all();
-                var valid = true;
-                valid = valid & pn_dislocation_wagon.val.checkSelection(pn_dislocation_wagon.dislocation_wagon_way, "Выберите путь дислокации.");
-                valid = valid & pn_dislocation_wagon.val.checkInputOfNull(pn_dislocation_wagon.dislocation_wagon_start.obj, "Укажите время начала дислокации.");
-                valid = valid & pn_dislocation_wagon.val.checkInputOfNull(pn_dislocation_wagon.dislocation_wagon_stop.obj, "Укажите время конца дислокации.");
-                if (valid) {
-                    var start = moment(pn_dislocation_wagon.dislocation_wagon_stop.getDateTime());
-                    var stop = moment(pn_dislocation_wagon.dislocation_wagon_start.getDateTime());
-                    if (stop.isBefore(start)) {  //|| !start.isSame(stop)
-                        valid = valid & true;
-                    } else {
-                        pn_dislocation_wagon.val.set_object_error(pn_dislocation_wagon.dislocation_wagon_start.obj, "Время начала должно быть меньше времени конца.");
-                        pn_dislocation_wagon.val.set_object_error(pn_dislocation_wagon.dislocation_wagon_stop.obj, "Время начала должно быть меньше времени конца.");
-                        valid = valid & false;
-                    }
-                }
-
-                return valid;
-            },
-            // Сохранить 
-            save: function (callback_ok) {
-                var list_wir_id = [];
-                var valid = pn_dislocation_wagon.validation();
-                if (valid) {
-                    pn_dislocation_wagon.val.clear_all();
-                    LockScreen(langView('mess_save', langs));
-
-                    // Получим список номеров вагонов
-                    for (i = 0; i < pn_dislocation_wagon.rows_wagon.length; i++) {
-                        list_wir_id.push(pn_dislocation_wagon.rows_wagon[i].wir_id);
-                    }
-                    // Сформируем команду операции
-                    var operation_dislocation = {
-                        list_wir_id: list_wir_id,
-                        id_way_from: pn_dislocation_wagon.id_way_from,
-                        reverse: pn_dislocation_wagon.dislocation_wagon_reverse.prop('checked'),
-                        id_way_on: get_input_number_value(pn_dislocation_wagon.dislocation_wagon_way),
-                        side_on: get_input_number_value(pn_dislocation_wagon.dislocation_wagon_side),
-                        date_start: toISOStringTZ(get_datetime_value(pn_dislocation_wagon.dislocation_wagon_start.val(), pn_dislocation_wagon.lang)),
-                        date_stop: toISOStringTZ(get_datetime_value(pn_dislocation_wagon.dislocation_wagon_stop.val(), pn_dislocation_wagon.lang)),
-                        user: pn_dislocation_wagon.user_name,
-                    }
-                    // Выполним операцию
-                    ids_inc.postDislocationWagonsOfStation(operation_dislocation, function (result_dislocation) {
-                        if (result_dislocation >= 0) {
-                            // Обновим путь приема
-                            table_tree_way.update_way(current_id_station, current_id_park, operation_dislocation.id_way_on, function () {
-                                // Обновим путь отправки
-                                table_tree_way.update_way(current_id_station, current_id_park, current_id_way, function () {
-                                    // Обновим вагоны на пути
-                                    if (typeof callback_ok === 'function') {
-                                        pn_dislocation_wagon.obj.dialog("close");
-                                        callback_ok(result_dislocation);
-                                    }
-                                })
-                            })
-                        } else {
-                            pn_dislocation_wagon.val.out_error_message("При выполнении операции 'Дислокация' - произошла ошибка!");
-                            LockScreenOff();
-                        }
-                    });
-                }
-            },
-        },
-        //*************************************************************************************
         // ОКНО "Операции детально"
         //*************************************************************************************                
         operation_detali = {
@@ -1068,19 +747,31 @@
                                 ids_inc.postDislocationWagonsOfStation(operation_dislocation, function (result_dislocation) {
                                     if (result_dislocation >= 0) {
                                         // Обновим путь отправки
-                                        var way = getObjects(ids_inc.ids_dir.list_ways, 'id', operation_detali.id_way_dislocation_from)
-                                        // Пути определены?
-                                        if (way && way.length > 0) {
+                                        var way = ids_inc.ids_dir.list_ways.find(function (o) { return o.id === operation_detali.id_way_dislocation_from });
+                                        if (way!==null) {
                                             // Обновить станцию отправки
-                                            operation_detali.rows_update.push({ id_station: way[0].id_station, id_park: way[0].id_park, id_way: way[0].id });
+                                            operation_detali.rows_update.push({ id_station: way.id_station, id_park: way.id_park, id_way: way.id });
                                         }
                                         // Обновим путь приема
-                                        way = getObjects(ids_inc.ids_dir.list_ways, 'id', operation_detali.id_way_dislocation_on)
-                                        // Пути определены?
-                                        if (way && way.length > 0) {
+                                        way = ids_inc.ids_dir.list_ways.find(function (o) { return o.id === operation_detali.id_way_dislocation_on });
+                                        if (way!==null) {
                                             // Обновить станцию отправки
-                                            operation_detali.rows_update.push({ id_station: way[0].id_station, id_park: way[0].id_park, id_way: way[0].id });
+                                            operation_detali.rows_update.push({ id_station: way.id_station, id_park: way.id_park, id_way: way.id });
                                         }
+
+                                        //var way = getObjects(ids_inc.ids_dir.list_ways, 'id', operation_detali.id_way_dislocation_from)
+                                        //// Пути определены?
+                                        //if (way && way.length > 0) {
+                                        //    // Обновить станцию отправки
+                                        //    operation_detali.rows_update.push({ id_station: way[0].id_station, id_park: way[0].id_park, id_way: way[0].id });
+                                        //}
+                                        // Обновим путь приема
+                                        //way = getObjects(ids_inc.ids_dir.list_ways, 'id', operation_detali.id_way_dislocation_on)
+                                        //// Пути определены?
+                                        //if (way && way.length > 0) {
+                                        //    // Обновить станцию отправки
+                                        //    operation_detali.rows_update.push({ id_station: way[0].id_station, id_park: way[0].id_park, id_way: way[0].id });
+                                        //}
                                         operation_detali.bit_update = true;
                                         operation_detali.refresh_dislocation();
                                         operation_detali.val_dislocation.out_info_message("Операция 'Дислокации' - Выполнена");
@@ -4055,15 +3746,6 @@
             }
         });
         pn_loading_way_detail.init(lang);
-        //pn_select_wagon.init(lang);
-        // Инициализация панели дислокация
-        //pn_dislocation_wagon.init(lang, user_name, function (result_dislocation) {
-        //    if (result_dislocation > 0) {
-        //        alert.out_info_message('Операция "Дислокация" - выполнена. Обновленно  - ' + result_dislocation + ' записей');
-        //        // Обновим информацию по пути
-        //        table_wagons.load(current_id_way);
-        //    }
-        //});
         table_tree_way.load_station();
         LockScreenOff();
     });
