@@ -35,7 +35,11 @@ namespace EFIDS.Entities
 
         public bool? side_on { get; set; }
 
-        public bool working_way { get; set; }
+        public bool exit_uz { get; set; }
+
+        public DateTime? way_close { get; set; }
+
+        public DateTime? way_delete { get; set; }
 
         [StringLength(200)]
         public string note { get; set; }

@@ -709,7 +709,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Принять состав.
+        ///   Ищет локализованную строку, похожую на ПРИНЯТЬ.
         /// </summary>
         public static string title_operation_arrival_run {
             get {
@@ -849,15 +849,6 @@ namespace WEB_UI.App_LocalResources {
         public static string title_operation_run {
             get {
                 return ResourceManager.GetString("title_operation_run", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Отправить вагоны.
-        /// </summary>
-        public static string title_operation_sending_run {
-            get {
-                return ResourceManager.GetString("title_operation_sending_run", resourceCulture);
             }
         }
         

@@ -789,7 +789,6 @@
                         operation_detali.bt_operation_dislocation_run.prop("disabled", false);
                     }
                 }),
-
             id_station_dislocation: null,                       // Станция дислокации
             id_way_dislocation_from: null,                      // Путь с которого будет производится дислокация
             id_way_dislocation_on: null,                        // Путь куда будет производится дислокация
@@ -1476,29 +1475,6 @@
                 operation_detali.id_way_dislocation_from = id_way;
                 // Выберем станцию
                 operation_detali.operation_detali_dislocation_station.val(operation_detali.id_station_dislocation);
-                // Настроим компонент локомотивы 
-                operation_detali.operation_detali_dislocation_locomotive1 = cd_initSelect(
-                    operation_detali.operation_detali_dislocation_locomotive1,
-                    { lang: operation_detali.lang },
-                    operation_detali.list_locomotive,
-                    null,
-                    -1,
-                    function (event) {
-                        event.preventDefault();
-                        var locomotive = $(this).val();
-
-                    }, null);
-                operation_detali.operation_detali_dislocation_locomotive2 = cd_initSelect(
-                    operation_detali.operation_detali_dislocation_locomotive2,
-                    { lang: operation_detali.lang },
-                    operation_detali.list_locomotive,
-                    null,
-                    -1,
-                    function (event) {
-                        event.preventDefault();
-                        var locomotive = $(this).val();
-
-                    }, null);
                 // Сбросим бит обновления и список путей обновления
                 operation_detali.bit_update = false;
                 operation_detali.rows_update = [];
@@ -2334,13 +2310,12 @@
             operation_sending: $('.operation-sending').hide(),
             operation_detali_sending_way_from: $('input#operation_detali_sending_way_from'),
 
+            operation_detali_sending_station: $('select#operation_detali_sending_station'),
             operation_detali_sending_outer_ways: $('select#operation_detali_sending_outer_ways'),
             operation_detali_sending_num_train: $('input#operation_detali_sending_num_train'),
             operation_detali_sending_locomotive1: $('select#operation_detali_sending_locomotive1'),
             operation_detali_sending_locomotive2: $('select#operation_detali_sending_locomotive2'),
             operation_detali_sending_lead_time: $('input#operation_detali_sending_lead_time'),
-            //operation_detali_sending_start: $('input#operation_detali_sending_start'),
-            //operation_detali_sending_stop: $('input#operation_detali_sending_stop'),
             // Выполнить отправку состава
             bt_operation_sending_run: $('button#operation_sending_run').on('click',
                 function (event) {
@@ -2349,55 +2324,64 @@
                     event.preventDefault();
                     var valid = operation_detali.validation_sending();
                     if (valid) {
-                        // Подготовим список вагонов для отправки
-                        var list_sending = [];
-                        if (operation_detali.wagons_sending_from) {
-                            var wagons_sending = operation_detali.wagons_sending_from.filter(function (i) {
-                                return i.position_sending !== null ? true : false;
-                            }).sort(function (a, b) {
-                                return Number(a.position_sending) - Number(b.position_sending)
-                            });
-                            $.each(wagons_sending, function (i, el) {
-                                list_sending.push({ wir_id: el.wir_id, position: el.position_sending })
-                            });
-
-                        }
-                        // Определим пакет данных отправки на другую станцию
-                        var operation_sending = {
-                            id_way_from: operation_detali.id_way_from_sending,
-                            list_sending: list_sending,
-                            id_outer_ways: get_select_number_value(operation_detali.operation_detali_sending_outer_ways),
-                            num_sostav: get_input_number_value(operation_detali.operation_detali_sending_num_train),
-                            lead_time: toISOStringTZ(get_datetime_value(operation_detali.operation_detali_sending_lead_time.val(), operation_detali.lang)),
-                            //date_start: toISOStringTZ(get_datetime_value(operation_detali.operation_detali_sending_start.val(), operation_detali.lang)),
-                            //date_stop: toISOStringTZ(get_datetime_value(operation_detali.operation_detali_sending_stop.val(), operation_detali.lang)),
-                            locomotive1: get_select_string_value(operation_detali.operation_detali_sending_locomotive1),
-                            locomotive2: get_select_string_value(operation_detali.operation_detali_sending_locomotive2),
-                            user: operation_detali.user,
-                        }
-                        // Выполнить операцию отправки postSendingWagonsOfStation
-                        ids_inc.postSendingWagonsOfStation(operation_sending, function (result_sending) {
-                            if (result_sending >= 0) {
-                                // Обновить путь отправки и станцию отправки
-                                if (operation_detali.way_from_sending) {
-
-                                    operation_detali.rows_update.push({ id_station: operation_detali.way_from_sending.id_station, id_park: operation_detali.way_from_sending.id_park, id_way: operation_detali.way_from_sending.id });
-                                    operation_detali.rows_update.push({ id_station: operation_detali.way_from_sending.id_station, id_park: null, id_way: null });
+                        // Подтверждение выполнения операции.
+                        dc.dialog_confirm('Open', 'Выполнить?', 'Подтвердите выполнение операции «ОТПРАВИТЬ СОСТАВ НА СТАНЦИЮ АМКР»', function (result) {
+                            if (result) {
+                                LockScreen(langView('mess_save', langs));
+                                // Подготовим список вагонов для отправки
+                                var list_sending = [];
+                                if (operation_detali.wagons_sending_from) {
+                                    var wagons_sending = operation_detali.wagons_sending_from.filter(function (i) {
+                                        return i.position_sending !== null ? true : false;
+                                    }).sort(function (a, b) {
+                                        return Number(a.position_sending) - Number(b.position_sending)
+                                    });
+                                    $.each(wagons_sending, function (i, el) {
+                                        list_sending.push({ wir_id: el.wir_id, position: el.position_sending })
+                                    });
                                 }
-                                // Получим внешний путь
-                                var outer_way = getObjects(ids_inc.ids_dir.list_outer_ways, 'id', operation_sending.id_outer_ways)
-                                // Пути определены?
-                                if (outer_way && outer_way.length > 0) {
-                                    // Обновить станцию отправки
-                                    operation_detali.rows_update.push({ id_station: outer_way[0].id_station_on, id_park: null, id_way: null });
+                                // Определим пакет данных отправки на другую станцию
+                                var operation_sending = {
+                                    id_way_from: operation_detali.id_way_from_sending,
+                                    list_sending: list_sending,
+                                    id_outer_ways: get_select_number_value(operation_detali.operation_detali_sending_outer_ways),
+                                    num_sostav: get_input_number_value(operation_detali.operation_detali_sending_num_train),
+                                    lead_time: toISOStringTZ(get_datetime_value(operation_detali.operation_detali_sending_lead_time.val(), operation_detali.lang)),
+                                    locomotive1: get_select_string_value(operation_detali.operation_detali_sending_locomotive1),
+                                    locomotive2: get_select_string_value(operation_detali.operation_detali_sending_locomotive2),
+                                    user: operation_detali.user,
                                 }
-                                operation_detali.bit_update = true;
-                                operation_detali.refresh_sending();
-                                operation_detali.val_sending.out_info_message("Операция 'Отправление состава на станцию АМКР' - Выполнена");
+                                // Выполнить операцию отправки postSendingWagonsOfStation
+                                ids_inc.postSendingWagonsOfStation(operation_sending, function (result_sending) {
+                                    if (result_sending >= 0) {
+                                        // Обновить путь отправки и станцию отправки
+                                        if (operation_detali.way_from_sending) {
+
+                                            operation_detali.rows_update.push({ id_station: operation_detali.way_from_sending.id_station, id_park: operation_detali.way_from_sending.id_park, id_way: operation_detali.way_from_sending.id });
+                                            operation_detali.rows_update.push({ id_station: operation_detali.way_from_sending.id_station, id_park: null, id_way: null });
+                                        }
+                                        var outer_way = ids_inc.ids_dir.list_outer_ways.find(function (o) {
+                                            return o.id === operation_sending.id_outer_ways;
+                                        });
+                                        // Пути определены?
+                                        if (outer_way) {
+                                            // Обновить станцию отправки
+                                            operation_detali.rows_update.push({ id_station: outer_way.id_station_on, id_park: null, id_way: null });
+                                        }
+                                        operation_detali.bit_update = true;
+                                        operation_detali.refresh_sending();
+                                        operation_detali.val_sending.out_info_message("Операция 'Отправление состава на станцию АМКР' - Выполнена");
+                                    } else {
+                                        operation_detali.val_sending.out_error_message("При выполнении операции 'Отправление состава на станцию АМКР' - произошла ошибка. Код ошибки =" + result_sending);
+                                        LockScreenOff();
+                                    }
+
+                                });
+
                             } else {
-                                operation_detali.val_sending.out_error_message("При выполнении операции 'Отправление состава на станцию АМКР' - произошла ошибка. Код ошибки =" + result_sending);
+                                operation_detali.bt_operation_sending_run.prop("disabled", false);
+                                operation_detali.val_dissolution.out_warning_message("Выполнение операции «ОТПРАВИТЬ СОСТАВ» - отменено!");
                             }
-                            LockScreenOff();
                         });
                     } else {
                         operation_detali.bt_operation_sending_run.prop("disabled", false);
@@ -2484,12 +2468,47 @@
                             {
                                 text: langView('title_button_add_way_sending', langs),
                                 action: function (e, dt, node, config) {
-                                    //this.processing(true);
-                                    LockScreen(langView('mess_save', langs));
-                                    operation_detali.table_wagons_sending_way_from.add_way_sending(function () {
+                                    LockScreen(langView('mess_operation', langs));
+                                    // Выделим выбранные вагоны
+                                    var index_wagon = operation_detali.table_wagons_sending_way_from.index_select_wagons;
+                                    var row_select_wagon = operation_detali.table_wagons_sending_way_from.obj.rows(index_wagon).data();
+                                    // Получим последнюю позицию вагонов состава для отправки
+                                    var wagon_max_poz = operation_detali.wagons_sending_from.reduce(function (prev, current, index, array) { return prev.position_sending > current.position_sending ? prev : current });
+                                    var position_sending = wagon_max_poz && wagon_max_poz.position_sending !== null ? wagon_max_poz.position_sending + 1 : 1;
+                                    // Проставим сформируем состав для отправки
+                                    if (row_select_wagon && row_select_wagon.length > 0) {
+                                        operation_detali.table_wagons_sending_way_from.wagons_sending_async(row_select_wagon, position_sending, function () {
+                                            // Отобразим вагоны состава для отправки
+                                            operation_detali.table_wagons_sending.view();
+                                            // Отобразим вагоны на пути для роспуска (будут указан путь роспуска)
+                                            operation_detali.table_wagons_sending_way_from.view(operation_detali.wagons_sending_from, function () {
+                                                LockScreenOff();
+                                            });
+
+                                        });
+                                        //$.each(row_select_wagon, function (i, el) {
+                                        //    var wagon = getObjects(operation_detali.wagons_sending_from, 'wir_id', el.wir_id);
+                                        //    if (wagon && wagon.length > 0) {
+                                        //        wagon[0].position_sending = position_sending;
+                                        //        position_sending++;
+                                        //    }
+                                        //});
+                                        //// Отобразим вагоны состава для отправки
+                                        //operation_detali.table_wagons_sending.view();
+                                        //// Отобразим вагоны на пути для роспуска (будут указан путь роспуска)
+                                        //operation_detali.table_wagons_sending_way_from.view(operation_detali.wagons_sending_from, function () {
+                                        //    if (typeof callback === 'function') {
+                                        //        callback();
+                                        //    }
+                                        //});
+                                    } else {
                                         LockScreenOff();
-                                    });
-                                    //this.processing(false);
+                                    }
+
+
+                                    //operation_detali.table_wagons_sending_way_from.add_way_sending(function () {
+                                    //    LockScreenOff();
+                                    //});
                                 },
                                 enabled: false
                             }
@@ -2506,16 +2525,6 @@
                         operation_detali.table_wagons_sending_way_from.active_button_add();
 
                     });
-                    //    .on('buttons-processing', function (e, indicator) {
-                    //    if (indicator) {
-                    //        //overlay.appendTo('body');
-                    //        LockScreen(langView('mess_save', langs));
-                    //    }
-                    //    else {
-                    //        LockScreenOff();
-                    //        //overlay.remove();
-                    //    }
-                    //});
                 },
                 // Загрузить информацию
                 load: function (id_way, callback) {
@@ -2601,39 +2610,30 @@
                     }
 
                 },
-                // Добавить вагоны в состав для отправки
-                add_way_sending: function (callback) {
-                    // Выделим выбранные вагоны
-                    var index_wagon = operation_detali.table_wagons_sending_way_from.index_select_wagons;
-                    var row_select_wagon = operation_detali.table_wagons_sending_way_from.obj.rows(index_wagon).data();
-                    // Получим последнюю позицию вагонов состава для отправки
-                    var wagon_max_poz = operation_detali.wagons_sending_from.reduce(function (prev, current, index, array) { return prev.position_sending > current.position_sending ? prev : current });
-                    var position_sending = wagon_max_poz && wagon_max_poz.position_sending !== null ? wagon_max_poz.position_sending + 1 : 1;
-                    // Проставим сформируем состав для отправки
-                    //var row_select_wagon = null;
-                    if (row_select_wagon && row_select_wagon.length > 0) {
-                        $.each(row_select_wagon, function (i, el) {
-
-                            var wagon = getObjects(operation_detali.wagons_sending_from, 'wir_id', el.wir_id);
-                            if (wagon && wagon.length > 0) {
-                                wagon[0].position_sending = position_sending;
-                                position_sending++;
-                            }
-
-                        });
-                        // Отобразим вагоны состава для отправки
-                        operation_detali.table_wagons_sending.view();
-                        // Отобразим вагоны на пути для роспуска (будут указан путь роспуска)
-                        operation_detali.table_wagons_sending_way_from.view(operation_detali.wagons_sending_from, function () {
-                            if (typeof callback === 'function') {
-                                callback();
-                            }
-                        });
-                    } else {
-                        if (typeof callback === 'function') {
+                // Выполнить добавление вагонов выбранных для отправки на указаный путь (асинхронный режим)
+                wagons_sending_async: function (row, position_sending, callback) {
+                    var len = row.length;
+                    if (len === 0) {
+                        return 0;
+                    }
+                    function AddWagonsSendingAsync(i) {
+                        if (i < len) {
+                            // Поместим следующий вызов функции в цикл событий.
+                            setTimeout(function () {
+                                var wagon = operation_detali.wagons_sending_from.find(
+                                    function (o) { return o.wir_id === row[i].wir_id });
+                                if (wagon !== null) {
+                                    wagon.position_sending = position_sending;
+                                    position_sending++;
+                                }
+                                AddWagonsSendingAsync(i + 1);
+                            }, 0);
+                        } else {
+                            // Так как достигнут конец массива, мы вызываем коллбэк
                             callback();
                         }
                     }
+                    AddWagonsSendingAsync(0);
                 },
             },
             // Таблица вагонов состав сформирован для отправки
@@ -2694,27 +2694,35 @@
                             {
                                 text: langView('title_button_clear_wagon', langs),
                                 action: function (e, dt, node, config) {
-                                    //if (operation_detali.table_wagons_sending.id_way) {
-                                    LockScreen(langView('mess_save', langs));
+                                    LockScreen(langView('mess_operation', langs));
+                                    // Найдем выбранные вагоны
                                     wagons = operation_detali.wagons_sending_from.filter(function (i) {
                                         return i.position_sending !== null ? true : false;
                                     });
-                                    $.each(wagons, function (i, el) {
-                                        el.position_sending = null;
+                                    // Выполним сброс вагонов (ассинхроно)
+                                    operation_detali.table_wagons_sending.clear_wagons_async(wagons, function () {
+                                        // Отобразим вагоны состава для отправки
+                                        operation_detali.table_wagons_sending.view();
+                                        // Отобразим вагоны на пути для отправки ()
+                                        operation_detali.table_wagons_sending_way_from.view(operation_detali.wagons_sending_from, function () {
+                                            LockScreenOff();
+                                        });
                                     });
-                                    // Отобразим вагоны состава для отправки
-                                    operation_detali.table_wagons_sending.view();
-                                    // Отобразим вагоны на пути для отправки ()
-                                    operation_detali.table_wagons_sending_way_from.view(operation_detali.wagons_sending_from, function () {
-                                        LockScreenOff();
-                                    });
-                                    //}
+                                    //$.each(wagons, function (i, el) {
+                                    //    el.position_sending = null;
+                                    //});
+                                    //// Отобразим вагоны состава для отправки
+                                    //operation_detali.table_wagons_sending.view();
+                                    //// Отобразим вагоны на пути для отправки ()
+                                    //operation_detali.table_wagons_sending_way_from.view(operation_detali.wagons_sending_from, function () {
+                                    //    LockScreenOff();
+                                    //});
+
                                 },
                                 enabled: false,
                             }
                         ]
                     });
-
                 },
                 // Показать таблицу с данными
                 view: function () {
@@ -2786,18 +2794,44 @@
                     };
 
                 },
+                // Выполнить сброс вагонов (асинхронный режим)
+                clear_wagons_async: function (row, callback) {
+                    var len = row.length;
+                    if (len === 0) {
+                        return 0;
+                    }
+                    function ClearWagonAsync(i) {
+                        if (i < len) {
+                            // Поместим следующий вызов функции в цикл событий.
+                            setTimeout(function () {
+                                row[i].position_sending = null;
+                                ClearWagonAsync(i + 1);
+                            }, 0);
+                        } else {
+                            // Так как достигнут конец массива, мы вызываем коллбэк
+                            callback();
+                        }
+                    }
+                    ClearWagonAsync(0);
+                },
             },
             // Показать окно отправки
             view_sending: function (id_way) {
                 operation_detali.id_way_from_sending = id_way;
                 // Путь отправки
-                var way_from = getObjects(ids_inc.ids_dir.list_ways, 'id', id_way)
+                var way_from = ids_inc.ids_dir.list_ways.find(function (o) {
+                    return o.id === id_way;
+                });
+                // Сохраним путь отправки
+                operation_detali.way_from_sending = way_from;
                 // Проверим путь найден
-                if (way_from && way_from.length > 0) {
-                    operation_detali.way_from_sending = way_from && way_from.length > 0 ? way_from[0] : null;
+                if (way_from) {
                     operation_detali.operation_detali_sending_way_from.val(operation_detali.way_from_sending ? (operation_detali.way_from_sending["way_num_" + operation_detali.lang] + ' - ' + operation_detali.way_from_sending["way_name_" + operation_detali.lang]) : "");
-                    // Получить доступные пути отправки для станции на которой стоят вагоны
-                    operation_detali.outer_ways_sending = getObjects(ids_inc.ids_dir.list_outer_ways, 'id_station_from', operation_detali.way_from_sending.id_station)
+                    // Получить доступные пути отправки (без выхода на уз) для станции на которой стоят вагоны
+                    operation_detali.outer_ways_sending = ids_inc.ids_dir.list_outer_ways.filter(function (i) {
+                        return i.id_station_from === operation_detali.way_from_sending.id_station && !i.exit_uz;
+                    });
+
                     // Получим список станций, доступных для отправки
                     operation_detali.list_stations_sending = [];
                     // Обновим путь приема
@@ -2832,30 +2866,6 @@
                         }, null);
                     // Деактивируем компонент выбора внешнего пути
                     operation_detali.operation_detali_sending_outer_ways.prop("disabled", true);
-
-                    // Настроим компонент локомотивы 
-                    operation_detali.operation_detali_sending_locomotive1 = cd_initSelect(
-                        operation_detali.operation_detali_sending_locomotive1,
-                        { lang: operation_detali.lang },
-                        operation_detali.list_locomotive,
-                        null,
-                        -1,
-                        function (event) {
-                            event.preventDefault();
-                            var locomotive = $(this).val();
-
-                        }, null);
-                    operation_detali.operation_detali_sending_locomotive2 = cd_initSelect(
-                        operation_detali.operation_detali_sending_locomotive2,
-                        { lang: operation_detali.lang },
-                        operation_detali.list_locomotive,
-                        null,
-                        -1,
-                        function (event) {
-                            event.preventDefault();
-                            var locomotive = $(this).val();
-
-                        }, null);
                     // Сбросим бит обновления и список путей обновления
                     operation_detali.bit_update = false;
                     operation_detali.rows_update = [];
@@ -2873,8 +2883,6 @@
                 operation_detali.operation_detali_sending_locomotive1.val(-1);
                 operation_detali.operation_detali_sending_locomotive2.val(-1);
                 operation_detali.operation_detali_sending_lead_time.setDateTime(null);
-                //operation_detali.operation_detali_sending_start.setDateTime(null);
-                //operation_detali.operation_detali_sending_stop.setDateTime(null);
                 operation_detali.table_wagons_sending_way_from.load(operation_detali.id_way_from_sending, function () {
                     operation_detali.table_wagons_sending.view();
                     LockScreenOff();
@@ -2917,6 +2925,9 @@
                 valid = valid & operation_detali.val_sending.checkInputOfNull(operation_detali.operation_detali_sending_num_train, "Укажите номер поезда.");
                 valid = valid & operation_detali.val_sending.checkSelection(operation_detali.operation_detali_sending_locomotive1, "Укажите минимум один локомотив");
                 valid = valid & operation_detali.val_sending.checkInputOfNull(operation_detali.operation_detali_sending_lead_time.obj, "Укажите время выполнения отправки.");
+                if (operation_detali.operation_detali_sending_locomotive1.val() !== "-1" && operation_detali.operation_detali_sending_locomotive1.val() === operation_detali.operation_detali_sending_locomotive2.val()) {
+                    operation_detali.val_sending.set_object_error(operation_detali.operation_detali_sending_locomotive2, "Номера локомотивов совподают.")
+                }
                 return valid;
             },
             // -------------------------------------------------------------------------------------------------
@@ -2941,57 +2952,73 @@
                     event.preventDefault();
                     var valid = operation_detali.validation_arrival();
                     if (valid) {
-                        // Подготовим список вагонов для отправки
-                        var list_arrival = [];
-                        if (operation_detali.wagons_arrival) {
-                            var list_arrival_wagon = operation_detali.wagons_arrival.filter(function (i) {
-                                return i.position_arrival !== null ? true : false;
-                            }).sort(function (a, b) {
-                                return Number(a.position_arrival) - Number(b.position_arrival)
-                            });
-                            $.each(list_arrival_wagon, function (i, el) {
-                                list_arrival.push({ wir_id: el.wir_id, position: el.position_arrival })
-                            });
+                        // Подтверждение выполнения операции.
+                        dc.dialog_confirm('Open', 'Выполнить?', 'Подтвердите выполнение операции «ПРИНЯТЬ СОСТАВ НА СТАНЦИЮ АМКР»', function (result) {
+                            if (result) {
+                                LockScreen(langView('mess_save', langs));
+                                // Подготовим список вагонов для отправки
+                                var list_arrival = [];
+                                if (operation_detali.wagons_arrival) {
+                                    var list_arrival_wagon = operation_detali.wagons_arrival.filter(function (i) {
+                                        return i.position_arrival !== null ? true : false;
+                                    }).sort(function (a, b) {
+                                        return Number(a.position_arrival) - Number(b.position_arrival)
+                                    });
+                                    $.each(list_arrival_wagon, function (i, el) {
+                                        list_arrival.push({ wir_id: el.wir_id, position: el.position_arrival })
+                                    });
 
-                        }
-                        // Определим пакет данных отправки на другую станцию
-                        var operation_arrival = {
-                            id_outer_way: get_select_number_value(operation_detali.operation_detali_arrival_outer_ways),
-                            reverse: operation_detali.operation_detali_arrival_reverse.prop('checked'),
-                            list_arrival: list_arrival,
-                            id_way_on: get_select_number_value(operation_detali.operation_detali_arrival_way),
-                            side_on: get_input_number_value(operation_detali.operation_detali_arrival_side),
-                            lead_time: toISOStringTZ(get_datetime_value(operation_detali.operation_detali_arrival_lead_time.val(), operation_detali.lang)),
-                            locomotive1: get_select_string_value(operation_detali.operation_detali_arrival_locomotive1),
-                            locomotive2: get_select_string_value(operation_detali.operation_detali_arrival_locomotive2),
-                            user: operation_detali.user,
-                        }
-                        // Выполнить операцию приема postArrivalWagonsOfStation
-                        ids_inc.postArrivalWagonsOfStation(operation_arrival, function (result_arrival) {
-                            if (result_arrival >= 0) {
-                                // Получим внешний путь
-                                var outer_way = getObjects(ids_inc.ids_dir.list_outer_ways, 'id', operation_detali.table_arrival_sostav.id_outer_ways)
-                                // Пути определены?
-                                if (outer_way && outer_way.length > 0) {
-                                    // Обновить станцию отправки
-                                    operation_detali.rows_update.push({ id_station: outer_way[0].id_station_from, id_park: null, id_way: null });
                                 }
-                                // Обновить станцию приема
-                                operation_detali.rows_update.push({ id_station: operation_detali.id_station_on_arrival, id_park: null, id_way: null });
-                                // Обновим путь приема
-                                var way = getObjects(ids_inc.ids_dir.list_ways, 'id', operation_detali.id_way_on_arrival)
-                                // Пути определены?
-                                if (way && way.length > 0) {
-                                    // Обновить станцию отправки
-                                    operation_detali.rows_update.push({ id_station: way[0].id_station, id_park: way[0].id_park, id_way: way[0].id });
+                                // Определим пакет данных отправки на другую станцию
+                                var operation_arrival = {
+                                    id_outer_way: get_select_number_value(operation_detali.operation_detali_arrival_outer_ways),
+                                    reverse: operation_detali.operation_detali_arrival_reverse.prop('checked'),
+                                    list_arrival: list_arrival,
+                                    id_way_on: get_select_number_value(operation_detali.operation_detali_arrival_way),
+                                    side_on: get_input_number_value(operation_detali.operation_detali_arrival_side),
+                                    lead_time: toISOStringTZ(get_datetime_value(operation_detali.operation_detali_arrival_lead_time.val(), operation_detali.lang)),
+                                    locomotive1: get_select_string_value(operation_detali.operation_detali_arrival_locomotive1),
+                                    locomotive2: get_select_string_value(operation_detali.operation_detali_arrival_locomotive2),
+                                    user: operation_detali.user,
                                 }
-                                operation_detali.bit_update = true;
-                                operation_detali.refresh_arrival();
-                                operation_detali.val_arrival.out_info_message("Операция 'Прибытия состава на станцию АМКР' - Выполнена");
+                                // Выполнить операцию приема postArrivalWagonsOfStation
+                                ids_inc.postArrivalWagonsOfStation(operation_arrival, function (result_arrival) {
+                                    if (result_arrival >= 0) {
+                                        // Получим внешний путь
+                                        //var outer_way = getObjects(ids_inc.ids_dir.list_outer_ways, 'id', operation_detali.table_arrival_sostav.id_outer_ways)
+                                        var outer_way = ids_inc.ids_dir.list_outer_ways.find(function (o) {
+                                            return o.id === operation_detali.table_arrival_sostav.id_outer_ways;
+                                        });
+                                        // Внешний путь определен?
+                                        if (outer_way) {
+                                            // Обновить станцию отправки
+                                            operation_detali.rows_update.push({ id_station: outer_way.id_station_from, id_park: null, id_way: null });
+                                        }
+                                        // Обновить станцию приема
+                                        operation_detali.rows_update.push({ id_station: operation_detali.id_station_on_arrival, id_park: null, id_way: null });
+                                        // Обновим путь приема
+                                        //var way = getObjects(ids_inc.ids_dir.list_ways, 'id', operation_detali.id_way_on_arrival)
+                                        var way = ids_inc.ids_dir.list_ways.find(function (o) {
+                                            return o.id === operation_detali.id_way_on_arrival;
+                                        });
+                                        // Пути определены?
+                                        if (way) {
+                                            // Обновить станцию отправки
+                                            operation_detali.rows_update.push({ id_station: way.id_station, id_park: way.id_park, id_way: way.id });
+                                        }
+                                        operation_detali.bit_update = true;
+                                        operation_detali.refresh_arrival();
+                                        operation_detali.val_arrival.out_info_message("Операция 'Прибытия состава на станцию АМКР' - Выполнена");
+                                    } else {
+                                        operation_detali.val_arrival.out_error_message("При выполнении операции 'Прибытия состава на станцию АМКР' - произошла ошибка. Код ошибки =" + result_arrival);
+                                        LockScreenOff();
+                                    }
+
+                                });
                             } else {
-                                operation_detali.val_arrival.out_error_message("При выполнении операции 'Прибытия состава на станцию АМКР' - произошла ошибка. Код ошибки =" + result_arrival);
+                                operation_detali.bt_operation_arrival_run.prop("disabled", false);
+                                operation_detali.val_dissolution.out_warning_message("Выполнение операции «ПРИНЯТЬ СОСТАВ» - отменено!");
                             }
-                            LockScreenOff();
                         });
                     } else {
                         operation_detali.bt_operation_arrival_run.prop("disabled", false);
@@ -3037,7 +3064,8 @@
                             { data: "locomotives", title: langView('field_locomotives', langs), width: "100px", orderable: false, searchable: false },
                         ],
                     }).on('select', function (e, dt, type, indexes) {
-                        // Событие выбора пути
+                        LockScreen(langView('mess_delay', langs));
+                        // Событие выбора состава
                         // Сохраним выбраный состав
                         operation_detali.table_arrival_sostav.index_select_sostav = indexes && indexes.length > 0 ? indexes[0] : null;
                         // получим состав
@@ -3047,32 +3075,44 @@
                         //operation_detali.table_wagons_way_from.active_button_add();
                         // Подготовим рабочий масив (Сбросим поле позиции для приема)
                         if (operation_detali.wagons_arrival) {
-                            $.each(operation_detali.wagons_arrival, function (i, el) {
-                                el.position_arrival = null;
+                            operation_detali.table_arrival_sostav.clear_wagons_async(operation_detali.wagons_arrival, function () {
+                                // Показать вагоны выбранного состава
+                                operation_detali.table_arrival_sostav.arrival_select_wagons = [];
+                                // Проверим есть вагоны в прибытии
+                                if (operation_detali.wagons_arrival && operation_detali.wagons_arrival.length > 0) {
+                                    // Найдем вагоны выбранного состава
+                                    operation_detali.table_arrival_sostav.arrival_select_wagons = getObjects(operation_detali.wagons_arrival, 'current_operation_note', operation_detali.table_arrival_sostav.select_sostav ? operation_detali.table_arrival_sostav.select_sostav.num_train : null);
+                                }
+                                // Покажем состав
+                                operation_detali.table_wagons_arrival_from.view(operation_detali.table_arrival_sostav.arrival_select_wagons, function () {
+                                    operation_detali.table_wagons_arrival_on.view();
+                                    LockScreenOff();
+                                });
+                                // Сбросим таблицу выбранных вагонов
                             });
+                            //$.each(operation_detali.wagons_arrival, function (i, el) {
+                            //    el.position_arrival = null;
+                            //});
                         }
-
-                        // Показать вагоны выбранного состава
-                        operation_detali.table_arrival_sostav.arrival_select_wagons = [];
-
-                        // Проверим есть вагоны в прибытии
-                        if (operation_detali.wagons_arrival && operation_detali.wagons_arrival.length > 0) {
-                            // Найдем вагоны выбранного состава
-                            operation_detali.table_arrival_sostav.arrival_select_wagons = getObjects(operation_detali.wagons_arrival, 'current_operation_note', operation_detali.table_arrival_sostav.select_sostav ? operation_detali.table_arrival_sostav.select_sostav.num_train : null);
-                        }
-                        // Покажем состав
-                        operation_detali.table_wagons_arrival_from.view(operation_detali.table_arrival_sostav.arrival_select_wagons, function () {
-                            LockScreenOff();
-                        });
-                        // Сбросим таблицу выбранных вагонов
-                        operation_detali.table_wagons_arrival_on.view();
+                        //// Показать вагоны выбранного состава
+                        //operation_detali.table_arrival_sostav.arrival_select_wagons = [];
+                        //// Проверим есть вагоны в прибытии
+                        //if (operation_detali.wagons_arrival && operation_detali.wagons_arrival.length > 0) {
+                        //    // Найдем вагоны выбранного состава
+                        //    operation_detali.table_arrival_sostav.arrival_select_wagons = getObjects(operation_detali.wagons_arrival, 'current_operation_note', operation_detali.table_arrival_sostav.select_sostav ? operation_detali.table_arrival_sostav.select_sostav.num_train : null);
+                        //}
+                        //// Покажем состав
+                        //operation_detali.table_wagons_arrival_from.view(operation_detali.table_arrival_sostav.arrival_select_wagons, function () {
+                        //    operation_detali.table_wagons_arrival_on.view();
+                        //    LockScreenOff();
+                        //});
+                        //// Сбросим таблицу выбранных вагонов
 
                     });
                 },
                 // Загрузить информацию
                 load: function (id_outer_ways) {
                     operation_detali.table_arrival_sostav.id_outer_ways = id_outer_ways;
-
                     if (id_outer_ways) {
                         LockScreen(langView('mess_delay', langs));
                         // Сбросим рабочий список вагонов
@@ -3098,10 +3138,14 @@
                                 operation_detali.table_arrival_sostav.view([]);
                             }
                         });
-                        // Сбросим таблицу вагонов в составах на подходах
-                        operation_detali.table_wagons_arrival_from.view([]);
-                        operation_detali.table_wagons_arrival_on.view();
+
+                    } else {
+                        // Путь не выбран, сбросим таблицу
+                        operation_detali.table_arrival_sostav.view([]);
                     }
+                    // Сбросим таблицу вагонов в составах на подходах
+                    operation_detali.table_wagons_arrival_from.view([]);
+                    operation_detali.table_wagons_arrival_on.view();
                 },
                 // Показать таблицу с данными
                 view: function (arrival_sostavs) {
@@ -3124,6 +3168,26 @@
                         "locomotives": arrival_sostav.locomotives
                     };
 
+                },
+                // Выполнить сброс вагонов (асинхронный режим)
+                clear_wagons_async: function (row, callback) {
+                    var len = row.length;
+                    if (len === 0) {
+                        return 0;
+                    }
+                    function ClearWagonAsync(i) {
+                        if (i < len) {
+                            // Поместим следующий вызов функции в цикл событий.
+                            setTimeout(function () {
+                                row[i].position_arrival = null;
+                                ClearWagonAsync(i + 1);
+                            }, 0);
+                        } else {
+                            // Так как достигнут конец массива, мы вызываем коллбэк
+                            callback();
+                        }
+                    }
+                    ClearWagonAsync(0);
                 },
             },
             // Таблица вагонов в составах на подходах
@@ -3207,7 +3271,7 @@
                             {
                                 text: langView('title_button_add_way_sending', langs),
                                 action: function (e, dt, node, config) {
-                                    LockScreen(langView('mess_save', langs));
+                                    LockScreen(langView('mess_operation', langs));
                                     // Выделим выбранные вагоны
                                     var index_wagon = operation_detali.table_wagons_arrival_from.index_select_wagons;
                                     var row_select_wagon = operation_detali.table_wagons_arrival_from.obj.rows(index_wagon).data();
@@ -3216,27 +3280,33 @@
                                     var position_arrival = wagon_max_poz && wagon_max_poz.position_arrival !== null ? wagon_max_poz.position_arrival + 1 : 1;
                                     // Проставим сформируем состав для отправки
                                     if (row_select_wagon && row_select_wagon.length > 0) {
-                                        $.each(row_select_wagon, function (i, el) {
-
-                                            var wagon = getObjects(operation_detali.wagons_arrival, 'wir_id', el.wir_id);
-                                            if (wagon && wagon.length > 0) {
-                                                wagon[0].position_arrival = position_arrival;
-                                                position_arrival++;
-                                            }
-
+                                        // Выполним перенос (асинхронно)
+                                        operation_detali.table_wagons_arrival_from.wagons_arrival_async(row_select_wagon, position_arrival, function () {
+                                            // Отобразим вагоны состава для приема
+                                            operation_detali.table_wagons_arrival_on.view();
+                                            // Отобразим вагоны прибывающего состава (будут отмечены выбранные вагоны)
+                                            operation_detali.table_wagons_arrival_from.view(operation_detali.table_arrival_sostav.arrival_select_wagons, function () {
+                                                LockScreenOff();
+                                            });
                                         });
-                                        // Отобразим вагоны состава для приема
-                                        operation_detali.table_wagons_arrival_on.view();
-                                        // Отобразим вагоны прибывающего состава (будут отмечены выбранные вагоны)
-                                        operation_detali.table_wagons_arrival_from.view(operation_detali.table_arrival_sostav.arrival_select_wagons, function () {
-                                            LockScreenOff();
-                                        });
+                                        //$.each(row_select_wagon, function (i, el) {
+
+                                        //    var wagon = getObjects(operation_detali.wagons_arrival, 'wir_id', el.wir_id);
+                                        //    if (wagon && wagon.length > 0) {
+                                        //        wagon[0].position_arrival = position_arrival;
+                                        //        position_arrival++;
+                                        //    }
+
+                                        //});
+                                        //// Отобразим вагоны состава для приема
+                                        //operation_detali.table_wagons_arrival_on.view();
+                                        //// Отобразим вагоны прибывающего состава (будут отмечены выбранные вагоны)
+                                        //operation_detali.table_wagons_arrival_from.view(operation_detali.table_arrival_sostav.arrival_select_wagons, function () {
+                                        //    LockScreenOff();
+                                        //});
                                     } else {
                                         LockScreenOff();
                                     }
-
-
-
                                 },
                                 enabled: false
                             }
@@ -3327,7 +3397,32 @@
                         operation_detali.table_wagons_arrival_from.obj.button(2).enable(false);
                     }
 
-                }
+                },
+                // Выполнить добавление вагонов выбранных для приема на указаный путь (асинхронный режим)
+                wagons_arrival_async: function (row, position_arrival, callback) {
+                    var len = row.length;
+                    if (len === 0) {
+                        return 0;
+                    }
+                    function AddWagonsArrivalAsync(i) {
+                        if (i < len) {
+                            // Поместим следующий вызов функции в цикл событий.
+                            setTimeout(function () {
+                                var wagon = operation_detali.wagons_arrival.find(
+                                    function (o) { return o.wir_id === row[i].wir_id });
+                                if (wagon !== null) {
+                                    wagon.position_arrival = position_arrival;;
+                                    position_arrival++;
+                                }
+                                AddWagonsArrivalAsync(i + 1);
+                            }, 0);
+                        } else {
+                            // Так как достигнут конец массива, мы вызываем коллбэк
+                            callback();
+                        }
+                    }
+                    AddWagonsArrivalAsync(0);
+                },
             },
             // Таблица вагонов в составе для принятия
             table_wagons_arrival_on: {
@@ -3397,19 +3492,28 @@
                             {
                                 text: langView('title_button_clear_wagon', langs),
                                 action: function (e, dt, node, config) {
-                                    LockScreen(langView('mess_save', langs));
+                                    LockScreen(langView('mess_operation', langs));
+                                    // Выберем вагоны
                                     wagons = operation_detali.wagons_arrival.filter(function (i) {
                                         return i.position_arrival !== null ? true : false;
                                     });
-                                    $.each(wagons, function (i, el) {
-                                        el.position_arrival = null;
+                                    // Сбросим вагоны (асинхроно)
+                                    operation_detali.table_wagons_arrival_on.clear_wagons_async(wagons, function () {
+                                        operation_detali.table_wagons_arrival_on.view();
+                                        // Отобразим вагоны прибывающего состава (будут убраны выбранные вагоны)
+                                        operation_detali.table_wagons_arrival_from.view(operation_detali.table_arrival_sostav.arrival_select_wagons, function () {
+                                            LockScreenOff();
+                                        });
                                     });
-                                    // Отобразим вагоны состава для приема
-                                    operation_detali.table_wagons_arrival_on.view();
-                                    // Отобразим вагоны прибывающего состава (будут убраны выбранные вагоны)
-                                    operation_detali.table_wagons_arrival_from.view(operation_detali.table_arrival_sostav.arrival_select_wagons, function () {
-                                        LockScreenOff();
-                                    });
+                                    //$.each(wagons, function (i, el) {
+                                    //    el.position_arrival = null;
+                                    //});
+                                    //// Отобразим вагоны состава для приема
+                                    //operation_detali.table_wagons_arrival_on.view();
+                                    //// Отобразим вагоны прибывающего состава (будут убраны выбранные вагоны)
+                                    //operation_detali.table_wagons_arrival_from.view(operation_detali.table_arrival_sostav.arrival_select_wagons, function () {
+                                    //    LockScreenOff();
+                                    //});
                                 },
                                 enabled: false,
                             }
@@ -3428,7 +3532,7 @@
                 },
                 // Показать таблицу с данными
                 view: function () {
-                    LockScreen(langView('mess_delay', langs));
+                    //LockScreen(langView('mess_delay', langs));
                     if (operation_detali.wagons_arrival) {
                         // Отфильтруем вагоны по которым выставлена новая позиция и отсортируем по position_sending
                         var wagons = operation_detali.wagons_arrival.filter(function (i) {
@@ -3452,7 +3556,7 @@
                         operation_detali.table_wagons_arrival_on.obj.button(0).enable(false);
                     }
                     operation_detali.table_wagons_arrival_on.obj.draw();
-                    LockScreenOff();
+                    //LockScreenOff();
                 },
                 // Определить вагон
                 get_wagon: function (wagon) {
@@ -3514,39 +3618,37 @@
                         operation_detali.table_wagons_arrival_on.obj.button(2).enable(false);
                     }
 
-                }
+                },
+                // Выполнить сброс вагонов (асинхронный режим)
+                clear_wagons_async: function (row, callback) {
+                    var len = row.length;
+                    if (len === 0) {
+                        return 0;
+                    }
+                    function ClearWagonAsync(i) {
+                        if (i < len) {
+                            // Поместим следующий вызов функции в цикл событий.
+                            setTimeout(function () {
+                                row[i].position_arrival = null;
+                                ClearWagonAsync(i + 1);
+                            }, 0);
+                        } else {
+                            // Так как достигнут конец массива, мы вызываем коллбэк
+                            callback();
+                        }
+                    }
+                    ClearWagonAsync(0);
+                },
             },
             // Показать окно прибытия
             view_arrival: function (id_station_on, id_way_on) {
                 operation_detali.id_station_on_arrival = id_station_on;
                 operation_detali.id_way_on_arrival = id_way_on;
+                operation_detali.table_arrival_sostav.id_outer_ways = null;
+
                 operation_detali.operation_detali_arrival_station.val(operation_detali.id_station_on_arrival === null ? -1 : Number(operation_detali.id_station_on_arrival));
                 // Отразим внешние пути
                 operation_detali.update_arrival_outer_ways(operation_detali.id_station_on_arrival);
-                //
-                // Настроим компонент локомотивы 
-                operation_detali.operation_detali_arrival_locomotive1 = cd_initSelect(
-                    operation_detali.operation_detali_arrival_locomotive1,
-                    { lang: operation_detali.lang },
-                    operation_detali.list_locomotive,
-                    null,
-                    -1,
-                    function (event) {
-                        event.preventDefault();
-                        var locomotive = $(this).val();
-
-                    }, null);
-                operation_detali.operation_detali_arrival_locomotive2 = cd_initSelect(
-                    operation_detali.operation_detali_arrival_locomotive2,
-                    { lang: operation_detali.lang },
-                    operation_detali.list_locomotive,
-                    null,
-                    -1,
-                    function (event) {
-                        event.preventDefault();
-                        var locomotive = $(this).val();
-
-                    }, null);
                 // Сбросим бит обновления и список путей обновления
                 operation_detali.bit_update = false;
                 operation_detali.rows_update = [];
@@ -3575,7 +3677,9 @@
                 if (id_statstion_on !== null && id_statstion_on !== -1) {
                     operation_detali.operation_detali_arrival_outer_ways.prop("disabled", false);
                     // уточним список путей отправки
-                    var outer_ways_arrival = getObjects(ids_inc.ids_dir.list_outer_ways, 'id_station_on', id_statstion_on)
+                    var outer_ways_arrival = ids_inc.ids_dir.list_outer_ways.filter(function (i) {
+                        return i.id_station_on === id_statstion_on && !i.exit_uz;
+                    });
 
                     // Пути определены?
                     if (outer_ways_arrival && outer_ways_arrival.length > 0) {
@@ -3637,7 +3741,10 @@
                 var valid = true;
                 valid = valid & operation_detali.val_arrival.checkSelection(operation_detali.operation_detali_arrival_way, "Укажите путь према состава");
                 valid = valid & operation_detali.val_arrival.checkInputOfNull(operation_detali.operation_detali_arrival_lead_time.obj, "Укажите время выполнения операции.");
-                valid = valid & operation_detali.val_sending.checkSelection(operation_detali.operation_detali_arrival_locomotive1, "Укажите минимум один локомотив");
+                valid = valid & operation_detali.val_arrival.checkSelection(operation_detali.operation_detali_arrival_locomotive1, "Укажите минимум один локомотив");
+                if (operation_detali.operation_detali_arrival_locomotive1.val() !== "-1" && operation_detali.operation_detali_arrival_locomotive1.val() === operation_detali.operation_detali_arrival_locomotive2.val()) {
+                    operation_detali.val_arrival.set_object_error(operation_detali.operation_detali_arrival_locomotive2, "Номера локомотивов совподают.")
+                }
                 return valid;
             },
             // -------------------------------------------------------------------------------------------------
@@ -3673,7 +3780,30 @@
                         event.preventDefault();
                         //var id = Number($(this).val());
                     }, null);
+                // Настроим компонент локомотив1
+                operation_detali.operation_detali_dislocation_locomotive1 = cd_initSelect(
+                    operation_detali.operation_detali_dislocation_locomotive1,
+                    { lang: operation_detali.lang },
+                    operation_detali.list_locomotive,
+                    null,
+                    -1,
+                    function (event) {
+                        event.preventDefault();
+                        var locomotive = $(this).val();
 
+                    }, null);
+                // Настроим компонент локомотив2
+                operation_detali.operation_detali_dislocation_locomotive2 = cd_initSelect(
+                    operation_detali.operation_detali_dislocation_locomotive2,
+                    { lang: operation_detali.lang },
+                    operation_detali.list_locomotive,
+                    null,
+                    -1,
+                    function (event) {
+                        event.preventDefault();
+                        var locomotive = $(this).val();
+
+                    }, null);
                 // Инициализация элементов операции "дислокации"
                 operation_detali.table_wagons_dislocation_from.init();
                 operation_detali.table_ways_dislocation_on.init();
@@ -3704,9 +3834,6 @@
                     ;
                 // Проверка валидации операции роспуска
                 operation_detali.val_dislocation = new VALIDATION(operation_detali.lang, operation_detali.alert, operation_detali.all_obj_dislocation); // Создадим класс VALIDATION
-
-
-
                 //------------- Операция "РОСПУСК" ---------------------------------------------------------------------------
                 // настроим компонент выбора времени начала
                 operation_detali.operation_detali_dissolution_start = cd_initDateTimeRangePicker(operation_detali.operation_detali_dissolution_start, { lang: operation_detali.lang, time: true }, function (datetime) {
@@ -3732,12 +3859,30 @@
                 operation_detali.operation_detali_sending_lead_time = cd_initDateTimeRangePicker(operation_detali.operation_detali_sending_lead_time, { lang: operation_detali.lang, time: true }, function (datetime) {
 
                 });
-                //operation_detali.operation_detali_sending_start = cd_initDateTimeRangePicker(operation_detali.operation_detali_sending_start, { lang: operation_detali.lang, time: true }, function (datetime) {
+                // Настроим компонент локомотив1
+                operation_detali.operation_detali_sending_locomotive1 = cd_initSelect(
+                    operation_detali.operation_detali_sending_locomotive1,
+                    { lang: operation_detali.lang },
+                    operation_detali.list_locomotive,
+                    null,
+                    -1,
+                    function (event) {
+                        event.preventDefault();
+                        var locomotive = $(this).val();
 
-                //});
-                //operation_detali.operation_detali_sending_stop = cd_initDateTimeRangePicker(operation_detali.operation_detali_sending_stop, { lang: operation_detali.lang, time: true }, function (datetime) {
+                    }, null);
+                // Настроим компонент локомотив2
+                operation_detali.operation_detali_sending_locomotive2 = cd_initSelect(
+                    operation_detali.operation_detali_sending_locomotive2,
+                    { lang: operation_detali.lang },
+                    operation_detali.list_locomotive,
+                    null,
+                    -1,
+                    function (event) {
+                        event.preventDefault();
+                        var locomotive = $(this).val();
 
-                //});
+                    }, null);
                 // Инициализация таблиц
                 operation_detali.table_wagons_sending_way_from.init();
                 operation_detali.table_wagons_sending.init();
@@ -3785,6 +3930,30 @@
                     function (event) {
                         event.preventDefault();
                         //var id = Number($(this).val());
+                    }, null);
+                // Настроим компонент локомотив1 
+                operation_detali.operation_detali_arrival_locomotive1 = cd_initSelect(
+                    operation_detali.operation_detali_arrival_locomotive1,
+                    { lang: operation_detali.lang },
+                    operation_detali.list_locomotive,
+                    null,
+                    -1,
+                    function (event) {
+                        event.preventDefault();
+                        var locomotive = $(this).val();
+
+                    }, null);
+                // Настроим компонент локомотив2
+                operation_detali.operation_detali_arrival_locomotive2 = cd_initSelect(
+                    operation_detali.operation_detali_arrival_locomotive2,
+                    { lang: operation_detali.lang },
+                    operation_detali.list_locomotive,
+                    null,
+                    -1,
+                    function (event) {
+                        event.preventDefault();
+                        var locomotive = $(this).val();
+
                     }, null);
                 // Инициализация таблиц
                 operation_detali.table_arrival_sostav.init();

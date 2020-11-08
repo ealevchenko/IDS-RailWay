@@ -172,6 +172,32 @@ namespace IDS.Helper
             return wio_new;
         }
 
+        //public static WagonInternalOperation SetOpenOperation(this WagonInternalOperation wio_last, int id_operation, DateTime date_start, int? id_condition, int? id_loading_status, string locomotive1, string locomotive2, string note, string user)
+        //{
+        //    WagonInternalOperation wio_new = null;
+
+        //    if (wio_last != null)
+        //    {
+        //        wio_new = new WagonInternalOperation()
+        //        {
+        //            id = 0,
+        //            id_operation = id_operation,
+        //            operation_start = date_start,
+        //            id_condition = (id_condition != null ? (int)id_condition : (wio_last != null ? wio_last.id_condition : 0)),
+        //            id_loading_status = (id_loading_status != null ? (int)id_loading_status : (wio_last != null ? wio_last.id_loading_status : 0)),
+        //            locomotive1 = locomotive1,
+        //            locomotive2 = locomotive2,
+        //            note = note,
+        //            create = DateTime.Now,
+        //            create_user = user,
+        //            parent_id = wio_last.CloseOperation(date_start, null, user)
+        //        };
+
+        //        wir.WagonInternalOperation.Add(wio_new);
+        //    }
+        //    return wio_new;
+        //}
+
         //public static WagonInternalRoutes SetCloseOperation(this WagonInternalRoutes wir, DateTime date_end, string note, string user)
         //{
         //    if (wir != null && wir.close == null)

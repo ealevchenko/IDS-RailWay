@@ -486,11 +486,8 @@
   <data name="title_operation_detali_sending_station" xml:space="preserve">
     <value>Отправить на станцию</value>
   </data>
-  <data name="title_operation_sending_run" xml:space="preserve">
-    <value>Отправить вагоны</value>
-  </data>
   <data name="title_operation_arrival_run" xml:space="preserve">
-    <value>Принять состав</value>
+    <value>ПРИНЯТЬ</value>
   </data>
   <data name="title_operation_detali_arrival_outer_ways" xml:space="preserve">
     <value>Прибывает с внешнего пути</value>

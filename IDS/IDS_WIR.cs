@@ -684,7 +684,7 @@ namespace IDS
                 string note_sostav = "Состав №" + num_sostav.ToString();
                 wagon.SetSendingWagon(id_outer_ways, lead_time, position_on, note_sostav, user);
                 // Установим и закроем операцию отправления -5              
-                wagon.SetOpenOperation(5, lead_time, null, null, locomotive1, locomotive2, note_sostav, user).SetCloseOperation(lead_time, null, user);
+                wagon.SetOpenOperation(5, lead_time.AddMinutes(-10), null, null, locomotive1, locomotive2, note_sostav, user).SetCloseOperation(lead_time, null, user);
                 //context.Update(wagon); // Обновим контекст
                 return 1;
             }
@@ -856,7 +856,7 @@ namespace IDS
                 string note_sostav = wim.note + "- принят";
                 wagon.SetStationWagon(id_station_on, id_way_on, lead_time, position_on, note_sostav, user);
                 // Установим и закроем операцию отправления -5              
-                wagon.SetOpenOperation(6, lead_time, null, null, locomotive1, locomotive2, note_sostav, user).SetCloseOperation(lead_time, null, user);
+                wagon.SetOpenOperation(6, lead_time.AddMinutes(-10), null, null, locomotive1, locomotive2, note_sostav, user).SetCloseOperation(lead_time, null, user);
                 //context.Update(wagon); // Обновим контекст
                 return 1;
             }
