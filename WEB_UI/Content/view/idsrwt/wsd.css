@@ -162,6 +162,13 @@ table#wagons-way {
         white-space: nowrap;
     }
 
+
+tr.group,
+tr.group:hover {
+    background-color: #ddd !important;
+    text-align:center;
+    text-transform:uppercase;
+}
 /* -------------------------------- 
 
 cars detali panel 

@@ -244,6 +244,38 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public int? count_capacity { get; set; }
     }
 
+    public class view_way_status
+    {
+        public int id { get; set; }
+        public int id_station { get; set; }
+        public int id_park { get; set; }
+        public int position_park { get; set; }
+        public int position_way { get; set; }
+        public string park_name_ru { get; set; }
+        public string park_name_en { get; set; }
+        public string park_abbr_ru { get; set; }
+        public string park_abbr_en { get; set; }
+        public string way_num_ru { get; set; }
+        public string way_num_en { get; set; }
+        public string way_name_ru { get; set; }
+        public string way_name_en { get; set; }
+        public string way_abbr_ru { get; set; }
+        public string way_abbr_en { get; set; }
+        public int? capacity { get; set; }
+        public int count_wagon { get; set; }
+        public bool? deadlock { get; set; }
+        public bool? crossing_uz { get; set; }
+        public bool? crossing_amkr { get; set; }
+        public int? id_devision { get; set; }
+        public bool? dissolution { get; set; }
+        public bool? output_dissolution { get; set; }
+        public string note { get; set; }
+        public DateTime create { get; set; }
+        public string create_user { get; set; }
+        public DateTime? change { get; set; }
+        public string change_user { get; set; }
+    }
+
     public class view_arrival_sostav
     {
         public string num_train { get; set; }
@@ -254,13 +286,14 @@ namespace WEB_UI.Controllers.api.IDS.RWT
 
     public class OperationDislocationWagons
     {
-        public List<long> list_wir_id { get; set; }
         public int id_way_from { get; set; }
         public bool reverse { get; set; }
+        public List<ListOperationWagon> list_dislocation { get; set; }
         public int id_way_on { get; set; }
         public bool side_on { get; set; }
-        public DateTime date_start { get; set; }
-        public DateTime date_stop { get; set; }
+        public DateTime lead_time { get; set; }
+        public string locomotive1 { get; set; }
+        public string locomotive2 { get; set; }
         public string user { get; set; }
     }
 
@@ -391,6 +424,23 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             }
         }
 
+        // GET: api/ids/rwt/wsd/view/ways/status/station/id/6
+        [Route("view/ways/status/station/id/{id_station:int}")]
+        [ResponseType(typeof(view_way_status))]
+        public IHttpActionResult GetViewWaysStatusOfIDStation(int id_station)
+        {
+            try
+            {
+                string sql = "select * from [IDS].[get_view_ways_status_of_station](" + id_station + ") order by position_park, position_way";
+                List<view_way_status> ways = db.Database.SqlQuery<view_way_status>(sql).ToList();
+                return Ok(ways);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         // POST api/ids/rwt/wsd/operation/dislocation
         [HttpPost]
         [Route("operation/dislocation")]
@@ -400,7 +450,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             try
             {
                 IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
-                int result = ids_wir.DislocationWagonsOfStation(value.list_wir_id, value.id_way_from, value.reverse, value.id_way_on, value.side_on, value.date_start, value.date_stop, value.user);
+                int result = ids_wir.DislocationWagonsOfStation(value.id_way_from, value.reverse, value.list_dislocation, value.id_way_on, value.side_on, value.lead_time, value.locomotive1, value.locomotive2, value.user);
                 return Ok(result);
             }
             catch (Exception e)

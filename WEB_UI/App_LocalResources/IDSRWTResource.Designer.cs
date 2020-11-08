@@ -403,60 +403,6 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Реверс.
-        /// </summary>
-        public static string title_dislocation_wagon_reverse {
-            get {
-                return ResourceManager.GetString("title_dislocation_wagon_reverse", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Сторона.
-        /// </summary>
-        public static string title_dislocation_wagon_side {
-            get {
-                return ResourceManager.GetString("title_dislocation_wagon_side", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Начало дислокации.
-        /// </summary>
-        public static string title_dislocation_wagon_start {
-            get {
-                return ResourceManager.GetString("title_dislocation_wagon_start", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Конец дислокации.
-        /// </summary>
-        public static string title_dislocation_wagon_stop {
-            get {
-                return ResourceManager.GetString("title_dislocation_wagon_stop", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Путь назначения.
-        /// </summary>
-        public static string title_dislocation_wagon_way {
-            get {
-                return ResourceManager.GetString("title_dislocation_wagon_way", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Путь отпраки..
-        /// </summary>
-        public static string title_dislocation_wagon_way_from {
-            get {
-                return ResourceManager.GetString("title_dislocation_wagon_way_from", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на Тарифное расстояние.
         /// </summary>
         public static string title_distance_way {
@@ -781,15 +727,6 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Выполнить реверс.
-        /// </summary>
-        public static string title_operation_detali_arrival_reverse {
-            get {
-                return ResourceManager.GetString("title_operation_detali_arrival_reverse", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на Прибывает на станцию.
         /// </summary>
         public static string title_operation_detali_arrival_station {
@@ -826,6 +763,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Выполнить реверс.
+        /// </summary>
+        public static string title_operation_detali_reverse {
+            get {
+                return ResourceManager.GetString("title_operation_detali_reverse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Номер поезда.
         /// </summary>
         public static string title_operation_detali_sending_num_train {
@@ -853,6 +799,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Сторона.
+        /// </summary>
+        public static string title_operation_detali_side {
+            get {
+                return ResourceManager.GetString("title_operation_detali_side", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Станция.
         /// </summary>
         public static string title_operation_detali_station {
@@ -867,6 +822,15 @@ namespace WEB_UI.App_LocalResources {
         public static string title_operation_detali_way {
             get {
                 return ResourceManager.GetString("title_operation_detali_way", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Путь отправки.
+        /// </summary>
+        public static string title_operation_detali_way_from {
+            get {
+                return ResourceManager.GetString("title_operation_detali_way_from", resourceCulture);
             }
         }
         

@@ -9,6 +9,7 @@ $.Text_Common =
         'mess_load': 'Загрузка справочников...',
         'mess_save': 'Запись и обновление данных...',
         'mess_load_data': 'Получение запрашиваемых данных...',
+        'mess_operation': 'Выполняю операцию...',
     },
     'en':  //default language: English
     {
@@ -16,6 +17,8 @@ $.Text_Common =
         'mess_load': 'Downloading reference books...',
         'mess_save': 'Writing and updating data ...',
         'mess_load_data': 'Receiving the requested data...',
+        'mess_operation': 'Performing an operation...',
+
     }
 
 };

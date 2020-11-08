@@ -465,23 +465,8 @@
   <data name="title_unloading_ban" xml:space="preserve">
     <value>Запрет выгр.</value>
   </data>
-  <data name="title_dislocation_wagon_side" xml:space="preserve">
+  <data name="title_operation_detali_side" xml:space="preserve">
     <value>Сторона</value>
-  </data>
-  <data name="title_dislocation_wagon_start" xml:space="preserve">
-    <value>Начало дислокации</value>
-  </data>
-  <data name="title_dislocation_wagon_stop" xml:space="preserve">
-    <value>Конец дислокации</value>
-  </data>
-  <data name="title_dislocation_wagon_way" xml:space="preserve">
-    <value>Путь назначения</value>
-  </data>
-  <data name="title_dislocation_wagon_reverse" xml:space="preserve">
-    <value>Реверс</value>
-  </data>
-  <data name="title_dislocation_wagon_way_from" xml:space="preserve">
-    <value>Путь отпраки.</value>
   </data>
   <data name="title_operation_dissolution_run" xml:space="preserve">
     <value>Начать роспуск</value>
@@ -519,7 +504,7 @@
   <data name="title_operation_detali_lead_time" xml:space="preserve">
     <value>Время выполнения</value>
   </data>
-  <data name="title_operation_detali_arrival_reverse" xml:space="preserve">
+  <data name="title_operation_detali_reverse" xml:space="preserve">
     <value>Выполнить реверс</value>
   </data>
   <data name="title_operation_detali_arrival_way" xml:space="preserve">
@@ -536,5 +521,8 @@
   </data>
   <data name="title_operation_detali_way_on" xml:space="preserve">
     <value>Путь приема</value>
+  </data>
+  <data name="title_operation_detali_way_from" xml:space="preserve">
+    <value>Путь отправки</value>
   </data>
 </root>

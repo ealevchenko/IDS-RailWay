@@ -21,7 +21,7 @@ namespace IDS
         public int id_way_dissolution { get; set; }
     }
     /// <summary>
-    /// Класс данных задание на отправку
+    /// Класс данных задание на операции дислокация, отправка, прием
     /// </summary>
     public class ListOperationWagon
     {
@@ -329,12 +329,13 @@ namespace IDS
         /// <param name="id_way_from"></param>
         /// <param name="id_way_on"></param>
         /// <param name="position_on"></param>
-        /// <param name="date_start"></param>
-        /// <param name="date_stop"></param>
+        /// <param name="lead_time"></param>
         /// <param name="wagon"></param>
+        /// <param name="locomotive1"></param>
+        /// <param name="locomotive2"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public int DislocationWagon(ref EFDbContext context, int id_way_from, int id_way_on, int position_on, DateTime date_start, DateTime date_stop, WagonInternalRoutes wagon, string user)
+        public int DislocationWagon(ref EFDbContext context, int id_way_from, int id_way_on, int position_on, DateTime lead_time, WagonInternalRoutes wagon, string locomotive1, string locomotive2, string user)
         {
             try
             {
@@ -344,33 +345,34 @@ namespace IDS
                 WagonInternalMovement wim = wagon.GetLastMovement();
                 if (wim == null) return (int)errors_wir.not_open_wir;
                 if (wim.id_way != id_way_from) return (int)errors_wir.not_set_way_wir;
-                wagon.SetStationWagon(wim.id_station, id_way_on, date_stop, position_on, null, user);
+                wagon.SetStationWagon(wim.id_station, id_way_on, lead_time, position_on, null, user);
                 // Установим и закроем операцию дислокация -3              
-                wagon.SetOpenOperation(3, date_start, null, null, null, null, null, user).SetCloseOperation(date_stop, null, user);
+                wagon.SetOpenOperation(3, lead_time.AddMilliseconds(-10), null, null, null, null, null, user).SetCloseOperation(lead_time, null, user);
                 //context.Update(wagon); // Обновим контекст
                 return 1;
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("DislocationWagon(context={0}, id_way_from={1}, id_way_on={2}, position_on={3}, date_start={4}, date_stop={5}, wagon={6}, user={6})",
-                    context, id_way_from, id_way_on, position_on, date_start, date_stop, wagon, user), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("DislocationWagon(context={0}, id_way_from={1}, id_way_on={2}, position_on={3}, lead_time={4}, wagon={5}, locomotive1={6}, locomotive2={7}, user={8})",
+                    context, id_way_from, id_way_on, position_on, lead_time, wagon, locomotive1, locomotive2, user), servece_owner, eventID);
                 return -1;// Возвращаем id=-1 , Ошибка
             }
         }
         /// <summary>
-        /// Дислокация вагонов на станции
+        /// Дислокация вагонов на станци
         /// </summary>
         /// <param name="context"></param>
         /// <param name="id_way_from"></param>
         /// <param name="reverse"></param>
         /// <param name="id_way_on"></param>
         /// <param name="side_on"></param>
-        /// <param name="date_start"></param>
-        /// <param name="date_stop"></param>
+        /// <param name="lead_time"></param>
         /// <param name="wagons"></param>
+        /// <param name="locomotive1"></param>
+        /// <param name="locomotive2"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public ResultTransfer DislocationWagons(ref EFDbContext context, int id_way_from, bool reverse, int id_way_on, bool side_on, DateTime date_start, DateTime date_stop, List<WagonInternalRoutes> wagons, string user)
+        public ResultTransfer DislocationWagons(ref EFDbContext context, int id_way_from, bool reverse, int id_way_on, bool side_on, DateTime lead_time, List<WagonInternalRoutes> wagons, string locomotive1, string locomotive2, string user)
         {
             ResultTransfer rt = new ResultTransfer(wagons.Count());
             try
@@ -392,7 +394,7 @@ namespace IDS
 
                     foreach (WagonInternalRoutes wagon in wagon_position)
                     {
-                        int result = DislocationWagon(ref context, id_way_from, id_way_on, position, date_start, date_stop, wagon, user);
+                        int result = DislocationWagon(ref context, id_way_from, id_way_on, position, lead_time, wagon, locomotive1, locomotive2, user);
                         rt.SetMovedResult(result, wagon.num);
                         position++;
                     }
@@ -410,8 +412,8 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("DislocationWagons(context={0}, id_way_from={1}, reverse={2}, id_way_on={3}, side={4}, date_start={5}, date_stop={6}, wagons={7}, user={8})",
-                    context, id_way_from, reverse, id_way_on, side_on, date_start, date_stop, wagons, user), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("DislocationWagons(context={0}, id_way_from={1}, reverse={2}, id_way_on={3}, side={4}, lead_time={5}, wagons={6}, locomotive1={7}, locomotive2={8}, user={9})",
+                    context, id_way_from, reverse, id_way_on, side_on, lead_time, wagons, locomotive1, locomotive2, user), servece_owner, eventID);
                 rt.SetResult(-1);
                 return rt;// Возвращаем id=-1 , Ошибка
             }
@@ -419,16 +421,17 @@ namespace IDS
         /// <summary>
         /// Операция дислокации вагонов на станции АМКР
         /// </summary>
-        /// <param name="list_wir"></param>
         /// <param name="id_way_from"></param>
         /// <param name="reverse"></param>
+        /// <param name="list_dislocation"></param>
         /// <param name="id_way_on"></param>
         /// <param name="side_on"></param>
-        /// <param name="date_start"></param>
-        /// <param name="date_stop"></param>
+        /// <param name="lead_time"></param>
+        /// <param name="locomotive1"></param>
+        /// <param name="locomotive2"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public int DislocationWagonsOfStation(List<long> list_wir, int id_way_from, bool reverse, int id_way_on, bool side_on, DateTime date_start, DateTime date_stop, string user)
+        public int DislocationWagonsOfStation(int id_way_from, bool reverse, List<ListOperationWagon> list_dislocation, int id_way_on, bool side_on, DateTime lead_time, string locomotive1, string locomotive2, string user)
         {
             try
             {
@@ -442,12 +445,12 @@ namespace IDS
 
                 EFDbContext context = new EFDbContext();
                 List<WagonInternalRoutes> wagons = new List<WagonInternalRoutes>();
-                foreach (long id in list_wir)
+                foreach (ListOperationWagon dw in list_dislocation)
                 {
-                    wagons.Add(context.WagonInternalRoutes.Where(r => r.id == id).FirstOrDefault());
+                    wagons.Add(context.WagonInternalRoutes.Where(r => r.id == dw.wir_id).FirstOrDefault());
                 }
                 // Перенесем вагоны 
-                res = DislocationWagons(ref context, id_way_from, reverse, id_way_on, side_on, date_start, date_stop, wagons, user);
+                res = DislocationWagons(ref context, id_way_from, reverse, id_way_on, side_on, lead_time, wagons, locomotive1, locomotive2, user);
                 // Если операция успешна, перенумеруем позиции на пути с которого ушли вагоны
                 if (res.result > 0)
                 {
@@ -458,9 +461,8 @@ namespace IDS
                         context.SaveChanges();
                     }
                 }
-                string mess = String.Format("Операция дислокации вагонов на станции АМКР. Код выполнения = {0}. Путь отправки = {1}, реверс = {2}, путь приема = {3}, сторона = {4}, время начала операции = {5}, время конца операции = {6}. Результат переноса [выбрано для переноса = {7}, перенесено = {8}, пропущено = {9}, ошибок переноса = {10}].",
-                    res.result, id_way_from, reverse, id_way_on, side_on, date_start, date_stop, res.count,
-                    res.count, res.moved, res.skip, res.error);
+                string mess = String.Format("Операция дислокации вагонов на станции АМКР. Код выполнения = {0}. Путь отправки = {1}, реверс = {2}, путь приема = {3}, сторона = {4}, время выполнения операции = {5}. Результат переноса [выбрано для переноса = {6}, перенесено = {7}, пропущено = {8}, ошибок переноса = {9}].",
+                    res.result, id_way_from, reverse, id_way_on, side_on, lead_time, res.count, res.moved, res.skip, res.error);
                 mess.WarningLog(servece_owner, eventID);
                 mess.EventLog(res.result < 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
                 DateTime stop = DateTime.Now;
@@ -470,8 +472,8 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("DislocationWagonsOfStation(list_wir={0}, id_way_from={1}, reverse={2}, id_way_on={3}, side_on={4}, date_start={5}, date_stop={6}, user={7})",
-                    list_wir, id_way_from, reverse, id_way_on, side_on, date_start, date_stop, user), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("DislocationWagonsOfStation(id_way_from={0},reverse ={1}, list_dislocation={2}, id_way_on={3}, side_on={4}, lead_time={5}, locomotive1={6}, locomotive2={7}, user={8})",
+                    id_way_from, reverse, list_dislocation, id_way_on, side_on, lead_time, locomotive1, locomotive2, user), servece_owner, eventID);
                 return -1;// Возвращаем id=-1 , Ошибка
             }
         }

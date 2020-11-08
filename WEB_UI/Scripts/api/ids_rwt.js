@@ -3109,6 +3109,30 @@ IDS_RWT.prototype.getViewStationStatusOfIDStation= function (id_station, callbac
         },
     });
 };
+// Получить состояние всех путей по указаной станции
+IDS_RWT.prototype.getViewWaysStatusOfIDStation= function (id_station, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/wsd/view/ways/status/station/id/'+ id_station,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getViewWaysStatusOfIDStation", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 // Получить список составов на указаном внешнем пути
 IDS_RWT.prototype.getViewArrivalSostavOfIDOuterWay = function (id_outer_way, callback) {
     $.ajax({
