@@ -774,6 +774,8 @@ namespace EFIDS.Helper
                 id_devision = w.id_devision,
                 dissolution = w.dissolution,
                 output_dissolution = w.output_dissolution,
+                way_close = w.way_close,
+                way_delete = w.way_delete, 
                 note = w.note,
                 Directory_Station = w.Directory_Station.GetDirectory_Station(),
                 Directory_ParkWays = w.Directory_ParkWays.GetDirectory_ParkWays(),

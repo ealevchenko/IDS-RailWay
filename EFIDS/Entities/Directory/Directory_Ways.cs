@@ -62,13 +62,17 @@ namespace EFIDS.Entities
 
         public int? id_devision { get; set; }
 
-        [Required]
-        [StringLength(100)]
-        public string note { get; set; }
-
         public bool? dissolution { get; set; }
 
         public bool? output_dissolution { get; set; }
+
+        public DateTime? way_close { get; set; }
+
+        public DateTime? way_delete { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public string note { get; set; }
 
         public DateTime create { get; set; }
 
