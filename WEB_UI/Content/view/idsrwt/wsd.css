@@ -3,9 +3,18 @@
 body {
 }
 
+/*.dt-buttons {
+    float:left;
+}
+
+table.compact-table th, table.compact-table td {
+    padding:0.25rem 0.75rem;
+}*/
+
 .operator-detali-tables {
     font-size: 12px;
 }
+
 
 /*Коррекция отображения компонента дата и время*/
 .date-picker {
@@ -45,37 +54,37 @@ body {
 }
 
 td.station-control {
-    background: url('../../../Content/DataTables/media/images1/details_open.png') no-repeat center center;
+    background: url('../../../Content/DataTables/media/images/details_open.png') no-repeat center center;
     width: 20px;
     cursor: pointer;
 }
 
 tr.shown td.station-control {
-    background: url('../../../Content/DataTables/media/images1/details_close.png') no-repeat center center;
+    background: url('../../../Content/DataTables/media/images/details_close.png') no-repeat center center;
     width: 20px;
 }
 
 td.park-control {
-    background: url('../../../Content/DataTables/media/images1/details_open.png') no-repeat center center;
+    background: url('../../../Content/DataTables/media/images/details_open.png') no-repeat center center;
     width: 20px;
     cursor: pointer;
 }
 
 tr.shown td.park-control {
-    background: url('../../../Content/DataTables/media/images1/details_close.png') no-repeat center center;
+    background: url('../../../Content/DataTables/media/images/details_close.png') no-repeat center center;
     width: 20px;
 }
 
-table.dataTable tbody tr.station  {
+table.dataTable tbody tr.station {
     /*border: 1px solid #808080;*/
-/*    background-color: #ebebeb;*/
+    background-color: #ddd;
     color: #000000;
     text-transform: uppercase;
-    font-weight:600;
+    font-weight: 600;
 }
 
 table.dataTable tbody tr.park {
-/*    background-color: #ebebeb;*/
+    background-color: #ebebeb;
     color: #000000;
     text-transform: uppercase;
 }
@@ -133,7 +142,7 @@ td.way-name {
     background-image: url("../../../Images/idsrwt/wsd/tree_end.png");
     width: 16px;
     height: 16px;
-/*    margin-right: 5px;*/
+    /*    margin-right: 5px;*/
 }
 
 .icon-tree-open-skeep {
@@ -150,15 +159,15 @@ td.way-name {
 }
 
 table#wagons-way {
-    font-size: 13px;
+    /*font-size: 13px;*/
 }
 
     table#wagons-way th {
-        font-size: 13px;
+        /*font-size: 13px;*/
     }
 
     table#wagons-way tbody td {
-        font-size: 13px;
+        /*font-size: 13px;*/
         white-space: nowrap;
     }
 
@@ -166,8 +175,8 @@ table#wagons-way {
 tr.group,
 tr.group:hover {
     background-color: #ddd !important;
-    text-align:center;
-    text-transform:uppercase;
+    text-align: center;
+    text-transform: uppercase;
 }
 /* -------------------------------- 
 

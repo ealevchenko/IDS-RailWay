@@ -73,34 +73,34 @@ namespace WEB_UI
             bundles.Add(new ScriptBundle("~/bundles/DataTables").Include(
                 "~/Scripts/DataTables/media/js/jquery.dataTables.min.js",
                 //"~/Scripts/DataTables/media/js/dataTables.jqueryui.min.js",
-                "~/Scripts/DataTables/media/js/dataTables.bootstrap4.min.js",
+                //"~/Scripts/DataTables/media/js/dataTables.bootstrap4.min.js",
 
                 "~/Scripts/DataTables/extensions/Buttons/js/dataTables.buttons.min.js",
                 //"~/Scripts/DataTables/extensions/Buttons/js/buttons.jqueryui.min.js",
-                "~/Scripts/DataTables/extensions/Buttons/js/buttons.bootstrap4.min.js",
+                //"~/Scripts/DataTables/extensions/Buttons/js/buttons.bootstrap4.min.js",
                 "~/Scripts/DataTables/extensions/Buttons/js/buttons.html5.min.js",
                 "~/Scripts/DataTables/extensions/Buttons/js/buttons.print.min.js",
                 "~/Scripts/DataTables/extensions/Buttons/js/buttons.colVis.min.js",
 
                 "~/Scripts/DataTables/extensions/Select/js/dataTables.select.min.js",
                 //"~/Scripts/DataTables/extensions/Select/js/select.jqueryui.min.js",
-                "~/Scripts/DataTables/extensions/Select/js/select.bootstrap4.min.js",
+                //"~/Scripts/DataTables/extensions/Select/js/select.bootstrap4.min.js",
                 "~/Scripts/DataTables/extensions/JSZip/jszip.min.js"
                 ));
 
             bundles.Add(new StyleBundle("~/DataTables/css").Include(
-                "~/Content/DataTables/media/css/jquery.dataTables.min.css"
-                //, "~/Content/DataTables/media/css/dataTables.jqueryui.min.css"
-                , "~/Content/DataTables/media/css/dataTables.bootstrap4.min.css"
+                "~/Content/DataTables/media/css/jquery.dataTables.min.css",
+                //, "~/Content/DataTables/media/css/dataTables.jqueryui.min.css",
+                // "~/Content/DataTables/media/css/dataTables.bootstrap4.min.css",
 
-                , "~/Content/DataTables/extensions/Buttons/css/buttons.dataTables.min.css"
-                //, "~/Content/DataTables/extensions/Buttons/css/buttons.jqueryui.min.css"
-                , "~/Content/DataTables/extensions/Buttons/css/buttons.bootstrap4.min.css"
+                 "~/Content/DataTables/extensions/Buttons/css/buttons.dataTables.min.css",
+                //, "~/Content/DataTables/extensions/Buttons/css/buttons.jqueryui.min.css",
+                //"~/Content/DataTables/extensions/Buttons/css/buttons.bootstrap4.min.css",
 
 
-                , "~/Content/DataTables/extensions/Select/css/select.dataTables.min.css"
-                //, "~/Content/DataTables/extensions/Select/css/select.jqueryui.min.css"
-                , "~/Content/DataTables/extensions/Select/css/select.bootstrap4.min.css"
+                 "~/Content/DataTables/extensions/Select/css/select.dataTables.min.css"
+                //, "~/Content/DataTables/extensions/Select/css/select.jqueryui.min.css",
+                 //"~/Content/DataTables/extensions/Select/css/select.bootstrap4.min.css"
                 //,"~/Content/DataTables/css/datatables.css"
                 ));
 

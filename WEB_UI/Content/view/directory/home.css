@@ -81,12 +81,12 @@ input {
         }
 
 td.details-control {
-    background: url('../../../Content/DataTables/media/images1/details_open.png') no-repeat center center;
+    background: url('../../../Content/DataTables/media/images/details_open.png') no-repeat center center;
     cursor: pointer;
 }
 
 tr.shown td.details-control {
-    background: url('../../../Content/DataTables/media/images1/details_close.png') no-repeat center center;
+    background: url('../../../Content/DataTables/media/images/details_close.png') no-repeat center center;
 }
 
 /**/

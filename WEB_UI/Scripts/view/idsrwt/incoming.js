@@ -7721,6 +7721,7 @@
         //print_detali.init(lang, user_name);
         cars_detali.init(lang, user_name);
         table_sostav.init();
+        $("a.dt-button").removeClass('dt-button').addClass('btn btn-secondary');
         pn_sel.view(true, start_id_sostav);
     });
 });

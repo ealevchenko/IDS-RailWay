@@ -308,6 +308,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\DataTables\media\images\Sorting icons.psd" />
     <None Include="_app_offline.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -466,13 +467,14 @@
     <Content Include="Content\DataTables\media\css\dataTables.semanticui.min.css" />
     <Content Include="Content\DataTables\media\css\jquery.dataTables.css" />
     <Content Include="Content\DataTables\media\css\jquery.dataTables.min.css" />
-    <Content Include="Content\DataTables\media\images1\details_close.png" />
-    <Content Include="Content\DataTables\media\images1\details_open.png" />
-    <Content Include="Content\DataTables\media\images1\sort_asc.png" />
-    <Content Include="Content\DataTables\media\images1\sort_asc_disabled.png" />
-    <Content Include="Content\DataTables\media\images1\sort_both.png" />
-    <Content Include="Content\DataTables\media\images1\sort_desc.png" />
-    <Content Include="Content\DataTables\media\images1\sort_desc_disabled.png" />
+    <Content Include="Content\DataTables\media\images\details_close.png" />
+    <Content Include="Content\DataTables\media\images\details_open.png" />
+    <Content Include="Content\DataTables\media\images\favicon.ico" />
+    <Content Include="Content\DataTables\media\images\sort_asc.png" />
+    <Content Include="Content\DataTables\media\images\sort_asc_disabled.png" />
+    <Content Include="Content\DataTables\media\images\sort_both.png" />
+    <Content Include="Content\DataTables\media\images\sort_desc.png" />
+    <Content Include="Content\DataTables\media\images\sort_desc_disabled.png" />
     <Content Include="Content\DateTime\daterangepicker.css" />
     <Content Include="Content\DateTime\daterangepicker.min.css" />
     <Content Include="Content\font-awesome\css\font-awesome.css" />

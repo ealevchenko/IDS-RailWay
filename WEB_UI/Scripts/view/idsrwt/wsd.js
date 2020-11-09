@@ -118,9 +118,15 @@
                 if (select_row && select_row.length > 0) {
                     id_station = Number($(select_row[0]).attr("station"));
                     id_way = Number($(select_row[0]).attr("way"));
+                    // Откроем окно
+                    operation_detali.view_dislocation(id_station, id_way);
                 }
+                //else {
+                //    alert.out_warning_message("Выберите путь для выполнения операии дислокации");
+                //}
                 // Откроем окно
                 operation_detali.view_dislocation(id_station, id_way);
+
             }),
         // Выполнить роспуск
         bt_dissolution = $('button#dissolution').on('click',
@@ -208,7 +214,9 @@
                         $(row).attr('id', data.id).addClass('station');
                         $('td:eq(1)', row).attr('colspan', 3);
                         $('td:eq(1)', row).prepend($('<img class="icon-station" />')).addClass("station-name");
-                        $('td:eq(2)', row).append(data.count_arrive > 0 ? $('<a href="#" class="badge badge-warning">' + data.count_arrive + '</a>') : data.count_arrive).append('-').append(data.count_sent > 0 ? $('<a href="#" class="badge badge-success">' + data.count_sent + '</a>') : data.count_sent);
+                        $('td:eq(2)', row).append(data.count_arrive > 0 ? $('<a href="#" class="badge badge-warning">' + data.count_arrive + '</a>') : data.count_arrive).append('-').append(data.count_sent > 0 ? $('<a href="#" class="badge badge-success">' + data.count_sent + '</a>') : data.count_sent).addClass('text-center');
+                        $('td:eq(3)', row).addClass('text-right');
+                        $('td:eq(4)', row).addClass('text-right');
                     },
                     columns: [
                         {
@@ -321,7 +329,7 @@
                                                             // Получим компонент pb
                                                             var pb_way = table_tree_way.get_pb(el.id, el.capacity, el.count_wagon);
                                                             // определим строку путь
-                                                            var tr_way = $("<tr id='station-" + id_station + "' station='" + id_station + "' park='" + id_park + "' way='" + el.id + "' output-dissolution='" + (el.output_dissolution ? el.output_dissolution : false) + "'><td><img class='" + (end === 0 ? "icon-tree-open-skeep" : "icon-tree-open-not") + "'/></td><td></td><td><img class='" + (i !== 0 ? "icon-tree-open" : "icon-tree-open-end") + "'/></td><td class='way-name'><img class='icon-way'/>" + el.way_num_ru + " - " + el.way_abbr_ru + "</td><td></td><td>" + el.count_wagon + "</td><td>" + el.capacity + "</td></tr>");
+                                                            var tr_way = $("<tr id='station-" + id_station + "' station='" + id_station + "' park='" + id_park + "' way='" + el.id + "' output-dissolution='" + (el.output_dissolution ? el.output_dissolution : false) + "'><td><img class='" + (end === 0 ? "icon-tree-open-skeep" : "icon-tree-open-not") + "'/></td><td></td><td><img class='" + (i !== 0 ? "icon-tree-open" : "icon-tree-open-end") + "'/></td><td class='way-name'><img class='icon-way'/>" + el.way_num_ru + " - " + el.way_abbr_ru + "</td><td class='text-center'></td><td class='text-right'>" + el.count_wagon + "</td><td class='text-right'>" + el.capacity + "</td></tr>");
                                                             var td = tr_way.find('td:eq(4)');
                                                             td.append(pb_way);
                                                             // Событие выбора пути
@@ -803,14 +811,14 @@
                 ban_add_dislocation: false,                     // Бит запрета на добавление вагонов для дислокации
                 // Панель выбора вагонов
                 pn_sel_wagon: {
-                    form_select_wagon: $('<form id="form_select_wagon" class="form-inline ml-3" style="font-size:16px;"></form>'),
+                    form_select_wagon: $('<form id="form_select_wagon" class="form-inline ml-3" style="font-size:13px;"></form>'),
                     div_form: $('<div class="form-group"></div>'),
                     label_wagon_side: $('<label for="select_wagon_side">Сторона:</label>'),
-                    select_wagon_side: $('<select class="custom-select form-control mx-sm-3" id="select_wagon_side" name="select_wagon_side"></select>'),
+                    select_wagon_side: $('<select class="custom-select form-control-sm mx-sm-3" id="select_wagon_side" name="select_wagon_side"></select>'),
                     label_wagon_count: $('<label for="select_wagon_count">Кол:</label>'),
-                    select_wagon_count: $('<input type="number" class="form-control mx-sm-3" id="select_wagon_count" name="select_wagon_count" style="width:70px" placeholder="">'),
+                    select_wagon_count: $('<input type="number" class="form-control-sm mx-sm-3" id="select_wagon_count" name="select_wagon_count" style="width:70px" placeholder="">'),
                     // Пометить для дислокации
-                    bt_select_run: $('<button class="btn btn-primary" id="select_run">Ок</button>').on('click',
+                    bt_select_run: $('<button class="btn btn-secondary btn-sm" id="select_run">Ок</button>').on('click',
                         function (event) {
                             event.preventDefault();
                             var count = Number(operation_detali.table_wagons_dislocation_from.pn_sel_wagon.select_wagon_count.val());
@@ -858,7 +866,7 @@
                                     .append(operation_detali.table_wagons_dislocation_from.pn_sel_wagon.select_wagon_count)
                                     .append(operation_detali.table_wagons_dislocation_from.pn_sel_wagon.bt_select_run)
                             );
-                        $('div#wagons-dislocation-from_wrapper div.btn-group').append(operation_detali.table_wagons_dislocation_from.pn_sel_wagon.form_select_wagon);
+                        $('div#wagons-dislocation-from_wrapper div.dt-buttons').after(operation_detali.table_wagons_dislocation_from.pn_sel_wagon.form_select_wagon);
                         // Сбросим настройки пометки вагонов
                         operation_detali.table_wagons_dislocation_from.pn_sel_wagon.clear();
                     },
@@ -1471,7 +1479,8 @@
             // Показать дислокацию
             view_dislocation: function (id_station, id_way) {
                 // Сохраним
-                operation_detali.id_station_dislocation = id_station;
+                
+                operation_detali.id_station_dislocation = id_station!==null ? id_station : -1;
                 operation_detali.id_way_dislocation_from = id_way;
                 // Выберем станцию
                 operation_detali.operation_detali_dislocation_station.val(operation_detali.id_station_dislocation);
@@ -1507,6 +1516,7 @@
                     // уточним список путей отправки
                     operation_detali.list_ways_station = ids_inc.ids_dir.getListWays2TextOfAray(ids_inc.ids_dir.list_ways.filter(function (i) { return i.id_station === id_station }), 'id', 'way_num', 'way_name', operation_detali.lang, null);
                 } else {
+                    //id_station = -1;
                     operation_detali.operation_detali_dislocation_way.prop("disabled", true);
                 }
                 // Отобразим компанент путей
@@ -3970,6 +3980,8 @@
                     ;
                 operation_detali.val_arrival = new VALIDATION(operation_detali.lang, operation_detali.alert, operation_detali.all_obj_arrival); // Создадим класс VALIDATION
 
+                //$("a.dt-button").removeClass('dt-button').addClass('btn btn-secondary');
+
                 // Sumbit form
                 operation_detali.content.find("form").on("submit", function (event) {
                     event.preventDefault();
@@ -4024,5 +4036,6 @@
         pn_loading_way_detail.init(lang);
         table_tree_way.load_station();
         LockScreenOff();
+        $("a.dt-button").removeClass('dt-button').addClass('btn btn-secondary');
     });
 });

@@ -109,17 +109,21 @@
                             <div class="card border-primary">
                                 <div class="card-header">Дерево путей</div>
                                 <div class="card-body">
-                                    @*style="overflow-x:scroll"*@
-                                    <table id="tree-way" class="compact">
-                                        <thead>
-                                            <tr>
-                                                <th colspan="4" style="width:100px">Дерево путей</th>
-                                                <th>Оператор</th>
-                                                <th>Кол</th>
-                                                <th>Макс</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
+                                    <div class="row">
+                                        <div class="col-xl-12 text-left">
+                                            @*style="overflow-x:scroll"*@
+                                            <table id="tree-way" class="compact hover row-border">
+                                                <thead>
+                                                    <tr>
+                                                        <th colspan="4" style="width:100px">Дерево путей</th>
+                                                        <th>Оператор</th>
+                                                        <th>Кол</th>
+                                                        <th>Макс</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -127,7 +131,11 @@
                             <div class="card border-info">
                                 <div class="card-header">Перечень вагонов</div>
                                 <div class="card-body" style="font-size:13px">
-                                    <table id="wagons-way" class="compact table table-striped table-hover" style="width:100%; table-layout: fixed"></table>
+                                    <div class="row">
+                                        <div class="col-xl-12">
+                                            <table id="wagons-way" class="display compact table-striped table-hover" style="width:100%; table-layout: fixed"></table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -191,7 +199,7 @@
                                                     <fieldset class="border-primary">
                                                         <div class="form-row text-center ">
                                                             <div class="col-xl-12 mb-1 text-left">
-                                                                <button class="btn btn-primary" id="operation_dislocation_run" disabled="disabled">@IDSRWTResource.title_operation_run</button>
+                                                                <button class="btn btn-warning" id="operation_dislocation_run" disabled="disabled">@IDSRWTResource.title_operation_run</button>
                                                             </div>
                                                         </div>
                                                         <div class="form-row">
@@ -212,7 +220,7 @@
                                                         <div class="form-row">
                                                             <div class="col-xl-12 mb-1 text-left">
                                                                 <div class="operator-detali-tables">
-                                                                    <table id="ways-dislocation-on" class="compact table table-hover" style="width:100%; table-layout: fixed"></table>
+                                                                    <table id="ways-dislocation-on" class="display compact hover row-border" style="width:100%; table-layout: fixed"></table>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -241,7 +249,7 @@
                                                     <fieldset class="border-primary">
                                                         <legend class="text-primary">Вагоны для дислокации</legend>
                                                         <div class="operator-detali-tables">
-                                                            <table id="wagons-dislocation-on" class="compact table table-striped table-hover" style="width:100%; table-layout: fixed"></table>
+                                                            <table id="wagons-dislocation-on" class="display compact hover row-border" style="width:100%; table-layout: fixed"></table>
                                                         </div>
                                                     </fieldset>
                                                 </div>
@@ -280,7 +288,7 @@
                                                     <fieldset class="border-primary">
                                                         <legend class="text-primary">Вагоны на пути</legend>
                                                         <div class="operator-detali-tables">
-                                                            <table id="wagons-dislocation-from" class="compact table table-striped table-hover" style="width:100%; table-layout: fixed"></table>
+                                                            <table id="wagons-dislocation-from" class="display compact hover row-border" style="width:100%; table-layout: fixed"></table>
                                                         </div>
                                                     </fieldset>
                                                 </div>
