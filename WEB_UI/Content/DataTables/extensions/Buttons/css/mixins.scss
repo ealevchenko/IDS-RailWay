@@ -1,11 +1,19 @@
 
+@function dtb-tint( $color, $percent ) {
+	@return mix(white, $color, $percent);
+}
+
+@function dtb-shade( $color, $percent ) {
+	@return mix(black, $color, $percent);
+}
+
 @mixin dtb-two-stop-gradient($fromColor, $toColor) {
 	background-color: $toColor; /* Fallback */
-	background-image: -webkit-linear-gradient(top, $fromColor 0%, $toColor 100%); /* Chrome 10+, Saf5.1+, iOS 5+ */
-	background-image:    -moz-linear-gradient(top, $fromColor 0%, $toColor 100%); /* FF3.6 */
-	background-image:     -ms-linear-gradient(top, $fromColor 0%, $toColor 100%); /* IE10 */
-	background-image:      -o-linear-gradient(top, $fromColor 0%, $toColor 100%); /* Opera 11.10+ */
-	background-image:         linear-gradient(to bottom, $fromColor 0%, $toColor 100%);
+	background: -webkit-linear-gradient(top, $fromColor 0%, $toColor 100%); /* Chrome 10+, Saf5.1+, iOS 5+ */
+	background:    -moz-linear-gradient(top, $fromColor 0%, $toColor 100%); /* FF3.6 */
+	background:     -ms-linear-gradient(top, $fromColor 0%, $toColor 100%); /* IE10 */
+	background:      -o-linear-gradient(top, $fromColor 0%, $toColor 100%); /* Opera 11.10+ */
+	background:         linear-gradient(to bottom, $fromColor 0%, $toColor 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#{nth( $fromColor, 1 )}', EndColorStr='#{nth( $toColor, 1 )}');
 }
 
@@ -30,7 +38,7 @@
 		border-radius: 0;
 
 		&.two-column {
-			margin-left: -150px;
+			margin-left: -200px;
 		}
 
 		&.three-column {
@@ -42,13 +50,14 @@
 		}
 	}
 
-	> div:last-child {
+	> :last-child {
 		> * {
 			-webkit-column-break-inside: avoid;
 			break-inside: avoid;
 		}
 
 		// Multi-column layout feature
+		display: block !important;
 		-webkit-column-gap: 8px;
 		-moz-column-gap: 8px;
 			-ms-column-gap: 8px;
@@ -57,9 +66,9 @@
 	}
 
 	&.two-column {
-		width: 300px;
+		width: 400px;
 
-		> div:last-child {
+		> :last-child {
 			padding-bottom: 1px;
 
 			-webkit-column-count: 2;
@@ -73,7 +82,7 @@
 	&.three-column {
 		width: 450px;
 
-		> div:last-child {
+		> :last-child {
 			padding-bottom: 1px;
 
 			-webkit-column-count: 3;
@@ -87,7 +96,7 @@
 	&.four-column {
 		width: 600px;
 
-		> div:last-child {
+		> :last-child {
 			padding-bottom: 1px;
 
 			-webkit-column-count: 4;
