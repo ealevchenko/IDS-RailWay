@@ -2,6 +2,47 @@
 
 body {
 }
+
+/*.dataTables_scrollBody {
+    overflow-y: visible !important;
+    overflow-x: initial !important;
+}*/
+
+table.dataTable tbody td.select-checkbox,
+table.dataTable tbody th.select-checkbox {
+    position: relative;
+}
+
+    table.dataTable tbody td.select-checkbox:before, table.dataTable tbody td.select-checkbox:after,
+    table.dataTable tbody th.select-checkbox:before,
+    table.dataTable tbody th.select-checkbox:after {
+        display: block;
+        position: absolute;
+        top: 1.2em;
+        left: 50%;
+        width: 12px;
+        height: 12px;
+        box-sizing: border-box;
+    }
+
+    table.dataTable tbody td.select-checkbox:before,
+    table.dataTable tbody th.select-checkbox:before {
+        content: ' ';
+        margin-top: -6px;
+        margin-left: -6px;
+        border: 1px solid black;
+        border-radius: 3px;
+    }
+
+table.dataTable tr.selected td.select-checkbox:after,
+table.dataTable tr.selected th.select-checkbox:after {
+    content: '\2714';
+    margin-top: -11px;
+    margin-left: -4px;
+    text-align: center;
+    text-shadow: 1px 1px #B0BED9, -1px -1px #B0BED9, 1px -1px #B0BED9, -1px 1px #B0BED9;
+}
+
 /**/
 td.icon-right {
     background: url('../../../Images/idsrwt/right.png') no-repeat left center;
@@ -34,6 +75,34 @@ table.dataTable tbody tr:not(.selected).status-accepted.odd, table.dataTable tbo
 table.dataTable tbody tr:not(.selected).status-rejected.odd, table.dataTable tbody tr:not(.selected).status-rejected.even {
     background-color: #fbcfcf;
 }
+
+table.dataTable.display tbody tr:not(.selected).odd.status-in-work > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.status-in-work > .sorting_1 {
+    background-color: #F9DA9F;
+}
+table.dataTable.display tbody tr:not(.selected).even.status-in-work > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.status-in-work > .sorting_1 {
+    background-color: #F9DA9F;
+}
+
+table.dataTable.display tbody tr:not(.selected).odd.status-accepted > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.status-accepted > .sorting_1 {
+    background-color: #8EFFA8;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.status-accepted > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.status-accepted > .sorting_1 {
+    background-color: #8EFFA8;
+}
+
+table.dataTable.display tbody tr:not(.selected).odd.status-rejected > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.status-rejected > .sorting_1 {
+    background-color: #F9AEBB;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.status-rejected > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.status-rejected > .sorting_1 {
+    background-color: #F9AEBB;
+}
+
+/*table.dataTable.display tbody tr.odd > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd > .sorting_1 {
+
+}*/
+
 
 div.dt-buttons a {
     margin-right: 2px;

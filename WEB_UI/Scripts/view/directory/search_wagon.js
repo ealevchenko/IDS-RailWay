@@ -110,7 +110,7 @@
                             defaultContent: '<button type="button" class="btn btn-outline-primary btn-sm">Показать</button>',
                             orderable: false,
                             //className: 'select-checkbox',
-                            width: "50px"
+                            width: "20px"
                         },
                         { data: "num", title: langView('field_num', langs), width: "50px", orderable: false, searchable: true },
                         { data: "train", title: langView('field_train', langs), width: "50px", orderable: false, searchable: true },

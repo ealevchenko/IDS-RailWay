@@ -259,7 +259,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Коммерческое состояние груза.
+        ///   Ищет локализованную строку, похожую на Коммерческое состояние.
         /// </summary>
         public static string title_commercial_condition {
             get {

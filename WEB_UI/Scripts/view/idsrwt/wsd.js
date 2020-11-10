@@ -55,10 +55,16 @@
             'field_count_wagon': 'Кол.',
             'field_locomotives': 'Локом.',
 
+            'title_button_export': 'Экспорт',
             'title_button_buffer': 'Буфер',
             'title_button_excel': 'Excel',
             'title_button_field': 'Поля',
-            'title_button_field_all': 'Все поля',
+            'title_button_field_select': 'Выбрать',
+            'title_button_field_view_all': 'Показать все',
+            'title_button_field_clear': 'Сбросить',
+
+            //'title_button_field_all': 'Все поля',
+            //'title_button_field_restore': 'Сбросить поля',
             'title_button_select': 'Выбрать вагоны',
             'title_button_select_all': 'Все вагоны',
             'title_button_select_none': 'Убрать выбор',
@@ -473,6 +479,12 @@
                     "ordering": true,
                     "info": true,
                     "keys": true,
+                    colReorder: true,               // вкл. перетаскивание полей
+                    fixedHeader: false,             // вкл. фикс. заголовка
+                    fixedColumns: {
+                        leftColumns: 2,
+                    },
+                    headerOffset: $('nav#nav-global').height(),
                     select: {
                         style: "single"
                     },
@@ -542,26 +554,46 @@
                     stateSave: true,
                     buttons: [
                         {
-                            text: langView('title_button_buffer', langs),
-                            extend: 'copyHtml5',
+                            extend: 'collection',
+                            text: langView('title_button_export', langs),
+                            buttons: [
+                                {
+                                    text: langView('title_button_buffer', langs),
+                                    extend: 'copyHtml5',
+                                },
+                                {
+                                    text: langView('title_button_excel', langs),
+                                    extend: 'excelHtml5',
+                                    sheetName: 'Список вагонов',
+                                    messageTop: function () {
+                                        return '';
+                                    }
+                                },
+                            ],
+                            autoClose: true
                         },
                         {
-                            text: langView('title_button_excel', langs),
-                            extend: 'excelHtml5',
-                            sheetName: 'Список вагонов',
-                            messageTop: function () {
-                                return '';
-                            }
-                        },
-                        {
-                            extend: 'colvis',
+                            extend: 'collection',
                             text: langView('title_button_field', langs),
-                            collectionLayout: 'fixed two-column',
-                        },
-                        {
-                            extend: 'colvisGroup',
-                            text: langView('title_button_field_all', langs),
-                            show: ':hidden'
+                            buttons: [
+                                {
+                                    extend: 'colvis',
+                                    text: langView('title_button_field_select', langs),
+                                    collectionLayout: 'fixed two-column',
+                                },
+                                {
+                                    extend: 'colvisGroup',
+                                    text: langView('title_button_field_view_all', langs),
+                                    show: ':hidden'
+                                },
+                                {
+                                    text: langView('title_button_field_clear', langs),
+                                    action: function (e, dt, node, conf) {
+                                        table_wagons.obj.colReorder.reset();
+                                    }
+                                },
+                            ],
+                            autoClose: true
                         },
                         {
                             extend: 'pageLength',
@@ -818,7 +850,7 @@
                     label_wagon_count: $('<label for="select_wagon_count">Кол:</label>'),
                     select_wagon_count: $('<input type="number" class="form-control-sm mx-sm-3" id="select_wagon_count" name="select_wagon_count" style="width:70px" placeholder="">'),
                     // Пометить для дислокации
-                    bt_select_run: $('<button class="btn btn-secondary btn-sm" id="select_run">Ок</button>').on('click',
+                    bt_select_run: $('<button class="dt-button" id="select_run">Ок</button>').on('click',
                         function (event) {
                             event.preventDefault();
                             var count = Number(operation_detali.table_wagons_dislocation_from.pn_sel_wagon.select_wagon_count.val());
@@ -1479,8 +1511,8 @@
             // Показать дислокацию
             view_dislocation: function (id_station, id_way) {
                 // Сохраним
-                
-                operation_detali.id_station_dislocation = id_station!==null ? id_station : -1;
+
+                operation_detali.id_station_dislocation = id_station !== null ? id_station : -1;
                 operation_detali.id_way_dislocation_from = id_way;
                 // Выберем станцию
                 operation_detali.operation_detali_dislocation_station.val(operation_detali.id_station_dislocation);
@@ -1969,6 +2001,8 @@
                 // Показать таблицу с данными
                 view: function (wagons, callback) {
                     operation_detali.table_wagons_way_from.obj.clear();
+                    // Сбросим выбпанные строки
+                    operation_detali.table_wagons_way_from.index_select_wagons = null;
                     $.each(wagons, function (i, el) {
                         operation_detali.table_wagons_way_from.obj.row.add(operation_detali.table_wagons_way_from.get_wagon(el));
                     });
@@ -4036,6 +4070,6 @@
         pn_loading_way_detail.init(lang);
         table_tree_way.load_station();
         LockScreenOff();
-        $("a.dt-button").removeClass('dt-button').addClass('btn btn-secondary');
+        //$("a.dt-button").removeClass('dt-button').addClass('btn btn-secondary');
     });
 });

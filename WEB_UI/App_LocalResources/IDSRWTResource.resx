@@ -166,7 +166,7 @@
     <value>Грузополучатель</value>
   </data>
   <data name="title_commercial_condition" xml:space="preserve">
-    <value>Коммерческое состояние груза</value>
+    <value>Коммерческое состояние</value>
   </data>
   <data name="title_composition_index" xml:space="preserve">
     <value>Индекс поезда</value>

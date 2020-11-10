@@ -3,14 +3,16 @@
 body {
 }
 
-/*.dt-buttons {
-    float:left;
+.dt-buttons {
+   font-size:1rem;
 }
 
-table.compact-table th, table.compact-table td {
+/*table.fixedHeader-floating {
+    top: 76px !important;
+}*/
+/*table.compact-table th, table.compact-table td {
     padding:0.25rem 0.75rem;
 }*/
-
 .operator-detali-tables {
     font-size: 12px;
 }
