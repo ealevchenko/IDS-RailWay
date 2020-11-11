@@ -31,5 +31,22 @@ namespace WEB_UI.Controllers.api
                 return BadRequest(e.Message);
             }
         }
+
+
+        //// POST api/uz/web/client/car_info/num/62079280
+        //[HttpPost]
+        //[Route("")]
+        //public int PostCargo([FromBody]Directory_Cargo value)
+        //{
+        //    try
+        //    {
+        //        this.ef_dir.Add(value);
+        //        return ef_dir.Save();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return -1;
+        //    }
+        //}
     }
 }

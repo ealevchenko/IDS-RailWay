@@ -1,6 +1,8 @@
 ﻿using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -21,54 +23,68 @@ namespace Test
             //int n1 = ar.IndexOf(".Controllers");
             //ar = ar.Substring(ar.IndexOf("Areas.") + 6, ar.IndexOf(".Controllers") - (ar.IndexOf("Areas.") + 6));
 
-            //try
-            //{
-            //    //String.Format("Выполняем запрос к WebAPI, url:{0}, api_comand {1}, metod {2}, accept {3}", url, api_comand, metod, accept).WriteInformation(eventID);
-            //    HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(@"https://uz.gov.ua/car_info/index.php?func=print&site_nv=52724994");
-            //    request.Method = "GET";
-            //    request.PreAuthenticate = true;
-            //    request.Credentials = CredentialCache.DefaultCredentials;
-            //    request.Accept = "text/html";
-            //    try
-            //    {
-            //        using (System.Net.WebResponse response = request.GetResponse())
-            //        {
-            //            try
-            //            {
-            //                using (System.IO.StreamReader rd = new System.IO.StreamReader(response.GetResponseStream()))
-            //                {
-            //                    string result = rd.ReadToEnd();
-            //                    //PM > Install - Package HtmlAgilityPack - Version 1.11.17
-            //                    HtmlDocument htmlSnippet = new HtmlDocument();
-            //                    htmlSnippet.LoadHtml(result);
+            try
+            {
+                //String.Format("Выполняем запрос к WebAPI, url:{0}, api_comand {1}, metod {2}, accept {3}", url, api_comand, metod, accept).WriteInformation(eventID);
+                //HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(@"https://uz.gov.ua/car_info/index.php?func=print&site_nv=52724994");
+                HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(@"https://www.uz.gov.ua/nsi_cargo_stations/Nsi_Stan.php");
 
-            //                    List<string> hrefTags = new List<string>();
+                request.Method = "POST";
+                request.PreAuthenticate = true;
+                request.Credentials = CredentialCache.DefaultCredentials;
+                request.Accept = "text/html";
+                request.ContentType = "application/x-www-form-urlencoded";
 
-            //                    foreach (HtmlNode link in htmlSnippet.DocumentNode.SelectNodes("//td"))
-            //                    {
-            //                        //HtmlAttribute att = link.Attributes["href"];
-            //                        //hrefTags.Add(att.Value);
-            //                        string value = link.InnerHtml;
-            //                        value = value.Replace("&nbsp;", "");
-            //                        hrefTags.Add(value);
-            //                    }
-            //                }
-            //            }
-            //            catch (Exception e)
-            //            {
 
-            //            }
-            //        }
-            //    }
-            //    catch (Exception e)
-            //    {
+                //string postData = "B1:%D0%9F%D0%BE%D1%88%D1%83%D0%BA,D2:n_stan,R1:1,T1:,T2:449909,T3:,T4:,T5:";
+                string postData = "B1=%D0%9F%D0%BE%D1%88%D1%83%D0%BA&D2=n_stan&R1=1&T1=&T2=449909&T3=&T4=&T5=";
+                Encoding encoding = Encoding.UTF8;
+                byte[] byte1 = encoding.GetBytes(postData);
+                request.ContentLength = byte1.Length;
+                Stream st = request.GetRequestStream();
+                st.Write(byte1, 0, byte1.Length);
+                st.Close();
 
-            //    }
-            //}
-            //catch (Exception e)
-            //{
+                try
+                {
+                    using (System.Net.WebResponse response = request.GetResponse())
+                    {
+                        try
+                        {
+                            using (System.IO.StreamReader rd = new System.IO.StreamReader(response.GetResponseStream()))
+                            {
+                                string result = rd.ReadToEnd();
+                                //PM > Install - Package HtmlAgilityPack - Version 1.11.17
+                                HtmlDocument htmlSnippet = new HtmlDocument();
+                                htmlSnippet.LoadHtml(result);
 
-            //}
+                                //List<string> hrefTags = new List<string>();
+
+                                //foreach (HtmlNode link in htmlSnippet.DocumentNode.SelectNodes("//td"))
+                                //{
+                                //    //HtmlAttribute att = link.Attributes["href"];
+                                //    //hrefTags.Add(att.Value);
+                                //    string value = link.InnerHtml;
+                                //    value = value.Replace("&nbsp;", "");
+                                //    hrefTags.Add(value);
+                                //}
+                            }
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
 
 
 
@@ -100,15 +116,15 @@ namespace Test
             //tids.IDSTransfer_IncomingArrivalSostav_All();         // Перенос всех принятых составов на АМКР с открытием WIR
             //tids.IDSTransfer_SetStationOutgoingWagonsOfKIS();       // Найти и поставить все вагоны по отправляемому составу на станцию и путь отправки АМКР (По данным КИС, операция перед закрытием WIR отправка состава на УЗ)
             //tids.IDSTransfer_SendingOutgoingSostav();             // Закрытие WIR отправка состава на УЗ
-            
+
             //tids.IDS_SAP_GetCurrentIncomingSupplyOfWebSAP();      // Чтение и обновление строки САП входящие поставки
-            
+
             //tids.IDS_WIR_RenumberingWagons();                       // Перенумерация с указанной позиции
             //tids.IDS_WIR_DislocationWagons();                       // Операция дислокация
             //tids.IDS_WIR_DislocationWagonsOfStation();                // Операция дислокация
             //tids.IDS_WIR_DissolutionWagonsOfStation();                // Операция роспуск
             //tids.IDS_WIR_SendingWagonsOfStation();                // Операция роспуск
-            tids.IDS_WIR_ArrivalWagonsOfStation();                // Операция роспуск
+            //tids.IDS_WIR_ArrivalWagonsOfStation();                // Операция роспуск
 
 
             #endregion
