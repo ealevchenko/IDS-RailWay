@@ -119,6 +119,32 @@ UZ_DIRECTORY.prototype.getStations = function (callback) {
         },
     });
 };
+// Получить станцию по коду
+UZ_DIRECTORY.prototype.getStationsOfCodeCS = function (code, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/uz/directory/stations/code_cs/'+code,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("UZ_DIRECTORY.getStationsOfCodeCS", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
+
+
 //======= Directory_InternalRailroad (Справочник регионов ж.д. дорог) ======================================
 UZ_DIRECTORY.prototype.getInternalRailroad = function (callback) {
     $.ajax({

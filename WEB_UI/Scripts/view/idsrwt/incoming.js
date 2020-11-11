@@ -2049,7 +2049,7 @@
                     .add(cars_detali.uz_vag_devision_on_amkr_name)
                     .add(cars_detali.arrival_cars_position_arrival)
                     .add(cars_detali.arrival_cars_car_date_adoption_act.obj)
-                    ;
+                ;
 
                 // Соберем все элементы в массив
                 cars_detali.all_obj_card_vag = $([])
@@ -3611,10 +3611,23 @@
                     } else {
                         cars_detali.bt_route_name_from_add.show();
                         // Определим дорогу
-                        var ir_from = cars_detali.ids_inc.uz_dir.getInternalRailroad_Internal_Of_StationCode(stn_from);
-                        if (ir_from) {
-                            ir_name_from = ir_from.internal_railroad;
-                        }
+                        cars_detali.ids_inc.uz_dir.getStationsOfCodeCS(stn_from, function (external_station) {
+                            if (external_station) {
+                                var ir_from = cars_detali.ids_inc.uz_dir.list_internal_railroad.find(function (o) {
+                                    return o.id === external_station.id_ir;
+                                });
+                                if (ir_from) {
+                                    cars_detali.uz_route_name_railway_from.val(ir_from.internal_railroad);
+                                }
+
+                            }
+                        });
+                        //var ir_from = cars_detali.ids_inc.uz_dir.getInternalRailroad_Internal_Of_StationCode(stn_from);
+                        //if (ir_from) {
+                        //    ir_name_from = ir_from.internal_railroad;
+                        //} else {
+
+                        //}
                     }
                 }
                 cars_detali.uz_route_stn_from.val(stn_from);
@@ -5844,32 +5857,58 @@
             // Добавить запись в справочник ExternalNetworkStation
             addDirectory_ExternalStation: function (stn, name, callback_ok, callback_err) {
                 LockScreen(langView('mess_save', langs));
-                var ir = cars_detali.ids_inc.uz_dir.getInternalRailroad_Internal_Of_StationCode(stn);
-                cars_detali.ids_inc.ids_dir.postExternalStation({
-                    code: stn,
-                    station_name_ru: name,
-                    station_name_en: name,
-                    code_inlandrailway: ir.code,
-                    create: toISOStringTZ(new Date()),
-                    create_user: cars_detali.user
-                }, function (result_add) {
-                    if (result_add > 0) {
-                        // Ок
-                        cars_detali.ids_inc.ids_dir.loadExternalStation(function () {
-                            if (typeof callback_ok === 'function') {
-                                callback_ok();
-                            }
-                            LockScreenOff();
-                        });
+                // Поиск дороги простым способом
+                //var ir = cars_detali.ids_inc.uz_dir.getInternalRailroad_Internal_Of_StationCode(stn);
+                ////
+                //if (ir === null) {
+
+                //}
+                // Найдем запись внешней станции в спраочнике УЗ 
+                cars_detali.ids_inc.uz_dir.getStationsOfCodeCS(stn, function (external_station) {
+                    if (external_station) {
+                        // Станция найдена, определим дорогу
+                        var ir = cars_detali.ids_inc.uz_dir.list_internal_railroad.find(function (o) { return o.id === external_station.id_ir; });
+                        if (ir) {
+                            // Дорога определена, сохраним
+                            cars_detali.ids_inc.ids_dir.postExternalStation({
+                                code: stn,
+                                station_name_ru: name,
+                                station_name_en: name,
+                                code_inlandrailway: ir.code,
+                                create: toISOStringTZ(new Date()),
+                                create_user: cars_detali.user
+                            }, function (result_add) {
+                                if (result_add > 0) {
+                                    // Ок
+                                    cars_detali.ids_inc.ids_dir.loadExternalStation(function () {
+                                        if (typeof callback_ok === 'function') {
+                                            callback_ok();
+                                        }
+                                        LockScreenOff();
+                                    });
+                                } else {
+                                    cars_detali.alert.clear_message();
+                                    cars_detali.alert.out_error_message("Ошибка. При добавлении записи в справочник возникла ошибка.");
+                                    if (typeof callback_err === 'function') {
+                                        callback_err();
+                                    }
+                                    LockScreenOff();
+                                }
+                            });
+                        }
+
                     } else {
-                        cars_detali.alert.clear_message();
-                        cars_detali.alert.out_error_message("Ошибка. При добавлении записи в справочник возникла ошибка.");
+                        // Станция не найдена
+                        // cars_detali.alert.clear_message();
+                        cars_detali.alert.out_warning_message("Во внутреннем справочнике УЗ нет станции " + stn_from + ", добавьте станцию вручную или обновите справочник УЗ.");
+                        LockScreenOff();
                         if (typeof callback_err === 'function') {
                             callback_err();
                         }
-                        LockScreenOff();
                     }
                 });
+
+
             },
             // Добавить запись в справочник BorderCheckpoint
             addDirectory_BorderCheckpoint: function (stn, name, callback_ok, callback_err) {
@@ -7578,7 +7617,7 @@
                         .add(pn_arrival_sostav.arrival_sostav_way_on)
                         .add(pn_arrival_sostav.arrival_count_car)
                         .add(pn_arrival_sostav.arrival_sostav_numeration)
-                        ;
+                    ;
                     // создадим классы 
 
                     //pn_arrival_sostav.alert = new ALERT($('div#arrival-sostav-alert'));// Создадим класс ALERTG
