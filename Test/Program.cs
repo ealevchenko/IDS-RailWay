@@ -11,6 +11,18 @@ using Test.TestModule;
 
 namespace Test
 {
+
+
+    public class ststion_uz
+    {
+        public int code { get; set; }
+        public string name { get; set; }
+        public string name_uk { get; set; }
+        public string admin { get; set; }
+        public string ir { get; set; }
+        public string node { get; set; }
+    }
+
     class Program
     {
         static void Main(string[] args)
@@ -23,6 +35,8 @@ namespace Test
             //int n1 = ar.IndexOf(".Controllers");
             //ar = ar.Substring(ar.IndexOf("Areas.") + 6, ar.IndexOf(".Controllers") - (ar.IndexOf("Areas.") + 6));
 
+
+
             try
             {
                 //String.Format("Выполняем запрос к WebAPI, url:{0}, api_comand {1}, metod {2}, accept {3}", url, api_comand, metod, accept).WriteInformation(eventID);
@@ -33,11 +47,13 @@ namespace Test
                 request.PreAuthenticate = true;
                 request.Credentials = CredentialCache.DefaultCredentials;
                 request.Accept = "text/html";
+                //request.Accept = "application/json";
                 request.ContentType = "application/x-www-form-urlencoded";
+                //request.ContentType = "application/json";
 
-
-                //string postData = "B1:%D0%9F%D0%BE%D1%88%D1%83%D0%BA,D2:n_stan,R1:1,T1:,T2:449909,T3:,T4:,T5:";
-                string postData = "B1=%D0%9F%D0%BE%D1%88%D1%83%D0%BA&D2=n_stan&R1=1&T1=&T2=449909&T3=&T4=&T5=";
+                //string postData = "B1=%D0%9F%D0%BE%D1%88%D1%83%D0%BA&D2=n_stan&R1=1&T1=&T2=449909&T3=&T4=&T5=";
+                //string postData = "B1=%D0%9F%D0%BE%D1%88%D1%83%D0%BA&D2=n_stan&R1=1&T1=&T2=0011518&T3=&T4=&T5=";
+                string postData = "B1=%D0%9F%D0%BE%D1%88%D1%83%D0%BA&D2=n_stan&R1=1&T1=&T2=&T3=22&T4=&T5=";
                 Encoding encoding = Encoding.UTF8;
                 byte[] byte1 = encoding.GetBytes(postData);
                 request.ContentLength = byte1.Length;
@@ -56,9 +72,71 @@ namespace Test
                                 string result = rd.ReadToEnd();
                                 //PM > Install - Package HtmlAgilityPack - Version 1.11.17
                                 HtmlDocument htmlSnippet = new HtmlDocument();
-                                htmlSnippet.LoadHtml(result);
+                                string sstr = "<br><table border='1' bgcolor='#ffffff' align=center cellpadding='1' cellspacing='0' height='20' width='600'>";
+                                int indexOfSubstring = result.IndexOf(sstr);
+                                if (indexOfSubstring > 0)
+                                {
+                                    string text = result.Remove(0, (indexOfSubstring + sstr.Length));
+                                    indexOfSubstring = text.IndexOf("</table>");
+                                    if (indexOfSubstring > 0)
+                                    {
+                                        string res_tab = text.Remove(indexOfSubstring);
+                                        if (!String.IsNullOrWhiteSpace(res_tab))
+                                        {
+                                            // таблица определена
+                                            htmlSnippet.LoadHtml(res_tab);
+                                            List<ststion_uz> list_ststion_uz = new List<ststion_uz>();
+                                            foreach (HtmlNode link in htmlSnippet.DocumentNode.SelectNodes("//tr"))
+                                            {
+                                                string value = link.InnerHtml;
+                                                value = value.Replace("&nbsp;", "");
+                                                if (!String.IsNullOrWhiteSpace(value))
+                                                {
+                                                    // подстрока tr определена
+                                                    HtmlDocument html_tr = new HtmlDocument();
+                                                    html_tr.LoadHtml(value);
+                                                    List<string> list_fields = new List<string>();
+                                                    foreach (HtmlNode field in html_tr.DocumentNode.SelectNodes("//td"))
+                                                    {
+                                                        string value_fl = field.InnerHtml;
+                                                        if (value_fl == "<b> Код: </b>") break; // Пропустим заглавие
+                                                        value_fl = value_fl.Replace("&nbsp;", "");
+                                                        list_fields.Add(value_fl);
+                                                    }
+                                                    if (list_fields.Count() == 6)
+                                                    {
+                                                        ststion_uz str = new ststion_uz()
+                                                        {
+                                                            code = !String.IsNullOrWhiteSpace(list_fields[0]) ? int.Parse(list_fields[0]) : 0,
+                                                            name= !String.IsNullOrWhiteSpace(list_fields[1]) ? list_fields[1] : null,
+                                                            name_uk= !String.IsNullOrWhiteSpace(list_fields[2]) ? list_fields[2] : null,
+                                                            admin= !String.IsNullOrWhiteSpace(list_fields[3]) ? list_fields[3] : null,
+                                                            ir= !String.IsNullOrWhiteSpace(list_fields[4]) ? list_fields[4] : null,
+                                                            node= !String.IsNullOrWhiteSpace(list_fields[5]) ? list_fields[5] : null,
+                                                        };
+                                                        list_ststion_uz.Add(str);
+                                                    }
+
+                                                }
+                                            }
+                                            //
+                                        }
+                                    }
+                                }
+
+
+
+                                //int indexOfSubstring = result.IndexOf("<td>11518");
+                                //if (indexOfSubstring == -1) return;
+                                //string text = result.Remove(0,indexOfSubstring);
+                                //indexOfSubstring = text.IndexOf("</tr>");
+                                //if (indexOfSubstring == -1) return;
+                                //string text1 = text.Remove(indexOfSubstring);
+                                //htmlSnippet.LoadHtml(text1);
 
                                 //List<string> hrefTags = new List<string>();
+
+                                //// <br><table border='1' bgcolor='#ffffff' align=center cellpadding='1' cellspacing='0' height='20' width='600'>
 
                                 //foreach (HtmlNode link in htmlSnippet.DocumentNode.SelectNodes("//td"))
                                 //{
