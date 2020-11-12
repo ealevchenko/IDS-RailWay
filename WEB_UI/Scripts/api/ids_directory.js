@@ -926,6 +926,77 @@ IDS_DIRECTORY.prototype.getWarningWagons = function (callback) {
         },
     });
 };
+// Показать вагоны с признаком проверки
+IDS_DIRECTORY.prototype.getViewWarningWagons = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/wagon/view/warning',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getViewWarningWagons", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Показать вагоны согласно списка
+IDS_DIRECTORY.prototype.getViewWagonOfNums = function (list_nums, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/wagon/view/list_nums/',
+        type: 'POST',
+        data: JSON.stringify(list_nums),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_DIRECTORY.getViewWagonOfNums", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Показать вагоны по оператору
+IDS_DIRECTORY.prototype.getViewWagonOfOperator = function (id_operator, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/wagon/view/operator/id/' + id_operator,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getViewWagonOfOperator", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 
 IDS_DIRECTORY.prototype.getWagonOfNumSpecification = function (num, specification, callback) {
     $.ajax({

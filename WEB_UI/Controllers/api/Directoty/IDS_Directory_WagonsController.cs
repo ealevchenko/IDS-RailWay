@@ -16,8 +16,76 @@ using WEB_UI.Infrastructure;
 
 namespace WEB_UI.Controllers.api
 {
+
+    public class view_directory_wagon
+    {
+        public int num { get; set; }
+        public int id_countrys { get; set; }
+        public int? code_sng { get; set; }
+        public string countrys_name_ru { get; set; }
+        public string countrys_name_en { get; set; }
+        public string country_abbr_ru { get; set; }
+        public string country_abbr_en { get; set; }
+        public int id_genus { get; set; }
+        public int? rod_uz { get; set; }
+        public string genus_ru { get; set; }
+        public string genus_en { get; set; }
+        public string genus_abbr_ru { get; set; }
+        public string genus_abbr_en { get; set; }
+        public int id_owner { get; set; }
+        public string owner_ru { get; set; }
+        public string owner_en { get; set; }
+        public string owner_abbr_ru { get; set; }
+        public string owner_abbr_en { get; set; }
+        public int? id_operator_uz { get; set; }
+        public string operators_uz_ru { get; set; }
+        public string operators_uz_en { get; set; }
+        public string operators_uz_abbr_ru { get; set; }
+        public string operators_uz_abbr_en { get; set; }
+        public DateTime? change_operator_uz { get; set; }
+        public double gruzp { get; set; }
+        public double? tara { get; set; }
+        public int kol_os { get; set; }
+        public string usl_tip { get; set; }
+        public DateTime? date_rem_uz { get; set; }
+        public DateTime? date_rem_vag { get; set; }
+        public int? id_type_ownership { get; set; }
+        public string type_ownership_ru { get; set; }
+        public string type_ownership_en { get; set; }
+        public int? sign { get; set; }
+        public string factory_number { get; set; }
+        public string inventory_number { get; set; }
+        public int? year_built { get; set; }
+        public bool? exit_ban { get; set; }
+        public string note { get; set; }
+        public int? sobstv_kis { get; set; }
+        public bool? bit_warning { get; set; }
+        public DateTime create_wagons { get; set; }
+        public string create_user_wagons { get; set; }
+        public DateTime? change_wagons { get; set; }
+        public string change_user_wagons { get; set; }
+        public int? id_wagons_rent { get; set; }
+        public int? id_operator_amkr { get; set; }
+        public string operators_amkr_ru { get; set; }
+        public string operators_amkr_en { get; set; }
+        public string operators_uz_amkr_ru { get; set; }
+        public string operators_uz_amkr_en { get; set; }
+        public DateTime? rent_start { get; set; }
+        public DateTime? rent_end { get; set; }
+        public int? id_limiting { get; set; }
+        public string limiting_name_ru { get; set; }
+        public string limiting_name_en { get; set; }
+        public string limiting_abbr_ru { get; set; }
+        public string limiting_abbr_en { get; set; }
+        public DateTime? create_wagons_rent { get; set; }
+        public string create_user_wagons_rent { get; set; }
+        public DateTime? change_wagons_rent { get; set; }
+        public string change_user_wagons_rent { get; set; }
+        public int? parent_id_wagons_rent { get; set; }
+    }
+    
     /// <summary>
-    /// СПИСОК СТРАН
+    /// СПИСОК ВАГОНОВ
     /// </summary>
     [RoutePrefix("api/ids/directory/wagon")]
     public class IDS_Directory_WagonsController : ApiController
@@ -120,6 +188,25 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // POST: api/ids/directory/wagon/view/list_nums/
+        [HttpPost]
+        [Route("view/list_nums/")]
+        [ResponseType(typeof(view_directory_wagon))]
+        public IHttpActionResult PostViewWagonsOfNums([FromBody] List<int> nums)
+        {
+            try
+            {
+                String s_nums = String.Join(",", nums.ToArray());
+                string sql = "select * from [IDS].[get_view_directory_wagon]() where num in(" + s_nums + ")";
+                List<view_directory_wagon> list = this.ef_dir.Database.SqlQuery<view_directory_wagon>(sql).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         // GET: api/ids/directory/wagon/warning
         [Route("warning")]
         [ResponseType(typeof(Directory_Wagons))]
@@ -132,6 +219,23 @@ namespace WEB_UI.Controllers.api
                     .Where(w => w.bit_warning == true)
                     .ToList()
                     .Select(m => m.GetDirectory_Wagons_Directory_WagonsRent()).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // GET: api/ids/directory/wagon/view/warning
+        [Route("view/warning")]
+        [ResponseType(typeof(view_directory_wagon))]
+        public IHttpActionResult GetViewWarningWagons()
+        {
+            try
+            {
+                string sql = "select * from [IDS].[get_view_directory_wagon]() where bit_warning = 1";
+                List<view_directory_wagon> list = this.ef_dir.Database.SqlQuery<view_directory_wagon>(sql).ToList();
                 return Ok(list);
             }
             catch (Exception e)
@@ -161,132 +265,22 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        ////// GET: api/ids/directory/cars/num/60173705/rent/start/2018-12-12T00:00:00
-        ////[Route("num/{num:int}/rent/start/{start:datetime}")]
-        ////[ResponseType(typeof(Directory_Wagons))]
-        ////public IHttpActionResult GetOpenRent_CarsOfNumRentStart(int num, DateTime start)
-        ////{
-        ////    try
-        ////    {
-        ////        List<Directory_Wagons> cars = this.ef_dir
-        ////            .Context
-        ////            .Where(w => w.num == num & w.rent_start == start & w.rent_end == null)
-        ////            .ToList()
-        ////            .Select(m => m.GetDirectory_Wagons()).OrderBy(c => c.rent_start).ToList();
-        ////        return Ok(cars);
-        ////    }
-        ////    catch (Exception e)
-        ////    {
-        ////        return BadRequest(e.Message);
-        ////    }
-        ////}
-
-        ////// GET: api/ids/directory/cars/current/num/63958730
-        ////[Route("current/num/{num:int}")]
-        ////[ResponseType(typeof(Directory_Wagons))]
-        ////public IHttpActionResult GetCurrentCarsOfNum(int num)
-        ////{
-        ////    try
-        ////    {
-        ////        string user = base.User.Identity.Name;
-        ////        IDSDirectory ids_dir = new IDSDirectory(service.WebAPI_IDS);
-        ////        ids_dir.Transfer_new_car_of_kis = true; // Признак создавать вагоны в справочнике ИДС по данным КИС и ИРЫ если вагон новый
-        ////        Directory_Wagons car = ids_dir.GetCurrentDirectory_WagonsOfNum(num, user);
-        ////        return Ok(car);
-
-        ////    }
-        ////    catch (Exception e)
-        ////    {
-        ////        return BadRequest(e.Message);
-        ////    }
-        ////}
-
-        ////// POST: api/ids/directory/cars/current/nums/
-        ////[HttpPost]
-        ////[Route("current/nums/")]
-        ////[ResponseType(typeof(Directory_Wagons))]
-        ////public IHttpActionResult GetCurrentCarsOfNums([FromBody] List<int> nums)
-        ////{
-        ////    try
-        ////    {
-        ////        List<Directory_Wagons> cars = new List<Directory_Wagons>();
-
-        ////        foreach (int num in nums)
-        ////        {
-        ////            Directory_Wagons car = this.ef_dir
-        ////                .Context
-        ////                .Where(c => c.num == num)
-        ////                .ToList()
-        ////                .Select(m => m.GetDirectory_Wagons())
-        ////                .OrderByDescending(i => i.id)
-        ////                .FirstOrDefault();
-        ////            if (car != null)
-        ////            {
-        ////                cars.Add(car);
-        ////            }
-        ////        }
-
-        ////        return Ok(cars);
-
-        ////    }
-        ////    catch (Exception e)
-        ////    {
-        ////        return BadRequest(e.Message);
-        ////    }
-        ////}
-
-        ////// GET: api/ids/directory/cars/current/change_operator/
-        ////[Route("current/change_operator")]
-        ////[ResponseType(typeof(Directory_Wagons))]
-        ////public IHttpActionResult GetCurrentCarsOfChangeOperator()
-        ////{
-        ////    try
-        ////    {
-        ////        var cars = this.ef_dir
-        ////            .Context
-        ////            .Where(w => w.ban_changes_operator == true)
-        ////            .ToList()
-        ////            .Select(m => m.GetDirectory_Wagons())
-        ////            .GroupBy(p => p.num)
-        ////            .ToList()
-        ////            .Select(p => p.Select(m => m).OrderByDescending(x => x.id).FirstOrDefault()).ToList();
-        ////        //.Select(g => new
-        ////        //   {
-        ////        //       num = g.Key,
-        ////        //       cars = g.Select(p => p).OrderByDescending(p => p.id).FirstOrDefault()
-        ////        //   }).ToList();
-
-        ////        //.ToDictionary(p=>p.Key, i=>i.Select(m=>m.GetDirectory_Wagons())).ToList();
-        ////        return Ok(cars);
-        ////    }
-        ////    catch (Exception e)
-        ////    {
-        ////        return BadRequest(e.Message);
-        ////    }
-        ////}
-
-
-
-        //// GET: api/ids/directory/wagon/num/53185617/adm/22/rod/60/kol_os/4/usl_tip/null
-        //[Route("num/{num:int}/adm/{adm:int}/rod/{rod}/kol_os/{kol_os:int}/usl_tip/{usl_tip}")]
-        //[ResponseType(typeof(Directory_Wagons))]
-        //public IHttpActionResult GetWagonOfNum(int num, int adm, string rod, int kol_os, string usl_tip)
-        //{
-        //    try
-        //    {
-        //        string user = base.User.Identity.Name;
-        //        IDSDirectory ids_dir = new IDSDirectory(service.WebAPI_IDS);
-        //        ids_dir.Transfer_new_car_of_kis = true; // Признак создавать вагоны в справочнике ИДС по данным КИС и ИРЫ если вагон новый
-        //        //ids_dir.Transfer_new_car_of_kis = false; // Признак создавать вагоны в справочнике ИДС по данным КИС и ИРЫ если вагон новый
-        //        //Directory_Wagons car = ids_dir.GetCurrentDirectory_WagonsOfNum(num, 22, 60, 4, null, true, user);
-        //        Directory_Wagons car = ids_dir.GetDirectory_WagonsOfNum(num, adm, (rod == "null" ? null : (int?)int.Parse(rod)), kol_os, (usl_tip == "null" ? null : usl_tip), user).GetDirectory_Wagons_Directory_WagonsRent();
-        //        return Ok(car.GetDirectory_Wagons_Directory_WagonsRent());
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return BadRequest(e.Message);
-        //    }
-        //}
+        // GET: api/ids/directory/wagon/view/operator/id/6
+        [Route("view/operator/id/{id:int}")]
+        [ResponseType(typeof(view_directory_wagon))]
+        public IHttpActionResult GetViewWagonsOfOperator(int? id)
+        {
+            try
+            {
+                string sql = "select * from [IDS].[get_view_directory_wagon]() where id_operator_amkr = "+ id.ToString();
+                List<view_directory_wagon> list = this.ef_dir.Database.SqlQuery<view_directory_wagon>(sql).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
         public class WagonSpecification
         {
@@ -295,7 +289,6 @@ namespace WEB_UI.Controllers.api
             public int kol_os { get; set; }
             public string usl_tip { get; set; }
         }
-
 
         // POST: api/ids/directory/wagon/num/53185617/specification/
         [HttpPost]

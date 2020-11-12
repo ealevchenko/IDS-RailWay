@@ -34,10 +34,20 @@
                 'field_change': 'Строку правили',
                 'field_change_user': 'Правил',
 
+                //'title_button_buffer': 'Буфер',
+                //'title_button_excel': 'Excel',
+                //'title_button_field': 'Поля',
+                //'title_button_field_all': 'Все поля',
+
+                'title_button_export': 'Экспорт',
                 'title_button_buffer': 'Буфер',
                 'title_button_excel': 'Excel',
                 'title_button_field': 'Поля',
-                'title_button_field_all': 'Все поля',
+                'title_button_field_select': 'Выбрать',
+                'title_button_field_view_all': 'Показать все',
+                'title_button_field_clear': 'Сбросить',
+
+
                 'title_button_select_all': 'Выбрать все',
                 'title_button_select_none': 'Убрать все',
 
@@ -148,7 +158,7 @@
                 pn_search.bt_cars_warning.on('click', function (event) {
                     event.preventDefault();
                     pn_search.text_type_searsh.text('Требующие правки'),
-                        LockScreen(langView('mess_delay', langs));
+                    LockScreen(langView('mess_delay', langs));
                     pn_search.view_cars();
                     //table_directory.view_cars_warning();
                 });
@@ -169,7 +179,7 @@
                         var car_valid = [];
                         var cars = pn_search.num_car.val().split(';');
                         $.each(cars, function (i, el) {
-                            if (!isNumeric(el) || !(Number(el) >= 10000000 && Number(el) <= 99999999)) {
+                            if (!isNumeric($.trim(el)) || !(Number($.trim(el)) >= 10000000 && Number(el) <= 99999999)) {
                                 // Ошибка ввода
                                 alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' введен неправильный номер :' + el);
                                 valid = false;
@@ -819,7 +829,7 @@
             add_edit_kol_os: $('select#add_edit_kol_os'),
             add_edit_gruzp: $('input#add_edit_gruzp'),
 
-            add_edit_tara : $('input#add_edit_tara'),
+            add_edit_tara: $('input#add_edit_tara'),
             add_edit_year_built: $('input#add_edit_year_built'),
             add_edit_factory_number: $('input#add_edit_factory_number'),
             add_edit_inventory_number: $('input#add_edit_inventory_number'),
@@ -1657,15 +1667,22 @@
             count_string: null,
             init: function () {
                 this.obj = this.html_table.DataTable({
-                    "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "All"]],
+                    "lengthMenu": [[10, 20, 50, 100], [10, 20, 50, 100]],
                     "paging": true,
                     "searching": true,
                     "ordering": true,
                     "info": true,
                     "keys": true,
-                    select: {
-                        style: "multi"
-                    },
+                    colReorder: false,               // вкл. перетаскивание полей
+                    //fixedHeader: false,             // вкл. фикс. заголовка
+                    //fixedColumns: {
+                    //    leftColumns: 1,
+                    //},
+                    "deferRender": true,
+                    select:false,
+                    //select: {
+                    //    style: "multi"
+                    //},
                     "autoWidth": true,
                     //"filter": true,
                     //"scrollY": "600px",
@@ -1676,7 +1693,10 @@
                     language: language_table(langs),
                     jQueryUI: false,
                     "createdRow": function (row, data, index) {
-                        $(row).attr('id', data.id);
+                        $(row).attr('id', data.id_wagons_rent);
+
+                        //data.rent_start = data.rent_start !== null ? data.rent_start.replace(/T/g, ' ') : null
+                        $('td', row).eq(7).text(data.rent_start !== null ? data.rent_start.replace(/T/g, ' ') : null);
                         //if (data.id_group === 0) {
                         //    $('td', row).eq(1).addClass('warning');
                         //}
@@ -1692,22 +1712,22 @@
                     columns: [
                         { data: "num", title: langView('field_num', langs), width: "50px", orderable: true, searchable: true },
                         {
-                            data: "countrys", title: langView('field_countrys', langs), width: "50px", orderable: false, searchable: false
+                            data: "country_abbr_" + lang, title: langView('field_countrys', langs), width: "50px", orderable: false, searchable: false
                         },
                         {
-                            data: "genus", title: langView('field_genus', langs), width: "50px", orderable: false, searchable: false
+                            data: "genus_abbr_" + lang, title: langView('field_genus', langs), width: "50px", orderable: false, searchable: false
                         },
                         {
-                            data: "owner", title: langView('field_owner', langs), width: "150px", orderable: false, searchable: false
+                            data: "owner_abbr_" + lang, title: langView('field_owner', langs), width: "150px", orderable: false, searchable: false
                         },
                         {
-                            data: "operator_uz", title: langView('field_operator_uz', langs), width: "150px", orderable: true, searchable: false
+                            data: "operators_uz_" + lang, title: langView('field_operator_uz', langs), width: "150px", orderable: true, searchable: false
                         },
                         {
-                            data: "change_operator", title: langView('field_change_operator', langs), width: "50px", orderable: true, searchable: false
+                            data: "change_operator_uz", title: langView('field_change_operator', langs), width: "50px", orderable: true, searchable: false
                         },
                         {
-                            data: "operator", title: langView('field_operator', langs), width: "150px", orderable: true, searchable: false
+                            data: "operators_amkr_" + lang, title: langView('field_operator', langs), width: "150px", orderable: true, searchable: false
                         },
                         {
                             data: "rent_start", title: langView('field_rent_start', langs), width: "100px", orderable: false, searchable: false
@@ -1716,7 +1736,7 @@
                             data: "rent_end", title: langView('field_rent_end', langs), width: "100px", orderable: false, searchable: false
                         },
                         {
-                            data: "limiting", title: langView('field_limiting', langs), width: "150px", orderable: false, searchable: false
+                            data: "limiting_abbr_" + lang, title: langView('field_limiting', langs), width: "150px", orderable: false, searchable: false
                         },
                         {
                             data: "sign", title: langView('field_sign', langs), width: "100px", orderable: false, searchable: false
@@ -1740,7 +1760,7 @@
                             data: "date_rem_vag", title: langView('field_date_rem_vag', langs), width: "100px", orderable: false, searchable: false
                         },
                         {
-                            data: "type_ownership", title: langView('field_type_ownership', langs), width: "100px", orderable: false, searchable: false
+                            data: "type_ownership_" + lang, title: langView('field_type_ownership', langs), width: "100px", orderable: false, searchable: false
                         },
                         {
                             data: "factory_number", title: langView('field_factory_number', langs), width: "50px", orderable: false, searchable: false
@@ -1757,53 +1777,79 @@
                         {
                             data: "note", title: langView('field_note', langs), width: "300px", orderable: false, searchable: false
                         },
-                        //{ data: "sobstv_kis", title: langView('field_sobstv_kis', langs), width: "50px", orderable: false, searchable: false },
                         {
-                            data: "create", title: langView('field_create', langs), width: "100px", orderable: false, searchable: false
+                            data: "create_wagons_rent", title: langView('field_create', langs), width: "100px", orderable: false, searchable: false
                         },
                         {
-                            data: "create_user", title: langView('field_create_user', langs), width: "100px", orderable: false, searchable: false
+                            data: "create_user_wagons_rent", title: langView('field_create_user', langs), width: "100px", orderable: false, searchable: false
                         },
                         {
-                            data: "change", title: langView('field_change', langs), width: "100px", orderable: false, searchable: false
+                            data: "change_wagons_rent", title: langView('field_change', langs), width: "100px", orderable: false, searchable: false
                         },
                         {
-                            data: "change_user", title: langView('field_change_user', langs), width: "100px", orderable: false, searchable: false
+                            data: "change_user_wagons_rent", title: langView('field_change_user', langs), width: "100px", orderable: false, searchable: false
                         },
                     ],
                     dom: 'Bfrtip',
                     stateSave: false,
                     buttons: [
                         {
-                            text: langView('title_button_buffer', langs),
-                            extend: 'copyHtml5',
+                            extend: 'collection',
+                            text: langView('title_button_export', langs),
+                            buttons: [
+                                {
+                                    text: langView('title_button_buffer', langs),
+                                    extend: 'copyHtml5',
+                                },
+                                {
+                                    text: langView('title_button_excel', langs),
+                                    extend: 'excelHtml5',
+                                    sheetName: 'Карточки вагонов',
+                                    messageTop: function () {
+                                        return '';
+                                    }
+                                },
+                            ],
+                            autoClose: true
                         },
                         {
-                            text: langView('title_button_excel', langs),
-                            extend: 'excelHtml5',
-                            sheetName: 'Карточки вагонов',
-                            messageTop: function () {
-                                return '';
+                            extend: 'collection',
+                            text: langView('title_button_field', langs),
+                            buttons: [
+                                {
+                                    extend: 'colvis',
+                                    text: langView('title_button_field_select', langs),
+                                    collectionLayout: 'fixed two-column',
+                                },
+                                {
+                                    extend: 'colvisGroup',
+                                    text: langView('title_button_field_view_all', langs),
+                                    show: ':hidden'
+                                },
+                                {
+                                    text: langView('title_button_field_clear', langs),
+                                    action: function (e, dt, node, conf) {
+                                        table_directory.obj.colReorder.reset();
+                                    }
+                                },
+                            ],
+                            autoClose: true
+                        },
+                        {
+                            //extend: 'selectAll',
+                            text: langView('title_button_select_all', langs),
+                            action: function () {
+                                table_directory.html_table.find('tr').addClass('selected')
+                                table_directory.view_button();
                             }
                         },
                         {
-                            extend: 'colvis',
-                            text: langView('title_button_field', langs),
-                            collectionLayout: 'fixed two-column',
-                            //postfixButtons: ['colvisRestore']
-                        },
-                        {
-                            extend: 'colvisGroup',
-                            text: langView('title_button_field_all', langs),
-                            show: ':hidden'
-                        },
-                        {
-                            extend: 'selectAll',
-                            text: langView('title_button_select_all', langs),
-                        },
-                        {
-                            extend: 'selectNone',
+                            //extend: 'selectNone',
                             text: langView('title_button_select_none', langs),
+                            action: function () {
+                                $(table_directory.html_table.find('tr')).removeClass('selected')
+                                table_directory.view_button();
+                            }
                         },
                         {
                             text: langView('title_button_add', langs),
@@ -1821,30 +1867,6 @@
                             },
                             enabled: false
                         },
-                        //{
-                        //    text: langView('title_button_del', langs),
-                        //    action: function (e, dt, node, config) {
-
-                        //        dc.dialog_confirm('Open', 'Удалить?', 'Вы уверены что хотите удалить строку : ' + table_directory.select_string.cargo_name_ru, function (result) {
-                        //            if (result) {
-                        //                ids_dir.deleteCargo(table_directory.select_string.id, function (result_del) {
-                        //                    alert.clear_message();
-                        //                    if (result_del > 0) {
-                        //                        alert.out_info_message('Строка справочника - удалена!');
-                        //                    } else {
-                        //                        alert.out_error_message('Ошибка удаления строки справочника!');
-                        //                    }
-                        //                    //
-                        //                    ids_dir.loadCargo(function () {
-                        //                        table_directory.view(ids_dir.list_cargo);
-
-                        //                    });
-                        //                });
-                        //            }
-                        //        });
-                        //    },
-                        //    enabled: false
-                        //},
                         {
                             text: langView('title_button_edit_operator', langs),
                             action: function (e, dt, node, config) {
@@ -1868,42 +1890,67 @@
                         }
                     ]
                 }).on('select', function (e, dt, type, indexes) {
+                    table_directory.obj.row(indexes).select();
                     table_directory.view_button(indexes);
 
                 }).on('deselect', function (e, dt, type, indexes) {
+                    table_directory.obj.row(indexes).deselect();
                     table_directory.view_button(indexes);
+                }).on('click', 'tr', function () {
+                    $(this).toggleClass('selected');
+                    table_directory.view_button();
                 });
             },
             // Отобразить кнопки редактирования таблицы
-            view_button: function (indexes) {
-                var items = table_directory.obj.rows({ selected: true });
-                table_directory.count_string = items ? items.count() : 0;
-                table_directory.select_string = items && items.count() === 1 ? table_directory.obj.rows(items[0]).data()[0] : null;
+            view_button: function () {
+                var row = table_directory.html_table.find('tr.selected');
+                table_directory.count_string = row ? row.length : 0;
+
+                //table_directory.select_string = items && items.count() === 1 ? table_directory.obj.rows(items[0]).data()[0] : null;
                 if (table_directory.count_string > 0) {
-                    table_directory.obj.button(8).enable(true);
-                    table_directory.obj.button(9).enable(true);
+                    table_directory.obj.button(3).enable(true);
+                    table_directory.obj.button(6).enable(true);
+                    table_directory.obj.button(7).enable(true);
                     if (table_directory.count_string === 1) {
-                        table_directory.obj.button(7).enable(true);
-                        //table_directory.obj.button(8).enable(true);
+                        table_directory.obj.button(5).enable(true);
+                        //table_directory.obj.button(6).enable(true);
                     } else {
 
-                        table_directory.obj.button(7).enable(false);
-                        //table_directory.obj.button(8).enable(false);
+                        table_directory.obj.button(5).enable(false);
+                        //table_directory.obj.button(6).enable(false);
                     }
                 } else {
                     table_directory.deselect();
                 }
+
+                //var items = table_directory.obj.rows({ selected: true });
+                //table_directory.count_string = items ? items.count() : 0;
+                //table_directory.select_string = items && items.count() === 1 ? table_directory.obj.rows(items[0]).data()[0] : null;
+                //if (table_directory.count_string > 0) {
+                //    table_directory.obj.button(6).enable(true);
+                //    table_directory.obj.button(7).enable(true);
+                //    if (table_directory.count_string === 1) {
+                //        table_directory.obj.button(5).enable(true);
+                //        //table_directory.obj.button(6).enable(true);
+                //    } else {
+
+                //        table_directory.obj.button(5).enable(false);
+                //        //table_directory.obj.button(6).enable(false);
+                //    }
+                //} else {
+                //    table_directory.deselect();
+                //}
             },
             // Показать вагоны требующие внимания
             view_cars_warning: function () {
                 alert.clear_message();
-                ids_dir.getWarningWagons(function (wagons) {
+                ids_dir.getViewWarningWagons(function (wagons) {
                     table_directory.view(wagons);
                 });
             },
             // Показать вагоны по списку номеров
             view_cars_search_num: function (car_valid, callback) {
-                ids_dir.getWagonOfNums(car_valid, function (wagon) {
+                ids_dir.getViewWagonOfNums(car_valid, function (wagon) {
                     var not_car = car_valid.filter(function (i) {
                         var not = true;
                         for (var ci = 0; ci < wagon.length; ci++) {
@@ -1924,75 +1971,106 @@
             // Показать вагоны по оператору
             view_cars_search_operator: function () {
                 var id = Number(pn_search.wagon_operator.val());
-                ids_dir.getWagonOfOperator(id, function (cars) {
+                ids_dir.getViewWagonOfOperator(id, function (cars) {
                     table_directory.view(cars);
                 });
             },
             // Показать таблицу с данными
             view: function (data) {
+                LockScreen(langView('mess_load_table', langs));
                 var id_select = table_directory.select_string ? table_directory.select_string.id : 0;
                 table_directory.obj.clear();
                 // Сбросить выделенный состав
                 table_directory.deselect();
-                $.each(data, function (i, el) {
-                    table_directory.obj.row.add(table_directory.get_string(el));
-                });
-                if (table_directory.count_string === 1) {
-                    table_directory.obj.row('#' + id_select).select();
-                }
-                table_directory.obj.draw();
-                LockScreenOff();
+                // Добавить поля асинхроно
+                //table_directory.view_wagons_async(data, function () {
+                //    if (table_directory.count_string === 1) {
+                //        table_directory.obj.row('#' + id_select).select();
+                //    }
+                //    table_directory.obj.draw();
+                //    LockScreenOff();
+                //});
+                setTimeout(function () {
+                    table_directory.obj.rows.add(data);
+                        if (table_directory.count_string === 1) {
+                            table_directory.obj.row('#' + id_select).select();
+                        }
+                        table_directory.obj.draw();
+                        LockScreenOff();
+                }, 0);
+                //table_directory.obj.rows.add(data);
+
+                //$.each(data, function (i, el) {
+                //    table_directory.obj.row.add(table_directory.get_string(el));
+                //});
+                //if (table_directory.count_string === 1) {
+                //    table_directory.obj.row('#' + id_select).select();
+                //}
+                //table_directory.obj.draw();
+                //LockScreenOff();
             },
+
+            //view_wagons_async: function (rows, callback) {
+            //    var len = rows.length;
+            //    if (len === 0) {
+            //        return 0;
+            //    }
+            //    function ViewWagonAsync(i) {
+            //        if (i < len) {
+            //            // Поместим следующий вызов функции в цикл событий.
+            //            setTimeout(function () {
+            //                table_directory.obj.row.add(table_directory.get_string(rows[i]));
+            //                ViewWagonAsync(i + 1);
+            //            }, 0);
+            //        } else {
+            //            // Так как достигнут конец массива, мы вызываем коллбэк
+            //            callback();
+            //        }
+            //    }
+            //    ViewWagonAsync(0);
+            //},
+
             // Получить полную информацию по составау
             get_string: function (data) {
-
-                var corrent_rent = ids_dir.getCurrentRentOfWagon(data);
-                var countrys = data ? data.Directory_Countrys : null;
-                var genus = data ? data.Directory_GenusWagons : null;
-                var owner = data ? data.Directory_OwnersWagons : null;
-                var operator_uz = data ? data.Directory_OperatorsWagons : null;
-                var type_ownership = data ? data.Directory_TypeOwnerShip : null;
-                var operator = corrent_rent ? corrent_rent.Directory_OperatorsWagons : null;
-                var limiting = corrent_rent ? corrent_rent.Directory_LimitingLoading : null;
-
                 return {
-                    "id": data.id,
+                    "id": data.id_wagons_rent,
                     "num": data.num,
                     "id_countrys": data.id_countrys,
-                    "countrys": countrys ? ids_dir.getValueObj(countrys, 'country_abbr', lang) : '',
+                    "code_sng": data.code_sng,
+                    "countrys": data['country_abbr_' + lang],
                     "id_genus": data.id_genus,
-                    "genus": genus ? ids_dir.getValueObj(genus, 'abbr', lang) : '',
+                    "rod_uz": data.rod_uz,
+                    "genus": data['genus_abbr_' + lang],
                     "id_owner": data.id_owner,
-                    "owner": owner ? ids_dir.getValueObj(owner, 'owner', lang) : '',
+                    "owner": data['owner_abbr_' + lang],
                     "id_operator_uz": data.id_operator_uz,
-                    "change_operator": data.change_operator !== null ? data.change_operator.replace(/T/g, ' ') : null,
-                    "operator_uz": operator_uz ? ids_dir.getValueObj(operator_uz, 'operators', lang) : '',
+                    "change_operator": data.change_operator_uz !== null ? data.change_operator_uz.replace(/T/g, ' ') : null,
+                    "operator_uz": data['operators_uz_' + lang],
                     "bit_warning": data.bit_warning,
-                    "id_operator": corrent_rent ? corrent_rent.id_operator : null,
-                    "operator": operator ? ids_dir.getValueObj(operator, 'operators', lang) : '',
+                    "id_operator": data.id_operator_amkr,
+                    "operator": data['operators_amkr_' + lang],
                     "gruzp": data.gruzp,
                     "tara": data.tara,
                     "kol_os": data.kol_os,
                     "usl_tip": data.usl_tip,
                     "date_rem_uz": data.date_rem_uz !== null ? data.date_rem_uz.replace(/T/g, ' ') : null,
                     "date_rem_vag": data.date_rem_vag !== null ? data.date_rem_vag.replace(/T/g, ' ') : null,
-                    "id_limiting": corrent_rent ? corrent_rent.id_limiting : null,
-                    "limiting": limiting ? ids_dir.getValueObj(limiting, 'limiting_abbr', lang) : '',
+                    "id_limiting": data.id_limiting,
+                    "limiting": data['limiting_abbr_' + lang],
                     "id_type_ownership": data.id_type_ownership,
-                    "type_ownership": type_ownership ? ids_dir.getValueObj(type_ownership, 'type_ownership', lang) : '',
-                    "rent_start": corrent_rent && corrent_rent.rent_start !== null ? corrent_rent.rent_start.replace(/T/g, ' ') : null,
-                    "rent_end": corrent_rent && corrent_rent.rent_end !== null ? corrent_rent.rent_end.replace(/T/g, ' ') : null,
+                    "type_ownership": data['type_ownership_' + lang],
+                    "rent_start": data && data.rent_start !== null ? data.rent_start.replace(/T/g, ' ') : null,
+                    "rent_end": data && data.rent_end !== null ? data.rent_end.replace(/T/g, ' ') : null,
                     "sign": data.sign,
                     "factory_number": data.factory_number,
                     "inventory_number": data.inventory_number,
                     "year_built": data.year_built,
                     "exit_ban": data.exit_ban,
                     "note": data.note,
-                    "sobstv_kis": data.sobstv_kis,
-                    "create": data.create !== null ? data.create.replace(/T/g, ' ') : null,
-                    "create_user": data.create_user,
-                    "change": data.change !== null ? data.change.replace(/T/g, ' ') : null,
-                    "change_user": data.change_user,
+                    "create": data.create_wagons_rent !== null ? data.create_wagons_rent.replace(/T/g, ' ') : null,
+                    "create_user": data.create_user_wagons_rent,
+                    "change": data.change_wagons_rent !== null ? data.change_wagons_rent.replace(/T/g, ' ') : null,
+                    "change_user": data.change_user_wagons_rent,
                 };
             },
             // Обновить данные в таблице
@@ -2019,10 +2097,10 @@
             // Deselect
             deselect: function () {
                 table_directory.select_string = null;
-                //table_directory.obj.button(6).enable(false);
+                table_directory.obj.button(3).enable(false);
+                table_directory.obj.button(5).enable(false);
+                table_directory.obj.button(6).enable(false);
                 table_directory.obj.button(7).enable(false);
-                table_directory.obj.button(8).enable(false);
-                table_directory.obj.button(9).enable(false);
             }
         };
     //================================================================
