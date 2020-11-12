@@ -1667,7 +1667,7 @@
             count_string: null,
             init: function () {
                 this.obj = this.html_table.DataTable({
-                    "lengthMenu": [[10, 20, 50, 100], [10, 20, 50, 100]],
+                    "lengthMenu": [[10, 20, 50, 100, 200], [10, 20, 50, 100, 200]],
                     "paging": true,
                     "searching": true,
                     "ordering": true,
@@ -1696,7 +1696,7 @@
                         $(row).attr('id', data.id_wagons_rent);
 
                         //data.rent_start = data.rent_start !== null ? data.rent_start.replace(/T/g, ' ') : null
-                        $('td', row).eq(7).text(data.rent_start !== null ? data.rent_start.replace(/T/g, ' ') : null);
+                        //$('td', row).eq(7).text(data.rent_start !== null ? data.rent_start.replace(/T/g, ' ') : null);
                         //if (data.id_group === 0) {
                         //    $('td', row).eq(1).addClass('warning');
                         //}
@@ -1724,13 +1724,13 @@
                             data: "operators_uz_" + lang, title: langView('field_operator_uz', langs), width: "150px", orderable: true, searchable: false
                         },
                         {
-                            data: "change_operator_uz", title: langView('field_change_operator', langs), width: "50px", orderable: true, searchable: false
+                            data: function (row, type, val, meta) { return getReplaceTOfDT(row.change_operator_uz); }, title: langView('field_change_operator', langs), width: "50px", orderable: true, searchable: false
                         },
                         {
                             data: "operators_amkr_" + lang, title: langView('field_operator', langs), width: "150px", orderable: true, searchable: false
                         },
                         {
-                            data: "rent_start", title: langView('field_rent_start', langs), width: "100px", orderable: false, searchable: false
+                            data: function (row, type, val, meta) { return getReplaceTOfDT(row.rent_start); }, title: langView('field_rent_start', langs), width: "100px", orderable: false, searchable: false
                         },
                         {
                             data: "rent_end", title: langView('field_rent_end', langs), width: "100px", orderable: false, searchable: false
@@ -1754,10 +1754,10 @@
                             data: "usl_tip", title: langView('field_usl_tip', langs), width: "50px", orderable: false, searchable: false
                         },
                         {
-                            data: "date_rem_uz", title: langView('field_date_rem_uz', langs), width: "100px", orderable: false, searchable: false
+                            data: function (row, type, val, meta) { return getReplaceTOfDT(row.date_rem_uz); }, title: langView('field_date_rem_uz', langs), width: "100px", orderable: false, searchable: false
                         },
                         {
-                            data: "date_rem_vag", title: langView('field_date_rem_vag', langs), width: "100px", orderable: false, searchable: false
+                            data: function (row, type, val, meta) { return getReplaceTOfDT(row.date_rem_vag); }, title: langView('field_date_rem_vag', langs), width: "100px", orderable: false, searchable: false
                         },
                         {
                             data: "type_ownership_" + lang, title: langView('field_type_ownership', langs), width: "100px", orderable: false, searchable: false
@@ -1778,13 +1778,13 @@
                             data: "note", title: langView('field_note', langs), width: "300px", orderable: false, searchable: false
                         },
                         {
-                            data: "create_wagons_rent", title: langView('field_create', langs), width: "100px", orderable: false, searchable: false
+                            data: function (row, type, val, meta) { return getReplaceTOfDT(row.create_wagons_rent); }, title: langView('field_create', langs), width: "100px", orderable: false, searchable: false
                         },
                         {
                             data: "create_user_wagons_rent", title: langView('field_create_user', langs), width: "100px", orderable: false, searchable: false
                         },
                         {
-                            data: "change_wagons_rent", title: langView('field_change', langs), width: "100px", orderable: false, searchable: false
+                            data: function (row, type, val, meta) { return getReplaceTOfDT(row.change_wagons_rent); }, title: langView('field_change', langs), width: "100px", orderable: false, searchable: false
                         },
                         {
                             data: "change_user_wagons_rent", title: langView('field_change_user', langs), width: "100px", orderable: false, searchable: false
@@ -1870,9 +1870,25 @@
                         {
                             text: langView('title_button_edit_operator', langs),
                             action: function (e, dt, node, config) {
-                                var items = table_directory.obj.rows({ selected: true });
-                                var row_cargo = table_directory.obj.rows(items[0]).data();
-                                pn_change_group_operator.Open(row_cargo);
+                                //var items = table_directory.obj.rows({ selected: true });
+                                //var row_cargo = table_directory.obj.rows(items[0]).data();
+
+                                var rows = table_directory.html_table.find('tbody tr.selected');
+                                var list_id = [];
+                                rows.each(function (i, elem) {
+                                    list_id.push($(elem).attr("id"));
+
+
+                                    //if ($(this).hasClass("stop")) {
+                                    //    alert("Остановлено на " + i + "-м пункте списка.");
+                                    //    return false;
+                                    //} else {
+                                   // alert(i + ': ' + $(elem).attr("id"));
+
+                                    //}
+                                });
+
+                                //pn_change_group_operator.Open(row_cargo);
                             },
                             enabled: false
                         },

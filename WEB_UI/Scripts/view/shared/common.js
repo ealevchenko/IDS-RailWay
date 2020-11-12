@@ -509,6 +509,10 @@ var DateToStringOfCulture = function (date, lang) {
 var StringDateToFormatStringDate = function (s_date, lang) {
     return DateToStringOfCulture(ISOtoDate(s_date), lang);
 };
+// Убрать Т из формата даты ISO
+var getReplaceTOfDT = function (date) {
+    return date !== null ? date.replace(/T/g, ' ') : null;
+};
 
 //var toCorrectISOString = function (date) {
 //    return date ? date.toISOString() : null;
