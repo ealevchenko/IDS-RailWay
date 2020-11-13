@@ -83,6 +83,16 @@ namespace WEB_UI.Controllers.api
         public string change_user_wagons_rent { get; set; }
         public int? parent_id_wagons_rent { get; set; }
     }
+    /// <summary>
+    /// Класс данных для выполнения операции групповой смены оператора на вагоны
+    /// </summary>
+    public class ChangeOperationGroupWagon
+    {
+        public int id_operator { get; set; }        
+        public List<int> list_id_rent { get; set; }        
+        public DateTime start_rent { get; set; }
+        public string user { get; set; }
+    }
     
     /// <summary>
     /// СПИСОК ВАГОНОВ
@@ -101,6 +111,29 @@ namespace WEB_UI.Controllers.api
             this.ef_dir = dir;
             this.ef_dir_rent = dir_rent;
         }
+
+        #region ВЫПОЛНЕНИЕ ОПЕРАЦИЙ ПРАВКИ СПРАВОЧНИКА
+        // POST api/ids/directory/wagon/update/operator/group/
+        [HttpPost]
+        [Route("update/operator/group/")]
+        [ResponseType(typeof(OperationResult))]
+        public IHttpActionResult PostUpdateOperatorAMKROfWagons([FromBody] ChangeOperationGroupWagon value)
+        {
+            try
+            {
+                IDSDirectory ids_dir = new IDSDirectory(service.WebAPI_IDS);
+                OperationResult result = ids_dir.UpdateOperatorAMKROfWagons(value.list_id_rent, value.id_operator, value.start_rent, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        #endregion
+
+
 
         // GET: api/ids/directory/wagon/is_correct/num/24119703
         [Route("is_correct/num/{num:int}")]

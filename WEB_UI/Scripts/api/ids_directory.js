@@ -926,6 +926,7 @@ IDS_DIRECTORY.prototype.getWarningWagons = function (callback) {
         },
     });
 };
+// --------- View -------------------------------------------------
 // Показать вагоны с признаком проверки
 IDS_DIRECTORY.prototype.getViewWarningWagons = function (callback) {
     $.ajax({
@@ -991,6 +992,32 @@ IDS_DIRECTORY.prototype.getViewWagonOfOperator = function (id_operator, callback
         },
         error: function (x, y, z) {
             OnAJAXError("IDS_DIRECTORY.getViewWagonOfOperator", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//---------- Update
+//Обновим оператора по группе вагонов
+IDS_DIRECTORY.prototype.postUpdateOperatorAMKROfWagons = function (operation_wagons, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/wagon/update/operator/group/',
+        type: 'POST',
+        data: JSON.stringify(operation_wagons),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_DIRECTORY.postUpdateOperatorAMKROfWagons", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -4607,7 +4634,7 @@ IDS_DIRECTORY.prototype.getOperatorsWagons_Internal_Of_ID = function (id_operato
 //
 IDS_DIRECTORY.prototype.getOperatorsWagons_Internal_Of_Name = function (text, ftext, lang) {
     if (this.list_operators_wagons) {
-        var obj = getObjects(this.list_operators_wagons, (lang ? ftext + '_' + lang : name), text);
+        var obj = getObjects(this.list_operators_wagons, (lang ? ftext + '_' + lang : ftext), text);
         return obj && obj.length > 0 ? obj[0] : null;
     }
 };
