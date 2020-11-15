@@ -2,66 +2,67 @@
 
     // Массив текстовых сообщений 
     $.Text_View =
+    {
+        'default':  //default language: ru
         {
-            'default':  //default language: ru
-            {
-                'field_num': '№ ваг',
-                'field_countrys': 'Адм',
-                'field_genus': 'Род',
-                'field_owner': 'Владелец',
-                'field_operator_uz': 'Оператор (УЗ)',
-                'field_change_operator': 'Опер. измен.',
-                'field_operator': 'Оператор (АМКР)',
-                'field_gruzp': 'Грузопод.т',
-                'field_tara': 'Тара.т',
-                'field_kol_os': 'Кол. осей',
-                'field_usl_tip': 'Тип цистерны',
-                'field_date_rem_uz': 'Дата ремонта (УЗ)',
-                'field_date_rem_vag': 'Дата ремонта (Вагон)',
-                'field_limiting': 'Ограничение',
-                'field_type_ownership': 'Собственность',
-                'field_rent_start': 'Начало аренды',
-                'field_rent_end': 'Конец аренды',
-                'field_sign': 'Признаки',
-                'field_factory_number': 'Заводской №',
-                'field_inventory_number': 'Инвентарный №',
-                'field_year_built': 'Год постройки',
-                'field_exit_ban': 'запрет на выезд',
-                'field_note': 'Примечание',
-                'field_sobstv_kis': 'Оператор (КИС)',
-                'field_create': 'Строка создана',
-                'field_create_user': 'Создал строку',
-                'field_change': 'Строку правили',
-                'field_change_user': 'Правил',
+            'field_pos': '№ п.п',
+            'field_num': '№ ваг',
+            'field_countrys': 'Адм',
+            'field_genus': 'Род',
+            'field_owner': 'Владелец',
+            'field_operator_uz': 'Оператор (УЗ)',
+            'field_change_operator': 'Опер. измен.',
+            'field_operator': 'Оператор (АМКР)',
+            'field_gruzp': 'Грузопод.т',
+            'field_tara': 'Тара.т',
+            'field_kol_os': 'Кол. осей',
+            'field_usl_tip': 'Тип цистерны',
+            'field_date_rem_uz': 'Дата ремонта (УЗ)',
+            'field_date_rem_vag': 'Дата ремонта (Вагон)',
+            'field_limiting': 'Ограничение',
+            'field_type_ownership': 'Собственность',
+            'field_rent_start': 'Начало аренды',
+            'field_rent_end': 'Конец аренды',
+            'field_sign': 'Признаки',
+            'field_factory_number': 'Заводской №',
+            'field_inventory_number': 'Инвентарный №',
+            'field_year_built': 'Год постройки',
+            'field_exit_ban': 'запрет на выезд',
+            'field_note': 'Примечание',
+            'field_sobstv_kis': 'Оператор (КИС)',
+            'field_create': 'Строка создана',
+            'field_create_user': 'Создал строку',
+            'field_change': 'Строку правили',
+            'field_change_user': 'Правил',
 
-                //'title_button_buffer': 'Буфер',
-                //'title_button_excel': 'Excel',
-                //'title_button_field': 'Поля',
-                //'title_button_field_all': 'Все поля',
+            //'title_button_buffer': 'Буфер',
+            //'title_button_excel': 'Excel',
+            //'title_button_field': 'Поля',
+            //'title_button_field_all': 'Все поля',
 
-                'title_button_export': 'Экспорт',
-                'title_button_buffer': 'Буфер',
-                'title_button_excel': 'Excel',
-                'title_button_field': 'Поля',
-                'title_button_field_select': 'Выбрать',
-                'title_button_field_view_all': 'Показать все',
-                'title_button_field_clear': 'Сбросить',
+            'title_button_export': 'Экспорт',
+            'title_button_buffer': 'Буфер',
+            'title_button_excel': 'Excel',
+            'title_button_field': 'Поля',
+            'title_button_field_select': 'Выбрать',
+            'title_button_field_view_all': 'Показать все',
+            'title_button_field_clear': 'Сбросить',
 
 
-                'title_button_select_all': 'Выбрать все',
-                'title_button_select_none': 'Убрать все',
+            'title_button_select_all': 'Выбрать все',
+            'title_button_select_none': 'Убрать все',
 
-                'title_button_add': 'Добавить',
-                'title_button_edit': 'Изменить',
-                'title_button_del': 'Удалить',
-                'title_button_edit_operator': 'Изменить оператора',
-                'title_button_edit_limit': 'Изменить ограничение',
-            },
-            'en':  //default language: English
-            {
-                'field_train': 'train number',
-            }
-        };
+            'title_button_add': 'Добавить',
+            'title_button_edit': 'Править',
+            'title_button_del': 'Удалить',
+            'title_button_edit_group': 'Править оператора или ограничение',
+            //'title_button_edit_limit': 'Изменить ограничение',
+        },
+        'en':  //default language: English
+        {
+            'field_train': 'train number',
+        }
+    };
 
     //*************************************************************************************
     // ОБЪЯВЛЕНИЕ ОСНОВНЫХ ОБЪЕКТОВ ПРИЛОЖЕНИЯ
@@ -113,7 +114,7 @@
             // Инициализация
             init: function () {
                 // обработка события show.bs.tab переключение панелей выбора
-                $('[data-toggle="tab"]').on('show.bs.tab', function (e) {
+                $('#global-tab > ul > li > [data-toggle="tab"]').on('show.bs.tab', function (e) {
                     var activeTab = $(e.target);    // активная вкладка
                     switch (e.target.hash) {
                         case '#cars-warning': pn_search.active = 0; break;
@@ -158,7 +159,7 @@
                 pn_search.bt_cars_warning.on('click', function (event) {
                     event.preventDefault();
                     pn_search.text_type_searsh.text('Требующие правки'),
-                    LockScreen(langView('mess_delay', langs));
+                        LockScreen(langView('mess_delay', langs));
                     pn_search.view_cars();
                     //table_directory.view_cars_warning();
                 });
@@ -386,206 +387,207 @@
                         pn_search.bt_cars_search_num.prop("disabled", false);
                     }); break;
                     case 2: table_directory.view_cars_search_operator(); break;
-                        //case 3: table_directory.view_cars_search_operator(); break;
+                    //case 3: table_directory.view_cars_search_operator(); break;
                 }
             }
         },
         //*************************************************************************************
         // ОКНО ИЗМЕНИТЬ ОГРАНИЧЕНИЕ ПО ГРУППЕ
         //*************************************************************************************
-        pn_change_group_limit = {
-            obj: null,
-            lang: null,
-            user_name: null,
-            ids_dir: null,
-            alert: $('div#change_group_limit_alert'),                                             // Сообщения
-            all_obj: null,                                                                  // массив всех элементов формы 
-            val: null,                                                                      // класс валидации
-            list_group: null,
-            rows: null,
-            // Поля формы
-            change_group_limiting: $('select#change_group_limiting'),
-            // загрузка библиотек
-            loadReference: function (callback) {
-                //LockScreen(langView('mess_load', langs));
-                var count = 1;
-                pn_change_group_limit.ids_dir.load(['limiting_loading'], false, function () {
-                    count -= 1;
-                    if (count === 0) {
-                        if (typeof callback === 'function') {
-                            callback();
-                        }
-                    }
-                });
-            },
-            // инициализвция Окна
-            init: function (lang, user_name, callback_ok) {
-                pn_change_group_limit.lang = lang;
-                pn_change_group_limit.user_name = user_name;
-                pn_change_group_limit.ids_dir = new IDS_DIRECTORY(pn_change_group_limit.lang), // Создадим класс IDS_DIRECTORY
-                    pn_change_group_limit.loadReference(function () {
-                        pn_change_group_limit.list_group = pn_change_group_limit.ids_dir.getListLimitingLoading('id', 'limiting_name', pn_change_group_limit.lang, null);
-                        // Инициализация элементов
-                        pn_change_group_limit.change_group_limiting = cd_initSelect(
-                            pn_change_group_limit.change_group_limiting,
-                            { lang: pn_change_group_limit.lang },
-                            pn_change_group_limit.list_group,
-                            null,
-                            -1,
-                            function (event) {
-                                event.preventDefault();
-                                var id = Number($(this).val());
-                            }, null);
-                        // Соберем все элементы в массив
-                        pn_change_group_limit.all_obj = $([])
-                            .add(pn_change_group_limit.change_group_limiting)
-                        ;
-                        // создадим классы 
+        //pn_change_group_limit = {
+        //    obj: null,
+        //    lang: null,
+        //    user_name: null,
+        //    ids_dir: null,
+        //    alert: $('div#change_group_limit_alert'),                                             // Сообщения
+        //    all_obj: null,                                                                  // массив всех элементов формы 
+        //    val: null,                                                                      // класс валидации
+        //    list_group: null,
+        //    rows: null,
+        //    // Поля формы
+        //    change_group_limiting: $('select#change_group_limiting'),
+        //    // загрузка библиотек
+        //    loadReference: function (callback) {
+        //        //LockScreen(langView('mess_load', langs));
+        //        var count = 1;
+        //        pn_change_group_limit.ids_dir.load(['limiting_loading'], false, function () {
+        //            count -= 1;
+        //            if (count === 0) {
+        //                if (typeof callback === 'function') {
+        //                    callback();
+        //                }
+        //            }
+        //        });
+        //    },
+        //    // инициализвция Окна
+        //    init: function (lang, user_name, callback_ok) {
+        //        pn_change_group_limit.lang = lang;
+        //        pn_change_group_limit.user_name = user_name;
+        //        pn_change_group_limit.ids_dir = new IDS_DIRECTORY(pn_change_group_limit.lang), // Создадим класс IDS_DIRECTORY
+        //            pn_change_group_limit.loadReference(function () {
+        //                pn_change_group_limit.list_group = pn_change_group_limit.ids_dir.getListLimitingLoading('id', 'limiting_name', pn_change_group_limit.lang, null);
+        //                // Инициализация элементов
+        //                pn_change_group_limit.change_group_limiting = cd_initSelect(
+        //                    pn_change_group_limit.change_group_limiting,
+        //                    { lang: pn_change_group_limit.lang },
+        //                    pn_change_group_limit.list_group,
+        //                    null,
+        //                    -1,
+        //                    function (event) {
+        //                        event.preventDefault();
+        //                        var id = Number($(this).val());
+        //                    }, null);
+        //                // Соберем все элементы в массив
+        //                pn_change_group_limit.all_obj = $([])
+        //                    .add(pn_change_group_limit.change_group_limiting)
+        //                    ;
+        //                // создадим классы 
 
-                        //pn_change_group_limit.alert = new ALERT($('div#arrival-sostav-alert'));// Создадим класс ALERTG
-                        pn_change_group_limit.val = new VALIDATION(pn_change_group_limit.lang, pn_change_group_limit.alert, pn_change_group_limit.all_obj); // Создадим класс VALIDATION
-                        //pn_change_group_limit.table_car.init();
-                        pn_change_group_limit.obj = $("div#change_group_limit").dialog({
-                            resizable: false,
-                            title: 'Изменить ограничение по группе вагонов',
-                            modal: true,
-                            autoOpen: false,
-                            height: "auto",
-                            width: 600,
-                            classes: {
-                                "ui-dialog": "card",
-                                "ui-dialog-titlebar": "card-header bg-primary text-white",
-                                "ui-dialog-content": "card-body",
-                                "ui-dialog-buttonpane": "card-footer text-muted"
-                            },
-                            open: function (event, ui) {
+        //                //pn_change_group_limit.alert = new ALERT($('div#arrival-sostav-alert'));// Создадим класс ALERTG
+        //                pn_change_group_limit.val = new VALIDATION(pn_change_group_limit.lang, pn_change_group_limit.alert, pn_change_group_limit.all_obj); // Создадим класс VALIDATION
+        //                //pn_change_group_limit.table_car.init();
+        //                pn_change_group_limit.obj = $("div#change_group_limit").dialog({
+        //                    resizable: false,
+        //                    title: 'Изменить ограничение по группе вагонов',
+        //                    modal: true,
+        //                    autoOpen: false,
+        //                    height: "auto",
+        //                    width: 600,
+        //                    classes: {
+        //                        "ui-dialog": "card",
+        //                        "ui-dialog-titlebar": "card-header bg-primary text-white",
+        //                        "ui-dialog-content": "card-body",
+        //                        "ui-dialog-buttonpane": "card-footer text-muted"
+        //                    },
+        //                    open: function (event, ui) {
 
-                            },
-                            buttons: [
-                                {
+        //                    },
+        //                    buttons: [
+        //                        {
 
-                                    disabled: false,
-                                    text: "Ок",
-                                    class: "btn btn-outline-primary btn",
-                                    click: function () {
-                                        pn_change_group_limit.save(callback_ok);
-                                    }
-                                },
-                                {
-                                    text: "Отмена",
-                                    class: "btn btn-outline-primary btn",
-                                    click: function () {
-                                        $(this).dialog("close");
-                                    }
-                                },
-                            ]
-                        });
-                        // Sumbit form
-                        pn_change_group_limit.obj.find("form").on("submit", function (event) {
-                            event.preventDefault();
-                        });
-                    });
+        //                            disabled: false,
+        //                            text: "Ок",
+        //                            class: "btn btn-outline-primary btn",
+        //                            click: function () {
+        //                                pn_change_group_limit.save(callback_ok);
+        //                            }
+        //                        },
+        //                        {
+        //                            text: "Отмена",
+        //                            class: "btn btn-outline-primary btn",
+        //                            click: function () {
+        //                                $(this).dialog("close");
+        //                            }
+        //                        },
+        //                    ]
+        //                });
+        //                // Sumbit form
+        //                pn_change_group_limit.obj.find("form").on("submit", function (event) {
+        //                    event.preventDefault();
+        //                });
+        //            });
 
-            },
-            // открыть окно 
-            Open: function (rows) {
-                pn_change_group_limit.val.clear_all();
-                pn_change_group_limit.change_group_limiting.val(-1); // сбросить выбор
-                pn_change_group_limit.rows = rows;
-                if (rows && rows.length > 0) {
-                    pn_change_group_limit.obj.dialog("open");
-                }
-            },
-            // Валидация данных
-            validation: function () {
-                pn_change_group_limit.val.clear_all();
-                var valid = true;
-                valid = valid & pn_change_group_limit.val.checkSelection(pn_change_group_limit.change_group_limiting, "Выберите ограничение");
-                return valid;
-            },
-            // Сохранить 
-            save: function (callback_ok) {
-                var list_cars = [];
-                var list_nums = [];
-                var list_rent = [];
-                var valid = pn_change_group_limit.validation();
-                if (valid) {
-                    pn_change_group_limit.val.clear_all();
-                    LockScreen(langView('mess_save', langs));
-                    // Получимсписок номеров вагонов
-                    for (inum = 0; inum < pn_change_group_limit.rows.length; inum++) {
-                        list_nums.push(pn_change_group_limit.rows[inum].num);
-                    }
-                    // Получим строки справочника по списку номеров вагона
-                    pn_change_group_limit.ids_dir.getWagonOfNums(list_nums, function (result_wagon) {
-                        //list_cars = result_wagon;
-                        for (ir = 0; ir < result_wagon.length; ir++) {
-                            // Получим текущую аренду
-                            var car = pn_change_group_limit.ids_dir.getCloneWagons(result_wagon[ir]);
-                            var current_rent = pn_change_group_limit.ids_dir.getCurrentRentOfWagon(result_wagon[ir]);
-                            if (car.id_genus === 0 || car.id_countrys === 0 || current_rent === null || (current_rent.id_operator === null || current_rent.id_operator == 0)) {
-                                car.bit_warning = true;
-                            } else {
-                                car.bit_warning = false;
-                            }
-                            car.change = toISOStringTZ(new Date());
-                            car.change_user = pn_change_group_limit.user_name;
-                            var new_rent = pn_change_group_limit.ids_dir.getCloneWagonsRent(current_rent);
-                            new_rent.id_limiting = get_select_number_value(pn_change_group_limit.change_group_limiting);
-                            new_rent.change = toISOStringTZ(new Date()),
-                                new_rent.change_user = pn_change_group_limit.user_name,
-                                list_rent.push(new_rent);
-                            list_cars.push(car);
-                        }
-                        // обновим аренду
-                        pn_change_group_limit.ids_dir.putListWagonsRent(list_rent, function (result_upd) {
-                            if (result_upd >= 0) {
-                                pn_change_group_limit.ids_dir.putListWagon(list_cars, function (result_upd_car) {
-                                    if (result_upd_car >= 0) {
-                                        if (typeof callback_ok === 'function') {
-                                            pn_change_group_limit.obj.dialog("close");
-                                            callback_ok(result_upd_car);
-                                        }
-                                    } else {
-                                        //pn_change_group_limit.val.clear_all();
-                                        pn_change_group_limit.val.out_error_message("При обновлении основной информации по группе вагонов произошла ошибка!");
-                                        LockScreenOff();
-                                    }
-                                });
-                            } else {
-                                //pn_change_group_limit.val.clear_all();
-                                pn_change_group_limit.val.out_error_message("При обновлении ограничения на группу вагонов произошла ошибка!");
-                                LockScreenOff();
-                            }
-                        });
-                    });
-                }
-            },
-        },
+        //    },
+        //    // открыть окно 
+        //    Open: function (rows) {
+        //        pn_change_group_limit.val.clear_all();
+        //        pn_change_group_limit.change_group_limiting.val(-1); // сбросить выбор
+        //        pn_change_group_limit.rows = rows;
+        //        if (rows && rows.length > 0) {
+        //            pn_change_group_limit.obj.dialog("open");
+        //        }
+        //    },
+        //    // Валидация данных
+        //    validation: function () {
+        //        pn_change_group_limit.val.clear_all();
+        //        var valid = true;
+        //        valid = valid & pn_change_group_limit.val.checkSelection(pn_change_group_limit.change_group_limiting, "Выберите ограничение");
+        //        return valid;
+        //    },
+        //    // Сохранить 
+        //    save: function (callback_ok) {
+        //        var list_cars = [];
+        //        var list_nums = [];
+        //        var list_rent = [];
+        //        var valid = pn_change_group_limit.validation();
+        //        if (valid) {
+        //            pn_change_group_limit.val.clear_all();
+        //            LockScreen(langView('mess_save', langs));
+        //            // Получимсписок номеров вагонов
+        //            for (inum = 0; inum < pn_change_group_limit.rows.length; inum++) {
+        //                list_nums.push(pn_change_group_limit.rows[inum].num);
+        //            }
+        //            // Получим строки справочника по списку номеров вагона
+        //            pn_change_group_limit.ids_dir.getWagonOfNums(list_nums, function (result_wagon) {
+        //                //list_cars = result_wagon;
+        //                for (ir = 0; ir < result_wagon.length; ir++) {
+        //                    // Получим текущую аренду
+        //                    var car = pn_change_group_limit.ids_dir.getCloneWagons(result_wagon[ir]);
+        //                    var current_rent = pn_change_group_limit.ids_dir.getCurrentRentOfWagon(result_wagon[ir]);
+        //                    if (car.id_genus === 0 || car.id_countrys === 0 || current_rent === null || (current_rent.id_operator === null || current_rent.id_operator == 0)) {
+        //                        car.bit_warning = true;
+        //                    } else {
+        //                        car.bit_warning = false;
+        //                    }
+        //                    car.change = toISOStringTZ(new Date());
+        //                    car.change_user = pn_change_group_limit.user_name;
+        //                    var new_rent = pn_change_group_limit.ids_dir.getCloneWagonsRent(current_rent);
+        //                    new_rent.id_limiting = get_select_number_value(pn_change_group_limit.change_group_limiting);
+        //                    new_rent.change = toISOStringTZ(new Date()),
+        //                        new_rent.change_user = pn_change_group_limit.user_name,
+        //                        list_rent.push(new_rent);
+        //                    list_cars.push(car);
+        //                }
+        //                // обновим аренду
+        //                pn_change_group_limit.ids_dir.putListWagonsRent(list_rent, function (result_upd) {
+        //                    if (result_upd >= 0) {
+        //                        pn_change_group_limit.ids_dir.putListWagon(list_cars, function (result_upd_car) {
+        //                            if (result_upd_car >= 0) {
+        //                                if (typeof callback_ok === 'function') {
+        //                                    pn_change_group_limit.obj.dialog("close");
+        //                                    callback_ok(result_upd_car);
+        //                                }
+        //                            } else {
+        //                                //pn_change_group_limit.val.clear_all();
+        //                                pn_change_group_limit.val.out_error_message("При обновлении основной информации по группе вагонов произошла ошибка!");
+        //                                LockScreenOff();
+        //                            }
+        //                        });
+        //                    } else {
+        //                        //pn_change_group_limit.val.clear_all();
+        //                        pn_change_group_limit.val.out_error_message("При обновлении ограничения на группу вагонов произошла ошибка!");
+        //                        LockScreenOff();
+        //                    }
+        //                });
+        //            });
+        //        }
+        //    },
+        //},
         //*************************************************************************************
         // ОКНО ИЗМЕНИТЬ ОПЕРАТОРА ПО ГРУППЕ
         //*************************************************************************************
-        pn_change_group_operator = {
+        pn_change_group = {
             obj: null,
             lang: null,
             user_name: null,
             ids_dir: null,
-            alert: $('div#change_group_operator_alert'),                                       // Сообщения
+            alert: $('div#change_group_alert'),                                       // Сообщения
             all_obj: null,                                                                  // массив всех элементов формы 
             val: null,                                                                      // класс валидации
             list_group: null,
             id_operation: null,
             //rows: null,
-            list_id_rent: null,
+            list_nums: null,
             // Поля формы
-            //change_group_operator: $('select#change_group_operator'),
+            enable_change_operator: $('input#enable_change_operator'),
+            enable_change_limiting: $('input#enable_change_limiting'),
             change_group_operator: $('input#change_group_operator'),
             change_group_rent_start: $('input#change_group_rent_start'),
+            change_group_limiting: $('select#change_group_limiting'),
             // загрузка библиотек
             loadReference: function (callback) {
-                //LockScreen(langView('mess_load', langs));
                 var count = 1;
-                pn_change_group_operator.ids_dir.load(['operators_wagons'], false, function () {
+                pn_change_group.ids_dir.load(['operators_wagons', 'limiting_loading'], false, function () {
                     count -= 1;
                     if (count === 0) {
                         if (typeof callback === 'function') {
@@ -596,34 +598,59 @@
             },
             // инициализвция Окна
             init: function (lang, user_name, callback_ok) {
-                pn_change_group_operator.lang = lang;
-                pn_change_group_operator.user_name = user_name;
-                pn_change_group_operator.ids_dir = new IDS_DIRECTORY(pn_change_group_operator.lang), // Создадим класс IDS_DIRECTORY
-                pn_change_group_operator.loadReference(function () {
-                    //
-                    pn_change_group_operator.change_group_operator = initAutocomplete(
-                        pn_change_group_operator.change_group_operator,
-                        { lang: pn_change_group_operator.lang, minLength: 2 },
-                        getAutocompleteListText(pn_change_group_operator.ids_dir.getListOperatorsWagons('id', 'operators', pn_change_group_operator.lang, null), 'text'),
-                        pn_change_group_operator.view_operator,
+                pn_change_group.lang = lang;
+                pn_change_group.user_name = user_name;
+                pn_change_group.ids_dir = new IDS_DIRECTORY(pn_change_group.lang); // Создадим класс IDS_DIRECTORY
+                // Загрузим библиотеки
+                pn_change_group.loadReference(function () {
+                    // Выбор правки операторов
+                    pn_change_group.enable_change_operator.on('click',
+                        function (event) {
+                            //event.preventDefault();
+                            pn_change_group.set_enable_change_operator(pn_change_group.enable_change_operator.prop('checked'));
+                        });
+                    // Выбор правки лимит
+                    pn_change_group.enable_change_limiting.on('click',
+                        function (event) {
+                            //event.preventDefault();
+                            pn_change_group.set_enable_change_limiting(pn_change_group.enable_change_limiting.prop('checked'));
+                        });
+                    // настроим компонент операторов
+                    pn_change_group.change_group_operator = initAutocomplete(
+                        pn_change_group.change_group_operator,
+                        { lang: pn_change_group.lang, minLength: 2 },
+                        getAutocompleteListText(pn_change_group.ids_dir.getListOperatorsWagons('id', 'operators', pn_change_group.lang, null), 'text'),
+                        pn_change_group.view_operator,
                         "");
                     // Дата начала аренды новая
-                    pn_change_group_operator.change_group_rent_start = cd_initDateTimeRangePicker(pn_change_group_operator.change_group_rent_start, { lang: pn_change_group_operator.lang, time: true }, function (datetime) {
+                    pn_change_group.change_group_rent_start = cd_initDateTimeRangePicker(pn_change_group.change_group_rent_start, { lang: pn_change_group.lang, time: true }, function (datetime) {
 
-                    }),
+                    });
+                    pn_change_group.list_limiting = pn_change_group.ids_dir.getListLimitingLoading('id', 'limiting_name', pn_change_group.lang, null);
+                    // Инициализация элементов
+                    pn_change_group.change_group_limiting = cd_initSelect(
+                        pn_change_group.change_group_limiting,
+                        { lang: pn_change_group.lang },
+                        pn_change_group.list_limiting,
+                        null,
+                        -1,
+                        function (event) {
+                            //event.preventDefault();
+                            var id = Number($(this).val());
+                        }, null);
                     // Соберем все элементы в массив
-                    pn_change_group_operator.all_obj = $([])
-                        .add(pn_change_group_operator.change_group_operator)
-                        .add(pn_change_group_operator.change_group_rent_start.obj)
-                    ;
+                    pn_change_group.all_obj = $([])
+                        .add(pn_change_group.change_group_operator)
+                        .add(pn_change_group.change_group_rent_start.obj)
+                        .add(pn_change_group.change_group_limiting);
                     // создадим классы 
 
-                    //pn_change_group_operator.alert = new ALERT($('div#arrival-sostav-alert'));// Создадим класс ALERTG
-                    pn_change_group_operator.val = new VALIDATION(pn_change_group_operator.lang, pn_change_group_operator.alert, pn_change_group_operator.all_obj); // Создадим класс VALIDATION
-                    //pn_change_group_operator.table_car.init();
-                    pn_change_group_operator.obj = $("div#change_group_operator").dialog({
+                    //pn_change_group.alert = new ALERT($('div#arrival-sostav-alert'));// Создадим класс ALERTG
+                    pn_change_group.val = new VALIDATION(pn_change_group.lang, pn_change_group.alert, pn_change_group.all_obj); // Создадим класс VALIDATION
+                    //pn_change_group.table_car.init();
+                    pn_change_group.obj = $("div#change_group").dialog({
                         resizable: false,
-                        title: 'Изменить оператора по группе вагонов',
+                        title: 'Изменить оператора или лимит загрузки по группе вагонов',
                         modal: true,
                         autoOpen: false,
                         height: "auto",
@@ -644,7 +671,7 @@
                                 text: "Ок",
                                 class: "btn btn-outline-primary btn",
                                 click: function () {
-                                    pn_change_group_operator.save(callback_ok);
+                                    pn_change_group.save(callback_ok);
                                 }
                             },
                             {
@@ -657,7 +684,7 @@
                         ]
                     });
                     // Sumbit form
-                    pn_change_group_operator.obj.find("form").on("submit", function (event) {
+                    pn_change_group.obj.find("form").on("submit", function (event) {
                         event.preventDefault();
                     });
                 });
@@ -665,70 +692,121 @@
             },
             // Показать станцию отправления (ручной режим)
             view_operator: function (text) {
-                pn_change_group_operator.validation_operator(text);
+                pn_change_group.validation_operator(text);
             },
             // открыть окно
-            Open: function (list_id_rent) {
-                pn_change_group_operator.val.clear_all();
-                pn_change_group_operator.change_group_operator.val("");                 // Сбросить
-                pn_change_group_operator.change_group_rent_start.setDateTime(null);     // Сбросить
-                //pn_change_group_operator.rows = rows;
-                pn_change_group_operator.list_id_rent = list_id_rent;
-                if (list_id_rent && list_id_rent.length > 0) {
-                    pn_change_group_operator.obj.dialog("open");
+            Open: function (list_nums) {
+                // Сохраним и проверим список для изменения
+                pn_change_group.list_nums = list_nums;
+                if (list_nums && list_nums.length > 0) {
+                    pn_change_group.val.clear_all();
+                    // Сросить все элементы
+                    //pn_change_group.change_group_operator.val("");                 // Сбросить
+                    //pn_change_group.change_group_rent_start.setDateTime(null);     // Сбросить
+                    //pn_change_group.change_group_limiting.val(-1)            // сбросить выбор
+                    pn_change_group.enable_change_operator.prop('checked', false);
+                    pn_change_group.enable_change_limiting.prop('checked', false);
+                    pn_change_group.set_enable_change_operator(pn_change_group.enable_change_operator.prop('checked'));
+                    pn_change_group.set_enable_change_limiting(pn_change_group.enable_change_limiting.prop('checked'));
+                    pn_change_group.obj.dialog("open");
+                }
+            },
+            // Активировать или деактивировать 
+            set_enable_change_operator: function (enabled) {
+                pn_change_group.change_group_operator.prop("disabled", !enabled);
+                pn_change_group.change_group_rent_start.obj.prop("disabled", !enabled);
+                if (!enabled) {
+                    pn_change_group.change_group_operator.val("");                 // Сбросить
+                    pn_change_group.change_group_rent_start.setDateTime(null);     // Сбросить
+                    // Сбросим ошибки
+                    pn_change_group.val.clear_error(pn_change_group.change_group_operator);
+                    pn_change_group.val.clear_error(pn_change_group.change_group_rent_start.obj);
+                }
+            },
+            // Активировать или деактивировать 
+            set_enable_change_limiting: function (enabled) {
+                pn_change_group.change_group_limiting.prop("disabled", !enabled);
+                if (!enabled) {
+                    pn_change_group.change_group_limiting.val(-1);      // Сбросить
+                    // Сбросим ошибки
+                    pn_change_group.val.clear_error(pn_change_group.change_group_limiting);
                 }
             },
             // Валидация оператора
             validation_operator: function (name_operator) {
                 var valid = false;
-                pn_change_group_operator.id_operation = null; // Сбросим оператора
+                pn_change_group.id_operation = null; // Сбросим оператора
                 if (name_operator) {
-                    var obj = pn_change_group_operator.ids_dir.list_operators_wagons.find(function (o) { return o['operators_' + pn_change_group_operator.lang] === name_operator; });
+                    var obj = pn_change_group.ids_dir.list_operators_wagons.find(function (o) { return o['operators_' + pn_change_group.lang] === name_operator; });
                     if (obj) {
-                        pn_change_group_operator.id_operation = obj.id; // Определим оператора
-                        pn_change_group_operator.val.set_control_ok(pn_change_group_operator.change_group_operator, "");
+                        pn_change_group.id_operation = obj.id; // Определим оператора
+                        pn_change_group.val.set_control_ok(pn_change_group.change_group_operator, "");
                         valid = true;
                     } else {
-                        pn_change_group_operator.val.set_control_error(pn_change_group_operator.change_group_operator, "Указаного оператора нет в справочнике ИДС");
+                        pn_change_group.val.set_control_error(pn_change_group.change_group_operator, "Указаного оператора нет в справочнике ИДС");
                     }
                 } else {
-                    pn_change_group_operator.val.set_control_error(pn_change_group_operator.change_group_operator, "Не указан оператор");
+                    pn_change_group.val.set_control_error(pn_change_group.change_group_operator, "Не указан оператор");
                 }
                 return valid
             },
             // Валидация данных
             validation: function () {
-                pn_change_group_operator.val.clear_all();
+                pn_change_group.val.clear_all();
                 var valid = true;
-                //valid = valid & pn_change_group_operator.val.checkSelection(pn_change_group_operator.change_group_operator, "Выберите оператора");
-                //var operator = pn_change_group_operator.ids_dir.list_operators_wagons.find(function (o) { return o['operators_' + pn_change_group_operator.lang] === text; });
-                valid = valid & pn_change_group_operator.validation_operator(pn_change_group_operator.change_group_operator.val());
-                valid = valid & pn_change_group_operator.val.checkInputOfNull(pn_change_group_operator.change_group_rent_start.obj, "Укажите время начало аренды");
-                valid = valid & pn_change_group_operator.val.checkInputOfDateTime(pn_change_group_operator.change_group_rent_start.obj, lang === 'ru' ? 'DD.MM.YYYY HH:mm:ss' : 'MM/DD/YYYY HH:mm:ss');
+                var e_operator = pn_change_group.enable_change_operator.prop('checked');
+                var e_limiting = pn_change_group.enable_change_limiting.prop('checked');
+                // Проверим активные панели
+                if (e_operator || e_limiting) {
+                    if (e_operator) {
+                        valid = valid & pn_change_group.validation_operator(pn_change_group.change_group_operator.val());
+                        valid = valid & pn_change_group.val.checkInputOfNull(pn_change_group.change_group_rent_start.obj, "Укажите время начало аренды");
+                        valid = valid & pn_change_group.val.checkInputOfDateTime(pn_change_group.change_group_rent_start.obj, lang === 'ru' ? 'DD.MM.YYYY HH:mm:ss' : 'MM/DD/YYYY HH:mm:ss');
+                    }
+                    if (e_limiting) {
+                        valid = valid & pn_change_group.val.checkSelection(pn_change_group.change_group_limiting, "Выберите ограничение");
+                    }
+                } else {
+                    pn_change_group.val.out_warning_message("Ни одно из свойств не выбрано для правки.")
+                    valid = false;
+                }
                 return valid;
             },
             // Сохранить
             save: function (callback_ok) {
-                var valid = pn_change_group_operator.validation();
+                var valid = pn_change_group.validation();
                 if (valid) {
                     LockScreen(langView('mess_save', langs));
+                    var enb_operator = pn_change_group.enable_change_operator.prop('checked');
+                    var enb_limiting = pn_change_group.enable_change_limiting.prop('checked');
+
                     // Подготовим данные для операции обновления
-                    var wagons_group_operator = {
-                        list_id_rent: pn_change_group_operator.list_id_rent,
-                        id_operator: pn_change_group_operator.id_operation,
-                        start_rent: toISOStringTZ(get_datetime_value(pn_change_group_operator.change_group_rent_start.val(), pn_change_group_operator.lang)),
-                        user: pn_change_group_operator.user_name,
+                    var operation_update_wagons = {
+                        list_nums: pn_change_group.list_nums,
+                        edit_operator: enb_operator,
+                        id_operator: (enb_operator ? pn_change_group.id_operation : null),
+                        start_rent: (enb_operator ? toISOStringTZ(get_datetime_value(pn_change_group.change_group_rent_start.val(), pn_change_group.lang)) : null),
+                        edit_limiting: enb_limiting,
+                        id_limiting: (enb_limiting ? get_select_number_value(pn_change_group.change_group_limiting) : null),
+                        user: pn_change_group.user_name,
                     }
                     // Обновим
-                    pn_change_group_operator.ids_dir.postUpdateOperatorAMKROfWagons(wagons_group_operator, function (result_operation) {
+                    pn_change_group.ids_dir.postOperationUpdateWagons(operation_update_wagons, function (result_operation) {
                         if (result_operation && result_operation.result > 0) {
                             if (typeof callback_ok === 'function') {
-                                pn_change_group_operator.obj.dialog("close");
+                                pn_change_group.obj.dialog("close");
                                 callback_ok({ type: 0, result: result_operation });
                             }
                         } else {
-                            pn_change_group_operator.val.clear_all();
-                            pn_change_group_operator.val.out_error_message("При обновлении оператора на группе вагонов произошла ошибка. Код ошибки = " + (result_operation ? result_operation.result : null));
+                            pn_change_group.val.clear_all();
+                            pn_change_group.val.out_error_message("При обновлении информации по группе вагонов произошла ошибка. Код ошибки = " + (result_operation ? result_operation.result : null));
+                            if (result_operation && result_operation.listResultWagon && result_operation.listResultWagon.length > 0) {
+                                $.each(result_operation.listResultWagon, function (i, el) {
+                                    if (el.result < 0) {
+                                        pn_change_group.val.out_error_message("№ вагона :" + el.num + ". Код ошибки -" + el.result);
+                                    }
+                                });
+                            }
                             LockScreenOff();
                         }
                     });
@@ -740,37 +818,37 @@
                 //var list_old_rent = [];
                 //var list_new_rent = [];
                 //var new_rent = null;
-                //var id_operator = get_select_number_value(pn_change_group_operator.change_group_operator);
-                //var valid = pn_change_group_operator.validation();
+                //var id_operator = get_select_number_value(pn_change_group.change_group_operator);
+                //var valid = pn_change_group.validation();
                 //if (valid) {
                 //    LockScreen(langView('mess_save', langs));
                 //    // Получимсписок номеров вагонов
-                //    for (inum = 0; inum < pn_change_group_operator.rows.length; inum++) {
-                //        list_nums.push(pn_change_group_operator.rows[inum].num);
+                //    for (inum = 0; inum < pn_change_group.rows.length; inum++) {
+                //        list_nums.push(pn_change_group.rows[inum].num);
                 //    }
                 //    // Получим строки справочника по списку номеров вагона
-                //    pn_change_group_operator.ids_dir.getWagonOfNums(list_nums, function (result_wagon) {
+                //    pn_change_group.ids_dir.getWagonOfNums(list_nums, function (result_wagon) {
                 //        for (ir = 0; ir < result_wagon.length; ir++) {
                 //            // Получим текущую аренду
-                //            var car = pn_change_group_operator.ids_dir.getCloneWagons(result_wagon[ir]);
-                //            var current_rent = pn_change_group_operator.ids_dir.getCurrentRentOfWagon(result_wagon[ir]);
-                //            var old_rent = pn_change_group_operator.ids_dir.getCloneWagonsRent(current_rent);
+                //            var car = pn_change_group.ids_dir.getCloneWagons(result_wagon[ir]);
+                //            var current_rent = pn_change_group.ids_dir.getCurrentRentOfWagon(result_wagon[ir]);
+                //            var old_rent = pn_change_group.ids_dir.getCloneWagonsRent(current_rent);
                 //            if (old_rent.id_operator !== id_operator) {
                 //                // Создаем новую строку
                 //                // Закроем старую
-                //                old_rent.rent_end = toISOStringTZ(get_datetime_value(pn_change_group_operator.change_group_rent_start.val(), pn_change_group_operator.lang));
+                //                old_rent.rent_end = toISOStringTZ(get_datetime_value(pn_change_group.change_group_rent_start.val(), pn_change_group.lang));
                 //                old_rent.change = toISOStringTZ(new Date());
-                //                old_rent.change_user = pn_change_group_operator.user_name;
+                //                old_rent.change_user = pn_change_group.user_name;
                 //                // Создадим новую
                 //                new_rent = {
                 //                    "id": 0,
                 //                    "num": old_rent.num,
                 //                    "id_operator": id_operator,
                 //                    "id_limiting": old_rent.id_limiting,
-                //                    "rent_start": toISOStringTZ(get_datetime_value(pn_change_group_operator.change_group_rent_start.val(), pn_change_group_operator.lang)),
+                //                    "rent_start": toISOStringTZ(get_datetime_value(pn_change_group.change_group_rent_start.val(), pn_change_group.lang)),
                 //                    "rent_end": null,
                 //                    "create": toISOStringTZ(new Date()),
-                //                    "create_user": pn_change_group_operator.user_name,
+                //                    "create_user": pn_change_group.user_name,
                 //                    "change": null,
                 //                    "change_user": null,
                 //                    "parent_id": old_rent.id,
@@ -778,9 +856,9 @@
                 //                list_new_rent.push(new_rent);
                 //            } else {
                 //                // Оператор равен, обновим начало аренды
-                //                old_rent.rent_start = toISOStringTZ(get_datetime_value(pn_change_group_operator.change_group_rent_start.val(), pn_change_group_operator.lang));
+                //                old_rent.rent_start = toISOStringTZ(get_datetime_value(pn_change_group.change_group_rent_start.val(), pn_change_group.lang));
                 //                old_rent.change = toISOStringTZ(new Date());
-                //                old_rent.change_user = pn_change_group_operator.user_name;
+                //                old_rent.change_user = pn_change_group.user_name;
                 //            }
                 //            list_old_rent.push(old_rent);
                 //            // Определим бит "требует внимание"
@@ -792,38 +870,38 @@
                 //                car.bit_warning = false;
                 //            }
                 //            car.change = toISOStringTZ(new Date());
-                //            car.change_user = pn_change_group_operator.user_name;
+                //            car.change_user = pn_change_group.user_name;
 
                 //            list_cars.push(car);
                 //        }
                 //        // Обновим старые аренды
-                //        pn_change_group_operator.ids_dir.putListWagonsRent(list_old_rent, function (result_upd) {
+                //        pn_change_group.ids_dir.putListWagonsRent(list_old_rent, function (result_upd) {
                 //            if (result_upd >= 0) {
                 //                // Добавим новые аренды
-                //                pn_change_group_operator.ids_dir.postListWagonsRent(list_new_rent, function (result_add) {
+                //                pn_change_group.ids_dir.postListWagonsRent(list_new_rent, function (result_add) {
                 //                    if (result_add >= 0) {
                 //                        // Обновим осноную строку справочника вагона (с новым состоянием бита внимание и кто правил)
-                //                        pn_change_group_operator.ids_dir.putListWagon(list_cars, function (result_upd_car) {
+                //                        pn_change_group.ids_dir.putListWagon(list_cars, function (result_upd_car) {
                 //                            if (result_upd_car >= 0) {
                 //                                if (typeof callback_ok === 'function') {
-                //                                    pn_change_group_operator.obj.dialog("close");
+                //                                    pn_change_group.obj.dialog("close");
                 //                                    callback_ok({ update: result_upd, add: result_add, cars: result_upd_car });
                 //                                }
                 //                            } else {
                 //                                //pn_change_group_limit.val.clear_all();
-                //                                pn_change_group_operator.val.out_error_message("При обновлении основной информации по группе вагонов произошла ошибка!");
+                //                                pn_change_group.val.out_error_message("При обновлении основной информации по группе вагонов произошла ошибка!");
                 //                                LockScreenOff();
                 //                            }
                 //                        });
                 //                    } else {
-                //                        pn_change_group_operator.val.clear_all();
-                //                        pn_change_group_operator.val.out_error_message("При добавлении новых строки операторов на группу вагонов произошла ошибка!");
+                //                        pn_change_group.val.clear_all();
+                //                        pn_change_group.val.out_error_message("При добавлении новых строки операторов на группу вагонов произошла ошибка!");
                 //                        LockScreenOff();
                 //                    }
                 //                });
                 //            } else {
-                //                pn_change_group_operator.val.clear_all();
-                //                pn_change_group_operator.val.out_error_message("При обновлении операторов на группу вагонов произошла ошибка!");
+                //                pn_change_group.val.clear_all();
+                //                pn_change_group.val.out_error_message("При обновлении операторов на группу вагонов произошла ошибка!");
                 //                LockScreenOff();
                 //            }
                 //        });
@@ -844,7 +922,123 @@
             val: null,                                                                  // класс валидации
             select_num: null,                                                           // номер вагона
             select_obj: null,                                                           // строка
-            select_rent: null,                                                           // строка
+            select_rent: null,                                                          // строка
+            active_tab: null,
+            table_rent: {
+                html_table: $('table#list-rent'),
+                obj: null,
+                num: null,
+                rents: null,
+                init: function () {
+                    this.obj = this.html_table.DataTable({
+                        "paging": false,
+                        "searching": false,
+                        "ordering": true,
+                        "info": true,
+                        "keys": true,
+                        "select": false,
+                        "autoWidth": false,
+                        sScrollX: "100%",
+                        scrollX: true,
+                        language: language_table(langs),
+                        jQueryUI: false,
+                        "createdRow": function (row, data, index) {
+                            //$('td:eq(0)', row).text(index+1);
+                        },
+                        columns: [
+                            {
+                                data: function (row, type, val, meta) {
+                                    return meta.row + 1;
+                                },
+                                title: langView('field_pos', langs),
+                                width: "20px",
+                                orderable: true,
+                                searchable: false
+                            },
+                            {
+                                data: function (row, type, val, meta) {
+                                    return row.Directory_OperatorsWagons ? row.Directory_OperatorsWagons['operators_' + pn_add_edit.lang] : '';
+                                },
+                                title: langView('field_operator', langs),
+                                width: "200px",
+                                orderable: true,
+                                searchable: false
+                            },
+                            {
+                                data: function (row, type, val, meta) { return getReplaceTOfDT(row.rent_start); },
+                                title: langView('field_rent_start', langs),
+                                width: "150px",
+                                orderable: true,
+                                searchable: false
+                            },
+                            {
+                                data: function (row, type, val, meta) { return getReplaceTOfDT(row.rent_end); },
+                                title: langView('field_rent_end', langs),
+                                width: "150px",
+                                orderable: true,
+                                searchable: false
+                            },
+                            {
+                                data: function (row, type, val, meta) {
+                                    return row.Directory_LimitingLoading ? row.Directory_LimitingLoading['limiting_name_' + pn_add_edit.lang] : '';
+                                },
+                                title: langView('field_limiting', langs),
+                                width: "150px",
+                                orderable: true,
+                                searchable: false
+                            },
+                            {
+                                data: function (row, type, val, meta) {
+                                    return row.create ?  row.create_user + '</br> (' + getReplaceTOfDT(row.create) + ')' : null;
+                                },
+                                title: langView('field_create', langs), width: "150px", orderable: false, searchable: false
+                            },
+                            {
+                                data: function (row, type, val, meta) {
+                                    
+                                    return row.change ? row.change_user + '</br>(' + getReplaceTOfDT(row.change) + ')' : null;
+                                }
+                                , title: langView('field_change', langs), width: "150px", orderable: false, searchable: false
+                            }
+                        ],
+                        //dom: 'Bfrtip',
+                    });
+                },
+                // Загрузить информацию
+                load: function (num, callback) {
+                    // Сбросим рабочий массив
+                    LockScreen(langView('mess_delay', langs));
+                    if (num) {
+                        if (pn_add_edit.num !== num) {
+                            pn_add_edit.num = num;
+                            pn_add_edit.ids_dir.getWagonsRentOfNum(num, function (rents) {
+                                pn_add_edit.rents = rents;
+                                pn_add_edit.table_rent.view(pn_add_edit.rents);
+                            });
+                        } else {
+                            pn_add_edit.num = num;
+                            pn_add_edit.table_rent.view(pn_add_edit.rents);
+                        }
+
+                    } else {
+                        LockScreenOff();
+                    }
+                },
+                // Показать таблицу с данными
+                view: function (rents, callback) {
+                    setTimeout(function () {
+                        var list = rents.sort(function (a, b) { return a.id - b.id;});
+                        pn_add_edit.table_rent.obj.clear();
+                        if (list && list.length > 0) {
+                            pn_add_edit.table_rent.obj.rows.add(list);
+                        }
+                        pn_add_edit.table_rent.obj.order([0, 'desc']).draw();
+                        LockScreenOff();
+                    }, 0);
+
+
+                },
+            },
             // Поля формы
             add_edit_num: $('input#add_edit_num'),
             // Поиск и определение вагона
@@ -919,7 +1113,19 @@
                 pn_add_edit.user_name = user_name;
                 pn_add_edit.ids_dir = new IDS_DIRECTORY(pn_add_edit.lang), // Создадим класс IDS_DIRECTORY
                     pn_add_edit.loadReference(function () {
+                        // обработка события show.bs.tab переключение панелей выбора
+                        $('ul#add_edit_tab > li > [data-toggle="tab"]').on('show.bs.tab', function (e) {
+                            switch (e.target.hash) {
+                                case '#total': pn_add_edit.active_tab = 0; break;
+                                case '#rent': pn_add_edit.active_tab = 1; break;
+                            };
+                            // Выбрана рента
+                            if (pn_add_edit.active_tab === 1) {
+                                pn_add_edit.table_rent.load(pn_add_edit.select_obj.num);
+                            }
+                        });
                         // Инициализация элементов
+                        pn_add_edit.table_rent.init()
                         // АДМ
                         pn_add_edit.add_edit_name_adm = cd_initSelect(
                             pn_add_edit.add_edit_name_adm,
@@ -998,7 +1204,7 @@
                         pn_add_edit.add_edit_change_operator = cd_initDateTimeRangePicker(pn_add_edit.add_edit_change_operator, { lang: lang, time: true }, function (datetime) {
 
                         }),
-                        // Оператор УЗ
+                            // Оператор УЗ
                             pn_add_edit.add_edit_operator_car = cd_initSelect(
                                 pn_add_edit.add_edit_operator_car,
                                 {
@@ -1015,7 +1221,7 @@
                         pn_add_edit.add_edit_operator_car_rent_start = cd_initDateTimeRangePicker(pn_add_edit.add_edit_operator_car_rent_start, { lang: lang, time: true }, function (datetime) {
 
                         }),
-                        // Признак собственности
+                            // Признак собственности
                             pn_add_edit.add_edit_type_ownership = cd_initSelect(
                                 pn_add_edit.add_edit_type_ownership,
                                 {
@@ -1045,7 +1251,7 @@
                         pn_add_edit.add_edit_operator_car_rent_start_now = cd_initDateTimeRangePicker(pn_add_edit.add_edit_operator_car_rent_start_now, { lang: lang, time: true }, function (datetime) {
 
                         }),
-                        // ограничение ограничения
+                            // ограничение ограничения
                             pn_add_edit.add_edit_limiting = cd_initSelect(
                                 pn_add_edit.add_edit_limiting,
                                 {
@@ -1079,11 +1285,11 @@
                         pn_add_edit.add_edit_date_rem_uz = cd_initDateTimeRangePicker(pn_add_edit.add_edit_date_rem_uz, { lang: lang, time: false }, function (datetime) {
 
                         }),
-                        // Дата ремонта вагона
+                            // Дата ремонта вагона
                             pn_add_edit.add_edit_date_rem_vag = cd_initDateTimeRangePicker(pn_add_edit.add_edit_date_rem_vag, { lang: lang, time: false }, function (datetime) {
 
                             }),
-                        // Соберем все элементы в массив
+                            // Соберем все элементы в массив
                             pn_add_edit.all_obj = $([])
                                 .add(pn_add_edit.add_edit_num)
                                 .add(pn_add_edit.add_edit_kod_adm)
@@ -1111,7 +1317,7 @@
                                 .add(pn_add_edit.add_edit_date_rem_uz.obj)
                                 .add(pn_add_edit.add_edit_date_rem_vag.obj)
                                 .add(pn_add_edit.add_edit_note)
-                        ;
+                            ;
                         // создадим классы 
 
                         //pn_add_edit.alert = new ALERT($('div#add_edit_alert'));// Создадим класс ALERTG
@@ -1153,7 +1359,7 @@
                             ]
                         });
                         // Sumbit form
-                        pn_add_edit.obj.find("form").on("submit", function (event) {
+                        $("form#form_add_edit").on("submit", function (event) {
                             event.preventDefault();
                         });
                     });
@@ -1162,6 +1368,7 @@
             //  вывести информацию о вагоне
             view_car: function (car) {
                 if (car) {
+                    $('#add_edit_tab a[href="#rent"]').prop('disabled', false);
                     pn_add_edit.select_obj = car;
                     pn_add_edit.select_rent = pn_add_edit.ids_dir.getCurrentRentOfWagon(car)
 
@@ -1203,7 +1410,12 @@
             },
             // открыть окно добавмить вагоны вручную
             Open: function (num) {
+                LockScreen(langView('mess_operation', langs));
                 pn_add_edit.val.clear_all();
+                // По умолчанию первая закладка
+                $('#add_edit_tab a[href="#total"]').tab('show') // Select tab by name
+                $('#add_edit_tab a[href="#rent"]').prop('disabled', true);
+                pn_add_edit.active_tab = 0;
                 pn_add_edit.select_num = num;
                 pn_add_edit.select_obj = null;
                 if (pn_add_edit.select_num) {
@@ -1212,42 +1424,13 @@
                     pn_add_edit.ids_dir.getWagonOfNum(pn_add_edit.select_num, function (result_obj) {
                         if (result_obj) {
                             pn_add_edit.view_car(result_obj);
-                            //    pn_add_edit.select_obj = result_obj;
-                            //    pn_add_edit.select_rent = pn_add_edit.ids_dir.getCurrentRentOfWagon(result_obj)
-
-                            //    pn_add_edit.add_edit_num.val(pn_add_edit.select_obj.num).prop('disabled', true);
-                            //    pn_add_edit.add_search_car.prop('disabled', true);
-                            //    pn_add_edit.add_edit_kod_adm.val(pn_add_edit.ids_dir.getValue_Countrys_Of_ID(Number(pn_add_edit.select_obj.id_countrys), 'code_sng'));
-                            //    pn_add_edit.add_edit_name_adm.val(Number(pn_add_edit.select_obj.id_countrys));
-                            //    //pn_add_edit.add_edit_kod_rod.val(pn_add_edit.ids_dir.getValue_GenusWagons_Of_ID(Number(pn_add_edit.select_obj.id_genus), 'rod_uz'));
-                            //    pn_add_edit.add_edit_name_rod.val(Number(pn_add_edit.select_obj.id_genus));
-                            //    pn_add_edit.add_edit_name_rod_abbr.val(pn_add_edit.ids_dir.getValue_GenusWagons_Of_ID(Number(pn_add_edit.select_obj.id_genus), 'abbr', pn_add_edit.lang));
-                            //    pn_add_edit.add_edit_usl_tip.val(pn_add_edit.select_obj.usl_tip);
-                            //    pn_add_edit.add_edit_kol_os.val(pn_add_edit.select_obj.kol_os);
-                            //    pn_add_edit.add_edit_gruzp.val(pn_add_edit.select_obj.gruzp);
-                            //    pn_add_edit.add_edit_owner_car.val(Number(pn_add_edit.select_obj.id_owner));
-                            //    pn_add_edit.add_edit_operator_uz_car.val(Number(pn_add_edit.select_obj.id_operator_uz));
-                            //    pn_add_edit.add_edit_change_operator.setDateTime(pn_add_edit.select_obj.change_operator !== null ? pn_add_edit.select_obj.change_operator.replace(/T/g, ' ') : null);
-
-                            //    pn_add_edit.add_edit_operator_car.val(Number(pn_add_edit.select_rent.id_operator));
-                            //    pn_add_edit.add_edit_operator_car_rent_start.setDateTime(pn_add_edit.select_rent.rent_start !== null ? pn_add_edit.select_rent.rent_start.replace(/T/g, ' ') : null);
-                            //    pn_add_edit.add_edit_type_ownership.val(pn_add_edit.select_obj.id_type_ownership);
-
-                            //    pn_add_edit.add_edit_operator_car_new.val(-1);
-                            //    pn_add_edit.add_edit_operator_car_rent_start_now.setDateTime(null);
-                            //    pn_add_edit.add_edit_limiting.val(Number(pn_add_edit.select_rent.id_limiting));
-                            //    pn_add_edit.add_edit_sign.val(pn_add_edit.select_obj.sign !== null ? pn_add_edit.select_obj.sign : -1);
-
-                            //    pn_add_edit.add_edit_date_rem_uz.setDateTime(pn_add_edit.select_obj.date_rem_uz !== null ? pn_add_edit.select_obj.date_rem_uz.replace(/T/g, ' ') : null);
-                            //    pn_add_edit.add_edit_date_rem_vag.setDateTime(pn_add_edit.select_obj.date_rem_vag !== null ? pn_add_edit.select_obj.date_rem_vag.replace(/T/g, ' ') : null);
-
-                            //    pn_add_edit.add_edit_note.text(pn_add_edit.select_obj.note);
                             pn_add_edit.obj.dialog("open");
-
+                            LockScreenOff();
                         }
                         else {
                             pn_add_edit.val.clear_all();
                             pn_add_edit.val.out_error_message("Ошибка. Не могу найти строку по id = " + pn_add_edit.select_num);
+                            LockScreenOff();
                         }
                     });
                 } else {
@@ -1255,19 +1438,11 @@
                     pn_add_edit.add_edit_num.val('').prop('disabled', false);
                     pn_add_edit.add_search_car.prop('disabled', false);
                     pn_add_edit.disabled_element();
-
-                    //pn_add_edit.add_edit_cargo_group.val(-1);
-                    //pn_add_edit.add_edit_cargo_etsng.val(-1);
-                    //pn_add_edit.add_edit_cargo_name_ru.val('');
-                    //pn_add_edit.add_edit_cargo_name_en.val('');
-                    //pn_add_edit.add_edit_code_sap.val('');
-                    //pn_add_edit.add_edit_sending.prop('checked', false);
                     // Добавим запись
                     pn_add_edit.obj.dialog("open");
+                    LockScreenOff();
                 }
             },
-
-
             // Сделать не активными все элементы
             disabled_element: function () {
                 pn_add_edit.add_edit_kod_adm.prop('disabled', true);
@@ -1740,7 +1915,7 @@
                     language: language_table(langs),
                     jQueryUI: false,
                     "createdRow": function (row, data, index) {
-                        $(row).attr('id', data.id_wagons_rent);
+                        $(row).attr('id', data.num);
 
                         //data.rent_start = data.rent_start !== null ? data.rent_start.replace(/T/g, ' ') : null
                         //$('td', row).eq(7).text(data.rent_start !== null ? data.rent_start.replace(/T/g, ' ') : null);
@@ -1789,10 +1964,10 @@
                             data: "sign", title: langView('field_sign', langs), width: "100px", orderable: false, searchable: false
                         },
                         {
-                            data: "gruzp", title: langView('field_gruzp', langs), width: "50px", orderable: false, searchable: false
+                            data: function (row, type, val, meta) { return row.gruzp !== null ? Number(row.gruzp).toFixed(2) : null; }, title: langView('field_gruzp', langs), width: "50px", orderable: false, searchable: false
                         },
                         {
-                            data: "tara", title: langView('field_tara', langs), width: "50px", orderable: false, searchable: false
+                            data: function (row, type, val, meta) { return row.tara !== null ? Number(row.tara).toFixed(2) : null; }, title: langView('field_tara', langs), width: "50px", orderable: false, searchable: false
                         },
                         {
                             data: "kol_os", title: langView('field_kol_os', langs), width: "50px", orderable: false, searchable: false
@@ -1908,45 +2083,44 @@
                         {
                             text: langView('title_button_edit', langs),
                             action: function (e, dt, node, config) {
-                                if (table_directory.select_string) {
-                                    pn_add_edit.Open(table_directory.select_string.num);
+                                var rows = table_directory.html_table.find('tbody tr.selected');
+                                if (rows && rows.length === 1) {
+                                    var num = $(rows[0]).attr("id")
+                                    if (num) {
+                                        pn_add_edit.Open(Number(num));
+                                    }
                                 }
                             },
                             enabled: false
                         },
                         {
-                            text: langView('title_button_edit_operator', langs),
+                            text: langView('title_button_edit_group', langs),
                             action: function (e, dt, node, config) {
-                                //var items = table_directory.obj.rows({ selected: true });
-                                //var row_cargo = table_directory.obj.rows(items[0]).data();
                                 // Получим список выделеных строк
                                 var rows = table_directory.html_table.find('tbody tr.selected');
                                 if (rows && rows.length > 0) {
                                     // Получим перечень id последних аренд
-                                    var list_id_rent = [];
+                                    var list_nums = [];
                                     rows.each(function (i, elem) {
-                                        var id_rent = $(elem).attr("id")
-                                        if (id_rent) {
-                                            list_id_rent.push(Number(id_rent));
-                                        } else {
-                                            alert.out_error_message('Неопределённо id по записи №'+(i+1));
-                                            return;
+                                        var num = $(elem).attr("id")
+                                        if (num) {
+                                            list_nums.push(Number(num));
                                         }
                                     });
-                                    pn_change_group_operator.Open(list_id_rent);
+                                    pn_change_group.Open(list_nums);
                                 }
                             },
                             enabled: false
                         },
-                        {
-                            text: langView('title_button_edit_limit', langs),
-                            action: function (e, dt, node, config) {
-                                var items = table_directory.obj.rows({ selected: true });
-                                var row_cargo = table_directory.obj.rows(items[0]).data();
-                                pn_change_group_limit.Open(row_cargo);
-                            },
-                            enabled: false
-                        },
+                        //{
+                        //    text: langView('title_button_edit_limit', langs),
+                        //    action: function (e, dt, node, config) {
+                        //        var items = table_directory.obj.rows({ selected: true });
+                        //        var row_cargo = table_directory.obj.rows(items[0]).data();
+                        //        pn_change_group_limit.Open(row_cargo);
+                        //    },
+                        //    enabled: false
+                        //},
                         {
                             extend: 'pageLength',
                         }
@@ -1972,7 +2146,7 @@
                 if (table_directory.count_string > 0) {
                     table_directory.obj.button(3).enable(true);
                     table_directory.obj.button(6).enable(true);
-                    table_directory.obj.button(7).enable(true);
+                    //table_directory.obj.button(7).enable(true);
                     if (table_directory.count_string === 1) {
                         table_directory.obj.button(5).enable(true);
                         //table_directory.obj.button(6).enable(true);
@@ -2162,7 +2336,7 @@
                 table_directory.obj.button(3).enable(false);
                 table_directory.obj.button(5).enable(false);
                 table_directory.obj.button(6).enable(false);
-                table_directory.obj.button(7).enable(false);
+                //table_directory.obj.button(7).enable(false);
             }
         };
     //================================================================
@@ -2172,20 +2346,20 @@
     loadReference(function (result) {
         //if (lang === 'ru') $.datepicker.setDefaults($.datepicker.regional.ru);
         pn_search.init();
-        // Инициализация окна править группу ограничений
-        pn_change_group_limit.init(lang, user_name, function (result_change_group) {
-            if (result_change_group > 0) {
-                // Показать после изменения
-                pn_search.view_cars();
-                alert.out_info_message('Обновлены огранечения по группе вагонов в количестве - ' + result_change_group + ' записей');
-            }
-        });
+        //// Инициализация окна править группу ограничений
+        //pn_change_group_limit.init(lang, user_name, function (result_change_group) {
+        //    if (result_change_group > 0) {
+        //        // Показать после изменения
+        //        pn_search.view_cars();
+        //        alert.out_info_message('Обновлены огранечения по группе вагонов в количестве - ' + result_change_group + ' записей');
+        //    }
+        //});
         // Инициализация окна править группу операторов
-        pn_change_group_operator.init(lang, user_name, function (result_operation) {
+        pn_change_group.init(lang, user_name, function (result_operation) {
             if (result_operation) {
                 // Показать после изменения
                 pn_search.view_cars();
-                alert.out_info_message('Обновлены операторы по группе вагонов в количестве - ' + result_operation.result.listResultID.length + ' записей.');
+                alert.out_info_message('Обновлена информация по группе вагонов в количестве - ' + result_operation.result.listResultWagon.length + ' записей.');
             }
         });
         // Инициализация окна добавить править груз

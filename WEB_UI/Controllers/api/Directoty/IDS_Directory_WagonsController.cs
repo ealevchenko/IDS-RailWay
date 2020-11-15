@@ -86,11 +86,14 @@ namespace WEB_UI.Controllers.api
     /// <summary>
     /// Класс данных для выполнения операции групповой смены оператора на вагоны
     /// </summary>
-    public class ChangeOperationGroupWagon
+    public class OperationUpdateWagons
     {
-        public int id_operator { get; set; }        
-        public List<int> list_id_rent { get; set; }        
-        public DateTime start_rent { get; set; }
+        public List<int> list_nums { get; set; } 
+        public bool edit_operator { get; set; }         
+        public int? id_operator { get; set; }        
+        public DateTime? start_rent { get; set; }
+        public bool edit_limiting { get; set; } 
+        public int? id_limiting { get; set; }         
         public string user { get; set; }
     }
     
@@ -113,16 +116,16 @@ namespace WEB_UI.Controllers.api
         }
 
         #region ВЫПОЛНЕНИЕ ОПЕРАЦИЙ ПРАВКИ СПРАВОЧНИКА
-        // POST api/ids/directory/wagon/update/operator/group/
+        // POST api/ids/directory/wagon/operation/update/
         [HttpPost]
-        [Route("update/operator/group/")]
+        [Route("operation/update/")]
         [ResponseType(typeof(OperationResult))]
-        public IHttpActionResult PostUpdateOperatorAMKROfWagons([FromBody] ChangeOperationGroupWagon value)
+        public IHttpActionResult PostOperationUpdateWagons([FromBody] OperationUpdateWagons value)
         {
             try
             {
                 IDSDirectory ids_dir = new IDSDirectory(service.WebAPI_IDS);
-                OperationResult result = ids_dir.UpdateOperatorAMKROfWagons(value.list_id_rent, value.id_operator, value.start_rent, value.user);
+                OperationResult result = ids_dir.OperationUpdateWagons(value.list_nums, value.edit_operator, value.id_operator, value.start_rent, value.edit_limiting, value.id_limiting, value.user);
                 return Ok(result);
             }
             catch (Exception e)

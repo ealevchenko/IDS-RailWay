@@ -1000,9 +1000,9 @@ IDS_DIRECTORY.prototype.getViewWagonOfOperator = function (id_operator, callback
 };
 //---------- Update
 //Обновим оператора по группе вагонов
-IDS_DIRECTORY.prototype.postUpdateOperatorAMKROfWagons = function (operation_wagons, callback) {
+IDS_DIRECTORY.prototype.postOperationUpdateWagons = function (operation_wagons, callback) {
     $.ajax({
-        url: '../../api/ids/directory/wagon/update/operator/group/',
+        url: '../../api/ids/directory/wagon/operation/update/',
         type: 'POST',
         data: JSON.stringify(operation_wagons),
         contentType: "application/json;charset=utf-8",
@@ -1017,7 +1017,7 @@ IDS_DIRECTORY.prototype.postUpdateOperatorAMKROfWagons = function (operation_wag
         },
         error: function (x, y, z) {
             LockScreenOff();
-            OnAJAXError("IDS_DIRECTORY.postUpdateOperatorAMKROfWagons", x, y, z);
+            OnAJAXError("IDS_DIRECTORY.postOperationUpdateWagons", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -1140,6 +1140,29 @@ IDS_DIRECTORY.prototype.getWagonsRent = function (callback) {
         },
         error: function (x, y, z) {
             OnAJAXError("IDS_DIRECTORY.getWagonsRent", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить аренды по номеру вагона
+IDS_DIRECTORY.prototype.getWagonsRentOfNum = function (num, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/wagon_rent/num/'+ num,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getWagonsRentOfNum", x, y, z);
         },
         complete: function () {
             AJAXComplete();

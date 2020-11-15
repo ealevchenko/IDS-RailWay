@@ -32,10 +32,10 @@
             <div class="card border-warning mt-3">
                 <!-- Шапка -->
                 <div class="card-header bg-warning text-white">
-                    <button class="btn btn-link text-light text-uppercase" data-toggle="collapse" data-target="#demo">Найти вагоны</button><span id="type-search" class="badge badge-primary"></span>
+                    <button class="btn btn-link text-light text-uppercase" data-toggle="collapse" data-target="#global-tab">Найти вагоны</button><span id="type-search" class="badge badge-primary"></span>
                 </div>
                 <!-- Текстовый контент -->
-                <div class="card-body collapse" id="demo">
+                <div class="card-body collapse" id="global-tab">
                     <ul class="nav nav-tabs">
                         <li class="nav-item">
                             <a class="nav-link active" data-toggle="tab" href="#cars-warning">Требующие правки</a>
@@ -186,45 +186,52 @@
 
 <div id="dialog-confirm"></div>
 
-<div id="change_group_limit" title="" style="display:none">
-    <div class="alert" id="change_group_limit_alert"></div>
-    <form id="form_change_group_limit">
-        <div class="form-group row" style="margin-bottom:0.5rem">
-            <label for="change_group_limiting" class="col-sm-5 col-form-label">@DirectoryResource.title_add_edit_limiting:</label>
-            <div class="col-sm-7">
-                <select class="form-control" id="change_group_limiting" name="change_group_limiting" required="required"></select>
-                <div class="invalid-feedback">
-
+<div id="change_group" title="" style="display:none">
+    <div class="alert" id="change_group_alert"></div>
+    <form id="form_change_group">
+        <fieldset class="border-primary">
+            <div class="row">
+                <div class="col-xl-1 text-center">
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="enable_change_operator">
+                    </div>
+                </div>
+                <div class="col-xl-11">
+                    <div class="form-group row" style="margin-bottom:0.5rem">
+                        <label for="change_group_operator" class="col-sm-5 col-form-label">@DirectoryResource.title_add_edit_operator_car_new:</label>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" id="change_group_operator" name="change_group_operator" title="" required="required">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="form-group row" style="margin-bottom:0.5rem">
+                        <label for="change_group_rent_start" class="col-sm-5 col-form-label">@DirectoryResource.title_add_edit_operator_car_rent_start:</label>
+                        <div class="col-sm-7">
+                            <input type="datetime" class="form-control" id="change_group_rent_start" name="change_group_rent_start">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- Allow form submission with keyboard without duplicating the dialog button -->
-        <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
-    </form>
-</div>
-
-<div id="change_group_operator" title="" style="display:none">
-    <div class="alert" id="change_group_operator_alert"></div>
-    <form id="form_change_group_operator">
-        <div class="form-group row" style="margin-bottom:0.5rem">
-            <label for="change_group_operator" class="col-sm-5 col-form-label">@DirectoryResource.title_add_edit_operator_car_new:</label>
-            <div class="col-sm-7">
-                @*<select class="form-control" id="change_group_operator" name="change_group_operator" required="required"></select>
-                    <div class="invalid-feedback"></div>*@
-                <input type="text" class="form-control" id="change_group_operator" name="change_group_operator" title="" required="required">
-                <div class="invalid-feedback"></div>
-            </div>
-        </div>
-        <div class="form-group row" style="margin-bottom:0.5rem">
-            <label for="change_group_rent_start" class="col-sm-5 col-form-label">@DirectoryResource.title_add_edit_operator_car_rent_start:</label>
-            <div class="col-sm-7">
-                <input type="datetime" class="form-control" id="change_group_rent_start" name="change_group_rent_start">
-                <div class="invalid-feedback">
-
+        </fieldset>
+        <fieldset class="border-primary">
+            <div class="row">
+                <div class="col-xl-1 text-center">
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="enable_change_limiting">
+                    </div>
+                </div>
+                <div class="col-xl-11">
+                    <div class="form-group row" style="margin-bottom:0.5rem">
+                        <label for="change_group_limiting" class="col-sm-5 col-form-label">@DirectoryResource.title_add_edit_limiting:</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" id="change_group_limiting" name="change_group_limiting" required="required"></select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-
+        </fieldset>
         <!-- Allow form submission with keyboard without duplicating the dialog button -->
         <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
     </form>
@@ -233,183 +240,209 @@
 <div id="add_edit" title="" style="display:none">
     <div class="alert" id="add_edit_alert"></div>
     <form id="form_add_edit">
-        <div class="row" style="margin-bottom:0.5rem">
-            <div class="col-md-6 mb-1 text-left">
-                <label for="add_edit_num" class="col-form-label">@DirectoryResource.title_add_edit_num:</label>
-                <div class="input-group">
-                    <input type="number" class="form-control" id="add_edit_num" name="add_edit_num" disabled="disabled">
-                    <div class="input-group-append">
-                        <button type="button" class="btn btn-warning btn" id="add_search_car" title="Определить вагон">
-                            <i class="fa fa-search" aria-hidden="true"></i>
-                        </button>
+        <div>
+            <ul class="nav nav-tabs" id="add_edit_tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" id="total-tab" data-toggle="tab" href="#total" role="tab" aria-controls="total" aria-selected="true">Общие данные</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="rent-tab" data-toggle="tab" href="#rent" role="tab" aria-controls="rent" aria-selected="false">Аренды</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="total" role="tabpanel" aria-labelledby="total-tab">
+                    <div class="row" style="margin-bottom:0.5rem">
+                        <div class="col-md-6 mb-1 text-left">
+                            <label for="add_edit_num" class="col-form-label">@DirectoryResource.title_add_edit_num:</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="add_edit_num" name="add_edit_num" disabled="disabled">
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-warning btn" id="add_search_car" title="Определить вагон">
+                                        <i class="fa fa-search" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="invalid-feedback">
+
+                            </div>
+                        </div>
+                        <div class="col-md-2 mb-1 text-left">
+                            <label for="add_edit_kod_adm" class="col-form-label">@DirectoryResource.title_add_edit_kod_adm:</label>
+                            <input type="text" class="form-control" id="add_edit_kod_adm" name="add_edit_kod_adm" disabled="disabled">
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-1 text-left">
+                            <label for="add_edit_name_adm" class="col-form-label">@DirectoryResource.title_add_edit_name_adm:</label>
+                            <select class="form-control" id="add_edit_name_adm" name="add_edit_name_adm"></select>
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom:0.5rem">
+
+                        @*<div class="col-md-1 mb-1 text-left">
+                                <label for="add_edit_kod_rod" class="col-form-label">@DirectoryResource.title_add_edit_kod_rod:</label>
+                                <input type="text" class="form-control" id="add_edit_kod_rod" name="add_edit_kod_rod" disabled="disabled">
+                            </div>*@
+                        <div class="col-md-4 mb-1 text-left">
+                            <label for="add_edit_name_rod" class="col-form-label">@DirectoryResource.title_add_edit_name_rod:</label>
+                            <select class="form-control" id="add_edit_name_rod" name="add_edit_name_rod"></select>
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                        <div class="col-md-2 mb-1 text-left">
+                            <label for="add_edit_name_rod_abbr" class="col-form-label">@DirectoryResource.title_add_edit_name_rod_abbr:</label>
+                            <input type="text" class="form-control" id="add_edit_name_rod_abbr" name="add_edit_name_rod_abbr" disabled="disabled">
+                        </div>
+                        <div class="col-md-2 mb-1 text-left">
+                            <label for="add_edit_usl_tip" class="col-form-label">@DirectoryResource.title_add_edit_usl_tip:</label>
+                            <input type="text" class="form-control" id="add_edit_usl_tip" name="add_edit_usl_tip">
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                        <div class="col-md-2 mb-1 text-left">
+                            <label for="add_edit_kol_os" class="col-form-label">@DirectoryResource.title_add_add_edit_kol_os:</label>
+                            <select class="form-control" id="add_edit_kol_os" name="add_edit_kol_os"></select>
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                        <div class="col-md-2 mb-1 text-left">
+                            <label for="add_edit_gruzp" class="col-form-label">@DirectoryResource.title_add_edit_gruzp:</label>
+                            <input type="number" class="form-control" id="add_edit_gruzp" name="add_edit_gruzp" disabled="disabled">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom:0.5rem">
+                        <div class="col-md-2 mb-1 text-left">
+                            <label for="add_edit_tara" class="col-form-label">@DirectoryResource.title_add_edit_tara:</label>
+                            <input type="number" class="form-control" id="add_edit_tara" name="add_edit_tara">
+                        </div>
+                        <div class="col-md-2 mb-1 text-left">
+                            <label for="add_edit_year_built" class="col-form-label">@DirectoryResource.title_add_edit_year_built:</label>
+                            <input type="number" class="form-control" id="add_edit_year_built" name="add_edit_year_built">
+                        </div>
+                        <div class="col-md-4 mb-1 text-left">
+                            <label for="add_edit_factory_number" class="col-form-label">@DirectoryResource.title_add_edit_factory_number:</label>
+                            <input type="text" class="form-control" id="add_edit_factory_number" name="add_edit_factory_number">
+                        </div>
+                        <div class="col-md-4 mb-1 text-left">
+                            <label for="add_edit_inventory_number" class="col-form-label">@DirectoryResource.title_add_edit_inventory_number:</label>
+                            <input type="text" class="form-control" id="add_edit_inventory_number" name="add_edit_inventory_number">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom:0.5rem">
+                        <div class="col-md-5 mb-1 text-left">
+                            <label for="add_edit_owner_car" class="col-form-label">@DirectoryResource.title_add_edit_owner_car:</label>
+                            <select class="form-control" id="add_edit_owner_car" name="add_edit_owner_car" disabled="disabled"></select>
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                        <div class="col-md-5 mb-1 text-left">
+                            <label for="add_edit_operator_uz_car" class="col-form-label">@DirectoryResource.title_add_edit_operator_uz_car:</label>
+                            <select class="form-control" id="add_edit_operator_uz_car" name="add_edit_operator_uz_car" disabled="disabled"></select>
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                        <div class="col-md-2 mb-1 text-left">
+                            <label for="add_edit_change_operator" class="col-form-label">@DirectoryResource.title_add_edit_change_operator:</label>
+                            <input type="datetime" class="form-control" id="add_edit_change_operator" name="add_edit_change_operator" disabled="disabled">
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-1 text-left">
+                            <label for="add_edit_operator_car" class="col-form-label">@DirectoryResource.title_add_edit_operator_car:</label>
+                            <select class="form-control" id="add_edit_operator_car" name="add_edit_operator_car" disabled="disabled"></select>
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-1 text-left">
+                            <label for="add_edit_operator_car_rent_start" class="col-form-label">@DirectoryResource.title_add_edit_operator_car_rent_start:</label>
+                            <input type="datetime" class="form-control" id="add_edit_operator_car_rent_start" name="add_edit_operator_car_rent_start" disabled="disabled">
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-1 text-left">
+                            <label for="add_edit_type_ownership" class="col-form-label">@DirectoryResource.title_add_edit_type_ownership:</label>
+                            <select class="form-control" id="add_edit_type_ownership" name="add_edit_type_ownership" disabled="disabled"></select>
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom:0.5rem">
+                        <div class="col-md-12 mt-1 text-left">
+                            <div class="alert alert-warning" role="alert">@DirectoryResource.title_add_edit_message_new_operator</div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom:0.5rem">
+                        <div class="col-md-6 mb-1 text-left">
+                            <label for="add_edit_operator_car_new" class="col-form-label">@DirectoryResource.title_add_edit_operator_car_new:</label>
+                            <select class="form-control" id="add_edit_operator_car_new" name="add_edit_operator_car_new"></select>
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-1 text-left">
+                            <label for="add_edit_operator_car_rent_start_now" class="col-form-label">@DirectoryResource.title_add_edit_operator_car_rent_start:</label>
+                            <input type="datetime" class="form-control" id="add_edit_operator_car_rent_start_now" name="add_edit_operator_car_rent_start_now">
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom:0.5rem">
+                        <div class="col-md-9 mb-1 text-left">
+                            <label for="add_edit_limiting" class="col-form-label">@DirectoryResource.title_add_edit_limiting:</label>
+                            <select class="form-control" id="add_edit_limiting" name="add_edit_limiting"></select>
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-1 text-left">
+                            <label for="add_edit_sign" class="col-form-label">@DirectoryResource.title_add_edit_sign:</label>
+                            <select class="form-control" id="add_edit_sign" name="add_edit_sign"></select>
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom:0.5rem">
+                        <div class="col-md-6 mb-1 text-left">
+                            <label for="add_edit_date_rem_uz" class="col-form-label">@DirectoryResource.title_add_edit_date_rem_uz:</label>
+                            <input type="datetime" class="form-control" id="add_edit_date_rem_uz" name="add_edit_date_rem_uz" disabled="disabled">
+                        </div>
+                        <div class="col-md-6 mb-1 text-left">
+                            <label for="add_edit_date_rem_vag" class="col-form-label">@DirectoryResource.title_add_edit_date_rem_vag:</label>
+                            <input type="datetime" class="form-control" id="add_edit_date_rem_vag" name="add_edit_date_rem_vag">
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom:0.5rem">
+                        <div class="col-md-12 mb-1 text-left">
+                            <label for="add_edit_note" class="col-form-label">@DirectoryResource.title_add_edit_note:</label>
+                            <textarea class="form-control" rows="3" id="add_edit_note" name="add_edit_note" disabled="disabled"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="add_edit_exit_ban" style="position:relative">
+                        <label class="form-check-label" for="add_edit_exit_ban">@DirectoryResource.title_add_edit_exit_ban</label>
+                    </div>
+
+                </div>
+                <div class="tab-pane fade" id="rent" role="tabpanel" aria-labelledby="rent-tab">
+                    <div class="row">
+                        <div class="col-xl-12" style="font-size:13px">
+                            <div>
+                                <table id="list-rent" class="display compact hover row-border" style="width:100%;table-layout:fixed"></table>
+                            </div>
+                            
+                        </div>
                     </div>
                 </div>
-                <div class="invalid-feedback">
-
-                </div>
-            </div>
-            <div class="col-md-2 mb-1 text-left">
-                <label for="add_edit_kod_adm" class="col-form-label">@DirectoryResource.title_add_edit_kod_adm:</label>
-                <input type="text" class="form-control" id="add_edit_kod_adm" name="add_edit_kod_adm" disabled="disabled">
-                <div class="invalid-feedback">
-                </div>
-            </div>
-            <div class="col-md-4 mb-1 text-left">
-                <label for="add_edit_name_adm" class="col-form-label">@DirectoryResource.title_add_edit_name_adm:</label>
-                <select class="form-control" id="add_edit_name_adm" name="add_edit_name_adm"></select>
-                <div class="invalid-feedback">
-                </div>
             </div>
         </div>
-        <div class="row" style="margin-bottom:0.5rem">
-
-            @*<div class="col-md-1 mb-1 text-left">
-                    <label for="add_edit_kod_rod" class="col-form-label">@DirectoryResource.title_add_edit_kod_rod:</label>
-                    <input type="text" class="form-control" id="add_edit_kod_rod" name="add_edit_kod_rod" disabled="disabled">
-                </div>*@
-            <div class="col-md-4 mb-1 text-left">
-                <label for="add_edit_name_rod" class="col-form-label">@DirectoryResource.title_add_edit_name_rod:</label>
-                <select class="form-control" id="add_edit_name_rod" name="add_edit_name_rod"></select>
-                <div class="invalid-feedback">
-                </div>
-            </div>
-            <div class="col-md-2 mb-1 text-left">
-                <label for="add_edit_name_rod_abbr" class="col-form-label">@DirectoryResource.title_add_edit_name_rod_abbr:</label>
-                <input type="text" class="form-control" id="add_edit_name_rod_abbr" name="add_edit_name_rod_abbr" disabled="disabled">
-            </div>
-            <div class="col-md-2 mb-1 text-left">
-                <label for="add_edit_usl_tip" class="col-form-label">@DirectoryResource.title_add_edit_usl_tip:</label>
-                <input type="text" class="form-control" id="add_edit_usl_tip" name="add_edit_usl_tip">
-                <div class="invalid-feedback">
-                </div>
-            </div>
-            <div class="col-md-2 mb-1 text-left">
-                <label for="add_edit_kol_os" class="col-form-label">@DirectoryResource.title_add_add_edit_kol_os:</label>
-                <select class="form-control" id="add_edit_kol_os" name="add_edit_kol_os"></select>
-                <div class="invalid-feedback">
-                </div>
-            </div>
-            <div class="col-md-2 mb-1 text-left">
-                <label for="add_edit_gruzp" class="col-form-label">@DirectoryResource.title_add_edit_gruzp:</label>
-                <input type="number" class="form-control" id="add_edit_gruzp" name="add_edit_gruzp" disabled="disabled">
-            </div>
-        </div>
-        <div class="row" style="margin-bottom:0.5rem">
-            <div class="col-md-2 mb-1 text-left">
-                <label for="add_edit_tara" class="col-form-label">@DirectoryResource.title_add_edit_tara:</label>
-                <input type="number" class="form-control" id="add_edit_tara" name="add_edit_tara">
-            </div>
-            <div class="col-md-2 mb-1 text-left">
-                <label for="add_edit_year_built" class="col-form-label">@DirectoryResource.title_add_edit_year_built:</label>
-                <input type="number" class="form-control" id="add_edit_year_built" name="add_edit_year_built">
-            </div>
-            <div class="col-md-4 mb-1 text-left">
-                <label for="add_edit_factory_number" class="col-form-label">@DirectoryResource.title_add_edit_factory_number:</label>
-                <input type="text" class="form-control" id="add_edit_factory_number" name="add_edit_factory_number">
-            </div>
-            <div class="col-md-4 mb-1 text-left">
-                <label for="add_edit_inventory_number" class="col-form-label">@DirectoryResource.title_add_edit_inventory_number:</label>
-                <input type="text" class="form-control" id="add_edit_inventory_number" name="add_edit_inventory_number">
-            </div>
-        </div>
-        <div class="row" style="margin-bottom:0.5rem">
-            <div class="col-md-5 mb-1 text-left">
-                <label for="add_edit_owner_car" class="col-form-label">@DirectoryResource.title_add_edit_owner_car:</label>
-                <select class="form-control" id="add_edit_owner_car" name="add_edit_owner_car" disabled="disabled"></select>
-                <div class="invalid-feedback">
-                </div>
-            </div>
-            <div class="col-md-5 mb-1 text-left">
-                <label for="add_edit_operator_uz_car" class="col-form-label">@DirectoryResource.title_add_edit_operator_uz_car:</label>
-                <select class="form-control" id="add_edit_operator_uz_car" name="add_edit_operator_uz_car" disabled="disabled"></select>
-                <div class="invalid-feedback">
-                </div>
-            </div>
-            <div class="col-md-2 mb-1 text-left">
-                <label for="add_edit_change_operator" class="col-form-label">@DirectoryResource.title_add_edit_change_operator:</label>
-                <input type="datetime" class="form-control" id="add_edit_change_operator" name="add_edit_change_operator" disabled="disabled">
-                <div class="invalid-feedback">
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4 mb-1 text-left">
-                <label for="add_edit_operator_car" class="col-form-label">@DirectoryResource.title_add_edit_operator_car:</label>
-                <select class="form-control" id="add_edit_operator_car" name="add_edit_operator_car" disabled="disabled"></select>
-                <div class="invalid-feedback">
-                </div>
-            </div>
-            <div class="col-md-4 mb-1 text-left">
-                <label for="add_edit_operator_car_rent_start" class="col-form-label">@DirectoryResource.title_add_edit_operator_car_rent_start:</label>
-                <input type="datetime" class="form-control" id="add_edit_operator_car_rent_start" name="add_edit_operator_car_rent_start" disabled="disabled">
-                <div class="invalid-feedback">
-                </div>
-            </div>
-            <div class="col-md-4 mb-1 text-left">
-                <label for="add_edit_type_ownership" class="col-form-label">@DirectoryResource.title_add_edit_type_ownership:</label>
-                <select class="form-control" id="add_edit_type_ownership" name="add_edit_type_ownership" disabled="disabled"></select>
-                <div class="invalid-feedback">
-                </div>
-            </div>
-        </div>
-        <div class="row" style="margin-bottom:0.5rem">
-            <div class="col-md-12 mt-1 text-left">
-                <div class="alert alert-warning" role="alert">@DirectoryResource.title_add_edit_message_new_operator</div>
-            </div>
-        </div>
-        <div class="row" style="margin-bottom:0.5rem">
-            <div class="col-md-6 mb-1 text-left">
-                <label for="add_edit_operator_car_new" class="col-form-label">@DirectoryResource.title_add_edit_operator_car_new:</label>
-                <select class="form-control" id="add_edit_operator_car_new" name="add_edit_operator_car_new"></select>
-                <div class="invalid-feedback">
-                </div>
-            </div>
-            <div class="col-md-6 mb-1 text-left">
-                <label for="add_edit_operator_car_rent_start_now" class="col-form-label">@DirectoryResource.title_add_edit_operator_car_rent_start:</label>
-                <input type="datetime" class="form-control" id="add_edit_operator_car_rent_start_now" name="add_edit_operator_car_rent_start_now">
-                <div class="invalid-feedback">
-                </div>
-            </div>
-        </div>
-        <div class="row" style="margin-bottom:0.5rem">
-            <div class="col-md-9 mb-1 text-left">
-                <label for="add_edit_limiting" class="col-form-label">@DirectoryResource.title_add_edit_limiting:</label>
-                <select class="form-control" id="add_edit_limiting" name="add_edit_limiting"></select>
-                <div class="invalid-feedback">
-                </div>
-            </div>
-            <div class="col-md-3 mb-1 text-left">
-                <label for="add_edit_sign" class="col-form-label">@DirectoryResource.title_add_edit_sign:</label>
-                <select class="form-control" id="add_edit_sign" name="add_edit_sign"></select>
-                <div class="invalid-feedback">
-                </div>
-            </div>
-        </div>
-        <div class="row" style="margin-bottom:0.5rem">
-            <div class="col-md-6 mb-1 text-left">
-                <label for="add_edit_date_rem_uz" class="col-form-label">@DirectoryResource.title_add_edit_date_rem_uz:</label>
-                <input type="datetime" class="form-control" id="add_edit_date_rem_uz" name="add_edit_date_rem_uz" disabled="disabled">
-            </div>
-            <div class="col-md-6 mb-1 text-left">
-                <label for="add_edit_date_rem_vag" class="col-form-label">@DirectoryResource.title_add_edit_date_rem_vag:</label>
-                <input type="datetime" class="form-control" id="add_edit_date_rem_vag" name="add_edit_date_rem_vag">
-                <div class="invalid-feedback">
-                </div>
-            </div>
-        </div>
-        <div class="row" style="margin-bottom:0.5rem">
-            <div class="col-md-12 mb-1 text-left">
-                <label for="add_edit_note" class="col-form-label">@DirectoryResource.title_add_edit_note:</label>
-                <textarea class="form-control" rows="3" id="add_edit_note" name="add_edit_note" disabled="disabled"></textarea>
-            </div>
-        </div>
-        <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="add_edit_exit_ban" style="position:relative">
-            <label class="form-check-label" for="add_edit_exit_ban">@DirectoryResource.title_add_edit_exit_ban</label>
-        </div>
-        <!-- Allow form submission with keyboard without duplicating the dialog button -->
+        @*Allow form submission with keyboard without duplicating the dialog button*@
         <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
     </form>
+
 </div>
 
 

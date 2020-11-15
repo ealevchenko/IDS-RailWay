@@ -647,9 +647,9 @@ VALIDATION.prototype.clear_all = function () {
     this.clear_error();
 };
 // Очистить все ошибки
-VALIDATION.prototype.clear_error = function (objs) {
-    if (objs) {
-        obs.removeClass('is-valid is-invalid');
+VALIDATION.prototype.clear_error = function (obj) {
+    if (obj) {
+        obj.removeClass('is-valid is-invalid');
     } else {
         this.all_obj.removeClass('is-valid is-invalid');
     }
@@ -750,7 +750,7 @@ VALIDATION.prototype.checkInputOfNull = function (o, mes_error, mes_ok, off_mess
 };
 // Проверка Select на выбраный раздел
 VALIDATION.prototype.checkSelection = function (o, mes_error, mes_ok, off_message) {
-    //var s = Number(o.val())
+    var s = Number(o.val())
     if (Number(o.val()) < 0) {
         this.set_control_error(o, mes_error);
         if (!(off_message !== undefined && off_message))

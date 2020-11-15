@@ -18,15 +18,17 @@ namespace IDS
     {
         global = -1,
         cancel_save_changes = -2,               // Отмена сохранений изменений в базе данных (были ошибки по ходу выполнения всей операции)
-        not_input_value = -100,
-        not_list_id = -101,                     // Ошибка нет списка id
+        error_input_value = -100,
+        not_list_nums = -101,                    // Ошибка нет списка вагонов
         error_id_rent_wagon = -102,             // Ошибка нет id аренды не существует
         error_last_id_rent_wagon = -103,        // Ошибка последней id аренды не существует
+        not_wagon_of_db = -201,                 // Указаного вагона нет в базе
+        error_set_date = -202,                  // Ошибка сохранения даты                 
     }
 
-    public class ResultiID
+    public class ResultiWagon
     {
-        public int id { get; set; }
+        public int num { get; set; }
         public int result { get; set; }
     }
 
@@ -34,7 +36,7 @@ namespace IDS
     {
         public int result { get; set; } // Глобальный ресурс выполнения всего переноса
         public int error { get; set; } // количество ошибок
-        public List<ResultiID> listResultID = new List<ResultiID>();
+        public List<ResultiWagon> listResultWagon = new List<ResultiWagon>();
 
 
         public OperationResult()
@@ -42,8 +44,6 @@ namespace IDS
             this.result = 0;
             this.error = 0;
         }
-
-
 
         public void SetResult(int code)
         {
@@ -53,9 +53,9 @@ namespace IDS
         {
             this.error++;
         }
-        public void SetResultID(int result, int id)
+        public void SetResultOperation(int result, int num)
         {
-            this.listResultID.Add(new ResultiID() { id = id, result = result });
+            this.listResultWagon.Add(new ResultiWagon() { num = num, result = result });
             if (result < 0) { AddError(); }
         }
     }
@@ -1459,123 +1459,288 @@ namespace IDS
             }
         }
 
+        ///// <summary>
+        ///// Обновить оператора по одному вагону
+        ///// </summary>
+        ///// <param name="id_rent"></param>
+        ///// <param name="id_operator"></param>
+        ///// <param name="start_rent"></param>
+        ///// <param name="user"></param>
+        ///// <returns></returns>
+        //public int UpdateOperatorAMKROfWagon(ref EFDbContext context, int id_rent, int id_operator, DateTime start_rent, string user)
+        //{
+        //    try
+        //    {
+        //        // Проверка контекста
+        //        if (context == null)
+        //        {
+        //            context = new EFDbContext();
+        //        }
+        //        Directory_WagonsRent rent = context.Directory_WagonsRent.Where(r => r.id == id_rent).FirstOrDefault();
+        //        if (rent == null) return (int)errors_ids_dir.error_id_rent_wagon;  // Ошибка указоной аренды нет
+        //        Directory_WagonsRent rent_last = context.Directory_WagonsRent.Where(r => r.num == rent.num).OrderByDescending(c => c.id).FirstOrDefault();
+        //        if (rent_last == null || rent_last.id != rent.id) return (int)errors_ids_dir.error_last_id_rent_wagon; ; // Ошибка. id аренды для изменения не совпадает с последней открытой арендой
+        //        Directory_Wagons wagon = context.Directory_Wagons.Where(w => w.num == rent_last.num).FirstOrDefault();
+
+        //        // Начнем обновление 
+        //        if (rent_last.id_operator != null && rent_last.id_operator != id_operator)
+        //        {
+        //            // Закроем старую если не закрыта
+        //            rent_last.rent_end = rent_last.rent_end == null ? start_rent : rent_last.rent_end;
+
+        //            // Оператор новый создадим новую строку аренды
+        //            Directory_WagonsRent new_rent = new Directory_WagonsRent()
+        //            {
+
+        //                id = 0,
+        //                num = rent_last.num,
+        //                id_operator = id_operator,
+        //                id_limiting = rent_last.id_limiting,
+        //                rent_start = start_rent,
+        //                rent_end = null,
+        //                create = start_rent,
+        //                create_user = user,
+        //                change = null,
+        //                change_user = null,
+        //                parent_id = rent_last.id,
+        //            };
+        //            wagon.Directory_WagonsRent.Add(new_rent);
+        //        }
+        //        else
+        //        {
+        //            if (rent_last.id_operator == null)
+        //            {
+        //                rent_last.id_operator = id_operator;
+        //            }
+        //            // Оператор старый обновим дату аренды
+        //            rent_last.rent_start = start_rent;
+
+        //        }
+        //        // Оновим штамп изменений
+        //        rent_last.change = start_rent;
+        //        rent_last.change_user = user;
+        //        //Установить бит требующий внимания
+
+
+        //        return 1;
+
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        e.ExceptionMethodLog(String.Format("UpdateOperatorAMKROfWagon(context={0}, id_rent={1}, id_operator ={2}, start_rent={3}, user={4})",
+        //            context, id_rent, id_operator, start_rent, user), servece_owner, eventID);
+        //        return (int)errors_ids_dir.global;// Возвращаем id=-1 , Ошибка
+        //    }
+        //}
+        ///// <summary>
+        ///// Обновить оператора по списку вагонов
+        ///// </summary>
+        ///// <param name="list_id_rent"></param>
+        ///// <param name="id_operator"></param>
+        ///// <param name="start_rent"></param>
+        ///// <param name="user"></param>
+        ///// <returns></returns>
+        //public OperationResult UpdateOperatorAMKROfWagons(List<int> list_id_rent, int id_operator, DateTime start_rent, string user)
+        //{
+        //    OperationResult result = new OperationResult();
+        //    try
+        //    {
+        //        //DateTime start = DateTime.Now;
+        //        if (list_id_rent != null)
+        //        {
+        //            // Проверим и скорректируем пользователя
+        //            if (String.IsNullOrWhiteSpace(user))
+        //            {
+        //                user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+        //            }
+
+        //            EFDbContext context = new EFDbContext();
+        //            foreach (int id_rent in list_id_rent)
+        //            {
+        //                int res = UpdateOperatorAMKROfWagon(ref context, id_rent, id_operator, start_rent, user);
+        //                result.SetResultOperation(id_rent, res);
+        //            }
+        //            // Если нет ошибок тогда обновим базу
+        //            if (result.error >= 0)
+        //            {
+        //                result.SetResult(context.SaveChanges());
+        //            }
+        //            else
+        //            {
+        //                result.SetResult((int)errors_ids_dir.cancel_save_changes); // Ошибка изменение было отменено
+        //            }
+        //        }
+        //        else
+        //        {
+        //            result.SetResult((int)errors_ids_dir.not_list_id);// Ошибка нет списка id
+        //        }
+
+        //        string mess = String.Format("Справочник вагонов, смена оператора по группе вагонов. Код выполнения = {0}. Группа id_rent = {1}, новый оператор = {2}, начало аренды = {3}. Результат выполнения [Кол вагонов = {4}, ошибок выполнения = {5}].",
+        //            result.result, String.Join(";", list_id_rent.ToArray()), id_operator, start_rent, list_id_rent.Count(), result.error);
+        //        mess.WarningLog(servece_owner, eventID);
+        //        mess.EventLog(result.result < 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
+        //        //DateTime stop = DateTime.Now;
+        //        //servece_owner.ServicesToLog(eventID, String.Format("Операция смены оператора по группе вагонов"), start, stop, result.result);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        e.ExceptionMethodLog(String.Format("UpdateOperatorAMKROfWagons(list_id_rent={0}, id_operator ={1}, start_rent={2}, user={3})",
+        //            list_id_rent, id_operator, start_rent, user), servece_owner, eventID);
+        //        result.SetResult((int)errors_ids_dir.global);// Ошибка нет списка id
+        //    }
+        //    return result;
+        //}
+
         /// <summary>
-        /// Обновить оператора по одному вагону
+        /// Операция обновления вагона в справочнике
         /// </summary>
-        /// <param name="id_rent"></param>
+        /// <param name="context"></param>
+        /// <param name="num"></param>
+        /// <param name="edit_operator"></param>
         /// <param name="id_operator"></param>
         /// <param name="start_rent"></param>
+        /// <param name="edit_limiting"></param>
+        /// <param name="id_limiting"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public int UpdateOperatorAMKROfWagon(ref EFDbContext context, int id_rent, int id_operator, DateTime start_rent, string user)
+        public int OperationUpdateWagon(ref EFDbContext context, int num, bool edit_operator, int? id_operator, DateTime? start_rent, bool edit_limiting, int? id_limiting, string user)
         {
             try
             {
+                // Проверим на ошибки
+                if ((!edit_operator && !edit_limiting) || (edit_operator && id_operator == null && start_rent == null) || (edit_limiting && id_limiting == null))
+                {
+                    return (int)errors_ids_dir.error_input_value;// Ошибка входных данных
+                }
                 // Проверка контекста
                 if (context == null)
                 {
                     context = new EFDbContext();
                 }
-                Directory_WagonsRent rent = context.Directory_WagonsRent.Where(r => r.id == id_rent).FirstOrDefault();
-                if (rent == null) return (int)errors_ids_dir.error_id_rent_wagon;  // Ошибка указоной аренды нет
-                Directory_WagonsRent rent_last = context.Directory_WagonsRent.Where(r => r.num == rent.num).OrderByDescending(c => c.id).FirstOrDefault();
-                if (rent_last == null || rent_last.id != rent.id) return (int)errors_ids_dir.error_last_id_rent_wagon; ; // Ошибка. id аренды для изменения не совпадает с последней открытой арендой
-                Directory_Wagons wagon = context.Directory_Wagons.Where(w => w.num == rent_last.num).FirstOrDefault();
+                Directory_Wagons wagon = context.Directory_Wagons.Where(w => w.num == num).FirstOrDefault();
+                if (wagon == null) return (int)errors_ids_dir.not_wagon_of_db;// Указаного вагона нет в базе
+                // Найдем последнюю аренду
+                Directory_WagonsRent rent_last = wagon.Directory_WagonsRent.OrderByDescending(c => c.id).FirstOrDefault();
 
                 // Начнем обновление 
-                if (rent_last.id_operator!= null && rent_last.id_operator != id_operator)
+                // Проверим создавать новую аренду
+                if (rent_last == null || (edit_operator && rent_last != null && rent_last.id_operator != null && rent_last.id_operator != id_operator))
                 {
-                    // Закроем старую если не закрыта
-                    rent_last.rent_end = rent_last.rent_end == null ? start_rent: rent_last.rent_end;
-
+                    // Создаем новую строку аренды
+                    // Если есть старая
+                    if (rent_last != null)
+                    {
+                        // Закроем старую если не закрыта
+                        if (rent_last.rent_start >= start_rent) return (int)errors_ids_dir.error_set_date;// Ошибка дата конца аренды меньше или равна началу аренды
+                        rent_last.rent_end = rent_last.rent_end == null ? start_rent : rent_last.rent_end;
+                    }
                     // Оператор новый создадим новую строку аренды
                     Directory_WagonsRent new_rent = new Directory_WagonsRent()
                     {
-
                         id = 0,
-                        num = rent_last.num,
+                        num = num,
                         id_operator = id_operator,
-                        id_limiting = rent_last.id_limiting,
+                        id_limiting = edit_limiting ? id_limiting : rent_last.id_limiting,
                         rent_start = start_rent,
                         rent_end = null,
-                        create = start_rent,
+                        create = (DateTime)start_rent,
                         create_user = user,
                         change = null,
                         change_user = null,
-                        parent_id = rent_last.id,
+                        parent_id = rent_last != null ? (int?)rent_last.id : null,
                     };
                     wagon.Directory_WagonsRent.Add(new_rent);
                 }
                 else
                 {
-                    if (rent_last.id_operator == null) {
-                        rent_last.id_operator = id_operator;
-                    }
-                    // Оператор старый обновим дату аренды
-                    rent_last.rent_start = start_rent;
+                    // Правим оператора
+                    if (edit_operator)
+                    {
+                        // Правим старую аренду
+                        if (rent_last.id_operator == null)
+                        {
+                            rent_last.id_operator = id_operator;
+                        }
 
+                        if (rent_last.rent_end != null)
+                        {
+                            // Если аренда закрыта
+                            if (start_rent >= rent_last.rent_end) return (int)errors_ids_dir.error_set_date;// Ошибка дата конца аренды меньше или равна началу аренды
+                        }
+                        // Оператор старый обновим дату аренды
+                        rent_last.rent_start = start_rent;
+                    }
+                    // Правим лимит
+                    if (edit_limiting) { 
+                        rent_last.id_limiting = id_limiting;
+                    }
                 }
                 // Оновим штамп изменений
                 rent_last.change = start_rent;
                 rent_last.change_user = user;
                 //Установить бит требующий внимания
 
-
                 return 1;
 
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("UpdateOperatorAMKROfWagon(context={0}, id_rent={1}, id_operator ={2}, start_rent={3}, user={4})",
-                    context, id_rent, id_operator, start_rent, user), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("OperationUpdateWagons(num={0}, edit_operator={1}, id_operator ={2}, start_rent={3}, edit_limiting ={4}, id_limiting={5},user={6})",
+                    num, edit_operator, id_operator, start_rent, edit_limiting, id_limiting, user), servece_owner, eventID);
                 return (int)errors_ids_dir.global;// Возвращаем id=-1 , Ошибка
             }
         }
         /// <summary>
-        /// Обновить оператора по списку вагонов
+        /// Операция обновления справочника вагонов
         /// </summary>
-        /// <param name="list_id_rent"></param>
+        /// <param name="list_nums"></param>
+        /// <param name="edit_operator"></param>
         /// <param name="id_operator"></param>
         /// <param name="start_rent"></param>
+        /// <param name="edit_limiting"></param>
+        /// <param name="id_limiting"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public OperationResult UpdateOperatorAMKROfWagons(List<int> list_id_rent, int id_operator, DateTime start_rent, string user)
+        public OperationResult OperationUpdateWagons(List<int> list_nums, bool edit_operator, int? id_operator, DateTime? start_rent, bool edit_limiting, int? id_limiting, string user)
         {
             OperationResult result = new OperationResult();
             try
             {
                 //DateTime start = DateTime.Now;
-                if (list_id_rent != null)
+                // Проверим на ошибки
+                if (list_nums == null)
                 {
-                    // Проверим и скорректируем пользователя
-                    if (String.IsNullOrWhiteSpace(user))
-                    {
-                        user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
-                    }
+                    result.SetResult((int)errors_ids_dir.not_list_nums);// Ошибка нет списка номеров
+                }
 
-                    EFDbContext context = new EFDbContext();
-                    foreach (int id_rent in list_id_rent)
-                    {
-                        int res = UpdateOperatorAMKROfWagon(ref context, id_rent, id_operator, start_rent, user);
-                        result.SetResultID(id_rent, res);
-                    }
-                    // Если нет ошибок тогда обновим базу
-                    if (result.error >= 0)
-                    {
-                        result.SetResult(context.SaveChanges());
-                    }
-                    else
-                    {
-                        result.SetResult((int)errors_ids_dir.cancel_save_changes); // Ошибка изменение было отменено
-                    }
+                if ((!edit_operator && !edit_limiting) || (edit_operator && id_operator == null && start_rent == null) || (edit_limiting && id_limiting == null))
+                {
+                    result.SetResult((int)errors_ids_dir.error_input_value);// Ошибка нет данных по оператору
+                }
+
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+
+                EFDbContext context = new EFDbContext();
+                foreach (int num in list_nums)
+                {
+                    int res = OperationUpdateWagon(ref context, num, edit_operator, id_operator, start_rent, edit_limiting, id_limiting, user);
+                    result.SetResultOperation(res, num);
+                }
+                // Если нет ошибок тогда обновим базу
+                if (result.error == 0)
+                {
+                    result.SetResult(context.SaveChanges());
                 }
                 else
                 {
-                    result.SetResult((int)errors_ids_dir.not_list_id);// Ошибка нет списка id
+                    result.SetResult((int)errors_ids_dir.cancel_save_changes); // Ошибка изменение было отменено
                 }
-
-                string mess = String.Format("Справочник вагонов, смена оператора по группе вагонов. Код выполнения = {0}. Группа id_rent = {1}, новый оператор = {2}, начало аренды = {3}. Результат выполнения [Кол вагонов = {4}, ошибок выполнения = {5}].",
-                    result.result, String.Join(";", list_id_rent.ToArray()), id_operator, start_rent, list_id_rent.Count(), result.error);
+                string mess = String.Format("Справочник вагонов, смена оператора {0} или ограничения погрузки {1} по группе вагонов. Код выполнения = {2}. Список вагонов = {3}, новый оператор = {4}, начало аренды = {5}, ограничение погрузки = {6}. Результат выполнения [Кол вагонов = {7}, ошибок выполнения = {8}].",
+                    edit_operator, edit_limiting, result.result, String.Join(";", list_nums.ToArray()), id_operator, id_limiting, start_rent, list_nums.Count(), result.error);
                 mess.WarningLog(servece_owner, eventID);
                 mess.EventLog(result.result < 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
                 //DateTime stop = DateTime.Now;
@@ -1583,17 +1748,13 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("UpdateOperatorAMKROfWagons(list_id_rent={0}, id_operator ={1}, start_rent={2}, user={3})",
-                    list_id_rent, id_operator, start_rent, user), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("OperationUpdateWagons(list_nums={0}, edit_operator={1}, id_operator ={2}, start_rent={3}, edit_limiting ={4}, id_limiting={5},user={6})",
+                    list_nums, edit_operator, id_operator, start_rent, edit_limiting, id_limiting, user), servece_owner, eventID);
                 result.SetResult((int)errors_ids_dir.global);// Ошибка нет списка id
             }
             return result;
         }
-
         #endregion
-
-
-
 
         #region СПРАВОЧНИК ЖЕЛЕЗНЫХ ДОРОГ (IDS.Directory_Railway)
         /// <summary>
