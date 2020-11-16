@@ -85,13 +85,27 @@
                                     <p>Найти вагон(ы) в справочнике по оператору.</p>
                                 </div>
                             </div>
-                            <form class="form-inline">
+                            <div class="form-row mt-2">
+                                <div class="col-xl-1">
+                                    <label for="wagon_operator_comparison" class="col-form-label">Оператор:</label>
+                                </div>
+                                <div class="col-xl-5">
+                                    <input type="text" class="form-control" style="font-size:15px" id="select_wagon_operator" name="select_wagon_operator" title="" required="required">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-xl-1">
+                                    <button type="button" class="btn btn-primary mb-2 ml-3" id="cars_search_operator" disabled="disabled">Поиск</button>
+                                </div>
+                            </div>
+
+                            @*<form class="form-inline">
                                 <div class="form-group mb-2">
                                     <label for="wagon-operator" class="col-form-label">Оператор:</label>
-                                    <select class="form-control ml-3" id="wagon_operator" style="font-size:inherit"></select>
+                                    @*<select class="form-control ml-3" id="wagon_operator" style="font-size:inherit"></select>
                                 </div>
-                                @*<button type="button" class="btn btn-primary mb-2 ml-3" id="cars_search_operator">Поиск</button>*@
-                            </form>
+                                <button type="button" class="btn btn-primary mb-2 ml-3" id="cars_search_operator">Поиск</button>
+
+                            </form>*@
                         </div>
                         <div class="tab-pane fade" id="cars-search-comparison">
                             <div class="form-row">

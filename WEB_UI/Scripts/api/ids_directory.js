@@ -5971,12 +5971,16 @@ IDS_DIRECTORY.prototype.getCloneWagons = function (wagon) {
 // Вернуть текущую аренду вагона
 IDS_DIRECTORY.prototype.getCurrentRentOfWagon = function (vagon) {
     if (vagon && vagon.Directory_WagonsRent && vagon.Directory_WagonsRent.length > 0) {
-        var rent = vagon.Directory_WagonsRent.filter(function (i) {
-            return (i.rent_end) ? false : true;
+        var rent_current = vagon.Directory_WagonsRent.find(function (o) {
+            return o.rent_end === null;
         });
-        if (rent && rent.length > 0) {
-            return rent[0];
-        }
+        return rent_current;
+        //var rent = vagon.Directory_WagonsRent.filter(function (i) {
+        //    return (i.rent_end) ? false : true;
+        //});
+        //if (rent && rent.length > 0) {
+        //    return rent[0];
+        //}
     }
     return null;
 };

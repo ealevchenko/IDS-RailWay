@@ -11,6 +11,7 @@ $.Text_Common =
         'mess_save': 'Запись и обновление данных...',
         'mess_load_data': 'Получение запрашиваемых данных...',
         'mess_operation': 'Выполняю операцию...',
+        'mess_update_uz': 'Обновляю данные на УЗ...',
     },
     'en':  //default language: English
     {
@@ -20,6 +21,7 @@ $.Text_Common =
         'mess_save': 'Writing and updating data ...',
         'mess_load_data': 'Receiving the requested data...',
         'mess_operation': 'Performing an operation...',
+        'mess_update_uz': 'I am updating the data on the UZ ...',
 
     }
 
@@ -1000,7 +1002,7 @@ var is_valid_num_wagon = function (num) {
     if (num) {
         if (!isNumeric(num)) return false;
         if (!(Number(num) >= 10000000 && Number(num) <= 99999999)) return false;
-        var symbols = num.split(""); // разбиваем на массив символов
+        var symbols = String(num).split(""); // разбиваем на массив символов
         if (symbols.length !== 8) return false;
         var cs = Number(symbols[7]);
         symbols.length--;

@@ -2672,46 +2672,6 @@
                                     }
                                     cars_detali.view_epd_card_vag(cars_detali.select_vagon);
                                 });
-
-                            //if (cars_detali.car_status === 2) {
-                            //    // Ручной режим
-                            //    cars_detali.get_vagon_of_num_dir(cars_detali.select_num, function (result_vagon) {
-                            //        cars_detali.select_vagon = result_vagon;
-                            //        if (cars_detali.select_vagon && cars_detali.select_vagon.id === 0) {
-                            //            // Запись вагона новая 
-                            //            cars_detali.bt_card_vag_add.show();
-                            //            cars_detali.set_mode_vagon_card(true);
-                            //        } else {
-                            //            // Запись вагона из справочника
-                            //            cars_detali.bt_card_vag_add.hide();
-                            //            cars_detali.set_mode_vagon_card(false);
-                            //            cars_detali.val_arrival_car.set_control_ok(cars_detali.bt_card_vag_add, "");
-
-                            //        }
-                            //        // Показать информацию из справочника вагонов ИДС (вагон определяеется ранее)
-                            //        cars_detali.view_epd_card_vag(cars_detali.select_vagon);
-                            //    });
-                            //} else {
-                            //    // Не ручной режим
-                            //    cars_detali.get_vagon_dir(cars_detali.select_otpr_vagon, cars_detali.select_num,
-                            //        function (result_vagon) {
-                            //            cars_detali.select_vagon = result_vagon;
-                            //            if (cars_detali.select_vagon && cars_detali.select_vagon.id === 0) {
-                            //                // Запись вагона новая 
-                            //                cars_detali.bt_card_vag_add.show();
-                            //                cars_detali.set_mode_vagon_card(true);
-                            //            } else {
-                            //                // Запись вагона из справочника
-                            //                cars_detali.bt_card_vag_add.hide();
-                            //                cars_detali.set_mode_vagon_card(false);
-                            //                cars_detali.val_arrival_car.set_control_ok(cars_detali.bt_card_vag_add, "");
-                            //            }
-                            //            // Показать информацию из справочника вагонов ИДС (вагон определяеется ранее)
-                            //            cars_detali.view_epd_card_vag(cars_detali.select_vagon);
-                            //        });
-                            //}
-
-
                         }, null);
                     }
                 });

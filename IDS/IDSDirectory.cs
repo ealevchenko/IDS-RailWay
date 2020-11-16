@@ -1314,7 +1314,10 @@ namespace IDS
                         bool bit_warning = false;
                         double gruzp = info.carrying_capacity != null ? (double)info.carrying_capacity : 0;
                         // Определим бит внимания требуется корреция (не определен род, адм, оператор)
-                        if (id_genus == 0 || id_countrys == 0 || id_operator_uz == 0 || (id_operator_amkr == null || id_operator_amkr == 0))
+                        if (id_genus == 0 || id_countrys == 0 || 
+                            id_operator_uz == 0 || 
+                            (id_operator_amkr == null || id_operator_amkr == 0) || 
+                            (id_operator_uz > 0 && wagon.id_operator != id_operator_uz))    // На УЗ сменился оператор
                         {
                             bit_warning = true;
                         }
@@ -1411,6 +1414,9 @@ namespace IDS
                 else
                 {
                     Directory_WagonsRent current_wagon_rent = list_wagon_rent.Where(r => r.rent_end == null).OrderByDescending(r => r.rent_start).FirstOrDefault();
+
+                    //Directory_WagonsRent current_wagon_rent = list_wagon_rent.OrderByDescending(r => r.rent_start).FirstOrDefault();
+
                     // Поменялся оператор?
                     if (id_operator_amkr != null && current_wagon_rent.id_operator != id_operator_amkr)
                     {
@@ -1591,6 +1597,23 @@ namespace IDS
         //    return result;
         //}
 
+
+        public OperationResult UpdateWagon(Directory_Wagons wagons, int? id_operator, DateTime? start_rent, int? id_limiting, string user)
+        {
+            OperationResult result = new OperationResult();
+            try
+            {
+
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateWagon(wagons={0}, id_operator={1}, start_rent ={2}, id_limiting={3}, user={4})",
+                    wagons, id_operator, start_rent, start_rent, id_limiting, user), servece_owner, eventID);
+                result.SetResult((int)errors_ids_dir.global);// Ошибка нет списка id
+            }
+            return result;
+        }
+
         /// <summary>
         /// Операция обновления вагона в справочнике
         /// </summary>
@@ -1671,7 +1694,8 @@ namespace IDS
                         rent_last.rent_start = start_rent;
                     }
                     // Правим лимит
-                    if (edit_limiting) { 
+                    if (edit_limiting)
+                    {
                         rent_last.id_limiting = id_limiting;
                     }
                 }

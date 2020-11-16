@@ -105,12 +105,14 @@
             bt_cars_comparison_num_yes: $('button#cars_comparison_num_yes'),
             bt_cars_comparison_num_no: $('button#cars_comparison_num_no'),
             bt_cars_comparison_num_change: $('button#cars_comparison_num_change'),
-            wagon_operator: $('select#wagon_operator'),
+            //wagon_operator: $('select#wagon_operator'),
+            select_wagon_operator: $('input#select_wagon_operator'),
             wagon_operator_comparison: $('select#wagon_operator_comparison'),
             text_type_searsh: $('#type-search').text(''),
             active: 0,
             num_cars_valid: [],
             num_cars_comparison_valid: [],
+            id_operator: null,
             // Инициализация
             init: function () {
                 // обработка события show.bs.tab переключение панелей выбора
@@ -124,27 +126,35 @@
                     // отобразим тип поиска
                     pn_search.text_type_searsh.text(activeTab.text());
 
-                    if (e.target.hash === "#cars-search-operator") {
-                        LockScreen(langView('mess_delay', langs));
-                        pn_search.view_cars();
-                    } else {
-                        table_directory.view([]);
-                    }
+                    //if (e.target.hash === "#cars-search-operator") {
+                    //    LockScreen(langView('mess_delay', langs));
+                    //    pn_search.view_cars();
+                    //} else {
+                    //    table_directory.view([]);
+                    //}
                 });
 
                 // Инициализация элементов
-                pn_search.wagon_operator = cd_initSelect(
-                    pn_search.wagon_operator,
-                    { lang: lang },
-                    ids_dir.getListOperatorsWagons('id', 'operators', lang, null),
-                    null,
-                    -1,
-                    function (event) {
-                        event.preventDefault();
-                        // Найти вагон по оператору
-                        LockScreen(langView('mess_delay', langs));
-                        pn_search.view_cars();
-                    }, null);
+                //pn_search.wagon_operator = cd_initSelect(
+                //    pn_search.wagon_operator,
+                //    { lang: lang },
+                //    ids_dir.getListOperatorsWagons('id', 'operators', lang, null),
+                //    null,
+                //    -1,
+                //    function (event) {
+                //        event.preventDefault();
+                //        // Найти вагон по оператору
+                //        LockScreen(langView('mess_delay', langs));
+                //        pn_search.view_cars();
+                //    }, null);
+                // настроим компонент операторов
+                pn_search.select_wagon_operator = initAutocomplete(
+                    pn_search.select_wagon_operator,
+                    { lang: pn_search.lang, minLength: 2 },
+                    getAutocompleteListText(ids_dir.getListOperatorsWagons('id', 'operators', lang, null), 'text'),
+                    pn_search.view_bt_search_operation,
+                    "");
+
                 // 
                 pn_search.wagon_operator_comparison = cd_initSelect(
                     pn_search.wagon_operator_comparison,
@@ -226,6 +236,16 @@
                         LockScreenOff();
                     }
                 });
+                // Кнопка сравнить вагон по номеру и оператору
+                pn_search.bt_cars_search_operator.on('click', function (event) {
+                    event.preventDefault();
+                    LockScreen(langView('mess_delay', langs));
+                    alert.clear_message();
+                    if (pn_search.id_operation !== null) {
+                        pn_search.view_cars();
+                    }
+                });
+
                 // Кнопка сравнить вагон по номеру и оператору
                 pn_search.bt_cars_comparison_num.on('click', function (event) {
                     event.preventDefault();
@@ -378,6 +398,8 @@
                         LockScreenOff();
                     }
                 });
+
+
             },
             // Показать в зависимости от ыбранного режима поиска
             view_cars: function () {
@@ -387,184 +409,33 @@
                         pn_search.bt_cars_search_num.prop("disabled", false);
                     }); break;
                     case 2: table_directory.view_cars_search_operator(); break;
-                    //case 3: table_directory.view_cars_search_operator(); break;
+                        //case 3: table_directory.view_cars_search_operator(); break;
                 }
-            }
+            },
+            // Поиск по оператору
+            view_bt_search_operation: function (name_operator) {
+                pn_search.id_operator = null; // Сбросим оператора
+                pn_search.bt_cars_search_operator.prop('disabled', true);
+                if (name_operator) {
+                    var obj = ids_dir.list_operators_wagons.find(function (o) { return o['operators_' + lang] === name_operator; });
+                    if (obj) {
+                        pn_search.id_operator = obj.id; // Определим оператора
+
+                        pn_search.select_wagon_operator.removeClass('is-invalid').addClass('is-valid');
+                        pn_search.select_wagon_operator.next(".invalid-feedback").text("");
+                        pn_search.bt_cars_search_operator.prop('disabled', false);
+                    } else {
+                        pn_search.select_wagon_operator.removeClass('is-valid').addClass('is-invalid');
+                        pn_search.select_wagon_operator.next(".invalid-feedback").text("Указаного оператора нет в справочнике ИДС");
+                    }
+                } else {
+                    pn_search.select_wagon_operator.removeClass('is-valid').addClass('is-invalid');
+                    pn_search.select_wagon_operator.next(".invalid-feedback").text("Не указан оператор");
+                }
+            },
         },
         //*************************************************************************************
-        // ОКНО ИЗМЕНИТЬ ОГРАНИЧЕНИЕ ПО ГРУППЕ
-        //*************************************************************************************
-        //pn_change_group_limit = {
-        //    obj: null,
-        //    lang: null,
-        //    user_name: null,
-        //    ids_dir: null,
-        //    alert: $('div#change_group_limit_alert'),                                             // Сообщения
-        //    all_obj: null,                                                                  // массив всех элементов формы 
-        //    val: null,                                                                      // класс валидации
-        //    list_group: null,
-        //    rows: null,
-        //    // Поля формы
-        //    change_group_limiting: $('select#change_group_limiting'),
-        //    // загрузка библиотек
-        //    loadReference: function (callback) {
-        //        //LockScreen(langView('mess_load', langs));
-        //        var count = 1;
-        //        pn_change_group_limit.ids_dir.load(['limiting_loading'], false, function () {
-        //            count -= 1;
-        //            if (count === 0) {
-        //                if (typeof callback === 'function') {
-        //                    callback();
-        //                }
-        //            }
-        //        });
-        //    },
-        //    // инициализвция Окна
-        //    init: function (lang, user_name, callback_ok) {
-        //        pn_change_group_limit.lang = lang;
-        //        pn_change_group_limit.user_name = user_name;
-        //        pn_change_group_limit.ids_dir = new IDS_DIRECTORY(pn_change_group_limit.lang), // Создадим класс IDS_DIRECTORY
-        //            pn_change_group_limit.loadReference(function () {
-        //                pn_change_group_limit.list_group = pn_change_group_limit.ids_dir.getListLimitingLoading('id', 'limiting_name', pn_change_group_limit.lang, null);
-        //                // Инициализация элементов
-        //                pn_change_group_limit.change_group_limiting = cd_initSelect(
-        //                    pn_change_group_limit.change_group_limiting,
-        //                    { lang: pn_change_group_limit.lang },
-        //                    pn_change_group_limit.list_group,
-        //                    null,
-        //                    -1,
-        //                    function (event) {
-        //                        event.preventDefault();
-        //                        var id = Number($(this).val());
-        //                    }, null);
-        //                // Соберем все элементы в массив
-        //                pn_change_group_limit.all_obj = $([])
-        //                    .add(pn_change_group_limit.change_group_limiting)
-        //                    ;
-        //                // создадим классы 
-
-        //                //pn_change_group_limit.alert = new ALERT($('div#arrival-sostav-alert'));// Создадим класс ALERTG
-        //                pn_change_group_limit.val = new VALIDATION(pn_change_group_limit.lang, pn_change_group_limit.alert, pn_change_group_limit.all_obj); // Создадим класс VALIDATION
-        //                //pn_change_group_limit.table_car.init();
-        //                pn_change_group_limit.obj = $("div#change_group_limit").dialog({
-        //                    resizable: false,
-        //                    title: 'Изменить ограничение по группе вагонов',
-        //                    modal: true,
-        //                    autoOpen: false,
-        //                    height: "auto",
-        //                    width: 600,
-        //                    classes: {
-        //                        "ui-dialog": "card",
-        //                        "ui-dialog-titlebar": "card-header bg-primary text-white",
-        //                        "ui-dialog-content": "card-body",
-        //                        "ui-dialog-buttonpane": "card-footer text-muted"
-        //                    },
-        //                    open: function (event, ui) {
-
-        //                    },
-        //                    buttons: [
-        //                        {
-
-        //                            disabled: false,
-        //                            text: "Ок",
-        //                            class: "btn btn-outline-primary btn",
-        //                            click: function () {
-        //                                pn_change_group_limit.save(callback_ok);
-        //                            }
-        //                        },
-        //                        {
-        //                            text: "Отмена",
-        //                            class: "btn btn-outline-primary btn",
-        //                            click: function () {
-        //                                $(this).dialog("close");
-        //                            }
-        //                        },
-        //                    ]
-        //                });
-        //                // Sumbit form
-        //                pn_change_group_limit.obj.find("form").on("submit", function (event) {
-        //                    event.preventDefault();
-        //                });
-        //            });
-
-        //    },
-        //    // открыть окно 
-        //    Open: function (rows) {
-        //        pn_change_group_limit.val.clear_all();
-        //        pn_change_group_limit.change_group_limiting.val(-1); // сбросить выбор
-        //        pn_change_group_limit.rows = rows;
-        //        if (rows && rows.length > 0) {
-        //            pn_change_group_limit.obj.dialog("open");
-        //        }
-        //    },
-        //    // Валидация данных
-        //    validation: function () {
-        //        pn_change_group_limit.val.clear_all();
-        //        var valid = true;
-        //        valid = valid & pn_change_group_limit.val.checkSelection(pn_change_group_limit.change_group_limiting, "Выберите ограничение");
-        //        return valid;
-        //    },
-        //    // Сохранить 
-        //    save: function (callback_ok) {
-        //        var list_cars = [];
-        //        var list_nums = [];
-        //        var list_rent = [];
-        //        var valid = pn_change_group_limit.validation();
-        //        if (valid) {
-        //            pn_change_group_limit.val.clear_all();
-        //            LockScreen(langView('mess_save', langs));
-        //            // Получимсписок номеров вагонов
-        //            for (inum = 0; inum < pn_change_group_limit.rows.length; inum++) {
-        //                list_nums.push(pn_change_group_limit.rows[inum].num);
-        //            }
-        //            // Получим строки справочника по списку номеров вагона
-        //            pn_change_group_limit.ids_dir.getWagonOfNums(list_nums, function (result_wagon) {
-        //                //list_cars = result_wagon;
-        //                for (ir = 0; ir < result_wagon.length; ir++) {
-        //                    // Получим текущую аренду
-        //                    var car = pn_change_group_limit.ids_dir.getCloneWagons(result_wagon[ir]);
-        //                    var current_rent = pn_change_group_limit.ids_dir.getCurrentRentOfWagon(result_wagon[ir]);
-        //                    if (car.id_genus === 0 || car.id_countrys === 0 || current_rent === null || (current_rent.id_operator === null || current_rent.id_operator == 0)) {
-        //                        car.bit_warning = true;
-        //                    } else {
-        //                        car.bit_warning = false;
-        //                    }
-        //                    car.change = toISOStringTZ(new Date());
-        //                    car.change_user = pn_change_group_limit.user_name;
-        //                    var new_rent = pn_change_group_limit.ids_dir.getCloneWagonsRent(current_rent);
-        //                    new_rent.id_limiting = get_select_number_value(pn_change_group_limit.change_group_limiting);
-        //                    new_rent.change = toISOStringTZ(new Date()),
-        //                        new_rent.change_user = pn_change_group_limit.user_name,
-        //                        list_rent.push(new_rent);
-        //                    list_cars.push(car);
-        //                }
-        //                // обновим аренду
-        //                pn_change_group_limit.ids_dir.putListWagonsRent(list_rent, function (result_upd) {
-        //                    if (result_upd >= 0) {
-        //                        pn_change_group_limit.ids_dir.putListWagon(list_cars, function (result_upd_car) {
-        //                            if (result_upd_car >= 0) {
-        //                                if (typeof callback_ok === 'function') {
-        //                                    pn_change_group_limit.obj.dialog("close");
-        //                                    callback_ok(result_upd_car);
-        //                                }
-        //                            } else {
-        //                                //pn_change_group_limit.val.clear_all();
-        //                                pn_change_group_limit.val.out_error_message("При обновлении основной информации по группе вагонов произошла ошибка!");
-        //                                LockScreenOff();
-        //                            }
-        //                        });
-        //                    } else {
-        //                        //pn_change_group_limit.val.clear_all();
-        //                        pn_change_group_limit.val.out_error_message("При обновлении ограничения на группу вагонов произошла ошибка!");
-        //                        LockScreenOff();
-        //                    }
-        //                });
-        //            });
-        //        }
-        //    },
-        //},
-        //*************************************************************************************
-        // ОКНО ИЗМЕНИТЬ ОПЕРАТОРА ПО ГРУППЕ
+        // ОКНО ИЗМЕНИТЬ ОПЕРАТОРА ИЛИ ОГРАНИЧЕНИЯ ПО ГРУППЕ
         //*************************************************************************************
         pn_change_group = {
             obj: null,
@@ -698,6 +569,7 @@
             Open: function (list_nums) {
                 // Сохраним и проверим список для изменения
                 pn_change_group.list_nums = list_nums;
+                pn_search.bt_cars_search_operator.prop('disabled', true);
                 if (list_nums && list_nums.length > 0) {
                     pn_change_group.val.clear_all();
                     // Сросить все элементы
@@ -989,13 +861,13 @@
                             },
                             {
                                 data: function (row, type, val, meta) {
-                                    return row.create ?  row.create_user + '</br> (' + getReplaceTOfDT(row.create) + ')' : null;
+                                    return row.create ? row.create_user + '</br> (' + getReplaceTOfDT(row.create) + ')' : null;
                                 },
                                 title: langView('field_create', langs), width: "150px", orderable: false, searchable: false
                             },
                             {
                                 data: function (row, type, val, meta) {
-                                    
+
                                     return row.change ? row.change_user + '</br>(' + getReplaceTOfDT(row.change) + ')' : null;
                                 }
                                 , title: langView('field_change', langs), width: "150px", orderable: false, searchable: false
@@ -1027,7 +899,7 @@
                 // Показать таблицу с данными
                 view: function (rents, callback) {
                     setTimeout(function () {
-                        var list = rents.sort(function (a, b) { return a.id - b.id;});
+                        var list = rents.sort(function (a, b) { return a.id - b.id; });
                         pn_add_edit.table_rent.obj.clear();
                         if (list && list.length > 0) {
                             pn_add_edit.table_rent.obj.rows.add(list);
@@ -1204,7 +1076,7 @@
                         pn_add_edit.add_edit_change_operator = cd_initDateTimeRangePicker(pn_add_edit.add_edit_change_operator, { lang: lang, time: true }, function (datetime) {
 
                         }),
-                            // Оператор УЗ
+                        // Оператор УЗ
                             pn_add_edit.add_edit_operator_car = cd_initSelect(
                                 pn_add_edit.add_edit_operator_car,
                                 {
@@ -1221,7 +1093,7 @@
                         pn_add_edit.add_edit_operator_car_rent_start = cd_initDateTimeRangePicker(pn_add_edit.add_edit_operator_car_rent_start, { lang: lang, time: true }, function (datetime) {
 
                         }),
-                            // Признак собственности
+                        // Признак собственности
                             pn_add_edit.add_edit_type_ownership = cd_initSelect(
                                 pn_add_edit.add_edit_type_ownership,
                                 {
@@ -1251,7 +1123,7 @@
                         pn_add_edit.add_edit_operator_car_rent_start_now = cd_initDateTimeRangePicker(pn_add_edit.add_edit_operator_car_rent_start_now, { lang: lang, time: true }, function (datetime) {
 
                         }),
-                            // ограничение ограничения
+                        // ограничение ограничения
                             pn_add_edit.add_edit_limiting = cd_initSelect(
                                 pn_add_edit.add_edit_limiting,
                                 {
@@ -1285,11 +1157,11 @@
                         pn_add_edit.add_edit_date_rem_uz = cd_initDateTimeRangePicker(pn_add_edit.add_edit_date_rem_uz, { lang: lang, time: false }, function (datetime) {
 
                         }),
-                            // Дата ремонта вагона
+                        // Дата ремонта вагона
                             pn_add_edit.add_edit_date_rem_vag = cd_initDateTimeRangePicker(pn_add_edit.add_edit_date_rem_vag, { lang: lang, time: false }, function (datetime) {
 
                             }),
-                            // Соберем все элементы в массив
+                        // Соберем все элементы в массив
                             pn_add_edit.all_obj = $([])
                                 .add(pn_add_edit.add_edit_num)
                                 .add(pn_add_edit.add_edit_kod_adm)
@@ -1317,7 +1189,7 @@
                                 .add(pn_add_edit.add_edit_date_rem_uz.obj)
                                 .add(pn_add_edit.add_edit_date_rem_vag.obj)
                                 .add(pn_add_edit.add_edit_note)
-                            ;
+                        ;
                         // создадим классы 
 
                         //pn_add_edit.alert = new ALERT($('div#add_edit_alert'));// Создадим класс ALERTG
@@ -1368,44 +1240,55 @@
             //  вывести информацию о вагоне
             view_car: function (car) {
                 if (car) {
-                    $('#add_edit_tab a[href="#rent"]').prop('disabled', false);
-                    pn_add_edit.select_obj = car;
-                    pn_add_edit.select_rent = pn_add_edit.ids_dir.getCurrentRentOfWagon(car)
+                    LockScreen(langView('mess_update_uz', langs));
+                    // Обновим информацию по вагону из справочника УЗ
+                    var specification = {
+                        adm: car.Directory_Countrys.code_sng, rod: car.Directory_GenusWagons.rod_uz, kol_os: car.kol_os, usl_tip: car.usl_tip
+                    }
+                    pn_add_edit.ids_dir.getWagonOfNumSpecification(car.num, specification, function (result_wagon) {
+                        if (result_wagon) {
+                            // Обновили инфу по вагону
+                            $('#add_edit_tab a[href="#rent"]').prop('disabled', false);
+                            pn_add_edit.select_obj = result_wagon;
+                            pn_add_edit.select_rent = pn_add_edit.ids_dir.getCurrentRentOfWagon(result_wagon)
 
-                    pn_add_edit.add_edit_num.val(pn_add_edit.select_obj.num).prop('disabled', true);
-                    pn_add_edit.add_search_car.prop('disabled', true);
-                    pn_add_edit.add_edit_kod_adm.val(pn_add_edit.ids_dir.getValue_Countrys_Of_ID(Number(pn_add_edit.select_obj.id_countrys), 'code_sng'));
-                    pn_add_edit.add_edit_name_adm.val(Number(pn_add_edit.select_obj.id_countrys)).prop('disabled', false);
-                    //pn_add_edit.add_edit_kod_rod.val(pn_add_edit.ids_dir.getValue_GenusWagons_Of_ID(Number(pn_add_edit.select_obj.id_genus), 'rod_uz'));
-                    pn_add_edit.add_edit_name_rod.val(Number(pn_add_edit.select_obj.id_genus)).prop('disabled', false);
-                    pn_add_edit.add_edit_name_rod_abbr.val(pn_add_edit.ids_dir.getValue_GenusWagons_Of_ID(Number(pn_add_edit.select_obj.id_genus), 'abbr', pn_add_edit.lang));
-                    pn_add_edit.add_edit_usl_tip.val(pn_add_edit.select_obj.usl_tip).prop('disabled', false);
-                    pn_add_edit.add_edit_kol_os.val(pn_add_edit.select_obj.kol_os).prop('disabled', false);
-                    pn_add_edit.add_edit_gruzp.val(pn_add_edit.select_obj.gruzp).prop('disabled', false);
+                            pn_add_edit.add_edit_num.val(pn_add_edit.select_obj.num).prop('disabled', true);
+                            pn_add_edit.add_search_car.prop('disabled', true);
+                            pn_add_edit.add_edit_kod_adm.val(pn_add_edit.ids_dir.getValue_Countrys_Of_ID(Number(pn_add_edit.select_obj.id_countrys), 'code_sng'));
+                            pn_add_edit.add_edit_name_adm.val(Number(pn_add_edit.select_obj.id_countrys)).prop('disabled', false);
+                            //pn_add_edit.add_edit_kod_rod.val(pn_add_edit.ids_dir.getValue_GenusWagons_Of_ID(Number(pn_add_edit.select_obj.id_genus), 'rod_uz'));
+                            pn_add_edit.add_edit_name_rod.val(Number(pn_add_edit.select_obj.id_genus)).prop('disabled', false);
+                            pn_add_edit.add_edit_name_rod_abbr.val(pn_add_edit.ids_dir.getValue_GenusWagons_Of_ID(Number(pn_add_edit.select_obj.id_genus), 'abbr', pn_add_edit.lang));
+                            pn_add_edit.add_edit_usl_tip.val(pn_add_edit.select_obj.usl_tip).prop('disabled', false);
+                            pn_add_edit.add_edit_kol_os.val(pn_add_edit.select_obj.kol_os).prop('disabled', false);
+                            pn_add_edit.add_edit_gruzp.val(pn_add_edit.select_obj.gruzp).prop('disabled', false);
 
-                    pn_add_edit.add_edit_tara.val(pn_add_edit.select_obj.tara !== null ? pn_add_edit.select_obj.tara : 0).prop('disabled', false);
-                    pn_add_edit.add_edit_year_built.val(pn_add_edit.select_obj.year_built).prop('disabled', false);
-                    pn_add_edit.add_edit_factory_number.val(pn_add_edit.select_obj.factory_number).prop('disabled', false);
-                    pn_add_edit.add_edit_inventory_number.val(pn_add_edit.select_obj.inventory_number).prop('disabled', false);
-                    pn_add_edit.add_edit_exit_ban.prop('checked', pn_add_edit.select_obj.exit_ban !== null ? pn_add_edit.select_obj.exit_ban : false).prop('disabled', false);
+                            pn_add_edit.add_edit_tara.val(pn_add_edit.select_obj.tara !== null ? pn_add_edit.select_obj.tara : 0).prop('disabled', false);
+                            pn_add_edit.add_edit_year_built.val(pn_add_edit.select_obj.year_built).prop('disabled', false);
+                            pn_add_edit.add_edit_factory_number.val(pn_add_edit.select_obj.factory_number).prop('disabled', false);
+                            pn_add_edit.add_edit_inventory_number.val(pn_add_edit.select_obj.inventory_number).prop('disabled', false);
+                            pn_add_edit.add_edit_exit_ban.prop('checked', pn_add_edit.select_obj.exit_ban !== null ? pn_add_edit.select_obj.exit_ban : false).prop('disabled', false);
 
-                    pn_add_edit.add_edit_owner_car.val(Number(pn_add_edit.select_obj.id_owner));
-                    pn_add_edit.add_edit_operator_uz_car.val(Number(pn_add_edit.select_obj.id_operator_uz));
-                    pn_add_edit.add_edit_change_operator.setDateTime(pn_add_edit.select_obj.change_operator !== null ? pn_add_edit.select_obj.change_operator.replace(/T/g, ' ') : null);
+                            pn_add_edit.add_edit_owner_car.val(Number(pn_add_edit.select_obj.id_owner));
+                            pn_add_edit.add_edit_operator_uz_car.val(Number(pn_add_edit.select_obj.id_operator));
+                            pn_add_edit.add_edit_change_operator.setDateTime(pn_add_edit.select_obj.change_operator !== null ? pn_add_edit.select_obj.change_operator.replace(/T/g, ' ') : null);
 
-                    pn_add_edit.add_edit_operator_car.val(Number(pn_add_edit.select_rent.id_operator));
-                    pn_add_edit.add_edit_operator_car_rent_start.setDateTime(pn_add_edit.select_rent.rent_start !== null ? pn_add_edit.select_rent.rent_start.replace(/T/g, ' ') : null);
-                    pn_add_edit.add_edit_type_ownership.val(pn_add_edit.select_obj.id_type_ownership);
+                            pn_add_edit.add_edit_operator_car.val(pn_add_edit.select_rent ? Number(pn_add_edit.select_rent.id_operator) : -1);
+                            pn_add_edit.add_edit_operator_car_rent_start.setDateTime(pn_add_edit.select_rent && pn_add_edit.select_rent.rent_start !== null ? pn_add_edit.select_rent.rent_start.replace(/T/g, ' ') : null);
+                            pn_add_edit.add_edit_type_ownership.val(pn_add_edit.select_obj.id_type_ownership);
 
-                    pn_add_edit.add_edit_operator_car_new.val(-1).prop('disabled', false);
-                    pn_add_edit.add_edit_operator_car_rent_start_now.setDateTime(null); pn_add_edit.add_edit_operator_car_rent_start_now.obj.prop('disabled', false);
-                    pn_add_edit.add_edit_limiting.val(Number(pn_add_edit.select_rent.id_limiting)).prop('disabled', false);
-                    pn_add_edit.add_edit_sign.val(pn_add_edit.select_obj.sign !== null ? pn_add_edit.select_obj.sign : -1).prop('disabled', false);
+                            pn_add_edit.add_edit_operator_car_new.val(-1).prop('disabled', false);
+                            pn_add_edit.add_edit_operator_car_rent_start_now.setDateTime(null); pn_add_edit.add_edit_operator_car_rent_start_now.obj.prop('disabled', false);
+                            pn_add_edit.add_edit_limiting.val(Number(pn_add_edit.select_rent ? pn_add_edit.select_rent.id_limiting : -1)).prop('disabled', false);
+                            pn_add_edit.add_edit_sign.val(pn_add_edit.select_obj.sign !== null ? pn_add_edit.select_obj.sign : -1).prop('disabled', false);
 
-                    pn_add_edit.add_edit_date_rem_uz.setDateTime(pn_add_edit.select_obj.date_rem_uz !== null ? pn_add_edit.select_obj.date_rem_uz.replace(/T/g, ' ') : null);
-                    pn_add_edit.add_edit_date_rem_vag.setDateTime(pn_add_edit.select_obj.date_rem_vag !== null ? pn_add_edit.select_obj.date_rem_vag.replace(/T/g, ' ') : null);
+                            pn_add_edit.add_edit_date_rem_uz.setDateTime(pn_add_edit.select_obj.date_rem_uz !== null ? pn_add_edit.select_obj.date_rem_uz.replace(/T/g, ' ') : null);
+                            pn_add_edit.add_edit_date_rem_vag.setDateTime(pn_add_edit.select_obj.date_rem_vag !== null ? pn_add_edit.select_obj.date_rem_vag.replace(/T/g, ' ') : null);
 
-                    pn_add_edit.add_edit_note.text(pn_add_edit.select_obj.note);
+                            pn_add_edit.add_edit_note.text(pn_add_edit.select_obj.note);
+                            LockScreenOff();
+                        }
+                    });
                 }
             },
             // открыть окно добавмить вагоны вручную
@@ -1414,6 +1297,7 @@
                 pn_add_edit.val.clear_all();
                 // По умолчанию первая закладка
                 $('#add_edit_tab a[href="#total"]').tab('show') // Select tab by name
+                // Вторая не активна пока небудет определен номер вагона
                 $('#add_edit_tab a[href="#rent"]').prop('disabled', true);
                 pn_add_edit.active_tab = 0;
                 pn_add_edit.select_num = num;
@@ -1425,7 +1309,7 @@
                         if (result_obj) {
                             pn_add_edit.view_car(result_obj);
                             pn_add_edit.obj.dialog("open");
-                            LockScreenOff();
+                            //LockScreenOff();
                         }
                         else {
                             pn_add_edit.val.clear_all();
@@ -1445,37 +1329,43 @@
             },
             // Сделать не активными все элементы
             disabled_element: function () {
-                pn_add_edit.add_edit_kod_adm.prop('disabled', true);
-                pn_add_edit.add_edit_name_adm.prop('disabled', true);
-                pn_add_edit.add_edit_name_rod.prop('disabled', true);
-                pn_add_edit.add_edit_name_rod_abbr.prop('disabled', true);
-                pn_add_edit.add_edit_usl_tip.prop('disabled', true);
-                pn_add_edit.add_edit_kol_os.prop('disabled', true);
-                pn_add_edit.add_edit_gruzp.prop('disabled', true);
+                pn_add_edit.add_edit_kod_adm.val('').prop('disabled', true);
+                pn_add_edit.add_edit_name_adm.val(-1).prop('disabled', true);
+                pn_add_edit.add_edit_name_rod.val(-1).prop('disabled', true);
+                pn_add_edit.add_edit_name_rod_abbr.val('').prop('disabled', true);
+                pn_add_edit.add_edit_usl_tip.val('').prop('disabled', true);
+                pn_add_edit.add_edit_kol_os.val(-1).prop('disabled', true);
+                pn_add_edit.add_edit_gruzp.val('').prop('disabled', true);
 
-                pn_add_edit.add_edit_tara.prop('disabled', true);
-                pn_add_edit.add_edit_year_built.prop('disabled', true);
-                pn_add_edit.add_edit_factory_number.prop('disabled', true);
-                pn_add_edit.add_edit_inventory_number.prop('disabled', true);
-                pn_add_edit.add_edit_exit_ban.prop('disabled', true);
+                pn_add_edit.add_edit_tara.val('').prop('disabled', true);
+                pn_add_edit.add_edit_year_built.val('').prop('disabled', true);
+                pn_add_edit.add_edit_factory_number.val('').prop('disabled', true);
+                pn_add_edit.add_edit_inventory_number.val('').prop('disabled', true);
+                pn_add_edit.add_edit_exit_ban.prop('checked', false).prop('disabled', true);
 
-                pn_add_edit.add_edit_owner_car.prop('disabled', true);
-                pn_add_edit.add_edit_operator_uz_car.prop('disabled', true);
+                pn_add_edit.add_edit_owner_car.val(-1).prop('disabled', true);
+                pn_add_edit.add_edit_operator_uz_car.val(-1).prop('disabled', true);
+                pn_add_edit.add_edit_change_operator.setDateTime(null);
                 pn_add_edit.add_edit_change_operator.obj.prop('disabled', true);
 
-                pn_add_edit.add_edit_operator_car.prop('disabled', true);
+                pn_add_edit.add_edit_operator_car.val(-1).prop('disabled', true);
+                pn_add_edit.add_edit_operator_car_rent_start.setDateTime(null);
                 pn_add_edit.add_edit_operator_car_rent_start.obj.prop('disabled', true);
-                pn_add_edit.add_edit_type_ownership.prop('disabled', true);
+                pn_add_edit.add_edit_type_ownership.val(-1).prop('disabled', true);
 
-                pn_add_edit.add_edit_operator_car_new.prop('disabled', true);
+                pn_add_edit.add_edit_operator_car_new.val(-1).prop('disabled', true);
+                pn_add_edit.add_edit_operator_car_rent_start_now.setDateTime(null);
                 pn_add_edit.add_edit_operator_car_rent_start_now.obj.prop('disabled', true);
-                pn_add_edit.add_edit_limiting.prop('disabled', true);
-                pn_add_edit.add_edit_sign.prop('disabled', true);
+                pn_add_edit.add_edit_limiting.val(-1).prop('disabled', true);
+                pn_add_edit.add_edit_sign.val(-1).prop('disabled', true);
 
+
+                pn_add_edit.add_edit_date_rem_uz.setDateTime(null);
+                pn_add_edit.add_edit_date_rem_vag.setDateTime(null);
                 pn_add_edit.add_edit_date_rem_uz.obj.prop('disabled', true);
                 pn_add_edit.add_edit_date_rem_vag.obj.prop('disabled', true);
 
-                pn_add_edit.add_edit_note.prop('disabled', true);
+                pn_add_edit.add_edit_note.val('').prop('disabled', true);
             },
             // Сделать не активными все элементы для дабавления
             enabled_add_element: function () {
@@ -1659,38 +1549,70 @@
                     }
                 } else {
                     // Проверка на контрольную сумму
-                    pn_add_edit.ids_dir.IsCorrectNumCar(num, function (result_correct) {
-                        if (result_correct) {
-                            pn_add_edit.ids_dir.getWagonOfNum(num, function (result_obj) {
-                                if (result_obj) {
-                                    // Вагон найден
-                                    pn_add_edit.val.out_warning_message('Вагон уже существует в справочнике.');
+                    var valid_num = is_valid_num_wagon(num)
+                    if (valid_num) {
+                        pn_add_edit.ids_dir.getWagonOfNum(num, function (result_obj) {
+                            if (result_obj) {
+                                // Вагон найден
+                                pn_add_edit.val.out_warning_message('Вагон уже существует в справочнике.');
+                                if (typeof callback === 'function') {
+                                    callback(result_obj);
+                                }
+                            } else {
+                                // Вагон не найден, добавить
+                                // Создадим первую запись или обновим строку вагона в справочнике вагонов и аренд
+                                var specification = {
+                                    adm: 0, rod: 0, kol_os: 0, usl_tip: null
+                                }
+                                pn_add_edit.ids_dir.getWagonOfNumSpecification(num, specification, function (result_obj) {
+                                    if (result_obj) {
+                                        pn_add_edit.val.out_info_message('Первая строка по вагону добавлена в справочник.');
+                                    }
                                     if (typeof callback === 'function') {
                                         callback(result_obj);
                                     }
-                                } else {
-                                    // Вагон не найден, добавить
-                                    // Создадим первую запись или обновим строку вагона в справочнике вагонов и аренд
-                                    var specification = {
-                                        adm: 0, rod: 0, kol_os: 0, usl_tip: null
-                                    }
-                                    pn_add_edit.ids_dir.getWagonOfNumSpecification(num, specification, function (result_obj) {
-                                        if (result_obj) {
-                                            pn_add_edit.val.out_info_message('Первая строка по вагону добавлена в справочник.');
-                                        }
-                                        if (typeof callback === 'function') {
-                                            callback(result_obj);
-                                        }
-                                    });
-                                }
-                            });
-                        } else {
-                            pn_add_edit.val.out_error_message('Ошибка ввода номера вагона. Такого номера не существует.');
-                            if (typeof callback === 'function') {
-                                callback(null);
+                                });
                             }
+                        });
+                    } else {
+                        pn_add_edit.val.out_error_message('Ошибка ввода номера вагона. Такого номера не существует.');
+                        if (typeof callback === 'function') {
+                            callback(null);
                         }
-                    });
+                    }
+
+                    //pn_add_edit.ids_dir.IsCorrectNumCar(num, function (result_correct) {
+                    //    if (result_correct) {
+                    //        pn_add_edit.ids_dir.getWagonOfNum(num, function (result_obj) {
+                    //            if (result_obj) {
+                    //                // Вагон найден
+                    //                pn_add_edit.val.out_warning_message('Вагон уже существует в справочнике.');
+                    //                if (typeof callback === 'function') {
+                    //                    callback(result_obj);
+                    //                }
+                    //            } else {
+                    //                // Вагон не найден, добавить
+                    //                // Создадим первую запись или обновим строку вагона в справочнике вагонов и аренд
+                    //                var specification = {
+                    //                    adm: 0, rod: 0, kol_os: 0, usl_tip: null
+                    //                }
+                    //                pn_add_edit.ids_dir.getWagonOfNumSpecification(num, specification, function (result_obj) {
+                    //                    if (result_obj) {
+                    //                        pn_add_edit.val.out_info_message('Первая строка по вагону добавлена в справочник.');
+                    //                    }
+                    //                    if (typeof callback === 'function') {
+                    //                        callback(result_obj);
+                    //                    }
+                    //                });
+                    //            }
+                    //        });
+                    //    } else {
+                    //        pn_add_edit.val.out_error_message('Ошибка ввода номера вагона. Такого номера не существует.');
+                    //        if (typeof callback === 'function') {
+                    //            callback(null);
+                    //        }
+                    //    }
+                    //});
                 }
             },
             // Сохранить прибытие состава
@@ -1887,6 +1809,7 @@
             obj: null,
             select_string: null,
             count_string: null,
+            count_rows: null,              // Количество строк
             init: function () {
                 this.obj = this.html_table.DataTable({
                     "lengthMenu": [[10, 20, 50, 100, 200], [10, 20, 50, 100, 200]],
@@ -2063,7 +1986,8 @@
                             action: function () {
                                 table_directory.html_table.find('tr').addClass('selected')
                                 table_directory.view_button();
-                            }
+                            },
+                            enabled: false
                         },
                         {
                             //extend: 'selectNone',
@@ -2071,7 +1995,8 @@
                             action: function () {
                                 $(table_directory.html_table.find('tr')).removeClass('selected')
                                 table_directory.view_button();
-                            }
+                            },
+                            enabled: false
                         },
                         {
                             text: langView('title_button_add', langs),
@@ -2097,18 +2022,7 @@
                             text: langView('title_button_edit_group', langs),
                             action: function (e, dt, node, config) {
                                 // Получим список выделеных строк
-                                var rows = table_directory.html_table.find('tbody tr.selected');
-                                if (rows && rows.length > 0) {
-                                    // Получим перечень id последних аренд
-                                    var list_nums = [];
-                                    rows.each(function (i, elem) {
-                                        var num = $(elem).attr("id")
-                                        if (num) {
-                                            list_nums.push(Number(num));
-                                        }
-                                    });
-                                    pn_change_group.Open(list_nums);
-                                }
+                                pn_change_group.Open(table_directory.get_select_wagon());
                             },
                             enabled: false
                         },
@@ -2125,57 +2039,76 @@
                             extend: 'pageLength',
                         }
                     ]
-                }).on('select', function (e, dt, type, indexes) {
-                    table_directory.obj.row(indexes).select();
-                    table_directory.view_button(indexes);
-
-                }).on('deselect', function (e, dt, type, indexes) {
-                    table_directory.obj.row(indexes).deselect();
-                    table_directory.view_button(indexes);
                 }).on('click', 'tr', function () {
                     $(this).toggleClass('selected');
                     table_directory.view_button();
                 });
+
+                //.on('select', function (e, dt, type, indexes) {
+                //    table_directory.obj.row(indexes).select();
+                //    table_directory.view_button(indexes);
+
+                //}).on('deselect', function (e, dt, type, indexes) {
+                //    table_directory.obj.row(indexes).deselect();
+                //    table_directory.view_button(indexes);
+                //})
             },
+            // Получить список выбранных вагонов
+            get_select_wagon: function () {
+                // Получим список выделеных строк
+                var list_nums = [];
+                var rows = table_directory.html_table.find('tbody tr.selected');
+                if (rows && rows.length > 0) {
+                    // Получим перечень id последних аренд
+
+                    rows.each(function (i, elem) {
+                        var num = $(elem).attr("id")
+                        if (num) {
+                            list_nums.push(Number(num));
+                        }
+                    });
+                }
+                return list_nums;
+            },
+            // Выделить вагоны согласно списка
+            set_select_wagon: function (nums) {
+                if (nums && nums.length > 0) {
+                    $.each(nums, function (i, el) {
+                        $('tr#' + el).addClass('selected');
+                    });
+                }
+            },
+
             // Отобразить кнопки редактирования таблицы
             view_button: function () {
-                var row = table_directory.html_table.find('tr.selected');
-                table_directory.count_string = row ? row.length : 0;
+                // Проверим данные есть
+                if (table_directory.count_rows > 0) {
+                    // Данные есть
+                    table_directory.obj.button(2).enable(true);
 
-                //table_directory.select_string = items && items.count() === 1 ? table_directory.obj.rows(items[0]).data()[0] : null;
-                if (table_directory.count_string > 0) {
-                    table_directory.obj.button(3).enable(true);
-                    table_directory.obj.button(6).enable(true);
-                    //table_directory.obj.button(7).enable(true);
-                    if (table_directory.count_string === 1) {
-                        table_directory.obj.button(5).enable(true);
-                        //table_directory.obj.button(6).enable(true);
+                    var row = table_directory.html_table.find('tr.selected');
+                    table_directory.count_string = row ? row.length : 0;
+                    if (table_directory.count_string > 0) {
+                        table_directory.obj.button(3).enable(true);
+                        table_directory.obj.button(6).enable(true);
+                        //table_directory.obj.button(7).enable(true);
+                        if (table_directory.count_string === 1) {
+                            table_directory.obj.button(5).enable(true);
+                            //table_directory.obj.button(6).enable(true);
+                        } else {
+
+                            table_directory.obj.button(5).enable(false);
+                            //table_directory.obj.button(6).enable(false);
+                        }
                     } else {
-
-                        table_directory.obj.button(5).enable(false);
-                        //table_directory.obj.button(6).enable(false);
+                        table_directory.deselect();
                     }
                 } else {
+                    // Данных нет
+                    table_directory.obj.button(2).enable(false);
                     table_directory.deselect();
                 }
 
-                //var items = table_directory.obj.rows({ selected: true });
-                //table_directory.count_string = items ? items.count() : 0;
-                //table_directory.select_string = items && items.count() === 1 ? table_directory.obj.rows(items[0]).data()[0] : null;
-                //if (table_directory.count_string > 0) {
-                //    table_directory.obj.button(6).enable(true);
-                //    table_directory.obj.button(7).enable(true);
-                //    if (table_directory.count_string === 1) {
-                //        table_directory.obj.button(5).enable(true);
-                //        //table_directory.obj.button(6).enable(true);
-                //    } else {
-
-                //        table_directory.obj.button(5).enable(false);
-                //        //table_directory.obj.button(6).enable(false);
-                //    }
-                //} else {
-                //    table_directory.deselect();
-                //}
             },
             // Показать вагоны требующие внимания
             view_cars_warning: function () {
@@ -2206,109 +2139,84 @@
             },
             // Показать вагоны по оператору
             view_cars_search_operator: function () {
-                var id = Number(pn_search.wagon_operator.val());
-                ids_dir.getViewWagonOfOperator(id, function (cars) {
-                    table_directory.view(cars);
-                });
+                if (pn_search.id_operator !== null) {
+                    var id = Number(pn_search.id_operator);
+                    ids_dir.getViewWagonOfOperator(id, function (cars) {
+                        table_directory.view(cars);
+                    });
+                }
+
             },
             // Показать таблицу с данными
             view: function (data) {
+                // Сохраним количество строк
+                table_directory.count_rows = data ? data.length : 0;
                 LockScreen(langView('mess_load_table', langs));
-                var id_select = table_directory.select_string ? table_directory.select_string.id : 0;
+                var nums = table_directory.get_select_wagon()
                 table_directory.obj.clear();
                 // Сбросить выделенный состав
                 table_directory.deselect();
                 // Добавить поля асинхроно
-                //table_directory.view_wagons_async(data, function () {
-                //    if (table_directory.count_string === 1) {
-                //        table_directory.obj.row('#' + id_select).select();
-                //    }
-                //    table_directory.obj.draw();
-                //    LockScreenOff();
-                //});
                 setTimeout(function () {
                     table_directory.obj.rows.add(data);
-                    if (table_directory.count_string === 1) {
-                        table_directory.obj.row('#' + id_select).select();
-                    }
                     table_directory.obj.draw();
+                    // Вернем выделеные строки
+
+                    table_directory.set_select_wagon(nums);
+                    //if (nums && nums.length > 0) {
+                    //    $.each(nums, function (i, el) {
+                    //        $('tr#' + el).addClass('selected');
+                    //    });
+                    //}
+                    // Отразим кнопки
+                    table_directory.view_button();
+
                     LockScreenOff();
                 }, 0);
-                //table_directory.obj.rows.add(data);
-
-                //$.each(data, function (i, el) {
-                //    table_directory.obj.row.add(table_directory.get_string(el));
-                //});
-                //if (table_directory.count_string === 1) {
-                //    table_directory.obj.row('#' + id_select).select();
-                //}
-                //table_directory.obj.draw();
-                //LockScreenOff();
             },
-
-            //view_wagons_async: function (rows, callback) {
-            //    var len = rows.length;
-            //    if (len === 0) {
-            //        return 0;
-            //    }
-            //    function ViewWagonAsync(i) {
-            //        if (i < len) {
-            //            // Поместим следующий вызов функции в цикл событий.
-            //            setTimeout(function () {
-            //                table_directory.obj.row.add(table_directory.get_string(rows[i]));
-            //                ViewWagonAsync(i + 1);
-            //            }, 0);
-            //        } else {
-            //            // Так как достигнут конец массива, мы вызываем коллбэк
-            //            callback();
-            //        }
-            //    }
-            //    ViewWagonAsync(0);
-            //},
-
             // Получить полную информацию по составау
-            get_string: function (data) {
-                return {
-                    "id": data.id_wagons_rent,
-                    "num": data.num,
-                    "id_countrys": data.id_countrys,
-                    "code_sng": data.code_sng,
-                    "countrys": data['country_abbr_' + lang],
-                    "id_genus": data.id_genus,
-                    "rod_uz": data.rod_uz,
-                    "genus": data['genus_abbr_' + lang],
-                    "id_owner": data.id_owner,
-                    "owner": data['owner_abbr_' + lang],
-                    "id_operator_uz": data.id_operator_uz,
-                    "change_operator": data.change_operator_uz !== null ? data.change_operator_uz.replace(/T/g, ' ') : null,
-                    "operator_uz": data['operators_uz_' + lang],
-                    "bit_warning": data.bit_warning,
-                    "id_operator": data.id_operator_amkr,
-                    "operator": data['operators_amkr_' + lang],
-                    "gruzp": data.gruzp,
-                    "tara": data.tara,
-                    "kol_os": data.kol_os,
-                    "usl_tip": data.usl_tip,
-                    "date_rem_uz": data.date_rem_uz !== null ? data.date_rem_uz.replace(/T/g, ' ') : null,
-                    "date_rem_vag": data.date_rem_vag !== null ? data.date_rem_vag.replace(/T/g, ' ') : null,
-                    "id_limiting": data.id_limiting,
-                    "limiting": data['limiting_abbr_' + lang],
-                    "id_type_ownership": data.id_type_ownership,
-                    "type_ownership": data['type_ownership_' + lang],
-                    "rent_start": data && data.rent_start !== null ? data.rent_start.replace(/T/g, ' ') : null,
-                    "rent_end": data && data.rent_end !== null ? data.rent_end.replace(/T/g, ' ') : null,
-                    "sign": data.sign,
-                    "factory_number": data.factory_number,
-                    "inventory_number": data.inventory_number,
-                    "year_built": data.year_built,
-                    "exit_ban": data.exit_ban,
-                    "note": data.note,
-                    "create": data.create_wagons_rent !== null ? data.create_wagons_rent.replace(/T/g, ' ') : null,
-                    "create_user": data.create_user_wagons_rent,
-                    "change": data.change_wagons_rent !== null ? data.change_wagons_rent.replace(/T/g, ' ') : null,
-                    "change_user": data.change_user_wagons_rent,
-                };
-            },
+            //get_string: function (data) {
+            //    return {
+            //        "id": data.id_wagons_rent,
+            //        "num": data.num,
+            //        "id_countrys": data.id_countrys,
+            //        "code_sng": data.code_sng,
+            //        "countrys": data['country_abbr_' + lang],
+            //        "id_genus": data.id_genus,
+            //        "rod_uz": data.rod_uz,
+            //        "genus": data['genus_abbr_' + lang],
+            //        "id_owner": data.id_owner,
+            //        "owner": data['owner_abbr_' + lang],
+            //        "id_operator_uz": data.id_operator_uz,
+            //        "change_operator": data.change_operator_uz !== null ? data.change_operator_uz.replace(/T/g, ' '): null,
+            //        "operator_uz": data['operators_uz_' + lang],
+            //        "bit_warning": data.bit_warning,
+            //        "id_operator": data.id_operator_amkr,
+            //        "operator": data['operators_amkr_' + lang],
+            //        "gruzp": data.gruzp,
+            //        "tara": data.tara,
+            //        "kol_os": data.kol_os,
+            //        "usl_tip": data.usl_tip,
+            //        "date_rem_uz": data.date_rem_uz !== null ? data.date_rem_uz.replace(/T/g, ' '): null,
+            //        "date_rem_vag": data.date_rem_vag !== null ? data.date_rem_vag.replace(/T/g, ' '): null,
+            //        "id_limiting": data.id_limiting,
+            //        "limiting": data['limiting_abbr_' + lang],
+            //        "id_type_ownership": data.id_type_ownership,
+            //        "type_ownership": data['type_ownership_' + lang],
+            //        "rent_start": data && data.rent_start !== null ? data.rent_start.replace(/T/g, ' '): null,
+            //        "rent_end": data && data.rent_end !== null ? data.rent_end.replace(/T/g, ' '): null,
+            //        "sign": data.sign,
+            //        "factory_number": data.factory_number,
+            //        "inventory_number": data.inventory_number,
+            //        "year_built": data.year_built,
+            //        "exit_ban": data.exit_ban,
+            //        "note": data.note,
+            //        "create": data.create_wagons_rent !== null ? data.create_wagons_rent.replace(/T/g, ' '): null,
+            //        "create_user": data.create_user_wagons_rent,
+            //        "change": data.change_wagons_rent !== null ? data.change_wagons_rent.replace(/T/g, ' '): null,
+            //        "change_user": data.change_user_wagons_rent,
+            //    };
+            //},
             // Обновить данные в таблице
             update_string: function (data) {
                 if (data) {
