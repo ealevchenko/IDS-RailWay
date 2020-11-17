@@ -236,7 +236,7 @@ namespace UZ
         {
             try
             {
-                List<GohubDocument> docs = GetEPD_UZ_Of_Filter(null, DocumentNumber, GohubDocumentStatus.Unknown, null, null, null, null, null, null, 1);
+                List<GohubDocument> docs = GetEPD_UZ_Of_Filter(null, DocumentNumber, GohubDocumentStatus.Unknown, null, null, null, null, null, null, 0);
                 return docs;
             }
             catch (Exception e)
