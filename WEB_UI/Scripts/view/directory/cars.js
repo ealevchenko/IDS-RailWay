@@ -29,6 +29,8 @@
             'field_year_built': 'Год постройки',
             'field_exit_ban': 'запрет на выезд',
             'field_note': 'Примечание',
+            'field_closed_route': 'Замкнутый маршрут',
+            'field_new_construction': 'Нова побудова',
             'field_sobstv_kis': 'Оператор (КИС)',
             'field_create': 'Строка создана',
             'field_create_user': 'Создал строку',
@@ -1923,17 +1925,34 @@
                             data: "note", title: langView('field_note', langs), width: "300px", orderable: false, searchable: false
                         },
                         {
-                            data: function (row, type, val, meta) { return getReplaceTOfDT(row.create_wagons_rent); }, title: langView('field_create', langs), width: "100px", orderable: false, searchable: false
+                            data: "new_construction", title: langView('field_new_construction', langs), width: "300px", orderable: false, searchable: false
                         },
                         {
-                            data: "create_user_wagons_rent", title: langView('field_create_user', langs), width: "100px", orderable: false, searchable: false
+                            data: function (row, type, val, meta) {
+                                return row.closed_route ? 'Да': '';
+                            }, title: langView('field_closed_route', langs), width: "100px", orderable: false, searchable: false
+                        },
+                        //{
+                        //    data: "create_user_wagons_rent", title: langView('field_create_user', langs), width: "100px", orderable: false, searchable: false
+                        //},
+                        //{
+                        //    data: function (row, type, val, meta) { return getReplaceTOfDT(row.change_wagons_rent); }, title: langView('field_change', langs), width: "100px", orderable: false, searchable: false
+                        //},
+                        //{
+                        //    data: "change_user_wagons_rent", title: langView('field_change_user', langs), width: "100px", orderable: false, searchable: false
+                        //},
+                        {
+                            data: function (row, type, val, meta) {
+                                return row.create_wagons_rent ? row.create_user_wagons_rent + '</br> (' + getReplaceTOfDT(row.create_wagons_rent) + ')' : null;
+                            },
+                            title: langView('field_create', langs), width: "150px", orderable: false, searchable: false
                         },
                         {
-                            data: function (row, type, val, meta) { return getReplaceTOfDT(row.change_wagons_rent); }, title: langView('field_change', langs), width: "100px", orderable: false, searchable: false
-                        },
-                        {
-                            data: "change_user_wagons_rent", title: langView('field_change_user', langs), width: "100px", orderable: false, searchable: false
-                        },
+                            data: function (row, type, val, meta) {
+                                return row.change_wagons_rent ? row.change_user_wagons_rent + '</br>(' + getReplaceTOfDT(row.change_wagons_rent) + ')' : null;
+                            }
+                            , title: langView('field_change', langs), width: "150px", orderable: false, searchable: false
+                        }
                     ],
                     dom: 'Bfrtip',
                     stateSave: false,

@@ -1237,6 +1237,8 @@ namespace IDS
                             sign = null,
                             note = "Запрет выхода:" + (info.exit_ban != null ? info.exit_ban : "нет") + "; Другие запреты:" + (info.other_bans != null ? info.other_bans.Replace("<br>", "") : ""),
                             sobstv_kis = sobstv_kis,
+                            closed_route = info.closed_route != null ? true: false, // если стоит плюсик 
+                            new_construction = info.new_construction,
                             create = DateTime.Now,
                             create_user = user,
                         };
@@ -1347,6 +1349,8 @@ namespace IDS
                         wagon.id_type_ownership = id_type_ownership;
                         //wagon.sign = wagon.sign;
                         wagon.note = "Запрет выхода:" + (info.exit_ban != null ? info.exit_ban : "нет") + "; Другие запреты:" + (info.other_bans != null ? info.other_bans.Replace("<br>", "") : "");
+                        wagon.closed_route = info.closed_route != null ? true: false;// если стоит плюсик 
+                        wagon.new_construction = info.new_construction;
                         wagon.change = DateTime.Now;
                         wagon.change_user = user;
                         //}

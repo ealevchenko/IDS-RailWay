@@ -60,6 +60,8 @@ namespace WEB_UI.Controllers.api
         public string note { get; set; }
         public int? sobstv_kis { get; set; }
         public bool? bit_warning { get; set; }
+        public bool? closed_route { get; set; }
+        public string new_construction { get; set; }
         public DateTime create_wagons { get; set; }
         public string create_user_wagons { get; set; }
         public DateTime? change_wagons { get; set; }

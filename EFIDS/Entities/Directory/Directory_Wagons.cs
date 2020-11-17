@@ -67,6 +67,11 @@ namespace EFIDS.Entities
 
         public bool? bit_warning { get; set; }
 
+        public bool? closed_route { get; set; }
+
+        [StringLength(200)]
+        public string new_construction { get; set; }
+
         public DateTime create { get; set; }
 
         [Required]
