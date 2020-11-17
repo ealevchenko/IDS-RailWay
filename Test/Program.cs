@@ -233,7 +233,7 @@ namespace Test
 
             #region Test_UZ тест логирования
             Test_UZ tuz = new Test_UZ();
-            //tuz.UZ_WebApiClientUZWagon();
+            tuz.UZ_WebApiClientUZWagon();
             //tuz.UZ_XML();
             //tuz.UZ_SMS_GetOTPR();
             //tuz.UZ_SMS_GetUZ_DOC_Of_NumDoc();  // Поиск в УЗ по номеру документа
