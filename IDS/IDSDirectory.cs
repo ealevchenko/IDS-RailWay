@@ -23,7 +23,8 @@ namespace IDS
         error_id_rent_wagon = -102,             // Ошибка нет id аренды не существует
         error_last_id_rent_wagon = -103,        // Ошибка последней id аренды не существует
         not_wagon_of_db = -201,                 // Указаного вагона нет в базе
-        error_set_date = -202,                  // Ошибка сохранения даты                 
+        error_set_date = -202,                  // Ошибка сохранения даты 
+        not_open_rent = -203,                  // Ошибка нет открытой аренды       
     }
 
     public class ResultiWagon
@@ -1253,7 +1254,8 @@ namespace IDS
                     wagon = ef_wag.Refresh(wagon);
                     return wagon;
                 }
-                else {
+                else
+                {
                     return null;
                 }
             }
@@ -1300,14 +1302,14 @@ namespace IDS
                 // Определим основные данные из УЗ и МОРС
                 int? id_type_ownership = card != null ? (int?)card.id_type_ownership : null;
                 // Определим АДМ -> id_countrys
-                Directory_Railway dir_rw = GetDirectory_RailwayOfNameAdm(info.admin);
+                Directory_Railway dir_rw = (info != null ? GetDirectory_RailwayOfNameAdm(info.admin) : null);
                 int id_countrys = dir_rw != null ? dir_rw.id_countrys : 0;
                 // род вагона
                 int id_genus = GetID_Directory_GenusWagonsOfRod(rod, true, user);
                 // Определим владельца
-                int id_owner = GetID_Directory_OwnersWagonsOfName(info.owner, true, user);// Владелец
+                int id_owner = (info != null ? GetID_Directory_OwnersWagonsOfName(info.owner, true, user) : 0);   // Владелец
                 // Определим оператора УЗ
-                int? id_operator_uz = GetID_Directory_OperatorsWagonsOfName(info.operat, true, user);// Оператор по справочнику УЗ
+                int? id_operator_uz = (info != null ? GetID_Directory_OperatorsWagonsOfName(info.operat, true, user) : 0);// Оператор по справочнику УЗ
 
                 bool? bit_warning; // по умолчанию выставить
 
@@ -1329,11 +1331,11 @@ namespace IDS
                         bit_warning = true,
                         id_operator = id_operator_uz > -1 ? id_operator_uz : null,
                         change_operator = DateTime.Now,
-                        gruzp = info.carrying_capacity != null ? (double)info.carrying_capacity : 0,
-                        tara = info.tara != null ? (double?)info.tara : null,
+                        gruzp = (info != null && info.carrying_capacity != null ? (double)info.carrying_capacity : 0),
+                        tara = (info != null && info.tara != null ? (double?)info.tara : null),
                         kol_os = kol_os,
                         usl_tip = usl_tip,
-                        date_rem_uz = info.repair_date,
+                        date_rem_uz = (info != null ? info.repair_date : null),
                         date_rem_vag = null,
                         id_type_ownership = id_type_ownership,
                         factory_number = null,
@@ -1341,10 +1343,10 @@ namespace IDS
                         year_built = null,
                         exit_ban = null,
                         sign = null,
-                        note = "Запрет выхода:" + (info.exit_ban != null ? info.exit_ban : "нет") + "; Другие запреты:" + (info.other_bans != null ? info.other_bans.Replace("<br>", "") : ""),
+                        note = (info != null ? "Запрет выхода:" + (info.exit_ban != null ? info.exit_ban : "нет") + "; Другие запреты:" + (info.other_bans != null ? info.other_bans.Replace("<br>", "") : "") : "Ошибка подключения к БД УЗ"),
                         sobstv_kis = null, // TODO: ненужно
-                        closed_route = info.closed_route != null ? true : false, // если стоит плюсик 
-                        new_construction = info.new_construction,
+                        closed_route = (info != null && info.closed_route != null ? true : false), // если стоит плюсик 
+                        new_construction = (info != null ? info.new_construction : null),
                         create = DateTime.Now,
                         create_user = user,
                     };
@@ -1353,7 +1355,7 @@ namespace IDS
                     {
                         id = 0,
                         num = num,
-                        id_operator = 0, 
+                        id_operator = 0,
                         id_limiting = null,
                         rent_start = DateTime.Now,
                         rent_end = null,
@@ -1371,7 +1373,7 @@ namespace IDS
                     var id_operator = wagon.id_operator;
                     var change_operator = wagon.change_operator;
                     // Определим изменение оператора УЗ
-                    if ((wagon.id_operator == null && id_operator_uz!=null) || (wagon.id_operator != null && wagon.id_operator != id_operator_uz))
+                    if ((wagon.id_operator == null && id_operator_uz != null) || (wagon.id_operator != null && wagon.id_operator != id_operator_uz))
                     {
                         // Оператор новый
                         id_operator = id_operator_uz;
@@ -1396,19 +1398,22 @@ namespace IDS
                     wagon.change_operator = change_operator;
                     //wagon.sobstv_kis = null;
                     wagon.id_operator = id_operator;
-                    wagon.gruzp = info.carrying_capacity != null ? (double)info.carrying_capacity : wagon.gruzp;
-                    wagon.tara = info.tara != null ? (double?)info.tara : wagon.tara;
                     wagon.kol_os = (wagon.kol_os == 0 && kol_os > 0 ? kol_os : wagon.kol_os);
                     wagon.usl_tip = (wagon.usl_tip == null && usl_tip != null ? usl_tip : wagon.usl_tip);
-                    wagon.date_rem_uz = info.repair_date;
                     //wagon.date_rem_vag = wagon.date_rem_vag;
                     wagon.id_type_ownership = id_type_ownership;
                     //wagon.sign = wagon.sign;
-                    wagon.note = "Запрет выхода:" + (info.exit_ban != null ? info.exit_ban : "нет") + "; Другие запреты:" + (info.other_bans != null ? info.other_bans.Replace("<br>", "") : "");
-                    wagon.closed_route = info.closed_route != null ? true : false;// если стоит плюсик 
-                    wagon.new_construction = info.new_construction;
                     wagon.change = DateTime.Now;
                     wagon.change_user = user;
+                    if (info != null)
+                    {
+                        wagon.date_rem_uz = info.repair_date;
+                        wagon.gruzp = info.carrying_capacity != null ? (double)info.carrying_capacity : wagon.gruzp;
+                        wagon.tara = info.tara != null ? (double?)info.tara : wagon.tara;
+                        wagon.note = "Запрет выхода:" + (info.exit_ban != null ? info.exit_ban : "нет") + "; Другие запреты:" + (info.other_bans != null ? info.other_bans.Replace("<br>", "") : "");
+                        wagon.closed_route = info.closed_route != null ? true : false;// если стоит плюсик 
+                        wagon.new_construction = info.new_construction;
+                    }
                     ef_wag.Update(wagon);
                     //context.Entry(wagon).State = System.Data.Entity.EntityState.Modified;
                 }
@@ -1482,8 +1487,11 @@ namespace IDS
                 Directory_Wagons wagon = OperationCreateUpdateWagon(ref context, num, user);
 
                 if (wagon == null) return (int)errors_ids_dir.not_wagon_of_db;// Указаного вагона нет в базе
-                // Найдем последнюю аренду
-                Directory_WagonsRent rent_last = wagon.Directory_WagonsRent.OrderByDescending(c => c.id).FirstOrDefault();
+                // Найдем открытую аренду
+                Directory_WagonsRent rent_last = wagon.Directory_WagonsRent.Where(r => r.rent_end == null).OrderByDescending(c => c.id).FirstOrDefault();
+
+                // Проверим если аренды есть а открытой нет, тогда ошибка последняя аренда закрыта
+                if (wagon.Directory_WagonsRent.Count() > 0 && rent_last == null) return (int)errors_ids_dir.not_open_rent;// Нет открытой аренды
 
                 // Начнем обновление 
                 // Проверим создавать новую аренду
@@ -1543,7 +1551,6 @@ namespace IDS
                 rent_last.change = start_rent;
                 rent_last.change_user = user;
                 //Установить бит требующий внимания
-
                 return 1;
 
             }

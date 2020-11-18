@@ -411,7 +411,7 @@
                         pn_search.bt_cars_search_num.prop("disabled", false);
                     }); break;
                     case 2: table_directory.view_cars_search_operator(); break;
-                        //case 3: table_directory.view_cars_search_operator(); break;
+                    //case 3: table_directory.view_cars_search_operator(); break;
                 }
             },
             // Поиск по оператору
@@ -1078,7 +1078,7 @@
                         pn_add_edit.add_edit_change_operator = cd_initDateTimeRangePicker(pn_add_edit.add_edit_change_operator, { lang: lang, time: true }, function (datetime) {
 
                         }),
-                        // Оператор УЗ
+                            // Оператор УЗ
                             pn_add_edit.add_edit_operator_car = cd_initSelect(
                                 pn_add_edit.add_edit_operator_car,
                                 {
@@ -1095,7 +1095,7 @@
                         pn_add_edit.add_edit_operator_car_rent_start = cd_initDateTimeRangePicker(pn_add_edit.add_edit_operator_car_rent_start, { lang: lang, time: true }, function (datetime) {
 
                         }),
-                        // Признак собственности
+                            // Признак собственности
                             pn_add_edit.add_edit_type_ownership = cd_initSelect(
                                 pn_add_edit.add_edit_type_ownership,
                                 {
@@ -1125,7 +1125,7 @@
                         pn_add_edit.add_edit_operator_car_rent_start_now = cd_initDateTimeRangePicker(pn_add_edit.add_edit_operator_car_rent_start_now, { lang: lang, time: true }, function (datetime) {
 
                         }),
-                        // ограничение ограничения
+                            // ограничение ограничения
                             pn_add_edit.add_edit_limiting = cd_initSelect(
                                 pn_add_edit.add_edit_limiting,
                                 {
@@ -1159,11 +1159,11 @@
                         pn_add_edit.add_edit_date_rem_uz = cd_initDateTimeRangePicker(pn_add_edit.add_edit_date_rem_uz, { lang: lang, time: false }, function (datetime) {
 
                         }),
-                        // Дата ремонта вагона
+                            // Дата ремонта вагона
                             pn_add_edit.add_edit_date_rem_vag = cd_initDateTimeRangePicker(pn_add_edit.add_edit_date_rem_vag, { lang: lang, time: false }, function (datetime) {
 
                             }),
-                        // Соберем все элементы в массив
+                            // Соберем все элементы в массив
                             pn_add_edit.all_obj = $([])
                                 .add(pn_add_edit.add_edit_num)
                                 .add(pn_add_edit.add_edit_kod_adm)
@@ -1191,7 +1191,7 @@
                                 .add(pn_add_edit.add_edit_date_rem_uz.obj)
                                 .add(pn_add_edit.add_edit_date_rem_vag.obj)
                                 .add(pn_add_edit.add_edit_note)
-                        ;
+                            ;
                         // создадим классы 
 
                         //pn_add_edit.alert = new ALERT($('div#add_edit_alert'));// Создадим класс ALERTG
@@ -1304,6 +1304,7 @@
                 pn_add_edit.active_tab = 0;
                 pn_add_edit.select_num = num;
                 pn_add_edit.select_obj = null;
+                pn_add_edit.disabled_element();
                 if (pn_add_edit.select_num) {
                     // Правим запись
                     pn_add_edit.obj.dialog("option", "title", "Править вагон");
@@ -1323,7 +1324,6 @@
                     pn_add_edit.obj.dialog("option", "title", "Добавить вагон");
                     pn_add_edit.add_edit_num.val('').prop('disabled', false);
                     pn_add_edit.add_search_car.prop('disabled', false);
-                    pn_add_edit.disabled_element();
                     // Добавим запись
                     pn_add_edit.obj.dialog("open");
                     LockScreenOff();
@@ -1929,7 +1929,7 @@
                         },
                         {
                             data: function (row, type, val, meta) {
-                                return row.closed_route ? 'Да': '';
+                                return row.closed_route ? 'Да' : '';
                             }, title: langView('field_closed_route', langs), width: "100px", orderable: false, searchable: false
                         },
                         //{
