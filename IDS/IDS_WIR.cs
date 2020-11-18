@@ -1017,7 +1017,12 @@ namespace IDS
                 {
                     // Вагона нет создать
                     IDSDirectory ids_dir = new IDSDirectory(this.servece_owner);
-                    Directory_Wagons wag_new = ids_dir.GetDirectory_WagonsOfNum(wagon.num, 0, null, 0, null, user);
+
+                    //TODO: Замена 
+                    //Directory_Wagons wag_new = ids_dir.GetDirectory_WagonsOfNum(wagon.num, 0, null, 0, null, user);
+                    Directory_Wagons wag_new = ids_dir.OperationCreateUpdateWagon(ref context, wagon.num, 0, null, 0, null, user);
+
+
                     //foreach (Directory_Wagons dir in context.Directory_Wagons) {
                     //    context.Entry(dir).Reload();
                     //}

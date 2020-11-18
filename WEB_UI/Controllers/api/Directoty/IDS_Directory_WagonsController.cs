@@ -1,4 +1,5 @@
 ﻿using EFIDS.Abstract;
+using EFIDS.Concrete;
 using EFIDS.Entities;
 using EFIDS.Helper;
 using IDS;
@@ -338,10 +339,10 @@ namespace WEB_UI.Controllers.api
             {
                 string user = base.User.Identity.Name;
                 IDSDirectory ids_dir = new IDSDirectory(service.WebAPI_IDS);
-                ids_dir.Transfer_new_car_of_kis = true; // Признак создавать вагоны в справочнике ИДС по данным КИС и ИРЫ если вагон новый
-                //ids_dir.Transfer_new_car_of_kis = false; // Признак создавать вагоны в справочнике ИДС по данным КИС и ИРЫ если вагон новый
-                //Directory_Wagons car = ids_dir.GetCurrentDirectory_WagonsOfNum(num, 22, 60, 4, null, true, user);
-                Directory_Wagons car = ids_dir.GetDirectory_WagonsOfNum(num, specification.adm, (specification.rod == null ? null : (int?)int.Parse(specification.rod)), specification.kol_os, specification.usl_tip, user).GetDirectory_Wagons_Directory_WagonsRent();
+                ids_dir.Transfer_new_car_of_kis = false; // TODO: !! ОТКЛЮЧИЛ Признак создавать вагоны в справочнике ИДС по данным КИС и ИРЫ если вагон новый 
+                //TODO: ЗАМЕНА
+                //Directory_Wagons car = ids_dir.GetDirectory_WagonsOfNum(num, specification.adm, (specification.rod == null ? null : (int?)int.Parse(specification.rod)), specification.kol_os, specification.usl_tip, user).GetDirectory_Wagons_Directory_WagonsRent();
+                Directory_Wagons car = ids_dir.OperationCreateUpdateWagon(num, specification.adm, (specification.rod == null ? null : (int?)int.Parse(specification.rod)), specification.kol_os, specification.usl_tip, user).GetDirectory_Wagons_Directory_WagonsRent();
                 return Ok(car.GetDirectory_Wagons_Directory_WagonsRent());
             }
             catch (Exception e)
