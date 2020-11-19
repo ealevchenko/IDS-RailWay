@@ -91,15 +91,37 @@ namespace WEB_UI.Controllers.api
     /// </summary>
     public class OperationUpdateWagons
     {
-        public List<int> list_nums { get; set; } 
-        public bool edit_operator { get; set; }         
-        public int? id_operator { get; set; }        
+        public List<int> list_nums { get; set; }
+        public bool edit_operator { get; set; }
+        public int? id_operator { get; set; }
         public DateTime? start_rent { get; set; }
-        public bool edit_limiting { get; set; } 
-        public int? id_limiting { get; set; }         
+        public bool edit_limiting { get; set; }
+        public int? id_limiting { get; set; }
         public string user { get; set; }
     }
-    
+
+    public class OperationUpdateWagon
+    {
+        public int num { get; set; }
+        public int id_countrys { get; set; }
+        public int id_genus { get; set; }
+        public double? gruzp { get; set; }
+        public double? tara { get; set; }
+        public int kol_os { get; set; }
+        public string usl_tip { get; set; }
+        public DateTime? date_rem_vag { get; set; }
+        public int? id_type_ownership { get; set; }
+        public int? sign { get; set; }
+        public string factory_number { get; set; }
+        public string inventory_number { get; set; }
+        public int? year_built { get; set; }
+        public bool? exit_ban { get; set; }
+        public int? id_operator { get; set; }
+        public DateTime? rent_start { get; set; }
+        public int? id_limiting { get; set; }
+        public string user { get; set; }
+    }
+
     /// <summary>
     /// СПИСОК ВАГОНОВ
     /// </summary>
@@ -137,6 +159,24 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // POST api/ids/directory/wagon/operation/update/wagon
+        [HttpPost]
+        [Route("operation/update/wagon/")]
+        [ResponseType(typeof(OperationResult))]
+        public IHttpActionResult PostOperationUpdateWagons([FromBody] OperationUpdateWagon value)
+        {
+            try
+            {
+                IDSDirectory ids_dir = new IDSDirectory(service.WebAPI_IDS);
+                OperationResult result = ids_dir.OperationUpdateWagon(value.num, value.id_countrys, value.id_genus, value.gruzp, value.tara, value.kol_os, value.usl_tip, value.date_rem_vag, value.id_type_ownership, value.sign, value.factory_number, value.inventory_number, value.year_built, value.exit_ban, value.id_operator, value.rent_start, value.id_limiting, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         #endregion
 
 
@@ -156,9 +196,9 @@ namespace WEB_UI.Controllers.api
             {
                 return BadRequest(e.Message);
             }
-        }        
-        
-        
+        }
+
+
         // GET: api/ids/directory/wagon/all
         [Route("all")]
         [ResponseType(typeof(Directory_Wagons))]
@@ -311,7 +351,7 @@ namespace WEB_UI.Controllers.api
         {
             try
             {
-                string sql = "select * from [IDS].[get_view_directory_wagon]() where id_operator_amkr = "+ id.ToString();
+                string sql = "select * from [IDS].[get_view_directory_wagon]() where id_operator_amkr = " + id.ToString();
                 List<view_directory_wagon> list = this.ef_dir.Database.SqlQuery<view_directory_wagon>(sql).ToList();
                 return Ok(list);
             }

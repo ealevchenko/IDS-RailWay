@@ -178,6 +178,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Замкнутый маршрут.
+        /// </summary>
+        public static string title_add_edit_closed_route {
+            get {
+                return ResourceManager.GetString("title_add_edit_closed_route", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Код в SAP.
         /// </summary>
         public static string title_add_edit_code_sap {
@@ -205,7 +214,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Запрет выхода на УЗ (перемещение только по АМКР).
+        ///   Ищет локализованную строку, похожую на Запрет выхода на УЗ (толька АМКР).
         /// </summary>
         public static string title_add_edit_exit_ban {
             get {
@@ -300,6 +309,15 @@ namespace WEB_UI.App_LocalResources {
         public static string title_add_edit_name_rod_abbr {
             get {
                 return ResourceManager.GetString("title_add_edit_name_rod_abbr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Нова побудова.
+        /// </summary>
+        public static string title_add_edit_new_construction {
+            get {
+                return ResourceManager.GetString("title_add_edit_new_construction", resourceCulture);
             }
         }
         
@@ -408,6 +426,15 @@ namespace WEB_UI.App_LocalResources {
         public static string title_add_edit_usl_tip {
             get {
                 return ResourceManager.GetString("title_add_edit_usl_tip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Контроль системной нумерации.
+        /// </summary>
+        public static string title_add_edit_valodation_num {
+            get {
+                return ResourceManager.GetString("title_add_edit_valodation_num", resourceCulture);
             }
         }
         

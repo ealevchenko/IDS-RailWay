@@ -99,13 +99,13 @@
                             </div>
 
                             @*<form class="form-inline">
-                                <div class="form-group mb-2">
-                                    <label for="wagon-operator" class="col-form-label">Оператор:</label>
-                                    @*<select class="form-control ml-3" id="wagon_operator" style="font-size:inherit"></select>
-                                </div>
-                                <button type="button" class="btn btn-primary mb-2 ml-3" id="cars_search_operator">Поиск</button>
+                                    <div class="form-group mb-2">
+                                        <label for="wagon-operator" class="col-form-label">Оператор:</label>
+                                        @*<select class="form-control ml-3" id="wagon_operator" style="font-size:inherit"></select>
+                                    </div>
+                                    <button type="button" class="btn btn-primary mb-2 ml-3" id="cars_search_operator">Поиск</button>
 
-                            </form>*@
+                                </form>*@
                         </div>
                         <div class="tab-pane fade" id="cars-search-comparison">
                             <div class="form-row">
@@ -266,6 +266,20 @@
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="total" role="tabpanel" aria-labelledby="total-tab">
                     <div class="row" style="margin-bottom:0.5rem">
+                        <div class="col-xl-6">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="add_edit_valodation_num" style="position:relative">
+                                <label class="form-check-label" for="add_edit_valodation_num">@DirectoryResource.title_add_edit_valodation_num</label>
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="add_edit_exit_ban" style="position:relative">
+                                <label class="form-check-label" for="add_edit_exit_ban">@DirectoryResource.title_add_edit_exit_ban</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom:0.5rem">
                         <div class="col-md-6 mb-1 text-left">
                             <label for="add_edit_num" class="col-form-label">@DirectoryResource.title_add_edit_num:</label>
                             <div class="input-group">
@@ -365,19 +379,19 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4 mb-1 text-left">
+                        <div class="col-md-6 mb-1 text-left">
                             <label for="add_edit_operator_car" class="col-form-label">@DirectoryResource.title_add_edit_operator_car:</label>
                             <select class="form-control" id="add_edit_operator_car" name="add_edit_operator_car" disabled="disabled"></select>
                             <div class="invalid-feedback">
                             </div>
                         </div>
-                        <div class="col-md-4 mb-1 text-left">
+                        <div class="col-md-3 mb-1 text-left">
                             <label for="add_edit_operator_car_rent_start" class="col-form-label">@DirectoryResource.title_add_edit_operator_car_rent_start:</label>
                             <input type="datetime" class="form-control" id="add_edit_operator_car_rent_start" name="add_edit_operator_car_rent_start" disabled="disabled">
                             <div class="invalid-feedback">
                             </div>
                         </div>
-                        <div class="col-md-4 mb-1 text-left">
+                        <div class="col-md-3 mb-1 text-left">
                             <label for="add_edit_type_ownership" class="col-form-label">@DirectoryResource.title_add_edit_type_ownership:</label>
                             <select class="form-control" id="add_edit_type_ownership" name="add_edit_type_ownership" disabled="disabled"></select>
                             <div class="invalid-feedback">
@@ -390,13 +404,15 @@
                         </div>
                     </div>
                     <div class="row" style="margin-bottom:0.5rem">
-                        <div class="col-md-6 mb-1 text-left">
+                        <div class="col-xl-8 mb-1 text-left">
                             <label for="add_edit_operator_car_new" class="col-form-label">@DirectoryResource.title_add_edit_operator_car_new:</label>
-                            <select class="form-control" id="add_edit_operator_car_new" name="add_edit_operator_car_new"></select>
-                            <div class="invalid-feedback">
-                            </div>
+                            <input type="text" class="form-control" id="add_edit_operator_car_new" name="add_edit_operator_car_new" title="" required="required">
+                            <div class="invalid-feedback"></div>
+                            @*<select class="form-control" id="add_edit_operator_car_new" name="add_edit_operator_car_new"></select>
+                                <div class="invalid-feedback">
+                                </div>*@
                         </div>
-                        <div class="col-md-6 mb-1 text-left">
+                        <div class="col-xl-4 mb-1 text-left">
                             <label for="add_edit_operator_car_rent_start_now" class="col-form-label">@DirectoryResource.title_add_edit_operator_car_rent_start:</label>
                             <input type="datetime" class="form-control" id="add_edit_operator_car_rent_start_now" name="add_edit_operator_car_rent_start_now">
                             <div class="invalid-feedback">
@@ -435,9 +451,15 @@
                             <textarea class="form-control" rows="3" id="add_edit_note" name="add_edit_note" disabled="disabled"></textarea>
                         </div>
                     </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="add_edit_exit_ban" style="position:relative">
-                        <label class="form-check-label" for="add_edit_exit_ban">@DirectoryResource.title_add_edit_exit_ban</label>
+                    <div class="row" style="margin-bottom:0.5rem">
+                        <div class="col-md-8 mb-1 text-left">
+                            <label for="add_edit_new_construction" class="col-form-label">@DirectoryResource.title_add_edit_new_construction:</label>
+                            <input type="datetime" class="form-control" id="add_edit_new_construction" name="add_edit_new_construction" disabled="disabled">
+                        </div>
+                        <div class="col-md-4 form-check" style="padding-top:5%">
+                            <input type="checkbox" class="form-check-input" id="add_edit_closed_route" style="position:relative" disabled="disabled">
+                            <label class=" form-check-label" for="add_edit_closed_route">@DirectoryResource.title_add_edit_closed_route</label>
+                        </div>
                     </div>
 
                 </div>
@@ -447,7 +469,7 @@
                             <div>
                                 <table id="list-rent" class="display compact hover row-border" style="width:100%;table-layout:fixed"></table>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>

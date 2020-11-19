@@ -999,7 +999,7 @@ IDS_DIRECTORY.prototype.getViewWagonOfOperator = function (id_operator, callback
     });
 };
 //---------- Update
-//Обновим оператора по группе вагонов
+//Обновим оператора или ограничения по группе вагонов
 IDS_DIRECTORY.prototype.postOperationUpdateWagons = function (operation_wagons, callback) {
     $.ajax({
         url: '../../api/ids/directory/wagon/operation/update/',
@@ -1018,6 +1018,31 @@ IDS_DIRECTORY.prototype.postOperationUpdateWagons = function (operation_wagons, 
         error: function (x, y, z) {
             LockScreenOff();
             OnAJAXError("IDS_DIRECTORY.postOperationUpdateWagons", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Обновим строки справочника вагонов
+IDS_DIRECTORY.prototype.postOperationUpdateWagon = function (operation_wagon, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/wagon/operation/update/wagon/',
+        type: 'POST',
+        data: JSON.stringify(operation_wagon),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_DIRECTORY.postOperationUpdateWagon", x, y, z);
         },
         complete: function () {
             AJAXComplete();

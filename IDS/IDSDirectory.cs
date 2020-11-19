@@ -1230,6 +1230,9 @@ namespace IDS
         //    }
         //}
 
+
+
+
         /// <summary>
         /// Операция обновления вагона (с обязателным обновлением основной информации из справочника УЗ) в справочнике ИДС 
         /// (если вагона нет создаст вагон и первую аренду по входным данным и данным УЗ, МОРС)
@@ -1355,9 +1358,9 @@ namespace IDS
                     {
                         id = 0,
                         num = num,
-                        id_operator = 0,
+                        id_operator = null, // не указываем оператора
                         id_limiting = null,
-                        rent_start = DateTime.Now,
+                        rent_start = null, // не указываем время
                         rent_end = null,
                         create = DateTime.Now,
                         create_user = user,
@@ -1401,7 +1404,7 @@ namespace IDS
                     wagon.kol_os = (wagon.kol_os == 0 && kol_os > 0 ? kol_os : wagon.kol_os);
                     wagon.usl_tip = (wagon.usl_tip == null && usl_tip != null ? usl_tip : wagon.usl_tip);
                     //wagon.date_rem_vag = wagon.date_rem_vag;
-                    wagon.id_type_ownership = id_type_ownership;
+                    wagon.id_type_ownership = (id_type_ownership !=null && wagon.id_type_ownership== null && id_type_ownership!=wagon.id_type_ownership ? id_type_ownership : wagon.id_type_ownership);
                     //wagon.sign = wagon.sign;
                     wagon.change = DateTime.Now;
                     wagon.change_user = user;
@@ -1423,6 +1426,127 @@ namespace IDS
             catch (Exception e)
             {
                 return null;
+            }
+        }
+
+
+        /// <summary>
+        /// Обновить строку справочника вагона 
+        /// </summary>
+        /// <param name="num"></param>
+        /// <param name="id_countrys"></param>
+        /// <param name="id_genus"></param>
+        /// <param name="gruzp"></param>
+        /// <param name="tara"></param>
+        /// <param name="kol_os"></param>
+        /// <param name="usl_tip"></param>
+        /// <param name="date_rem_vag"></param>
+        /// <param name="id_type_ownership"></param>
+        /// <param name="sign"></param>
+        /// <param name="factory_number"></param>
+        /// <param name="inventory_number"></param>
+        /// <param name="year_built"></param>
+        /// <param name="exit_ban"></param>
+        /// <param name="id_operator"></param>
+        /// <param name="start_rent"></param>
+        /// <param name="id_limiting"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public OperationResult OperationUpdateWagon(int num, int id_countrys, int id_genus, double? gruzp, double? tara, int kol_os, string usl_tip,
+            DateTime? date_rem_vag, int? id_type_ownership, int? sign, string factory_number, string inventory_number, int? year_built, bool? exit_ban, int? id_operator, DateTime? start_rent, int? id_limiting, string user)
+        {
+            OperationResult result = new OperationResult();
+            try
+            {
+                EFDbContext context = new EFDbContext();
+                result.SetResultOperation(OperationUpdateWagon(ref context, num, id_countrys, id_genus, gruzp, tara, kol_os, usl_tip, date_rem_vag,
+                    id_type_ownership, sign, factory_number, inventory_number, year_built, exit_ban, id_operator, start_rent, id_limiting, user), num);
+                // Если нет ошибок тогда обновим базу
+                if (result.error == 0)
+                {
+                    result.SetResult(context.SaveChanges());
+                }
+                else
+                {
+                    result.SetResult((int)errors_ids_dir.cancel_save_changes); // Ошибка изменение было отменено
+                }
+            }
+            catch (Exception e)
+            {
+                //e.ExceptionMethodLog(String.Format("OperationUpdateWagons(list_nums={0}, edit_operator={1}, id_operator ={2}, start_rent={3}, edit_limiting ={4}, id_limiting={5},user={6})",
+                //    list_nums, edit_operator, id_operator, start_rent, edit_limiting, id_limiting, user), servece_owner, eventID);
+                result.SetResult((int)errors_ids_dir.global);// Ошибка нет списка id
+            }
+            return result;
+        }
+        /// <summary>
+        /// Обновить информацию по вагону
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="num"></param>
+        /// <param name="adm"></param>
+        /// <param name="rod"></param>
+        /// <param name="kol_os"></param>
+        /// <param name="usl_tip"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationUpdateWagon(ref EFDbContext context, int num, int id_countrys, int id_genus, double? gruzp, double? tara, int kol_os, string usl_tip,
+            DateTime? date_rem_vag, int? id_type_ownership, int? sign, string factory_number, string inventory_number, int? year_built, bool? exit_ban, int? id_operator, DateTime? start_rent, int? id_limiting, string user)
+        {
+            try
+            {
+
+                // Проверка контекста
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                // Вагоны
+                EFDirectory_Wagons ef_vag = new EFDirectory_Wagons(context);
+                // Получим вагон
+                Directory_Wagons wagon = ef_vag.Context.Where(w => w.num == num).FirstOrDefault();
+                if (wagon == null) return (int)errors_ids_dir.not_wagon_of_db;// Нет вагона в базе данных
+                bool bit_warning = false;
+                // Установим бит внимание
+                if (id_genus == 0 || id_countrys == 0)
+                {
+                    bit_warning = true;
+                }
+                // Вагона есть обновим
+                wagon.id_countrys = (wagon.id_countrys == 0 && id_countrys > 0 ? id_countrys : wagon.id_countrys);
+                wagon.id_genus = (wagon.id_genus == 0 && id_genus > 0 ? id_genus : wagon.id_genus);
+                //wagon.bit_warning = bit_warning;
+                wagon.kol_os = (wagon.kol_os == 0 && kol_os > 0 ? kol_os : wagon.kol_os);
+                wagon.usl_tip = (wagon.usl_tip == null && usl_tip != null ? usl_tip : wagon.usl_tip);
+                wagon.date_rem_vag = date_rem_vag != null ? date_rem_vag : wagon.date_rem_vag;
+                wagon.id_type_ownership = id_type_ownership;
+                wagon.sign = sign != null ? sign : wagon.sign;
+                wagon.gruzp = gruzp != null ? (double)gruzp : wagon.gruzp;
+                wagon.tara = tara != null ? (double?)tara : wagon.tara;
+                wagon.factory_number = factory_number;
+                wagon.inventory_number = inventory_number;
+                wagon.year_built = year_built;
+                wagon.exit_ban = exit_ban;
+                wagon.bit_warning = bit_warning; // Бит внимание
+                wagon.change = DateTime.Now;
+                wagon.change_user = user;
+                // Обновим оператора
+                int result_rent = OperationUpdateWagonRent(ref context, ref wagon, (id_operator != null && start_rent != null ? true : false), id_operator, start_rent, true, id_limiting, user);
+                // Применим обновление
+                ef_wag.Update(wagon);
+                // если все Ок тогда 1 
+                return result_rent > 0 ? 1 : result_rent; // Вернем результат
+            }
+            catch (Exception e)
+            {
+                //e.ExceptionMethodLog(String.Format("OperationUpdateWagons(num={0}, edit_operator={1}, id_operator ={2}, start_rent={3}, edit_limiting ={4}, id_limiting={5},user={6})",
+                // num, edit_operator, id_operator, start_rent, edit_limiting, id_limiting, user), servece_owner, eventID);
+                return (int)errors_ids_dir.global;// Возвращаем id=-1 , Ошибка
             }
         }
         /// <summary>
@@ -1457,6 +1581,95 @@ namespace IDS
             }
         }
         /// <summary>
+        /// Обновим аренду по указанному вагону
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="wagon"></param>
+        /// <param name="edit_operator"></param>
+        /// <param name="id_operator"></param>
+        /// <param name="start_rent"></param>
+        /// <param name="edit_limiting"></param>
+        /// <param name="id_limiting"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationUpdateWagonRent(ref EFDbContext context, ref Directory_Wagons wagon, bool edit_operator, int? id_operator, DateTime? start_rent, bool edit_limiting, int? id_limiting, string user)
+        {
+            try
+            {
+                // Найдем открытую аренду
+                Directory_WagonsRent rent_last = wagon.Directory_WagonsRent.Where(r => r.rent_end == null).OrderByDescending(c => c.id).FirstOrDefault();
+
+                // Проверим если аренды есть а открытой нет, тогда ошибка последняя аренда закрыта
+                if (wagon.Directory_WagonsRent.Count() > 0 && rent_last == null) return (int)errors_ids_dir.not_open_rent;// Нет открытой аренды
+
+                // Начнем обновление 
+                // Проверим создавать новую аренду
+                if (rent_last == null || (edit_operator && rent_last != null && rent_last.id_operator != null && rent_last.id_operator != id_operator))
+                {
+                    // Создаем новую строку аренды
+                    // Если есть старая
+                    if (rent_last != null)
+                    {
+                        // Закроем старую если не закрыта
+                        if (rent_last.rent_start > start_rent) return (int)errors_ids_dir.error_set_date;// Ошибка дата конца аренды меньше или равна началу аренды
+                        rent_last.rent_end = rent_last.rent_end == null ? start_rent : rent_last.rent_end;
+                    }
+                    // Оператор новый создадим новую строку аренды
+                    Directory_WagonsRent new_rent = new Directory_WagonsRent()
+                    {
+                        id = 0,
+                        num = wagon.num,
+                        id_operator = id_operator,
+                        id_limiting = edit_limiting ? id_limiting : rent_last.id_limiting,
+                        rent_start = start_rent,
+                        rent_end = null,
+                        create = (DateTime)start_rent,
+                        create_user = user,
+                        change = null,
+                        change_user = null,
+                        parent_id = rent_last != null ? (int?)rent_last.id : null,
+                    };
+                    wagon.Directory_WagonsRent.Add(new_rent);
+                }
+                else
+                {
+                    // Правим оператора
+                    if (edit_operator)
+                    {
+                        // Правим старую аренду
+                        if (rent_last.id_operator == null)
+                        {
+                            rent_last.id_operator = id_operator;
+                        }
+
+                        if (rent_last.rent_end != null)
+                        {
+                            // Если аренда закрыта
+                            if (start_rent > rent_last.rent_end) return (int)errors_ids_dir.error_set_date;// Ошибка дата конца аренды меньше или равна началу аренды
+                        }
+                        // Оператор старый обновим дату аренды
+                        rent_last.rent_start = start_rent;
+                    }
+                    // Правим лимит
+                    if (edit_limiting)
+                    {
+                        rent_last.id_limiting = id_limiting;
+                    }
+                }
+                // Оновим штамп изменений
+                rent_last.change = start_rent;
+                rent_last.change_user = user;
+                //Установить бит требующий внимания
+                return 1;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationUpdateWagonRent(context={0}, vagon={1}, edit_operator={2}, id_operator ={3}, start_rent={4}, edit_limiting ={5}, id_limiting={6},user={7})",
+                   context, wagon, edit_operator, id_operator, start_rent, edit_limiting, id_limiting, user), servece_owner, eventID);
+                return (int)errors_ids_dir.global;// Возвращаем id=-1 , Ошибка
+            }
+        }
+        /// <summary>
         /// Операция обновления информации на вагон указанного контекста  по оператору или ограничению (с обязателным обновлением основной информации из справочника УЗ) в справочнике ИДС 
         /// (если вагона нет создаст вагон и первую аренду по данным УЗ, МОРС)
         /// </summary>
@@ -1485,79 +1698,17 @@ namespace IDS
                 }
                 // Проверим наличие вагона в базе ИДС если нет создать по данным УЗ если есть обновить по данным УЗ
                 Directory_Wagons wagon = OperationCreateUpdateWagon(ref context, num, user);
-
+                // Проверим вагон в базе 
                 if (wagon == null) return (int)errors_ids_dir.not_wagon_of_db;// Указаного вагона нет в базе
-                // Найдем открытую аренду
-                Directory_WagonsRent rent_last = wagon.Directory_WagonsRent.Where(r => r.rent_end == null).OrderByDescending(c => c.id).FirstOrDefault();
-
-                // Проверим если аренды есть а открытой нет, тогда ошибка последняя аренда закрыта
-                if (wagon.Directory_WagonsRent.Count() > 0 && rent_last == null) return (int)errors_ids_dir.not_open_rent;// Нет открытой аренды
-
-                // Начнем обновление 
-                // Проверим создавать новую аренду
-                if (rent_last == null || (edit_operator && rent_last != null && rent_last.id_operator != null && rent_last.id_operator != id_operator))
-                {
-                    // Создаем новую строку аренды
-                    // Если есть старая
-                    if (rent_last != null)
-                    {
-                        // Закроем старую если не закрыта
-                        if (rent_last.rent_start >= start_rent) return (int)errors_ids_dir.error_set_date;// Ошибка дата конца аренды меньше или равна началу аренды
-                        rent_last.rent_end = rent_last.rent_end == null ? start_rent : rent_last.rent_end;
-                    }
-                    // Оператор новый создадим новую строку аренды
-                    Directory_WagonsRent new_rent = new Directory_WagonsRent()
-                    {
-                        id = 0,
-                        num = num,
-                        id_operator = id_operator,
-                        id_limiting = edit_limiting ? id_limiting : rent_last.id_limiting,
-                        rent_start = start_rent,
-                        rent_end = null,
-                        create = (DateTime)start_rent,
-                        create_user = user,
-                        change = null,
-                        change_user = null,
-                        parent_id = rent_last != null ? (int?)rent_last.id : null,
-                    };
-                    wagon.Directory_WagonsRent.Add(new_rent);
-                }
-                else
-                {
-                    // Правим оператора
-                    if (edit_operator)
-                    {
-                        // Правим старую аренду
-                        if (rent_last.id_operator == null)
-                        {
-                            rent_last.id_operator = id_operator;
-                        }
-
-                        if (rent_last.rent_end != null)
-                        {
-                            // Если аренда закрыта
-                            if (start_rent >= rent_last.rent_end) return (int)errors_ids_dir.error_set_date;// Ошибка дата конца аренды меньше или равна началу аренды
-                        }
-                        // Оператор старый обновим дату аренды
-                        rent_last.rent_start = start_rent;
-                    }
-                    // Правим лимит
-                    if (edit_limiting)
-                    {
-                        rent_last.id_limiting = id_limiting;
-                    }
-                }
-                // Оновим штамп изменений
-                rent_last.change = start_rent;
-                rent_last.change_user = user;
-                //Установить бит требующий внимания
-                return 1;
-
+                // Добавим оператора
+                int result_rent = OperationUpdateWagonRent(ref context, ref wagon, edit_operator, id_operator, start_rent, edit_limiting, id_limiting, user);
+                // если все Ок тогда 1 
+                return result_rent > 0 ? 1 : result_rent; // Вернем результат
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("OperationUpdateWagons(num={0}, edit_operator={1}, id_operator ={2}, start_rent={3}, edit_limiting ={4}, id_limiting={5},user={6})",
-                    num, edit_operator, id_operator, start_rent, edit_limiting, id_limiting, user), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("OperationUpdateWagons(context={0}, num={1}, edit_operator={2}, id_operator ={3}, start_rent={4}, edit_limiting ={5}, id_limiting={6},user={7})",
+                   context, num, edit_operator, id_operator, start_rent, edit_limiting, id_limiting, user), servece_owner, eventID);
                 return (int)errors_ids_dir.global;// Возвращаем id=-1 , Ошибка
             }
         }

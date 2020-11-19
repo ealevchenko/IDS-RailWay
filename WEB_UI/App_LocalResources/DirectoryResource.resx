@@ -156,6 +156,9 @@
   <data name="title_add_edit_change_operator" xml:space="preserve">
     <value>Изм. (УЗ)</value>
   </data>
+  <data name="title_add_edit_closed_route" xml:space="preserve">
+    <value>Замкнутый маршрут</value>
+  </data>
   <data name="title_add_edit_code_sap" xml:space="preserve">
     <value>Код в SAP</value>
   </data>
@@ -166,7 +169,7 @@
     <value>Дата рем. (Вагон)</value>
   </data>
   <data name="title_add_edit_exit_ban" xml:space="preserve">
-    <value>Запрет выхода на УЗ (перемещение только по АМКР)</value>
+    <value>Запрет выхода на УЗ (толька АМКР)</value>
   </data>
   <data name="title_add_edit_factory_number" xml:space="preserve">
     <value>Заводской №</value>
@@ -197,6 +200,9 @@
   </data>
   <data name="title_add_edit_name_rod_abbr" xml:space="preserve">
     <value>Род (абр.)</value>
+  </data>
+  <data name="title_add_edit_new_construction" xml:space="preserve">
+    <value>Нова побудова</value>
   </data>
   <data name="title_add_edit_note" xml:space="preserve">
     <value>Ограничения (УЗ)</value>
@@ -233,6 +239,9 @@
   </data>
   <data name="title_add_edit_usl_tip" xml:space="preserve">
     <value>Тип цист.</value>
+  </data>
+  <data name="title_add_edit_valodation_num" xml:space="preserve">
+    <value>Контроль системной нумерации</value>
   </data>
   <data name="title_add_edit_year_built" xml:space="preserve">
     <value>Год постр.</value>
