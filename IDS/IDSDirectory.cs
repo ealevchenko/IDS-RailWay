@@ -1687,7 +1687,9 @@ namespace IDS
             try
             {
                 // Проверим на ошибки
-                if ((!edit_operator && !edit_limiting) || (edit_operator && id_operator == null && start_rent == null) || (edit_limiting && id_limiting == null))
+                if ((!edit_operator && !edit_limiting) || (edit_operator && id_operator == null && start_rent == null) 
+                    //|| (edit_limiting && id_limiting == null)
+                    )
                 {
                     return (int)errors_ids_dir.error_input_value;// Ошибка входных данных
                 }
@@ -1735,7 +1737,9 @@ namespace IDS
                     result.SetResult((int)errors_ids_dir.not_list_nums);// Ошибка нет списка номеров
                 }
 
-                if ((!edit_operator && !edit_limiting) || (edit_operator && id_operator == null && start_rent == null) || (edit_limiting && id_limiting == null))
+                if ((!edit_operator && !edit_limiting) || (edit_operator && id_operator == null && start_rent == null) 
+                    //|| (edit_limiting && id_limiting == null)
+                    )
                 {
                     result.SetResult((int)errors_ids_dir.error_input_value);// Ошибка нет данных по оператору
                 }
