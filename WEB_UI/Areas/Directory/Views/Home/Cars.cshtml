@@ -68,6 +68,10 @@
                                 <div class="col-xl-12">
                                     @*                              <p>Найти вагон(ы) в справочнике по номеру вагона, если вагона нет в справочнике вагон создается по данным КИС и УЗ.</p>*@
                                     <p>Найти вагон(ы) в справочнике по номеру вагона(ов), если указывается перечень вагонов - вагоны разделяются ";".</p>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="cars_search_valodation_num" style="position:relative">
+                                        <label class="form-check-label" for="cars_search_valodation_num">@DirectoryResource.title_add_edit_valodation_num</label>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-row mt-2">
@@ -118,18 +122,25 @@
                                     <label for="wagon_operator_comparison" class="col-form-label">Оператор:</label>
                                 </div>
                                 <div class="col-xl-3">
-                                    <select class="form-control" id="wagon_operator_comparison" style="font-size:inherit"></select>
+                                    @*<select class="form-control" id="wagon_operator_comparison" style="font-size:inherit"></select>*@
+                                    <input type="text" class="form-control" style="font-size:15px" id="wagon_operator_comparison" name="wagon_operator_comparison" title="" required="required">
+                                    <div class="invalid-feedback"></div>
                                 </div>
                             </div>
+
                             <div class="form-row mt-2">
                                 <div class="col-xl-1">
                                     <label for="num_cars_comparison" class="col-form-label">Перечень:</label>
                                 </div>
                                 <div class="col-xl-9">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="cars_comparison_valodation_num" style="position:relative">
+                                        <label class="form-check-label" for="cars_comparison_valodation_num">@DirectoryResource.title_add_edit_valodation_num</label>
+                                    </div>
                                     <textarea class="form-control" id="num_cars_comparison" name="num_cars_comparison" rows="3" style="font-size:inherit"></textarea>
                                 </div>
                                 <div class="col-xl-2">
-                                    <button type="button" class="btn btn-primary" id="cars_comparison_num">Сравнить</button>
+                                    <button type="button" class="btn btn-primary" id="cars_comparison_num" disabled="disabled">Сравнить</button>
                                 </div>
                             </div>
                             <div class="form-row mt-2">
@@ -151,7 +162,7 @@
                                     <textarea class="form-control" id="num_cars_comparison_yes" name="num_cars_comparison_yes" rows="2" style="font-size:inherit"></textarea>
                                 </div>
                                 <div class="col-xl-2">
-                                    <button type="button" class="btn btn-primary" id="cars_comparison_num_yes" disabled>Показать</button>
+                                    <button type="button" class="btn btn-primary" id="cars_comparison_num_yes">Показать</button>
                                 </div>
                             </div>
                             <div class="form-row mt-2">
@@ -162,7 +173,7 @@
                                     <textarea class="form-control" id="num_cars_comparison_no" name="num_cars_comparison_no" rows="2" style="font-size:inherit"></textarea>
                                 </div>
                                 <div class="col-xl-2">
-                                    <button type="button" class="btn btn-primary" id="cars_comparison_num_no" disabled>Показать</button>
+                                    <button type="button" class="btn btn-primary" id="cars_comparison_num_no">Показать</button>
                                 </div>
                             </div>
                             <div class="form-row mt-2">
@@ -173,7 +184,7 @@
                                     <textarea class="form-control" id="num_cars_comparison_change" name="num_cars_comparison_change" rows="2" style="font-size:inherit"></textarea>
                                 </div>
                                 <div class="col-xl-2">
-                                    <button type="button" class="btn btn-primary" id="cars_comparison_num_change" disabled>Показать</button>
+                                    <button type="button" class="btn btn-primary" id="cars_comparison_num_change" >Показать</button>
                                 </div>
                             </div>
                         </div>

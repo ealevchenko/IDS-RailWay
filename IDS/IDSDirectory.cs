@@ -1523,9 +1523,9 @@ namespace IDS
                 //wagon.bit_warning = bit_warning;
                 wagon.kol_os = (wagon.kol_os == 0 && kol_os > 0 ? kol_os : wagon.kol_os);
                 wagon.usl_tip = (wagon.usl_tip == null && usl_tip != null ? usl_tip : wagon.usl_tip);
-                wagon.date_rem_vag = date_rem_vag != null ? date_rem_vag : wagon.date_rem_vag;
+                wagon.date_rem_vag = date_rem_vag;
                 wagon.id_type_ownership = id_type_ownership;
-                wagon.sign = sign != null ? sign : wagon.sign;
+                wagon.sign = sign;
                 wagon.gruzp = gruzp != null ? (double)gruzp : wagon.gruzp;
                 wagon.tara = tara != null ? (double?)tara : wagon.tara;
                 wagon.factory_number = factory_number;

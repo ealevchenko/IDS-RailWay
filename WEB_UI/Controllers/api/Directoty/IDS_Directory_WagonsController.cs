@@ -275,9 +275,11 @@ namespace WEB_UI.Controllers.api
         {
             try
             {
+                List<view_directory_wagon> list = new List<view_directory_wagon>();
+                if (nums == null || nums.Count() == 0) return Ok(list); 
                 String s_nums = String.Join(",", nums.ToArray());
                 string sql = "select * from [IDS].[get_view_directory_wagon]() where num in(" + s_nums + ")";
-                List<view_directory_wagon> list = this.ef_dir.Database.SqlQuery<view_directory_wagon>(sql).ToList();
+                list = this.ef_dir.Database.SqlQuery<view_directory_wagon>(sql).ToList();
                 return Ok(list);
             }
             catch (Exception e)

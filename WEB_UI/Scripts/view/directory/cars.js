@@ -93,6 +93,8 @@
         //*************************************************************************************
         pn_search = {
             num_car: $('textarea#num_cars'),
+            cars_search_valodation_num: $('input#cars_search_valodation_num'),
+            cars_comparison_valodation_num: $('input#cars_comparison_valodation_num'),
             num_cars_comparison: $('textarea#num_cars_comparison'),
             num_cars_comparison_not: $('textarea#num_cars_comparison_not'),
             num_cars_comparison_yes: $('textarea#num_cars_comparison_yes'),
@@ -109,31 +111,34 @@
             bt_cars_comparison_num_change: $('button#cars_comparison_num_change'),
             //wagon_operator: $('select#wagon_operator'),
             select_wagon_operator: $('input#select_wagon_operator'),
-            wagon_operator_comparison: $('select#wagon_operator_comparison'),
+            //wagon_operator_comparison: $('select#wagon_operator_comparison'),
+            wagon_operator_comparison: $('input#wagon_operator_comparison'),
+
             text_type_searsh: $('#type-search').text(''),
             active: 0,
             num_cars_valid: [],
             num_cars_comparison_valid: [],
             id_operator: null,
+            id_operator_comparison: null,
             // Инициализация
             init: function () {
                 // обработка события show.bs.tab переключение панелей выбора
                 $('#global-tab > ul > li > [data-toggle="tab"]').on('show.bs.tab', function (e) {
                     var activeTab = $(e.target);    // активная вкладка
+                    alert.clear_message();          // Сбросить сообщения
+                    // Сбросим таблицу
+                    table_directory.view([], function () {
+                        LockScreenOff();
+                    });
                     switch (e.target.hash) {
                         case '#cars-warning': pn_search.active = 0; break;
-                        case '#cars-search-num': pn_search.active = 1; break;
+                        case '#cars-search-num': pn_search.active = 1; pn_search.cars_search_valodation_num.prop("checked", true); break;
                         case '#cars-search-operator': pn_search.active = 2; break;
+                        case '#cars-search-comparison': pn_search.active = 3; pn_search.cars_comparison_valodation_num.prop("checked", true); break;
                     };
                     // отобразим тип поиска
                     pn_search.text_type_searsh.text(activeTab.text());
 
-                    //if (e.target.hash === "#cars-search-operator") {
-                    //    LockScreen(langView('mess_delay', langs));
-                    //    pn_search.view_cars();
-                    //} else {
-                    //    table_directory.view([]);
-                    //}
                 });
 
                 // Инициализация элементов
@@ -158,15 +163,23 @@
                     "");
 
                 // 
-                pn_search.wagon_operator_comparison = cd_initSelect(
+                //pn_search.wagon_operator_comparison = cd_initSelect(
+                //    pn_search.wagon_operator_comparison,
+                //    { lang: lang },
+                //    ids_dir.getListOperatorsWagons('id', 'operators', lang, null),
+                //    null,
+                //    -1,
+                //    function (event) {
+                //        event.preventDefault();
+                //    }, null);
+                //
+                pn_search.wagon_operator_comparison = initAutocomplete(
                     pn_search.wagon_operator_comparison,
-                    { lang: lang },
-                    ids_dir.getListOperatorsWagons('id', 'operators', lang, null),
-                    null,
-                    -1,
-                    function (event) {
-                        event.preventDefault();
-                    }, null);
+                    { lang: pn_search.lang, minLength: 2 },
+                    getAutocompleteListText(ids_dir.getListOperatorsWagons('id', 'operators', lang, null), 'text'),
+                    pn_search.view_bt_comparison_operation,
+                    "");
+
                 // Кнопка найти вагон требующий изменения
                 pn_search.bt_cars_warning.on('click', function (event) {
                     event.preventDefault();
@@ -175,12 +188,14 @@
                     pn_search.view_cars();
                     //table_directory.view_cars_warning();
                 });
-                // Кнопка сравнить вагон по номеру и оператору
+                // Кнопка найти вагоны по номерам
                 pn_search.bt_cars_search_num.on('click', function (event) {
                     event.preventDefault();
                     LockScreen(langView('mess_delay', langs));
                     alert.clear_message();
                     if (pn_search.num_car.val() !== "") {
+
+                        var num_valid = pn_search.cars_search_valodation_num.prop("checked");
                         pn_search.bt_cars_search_num.prop("disabled", true);
 
                         var isNumeric = function (value) {
@@ -191,14 +206,41 @@
                         var valid = true;
                         var car_valid = [];
                         var cars = pn_search.num_car.val().split(';');
+
                         $.each(cars, function (i, el) {
-                            if (!isNumeric($.trim(el)) || !(Number($.trim(el)) >= 10000000 && Number(el) <= 99999999)) {
-                                // Ошибка ввода
+
+                            if (!isNumeric($.trim(el))) {
                                 alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' введен неправильный номер :' + el);
                                 valid = false;
                             } else {
-                                car_valid.push(Number(el));
+                                if (Number($.trim(el)) <= 0) {
+                                    alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' номер не может быть меньше или равен 0 :' + el);
+                                    valid = false;
+                                } else {
+                                    // Разрешена проверка системной нумерации
+                                    if (num_valid) {
+                                        var num_val = is_valid_num_wagon(Number($.trim(el)));
+                                        // Если валидный добавим в список
+                                        if (num_val) {
+                                            car_valid.push(Number($.trim(el)));
+                                        } else {
+                                            alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' не системная нумерация (ошибка контрольной суммы) :' + el);
+                                        }
+                                        valid = valid & num_val;
+                                    } else {
+                                        // добавим в список
+                                        car_valid.push(Number($.trim(el)));
+                                    }
+                                }
                             }
+                            //is_valid_num_wagon(num)
+                            //if (!isNumeric($.trim(el)) || !(Number($.trim(el)) >= 10000000 && Number(el) <= 99999999)) {
+                            //    // Ошибка ввода
+                            //    alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' введен неправильный номер :' + el);
+                            //    valid = false;
+                            //} else {
+                            //    car_valid.push(Number(el));
+                            //}
                         });
                         // Провкерка на повторяющиеся номера
                         arr_res = [];
@@ -247,161 +289,211 @@
                         pn_search.view_cars();
                     }
                 });
-
                 // Кнопка сравнить вагон по номеру и оператору
                 pn_search.bt_cars_comparison_num.on('click', function (event) {
                     event.preventDefault();
-                    LockScreen(langView('mess_delay', langs));
                     alert.clear_message();
-                    pn_search.num_cars_comparison_not.text();
-                    pn_search.num_cars_comparison_yes.text();
-                    pn_search.num_cars_comparison_no.text();
-                    pn_search.num_cars_comparison_change.text();
+                    table_directory.nums_comparison = [];
+                    table_directory.view_cars_comparison(function () {
+                        LockScreen(langView('mess_operation', langs));
+                        //LockScreen(langView('mess_delay', langs));
+                        pn_search.num_cars_comparison_not.text();
+                        pn_search.num_cars_comparison_yes.text();
+                        pn_search.num_cars_comparison_no.text();
+                        pn_search.num_cars_comparison_change.text();
 
-                    // Проверим оператора
-                    var id_operator = get_select_number_value(pn_search.wagon_operator_comparison);
-                    if (id_operator === null) {
-                        alert.out_warning_message('Выберите оператора.');
-                        //pn_search.bt_cars_comparison_num.prop("disabled", false);
-                        LockScreenOff();
-                    }
-                    if (pn_search.num_cars_comparison.val() !== "") {
-                        pn_search.bt_cars_comparison_num.prop("disabled", true);
-
-                        var isNumeric = function (value) {
-                            return /^\d+$/.test(value);
-                        };
-                        // Провкерка на правильный ввод номеров
-                        var valid = true;
-                        var car_valid = [];
-                        var cars = pn_search.num_cars_comparison.val().split(';');
-                        $.each(cars, function (i, el) {
-                            if (!isNumeric(el) || !(Number(el) >= 10000000 && Number(el) <= 99999999)) {
-                                // Ошибка ввода
-                                alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' введен неправильный номер :' + el);
-                                valid = false;
-                            } else {
-                                car_valid.push(Number(el));
-                            }
-                        });
-                        // Провкерка на повторяющиеся номера
-                        arr_res = [];
-                        car_valid.sort();
-                        for (var i = 1; i < car_valid.length; i++) {
-                            if (car_valid[i] === car_valid[i - 1]) {
-                                var is_unique = true;
-                                for (var k = 0; k < arr_res.length; k++) {
-                                    if (arr_res[k] === car_valid[i]) {
-                                        is_unique = false;
-                                        break;
-                                    }
-                                }
-                                if (is_unique) {
-                                    arr_res.push(car_valid[i]);
-                                }
-                            }
-                        }
-                        // Вывод сообщений повторяющихся номеров
-                        $.each(arr_res, function (i, el) {
-                            alert.out_warning_message('Ошибка ввода, введеный номер :' + el + ' повторяется.');
-                            pn_search.bt_cars_comparison_num.prop("disabled", false);
+                        // Проверим оператора
+                        var id_operator = pn_search.id_operator_comparison; //get_select_number_value(pn_search.wagon_operator_comparison);
+                        if (id_operator === null) {
+                            alert.out_warning_message('Выберите оператора.');
+                            //pn_search.bt_cars_comparison_num.prop("disabled", false);
                             LockScreenOff();
-                        });
-                        // Продолжим 
-                        if (valid) {
-                            //var wagon_nums = pn_search.num_cars_comparison_valid; // Номера вагонов со списка
-                            var wagon_list = null; // Вагоны со списка которые есть базе
-                            var wagon_operator = null;
+                        }
+                        if (pn_search.num_cars_comparison.val() !== "") {
+                            pn_search.bt_cars_comparison_num.prop("disabled", true);
+                            var num_valid = pn_search.cars_comparison_valodation_num.prop("checked");
+
+                            var isNumeric = function (value) {
+                                return /^\d+$/.test(value);
+                            };
+                            // Провкерка на правильный ввод номеров
+                            var valid = true;
+                            var car_valid = [];
+                            var cars = pn_search.num_cars_comparison.val().split(';');
                             // 
-                            var arr_not = [];
-                            var arr_yes = [];
-                            var arr_yes_operator = [];
-                            var arr_no_operator = [];
-                            var arr_change_operator = [];
+                            $.each(cars, function (i, el) {
 
-                            // функция возрата номеров вагонов из массива
-                            var get_arr_nums = function (arr) {
-                                var arr_result = [];
-                                for (var ia = 0; ia < arr.length; ia++) {
-                                    arr_result.push(arr[ia].num);
-                                }
-                                return arr_result;
-                            };
-                            // Показать результаты
-                            var view_result = function (textarea, nums) {
-                                var result = '';
-                                for (var iw = 0; iw < nums.length; iw++) {
-                                    result += nums[iw] + (iw < (nums.length - 1) ? ';' : '');
-                                }
-                                if (textarea) {
-                                    textarea.text(result);
-                                }
-                            };
-
-                            // Сохраним номера вагонов для выбора
-                            pn_search.num_cars_comparison_valid = car_valid;
-                            // Проведем сравнение
-                            // Получим вагоны со списка
-                            ids_dir.getWagonOfNums(pn_search.num_cars_comparison_valid, function (result_wagon_list) {
-                                wagon_list = result_wagon_list;
-                                // Получить вагоны по оператору
-                                ids_dir.getWagonOfOperator(id_operator, function (result_wagon_operator) {
-                                    wagon_operator = result_wagon_operator;
-                                    // Определим вагоны которые есть в базе и нет
-                                    var nums = get_arr_nums(wagon_list);
-                                    for (var i = 0; i < pn_search.num_cars_comparison_valid.length; i++) {
-                                        if (nums.indexOf(pn_search.num_cars_comparison_valid[i]) === -1) {
-                                            arr_not.push(pn_search.num_cars_comparison_valid[i]);
+                                if (!isNumeric($.trim(el))) {
+                                    alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' введен неправильный номер :' + el);
+                                    valid = false;
+                                } else {
+                                    if (Number($.trim(el)) <= 0) {
+                                        alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' номер не может быть меньше или равен 0 :' + el);
+                                        valid = false;
+                                    } else {
+                                        // Разрешена проверка системной нумерации
+                                        if (num_valid) {
+                                            var num_val = is_valid_num_wagon(Number($.trim(el)));
+                                            // Если валидный добавим в список
+                                            if (num_val) {
+                                                car_valid.push(Number($.trim(el)));
+                                            } else {
+                                                alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' не системная нумерация (ошибка контрольной суммы) :' + el);
+                                            }
+                                            valid = valid & num_val;
                                         } else {
-                                            arr_yes.push(pn_search.num_cars_comparison_valid[i]);
+                                            // добавим в список
+                                            car_valid.push(Number($.trim(el)));
                                         }
                                     }
-                                    // Вагоны которые есть в базе, проверим на соответсвие оператору
-                                    for (var io = 0; io < arr_yes.length; io++) {
-                                        var res = wagon_list.find(function (item, index, array) {
-                                            return item.num === arr_yes[io] ? true : false;
-                                        });
-                                        if (res) {
-                                            var current_rent = ids_dir.getCurrentRentOfWagon(res);
-                                            if (current_rent.id_operator === id_operator) {
-                                                arr_yes_operator.push(arr_yes[io]);
+                                }
+                            });
+                            // Провкерка на повторяющиеся номера
+                            arr_res = [];
+                            car_valid.sort();
+                            for (var i = 1; i < car_valid.length; i++) {
+                                if (car_valid[i] === car_valid[i - 1]) {
+                                    var is_unique = true;
+                                    for (var k = 0; k < arr_res.length; k++) {
+                                        if (arr_res[k] === car_valid[i]) {
+                                            is_unique = false;
+                                            break;
+                                        }
+                                    }
+                                    if (is_unique) {
+                                        arr_res.push(car_valid[i]);
+                                    }
+                                }
+                            }
+                            // Вывод сообщений повторяющихся номеров
+                            $.each(arr_res, function (i, el) {
+                                alert.out_warning_message('Ошибка ввода, введеный номер :' + el + ' повторяется.');
+                                pn_search.bt_cars_comparison_num.prop("disabled", false);
+                                LockScreenOff();
+                            });
+                            // Продолжим 
+                            if (valid) {
+                                //var wagon_nums = pn_search.num_cars_comparison_valid; // Номера вагонов со списка
+                                var wagon_list = null; // Вагоны со списка которые есть базе
+                                var wagon_operator = null;
+                                // 
+                                var arr_not = [];
+                                var arr_yes = [];
+                                var arr_yes_operator = [];
+                                var arr_no_operator = [];
+                                var arr_change_operator = [];
+
+                                // функция возрата номеров вагонов из массива
+                                var get_arr_nums = function (arr) {
+                                    var arr_result = [];
+                                    for (var ia = 0; ia < arr.length; ia++) {
+                                        arr_result.push(arr[ia].num);
+                                    }
+                                    return arr_result;
+                                };
+                                // Показать результаты
+                                var view_result = function (textarea, nums) {
+                                    var result = '';
+                                    for (var iw = 0; iw < nums.length; iw++) {
+                                        result += nums[iw] + (iw < (nums.length - 1) ? ';' : '');
+                                    }
+                                    if (textarea) {
+                                        textarea.text(result);
+                                    }
+                                };
+
+                                // Сохраним номера вагонов для выбора
+                                pn_search.num_cars_comparison_valid = car_valid;
+                                // Проведем сравнение
+                                // Получим вагоны со списка
+                                //
+                                ids_dir.getWagonOfNums(pn_search.num_cars_comparison_valid, function (result_wagon_list) {
+                                    wagon_list = result_wagon_list;
+                                    // Получить вагоны по оператору
+                                    ids_dir.getWagonOfOperator(id_operator, function (result_wagon_operator) {
+                                        wagon_operator = result_wagon_operator;
+                                        // Определим вагоны которые есть в базе и нет
+                                        var nums = get_arr_nums(wagon_list);
+                                        for (var i = 0; i < pn_search.num_cars_comparison_valid.length; i++) {
+                                            if (nums.indexOf(pn_search.num_cars_comparison_valid[i]) === -1) {
+                                                arr_not.push(pn_search.num_cars_comparison_valid[i]);
                                             } else {
-                                                arr_no_operator.push(arr_yes[io]);
+                                                arr_yes.push(pn_search.num_cars_comparison_valid[i]);
                                             }
                                         }
-                                    }
-                                    // Определим вагоны которые теперь не пренадлежат оператору
-                                    var nums = get_arr_nums(wagon_operator);
-                                    for (var i = 0; i < nums.length; i++) {
-                                        if (arr_yes_operator.indexOf(nums[i]) === -1) {
-                                            arr_change_operator.push(nums[i]);
+                                        // Вагоны которые есть в базе, проверим на соответсвие оператору
+                                        for (var io = 0; io < arr_yes.length; io++) {
+                                            var res = wagon_list.find(function (item, index, array) {
+                                                return item.num === arr_yes[io] ? true : false;
+                                            });
+                                            if (res) {
+                                                var current_rent = ids_dir.getCurrentRentOfWagon(res);
+                                                if (current_rent.id_operator === id_operator) {
+                                                    arr_yes_operator.push(arr_yes[io]);
+                                                } else {
+                                                    arr_no_operator.push(arr_yes[io]);
+                                                }
+                                            }
                                         }
-                                    }
-                                    // Покажем результат
-                                    view_result(pn_search.num_cars_comparison_not, arr_not);
-                                    view_result(pn_search.num_cars_comparison_yes, arr_yes_operator);
-                                    view_result(pn_search.num_cars_comparison_no, arr_no_operator);
-                                    view_result(pn_search.num_cars_comparison_change, arr_change_operator);
-                                    pn_search.bt_cars_comparison_num.prop("disabled", false);
-                                    alert.out_info_message('Проверено ' + pn_search.num_cars_comparison_valid.length + ' номеров вагонов, в справочнике найдено ' + arr_yes.length + ' вагона(ов), нет в справочнике ' + arr_not.length + ' вагона(ов), к указанному оператору в справочнике найдено ' + wagon_operator.length + ' вагона(ов) из них соответствует ' + arr_yes_operator.length + ' вагона(ов), не соответствует ' + arr_no_operator.length + ' вагона(ов), уже не соответствует ' + arr_change_operator.length + ' вагона(ов).');
-                                    LockScreenOff();
+                                        // Определим вагоны которые теперь не пренадлежат оператору
+                                        var nums = get_arr_nums(wagon_operator);
+                                        for (var i = 0; i < nums.length; i++) {
+                                            if (arr_yes_operator.indexOf(nums[i]) === -1) {
+                                                arr_change_operator.push(nums[i]);
+                                            }
+                                        }
+                                        // Покажем результат
+                                        view_result(pn_search.num_cars_comparison_not, arr_not);
+                                        view_result(pn_search.num_cars_comparison_yes, arr_yes_operator);
+                                        view_result(pn_search.num_cars_comparison_no, arr_no_operator);
+                                        view_result(pn_search.num_cars_comparison_change, arr_change_operator);
+                                        pn_search.bt_cars_comparison_num.prop("disabled", false);
+                                        alert.out_info_message('Проверено ' + pn_search.num_cars_comparison_valid.length + ' номеров вагонов, в справочнике найдено ' + arr_yes.length + ' вагона(ов), нет в справочнике ' + arr_not.length + ' вагона(ов), к указанному оператору в справочнике найдено ' + wagon_operator.length + ' вагона(ов) из них соответствует ' + arr_yes_operator.length + ' вагона(ов), не соответствует ' + arr_no_operator.length + ' вагона(ов), уже не соответствует ' + arr_change_operator.length + ' вагона(ов).');
+                                        LockScreenOff();
 
+                                    });
                                 });
-                            });
+                            } else {
+                                alert.out_warning_message('Исправьте указанные номера в указанных позициях и попробуйте заново.');
+                                pn_search.bt_cars_comparison_num.prop("disabled", false);
+                                LockScreenOff();
+                            }
+
                         } else {
-                            alert.out_warning_message('Исправьте указанные номера в указанных позициях и попробуйте заново.');
+                            alert.out_error_message("Введите номер вагона или несколько вагонов, разделитель номеров ';'");
                             pn_search.bt_cars_comparison_num.prop("disabled", false);
                             LockScreenOff();
                         }
+                    });
 
-                    } else {
-                        alert.out_error_message("Введите номер вагона или несколько вагонов, разделитель номеров ';'");
-                        pn_search.bt_cars_comparison_num.prop("disabled", false);
-                        LockScreenOff();
-                    }
                 });
-
-
+                // Показать вагоны соответсвующие оператору
+                pn_search.bt_cars_comparison_num_yes.on('click', function (event) {
+                    event.preventDefault();
+                    LockScreen(langView('mess_delay', langs));
+                    table_directory.nums_comparison = pn_search.num_cars_comparison_yes.text().split(';');
+                    table_directory.view_cars_comparison(function () {
+                        LockScreenOff();
+                    });
+                });
+                // Показать вагоны требующиеизмения
+                pn_search.bt_cars_comparison_num_no.on('click', function (event) {
+                    event.preventDefault();
+                    LockScreen(langView('mess_delay', langs));
+                    table_directory.nums_comparison = pn_search.num_cars_comparison_no.text().split(';');
+                    table_directory.view_cars_comparison(function () {
+                        LockScreenOff();
+                    });
+                });
+                // Показать вагоны не пренадлежащие оператору
+                pn_search.bt_cars_comparison_num_change.on('click', function (event) {
+                    event.preventDefault();
+                    LockScreen(langView('mess_delay', langs));
+                    table_directory.nums_comparison = pn_search.num_cars_comparison_change.text().split(';');
+                    table_directory.view_cars_comparison(function () {
+                        LockScreenOff();
+                    });
+                });
             },
             // Показать в зависимости от ыбранного режима поиска
             view_cars: function () {
@@ -409,9 +501,12 @@
                     case 0: table_directory.view_cars_warning(); break;
                     case 1: table_directory.view_cars_search_num(pn_search.num_cars_valid, function () {
                         pn_search.bt_cars_search_num.prop("disabled", false);
+                        LockScreenOff();
                     }); break;
                     case 2: table_directory.view_cars_search_operator(); break;
-                    //case 3: table_directory.view_cars_search_operator(); break;
+                    case 3: table_directory.view_cars_comparison(function () {
+                        LockScreenOff();
+                    }); break;
                 }
             },
             // Поиск по оператору
@@ -435,6 +530,30 @@
                     pn_search.select_wagon_operator.next(".invalid-feedback").text("Не указан оператор");
                 }
             },
+            // Поиск по оператору
+            view_bt_comparison_operation: function (name_operator) {
+                pn_search.id_operator_comparison = null; // Сбросим оператора
+                pn_search.bt_cars_comparison_num.prop('disabled', true);
+                if (name_operator) {
+                    var obj = ids_dir.list_operators_wagons.find(function (o) { return o['operators_' + lang] === name_operator; });
+                    if (obj) {
+                        pn_search.id_operator_comparison = obj.id; // Определим оператора
+
+                        pn_search.wagon_operator_comparison.removeClass('is-invalid').addClass('is-valid');
+                        pn_search.wagon_operator_comparison.next(".invalid-feedback").text("");
+                        pn_search.bt_cars_comparison_num.prop('disabled', false);
+                    } else {
+                        pn_search.wagon_operator_comparison.removeClass('is-valid').addClass('is-invalid');
+                        pn_search.wagon_operator_comparison.next(".invalid-feedback").text("Указаного оператора нет в справочнике ИДС");
+                    }
+                } else {
+                    pn_search.wagon_operator_comparison.removeClass('is-valid').addClass('is-invalid');
+                    pn_search.wagon_operator_comparison.next(".invalid-feedback").text("Не указан оператор");
+                }
+            },
+
+
+
         },
         //*************************************************************************************
         // ОКНО ИЗМЕНИТЬ ОПЕРАТОРА ИЛИ ОГРАНИЧЕНИЯ ПО ГРУППЕ
@@ -793,11 +912,11 @@
                     LockScreen(langView('mess_delay', langs));
                     if (num) {
                         //if (pn_add_edit.num !== num) {
-                            pn_add_edit.num = num;
-                            pn_add_edit.ids_dir.getWagonsRentOfNum(num, function (rents) {
-                                pn_add_edit.rents = rents;
-                                pn_add_edit.table_rent.view(pn_add_edit.rents);
-                            });
+                        pn_add_edit.num = num;
+                        pn_add_edit.ids_dir.getWagonsRentOfNum(num, function (rents) {
+                            pn_add_edit.rents = rents;
+                            pn_add_edit.table_rent.view(pn_add_edit.rents);
+                        });
                         //} else {
                         //    pn_add_edit.num = num;
                         //    pn_add_edit.table_rent.view(pn_add_edit.rents);
@@ -994,7 +1113,7 @@
                         pn_add_edit.add_edit_change_operator = cd_initDateTimeRangePicker(pn_add_edit.add_edit_change_operator, { lang: lang, time: true }, function (datetime) {
 
                         }),
-                            // Оператор УЗ
+                        // Оператор УЗ
                             pn_add_edit.add_edit_operator_car = cd_initSelect(
                                 pn_add_edit.add_edit_operator_car,
                                 {
@@ -1011,7 +1130,7 @@
                         pn_add_edit.add_edit_operator_car_rent_start = cd_initDateTimeRangePicker(pn_add_edit.add_edit_operator_car_rent_start, { lang: lang, time: true }, function (datetime) {
 
                         }),
-                            // Признак собственности
+                        // Признак собственности
                             pn_add_edit.add_edit_type_ownership = cd_initSelect(
                                 pn_add_edit.add_edit_type_ownership,
                                 {
@@ -1053,7 +1172,7 @@
                         pn_add_edit.add_edit_operator_car_rent_start_now = cd_initDateTimeRangePicker(pn_add_edit.add_edit_operator_car_rent_start_now, { lang: lang, time: true }, function (datetime) {
 
                         }),
-                            // ограничение ограничения
+                        // ограничение ограничения
                             pn_add_edit.add_edit_limiting = cd_initSelect(
                                 pn_add_edit.add_edit_limiting,
                                 {
@@ -1087,11 +1206,11 @@
                         pn_add_edit.add_edit_date_rem_uz = cd_initDateTimeRangePicker(pn_add_edit.add_edit_date_rem_uz, { lang: lang, time: false }, function (datetime) {
 
                         }),
-                            // Дата ремонта вагона
+                        // Дата ремонта вагона
                             pn_add_edit.add_edit_date_rem_vag = cd_initDateTimeRangePicker(pn_add_edit.add_edit_date_rem_vag, { lang: lang, time: false }, function (datetime) {
 
                             }),
-                            // Соберем все элементы в массив
+                        // Соберем все элементы в массив
                             pn_add_edit.all_obj = $([])
                                 .add(pn_add_edit.add_edit_num)
                                 .add(pn_add_edit.add_edit_kod_adm)
@@ -1119,7 +1238,7 @@
                                 .add(pn_add_edit.add_edit_date_rem_uz.obj)
                                 .add(pn_add_edit.add_edit_date_rem_vag.obj)
                                 .add(pn_add_edit.add_edit_note)
-                            ;
+                        ;
                         // создадим классы 
 
                         //pn_add_edit.alert = new ALERT($('div#add_edit_alert'));// Создадим класс ALERTG
@@ -1210,7 +1329,7 @@
 
                             pn_add_edit.add_edit_operator_car_new.val('').prop('disabled', false);
                             pn_add_edit.add_edit_operator_car_rent_start_now.setDateTime(null); pn_add_edit.add_edit_operator_car_rent_start_now.obj.prop('disabled', false);
-                            pn_add_edit.add_edit_limiting.val(Number(pn_add_edit.select_rent && pn_add_edit.select_rent.id_limiting!==null ? pn_add_edit.select_rent.id_limiting : -1)).prop('disabled', false);
+                            pn_add_edit.add_edit_limiting.val(Number(pn_add_edit.select_rent && pn_add_edit.select_rent.id_limiting !== null ? pn_add_edit.select_rent.id_limiting : -1)).prop('disabled', false);
                             pn_add_edit.add_edit_sign.val(pn_add_edit.select_obj.sign !== null ? pn_add_edit.select_obj.sign : -1).prop('disabled', false);
 
                             pn_add_edit.add_edit_date_rem_uz.setDateTime(pn_add_edit.select_obj.date_rem_uz !== null ? pn_add_edit.select_obj.date_rem_uz.replace(/T/g, ' ') : null);
@@ -1427,90 +1546,6 @@
                 }
                 return id_operator
             },
-
-            // Получить новый объек Cars
-            //get_new_cars: function (old_cars) {
-            //    return {
-            //        id: old_cars.id,
-            //        num: old_cars.num,
-            //        id_countrys: old_cars.id_countrys,
-            //        id_genus: old_cars.id_genus,
-            //        id_owner: old_cars.id_owner,
-            //        id_operator_uz: old_cars.id_operator_uz,
-            //        ban_changes_operator: old_cars.ban_changes_operator,
-            //        id_operator: old_cars.id_operator,
-            //        gruzp: old_cars.gruzp,
-            //        kol_os: old_cars.kol_os,
-            //        usl_tip: old_cars.usl_tip,
-            //        date_rem_uz: old_cars.date_rem_uz,
-            //        date_rem_vag: old_cars.date_rem_vag,
-            //        id_limiting: old_cars.id_limiting,
-            //        id_type_ownership: old_cars.id_type_ownership,
-            //        rent_start: old_cars.rent_start,
-            //        rent_end: old_cars.rent_end,
-            //        sign: old_cars.sign,
-            //        note: old_cars.note,
-            //        sobstv_kis: old_cars.sobstv_kis,
-            //        create: old_cars.create,
-            //        create_user: old_cars.create_user,
-            //        change: old_cars.change,
-            //        change_user: old_cars.change_user,
-            //    }
-            //},
-            // Закрыть аренду по указаному вагону 
-            //close_rent: function (num, rent_start, rent_stop, callback) {
-            //    if (num) {
-            //        pn_add_edit.ids_dir.getOpenRent_CarsOfNumRentStart(num, rent_start, function (not_close_cars) {
-            //            var close_cars = [];
-            //            for (i = 0; i < not_close_cars.length; i++) {
-            //                var close_car = pn_add_edit.get_new_cars(not_close_cars[i]);
-            //                close_car.ban_changes_operator = 0;
-            //                close_car.rent_end = rent_stop;
-            //                close_car.change = toISOStringTZ(new Date());
-            //                close_car.change_user = pn_add_edit.user_name;
-            //                close_cars.push(close_car);
-            //            }
-            //            // Обновим записи
-            //            pn_add_edit.ids_dir.putListCars(close_cars, function (result_upd) {
-            //                if (typeof callback === 'function') {
-            //                    callback(result_upd);
-            //                }
-            //            });
-            //        });
-            //    } else {
-            //        if (typeof callback === 'function') {
-            //            callback(0);
-            //        }
-            //    }
-            //},
-            // Сбросить бит требуется изменение по предыдущим записям
-            //clear_bit_warning: function (num, id, callback) {
-            //    if (num) {
-            //        pn_add_edit.ids_dir.getCarsOfNum(num, function (not_clear_cars) {
-            //            var clear_cars = [];
-            //            for (i = 0; i < not_clear_cars.length; i++) {
-            //                var clear_car = pn_add_edit.get_new_cars(not_clear_cars[i]);
-            //                // если бит взведен и строка не текущая тогда сбросим
-            //                if (clear_car.ban_changes_operator && clear_car.id !== id) {
-            //                    clear_car.ban_changes_operator = 0;
-            //                    clear_car.change = toISOStringTZ(new Date());
-            //                    clear_car.change_user = pn_add_edit.user_name;
-            //                    clear_cars.push(clear_car);
-            //                }
-            //            }
-            //            // Обновим записи
-            //            pn_add_edit.ids_dir.putListCars(clear_cars, function (result_upd) {
-            //                if (typeof callback === 'function') {
-            //                    callback(result_upd);
-            //                }
-            //            });
-            //        });
-            //    } else {
-            //        if (typeof callback === 'function') {
-            //            callback(0);
-            //        }
-            //    }
-            //},
             // Добавить первую строку вагона с проверкой
             add_wagon: function (num, callback) {
                 LockScreen(langView('mess_delay', langs));
@@ -1652,158 +1687,6 @@
                     LockScreenOff();
                 }
             },
-            // Сохранить информацию о вагоне
-            //save_wagon: function (vagon, callback) {
-            //    // Проверим, вагон найден?
-            //    if (pn_add_edit.select_obj) {
-            //        // Оновим информацию
-            //        pn_add_edit.ids_dir.putWagon(vagon, function (result_upd) {
-            //            if (typeof callback === 'function') {
-            //                callback({
-            //                    type: 1, result: result_upd
-            //                });
-            //            }
-            //        });
-            //    } else {
-            //        // Добавим информацию
-            //        pn_add_edit.ids_dir.postWagon(vagon, function (result_add) {
-            //            if (typeof callback === 'function') {
-            //                callback({
-            //                    type: 0, result: result_add
-            //                });
-            //            }
-            //        });
-            //    }
-            //},
-            // Сохранить аренду
-            //save_wagon_rent: function (old_wagon_rent, callback) {
-            //    if (old_wagon_rent) {
-            //        if (old_wagon_rent.id === 0) {
-            //            // Добавить новую запись
-            //            pn_add_edit.ids_dir.postWagonsRent(old_wagon_rent, function (result_add) {
-            //                if (typeof callback === 'function') {
-            //                    callback({
-            //                        type: 0, result: result_add
-            //                    });
-            //                }
-            //            });
-            //        } else {
-            //            // Обновим запись
-            //            pn_add_edit.ids_dir.putWagonsRent(old_wagon_rent, function (result_upd) {
-            //                if (typeof callback === 'function') {
-            //                    callback({
-            //                        type: 1, result: result_upd
-            //                    });
-            //                }
-            //            });
-            //        }
-            //    } else {
-            //        if (typeof callback === 'function') {
-            //            callback({
-            //                type: null, result: 0
-            //            });
-            //        }
-            //    }
-            //},
-            // добавить новую аренду
-            //save_new_wagon_rent: function (new_wagon_rent, callback) {
-            //    if (new_wagon_rent) {
-            //        // Добавить новую запись
-            //        pn_add_edit.ids_dir.postWagonsRent(new_wagon_rent, function (result_add_new) {
-            //            if (typeof callback === 'function') {
-            //                callback(result_add_new);
-            //            }
-            //        });
-            //    } else {
-            //        if (typeof callback === 'function') {
-            //            callback(0);
-            //        }
-            //    }
-            //},
-            // Получить строку по вагону (если новый оператор тогда новая строка)
-            //get_object: function () {
-            //    // Определим новый оператор назначен
-            //    var bit_warning = false; // Опрелелим (определен род, определен адм выбран оператор)
-            //    var id_countrys = get_select_number_value(pn_add_edit.add_edit_name_adm);
-            //    var id_genus = get_select_number_value(pn_add_edit.add_edit_name_rod);
-            //    var id_new_operator = get_select_number_value(pn_add_edit.add_edit_operator_car_new);
-            //    var id_operator_car_amkr = get_select_number_value(pn_add_edit.add_edit_operator_car);
-
-            //    // Если не определен род или адм.
-            //    if (id_genus === 0 || id_countrys === 0 || (pn_add_edit.select_rent && pn_add_edit.select_rent.id_operator === null) || (pn_add_edit.select_rent && pn_add_edit.select_rent.rent_start === null)) {
-            //        bit_warning = true;
-            //    }
-            //    var new_wagon = {
-            //        "num": pn_add_edit.select_obj.num,
-            //        "id_countrys": get_select_number_value(pn_add_edit.add_edit_name_adm), //
-            //        "id_genus": get_select_number_value(pn_add_edit.add_edit_name_rod),    //
-            //        "id_owner": pn_add_edit.select_obj.id_owner,
-            //        "id_operator": pn_add_edit.select_obj.id_operator,
-            //        "change_operator": pn_add_edit.select_obj.change_operator,
-            //        //"gruzp": pn_add_edit.select_obj.gruzp,
-            //        "gruzp": get_select_number_value(pn_add_edit.add_edit_gruzp),
-            //        //"tara": pn_add_edit.select_obj.tara,
-            //        "tara": get_select_number_value(pn_add_edit.add_edit_tara),
-            //        "kol_os": get_select_number_value(pn_add_edit.add_edit_kol_os),
-            //        "usl_tip": get_input_string_value(pn_add_edit.add_edit_usl_tip),
-            //        "date_rem_uz": pn_add_edit.select_obj.date_rem_uz,
-            //        "date_rem_vag": toISOStringTZ(get_date_value(pn_add_edit.add_edit_date_rem_vag.val(), pn_add_edit.lang)),
-            //        "id_type_ownership": get_select_number_value(pn_add_edit.add_edit_type_ownership),
-            //        "factory_number": get_input_string_value(pn_add_edit.add_edit_factory_number),
-            //        "inventory_number": get_input_string_value(pn_add_edit.add_edit_inventory_number),
-            //        "year_built": get_select_number_value(pn_add_edit.add_edit_year_built),
-            //        "exit_ban": pn_add_edit.add_edit_exit_ban.prop('checked'),
-            //        "sign": get_select_number_value(pn_add_edit.add_edit_sign),
-            //        "note": pn_add_edit.select_obj.note,
-            //        "sobstv_kis": pn_add_edit.select_obj.sobstv_kis,
-            //        "bit_warning": bit_warning,
-            //        //"new_construction""
-            //        //                    pn_add_edit.add_edit_new_construction.val(pn_add_edit.select_obj.new_construction).prop('disabled', true);
-            //        //                pn_add_edit.add_edit_closed_route.prop('checked', pn_add_edit.select_obj.closed_route).prop('disabled', true);
-            //        "create": pn_add_edit.select_obj.create,
-            //        "create_user": pn_add_edit.select_obj.create_user,
-            //        "change": toISOStringTZ(new Date()),
-            //        "change_user": pn_add_edit.user_name,
-            //    }
-            //    var new_wagon_rent = null;
-            //    var old_wagon_rent = pn_add_edit.ids_dir.getCloneWagonsRent(pn_add_edit.select_rent);
-            //    // Определим сотояние строки аренда (Новая строка создается, если аренды нет или изменился оператор в строке аренда)
-            //    if ((!pn_add_edit.select_rent) ||
-            //        ((id_new_operator && id_new_operator >= 0) && (pn_add_edit.select_rent && pn_add_edit.select_rent.id_operator && pn_add_edit.select_rent.id_operator > 0 && pn_add_edit.select_rent.id_operator !== id_new_operator))) {
-            //        // Закроем старую
-            //        old_wagon_rent.rent_end = toISOStringTZ(get_datetime_value(pn_add_edit.add_edit_operator_car_rent_start_now.val(), pn_add_edit.lang));
-            //        old_wagon_rent.change = toISOStringTZ(new Date());
-            //        old_wagon_rent.change_user = pn_add_edit.user_name;
-            //        // Создадим новую
-            //        new_wagon_rent = {
-            //            "id": 0,
-            //            "num": pn_add_edit.select_obj.num,
-            //            "id_operator": id_new_operator,
-            //            "id_limiting": get_select_number_value(pn_add_edit.add_edit_limiting),
-            //            "rent_start": toISOStringTZ(get_datetime_value(pn_add_edit.add_edit_operator_car_rent_start_now.val(), pn_add_edit.lang)),
-            //            "rent_end": null,
-            //            "create": toISOStringTZ(new Date()),
-            //            "create_user": pn_add_edit.user_name,
-            //            "change": null,
-            //            "change_user": null,
-            //            "parent_id": pn_add_edit.select_rent !== null ? pn_add_edit.select_rent.id : null,
-            //        }
-            //    } else {
-            //        // Откорректируем старую
-            //        old_wagon_rent.id_operator = id_new_operator && id_new_operator >= 0 ? id_new_operator : old_wagon_rent.id_operator;
-            //        old_wagon_rent.id_limiting = get_select_number_value(pn_add_edit.add_edit_limiting);
-            //        var new_date_rent = get_datetime_value(pn_add_edit.add_edit_operator_car_rent_start_now.val(), pn_add_edit.lang);
-            //        if ((old_wagon_rent.rent_start === null && new_date_rent !== null) || (old_wagon_rent.rent_start !== null && new_date_rent !== null && old_wagon_rent.rent_start !== new_date_rent)) {
-            //            old_wagon_rent.rent_start = toISOStringTZ(new_date_rent);
-            //        }
-            //        old_wagon_rent.rent_end = null;
-            //        old_wagon_rent.change = toISOStringTZ(new Date());
-            //        old_wagon_rent.change_user = pn_add_edit.user_name;
-            //    }
-            //    return {
-            //        wagon: new_wagon, old_wagon_rent: old_wagon_rent, new_wagon_rent: new_wagon_rent
-            //    };
-            //},
         },
         //*************************************************************************************
         // ОСНОВНАЯ ТАБЛИЦА СПРАВОЧНИКА
@@ -2086,6 +1969,7 @@
                 //    table_directory.view_button(indexes);
                 //})
             },
+            nums_comparison: [],
             // Получить список выбранных вагонов
             get_select_wagon: function () {
                 // Получим список выделеных строк
@@ -2147,7 +2031,9 @@
             view_cars_warning: function () {
                 alert.clear_message();
                 ids_dir.getViewWarningWagons(function (wagons) {
-                    table_directory.view(wagons);
+                    table_directory.view(wagons, function () {
+                        LockScreenOff();
+                    });
                 });
             },
             // Показать вагоны по списку номеров
@@ -2156,18 +2042,20 @@
                     var not_car = car_valid.filter(function (i) {
                         var not = true;
                         for (var ci = 0; ci < wagon.length; ci++) {
-                            if (i === wagon[ci].num) not = false;
+                            if (Number(i) === wagon[ci].num) not = false;
                         }
                         return not;
                     });
-                    table_directory.view(wagon);
-                    $.each(not_car, function (i, el) {
-                        alert.out_warning_message('Вагон № :' + el + ' - не найден!');
+                    table_directory.view(wagon, function () {
+                        $.each(not_car, function (i, el) {
+                            alert.out_warning_message('Вагон № :' + el + ' - не найден!');
+                        });
+                        // Функция обратного вызова
+                        if (typeof callback === 'function') {
+                            callback();
+                        }
                     });
-                    // Функция обратного вызова
-                    if (typeof callback === 'function') {
-                        callback();
-                    }
+
                 });
             },
             // Показать вагоны по оператору
@@ -2175,13 +2063,25 @@
                 if (pn_search.id_operator !== null) {
                     var id = Number(pn_search.id_operator);
                     ids_dir.getViewWagonOfOperator(id, function (cars) {
-                        table_directory.view(cars);
+                        table_directory.view(cars, function () {
+                            LockScreenOff();
+                        });
                     });
                 }
 
             },
+            // Вывести вагоны сравнения
+            view_cars_comparison: function (callback) {
+                table_directory.view_cars_search_num(table_directory.nums_comparison, function () {
+                    // Функция обратного вызова
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                    //LockScreenOff();
+                });
+            },
             // Показать таблицу с данными
-            view: function (data) {
+            view: function (data, callback) {
                 // Сохраним количество строк
                 table_directory.count_rows = data ? data.length : 0;
                 LockScreen(langView('mess_load_table', langs));
@@ -2203,8 +2103,11 @@
                     //}
                     // Отразим кнопки
                     table_directory.view_button();
-
-                    LockScreenOff();
+                    // Функция обратного вызова
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                    //LockScreenOff();
                 }, 0);
             },
             // Получить полную информацию по составау
