@@ -27,44 +27,10 @@ namespace IDS
         not_open_rent = -203,                  // Ошибка нет открытой аренды       
     }
 
-    public class ResultiWagon
-    {
-        public int num { get; set; }
-        public int result { get; set; }
-    }
-
-    public class OperationResult
-    {
-        public int result { get; set; } // Глобальный ресурс выполнения всего переноса
-        public int error { get; set; } // количество ошибок
-        public List<ResultiWagon> listResultWagon = new List<ResultiWagon>();
-
-
-        public OperationResult()
-        {
-            this.result = 0;
-            this.error = 0;
-        }
-
-        public void SetResult(int code)
-        {
-            this.result = code;
-        }
-        public void AddError()
-        {
-            this.error++;
-        }
-        public void SetResultOperation(int result, int num)
-        {
-            this.listResultWagon.Add(new ResultiWagon() { num = num, result = result });
-            if (result < 0) { AddError(); }
-        }
-    }
-
-    public class IDSDirectory
+    public class IDSDirectory : IDS_Base
     {
         private eventID eventID = eventID.IDS_Directory;
-        protected service servece_owner = service.Null;
+        //protected service servece_owner = service.Null;
         private bool transfer_new_car_of_kis = false; // TODO: Удалить 
         public bool Transfer_new_car_of_kis { get { return this.transfer_new_car_of_kis; } set { this.transfer_new_car_of_kis = value; } }// TODO: Удалить 
 
@@ -78,16 +44,26 @@ namespace IDS
         EFDirectory_OperatorsWagons ef_operator = new EFDirectory_OperatorsWagons(new EFDbContext());
         EFDirectory_Railway ef_rw = new EFDirectory_Railway(new EFDbContext());
 
+        public IDSDirectory() : base()
+        {
 
-        public IDSDirectory()
+        }        
+        
+        public IDSDirectory(service servece_owner) : base(servece_owner)
         {
 
         }
 
-        public IDSDirectory(service servece_owner)
-        {
-            this.servece_owner = servece_owner;
-        }
+
+        //public IDSDirectory() : base();
+        //{
+
+        //}
+
+        //public IDSDirectory(service servece_owner)
+        //{
+        //    this.servece_owner = servece_owner;
+        //}
 
 
         #region СПРАВОЧНИК ВНУТРЕННИХ СТАНЦИЙ ПРЕДПРИЯТИЯ (IDS.Directory_Station )

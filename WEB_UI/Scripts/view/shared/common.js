@@ -515,7 +515,10 @@ var StringDateToFormatStringDate = function (s_date, lang) {
 var getReplaceTOfDT = function (date) {
     return date !== null ? date.replace(/T/g, ' ') : null;
 };
-
+// Убрать время из даты ISO
+var getSupstrTOfDT = function (date) {
+    return date !== null ? date.substr(0, 10) : null;
+};
 //var toCorrectISOString = function (date) {
 //    return date ? date.toISOString() : null;
 //};

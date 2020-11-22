@@ -786,6 +786,7 @@
                                 // Выполнить операцию роспуска
                                 ids_inc.postDislocationWagonsOfStation(operation_dislocation, function (result_dislocation) {
                                     if (result_dislocation >= 0) {
+                                        //operation_detali.table_wagons_dislocation_on.wagons = null;
                                         // Обновим путь отправки
                                         var way = ids_inc.ids_dir.list_ways.find(function (o) { return o.id === operation_detali.id_way_dislocation_from });
                                         if (way !== null) {
@@ -1417,7 +1418,7 @@
                 // Показать таблицу с данными
                 view: function () {
                     LockScreen(langView('mess_delay', langs));
-                    operation_detali.table_wagons_dislocation_on.wagons = null
+                    operation_detali.table_wagons_dislocation_on.wagons = null;
                     // Рабочий список вагонов есть
                     if (operation_detali.wagons_dislocation_from && operation_detali.wagons_dislocation_from.length > 0) {
                         // Получим выбранные вагоны и отсортируем их по позиции
@@ -1607,7 +1608,8 @@
                 valid = valid & operation_detali.val_dislocation.checkSelection(operation_detali.operation_detali_dislocation_locomotive1, "Укажите минимум один локомотив");
                 valid = valid & operation_detali.val_dislocation.checkInputOfNull(operation_detali.operation_detali_dislocation_lead_time.obj, "Укажите время выполнения операции.");
                 if (operation_detali.operation_detali_dislocation_locomotive1.val() !== "-1" && operation_detali.operation_detali_dislocation_locomotive1.val() === operation_detali.operation_detali_dislocation_locomotive2.val()) {
-                    operation_detali.val_dislocation.set_object_error(operation_detali.operation_detali_dislocation_locomotive2, "Номера локомотивов совподают.")
+                    operation_detali.val_dislocation.set_object_error(operation_detali.operation_detali_dislocation_locomotive2, "Номера локомотивов совподают.");
+                    valid = false;
                 }
                 return valid;
             },
@@ -2970,7 +2972,8 @@
                 valid = valid & operation_detali.val_sending.checkSelection(operation_detali.operation_detali_sending_locomotive1, "Укажите минимум один локомотив");
                 valid = valid & operation_detali.val_sending.checkInputOfNull(operation_detali.operation_detali_sending_lead_time.obj, "Укажите время выполнения отправки.");
                 if (operation_detali.operation_detali_sending_locomotive1.val() !== "-1" && operation_detali.operation_detali_sending_locomotive1.val() === operation_detali.operation_detali_sending_locomotive2.val()) {
-                    operation_detali.val_sending.set_object_error(operation_detali.operation_detali_sending_locomotive2, "Номера локомотивов совподают.")
+                    operation_detali.val_sending.set_object_error(operation_detali.operation_detali_sending_locomotive2, "Номера локомотивов совподают.");
+                    valid = false;
                 }
                 return valid;
             },
@@ -3787,7 +3790,8 @@
                 valid = valid & operation_detali.val_arrival.checkInputOfNull(operation_detali.operation_detali_arrival_lead_time.obj, "Укажите время выполнения операции.");
                 valid = valid & operation_detali.val_arrival.checkSelection(operation_detali.operation_detali_arrival_locomotive1, "Укажите минимум один локомотив");
                 if (operation_detali.operation_detali_arrival_locomotive1.val() !== "-1" && operation_detali.operation_detali_arrival_locomotive1.val() === operation_detali.operation_detali_arrival_locomotive2.val()) {
-                    operation_detali.val_arrival.set_object_error(operation_detali.operation_detali_arrival_locomotive2, "Номера локомотивов совподают.")
+                    operation_detali.val_arrival.set_object_error(operation_detali.operation_detali_arrival_locomotive2, "Номера локомотивов совподают.");
+                    valid = false;
                 }
                 return valid;
             },

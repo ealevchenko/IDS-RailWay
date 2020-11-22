@@ -3394,7 +3394,9 @@
                 cars_detali.uz_vag_condition_arrival = cd_initSelect(
                     $('select#uz_vag_condition_arrival'),
                     { lang: lang },
-                    cars_detali.ids_inc.ids_dir.getList2ConditionArrival('id', 'condition_abbr', 'condition_name', cars_detali.lang, null),
+                    cars_detali.ids_inc.ids_dir.getList2ConditionArrival('id', 'condition_abbr', 'condition_name', cars_detali.lang, function (i) {
+                        return i.delete === null;
+                    }),
                     null,
                     id ? Number(id) : -1,
                     function (event) {

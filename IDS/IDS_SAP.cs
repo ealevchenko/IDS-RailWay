@@ -12,23 +12,33 @@ using System.Threading.Tasks;
 namespace IDS
 {
 
-    public class IDS_SAP
+    public class IDS_SAP : IDS_Base
     {
         private eventID eventID = eventID.IDS_IDSSAP;
-        protected service servece_owner = service.Null;
 
-        public IDS_SAP()
+        public IDS_SAP() : base()
         {
 
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="servece_owner"></param>
-        public IDS_SAP(service servece_owner)
+
+        public IDS_SAP(service servece_owner) : base(servece_owner)
         {
 
         }
+        //protected service servece_owner = service.Null;
+
+        //public IDS_SAP()
+        //{
+
+        //}
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="servece_owner"></param>
+        //public IDS_SAP(service servece_owner)
+        //{
+
+        //}
 
         /// <summary>
         /// 

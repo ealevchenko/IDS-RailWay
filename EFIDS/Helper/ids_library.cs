@@ -436,7 +436,9 @@ namespace EFIDS.Helper
                 create = c.create,
                 create_user = c.create_user,
                 change = c.change,
-                change_user = c.change_user,
+                change_user = c.change_user, 
+                delete = c.delete,
+                delete_user = c.delete_user, 
             };
         }
         // Справочник годность по отправке

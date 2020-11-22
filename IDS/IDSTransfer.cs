@@ -24,28 +24,38 @@ namespace IDS
         public int consignee { get; set; }
     }
 
-    public class IDSTransfer
+    public class IDSTransfer : IDS_Base
     {
         private eventID eventID = eventID.IDS_IDSTransfer;
-        protected service servece_owner = service.Null;
+        //protected service servece_owner = service.Null;
 
         private int transfer_control_time_interval_kis = 12; // Интервал часов контроля до и после текущего времени при переное данных из КИС
         public int TransferControlTimeIntervalKIS { get { return this.transfer_control_time_interval_kis; } set { this.transfer_control_time_interval_kis = value; } }
         private bool transfer_set_outgoing_wagon_of_kis = true; // Признак здавать вагоны на УЗ по данным КИС
         public bool TransferSetOutgoingWagonOfKis { get { return this.transfer_set_outgoing_wagon_of_kis; } set { this.transfer_set_outgoing_wagon_of_kis = value; } }
 
-        public IDSTransfer()
+        public IDSTransfer() : base()
         {
 
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="servece_owner"></param>
-        public IDSTransfer(service servece_owner)
+
+        public IDSTransfer(service servece_owner) : base(servece_owner)
         {
-            this.servece_owner = servece_owner;
+
         }
+
+        //public IDSTransfer()
+        //{
+
+        //}
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="servece_owner"></param>
+        //public IDSTransfer(service servece_owner)
+        //{
+        //    this.servece_owner = servece_owner;
+        //}
 
         #region ArrivalSostav
         /// <summary>

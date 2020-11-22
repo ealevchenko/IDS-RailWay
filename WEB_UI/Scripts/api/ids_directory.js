@@ -4534,11 +4534,16 @@ IDS_DIRECTORY.prototype.getValueCulture_TypeWagons_Of_ID = function (id_type_wag
     return obj ? obj[name + '_' + this.lang] : null;
 };
 //
-IDS_DIRECTORY.prototype.getListTypeWagons = function (fvalue, ftext, lang) {
+IDS_DIRECTORY.prototype.getListTypeWagons = function (fvalue, ftext, lang, filter) {
     var list = [];
+    var list_filtr = null;
     if (this.list_type_wagons) {
-        for (i = 0, j = this.list_type_wagons.length; i < j; i++) {
-            var l = this.list_type_wagons[i];
+        if (typeof filter === 'function') {
+            list_filtr = this.list_type_wagons.filter(filter);
+        } else { list_filtr = this.list_type_wagons; }
+
+        for (i = 0, j = list_filtr.length; i < j; i++) {
+            var l = list_filtr[i];
             if (lang) {
                 list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
             } else {
