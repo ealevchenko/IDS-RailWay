@@ -44,12 +44,14 @@ namespace IDS
         EFDirectory_OperatorsWagons ef_operator = new EFDirectory_OperatorsWagons(new EFDbContext());
         EFDirectory_Railway ef_rw = new EFDirectory_Railway(new EFDbContext());
 
-        public IDSDirectory() : base()
+        public IDSDirectory()
+            : base()
         {
 
-        }        
-        
-        public IDSDirectory(service servece_owner) : base(servece_owner)
+        }
+
+        public IDSDirectory(service servece_owner)
+            : base(servece_owner)
         {
 
         }
@@ -648,567 +650,6 @@ namespace IDS
                 return false;
             }
         }
-        ///// <summary>
-        ///// Получить вагон если нет создать новую запись в справочике, если есть обновить данные на УЗ
-        ///// </summary>
-        ///// <param name="num"></param>
-        ///// <param name="adm"></param>
-        ///// <param name="rod"></param>
-        ///// <param name="kol_os"></param>
-        ///// <param name="usl_tip"></param>
-        ///// <param name="user"></param>
-        ///// <returns></returns>
-        //public Directory_Wagons GetDirectory_WagonsOfNum(int num, int adm, int? rod, int kol_os, string usl_tip, string user)
-        //{
-        //    try
-        //    {
-        //        // Проверим и скорректируем пользователя
-        //        if (String.IsNullOrWhiteSpace(user))
-        //        {
-        //            user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
-        //        }
-        //        // Проверим наличие
-        //        Directory_Wagons wagon = ef_wag.Context.Where(c => c.num == num).FirstOrDefault();
-        //        int id_genus = GetID_Directory_GenusWagonsOfRod(rod, true, user);
-        //        // Проверим вагон в справочнике если нет создаем первую строку
-        //        if (wagon == null)
-        //        {
-        //            wagon = CreateDirectory_Wagons(num, id_genus, kol_os, usl_tip, null, null, null, null, user);
-        //            // Сохраним изменения
-        //            ef_wag.Add(wagon);
-        //            int result_create = ef_wag.Save();
-        //            String.Format("В справочник 'ВАГОНОВ ИДС' - добавлен новый вагон №{0}, код выполнения : {1}", num, result_create).WarningLog(servece_owner, this.eventID);
-        //        }
-        //        else
-        //        {
-        //            // Если вагон есть обновим информацию
-        //            Directory_WagonsRent current_wagon_rent = wagon.Directory_WagonsRent.Where(r => r.rent_end == null).OrderByDescending(r => r.rent_start).FirstOrDefault();
-        //            wagon = UpdateDirectory_Wagons(num, id_genus, kol_os, usl_tip, (current_wagon_rent != null ? current_wagon_rent.id_operator : null), (current_wagon_rent != null ? current_wagon_rent.rent_start : null), (current_wagon_rent != null ? current_wagon_rent.id_limiting : null), wagon.sobstv_kis, user);
-        //            // Сохраним изменения
-        //            ef_wag.Update(wagon);
-        //            int result_create = ef_wag.Save();
-        //        }
-        //        // Обновим информацию и верем
-        //        wagon = ef_wag.Context.Where(c => c.num == num).FirstOrDefault();
-        //        return wagon;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        e.ExceptionMethodLog(String.Format("GetCurrentDirectory_CarsOfNum(num={0}, adm={1}, rod={2}, kol_os={3}, usl_tip={4}, user={5})", num, adm, rod, kol_os, usl_tip, user), servece_owner, eventID);
-        //        return null;
-        //    }
-        //}
-
-        ////public Directory_Wagons CreateDirectory_Wagons_IN_KIS(int num, int id_genus, int kol_os, string usl_tip, string user)
-        ////{
-        ////    try
-        ////    {
-        ////        //EFDirectory_Wagons ef_wag = new EFDirectory_Wagons(new EFDbContext());
-        ////        // Проверим и скорректируем пользователя
-        ////        if (String.IsNullOrWhiteSpace(user))
-        ////        {
-        ////            user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
-        ////        }
-        ////        // Подключим и найдем вагон в справочнике Иры
-        ////        EFDirectory_Cars_KIS ef_car_kis = new EFDirectory_Cars_KIS(new EFDbContext());
-        ////        Directory_Cars_KIS dir_car_kis = ef_car_kis.Context.Where(c => c.num == num).FirstOrDefault();
-        ////        // Подключим и найдем вагон в КИС
-        ////        KISDirectory kis_dir = new KISDirectory(this.servece_owner);    // Подключим библиотеку КИС
-        ////        KOMETA_VAGON_SOB vag_kis = kis_dir.GetCurrent_KOMETA_VAGON_SOB(num);// Получим текущего оператора по КИС
-
-        ////        //Console.WriteLine("Записываю вагон №{0}, id_owner = {1}", num, id_owner);
-        ////        id_genus = dir_car_kis != null ? (int)dir_car_kis.id_genus : id_genus;
-        ////        // Определим оператора АМКР и начало аренды
-        ////        int? id_operator_amkr = dir_car_kis != null ? dir_car_kis.id_operator : null;   // Оператор по справочнику ИДС (выставлен Ирой)
-        ////        DateTime? rent_start = (vag_kis != null ? (DateTime?)vag_kis.DATE_AR : null);   // Начало аренды из справочника КИС
-        ////        int? id_limiting = dir_car_kis != null ? dir_car_kis.id_limiting : null;        // лимит погрузки по справочнику ИДС (выставлен Ирой)
-        ////        int? id_sob_kis = dir_car_kis != null ? dir_car_kis.id_sob_kis : null;          // id_operator_kis по справочнику ИДС (выставлен Ирой)
-        ////        if (vag_kis != null && dir_car_kis != null && vag_kis.SOB != dir_car_kis.id_sob_kis)
-        ////        {
-        ////            id_operator_amkr = null;
-        ////            rent_start = null;
-        ////            id_limiting = null;
-        ////            id_sob_kis = null;
-        ////        }
-        ////        Directory_Wagons wagons = CreateDirectory_Wagons(num, id_genus, kol_os, usl_tip, id_operator_amkr, rent_start, id_limiting, id_sob_kis, user);
-        ////        return wagons;
-
-        ////    }
-        ////    catch (Exception e)
-        ////    {
-        ////        e.ExceptionMethodLog(String.Format("CreateFirstNewDirectory_Wagons(num={0}, id_genus={1}, kol_os={2}, usl_tip={3}, user={4})", num, id_genus, kol_os, usl_tip, user), servece_owner, eventID);
-        ////        return null;
-        ////    }
-        ////}
-        ///// <summary>
-        ///// Создать строку справочника вагонов 
-        ///// </summary>
-        ///// <param name="num"></param>
-        ///// <param name="id_genus"></param>
-        ///// <param name="kol_os"></param>
-        ///// <param name="usl_tip"></param>
-        ///// <param name="id_operator_amkr"></param>
-        ///// <param name="rent_start"></param>
-        ///// <param name="id_limiting"></param>
-        ///// <param name="sobstv_kis"></param>
-        ///// <param name="user"></param>
-        ///// <returns></returns>
-        //public Directory_Wagons CreateDirectory_Wagons(int num, int id_genus, int kol_os, string usl_tip, int? id_operator_amkr, DateTime? rent_start, int? id_limiting, int? sobstv_kis, string user)
-        //{
-        //    try
-        //    {
-        //        // Проверим и скорректируем пользователя
-        //        if (String.IsNullOrWhiteSpace(user))
-        //        {
-        //            user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
-        //        }
-
-        //        IDSMORS mors = new IDSMORS(this.servece_owner);                 // Подключим справочник МОРС
-        //        WebAPIClientUZ client = new WebAPIClientUZ(this.servece_owner); // Подключим WebAPI справочник УЗ
-
-        //        // Проверим наличие
-        //        Directory_Wagons wagon = ef_wag.Context.Where(c => c.num == num).FirstOrDefault();
-
-        //        if (wagon == null)
-        //        {
-        //            // Определим справочные данные из системы МОРС
-        //            CardsWagons card = mors.GetCardsWagonsOfNum(num);
-        //            // Получим строку из справочника Иры
-
-        //            // Получим информацию из БД УЗ
-        //            UZWagonInfo info = client.GetInfoWagonOfNum(num);
-        //            int? id_type_ownership = card != null ? (int?)card.id_type_ownership : null;
-        //            // Вагон обработан Ирой
-        //            if (info != null)
-        //            {
-        //                Directory_Railway dir_rw = GetDirectory_RailwayOfNameAdm(info.admin);
-        //                int id_countrys = dir_rw != null ? dir_rw.id_countrys : 0;
-        //                int id_owner = GetID_Directory_OwnersWagonsOfName(info.owner, true, user);// Владелец
-        //                int? id_operator_uz = GetID_Directory_OperatorsWagonsOfName(info.operat, true, user);// Оператор по справочнику УЗ
-        //                bool bit_warning = false;
-        //                // Определим бит внимания требуется корреция (не определен род, адм, оператор)
-        //                if (id_genus == 0 || id_countrys == 0 || id_operator_uz == 0 || (id_operator_amkr == null || id_operator_amkr == 0))
-        //                {
-        //                    bit_warning = true;
-        //                }
-        //                Directory_Wagons new_wagon = new Directory_Wagons()
-        //                {
-        //                    num = num,
-        //                    id_countrys = id_countrys > -1 ? id_countrys : 0,
-        //                    id_genus = id_genus > -1 ? id_genus : 0,
-        //                    id_owner = id_owner > -1 ? id_owner : 0,
-        //                    bit_warning = bit_warning,
-        //                    id_operator = id_operator_uz,
-        //                    change_operator = DateTime.Now,
-        //                    gruzp = info.carrying_capacity != null ? (double)info.carrying_capacity : 0,
-        //                    tara = info.tara != null ? (double?)info.tara : null,
-        //                    kol_os = kol_os,
-        //                    usl_tip = usl_tip,
-        //                    date_rem_uz = info.repair_date,
-        //                    date_rem_vag = null,
-        //                    id_type_ownership = id_type_ownership,
-        //                    factory_number = null,
-        //                    inventory_number = null,
-        //                    year_built = null,
-        //                    exit_ban = null,
-        //                    sign = null,
-        //                    note = "Запрет выхода:" + (info.exit_ban != null ? info.exit_ban : "нет") + "; Другие запреты:" + (info.other_bans != null ? info.other_bans.Replace("<br>", "") : ""),
-        //                    sobstv_kis = sobstv_kis,
-        //                    closed_route = info.closed_route != null ? true : false, // если стоит плюсик 
-        //                    new_construction = info.new_construction,
-        //                    create = DateTime.Now,
-        //                    create_user = user,
-        //                };
-
-        //                List<Directory_WagonsRent> list_wagon_rent = UpdateDirectory_WagonsRent(new_wagon.Directory_WagonsRent.ToList(), num, id_operator_amkr, rent_start, id_limiting, user);
-        //                new_wagon.Directory_WagonsRent = list_wagon_rent != null ? list_wagon_rent : new List<Directory_WagonsRent>();
-        //                return new_wagon;
-        //            }
-        //            else
-        //            {
-        //                // Нет информации по уз вернем старую запись
-        //                Console.WriteLine("Нет информации по УЗ на вагон №{0}", num);
-        //                return null;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            // отправить на обновление
-        //            wagon = UpdateDirectory_Wagons(num, id_genus, kol_os, usl_tip, id_operator_amkr, rent_start, id_limiting, sobstv_kis, user);
-        //        }
-        //        return wagon;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        e.ExceptionMethodLog(String.Format("CreateDirectory_Wagons(num={0}, id_genus={1}, kol_os={2}, usl_tip={3}, id_operator_amkr={4}, rent_start={5}, id_limiting={6}, sobstv_kis={7}, user={8})",
-        //            num, id_genus, kol_os, usl_tip, id_operator_amkr, rent_start, id_limiting, sobstv_kis, user), servece_owner, eventID);
-        //        return null;
-        //    }
-        //}
-        ///// <summary>
-        ///// Обновить запись строки справочника вагона
-        ///// </summary>
-        ///// <param name="num"></param>
-        ///// <param name="id_genus"></param>
-        ///// <param name="kol_os"></param>
-        ///// <param name="usl_tip"></param>
-        ///// <param name="id_operator_amkr"></param>
-        ///// <param name="rent_start"></param>
-        ///// <param name="id_limiting"></param>
-        ///// <param name="sobstv_kis"></param>
-        ///// <param name="user"></param>
-        ///// <returns></returns>
-        //public Directory_Wagons UpdateDirectory_Wagons(int num, int id_genus, int kol_os, string usl_tip, int? id_operator_amkr, DateTime? rent_start, int? id_limiting, int? sobstv_kis, string user)
-        //{
-        //    try
-        //    {
-        //        // Проверим и скорректируем пользователя
-        //        if (String.IsNullOrWhiteSpace(user))
-        //        {
-        //            user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
-        //        }
-
-        //        IDSMORS mors = new IDSMORS(this.servece_owner);                 // Подключим справочник МОРС
-        //        WebAPIClientUZ client = new WebAPIClientUZ(this.servece_owner); // Подключим WebAPI справочник УЗ
-
-        //        // Проверим наличие
-        //        Directory_Wagons wagon = ef_wag.Context.Where(c => c.num == num).FirstOrDefault();
-
-        //        if (wagon != null)
-        //        {
-        //            // Определим справочные данные из системы МОРС
-        //            CardsWagons card = mors.GetCardsWagonsOfNum(num);
-        //            // Получим строку из справочника Иры
-
-        //            // Получим информацию из БД УЗ
-        //            UZWagonInfo info = client.GetInfoWagonOfNum(num);
-        //            int? id_type_ownership = card != null ? (int?)card.id_type_ownership : null;
-        //            // Вагон обработан Ирой
-        //            if (info != null)
-        //            {
-        //                Directory_Railway dir_rw = GetDirectory_RailwayOfNameAdm(info.admin);
-        //                int id_countrys = dir_rw != null ? dir_rw.id_countrys : 0;
-        //                int id_owner = GetID_Directory_OwnersWagonsOfName(info.owner, true, user);// Владелец
-        //                int? id_operator_uz = GetID_Directory_OperatorsWagonsOfName(info.operat, true, user);// Оператор по справочнику УЗ
-        //                bool bit_warning = false;
-        //                double gruzp = info.carrying_capacity != null ? (double)info.carrying_capacity : 0;
-        //                // Определим бит внимания требуется корреция (не определен род, адм, оператор)
-        //                if (id_genus == 0 || id_countrys == 0 ||
-        //                    id_operator_uz == 0 ||
-        //                    (id_operator_amkr == null || id_operator_amkr == 0) ||
-        //                    (id_operator_uz > 0 && wagon.id_operator != id_operator_uz))    // На УЗ сменился оператор
-        //                {
-        //                    bit_warning = true;
-        //                }
-
-        //                //if ((wagon.id_countrys == 0 && id_countrys > 0) || (wagon.id_countrys > 0 && wagon.id_countrys != id_countrys) ||
-        //                //    (wagon.id_genus == 0 && id_genus > 0) || (wagon.id_genus > 0 && wagon.id_genus != id_genus) ||
-        //                //    (wagon.id_owner == 0 && id_owner > 0) || (wagon.id_owner > 0 && wagon.id_owner != id_owner) ||
-        //                //    (wagon.id_operator == null && id_operator_uz != null) || (wagon.id_operator != null && id_operator_uz != null && wagon.id_operator != id_operator_uz) ||
-        //                //    (gruzp > 0 && wagon.gruzp != gruzp) || 
-        //                //    (wagon.kol_os == 0 && kol_os > 0) || (wagon.kol_os > 0 && wagon.kol_os != kol_os) ||
-        //                //    )
-        //                //{
-        //                // Обновим информацию
-        //                wagon.id_countrys = (wagon.id_countrys == 0 && id_countrys > 0 ? id_countrys : wagon.id_countrys);
-        //                wagon.id_genus = (wagon.id_genus == 0 && id_genus > 0 ? id_genus : wagon.id_genus);
-        //                wagon.id_owner = (wagon.id_owner != id_owner ? id_owner : wagon.id_owner);
-        //                wagon.bit_warning = bit_warning;
-        //                wagon.change_operator = (wagon.id_operator != id_operator_uz ? DateTime.Now : wagon.change_operator);
-        //                wagon.sobstv_kis = (wagon.id_operator != id_operator_uz ? null : wagon.sobstv_kis);
-        //                wagon.id_operator = (wagon.id_operator != id_operator_uz ? id_operator_uz : wagon.id_operator);
-        //                wagon.gruzp = info.carrying_capacity != null ? (double)info.carrying_capacity : wagon.gruzp;
-        //                wagon.tara = info.tara != null ? (double?)info.tara : wagon.tara;
-        //                wagon.kol_os = (wagon.kol_os == 0 && kol_os > 0 ? kol_os : wagon.kol_os);
-        //                wagon.usl_tip = (wagon.usl_tip == null && usl_tip != null ? usl_tip : wagon.usl_tip);
-        //                wagon.date_rem_uz = info.repair_date;
-        //                //wagon.date_rem_vag = wagon.date_rem_vag;
-        //                wagon.id_type_ownership = id_type_ownership;
-        //                //wagon.sign = wagon.sign;
-        //                wagon.note = "Запрет выхода:" + (info.exit_ban != null ? info.exit_ban : "нет") + "; Другие запреты:" + (info.other_bans != null ? info.other_bans.Replace("<br>", "") : "");
-        //                wagon.closed_route = info.closed_route != null ? true : false;// если стоит плюсик 
-        //                wagon.new_construction = info.new_construction;
-        //                wagon.change = DateTime.Now;
-        //                wagon.change_user = user;
-        //                //}
-        //                List<Directory_WagonsRent> list_wagon_rent = UpdateDirectory_WagonsRent(wagon.Directory_WagonsRent.ToList(), num, id_operator_amkr, rent_start, id_limiting, user);
-        //                wagon.Directory_WagonsRent = list_wagon_rent != null ? list_wagon_rent : new List<Directory_WagonsRent>();
-        //            }
-        //            else
-        //            {
-        //                // Нет информации по уз вернем старую запись
-        //                Console.WriteLine("Нет информации по УЗ на вагон №{0}", num);
-        //                return wagon;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            // отправить на добавление и вернуть новый
-        //            wagon = CreateDirectory_Wagons(num, id_genus, kol_os, usl_tip, id_operator_amkr, rent_start, id_limiting, sobstv_kis, user);
-        //        }
-        //        return wagon;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        e.ExceptionMethodLog(String.Format("CreateDirectory_Wagons(num={0}, id_genus={1}, kol_os={2}, usl_tip={3}, id_operator_amkr={4}, rent_start={5}, id_limiting={6}, sobstv_kis={7}, user={8})",
-        //            num, id_genus, kol_os, usl_tip, id_operator_amkr, rent_start, id_limiting, sobstv_kis, user), servece_owner, eventID);
-        //        return null;
-        //    }
-        //}
-        ///// <summary>
-        ///// Обновить список аренд
-        ///// </summary>
-        ///// <param name="list_wagon_rent"></param>
-        ///// <param name="num"></param>
-        ///// <param name="id_operator_amkr"></param>
-        ///// <param name="rent_start"></param>
-        ///// <param name="id_limiting"></param>
-        ///// <param name="user"></param>
-        ///// <returns></returns>
-        //public List<Directory_WagonsRent> UpdateDirectory_WagonsRent(List<Directory_WagonsRent> list_wagon_rent, int num, int? id_operator_amkr, DateTime? rent_start, int? id_limiting, string user)
-        //{
-        //    try
-        //    {
-        //        // Проверим и скорректируем пользователя
-        //        if (String.IsNullOrWhiteSpace(user))
-        //        {
-        //            user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
-        //        }
-
-        //        if (list_wagon_rent == null || list_wagon_rent.Count() == 0)
-        //        {
-        //            Directory_WagonsRent wagon_rent = new Directory_WagonsRent()
-        //            {
-        //                id = 0,
-        //                num = num,
-        //                id_operator = id_operator_amkr,
-        //                id_limiting = id_limiting,
-        //                rent_start = rent_start,
-        //                rent_end = null,
-        //                create = DateTime.Now,
-        //                create_user = user,
-        //                parent_id = null,
-        //            };
-        //            list_wagon_rent.Add(wagon_rent);
-        //            //return list_wagon_rent;
-        //        }
-        //        else
-        //        {
-        //            Directory_WagonsRent current_wagon_rent = list_wagon_rent.Where(r => r.rent_end == null).OrderByDescending(r => r.rent_start).FirstOrDefault();
-
-        //            //Directory_WagonsRent current_wagon_rent = list_wagon_rent.OrderByDescending(r => r.rent_start).FirstOrDefault();
-
-        //            // Поменялся оператор?
-        //            if (id_operator_amkr != null && current_wagon_rent.id_operator != id_operator_amkr)
-        //            {
-        //                // Да оператор поменялся, создадим новую строку
-        //                // Закроем старую
-        //                current_wagon_rent.rent_end = rent_start;
-        //                current_wagon_rent.change = DateTime.Now;
-        //                current_wagon_rent.change_user = user;
-        //                // Создадим новую
-        //                Directory_WagonsRent wagon_rent = new Directory_WagonsRent()
-        //                {
-        //                    id = 0,
-        //                    num = num,
-        //                    id_operator = id_operator_amkr,
-        //                    id_limiting = id_limiting,
-        //                    rent_start = rent_start,
-        //                    rent_end = null,
-        //                    create = DateTime.Now,
-        //                    create_user = user,
-        //                    parent_id = current_wagon_rent.id,
-        //                };
-        //                list_wagon_rent.Add(wagon_rent);
-        //            }
-        //            else
-        //            {
-        //                // Нет оператор не изменился, проверим изменение аренды или лимита
-        //                if ((rent_start != null && current_wagon_rent.rent_start != rent_start)
-        //                    || (current_wagon_rent.id_limiting != id_limiting))
-        //                {
-        //                    current_wagon_rent.rent_start = rent_start != null && current_wagon_rent.rent_start != rent_start ? rent_start : current_wagon_rent.rent_start;
-        //                    current_wagon_rent.id_limiting = current_wagon_rent.id_limiting != id_limiting ? id_limiting : current_wagon_rent.id_limiting;
-        //                    current_wagon_rent.change = DateTime.Now;
-        //                    current_wagon_rent.change_user = user;
-        //                }
-        //            }
-        //            //return list_wagon_rent;
-
-        //        }
-        //        return list_wagon_rent;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        e.ExceptionMethodLog(String.Format("AddDirectory_WagonsRent(list_wagon_rent={0}, num={1}, id_operator_amkr={2}, rent_start={3}, id_limiting={4}, user={5})",
-        //            list_wagon_rent, num, id_operator_amkr, rent_start, id_limiting, user), servece_owner, eventID);
-        //        return null;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Обновить оператора по одному вагону
-        ///// </summary>
-        ///// <param name="id_rent"></param>
-        ///// <param name="id_operator"></param>
-        ///// <param name="start_rent"></param>
-        ///// <param name="user"></param>
-        ///// <returns></returns>
-        //public int UpdateOperatorAMKROfWagon(ref EFDbContext context, int id_rent, int id_operator, DateTime start_rent, string user)
-        //{
-        //    try
-        //    {
-        //        // Проверка контекста
-        //        if (context == null)
-        //        {
-        //            context = new EFDbContext();
-        //        }
-        //        Directory_WagonsRent rent = context.Directory_WagonsRent.Where(r => r.id == id_rent).FirstOrDefault();
-        //        if (rent == null) return (int)errors_ids_dir.error_id_rent_wagon;  // Ошибка указоной аренды нет
-        //        Directory_WagonsRent rent_last = context.Directory_WagonsRent.Where(r => r.num == rent.num).OrderByDescending(c => c.id).FirstOrDefault();
-        //        if (rent_last == null || rent_last.id != rent.id) return (int)errors_ids_dir.error_last_id_rent_wagon; ; // Ошибка. id аренды для изменения не совпадает с последней открытой арендой
-        //        Directory_Wagons wagon = context.Directory_Wagons.Where(w => w.num == rent_last.num).FirstOrDefault();
-
-        //        // Начнем обновление 
-        //        if (rent_last.id_operator != null && rent_last.id_operator != id_operator)
-        //        {
-        //            // Закроем старую если не закрыта
-        //            rent_last.rent_end = rent_last.rent_end == null ? start_rent : rent_last.rent_end;
-
-        //            // Оператор новый создадим новую строку аренды
-        //            Directory_WagonsRent new_rent = new Directory_WagonsRent()
-        //            {
-
-        //                id = 0,
-        //                num = rent_last.num,
-        //                id_operator = id_operator,
-        //                id_limiting = rent_last.id_limiting,
-        //                rent_start = start_rent,
-        //                rent_end = null,
-        //                create = start_rent,
-        //                create_user = user,
-        //                change = null,
-        //                change_user = null,
-        //                parent_id = rent_last.id,
-        //            };
-        //            wagon.Directory_WagonsRent.Add(new_rent);
-        //        }
-        //        else
-        //        {
-        //            if (rent_last.id_operator == null)
-        //            {
-        //                rent_last.id_operator = id_operator;
-        //            }
-        //            // Оператор старый обновим дату аренды
-        //            rent_last.rent_start = start_rent;
-
-        //        }
-        //        // Оновим штамп изменений
-        //        rent_last.change = start_rent;
-        //        rent_last.change_user = user;
-        //        //Установить бит требующий внимания
-
-
-        //        return 1;
-
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        e.ExceptionMethodLog(String.Format("UpdateOperatorAMKROfWagon(context={0}, id_rent={1}, id_operator ={2}, start_rent={3}, user={4})",
-        //            context, id_rent, id_operator, start_rent, user), servece_owner, eventID);
-        //        return (int)errors_ids_dir.global;// Возвращаем id=-1 , Ошибка
-        //    }
-        //}
-        ///// <summary>
-        ///// Обновить оператора по списку вагонов
-        ///// </summary>
-        ///// <param name="list_id_rent"></param>
-        ///// <param name="id_operator"></param>
-        ///// <param name="start_rent"></param>
-        ///// <param name="user"></param>
-        ///// <returns></returns>
-        //public OperationResult UpdateOperatorAMKROfWagons(List<int> list_id_rent, int id_operator, DateTime start_rent, string user)
-        //{
-        //    OperationResult result = new OperationResult();
-        //    try
-        //    {
-        //        //DateTime start = DateTime.Now;
-        //        if (list_id_rent != null)
-        //        {
-        //            // Проверим и скорректируем пользователя
-        //            if (String.IsNullOrWhiteSpace(user))
-        //            {
-        //                user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
-        //            }
-
-        //            EFDbContext context = new EFDbContext();
-        //            foreach (int id_rent in list_id_rent)
-        //            {
-        //                int res = UpdateOperatorAMKROfWagon(ref context, id_rent, id_operator, start_rent, user);
-        //                result.SetResultOperation(id_rent, res);
-        //            }
-        //            // Если нет ошибок тогда обновим базу
-        //            if (result.error >= 0)
-        //            {
-        //                result.SetResult(context.SaveChanges());
-        //            }
-        //            else
-        //            {
-        //                result.SetResult((int)errors_ids_dir.cancel_save_changes); // Ошибка изменение было отменено
-        //            }
-        //        }
-        //        else
-        //        {
-        //            result.SetResult((int)errors_ids_dir.not_list_id);// Ошибка нет списка id
-        //        }
-
-        //        string mess = String.Format("Справочник вагонов, смена оператора по группе вагонов. Код выполнения = {0}. Группа id_rent = {1}, новый оператор = {2}, начало аренды = {3}. Результат выполнения [Кол вагонов = {4}, ошибок выполнения = {5}].",
-        //            result.result, String.Join(";", list_id_rent.ToArray()), id_operator, start_rent, list_id_rent.Count(), result.error);
-        //        mess.WarningLog(servece_owner, eventID);
-        //        mess.EventLog(result.result < 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
-        //        //DateTime stop = DateTime.Now;
-        //        //servece_owner.ServicesToLog(eventID, String.Format("Операция смены оператора по группе вагонов"), start, stop, result.result);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        e.ExceptionMethodLog(String.Format("UpdateOperatorAMKROfWagons(list_id_rent={0}, id_operator ={1}, start_rent={2}, user={3})",
-        //            list_id_rent, id_operator, start_rent, user), servece_owner, eventID);
-        //        result.SetResult((int)errors_ids_dir.global);// Ошибка нет списка id
-        //    }
-        //    return result;
-        //}
-
-
-        //public OperationResult UpdateWagon(Directory_Wagons wagons, int? id_operator, DateTime? start_rent, int? id_limiting, string user)
-        //{
-        //    OperationResult result = new OperationResult();
-        //    try
-        //    {
-
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        e.ExceptionMethodLog(String.Format("UpdateWagon(wagons={0}, id_operator={1}, start_rent ={2}, id_limiting={3}, user={4})",
-        //            wagons, id_operator, start_rent, start_rent, id_limiting, user), servece_owner, eventID);
-        //        result.SetResult((int)errors_ids_dir.global);// Ошибка нет списка id
-        //    }
-        //    return result;
-        //}
-
-
-        //public OperationResult OperationCreateUpdateWagons(List<int> list_nums, bool edit_operator, int? id_operator, DateTime? start_rent, bool edit_limiting, int? id_limiting, string user)
-        //{
-        //    try { 
-
-        //    }
-        //    catch (Exception e) { 
-
-        //    }
-        //}
-
-
-
-
         /// <summary>
         /// Операция обновления вагона (с обязателным обновлением основной информации из справочника УЗ) в справочнике ИДС 
         /// (если вагона нет создаст вагон и первую аренду по входным данным и данным УЗ, МОРС)
@@ -1240,6 +681,8 @@ namespace IDS
             }
             catch (Exception e)
             {
+                e.ExceptionMethodLog(String.Format("OperationCreateUpdateWagon(num={0}, adm={1}, rod={2}, kol_os={3}, usl_tip={4}, user={5})", 
+                    num, adm, rod, kol_os, usl_tip, user), servece_owner, eventID);
                 return null;
             }
         }
@@ -1380,7 +823,7 @@ namespace IDS
                     wagon.kol_os = (wagon.kol_os == 0 && kol_os > 0 ? kol_os : wagon.kol_os);
                     wagon.usl_tip = (wagon.usl_tip == null && usl_tip != null ? usl_tip : wagon.usl_tip);
                     //wagon.date_rem_vag = wagon.date_rem_vag;
-                    wagon.id_type_ownership = (id_type_ownership !=null && wagon.id_type_ownership== null && id_type_ownership!=wagon.id_type_ownership ? id_type_ownership : wagon.id_type_ownership);
+                    wagon.id_type_ownership = (id_type_ownership != null && wagon.id_type_ownership == null && id_type_ownership != wagon.id_type_ownership ? id_type_ownership : wagon.id_type_ownership);
                     //wagon.sign = wagon.sign;
                     wagon.change = DateTime.Now;
                     wagon.change_user = user;
@@ -1401,11 +844,11 @@ namespace IDS
             }
             catch (Exception e)
             {
+                e.ExceptionMethodLog(String.Format("OperationCreateUpdateWagon(context={0}, num={1}, adm={2}, rod={3}, kol_os={4}, usl_tip={5}, user={6})", 
+                    context, num, adm, rod, kol_os, usl_tip, user), servece_owner, eventID);
                 return null;
             }
         }
-
-
         /// <summary>
         /// Обновить строку справочника вагона 
         /// </summary>
@@ -1449,8 +892,8 @@ namespace IDS
             }
             catch (Exception e)
             {
-                //e.ExceptionMethodLog(String.Format("OperationUpdateWagons(list_nums={0}, edit_operator={1}, id_operator ={2}, start_rent={3}, edit_limiting ={4}, id_limiting={5},user={6})",
-                //    list_nums, edit_operator, id_operator, start_rent, edit_limiting, id_limiting, user), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("OperationUpdateWagon(num={0}, id_countrys={1}, id_genus={2}, gruzp={3}, tara={4}, kol_os={5}, usl_tip={6}, date_rem_vag={7}, id_type_ownership={8}, sign={9}, factory_number={10}, inventory_number={11}, year_built={12}, exit_ban={13}, id_operator={14}, start_rent={15}, id_limiting={16}, user={17})",
+                  num, id_countrys, id_genus, gruzp, tara, kol_os, usl_tip, date_rem_vag, id_type_ownership, sign, factory_number, inventory_number, year_built, exit_ban, id_operator, start_rent, id_limiting, user), servece_owner, eventID);
                 result.SetResult((int)errors_ids_dir.global);// Ошибка нет списка id
             }
             return result;
@@ -1520,8 +963,8 @@ namespace IDS
             }
             catch (Exception e)
             {
-                //e.ExceptionMethodLog(String.Format("OperationUpdateWagons(num={0}, edit_operator={1}, id_operator ={2}, start_rent={3}, edit_limiting ={4}, id_limiting={5},user={6})",
-                // num, edit_operator, id_operator, start_rent, edit_limiting, id_limiting, user), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("OperationUpdateWagon(context={0}, num={1}, id_countrys={2}, id_genus={3}, gruzp={4}, tara={5}, kol_os={6}, usl_tip={7}, date_rem_vag={8}, id_type_ownership={9}, sign={10}, factory_number={11}, inventory_number={12}, year_built={13}, exit_ban={14}, id_operator={15}, start_rent={16}, id_limiting={17}, user={18})",
+                 context, num, id_countrys, id_genus, gruzp, tara, kol_os, usl_tip, date_rem_vag, id_type_ownership, sign, factory_number, inventory_number, year_built, exit_ban, id_operator, start_rent, id_limiting, user), servece_owner, eventID);
                 return (int)errors_ids_dir.global;// Возвращаем id=-1 , Ошибка
             }
         }
@@ -1553,6 +996,7 @@ namespace IDS
             }
             catch (Exception e)
             {
+                e.ExceptionMethodLog(String.Format("OperationCreateUpdateWagon(context={0}, num={1}, user={2})", context, num, user), servece_owner, eventID);
                 return null;
             }
         }
@@ -1663,7 +1107,7 @@ namespace IDS
             try
             {
                 // Проверим на ошибки
-                if ((!edit_operator && !edit_limiting) || (edit_operator && id_operator == null && start_rent == null) 
+                if ((!edit_operator && !edit_limiting) || (edit_operator && id_operator == null && start_rent == null)
                     //|| (edit_limiting && id_limiting == null)
                     )
                 {
@@ -1713,7 +1157,7 @@ namespace IDS
                     result.SetResult((int)errors_ids_dir.not_list_nums);// Ошибка нет списка номеров
                 }
 
-                if ((!edit_operator && !edit_limiting) || (edit_operator && id_operator == null && start_rent == null) 
+                if ((!edit_operator && !edit_limiting) || (edit_operator && id_operator == null && start_rent == null)
                     //|| (edit_limiting && id_limiting == null)
                     )
                 {
@@ -1788,3 +1232,562 @@ namespace IDS
 
     }
 }
+
+
+///// <summary>
+///// Получить вагон если нет создать новую запись в справочике, если есть обновить данные на УЗ
+///// </summary>
+///// <param name="num"></param>
+///// <param name="adm"></param>
+///// <param name="rod"></param>
+///// <param name="kol_os"></param>
+///// <param name="usl_tip"></param>
+///// <param name="user"></param>
+///// <returns></returns>
+//public Directory_Wagons GetDirectory_WagonsOfNum(int num, int adm, int? rod, int kol_os, string usl_tip, string user)
+//{
+//    try
+//    {
+//        // Проверим и скорректируем пользователя
+//        if (String.IsNullOrWhiteSpace(user))
+//        {
+//            user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+//        }
+//        // Проверим наличие
+//        Directory_Wagons wagon = ef_wag.Context.Where(c => c.num == num).FirstOrDefault();
+//        int id_genus = GetID_Directory_GenusWagonsOfRod(rod, true, user);
+//        // Проверим вагон в справочнике если нет создаем первую строку
+//        if (wagon == null)
+//        {
+//            wagon = CreateDirectory_Wagons(num, id_genus, kol_os, usl_tip, null, null, null, null, user);
+//            // Сохраним изменения
+//            ef_wag.Add(wagon);
+//            int result_create = ef_wag.Save();
+//            String.Format("В справочник 'ВАГОНОВ ИДС' - добавлен новый вагон №{0}, код выполнения : {1}", num, result_create).WarningLog(servece_owner, this.eventID);
+//        }
+//        else
+//        {
+//            // Если вагон есть обновим информацию
+//            Directory_WagonsRent current_wagon_rent = wagon.Directory_WagonsRent.Where(r => r.rent_end == null).OrderByDescending(r => r.rent_start).FirstOrDefault();
+//            wagon = UpdateDirectory_Wagons(num, id_genus, kol_os, usl_tip, (current_wagon_rent != null ? current_wagon_rent.id_operator : null), (current_wagon_rent != null ? current_wagon_rent.rent_start : null), (current_wagon_rent != null ? current_wagon_rent.id_limiting : null), wagon.sobstv_kis, user);
+//            // Сохраним изменения
+//            ef_wag.Update(wagon);
+//            int result_create = ef_wag.Save();
+//        }
+//        // Обновим информацию и верем
+//        wagon = ef_wag.Context.Where(c => c.num == num).FirstOrDefault();
+//        return wagon;
+//    }
+//    catch (Exception e)
+//    {
+//        e.ExceptionMethodLog(String.Format("GetCurrentDirectory_CarsOfNum(num={0}, adm={1}, rod={2}, kol_os={3}, usl_tip={4}, user={5})", num, adm, rod, kol_os, usl_tip, user), servece_owner, eventID);
+//        return null;
+//    }
+//}
+
+////public Directory_Wagons CreateDirectory_Wagons_IN_KIS(int num, int id_genus, int kol_os, string usl_tip, string user)
+////{
+////    try
+////    {
+////        //EFDirectory_Wagons ef_wag = new EFDirectory_Wagons(new EFDbContext());
+////        // Проверим и скорректируем пользователя
+////        if (String.IsNullOrWhiteSpace(user))
+////        {
+////            user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+////        }
+////        // Подключим и найдем вагон в справочнике Иры
+////        EFDirectory_Cars_KIS ef_car_kis = new EFDirectory_Cars_KIS(new EFDbContext());
+////        Directory_Cars_KIS dir_car_kis = ef_car_kis.Context.Where(c => c.num == num).FirstOrDefault();
+////        // Подключим и найдем вагон в КИС
+////        KISDirectory kis_dir = new KISDirectory(this.servece_owner);    // Подключим библиотеку КИС
+////        KOMETA_VAGON_SOB vag_kis = kis_dir.GetCurrent_KOMETA_VAGON_SOB(num);// Получим текущего оператора по КИС
+
+////        //Console.WriteLine("Записываю вагон №{0}, id_owner = {1}", num, id_owner);
+////        id_genus = dir_car_kis != null ? (int)dir_car_kis.id_genus : id_genus;
+////        // Определим оператора АМКР и начало аренды
+////        int? id_operator_amkr = dir_car_kis != null ? dir_car_kis.id_operator : null;   // Оператор по справочнику ИДС (выставлен Ирой)
+////        DateTime? rent_start = (vag_kis != null ? (DateTime?)vag_kis.DATE_AR : null);   // Начало аренды из справочника КИС
+////        int? id_limiting = dir_car_kis != null ? dir_car_kis.id_limiting : null;        // лимит погрузки по справочнику ИДС (выставлен Ирой)
+////        int? id_sob_kis = dir_car_kis != null ? dir_car_kis.id_sob_kis : null;          // id_operator_kis по справочнику ИДС (выставлен Ирой)
+////        if (vag_kis != null && dir_car_kis != null && vag_kis.SOB != dir_car_kis.id_sob_kis)
+////        {
+////            id_operator_amkr = null;
+////            rent_start = null;
+////            id_limiting = null;
+////            id_sob_kis = null;
+////        }
+////        Directory_Wagons wagons = CreateDirectory_Wagons(num, id_genus, kol_os, usl_tip, id_operator_amkr, rent_start, id_limiting, id_sob_kis, user);
+////        return wagons;
+
+////    }
+////    catch (Exception e)
+////    {
+////        e.ExceptionMethodLog(String.Format("CreateFirstNewDirectory_Wagons(num={0}, id_genus={1}, kol_os={2}, usl_tip={3}, user={4})", num, id_genus, kol_os, usl_tip, user), servece_owner, eventID);
+////        return null;
+////    }
+////}
+///// <summary>
+///// Создать строку справочника вагонов 
+///// </summary>
+///// <param name="num"></param>
+///// <param name="id_genus"></param>
+///// <param name="kol_os"></param>
+///// <param name="usl_tip"></param>
+///// <param name="id_operator_amkr"></param>
+///// <param name="rent_start"></param>
+///// <param name="id_limiting"></param>
+///// <param name="sobstv_kis"></param>
+///// <param name="user"></param>
+///// <returns></returns>
+//public Directory_Wagons CreateDirectory_Wagons(int num, int id_genus, int kol_os, string usl_tip, int? id_operator_amkr, DateTime? rent_start, int? id_limiting, int? sobstv_kis, string user)
+//{
+//    try
+//    {
+//        // Проверим и скорректируем пользователя
+//        if (String.IsNullOrWhiteSpace(user))
+//        {
+//            user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+//        }
+
+//        IDSMORS mors = new IDSMORS(this.servece_owner);                 // Подключим справочник МОРС
+//        WebAPIClientUZ client = new WebAPIClientUZ(this.servece_owner); // Подключим WebAPI справочник УЗ
+
+//        // Проверим наличие
+//        Directory_Wagons wagon = ef_wag.Context.Where(c => c.num == num).FirstOrDefault();
+
+//        if (wagon == null)
+//        {
+//            // Определим справочные данные из системы МОРС
+//            CardsWagons card = mors.GetCardsWagonsOfNum(num);
+//            // Получим строку из справочника Иры
+
+//            // Получим информацию из БД УЗ
+//            UZWagonInfo info = client.GetInfoWagonOfNum(num);
+//            int? id_type_ownership = card != null ? (int?)card.id_type_ownership : null;
+//            // Вагон обработан Ирой
+//            if (info != null)
+//            {
+//                Directory_Railway dir_rw = GetDirectory_RailwayOfNameAdm(info.admin);
+//                int id_countrys = dir_rw != null ? dir_rw.id_countrys : 0;
+//                int id_owner = GetID_Directory_OwnersWagonsOfName(info.owner, true, user);// Владелец
+//                int? id_operator_uz = GetID_Directory_OperatorsWagonsOfName(info.operat, true, user);// Оператор по справочнику УЗ
+//                bool bit_warning = false;
+//                // Определим бит внимания требуется корреция (не определен род, адм, оператор)
+//                if (id_genus == 0 || id_countrys == 0 || id_operator_uz == 0 || (id_operator_amkr == null || id_operator_amkr == 0))
+//                {
+//                    bit_warning = true;
+//                }
+//                Directory_Wagons new_wagon = new Directory_Wagons()
+//                {
+//                    num = num,
+//                    id_countrys = id_countrys > -1 ? id_countrys : 0,
+//                    id_genus = id_genus > -1 ? id_genus : 0,
+//                    id_owner = id_owner > -1 ? id_owner : 0,
+//                    bit_warning = bit_warning,
+//                    id_operator = id_operator_uz,
+//                    change_operator = DateTime.Now,
+//                    gruzp = info.carrying_capacity != null ? (double)info.carrying_capacity : 0,
+//                    tara = info.tara != null ? (double?)info.tara : null,
+//                    kol_os = kol_os,
+//                    usl_tip = usl_tip,
+//                    date_rem_uz = info.repair_date,
+//                    date_rem_vag = null,
+//                    id_type_ownership = id_type_ownership,
+//                    factory_number = null,
+//                    inventory_number = null,
+//                    year_built = null,
+//                    exit_ban = null,
+//                    sign = null,
+//                    note = "Запрет выхода:" + (info.exit_ban != null ? info.exit_ban : "нет") + "; Другие запреты:" + (info.other_bans != null ? info.other_bans.Replace("<br>", "") : ""),
+//                    sobstv_kis = sobstv_kis,
+//                    closed_route = info.closed_route != null ? true : false, // если стоит плюсик 
+//                    new_construction = info.new_construction,
+//                    create = DateTime.Now,
+//                    create_user = user,
+//                };
+
+//                List<Directory_WagonsRent> list_wagon_rent = UpdateDirectory_WagonsRent(new_wagon.Directory_WagonsRent.ToList(), num, id_operator_amkr, rent_start, id_limiting, user);
+//                new_wagon.Directory_WagonsRent = list_wagon_rent != null ? list_wagon_rent : new List<Directory_WagonsRent>();
+//                return new_wagon;
+//            }
+//            else
+//            {
+//                // Нет информации по уз вернем старую запись
+//                Console.WriteLine("Нет информации по УЗ на вагон №{0}", num);
+//                return null;
+//            }
+//        }
+//        else
+//        {
+//            // отправить на обновление
+//            wagon = UpdateDirectory_Wagons(num, id_genus, kol_os, usl_tip, id_operator_amkr, rent_start, id_limiting, sobstv_kis, user);
+//        }
+//        return wagon;
+//    }
+//    catch (Exception e)
+//    {
+//        e.ExceptionMethodLog(String.Format("CreateDirectory_Wagons(num={0}, id_genus={1}, kol_os={2}, usl_tip={3}, id_operator_amkr={4}, rent_start={5}, id_limiting={6}, sobstv_kis={7}, user={8})",
+//            num, id_genus, kol_os, usl_tip, id_operator_amkr, rent_start, id_limiting, sobstv_kis, user), servece_owner, eventID);
+//        return null;
+//    }
+//}
+///// <summary>
+///// Обновить запись строки справочника вагона
+///// </summary>
+///// <param name="num"></param>
+///// <param name="id_genus"></param>
+///// <param name="kol_os"></param>
+///// <param name="usl_tip"></param>
+///// <param name="id_operator_amkr"></param>
+///// <param name="rent_start"></param>
+///// <param name="id_limiting"></param>
+///// <param name="sobstv_kis"></param>
+///// <param name="user"></param>
+///// <returns></returns>
+//public Directory_Wagons UpdateDirectory_Wagons(int num, int id_genus, int kol_os, string usl_tip, int? id_operator_amkr, DateTime? rent_start, int? id_limiting, int? sobstv_kis, string user)
+//{
+//    try
+//    {
+//        // Проверим и скорректируем пользователя
+//        if (String.IsNullOrWhiteSpace(user))
+//        {
+//            user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+//        }
+
+//        IDSMORS mors = new IDSMORS(this.servece_owner);                 // Подключим справочник МОРС
+//        WebAPIClientUZ client = new WebAPIClientUZ(this.servece_owner); // Подключим WebAPI справочник УЗ
+
+//        // Проверим наличие
+//        Directory_Wagons wagon = ef_wag.Context.Where(c => c.num == num).FirstOrDefault();
+
+//        if (wagon != null)
+//        {
+//            // Определим справочные данные из системы МОРС
+//            CardsWagons card = mors.GetCardsWagonsOfNum(num);
+//            // Получим строку из справочника Иры
+
+//            // Получим информацию из БД УЗ
+//            UZWagonInfo info = client.GetInfoWagonOfNum(num);
+//            int? id_type_ownership = card != null ? (int?)card.id_type_ownership : null;
+//            // Вагон обработан Ирой
+//            if (info != null)
+//            {
+//                Directory_Railway dir_rw = GetDirectory_RailwayOfNameAdm(info.admin);
+//                int id_countrys = dir_rw != null ? dir_rw.id_countrys : 0;
+//                int id_owner = GetID_Directory_OwnersWagonsOfName(info.owner, true, user);// Владелец
+//                int? id_operator_uz = GetID_Directory_OperatorsWagonsOfName(info.operat, true, user);// Оператор по справочнику УЗ
+//                bool bit_warning = false;
+//                double gruzp = info.carrying_capacity != null ? (double)info.carrying_capacity : 0;
+//                // Определим бит внимания требуется корреция (не определен род, адм, оператор)
+//                if (id_genus == 0 || id_countrys == 0 ||
+//                    id_operator_uz == 0 ||
+//                    (id_operator_amkr == null || id_operator_amkr == 0) ||
+//                    (id_operator_uz > 0 && wagon.id_operator != id_operator_uz))    // На УЗ сменился оператор
+//                {
+//                    bit_warning = true;
+//                }
+
+//                //if ((wagon.id_countrys == 0 && id_countrys > 0) || (wagon.id_countrys > 0 && wagon.id_countrys != id_countrys) ||
+//                //    (wagon.id_genus == 0 && id_genus > 0) || (wagon.id_genus > 0 && wagon.id_genus != id_genus) ||
+//                //    (wagon.id_owner == 0 && id_owner > 0) || (wagon.id_owner > 0 && wagon.id_owner != id_owner) ||
+//                //    (wagon.id_operator == null && id_operator_uz != null) || (wagon.id_operator != null && id_operator_uz != null && wagon.id_operator != id_operator_uz) ||
+//                //    (gruzp > 0 && wagon.gruzp != gruzp) || 
+//                //    (wagon.kol_os == 0 && kol_os > 0) || (wagon.kol_os > 0 && wagon.kol_os != kol_os) ||
+//                //    )
+//                //{
+//                // Обновим информацию
+//                wagon.id_countrys = (wagon.id_countrys == 0 && id_countrys > 0 ? id_countrys : wagon.id_countrys);
+//                wagon.id_genus = (wagon.id_genus == 0 && id_genus > 0 ? id_genus : wagon.id_genus);
+//                wagon.id_owner = (wagon.id_owner != id_owner ? id_owner : wagon.id_owner);
+//                wagon.bit_warning = bit_warning;
+//                wagon.change_operator = (wagon.id_operator != id_operator_uz ? DateTime.Now : wagon.change_operator);
+//                wagon.sobstv_kis = (wagon.id_operator != id_operator_uz ? null : wagon.sobstv_kis);
+//                wagon.id_operator = (wagon.id_operator != id_operator_uz ? id_operator_uz : wagon.id_operator);
+//                wagon.gruzp = info.carrying_capacity != null ? (double)info.carrying_capacity : wagon.gruzp;
+//                wagon.tara = info.tara != null ? (double?)info.tara : wagon.tara;
+//                wagon.kol_os = (wagon.kol_os == 0 && kol_os > 0 ? kol_os : wagon.kol_os);
+//                wagon.usl_tip = (wagon.usl_tip == null && usl_tip != null ? usl_tip : wagon.usl_tip);
+//                wagon.date_rem_uz = info.repair_date;
+//                //wagon.date_rem_vag = wagon.date_rem_vag;
+//                wagon.id_type_ownership = id_type_ownership;
+//                //wagon.sign = wagon.sign;
+//                wagon.note = "Запрет выхода:" + (info.exit_ban != null ? info.exit_ban : "нет") + "; Другие запреты:" + (info.other_bans != null ? info.other_bans.Replace("<br>", "") : "");
+//                wagon.closed_route = info.closed_route != null ? true : false;// если стоит плюсик 
+//                wagon.new_construction = info.new_construction;
+//                wagon.change = DateTime.Now;
+//                wagon.change_user = user;
+//                //}
+//                List<Directory_WagonsRent> list_wagon_rent = UpdateDirectory_WagonsRent(wagon.Directory_WagonsRent.ToList(), num, id_operator_amkr, rent_start, id_limiting, user);
+//                wagon.Directory_WagonsRent = list_wagon_rent != null ? list_wagon_rent : new List<Directory_WagonsRent>();
+//            }
+//            else
+//            {
+//                // Нет информации по уз вернем старую запись
+//                Console.WriteLine("Нет информации по УЗ на вагон №{0}", num);
+//                return wagon;
+//            }
+//        }
+//        else
+//        {
+//            // отправить на добавление и вернуть новый
+//            wagon = CreateDirectory_Wagons(num, id_genus, kol_os, usl_tip, id_operator_amkr, rent_start, id_limiting, sobstv_kis, user);
+//        }
+//        return wagon;
+//    }
+//    catch (Exception e)
+//    {
+//        e.ExceptionMethodLog(String.Format("CreateDirectory_Wagons(num={0}, id_genus={1}, kol_os={2}, usl_tip={3}, id_operator_amkr={4}, rent_start={5}, id_limiting={6}, sobstv_kis={7}, user={8})",
+//            num, id_genus, kol_os, usl_tip, id_operator_amkr, rent_start, id_limiting, sobstv_kis, user), servece_owner, eventID);
+//        return null;
+//    }
+//}
+///// <summary>
+///// Обновить список аренд
+///// </summary>
+///// <param name="list_wagon_rent"></param>
+///// <param name="num"></param>
+///// <param name="id_operator_amkr"></param>
+///// <param name="rent_start"></param>
+///// <param name="id_limiting"></param>
+///// <param name="user"></param>
+///// <returns></returns>
+//public List<Directory_WagonsRent> UpdateDirectory_WagonsRent(List<Directory_WagonsRent> list_wagon_rent, int num, int? id_operator_amkr, DateTime? rent_start, int? id_limiting, string user)
+//{
+//    try
+//    {
+//        // Проверим и скорректируем пользователя
+//        if (String.IsNullOrWhiteSpace(user))
+//        {
+//            user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+//        }
+
+//        if (list_wagon_rent == null || list_wagon_rent.Count() == 0)
+//        {
+//            Directory_WagonsRent wagon_rent = new Directory_WagonsRent()
+//            {
+//                id = 0,
+//                num = num,
+//                id_operator = id_operator_amkr,
+//                id_limiting = id_limiting,
+//                rent_start = rent_start,
+//                rent_end = null,
+//                create = DateTime.Now,
+//                create_user = user,
+//                parent_id = null,
+//            };
+//            list_wagon_rent.Add(wagon_rent);
+//            //return list_wagon_rent;
+//        }
+//        else
+//        {
+//            Directory_WagonsRent current_wagon_rent = list_wagon_rent.Where(r => r.rent_end == null).OrderByDescending(r => r.rent_start).FirstOrDefault();
+
+//            //Directory_WagonsRent current_wagon_rent = list_wagon_rent.OrderByDescending(r => r.rent_start).FirstOrDefault();
+
+//            // Поменялся оператор?
+//            if (id_operator_amkr != null && current_wagon_rent.id_operator != id_operator_amkr)
+//            {
+//                // Да оператор поменялся, создадим новую строку
+//                // Закроем старую
+//                current_wagon_rent.rent_end = rent_start;
+//                current_wagon_rent.change = DateTime.Now;
+//                current_wagon_rent.change_user = user;
+//                // Создадим новую
+//                Directory_WagonsRent wagon_rent = new Directory_WagonsRent()
+//                {
+//                    id = 0,
+//                    num = num,
+//                    id_operator = id_operator_amkr,
+//                    id_limiting = id_limiting,
+//                    rent_start = rent_start,
+//                    rent_end = null,
+//                    create = DateTime.Now,
+//                    create_user = user,
+//                    parent_id = current_wagon_rent.id,
+//                };
+//                list_wagon_rent.Add(wagon_rent);
+//            }
+//            else
+//            {
+//                // Нет оператор не изменился, проверим изменение аренды или лимита
+//                if ((rent_start != null && current_wagon_rent.rent_start != rent_start)
+//                    || (current_wagon_rent.id_limiting != id_limiting))
+//                {
+//                    current_wagon_rent.rent_start = rent_start != null && current_wagon_rent.rent_start != rent_start ? rent_start : current_wagon_rent.rent_start;
+//                    current_wagon_rent.id_limiting = current_wagon_rent.id_limiting != id_limiting ? id_limiting : current_wagon_rent.id_limiting;
+//                    current_wagon_rent.change = DateTime.Now;
+//                    current_wagon_rent.change_user = user;
+//                }
+//            }
+//            //return list_wagon_rent;
+
+//        }
+//        return list_wagon_rent;
+//    }
+//    catch (Exception e)
+//    {
+//        e.ExceptionMethodLog(String.Format("AddDirectory_WagonsRent(list_wagon_rent={0}, num={1}, id_operator_amkr={2}, rent_start={3}, id_limiting={4}, user={5})",
+//            list_wagon_rent, num, id_operator_amkr, rent_start, id_limiting, user), servece_owner, eventID);
+//        return null;
+//    }
+//}
+
+///// <summary>
+///// Обновить оператора по одному вагону
+///// </summary>
+///// <param name="id_rent"></param>
+///// <param name="id_operator"></param>
+///// <param name="start_rent"></param>
+///// <param name="user"></param>
+///// <returns></returns>
+//public int UpdateOperatorAMKROfWagon(ref EFDbContext context, int id_rent, int id_operator, DateTime start_rent, string user)
+//{
+//    try
+//    {
+//        // Проверка контекста
+//        if (context == null)
+//        {
+//            context = new EFDbContext();
+//        }
+//        Directory_WagonsRent rent = context.Directory_WagonsRent.Where(r => r.id == id_rent).FirstOrDefault();
+//        if (rent == null) return (int)errors_ids_dir.error_id_rent_wagon;  // Ошибка указоной аренды нет
+//        Directory_WagonsRent rent_last = context.Directory_WagonsRent.Where(r => r.num == rent.num).OrderByDescending(c => c.id).FirstOrDefault();
+//        if (rent_last == null || rent_last.id != rent.id) return (int)errors_ids_dir.error_last_id_rent_wagon; ; // Ошибка. id аренды для изменения не совпадает с последней открытой арендой
+//        Directory_Wagons wagon = context.Directory_Wagons.Where(w => w.num == rent_last.num).FirstOrDefault();
+
+//        // Начнем обновление 
+//        if (rent_last.id_operator != null && rent_last.id_operator != id_operator)
+//        {
+//            // Закроем старую если не закрыта
+//            rent_last.rent_end = rent_last.rent_end == null ? start_rent : rent_last.rent_end;
+
+//            // Оператор новый создадим новую строку аренды
+//            Directory_WagonsRent new_rent = new Directory_WagonsRent()
+//            {
+
+//                id = 0,
+//                num = rent_last.num,
+//                id_operator = id_operator,
+//                id_limiting = rent_last.id_limiting,
+//                rent_start = start_rent,
+//                rent_end = null,
+//                create = start_rent,
+//                create_user = user,
+//                change = null,
+//                change_user = null,
+//                parent_id = rent_last.id,
+//            };
+//            wagon.Directory_WagonsRent.Add(new_rent);
+//        }
+//        else
+//        {
+//            if (rent_last.id_operator == null)
+//            {
+//                rent_last.id_operator = id_operator;
+//            }
+//            // Оператор старый обновим дату аренды
+//            rent_last.rent_start = start_rent;
+
+//        }
+//        // Оновим штамп изменений
+//        rent_last.change = start_rent;
+//        rent_last.change_user = user;
+//        //Установить бит требующий внимания
+
+
+//        return 1;
+
+//    }
+//    catch (Exception e)
+//    {
+//        e.ExceptionMethodLog(String.Format("UpdateOperatorAMKROfWagon(context={0}, id_rent={1}, id_operator ={2}, start_rent={3}, user={4})",
+//            context, id_rent, id_operator, start_rent, user), servece_owner, eventID);
+//        return (int)errors_ids_dir.global;// Возвращаем id=-1 , Ошибка
+//    }
+//}
+///// <summary>
+///// Обновить оператора по списку вагонов
+///// </summary>
+///// <param name="list_id_rent"></param>
+///// <param name="id_operator"></param>
+///// <param name="start_rent"></param>
+///// <param name="user"></param>
+///// <returns></returns>
+//public OperationResult UpdateOperatorAMKROfWagons(List<int> list_id_rent, int id_operator, DateTime start_rent, string user)
+//{
+//    OperationResult result = new OperationResult();
+//    try
+//    {
+//        //DateTime start = DateTime.Now;
+//        if (list_id_rent != null)
+//        {
+//            // Проверим и скорректируем пользователя
+//            if (String.IsNullOrWhiteSpace(user))
+//            {
+//                user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+//            }
+
+//            EFDbContext context = new EFDbContext();
+//            foreach (int id_rent in list_id_rent)
+//            {
+//                int res = UpdateOperatorAMKROfWagon(ref context, id_rent, id_operator, start_rent, user);
+//                result.SetResultOperation(id_rent, res);
+//            }
+//            // Если нет ошибок тогда обновим базу
+//            if (result.error >= 0)
+//            {
+//                result.SetResult(context.SaveChanges());
+//            }
+//            else
+//            {
+//                result.SetResult((int)errors_ids_dir.cancel_save_changes); // Ошибка изменение было отменено
+//            }
+//        }
+//        else
+//        {
+//            result.SetResult((int)errors_ids_dir.not_list_id);// Ошибка нет списка id
+//        }
+
+//        string mess = String.Format("Справочник вагонов, смена оператора по группе вагонов. Код выполнения = {0}. Группа id_rent = {1}, новый оператор = {2}, начало аренды = {3}. Результат выполнения [Кол вагонов = {4}, ошибок выполнения = {5}].",
+//            result.result, String.Join(";", list_id_rent.ToArray()), id_operator, start_rent, list_id_rent.Count(), result.error);
+//        mess.WarningLog(servece_owner, eventID);
+//        mess.EventLog(result.result < 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
+//        //DateTime stop = DateTime.Now;
+//        //servece_owner.ServicesToLog(eventID, String.Format("Операция смены оператора по группе вагонов"), start, stop, result.result);
+//    }
+//    catch (Exception e)
+//    {
+//        e.ExceptionMethodLog(String.Format("UpdateOperatorAMKROfWagons(list_id_rent={0}, id_operator ={1}, start_rent={2}, user={3})",
+//            list_id_rent, id_operator, start_rent, user), servece_owner, eventID);
+//        result.SetResult((int)errors_ids_dir.global);// Ошибка нет списка id
+//    }
+//    return result;
+//}
+
+
+//public OperationResult UpdateWagon(Directory_Wagons wagons, int? id_operator, DateTime? start_rent, int? id_limiting, string user)
+//{
+//    OperationResult result = new OperationResult();
+//    try
+//    {
+
+//    }
+//    catch (Exception e)
+//    {
+//        e.ExceptionMethodLog(String.Format("UpdateWagon(wagons={0}, id_operator={1}, start_rent ={2}, id_limiting={3}, user={4})",
+//            wagons, id_operator, start_rent, start_rent, id_limiting, user), servece_owner, eventID);
+//        result.SetResult((int)errors_ids_dir.global);// Ошибка нет списка id
+//    }
+//    return result;
+//}
+
+
+//public OperationResult OperationCreateUpdateWagons(List<int> list_nums, bool edit_operator, int? id_operator, DateTime? start_rent, bool edit_limiting, int? id_limiting, string user)
+//{
+//    try { 
+
+//    }
+//    catch (Exception e) { 
+
+//    }
+//}

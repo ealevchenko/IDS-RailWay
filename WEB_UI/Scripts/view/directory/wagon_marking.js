@@ -165,6 +165,7 @@
                     // Делаем запрос
                     LockScreen(langView('mess_load_data', langs));
                     ids_inc.getArrivalSostavOfDatePeriodIDStationOn(start, stop, id_station, function (list_sostav) {
+                        table_arrival_wagon.view([]); //Очистим таблицу
                         list_sostav.forEach(function (item, index, array) {
                             list_doc.push({ value: item.id, text: item.num_doc });
                         });
@@ -256,7 +257,7 @@
                         {
                             // Тип
                             data: function (row, type, val, meta) {
-                                return row.Arrival_UZ_Vagon && row.Arrival_UZ_Vagon.Directory_Wagons && row.Arrival_UZ_Vagon.Directory_Wagons.Directory_TypeWagons ? row.Arrival_UZ_Vagon.Directory_Wagons.Directory_TypeWagons["type_" + lang] : null;
+                                return row.Arrival_UZ_Vagon && row.Arrival_UZ_Vagon.Directory_TypeWagons ? row.Arrival_UZ_Vagon.Directory_TypeWagons["type_" + lang] : null;
                             },
                             title: langView('field_type', langs), width: "50px", orderable: true, searchable: true
                         },
@@ -554,15 +555,13 @@
                         if (wagon_arrival) {
                             var condition = wagon_arrival.Arrival_UZ_Vagon && wagon_arrival.Arrival_UZ_Vagon.Directory_ConditionArrival ? wagon_arrival.Arrival_UZ_Vagon.Directory_ConditionArrival : null;
                             pn_edit_condition.edit_condition_arrival.val(condition !== null ? condition.id : null); // сбросить выбор
-                            var type = wagon_arrival.Arrival_UZ_Vagon && wagon_arrival.Arrival_UZ_Vagon.Directory_Wagons && wagon_arrival.Arrival_UZ_Vagon.Directory_Wagons.Directory_TypeWagons ? wagon_arrival.Arrival_UZ_Vagon.Directory_Wagons.Directory_TypeWagons : null;
+                            var type = wagon_arrival.Arrival_UZ_Vagon && wagon_arrival.Arrival_UZ_Vagon.Directory_TypeWagons ? wagon_arrival.Arrival_UZ_Vagon.Directory_TypeWagons : null;
                             pn_edit_condition.edit_condition_type.val(type!==null ? type.id : -1); // сбросить выбор
                             var dt_rem_uz = wagon_arrival.Arrival_UZ_Vagon && wagon_arrival.Arrival_UZ_Vagon.Directory_Wagons && wagon_arrival.Arrival_UZ_Vagon.Directory_Wagons.date_rem_vag ? wagon_arrival.Arrival_UZ_Vagon.Directory_Wagons.date_rem_vag : null;
                             pn_edit_condition.edit_condition_date_rem_vag.setDateTime(dt_rem_uz); // сбросить выбор
                             pn_edit_condition.obj.dialog("open");
                         }
                     });
-
-
                 }
             },
             // Валидация данных
@@ -583,34 +582,32 @@
                     LockScreen(langView('mess_save', langs));
                     // Получим строку обновлений
                     var operation_update_wagon_marking = {
-                        "id_arrival_wagon": pn_edit_condition.id_arrival_car,
-                        "condition_arrival": get_select_number_value(pn_edit_condition.edit_condition_arrival), //
-                        "type_wagon": get_select_number_value(pn_edit_condition.edit_condition_type),
-                        "date_rem_wagon": toISOStringTZ(get_datetime_value(pn_edit_condition.edit_condition_date_rem_vag.val(), pn_edit_condition.lang)),
+                        "id_arrival_cars": pn_edit_condition.id_arrival_car,
+                        "id_condition": get_select_number_value(pn_edit_condition.edit_condition_arrival), //
+                        "id_type": get_select_number_value(pn_edit_condition.edit_condition_type),
+                        "date_rem_vag": toISOStringTZ(get_datetime_value(pn_edit_condition.edit_condition_date_rem_vag.val(), pn_edit_condition.lang)),
                         "user": pn_edit_condition.user_name,
                     }
-                    ////// Получимсписок номеров вагонов
-                    //for (inum = 0; inum < pn_edit_condition.rows.length; inum++) {
-                    //    var vag = pn_edit_condition.ids_inc.getCloneArrival_UZ_Vagon(pn_edit_condition.rows[inum].vag_uz);
-                    //    if (vag) {
-                    //        vag.id_condition = get_select_number_value(pn_edit_condition.edit_condition_arrival);
-                    //        vag.change = toISOStringTZ(new Date());
-                    //        vag.change_user = pn_edit_condition.user_name;
-                    //    }
-                    //    list_uz_vagon.push(vag);
-                    //}
-                    //// Обновим информацию в документах на прибывший вагон
-                    //pn_edit_condition.ids_inc.putListArrival_UZ_Vagon(list_uz_vagon, function (result_upd) {
-                    //    if (result_upd >= 0) {
-                    //        if (typeof callback_ok === 'function') {
-                    //            pn_edit_condition.obj.dialog("close");
-                    //            callback_ok(result_upd);
-                    //        }
-                    //    } else {
-                    //        pn_edit_condition.val.out_error_message("При обновлении разметки по прибитию по группе вагонов произошла ошибка!");
-                    //        LockScreenOff();
-                    //    }
-                    //});
+                    // Обновим информацию в документах на прибывший вагон
+                    pn_edit_condition.ids_inc.postOperationUpdateWagonMarking(operation_update_wagon_marking, function (result_operation) {
+                        if (result_operation && result_operation.result >= 0) {
+                            if (typeof callback_ok === 'function') {
+                                pn_edit_condition.obj.dialog("close");
+                                callback_ok(result_operation);
+                            }
+                        } else {
+                            pn_edit_condition.val.clear_all();
+                            pn_edit_condition.val.out_error_message("При обновлении разметки по прибитию произошла ошибка. Код ошибки = " + (result_operation ? result_operation.result : null));
+                            if (result_operation && result_operation.listResultWagon && result_operation.listResultWagon.length > 0) {
+                                $.each(result_operation.listResultWagon, function (i, el) {
+                                    if (el.result < 0) {
+                                        pn_edit_condition.val.out_error_message("№ вагона :" + el.num + ". Код ошибки : " + el.result);
+                                    }
+                                });
+                            }
+                            LockScreenOff();
+                        }
+                    });
                 }
             },
         };
@@ -624,11 +621,12 @@
         pn_select.init(lang, list_station);
         table_arrival_wagon.init();
         // Инициализация окна править группу ограничений
-        pn_edit_condition.init(lang, user_name, function (result_change_group) {
-            if (result_change_group > 0) {
+        pn_edit_condition.init(lang, user_name, function (result_operation) {
+            if (result_operation) {
                 // Показать после изменения
                 pn_select.view_arrival_wagon(get_select_number_value(pn_select.select_doc));
-                alert.out_info_message('Обновлены готовности по группе вагонов в количестве - ' + result_change_group + ' записей');
+                alert.out_info_message('Обновлена информация по вагону № ' + result_operation.listResultWagon[0].num + ', код выполнения :' + result_operation.listResultWagon[0].result + ', обновлено таблиц : ' + result_operation.result);
+
             }
         });
         //LockScreenOff();

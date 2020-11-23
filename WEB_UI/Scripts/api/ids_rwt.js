@@ -384,8 +384,6 @@ IDS_RWT.prototype.postInstructionalLetters = function (letters, callback) {
         },
     });
 };
-
-
 //Обновить письмо
 IDS_RWT.prototype.putInstructionalLetters = function (letters, callback) {
     $.ajax({
@@ -3014,6 +3012,35 @@ IDS_RWT.prototype.postOutgoingSostav = function (outgoing_sostav, callback) {
         },
     });
 };
+//======================================================================================================
+//                              РАЗДЕЛ ПРАВКА ДОКУМЕНТОВ ПО ПРИБЫТИЮ
+//======================================================================================================
+//Обновим данные по вагону (Операция разметка вагона по прибытию)
+IDS_RWT.prototype.postOperationUpdateWagonMarking = function (update_data, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/incoming/operation/update/wagon_marking/',
+        type: 'POST',
+        data: JSON.stringify(update_data),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postOperationUpdateWagonMarking", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 //======================================================================================================
 //                                  РАЗДЕЛ АРМ ДИСПЕТЧЕРА
 //======= WSD (АРМ диспетчера) =========================================================================
