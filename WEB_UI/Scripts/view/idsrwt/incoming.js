@@ -5071,7 +5071,7 @@
 
                 valid = valid & cars_detali.validation_vag_condition_arrival(valid, false);
 
-                valid = valid & cars_detali.val_arrival_car.checkInputOfRange(cars_detali.uz_vag_gruzp, 60.0, 80.0, "Грузоподъемность должна быть в диапазоне от 60.0 до 80.0 тон.");
+                valid = valid & cars_detali.val_arrival_car.checkInputOfRange(cars_detali.uz_vag_gruzp, 0.0, 80.0, "Грузоподъемность должна быть в диапазоне от 0.0 до 80.0 тон.");
                 valid = valid & cars_detali.val_arrival_car.checkInputOfRange(cars_detali.uz_vag_ves_tary_arc, 15.0, 35.0, "Тара должна быть в диапазоне от 15.0 до 35.0 тон.");
                 valid = valid & cars_detali.val_arrival_car.checkInputOfRange_IsNull(cars_detali.uz_vag_u_tara, 15.0, 35.0, "Тара должна быть в диапазоне от 15.0 до 35.0 тон.");
 
