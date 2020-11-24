@@ -1,0 +1,87 @@
+﻿@using WEB_UI.App_LocalResources;
+@{
+    ViewBag.Title = @DirectoryResource.park_state_title;
+}
+
+@section styles {
+    @Styles.Render("~/DataTables/css")
+    @Styles.Render("~/DateTime/css")
+    <link rel="stylesheet" type="text/css" href="~/Content/view/directory/home.css">
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/Moment")
+    @Scripts.Render("~/bundles/DataTables")
+    @Scripts.Render("~/bundles/DateTime")
+
+    <script src="~/Scripts/view/shared/common.js"></script> <!-- Общая библиотека методов программы -->
+    <script src="~/Scripts/api/shared.js"></script> <!-- Общая библиотека методов API -->
+    <script src="~/Scripts/api/ids_sap.js"></script> <!-- Class API SAP функции для работы с САП -->
+    <script src="~/Scripts/api/uz_directory.js"></script> <!-- Class API УЗ Справочники -->
+    <script src="~/Scripts/api/ids_directory.js"></script> <!-- Class API ИДС Справочники -->
+    <script src="~/Scripts/api/metrans.js"></script> <!-- Class API МЕТРАНС -->
+    <script src="~/Scripts/api/ids_transfer.js"></script> <!-- Class API ИДС Переносы -->
+    <script src="~/Scripts/api/ids_rwt.js"></script> <!-- Class API ИДС Прием вагонов -->
+
+    <script src="~/Scripts/plugins/pl_dialog_confirm.js"></script> <!-- Плагин -->
+
+    <script src="~/Scripts/view/directory/park_state.js"></script> <!--  -->
+}
+
+<input id="username" type="hidden" value="@User.Identity.Name" />
+
+<div id="dialog-confirm"></div>
+
+<div class="container-fluid">
+    <div class="alert" id="main-alert"></div>
+    <div class="row">
+        <div class="col-xl-12 mb-3 mt-2">
+            <div class="card border-dark mb-3">
+                <div class="card-header bg-secondary text-white">
+                    <div class="row">
+                        <div class="col-xl-12 text-center">
+                            <div class="container-fluid">
+                                <form class="form-inline">
+                                    <label class="col-form-label text-white mr-2" for="select_station">@DirectoryResource.title_station:</label>
+                                    <select type="text" id="select_station" name="select_station" class="form-control mr-3" style="font-size:1.5rem"></select>
+                                    <label class="col-form-label text-white mr-2" for="select_park_status">@DirectoryResource.title_park_status:</label>
+                                    <select type="text" id="select_park_status" name="select_park_status" class="form-control mr-3" style="font-size:1.5rem"></select>
+                                    <button type="button" class="btn btn-danger mr-3" id="delete_park_status" disabled>@DirectoryResource.title_delete</button>
+                                    <label class="col-form-label text-white mr-2" for="input_park_status_on_dt" disabled>@DirectoryResource.title_park_status_on_dt:</label>
+                                    <div>
+                                        <input type="datetime" id="input_park_status_on_dt" name="input_park_status_on_dt" class="form-control mr-3" style="font-size:1.5rem" disabled />
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <button type="button" class="btn btn-primary" id="create_park_status" disabled>@DirectoryResource.title_create</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body text-dark pl-3 pr-3" style="font-size:1.3rem">
+                    <div class="card">
+                        <div class="card-header" id="sostav_info">
+
+                            @*<label id="sostav_info"></label>*@
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-xl-12" style="font-size:12px">
+                                    <table class="display compact hover row-border cell-border" id="table-wagon" style="width:100%; table-layout: fixed"></table>
+                                </div>
+                            </div>
+                            @*<blockquote class="blockquote mb-0">
+                                </blockquote>*@
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-dark">&copy; @DateTime.Now.Year ДАТП & ТД</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+

@@ -3283,7 +3283,32 @@ IDS_RWT.prototype.postArrivalWagonsOfStation = function (operation_arrival, call
         },
     });
 };
-
+//======================================================================================================
+//                                  РАЗДЕЛ СОСТОЯНИЕ ПАРКА
+//======= ParkState (Состояние парка) =========================================================================
+// Получить список сотояний парка по указаной станции
+IDS_RWT.prototype.getViewParkStateOfStation = function (id_station, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/park_state/view/station_state/station/'+id_station,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getViewParkStateOfStation", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 /* ----------------------------------------------------------
 функции для работы с объектами
 -------------------------------------------------------------*/

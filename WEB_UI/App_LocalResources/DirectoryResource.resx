@@ -135,6 +135,12 @@
   <data name="instructional_letters_title" xml:space="preserve">
     <value>Инструктивные письма</value>
   </data>
+  <data name="park_state_description" xml:space="preserve">
+    <value>Расставить текущее положение вагонов по путям станции</value>
+  </data>
+  <data name="park_state_title" xml:space="preserve">
+    <value>Сотояние парка</value>
+  </data>
   <data name="search_wagon_description" xml:space="preserve">
     <value>Найти вагон, показать историю перемещения.</value>
   </data>
@@ -248,6 +254,21 @@
   </data>
   <data name="title_change_group_cargo_group" xml:space="preserve">
     <value>Группы грузов в ИДС</value>
+  </data>
+  <data name="title_create" xml:space="preserve">
+    <value>Создать</value>
+  </data>
+  <data name="title_delete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="title_park_status" xml:space="preserve">
+    <value>Статусы</value>
+  </data>
+  <data name="title_park_status_on_dt" xml:space="preserve">
+    <value>По сотоянию на</value>
+  </data>
+  <data name="title_station" xml:space="preserve">
+    <value>Станция</value>
   </data>
   <data name="wagon_marking_description" xml:space="preserve">
     <value>Выбрать прибывший состав и произвести разметку вагонов</value>

@@ -57,5 +57,11 @@ namespace WEB_UI.Areas.Directory.Controllers
         {
             return View();
         }
+        // Состояние парка
+        [AccessOfDB(LogVisit = true)]
+        public ActionResult ParkState()
+        {
+            return View();
+        }
     }
 }

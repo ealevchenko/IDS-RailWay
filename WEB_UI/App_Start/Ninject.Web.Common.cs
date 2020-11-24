@@ -187,6 +187,11 @@ namespace WEB_UI.App_Start
 
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.InstructionalLetters>>().To<EFIDS.Concrete.EFInstructionalLetters>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.InstructionalLettersWagon>>().To<EFIDS.Concrete.EFInstructionalLettersWagon>();
+
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.ParkState_Station>>().To<EFIDS.Concrete.EFParkState_Station>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.ParkState_Wagon>>().To<EFIDS.Concrete.EFParkState_Wagon>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.ParkState_Way>>().To<EFIDS.Concrete.EFParkState_Way>();
+
         }
     }
 }

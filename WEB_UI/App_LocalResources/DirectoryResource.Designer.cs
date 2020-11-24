@@ -115,6 +115,24 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Расставить текущее положение вагонов по путям станции.
+        /// </summary>
+        public static string park_state_description {
+            get {
+                return ResourceManager.GetString("park_state_description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сотояние парка.
+        /// </summary>
+        public static string park_state_title {
+            get {
+                return ResourceManager.GetString("park_state_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Найти вагон, показать историю перемещения..
         /// </summary>
         public static string search_wagon_description {
@@ -453,6 +471,51 @@ namespace WEB_UI.App_LocalResources {
         public static string title_change_group_cargo_group {
             get {
                 return ResourceManager.GetString("title_change_group_cargo_group", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Создать.
+        /// </summary>
+        public static string title_create {
+            get {
+                return ResourceManager.GetString("title_create", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Удалить.
+        /// </summary>
+        public static string title_delete {
+            get {
+                return ResourceManager.GetString("title_delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Статусы.
+        /// </summary>
+        public static string title_park_status {
+            get {
+                return ResourceManager.GetString("title_park_status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на По сотоянию на.
+        /// </summary>
+        public static string title_park_status_on_dt {
+            get {
+                return ResourceManager.GetString("title_park_status_on_dt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Станция.
+        /// </summary>
+        public static string title_station {
+            get {
+                return ResourceManager.GetString("title_station", resourceCulture);
             }
         }
         

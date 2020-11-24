@@ -132,6 +132,25 @@ var getStringArr = function (list, sep) {
     });
     return result;
 };
+// Получить список для в формате (value:text)
+var getList2Option = function (list, fvalue, ftext1, ftext2, lang, filter) {
+    var list_result = [];
+    var list_filtr = null;
+    if (list) {
+        if (typeof filter === 'function') {
+            list_filtr = list.filter(filter);
+        } else { list_filtr = list; }
+        for (i = 0, j = list_filtr.length; i < j; i++) {
+            var l = list_filtr[i];
+            if (lang) {
+                list_result.push({ value: l[fvalue], text: l[ftext1 + '_' + lang] + ' - ' + l[ftext2 + '_' + lang] });
+            } else {
+                list_result.push({ value: l[fvalue], text: l[ftext1] + ' - ' + l[ftext2] });
+            }
+        }
+    }
+    return list_result;
+};
 //==============================================================================================
 /* ----------------------------------------------------------
     Блокировка экрана

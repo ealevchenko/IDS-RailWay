@@ -106,6 +106,9 @@
     <Compile Include="Concrete\Directory\EFDirectory_WagonManufacturers.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_GenusWagons.cs" />
     <Compile Include="Concrete\EFRepository.cs" />
+    <Compile Include="Concrete\RWT\EFParkState_Wagon.cs" />
+    <Compile Include="Concrete\RWT\EFParkState_Way.cs" />
+    <Compile Include="Concrete\RWT\EFParkState_Station.cs" />
     <Compile Include="Concrete\RWT\EFUZ_DOC_OUT.cs" />
     <Compile Include="Concrete\RWT\EFWagonInternalRoutes.cs" />
     <Compile Include="Concrete\RWT\EFWagonInternalOperation.cs" />
@@ -203,6 +206,9 @@
     <Compile Include="Entities\Directory\Directory_OuterWays.cs" />
     <Compile Include="Entities\Directory\Directory_Locomotive.cs" />
     <Compile Include="Entities\Directory\Directory_LocomotiveStatus.cs" />
+    <Compile Include="Entities\RWT\ParkState_Station.cs" />
+    <Compile Include="Entities\RWT\ParkState_Wagon.cs" />
+    <Compile Include="Entities\RWT\ParkState_Way.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

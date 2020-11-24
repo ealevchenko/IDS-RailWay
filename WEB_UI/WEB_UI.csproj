@@ -269,6 +269,7 @@
     <Compile Include="Controllers\api\Directoty\IDS_Directory_ModelsWagonsController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_TypesRepairsWagonsController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_WagonManufacturersController.cs" />
+    <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_ParkStateController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_SAPIncomingSupplyController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_OutgoingSostavController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_InstructionalLettersWagonController.cs" />
@@ -348,6 +349,7 @@
     <Content Include="Content\DataTables\media\images\sort_both.png" />
     <Content Include="Content\DataTables\media\images\sort_desc.png" />
     <Content Include="Content\DataTables\media\images\sort_desc_disabled.png" />
+    <Content Include="Images\directory\line-icon-3_.svg" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -400,6 +402,7 @@
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\moment.min.js.map" />
     <Content Include="Scripts\moment-with-locales.min.js.map" />
+    <Content Include="Areas\Directory\Views\Home\ParkState.cshtml" />
     <None Include="_app_offline.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -957,6 +960,7 @@
     <Content Include="Scripts\view\directory\cargo_group.js" />
     <Content Include="Scripts\view\directory\cars.js" />
     <Content Include="Scripts\view\directory\instructional_letters.js" />
+    <Content Include="Scripts\view\directory\park_state.js" />
     <Content Include="Scripts\view\directory\wagon_marking.js" />
     <Content Include="Scripts\view\directory\search_wagon.js" />
     <Content Include="Scripts\view\idsmors\electronic_cards.js" />

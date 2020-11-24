@@ -102,6 +102,10 @@ namespace EFIDS.Concrete
 
         public virtual DbSet<Directory_WagonLoadingStatus> Directory_WagonLoadingStatus { get; set; }
         public virtual DbSet<Directory_WagonOperations> Directory_WagonOperations { get; set; }
+        // Состояние парка
+        public virtual DbSet<ParkState_Station> ParkState_Station { get; set; }
+        public virtual DbSet<ParkState_Wagon> ParkState_Wagon { get; set; }
+        public virtual DbSet<ParkState_Way> ParkState_Way { get; set; }
 
         // !!! временно для совмещения справочника КИС и ИДС
         public virtual DbSet<Directory_Cars_KIS> Directory_Cars_KIS { get; set; }
@@ -111,6 +115,31 @@ namespace EFIDS.Concrete
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+
+            // Состояние парка
+            //modelBuilder.Entity<Directory_Station>()
+            //    .HasMany(e => e.ParkState_Station)
+            //    .WithRequired(e => e.Directory_Station)
+            //    .HasForeignKey(e => e.id_station)
+            //    .WillCascadeOnDelete(false);
+
+            //modelBuilder.Entity<Directory_Ways>()
+            //    .HasMany(e => e.ParkState_Way)
+            //    .WithRequired(e => e.Directory_Ways)
+            //    .HasForeignKey(e => e.id_way)
+            //    .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<ParkState_Station>()
+                .HasMany(e => e.ParkState_Way)
+                .WithRequired(e => e.ParkState_Station)
+                .HasForeignKey(e => e.id_park_state_station)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<ParkState_Way>()
+                .HasMany(e => e.ParkState_Wagon)
+                .WithRequired(e => e.ParkState_Way)
+                .HasForeignKey(e => e.id_park_state_way)
+                .WillCascadeOnDelete(false);
             // Локомотивы
             modelBuilder.Entity<Directory_Locomotive>()
                 .HasMany(e => e.WagonInternalOperation)
