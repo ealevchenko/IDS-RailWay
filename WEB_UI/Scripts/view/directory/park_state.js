@@ -54,8 +54,51 @@
             bt_create_park_status: $('button#create_park_status').on('click',
                 function (event) {
                     pn_select.bt_create_park_status.prop("disabled", true);
-                    pn_select.val_add_park_status.clear_all();
+                    //pn_select.val_add_park_status.clear_all();
                     event.preventDefault();
+                    var valid = pn_select.validation();
+                    if (valid) {
+                        // Валидация пройдена, погнали дальше
+                        // Определим станцию
+                        var station = pn_select.get_station_of_id(pn_select.id_station_select);
+                        // Подтверждение выполнения операции.
+                        dc.dialog_confirm('Open', 'Создать?', 'Будет создано новое положение парка на станции :' + (station ? station.text : '?') + ' по состоянию на :' + toISOStringTZ(get_datetime_value(pn_select.input_park_status_on_dt.val(), pn_select.lang)) + '.', function (result) {
+                            if (result) {
+                                LockScreen(langView('mess_save', langs));
+                                // Подготовим список вагонов для отправки
+                                // Определим пакет данных отправки на другую станцию
+                                var operation_create_park_state = {
+                                    id_station: pn_select.id_station_select,
+                                    date_status_on: toISOStringTZ(get_datetime_value(pn_select.input_park_status_on_dt.val(), pn_select.lang)),
+                                    user: user_name,
+                                }
+                                // Выполнить операцию создать парк
+                                ids_inc.postOperationCreateParkStateOfStation(operation_create_park_state, function (result_create) {
+                                    if (result_create && result_create.result >= 0) {
+                                        // Обновим
+                                        pn_select.update_select_park_status(pn_select.id_station_select, -1);
+
+                                        pn_select.val_add_park_status.out_info_message("Операция 'Создать новое положение парка' - Выполнена");
+                                    } else {
+                                        pn_select.val_add_park_status.out_warning_message("При выполнении операции 'Создать новое положение парка' - произошла ошибка. Код ошибки =" + result_create.result);
+                                        if (result_create && result_create.listResult && result_create.listResult.length > 0) {
+                                            $.each(result_create.listResult, function (i, el) {
+                                                if (el.result < 0) {
+                                                    pn_select.val_add_park_status.out_error_message("Станция id :" + el.id + ". Код ошибки : " + el.result);
+                                                }
+                                            });
+                                        }
+                                        LockScreenOff();
+                                    }
+                                });
+                            } else {
+                                pn_select.bt_create_park_status.prop("disabled", false);
+                                pn_select.val_add_park_status.out_warning_message("Выполнение операции «Создания нового положения парка» - отменено!");
+                            }
+                        });
+                    } else {
+                        pn_select.bt_create_park_status.prop("disabled", false);
+                    }
                 }),
             // Удалить
             bt_delete_park_status: $('button#delete_park_status').on('click',
@@ -63,6 +106,47 @@
                     pn_select.bt_delete_park_status.prop("disabled", true);
                     pn_select.val_add_park_status.clear_all();
                     event.preventDefault();
+                    // Определим станцию
+                    var station = pn_select.get_station_of_id(pn_select.id_station_select);
+                    var park_state = pn_select.get_park_state_of_id(pn_select.id_park_status_select);
+                    // Подтвердить
+                    dc.dialog_confirm('Open', 'Удалить?', 'Будет удалено положение парка по сотоянию на: ' + (park_state ? park_state.state_on : '?') + ', созданое : ' + (park_state ? park_state.create_user : '?') + ', по станции : ' + (station ? station.text : '?') + '.', function (result) {
+                        if (result) {
+                            //LockScreen(langView('mess_save', langs));
+                            //// Подготовим список вагонов для отправки
+                            //// Определим пакет данных отправки на другую станцию
+                            //var operation_create_park_state = {
+                            //    id_station: pn_select.id_station_select,
+                            //    date_status_on: toISOStringTZ(get_datetime_value(pn_select.input_park_status_on_dt.val(), pn_select.lang)),
+                            //    user: user_name,
+                            //}
+                            //// Выполнить операцию создать парк
+                            //ids_inc.postOperationCreateParkStateOfStation(operation_create_park_state, function (result_create) {
+                            //    if (result_create && result_create.result >= 0) {
+                            //        // Обновим
+                            //        pn_select.update_select_park_status(pn_select.id_station_select, -1);
+
+                            //        pn_select.val_add_park_status.out_info_message("Операция 'Создать новое положение парка' - Выполнена");
+                            //    } else {
+                            //        pn_select.val_add_park_status.out_warning_message("При выполнении операции 'Создать новое положение парка' - произошла ошибка. Код ошибки =" + result_create.result);
+                            //        if (result_create && result_create.listResult && result_create.listResult.length > 0) {
+                            //            $.each(result_create.listResult, function (i, el) {
+                            //                if (el.result < 0) {
+                            //                    pn_select.val_add_park_status.out_error_message("Станция id :" + el.id + ". Код ошибки : " + el.result);
+                            //                }
+                            //            });
+                            //        }
+                            //        LockScreenOff();
+                            //    }
+                            //});
+                        } else {
+                            pn_select.bt_delete_park_status.prop("disabled", false);
+                            pn_select.val_add_park_status.out_warning_message("Выполнение операции «Удаление положения парка» - отменено!");
+                        }
+                    });
+
+
+
                 }),
             // Инициализация
             init: function (lang, list_station) {
@@ -146,62 +230,30 @@
                 }
                 LockScreenOff();
             },
-
-            //// Инициализация выбора документа
-            //update_obj_select_doc: function (list_doc) {
-            //    pn_select.select_doc = cd_updateSelect(
-            //        pn_select.select_doc,
-            //        { lang: pn_select.lang },
-            //        list_doc,
-            //        null,
-            //        -1,
-            //        null);
-            //},
-            //// Обновим компонент выбора документа
-            //update_select_doc: function (start, stop, id_station, callback) {
-            //    var list_doc = [];
-            //    if (start && stop && id_station && id_station > 0) {
-            //        // Делаем запрос
-            //        LockScreen(langView('mess_load_data', langs));
-            //        ids_inc.getArrivalSostavOfDatePeriodIDStationOn(start, stop, id_station, function (list_sostav) {
-            //            table_arrival_wagon.view([]); //Очистим таблицу
-            //            list_sostav.forEach(function (item, index, array) {
-            //                list_doc.push({ value: item.id, text: item.num_doc });
-            //            });
-            //            pn_select.update_obj_select_doc(list_doc);
-            //            if (typeof callback === 'function') {
-            //                LockScreenOff();
-            //                callback(list_sostav);
-            //            }
-            //        });
-            //    } else {
-            //        pn_select.update_obj_select_doc(list_doc);
-            //        if (typeof callback === 'function') {
-            //            LockScreenOff();
-            //            callback(list_doc);
-            //        }
-            //    }
-            //},
-            //// Показать вагоны
-            //view_arrival_wagon: function (id_sostav) {
-            //    LockScreen(langView('mess_load_data', langs));
-            //    // Получить инфу по составу
-            //    ids_inc.getArrivalSostavOfID(id_sostav, function (sostav) {
-            //        // Вывести информацию о составе
-            //        var info = 'Индекс состава : ' + (sostav ? sostav.composition_index : '') + ', прибыл : ' + (sostav ? sostav.date_arrival : '');
-            //        pn_select.sostav_info.text(info);
-            //        if (sostav && sostav.ArrivalCars) {
-            //            var list_wagon_sort = sostav.ArrivalCars.filter(function (i) {
-            //                return i.position_arrival;
-            //            }).sort(function (a, b) {
-            //                return Number(a.position_arrival) - Number(b.position_arrival);
-            //            });
-
-            //            table_arrival_wagon.view(list_wagon_sort);
-            //        }
-
-            //    });
-            //}
+            // Валидация
+            validation: function () {
+                pn_select.val_add_park_status.clear_all();
+                var valid = true;
+                valid = valid & pn_select.val_add_park_status.checkSelection(pn_select.select_station, "Укажите станцию переписи вагонов");
+                valid = valid & pn_select.val_add_park_status.checkInputOfNull(pn_select.input_park_status_on_dt.obj, "Укажите дату и время переписи вагонов");
+                return valid;
+            },
+            // Получить станцию
+            get_station_of_id: function (id) {
+                if (id > 0) {
+                    return pn_select.list_stations.find(function (o) {
+                        return Number(o.value) === id;
+                    });
+                } else return null;
+            },
+            // Получить положение парка
+            get_park_state_of_id: function (id) {
+                if (id > 0) {
+                    return pn_select.list_park_state.find(function (o) {
+                        return Number(o.id) === id;
+                    });
+                } else return null;
+            },
         };
 
     //================================================================

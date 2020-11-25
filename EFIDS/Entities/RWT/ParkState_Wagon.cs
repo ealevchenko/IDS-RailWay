@@ -17,7 +17,6 @@ namespace EFIDS.Entities
 
         public int position { get; set; }
 
-        [Required]
         [StringLength(100)]
         public string note { get; set; }
 

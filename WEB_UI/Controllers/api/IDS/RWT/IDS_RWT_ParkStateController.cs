@@ -13,15 +13,12 @@ using System.Web.Http.Description;
 namespace WEB_UI.Controllers.api.IDS.RWT
 {
 
-    //public class OperationUpdateWagonMarking
-    //{
-    //    public int id_arrival_cars { get; set; }
-    //    public int id_condition { get; set; }
-    //    public int? id_type { get; set; }
-    //    public DateTime? date_rem_vag { get; set; }
-    //    public string user { get; set; }
-    //}
-
+    public class OperationCreateParkState
+    {
+        public int id_station  { get; set; }
+        public DateTime date_status_on  { get; set; }
+        public string user  { get; set; }
+    }
 
     [RoutePrefix("api/ids/rwt/park_state")]
     public class IDS_RWT_ParkStateController : ApiController
@@ -36,7 +33,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         {
             try
             {
-                string sql = "select * from [IDS].[get_view_park_state_of_station]("+id.ToString()+")";
+                string sql = "select * from [IDS].[get_view_park_state_of_station](" + id.ToString() + ") order by [state_on] desc";
                 List<ParkState_Station> list = this.db.Database.SqlQuery<ParkState_Station>(sql).ToList();
                 return Ok(list);
             }
@@ -46,26 +43,23 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             }
         }
 
-        //#region ПРАВКА РАЗМЕТКИ ВАГОНОВ
-
-        //// POST api/ids/rwt/incoming/operation/update/wagon_marking
-        //[HttpPost]
-        //[Route("operation/update/wagon_marking")]
-        //[ResponseType(typeof(OperationResult))]
-        //public IHttpActionResult PostArrivalWagonsOfStation([FromBody] OperationUpdateWagonMarking value)
-        //{
-        //    try
-        //    {
-        //        IDS_RWT ids_rwt = new IDS_RWT(service.WebAPI_IDS);
-        //        OperationResult result = ids_rwt.OperationUpdateWagonMarking(value.id_arrival_cars, value.id_condition, value.id_type, value.date_rem_vag, value.user);
-        //        return Ok(result);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return BadRequest(e.Message);
-        //    }
-        //}
-        //#endregion
+        // POST api/ids/rwt/park_state/station/create/
+        [HttpPost]
+        [Route("station/create")]
+        [ResponseType(typeof(OperationResultID))]
+        public IHttpActionResult PostOperationCreateParkStateOfStation([FromBody] OperationCreateParkState value)
+        {
+            try
+            {
+                IDS_RWT ids_rwt = new IDS_RWT(service.WebAPI_IDS);
+                OperationResultID result = ids_rwt.OperationCreateParkState(value.id_station, value.date_status_on, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
     }
 }

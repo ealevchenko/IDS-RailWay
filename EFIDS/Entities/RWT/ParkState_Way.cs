@@ -23,7 +23,6 @@ namespace EFIDS.Entities
 
         public int position { get; set; }
 
-        [Required]
         [StringLength(100)]
         public string note { get; set; }
 
@@ -43,7 +42,7 @@ namespace EFIDS.Entities
         [StringLength(50)]
         public string delete_user { get; set; }
 
-        public virtual Directory_Ways Directory_Ways { get; set; }
+        //public virtual Directory_Ways Directory_Ways { get; set; }
 
         public virtual ParkState_Station ParkState_Station { get; set; }
 

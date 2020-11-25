@@ -871,10 +871,10 @@ namespace IDS
         /// <param name="id_limiting"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public OperationResult OperationUpdateWagon(int num, int id_countrys, int id_genus, double? gruzp, double? tara, int kol_os, string usl_tip,
+        public OperationResultWagon OperationUpdateWagon(int num, int id_countrys, int id_genus, double? gruzp, double? tara, int kol_os, string usl_tip,
             DateTime? date_rem_vag, int? id_type_ownership, int? sign, string factory_number, string inventory_number, int? year_built, bool? exit_ban, int? id_operator, DateTime? start_rent, int? id_limiting, string user)
         {
-            OperationResult result = new OperationResult();
+            OperationResultWagon result = new OperationResultWagon();
             try
             {
                 EFDbContext context = new EFDbContext();
@@ -1145,9 +1145,9 @@ namespace IDS
         /// <param name="id_limiting"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public OperationResult OperationUpdateWagons(List<int> list_nums, bool edit_operator, int? id_operator, DateTime? start_rent, bool edit_limiting, int? id_limiting, string user)
+        public OperationResultWagon OperationUpdateWagons(List<int> list_nums, bool edit_operator, int? id_operator, DateTime? start_rent, bool edit_limiting, int? id_limiting, string user)
         {
-            OperationResult result = new OperationResult();
+            OperationResultWagon result = new OperationResultWagon();
             try
             {
                 //DateTime start = DateTime.Now;

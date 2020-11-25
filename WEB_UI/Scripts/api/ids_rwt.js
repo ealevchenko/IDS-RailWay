@@ -3309,6 +3309,33 @@ IDS_RWT.prototype.getViewParkStateOfStation = function (id_station, callback) {
         },
     });
 };
+//Операция создать парк 
+IDS_RWT.prototype.postOperationCreateParkStateOfStation = function (operation_value, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/park_state/station/create/',
+        type: 'POST',
+        data: JSON.stringify(operation_value),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postOperationCreateParkStateOfStation", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
+
 /* ----------------------------------------------------------
 функции для работы с объектами
 -------------------------------------------------------------*/

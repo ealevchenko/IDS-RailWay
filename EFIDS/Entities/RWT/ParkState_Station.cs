@@ -21,7 +21,6 @@ namespace EFIDS.Entities
 
         public DateTime state_on { get; set; }
 
-        [Required]
         [StringLength(100)]
         public string note { get; set; }
 
@@ -41,7 +40,13 @@ namespace EFIDS.Entities
         [StringLength(50)]
         public string delete_user { get; set; }
 
-        public virtual Directory_Station Directory_Station { get; set; }
+        public DateTime? applied { get; set; }
+
+        [StringLength(50)]
+        public string applied_user { get; set; }
+
+
+        //public virtual Directory_Station Directory_Station { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ParkState_Way> ParkState_Way { get; set; }

@@ -144,13 +144,13 @@ namespace WEB_UI.Controllers.api
         // POST api/ids/directory/wagon/operation/update/
         [HttpPost]
         [Route("operation/update/")]
-        [ResponseType(typeof(OperationResult))]
+        [ResponseType(typeof(OperationResultWagon))]
         public IHttpActionResult PostOperationUpdateWagons([FromBody] OperationUpdateWagons value)
         {
             try
             {
                 IDSDirectory ids_dir = new IDSDirectory(service.WebAPI_IDS);
-                OperationResult result = ids_dir.OperationUpdateWagons(value.list_nums, value.edit_operator, value.id_operator, value.start_rent, value.edit_limiting, value.id_limiting, value.user);
+                OperationResultWagon result = ids_dir.OperationUpdateWagons(value.list_nums, value.edit_operator, value.id_operator, value.start_rent, value.edit_limiting, value.id_limiting, value.user);
                 return Ok(result);
             }
             catch (Exception e)
@@ -162,13 +162,13 @@ namespace WEB_UI.Controllers.api
         // POST api/ids/directory/wagon/operation/update/wagon
         [HttpPost]
         [Route("operation/update/wagon/")]
-        [ResponseType(typeof(OperationResult))]
+        [ResponseType(typeof(OperationResultWagon))]
         public IHttpActionResult PostOperationUpdateWagons([FromBody] OperationUpdateWagon value)
         {
             try
             {
                 IDSDirectory ids_dir = new IDSDirectory(service.WebAPI_IDS);
-                OperationResult result = ids_dir.OperationUpdateWagon(value.num, value.id_countrys, value.id_genus, value.gruzp, value.tara, value.kol_os, value.usl_tip, value.date_rem_vag, value.id_type_ownership, value.sign, value.factory_number, value.inventory_number, value.year_built, value.exit_ban, value.id_operator, value.rent_start, value.id_limiting, value.user);
+                OperationResultWagon result = ids_dir.OperationUpdateWagon(value.num, value.id_countrys, value.id_genus, value.gruzp, value.tara, value.kol_os, value.usl_tip, value.date_rem_vag, value.id_type_ownership, value.sign, value.factory_number, value.inventory_number, value.year_built, value.exit_ban, value.id_operator, value.rent_start, value.id_limiting, value.user);
                 return Ok(result);
             }
             catch (Exception e)

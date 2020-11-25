@@ -12,6 +12,12 @@ namespace IDS
         public int num { get; set; }
         public int result { get; set; }
     }
+
+    public class ResultID
+    {
+        public int id { get; set; }
+        public int result { get; set; }
+    }
     /// <summary>
     /// Класс данных результата выполнения переноса
     /// </summary>
@@ -123,14 +129,14 @@ namespace IDS
 
     }
 
-    public class OperationResult
+    public class OperationResultWagon
     {
         public int result { get; set; } // Глобальный ресурс выполнения всего переноса
         public int error { get; set; } // количество ошибок
         public List<ResultWagon> listResultWagon = new List<ResultWagon>();
 
 
-        public OperationResult()
+        public OperationResultWagon()
         {
             this.result = 0;
             this.error = 0;
@@ -147,6 +153,36 @@ namespace IDS
         public void SetResultOperation(int result, int num)
         {
             this.listResultWagon.Add(new ResultWagon() { num = num, result = result });
+            if (result < 0) { AddError(); }
+        }
+    }
+
+    public class OperationResultID
+    {
+        public int result { get; set; } // Глобальный ресурс выполнения всего переноса
+        public int error { get; set; } // количество ошибок
+        public List<ResultID> listResult = new List<ResultID>();
+
+
+        public OperationResultID()
+        {
+            this.result = 0;
+            this.error = 0;
+        }
+
+        public void SetResult(int code)
+        {
+            this.result = code;
+        }
+
+        public void AddError()
+        {
+            this.error++;
+        }
+
+        public void SetResultOperation(int result, int id)
+        {
+            this.listResult.Add(new ResultID() { id = id, result = result });
             if (result < 0) { AddError(); }
         }
     }

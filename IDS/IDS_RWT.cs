@@ -18,6 +18,7 @@ namespace IDS
         not_arrival_cars = -201,                    // Ошибка, нет строки с входящим вагоном
         not_arrival_uz_vagon = -202,                // Ошибка, нет записи или сылки на документ прибывшего вагона
         not_wagon_of_db = -203,                     // Указаного вагона нет в базе
+        validation_data = -204,                      // Ошибка, дата непрошла валидацию
     }
 
 
@@ -37,6 +38,126 @@ namespace IDS
 
         }
 
+        #region ПОЛОЖЕНИЕ ПАРКА
+        /// <summary>
+        /// Добавить новое положение парка по станции
+        /// </summary>
+        /// <param name="id_station"></param>
+        /// <param name="date_status_on"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public OperationResultID OperationCreateParkState(int id_station, DateTime date_status_on, string user)
+        {
+            OperationResultID result = new OperationResultID();
+            try
+            {
+                EFDbContext context = new EFDbContext();
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                result.SetResultOperation(OperationCreateParkState(ref context, id_station, date_status_on, user), id_station);
+                // Если нет ошибок тогда обновим базу
+                if (result.error == 0)
+                {
+                    result.SetResult(context.SaveChanges());
+                }
+                else
+                {
+                    result.SetResult((int)errors_ids_rwt.cancel_save_changes); // Ошибка изменение было отменено
+                }
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationCreateParkState(id_station={0}, date_status_on ={1}, user={2})",
+                    id_station, date_status_on, user), servece_owner, this.eventID);
+                result.SetResult((int)errors_ids_rwt.global);// Ошибка нет списка id
+            }
+            return result;
+        }
+        /// <summary>
+        /// Добавить новое положение парка по станции
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_station"></param>
+        /// <param name="date_status_on"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationCreateParkState(ref EFDbContext context, int id_station, DateTime date_status_on, string user)
+        {
+            try
+            {
+                // Проверка контекста
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+
+                EFParkState_Station ef_pss = new EFParkState_Station(context);
+                // Получим последнееположение по станции
+                List<ParkState_Station> list = ef_pss.Context.ToList();
+                
+                ParkState_Station pss_last = ef_pss.Context.Where(p => p.id_station == id_station).OrderByDescending(s => s.state_on).FirstOrDefault();
+                if (pss_last != null)
+                {
+                    // Проверим на дату (дата новая не должна быть равна или меньше последней
+                    if (pss_last.state_on >= date_status_on) return (int)errors_ids_rwt.validation_data; // Ошибка
+                }
+                // Создаем новую запись
+                ParkState_Station pss = new ParkState_Station()
+                {
+                    id = 0,
+                    id_station = id_station,
+                    state_on = date_status_on,
+                    note = null,
+                    create = DateTime.Now,
+                    create_user = user,
+                    change = null,
+                    change_user = null,
+                    delete = null,
+                    delete_user = null,
+                    applied = null,
+                    applied_user = null,
+                };
+                // Получим пути по данной станции
+                EFDirectory_Ways ef_ways = new EFDirectory_Ways(context);
+                List<Directory_Ways> list_ways_station = ef_ways.Context.Where(w => w.id_station == id_station).ToList();
+                int position = 1;
+                foreach (Directory_Ways way in list_ways_station) {
+                    ParkState_Way psw = new ParkState_Way() { 
+                        id = 0,
+                        id_park_state_station = 0,
+                        id_way = way.id,
+                        position = position,
+                        note = null,
+                        create = DateTime.Now,
+                        create_user = user,
+                        change = null,
+                        change_user = null,
+                        delete = null,
+                        delete_user = null,
+                    };
+                    pss.ParkState_Way.Add(psw);
+                    position++;
+                }
+                ef_pss.Add(pss);
+                return 1;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationCreateParkState(context={0}, id_station={1}, date_status_on={2}, user={3})",
+                    context, id_station, date_status_on, user), servece_owner, this.eventID);
+                return (int)errors_ids_rwt.global;// Ошибка
+            }
+        }
+        #endregion
+
         #region ПРАВКА РАЗМЕТКИ ВАГОНОВ
         /// <summary>
         /// Правка разметки по прибытию 
@@ -47,9 +168,9 @@ namespace IDS
         /// <param name="date_rem_vag"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public OperationResult OperationUpdateWagonMarking(int id_arrival_cars, int id_condition, int? id_type, DateTime? date_rem_vag, string user)
+        public OperationResultWagon OperationUpdateWagonMarking(int id_arrival_cars, int id_condition, int? id_type, DateTime? date_rem_vag, string user)
         {
-            OperationResult result = new OperationResult();
+            OperationResultWagon result = new OperationResultWagon();
             try
             {
                 EFDbContext context = new EFDbContext();

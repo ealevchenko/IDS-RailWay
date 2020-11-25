@@ -32,13 +32,13 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         // POST api/ids/rwt/incoming/operation/update/wagon_marking
         [HttpPost]
         [Route("operation/update/wagon_marking")]
-        [ResponseType(typeof(OperationResult))]
+        [ResponseType(typeof(OperationResultWagon))]
         public IHttpActionResult PostArrivalWagonsOfStation([FromBody] OperationUpdateWagonMarking value)
         {
             try
             {
                 IDS_RWT ids_rwt = new IDS_RWT(service.WebAPI_IDS);
-                OperationResult result = ids_rwt.OperationUpdateWagonMarking(value.id_arrival_cars, value.id_condition, value.id_type, value.date_rem_vag, value.user);
+                OperationResultWagon result = ids_rwt.OperationUpdateWagonMarking(value.id_arrival_cars, value.id_condition, value.id_type, value.date_rem_vag, value.user);
                 return Ok(result);
             }
             catch (Exception e)
