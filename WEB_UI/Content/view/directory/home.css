@@ -116,3 +116,11 @@ fieldset {
         fieldset > fieldset legend {
             text-transform: none;
         }
+
+        
+tr.group,
+tr.group:hover {
+    background-color: #ddd !important;
+    text-align: center;
+    text-transform: uppercase;
+}

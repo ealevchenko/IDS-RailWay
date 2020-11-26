@@ -18,7 +18,8 @@ namespace IDS
         not_arrival_cars = -201,                    // Ошибка, нет строки с входящим вагоном
         not_arrival_uz_vagon = -202,                // Ошибка, нет записи или сылки на документ прибывшего вагона
         not_wagon_of_db = -203,                     // Указаного вагона нет в базе
-        validation_data = -204,                      // Ошибка, дата непрошла валидацию
+        validation_data = -204,                     // Ошибка, дата непрошла валидацию
+        not_park_station_station_of_db = -205,      // Ошибка, в базе данных нет строки положения парка по станции
     }
 
 
@@ -101,8 +102,6 @@ namespace IDS
 
                 EFParkState_Station ef_pss = new EFParkState_Station(context);
                 // Получим последнееположение по станции
-                List<ParkState_Station> list = ef_pss.Context.ToList();
-                
                 ParkState_Station pss_last = ef_pss.Context.Where(p => p.id_station == id_station).OrderByDescending(s => s.state_on).FirstOrDefault();
                 if (pss_last != null)
                 {
@@ -129,8 +128,10 @@ namespace IDS
                 EFDirectory_Ways ef_ways = new EFDirectory_Ways(context);
                 List<Directory_Ways> list_ways_station = ef_ways.Context.Where(w => w.id_station == id_station).ToList();
                 int position = 1;
-                foreach (Directory_Ways way in list_ways_station) {
-                    ParkState_Way psw = new ParkState_Way() { 
+                foreach (Directory_Ways way in list_ways_station)
+                {
+                    ParkState_Way psw = new ParkState_Way()
+                    {
                         id = 0,
                         id_park_state_station = 0,
                         id_way = way.id,
@@ -156,6 +157,90 @@ namespace IDS
                 return (int)errors_ids_rwt.global;// Ошибка
             }
         }
+        /// <summary>
+        /// Удалить положение парка
+        /// </summary>
+        /// <param name="id_station"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public OperationResultID OperationDeleteParkState(int id_station, string user)
+        {
+            OperationResultID result = new OperationResultID();
+            try
+            {
+                EFDbContext context = new EFDbContext();
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                result.SetResultOperation(OperationDeleteParkState(ref context, id_station, user), id_station);
+                // Если нет ошибок тогда обновим базу
+                if (result.error == 0)
+                {
+                    result.SetResult(context.SaveChanges());
+                }
+                else
+                {
+                    result.SetResult((int)errors_ids_rwt.cancel_save_changes); // Ошибка изменение было отменено
+                }
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationDeleteParkState(id_station={0}, user={1})",
+                    id_station, user), servece_owner, this.eventID);
+                result.SetResult((int)errors_ids_rwt.global);// Ошибка нет списка id
+            }
+            return result;
+        }
+        /// <summary>
+        /// Удалить положение парка
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_station"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationDeleteParkState(ref EFDbContext context, int id_station, string user)
+        {
+            try
+            {
+                // Проверка контекста
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+
+                EFParkState_Station ef_pss = new EFParkState_Station(context);
+                EFParkState_Way ef_psw = new EFParkState_Way(context);
+                EFParkState_Wagon ef_pswag = new EFParkState_Wagon(context);
+                // Получим строку положения по станции
+                ParkState_Station pss = ef_pss.Context.Where(s => s.id_station == id_station).FirstOrDefault();
+                if (pss == null) return (int)errors_ids_rwt.not_park_station_station_of_db;                     // Ошибка, в базе данных нет строки положения парка по станции
+                // Получим пути выбранного состояния парка
+                List<ParkState_Way> list_psw = ef_psw.Context.Where(w => w.id_park_state_station == pss.id).ToList();
+                // Пройдемся по всем путям и удалим вагоны
+                foreach (ParkState_Way way in list_psw)
+                {
+                    List<int> list_id_wag = ef_pswag.Context.Where(w => w.id_park_state_way == way.id).ToList().Select(w => w.id).ToList();
+                    ef_pswag.Delete(list_id_wag); // пометим для удаления все вагоны
+                    ef_psw.Delete(way.id);        // пометим для удаления путь
+                }
+                ef_pss.Delete(pss.id);
+                return 1;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationDeleteParkState(context={0}, id_station={1}, user={2})",
+                    context, id_station, user), servece_owner, this.eventID);
+                return (int)errors_ids_rwt.global;// Ошибка
+            }
+        }
+
         #endregion
 
         #region ПРАВКА РАЗМЕТКИ ВАГОНОВ

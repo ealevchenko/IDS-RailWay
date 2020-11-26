@@ -3309,6 +3309,29 @@ IDS_RWT.prototype.getViewParkStateOfStation = function (id_station, callback) {
         },
     });
 };
+// Получить состояние путей по указаному парку
+IDS_RWT.prototype.getViewStatusParkStateOfParkStateStation = function (id_park_state_station, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/park_state/view/status/park_state_way/park_state_station/' + id_park_state_station,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getViewStatusParkStateOfParkStateStation", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 //Операция создать парк 
 IDS_RWT.prototype.postOperationCreateParkStateOfStation = function (operation_value, callback) {
     $.ajax({
@@ -3334,7 +3357,31 @@ IDS_RWT.prototype.postOperationCreateParkStateOfStation = function (operation_va
         },
     });
 };
-
+//Операция удалить парк 
+IDS_RWT.prototype.postOperationDeleteParkStateOfStation = function (operation_value, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/park_state/station/delete/',
+        type: 'POST',
+        data: JSON.stringify(operation_value),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postOperationDeleteParkStateOfStation", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 
 /* ----------------------------------------------------------
 функции для работы с объектами
