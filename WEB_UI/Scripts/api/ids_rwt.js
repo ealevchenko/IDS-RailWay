@@ -3309,6 +3309,29 @@ IDS_RWT.prototype.getViewParkStateOfStation = function (id_station, callback) {
         },
     });
 };
+// Получить список вагонов по указаному пути
+IDS_RWT.prototype.getViewWagonParkStateOfWay = function (id_way, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/park_state/view/wagon_state/way/' + id_way,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getViewWagonParkStateOfWay", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 // Получить состояние путей по указаному парку
 IDS_RWT.prototype.getViewStatusParkStateOfParkStateStation = function (id_park_state_station, callback) {
     $.ajax({

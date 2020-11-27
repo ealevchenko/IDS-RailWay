@@ -83,6 +83,29 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             }
         }
 
+        // GET: api/ids/rwt/park_state/view/wagon_state/way/6
+        /// <summary>
+        /// Показать все вагоны по указаному пути (оптимизированный)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Route("view/wagon_state/way/{id:int}")]
+        [ResponseType(typeof(ParkState_Wagon))]
+        public IHttpActionResult GetViewWagonParkStateOfWay(int id)
+        {
+            try
+            {
+                string sql = "select * from [IDS].[get_view_wagon_park_state_of_way](" + id.ToString() + ") order by [position] desc";
+                List<ParkState_Wagon> list = this.db.Database.SqlQuery<ParkState_Wagon>(sql).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+
         // GET: api/ids/rwt/park_state/view/status/park_state_way/park_state_station/12
         /// <summary>
         /// Показать все состояния путей по указаному парку (оптимизированный)
