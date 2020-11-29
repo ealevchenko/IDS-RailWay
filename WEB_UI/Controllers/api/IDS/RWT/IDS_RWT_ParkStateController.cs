@@ -54,6 +54,14 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string user  { get; set; }
     }
 
+    public class OperationUpdWagonsParkState
+    {
+        public int id_park_state_way { get; set; }
+        public List<int> wagons { get; set; }
+        public int type_operation { get; set; }
+        public string user  { get; set; }
+    }
+
 
     [RoutePrefix("api/ids/rwt/park_state")]
     public class IDS_RWT_ParkStateController : ApiController
@@ -173,5 +181,29 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 return BadRequest(e.Message);
             }
         }
+
+        // POST api/ids/rwt/park_state/way/wagon/update/
+        /// <summary>
+        /// Удалить положение парка по указаной станции
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("way/wagon/update/")]
+        [ResponseType(typeof(OperationResultWagon))]
+        public IHttpActionResult PostOperationUpdateWagonsParkStateOfWay([FromBody] OperationUpdWagonsParkState value)
+        {
+            try
+            {
+                IDS_RWT ids_rwt = new IDS_RWT(service.WebAPI_IDS);
+                OperationResultWagon result = ids_rwt.OperationUpdateWagonsParkState(value.id_park_state_way, value.wagons, value.type_operation, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
     }
 }

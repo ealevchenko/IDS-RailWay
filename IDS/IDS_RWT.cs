@@ -15,11 +15,13 @@ namespace IDS
         global = -1,
         cancel_save_changes = -2,                   // Отмена сохранений изменений в базе данных (были ошибки по ходу выполнения всей операции)
         error_input_value = -100,
+        error_input_nums_wagons = -101,             // Ошибка, нет списка вагонов
         not_arrival_cars = -201,                    // Ошибка, нет строки с входящим вагоном
         not_arrival_uz_vagon = -202,                // Ошибка, нет записи или сылки на документ прибывшего вагона
         not_wagon_of_db = -203,                     // Указаного вагона нет в базе
         validation_data = -204,                     // Ошибка, дата непрошла валидацию
         not_park_station_station_of_db = -205,      // Ошибка, в базе данных нет строки положения парка по станции
+        not_way_park_station_station_of_db = -206,  // Ошибка, в базе данных нет строки пути положения парка по станции
     }
 
 
@@ -40,6 +42,63 @@ namespace IDS
         }
 
         #region ПОЛОЖЕНИЕ ПАРКА
+        /// <summary>
+        /// Получить последнюю позицию вагона по указоному id пути положения парка
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_park_state_way"></param>
+        /// <returns></returns>
+        public int GetLastPositionOfWay(ref EFDbContext context, int id_park_state_way)
+        {
+            try
+            {
+                // Проверка контекста
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                EFParkState_Wagon ef_pswag = new EFParkState_Wagon(context);
+                ParkState_Wagon wagon = ef_pswag.Context.Where(w => w.id_park_state_way == id_park_state_way).OrderByDescending(c => c.position).FirstOrDefault();
+                return wagon != null ? wagon.position : 0;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetLastPositionOfWay(context={0}, id_park_state_way={1})",
+                    context, id_park_state_way), servece_owner, this.eventID);
+                return -1;
+            }
+        }
+        /// <summary>
+        /// Удалить все вагоны по заданному пути
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_park_state_way"></param>
+        /// <returns></returns>
+        public int DeletWagonsOfWay(ref EFDbContext context, int id_park_state_way)
+        {
+            try
+            {
+                // Проверка контекста
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                EFParkState_Wagon ef_pswag = new EFParkState_Wagon(context);
+                List<ParkState_Wagon> wagons = ef_pswag.Context.Where(w => w.id_park_state_way == id_park_state_way).ToList();
+                if (wagons != null && wagons.Count() > 0)
+                {
+                    ef_pswag.Delete(wagons.Select(w => w.id));
+                    return wagons.Count();
+                }
+                return 0;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("DeletWagonsOfWay(context={0}, id_park_state_way={1})",
+                    context, id_park_state_way), servece_owner, this.eventID);
+                return -1;
+            }
+        }
         /// <summary>
         /// Добавить новое положение парка по станции
         /// </summary>
@@ -237,6 +296,120 @@ namespace IDS
             {
                 e.ExceptionMethodLog(String.Format("OperationDeleteParkState(context={0}, id_station={1}, user={2})",
                     context, id_station, user), servece_owner, this.eventID);
+                return (int)errors_ids_rwt.global;// Ошибка
+            }
+        }
+        /// <summary>
+        /// Добавить или перезаписать вагоны по указаному пути
+        /// </summary>
+        /// <param name="id_way"></param>
+        /// <param name="wagons"></param>
+        /// <param name="type"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public OperationResultWagon OperationUpdateWagonsParkState(int id_park_state_way, List<int> wagons, int type, string user)
+        {
+            OperationResultWagon result = new OperationResultWagon();
+            try
+            {
+                EFDbContext context = new EFDbContext();
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                if (wagons != null)
+                {
+
+                    int position = 1;
+                    // Получим последнюю позицию по пути в зависимости от типа операции
+                    if (type > 0)
+                    {
+                        // Определена операция замещения вагонов
+                        int res_del = DeletWagonsOfWay(ref context, id_park_state_way);
+                    }
+                    else
+                    {
+                        // Добавить
+                        position = GetLastPositionOfWay(ref context, id_park_state_way) + 1;
+                    }
+
+                    // Пройдемся по списку вагонов
+                    foreach (int num in wagons)
+                    {
+                        // Выполним операцию
+                        result.SetResultOperation(OperationUpdateWagonParkState(ref context, id_park_state_way, num, position, user), num);
+                        position++;
+                    }
+
+                    // Если нет ошибок тогда обновим базу
+                    if (result.error == 0)
+                    {
+                        result.SetResult(context.SaveChanges());
+                    }
+                    else
+                    {
+                        result.SetResult((int)errors_ids_rwt.cancel_save_changes); // Ошибка изменение было отменено
+                    }
+                }
+                else
+                {
+                    result.SetResult((int)errors_ids_rwt.error_input_nums_wagons); // Ошибка? неуказан список вагонов
+                }
+
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationUpdateWagonsParkState(id_park_state_way={0}, wagons={1}, type={2}, user={3})",
+                    id_park_state_way, wagons, type, user), servece_owner, this.eventID);
+                result.SetResult((int)errors_ids_rwt.global);// Ошибка нет списка id
+            }
+            return result;
+        }
+        /// <summary>
+        /// Добавить вагон
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_park_state_way"></param>
+        /// <param name="num"></param>
+        /// <param name="position"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationUpdateWagonParkState(ref EFDbContext context, int id_park_state_way, int num, int position, string user)
+        {
+            try
+            {
+                // Проверка контекста
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFParkState_Way ef_psw = new EFParkState_Way(context);
+                //EFParkState_Wagon ef_pswag = new EFParkState_Wagon(context);
+                ParkState_Way way = ef_psw.Context.Where(w => w.id == id_park_state_way).FirstOrDefault();
+                if (way == null) return (int)errors_ids_rwt.not_way_park_station_station_of_db;                     // Ошибка, в базе данных нет строки положения парка по станции
+                ParkState_Wagon wagon = new ParkState_Wagon()
+                {
+                    id = 0,
+                    id_park_state_way = id_park_state_way,
+                    num = num,
+                    position = position,
+                    note = null,
+                    create = DateTime.Now,
+                    create_user = user,
+                };
+                way.ParkState_Wagon.Add(wagon);
+                return 1;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationDeleteParkState(context={0}, id_park_state_way={1}, num={2}, position={3}, user={4})",
+                    context, id_park_state_way, num, position, user), servece_owner, this.eventID);
                 return (int)errors_ids_rwt.global;// Ошибка
             }
         }

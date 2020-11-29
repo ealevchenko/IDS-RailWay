@@ -63,7 +63,7 @@
             select_park_status: $('select#select_park_status'),
             input_park_status_on_dt: $('input#input_park_status_on_dt'),
             park_state_info: $('div#park_state_info'),
-            accordion_ways: $('div#accordion_ways'),
+            //accordion_ways: $('div#accordion_ways'),
             // Добавить
             bt_create_park_status: $('button#create_park_status').on('click',
                 function (event) {
@@ -268,7 +268,7 @@
                 pn_select.val_add_park_status.clear_all();
                 pn_select.clear_create_park_state();
                 // Очистим пути.
-                pn_select.accordion_ways.empty();
+                //pn_select.accordion_ways.empty();
                 pn_select.list_way_state = null;
                 // Установим
                 pn_select.id_park_status_select = id_park_status;
@@ -377,7 +377,8 @@
             obj: null,
             id_way: null,
             index_way: null,                             // Индекс выбраной строки в таблице
-            select_way: null,                                   // Выбранный путь
+            select_way: null,                            // Выбранный путь
+            list_way_state: null,                        // Список путей путь
             init: function () {
                 var groupColumn = 0;
                 this.obj = this.html_table.DataTable({
@@ -460,11 +461,16 @@
             },
             // Показать таблицу с данными
             view: function (list_way_state) {
+                table_ways_park_state.list_way_state = list_way_state;
+                var index = table_ways_park_state.index_way !== null ? table_ways_park_state.index_way : null;
                 table_ways_park_state.obj.clear();
-                if (list_way_state && list_way_state.length > 0) {
-                    table_ways_park_state.obj.rows.add(list_way_state.sort(function (a, b) { return a.position - b.position; }));
+                if (table_ways_park_state.list_way_state && table_ways_park_state.list_way_state.length > 0) {
+                    table_ways_park_state.obj.rows.add(table_ways_park_state.list_way_state.sort(function (a, b) { return a.position - b.position; }));
                 }
                 table_ways_park_state.obj.draw();
+                if (index !== null) {
+                    table_ways_park_state.obj.row(index).select();
+                }
                 //LockScreenOff();
             },
             // Сбрость данные таблицы
@@ -480,7 +486,57 @@
                 num_wagon_park_state: $('textarea#num_wagon_park_state'),
                 bt_num_wagon_park_state_add: $('button#num_wagon_park_state_add').on('click', function (event) {
                     event.preventDefault();
+                    alert.clear_message();
+                    table_wagon_park_state.pn_edit_nums.bt_num_wagon_park_state_add.prop("disabled", true);
                     var nums = table_wagon_park_state.pn_edit_nums.valid_nums();
+                    if (nums && nums.length > 0) {
+                        // Вагоны определены
+                        LockScreen(langView('mess_save', langs));
+                        // Определим пакет данных для обновлени вагонов
+                        var operation_update_wagon_park_state = {
+                            id_park_state_way: table_ways_park_state.id_way,
+                            wagons: nums,
+                            type_operation: 0, // Добавить
+                            user: user_name,
+                        }
+                        // Обновим данные
+                        ids_inc.postOperationUpdateWagonsParkStateOfWay(operation_update_wagon_park_state, function (result_update) {
+                            if (result_update && result_update.result >= 0) {
+                                // Обновим
+                                //table_ways_park_state.view(table_ways_park_state.list_way_state);
+
+                                // Покажем выбраное положение парка
+                                pn_select.update_view_park_status(pn_select.id_park_status_select, function () {
+                                    if (typeof callback === 'function') {
+                                        LockScreenOff();
+                                        alert.out_info_message("Операция 'Добавить вагоны на путь' - Выполнена");
+                                    }
+                                });
+
+
+
+                                //pn_select.update_select_park_status(pn_select.id_station_select, 0, function () {
+
+
+                                //});
+
+
+                            } else {
+                                alert.out_warning_message("При выполнении операции 'Добавить вагоны на путь' - произошла ошибка. Код ошибки =" + result_update.result);
+                                if (result_update && result_update.listResultWagon && result_update.listResultWagon.length > 0) {
+                                    $.each(result_update.listResultWagon, function (i, el) {
+                                        if (el.result < 0) {
+                                            alert.out_error_message("Станция id :" + el.id + ". Код ошибки : " + el.result);
+                                        }
+                                    });
+                                }
+                                pn_select.bt_create_park_status.prop("disabled", false);
+                                LockScreenOff();
+                            }
+                        });
+                    }
+
+                    table_wagon_park_state.pn_edit_nums.bt_num_wagon_park_state_add.prop("disabled", false);
                 }),
                 bt_num_wagon_park_state_replace: $('button#num_wagon_park_state_replace'),
                 // Инициализация
@@ -528,7 +584,68 @@
                     var text_nums = table_wagon_park_state.pn_edit_nums.num_wagon_park_state.val();
                     if (!text_nums || text_nums === null) {
                         alert.out_warning_message('Нет списка вагонов');
+                        return null;
                     }
+
+                    var isNumeric = function (value) {
+                        return /^\d+$/.test(value);
+                    };
+                    // Провкерка на правильный ввод номеров
+                    var valid = true;
+                    var car_valid = [];
+                    var cars = table_wagon_park_state.pn_edit_nums.num_wagon_park_state.val().split(';');
+
+                    var num_valid = table_wagon_park_state.pn_edit_nums.num_wagon_park_state_validation.prop("checked");
+
+                    $.each(cars, function (i, el) {
+                        if (!isNumeric($.trim(el))) {
+                            alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' введен неправильный номер :' + el);
+                            valid = false;
+                        } else {
+                            if (Number($.trim(el)) <= 0) {
+                                alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' номер не может быть меньше или равен 0 :' + el);
+                                valid = false;
+                            } else {
+                                // Разрешена проверка системной нумерации
+                                if (num_valid) {
+                                    var num_val = is_valid_num_wagon(Number($.trim(el)));
+                                    // Если валидный добавим в список
+                                    if (num_val) {
+                                        car_valid.push(Number($.trim(el)));
+                                    } else {
+                                        alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' не системная нумерация (ошибка контрольной суммы) :' + el);
+                                    }
+                                    valid = valid & num_val;
+                                } else {
+                                    // добавим в список
+                                    car_valid.push(Number($.trim(el)));
+                                }
+                            }
+                        }
+                    });
+                    // Провкерка на повторяющиеся номера
+                    arr_res = [];
+                    car_valid.sort();
+                    for (var i = 1; i < car_valid.length; i++) {
+                        if (car_valid[i] === car_valid[i - 1]) {
+                            var is_unique = true;
+                            for (var k = 0; k < arr_res.length; k++) {
+                                if (arr_res[k] === car_valid[i]) {
+                                    is_unique = false;
+                                    break;
+                                }
+                            }
+                            if (is_unique) {
+                                arr_res.push(car_valid[i]);
+                            }
+                        }
+                    }
+                    // Вывод сообщений повторяющихся номеров
+                    $.each(arr_res, function (i, el) {
+                        alert.out_warning_message('Ошибка ввода, введеный номер :' + el + ' повторяется.');
+                        //LockScreenOff();
+                    });
+                    return valid ? car_valid : null;
                 }
             },
             obj: null,
