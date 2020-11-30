@@ -5665,7 +5665,7 @@
 
                         "vesg": vag_uz && vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000).toFixed(3) : null,
                         "cargo": vag_uz && vag_uz.Directory_Cargo ? cars_detali.ids_inc.ids_dir.getValueObj(vag_uz.Directory_Cargo, 'cargo_name', cars_detali.lang) : null,
-                        "station_on_amkr": vag_uz && vag_uz.Directory_Station ? cars_detali.ids_inc.ids_dir.getValueObj(vag_uz.Directory_Station, 'station_name', cars_detali.lang) : null,
+                        "station_on_amkr": vag_uz && vag_uz.Directory_Station ? cars_detali.ids_inc.ids_dir.getValueObj(vag_uz.Directory_Station, 'station_name', cars_detali.lang) : 'Под погрузку',
                         "division_on_amkr": dir_division ? cars_detali.ids_inc.ids_dir.getValueObj(dir_division, 'division_abbr', cars_detali.lang) : null
                     };
                 },
