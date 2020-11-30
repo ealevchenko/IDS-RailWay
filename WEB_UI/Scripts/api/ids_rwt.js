@@ -3159,7 +3159,6 @@ IDS_RWT.prototype.getViewWaysStatusOfIDStation= function (id_station, callback) 
         },
     });
 };
-
 // Получить список составов на указаном внешнем пути
 IDS_RWT.prototype.getViewArrivalSostavOfIDOuterWay = function (id_outer_way, callback) {
     $.ajax({
@@ -3283,6 +3282,30 @@ IDS_RWT.prototype.postArrivalWagonsOfStation = function (operation_arrival, call
         },
     });
 };
+// ПОИСК ВАГОНОВ
+// Поиск вагона на АМКР
+IDS_RWT.prototype.getViewDislocationAMKRWagonOfNum = function (num, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/wsd/view/dislocation/amkr/wagon/num/' + num,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getViewDislocationAMKRWagonOfNum", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 //======================================================================================================
 //                                  РАЗДЕЛ СОСТОЯНИЕ ПАРКА
 //======= ParkState (Состояние парка) =========================================================================
@@ -3355,7 +3378,7 @@ IDS_RWT.prototype.getViewStatusParkStateOfParkStateStation = function (id_park_s
         },
     });
 };
-//Операция создать парк 
+// Операция создать парк 
 IDS_RWT.prototype.postOperationCreateParkStateOfStation = function (operation_value, callback) {
     $.ajax({
         url: '../../api/ids/rwt/park_state/station/create/',
@@ -3424,6 +3447,31 @@ IDS_RWT.prototype.postOperationUpdateWagonsParkStateOfWay = function (operation_
         error: function (x, y, z) {
             LockScreenOff();
             OnAJAXError("IDS_RWT.postOperationUpdateWagonsParkStateOfWay", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Операция удалить  вагоны на пути парка 
+IDS_RWT.prototype.postOperationDeleteWagonsParkStateOfWay = function (operation_value, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/park_state/way/wagon/delete/',
+        type: 'POST',
+        data: JSON.stringify(operation_value),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postOperationDeleteWagonsParkStateOfWay", x, y, z);
         },
         complete: function () {
             AJAXComplete();

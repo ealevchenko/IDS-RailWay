@@ -62,6 +62,12 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string user  { get; set; }
     }
 
+    public class OperationDeleteWagonsParkState
+    {
+        public int id_park_state_way { get; set; }
+        public string user  { get; set; }
+    }
+
 
     [RoutePrefix("api/ids/rwt/park_state")]
     public class IDS_RWT_ParkStateController : ApiController
@@ -184,7 +190,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
 
         // POST api/ids/rwt/park_state/way/wagon/update/
         /// <summary>
-        /// Удалить положение парка по указаной станции
+        /// Обновить вагоны положения парка по указаному пути
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -197,6 +203,29 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             {
                 IDS_RWT ids_rwt = new IDS_RWT(service.WebAPI_IDS);
                 OperationResultWagon result = ids_rwt.OperationUpdateWagonsParkState(value.id_park_state_way, value.wagons, value.type_operation, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST api/ids/rwt/park_state/way/wagon/delete/
+        /// <summary>
+        /// Удалить положение парка по указаной станции
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("way/wagon/delete/")]
+        [ResponseType(typeof(OperationResultID))]
+        public IHttpActionResult PostOperationDeleteWagonsParkStateOfWay([FromBody] OperationDeleteWagonsParkState value)
+        {
+            try
+            {
+                IDS_RWT ids_rwt = new IDS_RWT(service.WebAPI_IDS);
+                OperationResultID result = ids_rwt.DeleteWagonsOfWay(value.id_park_state_way, value.user);
                 return Ok(result);
             }
             catch (Exception e)

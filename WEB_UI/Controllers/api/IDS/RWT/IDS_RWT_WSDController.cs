@@ -334,6 +334,38 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string user { get; set; }
     }
 
+    public  class view_wagon_position
+    {
+        public long id { get; set; }
+        public long id_wagon_internal_routes { get; set; }
+        public int id_station { get; set; }
+        public string station_name_ru { get; set; }
+        public string station_name_en { get; set; }
+        public string station_abbr_ru { get; set; }
+        public string station_abbr_en { get; set; }
+        public int id_way { get; set; }
+        public string way_num_ru { get; set; }
+        public string way_num_en { get; set; }
+        public string way_name_ru { get; set; }
+        public string way_name_en { get; set; }
+        public string way_abbr_ru { get; set; }
+        public string way_abbr_en { get; set; }
+        public DateTime way_start { get; set; }
+        public DateTime? way_end { get; set; }
+        public int? id_outer_way { get; set; }
+        public string name_outer_way_ru { get; set; }
+        public string name_outer_way_en { get; set; }
+        public DateTime? outer_way_start { get; set; }
+        public DateTime? outer_way_end { get; set; }
+        public int position { get; set; }
+        public string note { get; set; }
+        public DateTime create { get; set; }
+        public string create_user { get; set; }
+        public DateTime? close { get; set; }
+        public string close_user { get; set; }
+        public long? parent_id { get; set; }
+    }
+
     [RoutePrefix("api/ids/rwt/wsd")]
     public class IDS_RWT_WSDController : ApiController
     {
@@ -513,6 +545,28 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             }
         }
 
-
+        #region ПОИСК ВАГОНОВ
+        // GET: api/ids/rwt/wsd/view/dislocation/amkr/wagon/num/54895305
+        /// <summary>
+        /// Поиск текущего положения вагона на территории АМКР
+        /// </summary>
+        /// <param name="id_outer_way"></param>
+        /// <returns></returns>
+        [Route("view/dislocation/amkr/wagon/num/{num:int}")]
+        [ResponseType(typeof(view_wagon_position))]
+        public IHttpActionResult GetViewDislocationAMKRWagonOfNum(int num)
+        {
+            try
+            {
+                string sql = "select * from [IDS].[get_dislocation_wagon_of_num](" + num + ")";
+                List<view_wagon_position> position = db.Database.SqlQuery<view_wagon_position>(sql).ToList();
+                return Ok(position);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        #endregion
     }
 }

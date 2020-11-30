@@ -124,3 +124,10 @@ tr.group:hover {
     text-align: center;
     text-transform: uppercase;
 }
+
+.exist-amkr {
+    background-color:#deebbc !important;
+}
+.not-exist-amkr {
+    background-color:#f5cdb0 !important;
+}

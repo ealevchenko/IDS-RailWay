@@ -71,10 +71,46 @@ namespace IDS
         /// <summary>
         /// Удалить все вагоны по заданному пути
         /// </summary>
+        /// <param name="id_park_state_way"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public OperationResultID DeleteWagonsOfWay(int id_park_state_way, string user)
+        {
+            OperationResultID result = new OperationResultID();
+            try
+            {
+                EFDbContext context = new EFDbContext();
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                result.SetResultOperation(DeleteWagonsOfWay(ref context, id_park_state_way), id_park_state_way);
+                // Если нет ошибок тогда обновим базу
+                if (result.error == 0)
+                {
+                    result.SetResult(context.SaveChanges());
+                }
+                else
+                {
+                    result.SetResult((int)errors_ids_rwt.cancel_save_changes); // Ошибка изменение было отменено
+                }
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("DeleteWagonsOfWay(id_station={0}, user={1})",
+                    id_park_state_way, user), servece_owner, this.eventID);
+                result.SetResult((int)errors_ids_rwt.global);// Ошибка нет списка id
+            }
+            return result;
+        }
+        /// <summary>
+        /// Удалить все вагоны по заданному пути
+        /// </summary>
         /// <param name="context"></param>
         /// <param name="id_park_state_way"></param>
         /// <returns></returns>
-        public int DeletWagonsOfWay(ref EFDbContext context, int id_park_state_way)
+        public int DeleteWagonsOfWay(ref EFDbContext context, int id_park_state_way)
         {
             try
             {
@@ -326,7 +362,7 @@ namespace IDS
                     if (type > 0)
                     {
                         // Определена операция замещения вагонов
-                        int res_del = DeletWagonsOfWay(ref context, id_park_state_way);
+                        int res_del = DeleteWagonsOfWay(ref context, id_park_state_way);
                     }
                     else
                     {
