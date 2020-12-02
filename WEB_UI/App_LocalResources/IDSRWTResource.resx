@@ -367,7 +367,7 @@
     <value>Склад</value>
   </data>
   <data name="title_warehouse_new" xml:space="preserve">
-    <value>Переадресация</value>
+    <value>Переадресация (Заадресовка 10км)</value>
   </data>
   <data name="title_warehouse_shop" xml:space="preserve">
     <value>Цех</value>

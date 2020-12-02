@@ -847,6 +847,85 @@
                     }
                 });
             };
+            // Вывести отчет "Акт общей формы"
+            var view_report_gfa = function (sostav) {
+
+                var list_cars = sostav.ArrivalCars.filter(function (i) {
+                    return i.position_arrival;
+                });
+
+                var nums = getArrOfNameObjArr(list_cars, 'num');
+                pn_sel_wagon.Open(nums, function (select_nums) {
+                    // Получить отчет
+                    if (select_nums && select_nums.length > 0) {
+
+                        var mywindow = window.open('', 'Акт общей формы');
+                        mywindow.document.write('<html><head><title>Акт общей формы</title>');
+                        //mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/view/shared/print_aica.css">');
+                        mywindow.document.write('</head><body>');
+                        //mywindow.document.write('<div class=WordSection1>');
+                        //mywindow.document.write('<br />');
+                        //mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;text-indent:14.0cm"><span lang=UK style="font-size:14.0pt;line-height:107%;">Начальнику станції</span></p>');
+                        //mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;text-indent:14.0cm"><span lang=UK style="font-size:14.0pt;line-height:107%;">' + station_name + '</span></p>');
+                        //mywindow.document.write('<br />');
+                        //mywindow.document.write('<br />');
+                        //mywindow.document.write('<br />');
+                        //mywindow.document.write('<p class=MsoNormal align=center style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:center"><span style="font-size:14.0pt;line-height:107%;">ЗАЯВКА№________</span></p>');
+                        //mywindow.document.write('<p class=MsoNormal align=center style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:center"><span style="font-size:14.0pt;line-height:107%;">на видачу комерційного акту</span></p>');
+                        //mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span style="font-size:14.0pt;line-height:107%;">від__________ 20     р.</span></p>');
+                        //mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span style="font-size:14.0pt;line-height:107%;">________год.________хв.</span></p>');
+                        //mywindow.document.write('<br />');
+                        //mywindow.document.write('<br />');
+                        //mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span lang=UK style="font-size:14.0pt;line-height:107%;">Згідно зі ст. 129 Статуту залізниць України прошу скласти та надати комерційний акт на вантаж , що прибув потягом № ­­­­­­­ ­­­­­­­­­­­­­­_______________(дата)</span></p>');
+                        //mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span lang=UK style="font-size:14.0pt;line-height:107%;">__________(год./хв.) з невідповідності маси вантажу натурою з даними, зазначеними у залізничній накладній</span></p>');
+
+                        //mywindow.document.write('<br />');
+                        //mywindow.document.write('<br />');
+                        //mywindow.document.write('<table border=1 cellspacing=0 cellpadding=0 width=95% style="border-collapse:collapse;border:none">');
+                        //mywindow.document.write('<tr>');
+                        //mywindow.document.write('<td>Вагон №</td>');
+                        //mywindow.document.write('<td>Найменування вантажу</td>');
+                        //mywindow.document.write('<td>Станція відправлення</td>');
+                        //mywindow.document.write('<td>Відправник</td>');
+                        //mywindow.document.write('</tr>');
+
+                        //select_nums.forEach(function (item, index, array) {
+                        //    var wag = getObjOflist(sostav.ArrivalCars, 'num', item);
+
+                        //    var doc_uz = wag.Arrival_UZ_Vagon && wag.Arrival_UZ_Vagon.Arrival_UZ_Document ? wag.Arrival_UZ_Vagon.Arrival_UZ_Document : null;
+                        //    var vag_uz = wag.Arrival_UZ_Vagon ? wag.Arrival_UZ_Vagon : null;
+                        //    var dir_cargo = vag_uz && vag_uz.Directory_Cargo ? vag_uz.Directory_Cargo : null;
+                        //    var dir_es = doc_uz && doc_uz.Directory_ExternalStation ? doc_uz.Directory_ExternalStation : null;
+                        //    var dir_ship = doc_uz && doc_uz.Directory_Shipper ? doc_uz.Directory_Shipper : null;
+
+                        //    mywindow.document.write('<tr>');
+                        //    mywindow.document.write('<td>');
+                        //    mywindow.document.write(wag.num);
+                        //    mywindow.document.write('</td>');
+                        //    mywindow.document.write('<td>');
+                        //    mywindow.document.write(dir_cargo ? ids_inc.ids_dir.getValueObj(dir_cargo, 'cargo_name', lang) : '');
+                        //    mywindow.document.write('</td>');
+                        //    mywindow.document.write('<td>');
+                        //    mywindow.document.write(dir_es ? ids_inc.ids_dir.getValueObj(dir_es, 'station_name', lang) : '');
+                        //    mywindow.document.write('</td>');
+                        //    mywindow.document.write('<td class="shipper">');
+                        //    mywindow.document.write(dir_ship ? ids_inc.ids_dir.getValueObj(dir_ship, 'shipper_name', lang) : '');
+                        //    mywindow.document.write('</td>');
+                        //    mywindow.document.write('</tr>');
+
+                        //});
+                        //mywindow.document.write('</table>');
+                        //mywindow.document.write('<br />');
+                        //mywindow.document.write('<br />');
+                        //mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span lang=UK style="font-size:14.0pt;line-height:107%;">Представник</span></p>');
+                        //mywindow.document.write('</div>');
+                        mywindow.document.write('</body></html>');
+
+                        mywindow.document.close(); // necessary for IE >= 10
+                        mywindow.focus(); // necessary for IE >= 10
+                    }
+                });
+            };
 
             var view_report_dg20 = function (sostav) {
                 // Добавить пробелы
@@ -1028,6 +1107,7 @@
                             case 'report_api_kr_gl': view_report_api(sostav, 'Кривий Ріг-Головний'); break;
                             case 'report_apaca_kr': view_report_apaca(sostav, 'Кривий Ріг'); break;
                             case 'report_apaca_kr_gl': view_report_apaca(sostav, 'Кривий Ріг-Головний'); break;
+                            case 'report_gfa': view_report_gfa(sostav); break;
                             case 'report_dg20': view_report_dg20(sostav); break;
 
                             default: break;
@@ -1394,6 +1474,7 @@
             report_api_kr_gl: $('#report_api_kr_gl'),
             report_apaca_kr: $('#report_apaca_kr'),
             report_apaca_kr_gl: $('#report_apaca_kr_gl'),
+            report_gfa: $('#report_gfa'),
             report_dg20: $('#report_dg20'),
 
             init: function (list_station) {
@@ -1489,6 +1570,13 @@
                     event.preventDefault();
                     if (table_sostav.select_sostav) {
                         view_report(table_sostav.select_sostav.id, 'report_apaca_kr_gl');
+                    }
+                });
+
+                pn_sel.report_gfa.on('click', function (event) {
+                    event.preventDefault();
+                    if (table_sostav.select_sostav) {
+                        view_report(table_sostav.select_sostav.id, 'report_gfa');
                     }
                 });
                 //
@@ -4429,7 +4517,7 @@
                             cars_detali.SAP_inbound_delivery_num_input_sipply.val(sap_is.VBELN);
                             cars_detali.SAP_inbound_delivery_num_pos_sipply.val(sap_is.NUM_VBELN);
                             cars_detali.SAP_inbound_delivery_dt_sipply.val(sap_is.ERDAT !== null && sap_is.ETIME !== null ? sap_is.ERDAT + ' ' + sap_is.ETIME : '');
-                            cars_detali.SAP_inbound_delivery_unloading_ban.val(sap_is.KOD_R_10);
+                            cars_detali.SAP_inbound_delivery_unloading_ban.val(outSAP_KOD_R_10(sap_is.KOD_R_10));
                             cars_detali.SAP_inbound_delivery_ship.val(sap_is.NAME_SH);
                             cars_detali.SAP_inbound_delivery_material_code.val(sap_is.MATNR);
                             cars_detali.SAP_inbound_delivery_material_name.val(sap_is.MAKTX);

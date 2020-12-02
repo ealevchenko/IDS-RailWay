@@ -53,7 +53,7 @@
             });
         },
         //*************************************************************************************
-        // ОСНОВНАЯ ПАНЕЛЬ ВЫБОРА СОСТАВОВ
+        // ОСНОВНАЯ ПАНЕЛЬ ВЫБОРА СТАНЦИИ, СОСТОЯНИЯ ПАРКА
         //*************************************************************************************
         pn_select = {
             lang: null,
@@ -69,6 +69,15 @@
             select_park_status: $('select#select_park_status'),
             input_park_status_on_dt: $('input#input_park_status_on_dt'),
             park_state_info: $('div#park_state_info'),
+            bt_apply: $('<button type="button" class="btn btn-warning ml-3" id="apply_park_state">Проверить и применить</button>').on('click',
+                function (event) {
+                    event.preventDefault();
+                    // счтать текущий статус
+                    var id_park_status = get_select_number_value(pn_select.select_park_status);
+                    if (id_park_status > 0) {
+                        // Статус выбран
+                    }
+                }),
             //accordion_ways: $('div#accordion_ways'),
             // Добавить
             bt_create_park_status: $('button#create_park_status').on('click',
@@ -286,7 +295,7 @@
                     pn_select.input_park_status_on_dt.obj.prop('disabled', true);
                     pn_select.bt_create_park_status.prop('disabled', true);
                     var patk_state = pn_select.get_park_state_of_id(pn_select.id_park_status_select);
-                    pn_select.park_state_info.text('Состояние парка на :' + patk_state.state_on + '? созданное : ' + patk_state.create_user);
+                    pn_select.park_state_info.text('Состояние парка на :' + patk_state.state_on + ', созданное : ' + patk_state.create_user).append(pn_select.bt_apply);
                     // Сделаем выборку 
                     ids_inc.getViewStatusParkStateOfParkStateStation(pn_select.id_park_status_select, function (list_way_state) {
                         pn_select.list_way_state = list_way_state;
@@ -340,7 +349,7 @@
                     pn_select.bt_delete_park_status.prop('disabled', true);
                     pn_select.input_park_status_on_dt.obj.prop('disabled', false);
                     pn_select.bt_create_park_status.prop('disabled', false);
-                    pn_select.park_state_info.text('');
+                    pn_select.park_state_info.empty().text('');
                     table_ways_park_state.clear(); // Очистим путя
                     if (typeof callback === 'function') {
                         //LockScreenOff();
@@ -755,7 +764,7 @@
                         },
                         {
                             data: function (row, type, val, meta) {
-                                return !is_valid_num_wagon(Number(row.num)) ? 'Не системная': 'Системная'
+                                return !is_valid_num_wagon(Number(row.num)) ? 'Не системная' : 'Системная'
                             },
                             title: langView('field_num_valid', langs), width: "50px", orderable: false, searchable: false
                         },
@@ -932,7 +941,7 @@
     loadReference(function (result) {
         table_ways_park_state.init();
         table_wagon_park_state.init();
-        var list_station = ids_inc.ids_dir.getListStation('id', 'station_name', lang, function (i) { return i.station_uz === false && i.id!==99 ? true : false; });
+        var list_station = ids_inc.ids_dir.getListStation('id', 'station_name', lang, function (i) { return i.station_uz === false && i.id !== 99 ? true : false; });
         pn_select.init(lang, list_station);
         // Инициализация окна править группу ограничений
         LockScreenOff();
