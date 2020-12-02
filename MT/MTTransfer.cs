@@ -102,7 +102,7 @@ namespace MT
         public int DayRangeApproachesCars { get { return this.day_range_approaches_cars; } set { this.day_range_approaches_cars = value; } }
 
 
-        private int day_range_arrival_cars = 10; // тайм аут по времени для вагонов прибывших на УЗ
+        private int day_range_arrival_cars = 5; // тайм аут по времени для вагонов прибывших на УЗ
         public int DayRangeArrivalCars { get { return this.day_range_arrival_cars; } set { this.day_range_arrival_cars = value; } }
 
         private bool arrival_to_railway = true;  // Признак переносить вагоны в прибытие АМКР 

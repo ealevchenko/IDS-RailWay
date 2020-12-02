@@ -219,7 +219,7 @@ namespace Test
             #region Test_Metrans тест Метранса
             Test_Metrans tmt = new Test_Metrans();
             //tmt.MTTransfer_TransferApproaches();
-            //tmt.MTTransfer_TransferArrival();
+            tmt.MTTransfer_TransferArrival();
             //tmt.MTThread_SFTPTransfer();
             //tmt.MTTransfer_WebApiClientMT();
             //tmt.MTThread_Start_TransferWT();
@@ -233,7 +233,7 @@ namespace Test
 
             #region Test_UZ тест логирования
             Test_UZ tuz = new Test_UZ();
-            tuz.UZ_WebApiClientUZWagon();
+            //tuz.UZ_WebApiClientUZWagon();
             //tuz.UZ_XML();
             //tuz.UZ_SMS_GetOTPR();
             //tuz.UZ_SMS_GetUZ_DOC_Of_NumDoc();  // Поиск в УЗ по номеру документа
