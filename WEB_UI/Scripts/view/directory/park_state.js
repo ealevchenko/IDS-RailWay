@@ -747,6 +747,9 @@
                     language: language_table(langs),
                     jQueryUI: false,
                     "createdRow": function (row, data, index) {
+                        //if (data.id == 294) {
+                        //    var r = 4;
+                        //}
                         $(row).attr('id', data.id);
                     },
                     columns: [
@@ -774,23 +777,31 @@
                                 var r = meta.row;
                                 var id = row.id
                                 var num = row.num;
+                                var result_dislocation = 'Поиск..';
                                 ids_inc.getViewDislocationAMKRWagonOfNum(num, function (result_position) {
-                                    var td = $('table#wagon-park-state tbody tr#' + id).find('td:eq(' + c + ')');
+                                    //if (id == 294) {
+                                    //    var r = 4;
+                                    //}
+
+                                    //var tr = $('table#wagon-park-state tbody tr#' + id);
+                                    var tr = $('tr#' + id);
+                                    var td = tr.find('td:eq(' + c + ')');
                                     var result_dislocation = 'Вагона нет на территории АМКР';
                                     if (result_position && result_position.length > 0) {
                                         $('table#wagon-park-state tbody tr#' + id).removeClass('not-exist-amkr').addClass('exist-amkr');
                                         if (result_position[0].id_outer_way === null) {
                                             result_dislocation = 'Вагон находится на станции : ' + result_position[0]['station_name_' + lang] + '; <br/>Путь станции : ' + result_position[0]['way_num_' + lang] + ' - ' + result_position[0]['way_name_' + lang] + '; <br/>Позиция на пути : ' + result_position[0].position + ', прибыл на путь : ' + getReplaceTOfDT(result_position[0].way_start);
                                         } else {
-
+                                            result_dislocation = 'ss';
                                         }
                                     } else {
                                         $('table#wagon-park-state tbody tr#' + id).removeClass('exist-amkr').addClass('not-exist-amkr');
                                     }
                                     $(td).empty().append(result_dislocation);
-                                })
+                                });
                                 //return row.note;
-                                return 'Поиск..';
+                                //return 'Поиск..';
+                                return result_dislocation;
                             },
                             title: langView('field_note', langs), width: "400px", orderable: false, searchable: false
                         },
