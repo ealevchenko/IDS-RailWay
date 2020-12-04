@@ -747,9 +747,6 @@
                     language: language_table(langs),
                     jQueryUI: false,
                     "createdRow": function (row, data, index) {
-                        //if (data.id == 294) {
-                        //    var r = 4;
-                        //}
                         $(row).attr('id', data.id);
                     },
                     columns: [
@@ -779,11 +776,6 @@
                                 var num = row.num;
                                 var result_dislocation = 'Поиск..';
                                 ids_inc.getViewDislocationAMKRWagonOfNum(num, function (result_position) {
-                                    //if (id == 294) {
-                                    //    var r = 4;
-                                    //}
-
-                                    //var tr = $('table#wagon-park-state tbody tr#' + id);
                                     var tr = $('tr#' + id);
                                     var td = tr.find('td:eq(' + c + ')');
                                     var result_dislocation = 'Вагона нет на территории АМКР';
