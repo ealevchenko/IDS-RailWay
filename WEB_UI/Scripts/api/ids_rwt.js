@@ -3478,6 +3478,29 @@ IDS_RWT.prototype.postOperationDeleteWagonsParkStateOfWay = function (operation_
         },
     });
 };
+// Получить положение вагонов по указаному парку
+IDS_RWT.prototype.getViewDislocationAMKRWagonOfIDParkState = function (id_park_state_station, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/park_state/view/dislocation/amkr/park_state/id/' + id_park_state_station,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getViewDislocationAMKRWagonOfIDParkState", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 /* ----------------------------------------------------------
 функции для работы с объектами
 -------------------------------------------------------------*/

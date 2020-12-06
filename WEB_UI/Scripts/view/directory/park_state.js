@@ -76,6 +76,9 @@
                     var id_park_status = get_select_number_value(pn_select.select_park_status);
                     if (id_park_status > 0) {
                         // Статус выбран
+                        ids_inc.getViewDislocationAMKRWagonOfIDParkState(id_park_status, function (wagon_dislocation) {
+
+                        });
                     }
                 }),
             //accordion_ways: $('div#accordion_ways'),
@@ -503,6 +506,7 @@
                 table_ways_park_state.view(null);
             }
         },
+        // Таблица вагонов на путях
         table_wagon_park_state = {
             html_table: $('table#wagon-park-state'),
             // Панель правки вагонов
@@ -774,25 +778,47 @@
                                 var r = meta.row;
                                 var id = row.id
                                 var num = row.num;
-                                var result_dislocation = 'Поиск..';
+                                     if (id === 21) {
+                                        var s = '';
+                                    }                               var result_dislocation = 'Поиск..';
+
                                 ids_inc.getViewDislocationAMKRWagonOfNum(num, function (result_position) {
-                                    var tr = $('tr#' + id);
+                                    if (id === 21) {
+                                        var s = '';
+                                    }
+                                    var tb = $('table#wagon-park-state');
+                                    //var tr = $('table#wagon-park-state tbody tr#' + id);
+                                    var tr = tb.find('tbody tr#' + id);
                                     var td = tr.find('td:eq(' + c + ')');
-                                    var result_dislocation = 'Вагона нет на территории АМКР';
+                                    //var result_dislocation = 'Вагона нет на территории АМКР';
+
                                     if (result_position && result_position.length > 0) {
-                                        $('table#wagon-park-state tbody tr#' + id).removeClass('not-exist-amkr').addClass('exist-amkr');
-                                        if (result_position[0].id_outer_way === null) {
-                                            result_dislocation = 'Вагон находится на станции : ' + result_position[0]['station_name_' + lang] + '; <br/>Путь станции : ' + result_position[0]['way_num_' + lang] + ' - ' + result_position[0]['way_name_' + lang] + '; <br/>Позиция на пути : ' + result_position[0].position + ', прибыл на путь : ' + getReplaceTOfDT(result_position[0].way_start);
+
+                                        if (result_position[0].close_wir === null) {
+                                            //$('table#wagon-park-state tbody tr#' + id).removeClass('not-exist-amkr').addClass('exist-amkr');
+                                            tr.removeClass('not-exist-amkr').addClass('exist-amkr');
+                                            // Вагон на территории АМКР
+                                            if (result_position[0].id_outer_way === null) {
+                                                // Вагон на станции
+                                                result_dislocation = 'Вагон находится на станции : ' + result_position[0]['station_name_' + lang] + '; <br/>Путь станции : ' + result_position[0]['way_num_' + lang] + ' - ' + result_position[0]['way_name_' + lang] + '; <br/>Позиция на пути : ' + result_position[0].position + ', прибыл на путь : ' + getReplaceTOfDT(result_position[0].way_start);
+                                            } else {
+                                                // Вагон движется по территории.
+                                                result_dislocation = 'Вагон находится на перегоне : ' + result_position[0]['name_outer_way_' + lang] + '; <br/>Отправлен : ' + getReplaceTOfDT(result_position[0].outer_way_start);
+                                            }
                                         } else {
-                                            result_dislocation = 'ss';
+                                            // Вагон вышел
+                                            //$('table#wagon-park-state tbody tr#' + id).removeClass('exist-amkr').addClass('not-exist-amkr');
+                                            tr.removeClass('exist-amkr').addClass('not-exist-amkr');
+                                            result_dislocation = 'Вагон сдан на УЗ ' + getReplaceTOfDT(result_position[0].close_wir) + ' со станции ' + result_position[0]['station_name_' + lang];
                                         }
                                     } else {
-                                        $('table#wagon-park-state tbody tr#' + id).removeClass('exist-amkr').addClass('not-exist-amkr');
+                                        // Вагона небыло на территории
+                                        //$('table#wagon-park-state tbody tr#' + id).removeClass('exist-amkr').addClass('not-exist-amkr');
+                                        tr.removeClass('exist-amkr').addClass('not-exist-amkr');
+                                        result_dislocation = 'Вагона не заходил на территорию АМКР.';
                                     }
                                     $(td).empty().append(result_dislocation);
                                 });
-                                //return row.note;
-                                //return 'Поиск..';
                                 return result_dislocation;
                             },
                             title: langView('field_note', langs), width: "400px", orderable: false, searchable: false

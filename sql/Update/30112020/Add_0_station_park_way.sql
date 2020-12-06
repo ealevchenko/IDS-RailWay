@@ -1,3 +1,4 @@
+use [KRR-PA-CNT-Railway]
 SET IDENTITY_INSERT [IDS].[Directory_Station] ON 
 
 INSERT [IDS].[Directory_Station] ([id], [station_name_ru], [station_name_en], [station_abbr_ru], [station_abbr_en], [exit_uz], [station_uz], [default_side], [code], [idle_time]) VALUES (99, N'До выяснения', N'Until clarification', N'?', N'?', 0, 0, NULL, NULL, NULL)

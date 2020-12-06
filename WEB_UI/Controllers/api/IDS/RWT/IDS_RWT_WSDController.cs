@@ -334,36 +334,49 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string user { get; set; }
     }
 
-    public  class view_wagon_position
+    public class view_wagon_dislocation
     {
-        public long id { get; set; }
-        public long id_wagon_internal_routes { get; set; }
-        public int id_station { get; set; }
+        public long id_wir { get; set; }
+        public int num { get; set; }
+        public long? id_arrival_car { get; set; }
+        public long? id_sap_incoming_supply { get; set; }
+        public bool? doc_outgoing_car { get; set; }
+        public long? id_outgoing_car { get; set; }
+        public long? id_sap_outbound_supply { get; set; }
+        public string note_wir { get; set; }
+        public DateTime create_wir { get; set; }
+        public string create_user_wir { get; set; }
+        public DateTime? close_wir { get; set; }
+        public string close_user_wir { get; set; }
+        public long? parent_id_wir { get; set; }
+        public long? id_wim { get; set; }
+        public long? id_wagon_internal_routes { get; set; }
+        public int? id_station { get; set; }
         public string station_name_ru { get; set; }
         public string station_name_en { get; set; }
         public string station_abbr_ru { get; set; }
         public string station_abbr_en { get; set; }
-        public int id_way { get; set; }
+        public int? id_way { get; set; }
         public string way_num_ru { get; set; }
         public string way_num_en { get; set; }
         public string way_name_ru { get; set; }
         public string way_name_en { get; set; }
         public string way_abbr_ru { get; set; }
         public string way_abbr_en { get; set; }
-        public DateTime way_start { get; set; }
+        public DateTime? way_start { get; set; }
         public DateTime? way_end { get; set; }
         public int? id_outer_way { get; set; }
         public string name_outer_way_ru { get; set; }
         public string name_outer_way_en { get; set; }
         public DateTime? outer_way_start { get; set; }
         public DateTime? outer_way_end { get; set; }
-        public int position { get; set; }
-        public string note { get; set; }
-        public DateTime create { get; set; }
-        public string create_user { get; set; }
-        public DateTime? close { get; set; }
-        public string close_user { get; set; }
-        public long? parent_id { get; set; }
+        public int? position { get; set; }
+        public string note_wim { get; set; }
+        public DateTime? create_wim { get; set; }
+        public string create_user_wim { get; set; }
+        public DateTime? close_wim { get; set; }
+        public string close_user_wim { get; set; }
+        public long? parent_id_wim { get; set; }
     }
 
     [RoutePrefix("api/ids/rwt/wsd")]
@@ -546,20 +559,20 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         }
 
         #region ПОИСК ВАГОНОВ
-        // GET: api/ids/rwt/wsd/view/dislocation/amkr/wagon/num/54895305
+        // GET: api/ids/rwt/wsd/view/dislocation/amkr/wagon/num/63531040
         /// <summary>
         /// Поиск текущего положения вагона на территории АМКР
         /// </summary>
-        /// <param name="id_outer_way"></param>
+        /// <param name="num"></param>
         /// <returns></returns>
         [Route("view/dislocation/amkr/wagon/num/{num:int}")]
-        [ResponseType(typeof(view_wagon_position))]
+        [ResponseType(typeof(view_wagon_dislocation))]
         public IHttpActionResult GetViewDislocationAMKRWagonOfNum(int num)
         {
             try
             {
                 string sql = "select * from [IDS].[get_dislocation_wagon_of_num](" + num + ")";
-                List<view_wagon_position> position = db.Database.SqlQuery<view_wagon_position>(sql).ToList();
+                List<view_wagon_dislocation> position = db.Database.SqlQuery<view_wagon_dislocation>(sql).ToList();
                 return Ok(position);
             }
             catch (Exception e)
