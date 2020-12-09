@@ -69,6 +69,7 @@
             select_park_status: $('select#select_park_status'),
             input_park_status_on_dt: $('input#input_park_status_on_dt'),
             park_state_info: $('div#park_state_info'),
+            // Принять 
             bt_apply: $('<button type="button" class="btn btn-warning ml-3" id="apply_park_state">Проверить и применить</button>').on('click',
                 function (event) {
                     event.preventDefault();
@@ -77,7 +78,49 @@
                     if (id_park_status > 0) {
                         // Статус выбран
                         ids_inc.getViewDislocationAMKRWagonOfIDParkState(id_park_status, function (wagon_dislocation) {
+                            var wagons_not_arrival = []; // Вагоны которые не заходили
+                            var wagons_exit = []; // Вагоны которые вышли
+                            var wagons_amkr = []; // Вагоны которые на АМКР
 
+                            if (wagon_dislocation && wagon_dislocation.length > 0) {
+                                $.each(wagon_dislocation, function (i, el) {
+                                    if (el.id_wir === null) {
+                                        // Вагон не заходил
+                                        wagons_not_arrival.push(el);
+                                        //pn_select.val_add_park_status.out_error_message("Станция id :" + el.id + ". Код ошибки : " + el.result);
+                                    } else {
+                                        if (el.close_wim !== null) {
+                                            wagons_exit.push(el);
+                                        } else {
+                                            wagons_amkr.push(el);
+                                        }
+                                    }
+                                });
+                                // Есть вагоны на амкр, проверим на повтор
+                                if (wagons_amkr && wagons_amkr.length > 0) {
+                                    // Провкерка на повторяющиеся номера
+                                    var arr_res = [];
+                                    wagons_amkr.sort();
+                                    for (var i = 1; i < wagons_amkr.length; i++) {
+                                        if (wagons_amkr[i].num === wagons_amkr[i - 1].num) {
+                                            var is_unique = true;
+                                            for (var k = 0; k < arr_res.length; k++) {
+                                                if (arr_res[k].num === wagons_amkr[i].num) {
+                                                    is_unique = false;
+                                                    break;
+                                                }
+                                            }
+                                            if (is_unique) {
+                                                arr_res.push(wagons_amkr[i]);
+                                            }
+                                        }
+                                    }
+                                    // Вывод сообщений повторяющихся номеров
+                                    $.each(arr_res, function (i, el) {
+                                        pn_select.val_add_park_status.out_error_message('Ошибка, введеный номер :' + el.num + ' повторяется.');
+                                    });
+                                }
+                            }
                         });
                     }
                 }),
