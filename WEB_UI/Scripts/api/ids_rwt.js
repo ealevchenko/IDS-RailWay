@@ -3501,6 +3501,29 @@ IDS_RWT.prototype.getViewDislocationAMKRWagonOfIDParkState = function (id_park_s
         },
     });
 };
+// Получить положение вагонов за указаную дату
+IDS_RWT.prototype.getViewDislocationAMKRWagonOfDate = function (date, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/park_state/view/dislocation/amkr/park_state/date/' + toISOStringTZ(date).substring(0, 19),
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getViewDislocationAMKRWagonOfDate", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 /* ----------------------------------------------------------
 функции для работы с объектами
 -------------------------------------------------------------*/

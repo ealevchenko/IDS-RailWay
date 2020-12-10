@@ -12,6 +12,7 @@ $.Text_Common =
         'mess_load_data': 'Получение запрашиваемых данных...',
         'mess_operation': 'Выполняю операцию...',
         'mess_update_uz': 'Обновляю данные на УЗ...',
+        'mess_checking_data': 'Проверяю данные...',
     },
     'en':  //default language: English
     {
@@ -22,7 +23,7 @@ $.Text_Common =
         'mess_load_data': 'Receiving the requested data...',
         'mess_operation': 'Performing an operation...',
         'mess_update_uz': 'I am updating the data on the UZ ...',
-
+        'mess_checking_data': 'Checking data...',
     }
 
 };
