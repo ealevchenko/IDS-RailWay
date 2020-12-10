@@ -67,5 +67,5 @@ SELECT
 	[IDS].[Directory_Ways] as dir_way ON dir_way.id = wim.[id_way] Left JOIN
 	[IDS].[Directory_OuterWays] as dir_oway ON dir_oway.id = wim.[id_outer_way] Left JOIN
 	[IDS].[Directory_Ways] as dir_way_ps ON dir_way_ps.id = ps_way.[id_way]
-WHERE (ps_way.id_park_state_station = 2)
+WHERE (ps_way.id_park_state_station = 16)
 order by ps_way.[position], ps_wag.[position]
