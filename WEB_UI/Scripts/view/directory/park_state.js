@@ -516,8 +516,9 @@
             // Применить статус
             aplly: function () {
                 pn_select.validation_park_state(function (wagons) {
-                    if (wagons) {
+                    if (wagons && wagons.length>0) {
                         // Прошли валидацию
+
                     }
                 });
             }
