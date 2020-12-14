@@ -436,9 +436,9 @@ namespace EFIDS.Helper
                 create = c.create,
                 create_user = c.create_user,
                 change = c.change,
-                change_user = c.change_user, 
+                change_user = c.change_user,
                 delete = c.delete,
-                delete_user = c.delete_user, 
+                delete_user = c.delete_user,
             };
         }
         // Справочник годность по отправке
@@ -1617,6 +1617,28 @@ namespace EFIDS.Helper
                 change = l.change,
                 change_user = l.change_user,
                 InstructionalLettersWagon = l.InstructionalLettersWagon.ToList().Select(c => c.GetInstructionalLettersWagon()).ToList(),
+            };
+        }
+
+        public static ParkState_Station GetParkState_Station(this ParkState_Station p)
+        {
+            if (p == null) return null;
+            return new ParkState_Station()
+            {
+                id = p.id,
+                id_station = p.id_station,
+                state_on = p.state_on,
+                note = p.note,
+                create = p.create,
+                create_user = p.create_user,
+                change = p.change,
+                change_user = p.change_user,
+                delete = p.delete,
+                delete_user = p.delete_user,
+                applied = p.applied,
+                applied_user = p.applied_user, 
+                ParkState_Way = null
+
             };
         }
 

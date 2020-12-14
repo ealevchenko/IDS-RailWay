@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
+using EFIDS.Helper;
 
 namespace WEB_UI.Controllers.api.IDS.RWT
 {
@@ -217,6 +218,47 @@ namespace WEB_UI.Controllers.api.IDS.RWT
     {
         private EFDbContext db = new EFDbContext();
 
+        // GET: api/ids/rwt/park_state/park_state_station/id/21
+        /// <summary>
+        /// Получить состояние парка по id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Route("park_state_station/id/{id:int}")]
+        [ResponseType(typeof(ParkState_Station))]
+        public IHttpActionResult GetParkState_Station(int id)
+        {
+            try
+            {
+                ParkState_Station pss = db.ParkState_Station.Where(p => p.id == id).ToList().Select(c => c.GetParkState_Station()).FirstOrDefault();
+                return Ok(pss);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // PUT api/ids/rwt/park_state/park_state_station/
+        [HttpPut]
+        [Route("park_state_station")]
+        public int PutParkState_Station([FromBody]ParkState_Station value)
+        {
+            try
+            {
+                EFParkState_Station ef_pss = new EFParkState_Station(db);
+                ef_pss.Update(value);
+                int res = ef_pss.Save();
+                return res > 0 ? value.id : res;
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+        }
+
+        #region ВЫБОРКА VIEW
+
         // GET: api/ids/rwt/park_state/view/station_state/station/6
         /// <summary>
         /// Показать все состояния парков по указаной станции (оптимизированный)
@@ -283,6 +325,10 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 return BadRequest(e.Message);
             }
         }
+
+        #endregion
+
+        #region ВЫПОЛНЕНИЕ ОПЕРАЦИЙ
 
         // POST api/ids/rwt/park_state/station/create/
         /// <summary>
@@ -398,7 +444,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 return BadRequest(e.Message);
             }
         }
-
+        #endregion
 
         #region ПОИСК ВАГОНОВ
         // GET: api/ids/rwt/park_state/view/dislocation/amkr/park_state/id/2

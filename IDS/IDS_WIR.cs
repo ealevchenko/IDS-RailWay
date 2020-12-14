@@ -237,7 +237,7 @@ namespace IDS
                 if (wim.id_way != id_way_from) return (int)errors_wir.not_set_way_wir;
                 wagon.SetStationWagon(wim.id_station, id_way_on, lead_time, position_on, null, user);
                 // Установим и закроем операцию дислокация -3              
-                wagon.SetOpenOperation(3, lead_time.AddMilliseconds(-10), null, null, null, null, null, user).SetCloseOperation(lead_time, null, user);
+                wagon.SetOpenOperation(3, lead_time.AddMinutes(-10), null, null, null, null, null, user).SetCloseOperation(lead_time, null, user);
                 //context.Update(wagon); // Обновим контекст
                 return 1;
             }
@@ -905,8 +905,10 @@ namespace IDS
                 // Получим текущее положение вагона
                 WagonInternalMovement wim = wagon.GetLastMovement();
                 if (wim == null) return (int)errors_wir.not_open_wir;
+                // Проверим вагон уже стоит ?
+                if (wim.id_station == id_station && wim.id_way == id_way && wim.position == position) return 0; // Вагон стоит на станции на пути и в позиции, пропустить операцию
                 string note = "Перенесён по состоянию парка";
-                wagon.SetStationWagon(wim.id_station, id_way, lead_time, position, note, user);
+                wagon.SetStationWagon(id_station, id_way, lead_time, position, note, user);
                 // Установим и закроем операцию ручная расстановка -3              
                 wagon.SetOpenOperation(8, lead_time.AddMinutes(-10), null, null, null, null, null, user).SetCloseOperation(lead_time, null, user);
                 //context.Update(wagon); // Обновим контекст
@@ -968,7 +970,7 @@ namespace IDS
                     foreach (WagonInternalMovement wim in old_dislocation)
                     {
                         WagonInternalRoutes wir = wim.WagonInternalRoutes;
-                        int result = DislocationWagon(ref context, wim.id_way, 0, position, lead_time, wir, null, null, user);
+                        int result = ApplyWagonParkState(ref context, 99, 0, position, lead_time, wir, user);
                         rt.SetMovedResult(result, wir.num);
                         position++;
                     }

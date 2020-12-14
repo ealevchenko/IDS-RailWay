@@ -3309,6 +3309,53 @@ IDS_RWT.prototype.getViewDislocationAMKRWagonOfNum = function (num, callback) {
 //======================================================================================================
 //                                  РАЗДЕЛ СОСТОЯНИЕ ПАРКА
 //======= ParkState (Состояние парка) =========================================================================
+IDS_RWT.prototype.getParkState_StationOfID = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/park_state/park_state_station/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getParkState_StationOfID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Обновить состояние парка
+IDS_RWT.prototype.putParkState_Station = function (pss, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/park_state/park_state_station/',
+        type: 'PUT',
+        data: JSON.stringify(pss),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.putParkState_Station", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 // Получить список сотояний парка по указаной станции
 IDS_RWT.prototype.getViewParkStateOfStation = function (id_station, callback) {
     $.ajax({
@@ -3472,6 +3519,31 @@ IDS_RWT.prototype.postOperationDeleteWagonsParkStateOfWay = function (operation_
         error: function (x, y, z) {
             LockScreenOff();
             OnAJAXError("IDS_RWT.postOperationDeleteWagonsParkStateOfWay", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Операция удалить  вагоны на пути парка 
+IDS_RWT.prototype.postOperationApplyWagonsParkState = function (operation_value, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/park_state/way/wagon/apply/',
+        type: 'POST',
+        data: JSON.stringify(operation_value),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postOperationApplyWagonsParkState", x, y, z);
         },
         complete: function () {
             AJAXComplete();
