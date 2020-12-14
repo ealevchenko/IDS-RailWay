@@ -626,7 +626,7 @@ var ALERT = function (alert) {
 // Очистить сообщения
 ALERT.prototype.clear_message = function () {
     if (this.alert) {
-        this.alert.hide().text('');
+        this.alert.hide().text('').removeClass('alert-success alert-warning alert-danger');
     }
 };
 // Вывести сообщение об ошибке
@@ -682,7 +682,7 @@ VALIDATION.prototype.clear_error = function (obj) {
 // Очистить сообщения
 VALIDATION.prototype.clear_message = function () {
     if (this.alert) {
-        this.alert.hide().text('');
+        this.alert.hide().text('').removeClass('alert-success alert-warning alert-danger');
         this.type_message = 0;
     }
 };
@@ -714,10 +714,10 @@ VALIDATION.prototype.out_warning_message = function (message) {
 VALIDATION.prototype.out_info_message = function (message) {
     if (this.alert) {
         if (this.type_message === 0) {
-            this.alert.show().removeClass('alert-success alert-danger').addClass('alert-success');
+            this.alert.show().removeClass('alert-warning alert-danger').addClass('alert-success');
         }
         if (message) {
-            this.alert.text(message);
+            this.alert.text(message).append($('<br />'));
         }
     }
 };
