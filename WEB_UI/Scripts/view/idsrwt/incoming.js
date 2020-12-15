@@ -5165,6 +5165,10 @@
 
                 valid = valid & cars_detali.val_arrival_car.checkInputOfDirectory(cars_detali.uz_cargo_kod_etsng, this, 'ids_inc.ids_dir.getCargoETSNG_Of_Code', "Указанного кода груза ЕТ СНГ нет в справочнике ИДС.");
                 valid = valid & cars_detali.val_arrival_car.checkInputOfDirectory_IsNull(cars_detali.uz_cargo_kod_gng, this, 'ids_inc.ids_dir.getCargoGNG_Of_Code', "Указанного кода груза ГНГ нет в справочнике ИДС.");
+                if (cars_detali.select_id_cargo===null) {
+                    valid = valid & cars_detali.val_arrival_car.set_object_error(cars_detali.uz_cargo_group_cargo, "Груз неопределен");
+                }
+
 
                 valid = valid & cars_detali.validation_vag_station_on_amkr(valid, false);
                 valid = valid & cars_detali.validation_vag_devision_on_amkr(valid, false);
