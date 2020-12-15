@@ -1074,6 +1074,7 @@
     <EmbeddedResource Include="App_LocalResources\IDSRWTResource.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>IDSRWTResource.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
