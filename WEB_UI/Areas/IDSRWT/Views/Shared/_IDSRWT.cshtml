@@ -32,7 +32,19 @@
                             <a class="nav-link" href='@Url.Action("Index", "Home", new { area = "" })'>Номе</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href='@Url.Action("Index", "Home", new { area = "IDSRWT" })'>ВДС «ЖД АМКР»</a>
+                            @*<a class="nav-link" href='@Url.Action("Index", "Home", new { area = "IDSRWT" })'>ВДС «ЖД АМКР»</a>*@
+                            <div class="dropdown  mr-3">
+                                @*<button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown">
+                                    ВДС «ЖД АМКР»
+                                </button>*@
+                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href=#>ВДС «ЖД АМКР»</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href='@Url.Action("Arrival", "Home", new { area = "IDSRWT" })' target="_blank">@WEB_UI.App_LocalResources.IDSRWTResource.arrival_title</a>
+                                    <a class="dropdown-item" href='@Url.Action("Incoming", "Home", new { area = "IDSRWT" })' target="_blank">@WEB_UI.App_LocalResources.IDSRWTResource.incoming_title</a>
+                                    <a class="dropdown-item" href='@Url.Action("WSD", "Home", new { area = "IDSRWT" })' target="_blank">@WEB_UI.App_LocalResources.IDSRWTResource.wsd_title</a>
+                                    <a class="dropdown-item" href='@Url.Action("Outgoing", "Home", new { area = "IDSRWT" })' target="_blank">@WEB_UI.App_LocalResources.IDSRWTResource.outgoing_title</a>
+                                </div>
+                            </div>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href='@Url.Action("Index", "Home", new { area = "IDSMORS" })'>ИДС"УСПС"</a>
@@ -42,6 +54,8 @@
                         </li>
                     </ul>
                 </div>
+
+
             </div>
         </div>
     </nav>

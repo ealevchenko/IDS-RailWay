@@ -167,3 +167,28 @@ header {
     font-size: xx-large;
     color: #0033CC;
 }
+
+
+    .navbar-amkr .nav > li > div > a,
+    .navbar-amkr .nav > li > div > a:focus {
+        text-transform: uppercase;
+        font-weight: 700;
+        font-size: 13px;
+        color: rgba(255, 252, 252, 0.7);
+    }
+
+        .navbar-amkr .nav > li > div > a:hover,
+        .navbar-amkr .nav > li > div > a:focus:hover {
+            color: white;
+        }
+
+    .navbar-amkr .nav > li.active > div > a,
+    .navbar-amkr .nav > li.active > div > a:focus {
+        color: white !important;
+        background-color: transparent;
+    }
+
+        .navbar-amkr .nav > li.active > div > a:hover,
+        .navbar-amkr .nav > li.active > div > a:focus:hover {
+            background-color: transparent;
+        }
