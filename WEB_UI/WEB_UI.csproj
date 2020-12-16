@@ -349,6 +349,7 @@
     <Content Include="Content\DataTables\media\images\sort_both.png" />
     <Content Include="Content\DataTables\media\images\sort_desc.png" />
     <Content Include="Content\DataTables\media\images\sort_desc_disabled.png" />
+    <Content Include="Content\view\shared\print_gfa.css" />
     <Content Include="Images\directory\line-icon-3_.svg" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
