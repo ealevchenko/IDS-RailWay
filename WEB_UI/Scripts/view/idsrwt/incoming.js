@@ -1033,7 +1033,7 @@
                         mywindow.document.write(dir_sd ? ids_inc.ids_dir.getValueObj(dir_sd, 'certification_data', lang) : '');
                         mywindow.document.write('</td>');
                         mywindow.document.write('<td valign=top style="width:21.3pt;border:solid windowtext 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.35pt">');
-                        mywindow.document.write(vag_uz.vesg ? vag_uz.vesg : '');
+                        mywindow.document.write(vag_uz.vesg ? Number(vag_uz.vesg/1000).toFixed(2) : '');
                         mywindow.document.write('</td>');
                         mywindow.document.write('<td valign=top style="width:21.3pt;border:solid windowtext 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.35pt">');
                         mywindow.document.write(vag_uz.vesg_reweighing ? vag_uz.vesg_reweighing : '');
@@ -1055,9 +1055,35 @@
 
                 var list_cars = sostav.ArrivalCars.filter(function (i) {
                     return i.position_arrival;
+                }).sort(function (a, b) {
+                    return a.Arrival_UZ_Vagon.Directory_Divisions.id_division_on_amkr - b.Arrival_UZ_Vagon.Directory_Divisions.id_division_on_amkr;
                 });
 
-                var nums = getArrOfNameObjArr(list_cars, 'num');
+                //$.each(list_cars, function (i, el) {
+
+                //});
+
+
+                var nums = list_cars.reduce(function (r, i) {
+                    r[i.Arrival_UZ_Vagon.Directory_Divisions["division_abbr_" + lang]] = r[i.Arrival_UZ_Vagon.Directory_Divisions["division_abbr_" + lang]] || [];
+                    r[i.Arrival_UZ_Vagon.Directory_Divisions["division_abbr_" + lang]].push(i);
+                    return r;
+                }, {});
+                var arr1 = [];
+                for (var key in nums) {
+                    arr1.push(nums[key]);
+                }
+                //const arr = [{ name: "one", q: 5 }, { name: "one", q: 3 }, { name: "two", q: 1 }, { name: "two", q: 6 }, { name: "three", q: 10 }]
+                //const result = list_cars.reduce(function (acc, obj) {
+                //    var index = acc.indexOf(function (elm) { return elm.Arrival_UZ_Vagon.Directory_Divisions.division_abbr_ru == obj.Arrival_UZ_Vagon.Directory_Divisions.division_abbr_ru });
+                //    if (index == -1) { return acc.concat(Object.assign({}, obj)) };
+                //    acc[index]['q'] += obj.q;
+                //    return acc
+                //}, []);
+
+
+
+                //var nums = getArrOfNameObjArr(list_cars, 'num');
 
 
                 pn_rep_sel_wagon.Open(nums, function (page_nums1, page_nums2) {
@@ -1739,7 +1765,8 @@
         //*************************************************************************************
         pn_rep_sel_wagon = {
             obj: null,
-            list_nums: $('ul#list_nums'),
+            list_divis: $('div#fs-list-nums'),
+            //list_nums: $('ul#list_nums'),
             report_page1: $('ul#report_page1'),
             report_page2: $('ul#report_page2'),
             callback_ok: function () {
@@ -1787,18 +1814,29 @@
                 if (typeof callback_ok === 'function') {
                     pn_rep_sel_wagon.callback_ok = callback_ok;
                 }
+                //$("#list_nums, #report_page1, #report_page2").sortable({
+                //    connectWith: ".connectedSortable"
+                //}).disableSelection();
+                //pn_rep_sel_wagon.list_nums.empty();
+                pn_rep_sel_wagon.list_divis.empty();
+                pn_rep_sel_wagon.report_page1.empty();
+                pn_rep_sel_wagon.report_page2.empty();
+
+                $.each(list_num, function (i, el) {
+                    if (el && el.length > 0) {
+                        var list_nums = $('<ul id="list_nums" class="connectedSortable"></ul>');
+                        for (inum = 0; inum < el.length; inum++) {
+                            // Добавить документ в таблицу
+                            list_nums.append($('<li num="' + el[inum].num + '" class="ui-state-default">' + el[inum].num + '</li>'));
+                        }
+                        pn_rep_sel_wagon.list_divis.append($('<div class="name_division mb-1 mt-1 text-center text-primary font-weight-bold font-italic">' + i + '</div>')).append(list_nums);
+                    }
+                });
+
                 $("#list_nums, #report_page1, #report_page2").sortable({
                     connectWith: ".connectedSortable"
                 }).disableSelection();
-                pn_rep_sel_wagon.list_nums.empty();
-                pn_rep_sel_wagon.report_page1.empty();
-                pn_rep_sel_wagon.report_page2.empty();
-                if (list_num && list_num.length > 0) {
-                    for (i = 0; i < list_num.length; i++) {
-                        // Добавить документ в таблицу
-                        pn_rep_sel_wagon.list_nums.append($('<li num="' + list_num[i] + '" class="ui-state-default">' + list_num[i] + '</li>'));
-                    }
-                }
+
                 pn_rep_sel_wagon.obj.dialog("open");
             },
             // Сохранить изменения
@@ -5165,7 +5203,7 @@
 
                 valid = valid & cars_detali.val_arrival_car.checkInputOfDirectory(cars_detali.uz_cargo_kod_etsng, this, 'ids_inc.ids_dir.getCargoETSNG_Of_Code', "Указанного кода груза ЕТ СНГ нет в справочнике ИДС.");
                 valid = valid & cars_detali.val_arrival_car.checkInputOfDirectory_IsNull(cars_detali.uz_cargo_kod_gng, this, 'ids_inc.ids_dir.getCargoGNG_Of_Code', "Указанного кода груза ГНГ нет в справочнике ИДС.");
-                if (cars_detali.select_id_cargo===null) {
+                if (cars_detali.select_id_cargo === null) {
                     valid = valid & cars_detali.val_arrival_car.set_object_error(cars_detali.uz_cargo_group_cargo, "Груз неопределен");
                 }
 
