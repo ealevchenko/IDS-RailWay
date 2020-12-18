@@ -571,7 +571,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         {
             try
             {
-                string sql = "select * from [IDS].[get_dislocation_wagon_of_num](" + num + ")";
+                string sql = "select top(1) * from [IDS].[get_dislocation_wagon_of_num](" + num + ") order by id_wir desc";
                 List<view_wagon_dislocation> position = db.Database.SqlQuery<view_wagon_dislocation>(sql).ToList();
                 return Ok(position);
             }

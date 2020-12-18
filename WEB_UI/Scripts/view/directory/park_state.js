@@ -412,10 +412,12 @@
                                     // Вагоны по текущему статусу разделены
                                     // проверим вагоны которые не заходили
                                     if (wagons_not_arrival && wagons_not_arrival.length > 0) {
+                                        valid = false;
                                         pn_select.val_add_park_status.out_error_message('Ошибка, найдено :' + wagons_not_arrival.length + ' вагонов которые не разу не заходили на АМКР');
                                     }
                                     // проверим вагоны которые ушли
                                     if (wagons_exit && wagons_exit.length > 0) {
+                                        valid = false;
                                         pn_select.val_add_park_status.out_error_message('Ошибка, найдено :' + wagons_exit.length + ' вагонов которые уже зданы на УЗ');
                                     }
                                     // Есть вагоны на амкр, проверим на повтор
@@ -440,6 +442,7 @@
                                         }
                                         // Вывод сообщений повторяющихся номеров
                                         $.each(arr_res, function (i, el) {
+                                            valid = false;
                                             pn_select.val_add_park_status.out_error_message('Ошибка, введеный номер :' + el.num + ' повторяется.');
                                         });
 
@@ -453,6 +456,7 @@
                                             callback(valid ? list_internal : null);
                                         }
                                     } else {
+                                        valid = false;
                                         pn_select.val_add_park_status.out_error_message('Ошибка, в текущем положении парка нет вагонов на территории АМКР');
                                         LockScreenOff();
                                         if (typeof callback === 'function') {
@@ -460,6 +464,7 @@
                                         }
                                     }
                                 } else {
+                                    valid = false;
                                     pn_select.val_add_park_status.out_error_message('Ошибка, Вагонов в текущем положении парка нет для проверки за указаную дату:' + ps.state_on + ' - нет.');
                                     LockScreenOff();
                                     if (typeof callback === 'function') {
@@ -467,6 +472,7 @@
                                     }
                                 }
                             } else {
+                                valid = false;
                                 // Вагонов нет
                                 pn_select.val_add_park_status.out_error_message('Ошибка, Вагонов для проверки за указаную дату:' + ps.state_on + ' - нет.');
                                 LockScreenOff();
@@ -971,9 +977,9 @@
                                 } var result_dislocation = 'Поиск..';
 
                                 ids_inc.getViewDislocationAMKRWagonOfNum(num, function (result_position) {
-                                    if (id === 21) {
-                                        var s = '';
-                                    }
+                                    //if (id === 21) {
+                                    //    var s = '';
+                                    //}
                                     var tb = $('table#wagon-park-state');
                                     //var tr = $('table#wagon-park-state tbody tr#' + id);
                                     var tr = tb.find('tbody tr#' + id);
@@ -997,13 +1003,13 @@
                                             // Вагон вышел
                                             //$('table#wagon-park-state tbody tr#' + id).removeClass('exist-amkr').addClass('not-exist-amkr');
                                             tr.removeClass('exist-amkr').addClass('not-exist-amkr');
-                                            result_dislocation = 'Вагон сдан на УЗ ' + getReplaceTOfDT(result_position[0].close_wir) + ' со станции ' + result_position[0]['station_name_' + lang];
+                                            result_dislocation = 'Вагон сдан на УЗ ' + getReplaceTOfDT(result_position[0].way_end) + ' со станции ' + result_position[0]['station_name_' + lang];
                                         }
                                     } else {
                                         // Вагона небыло на территории
                                         //$('table#wagon-park-state tbody tr#' + id).removeClass('exist-amkr').addClass('not-exist-amkr');
                                         tr.removeClass('exist-amkr').addClass('not-exist-amkr');
-                                        result_dislocation = 'Вагона не заходил на территорию АМКР.';
+                                        result_dislocation = 'Вагон не заходил на территорию АМКР.';
                                     }
                                     $(td).empty().append(result_dislocation);
                                 });
