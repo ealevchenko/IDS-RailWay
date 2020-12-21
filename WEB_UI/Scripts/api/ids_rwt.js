@@ -2657,6 +2657,32 @@ IDS_RWT.prototype.getArrivalCarsOfPeriodNums = function (start, stop, nums, call
         },
     });
 };
+// Получить перечень вагонов за указаный период выбранные вагоны
+IDS_RWT.prototype.postArrivalCarsOfPeriodNums = function (period, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/arrival_cars/period/',
+        type: 'POST',
+        data: JSON.stringify(period),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postArrivalCarsOfPeriodNums", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 //Обновить 
 IDS_RWT.prototype.putArrivalCars = function (arrival_cars, callback) {
     $.ajax({

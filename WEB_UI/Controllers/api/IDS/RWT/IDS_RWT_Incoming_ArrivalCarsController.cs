@@ -11,6 +11,12 @@ using EFIDS.Entities;
 
 namespace WEB_UI.Controllers.api
 {
+    public class OperationPeriodNums {
+        public DateTime start { get; set; }
+        public DateTime stop { get; set; }
+        public List<int> nums { get; set; }
+    }
+    
     [RoutePrefix("api/ids/rwt/arrival_cars")]
     public class IDS_RWT_Incoming_ArrivalCarsController : ApiController
     {
@@ -119,6 +125,41 @@ namespace WEB_UI.Controllers.api
                 foreach (ArrivalCars car in list)
                 {
                     if (nums.IndexOf(car.num.ToString()) > -1)
+                    {
+                        list_result.Add(car);
+                    }
+                }
+                return Ok(list_result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST: api/ids/rwt/arrival_cars/period/
+        [HttpPost]
+        [Route("period")]
+        [ResponseType(typeof(ArrivalCars))]
+        public IHttpActionResult PostArrivalCarsOfPeriodNums([FromBody]OperationPeriodNums value)
+        {
+            try
+            {
+                //string sql = "SELECT IDS.ArrivalCars.* FROM IDS.ArrivalCars INNER JOIN IDS.ArrivalSostav ON IDS.ArrivalCars.id = IDS.ArrivalSostav.id WHERE (IDS.ArrivalSostav.date_arrival >= CONVERT(datetime,'" + start.ToString("yyyy-MM-dd HH:mm:ss") + "',120) and IDS.ArrivalSostav.date_arrival <= CONVERT(datetime,'" + stop.ToString("yyyy-MM-dd HH:mm:ss") + "',120) and num in("+ nums + "))";
+                //List<ArrivalCars> list = this.ef_ids.Database.SqlQuery<ArrivalCars>(sql).ToList().Select(c => c.GetArrivalCars_ArrivalSostav()).ToList();
+                List<ArrivalCars> list_result = new List<ArrivalCars>();
+                List<ArrivalCars> list = this.ef_ids
+                    .Context
+                    .Where(s => s.ArrivalSostav.date_arrival >= value.start && s.ArrivalSostav.date_arrival <= value.stop)
+                    //.ToList()
+                    //.TakeWhile(x => nums.IndexOf(x.num.ToString()) > -1)
+                    .ToList()
+                    .Select(c => c.GetArrivalCars_ArrivalSostav()).ToList();
+                foreach (ArrivalCars car in list)
+                {
+                    int num = value.nums.Find(n=>n == car.num);
+
+                    if (num>0)
                     {
                         list_result.Add(car);
                     }

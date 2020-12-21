@@ -7317,19 +7317,33 @@
                     // Определим вагоны
                     if (vagon && vagon.length > 0) {
                         // Вагоны указаны
-                        var nums = '';
+                        //var nums = '';
+                        //for (i = 0; i < vagon.length; i++) {
+                        //    //if (vagon[i].operation === 1) {
+                        //    nums += vagon[i].nomer + (i !== vagon.length - 1 ? ',' : '');
+                        //    //}
+                        //}
+                        var nums = [];
                         for (i = 0; i < vagon.length; i++) {
-                            //if (vagon[i].operation === 1) {
-                            nums += vagon[i].nomer + (i !== vagon.length - 1 ? ',' : '');
-                            //}
+                            nums.push(Number(vagon[i].nomer));
                         }
                         // Получим перечень вагонов
-                        if (nums !== '') {
-                            pn_search_epd.ids_inc.getArrivalCarsOfPeriodNums(start._d, stop._d, nums, function (cars) {
+                        if (nums && nums.length>0) {
+                            period = {
+                                start: start.format(),
+                                stop: stop.format(),
+                                nums: nums,
+                            }
+                            pn_search_epd.ids_inc.postArrivalCarsOfPeriodNums(period, function (cars) {
                                 if (typeof callback === 'function') {
                                     callback(cars);
                                 }
                             });
+                            //pn_search_epd.ids_inc.getArrivalCarsOfPeriodNums(start._d, stop._d, nums, function (cars) {
+                            //    if (typeof callback === 'function') {
+                            //        callback(cars);
+                            //    }
+                            //});
                         } else {
                             if (typeof callback === 'function') {
                                 callback([]);
@@ -7784,17 +7798,32 @@
                     // Определим вагоны
                     if (cars && cars.length > 0) {
                         // Вагоны указаны
-                        var nums = '';
+                        //var nums = '';
+                        //for (i = 0; i < cars.length; i++) {
+                        //    nums += cars[i].num + (i !== cars.length - 1 ? ',' : '');
+                        //}
+                        var nums = [];
                         for (i = 0; i < cars.length; i++) {
-                            nums += cars[i].num + (i !== cars.length - 1 ? ',' : '');
+                            nums.push(Number(cars[i].num));
                         }
                         // Получим перечень вагонов
-                        if (nums !== '') {
-                            pn_manual_car.ids_inc.getArrivalCarsOfPeriodNums(start._d, stop._d, nums, function (cars) {
+                        if (nums && nums.length > 0) {
+                            period = {
+                                start: start.format(),
+                                stop: stop.format(),
+                                nums: nums,
+                            }
+                            pn_search_epd.ids_inc.postArrivalCarsOfPeriodNums(period, function (cars) {
                                 if (typeof callback === 'function') {
                                     callback(cars);
                                 }
                             });
+
+                            //pn_manual_car.ids_inc.getArrivalCarsOfPeriodNums(start._d, stop._d, nums, function (cars) {
+                            //    if (typeof callback === 'function') {
+                            //        callback(cars);
+                            //    }
+                            //});
                         } else {
                             if (typeof callback === 'function') {
                                 callback([]);
