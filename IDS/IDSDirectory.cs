@@ -739,7 +739,7 @@ namespace IDS
 
                 // Получим вагон из справочника
                 //Directory_Wagons wagon = context.Directory_Wagons.Where(c => c.num == num).FirstOrDefault();
-                Directory_Wagons wagon = ef_wag.Context.Where(c => c.num == num).FirstOrDefault();
+                Directory_Wagons wagon = ef_wag.Context.Where(c => c.num == num).ToList().FirstOrDefault();
                 if (wagon == null)
                 {
                     // Вагона нет, создадим вагон
