@@ -681,7 +681,7 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("OperationCreateUpdateWagon(num={0}, adm={1}, rod={2}, kol_os={3}, usl_tip={4}, user={5})", 
+                e.ExceptionMethodLog(String.Format("OperationCreateUpdateWagon(num={0}, adm={1}, rod={2}, kol_os={3}, usl_tip={4}, user={5})",
                     num, adm, rod, kol_os, usl_tip, user), servece_owner, eventID);
                 return null;
             }
@@ -844,7 +844,7 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("OperationCreateUpdateWagon(context={0}, num={1}, adm={2}, rod={3}, kol_os={4}, usl_tip={5}, user={6})", 
+                e.ExceptionMethodLog(String.Format("OperationCreateUpdateWagon(context={0}, num={1}, adm={2}, rod={3}, kol_os={4}, usl_tip={5}, user={6})",
                     context, num, adm, rod, kol_os, usl_tip, user), servece_owner, eventID);
                 return null;
             }
@@ -1040,7 +1040,7 @@ namespace IDS
                         id = 0,
                         num = wagon.num,
                         id_operator = id_operator,
-                        id_limiting = edit_limiting ? id_limiting : rent_last.id_limiting,
+                        id_limiting = edit_limiting ? id_limiting : (rent_last != null ? rent_last.id_limiting : null),
                         rent_start = start_rent,
                         rent_end = null,
                         create = (DateTime)start_rent,
@@ -1076,9 +1076,12 @@ namespace IDS
                         rent_last.id_limiting = id_limiting;
                     }
                 }
-                // Оновим штамп изменений
-                rent_last.change = start_rent;
-                rent_last.change_user = user;
+                if (rent_last != null)
+                {
+                    // Оновим штамп изменений
+                    rent_last.change = start_rent;
+                    rent_last.change_user = user;
+                }
                 //Установить бит требующий внимания
                 return 1;
             }
