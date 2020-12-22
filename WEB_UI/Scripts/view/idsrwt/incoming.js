@@ -1134,8 +1134,8 @@
                         mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/view/shared/print_way.css">');
                         mywindow.document.write('</head><body>');
                         mywindow.document.write('<div class=WordSection1>');
-                        mywindow.document.write('<br />');
-                        mywindow.document.write('<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0 style="border-collapse:collapse;border:none">');
+                        //mywindow.document.write('<br />');
+                        
                         // Пройдемся по вагонам
                         select_nums.forEach(function (item, index, array) {
                             var wag = sostav.ArrivalCars.find(function (o) {
@@ -1145,53 +1145,45 @@
                             if (wag) {
 
                                 var doc_uz_sms = wag.UZ_DOC ? wag.UZ_DOC : null;
+                                var date_otpr = null;
                                 if (doc_uz_sms) {
                                     // Получим дату отправки
                                     var index_start = doc_uz_sms.xml_doc.indexOf('date_otpr="', 0)
-                                    var date_otpr = doc_uz_sms.xml_doc.substring(index_start + 11);
+                                    date_otpr = doc_uz_sms.xml_doc.substring(index_start + 11);
                                     var index_stop = date_otpr.indexOf('"', 0);
-                                    var date_otpr = date_otpr.substring(0, index_stop);
-
-                                    var vag_uz = wag.Arrival_UZ_Vagon ? wag.Arrival_UZ_Vagon : null;
-                                    var dir_car = vag_uz && vag_uz.Directory_Wagons ? vag_uz.Directory_Wagons : null;
-                                    var dir_genus = dir_car && dir_car.Directory_GenusWagons ? dir_car.Directory_GenusWagons : null;
-
+                                    date_otpr = date_otpr.substring(0, index_stop);
                                 }
-                                var doc_uz = wag.Arrival_UZ_Vagon && wag.Arrival_UZ_Vagon.Arrival_UZ_Document ? wag.Arrival_UZ_Vagon.Arrival_UZ_Document : null;
                                 var vag_uz = wag.Arrival_UZ_Vagon ? wag.Arrival_UZ_Vagon : null;
-
                                 var dir_car = vag_uz && vag_uz.Directory_Wagons ? vag_uz.Directory_Wagons : null;
                                 var dir_genus = dir_car && dir_car.Directory_GenusWagons ? dir_car.Directory_GenusWagons : null;
 
-                                var docs = doc_uz && doc_uz.Arrival_UZ_Document_Docs ? doc_uz.Arrival_UZ_Document_Docs : null; 
+                                var doc_uz = wag.Arrival_UZ_Vagon && wag.Arrival_UZ_Vagon.Arrival_UZ_Document ? wag.Arrival_UZ_Vagon.Arrival_UZ_Document : null;
+                                var dir_es = doc_uz && doc_uz.Directory_ExternalStation ? doc_uz.Directory_ExternalStation : null;
+                                var dir_ship = doc_uz && doc_uz.Directory_Shipper ? doc_uz.Directory_Shipper : null;
+                                var dir_cargo = vag_uz && vag_uz.Directory_Cargo ? vag_uz.Directory_Cargo : null;
+                                var dir_certificat = vag_uz && vag_uz.Directory_CertificationData ? vag_uz.Directory_CertificationData : null;
 
+                                // Определим сертификат и акт
+                                var docs = doc_uz && doc_uz.Arrival_UZ_Document_Docs ? doc_uz.Arrival_UZ_Document_Docs : null;
                                 var sert = null;
                                 var act = null;
+                                var num_sert = null;
+                                var num_act = null;
                                 if (docs && docs.length > 0) {
                                     sert = docs.find(function (o) { return o.doc_type === "220"; });
+                                    if (sert) {
+                                        var index_start = sert.description.indexOf('№', 0);
+                                        num_sert = sert.description.substring(index_start);
+                                    }
                                     act = docs.find(function (o) { return o.doc_type === "160"; });
+                                    if (act) {
+                                        var index_start = act.description.indexOf('№', 0);
+                                        num_act = act.description.substring(index_start);
+                                    }
                                 }
-
-                                //var dir_es = doc_uz && doc_uz.Directory_ExternalStation ? doc_uz.Directory_ExternalStation : null;
-
-                                //var dir_cargo = vag_uz && vag_uz.Directory_Cargo ? vag_uz.Directory_Cargo : null;
-                                //var dir_certificat = vag_uz && vag_uz.Directory_CertificationData ? vag_uz.Directory_CertificationData : null;
-                                //var dir_commercial = vag_uz && vag_uz.Directory_CommercialCondition ? vag_uz.Directory_CommercialCondition : null;
-                                //var vag_acts_uz = vag_uz && vag_uz.Arrival_UZ_Vagon_Acts ? vag_uz.Arrival_UZ_Vagon_Acts : null;
-
-                                //var dir_car = vag_uz && vag_uz.Directory_Wagons ? vag_uz.Directory_Wagons : null;
-                                //var current_rent = cars_detali.get_current_rent(dir_car);
-                                //var dir_operator = current_rent && current_rent.Directory_OperatorsWagons ? current_rent.Directory_OperatorsWagons : null;
-                                //var dir_ll = current_rent && current_rent.Directory_LimitingLoading ? current_rent.Directory_LimitingLoading : null;
-
-
-                                //var dir_owner = dir_car && dir_car.Directory_OwnersWagons ? dir_car.Directory_OwnersWagons : null;
-                                //var dir_countrys = dir_car && dir_car.Directory_Countrys ? dir_car.Directory_Countrys : null;
-                                //var dir_genus = dir_car && dir_car.Directory_GenusWagons ? dir_car.Directory_GenusWagons : null;
-
-
                                 //-------------------
-                                mywindow.document.write('<tr><td width=704 valign=top style="width:528.1pt;border:solid white 1.0pt;border-bottom:solid windowtext 1.0pt;padding:0cm 5.4pt 0cm 5.4pt">');
+                                mywindow.document.write('<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0 style="border-collapse:collapse;border:none">');
+                                mywindow.document.write('<tr><td width=704 valign=top style="width:528.1pt;border:solid white 1.0pt;border-bottom:dashed windowtext 1.0pt;padding:0cm 5.4pt 0cm 5.4pt">');
                                 mywindow.document.write('<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0 style="margin-left:5.4pt;border-collapse:collapse;border:none">');
                                 mywindow.document.write('<tr>');
                                 mywindow.document.write('<td width=181 colspan=2 valign=top style="width:136.1pt;border:solid white 1.0pt;padding:0cm 5.4pt 0cm 5.4pt">');
@@ -1206,22 +1198,22 @@
                                 mywindow.document.write('</tr>');
                                 //
                                 mywindow.document.write('<tr>');
-                                mywindow.document.write('<td width=174 valign=top style="width:130.7pt;border:solid white 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt">');
+                                mywindow.document.write('<td width=110 valign=top style="border:solid white 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt">');
                                 mywindow.document.write('<p class=MsoNormal class="p-text-title"><b><span class="text-title">Вагон № </span></b><span class="text-title"><i>' + wag.num + '</i></span></p>');
                                 mywindow.document.write('</td>');
-                                mywindow.document.write('<td width=174 colspan=2 valign=top style="width:130.5pt;border-top:none;border-left:none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;padding:0cm 5.4pt 0cm 5.4pt">');
-                                mywindow.document.write('<p class=MsoNormal class="p-text-title"><b><span class="text-title">Род вагона </span></b><i><span class="text-title">' + (dir_genus ? dir_genus['abbr_' + lang] : '?') + '</span></i></p>');
+                                mywindow.document.write('<td width=90 colspan=2 valign=top style="border-top:none;border-left:none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;padding:0cm 5.4pt 0cm 5.4pt">');
+                                mywindow.document.write('<p class=MsoNormal class="p-text-title"><b><span class="text-title">Род вагона </span></b><i><span class="text-title">' + (dir_genus ? dir_genus['abbr_' + lang] : '______') + '</span></i></p>');
                                 mywindow.document.write('</td>');
-                                mywindow.document.write('<td width=164 colspan=3 valign=top style="width:123.0pt;border-top:none;border-left:none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;padding:0cm 5.4pt 0cm 5.4pt">');
-                                mywindow.document.write('<p class=MsoNormal class="p-text-title"><b><i><span class="text-title">Серт.№</span></i></b><span class="text-title"> </span><i><span lang=EN-US class="text-title">XXXX</span></i></p>');
+                                mywindow.document.write('<td width=300 colspan=3 valign=top style="border-top:none;border-left:none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;padding:0cm 5.4pt 0cm 5.4pt">');
+                                mywindow.document.write('<p class=MsoNormal class="p-text-title"><b><i><span class="text-title">Серт.: </span></i></b><span class="text-title"></span><i><span lang=EN-US class="text-title">' + (num_sert ? num_sert : '_______') + '</span></i></p>');
                                 mywindow.document.write('</td>');
-                                mywindow.document.write('<td width=168 colspan=2 valign=top style="width:126.1pt;border-top:none;border-left:none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;padding:0cm 5.4pt 0cm 5.4pt"><p class=MsoNormal class="p-text-title"><b><i><span class="text-title">Удост.№ </span></i></b><i><span class="text-title"><span lang=EN-US>XXXX</span></span></i></p>');
+                                mywindow.document.write('<td width=220 colspan=2 valign=top style="border-top:none;border-left:none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;padding:0cm 5.4pt 0cm 5.4pt"><p class=MsoNormal class="p-text-title"><b><i><span class="text-title">Удост.: </span></i></b><i><span class="text-title"><span lang=EN-US>' + (num_act ? num_act : '_______') + '</span></span></i></p>');
                                 mywindow.document.write('</td>');
                                 mywindow.document.write('</tr>');
                                 //
                                 mywindow.document.write('<tr>');
                                 mywindow.document.write('<td width=482 colspan=5 valign=top style="width:361.5pt;border:solid white 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt">');
-                                mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt;line-height:normal"><b><span class="text-title1">Станция отправления</span></b><span class="text-title1"><i>Кривой Рог отправлено</i> </span></p>');
+                                mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt;line-height:normal"><b><span class="text-title1">Станция отправления </span></b><span class="text-title1"><i>' + (dir_es ? dir_es['station_name_' + lang] : '________________________________') + '</i> </span></p>');
                                 mywindow.document.write('</td>');
                                 mywindow.document.write('<td width=94 colspan=2 valign=top style="width:70.85pt;border-top:none;border-left:none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;padding:0cm 5.4pt 0cm 5.4pt">');
                                 mywindow.document.write('<p class=MsoNormal class="p-text-title"><b><span class="text-title">Вес по ж. д.</span></b></p>');
@@ -1233,43 +1225,43 @@
                                 //
                                 mywindow.document.write('<tr>');
                                 mywindow.document.write('<td width=482 colspan=5 valign=top style="width:361.5pt;border:solid white 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt">');
-                                mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt;line-height:normal"><b><span class="text-title1">Отправитель</span></b><span class="text-title1"> <i>Кривой Рог отправитель</i></span></p>');
+                                mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt;line-height:normal"><b><span class="text-title1">Отправитель </span></b><span class="text-title1"><i>' + (dir_ship ? dir_ship['shipper_name_' + lang] : '________________________________') + '</i></span></p>');
                                 mywindow.document.write('</td>');
                                 mywindow.document.write('<td width=94 colspan=2 valign=top style="width:70.85pt;border-top:none;border-left:none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;padding:0cm 5.4pt 0cm 5.4pt">');
                                 mywindow.document.write('<p class=MsoNormal class="p-text-title"><b><span class="text-title">накладной</span></b></p>');
                                 mywindow.document.write('</td>');
                                 mywindow.document.write('<td width=104 valign=top style="width:77.95pt;border-top:none;border-left:none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;padding:0cm 5.4pt 0cm 5.4pt">');
-                                mywindow.document.write('<p class=MsoNormal class="p-text-title"><i><span class="text-title">бр.</span></i><span class="text-title"> ________</span></p>');
+                                mywindow.document.write('<p class=MsoNormal class="p-text-title"><i><span class="text-title">бр. </span></i><span class="text-title">_________</span></p>');
                                 mywindow.document.write('</td>');
                                 mywindow.document.write('</tr>');
                                 //
                                 mywindow.document.write('<tr>');
                                 mywindow.document.write('<td width=482 colspan=5 valign=top style="width:361.5pt;border:solid white 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt">');
-                                mywindow.document.write('<p class=MsoNormal class="p-text-title"><b><span class="text-title">Получатель</span></b><span class="text-title"> <i>Кривой Рог получатель</i></span></p>');
+                                mywindow.document.write('<p class=MsoNormal class="p-text-title"><b><span class="text-title">Получатель </span></b><span class="text-title"><i>______________________________________</i></span></p>');
                                 mywindow.document.write('</td>');
                                 mywindow.document.write('<td width=94 colspan=2 valign=top style="width:70.85pt;border-top:none;border-left:none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;padding:0cm 5.4pt 0cm 5.4pt">');
-                                mywindow.document.write('<p class=MsoNormal class="p-text-title"><i><span class="text-title">т.</span></i><span class="text-title"> </span><i><span lang=EN-US class="text-title">25</span></i><i><span class="text-title">,25</span></i></p>');
+                                mywindow.document.write('<p class=MsoNormal class="p-text-title"><i><span class="text-title">т. </span></i><span class="text-title"> </span><i><span lang=EN-US class="text-title">' + (vag_uz.ves_tary_arc ? Number(Number(vag_uz.ves_tary_arc) / 1000).toFixed(2) : '_________') + '</span></i></p>');
                                 mywindow.document.write('</td>');
                                 mywindow.document.write('<td width=104 valign=top style="width:77.95pt;border-top:none;border-left:none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;padding:0cm 5.4pt 0cm 5.4pt">');
-                                mywindow.document.write('<p class=MsoNormal class="p-text-title"><i><span class="text-title">т.</span></i><span class="text-title"> </span><i><span lang=EN-US class="text-title">25</span></i><i><span class="text-title">,25</span></i></p>');
+                                mywindow.document.write('<p class=MsoNormal class="p-text-title"><i><span class="text-title">т. </span></i><span class="text-title"> </span><i><span lang=EN-US class="text-title">' + (vag_uz.ves_tary_arc ? Number(Number(vag_uz.ves_tary_arc) / 1000).toFixed(2) : '_________') + '</span></i></p>');
                                 mywindow.document.write('</td>');
                                 mywindow.document.write('</tr>');
                                 //
                                 mywindow.document.write('<tr>');
-                                mywindow.document.write('<td width=482 colspan=5 valign=top style="width:361.5pt;border-top:none;border-left:solid white 1.0pt;border-bottom:solid windowtext 1.0pt;border-right:solid white 1.0pt;padding:0cm 5.4pt 0cm 5.4pt">');
-                                mywindow.document.write('<p class=MsoNormal class="p-text-title"><b><span class="text-title">Наименование груза</span></b><span class="text-title"><i>Изделия кислотоупорные и огнеупорные</i></span></p>');
-                                mywindow.document.write('<p class=MsoNormal class="p-text-title"><b><span class="text-title">Сертификатные данные</span></b><span class="text-title"> </span><i><span lang=EN-US class="text-title">XXXXX</span></i></p>');
+                                mywindow.document.write('<td width=482 colspan=5 valign=top style="width:361.5pt;border-top:none;border-left:solid white 1.0pt;border-bottom:none windowtext 1.0pt;border-right:solid white 1.0pt;padding:0cm 5.4pt 0cm 5.4pt">');
+                                mywindow.document.write('<p class=MsoNormal class="p-text-title"><b><span class="text-title">Наименование груза </span></b><span class="text-title"><i>' + (dir_cargo ? dir_cargo['cargo_name_' + lang] : '________________________________') + '</i></span></p>');
+                                mywindow.document.write('<p class=MsoNormal class="p-text-title"><b><span class="text-title">Сертификатные данные </span></b><span class="text-title"> </span><i><span lang=EN-US class="text-title">' + (dir_certificat ? dir_certificat['certification_data_' + lang] : '________________________________') + '</span></i></p>');
                                 mywindow.document.write('</td>');
-                                mywindow.document.write('<td width=94 colspan=2 valign=top style="width:70.85pt;border-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-right:solid white 1.0pt;padding:0cm 5.4pt 0cm 5.4pt">');
-                                mywindow.document.write('<p class=MsoNormal class="p-text-title"><i><span class="text-title">н.</span></i><span class="text-title"> </span><i><span lang=EN-US class="text-title">25</span></i><i><span class="text-title">,25</span></i></p>');
+                                mywindow.document.write('<td width=94 colspan=2 valign=top style="width:70.85pt;border-top:none;border-left:none;border-bottom:none windowtext 1.0pt;border-right:solid white 1.0pt;padding:0cm 5.4pt 0cm 5.4pt">');
+                                mywindow.document.write('<p class=MsoNormal class="p-text-title"><i><span class="text-title">н. </span></i><span class="text-title"></span><i><span lang=EN-US class="text-title">' + (vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000).toFixed(2) : '_________') + '</span></i></p>');
                                 mywindow.document.write('</td>');
-                                mywindow.document.write('<td width=104 valign=top style="width:77.95pt;border-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-right:solid white 1.0pt;padding:0cm 5.4pt 0cm 5.4pt">');
-                                mywindow.document.write('<p class=MsoNormal class="p-text-title"><i><span class="text-title">н.</span></i><span class="text-title">  _________</span></p>');
+                                mywindow.document.write('<td width=104 valign=top style="width:77.95pt;border-top:none;border-left:none;border-bottom:none windowtext 1.0pt;border-right:solid white 1.0pt;padding:0cm 5.4pt 0cm 5.4pt">');
+                                mywindow.document.write('<p class=MsoNormal class="p-text-title"><i><span class="text-title">н. </span></i><span class="text-title">_________</span></p>');
                                 mywindow.document.write('</td>');
                                 mywindow.document.write('</tr>');
                                 //mywindow.document.write('<tr height=0><td width=174 style="border:none"></td><td width=7 style="border:none"></td><td width=167 style="border:none"></td><td width=109 style="border:none"></td><td width=25 style="border:none"></td><td width=30 style="border:none"></td><td width=64 style="border:none"></td><td width=104 style="border:none"></td></tr>');
                                 mywindow.document.write('</table>');
-                                mywindow.document.write('<br />');
+                                //mywindow.document.write('<br />');
                                 //
                                 mywindow.document.write('<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0 width=680 style="width:18.0cm;margin-left:5.4pt;border-collapse:collapse;border:none">');
                                 mywindow.document.write('<tr style="height:14.35pt">');
@@ -1327,16 +1319,21 @@
                                 mywindow.document.write('<p class=MsoNormal align=center class="p-text-title1"><span class="text-title">&nbsp;</span></p>');
                                 mywindow.document.write('</td>');
                                 mywindow.document.write('<td width=87 valign=top style="width:65.0pt;border-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:0cm 5.4pt 0cm 5.4pt;height:21.0pt">');
-                                mywindow.document.write('<p class=MsoNormal align=center class="p-text-title1"><span class="text-title">&nbsp;</span></p>');
+                                mywindow.document.write('<p class=MsoNormal align=center class="p-text-title1"><span class="text-title"></span></p>');
                                 mywindow.document.write('</td>');
                                 mywindow.document.write('</tr>');
                                 mywindow.document.write('</table>');
+                                mywindow.document.write('<br />');
                                 //
                                 mywindow.document.write('<p class=MsoNormal class="p-text-title"><span class="text-title">Приемосдатчик гр. и баг. ст. примыкания АМКР__________________________________ (Ф.И.О.,подпись)</span></p>');
-                                mywindow.document.write('<p class=MsoNormal class="p-text-title"><span class="text-title">Приемосдатчик гр. и баг. станции-назначения__________________________________ (Ф.И.О.,подпись)</span></p>');
-                                mywindow.document.write('<p class=MsoNormal class="p-text-title"><span class="text-title">Расписка цеха-получателя__________________________________________________ (Ф.И.О.,подпись)</span></p>');
-                                mywindow.document.write('<br />');
+                                mywindow.document.write('<p class=MsoNormal class="p-text-title"><span class="text-title">Приемосдатчик гр. и баг. станции-назначения___________________________________ (Ф.И.О.,подпись)</span></p>');
+                                mywindow.document.write('<p class=MsoNormal class="p-text-title"><span class="text-title">Расписка цеха-получателя___________________________________________________ (Ф.И.О.,подпись)</span></p>');
+
                                 mywindow.document.write('</td></tr>');
+                                mywindow.document.write('</table>');
+                                mywindow.document.write('<br />');
+                                //mywindow.document.write('</tr><td>&nbsp;</td></tr>');
+                                
                                 //------------------
                             }
 
@@ -1344,7 +1341,7 @@
 
 
 
-                        mywindow.document.write('</table>');
+                        
                         mywindow.document.write('</body>');
                         mywindow.document.write('</html>');
                         mywindow.document.close(); // necessary for IE >= 10

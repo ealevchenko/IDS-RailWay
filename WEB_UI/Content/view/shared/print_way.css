@@ -73,3 +73,17 @@ ul {
     margin-bottom: .0001pt;
     text-align: center;
 }
+
+table {
+    page-break-after: auto;
+}
+
+    table tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+
+    table td {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
