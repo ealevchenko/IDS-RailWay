@@ -57,6 +57,29 @@ IDS_TRANSFER.prototype.getUZ_DOC_DB_UZ_OfNum = function (num, datetime, callback
         },
     });
 };
+// Найти документы в промежуточной базе УЗ
+IDS_TRANSFER.prototype.getUZ_DOC_DB_UZ_OfNumDay = function (num, day, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/transfer/epd/db_uz/num/' + num + '/day/' + day,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_TRANSFER.getUZ_DOC_DB_UZ_OfNumDay", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 
 //Добавить или обновить в базе документов ИДС (документ типа промежуточной базы)
 IDS_TRANSFER.prototype.postUZ_DOC_To_DB_IDS = function (uz_doc, callback) {

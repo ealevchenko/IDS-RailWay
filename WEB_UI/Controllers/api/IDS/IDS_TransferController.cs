@@ -53,6 +53,40 @@ namespace WEB_UI.Controllers.api.RWT
             }
         }
 
+        //// GET: api/ids/transfer/epd/db_uz/num/71113418/datetime/2020-03-20T23:59:59
+        //[Route("epd/db_uz/num/{num:int}/datetime/{datetime:datetime}")]
+        //[ResponseType(typeof(UZ.UZ_DOC))]
+        //public IHttpActionResult GetUZ_DOC_DB_UZ_OfNum(int num, DateTime datetime)
+        //{
+        //    try
+        //    {
+        //        IDSTransfer ids_tr = new IDSTransfer(service.WebAPI_IDS);
+        //        UZ.UZ_DOC uz_doc = ids_tr.GetUZ_DOC_DB_UZ_OfNum(num, datetime);
+        //        return Ok(uz_doc);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest(e.Message);
+        //    }
+        //}
+
+        // GET: api/ids/transfer/epd/db_uz/num/67860718/day/15
+        [Route("epd/db_uz/num/{num:int}/day/{day:int}")]
+        [ResponseType(typeof(UZ.UZ_DOC))]
+        public IHttpActionResult GetUZ_DOC_DB_UZ_OfNum(int num, int day)
+        {
+            try
+            {
+                IDSTransfer ids_tr = new IDSTransfer(service.WebAPI_IDS);
+                List<UZ.UZ_DOC> list = ids_tr.GetUZ_DOC_DB_UZ_OfNum(num, day);
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         // POST api/ids/transfer/db_ids
         [HttpPost]
         [Route("db_ids")]
@@ -96,6 +130,4 @@ namespace WEB_UI.Controllers.api.RWT
             }
         }
     }
-
-
 }

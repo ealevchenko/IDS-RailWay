@@ -12,8 +12,6 @@ using System.Configuration;
 using TMSoft.Gohub.Client;
 using EFUZ.Concrete;
 using EFUZ.Entities;
-//using EFUZ.Concrete;
-//using EFUZ.Entities;
 
 namespace UZ
 {
@@ -223,7 +221,7 @@ namespace UZ
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("GetEPD_UZ_Of_Filter(WagonNumber={0}, DocumentNumber={1})",WagonNumber, DocumentNumber), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("GetEPD_UZ_Of_Filter(WagonNumber={0}, DocumentNumber={1})", WagonNumber, DocumentNumber), servece_owner, eventID);
                 return null;
             }
         }
@@ -436,125 +434,92 @@ namespace UZ
                 return null;
             }
         }
+        /// <summary>
+        /// Получить документы по вагону по указаным грузополучателям за указаный интервал
+        /// </summary>
+        /// <param name="num"></param>
+        /// <param name="consignees"></param>
+        /// <param name="days"></param>
+        /// <returns></returns>
+        public List<UZ_DOC> GetDocumentOfDB_NumConsignees(int num, int[] consignees, int days)
+        {
+            try
+            {
+                EFUZ_Data ef_data = new EFUZ_Data(new EFSMSDbContext());
+                string sql = "SELECT *  FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data] " +
+                    "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = " + num.ToString() + ") and [arrived_code] in (0," + IntsToString(consignees, ',') + ",'none') order by[dt] desc";
+                List<UZ_Data> list_uz_data = ef_data.Database.SqlQuery<UZ_Data>(sql).ToList();
+                // Выберем все документы за указаный период
+                List<UZ_DOC> result = new List<UZ_DOC>();
+                DateTime start = DateTime.Now.AddDays(-1 * days);
+                foreach (UZ_Data uz_doc in list_uz_data)
+                {
+                    if (uz_doc.update_dt != null)
+                    {
+                        if (uz_doc.update_dt >= start)
+                        {
+                            UZ_DOC doc = Convert_UZ_Data_To_UZ_DOC(uz_doc);
+                            if (doc != null)
+                            {
+                                result.Add(doc);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (uz_doc.dt >= start)
+                        {
+                            UZ_DOC doc = Convert_UZ_Data_To_UZ_DOC(uz_doc);
+                            if (doc != null)
+                            {
+                                result.Add(doc);
+                            }
+                        }
+                    }
+                }
+                return result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetDocumentOfDB_NumConsignees(num={0}, consignees={1}, days={2})", num, consignees, days), this.servece_owner, eventID);
+                return null;
+            }
+        }
+        /// <summary>
+        /// Получить UZ_DOC документ из UZ_Data (Промежуточной базы)
+        /// </summary>
+        /// <param name="uz_doc"></param>
+        /// <returns></returns>
+        public UZ_DOC Convert_UZ_Data_To_UZ_DOC(UZ_Data uz_doc)
+        {
+            try
+            {
+                UZ_Convert convert = new UZ_Convert(this.servece_owner);
+                string xml_final = convert.XMLToFinalXML(uz_doc.raw_xml);
+                OTPR otpr = convert.FinalXMLToOTPR(xml_final);
+
+                // Документ найден 
+                UZ_DOC doc = new UZ_DOC()
+                {
+                    id_doc = uz_doc.doc_Id,
+                    revision = uz_doc.doc_Revision,
+                    status = GetStatus(uz_doc.doc_Status),
+                    sender_code = uz_doc.depart_code,
+                    recipient_code = uz_doc.arrived_code,
+                    dt = uz_doc.dt,
+                    xml = uz_doc.raw_xml,
+                    xml_final = xml_final,
+                    otpr = otpr,
+                };
+                return doc;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("Convert_UZ_Data_To_UZ_DOC(doc={0})", uz_doc), this.servece_owner, eventID);
+                return null;
+            }
+        }
 
         #endregion
-
-        ///// <summary>
-        ///// Получить Электронный перевозочный документ OTPR
-        ///// </summary>
-        ///// <param name="xml"></param>
-        ///// <returns></returns>
-        //public OTPR GetECD_OTPR(string xml)
-        //{
-        //    try
-        //    {
-        //        XmlDocument xDoc = new XmlDocument();
-        //        xDoc.LoadXml(xml);
-        //        // получим корневой элемент
-        //        XmlElement xRoot = xDoc.DocumentElement;
-        //        OTPR otpr = new OTPR();
-        //        //UZ_XML_DOC(xRoot, ref otpr);
-        //        string xml_out = null;
-        //        UZ_XML_DOC(xRoot, ref xml_out);
-
-        //        return otpr;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        e.ExceptionMethodLog(String.Format("GetECD_OTPR(xml={0})", xml), this.servece_owner, this.eventID);
-        //        return null;
-        //    }
-        //}
-
-        //private void UZ_XML_DOC(XmlElement xRoot, ref OTPR otpr)
-        //{
-        //    foreach (XmlNode xnode in xRoot)
-        //    {
-        //        //foreach (XmlNode node_doc in xnode.ChildNodes)
-        //        //{
-        //        // если узел - document-data
-        //        if (xnode.Name == "document-data")
-        //        {
-        //            foreach (XmlNode child_node_doc in xnode.ChildNodes)
-        //            {
-        //                // если узел - document-data
-        //                if (child_node_doc.Name == "uz-rwc-doc")
-        //                {
-        //                    UZ_XML_DOC((XmlElement)child_node_doc, ref otpr);
-        //                }
-        //                // если узел - document-data
-        //                if (child_node_doc.Name == "changes")
-        //                {
-        //                    //// Применить изменения
-        //                    //foreach (XmlNode changes_node in child_node_doc.ChildNodes)
-        //                    //{
-        //                    //    string target = getAttributes<string>(changes_node, "target");
-
-        //                    //    if (changes_node.Name == "delete")
-        //                    //    {
-
-        //                    //    }
-        //                    //    if (changes_node.Name == "update")
-        //                    //    {
-
-        //                    //    }
-        //                    //    if (changes_node.Name == "insert")
-        //                    //    {
-
-        //                    //    }
-        //                    //}
-        //                    //OTPR g = otpr;
-        //                }
-
-        //                // если узел - document-data
-        //                if (child_node_doc.Name == "OTPR")
-        //                {
-        //                    // атрибуты
-        //                    GetAttributes(child_node_doc, ref otpr);
-        //                    foreach (XmlNode otpr_node in child_node_doc.ChildNodes)
-        //                    {
-        //                        switch (otpr_node.Name)
-        //                        {
-        //                            case "ACTS": { GetTagACTS(otpr_node, ref otpr); break; }
-        //                            case "CARRIER": { GetTagCARRIER(otpr_node, ref otpr); break; }
-        //                            case "CIM_INFO": { GetTagCIM_INFO(otpr_node, ref otpr); break; }
-        //                            case "CLIENT": { GetTagCLIENT(otpr_node, ref otpr); break; }
-        //                            case "COM_COND": { GetTagCOM_COND(otpr_node, ref otpr); break; }
-        //                            case "CONT": { GetTagCONT(otpr_node, ref otpr); break; }
-        //                            case "FRONTIER_MARK": { GetTagFRONTIER_MARK(otpr_node, ref otpr); break; }
-        //                            case "OTPRDP": { GetTagOTPRDP(otpr_node, ref otpr); break; }
-        //                            case "PAC": { GetTagPAC(otpr_node, ref otpr); break; }
-        //                            case "PASS_MARK": { GetTagPASS_MARK(otpr_node, ref otpr); break; }
-        //                            case "PL": { GetTagPL(otpr_node, ref otpr); break; }
-        //                            case "PROLONGATION": { GetTagPROLONGATION(otpr_node, ref otpr); break; }
-        //                            case "ROUTE": { GetTagROUTE(otpr_node, ref otpr); break; }
-        //                            case "RW_STAT": { GetTagRW_STAT(otpr_node, ref otpr); break; }
-        //                            case "REFUSE_EPD": { GetTagREFUSE_EPD(otpr_node, ref otpr); break; }
-        //                            case "REISSUE_INFO": { GetTagREISSUE_INFO(otpr_node, ref otpr); break; }
-        //                            case "SCHEMA": { GetTagSCHEMA(otpr_node, ref otpr); break; }
-        //                            case "SENDER_DOC": { GetTagSENDER_DOC(otpr_node, ref otpr); break; }
-        //                            case "SEND_STAT": { GetTagSEND_STAT(otpr_node, ref otpr); break; }
-        //                            case "SHTEMPEL": { GetTagSHTEMPEL(otpr_node, ref otpr); break; }
-        //                            case "SPEC_COND": { GetTagSPEC_COND(otpr_node, ref otpr); break; }
-        //                            case "TAKS": { GetTagTAKS(otpr_node, ref otpr); break; }
-        //                            case "TEXT": { GetTagTEXT(otpr_node, ref otpr); break; }
-        //                            case "VAGON": { GetTagVAGON(otpr_node, ref otpr); break; }
-        //                        }
-        //                    }
-        //                }
-        //            }
-        //        }
-        //        // если узел - changes
-        //        if (xnode.Name == "signature")
-        //        {
-        //            foreach (XmlNode childnode in xnode.ChildNodes)
-        //            {
-
-        //            }
-        //        }
-        //        //}
-        //    }
-        //}
-
     }
 }

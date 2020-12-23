@@ -224,7 +224,7 @@ namespace Test
             #region Test_Metrans тест Метранса
             Test_Metrans tmt = new Test_Metrans();
             //tmt.MTTransfer_TransferApproaches();
-            tmt.MTTransfer_TransferArrival();
+            //tmt.MTTransfer_TransferArrival();
             //tmt.MTThread_SFTPTransfer();
             //tmt.MTTransfer_WebApiClientMT();
             //tmt.MTThread_Start_TransferWT();
@@ -245,6 +245,7 @@ namespace Test
             //tuz.UZ_SMS_GetOTPROfXML();
             //tuz.UZ_SMS_GetDocumentOfDB_Num();
             //tuz.UZ_SMS_GetArrivalDocumentOfDB_Num();
+            tuz.UZ_SMS_GetDocumentOfDB_NumConsignees();
             #endregion
 
             Console.WriteLine("Press any key to exit...");

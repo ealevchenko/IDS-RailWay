@@ -357,6 +357,27 @@ namespace IDS
             }
         }
         /// <summary>
+        /// Получить документы из промежуточной базы данных по номеру вагона за указаный период
+        /// </summary>
+        /// <param name="num_car"></param>
+        /// <param name="day"></param>
+        /// <returns></returns>
+        public List<UZ.UZ_DOC> GetUZ_DOC_DB_UZ_OfNum(int num_car, int day)
+        {
+            try
+            {
+                UZ.UZ_SMS uz_sms = new UZ.UZ_SMS(this.servece_owner);
+                List<UZ.UZ_DOC> list = uz_sms.GetDocumentOfDB_NumConsignees(num_car, new int[] { 7932, 6302, 659 }, day);
+                return list;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetUZ_DOC_DB_UZ_OfNum(num_car={0}, day={1})", num_car, day), servece_owner, eventID);
+                return null;// Ошибка
+            }
+        }
+
+        /// <summary>
         /// Добавим или обновим документ в таблице ЭПД принятых вагонов
         /// </summary>
         /// <param name="uz_doc"></param>
