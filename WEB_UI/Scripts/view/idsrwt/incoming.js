@@ -125,6 +125,7 @@
             'field_car_usl_tip_arrival': 'Тип цс',
             'field_station_on_amkr_arrival': 'Следует на ст.',
             'field_division_on_amkr_arrival': 'Цех получатель',
+            'field_commercial_condition': 'Ком. состояние',
 
 
             //'title_button_buffer': 'Буфер',
@@ -1172,7 +1173,7 @@
                                 var num_sert = null;
                                 var num_act = null;
                                 if (docs && docs.length > 0) {
-                                    sert = docs.find(function (o) { return o.doc_type === "220"; });
+                                    sert = docs.find(function (o) { return o.doc_type === "210" || o.doc_type === "220"; });
                                     if (sert) {
                                         var index_start = sert.description.indexOf('№', 0);
                                         num_sert = sert.description.substring(index_start);
@@ -5556,8 +5557,8 @@
             // Получить вагон для обновления или добавления
             get_arrival_uz_vagon: function (id_document_uz, num, id_arrival, mode) {
                 // Вернуть назать преобразование тары и уточненой тары
-                var u_tara = get_input_number_value(cars_detali.uz_vag_ves_tary_arc);
-                var ves_tary_arc = get_input_number_value(cars_detali.uz_vag_u_tara);
+                var ves_tary_arc = get_input_number_value(cars_detali.uz_vag_ves_tary_arc);
+                var u_tara = get_input_number_value(cars_detali.uz_vag_u_tara);
                 var vesg = get_input_number_value(cars_detali.uz_cargo_vesg_doc);
                 u_tara = u_tara !== null ? Number(u_tara * 1000) : null;
                 ves_tary_arc = ves_tary_arc !== null ? Number(ves_tary_arc * 1000) : null;
@@ -5857,8 +5858,11 @@
                             { data: "vesg", title: langView('field_vesg_arrival', langs), width: "50px", orderable: true, searchable: false },
                             { data: "cargo", title: langView('field_cargo_arrival', langs), width: "250px", orderable: true, searchable: false },
 
+
                             { data: "station_on_amkr", title: langView('field_station_on_amkr_arrival', langs), width: "150px", orderable: true, searchable: false },
                             { data: "division_on_amkr", title: langView('field_division_on_amkr_arrival', langs), width: "50px", orderable: true, searchable: false },
+                            { data: "commercial_condition", title: langView('field_commercial_condition', langs), width: "50px", orderable: true, searchable: false },
+
                         ],
                         stateSave: true,
                         dom: 'Bfrtip',
@@ -6011,6 +6015,8 @@
 
                     var dir_division = vag_uz && vag_uz.Directory_Divisions ? vag_uz.Directory_Divisions : null;
 
+                    var dir_commercial = vag_uz && vag_uz.Directory_CommercialCondition ? vag_uz.Directory_CommercialCondition : null;
+
                     return {
                         "id": data.id,
                         "position": data.position_arrival,
@@ -6057,7 +6063,9 @@
                         "vesg": vag_uz && vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000).toFixed(3) : null,
                         "cargo": vag_uz && vag_uz.Directory_Cargo ? cars_detali.ids_inc.ids_dir.getValueObj(vag_uz.Directory_Cargo, 'cargo_name', cars_detali.lang) : null,
                         "station_on_amkr": vag_uz && vag_uz.Directory_Station ? cars_detali.ids_inc.ids_dir.getValueObj(vag_uz.Directory_Station, 'station_name', cars_detali.lang) : 'Под погрузку',
-                        "division_on_amkr": dir_division ? cars_detali.ids_inc.ids_dir.getValueObj(dir_division, 'division_abbr', cars_detali.lang) : null
+                        "division_on_amkr": dir_division ? cars_detali.ids_inc.ids_dir.getValueObj(dir_division, 'division_abbr', cars_detali.lang) : null,
+                        "commercial_condition": dir_commercial ? dir_commercial['commercial_condition_'+lang] : null,
+
                     };
                 },
                 // Состяние кнопки "Вернуть вагон"
