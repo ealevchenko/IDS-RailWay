@@ -201,6 +201,7 @@ namespace Test
             //tids.IDSTransfer_SendingOutgoingSostav();             // Закрытие WIR отправка состава на УЗ
 
             //tids.IDS_SAP_GetCurrentIncomingSupplyOfWebSAP();      // Чтение и обновление строки САП входящие поставки
+            tids.IDS_SAP_UpdateIncomingSupply();                    // Обновление данных по входящей поставке
 
             //tids.IDS_WIR_RenumberingWagons();                       // Перенумерация с указанной позиции
             //tids.IDS_WIR_DislocationWagons();                       // Операция дислокация
@@ -245,7 +246,7 @@ namespace Test
             //tuz.UZ_SMS_GetOTPROfXML();
             //tuz.UZ_SMS_GetDocumentOfDB_Num();
             //tuz.UZ_SMS_GetArrivalDocumentOfDB_Num();
-            tuz.UZ_SMS_GetDocumentOfDB_NumConsignees();
+            //tuz.UZ_SMS_GetDocumentOfDB_NumConsignees();
             #endregion
 
             Console.WriteLine("Press any key to exit...");

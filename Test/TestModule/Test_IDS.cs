@@ -97,6 +97,16 @@ namespace Test.TestModule
             SAPIncomingSupply res = ids.GetCurrentIncomingSupplyOfWebSAP(sap);
         }
 
+        public void IDS_SAP_UpdateIncomingSupply()
+        {
+
+            EFDbContext context = new EFDbContext();
+
+            IDS_SAP ids = new IDS_SAP(service.Test);
+            int result = ids.UpdateListIncomingSupply(new List<int>(), @"EUROPE\ealevchenko");
+
+        }
+
         #endregion
 
         #region IDSDirectory

@@ -15,7 +15,7 @@ namespace IDS
 
     public class ResultID
     {
-        public int id { get; set; }
+        public long id { get; set; }
         public int result { get; set; }
     }
     /// <summary>
@@ -87,6 +87,171 @@ namespace IDS
         public void AddError()
         {
             this.error++;
+        }
+    }
+    /// <summary>
+    /// Класс данных результата выполнения обнавлений
+    /// </summary>
+    public class ResultUpdateWagon
+    {
+        public int result { get; set; } // Глобальный ресурс выполнения всего переноса
+        public int count { get; set; }
+        public int update { get; set; }
+        public int skip { get; set; }
+        public int error { get; set; }
+        public int close { get; set; }
+        public List<ResultWagon> listResult = new List<ResultWagon>();
+
+        public ResultUpdateWagon(int count)
+        {
+            this.count = count;
+            this.result = 0;
+            this.update = 0;
+            this.skip = 0;
+            this.error = 0;
+            this.close = 0;
+            this.listResult.Clear();
+        }
+
+        public void SetUpdateResult(int result)
+        {
+            if (result < 0)
+            {
+                AddError(result); return;
+            }
+            if (result > 0)
+            {
+                AddUpdate(); return;
+            }
+            AddSkip();
+            return;
+        }
+        public void SetUpdateResult(int result, int num)
+        {
+            listResult.Add(new ResultWagon() { num = num, result = result });
+
+            if (result < 0)
+            {
+                AddError(result); return;
+            }
+            if (result > 0)
+            {
+                AddUpdate(); return;
+            }
+            AddSkip(); return;
+        }
+        public void SetResult(int code)
+        {
+            this.result = code;
+        }
+        public void AddUpdate()
+        {
+            this.update++;
+        }
+        public void AddSkip()
+        {
+            this.skip++;
+        }
+        public void AddError(int err_code)
+        {
+            this.error++;
+        }
+        public void AddError()
+        {
+            this.error++;
+        }
+        public void AddClose()
+        {
+            this.close++;
+        }
+    }
+
+    public class ResultUpdateID
+    {
+        public int result { get; set; } // Глобальный ресурс выполнения всего переноса
+        public int count { get; set; }
+        public int update { get; set; }
+        public int skip { get; set; }
+        public int error { get; set; }
+        public int close { get; set; }
+        public List<ResultID> listResult = new List<ResultID>();
+
+        public ResultUpdateID(int count)
+        {
+            this.count = count;
+            this.result = 0;
+            this.update = 0;
+            this.skip = 0;
+            this.error = 0;
+            this.close = 0;
+            this.listResult.Clear();
+        }
+
+        public void SetUpdateResult(int result)
+        {
+            if (result < 0)
+            {
+                AddError(result); return;
+            }
+            if (result > 0)
+            {
+                AddUpdate(); return;
+            }
+            AddSkip();
+            return;
+        }
+        public void SetUpdateResult(int result, long id)
+        {
+            listResult.Add(new ResultID() { id = id, result = result });
+
+            if (result < 0)
+            {
+                AddError(result); return;
+            }
+            if (result > 0)
+            {
+                AddUpdate(); return;
+            }
+            AddSkip(); return;
+        }
+        public void SetCloseResult(int result, long id)
+        {
+            listResult.Add(new ResultID() { id = id, result = result });
+
+            if (result < 0)
+            {
+                AddError(result); return;
+            }
+            if (result > 0)
+            {
+                AddClose(); return;
+            }
+            AddSkip(); return;
+        }
+
+        public void SetResult(int code)
+        {
+            this.result = code;
+        }
+        public void AddUpdate()
+        {
+            this.update++;
+        }
+        public void AddSkip()
+        {
+            this.skip++;
+        }
+        public void AddError(int err_code)
+        {
+            this.error++;
+        }
+        public void AddError()
+        {
+            this.error++;
+        }
+        public void AddClose()
+        {
+            this.close++;
         }
     }
     /// <summary>
@@ -180,12 +345,13 @@ namespace IDS
             this.error++;
         }
 
-        public void SetResultOperation(int result, int id)
+        public void SetResultOperation(int result, long id)
         {
             this.listResult.Add(new ResultID() { id = id, result = result });
             if (result < 0) { AddError(); }
         }
     }
+
 
     public class IDS_Base
     {
