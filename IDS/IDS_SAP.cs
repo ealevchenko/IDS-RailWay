@@ -200,7 +200,7 @@ namespace IDS
                                 {
                                     // Вагон на территории АМКР
                                     // Проверим на груз
-                                    if (uz_vag.id_cargo != 1 && uz_vag.id_cargo != 3 && uz_vag.id_cargo != 20)
+                                    if (uz_vag.id_cargo != 1 && uz_vag.id_cargo != 3 && uz_vag.id_cargo != 20 && uz_vag.id_cargo != 37 && uz_vag.id_cargo != 38 && uz_vag.id_cargo != 40)
                                     {
                                         // Обновить 
                                         SAPIncomingSupply sap_up = GetUpdateIncomingSupplyOfWebSAP(sap, user);
