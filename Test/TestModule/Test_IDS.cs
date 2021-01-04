@@ -84,12 +84,14 @@ namespace Test.TestModule
             IDS_SAP ids = new IDS_SAP(service.Test);
 
             EFSAPIncomingSupply ef_sap = new EFSAPIncomingSupply(new EFDbContext());
-            SAPIncomingSupply sap = new SAPIncomingSupply() {
+            SAPIncomingSupply sap = new SAPIncomingSupply()
+            {
                 id = 0,
                 id_arrival_car = 0,
                 num = 54905161,
                 num_doc_uz = "29426762",
-                 create = DateTime.Now, create_user = "test_sap"
+                create = DateTime.Now,
+                create_user = "test_sap"
             };
             //SAPIncomingSupply sap = ef_sap.Context.Where(s => s.id == 8091).FirstOrDefault();
             //sap.num = 54905161;
@@ -103,7 +105,7 @@ namespace Test.TestModule
             EFDbContext context = new EFDbContext();
 
             IDS_SAP ids = new IDS_SAP(service.Test);
-            int result = ids.UpdateListIncomingSupply(new List<int>(), @"EUROPE\ealevchenko");
+            int result = ids.UpdateListIncomingSupply(new List<int>() { 1, 3, 20, 37, 38, 40 }, @"EUROPE\ealevchenko");
 
         }
 
@@ -186,7 +188,7 @@ namespace Test.TestModule
 
             ResultTransfer res = new ResultTransfer(0);
 
-            res = ids.DislocationWagons(ref context, 111, false, 115, false, DateTime.Now, wagons, "TЭM18-183", "TЭM18-184",  "TEST");
+            res = ids.DislocationWagons(ref context, 111, false, 115, false, DateTime.Now, wagons, "TЭM18-183", "TЭM18-184", "TEST");
             //int res_save = context.SaveChanges();
 
         }
@@ -246,10 +248,10 @@ namespace Test.TestModule
             EFDbContext context = new EFDbContext();
 
             List<ListOperationWagon> list_sending = new List<ListOperationWagon>();
-            list_sending.Add(new ListOperationWagon() { wir_id = 45153, position = 1});
-            list_sending.Add(new ListOperationWagon() { wir_id = 45157, position = 2});
-            list_sending.Add(new ListOperationWagon() { wir_id = 45162, position = 3});
-            list_sending.Add(new ListOperationWagon() { wir_id = 45165, position = 4});
+            list_sending.Add(new ListOperationWagon() { wir_id = 45153, position = 1 });
+            list_sending.Add(new ListOperationWagon() { wir_id = 45157, position = 2 });
+            list_sending.Add(new ListOperationWagon() { wir_id = 45162, position = 3 });
+            list_sending.Add(new ListOperationWagon() { wir_id = 45165, position = 4 });
 
             int res = ids.SendingWagonsOfStation(105, list_sending, 12, 123, DateTime.Now, "TЭM18-183", "TЭM18-184", "TEST");
             //int res_save = context.SaveChanges();
@@ -264,9 +266,9 @@ namespace Test.TestModule
             EFDbContext context = new EFDbContext();
 
             List<ListOperationWagon> list_sending = new List<ListOperationWagon>();
-            list_sending.Add(new ListOperationWagon() { wir_id = 45152, position = 1});
-            list_sending.Add(new ListOperationWagon() { wir_id = 45154, position = 2});
-            list_sending.Add(new ListOperationWagon() { wir_id = 45156, position = 3});
+            list_sending.Add(new ListOperationWagon() { wir_id = 45152, position = 1 });
+            list_sending.Add(new ListOperationWagon() { wir_id = 45154, position = 2 });
+            list_sending.Add(new ListOperationWagon() { wir_id = 45156, position = 3 });
 
             int res = ids.ArrivalWagonsOfStation(12, true, list_sending, 494, true, DateTime.Now, "TЭM18-183", "TЭM18-184", "TEST");
             //int res_save = context.SaveChanges();

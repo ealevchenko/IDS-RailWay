@@ -109,8 +109,12 @@ namespace IDS
                 return null;// Ошибка
             }
         }
-
-
+        /// <summary>
+        /// Обновить информацию о входящей поставке
+        /// </summary>
+        /// <param name="sap_is"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public SAPIncomingSupply GetUpdateIncomingSupplyOfWebSAP(SAPIncomingSupply sap_is, string user)
         {
             try
@@ -160,8 +164,15 @@ namespace IDS
                 return null;// Ошибка
             }
         }
-
-
+        /// <summary>
+        /// Обновить информацию по всем входящим поставкам по указаному вагону
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="list_cargo"></param>
+        /// <param name="num"></param>
+        /// <param name="gr_sap_is"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public ResultUpdateID UpdateIncomingSupply(ref EFDbContext context, List<int> list_cargo, int num, List<SAPIncomingSupply> gr_sap_is, string user)
         {
             ResultUpdateID result = new ResultUpdateID(0);
@@ -200,7 +211,9 @@ namespace IDS
                                 {
                                     // Вагон на территории АМКР
                                     // Проверим на груз
-                                    if (uz_vag.id_cargo != 1 && uz_vag.id_cargo != 3 && uz_vag.id_cargo != 20 && uz_vag.id_cargo != 37 && uz_vag.id_cargo != 38 && uz_vag.id_cargo != 40)
+                                    int id_cargo = list_cargo.ToList().Find(x => x == uz_vag.id_cargo);
+
+                                    if (id_cargo==0)
                                     {
                                         // Обновить 
                                         SAPIncomingSupply sap_up = GetUpdateIncomingSupplyOfWebSAP(sap, user);
@@ -292,7 +305,13 @@ namespace IDS
                 return result;// Ошибка
             }
         }
-
+        /// <summary>
+        /// Сгруппировать входящие поставки по номерам вагонов и обновить информацию по всем входящим поставкам по кждому вагону 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="list_cargo"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public ResultUpdateWagon UpdateListIncomingSupply(ref EFDbContext context, List<int> list_cargo, string user)
         {
             ResultUpdateWagon result = new ResultUpdateWagon(0);
@@ -309,8 +328,6 @@ namespace IDS
                 }
 
                 EFSAPIncomingSupply ef_sap = new EFSAPIncomingSupply(context);
-                //EFArrivalCars ef_ac = new EFArrivalCars(context);
-                //EFArrival_UZ_Vagon ef_uz_vag = new EFArrival_UZ_Vagon(context);
 
                 List<IGrouping<int, SAPIncomingSupply>> group_sap_is = ef_sap
                     .Context
@@ -342,7 +359,12 @@ namespace IDS
                 return result;// Ошибка
             }
         }
-
+        /// <summary>
+        /// Выполнить сервис "Обновить все текущие входяшие поставки"
+        /// </summary>
+        /// <param name="list_cargo"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public int UpdateListIncomingSupply(List<int> list_cargo, string user)
         {
             try
@@ -374,7 +396,7 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("UpdateIncomingSupply(list_cargo = {0}, user = {1})", list_cargo, user), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("UpdateListIncomingSupply(list_cargo = {0}, user = {1})", list_cargo, user), servece_owner, eventID);
                 return -1;// Возвращаем id=-1 , Ошибка
             }
         }
