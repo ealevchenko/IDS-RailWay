@@ -428,7 +428,7 @@
                                             });
                                             if (res) {
                                                 var current_rent = ids_dir.getCurrentRentOfWagon(res);
-                                                if (current_rent.id_operator === id_operator) {
+                                                if (current_rent && current_rent.id_operator === id_operator) {
                                                     arr_yes_operator.push(arr_yes[io]);
                                                 } else {
                                                     arr_no_operator.push(arr_yes[io]);
