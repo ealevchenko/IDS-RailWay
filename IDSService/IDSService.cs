@@ -43,13 +43,18 @@ namespace IDSService
         private eventID eventID = eventID.IDS;
         private service servece_name = service.IDS;
         private service thread_transfer_outgoing_kis = service.IDS_TransferOutgoingOfKIS;
+        private service thread_update_incoming_supply = service.IDS_UpdateIncomingSupply;
 
         private int interval_transfer_outgoing_kis = 3600; //  1раз в час
+        private int interval_update_incoming_supply = 3600; //  1раз в час
 
         bool active_transfer_outgoing_kis = true;
+        bool active_update_incoming_supply = true;
 
         //System.Timers.Timer timer_services = new System.Timers.Timer();
         System.Timers.Timer timer_services_outgoing_kis = new System.Timers.Timer();
+        System.Timers.Timer timer_services_update_incoming_supply = new System.Timers.Timer();
+
 
         private IDSThread ids_th = new IDSThread(service.IDS);
 
@@ -70,8 +75,10 @@ namespace IDSService
             {
                 // интервалы
                 this.interval_transfer_outgoing_kis = int.Parse(ConfigurationManager.AppSettings["IntervalTransferOutgoingOfKIS"].ToString());
+                this.interval_update_incoming_supply = int.Parse(ConfigurationManager.AppSettings["IntervalUpdateIncomingSupply"].ToString());
                 // состояние активности
                 this.active_transfer_outgoing_kis = bool.Parse(ConfigurationManager.AppSettings["ActiveTransferOutgoingOfKIS"].ToString());
+                this.active_update_incoming_supply = bool.Parse(ConfigurationManager.AppSettings["ActiveUpdateIncomingSupply"].ToString());
                 //this.active_close_approaches = RWSetting.GetDB_Config_DefaultSetting("ActiveCloseApproachesCars", this.thread_close_approaches, this.active_close_approaches, true);
 
                 // Настроем таймер контроля выполнения сервиса
@@ -81,7 +88,8 @@ namespace IDSService
                 timer_services_outgoing_kis.Interval = this.interval_transfer_outgoing_kis * 1000;
                 timer_services_outgoing_kis.Elapsed += new System.Timers.ElapsedEventHandler(this.OnTimerServices_TransferOutgoingOfKIS);
 
-
+                timer_services_update_incoming_supply.Interval = this.interval_update_incoming_supply * 1000;
+                timer_services_update_incoming_supply.Elapsed += new System.Timers.ElapsedEventHandler(this.OnTimerServices_UpdateIncomingSupply);
                 //Добавить инициализацию других таймеров
                 //...............
             }
@@ -104,6 +112,7 @@ namespace IDSService
             //timer_services.Start();
             // Запустить таймера потоков
             RunTimer_TransferOutgoingOfKIS();
+            RunTimer_UpdateIncomingSupply();
             //RunTimerCloseApproachesCars();
             //TODO: Добавить запуск других таймеров
             //...............
@@ -118,6 +127,9 @@ namespace IDSService
             message.WarningLog(servece_name, eventID);message.EventLog(EventStatus.Ok, servece_name, eventID);
             message = String.Format("Интервал выполнения сервиса {0}-{1} сек.", this.thread_transfer_outgoing_kis, this.interval_transfer_outgoing_kis);
             message.WarningLog(servece_name, eventID);message.EventLog(EventStatus.Ok, servece_name, eventID);
+            message = String.Format("Интервал выполнения сервиса {0}-{1} сек.", this.thread_update_incoming_supply, this.interval_update_incoming_supply);
+            message.WarningLog(servece_name, eventID);message.EventLog(EventStatus.Ok, servece_name, eventID);
+
             //String.Format(" сервиса {0}-{1} сек.,", this.thread_close_approaches, this.interval_close_approaches);
             // лог запуска
             //this.thread_host.WriteLogStatusServices();
@@ -188,7 +200,49 @@ namespace IDSService
             }
             catch (Exception e)
             {
-                e.ExceptionLog(String.Format("OnTimerServicesArrival(sender={0}, args={1})", sender, args.ToString()), this.servece_name, eventID);
+                e.ExceptionLog(String.Format("OnTimerServices_TransferOutgoingOfKIS(sender={0}, args={1})", sender, args.ToString()), this.servece_name, eventID);
+            }
+        }
+        #endregion
+
+        #region IDS_UpdateIncomingSupply
+        protected void Start_UpdateIncomingSupply(bool active)
+        {
+            if (active)
+            {
+                ids_th.Start_UpdateIncomingSupply();
+            }
+        }
+
+        protected void Start_UpdateIncomingSupply()
+        {
+            bool active = bool.Parse(ConfigurationManager.AppSettings["ActiveUpdateIncomingSupply"].ToString());
+            Start_UpdateIncomingSupply(active);
+        }
+
+        protected void RunTimer_UpdateIncomingSupply()
+        {
+            Start_UpdateIncomingSupply();
+            timer_services_update_incoming_supply.Start();
+        }
+
+        private void OnTimerServices_UpdateIncomingSupply(object sender, System.Timers.ElapsedEventArgs args)
+        {
+            //String.Format("Сервис : {0} сработал таймер OnTimerServicesArrival.", this.servece_name).WriteInformation(servece_name, eventID);
+            try
+            {
+                bool active = bool.Parse(ConfigurationManager.AppSettings["ActiveUpdateIncomingSupply"].ToString());
+                Start_UpdateIncomingSupply(active);
+                if (active != this.active_update_incoming_supply)
+                {
+                    this.active_update_incoming_supply = active;
+                    string mes_service_start = String.Format("Сервис : {0}, выполнение потока {1} - {2}", this.servece_name, this.thread_update_incoming_supply, active ? "возабновленно" : "остановленно");
+                    mes_service_start.EventLog(EventStatus.Ok, servece_name, eventID);
+                }
+            }
+            catch (Exception e)
+            {
+                e.ExceptionLog(String.Format("OnTimerServices_UpdateIncomingSupply(sender={0}, args={1})", sender, args.ToString()), this.servece_name, eventID);
             }
         }
         #endregion

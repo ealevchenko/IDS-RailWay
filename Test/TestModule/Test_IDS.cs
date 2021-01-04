@@ -278,6 +278,20 @@ namespace Test.TestModule
 
         #endregion
 
+        #region IDSThread
+        /// <summary>
+        ///  Тест выполнения потока обновления информации по Вх. поставке
+        /// </summary>
+        public void IDSThread_Start_UpdateIncomingSupply()
+        {
+            IDSThread ids_th = new IDSThread(service.IDS);
+            ids_th.Start_UpdateIncomingSupply();
+
+        }
+
+        #endregion
+
+
         public void GetActs()
         {
 

@@ -181,7 +181,6 @@ namespace Test
             //tkis.KISTransfer_TransferOutgoingIDSOfKis();
             #endregion
 
-
             #region Test_IDS Тест ИДС
             Test_IDS tids = new Test_IDS();
             //tids.IDSTransfer_AddArrival();
@@ -201,7 +200,8 @@ namespace Test
             //tids.IDSTransfer_SendingOutgoingSostav();             // Закрытие WIR отправка состава на УЗ
 
             //tids.IDS_SAP_GetCurrentIncomingSupplyOfWebSAP();      // Чтение и обновление строки САП входящие поставки
-            tids.IDS_SAP_UpdateIncomingSupply();                    // Обновление данных по входящей поставке
+            //tids.IDS_SAP_UpdateIncomingSupply();                    // Обновление данных по входящей поставке
+            tids.IDSThread_Start_UpdateIncomingSupply();                // Тест потока "Обновление данных по входящей поставке"
 
             //tids.IDS_WIR_RenumberingWagons();                       // Перенумерация с указанной позиции
             //tids.IDS_WIR_DislocationWagons();                       // Операция дислокация

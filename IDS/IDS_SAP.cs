@@ -26,6 +26,8 @@ namespace IDS
         private eventID eventID = eventID.IDS_IDSSAP;
         private int day_approach_limit = 30; // Количество дней, ожидания вагона с подходов
         public int Day_approach_limit { get { return this.day_approach_limit; } set { this.day_approach_limit = value; } }// TODO: Удалить 
+        //private string exceptions_cargo = "1;3;20;37;38;40"; // Код грузов для исключения из опроса обновления по ним входящей поставки
+        //public string Exceptions_Cargo { get { return this.exceptions_cargo; } set { this.exceptions_cargo = value; } }// TODO: Удалить 
 
         public IDS_SAP()
             : base()
@@ -343,12 +345,14 @@ namespace IDS
                 {
                     // Номер вагона
                     int num = gr_sap_is.Key;
-                    Console.WriteLine("Обрабатываю вагон №{0}, Кол. вх. пост. = {1}, уже ошибок = {2}.", num, gr_sap_is.Count(), result.error);
+                    //Console.WriteLine("Обрабатываю вагон №{0}, Кол. вх. пост. = {1}, уже ошибок = {2}.", num, gr_sap_is.Count(), result.error);
                     ResultUpdateID res_wag = UpdateIncomingSupply(ref context, list_cargo, num, gr_sap_is.OrderBy(w => w.id).ToList(), user);
                     result.SetUpdateResult(res_wag.result, num);
                     result.close += res_wag.close;
                     result.skip += res_wag.skip;
-                    Console.WriteLine("Обработал вагон №{0}, Код выполнения = {1}. Осталось обработать = {2}", num, res_wag.result, count_wag--);
+                    string mess = String.Format("Обработал вагон №{0}, Код выполнения={1}. Осталось обработать={2}", num, res_wag.result, count_wag--);
+                    mess.InformationLog(servece_owner, eventID);
+                    //Console.WriteLine("Обработал вагон №{0}, Код выполнения = {1}. Осталось обработать = {2}", num, res_wag.result, count_wag--);
                 }
                 return result;
             }

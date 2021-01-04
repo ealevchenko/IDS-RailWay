@@ -16,9 +16,13 @@ namespace IDS
         protected static service servece_owner = service.Null;
 
         protected static object locker_db_outgoing = new object();
+        protected static object locker_sap_is = new object();
 
         protected Thread thTransferOutgoingOfKIS = null;
         public bool statusTransferOutgoingOfKIS { get { return thTransferOutgoingOfKIS.IsAlive; } }
+
+        protected Thread thUpdateIncomingSupply = null;
+        public bool statusUpdateIncomingSupply { get { return thUpdateIncomingSupply.IsAlive; } }
 
         public IDSThread()
         {
@@ -103,5 +107,94 @@ namespace IDS
             }
         }
         #endregion
+
+        #region IDS_UpdateIncomingSupply
+        /// <summary>
+        /// Запустить поток обновления входящей поставки по вагонам
+        /// </summary>
+        /// <returns></returns>
+        public bool Start_UpdateIncomingSupply()
+        {
+            service service = service.IDS_UpdateIncomingSupply;
+            string mes_service_start = String.Format("Поток : {0} сервиса : {1}", service.ToString(), servece_owner);
+            try
+            {
+                if ((thUpdateIncomingSupply == null) || (!thUpdateIncomingSupply.IsAlive && thUpdateIncomingSupply.ThreadState == ThreadState.Stopped))
+                {
+                    thUpdateIncomingSupply = new Thread(UpdateIncomingSupply);
+                    thUpdateIncomingSupply.Name = service.ToString();
+                    thUpdateIncomingSupply.Start();
+                }
+                return thUpdateIncomingSupply.IsAlive;
+            }
+            catch (Exception ex)
+            {
+                mes_service_start += " - ошибка запуска.";
+                ex.ExceptionLog(mes_service_start, servece_owner, eventID);
+                return false;
+            }
+        }
+        /// <summary>
+        /// Поток обновления входящей поставки по вагонам
+        /// </summary>
+        private static void UpdateIncomingSupply()
+        {
+            service service = service.IDS_TransferOutgoingOfKIS;
+            DateTime dt_start = DateTime.Now;
+            try
+            {
+                int day_approach_limit = 30;
+                string exceptions_cargo = "1;3;20;37;38;40"; // Код грузов для исключения из опроса обновления по ним входящей поставки
+                List<int> list_exceptions_cargo = new List<int>();
+                //bool transfer_set_outgoing_wagon_of_kis = true;
+                // считать настройки
+                try
+                {
+                    // Количество дней, ожидания вагона с подходов
+                    day_approach_limit = int.Parse(ConfigurationManager.AppSettings["SAP_IS_DayApproachLimit"].ToString());
+                    exceptions_cargo = ConfigurationManager.AppSettings["SAP_IS_ExceptionsCargo"].ToString();
+                    try
+                    {
+                        string[] list_str = exceptions_cargo.Split(';');
+                        if (list_str != null && list_str.Length > 0) {
+                            foreach (string id in list_str) {
+                                list_exceptions_cargo.Add(int.Parse(id));
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.ExceptionLog(String.Format("Ошибка преобразования массива SAP_IS_ExceptionsCargo потока {0}, сервиса {1}", service.ToString(), servece_owner), servece_owner, eventID);
+                    }
+                    //transfer_set_outgoing_wagon_of_kis = bool.Parse(ConfigurationManager.AppSettings["TransferSetOutgoingWagonOfKis"].ToString());
+                }
+                catch (Exception ex)
+                {
+                    ex.ExceptionLog(String.Format("Ошибка выполнения считывания настроек потока {0}, сервиса {1}", service.ToString(), servece_owner), servece_owner, eventID);
+                }
+                int res_update = 0;
+                lock (locker_sap_is)
+                {
+                    IDS_SAP ids_sap = new IDS_SAP(service);
+                    ids_sap.Day_approach_limit = day_approach_limit;
+                    res_update = ids_sap.UpdateListIncomingSupply(list_exceptions_cargo, (System.Environment.UserDomainName + @"\" + System.Environment.UserName));
+                }
+                TimeSpan ts = DateTime.Now - dt_start;
+                string mes_service_exec = String.Format("Поток {0} сервиса {1} - время выполнения: {2}:{3}:{4}({5}), код выполнения: res_update:{6}.", service.ToString(), servece_owner, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds, res_update);
+                mes_service_exec.InformationLog(servece_owner, eventID);
+                service.ServicesToLog(service.ToString() + " - выполнен.", dt_start, DateTime.Now, res_update);
+            }
+            catch (ThreadAbortException exc)
+            {
+                String.Format("Поток {0} сервиса {1} - прерван по событию ThreadAbortException={2}", service.ToString(), servece_owner, exc).WarningLog(servece_owner, eventID);
+            }
+            catch (Exception ex)
+            {
+                ex.ExceptionLog(String.Format("Ошибка выполнения цикла обновления, потока {0} сервис {1}", service.ToString(), servece_owner), servece_owner, eventID);
+                service.ServicesToLog(service.ToString() + " - завершен с ошибкой.", dt_start, DateTime.Now, -1);
+            }
+        }
+        #endregion
+
     }
 }

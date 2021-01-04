@@ -133,7 +133,7 @@ namespace IDS
 
                 string response = Select(message, "GET", "text/xml");
 
-                String.Format("\r\n Выполнение метода GetIncomingSupply(ID={0}, NOM_NAKL={1}, NOM_VAG={2}) \r\nurl={3} \r\nxml={4}", ID, NOM_NAKL, NOM_VAG, message, response).WarningLog();
+                //String.Format("\r\n Выполнение метода GetIncomingSupply(ID={0}, NOM_NAKL={1}, NOM_VAG={2}) \r\nurl={3} \r\nxml={4}", ID, NOM_NAKL, NOM_VAG, message, response).WarningLog();
 
                 if (String.IsNullOrWhiteSpace(response)) return null;
                 XDocument doc = XDocument.Parse(response);
