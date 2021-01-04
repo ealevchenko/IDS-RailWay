@@ -215,7 +215,7 @@ namespace IDS
                                     // Проверим на груз
                                     int id_cargo = list_cargo.ToList().Find(x => x == uz_vag.id_cargo);
 
-                                    if (id_cargo==0)
+                                    if (id_cargo == 0)
                                     {
                                         // Обновить 
                                         SAPIncomingSupply sap_up = GetUpdateIncomingSupplyOfWebSAP(sap, user);
@@ -351,7 +351,15 @@ namespace IDS
                     result.close += res_wag.close;
                     result.skip += res_wag.skip;
                     string mess = String.Format("Обработал вагон №{0}, Код выполнения={1}. Осталось обработать={2}", num, res_wag.result, count_wag--);
-                    mess.InformationLog(servece_owner, eventID);
+                    if (res_wag.result >= 0)
+                    {
+                        mess.InformationLog(servece_owner, eventID);
+                    }
+                    else
+                    {
+                        mess.ErrorLog(servece_owner, eventID);
+                    }
+
                     //Console.WriteLine("Обработал вагон №{0}, Код выполнения = {1}. Осталось обработать = {2}", num, res_wag.result, count_wag--);
                 }
                 return result;
