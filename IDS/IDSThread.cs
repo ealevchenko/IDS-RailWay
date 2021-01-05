@@ -139,7 +139,7 @@ namespace IDS
         /// </summary>
         private static void UpdateIncomingSupply()
         {
-            service service = service.IDS_TransferOutgoingOfKIS;
+            service service = service.IDS_UpdateIncomingSupply;
             DateTime dt_start = DateTime.Now;
             try
             {
