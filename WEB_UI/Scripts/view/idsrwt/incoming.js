@@ -4908,7 +4908,7 @@
             // Создадим или определим ранее созданый документ УЗ (в ручном режиме)
             add_doc_uz: function (callback) {
                 // Определим название документа
-                var manual_num = 'MNL_' + cars_detali.uz_doc_num_doc.val();
+                var manual_num = 'MNL' + cars_detali.id_sostav + '_'+cars_detali.uz_doc_num_doc.val();
                 var result_manual_num_doc = null;
                 cars_detali.ids_inc.getUZ_DOCOfNum(manual_num, function (result_manual_num_doc) {
                     if (!result_manual_num_doc) {
