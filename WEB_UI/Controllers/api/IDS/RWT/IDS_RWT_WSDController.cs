@@ -391,8 +391,12 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         {
             try
             {
-                string sql = "select * from [IDS].[get_view_wagons_of_way](" + id_way.ToString() + ") order by position";
-                List<view_wagons> list = db.Database.SqlQuery<view_wagons>(sql).ToList();
+                db.Database.CommandTimeout = 300;
+                System.Data.SqlClient.SqlParameter id = new System.Data.SqlClient.SqlParameter("@id_way", id_way);
+                string sql = "select * from [IDS].[get_view_wagons_of_way](@id_way) order by position";
+                //List<view_wagons> list = db.Database.SqlQuery<view_wagons>(sql, id).ToList();
+                var list = db.Database.SqlQuery<view_wagons>(sql, id).ToList();
+                this.db.Database.CommandTimeout = null;
                 return Ok(list);
             }
             catch (Exception e)
