@@ -23,6 +23,10 @@
                 'field_change_user': 'Правил',
                 'field_create_sostav': 'Добавил',
                 'field_change_sostav': 'Правил',
+
+                'title_button_export': 'Экспорт',
+                'title_button_buffer': 'Буфер',
+                'title_button_excel': 'Excel',
             },
             'en':  //default language: English
             {
@@ -39,10 +43,17 @@
         alert = new ALERT($('div#main-alert')),// Создадим класс ALERTG
         ids_inc = new IDS_RWT(lang), // Создадим класс IDS_RWT
         num_wagon = $('input#num_wagon').val(''),
+        // Закладка "Картачка вагона"
+        code_sng = $('input#code_sng'),
+        countrys_name = $('input#countrys_name'),
+        genus_abbr = $('input#genus_abbr'),
+        genus_name = $('input#genus_name'),
+
         bt_search_wagon = $('button#bt_search_wagon').on('click', function (event) {
             event.preventDefault();
             search_wagon();
         }),
+
         // Загрузка основных справочников приложения
         loadReference = function (callback) {
             LockScreen(langView('mess_load', langs));
@@ -56,9 +67,18 @@
                 }
             });
         },
+        // Очистка
+        clear = function () {
+            // Закладка "Картачка вагона"
+            code_sng.val('');
+            countrys_name.val('');
+            genus_abbr.val('');
+            genus_name.val('');
+        },
         // Найти вагон
         search_wagon = function () {
             alert.clear_message();
+            clear(); // Очистим экран от старой информации
             LockScreen(langView('mess_delay', langs));
             bt_search_wagon.prop("disabled", true);
             var num = num_wagon.val();
@@ -69,11 +89,28 @@
                 LockScreenOff();
             } else {
                 // Ок, начинаем поиск
+                // Справочник вагонов
+                ids_inc.ids_dir.getWagonOfNum(num, function (wagon) {
+                    if (wagon) {
+                        var countrys = wagon.Directory_Countrys ? wagon.Directory_Countrys : null;
+                        if (countrys) {
+                            code_sng.val(countrys.code_sng);
+                            countrys_name.val(countrys['countrys_name_'+lang]);
+                        }
+                        var genus = wagon.Directory_GenusWagons ? wagon.Directory_GenusWagons : null;
+                        if (genus) {
+                            genus_abbr.val(genus['abbr_'+lang]);
+                            genus_name.val(genus['genus_'+lang]);
+                        }
+                    }
+                });
+
                 ids_inc.getArrivalCarsOfNum(num, function (list_arrival_cars) {
                     table_arrival_wagon.view(list_arrival_cars);
                     bt_search_wagon.prop("disabled", false);
                     LockScreenOff();
                 });
+                
             }
 
         },
@@ -143,16 +180,23 @@
                     stateSave: false,
                     buttons: [
                         {
-                            text: langView('title_button_buffer', langs),
-                            extend: 'copyHtml5',
-                        },
-                        {
-                            text: langView('title_button_excel', langs),
-                            extend: 'excelHtml5',
-                            sheetName: 'По прибытию',
-                            messageTop: function () {
-                                return '';
-                            }
+                            extend: 'collection',
+                            text: langView('title_button_export', langs),
+                            buttons: [
+                                {
+                                    text: langView('title_button_buffer', langs),
+                                    extend: 'copyHtml5',
+                                },
+                                {
+                                    text: langView('title_button_excel', langs),
+                                    extend: 'excelHtml5',
+                                    sheetName: 'Вагоны на пути',
+                                    messageTop: function () {
+                                        return '';
+                                    }
+                                },
+                            ],
+                            autoClose: true
                         },
                         {
                             extend: 'pageLength',

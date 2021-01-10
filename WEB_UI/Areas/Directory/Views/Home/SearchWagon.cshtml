@@ -40,11 +40,13 @@
                 <div class="card-header bg-secondary text-white">
                     <div class="row">
                         <div class="col-xl-12 text-center">
-                            <form class="form-inline">
-                                Найти вагон:
-                                <input class="form-control mr-sm-2" id="num_wagon" name="num_wagon" type="number" style="font-size:1.6rem;" placeholder="Номер вагона" aria-label="Search">
-                                <button class="btn btn-outline-success my-2 my-sm-0" id="bt_search_wagon" name="bt_search_wagon" type="submit">Search</button>
-                            </form>
+                            <div class="container-fluid">
+                                <form class="form-inline">
+                                    <label class="col-form-label text-white mr-2" for="num_wagon">Найти вагон:</label>
+                                    <input class="form-control mr-sm-2" id="num_wagon" name="num_wagon" type="number" style="font-size:1.5rem;" placeholder="Номер вагона" aria-label="Search">
+                                    <button class="btn btn-primary my-2 my-sm-0" id="bt_search_wagon" name="bt_search_wagon" type="submit">Search</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -58,6 +60,36 @@
                                 </div>
                                 <!-- Текстовый контент -->
                                 <div class="card-body collapse show" id="info_wagon">
+                                    <div class="row">
+                                        <div class="col-xl-6 operator-detali-tables">
+                                            <fieldset class="border-primary">
+                                                <legend>Основные</legend>
+                                                <div class="row">
+                                                    <div class="col-xl-12 d-flex">
+                                                        <div class="col-xl-1 p-2 d-flex">
+                                                            <label for="code_sng" class="col-form-label text-right">Код:</label>
+                                                            <input type="number" class="form-control info-wagon-form-control ml-2" id="code_sng" name="code_sng" disabled>
+                                                        </div>
+                                                        <div class="col-xl-3 p-2 d-flex">
+                                                            <label for="countrys_name" class="col-form-label text-right">Администрация:</label>
+                                                            <input type="text" class="form-control info-wagon-form-control ml-2" id="countrys_name" name="countrys_name" disabled>
+                                                        </div>
+                                                        <div class="col-xl-2 p-2 d-flex">
+                                                            <label for="genus_abbr" class="col-form-label text-right col-xl-8">Род(абр.):</label>
+                                                            <input type="text" class="form-control info-wagon-form-control ml-2" id="genus_abbr" name="genus_abbr" disabled>
+                                                        </div>
+                                                        <div class="col-xl-4 p-2 d-flex">
+                                                            <label for="genus_name" class="col-form-label  text-right col-xl-5">Род вагона:</label>
+                                                            <input type="text" class="form-control info-wagon-form-control ml-2" id="genus_name" name="genus_name" disabled>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-xl-6 operator-detali-tables">
+                                            <table class="display compact hover row-border" id="table_info_wagon_rent" style="width:100%;"></table>
+                                        </div>
+                                    </div>
                                     @*<fieldset class="border-primary"></fieldset>*@
                                 </div>
                             </div><!-- Конец карточки -->
@@ -72,10 +104,11 @@
                                 </div>
                                 <!-- Текстовый контент -->
                                 <div class="card-body collapse show" id="approaches_wagon">
-                                    @*<fieldset class="border-primary">
-
-                                        </fieldset>*@
-                                    <table class="table table-striped table-bordered" id="table_approaches_wagon" style="width:100%;"></table>
+                                    <div class="row">
+                                        <div class="col-xl-12 operator-detali-tables">
+                                            <table class="display compact hover row-border" id="table_approaches_wagon" style="width:100%;"></table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div><!-- Конец карточки -->
                         </div>
@@ -89,10 +122,11 @@
                                 </div>
                                 <!-- Текстовый контент -->
                                 <div class="card-body collapse show" id="arrival_wagon">
-                                    @*<fieldset class="border-primary">
-
-                                        </fieldset>*@
-                                    <table class="table table-striped table-bordered" id="table_arrival_wagon" style="width:100%;"></table>
+                                    <div class="row">
+                                        <div class="col-xl-12 operator-detali-tables">
+                                            <table class="display compact hover row-border" id="table_arrival_wagon" style="width:100%;"></table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div><!-- Конец карточки -->
                         </div>
@@ -108,8 +142,8 @@
                                 <div class="card-body collapse show" id="internal_wagon">
                                     @*<fieldset class="border-primary">
 
-                                        </fieldset>*@
-                                    <table class="table table-striped table-bordered" id="table_internal_wagon" style="width:100%;"></table>
+                                        </fieldset>*@<fieldset class="border-primary"></fieldset>
+                                    <table class="display compact hover row-border" id="table_internal_wagon" style="width:100%;"></table>
                                 </div>
                             </div><!-- Конец карточки -->
                         </div>
@@ -125,14 +159,14 @@
                                 <div class="card-body collapse show" id="outgoing_wagon">
                                     @*<fieldset class="border-primary">
 
-                                        </fieldset>*@
-                                    <table class="table table-striped table-bordered" id="table_outgoing_wagon" style="width:100%;"></table>
+                                        </fieldset>*@<fieldset class="border-primary"></fieldset>
+                                    <table class="display compact hover row-border" id="table_outgoing_wagon" style="width:100%;"></table>
                                 </div>
                             </div><!-- Конец карточки -->
                         </div>
                     </div>
                 </div>
-                <div class="card-footer bg-transparent border-dark">Footer</div>
+                <div class="card-footer bg-transparent border-dark">&copy; @DateTime.Now.Year ДАТП & ТД</div>
             </div>
         </div>
     </div>

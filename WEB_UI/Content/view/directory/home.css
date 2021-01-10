@@ -131,3 +131,10 @@ tr.group:hover {
 .not-exist-amkr {
     background-color:#f5cdb0 !important;
 }
+
+.operator-detali-tables {
+    font-size: 12px;
+}
+.info-wagon-form-control {
+    font-size: 1.2rem;
+}
