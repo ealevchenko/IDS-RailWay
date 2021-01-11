@@ -818,6 +818,15 @@ namespace IDS
                 if (wagon == null) return (int)errors_ids_dir.not_wagon_of_db;// Указаного вагона нет в базе
                 // Добавим оператора
                 int result_rent = OperationUpdateWagonRent(ref context, ref wagon, edit_operator, id_operator, start_rent, edit_limiting, id_limiting, user);
+                // Установка бита требуется внимание
+                if (wagon.id_operator == null || wagon.id_countrys == 0 || wagon.id_countrys == 0)
+                {
+                    wagon.bit_warning = true;
+                }
+                else
+                {
+                    wagon.bit_warning = false;
+                }
                 // если все Ок тогда 1 
                 return result_rent > 0 ? 1 : result_rent; // Вернем результат
             }
