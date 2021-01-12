@@ -48,6 +48,14 @@
         countrys_name = $('input#countrys_name'),
         genus_abbr = $('input#genus_abbr'),
         genus_name = $('input#genus_name'),
+        usl_tip = $('input#usl_tip'),
+        kol_os = $('input#kol_os'),
+        gruzp = $('input#gruzp'),
+        tara = $('input#gruzp'),
+        year_built = $('input#year_built'),
+        factory_number = $('input#factory_number'),
+        inventory_number = $('input#inventory_number'),
+        owner = $('input#owner'),
 
         bt_search_wagon = $('button#bt_search_wagon').on('click', function (event) {
             event.preventDefault();
@@ -74,6 +82,14 @@
             countrys_name.val('');
             genus_abbr.val('');
             genus_name.val('');
+            usl_tip.val('');
+            kol_os.val('');
+            gruzp.val('');
+            tara.val('');
+            year_built.val('');
+            factory_number.val('');
+            inventory_number.val('');
+            owner.val('');
         },
         // Найти вагон
         search_wagon = function () {
@@ -102,6 +118,19 @@
                             genus_abbr.val(genus['abbr_'+lang]);
                             genus_name.val(genus['genus_'+lang]);
                         }
+                        usl_tip.val(wagon.usl_tip);
+                        kol_os.val(wagon.kol_os);
+                        gruzp.val(wagon.gruzp);
+                        tara.val(wagon.tara);
+                        year_built.val(wagon.year_built);
+                        factory_number.val(wagon.factory_number);
+                        inventory_number.val(wagon.inventory_number);
+                        var dir_owner = wagon.Directory_OwnersWagons ? wagon.Directory_OwnersWagons : null;
+                        if (dir_owner) {
+                            owner.val(dir_owner['owner_' + lang]);
+                        }
+                        var dir_operators = wagon.Directory_OperatorsWagons ? wagon.Directory_OperatorsWagons : null;
+
                     }
                 });
 

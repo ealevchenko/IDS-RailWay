@@ -7,6 +7,7 @@
     @Styles.Render("~/DataTables/css")
     @*@Styles.Render("~/DateTime/css")*@
     <link rel="stylesheet" type="text/css" href="~/Content/view/directory/home.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/view/directory/search_wagon.css">
 }
 
 @section scripts {
@@ -56,7 +57,7 @@
                             <div class="card border-success mt-3">
                                 <!-- Шапка -->
                                 <div class="card-header text-success">
-                                    <button class="btn btn-link text-success text-uppercase" data-toggle="collapse" data-target="#info_wagon">Карточка вагона</button>
+                                    <button class="btn btn-link text-success text-uppercase" data-toggle="collapse" data-target="#info_wagon" style="font-size:1.3rem">Карточка вагона</button>
                                 </div>
                                 <!-- Текстовый контент -->
                                 <div class="card-body collapse show" id="info_wagon">
@@ -64,24 +65,54 @@
                                         <div class="col-xl-6 operator-detali-tables">
                                             <fieldset class="border-primary">
                                                 <legend>Основные</legend>
-                                                <div class="row">
+                                                <div class="row mb-2">
                                                     <div class="col-xl-12 d-flex">
-                                                        <div class="col-xl-1 p-2 d-flex">
-                                                            <label for="code_sng" class="col-form-label text-right">Код:</label>
-                                                            <input type="number" class="form-control info-wagon-form-control ml-2" id="code_sng" name="code_sng" disabled>
-                                                        </div>
-                                                        <div class="col-xl-3 p-2 d-flex">
-                                                            <label for="countrys_name" class="col-form-label text-right">Администрация:</label>
-                                                            <input type="text" class="form-control info-wagon-form-control ml-2" id="countrys_name" name="countrys_name" disabled>
-                                                        </div>
-                                                        <div class="col-xl-2 p-2 d-flex">
-                                                            <label for="genus_abbr" class="col-form-label text-right col-xl-8">Род(абр.):</label>
-                                                            <input type="text" class="form-control info-wagon-form-control ml-2" id="genus_abbr" name="genus_abbr" disabled>
-                                                        </div>
-                                                        <div class="col-xl-4 p-2 d-flex">
-                                                            <label for="genus_name" class="col-form-label  text-right col-xl-5">Род вагона:</label>
-                                                            <input type="text" class="form-control info-wagon-form-control ml-2" id="genus_name" name="genus_name" disabled>
-                                                        </div>
+                                                        <label for="code_sng" class="col-form-label text-right w-10">Код:</label>
+                                                        <input type="number" readonly class="form-control info-wagon-form-control ml-2 w-5" id="code_sng" name="code_sng" disabled>
+                                                        <label for="countrys_name" class="col-form-label text-right ml-2 w-15">Администрация:</label>
+                                                        <input type="text" readonly class="form-control info-wagon-form-control ml-2 w-10" id="countrys_name" name="countrys_name" disabled>
+                                                        <label for="genus_abbr" class="col-form-label text-right ml-2 w-10">Род(абр.):</label>
+                                                        <input type="text" readonly class="form-control info-wagon-form-control ml-2 w-5" id="genus_abbr" name="genus_abbr" disabled>
+                                                        <label for="genus_name" class="col-form-label  text-right ml-2 w-15">Род вагона:</label>
+                                                        <input type="text" readonly class="form-control info-wagon-form-control ml-2 w-15" id="genus_name" name="genus_name" disabled>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-2">
+                                                    <div class="col-xl-12 d-flex">
+                                                        <label for="usl_tip" class="col-form-label text-right w-10">Тип цист.:</label>
+                                                        <input type="number" readonly class="form-control info-wagon-form-control ml-2 w-10" id="usl_tip" name="usl_tip" disabled>
+                                                        <label for="kol_os" class="col-form-label text-right ml-2 w-10">Кол. ос.:</label>
+                                                        <input type="number" readonly class="form-control info-wagon-form-control ml-2 w-10" id="kol_os" name="kol_os" disabled>
+                                                        <label for="gruzp" class="col-form-label text-right ml-2 w-10">Груз-сть (УЗ):</label>
+                                                        <input type="number" readonly class="form-control info-wagon-form-control ml-2 w-10" id="gruzp" name="gruzp" disabled>
+                                                        <label for="tara" class="col-form-label  text-right ml-2 w-10">Тара (УЗ):</label>
+                                                        <input type="number" readonly class="form-control info-wagon-form-control ml-2 w-10" id="tara" name="tara" disabled>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-2">
+                                                    <div class="col-xl-12 d-flex">
+                                                        <label for="year_built" class="col-form-label text-right w-10">Год постр.:</label>
+                                                        <input type="number" readonly class="form-control info-wagon-form-control ml-2 w-10" id="year_built" name="year_built" disabled>
+                                                        <label for="factory_number" class="col-form-label text-right ml-2 w-10">Заводской №:</label>
+                                                        <input type="text" readonly class="form-control info-wagon-form-control ml-2 w-15" id="factory_number" name="factory_number" disabled>
+                                                        <label for="inventory_number" class="col-form-label text-right ml-2 w-15">Инвентарный №:</label>
+                                                        <input type="text" readonly class="form-control info-wagon-form-control ml-2 w-15" id="inventory_number" name="inventory_number" disabled>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-2">
+                                                    <div class="col-xl-12 d-flex">
+                                                        <label for="owner" class="col-form-label text-right w-15">Собственник (УЗ):</label>
+                                                        <input type="text" readonly class="form-control info-wagon-form-control ml-2 w-50" id="owner" name="owner" disabled>
+                                                        @*<label for="factory_number" class="col-form-label text-right ml-2 w-10">Заводской №:</label>
+                                                            <input type="text" readonly class="form-control info-wagon-form-control ml-2 w-15" id="factory_number" name="factory_number" disabled>*@
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-2">
+                                                    <div class="col-xl-12 d-flex">
+                                                        <label for="operators" class="col-form-label text-right w-15">Оператор (УЗ):</label>
+                                                        <input type="text" readonly class="form-control info-wagon-form-control ml-2 w-50" id="operators" name="operators" disabled>
+                                                        <label for="factory_number" class="col-form-label text-right ml-2 w-10">Заводской №:</label>
+                                                        <input type="text" readonly class="form-control info-wagon-form-control ml-2 w-15" id="factory_number" name="factory_number" disabled>
                                                     </div>
                                                 </div>
                                             </fieldset>
@@ -100,7 +131,7 @@
                             <div class="card border-secondary mt-3">
                                 <!-- Шапка -->
                                 <div class="card-header text-secondary">
-                                    <button class="btn btn-link text-secondary text-uppercase" data-toggle="collapse" data-target="#approaches_wagon">Подходы</button><span id="type-search" class="badge badge-primary"></span>
+                                    <button class="btn btn-link text-secondary text-uppercase" data-toggle="collapse" data-target="#approaches_wagon" style="font-size:1.3rem">Истроия</button><span id="type-search" class="badge badge-primary"></span>
                                 </div>
                                 <!-- Текстовый контент -->
                                 <div class="card-body collapse show" id="approaches_wagon">
@@ -118,7 +149,7 @@
                             <div class="card border-primary mt-3">
                                 <!-- Шапка -->
                                 <div class="card-header text-primary">
-                                    <button class="btn btn-link text-primary text-uppercase" data-toggle="collapse" data-target="#arrival_wagon">Прибытие на АМКР</button><span id="type-search" class="badge badge-primary"></span>
+                                    <button class="btn btn-link text-primary text-uppercase" data-toggle="collapse" data-target="#arrival_wagon" style="font-size:1.3rem">Прибытие на АМКР</button><span id="type-search" class="badge badge-primary"></span>
                                 </div>
                                 <!-- Текстовый контент -->
                                 <div class="card-body collapse show" id="arrival_wagon">
@@ -136,7 +167,7 @@
                             <div class="card border-info mt-3">
                                 <!-- Шапка -->
                                 <div class="card-header text-info">
-                                    <button class="btn btn-link text-info text-uppercase" data-toggle="collapse" data-target="#internal_wagon">На АМКР</button><span id="type-search" class="badge badge-primary"></span>
+                                    <button class="btn btn-link text-info text-uppercase" data-toggle="collapse" data-target="#internal_wagon" style="font-size:1.3rem">На АМКР</button><span id="type-search" class="badge badge-primary"></span>
                                 </div>
                                 <!-- Текстовый контент -->
                                 <div class="card-body collapse show" id="internal_wagon">
@@ -153,7 +184,7 @@
                             <div class="card border-primary mt-3">
                                 <!-- Шапка -->
                                 <div class="card-header text-primary">
-                                    <button class="btn btn-link text-primary text-uppercase" data-toggle="collapse" data-target="#outgoing_wagon">Отправление на УЗ</button><span id="type-search" class="badge badge-primary"></span>
+                                    <button class="btn btn-link text-primary text-uppercase" data-toggle="collapse" data-target="#outgoing_wagon" style="font-size:1.3rem">Отправление на УЗ</button><span id="type-search" class="badge badge-primary"></span>
                                 </div>
                                 <!-- Текстовый контент -->
                                 <div class="card-body collapse show" id="outgoing_wagon">
