@@ -855,6 +855,7 @@
                     // Провкерка на правильный ввод номеров
                     var valid = true;
                     var car_valid = [];
+                    var car_out = [];
                     var cars = table_wagon_park_state.pn_edit_nums.num_wagon_park_state.val().split(';');
 
                     var num_valid = table_wagon_park_state.pn_edit_nums.num_wagon_park_state_validation.prop("checked");
@@ -887,6 +888,7 @@
                                     // Если валидный добавим в список
                                     if (num_val) {
                                         car_valid.push(Number($.trim(el)));
+                                        car_out.push(Number($.trim(el)));
                                     } else {
                                         alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' не системная нумерация (ошибка контрольной суммы) :' + el);
                                     }
@@ -894,6 +896,7 @@
                                 } else {
                                     // добавим в список
                                     car_valid.push(Number($.trim(el)));
+                                    car_out.push(Number($.trim(el)));
                                 }
                             }
                         }
@@ -921,7 +924,7 @@
                         valid = false;
                         //LockScreenOff();
                     });
-                    return valid ? car_valid : null;
+                    return valid ? car_out : null;
                 }
             },
             obj: null,

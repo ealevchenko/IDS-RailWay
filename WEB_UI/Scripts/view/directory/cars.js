@@ -205,6 +205,7 @@
                         // Провкерка на правильный ввод номеров
                         var valid = true;
                         var car_valid = [];
+                        var car_out = [];
                         var cars = pn_search.num_car.val().split(';');
 
                         $.each(cars, function (i, el) {
@@ -223,6 +224,7 @@
                                         // Если валидный добавим в список
                                         if (num_val) {
                                             car_valid.push(Number($.trim(el)));
+                                            car_out.push(Number($.trim(el)));
                                         } else {
                                             alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' не системная нумерация (ошибка контрольной суммы) :' + el);
                                         }
@@ -230,6 +232,7 @@
                                     } else {
                                         // добавим в список
                                         car_valid.push(Number($.trim(el)));
+                                        car_out.push(Number($.trim(el)));
                                     }
                                 }
                             }
@@ -267,7 +270,7 @@
                         // Продолжим 
                         if (valid) {
                             // Сохраним номера вагонов для выбора
-                            pn_search.num_cars_valid = car_valid;
+                            pn_search.num_cars_valid = car_out;
                             pn_search.view_cars();
                         } else {
                             alert.out_warning_message('Исправьте указанные номера в указанных позициях и попробуйте заново.');
@@ -319,6 +322,7 @@
                             // Провкерка на правильный ввод номеров
                             var valid = true;
                             var car_valid = [];
+                            var car_out = [];
                             var cars = pn_search.num_cars_comparison.val().split(';');
                             // 
                             $.each(cars, function (i, el) {
@@ -337,6 +341,7 @@
                                             // Если валидный добавим в список
                                             if (num_val) {
                                                 car_valid.push(Number($.trim(el)));
+                                                car_out.push(Number($.trim(el)));
                                             } else {
                                                 alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' не системная нумерация (ошибка контрольной суммы) :' + el);
                                             }
@@ -344,6 +349,7 @@
                                         } else {
                                             // добавим в список
                                             car_valid.push(Number($.trim(el)));
+                                            car_out.push(Number($.trim(el)));
                                         }
                                     }
                                 }
@@ -403,7 +409,7 @@
                                 };
 
                                 // Сохраним номера вагонов для выбора
-                                pn_search.num_cars_comparison_valid = car_valid;
+                                pn_search.num_cars_comparison_valid = car_out;
                                 // Проведем сравнение
                                 // Получим вагоны со списка
                                 //

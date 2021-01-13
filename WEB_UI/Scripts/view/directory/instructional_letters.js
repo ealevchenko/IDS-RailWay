@@ -256,6 +256,7 @@
                 if (!list) return false;
                 // Провкерка на правильный ввод номеров
                 var car_valid = [];
+                //var car_out = [];
                 var cars = list.split(';');
                 $.each(cars, function (i, el) {
                     if (!isNumeric($.trim(el)) || !is_valid_num_wagon($.trim(el))) {
@@ -264,6 +265,7 @@
                         valid = false;
                     } else {
                         car_valid.push(Number(el));
+                        //car_out.push(Number(el));
                     }
                 });
                 // Провкерка на повторяющиеся номера
