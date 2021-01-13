@@ -37,11 +37,6 @@
             'field_change': 'Строку правили',
             'field_change_user': 'Правил',
 
-            //'title_button_buffer': 'Буфер',
-            //'title_button_excel': 'Excel',
-            //'title_button_field': 'Поля',
-            //'title_button_field_all': 'Все поля',
-
             'title_button_export': 'Экспорт',
             'title_button_buffer': 'Буфер',
             'title_button_excel': 'Excel',
@@ -58,11 +53,58 @@
             'title_button_edit': 'Править',
             'title_button_del': 'Удалить',
             'title_button_edit_group': 'Править оператора или ограничение',
-            //'title_button_edit_limit': 'Изменить ограничение',
+
         },
         'en':  //default language: English
         {
-            'field_train': 'train number',
+            'field_pos': 'No. p.p',
+            'field_num': 'wag #',
+            'field_countrys': 'Adm',
+            'field_genus': 'Genus',
+            'field_owner': 'Owner',
+            'field_operator_uz': 'Operator (UZ)',
+            'field_change_operator': 'Opera. change. ',
+            'field_operator': 'Operator (AMKP)',
+            'field_gruzp': 'Load capacity',
+            'field_tara': 'Tara.t',
+            'field_kol_os': ' Num. axes',
+            'field_usl_tip': 'Tank type',
+            'field_date_rem_uz': 'Repair date (UZ)',
+            'field_date_rem_vag': 'Date of repair (Wagon)',
+            'field_limiting': 'Limit',
+            'field_type_ownership': 'Ownership',
+            'field_rent_start': 'Lease start',
+            'field_rent_end': 'End of lease',
+            'field_sign': 'Signs',
+            'field_factory_number': 'Serial number',
+            'field_inventory_number': 'Inventory #',
+            'field_year_built': 'Year Built',
+            'field_exit_ban': 'exit ban',
+            'field_note': 'Note',
+            'field_closed_route': 'Closed Route',
+            'field_new_construction': 'Nova pobudova',
+            'field_sobstv_kis': 'Operator (KIS)',
+            'field_create': 'String created',
+            'field_create_user': 'Created a string',
+            'field_change': 'The line was edited',
+            'field_change_user': 'Rules',
+
+            'title_button_export': 'Export',
+            'title_button_buffer': 'Buffer',
+            'title_button_excel': 'Excel',
+            'title_button_field': 'Fields',
+            'title_button_field_select': 'Select',
+            'title_button_field_view_all': 'Show all',
+            'title_button_field_clear': 'Reset',
+
+
+            'title_button_select_all': 'Select All',
+            'title_button_select_none': 'Remove all',
+
+            'title_button_add': 'Add',
+            'title_button_edit': 'Edit',
+            'title_button_del': 'Remove',
+            'title_button_edit_group': 'Edit operator or restriction',
         }
     };
 

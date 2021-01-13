@@ -28,7 +28,25 @@
         },
         'en':  //default language: English
         {
-            'field_num': '',
+            'field_position': 'Position No.',
+            'field_num': 'Wagon number',
+            'field_rod': 'Rod',
+            'field_type': 'Type',
+            'field_cargo': 'Cargo',
+            'field_operator': 'Operator',
+            'field_limit': 'Limit',
+            'field_date_rem_uz': 'Date of repair by ultrasound',
+            'field_date_rem_vag': 'Date of repair on the car',
+            'field_condition': 'Layout on arrival',
+            'field_create_wagon': 'Added',
+            'field_change_wagon': 'Rules',
+
+            'title_button_export': 'Export',
+            'title_button_buffer': 'Buffer',
+            'title_button_excel': 'Excel',
+            'title_button_select_all': 'Select All',
+            'title_button_select_none': 'Remove all',
+            'title_button_edit': 'Edit markup',
         }
     };
 

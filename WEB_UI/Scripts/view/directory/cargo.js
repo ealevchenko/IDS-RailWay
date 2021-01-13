@@ -29,7 +29,27 @@
             },
             'en':  //default language: English
             {
-                'field_train': 'train number',
+                'field_id': 'Code',
+                'field_group': 'Group',
+                'field_cargo_etsng_code': 'ET CIS code',
+                'field_cargo_etsng_name': 'Cargo ET CIS',
+                'field_cargo_name_ru': 'Cargo in IDS (rus)',
+                'field_cargo_name_en': 'Cargo in IDS (eng)',
+                'field_code_sap': 'SAP code',
+                'field_sending': 'Sending',
+                'field_create': 'String created',
+                'field_create_user': 'Created a string',
+                'field_change': 'The line was edited',
+                'field_change_user': 'Rules',
+
+                'title_button_buffer': 'Buffer',
+                'title_button_excel': 'Excel',
+                'title_button_field': 'Fields',
+                'title_button_field_all': 'All fields',
+                'title_button_add': 'Add',
+                'title_button_edit': 'Edit',
+                'title_button_del': 'Remove',
+                'title_button_edit_group': 'Assign Group',
             }
         };
 

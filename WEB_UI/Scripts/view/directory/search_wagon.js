@@ -30,7 +30,28 @@
             },
             'en':  //default language: English
             {
-                'field_num': '',
+                'field_num': 'Wagon number',
+                'field_train': 'Train no.',
+                'field_composition_index': 'Train index',
+                'field_date_arrival': 'Arrival time',
+                'field_date_adoption': 'Admission time',
+                'field_date_adoption_act': 'Acceptance time by act',
+                'field_station_from': 'Sent from station',
+                'field_station_on': 'Received at station',
+                'field_way': 'Accepted on path',
+                'field_doc_uz': 'UZ waybill No.',
+                'field_status': 'Status',
+                'field_note': 'Note',
+                'field_create': 'String created',
+                'field_create_user': 'Created a string',
+                'field_change': 'The line was edited',
+                'field_change_user': 'Rules',
+                'field_create_sostav': 'Added',
+                'field_change_sostav': 'Rules',
+
+                'title_button_export': 'Export',
+                'title_button_buffer': 'Buffer',
+                'title_button_excel': 'Excel',
             }
         };
 

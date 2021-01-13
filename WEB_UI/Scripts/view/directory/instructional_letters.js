@@ -33,7 +33,30 @@
             },
             'en':  //default language: English
             {
-                'field_train': 'train number',
+                'field_num': 'Letter No.',
+                'field_dt': 'from',
+                'field_owner': 'Owner (by letter)',
+                'field_destination_station': 'Code',
+                'field_destination_station_name': 'Destination station',
+                'field_note': 'Note',
+                'field_create': 'String created',
+                'field_create_user': 'Created a string',
+                'field_change': 'The line was edited',
+                'field_change_user': 'Rules',
+
+                'field_num_wagon': 'Wagon number',
+                'field_close': 'Email closed',
+                'field_close_status': 'Close status',
+
+                'title_button_buffer': 'Buffer',
+                'title_button_excel': 'Excel',
+                'title_button_field': 'Fields',
+                'title_button_field_all': 'All fields',
+
+                'title_button_add': 'Add',
+                'title_button_edit': 'Edit',
+                'title_button_del': 'Remove',
+                'title_button_close': 'Close',
             }
         };
 

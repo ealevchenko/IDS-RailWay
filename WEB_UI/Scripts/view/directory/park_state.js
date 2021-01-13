@@ -21,12 +21,25 @@
             'title_button_buffer': 'Буфер',
             'title_button_excel': 'Excel',
             'title_button_clear_wagon': 'Убрать вагоны',
-
-            'field_': '',
         },
         'en':  //default language: English
         {
-            'field_': '',
+            'field_way_park': 'Park',
+            'field_way_name': 'Path',
+            'field_way_count': 'Worth',
+            'field_way_capacity': 'Accommodates',
+
+            'field_position': 'Position No.',
+            'field_num': 'Wagon number',
+            'field_num_valid': 'Numbering type',
+            'field_note': 'Dislocation at AMKR',
+            'field_create_wagon': 'Added',
+            'field_change_wagon': 'Rules',
+
+            'title_button_export': 'Export',
+            'title_button_buffer': 'Buffer',
+            'title_button_excel': 'Excel',
+            'title_button_clear_wagon': 'Remove wagons',
         }
     };
 
