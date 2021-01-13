@@ -76,6 +76,7 @@
             'field_epd_car_staus': 'Статус состава',
             'field_epd_car_arrival': 'Вагон принят',
 
+            'field_manual_position': '№ поз',
             'field_manual_car_num': '№ вагона',
             'field_manual_car_operation': 'Будет прим. операц.',
             'field_manual_car_id_doc_new': 'Найденный id-док',
@@ -4908,7 +4909,7 @@
             // Создадим или определим ранее созданый документ УЗ (в ручном режиме)
             add_doc_uz: function (callback) {
                 // Определим название документа
-                var manual_num = 'MNL' + cars_detali.id_sostav + '_'+cars_detali.uz_doc_num_doc.val();
+                var manual_num = 'MNL' + cars_detali.id_sostav + '_' + cars_detali.uz_doc_num_doc.val();
                 var result_manual_num_doc = null;
                 cars_detali.ids_inc.getUZ_DOCOfNum(manual_num, function (result_manual_num_doc) {
                     if (!result_manual_num_doc) {
@@ -6064,7 +6065,7 @@
                         "cargo": vag_uz && vag_uz.Directory_Cargo ? cars_detali.ids_inc.ids_dir.getValueObj(vag_uz.Directory_Cargo, 'cargo_name', cars_detali.lang) : null,
                         "station_on_amkr": vag_uz && vag_uz.Directory_Station ? cars_detali.ids_inc.ids_dir.getValueObj(vag_uz.Directory_Station, 'station_name', cars_detali.lang) : 'Под погрузку',
                         "division_on_amkr": dir_division ? cars_detali.ids_inc.ids_dir.getValueObj(dir_division, 'division_abbr', cars_detali.lang) : null,
-                        "commercial_condition": dir_commercial ? dir_commercial['commercial_condition_'+lang] : null,
+                        "commercial_condition": dir_commercial ? dir_commercial['commercial_condition_' + lang] : null,
 
                     };
                 },
@@ -7445,6 +7446,7 @@
                             //$('td', row).eq(6).text('').append(bt_xml);
                         },
                         columns: [
+                            { data: "position", title: langView('field_manual_position', langs), width: "50px", orderable: true, searchable: false },
                             { data: "num", title: langView('field_manual_car_num', langs), width: "50px", orderable: true, searchable: false },
                             { data: "operation_text", title: langView('field_manual_car_operation', langs), width: "300px", orderable: true, searchable: false },
                             { data: "id_doc_new", title: langView('field_manual_car_id_doc_new', langs), width: "50px", orderable: true, searchable: false },
@@ -7490,6 +7492,7 @@
                     var operation = arrival_car && arrival_car.id_arrival === pn_manual_car.sostav.id ? 0 : (arrival_car ? 2 : 1);
                     return {
                         "num": car.num,
+                        "position": car.position,
                         "operation_text": pn_manual_car.table_car.get_operation(operation, arrival_car ? arrival_car.arrival : null),
                         "operation": operation,
                         "uz_doc": car.uz_doc,
@@ -7551,6 +7554,7 @@
                     // Провкерка на правильный ввод номеров
                     var valid = true;
                     var car_valid = [];
+                    var car_out = [];
                     var cars = pn_manual_car.manual_num_car.val().split(';');
                     $.each(cars, function (i, el) {
                         //pn_manual_car.alert.out_warning_message();
@@ -7560,6 +7564,7 @@
                             valid = false;
                         } else {
                             car_valid.push(el);
+                            car_out.push(el);
                         }
                     });
                     // Провкерка на повторяющиеся номера
@@ -7588,16 +7593,23 @@
                         pn_manual_car.loading_cars.show();
                         var new_car = [];
                         // Привяжим вагоны к документам из промежуточной базы
-                        var count_c = car_valid.length;
-                        for (var ic = 0; ic < car_valid.length; ic++) {
+                        var count_c = car_out.length;
+                        for (var ic = 0; ic < car_out.length; ic++) {
                             //
-                            pn_manual_car.get_id_doc_new_cars(car_valid[ic], function (result_car) {
-                                new_car.push(result_car);
+                            var position = ic+1;
+                            pn_manual_car.get_id_doc_new_cars(car_out[ic], position, function (result_car) {
+                                new_car.push({ position: result_car.position, car: result_car });
                                 count_c -= 1;
                                 if (count_c === 0) {
+                                    var car_doc = [];
+                                    $.each(new_car.sort(function (a,b) {
+                                        return a.position - b.position;
+                                    }), function (i, el) {
+                                        car_doc.push(el.car);
+                                    });
                                     // Продолжим ввод
-                                    pn_manual_car.get_list_cars_of_period(1, new_car, function (res_cars) {
-                                        pn_manual_car.table_car.view(new_car, res_cars);
+                                    pn_manual_car.get_list_cars_of_period(1, car_doc, function (res_cars) {
+                                        pn_manual_car.table_car.view(car_doc, res_cars);
                                     });
                                 }
                             });
@@ -7880,11 +7892,11 @@
                 }
             },
             // Привязать документы к вагонам
-            get_id_doc_new_cars: function (car, callback) {
+            get_id_doc_new_cars: function (car, position, callback) {
                 // Найдем документ в промежуточной базе 
                 pn_manual_car.ids_inc.ids_tr.getUZ_DOC_DB_UZ_OfNum(car, (cars_detali.sostav ? cars_detali.sostav.date_arrival : toISOStringTZ(new Date())), function (result_uz_doc) {
                     if (typeof callback === 'function') {
-                        callback({ num: car, uz_doc: result_uz_doc });
+                        callback({ num: car, uz_doc: result_uz_doc, position: position });
                     }
                 });
             },
