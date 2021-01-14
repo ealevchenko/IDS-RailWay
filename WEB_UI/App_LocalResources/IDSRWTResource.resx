@@ -519,4 +519,10 @@
   <data name="title_operation_detali_way_from" xml:space="preserve">
     <value>Путь отправки</value>
   </data>
+  <data name="title_operation_detali_provide_station" xml:space="preserve">
+    <value>Станция отправки</value>
+  </data>
+  <data name="title_operation_detali_provide_way_from" xml:space="preserve">
+    <value>Путь с составом для предъявления</value>
+  </data>
 </root>

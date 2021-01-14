@@ -763,6 +763,24 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Станция отправки.
+        /// </summary>
+        public static string title_operation_detali_provide_station {
+            get {
+                return ResourceManager.GetString("title_operation_detali_provide_station", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Путь с составом для предъявления.
+        /// </summary>
+        public static string title_operation_detali_provide_way_from {
+            get {
+                return ResourceManager.GetString("title_operation_detali_provide_way_from", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Выполнить реверс.
         /// </summary>
         public static string title_operation_detali_reverse {
