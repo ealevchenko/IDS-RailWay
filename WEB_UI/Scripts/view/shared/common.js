@@ -1021,6 +1021,7 @@ VALIDATION.prototype.checkInputTextOfDirectory_IsNull = function (o, link, name_
 /* ----------------------------------------------------------
     Функции УЗ
 -------------------------------------------------------------*/
+// Проверка системной нумерации
 var is_valid_num_wagon = function (num) {
     if (num) {
         if (!isNumeric(num)) return false;
@@ -1045,6 +1046,76 @@ var is_valid_num_wagon = function (num) {
     }
     return false;
 };
+// Проверка списка вагонов
+var is_valid_nums = function (nums, alert, valid_sys_numbering) {
+    // Проверим список вагонов
+    if (!nums || nums === null) {
+        alert.out_warning_message('Нет списка вагонов');
+        return null;
+    }
+    var isNumeric = function (value) {
+        return /^\d+$/.test(value);
+    };
+    // Провкерка на правильный ввод номеров
+    var valid = true;
+    var car_valid = [];
+    var car_out = [];
+    var cars = nums.split(';');
+
+    var num_valid = valid_sys_numbering;
+
+    $.each(cars, function (i, el) {
+        if (!isNumeric($.trim(el))) {
+            alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' введен неправильный номер :' + el);
+            valid = false;
+        } else {
+            if (Number($.trim(el)) <= 0) {
+                alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' номер не может быть меньше или равен 0 :' + el);
+                valid = false;
+            } else {
+                // Разрешена проверка системной нумерации
+                if (num_valid) {
+                    var num_val = is_valid_num_wagon(Number($.trim(el)));
+                    // Если валидный добавим в список
+                    if (num_val) {
+                        car_valid.push(Number($.trim(el)));
+                        car_out.push(Number($.trim(el)));
+                    } else {
+                        alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' не системная нумерация (ошибка контрольной суммы) :' + el);
+                    }
+                    valid = valid & num_val;
+                } else {
+                    // добавим в список
+                    car_valid.push(Number($.trim(el)));
+                    car_out.push(Number($.trim(el)));
+                }
+            }
+        }
+    });
+    // Провкерка на повторяющиеся номера
+    arr_res = [];
+    car_valid.sort();
+    for (var i = 1; i < car_valid.length; i++) {
+        if (car_valid[i] === car_valid[i - 1]) {
+            var is_unique = true;
+            for (var k = 0; k < arr_res.length; k++) {
+                if (arr_res[k] === car_valid[i]) {
+                    is_unique = false;
+                    break;
+                }
+            }
+            if (is_unique) {
+                arr_res.push(car_valid[i]);
+            }
+        }
+    }
+    // Вывод сообщений повторяющихся номеров
+    $.each(arr_res, function (i, el) {
+        alert.out_warning_message('Ошибка ввода, введеный номер :' + el + ' повторяется.');
+        valid = false;
+    });
+    return valid ? car_out : null;
+}
 
 // Вернуть режим
 var outOperation = function (i) {

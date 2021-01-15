@@ -525,4 +525,7 @@
   <data name="title_operation_detali_provide_way_from" xml:space="preserve">
     <value>Путь с составом для предъявления</value>
   </data>
+  <data name="title_validation_num" xml:space="preserve">
+    <value>Контроль системной нумерации</value>
+  </data>
 </root>

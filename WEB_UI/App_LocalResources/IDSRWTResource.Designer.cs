@@ -1168,6 +1168,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Контроль системной нумерации.
+        /// </summary>
+        public static string title_validation_num {
+            get {
+                return ResourceManager.GetString("title_validation_num", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Вес тары (ЭПД), т.
         /// </summary>
         public static string title_ves_tary_arc {

@@ -647,7 +647,7 @@
                                                         <div class="form-row">
                                                             <div class="col-xl-12 mb-1 text-left">
                                                                 <label for="operation_detali_provide_way_from" class="col-form-label">@IDSRWTResource.title_operation_detali_provide_way_from:</label>
-                                                                <input type="text" class="form-control" id="operation_detali_provide_way_from" name="operation_detali_provide_way_from" disabled/>
+                                                                <input type="text" class="form-control" id="operation_detali_provide_way_from" name="operation_detali_provide_way_from" disabled />
                                                             </div>
                                                         </div>
                                                         <div class="form-row">
@@ -676,9 +676,80 @@
                                 <div class="col-xl-12">
                                     <div class="card border-info">
                                         <div class="card-header text-left">ВАГОНЫ ДЛЯ ПРЕДЪЯВЛЕНИЯ</div>
-                                        <div class="card-body operator-detali-tables">
-                                            <table id="wagons-provide-way-from" class="compact table table-striped table-hover" style="width:100%; table-layout: fixed"></table>
+                                        <div class="card-body d-flex">
+                                            <div class="card border-primary mb-1" style="width:100%">
+                                                <div class="card-header">Вагоны на пути</div>
+                                                <div class="card-body text-primary">
+                                                    <div class="row">
+                                                        <div class="col-xl-12 operator-detali-tables">
+                                                            <table id="wagons-provide-way-from" class="compact table table-striped table-hover" style="width:100%;"></table>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="card border-danger ml-2 mb-1 collapse" id="collect_wagon" style="width:100%">
+                                                <div class="card-header">Собрать по всем станциям</div>
+                                                <div class="card-body">
+                                                    <fieldset class="border-primary">
+                                                        <legend class="text-primary">Вагоны</legend>
+                                                        <div class="row">
+                                                            <div class="col-xl-12">
+                                                                <div class="card border-primary mb-3">
+                                                                    <div class="card-header">ДОБАВИТЬ СПИСКОМ</div>
+                                                                    <div class="card-body text-left">
+                                                                        <div class="row">
+                                                                            <div class="col-xl-10">
+                                                                                <div class="form-check">
+                                                                                    <input type="checkbox" class="form-check-input" id="validation_num" style="position:relative">
+                                                                                    <label class="form-check-label" for="validation_num">@IDSRWTResource.title_validation_num</label>
+                                                                                </div>
+                                                                                <textarea class="form-control" id="provide_num_wagons" name="provide_num_wagons" rows="3" style="font-size:inherit"></textarea>
+                                                                            </div>
+                                                                            <div class="col-xl-2 align-content-center">
+                                                                                <button type="button" class="btn btn-primary" id="provide_wagon_add">Добавить</button>
+                                                                                <button type="button" class="btn btn-primary" id="provide_wagon_replace" disabled="disabled">Заменить</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-xl-12">
+                                                                <div class="card border-primary mb-3">
+                                                                    <div class="card-header">ПЕРЕЧЕНЬ ВАГОНОВ</div>
+                                                                    <div class="card-body">
+                                                                        <div class="row">
+                                                                            <div class="col-xl-12 operator-detali-tables">
+                                                                                <table id="collect_wagons" class="display compact hover row-border" style="width:100%"></table>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
+                                            </div>
                                         </div>
+
+
+                                        @*<div class=" d-flex">
+                                            <div class="card-body operator-detali-tables" style="width:100%">
+                                                <table id="wagons-provide-way-from" class="compact table table-striped table-hover" style="width:100%; table-layout: fixed"></table>
+                                            </div>
+                                            <div class="collapse" id="collect_wagon" style="width:75%">
+                                                <div class="row">
+                                                    <div class="col-xl-12 operator-detali-tables">
+                                                        <fieldset class="border-primary m-2">
+                                                            <legend>Собрать по всем станциям</legend>
+
+                                                        </fieldset>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>*@
                                     </div>
                                 </div>
                             </div>
@@ -690,3 +761,5 @@
         <a href="#0" class="close cd-img-replace">Close</a>
     </div>
 </div>
+
+
