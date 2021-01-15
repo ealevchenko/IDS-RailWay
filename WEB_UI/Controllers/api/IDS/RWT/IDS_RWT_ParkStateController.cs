@@ -187,7 +187,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
 
     public class OperationDeleteParkState
     {
-        public int id_station  { get; set; }
+        public int id_park_status { get; set; }
         public string user  { get; set; }
     }
 
@@ -367,7 +367,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             try
             {
                 IDS_RWT ids_rwt = new IDS_RWT(service.WebAPI_IDS);
-                OperationResultID result = ids_rwt.OperationDeleteParkState(value.id_station, value.user);
+                OperationResultID result = ids_rwt.OperationDeleteParkState(value.id_park_status, value.user);
                 return Ok(result);
             }
             catch (Exception e)

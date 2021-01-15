@@ -158,7 +158,7 @@
                                 // Подготовим список вагонов для отправки
                                 // Определим пакет данных отправки на другую станцию
                                 var operation_delete_park_state = {
-                                    id_station: pn_select.id_station_select,
+                                    id_park_status: pn_select.id_park_status_select,
                                     user: user_name,
                                 }
                                 // Выполнить операцию удалить парк

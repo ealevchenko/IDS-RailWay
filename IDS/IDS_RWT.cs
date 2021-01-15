@@ -14,6 +14,7 @@ namespace IDS
     {
         global = -1,
         cancel_save_changes = -2,                   // Отмена сохранений изменений в базе данных (были ошибки по ходу выполнения всей операции)
+        error_delete_park_station_apply = -3,       // Отмена удаления, состояние парка уже применили
         error_input_value = -100,
         error_input_nums_wagons = -101,             // Ошибка, нет списка вагонов
         not_arrival_cars = -201,                    // Ошибка, нет строки с входящим вагоном
@@ -22,6 +23,7 @@ namespace IDS
         validation_data = -204,                     // Ошибка, дата непрошла валидацию
         not_park_station_station_of_db = -205,      // Ошибка, в базе данных нет строки положения парка по станции
         not_way_park_station_station_of_db = -206,  // Ошибка, в базе данных нет строки пути положения парка по станции
+
     }
 
 
@@ -255,10 +257,10 @@ namespace IDS
         /// <summary>
         /// Удалить положение парка
         /// </summary>
-        /// <param name="id_station"></param>
+        /// <param name="id_park_status"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public OperationResultID OperationDeleteParkState(int id_station, string user)
+        public OperationResultID OperationDeleteParkState(int id_park_status, string user)
         {
             OperationResultID result = new OperationResultID();
             try
@@ -269,7 +271,7 @@ namespace IDS
                 {
                     user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
                 }
-                result.SetResultOperation(OperationDeleteParkState(ref context, id_station, user), id_station);
+                result.SetResultOperation(OperationDeleteParkState(ref context, id_park_status, user), id_park_status);
                 // Если нет ошибок тогда обновим базу
                 if (result.error == 0)
                 {
@@ -282,8 +284,8 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("OperationDeleteParkState(id_station={0}, user={1})",
-                    id_station, user), servece_owner, this.eventID);
+                e.ExceptionMethodLog(String.Format("OperationDeleteParkState(id_park_status={0}, user={1})",
+                    id_park_status, user), servece_owner, this.eventID);
                 result.SetResult((int)errors_ids_rwt.global);// Ошибка нет списка id
             }
             return result;
@@ -292,10 +294,10 @@ namespace IDS
         /// Удалить положение парка
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="id_station"></param>
+        /// <param name="id_park_status"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public int OperationDeleteParkState(ref EFDbContext context, int id_station, string user)
+        public int OperationDeleteParkState(ref EFDbContext context, int id_park_status, string user)
         {
             try
             {
@@ -314,8 +316,9 @@ namespace IDS
                 EFParkState_Way ef_psw = new EFParkState_Way(context);
                 EFParkState_Wagon ef_pswag = new EFParkState_Wagon(context);
                 // Получим строку положения по станции
-                ParkState_Station pss = ef_pss.Context.Where(s => s.id_station == id_station).FirstOrDefault();
+                ParkState_Station pss = ef_pss.Context.Where(s => s.id == id_park_status).FirstOrDefault();
                 if (pss == null) return (int)errors_ids_rwt.not_park_station_station_of_db;                     // Ошибка, в базе данных нет строки положения парка по станции
+                if (pss.applied != null) return (int)errors_ids_rwt.error_delete_park_station_apply;             // Ошибка, удалить нельзя, состояние парка уже применили
                 // Получим пути выбранного состояния парка
                 List<ParkState_Way> list_psw = ef_psw.Context.Where(w => w.id_park_state_station == pss.id).ToList();
                 // Пройдемся по всем путям и удалим вагоны
@@ -330,8 +333,8 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("OperationDeleteParkState(context={0}, id_station={1}, user={2})",
-                    context, id_station, user), servece_owner, this.eventID);
+                e.ExceptionMethodLog(String.Format("OperationDeleteParkState(context={0}, id_park_status={1}, user={2})",
+                    context, id_park_status, user), servece_owner, this.eventID);
                 return (int)errors_ids_rwt.global;// Ошибка
             }
         }
