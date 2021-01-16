@@ -121,7 +121,7 @@ namespace WEB_UI.Controllers.api.RWT
             try
             {
                 IDSTransfer ids_tr = new IDSTransfer(service.WebAPI_IDS);
-                int result = ids_tr.IncomingArrivalSostav(value.id, value.user);
+                int result = ids_tr.IncomingArrivalSostav(value.id, null, value.user);
                 return Ok(result);
             }
             catch (Exception e)

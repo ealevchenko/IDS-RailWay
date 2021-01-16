@@ -209,15 +209,15 @@
     <Compile Include="Entities\RWT\ParkState_Station.cs" />
     <Compile Include="Entities\RWT\ParkState_Wagon.cs" />
     <Compile Include="Entities\RWT\ParkState_Way.cs" />
+    <Compile Include="Model\Model1.cs" />
+    <Compile Include="Model\view_ways_status.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>

@@ -3162,6 +3162,76 @@ IDS_RWT.prototype.getViewStationStatusOfIDStation= function (id_station, callbac
         },
     });
 };
+// Получить состояние парка путей по указаной станции
+IDS_RWT.prototype.getViewParkWaysOfStation = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/wsd/view/park_ways/status/station/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getViewParkWaysOfStation", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить состояние парка путей по указаной станции
+IDS_RWT.prototype.getViewWaysOfStationPark = function (id_station, id_park, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/wsd/view/ways/status/station/id/'+id_station+'/park_ways/id/'+id_park,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getViewWaysOfStationPark", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить состояние пути по id
+IDS_RWT.prototype.getViewWaysOfID = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/wsd/view/ways/status/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getViewWaysOfID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 // Получить состояние всех путей по указаной станции
 IDS_RWT.prototype.getViewWaysStatusOfIDStation= function (id_station, callback) {
     $.ajax({

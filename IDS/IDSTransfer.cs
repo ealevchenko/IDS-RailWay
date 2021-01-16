@@ -34,12 +34,14 @@ namespace IDS
         private bool transfer_set_outgoing_wagon_of_kis = true; // Признак здавать вагоны на УЗ по данным КИС
         public bool TransferSetOutgoingWagonOfKis { get { return this.transfer_set_outgoing_wagon_of_kis; } set { this.transfer_set_outgoing_wagon_of_kis = value; } }
 
-        public IDSTransfer() : base()
+        public IDSTransfer()
+            : base()
         {
 
         }
 
-        public IDSTransfer(service servece_owner) : base(servece_owner)
+        public IDSTransfer(service servece_owner)
+            : base(servece_owner)
         {
 
         }
@@ -675,7 +677,7 @@ namespace IDS
         /// </summary>
         /// <param name="id_arrival"></param>
         /// <returns></returns>
-        public int IncomingArrivalSostav(long id_arrival, string user)
+        public int IncomingArrivalSostav(long id_arrival, List<int> nums, string user)
         {
             try
             {
@@ -697,11 +699,26 @@ namespace IDS
                 if (sostav != null && sostav.date_adoption != null && (sostav.ArrivalCars != null && sostav.ArrivalCars.Count() > 0))
                 {
                     List<ArrivalCars> list_wagon = sostav.ArrivalCars.Where(c => c.position_arrival != null).ToList();
-                    if (list_wagon != null && list_wagon.Count() > 0)
+                    List<ArrivalCars> list_wagon_inc = new List<ArrivalCars>();
+                    // Проверим на выбранные номера
+                    if (nums != null && nums.Count() > 0)
+                    {
+                        foreach(ArrivalCars car in list_wagon.ToList()){
+                        // Выберем только нужные
+                            int num = nums.Find(n=> n == car.num);
+                            if (num > 0) {
+                                list_wagon_inc.Add(car);
+                            }
+                        }
+                    }
+                    else {
+                        // Оставим как есть
+                        list_wagon_inc = list_wagon;
+                    }
+                    if (list_wagon_inc != null && list_wagon_inc.Count() > 0)
                     {
                         // Переносим 
                         // Состав определен, принятые вагоны определены
-
                         int id_station = (int)sostav.id_station_on;
                         int id_way = (int)sostav.id_way;
                         DateTime date_arrival = sostav.date_arrival;
@@ -709,7 +726,7 @@ namespace IDS
                         EFDbContext curent = new EFDbContext();
                         //EFDbContext curent = null;
                         IDS_WIR wir = new IDS_WIR(this.servece_owner);
-                        res = wir.IncomingWagons(ref curent, id_station, id_way, date_arrival, list_wagon, (bool)sostav.numeration, user);
+                        res = wir.IncomingWagons(ref curent, id_station, id_way, date_arrival, list_wagon_inc, (bool)sostav.numeration, user);
 
                     }
                     else
@@ -747,7 +764,7 @@ namespace IDS
             try
             {
                 EFArrivalSostav ef_sostav = new EFArrivalSostav(new EFDbContext());
-                DateTime dt_start = new DateTime(2020,9,15,0,0,0);
+                DateTime dt_start = new DateTime(2020, 9, 15, 0, 0, 0);
                 List<ArrivalSostav> sostav_list = ef_sostav.Context.Where(s => s.date_adoption != null && s.date_adoption >= dt_start).OrderBy(c => c.date_adoption).ToList();
                 int moving = 0;
                 int error = 0;
@@ -757,7 +774,7 @@ namespace IDS
                 {
 
                     Console.WriteLine(String.Format("Переношу состав id={0}, осталось {1}, Ошибок переноса {2}, пропущено {3}", sost.id, (sostav_list.Count() - moving), error, skip));
-                    int res = IncomingArrivalSostav(sost.id, null);
+                    int res = IncomingArrivalSostav(sost.id, null, null);
                     if (res < 0)
                     {
                         error++;

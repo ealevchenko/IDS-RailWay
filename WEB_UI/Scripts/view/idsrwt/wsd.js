@@ -411,7 +411,7 @@
                                     // Отрисовать парки
                                     $(tr).addClass('shown');
                                     $.each(park.sort(function (a, b) { return b.id - a.id; }), function (i, el) {
-                                        $(tr).after("<tr class='park' id='station-" + row.data().id + "'><td><img class='" + (i !== 0 ? "icon-tree-open" : "icon-tree-open-end") + "'/></td><td class='park-control' park='" + el.id + "' station='" + row.data().id + "' end='" + (i === 0 ? 1 : 0) + "'></td><td colspan='2' class='park-name'><img class='icon-park'/>" + el.park_abbr_ru + "</td><td></td><td></td><td></td></tr>");
+                                        $(tr).after("<tr class='park' id='station-" + row.data().id + "'><td><img class='" + (i !== 0 ? "icon-tree-open" : "icon-tree-open-end") + "'/></td><td class='park-control' park='" + el.id + "' station='" + row.data().id + "' end='" + (i === 0 ? 1 : 0) + "'></td><td colspan='2' class='park-name'><img class='icon-park'/>" + el.park_abbr_ru + "</td><td></td><td class='text-right'>" + el.count_wagon + "</td><td class='text-right'>" + el.count_capacity + "</td></tr>");
                                         // Прикрепим событие выбора парка
                                         var el_ev = table_tree_way.html_table.find('tbody td[station="' + row.data().id + '"][park="' + el.id + '"]');
                                         //table_tree_way.html_table.find('tbody').on('click', 'td[park="' + el.id + '"]', function () {
@@ -476,20 +476,31 @@
             // Загрузить парки
             load_park: function (row, callback) {
                 LockScreen(langView('mess_delay', langs));
-                ids_inc.ids_dir.getParkWaysOfStationID(row.data().id, function (park) {
+                ids_inc.getViewParkWaysOfStation(row.data().id, function (park) {
                     if (typeof callback === 'function') {
                         callback(park);
                     }
                 });
+                //ids_inc.ids_dir.getParkWaysOfStationID(row.data().id, function (park) {
+                //    if (typeof callback === 'function') {
+                //        callback(park);
+                //    }
+                //});
+
             },
             // Загрузить пути
             load_way: function (station, park, callback) {
                 LockScreen(langView('mess_delay', langs));
-                ids_inc.ids_dir.getWaysOfStationIDParkID(station, park, function (ways) {
+                ids_inc.getViewWaysOfStationPark(station, park, function (ways) {
                     if (typeof callback === 'function') {
                         callback(ways);
                     }
                 });
+                //ids_inc.ids_dir.getWaysOfStationIDParkID(station, park, function (ways) {
+                //    if (typeof callback === 'function') {
+                //        callback(ways);
+                //    }
+                //});
             },
             // Обновление информации по станции
             update_station: function (id_station, callback) {
@@ -510,10 +521,14 @@
 
                 });
             },
+            // Обновить информацию по парку
+            update_park: function (id_park) {
+
+            },
             // Обновление информации по пути
             update_way: function (id_station, id_park, id_way, callback) {
                 LockScreen(langView('mess_delay', langs));
-                ids_inc.ids_dir.getWaysOfWayID(id_way, function (way) {
+                ids_inc.getViewWaysOfID(id_way, function (way) {
                     if (way) {
                         var pb_way = table_tree_way.get_pb(way.id, way.capacity, way.count_wagon);
                         var tr_way = table_tree_way.html_table.find('tbody tr[station="' + id_station + '"][park="' + id_park + '"][way="' + id_way + '"]');

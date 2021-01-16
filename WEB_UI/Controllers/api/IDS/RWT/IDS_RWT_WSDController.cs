@@ -244,6 +244,21 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public int? count_capacity { get; set; }
     }
 
+    public partial class view_park_way_status
+    {
+        public int id { get; set; }
+        public string park_name_ru { get; set; }
+        public string park_name_en { get; set; }
+        public string park_abbr_ru { get; set; }
+        public string park_abbr_en { get; set; }
+        public DateTime create { get; set; }
+        public string create_user { get; set; }
+        public DateTime? change { get; set; }
+        public string change_user { get; set; }
+        public int? count_wagon { get; set; }
+        public int? count_capacity { get; set; }
+    }
+
     public class view_way_status
     {
         public int id { get; set; }
@@ -384,7 +399,109 @@ namespace WEB_UI.Controllers.api.IDS.RWT
     {
         private EFDbContext db = new EFDbContext();
 
+        #region ДЕРЕВО ПУТЕЙ
+
+        // GET: api/ids/rwt/wsd/view/station/status/all
+        /// <summary>
+        /// Получить состояние по всем станциям (дерево станций)
+        /// </summary>
+        /// <returns></returns>
+        [Route("view/station/status/all")]
+        [ResponseType(typeof(view_station_status))]
+        public IHttpActionResult GetViewStationStatus()
+        {
+            try
+            {
+                string sql = "select * from [IDS].[get_view_station_status]()";
+                List<view_station_status> list = db.Database.SqlQuery<view_station_status>(sql).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // GET: api/ids/rwt/wsd/view/park_ways/status/station/id/6
+        /// <summary>
+        /// Получить состояние парка путей по указаной станции
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Route("view/park_ways/status/station/id/{id:int}")]
+        [ResponseType(typeof(view_park_way_status))]
+        public IHttpActionResult GetViewParkWaysOfStation(int id)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter id_station = new System.Data.SqlClient.SqlParameter("@id_station", id);
+                string sql = "select * from [IDS].[get_view_park_ways_status_of_station](@id_station) order by id";
+                var list = db.Database.SqlQuery<view_park_way_status>(sql, id_station).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // GET: api/ids/rwt/wsd/view/ways/status/station/id/6/park_ways/id/71
+        /// <summary>
+        /// Получить состояние путей по указаной станции и парку
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Route("view/ways/status/station/id/{id_station:int}/park_ways/id/{id_park:int}")]
+        [ResponseType(typeof(view_way_status))]
+        public IHttpActionResult GetViewWaysOfStationPark(int id_station, int id_park)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter id_s = new System.Data.SqlClient.SqlParameter("@id_station", id_station);
+                System.Data.SqlClient.SqlParameter id_p = new System.Data.SqlClient.SqlParameter("@id_park", id_park);
+                string sql = "select * from [IDS].[get_view_ways_status_of_station_park_ways](@id_station, @id_park) order by position_way";
+                var list = db.Database.SqlQuery<view_way_status>(sql, id_s, id_p).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // GET: api/ids/rwt/wsd/view/ways/status/id/109
+        /// <summary>
+        /// Получить состояние пути по id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Route("view/ways/status/id/{id:int}")]
+        [ResponseType(typeof(view_way_status))]
+        public IHttpActionResult GetViewWaysOfID(int id)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter id_way = new System.Data.SqlClient.SqlParameter("@id_way", id);
+                string sql = "select * from [IDS].[get_view_ways_status_of_id](@id_way) order by position_way";
+                view_way_status way = db.Database.SqlQuery<view_way_status>(sql, id_way).FirstOrDefault();
+                return Ok(way);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        #endregion
+
+
+        #region ДЕТАЛЬНО ВАГОНЫ
         // GET: api/ids/rwt/wsd/view/vagons/way/id/111
+        /// <summary>
+        /// Показать вагоны детально на указаном пути
+        /// </summary>
+        /// <param name="id_way"></param>
+        /// <returns></returns>
         [Route("view/vagons/way/id/{id_way:int}")]
         [ResponseType(typeof(view_wagons))]
         public IHttpActionResult GetViewWagonsOfWay(int id_way)
@@ -404,6 +521,8 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 return BadRequest(e.Message);
             }
         }
+        #endregion
+
 
         // GET: api/ids/rwt/wsd/view/vagons/outer_way/id/12
         [Route("view/vagons/outer_way/id/{id_outer_way:int}")]
@@ -414,23 +533,6 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             {
                 string sql = "select * from [IDS].[get_view_wagons_of_outer_way](" + id_outer_way.ToString() + ") order by position";
                 List<view_wagon_outer_way> list = db.Database.SqlQuery<view_wagon_outer_way>(sql).ToList();
-                return Ok(list);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        // GET: api/ids/rwt/wsd/view/station/status/all
-        [Route("view/station/status/all")]
-        [ResponseType(typeof(view_station_status))]
-        public IHttpActionResult GetViewStationStatus()
-        {
-            try
-            {
-                string sql = "select * from [IDS].[get_view_station_status]()";
-                List<view_station_status> list = db.Database.SqlQuery<view_station_status>(sql).ToList();
                 return Ok(list);
             }
             catch (Exception e)
