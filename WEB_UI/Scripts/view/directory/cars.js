@@ -115,7 +115,7 @@
         langs = $.extend(true, $.extend(true, getLanguages($.Text_View, lang), getLanguages($.Text_Common, lang)), getLanguages($.Text_Table, lang)),
         user_name = $('input#username').val(),
         dc = $('div#dialog-confirm').dialog_confirm({}),
-        alert = new ALERT($('div#main-alert')),// Создадим класс ALERTG
+        alert = new ALERT($('div#main-alert')),// Создадим класс ALERT
         ids_dir = new IDS_DIRECTORY(lang), // Создадим класс IDS_DIRECTORY
         // Загрузка основных справочников приложения
         loadReference = function (callback) {
