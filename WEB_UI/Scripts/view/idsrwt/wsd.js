@@ -4970,31 +4970,31 @@
                 //LockScreenOff();
             },
             // Обновим компонент внешних путей
-            update_outer_ways: function (id_statstion_on) {
-                // уточним список путей отправки
-                var outer_ways_provide = getObjects(operation_detali.outer_ways_provide, 'id_station_on', id_statstion_on)
-                var list_outer_ways = [];
-                // Пути определены?
-                if (outer_ways_provide && outer_ways_provide.length > 0) {
-                    $.each(outer_ways_provide, function (i, el) {
-                        list_outer_ways.push({ value: el.id, text: el["name_outer_way_" + operation_detali.lang] })
-                    });
-                }
-                // Отобразим компанент внешних путей
-                operation_detali.operation_detali_provide_outer_ways = cd_initSelect(
-                    operation_detali.operation_detali_provide_outer_ways,
-                    { lang: operation_detali.lang },
-                    list_outer_ways,
-                    null,
-                    -1,
-                    function (event) {
-                        event.preventDefault();
-                        var outer_way = Number($(this).val());
+            //update_outer_ways: function (id_statstion_on) {
+            //    // уточним список путей отправки
+            //    var outer_ways_provide = getObjects(operation_detali.outer_ways_provide, 'id_station_on', id_statstion_on)
+            //    var list_outer_ways = [];
+            //    // Пути определены?
+            //    if (outer_ways_provide && outer_ways_provide.length > 0) {
+            //        $.each(outer_ways_provide, function (i, el) {
+            //            list_outer_ways.push({ value: el.id, text: el["name_outer_way_" + operation_detali.lang] })
+            //        });
+            //    }
+            //    // Отобразим компанент внешних путей
+            //    operation_detali.operation_detali_provide_outer_ways = cd_initSelect(
+            //        operation_detali.operation_detali_provide_outer_ways,
+            //        { lang: operation_detali.lang },
+            //        list_outer_ways,
+            //        null,
+            //        -1,
+            //        function (event) {
+            //            event.preventDefault();
+            //            var outer_way = Number($(this).val());
 
-                    }, null);
-                // Отобразим вагоны состава для отправки
-                operation_detali.table_wagons_provide.view();
-            },
+            //        }, null);
+            //    // Отобразим вагоны состава для отправки
+            //    operation_detali.table_wagons_provide.view();
+            //},
             // Валидация данных
             validation_provide: function () {
                 operation_detali.val_provide.clear_all();
