@@ -49,7 +49,7 @@ namespace Test.TestModule
         {
 
             IDSTransfer ids = new IDSTransfer(service.Test);
-            int res = ids.IncomingArrivalSostav(42397, new List<int> { 52921665 }, @"EUROPE\test");
+            int res = ids.IncomingArrivalSostav(42370, new List<int> { 63664866 }, @"EUROPE\ealevchenko");
         }
 
         public void IDSTransfer_IncomingArrivalSostav_All()
