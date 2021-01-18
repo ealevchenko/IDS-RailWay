@@ -691,6 +691,7 @@
                                             <div class="card border-danger ml-2 mb-1 collapse" id="collect_wagon" style="width:100%">
                                                 <div class="card-header">Собрать по всем станциям</div>
                                                 <div class="card-body">
+                                                    <div class="alert" id="provide_alert"></div>
                                                     <fieldset class="border-primary">
                                                         <legend class="text-primary">Вагоны</legend>
                                                         <div class="row">
@@ -699,16 +700,15 @@
                                                                     <div class="card-header">ДОБАВИТЬ СПИСКОМ</div>
                                                                     <div class="card-body text-left">
                                                                         <div class="row">
-                                                                            <div class="col-xl-10">
+                                                                            <div class="col-xl-11">
                                                                                 <div class="form-check">
                                                                                     <input type="checkbox" class="form-check-input" id="validation_num" style="position:relative">
                                                                                     <label class="form-check-label" for="validation_num">@IDSRWTResource.title_validation_num</label>
                                                                                 </div>
                                                                                 <textarea class="form-control" id="provide_num_wagons" name="provide_num_wagons" rows="3" style="font-size:inherit"></textarea>
                                                                             </div>
-                                                                            <div class="col-xl-2 align-content-center">
-                                                                                <button type="button" class="btn btn-primary" id="provide_wagon_add">Добавить</button>
-                                                                                <button type="button" class="btn btn-primary" id="provide_wagon_replace" disabled="disabled">Заменить</button>
+                                                                            <div class="col-xl-1 align-content-center">
+                                                                                <button type="button" class="btn btn-primary" id="provide_search"><i class="fa fa-search"></i></button>
                                                                             </div>
                                                                         </div>
                                                                     </div>
