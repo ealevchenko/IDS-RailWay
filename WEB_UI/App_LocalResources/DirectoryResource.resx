@@ -139,7 +139,7 @@
     <value>Расставить текущее положение вагонов по путям станции</value>
   </data>
   <data name="park_state_title" xml:space="preserve">
-    <value>Сотояние парка</value>
+    <value>Соcтояние парка</value>
   </data>
   <data name="search_wagon_description" xml:space="preserve">
     <value>Найти вагон, показать историю перемещения.</value>

@@ -124,7 +124,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Сотояние парка.
+        ///   Ищет локализованную строку, похожую на Соcтояние парка.
         /// </summary>
         public static string park_state_title {
             get {
