@@ -1252,10 +1252,10 @@
                                 mywindow.document.write('</tr>');
                                 //
                                 mywindow.document.write('<tr>');
-                                mywindow.document.write('<td width=110 valign=top style="border:solid white 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt">');
-                                mywindow.document.write('<p class=MsoNormal class="p-text-title"><b><span class="text-title">Вагон № </span></b><span class="text-title"><i>' + wag.num + '</i></span></p>');
+                                mywindow.document.write('<td width=130 valign=top style="border:solid white 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt">');
+                                mywindow.document.write('<p class=MsoNormal class="p-text-title"><b><span class="text-title">Вагон № </span></b><span class="text-title-num">' + wag.num + '</span></p>');
                                 mywindow.document.write('</td>');
-                                mywindow.document.write('<td width=90 colspan=2 valign=top style="border-top:none;border-left:none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;padding:0cm 5.4pt 0cm 5.4pt">');
+                                mywindow.document.write('<td width=80 colspan=2 valign=top style="border-top:none;border-left:none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;padding:0cm 5.4pt 0cm 5.4pt">');
                                 mywindow.document.write('<p class=MsoNormal class="p-text-title"><b><span class="text-title">Род вагона </span></b><i><span class="text-title">' + (dir_genus ? dir_genus['abbr_' + lang] : '______') + '</span></i></p>');
                                 mywindow.document.write('</td>');
                                 mywindow.document.write('<td width=300 colspan=3 valign=top style="border-top:none;border-left:none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;padding:0cm 5.4pt 0cm 5.4pt">');

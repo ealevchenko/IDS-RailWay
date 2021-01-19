@@ -57,6 +57,13 @@ ul {
     color: black;
 }
 
+.text-title-num {
+    font-size: 11.0pt;
+    line-height: 107%;
+    font-family: Arial, sans-serif;
+    color: black;
+    font-style: oblique;
+}
 .text-title1 {
     font-size: 9.0pt;
     font-family: Arial, sans-serif;
