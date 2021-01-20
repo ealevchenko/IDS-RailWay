@@ -34,8 +34,11 @@ namespace EFIDS.Concrete
 
         public virtual DbSet<OutgoingCars> OutgoingCars { get; set; }
         public virtual DbSet<OutgoingSostav> OutgoingSostav { get; set; }
+        public virtual DbSet<OutgoingDetentionReturn> OutgoingDetentionReturn { get; set; }
         public virtual DbSet<UZ_DOC_OUT> UZ_DOC_OUT { get; set; }
 
+        // Задержания - возвраты
+        public virtual DbSet<Directory_DetentionReturn> Directory_DetentionReturn { get; set; }
         // Письма
         public virtual DbSet<InstructionalLetters> InstructionalLetters { get; set; }
         public virtual DbSet<InstructionalLettersWagon> InstructionalLettersWagon { get; set; }
@@ -218,8 +221,8 @@ namespace EFIDS.Concrete
                 .HasMany(e => e.WagonInternalRoutes1)
                 .WithOptional(e => e.WagonInternalRoutes2)
                 .HasForeignKey(e => e.parent_id);
-            
-            
+
+
             // Справочник состояний загрузок              
             modelBuilder.Entity<Directory_WagonLoadingStatus>()
                 .HasMany(e => e.WagonInternalOperation)
@@ -337,16 +340,28 @@ namespace EFIDS.Concrete
                 .HasForeignKey(e => e.id_way)
                 .WillCascadeOnDelete(false);
 
+            // Отправка
             modelBuilder.Entity<OutgoingSostav>()
                 .HasMany(e => e.OutgoingCars)
                 .WithOptional(e => e.OutgoingSostav)
                 .HasForeignKey(e => e.id_outgoing);
 
-            // Отправка
+
             modelBuilder.Entity<OutgoingCars>()
                 .HasMany(e => e.WagonInternalRoutes)
                 .WithOptional(e => e.OutgoingCars)
                 .HasForeignKey(e => e.id_outgoing_car);
+
+            modelBuilder.Entity<Directory_DetentionReturn>()
+                .HasMany(e => e.OutgoingDetentionReturn)
+                .WithRequired(e => e.Directory_DetentionReturn)
+                .HasForeignKey(e => e.id_detention_return)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<OutgoingDetentionReturn>()
+                .HasMany(e => e.OutgoingCars)
+                .WithOptional(e => e.OutgoingDetentionReturn)
+                .HasForeignKey(e => e.id_outgoing_detention_return);
 
             // Письма
             modelBuilder.Entity<InstructionalLetters>()

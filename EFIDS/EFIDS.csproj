@@ -57,6 +57,7 @@
     <Compile Include="Abstract\IWebView.cs" />
     <Compile Include="Abstract\IWebAccess.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_BorderCheckpoint.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_DetentionReturn.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Locomotive.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_OuterWays.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_LocomotiveStatus.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Concrete\Directory\EFDirectory_WagonManufacturers.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_GenusWagons.cs" />
     <Compile Include="Concrete\EFRepository.cs" />
+    <Compile Include="Concrete\RWT\EFOutgoingDetentionReturn.cs" />
     <Compile Include="Concrete\RWT\EFParkState_Wagon.cs" />
     <Compile Include="Concrete\RWT\EFParkState_Way.cs" />
     <Compile Include="Concrete\RWT\EFParkState_Station.cs" />
@@ -132,6 +134,7 @@
     <Compile Include="Concrete\RWT\EFArrivalSostav.cs" />
     <Compile Include="Concrete\Shared\EFWebView.cs" />
     <Compile Include="Concrete\Shared\EFWebAccess.cs" />
+    <Compile Include="Entities\Directory\Directory_DetentionReturn.cs" />
     <Compile Include="Entities\MORS\CardsWagons.cs" />
     <Compile Include="Entities\MORS\CardsWagonsRepairs.cs" />
     <Compile Include="Entities\Directory\Directory_DEPO.cs" />
@@ -209,15 +212,16 @@
     <Compile Include="Entities\RWT\ParkState_Station.cs" />
     <Compile Include="Entities\RWT\ParkState_Wagon.cs" />
     <Compile Include="Entities\RWT\ParkState_Way.cs" />
-    <Compile Include="Model\Model1.cs" />
-    <Compile Include="Model\view_ways_status.cs" />
+    <Compile Include="Entities\RWT\OutgoingDetentionReturn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Model\" />
+  </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>

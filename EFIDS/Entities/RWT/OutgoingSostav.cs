@@ -27,6 +27,12 @@ namespace EFIDS.Entities
 
         public DateTime date_readiness_amkr { get; set; }
 
+        public DateTime? date_end_inspection_acceptance_delivery { get; set; }
+
+        public DateTime? date_end_inspection_loader { get; set; }
+
+        public DateTime? date_end_inspection_vagonnik { get; set; }
+
         public DateTime? date_show_wagons { get; set; }
 
         public DateTime? date_readiness_uz { get; set; }
@@ -34,6 +40,8 @@ namespace EFIDS.Entities
         public DateTime? date_outgoing { get; set; }
 
         public DateTime? date_outgoing_act { get; set; }
+
+        public DateTime? date_departure { get; set; }
 
         [StringLength(50)]
         public string composition_index { get; set; }

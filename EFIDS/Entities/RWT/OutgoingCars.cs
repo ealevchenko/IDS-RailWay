@@ -14,7 +14,7 @@ namespace EFIDS.Entities
         {
             WagonInternalRoutes = new HashSet<WagonInternalRoutes>();
         }
-        
+
         public long id { get; set; }
 
         public long? id_outgoing { get; set; }
@@ -51,9 +51,13 @@ namespace EFIDS.Entities
 
         public long? id_outgoing_uz_vagon { get; set; }
 
+        public int? id_outgoing_detention_return { get; set; }
+
         public virtual UZ_DOC_OUT UZ_DOC_OUT { get; set; }
 
         public virtual Directory_Wagons Directory_Wagons { get; set; }
+
+        public virtual OutgoingDetentionReturn OutgoingDetentionReturn { get; set; }
 
         public virtual OutgoingSostav OutgoingSostav { get; set; }
 
