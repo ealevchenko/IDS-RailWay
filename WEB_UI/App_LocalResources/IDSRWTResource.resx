@@ -528,4 +528,22 @@
   <data name="title_validation_num" xml:space="preserve">
     <value>Контроль системной нумерации</value>
   </data>
+  <data name="title_link_letters" xml:space="preserve">
+    <value>Инструктивные письма</value>
+  </data>
+  <data name="title_link_park_state" xml:space="preserve">
+    <value>Состояние парка</value>
+  </data>
+  <data name="title_link_searsh_wagon" xml:space="preserve">
+    <value>Поиск вагона</value>
+  </data>
+  <data name="title_link_wagon_dir" xml:space="preserve">
+    <value>Карточка вагонов</value>
+  </data>
+  <data name="title_link_wagon_marking" xml:space="preserve">
+    <value>Разметка вагонов</value>
+  </data>
+  <data name="utilite_title" xml:space="preserve">
+    <value>Утилиты</value>
+  </data>
 </root>

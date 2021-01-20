@@ -47,11 +47,23 @@
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href='@Url.Action("Index", "Home", new { area = "IDSMORS" })'>ИДС"УСПС"</a>
+                            @*<a class="nav-link" href='@Url.Action("Index", "Home", new { Area = "Directory" })' target="_blank">Утилиты</a>*@
+                            <div class="dropdown  mr-3">
+                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href=#>Утилиты</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href='@Url.Action("Index", "Home", new { Area = "Directory" })' target="_blank">@WEB_UI.App_LocalResources.IDSRWTResource.utilite_title</a>
+                                    <a class="dropdown-item" href='@Url.Action("InstructionalLetters", "Home", new { Area = "Directory" })' target="_blank">@WEB_UI.App_LocalResources.IDSRWTResource.title_link_letters</a>
+                                    <a class="dropdown-item" href='@Url.Action("SearchWagon", "Home", new { Area = "Directory" })' target="_blank">@WEB_UI.App_LocalResources.IDSRWTResource.title_link_searsh_wagon</a>
+                                    <a class="dropdown-item" href='@Url.Action("WagonMarking", "Home", new { Area = "Directory" })' target="_blank">@WEB_UI.App_LocalResources.IDSRWTResource.title_link_wagon_marking</a>
+                                    <a class="dropdown-item" href='@Url.Action("ParkState", "Home", new { Area = "Directory" })' target="_blank">@WEB_UI.App_LocalResources.IDSRWTResource.title_link_park_state</a>
+                                    <a class="dropdown-item" href='@Url.Action("Cars", "Home", new { Area = "Directory" })' target="_blank">@WEB_UI.App_LocalResources.IDSRWTResource.title_link_wagon_dir</a>
+                                </div>
+                            </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href='@Url.Action("Index", "Home", new { Area = "Directory" })' target="_blank">Утилиты</a>
+                            <a class="nav-link" href='@Url.Action("Index", "Home", new { area = "IDSMORS" })'>ИДС"УСПС"</a>
                         </li>
+
                     </ul>
                 </div>
 

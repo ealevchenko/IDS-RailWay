@@ -529,6 +529,51 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Инструктивные письма.
+        /// </summary>
+        public static string title_link_letters {
+            get {
+                return ResourceManager.GetString("title_link_letters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Состояние парка.
+        /// </summary>
+        public static string title_link_park_state {
+            get {
+                return ResourceManager.GetString("title_link_park_state", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Поиск вагона.
+        /// </summary>
+        public static string title_link_searsh_wagon {
+            get {
+                return ResourceManager.GetString("title_link_searsh_wagon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Карточка вагонов.
+        /// </summary>
+        public static string title_link_wagon_dir {
+            get {
+                return ResourceManager.GetString("title_link_wagon_dir", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Разметка вагонов.
+        /// </summary>
+        public static string title_link_wagon_marking {
+            get {
+                return ResourceManager.GetString("title_link_wagon_marking", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Материал.
         /// </summary>
         public static string title_material {
@@ -1272,6 +1317,15 @@ namespace WEB_UI.App_LocalResources {
         public static string title_warehouse_shop {
             get {
                 return ResourceManager.GetString("title_warehouse_shop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Утилиты.
+        /// </summary>
+        public static string utilite_title {
+            get {
+                return ResourceManager.GetString("utilite_title", resourceCulture);
             }
         }
         

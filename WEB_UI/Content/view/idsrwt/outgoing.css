@@ -35,6 +35,29 @@ table.dataTable tbody tr:not(.selected).status-rejected.odd, table.dataTable tbo
     background-color: #fbcfcf;
 }
 
+table.dataTable.display tbody tr:not(.selected).odd.status-in-work > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.status-in-work > .sorting_1 {
+    background-color: #F9DA9F;
+}
+table.dataTable.display tbody tr:not(.selected).even.status-in-work > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.status-in-work > .sorting_1 {
+    background-color: #F9DA9F;
+}
+
+table.dataTable.display tbody tr:not(.selected).odd.status-accepted > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.status-accepted > .sorting_1 {
+    background-color: #8EFFA8;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.status-accepted > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.status-accepted > .sorting_1 {
+    background-color: #8EFFA8;
+}
+
+table.dataTable.display tbody tr:not(.selected).odd.status-rejected > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.status-rejected > .sorting_1 {
+    background-color: #F9AEBB;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.status-rejected > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.status-rejected > .sorting_1 {
+    background-color: #F9AEBB;
+}
+
 div.dt-buttons a {
     margin-right: 2px;
 }

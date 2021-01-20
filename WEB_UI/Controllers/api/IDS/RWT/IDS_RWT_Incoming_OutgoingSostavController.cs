@@ -11,6 +11,48 @@ using EFIDS.Entities;
 
 namespace WEB_UI.Controllers.api
 {
+    public class ViewOutgoingSostav
+    {
+        public long id { get; set; }
+        public int num_doc { get; set; }
+        public int id_station_from { get; set; }
+        public string station_from_name_ru { get; set; }
+        public string station_from_name_en { get; set; }
+        public string station_from_abbr_ru { get; set; }
+        public string station_from_abbr_en { get; set; }
+        public int id_way_from { get; set; }
+        public string way_from_num_ru { get; set; }
+        public string way_from_num_en { get; set; }
+        public string way_from_name_ru { get; set; }
+        public string way_from_name_en { get; set; }
+        public int? id_station_on { get; set; }
+        public string station_on_name_ru { get; set; }
+        public string station_on_name_en { get; set; }
+        public string station_on_abbr_ru { get; set; }
+        public string station_on_abbr_en { get; set; }
+        public DateTime date_readiness_amkr { get; set; }
+        public DateTime? date_end_inspection_acceptance_delivery { get; set; }
+        public DateTime? date_end_inspection_loader { get; set; }
+        public DateTime? date_end_inspection_vagonnik { get; set; }
+        public DateTime? date_show_wagons { get; set; }
+        public DateTime? date_readiness_uz { get; set; }
+        public DateTime? date_outgoing { get; set; }
+        public DateTime? date_outgoing_act { get; set; }
+        public DateTime? date_departure { get; set; }
+        public string composition_index { get; set; }
+        public int status { get; set; }
+        public string note { get; set; }
+        public DateTime create { get; set; }
+        public string create_user { get; set; }
+        public DateTime? change { get; set; }
+        public string change_user { get; set; }
+        public int? count_all { get; set; }
+        public int? count_outgoing { get; set; }
+        public int? count_not_outgoing { get; set; }
+        public int? count_detention_return { get; set; }
+    }
+    
+    
     [RoutePrefix("api/ids/rwt/outgoing_sostav")]
     public class IDS_RWT_Incoming_OutgoingSostavController : ApiController
     {
@@ -97,6 +139,26 @@ namespace WEB_UI.Controllers.api
                 return BadRequest(e.Message);
             }
         }
+
+        // GET: api/ids/rwt/outgoing_sostav/view/start/2021-01-01T00:00:00/stop/2021-01-20T23:59:59
+        [Route("view/start/{start:datetime}/stop/{stop:datetime}")]
+        [ResponseType(typeof(ViewOutgoingSostav))]
+        public IHttpActionResult GetViewOutgoingSostavOfPeriod(DateTime start, DateTime stop)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter p_start = new System.Data.SqlClient.SqlParameter("@start", start);
+                System.Data.SqlClient.SqlParameter p_stop = new System.Data.SqlClient.SqlParameter("@stop", stop);
+                string sql = "select * from [IDS].[get_outgoing_sostav_of_period](@start, @stop) order by date_readiness_amkr";
+                List<ViewOutgoingSostav> list = this.ef_ids.Database.SqlQuery<ViewOutgoingSostav>(sql,p_start,p_stop).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
 
         // POST api/ids/rwt/outgoing_sostav/
         [HttpPost]

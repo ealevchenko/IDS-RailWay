@@ -154,6 +154,8 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_Ways>>().To<EFIDS.Concrete.EFDirectory_Ways>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_OuterWays>>().To<EFIDS.Concrete.EFDirectory_OuterWays>();
 
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_DetentionReturn>>().To<EFIDS.Concrete.EFDirectory_DetentionReturn>();
+
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.CardsWagons>>().To<EFIDS.Concrete.EFCardsWagons>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.CardsWagonsRepairs>>().To<EFIDS.Concrete.EFCardsWagonsRepairs>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.ParksWagons>>().To<EFIDS.Concrete.EFParksWagons>();
@@ -181,6 +183,7 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFIDS.Abstract.IStringRepository<EFIDS.Entities.UZ_DOC>>().To<EFIDS.Concrete.EFUZ_DOC>();
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.OutgoingSostav>>().To<EFIDS.Concrete.EFOutgoingSostav>();
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.OutgoingCars>>().To<EFIDS.Concrete.EFOutgoingCars>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.OutgoingDetentionReturn>>().To<EFIDS.Concrete.EFOutgoingDetentionReturn>();
             kernel.Bind<EFIDS.Abstract.IStringRepository<EFIDS.Entities.UZ_DOC_OUT>>().To<EFIDS.Concrete.EFUZ_DOC_OUT>();
 
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.SAPIncomingSupply>>().To<EFIDS.Concrete.EFSAPIncomingSupply>();

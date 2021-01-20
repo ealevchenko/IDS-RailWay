@@ -11,10 +11,14 @@
                 'field_count': 'Кол. вагонов',
                 'field_station_on': 'Отправлен на станцию УЗ',
                 'field_date_show_wagons': 'Время готовности сдачи',
+                'field_date_end_inspection_acceptance_delivery': 'Время окон. осм. приемосд.',
+                'field_date_end_inspection_loader': 'Время окон. осм. грузчиками',
+                'field_date_end_inspection_vagonnik': 'Время окон. осм. вагонниками',
                 'field_date_readiness_uz': 'Время предъявления УЗ',
                 'field_date_outgoing': 'Время сдачи на УЗ',
                 'field_date_outgoing_act': 'Время сдачи на УЗ (по акту)',
-                'field_count_all': 'Отправлено-Осталось вагонов',
+                'field_date_departure': 'Время ухода на УЗ',
+                'field_count_all': 'Всего|отпр.|ост.|задерж.',
                 'field_composition_index': 'Индекс поезда',
                 'field_note': 'Примечание',
                 'field_status': 'Статус',
@@ -119,11 +123,13 @@
                 'field_station_on_amkr_arrival': 'Следует на ст.',
                 'field_division_on_amkr_arrival': 'Цех получатель',
 
-
+                'title_button_export': 'Экспорт',
                 'title_button_buffer': 'Буфер',
                 'title_button_excel': 'Excel',
                 'title_button_field': 'Поля',
-                'title_button_field_all': 'Все поля',
+                'title_button_field_select': 'Выбрать',
+                'title_button_field_view_all': 'Показать все',
+                'title_button_field_clear': 'Сбросить',
 
                 'title_button_wagon': 'Вагоны',
                 'title_button_wagon_accept': 'Отправить вагоны',
@@ -150,10 +156,15 @@
                 'field_count': 'Count. wagons',
                 'field_station_on': 'Sent to UZ station',
                 'field_date_show_wagons': 'Surrender ready time',
+                'field_date_end_inspection_acceptance_delivery': 'Время окон. осм. приемосд.',
+                'field_date_end_inspection_loader': 'Время окон. осм. грузчиками',
+                'field_date_end_inspection_vagonnik': 'Время окон. осм. вагонниками',
+
                 'field_date_readiness_uz': 'UZ presentation time',
                 'field_date_outgoing': 'Time of delivery to UZ',
                 'field_date_outgoing_act': 'Time of delivery to UZ (by act)',
-                'field_count_all': 'Sent-Wagons left',
+                'field_date_departure': 'Время ухода на УЗ',
+                'field_count_all': 'Всего|отпр.|ост.|задерж.',
                 'field_composition_index': 'Train index',
                 'field_note': 'Note',
                 'field_status': 'Status',
@@ -314,7 +325,7 @@
             LockScreen(langView('mess_delay', langs));
             if (refresh || data_start === null || data_stop === null || data_start !== start || data_stop !== stop) {
 
-                ids_inc.getOutgoingSostav(start, stop, function (data) {
+                ids_inc.getViewOutgoingSostav(start, stop, function (data) {
                     list_sostav = data;
                     data_start = start;
                     data_stop = stop;
@@ -329,7 +340,7 @@
         // ОСНОВНАЯ ТАБЛИЦА СОСТАВОВ
         //*************************************************************************************
         table_sostav = {
-            html_table: $('table#table-sostav-arrival'),
+            html_table: $('table#table-sostav-outgoing'),
             obj: null,
             select_sostav: null,
             init: function () {
@@ -368,52 +379,179 @@
                             defaultContent: "",
                             width: "30px"
                         },
-                        { data: "num_doc", title: langView('field_num_doc', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "date_readiness_amkr", title: langView('field_date_readiness_amkr', langs), width: "150px", orderable: true, searchable: true },
-                        { data: "station_from", title: langView('field_station_from', langs), width: "150px", orderable: true, searchable: true },
-                        { data: "way_from", title: langView('field_way_from', langs), width: "150px", orderable: true, searchable: true },
-                        { data: "count", title: langView('field_count', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "station_on", title: langView('field_station_on', langs), width: "150px", orderable: true, searchable: true },
-                        { data: "date_show_wagons", title: langView('field_date_show_wagons', langs), width: "150px", orderable: true, searchable: true },
-                        { data: "date_readiness_uz", title: langView('field_date_readiness_uz', langs), width: "150px", orderable: true, searchable: true },
-                        { data: "date_outgoing", title: langView('field_date_outgoing', langs), width: "150px", orderable: true, searchable: true },
-                        { data: "date_outgoing_act", title: langView('field_date_outgoing_act', langs), width: "150px", orderable: true, searchable: true },
-                        { data: "count_all", title: langView('field_count_all', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "composition_index", title: langView('field_composition_index', langs), width: "150px", orderable: true, searchable: true },
-                        { data: "note", title: langView('field_note', langs), width: "150px", orderable: true, searchable: true },
+                        {
+                            //data: "num_doc",
+                            data: function (row, type, val, meta) {
+                                return row.num_doc;
+                            },
+                            title: langView('field_num_doc', langs), width: "50px", orderable: true, searchable: true
+                        },
+                        {
+                            //data: "date_readiness_amkr",
+                            data: function (row, type, val, meta) {
+                                return getReplaceTOfDT(row.date_readiness_amkr);
+                            },
+                            title: langView('field_date_readiness_amkr', langs), width: "150px", orderable: true, searchable: true
+                        },
+                        {
+                            //data: "station_from",
+                            data: function (row, type, val, meta) {
+                                return row['station_from_name_' + lang];
+                            },
+                            title: langView('field_station_from', langs), width: "150px", orderable: true, searchable: true
+                        },
+                        {
+                            //data: "way_from",
+                            data: function (row, type, val, meta) {
+                                return row['way_from_num_' + lang];
+                            },
+                            title: langView('field_way_from', langs), width: "150px", orderable: true, searchable: true
+                        },
+                        {
+                            //data: "count",
+                            data: function (row, type, val, meta) {
+                                return row.count_all;
+                            },
+                            title: langView('field_count', langs), width: "50px", orderable: true, searchable: true
+                        },
+                        {
+                            //data: "station_on",
+                            data: function (row, type, val, meta) {
+                                return row['station_on_name_' + lang];
+                            },
+                            title: langView('field_station_on', langs), width: "150px", orderable: true, searchable: true
+                        },
+                        {
+                            //data: "date_show_wagons",
+                            data: function (row, type, val, meta) {
+                                return getReplaceTOfDT(row.date_end_inspection_acceptance_delivery);
+                            },
+                            title: langView('field_date_end_inspection_acceptance_delivery', langs), width: "150px", orderable: true, searchable: true
+                        },
+                        {
+                            data: function (row, type, val, meta) {
+                                return getReplaceTOfDT(row.date_end_inspection_loader);
+                            },
+                            title: langView('field_date_end_inspection_loader', langs), width: "150px", orderable: true, searchable: true
+                        },
+                        {
+                            data: function (row, type, val, meta) {
+                                return getReplaceTOfDT(row.date_end_inspection_vagonnik);
+                            },
+                            title: langView('field_date_end_inspection_vagonnik', langs), width: "150px", orderable: true, searchable: true
+                        },
+                        {
+                            //data: "date_readiness_uz",
+                            data: function (row, type, val, meta) {
+                                return getReplaceTOfDT(row.date_readiness_uz);
+                            },
+                            title: langView('field_date_readiness_uz', langs), width: "150px", orderable: true, searchable: true
+                        },
+                        {
+                            //data: "date_outgoing",
+                            data: function (row, type, val, meta) {
+                                return getReplaceTOfDT(row.date_outgoing);
+                            },
+                            title: langView('field_date_outgoing', langs), width: "150px", orderable: true, searchable: true
+                        },
+                        {
+                            //data: "date_outgoing_act",                            
+                            data: function (row, type, val, meta) {
+                                return getReplaceTOfDT(row.date_outgoing_act);
+                            },
+                            title: langView('field_date_outgoing_act', langs), width: "150px", orderable: true, searchable: true
+                        },
+                        {
+                            data: function (row, type, val, meta) {
+                                return getReplaceTOfDT(row.date_departure);
+                            },
+                            title: langView('field_date_departure', langs), width: "150px", orderable: true, searchable: true
+                        },
+                        {
+                            //data: "count_all",
+                            data: function (row, type, val, meta) {
+                                return row.count_all + " | " + row.count_outgoing + " | " + row.count_not_outgoing + " | " + row.count_detention_return;
+                            },
+                            title: langView('field_count_all', langs), width: "50px", orderable: true, searchable: true
+                        },
+                        {
+                            //data: "composition_index",
+                            data: function (row, type, val, meta) {
+                                return row.composition_index;
+                            },
+                            title: langView('field_composition_index', langs), width: "150px", orderable: true, searchable: true
+                        },
+                        {
+                            //data: "note",
+                            data: function (row, type, val, meta) {
+                                return row.note;
+                            },
+                            title: langView('field_note', langs), width: "150px", orderable: true, searchable: true
+                        },
                         //{ data: "status", title: langView('field_status', langs), width: "50px", orderable: true, searchable: true },
                         //{ data: "create", title: langView('field_create', langs), width: "50px", orderable: true, searchable: true },
                         //{ data: "create_user", title: langView('field_create_user', langs), width: "50px", orderable: true, searchable: true },
                         //{ data: "change", title: langView('field_change', langs), width: "50px", orderable: true, searchable: true },
                         //{ data: "change_user", title: langView('field_change_user', langs), width: "50px", orderable: true, searchable: true },
-                        { data: "create_sostav", title: langView('field_create_sostav', langs), width: "150px", orderable: true, searchable: true },
-                        { data: "change_sostav", title: langView('field_change_sostav', langs), width: "150px", orderable: true, searchable: true }
+                        {
+                            //data: "create_sostav",
+                            data: function (row, type, val, meta) {
+                                return row.create !== null && row.create_user !== null ? row.create_user + ' (' + row.create.replace(/T/g, ' ') + ')' : null
+                            },
+                            title: langView('field_create_sostav', langs), width: "150px", orderable: true, searchable: true
+                        },
+                        {
+                            //data: "change_sostav",
+                            data: function (row, type, val, meta) {
+                                return row.change !== null && row.change_user !== null ? row.change_user + ' (' + row.change.replace(/T/g, ' ') + ')' : null
+                            },
+                            title: langView('field_change_sostav', langs), width: "150px", orderable: true, searchable: true
+                        }
                     ],
                     dom: 'Bfrtip',
                     stateSave: false,
                     buttons: [
                         {
-                            text: langView('title_button_buffer', langs),
-                            extend: 'copyHtml5',
+                            extend: 'collection',
+                            text: langView('title_button_export', langs),
+                            buttons: [
+                                {
+                                    text: langView('title_button_buffer', langs),
+                                    extend: 'copyHtml5',
+                                },
+                                {
+                                    text: langView('title_button_excel', langs),
+                                    extend: 'excelHtml5',
+                                    sheetName: 'Поезда по прибытию',
+                                    messageTop: function () {
+                                        return '';
+                                    }
+                                },
+                            ],
+                            autoClose: true
                         },
                         {
-                            text: langView('title_button_excel', langs),
-                            extend: 'excelHtml5',
-                            sheetName: 'Поезда по прибытию',
-                            messageTop: function () {
-                                return '';
-                            }
-                        },
-                        {
-                            extend: 'colvis',
+                            extend: 'collection',
                             text: langView('title_button_field', langs),
-                            collectionLayout: 'fixed two-column',
-                            //postfixButtons: ['colvisRestore']
-                        },
-                        {
-                            extend: 'colvisGroup',
-                            text: langView('title_button_field_all', langs),
-                            show: ':hidden'
+                            buttons: [
+                                {
+                                    extend: 'colvis',
+                                    text: langView('title_button_field_select', langs),
+                                    collectionLayout: 'fixed two-column',
+                                },
+                                {
+                                    extend: 'colvisGroup',
+                                    text: langView('title_button_field_view_all', langs),
+                                    show: ':hidden'
+                                },
+                                {
+                                    text: langView('title_button_field_clear', langs),
+                                    action: function (e, dt, node, conf) {
+                                        table_sostav.obj.colReorder.reset();
+                                    }
+                                },
+                            ],
+                            autoClose: true
                         },
                         //{
                         //    text: langView('title_button_add', langs),
@@ -530,21 +668,21 @@
                     var rowData = table_sostav.obj.rows(indexes).data();
                     if (rowData && rowData.length > 0) {
                         table_sostav.select_sostav = rowData[0];
-                        table_sostav.obj.button(4).enable(true);
+                        table_sostav.obj.button(2).enable(true);
                         if (table_sostav.select_sostav.status < 1) {
                             //table_sostav.obj.button(5).enable(true);
                             //table_sostav.obj.button(6).enable(true);
-                            table_sostav.obj.button(4).text(langView('title_button_wagon_accept', langs));
+                            table_sostav.obj.button(2).text(langView('title_button_wagon_accept', langs));
                         } else {
                             // Если статус в работе принят или удален 
                             //table_sostav.obj.button(5).enable(false);
                             //table_sostav.obj.button(6).enable(false);
-                            table_sostav.obj.button(4).text(langView('title_button_wagon_view', langs));
+                            table_sostav.obj.button(2).text(langView('title_button_wagon_view', langs));
                         }
                     } else {
                         //table_sostav.obj.button(5).enable(false);
                         //table_sostav.obj.button(6).enable(false);
-                        table_sostav.obj.button(4).enable(false);
+                        table_sostav.obj.button(2).enable(false);
                     }
                 }).on('deselect', function (e, dt, type, indexes) {
                     table_sostav.deselect();
@@ -556,49 +694,50 @@
                 table_sostav.obj.clear();
                 // Сбросить выделенный состав
                 table_sostav.deselect();
-                $.each(data, function (i, el) {
-                    table_sostav.obj.row.add(table_sostav.get_sostav(el));
-                });
+                table_sostav.obj.rows.add(data);
+                //$.each(data, function (i, el) {
+                //    table_sostav.obj.row.add(table_sostav.get_sostav(el));
+                //});
                 table_sostav.obj.order([1, 'asc']);
                 table_sostav.obj.row('#' + id_select).select();
                 table_sostav.obj.draw();
                 LockScreenOff();
             },
-            // Получить полную информацию по составау
-            get_sostav: function (data) {
-                var car_outgoing = data.OutgoingCars !== null ? data.OutgoingCars.filter(function (i) {
-                    return i.outgoing ? true : false;
-                }) : [];
-                var car_not_outgoing = data.OutgoingCars !== null ? data.OutgoingCars.filter(function (i) {
-                    return !i.outgoing ? true : false;
-                }) : [];
-                return {
-                    "id": data.id,
-                    "num_doc": data.num_doc,
-                    "id_station_from": data.id_station_from,
-                    "station_from": data.id_station_from !== null && ids_inc !== null ? ids_inc.ids_dir.getValue_Station_Of_ID(data.id_station_from, 'station_name', lang) : '',
-                    "id_way_from": data.id_way_from,
-                    "way_from": data.id_way !== null && ids_inc !== null ? ids_inc.ids_dir.getValue_Ways_Of_ID(data.id_way, 'way_num', lang) : '',
-                    "id_station_on": data.id_station_on,
-                    "station_on": data.id_station_on !== null && ids_inc !== null ? ids_inc.ids_dir.getValue_Station_Of_ID(data.id_station_on, 'station_name', lang) : '',
-                    "date_readiness_amkr": data.date_readiness_amkr.replace(/T/g, ' '),
-                    "date_show_wagons": data.date_show_wagons !== null ? data.date_show_wagons.replace(/T/g, ' ') : null,
-                    "date_readiness_uz": data.date_readiness_uz !== null ? data.date_readiness_uz.replace(/T/g, ' ') : null,
-                    "date_outgoing": data.date_outgoing !== null ? data.date_outgoing.replace(/T/g, ' ') : null,
-                    "date_outgoing_act": data.date_outgoing_act !== null ? data.date_outgoing_act.replace(/T/g, ' ') : null,
-                    "composition_index": data.composition_index,
-                    "status": data.status,
-                    "note": data.note,
-                    "create": data.create !== null ? data.create.replace(/T/g, ' ') : null,
-                    "create_user": data.create_user,
-                    "change": data.change !== null ? data.change.replace(/T/g, ' ') : null,
-                    "change_user": data.change_user,
-                    "create_sostav": data.create !== null && data.create_user !== null ? data.create_user + ' (' + data.create.replace(/T/g, ' ') + ')' : null,
-                    "change_sostav": data.change !== null && data.change_user !== null ? data.change_user + ' (' + data.change.replace(/T/g, ' ') + ')' : null,
-                    "count": data.OutgoingCars !== null ? data.OutgoingCars.length : 0,
-                    "count_all": (car_outgoing !== null ? car_outgoing.length : 0) + ' - ' + (car_not_outgoing !== null ? car_not_outgoing.length : 0)
-                };
-            },
+            //// Получить полную информацию по составау
+            //get_sostav: function (data) {
+            //    var car_outgoing = data.OutgoingCars !== null ? data.OutgoingCars.filter(function (i) {
+            //        return i.outgoing ? true : false;
+            //    }) : [];
+            //    var car_not_outgoing = data.OutgoingCars !== null ? data.OutgoingCars.filter(function (i) {
+            //        return !i.outgoing ? true : false;
+            //    }) : [];
+            //    return {
+            //        "id": data.id,
+            //        "num_doc": data.num_doc,
+            //        "id_station_from": data.id_station_from,
+            //        "station_from": data.id_station_from !== null && ids_inc !== null ? ids_inc.ids_dir.getValue_Station_Of_ID(data.id_station_from, 'station_name', lang) : '',
+            //        "id_way_from": data.id_way_from,
+            //        "way_from": data.id_way !== null && ids_inc !== null ? ids_inc.ids_dir.getValue_Ways_Of_ID(data.id_way, 'way_num', lang) : '',
+            //        "id_station_on": data.id_station_on,
+            //        "station_on": data.id_station_on !== null && ids_inc !== null ? ids_inc.ids_dir.getValue_Station_Of_ID(data.id_station_on, 'station_name', lang) : '',
+            //        "date_readiness_amkr": data.date_readiness_amkr.replace(/T/g, ' '),
+            //        "date_show_wagons": data.date_show_wagons !== null ? data.date_show_wagons.replace(/T/g, ' ') : null,
+            //        "date_readiness_uz": data.date_readiness_uz !== null ? data.date_readiness_uz.replace(/T/g, ' ') : null,
+            //        "date_outgoing": data.date_outgoing !== null ? data.date_outgoing.replace(/T/g, ' ') : null,
+            //        "date_outgoing_act": data.date_outgoing_act !== null ? data.date_outgoing_act.replace(/T/g, ' ') : null,
+            //        "composition_index": data.composition_index,
+            //        "status": data.status,
+            //        "note": data.note,
+            //        "create": data.create !== null ? data.create.replace(/T/g, ' ') : null,
+            //        "create_user": data.create_user,
+            //        "change": data.change !== null ? data.change.replace(/T/g, ' ') : null,
+            //        "change_user": data.change_user,
+            //        "create_sostav": data.create !== null && data.create_user !== null ? data.create_user + ' (' + data.create.replace(/T/g, ' ') + ')' : null,
+            //        "change_sostav": data.change !== null && data.change_user !== null ? data.change_user + ' (' + data.change.replace(/T/g, ' ') + ')' : null,
+            //        "count": data.OutgoingCars !== null ? data.OutgoingCars.length : 0,
+            //        "count_all": (car_outgoing !== null ? car_outgoing.length : 0) + ' - ' + (car_not_outgoing !== null ? car_not_outgoing.length : 0)
+            //    };
+            //},
             // Обновить данные в таблице
             update_sostav: function (data) {
                 //if (data) {
@@ -625,7 +764,7 @@
                 table_sostav.select_sostav = null;
                 //table_sostav.obj.button(5).enable(false);
                 //table_sostav.obj.button(6).enable(false);
-                table_sostav.obj.button(4).enable(false);
+                table_sostav.obj.button(2).enable(false);
             }
         },
 

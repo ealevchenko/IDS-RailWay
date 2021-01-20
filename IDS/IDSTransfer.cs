@@ -563,9 +563,10 @@ namespace IDS
                                     id_way_from = GetIDWayIDSOfIDKis(sostav.K_ST),
                                     id_station_on = sostav.K_ST_PR != null ? (int?)GetIDStationIDSOfIDKis(sostav.K_ST_PR) : null,
                                     date_readiness_amkr = sostav.DT_PR,
-                                    date_show_wagons = this.transfer_set_outgoing_wagon_of_kis == true ? (DateTime?)sostav.DT : null,
+                                    date_show_wagons = null,
                                     date_readiness_uz = this.transfer_set_outgoing_wagon_of_kis == true ? (DateTime?)sostav.DT : null,
-                                    date_outgoing = this.transfer_set_outgoing_wagon_of_kis == true ? (DateTime?)sostav.DT : null,
+                                    date_outgoing = this.transfer_set_outgoing_wagon_of_kis == true ? (DateTime?)sostav.DT : null, 
+                                    date_departure = this.transfer_set_outgoing_wagon_of_kis == true ? (DateTime?)sostav.DT : null,
                                     date_outgoing_act = null,
                                     composition_index = null,
                                     status = this.transfer_set_outgoing_wagon_of_kis == true ? 2 : 0,
@@ -604,7 +605,7 @@ namespace IDS
                                                 outgoing_user = this.transfer_set_outgoing_wagon_of_kis == true ? user : null,
                                                 create = sostav.DAT_VVOD != null ? (DateTime)sostav.DAT_VVOD : DateTime.Now,
                                                 create_user = user,
-                                                id_outgoing_uz_vagon = null,
+                                                id_outgoing_uz_vagon = null, 
                                             };
                                             list_cars.Add(car);
                                         }
