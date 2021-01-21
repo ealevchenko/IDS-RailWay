@@ -176,5 +176,5 @@ use [KRR-PA-CNT-Railway]
 
 			UZ.Directory_Stations as let_station_uz ON  il.destination_station = let_station_uz.code_cs									--> Станция УЗ по письму
 
-		WHERE (wim.way_end IS NULL)
+		WHERE (wim.way_end IS NULL) and wim.id_way =0 and wir.num = 65297459
 		order by wim.position
