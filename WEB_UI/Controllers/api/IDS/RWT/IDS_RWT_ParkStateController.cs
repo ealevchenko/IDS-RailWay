@@ -316,7 +316,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         {
             try
             {
-                string sql = "select * from [IDS].[get_view_status_ways_park_state_of_station](" + id.ToString() + ") order by [position] desc";
+                string sql = "select * from [IDS].[get_view_status_ways_park_state_of_station](" + id.ToString() + ") order by id_park, position";
                 List<ViewStatusParkState> list = this.db.Database.SqlQuery<ViewStatusParkState>(sql).ToList();
                 return Ok(list);
             }

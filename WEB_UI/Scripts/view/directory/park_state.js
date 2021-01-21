@@ -695,7 +695,7 @@
                 var index = table_ways_park_state.index_way !== null ? table_ways_park_state.index_way : null;
                 table_ways_park_state.obj.clear();
                 if (table_ways_park_state.list_way_state && table_ways_park_state.list_way_state.length > 0) {
-                    table_ways_park_state.obj.rows.add(table_ways_park_state.list_way_state.sort(function (a, b) { return a.position - b.position; }));
+                    table_ways_park_state.obj.rows.add(table_ways_park_state.list_way_state.sort(function (a, b) { return a.id_park - b.id_park; }));
                 } else {
                     table_ways_park_state.id_way = null;
                     table_ways_park_state.index_way = null;                             // Индекс выбраной строки в таблице
