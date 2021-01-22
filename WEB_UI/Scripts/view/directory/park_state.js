@@ -86,6 +86,16 @@
             // Принять 
             bt_apply: $('<button type="button" class="btn btn-warning ml-3" id="apply_park_state">Проверить и применить</button>'),
             //accordion_ways: $('div#accordion_ways'),
+            bt_set_7: $('button#set_7').on('click',
+                function (event) {
+                    pn_select.input_park_status_on_dt.setDateTime(moment().set({ 'hour': 7, 'minute': 0, 'second': 0, 'millisecond': 0 })._d);
+                    event.preventDefault();
+                }),
+            bt_set_19: $('button#set_19').on('click',
+                function (event) {
+                    pn_select.input_park_status_on_dt.setDateTime(moment().set({ 'hour': 19, 'minute': 0, 'second': 0, 'millisecond': 0 })._d);
+                    event.preventDefault();
+                }),
             // Добавить
             bt_create_park_status: $('button#create_park_status').on('click',
                 function (event) {
@@ -193,6 +203,9 @@
                         pn_select.val_add_park_status.out_warning_message("Нельзя удалить состояние парка, которое применили " + getReplaceTOfDT(park_state.applied) + "!");
                     }
                 }),
+
+
+            // 
             // Инициализация
             init: function (lang, list_station) {
                 pn_select.id_station_select = -1;       // Станция по умолчанию (нет выбора)
@@ -302,7 +315,8 @@
                     pn_select.input_park_status_on_dt.obj.prop('disabled', true);
                     pn_select.bt_create_park_status.prop('disabled', true);
                     var patk_state = pn_select.get_park_state_of_id(pn_select.id_park_status_select);
-                    pn_select.park_state_info.text('Состояние парка на :' + patk_state.state_on + ', созданное : ' + patk_state.create_user)
+                    pn_select.park_state_info.text('Состояние парка на :' + getReplaceTOfDT(patk_state.state_on) + ', созданное : ' + patk_state.create_user + ' ')
+                        .append($('<label style="color:red;">' + (patk_state.applied ? '( применено : ' + getReplaceTOfDT(patk_state.applied) + ' )': '') + '</label>'))
                         .append(pn_select.bt_apply.on('click', function (event) {
                             event.preventDefault();
                             pn_select.apply();
