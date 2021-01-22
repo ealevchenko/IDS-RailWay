@@ -23,6 +23,8 @@ namespace IDS
         validation_data = -204,                     // Ошибка, дата непрошла валидацию
         not_park_station_station_of_db = -205,      // Ошибка, в базе данных нет строки положения парка по станции
         not_way_park_station_station_of_db = -206,  // Ошибка, в базе данных нет строки пути положения парка по станции
+        not_wir_of_db = -207,                       // Ошибка, нет записи внутренего перемещения вагона
+        not_wio_of_db = -208,                       // Ошибка, нет записи операций внутренего перемещения вагона
 
     }
 
@@ -537,7 +539,29 @@ namespace IDS
                 // Получим запись вагона из справочника
                 Directory_Wagons wagon = ef_dir_wag.Context.Where(w => w.num == arr_uz_vag.num).FirstOrDefault();
                 if (wagon == null) return (int)errors_ids_rwt.not_wagon_of_db; // Указаного вагона нет в базе
+                
+                // Получим контекст Внутренего перемещения
+                EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
+                WagonInternalRoutes wir = ef_wir.Context.Where(r => r.id_arrival_car == arr_cars.id).FirstOrDefault();
 
+                if (wir == null) return (int)errors_ids_rwt.not_wir_of_db; // Ошибка, нет записи внутренего перемещения вагона
+                // Найдем первую запись
+                WagonInternalOperation first_wio = wir.WagonInternalOperation.Where(o=>o.parent_id == null).OrderBy(o=>o.id).FirstOrDefault();
+                if (first_wio == null) return (int)errors_ids_rwt.not_wio_of_db; // Ошибка, нет записи операций внутренего перемещения вагона
+                int id_condition_first = first_wio.id_condition;
+                // Определим все записи
+                List<WagonInternalOperation> list_wio = wir.WagonInternalOperation.OrderBy(o=>o.id).ToList();
+                // Обновим годность по внутренему перемещению
+                foreach(WagonInternalOperation wio in list_wio){
+                    if (wio.id_condition == id_condition_first)
+                    {
+                        wio.id_condition = id_condition;
+                    }
+                    else {
+                        break; // Дрогая годность выйти изцикла
+                    }
+                }
+                ef_wir.Update(wir);
                 // Запись документа есть правим тип и годность по прибытию
                 arr_uz_vag.id_condition = id_condition;
                 arr_uz_vag.id_type = id_type;
