@@ -411,6 +411,9 @@
                                             if (el.wim_close !== null) {
                                                 wagons_exit.push(el);
                                             } else {
+                                                //if (el.num === 63663819) {
+                                                //    var s = 1;
+                                                //}
                                                 wagons_amkr.push(el);
                                                 var dublicat = list_external.find(function (o) {
                                                     return o.num === el.num;
@@ -437,7 +440,9 @@
                                     if (wagons_amkr && wagons_amkr.length > 0) {
                                         // Провкерка на повторяющиеся номера
                                         var arr_res = [];
-                                        wagons_amkr.sort();
+                                        wagons_amkr.sort(function (a, b) {
+                                            return a.num - b.num;
+                                        });
                                         for (var i = 1; i < wagons_amkr.length; i++) {
                                             if (wagons_amkr[i].num === wagons_amkr[i - 1].num) {
                                                 var is_unique = true;
