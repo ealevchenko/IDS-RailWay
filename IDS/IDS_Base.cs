@@ -7,6 +7,27 @@ using System.Threading.Tasks;
 
 namespace IDS
 {
+    public enum errors_base : int
+    {
+        global = -1,
+        cancel_save_changes = -2,       // Отмена сохранений изменений в базе данных (были ошибки по ходу выполнения всей операции)
+        error_save_changes = -3,        // Были ошибки по ходу выполнения всей операций
+        // Обшие входные переменые -100...
+        not_input_value = -100,
+        // таблица wir -200...
+        not_wir_db = -201,                  // В базе данных нет записи по WagonInternalRoutes (Внутренее перемещение вагонов)
+        //not_sostav = -101, //...
+        //not_wagon = -102,
+        //not_arrival_wir = -103,         // Нет записи [WagonInternalRoutes] зашедшей на АМКР
+        //not_open_wir = -104,            // Нет открытой записи положения вагона. (Если вагон защел тогда вагон всегда должен гдето стоять!)
+        //not_set_way_wir = -105,         // Нет вагон стоит не натом пути по которому нужно провести операцию.
+        //not_way_on = -106,              // Неуказан путь приема
+
+
+    }
+    
+    
+    
     public class ResultWagon
     {
         public int num { get; set; }
