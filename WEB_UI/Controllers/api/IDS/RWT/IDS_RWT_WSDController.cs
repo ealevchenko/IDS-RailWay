@@ -349,6 +349,14 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string user { get; set; }
     }
 
+    public class OperationProvideWagons
+    {
+        public int id_way_from { get; set; }
+        public List<ListOperationWagon> list_provide { get; set; }
+        public DateTime lead_time { get; set; }
+        public string user { get; set; }
+    }
+
     public class view_wagon_dislocation
     {
         public long id_wir { get; set; }
@@ -663,6 +671,25 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 return BadRequest(e.Message);
             }
         }
+
+        // POST api/ids/rwt/wsd/operation/provide
+        [HttpPost]
+        [Route("operation/provide")]
+        [ResponseType(typeof(ResultTransfer))]
+        public IHttpActionResult PostProvideWagonsOfStation([FromBody] OperationProvideWagons value)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                ResultTransfer result = ids_wir.OperationProvideWagons(value.id_way_from, value.list_provide, value.lead_time, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
 
         #region ПОИСК ВАГОНОВ
         // GET: api/ids/rwt/wsd/view/dislocation/amkr/wagon/num/63531040

@@ -16,6 +16,15 @@ namespace IDS
         not_input_value = -100,
         // таблица wir -200...
         not_wir_db = -201,                  // В базе данных нет записи по WagonInternalRoutes (Внутренее перемещение вагонов)
+        // таблица wim -300...
+        not_wim_db = -301,                  // В базе данных нет записи по WagonInternalMovement (Внутреняя дислокация вагонов)
+
+
+        // Справочники -1000.....
+        // Directory_Ways -1100..
+        not_dir_way_db = -1101,             // В базе данных нет записи указаной строки пути
+        way_not_crossing_uz = -1102,        // Путь неимеет выход на УЗ
+
         //not_sostav = -101, //...
         //not_wagon = -102,
         //not_arrival_wir = -103,         // Нет записи [WagonInternalRoutes] зашедшей на АМКР

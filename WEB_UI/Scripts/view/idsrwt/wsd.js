@@ -4618,43 +4618,39 @@
                                         list_provide.push({ wir_id: el.wir_id, position: el.position_provide })
                                     });
                                 }
-                                //// Определим пакет данных отправки на другую станцию
-                                //var operation_provide = {
-                                //    id_way_from: operation_detali.id_way_from_provide,
-                                //    list_provide: list_provide,
-                                //    id_outer_ways: get_select_number_value(operation_detali.operation_detali_provide_outer_ways),
-                                //    num_sostav: get_input_number_value(operation_detali.operation_detali_provide_num_train),
-                                //    lead_time: toISOStringTZ(get_datetime_value(operation_detali.operation_detali_provide_lead_time.val(), operation_detali.lang)),
-                                //    locomotive1: get_select_string_value(operation_detali.operation_detali_provide_locomotive1),
-                                //    locomotive2: get_select_string_value(operation_detali.operation_detali_provide_locomotive2),
-                                //    user: operation_detali.user,
-                                //}
-                                //// Выполнить операцию отправки postSendingWagonsOfStation
-                                //ids_inc.postSendingWagonsOfStation(operation_provide, function (result_provide) {
-                                //    if (result_provide >= 0) {
-                                //        // Обновить путь отправки и станцию отправки
-                                //        if (operation_detali.way_from_provide) {
+                                // Определим пакет данных отправки на другую станцию
+                                var operation_provide = {
+                                    id_way_from: operation_detali.id_way_from_provide,
+                                    list_provide: list_provide,
+                                    lead_time: toISOStringTZ(get_datetime_value(operation_detali.operation_detali_provide_lead_time.val(), operation_detali.lang)),
+                                    user: operation_detali.user,
+                                }
+                                // Выполнить операцию отправки postSendingWagonsOfStation
+                                ids_inc.postProvideWagonsOfStation(operation_provide, function (result_provide) {
+                                    if (result_provide >= 0) {
+                                        //// Обновить путь отправки и станцию отправки
+                                        //if (operation_detali.way_from_provide) {
 
-                                //            operation_detali.rows_update.push({ id_station: operation_detali.way_from_provide.id_station, id_park: operation_detali.way_from_provide.id_park, id_way: operation_detali.way_from_provide.id });
-                                //            operation_detali.rows_update.push({ id_station: operation_detali.way_from_provide.id_station, id_park: null, id_way: null });
-                                //        }
-                                //        var outer_way = ids_inc.ids_dir.list_outer_ways.find(function (o) {
-                                //            return o.id === operation_provide.id_outer_ways;
-                                //        });
-                                //        // Пути определены?
-                                //        if (outer_way) {
-                                //            // Обновить станцию отправки
-                                //            operation_detali.rows_update.push({ id_station: outer_way.id_station_on, id_park: null, id_way: null });
-                                //        }
-                                //        operation_detali.bit_update = true;
-                                //        operation_detali.refresh_provide();
-                                //        operation_detali.val_provide.out_info_message("Операция 'Отправление состава на станцию АМКР' - Выполнена");
-                                //    } else {
-                                //        operation_detali.val_provide.out_error_message("При выполнении операции 'Отправление состава на станцию АМКР' - произошла ошибка. Код ошибки =" + result_provide);
-                                //        LockScreenOff();
-                                //    }
+                                        //    operation_detali.rows_update.push({ id_station: operation_detali.way_from_provide.id_station, id_park: operation_detali.way_from_provide.id_park, id_way: operation_detali.way_from_provide.id });
+                                        //    operation_detali.rows_update.push({ id_station: operation_detali.way_from_provide.id_station, id_park: null, id_way: null });
+                                        //}
+                                        //var outer_way = ids_inc.ids_dir.list_outer_ways.find(function (o) {
+                                        //    return o.id === operation_provide.id_outer_ways;
+                                        //});
+                                        //// Пути определены?
+                                        //if (outer_way) {
+                                        //    // Обновить станцию отправки
+                                        //    operation_detali.rows_update.push({ id_station: outer_way.id_station_on, id_park: null, id_way: null });
+                                        //}
+                                        //operation_detali.bit_update = true;
+                                        //operation_detali.refresh_provide();
+                                        //operation_detali.val_provide.out_info_message("Операция 'Отправление состава на станцию АМКР' - Выполнена");
+                                    } else {
+                                        operation_detali.val_provide.out_error_message("При выполнении операции 'ПРЕДЪЯВИТЬ СОСТАВ УЗ' - произошла ошибка. Код ошибки =" + result_provide.result);
+                                        LockScreenOff();
+                                    }
 
-                                //});
+                                });
 
                             } else {
                                 operation_detali.bt_operation_provide_run.prop("disabled", false);

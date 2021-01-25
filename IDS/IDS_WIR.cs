@@ -1046,8 +1046,9 @@ namespace IDS
         /// <param name="lead_time"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public ResultTransfer OperationApplyWagonsParkState(int id_station, List<ParkStatePosition> wagons_ps, DateTime lead_time, string user) {
-            ResultTransfer res = new ResultTransfer(0);            
+        public ResultTransfer OperationApplyWagonsParkState(int id_station, List<ParkStatePosition> wagons_ps, DateTime lead_time, string user)
+        {
+            ResultTransfer res = new ResultTransfer(0);
             try
             {
 
@@ -1069,6 +1070,183 @@ namespace IDS
                 res.SetResult((int)errors_wir.global);
                 return res;
             }
+        }
+        #endregion
+
+        #region Операция "Предъявить на УЗ"
+        /// <summary>
+        /// Предявить вагон на уз
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_way"></param>
+        /// <param name="position"></param>
+        /// <param name="wagon"></param>
+        /// <param name="lead_time"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationProvideWagon(ref EFDbContext context, OutgoingSostav out_sostav, int id_way, int position, WagonInternalRoutes wagon, DateTime lead_time, string user)
+        {
+            try
+            {
+                if (wagon == null) return (int)errors_base.not_wir_db;
+                // Определим станцию и путь приема
+                Directory_Ways way = context.Directory_Ways.Where(w => w.id == id_way).FirstOrDefault();
+                if (way == null) return (int)errors_base.not_dir_way_db;                        // Нет пути
+                if (way.crossing_uz != true) return (int)errors_base.way_not_crossing_uz;       // Путь без выхода на уз
+
+
+                // Получим текущее положение вагона
+                WagonInternalMovement wim = wagon.GetLastMovement();
+                if (wim == null) return (int)errors_base.not_wim_db;
+                // Определим станцию на которой стоит вагон
+                Directory_Ways way_wagon = context.Directory_Ways.Where(w => w.id == wim.id_way).FirstOrDefault();
+                if (way_wagon == null) return (int)errors_base.not_dir_way_db;                        // Нет пути
+                if (way_wagon.crossing_uz != true) return (int)errors_base.way_not_crossing_uz;       // Путь без выхода на уз
+                // Проверка пройдена
+                // Создать вагон
+                OutgoingCars out_car = new OutgoingCars()
+                {
+                    id = 0,
+                    id_outgoing = 0,
+                    num = wagon.num,
+                    position = position,
+                    position_outgoing = null,
+                    num_doc = null,
+                    note = null,
+                    date_outgoing_act = null,
+                    outgoing = null,
+                    outgoing_user = null,
+                    create = DateTime.Now,
+                    create_user = user,
+                    id_outgoing_uz_vagon = null,
+                    id_outgoing_detention_return = null
+                };
+                // Добавим в состав
+                out_sostav.OutgoingCars.Add(out_car);
+                string note = null;
+                // Добавим сылку на выходной вагон
+                wagon.OutgoingCars = out_car;
+                // Откроем операцию предявить на уз 
+                wagon.SetOpenOperation(9, lead_time, null, null, null, null, note, user);
+                //context.Update(wagon); // Обновим контекст
+                return 1;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationProvideWagon(context={0}, id_way={1}, position={2}, wagon={3}, lead_time={4}, user={5})",
+                    context, id_way, position, wagon, lead_time, user), servece_owner, eventID);
+                return (int)errors_base.global;
+            }
+        }
+        /// <summary>
+        /// Выполнить операцию предяъявить состав на УЗ
+        /// </summary>
+        /// <param name="id_way"></param>
+        /// <param name="list_provide"></param>
+        /// <param name="lead_time"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public ResultTransfer OperationProvideWagons(int id_way, List<ListOperationWagon> list_provide, DateTime lead_time, string user)
+        {
+            ResultTransfer res = new ResultTransfer(0);
+            DateTime start = DateTime.Now;
+            try
+            {
+
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDbContext context = new EFDbContext();
+                //EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
+                EFOutgoingSostav ef_out_sos = new EFOutgoingSostav(context);
+
+                //List<WagonInternalRoutesPosition> wagons = new List<WagonInternalRoutesPosition>();
+                // Проверим станцию
+                Directory_Ways way = context.Directory_Ways.Where(w => w.id == id_way).FirstOrDefault();
+                if (way != null)
+                {
+                    // Этот путь имеет выход на УЗ
+                    if (way.crossing_uz == true)
+                    {
+                        // Путь имеет выход на УЗ
+                        DateTime start_date = new DateTime(DateTime.Now.Year, 1, 1, 0, 0, 0);
+                        OutgoingSostav sostav = ef_out_sos.Context.Where(s => s.id_station_from == way.id_station && s.date_readiness_amkr >= start_date).OrderByDescending(c => c.num_doc).FirstOrDefault();
+                        int num_doc = sostav != null ? sostav.num_doc + 1 : 1;
+                        // Создадим запись состав для отправки OutgoingSostav
+                        OutgoingSostav new_out_sostav = new OutgoingSostav()
+                        {
+                            id = 0,
+                            num_doc = num_doc,
+                            id_station_from = way.id_station,
+                            id_way_from = way.id,
+                            id_station_on = null,
+                            date_readiness_amkr = lead_time,
+                            date_end_inspection_acceptance_delivery = null,
+                            date_end_inspection_loader = null,
+                            date_end_inspection_vagonnik = null,
+                            date_show_wagons = null,
+                            date_readiness_uz = null,
+                            date_outgoing = null,
+                            date_outgoing_act = null,
+                            date_departure = null,
+                            composition_index = null,
+                            status = 0,
+                            note = null,
+                            create = DateTime.Now,
+                            create_user = user,
+                        };
+                        // Пройдемся по вагонам отсортировав их по позиции
+                        foreach (ListOperationWagon wag in list_provide.OrderBy(w => w.position).ToList())
+                        {
+                            WagonInternalRoutes wir = context.WagonInternalRoutes.Where(r => r.id == wag.wir_id).FirstOrDefault();
+                            int result = 0;
+                            if (wir != null)
+                            {
+                                result = OperationProvideWagon(ref context, new_out_sostav, id_way, wag.position, wir, lead_time, user); // Получим результат выполнения операции
+                            }
+                            else
+                            {
+                                result = (int)errors_base.not_wir_db; // В базе данных нет записи по WagonInternalRoutes (Внутренее перемещение вагонов)
+                            }
+                            // Сохраним рзультат выполнения
+                            res.SetMovedResult(result, wir.num);
+                        }
+                        // Если нет ошибок, сохраним изменения в базе
+                        if (res.error == 0)
+                        {
+                            res.SetResult(context.SaveChanges());
+                        }
+                        else
+                        {
+                            res.SetResult((int)errors_base.cancel_save_changes);
+                        }
+                    }
+                    else
+                    {
+                        res.SetResult((int)errors_base.way_not_crossing_uz); // Путь не имеет выход на УЗ
+                    }
+                }
+                else
+                {
+                    res.SetResult((int)errors_base.not_dir_way_db); // Указаного пути нет!
+                }
+                string mess = String.Format("Операция формирования состава для предъявления на УЗ. Код выполнения = {0}. Станция отправки = {1}, путь отправки = {2}, время операции = {3}. Результат [определено вагонов = {4}, сформировано = {5}, ошибок формирования = {6}].",
+                    res.result, (way != null ? (int?)way.id_station : null), id_way, lead_time, res.count, res.moved, res.error);
+                mess.WarningLog(servece_owner, eventID);
+                mess.EventLog(res.result < 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
+                DateTime stop = DateTime.Now;
+                servece_owner.ServicesToLog(eventID, String.Format("Операция формирования состава для предъявления на УЗ."), start, stop, res.result);
+
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationProvideWagons(id_way={0}, list_provide={1}, lead_time={2}, user={3})",
+                    id_way, list_provide, lead_time, user), servece_owner, eventID);
+                res.SetResult((int)errors_base.global); // Глобальная ошибка
+            }
+            return res;
         }
         #endregion
 
