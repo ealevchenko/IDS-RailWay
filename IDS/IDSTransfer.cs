@@ -2,6 +2,7 @@
 using EFIDS.Entities;
 using IDSLogs;
 using IDSLogs.Enum;
+using IDS.Helper;
 using KIS;
 using System;
 using System.Collections.Generic;
@@ -565,7 +566,7 @@ namespace IDS
                                     date_readiness_amkr = sostav.DT_PR,
                                     date_show_wagons = null,
                                     date_readiness_uz = this.transfer_set_outgoing_wagon_of_kis == true ? (DateTime?)sostav.DT : null,
-                                    date_outgoing = this.transfer_set_outgoing_wagon_of_kis == true ? (DateTime?)sostav.DT : null, 
+                                    date_outgoing = this.transfer_set_outgoing_wagon_of_kis == true ? (DateTime?)sostav.DT : null,
                                     date_departure = this.transfer_set_outgoing_wagon_of_kis == true ? (DateTime?)sostav.DT : null,
                                     date_outgoing_act = null,
                                     composition_index = null,
@@ -605,7 +606,7 @@ namespace IDS
                                                 outgoing_user = this.transfer_set_outgoing_wagon_of_kis == true ? user : null,
                                                 create = sostav.DAT_VVOD != null ? (DateTime)sostav.DAT_VVOD : DateTime.Now,
                                                 create_user = user,
-                                                id_outgoing_uz_vagon = null, 
+                                                id_outgoing_uz_vagon = null,
                                             };
                                             list_cars.Add(car);
                                         }
@@ -704,15 +705,18 @@ namespace IDS
                     // Проверим на выбранные номера
                     if (nums != null && nums.Count() > 0)
                     {
-                        foreach(ArrivalCars car in list_wagon.ToList()){
-                        // Выберем только нужные
-                            int num = nums.Find(n=> n == car.num);
-                            if (num > 0) {
+                        foreach (ArrivalCars car in list_wagon.ToList())
+                        {
+                            // Выберем только нужные
+                            int num = nums.Find(n => n == car.num);
+                            if (num > 0)
+                            {
                                 list_wagon_inc.Add(car);
                             }
                         }
                     }
-                    else {
+                    else
+                    {
                         // Оставим как есть
                         list_wagon_inc = list_wagon;
                     }
@@ -863,7 +867,7 @@ namespace IDS
             }
         }
         /// <summary>
-        /// Отправить состав на АМКР, закрыть WIR по вагонам.
+        /// Отправить состав на УЗ, закрыть WIR по вагонам.
         /// </summary>
         /// <param name="id_outgoing"></param>
         /// <param name="user"></param>
@@ -931,6 +935,82 @@ namespace IDS
                 return -1;// Возвращаем id=-1 , Ошибка
             }
         }
+
+
+        #endregion
+
+        #region АДМИНИСТРИРОВАНИЕ
+        /// <summary>
+        /// Закрыть вагоны принудительно
+        /// </summary>
+        /// <param name="list_id"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int CloseWir(List<int> list_id, DateTime close_date, string note, string user)
+        {
+            ResultUpdateID res = new ResultUpdateID(list_id.Count());
+            try
+            {
+
+                EFDbContext context = new EFDbContext();
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+
+                EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
+                // Пройдемся по списку внутрених перемещений
+                int count = list_id.Count();
+                foreach (int id in list_id.ToList())
+                {
+                    WagonInternalRoutes wir = ef_wir.Context.Where(r => r.id == id).FirstOrDefault();
+                    int result = 0;
+                    ;
+                    if (wir != null)
+                    {
+                        // Запись не закрыта
+                        if (wir.close == null)
+                        {
+                            wir.CloseWagon(close_date, note, user); // Закроет все операции и дислокации
+                            ef_wir.Update(wir);
+                            result = ef_wir.Save();
+                            //res.SetUpdateResult(result, id);
+                        }
+                        else
+                        {
+                            // Запись закрыта пропустить
+                            result = 0;
+                            //res.SetUpdateResult(result, id);
+                        }
+                    }
+                    else
+                    {
+                        // Запись wir не найдена
+                        result = (int)errors_base.not_wir_db;
+
+                    }
+                    res.SetUpdateResult(result, id);
+                    Console.WriteLine("Обработал id = {0}, результат = {1}, осталось {2}", id, result, count--);
+                }
+                if (res.error == 0)
+                {
+                    res.SetResult(res.listResult.Count());                      // ОК   
+                }
+                else
+                {
+                    res.SetResult((int)errors_base.error_save_changes);      // Были ошибки по ходу выполнения операций       
+                }
+
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("CloseWir(list_id={0}, close_date={1}, note={2}, user={3})", list_id, close_date, note, user), servece_owner, eventID);
+                res.SetResult((int)errors_base.global); // Ошибка
+            }
+            return res.result;
+        }
+
         #endregion
 
     }

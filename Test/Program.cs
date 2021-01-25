@@ -194,7 +194,7 @@ namespace Test
             //tids.SetNum_UZ();
 
             //tids.IDSTransfer_InsertOutgoingSostavOfKis();         // Перенос составов на ИДС в отправленные по данным КИС
-            tids.IDSTransfer_IncomingArrivalSostav();             // Открытие WIR по прибытию состава
+            //tids.IDSTransfer_IncomingArrivalSostav();             // Открытие WIR по прибытию состава
             //tids.IDSTransfer_IncomingArrivalSostav_All();         // Перенос всех принятых составов на АМКР с открытием WIR
             //tids.IDSTransfer_SetStationOutgoingWagonsOfKIS();       // Найти и поставить все вагоны по отправляемому составу на станцию и путь отправки АМКР (По данным КИС, операция перед закрытием WIR отправка состава на УЗ)
             //tids.IDSTransfer_SendingOutgoingSostav();             // Закрытие WIR отправка состава на УЗ
@@ -210,6 +210,7 @@ namespace Test
             //tids.IDS_WIR_SendingWagonsOfStation();                // Операция роспуск
             //tids.IDS_WIR_ArrivalWagonsOfStation();                // Операция роспуск
 
+            tids.IDSTransfer_CloseWir();                            // Тест административной функции закрыть внутренее перемещение
 
             #endregion
 
