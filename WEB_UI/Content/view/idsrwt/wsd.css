@@ -302,7 +302,7 @@ fieldset {
         }
 
 .not-select-wagon {
-    background-color: #fcca93;
+    /*background-color: #fcca93;*/
     text-decoration: line-through;
 }
 
@@ -312,4 +312,11 @@ fieldset {
 }
 .not-exist-amkr {
     background-color:#f5cdb0 !important;
+}
+
+.look-wagon {
+    background-color:#e8da92 !important;
+}
+.select-wagon {
+    background-color:#9cdd81 !important;
 }

@@ -76,6 +76,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string arrival_division_amkr_name_en { get; set; }
         public string arrival_division_amkr_abbr_ru { get; set; }
         public string arrival_division_amkr_abbr_en { get; set; }
+        public int current_id_operation_wagon { get; set; }
         public string current_operation_wagon_name_ru { get; set; }
         public string current_operation_wagon_name_en { get; set; }
         public DateTime? current_operation_wagon_start { get; set; }

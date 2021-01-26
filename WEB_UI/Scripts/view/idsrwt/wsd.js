@@ -616,6 +616,11 @@
                     jQueryUI: false,
                     "createdRow": function (row, data, index) {
                         $(row).attr('id', index + 1);
+
+                        if (data.current_id_operation_wagon === 9 && data.current_operation_wagon_end === null) {
+                            $(row).addClass('look-wagon');
+                        }
+
                         // Определим компонент прогресс бар
                         var max = data.current_station_amkr_idle_time ? Number(data.current_station_amkr_idle_time) : 0
                         var duration = data.current_station_amkr_duration ? Number(data.current_station_amkr_duration) : 0
@@ -1666,8 +1671,15 @@
                         jQueryUI: false,
                         "createdRow": function (row, data, index) {
                             $(row).attr('id', index + 1);
+                            //if (data.position_dislocation !== null) {
+                            //    $('td:eq(1)', row).addClass('not-select-wagon');
+                            //}
                             if (data.position_dislocation !== null) {
                                 $('td:eq(1)', row).addClass('not-select-wagon');
+                                $(row).addClass('select-wagon');
+                            }
+                            if (data.current_id_operation_wagon === 9 && data.current_operation_wagon_end === null) {
+                                $(row).addClass('look-wagon');
                             }
 
                         },
@@ -2585,10 +2597,16 @@
                         language: language_table(langs),
                         jQueryUI: false,
                         "createdRow": function (row, data, index) {
+                            //if (data.id_way_dissolution !== null) {
+                            //    $('td:eq(1)', row).addClass('not-select-wagon');
+                            //}
                             if (data.id_way_dissolution !== null) {
                                 $('td:eq(1)', row).addClass('not-select-wagon');
+                                $(row).addClass('select-wagon');
                             }
-
+                            if (data.current_id_operation_wagon === 9 && data.current_operation_wagon_end === null) {
+                                $(row).addClass('look-wagon');
+                            }
                         },
                         columns: operation_detali.init_columns_wagon_dissolution_from(),
                         //columns: [
@@ -3226,9 +3244,16 @@
                         language: language_table(langs),
                         jQueryUI: false,
                         "createdRow": function (row, data, index) {
+                            //if (data.position_sending !== null) {
+                            //    $('td:eq(1)', row).addClass('not-select-wagon');
+                            //    $(row).addClass('select-sending')
+                            //}
                             if (data.position_sending !== null) {
                                 $('td:eq(1)', row).addClass('not-select-wagon');
-                                $(row).addClass('select-sending')
+                                $(row).addClass('select-wagon');
+                            }
+                            if (data.current_id_operation_wagon === 9 && data.current_operation_wagon_end === null) {
+                                $(row).addClass('look-wagon');
                             }
                         },
                         columns: operation_detali.init_columns_wagon_from(),
@@ -4910,9 +4935,16 @@
                         language: language_table(langs),
                         jQueryUI: false,
                         "createdRow": function (row, data, index) {
+                            //if (data.position_provide !== null || (data.current_id_operation_wagon === 9 && data.current_operation_wagon_end === null)) {
+                            //    $('td:eq(1)', row).addClass('not-select-wagon');
+                            //    //$(row).addClass('select-provide')
+                            //}
                             if (data.position_provide !== null) {
                                 $('td:eq(1)', row).addClass('not-select-wagon');
-                                //$(row).addClass('select-provide')
+                                $(row).addClass('select-wagon');
+                            }
+                            if (data.current_id_operation_wagon === 9 && data.current_operation_wagon_end === null) {
+                                $(row).addClass('look-wagon');
                             }
                         },
                         columns: operation_detali.init_columns_wagon_from(),
@@ -4995,7 +5027,8 @@
                     }).on('user-select', function (e, dt, type, cell, originalEvent) {
                         var indexes = cell && cell.length > 0 ? cell[0][0].row : null;
                         var wagon = operation_detali.table_wagons_provide_way_from.obj.rows(indexes).data().toArray();
-                        if (wagon && wagon.length > 0 && wagon[0].position_provide !== null) {
+
+                        if (wagon && wagon.length > 0 && (wagon[0].position_provide !== null) || (wagon[0].current_id_operation_wagon === 9 && wagon[0].current_operation_wagon_end === null)) {
                             e.preventDefault();
                         }
                     }).on('select deselect', function (e, dt, type, indexes) {
@@ -5226,7 +5259,7 @@
                 operation_detali.operation_detali_provide_station.val(operation_detali.way_from_provide.id_station);
                 operation_detali.operation_detali_provide_lead_time.setDateTime(null);
                 operation_detali.table_wagons_provide_way_from.load(operation_detali.id_way_from_provide, function () {
-                    //operation_detali.table_wagons_provide.view();
+                    operation_detali.table_wagons_provide.view();
                     LockScreenOff();
                 });
                 operation_detali.operation_provide.show();
