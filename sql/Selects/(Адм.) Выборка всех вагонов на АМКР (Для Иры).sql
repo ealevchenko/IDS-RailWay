@@ -131,9 +131,21 @@ use [KRR-PA-CNT-Railway]
 		let_station_uz.station as instructional_letters_station_name,
 		--> Документ SAP по прибытию
 		sap_is.VBELN as sap_is_num,
+sap_is.NUM_VBELN as sap_is_NUM_VBELN,
 		sap_is.ERDAT as sap_is_create_date,
 		sap_is.ETIME as sap_is_create_time,
-		-- Документ SAP по отправке
+sap_is.WERKS as sap_is_WERKS,
+sap_is.LGORT as sap_is_LGORT,
+sap_is.LGOBE as sap_is_LGOBE,
+sap_is.LGORT_10 as sap_is_LGORT_10,
+sap_is.LGOBE_10 as sap_is_LGOBE_10,
+sap_is.MATNR as sap_is_MATNR,
+sap_is.MAKTX as sap_is_MAKTX,
+sap_is.NAME_SH as sap_is_NAME_SH,
+sap_is.KOD_R_10 as sap_is_KOD_R_10,
+sap_is.note as sap_is_note,
+
+	-- Документ SAP по отправке
 		wir.doc_outgoing_car as sap_os_doc_outgoing_car
 		--......
 		--into view_wagon
