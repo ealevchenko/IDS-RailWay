@@ -1097,7 +1097,7 @@ namespace IDS
         //        {
         //            user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
         //        }
-                
+
         //        if (wagon == null) return (int)errors_base.not_wir_db;
         //        // Определим станцию и путь приема
         //        Directory_Ways way = context.Directory_Ways.Where(w => w.id == id_way).FirstOrDefault();
@@ -1539,6 +1539,187 @@ namespace IDS
                 rt.SetResult(-1);
                 return rt;// Возвращаем id=-1 , Ошибка
             }
+        }
+
+        #endregion
+
+        #region АДМИНИСТРИРОВАНИЕ
+        /// <summary>
+        /// Закрыть вагоны принудительно
+        /// </summary>
+        /// <param name="list_id"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int CloseWir(List<int> list_id, DateTime close_date, string note, string user)
+        {
+            ResultUpdateID res = new ResultUpdateID(list_id.Count());
+            try
+            {
+
+                EFDbContext context = new EFDbContext();
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+
+                EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
+                // Пройдемся по списку внутрених перемещений
+                int count = list_id.Count();
+                foreach (int id in list_id.ToList())
+                {
+                    WagonInternalRoutes wir = ef_wir.Context.Where(r => r.id == id).FirstOrDefault();
+                    int result = 0;
+                    ;
+                    if (wir != null)
+                    {
+                        // Запись не закрыта
+                        if (wir.close == null)
+                        {
+                            wir.CloseWagon(close_date, note, user); // Закроет все операции и дислокации
+                            ef_wir.Update(wir);
+                            result = ef_wir.Save();
+                            //res.SetUpdateResult(result, id);
+                        }
+                        else
+                        {
+                            // Запись закрыта пропустить
+                            result = 0;
+                            //res.SetUpdateResult(result, id);
+                        }
+                    }
+                    else
+                    {
+                        // Запись wir не найдена
+                        result = (int)errors_base.not_wir_db;
+
+                    }
+                    res.SetUpdateResult(result, id);
+                    Console.WriteLine("Обработал id = {0}, результат = {1}, осталось {2}", id, result, count--);
+                }
+                if (res.error == 0)
+                {
+                    res.SetResult(res.listResult.Count());                      // ОК   
+                }
+                else
+                {
+                    res.SetResult((int)errors_base.error_save_changes);      // Были ошибки по ходу выполнения операций       
+                }
+
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("CloseWir(list_id={0}, close_date={1}, note={2}, user={3})", list_id, close_date, note, user), servece_owner, eventID);
+                res.SetResult((int)errors_base.global); // Ошибка
+            }
+            return res.result;
+        }
+        /// <summary>
+        /// Закрыть вагоны принудительно
+        /// </summary>
+        /// <param name="list_id"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int DeleteDoubleWir(List<int> list_id)
+        {
+            ResultUpdateID res = new ResultUpdateID(list_id.Count());
+            try
+            {
+
+                EFDbContext context = new EFDbContext();
+
+                EFWagonInternalMovement ef_wim = new EFWagonInternalMovement(context);
+                EFWagonInternalOperation ef_wio = new EFWagonInternalOperation(context);
+                int count = list_id.Count();
+                // Пройдемся по списку внутрених перемещений
+                foreach (int id in list_id.ToList())
+                {
+                    List<WagonInternalMovement> list_wim = ef_wim.Context.Where(m => m.id_wagon_internal_routes == id).OrderBy(c => c.id).ToList();
+                    List<WagonInternalOperation> list_wio = ef_wio.Context.Where(m => m.id_wagon_internal_routes == id).OrderBy(c => c.id).ToList();
+
+                    // Сгруппируем по путям роспуска
+                    List<IGrouping<long?, WagonInternalMovement>> group_list_wim = list_wim
+                                    .ToList()
+                                    .GroupBy(w => w.parent_id)
+                                    .ToList();
+                    List<IGrouping<long?, WagonInternalOperation>> group_list_wio = list_wio
+                                    .ToList()
+                                    .GroupBy(w => w.parent_id)
+                                    .ToList();
+                    // Пройдемся по путям роспуска
+                    foreach (IGrouping<long?, WagonInternalMovement> gr_wim in group_list_wim.ToList())
+                    {
+                        // Найдем задвоение
+                        if (gr_wim.Count() > 1)
+                        {
+                            WagonInternalMovement wim_close = gr_wim.Where(m => m.way_end != null).FirstOrDefault();
+                            if (wim_close != null)
+                            {
+                                // есть закрытая запись, удалить все не закрытые
+                                List<WagonInternalMovement> list_wim_close = gr_wim.Where(m => m.way_end == null).ToList();
+                                foreach (WagonInternalMovement del_wim in list_wim_close)
+                                {
+                                    ef_wim.Delete(del_wim.id);
+                                }
+
+                            }
+                            else
+                            {
+                                // Нет закрытой записи, оставить одну с макс id
+                                WagonInternalMovement wim_max = gr_wim.OrderByDescending(m => m.id).FirstOrDefault();
+                                if (wim_max != null)
+                                {
+                                    long id_max = wim_max.id;
+                                    foreach (WagonInternalMovement del_wim in gr_wim)
+                                    {
+                                        if (del_wim.id != id_max)
+                                        {
+                                            ef_wim.Delete(del_wim.id);
+                                        }
+
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                    int result_wim = ef_wim.Save();
+
+                    count--;
+                    Console.WriteLine("Обработал wim id = {0}, результат = {1}, осталось {2}", id, result_wim, count);
+                    // Пройдемся по операциям
+                    foreach (IGrouping<long?, WagonInternalOperation> gr_wio in group_list_wio.ToList())
+                    {
+                        // Найдем задвоение
+                        if (gr_wio.Count() > 1)
+                        {
+                            // Нет закрытой записи, оставить одну с макс id
+                            WagonInternalOperation wio_max = gr_wio.OrderByDescending(m => m.id).FirstOrDefault();
+                            if (wio_max != null)
+                            {
+                                long id_max = wio_max.id;
+                                foreach (WagonInternalOperation del_wio in gr_wio)
+                                {
+                                    if (del_wio.id != id_max)
+                                    {
+                                        ef_wio.Delete(del_wio.id);
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                    int result_wio = ef_wio.Save();
+
+                    Console.WriteLine("Обработал wio id = {0}, результат = {1}, осталось {2}", id, result_wio, count);
+                }
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("DeleteDoubleWir(list_id={0})", list_id), servece_owner, eventID);
+                res.SetResult((int)errors_base.global); // Ошибка
+            }
+            return res.result;
         }
 
         #endregion

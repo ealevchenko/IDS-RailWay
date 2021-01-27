@@ -35,15 +35,15 @@ namespace Test
             //int n1 = ar.IndexOf(".Controllers");
             //ar = ar.Substring(ar.IndexOf("Areas.") + 6, ar.IndexOf(".Controllers") - (ar.IndexOf("Areas.") + 6));
 
-            
-            
-            
+
+
+
             /// ВЫБОРКА СТАНЦИЙ ИЗ УЗ
 
             ////try
             ////{
             ////    /// ВЫБОРКА СТАНЦИЙ ИЗ УЗ
-                
+
             ////    //String.Format("Выполняем запрос к WebAPI, url:{0}, api_comand {1}, metod {2}, accept {3}", url, api_comand, metod, accept).WriteInformation(eventID);
             ////    //HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(@"https://uz.gov.ua/car_info/index.php?func=print&site_nv=52724994");
             ////    HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(@"https://www.uz.gov.ua/nsi_cargo_stations/Nsi_Stan.php");
@@ -210,7 +210,7 @@ namespace Test
             //tids.IDS_WIR_SendingWagonsOfStation();                // Операция роспуск
             //tids.IDS_WIR_ArrivalWagonsOfStation();                // Операция роспуск
 
-            tids.IDSTransfer_CloseWir();                            // Тест административной функции закрыть внутренее перемещение
+
 
             #endregion
 
@@ -248,6 +248,11 @@ namespace Test
             //tuz.UZ_SMS_GetDocumentOfDB_Num();
             //tuz.UZ_SMS_GetArrivalDocumentOfDB_Num();
             //tuz.UZ_SMS_GetDocumentOfDB_NumConsignees();
+            #endregion
+
+            #region Администрирование
+            //tids.IDS_WIR_CloseWir();                            // Административной функции закрыть внутренее перемещение
+            tids.IDS_WIR_DeleteDoubleWir();                        // Административной функции закрыть задвоение операций и дислокаций внутренего перемещения
             #endregion
 
             Console.WriteLine("Press any key to exit...");

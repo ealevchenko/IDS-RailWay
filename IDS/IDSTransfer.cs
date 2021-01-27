@@ -1141,79 +1141,7 @@ namespace IDS
 
         #endregion
 
-        #region АДМИНИСТРИРОВАНИЕ
-        /// <summary>
-        /// Закрыть вагоны принудительно
-        /// </summary>
-        /// <param name="list_id"></param>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        public int CloseWir(List<int> list_id, DateTime close_date, string note, string user)
-        {
-            ResultUpdateID res = new ResultUpdateID(list_id.Count());
-            try
-            {
 
-                EFDbContext context = new EFDbContext();
-                // Проверим и скорректируем пользователя
-                if (String.IsNullOrWhiteSpace(user))
-                {
-                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
-                }
-
-                EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
-                // Пройдемся по списку внутрених перемещений
-                int count = list_id.Count();
-                foreach (int id in list_id.ToList())
-                {
-                    WagonInternalRoutes wir = ef_wir.Context.Where(r => r.id == id).FirstOrDefault();
-                    int result = 0;
-                    ;
-                    if (wir != null)
-                    {
-                        // Запись не закрыта
-                        if (wir.close == null)
-                        {
-                            wir.CloseWagon(close_date, note, user); // Закроет все операции и дислокации
-                            ef_wir.Update(wir);
-                            result = ef_wir.Save();
-                            //res.SetUpdateResult(result, id);
-                        }
-                        else
-                        {
-                            // Запись закрыта пропустить
-                            result = 0;
-                            //res.SetUpdateResult(result, id);
-                        }
-                    }
-                    else
-                    {
-                        // Запись wir не найдена
-                        result = (int)errors_base.not_wir_db;
-
-                    }
-                    res.SetUpdateResult(result, id);
-                    Console.WriteLine("Обработал id = {0}, результат = {1}, осталось {2}", id, result, count--);
-                }
-                if (res.error == 0)
-                {
-                    res.SetResult(res.listResult.Count());                      // ОК   
-                }
-                else
-                {
-                    res.SetResult((int)errors_base.error_save_changes);      // Были ошибки по ходу выполнения операций       
-                }
-
-            }
-            catch (Exception e)
-            {
-                e.ExceptionMethodLog(String.Format("CloseWir(list_id={0}, close_date={1}, note={2}, user={3})", list_id, close_date, note, user), servece_owner, eventID);
-                res.SetResult((int)errors_base.global); // Ошибка
-            }
-            return res.result;
-        }
-
-        #endregion
 
     }
 }
