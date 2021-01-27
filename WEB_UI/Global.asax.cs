@@ -23,6 +23,8 @@ namespace WEB_UI
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             ViewEngines.Engines.Add(new CustomLocationViewEngine());
+
+            Application["park_state_apply"] = "";
         }
 
         protected void Application_BeginRequest()
@@ -54,6 +56,65 @@ namespace WEB_UI
             };
 
             errorHandler.Execute();
+        }
+
+
+        protected void Session_Start(object sender, EventArgs e)
+        {
+            // More secure than storing it application variables(does not rest on application start
+
+            try
+            {
+
+
+                Application.Lock();
+                int count = 0;
+
+                if (Application["UsersCount"] != null)
+                    count = (int)Application["UsersCount"];
+
+                count++;
+                Application["UsersCount"] = count;
+                //Session["session_id"] = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss");
+
+                // Снять закрытый доступ        
+                Application.UnLock();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+
+            }
+        }
+
+        protected void Session_End(Object sender, EventArgs e)
+        {
+
+            try
+            {
+                Application.Lock();
+                int count = 0;
+
+                if (Application["UsersCount"] != null)
+                    count = (int)Application["UsersCount"];
+
+                count--;
+                Application["UsersCount"] = count;
+
+                // Снять закрытый доступ        
+                Application.UnLock();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+
+            }
         }
     }
 }

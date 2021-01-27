@@ -17,6 +17,10 @@ body {
     font-size: 12px;
 }
 
+.curent-info {
+    color:yellow !important;
+
+}
 
 /*Коррекция отображения компонента дата и время*/
 .date-picker {

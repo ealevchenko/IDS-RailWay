@@ -16,6 +16,7 @@
 
     <script src="~/Scripts/view/shared/common.js"></script> <!-- Общая библиотека методов программы -->
     <script src="~/Scripts/api/shared.js"></script> <!-- Общая библиотека методов API -->
+    <script src="~/Scripts/api/ids_global.js"></script> <!-- Общая библиотека методов API -->
     <script src="~/Scripts/api/ids_sap.js"></script> <!-- Class API SAP функции для работы с САП -->
     <script src="~/Scripts/api/uz_directory.js"></script> <!-- Class API УЗ Справочники -->
     <script src="~/Scripts/api/ids_directory.js"></script> <!-- Class API ИДС Справочники -->
@@ -60,6 +61,7 @@
                 <div class="card-body text-dark pl-3 pr-3" style="font-size:1.3rem">
                     <div class="card">
                         <div class="card-header" id="park_state_info" style="text-transform:uppercase">
+                            @*На <label id="curent_date"></label> подключилось : <label id="client_count"></label> клиентов.*@
                         </div>
                         <div class="card-body">
                             <div class="row">
@@ -79,7 +81,7 @@
                                     <fieldset class="border-primary">
                                         <legend class="text-primary">Вагоны</legend>
                                         <div class="row">
-                                            <div class ="col-xl-12">
+                                            <div class="col-xl-12">
                                                 <div class="card border-primary mb-3">
                                                     <div class="card-header">ДОБАВИТЬ СПИСКОМ</div>
                                                     <div class="card-body">
@@ -127,7 +129,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-footer bg-transparent border-dark">&copy; @DateTime.Now.Year ДАТП & ТД</div>
+                <div class="card-footer bg-transparent border-dark">&copy; @DateTime.Now.Year ДАТП & ТД  (На <label id="curent_date"></label> подключилось : <label id="client_count"></label> клиентов.)</div>
             </div>
         </div>
     </div>

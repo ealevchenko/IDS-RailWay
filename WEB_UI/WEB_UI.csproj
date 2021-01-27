@@ -249,6 +249,7 @@
     <Compile Include="Controllers\api\Directoty\IDS_Directory_ShipperController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_ConsigneeController.cs" />
     <Compile Include="Controllers\api\Directoty\UZ_Directory_CargoController.cs" />
+    <Compile Include="Controllers\api\GlobalController.cs" />
     <Compile Include="Controllers\api\IDS\IDS_SAPController.cs" />
     <Compile Include="Controllers\api\IDS\MORS\IDS_WagonsMotionSignalsController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_StationController.cs" />
@@ -353,6 +354,7 @@
     <Content Include="Content\view\shared\print_way.css" />
     <Content Include="Content\view\shared\print_gfa.css" />
     <Content Include="Images\directory\line-icon-3_.svg" />
+    <Content Include="Scripts\api\ids_global.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />

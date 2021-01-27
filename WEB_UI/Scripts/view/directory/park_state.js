@@ -52,6 +52,7 @@
         dc = $('div#dialog-confirm').dialog_confirm({}),
         alert = new ALERT($('div#main-alert')),// Создадим класс ALERTG
         ids_inc = new IDS_RWT(lang), // Создадим класс IDS_RWT
+        ids_gl = new IDS_GLOBAL(), // Создадим класс IDS_RWT
         // Загрузка основных справочников приложения
         loadReference = function (callback) {
             LockScreen(langView('mess_load', langs));
@@ -316,7 +317,7 @@
                     pn_select.bt_create_park_status.prop('disabled', true);
                     var patk_state = pn_select.get_park_state_of_id(pn_select.id_park_status_select);
                     pn_select.park_state_info.text('Состояние парка на :' + getReplaceTOfDT(patk_state.state_on) + ', созданное : ' + patk_state.create_user + ' ')
-                        .append($('<label style="color:red;">' + (patk_state.applied ? '( применено : ' + getReplaceTOfDT(patk_state.applied) + ' )': '') + '</label>'))
+                        .append($('<label style="color:red;">' + (patk_state.applied ? '( применено : ' + getReplaceTOfDT(patk_state.applied) + ' )' : '') + '</label>'))
                         .append(pn_select.bt_apply.on('click', function (event) {
                             event.preventDefault();
                             pn_select.apply();
@@ -383,145 +384,168 @@
             },
             // Валидация введеных вагонов на наличее (на территории АМКР, отсутсвие в других статусах)
             validation_park_state: function (callback) {
+                var b_apply = false;
                 LockScreen(langView('mess_checking_data', langs));
                 // счтать текущий статус
                 var id_park_status = get_select_number_value(pn_select.select_park_status);
-                if (id_park_status > 0) {
-                    // Статус выбран
-                    // найдем строку статуса
-                    var ps = pn_select.list_park_state.find(function (o) {
-                        return o.id == id_park_status;
-                    });
-                    // строка статуса есть?
-                    if (ps) {
-                        // Строка есть, сделаем выборку по всем статусам за указанное время
-                        pn_select.park_status_select = ps;
-                        ids_inc.getViewDislocationAMKRWagonOfDate(ISOtoDate(ps.state_on), function (list_wagon) {
-                            var valid = true;
-                            var list_internal = []; // список вагонов пренадлежащих текущему положению
-                            var list_external = []; // список вагонов пренадлежащих другим положениям
-                            if (list_wagon && list_wagon.length > 0) {
-                                // Вагоны есть 
-                                $.each(list_wagon, function (i, el) {
-                                    if (el.id === id_park_status) {
-                                        // пренадлежит текущему положению
-                                        list_internal.push(el);
-                                    } else {
-                                        // не пренадлежит текущему положению
-                                        list_external.push(el);
-                                    }
-                                });
-                                // Разделили
-                                var wagons_not_arrival = []; // Вагоны которые не заходили
-                                var wagons_exit = []; // Вагоны которые вышли
-                                var wagons_amkr = []; // Вагоны которые на АМКР
-                                // Есть вагоны пренадлежащие текущему положению?
-                                if (list_internal && list_internal.length > 0) {
-                                    $.each(list_internal, function (i, el) {
-                                        if (el.wir_id === null) {
-                                            // Вагон не заходил
-                                            wagons_not_arrival.push(el);
-                                        } else {
-                                            if (el.wim_close !== null) {
-                                                wagons_exit.push(el);
+                ids_gl.getParkStateApply(function (result_apply) {
+                    if (result_apply && result_apply.length > 0) {
+                        //var list = result_apply.split(';');
+                        $.each(result_apply, function (i, el) {
+                            if (Number(el) === id_park_status) {
+                                b_apply = true;
+                            }
+                        });
+                    }
+                    // Пров
+                    if (b_apply === false) {
+                        // Применение парка не выполняется, можем применять
+                        //------------
+                        if (id_park_status > 0) {
+                            // Статус выбран
+                            // найдем строку статуса
+                            var ps = pn_select.list_park_state.find(function (o) {
+                                return o.id == id_park_status;
+                            });
+                            // строка статуса есть?
+                            if (ps) {
+                                // Строка есть, сделаем выборку по всем статусам за указанное время
+                                pn_select.park_status_select = ps;
+                                ids_inc.getViewDislocationAMKRWagonOfDate(ISOtoDate(ps.state_on), function (list_wagon) {
+                                    var valid = true;
+                                    var list_internal = []; // список вагонов пренадлежащих текущему положению
+                                    var list_external = []; // список вагонов пренадлежащих другим положениям
+                                    if (list_wagon && list_wagon.length > 0) {
+                                        // Вагоны есть 
+                                        $.each(list_wagon, function (i, el) {
+                                            if (el.id === id_park_status) {
+                                                // пренадлежит текущему положению
+                                                list_internal.push(el);
                                             } else {
-                                                //if (el.num === 63663819) {
-                                                //    var s = 1;
-                                                //}
-                                                wagons_amkr.push(el);
-                                                var dublicat = list_external.find(function (o) {
-                                                    return o.num === el.num;
-                                                });
-                                                if (dublicat) {
-                                                    valid = false;
-                                                    pn_select.val_add_park_status.out_error_message('Ошибка, введеный номер :' + el.num + ' повторяется в положении парка по станции :' + dublicat['pss_station_name_' + lang]);
-                                                }
+                                                // не пренадлежит текущему положению
+                                                list_external.push(el);
                                             }
-                                        }
-                                    });
-                                    // Вагоны по текущему статусу разделены
-                                    // проверим вагоны которые не заходили
-                                    if (wagons_not_arrival && wagons_not_arrival.length > 0) {
-                                        valid = false;
-                                        pn_select.val_add_park_status.out_error_message('Ошибка, найдено :' + wagons_not_arrival.length + ' вагонов которые не разу не заходили на АМКР');
-                                    }
-                                    // проверим вагоны которые ушли
-                                    if (wagons_exit && wagons_exit.length > 0) {
-                                        valid = false;
-                                        pn_select.val_add_park_status.out_error_message('Ошибка, найдено :' + wagons_exit.length + ' вагонов которые уже зданы на УЗ');
-                                    }
-                                    // Есть вагоны на амкр, проверим на повтор
-                                    if (wagons_amkr && wagons_amkr.length > 0) {
-                                        // Провкерка на повторяющиеся номера
-                                        var arr_res = [];
-                                        wagons_amkr.sort(function (a, b) {
-                                            return a.num - b.num;
                                         });
-                                        for (var i = 1; i < wagons_amkr.length; i++) {
-                                            if (wagons_amkr[i].num === wagons_amkr[i - 1].num) {
-                                                var is_unique = true;
-                                                for (var k = 0; k < arr_res.length; k++) {
-                                                    if (arr_res[k].num === wagons_amkr[i].num) {
-                                                        is_unique = false;
-                                                        break;
+                                        // Разделили
+                                        var wagons_not_arrival = []; // Вагоны которые не заходили
+                                        var wagons_exit = []; // Вагоны которые вышли
+                                        var wagons_amkr = []; // Вагоны которые на АМКР
+                                        // Есть вагоны пренадлежащие текущему положению?
+                                        if (list_internal && list_internal.length > 0) {
+                                            $.each(list_internal, function (i, el) {
+                                                if (el.wir_id === null) {
+                                                    // Вагон не заходил
+                                                    wagons_not_arrival.push(el);
+                                                } else {
+                                                    if (el.wim_close !== null) {
+                                                        wagons_exit.push(el);
+                                                    } else {
+                                                        //if (el.num === 63663819) {
+                                                        //    var s = 1;
+                                                        //}
+                                                        wagons_amkr.push(el);
+                                                        var dublicat = list_external.find(function (o) {
+                                                            return o.num === el.num;
+                                                        });
+                                                        if (dublicat) {
+                                                            valid = false;
+                                                            pn_select.val_add_park_status.out_error_message('Ошибка, введеный номер :' + el.num + ' повторяется в положении парка по станции :' + dublicat['pss_station_name_' + lang]);
+                                                        }
                                                     }
                                                 }
-                                                if (is_unique) {
+                                            });
+                                            // Вагоны по текущему статусу разделены
+                                            // проверим вагоны которые не заходили
+                                            if (wagons_not_arrival && wagons_not_arrival.length > 0) {
+                                                valid = false;
+                                                pn_select.val_add_park_status.out_error_message('Ошибка, найдено :' + wagons_not_arrival.length + ' вагонов которые не разу не заходили на АМКР');
+                                            }
+                                            // проверим вагоны которые ушли
+                                            if (wagons_exit && wagons_exit.length > 0) {
+                                                valid = false;
+                                                pn_select.val_add_park_status.out_error_message('Ошибка, найдено :' + wagons_exit.length + ' вагонов которые уже зданы на УЗ');
+                                            }
+                                            // Есть вагоны на амкр, проверим на повтор
+                                            if (wagons_amkr && wagons_amkr.length > 0) {
+                                                // Провкерка на повторяющиеся номера
+                                                var arr_res = [];
+                                                wagons_amkr.sort(function (a, b) {
+                                                    return a.num - b.num;
+                                                });
+                                                for (var i = 1; i < wagons_amkr.length; i++) {
+                                                    if (wagons_amkr[i].num === wagons_amkr[i - 1].num) {
+                                                        var is_unique = true;
+                                                        for (var k = 0; k < arr_res.length; k++) {
+                                                            if (arr_res[k].num === wagons_amkr[i].num) {
+                                                                is_unique = false;
+                                                                break;
+                                                            }
+                                                        }
+                                                        if (is_unique) {
+                                                            valid = false;
+                                                            arr_res.push(wagons_amkr[i]);
+                                                        }
+                                                    }
+                                                }
+                                                // Вывод сообщений повторяющихся номеров
+                                                $.each(arr_res, function (i, el) {
                                                     valid = false;
-                                                    arr_res.push(wagons_amkr[i]);
+                                                    pn_select.val_add_park_status.out_error_message('Ошибка, введеный номер :' + el.num + ' повторяется.');
+                                                });
+
+                                                if (valid) {
+                                                    // Проверка пройдена, Ок
+                                                    pn_select.val_add_park_status.out_info_message('Ок, вагоны проверены');
+                                                }
+                                                // Все прошли
+                                                LockScreenOff();
+                                                if (typeof callback === 'function') {
+                                                    callback(valid ? list_internal : null);
+                                                }
+                                            } else {
+                                                valid = false;
+                                                pn_select.val_add_park_status.out_error_message('Ошибка, в текущем положении парка нет вагонов на территории АМКР');
+                                                LockScreenOff();
+                                                if (typeof callback === 'function') {
+                                                    callback(null);
                                                 }
                                             }
-                                        }
-                                        // Вывод сообщений повторяющихся номеров
-                                        $.each(arr_res, function (i, el) {
+                                        } else {
                                             valid = false;
-                                            pn_select.val_add_park_status.out_error_message('Ошибка, введеный номер :' + el.num + ' повторяется.');
-                                        });
-
-                                        if (valid) {
-                                            // Проверка пройдена, Ок
-                                            pn_select.val_add_park_status.out_info_message('Ок, вагоны проверены');
-                                        }
-                                        // Все прошли
-                                        LockScreenOff();
-                                        if (typeof callback === 'function') {
-                                            callback(valid ? list_internal : null);
+                                            pn_select.val_add_park_status.out_error_message('Ошибка, Вагонов в текущем положении парка нет для проверки за указаную дату:' + ps.state_on + ' - нет.');
+                                            LockScreenOff();
+                                            if (typeof callback === 'function') {
+                                                callback(null);
+                                            }
                                         }
                                     } else {
                                         valid = false;
-                                        pn_select.val_add_park_status.out_error_message('Ошибка, в текущем положении парка нет вагонов на территории АМКР');
+                                        // Вагонов нет
+                                        pn_select.val_add_park_status.out_error_message('Ошибка, Вагонов для проверки за указаную дату:' + ps.state_on + ' - нет.');
                                         LockScreenOff();
                                         if (typeof callback === 'function') {
                                             callback(null);
                                         }
                                     }
-                                } else {
-                                    valid = false;
-                                    pn_select.val_add_park_status.out_error_message('Ошибка, Вагонов в текущем положении парка нет для проверки за указаную дату:' + ps.state_on + ' - нет.');
-                                    LockScreenOff();
-                                    if (typeof callback === 'function') {
-                                        callback(null);
-                                    }
-                                }
-                            } else {
-                                valid = false;
-                                // Вагонов нет
-                                pn_select.val_add_park_status.out_error_message('Ошибка, Вагонов для проверки за указаную дату:' + ps.state_on + ' - нет.');
-                                LockScreenOff();
-                                if (typeof callback === 'function') {
-                                    callback(null);
-                                }
-                            }
 
-                        });
+                                });
+                            }
+                        } else {
+                            // Парк не выбран
+                            pn_select.val_add_park_status.out_warning_message('Выберите состояние парка!');
+                            if (typeof callback === 'function') {
+                                callback(null);
+                            }
+                        }
+                        //------------
+                    } else {
+                        // Парк не выбран
+                        pn_select.val_add_park_status.out_warning_message('Состояние парка - уже применяется');
+                        if (typeof callback === 'function') {
+                            callback(null);
+                        }
                     }
-                } else {
-                    // Парк не выбран
-                    pn_select.val_add_park_status.out_warning_message('Выберите состояние парка!');
-                    if (typeof callback === 'function') {
-                        callback(null);
-                    }
-                }
+                });
             },
             // Применить статус
             apply: function () {
@@ -535,76 +559,86 @@
                             var station = pn_select.get_station_of_id(pn_select.id_station_select);
                             dc.dialog_confirm('Open', 'Применить?', 'Валидация прошла успешно, применить положение парка по станции ' + (station ? station.text : '?') + ' по состоянию на ' + pn_select.park_status_select.state_on + ' ?', function (result) {
                                 if (result) {
-                                    LockScreen(langView('mess_save', langs));
-                                    //
-                                    var wagons_ps = []
-                                    // Сформируем вагоны
-                                    $.each(wagons, function (i, el) {
-                                        wagons_ps.push({ id_way: el.ps_way_id_way, num: el.num, position: el.ps_wag_position })
+                                    ids_gl.postParkStateApply(pn_select.park_status_select.id, function (result_post) {
+                                        if (result_post) {
+                                            //-----------------------------------
+                                            LockScreen(langView('mess_save', langs));
+                                            //
+                                            var wagons_ps = []
+                                            // Сформируем вагоны
+                                            $.each(wagons, function (i, el) {
+                                                wagons_ps.push({ id_way: el.ps_way_id_way, num: el.num, position: el.ps_wag_position })
 
-                                    });
-                                    // Парк опрелделен, подготовим операцию
-                                    var operation_apply_park_status = {
-                                        id_station: pn_select.park_status_select.id_station,
-                                        wagons: wagons_ps,
-                                        lead_time: pn_select.park_status_select.state_on,
-                                        user: user_name
-                                    }
-                                    // Выполним операуию
-                                    ids_inc.postOperationApplyWagonsParkState(operation_apply_park_status, function (result_operation) {
-                                        if (result_operation && result_operation.result > 0) {
-                                            // Сделаем отметку о применении
-                                            ids_inc.getParkState_StationOfID(pn_select.id_park_status_select, function (result_pss) {
-                                                if (result_pss) {
-                                                    result_pss.applied = toISOStringTZ(new Date());
-                                                    result_pss.applied_user = user_name;
-                                                    ids_inc.putParkState_Station(result_pss, function (result_upd) {
-                                                        if (result_upd > 0) {
-                                                            // Покажем выбраное положение парка
-                                                            pn_select.update_select_park_status(pn_select.id_station_select, pn_select.id_park_status_select, function () {
-                                                                pn_select.val_add_park_status.clear_all();
-                                                                pn_select.val_add_park_status.out_info_message("Операция «Применить состояние парка» - выполнена!");
-                                                                LockScreenOff();
+                                            });
+                                            // Парк опрелделен, подготовим операцию
+                                            var operation_apply_park_status = {
+                                                id_station: pn_select.park_status_select.id_station,
+                                                wagons: wagons_ps,
+                                                lead_time: pn_select.park_status_select.state_on,
+                                                user: user_name
+                                            }
+                                            // Выполним операуию
+                                            ids_inc.postOperationApplyWagonsParkState(operation_apply_park_status, function (result_operation) {
+                                                if (result_operation && result_operation.result > 0) {
+                                                    // Сделаем отметку о применении
+                                                    ids_inc.getParkState_StationOfID(pn_select.id_park_status_select, function (result_pss) {
+                                                        if (result_pss) {
+                                                            result_pss.applied = toISOStringTZ(new Date());
+                                                            result_pss.applied_user = user_name;
+                                                            ids_inc.putParkState_Station(result_pss, function (result_upd) {
+                                                                if (result_upd > 0) {
+                                                                    // Покажем выбраное положение парка
+                                                                    pn_select.update_select_park_status(pn_select.id_station_select, pn_select.id_park_status_select, function () {
+                                                                        pn_select.val_add_park_status.clear_all();
+                                                                        pn_select.val_add_park_status.out_info_message("Операция «Применить состояние парка» - выполнена!");
+                                                                        LockScreenOff();
+                                                                    });
+
+
+                                                                    //pn_select.update_view_park_status(pn_select.id_park_status_select, function () {
+                                                                    //    pn_select.val_add_park_status.clear_all();
+                                                                    //    pn_select.val_add_park_status.out_info_message("Операция «Применить состояние парка» - выполнена!");
+                                                                    //    LockScreenOff();
+                                                                    //});
+                                                                } else {
+                                                                    pn_select.val_add_park_status.clear_all();
+                                                                    pn_select.val_add_park_status.out_error_message("Ошибка обновления строки состояния парка, отметка о выполнении не применилась!");
+                                                                    LockScreenOff();
+                                                                }
                                                             });
-
-
-                                                            //pn_select.update_view_park_status(pn_select.id_park_status_select, function () {
-                                                            //    pn_select.val_add_park_status.clear_all();
-                                                            //    pn_select.val_add_park_status.out_info_message("Операция «Применить состояние парка» - выполнена!");
-                                                            //    LockScreenOff();
-                                                            //});
                                                         } else {
                                                             pn_select.val_add_park_status.clear_all();
-                                                            pn_select.val_add_park_status.out_error_message("Ошибка обновления строки состояния парка, отметка о выполнении не применилась!");
+                                                            pn_select.val_add_park_status.out_error_message("Ошибка обновления строки состояния парка, нет строки состояния парка с id =" + pn_select.id_park_status_select);
                                                             LockScreenOff();
                                                         }
                                                     });
+
                                                 } else {
-                                                    pn_select.val_add_park_status.clear_all();
-                                                    pn_select.val_add_park_status.out_error_message("Ошибка обновления строки состояния парка, нет строки состояния парка с id =" + pn_select.id_park_status_select);
+                                                    // Отмена 
+                                                    if (result_operation && result_operation.result === 0) {
+                                                        pn_select.val_add_park_status.clear_all();
+                                                        pn_select.val_add_park_status.out_warning_message("Отмена применения состояния парка, вагоны уже стоят согласно списку состояния парка!");
+                                                    } else {
+                                                        pn_select.val_add_park_status.clear_all();
+                                                        pn_select.val_add_park_status.out_error_message("Ошибка применения состояния парка, код ошибки = " + (result_operation ? result_operation.result : null));
+                                                        if (result_operation && result_operation.listResult && result_operation.listResult.length > 0) {
+                                                            $.each(result_operation.listResult, function (i, el) {
+                                                                if (el.result < 0) {
+                                                                    pn_select.val_add_park_status.out_error_message("№ вагона :" + el.num + ", код ошибки -" + el.result);
+                                                                }
+                                                            });
+                                                        }
+                                                    }
                                                     LockScreenOff();
                                                 }
                                             });
-
+                                            //-------------------------------------------
                                         } else {
-                                            // Отмена 
-                                            if (result_operation && result_operation.result === 0) {
-                                                pn_select.val_add_park_status.clear_all();
-                                                pn_select.val_add_park_status.out_warning_message("Отмена применения состояния парка, вагоны уже стоят согласно списку состояния парка!");
-                                            } else {
-                                                pn_select.val_add_park_status.clear_all();
-                                                pn_select.val_add_park_status.out_error_message("Ошибка применения состояния парка, код ошибки = " + (result_operation ? result_operation.result : null));
-                                                if (result_operation && result_operation.listResult && result_operation.listResult.length > 0) {
-                                                    $.each(result_operation.listResult, function (i, el) {
-                                                        if (el.result < 0) {
-                                                            pn_select.val_add_park_status.out_error_message("№ вагона :" + el.num + ", код ошибки -" + el.result);
-                                                        }
-                                                    });
-                                                }
-                                            }
+                                            //
                                             LockScreenOff();
                                         }
                                     });
+
                                 } else {
                                     pn_select.val_add_park_status.out_warning_message('Операция «Применить состояние парка» - отменена!');
                                 }
@@ -612,6 +646,8 @@
                         } else {
                             pn_select.val_add_park_status.out_warning_message('Выберите состояние парка!');
                         }
+                    } else {
+                        LockScreenOff();
                     }
                 });
             }
@@ -1197,6 +1233,15 @@
     //=================================================================
     // Загрузка основных библиотек
     loadReference(function (result) {
+        // Обновить
+        setInterval(function () {
+            $('label#curent_date').text(getReplaceTOfDT(toISOStringTZ(new Date())));
+            ids_gl.getCountClient(function (count) {
+                $('label#client_count').text(count);
+            });
+
+        }, 1000);
+
         table_ways_park_state.init();
         table_wagon_park_state.init();
         var list_station = ids_inc.ids_dir.getListStation('id', 'station_name', lang, function (i) { return i.station_uz === false && i.id !== 99 ? true : false; });

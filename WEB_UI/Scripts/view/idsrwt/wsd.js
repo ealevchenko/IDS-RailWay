@@ -1,4 +1,12 @@
-﻿jQuery(document).ready(function ($) {
+﻿//var ids_gl = new IDS_GLOBAL(); // Создадим класс IDS_RWT
+
+//var update_view = function () {
+//    ids_gl.getCountClient(function (count) {
+//        $('label#client_count').text(count);
+//    });
+//};
+
+jQuery(document).ready(function ($) {
     // Массив текстовых сообщений 
     $.Text_View =
     {
@@ -172,6 +180,7 @@
         dc = $('div#dialog-confirm').dialog_confirm({}),
         alert = new ALERT($('div#main-alert')),// Создадим класс ALERTG
         ids_inc = new IDS_RWT(lang), // Создадим класс IDS_RWT
+        ids_gl = new IDS_GLOBAL(), // Создадим класс IDS_RWT
         loadReference = function (callback) {
             LockScreen(langView('mess_load', langs));
             var count = 1;
@@ -5571,11 +5580,21 @@
 
         };
 
+
     //================================================================
     // Основной вход
     //=================================================================
     // Загрузка основных библиотек
     loadReference(function (result) {
+        // Обновить
+        setInterval(function () {
+            $('label#curent_date').text(getReplaceTOfDT(toISOStringTZ(new Date())));
+            ids_gl.getCountClient(function (count) {
+                $('label#client_count').text(count);
+            });
+
+        }, 1000);
+
         table_tree_way.init();
         table_wagons.init();
         // Инициализация окон
