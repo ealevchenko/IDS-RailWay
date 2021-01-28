@@ -93,6 +93,21 @@ namespace IDS
                 // Если нет ошибок тогда обновим базу
                 if (result.error == 0)
                 {
+
+
+                    // Обновим время обновления 
+                    ParkState_Way psw = context.ParkState_Way.Where(w => w.id == id_park_state_way).FirstOrDefault();
+                    if (psw != null)
+                    {
+                        psw.change = DateTime.Now;
+                        psw.change_user = user;
+                        ParkState_Station pss = context.ParkState_Station.Where(p => p.id == psw.id_park_state_station).FirstOrDefault();
+                        if (pss != null)
+                        {
+                            pss.change = DateTime.Now;
+                            pss.change_user = user;
+                        }
+                    }
                     result.SetResult(context.SaveChanges());
                 }
                 else
@@ -386,6 +401,20 @@ namespace IDS
                     // Если нет ошибок тогда обновим базу
                     if (result.error == 0)
                     {
+                        // Обновим время обновления 
+                        ParkState_Way psw = context.ParkState_Way.Where(w => w.id == id_park_state_way).FirstOrDefault();
+                        if (psw != null)
+                        {
+                            psw.change = DateTime.Now;
+                            psw.change_user = user;                            
+                            ParkState_Station pss = context.ParkState_Station.Where(p => p.id == psw.id_park_state_station).FirstOrDefault();
+                            if (pss != null)
+                            {
+                                pss.change = DateTime.Now;
+                                pss.change_user = user;
+                            }
+                        }
+                        // Сохранить время 
                         result.SetResult(context.SaveChanges());
                     }
                     else
@@ -539,25 +568,27 @@ namespace IDS
                 // Получим запись вагона из справочника
                 Directory_Wagons wagon = ef_dir_wag.Context.Where(w => w.num == arr_uz_vag.num).FirstOrDefault();
                 if (wagon == null) return (int)errors_ids_rwt.not_wagon_of_db; // Указаного вагона нет в базе
-                
+
                 // Получим контекст Внутренего перемещения
                 EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
                 WagonInternalRoutes wir = ef_wir.Context.Where(r => r.id_arrival_car == arr_cars.id).FirstOrDefault();
 
                 if (wir == null) return (int)errors_ids_rwt.not_wir_of_db; // Ошибка, нет записи внутренего перемещения вагона
                 // Найдем первую запись
-                WagonInternalOperation first_wio = wir.WagonInternalOperation.Where(o=>o.parent_id == null).OrderBy(o=>o.id).FirstOrDefault();
+                WagonInternalOperation first_wio = wir.WagonInternalOperation.Where(o => o.parent_id == null).OrderBy(o => o.id).FirstOrDefault();
                 if (first_wio == null) return (int)errors_ids_rwt.not_wio_of_db; // Ошибка, нет записи операций внутренего перемещения вагона
                 int id_condition_first = first_wio.id_condition;
                 // Определим все записи
-                List<WagonInternalOperation> list_wio = wir.WagonInternalOperation.OrderBy(o=>o.id).ToList();
+                List<WagonInternalOperation> list_wio = wir.WagonInternalOperation.OrderBy(o => o.id).ToList();
                 // Обновим годность по внутренему перемещению
-                foreach(WagonInternalOperation wio in list_wio){
+                foreach (WagonInternalOperation wio in list_wio)
+                {
                     if (wio.id_condition == id_condition_first)
                     {
                         wio.id_condition = id_condition;
                     }
-                    else {
+                    else
+                    {
                         break; // Дрогая годность выйти изцикла
                     }
                 }

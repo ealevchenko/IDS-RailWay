@@ -33,6 +33,30 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // GET: api/global/client/hosts
+        [Route("client/hosts")]
+        [ResponseType(typeof(string[]))]
+        public IHttpActionResult GetHostClient()
+        {
+            try
+            {
+                string[] arr_host = null;
+                if (HttpContext.Current.Application["host_session"] != null)
+                {
+                    string host_session = (string)(object)HttpContext.Current.Application["host_session"];
+                    if (!String.IsNullOrWhiteSpace(host_session))
+                    {
+                        arr_host = host_session.Split(';');
+                    }
+                }
+                return Ok(arr_host);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         #region блокировка park_state
         // GET: api/global/park_state/apply
         [Route("park_state/apply")]

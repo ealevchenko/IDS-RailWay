@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Web;
 using System.Web.Http;
@@ -25,6 +26,7 @@ namespace WEB_UI
             ViewEngines.Engines.Add(new CustomLocationViewEngine());
 
             Application["park_state_apply"] = "";
+            Application["host_session"] = "";
         }
 
         protected void Application_BeginRequest()
@@ -65,18 +67,37 @@ namespace WEB_UI
 
             try
             {
-
+                //string host = Dns.GetHostEntry(Request.UserHostAddress).HostName.ToString();
 
                 Application.Lock();
+                // Определим и добавим имя нового клиента
+                string host_session;
+                string new_host = Dns.GetHostEntry(Request.UserHostAddress).HostName.ToString();
+                if (HttpContext.Current.Application["host_session"] != null)
+                {
+                    host_session = (string)(object)HttpContext.Current.Application["host_session"];
+                    if (String.IsNullOrWhiteSpace(host_session))
+                    {
+                        host_session = new_host;
+                    }
+                    else
+                    {
+                        host_session = host_session + ";" + new_host;
+                    }
+                }
+                else
+                {
+                    host_session = new_host;
+                }
+                HttpContext.Current.Application["host_session"] = host_session;
+                // Подчитаем количество клиентов
                 int count = 0;
-
                 if (Application["UsersCount"] != null)
                     count = (int)Application["UsersCount"];
-
                 count++;
                 Application["UsersCount"] = count;
-                //Session["session_id"] = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss");
-
+                // Запоминаю id сесии
+                Session["session_id"] = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss");
                 // Снять закрытый доступ        
                 Application.UnLock();
             }
@@ -96,8 +117,29 @@ namespace WEB_UI
             try
             {
                 Application.Lock();
-                int count = 0;
+                // Определим и добавим имя нового клиента
+                string host_session = "";
+                string end_host = Dns.GetHostEntry(Request.UserHostAddress).HostName.ToString();
+                if (HttpContext.Current.Application["host_session"] != null)
+                {
+                    host_session = (string)(object)HttpContext.Current.Application["park_state_apply"];
+                    if (!String.IsNullOrWhiteSpace(host_session))
+                    {
+                        string[] arr_host_session = host_session.Split(';');
+                        host_session = "";
+                        foreach (string hs in arr_host_session) {
+                            if (hs != end_host) {
+                                host_session = host_session + (!String.IsNullOrWhiteSpace(host_session) ? ";" : "") + hs;
+                            }
+                        }
+                    }
 
+                }
+                HttpContext.Current.Application["host_session"] = host_session;
+
+
+
+                int count = 0;
                 if (Application["UsersCount"] != null)
                     count = (int)Application["UsersCount"];
 

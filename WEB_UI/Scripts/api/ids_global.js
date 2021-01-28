@@ -33,6 +33,29 @@ IDS_GLOBAL.prototype.getCountClient = function (callback) {
         },
     });
 };
+// Получить хосты всех клиентов
+IDS_GLOBAL.prototype.getHostClient = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/global/client/hosts',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_GLOBAL.getHostClient", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 //
 IDS_GLOBAL.prototype.getParkStateApply = function (callback) {
     $.ajax({
