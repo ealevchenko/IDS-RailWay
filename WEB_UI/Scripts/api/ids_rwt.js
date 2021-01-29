@@ -3426,6 +3426,32 @@ IDS_RWT.prototype.postProvideWagonsOfStation = function (operation_provide, call
         },
     });
 };
+//Операция предъявления 
+IDS_RWT.prototype.postTransferProvideWagonsOfStation = function (operation_transfer, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/wsd/operation/transfer_provide/',
+        type: 'POST',
+        data: JSON.stringify(operation_transfer),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postTransferProvideWagonsOfStation", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 
 // ПОИСК ВАГОНОВ
 // Поиск вагона на АМКР

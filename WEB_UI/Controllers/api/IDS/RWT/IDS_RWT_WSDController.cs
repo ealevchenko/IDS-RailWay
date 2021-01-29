@@ -358,6 +358,14 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string user { get; set; }
     }
 
+    public class OperationTransferProvideWagons
+    {
+        public int id_way_on { get; set; }
+        public List<int> nums { get; set; }
+        public DateTime lead_time { get; set; }
+        public string user { get; set; }
+    }
+
     public class view_wagon_dislocation
     {
         public long id_wir { get; set; }
@@ -673,6 +681,24 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             }
         }
 
+         // POST api/ids/rwt/wsd/operation/transfer_provide
+        [HttpPost]
+        [Route("operation/transfer_provide")]
+        [ResponseType(typeof(ResultTransfer))]
+        public IHttpActionResult PostTransferProvideWagonsOfStation([FromBody] OperationTransferProvideWagons value)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                ResultTransfer result = ids_wir.OperationTransferProvideWagons(value.id_way_on, value.nums, value.lead_time, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }       
+        
         // POST api/ids/rwt/wsd/operation/provide
         [HttpPost]
         [Route("operation/provide")]
