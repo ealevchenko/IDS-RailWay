@@ -1677,6 +1677,111 @@ namespace IDS
             }
             return res.result;
         }
+        /// <summary>
+        /// Административная функция вернуть вагон из отправки
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <param name="note"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int ReturnWagons(List<int> nums, string note, string user)
+        {
+            ResultUpdateWagon res = new ResultUpdateWagon(nums.Count());
+            try
+            {
+
+                EFDbContext context = new EFDbContext();
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+
+                //EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
+                // Пройдемся по списку внутрених перемещений
+                int count = nums.Count();
+                foreach (int num in nums.ToList())
+                {
+                    WagonInternalRoutes wir = context.GetLastWagon(num);
+                    int result = 0;
+                    if (wir != null)
+                    {
+                        // Запись закрыта
+                        if (wir.close != null)
+                        {
+                            // Получим текущее положение вагона
+                            WagonInternalMovement wim = wir.GetLastMovement();
+                            WagonInternalOperation wio = wir.GetLastOperation();
+                            if (wim != null)
+                            {
+                                if (wio != null)
+                                {
+                                    // Проверки закончились, выполним операции
+                                    wir.id_outgoing_car = null;
+                                    wir.note = note;
+                                    wir.close = null;
+                                    wir.close_user = null;
+                                    // вернем на путь
+                                    wim.way_end = null;
+                                    wim.note = note;
+                                    wim.close = null;
+                                    wim.close_user = null;
+                                    // Отментим отмену в операции
+                                    wio.note = note;
+                                    result = 3;
+                                }
+                                else
+                                {
+                                    result = (int)errors_base.not_wio_db;
+                                }
+                            }
+                            else
+                            {
+                                result = (int)errors_base.not_wim_db;
+                            }
+
+
+                            //wir.CloseWagon(close_date, note, user); // Закроет все операции и дислокации
+                            //ef_wir.Update(wir);
+                            //result = ef_wir.Save();
+                            //res.SetUpdateResult(result, num);
+                        }
+                        else
+                        {
+                            // Запись открыта пропустить
+                            result = 0;
+
+                        }
+                    }
+                    else
+                    {
+                        // Запись wir не найдена
+                        result = (int)errors_base.not_wir_db;
+
+                    }
+                    if (result > 0) {
+                        result =  context.SaveChanges();
+                    }
+                    res.SetUpdateResult(result, num);
+                    Console.WriteLine("Обработал №  = {0}, результат = {1}, осталось {2}", num, result, count--);
+                }
+                if (res.error == 0)
+                {
+                    res.SetResult(res.listResult.Count());                      // ОК   
+                }
+                else
+                {
+                    res.SetResult((int)errors_base.error_save_changes);      // Были ошибки по ходу выполнения операций       
+                }
+
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("ReturnWagons(nums={0}, note={1}, user={2})", nums, note, user), servece_owner, eventID);
+                res.SetResult((int)errors_base.global); // Ошибка
+            }
+            return res.result;
+        }
 
         #endregion
     }
