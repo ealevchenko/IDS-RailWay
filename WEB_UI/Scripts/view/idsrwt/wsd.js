@@ -4652,26 +4652,25 @@
                                 }
                                 // Выполнить операцию отправки postSendingWagonsOfStation
                                 ids_inc.postProvideWagonsOfStation(operation_provide, function (result_provide) {
-                                    if (result_provide >= 0) {
-                                        //// Обновить путь отправки и станцию отправки
-                                        //if (operation_detali.way_from_provide) {
+                                    if (result_provide && result_provide.result>0) {
+                                        // Обновить путь отправки и станцию отправки
+                                        if (operation_detali.way_from_provide) {
 
-                                        //    operation_detali.rows_update.push({ id_station: operation_detali.way_from_provide.id_station, id_park: operation_detali.way_from_provide.id_park, id_way: operation_detali.way_from_provide.id });
-                                        //    operation_detali.rows_update.push({ id_station: operation_detali.way_from_provide.id_station, id_park: null, id_way: null });
-                                        //}
-                                        //var outer_way = ids_inc.ids_dir.list_outer_ways.find(function (o) {
-                                        //    return o.id === operation_provide.id_outer_ways;
-                                        //});
-                                        //// Пути определены?
-                                        //if (outer_way) {
-                                        //    // Обновить станцию отправки
-                                        //    operation_detali.rows_update.push({ id_station: outer_way.id_station_on, id_park: null, id_way: null });
-                                        //}
-                                        //operation_detali.bit_update = true;
-                                        //operation_detali.refresh_provide();
-                                        //operation_detali.val_provide.out_info_message("Операция 'Отправление состава на станцию АМКР' - Выполнена");
+                                            operation_detali.rows_update.push({ id_station: operation_detali.way_from_provide.id_station, id_park: operation_detali.way_from_provide.id_park, id_way: operation_detali.way_from_provide.id });
+                                            operation_detali.rows_update.push({ id_station: operation_detali.way_from_provide.id_station, id_park: null, id_way: null });
+                                        }
+                                        operation_detali.bit_update = true;
+                                        operation_detali.refresh_provide();
+                                        operation_detali.val_provide.out_info_message("Операция 'ПРЕДЪЯВИТЬ СОСТАВ УЗ' - Выполнена");
                                     } else {
-                                        operation_detali.val_provide.out_error_message("При выполнении операции 'ПРЕДЪЯВИТЬ СОСТАВ УЗ' - произошла ошибка. Код ошибки =" + result_provide.result);
+                                        operation_detali.val_provide.out_error_message("Ошибка выполнения операции «ПРЕДЪЯВИТЬ СОСТАВ УЗ», код ошибки = " + (result_provide ? result_provide.result : null));
+                                        if (result_provide && result_provide.listResult && result_provide.listResult.length > 0) {
+                                            $.each(result_provide.listResult, function (i, el) {
+                                                if (el.result < 0) {
+                                                    operation_detali.val_provide.out_error_message("№ вагона :" + el.num + ", код ошибки -" + el.result);
+                                                }
+                                            });
+                                        }
                                         LockScreenOff();
                                     }
 
@@ -4848,6 +4847,7 @@
                                         // Подтверждение выполнения операции.
                                         dc.dialog_confirm('Open', 'Перенести?', 'Перенести все найденные вагоны на путь станции для предъявления УЗ?', function (result) {
                                             if (result) {
+                                                operation_detali.val_provide.clear_all();
                                                 // Проверим список вагонов
                                                 if (operation_detali.pn_collect_wagon.table_wagons.list_wagon && operation_detali.pn_collect_wagon.table_wagons.list_wagon.length > 0) {
                                                     LockScreen(langView('mess_save', langs));
@@ -4869,21 +4869,33 @@
                                                     // Выполним операцию
                                                     ids_inc.postTransferProvideWagonsOfStation(operation_transfer_provide_wagons, function (result_operation) {
                                                         if (result_operation && result_operation.result > 0) {
-
+                                                            operation_detali.val_provide.out_info_message("Операция «Собрать вагоны на пути для предъявления» – выполнена!");
                                                         } else {
                                                             // Ошибка выполнения
-
+                                                            operation_detali.val_provide.out_error_message("Ошибка выполнения операции «Собрать вагоны на пути для предъявления», код ошибки = " + (result_operation ? result_operation.result : null));
+                                                            if (result_operation && result_operation.listResult && result_operation.listResult.length > 0) {
+                                                                $.each(result_operation.listResult, function (i, el) {
+                                                                    if (el.result < 0) {
+                                                                        operation_detali.val_provide.out_error_message("№ вагона :" + el.num + ", код ошибки -" + el.result);
+                                                                    }
+                                                                });
+                                                            }
                                                         }
-                                                        //operation_detali.pn_collect_wagon.table_wagons.list_wagon = [];
-                                                        //operation_detali.pn_collect_wagon.table_wagons.view([]);
+                                                        // Обновим данные в таблице
+                                                        operation_detali.table_wagons_provide_way_from.load(operation_detali.id_way_from_provide, function () {
+                                                            operation_detali.table_wagons_provide.view();
+                                                            LockScreenOff();
+                                                        });
                                                     });
 
                                                 } else {
                                                     // Вагоны не определены
+                                                    operation_detali.val_provide.out_warning_message('Неопределенны вагоны для выполнения операции «Собрать вагоны на пути для предъявления».');
                                                 }
 
                                             } else {
                                                 // Отмена 
+                                                operation_detali.val_provide.out_warning_message('Операция «Собрать вагоны на пути для предъявления» - отменена!');
                                             }
                                         });
                                     },
@@ -4931,7 +4943,8 @@
                     },
                     // Очистить данные
                     clear: function () {
-                        operation_detali.pn_collect_wagon.table_wagons.view(null);
+                        operation_detali.pn_collect_wagon.provide_num_wagons.val('');
+                        operation_detali.pn_collect_wagon.table_wagons.load(null);
                     },
                     // Показать вагоны в окне ввода вагонов
                     //view_nums: function (data) {
@@ -5049,6 +5062,7 @@
                                         operation_detali.div_provide_collect_wagon.collapse('toggle');
                                         // Скорректируем кнопку добавить вагоны 
                                         operation_detali.table_wagons_provide_way_from.active_button_add();
+                                        operation_detali.pn_collect_wagon.table_wagons.clear();
                                     } else {
                                         operation_detali.val_provide.clear_all();
                                         operation_detali.val_provide.out_warning_message("Сбор вагонов по станциям АМКР должна быть выполнена до формирования состава для предъявления, на данный момент состав уже сформирован в количестве " + count + " - вагонов. Очистите сформированный состав от вагонов, затем откройте окно для поиска и переноса вагонов на станцию примыкания.");
