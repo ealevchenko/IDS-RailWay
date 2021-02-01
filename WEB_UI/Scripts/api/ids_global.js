@@ -26,7 +26,7 @@ IDS_GLOBAL.prototype.getCountClient = function (callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_GLOBAL.getCountClient", x, y, z);
+            //OnAJAXError("IDS_GLOBAL.getCountClient", x, y, z);
         },
         complete: function () {
             AJAXComplete();

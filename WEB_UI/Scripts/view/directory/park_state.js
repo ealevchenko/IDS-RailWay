@@ -1285,12 +1285,15 @@
     //=================================================================
     // Загрузка основных библиотек
     loadReference(function (result) {
-        // Обновить
+        // Опрос времени
         setInterval(function () {
-            $('label#curent_date').text(getReplaceTOfDT(toISOStringTZ(new Date())));
             ids_gl.getCountClient(function (count) {
                 $('label#client_count').text(count);
             });
+        }, 5000);
+        // Опрос положения парка
+        setInterval(function () {
+            $('label#curent_date').text(getReplaceTOfDT(toISOStringTZ(new Date())));
             var id_station = Number(pn_select.id_station_select);
             $('label#curent_apply').text('');
             ids_gl.getParkStateApply(function (result_apply) {
@@ -1304,7 +1307,6 @@
 
                 }
             });
-
         }, 1000);
 
         table_ways_park_state.init();
