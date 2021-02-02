@@ -49,7 +49,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public int? wagon_tara_arc_doc { get; set; }
         public double? wagon_tara_uz { get; set; }
         public DateTime? wagon_date_rem_uz { get; set; }
-        public DateTime arrival_datetime { get; set; }
+        public DateTime? arrival_datetime { get; set; }
         public int? arrival_duration { get; set; }
         public string arrival_condition_name_ru { get; set; }
         public string arrival_condition_name_en { get; set; }
@@ -64,7 +64,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string arrival_certification_data_en { get; set; }
         public int? arrival_vesg_doc { get; set; }
         public double? arrival_vesg_reweighing { get; set; }
-        public int arrival_station_from_code { get; set; }
+        public int? arrival_station_from_code { get; set; }
         public string arrival_station_from_name_ru { get; set; }
         public string arrival_station_from_name_en { get; set; }
         public string arrival_station_amkr_name_ru { get; set; }
@@ -513,7 +513,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
 
 
         #region ДЕТАЛЬНО ВАГОНЫ
-        // GET: api/ids/rwt/wsd/view/vagons/way/id/111
+        // GET: api/ids/rwt/wsd/view/vagons/way/id/225
         /// <summary>
         /// Показать вагоны детально на указаном пути
         /// </summary>
