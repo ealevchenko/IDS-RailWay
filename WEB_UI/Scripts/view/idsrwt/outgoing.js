@@ -5,7 +5,7 @@
             'default':  //default language: ru
             {
                 'field_num_doc': '№ Ведомости',
-                'field_date_readiness_amkr': 'Время готовности на АМКР',
+                'field_date_readiness_amkr': 'Время предъявления на УЗ',
                 'field_station_from': 'Стоит на станции',
                 'field_way_from': 'Стоит на пути',
                 'field_count': 'Кол. вагонов',
@@ -14,10 +14,10 @@
                 'field_date_end_inspection_acceptance_delivery': 'Время окон. осм. приемосд.',
                 'field_date_end_inspection_loader': 'Время окон. осм. грузчиками',
                 'field_date_end_inspection_vagonnik': 'Время окон. осм. вагонниками',
-                'field_date_readiness_uz': 'Время предъявления УЗ',
+                'field_date_readiness_uz': 'Время готовности к сдаче на УЗ                                    ',
                 'field_date_outgoing': 'Время сдачи на УЗ',
                 'field_date_outgoing_act': 'Время сдачи на УЗ (по акту)',
-                'field_date_departure': 'Время ухода на УЗ',
+                'field_date_departure': 'Время отправления с АМКР',
                 'field_count_all': 'Всего|отпр.|ост.|задерж.',
                 'field_composition_index': 'Индекс поезда',
                 'field_note': 'Примечание',
@@ -93,6 +93,8 @@
                 'field_u_tara_arrival': 'Тара,т',
                 'field_car_date_rem_uz_arrival': 'Рем. УЗ',
                 'field_car_date_rem_vag_arrival': 'Рем. вагон',
+
+
                 'field_car_owner_arrival': 'Собств.',
                 'field_car_operator_arrival': 'Операт.',
                 'field_limiting_arrival': 'Огран.',
@@ -150,21 +152,20 @@
             'en':  //default language: English
             {
                 'field_num_doc': 'No. of the Statement',
-                'field_date_readiness_amkr': 'Readiness time for AMKR',
+                'field_date_readiness_amkr': 'Presentation time on UZ',
                 'field_station_from': 'Standing at a station',
                 'field_way_from': 'Is in the way',
                 'field_count': 'Count. wagons',
                 'field_station_on': 'Sent to UZ station',
                 'field_date_show_wagons': 'Surrender ready time',
-                'field_date_end_inspection_acceptance_delivery': 'Время окон. осм. приемосд.',
-                'field_date_end_inspection_loader': 'Время окон. осм. грузчиками',
-                'field_date_end_inspection_vagonnik': 'Время окон. осм. вагонниками',
-
-                'field_date_readiness_uz': 'UZ presentation time',
+                'field_date_end_inspection_acceptance_delivery': 'Window time. osm. reception. ',
+                'field_date_end_inspection_loader': 'Window time. osm. loaders',
+                'field_date_end_inspection_vagonnik': 'Window time. osm. carriages',
+                'field_date_readiness_uz': 'Readiness time for delivery to UZ',
                 'field_date_outgoing': 'Time of delivery to UZ',
                 'field_date_outgoing_act': 'Time of delivery to UZ (by act)',
-                'field_date_departure': 'Время ухода на УЗ',
-                'field_count_all': 'Всего|отпр.|ост.|задерж.',
+                'field_date_departure': 'Departure time from AMKR',
+                'field_count_all': 'Total | send | stop | delay',
                 'field_composition_index': 'Train index',
                 'field_note': 'Note',
                 'field_status': 'Status',
@@ -183,7 +184,7 @@
                 'field_stn_name_akt': 'Naming the station for the act',
                 'field_nom_akt': 'Act number',
                 'field_nom_dved': 'Number of sufficient road views',
-                'field_oper_date': 'The date of the entry of the tribute according to the act of the transfer document',
+                'field_oper_date': 'The date of the entry of the tribute according to the act of the rewinding document',
                 'field_prichina_akt': 'Reason',
                 'field_responsible_person': 'I`m individual, based on the data entered according to the act of the re-transfer document',
                 'field_ser_dved': 'Serious road views',
@@ -194,7 +195,7 @@
                 'field_nom_cont': 'Container number',
                 'field_kod_tiporazmer': 'Type size for container',
                 'field_gruzp': 'Masa gross per stencil (t)',
-                'field_ves_tary_arc': 'Masa tary to container (kg)',
+                'field_ves_tary_arc': 'Masa tary container (kg)',
                 'field_vesg': 'Vaha vantage net (kg)',
                 'field_brutto': 'Wagah vantage gross',
                 'field_kod': 'Payment code',
@@ -212,7 +213,7 @@
                 'field_epd_xml': 'XML',
 
                 'field_epd_car_num': 'Car number',
-                'field_epd_car_operation': 'Will be approx. op. ',
+                'field_epd_car_operation': 'Will be approx. oper. ',
                 'field_epd_car_composition_index': 'Composition Index',
                 'field_epd_car_train': 'Train',
                 'field_epd_sostav_arrival': 'The train has arrived',
@@ -220,7 +221,7 @@
                 'field_epd_car_arrival': 'Carriage accepted',
 
                 'field_manual_car_num': 'Car number',
-                'field_manual_car_operation': 'Will be approx. op. ',
+                'field_manual_car_operation': 'Will be approx. oper. ',
                 'field_manual_car_id_doc_new': 'Found id-doc',
                 'field_manual_car_id_doc_arrival': 'Bound dock id',
                 'field_manual_car_composition_index': 'Composition Index',
@@ -244,7 +245,7 @@
                 'field_limiting_arrival': 'Limiting',
                 'field_car_rent_start_arrival': 'Start. rent ',
 
-                'field_condition_arrival': 'Size. by arr. ',
+                'field_condition_arrival': 'Resize by arr. ',
 
                 'field_code_stn_from_arrival': 'Code. Art. send. ',
                 'field_name_stn_from_arrival': 'Art. send. ',
@@ -253,7 +254,7 @@
                 'field_code_border_checkpoint_arrival': 'Code. burial cross',
                 'field_name_border_checkpoint_arrival': 'Border. junction. ',
                 'field_cross_time_arrival': 'Arrival time junction. ',
-                'field_code_shipper_arrival': 'Code. gru-send. ',
+                'field_code_shipper_arrival': 'Code. gru-send ',
                 'field_name_shipper_arrival': 'Ship shipper',
                 'field_code_consignee_arrival': 'Code. gru-pol. ',
                 'field_name_consignee_arrival': 'Gru-pol.',
@@ -269,11 +270,13 @@
                 'field_station_on_amkr_arrival': 'Follows the station',
                 'field_division_on_amkr_arrival': 'Shop recipient',
 
-
+                'title_button_export': 'Export',
                 'title_button_buffer': 'Buffer',
                 'title_button_excel': 'Excel',
                 'title_button_field': 'Fields',
-                'title_button_field_all': 'All fields',
+                'title_button_field_select': 'Select',
+                'title_button_field_view_all': 'Show all',
+                'title_button_field_clear': 'Reset',
 
                 'title_button_wagon': 'Wagons',
                 'title_button_wagon_accept': 'Send wagons',
@@ -284,13 +287,12 @@
                 'mess_searsh_epd': 'Search for EPD ...',
                 'mess_searsh_vagon': 'Searching for a car ...',
                 'mess_not_searsh_epd': 'Automatically EPD was not found, try to find the document by car number in the intermediate database (using the search button to the right of the "Car number" field) or get the car number by the consignment note number ("EPD details" column).',
-                'mess_not_searsh_epd_vagon': 'Automatically EPD was found but it does not contain the selected wagon, try to find the document by wagon number in the intermediate database (using the search button to the right of the "Wagon number" field) or get the wagon number by the invoice number (column "EPD details" ). ',
+                'mess_not_searsh_epd_vagon': 'Automatically EPD was found but the selected wagon does not exist in it, try to find the document by wagon number in the intermediate database (using the search button to the right of the "Wagon number" field) or get the wagon number by the consignment note number ("EPD details" column ). ',
 
-                'mess_not_manual_epd': 'EPD was not found in the intermediate database, enter the data manually by switching to the "Manual entry" mode (using the "Edit" button to the right of the "Wagon number" field or by selecting the consignee not "AMKR") or get the wagon number by number consignment note (column "EPD details"). ',
+                'mess_not_manual_epd': 'EPD was not found in the intermediate database, enter the data manually by switching to the "Manual input" mode (using the "Edit" button to the right of the "Car number" field or by selecting the consignee not "AMKR") or get the car number by number consignment note (column "EPD details"). ',
                 'mess_arrival_vagon': 'Transferring the wagon to the database as arrived ...',
                 'mess_clear_vagon': 'Returning the wagon to the database on the way ...',
                 'mess_print': 'Preparing a document for printing ...',
-
             }
         };
 
