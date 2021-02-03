@@ -84,6 +84,11 @@ namespace WEB_UI.Controllers.api
         }
 
         // POST api/global/park_state
+        /// <summary>
+        /// Установить признак "Идет применение парка" (Возврат null-ошибка или признак стоит, "код"- признак установили)
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("park_state")]
         [ResponseType(typeof(string))]
@@ -92,6 +97,7 @@ namespace WEB_UI.Controllers.api
             try
             {
                 string park_state_apply = null;
+                string result = null;
                 // Закрытый доступ        
                 HttpContext.Current.Application.Lock();
                 if (HttpContext.Current.Application["park_state_apply"] != null)
@@ -99,6 +105,7 @@ namespace WEB_UI.Controllers.api
                     park_state_apply = (string)(object)HttpContext.Current.Application["park_state_apply"];
                     if (String.IsNullOrWhiteSpace(park_state_apply))
                     {
+                        result = value.ToString();
                         park_state_apply = value.ToString();
                     }
                     else
@@ -110,16 +117,17 @@ namespace WEB_UI.Controllers.api
                             {
                                 // Снять закрытый доступ 
                                 HttpContext.Current.Application.UnLock();
-                                return Ok(park_state_apply);
+                                return Ok(result); 
                             }
                         }
-                        park_state_apply = park_state_apply + ";" + value.ToString();
+                        result = value.ToString();
+                        park_state_apply = park_state_apply + ";" + result;
                     }
                     HttpContext.Current.Application["park_state_apply"] = park_state_apply;
                 }
                 // Снять закрытый доступ        
                 HttpContext.Current.Application.UnLock();
-                return Ok(park_state_apply);
+                return Ok(result);
             }
             catch (Exception e)
             {
