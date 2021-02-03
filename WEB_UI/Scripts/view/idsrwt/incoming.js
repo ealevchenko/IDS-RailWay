@@ -5611,9 +5611,9 @@
                 var ves_tary_arc = get_input_number_value(cars_detali.uz_vag_ves_tary_arc);
                 var u_tara = get_input_number_value(cars_detali.uz_vag_u_tara);
                 var vesg = get_input_number_value(cars_detali.uz_cargo_vesg_doc);
-                u_tara = u_tara !== null ? Number(u_tara * 1000) : null;
-                ves_tary_arc = ves_tary_arc !== null ? Number(ves_tary_arc * 1000) : null;
-                vesg = vesg !== null ? Number(vesg * 1000) : null;
+                u_tara = u_tara !== null ? Number(Number(u_tara * 1000).toFixed(0)) : null;
+                ves_tary_arc = ves_tary_arc !== null ? Number(Number(ves_tary_arc * 1000).toFixed(0)) : null;
+                vesg = vesg !== null ? Number(Number(vesg * 1000).toFixed(0)) : null;
 
                 var id_station_amkr = get_select_number_value(cars_detali.uz_vag_station_on_amkr);
 
