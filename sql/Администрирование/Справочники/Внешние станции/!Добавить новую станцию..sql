@@ -11,14 +11,14 @@ GO
 --           ,[change]
 --           ,[change_user])
 --     VALUES
---           (334103
---           ,N'СТАРОКОНСТАНТИНОВ 1'
---           ,N'STAROKONSTANTINOV 1'
+--           (331001
+--           ,N'Деражня'
+--           ,N'Derazhnya'
 --           ,32
 --           ,GetDate()
 --           ,N'EUROPE\ealevchenko'
 --           ,null
 --           ,null)
-GO
+--GO
 
 
