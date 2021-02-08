@@ -224,3 +224,32 @@ fieldset {
         fieldset > fieldset legend {
             text-transform: none;
         }
+
+/*Информация по вагону*/
+
+.inp-epd {
+    border-color: blue;
+    border-width: 2px;
+}
+
+.inp-manual {
+    border-color: red;
+    border-width: 2px;
+}
+
+.inp-uz {
+    border-color: orange;
+    border-width: 2px;
+}
+
+.inp-auto {
+    border-color: darkviolet;
+    border-width: 2px;
+}
+
+.mode-edit {
+    /*disabled;*/
+}
+.mode-view {
+    disabled;
+}

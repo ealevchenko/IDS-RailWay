@@ -1556,8 +1556,8 @@ namespace EFIDS.Helper
                     change_user = c.change_user,
                     id_outgoing_uz_vagon = c.id_outgoing_uz_vagon,
                     UZ_DOC_OUT = c.UZ_DOC_OUT.GetUZ_DOC_OUT(),
-                    Directory_Wagons = null,
-                    OutgoingSostav = null,
+                    Directory_Wagons = c.Directory_Wagons.GetDirectory_Wagons_Directory_WagonsRent(),
+                    OutgoingSostav = null, 
                 };
             }
             catch (Exception e)

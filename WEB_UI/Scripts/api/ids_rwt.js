@@ -3061,6 +3061,77 @@ IDS_RWT.prototype.postOutgoingSostav = function (outgoing_sostav, callback) {
         },
     });
 };
+//======= OutgoingCars (Таблица вагонов состава) ======================================
+// Получить все вагоны
+IDS_RWT.prototype.getOutgoingCars = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/outgoing_cars/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getOutgoingCars", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить вагоны сотава
+IDS_RWT.prototype.getOutgoingCarsOfSostav = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/outgoing_cars/sostav/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getOutgoingCarsOfSostav", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить вагон по id
+IDS_RWT.prototype.getOutgoingCarsOfID = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/outgoing_cars/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getOutgoingCarsOfID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 //======================================================================================================
 //                              РАЗДЕЛ ПРАВКА ДОКУМЕНТОВ ПО ПРИБЫТИЮ
 //======================================================================================================

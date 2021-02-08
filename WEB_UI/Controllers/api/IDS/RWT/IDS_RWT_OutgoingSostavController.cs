@@ -54,11 +54,11 @@ namespace WEB_UI.Controllers.api
     
     
     [RoutePrefix("api/ids/rwt/outgoing_sostav")]
-    public class IDS_RWT_Incoming_OutgoingSostavController : ApiController
+    public class IDS_RWT_OutgoingSostavController : ApiController
     {
         protected ILongRepository<OutgoingSostav> ef_ids;
 
-        public IDS_RWT_Incoming_OutgoingSostavController(ILongRepository<OutgoingSostav> ids)
+        public IDS_RWT_OutgoingSostavController(ILongRepository<OutgoingSostav> ids)
         {
             this.ef_ids = ids;
         }

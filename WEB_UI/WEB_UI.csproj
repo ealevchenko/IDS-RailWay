@@ -270,9 +270,10 @@
     <Compile Include="Controllers\api\Directoty\IDS_Directory_ModelsWagonsController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_TypesRepairsWagonsController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_WagonManufacturersController.cs" />
+    <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_OutgoingCarsController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_ParkStateController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_SAPIncomingSupplyController.cs" />
-    <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_OutgoingSostavController.cs" />
+    <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_OutgoingSostavController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_InstructionalLettersWagonController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_InstructionalLettersController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_Arrival_UZ_Document_DocsController.cs" />
@@ -289,6 +290,7 @@
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Incoming_ArrivalSostavController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_IncomingController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_WSDController.cs" />
+    <Compile Include="Controllers\api\IDS\RWT\Outgoing.cs" />
     <Compile Include="Controllers\api\Metrans\Metrans_ConsigneeController.cs" />
     <Compile Include="Controllers\api\Metrans\Metrans_ArrivalSostavController.cs" />
     <Compile Include="Controllers\api\Directoty\UZ_Directory_InternalRailroadController.cs" />

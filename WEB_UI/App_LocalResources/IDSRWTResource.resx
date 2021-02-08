@@ -270,7 +270,7 @@
   <data name="title_payer" xml:space="preserve">
     <value>Оплата</value>
   </data>
-  <data name="title_position_arrival" xml:space="preserve">
+  <data name="title_position" xml:space="preserve">
     <value>№ в поезде</value>
   </data>
   <data name="title_railway_name" xml:space="preserve">
@@ -545,5 +545,86 @@
   </data>
   <data name="utilite_title" xml:space="preserve">
     <value>Утилиты</value>
+  </data>
+  <data name="title_car_date_outgoing_act" xml:space="preserve">
+    <value>Дата сдачи по акту</value>
+  </data>
+  <data name="title_condition_arrival" xml:space="preserve">
+    <value>Разметка (прибытие)</value>
+  </data>
+  <data name="title_condition_provide" xml:space="preserve">
+    <value>Разметка (выгрузка)</value>
+  </data>
+  <data name="title_detention_bit" xml:space="preserve">
+    <value>Задержание</value>
+  </data>
+  <data name="title_loaded_car" xml:space="preserve">
+    <value>Груж/порожний</value>
+  </data>
+  <data name="title_num_cont" xml:space="preserve">
+    <value>№ контейнера</value>
+  </data>
+  <data name="title_reason_discrepancy_amkr" xml:space="preserve">
+    <value>Причина расх. сдачи по времени АМКР</value>
+  </data>
+  <data name="title_reason_discrepancy_uz" xml:space="preserve">
+    <value>Причина расх. сдачи по времени УЗ</value>
+  </data>
+  <data name="title_return_bit" xml:space="preserve">
+    <value>Возврат</value>
+  </data>
+  <data name="title_rod_vag_abbr" xml:space="preserve">
+    <value>Род(абр)</value>
+  </data>
+  <data name="title_adm_kod" xml:space="preserve">
+    <value>Адм.(код)</value>
+  </data>
+  <data name="title_adm_name" xml:space="preserve">
+    <value>Администрация</value>
+  </data>
+  <data name="title_cargo_name" xml:space="preserve">
+    <value>Наименование груза</value>
+  </data>
+  <data name="title_detention" xml:space="preserve">
+    <value>Задержание</value>
+  </data>
+  <data name="title_detention_return" xml:space="preserve">
+    <value>Задержание/Возврат</value>
+  </data>
+  <data name="title_loading_data" xml:space="preserve">
+    <value>Данные о погрузке</value>
+  </data>
+  <data name="title_loading_devision" xml:space="preserve">
+    <value>Цех погрузки</value>
+  </data>
+  <data name="title_return" xml:space="preserve">
+    <value>Возврат</value>
+  </data>
+  <data name="title_brigadier_loading" xml:space="preserve">
+    <value>Бригадир погрузки</value>
+  </data>
+  <data name="title_data_arrival" xml:space="preserve">
+    <value>Данные о прибытии</value>
+  </data>
+  <data name="title_epd" xml:space="preserve">
+    <value>ЭПД (после принятия УЗ)</value>
+  </data>
+  <data name="title_limiting_loading_amkr" xml:space="preserve">
+    <value>Ограничение (АМКР)</value>
+  </data>
+  <data name="title_limiting_loading_uz" xml:space="preserve">
+    <value>Ограничение (УЗ)</value>
+  </data>
+  <data name="title_sap_outbound_supply" xml:space="preserve">
+    <value>SAP (Исходящая поставка)</value>
+  </data>
+  <data name="title_station_name_on" xml:space="preserve">
+    <value>Станция назначения</value>
+  </data>
+  <data name="title_vesg_uz_doc" xml:space="preserve">
+    <value>Вес груза</value>
+  </data>
+  <data name="title_ves_tary_uz" xml:space="preserve">
+    <value>Вес тары</value>
   </data>
 </root>

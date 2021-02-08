@@ -1,0 +1,253 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
+using System.Web.Http.Description;
+using EFIDS.Helper;
+using EFIDS.Abstract;
+using EFIDS.Entities;
+
+namespace WEB_UI.Controllers.api
+{
+    public class OperationPeriodNums {
+        public DateTime start { get; set; }
+        public DateTime stop { get; set; }
+        public List<int> nums { get; set; }
+    }
+
+    [RoutePrefix("api/ids/rwt/outgoing_cars")]
+    public class IDS_RWT_OutgoingCarsController : ApiController
+    {
+        protected ILongRepository<OutgoingCars> ef_ids;
+
+        public IDS_RWT_OutgoingCarsController(ILongRepository<OutgoingCars> ids)
+        {
+            this.ef_ids = ids;
+        }
+
+
+        // GET: api/ids/rwt/outgoing_cars/all
+        [Route("all")]
+        [ResponseType(typeof(OutgoingCars))]
+        public IHttpActionResult GetOutgoingCars()
+        {
+            try
+            {
+                List<OutgoingCars> list = this.ef_ids.Context.ToList().Select(c => c.GetOutgoingCars()).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // GET: api/ids/rwt/outgoing_cars/sostav/id/17
+        [Route("sostav/id/{id:long}")]
+        [ResponseType(typeof(OutgoingCars))]
+        public IHttpActionResult GetOutgoingCarsOfSostav(long id)
+        {
+            try
+            {
+                List<OutgoingCars> list = this.ef_ids
+                    .Context
+                    .Where(s => s.id_outgoing == id)
+                    .ToList()
+                    .Select(c => c.GetOutgoingCars()).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // GET: api/ids/rwt/outgoing_cars/id/78943
+        [Route("id/{id:long}")]
+        [ResponseType(typeof(OutgoingCars))]
+        public IHttpActionResult GetOutgoingCarsOfID(long id)
+        {
+            try
+            {
+                OutgoingCars cars = this.ef_ids
+                    .Context
+                    .Where(s => s.id == id)
+                    .ToList()
+                    .Select(c => c.GetOutgoingCars()).FirstOrDefault();
+                return Ok(cars);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        //// GET: api/ids/rwt/outgoing_cars/num/63303077
+        //[Route("num/{num:int}")]
+        //[ResponseType(typeof(OutgoingCars))]
+        //public IHttpActionResult GetOutgoingCarsOfNum(int num)
+        //{
+        //    try
+        //    {
+        //        List<OutgoingCars> list = this.ef_ids
+        //            .Context
+        //            .Where(s => s.num == num)
+        //            .ToList()
+        //            .OrderBy(s=>s.id_outgoing)
+        //            .Select(c => c.GetOutgoingCars_OutgoingSostav()).ToList();
+        //        return Ok(list);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest(e.Message);
+        //    }
+        //}
+
+        //// GET: api/ids/rwt/outgoing_cars/start/2020-03-13T00:00:00/stop/2020-03-13T23:59:59/nums/56681562,52740883
+        //[Route("start/{start:datetime}/stop/{stop:datetime}/nums/{nums}")]
+        //[ResponseType(typeof(OutgoingCars))]
+        //public IHttpActionResult GetArrivalCars(DateTime start, DateTime stop, string nums)
+        //{
+        //    try
+        //    {
+        //        //string sql = "SELECT IDS.OutgoingCars.* FROM IDS.OutgoingCars INNER JOIN IDS.ArrivalSostav ON IDS.OutgoingCars.id = IDS.ArrivalSostav.id WHERE (IDS.ArrivalSostav.date_arrival >= CONVERT(datetime,'" + start.ToString("yyyy-MM-dd HH:mm:ss") + "',120) and IDS.ArrivalSostav.date_arrival <= CONVERT(datetime,'" + stop.ToString("yyyy-MM-dd HH:mm:ss") + "',120) and num in("+ nums + "))";
+        //        //List<OutgoingCars> list = this.ef_ids.Database.SqlQuery<OutgoingCars>(sql).ToList().Select(c => c.GetArrivalCars_ArrivalSostav()).ToList();
+        //        List<OutgoingCars> list_result = new List<OutgoingCars>();
+        //        List<OutgoingCars> list = this.ef_ids
+        //            .Context
+        //            .Where(s => s.ArrivalSostav.date_arrival >= start && s.ArrivalSostav.date_arrival <= stop)
+        //            //.ToList()
+        //            //.TakeWhile(x => nums.IndexOf(x.num.ToString()) > -1)
+        //            .ToList()
+        //            .Select(c => c.GetArrivalCars_ArrivalSostav()).ToList();
+        //        foreach (OutgoingCars car in list)
+        //        {
+        //            if (nums.IndexOf(car.num.ToString()) > -1)
+        //            {
+        //                list_result.Add(car);
+        //            }
+        //        }
+        //        return Ok(list_result);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest(e.Message);
+        //    }
+        //}
+
+        //// POST: api/ids/rwt/outgoing_cars/period/
+        //[HttpPost]
+        //[Route("period")]
+        //[ResponseType(typeof(OutgoingCars))]
+        //public IHttpActionResult PostArrivalCarsOfPeriodNums([FromBody]OperationPeriodNums value)
+        //{
+        //    try
+        //    {
+        //        //string sql = "SELECT IDS.OutgoingCars.* FROM IDS.OutgoingCars INNER JOIN IDS.ArrivalSostav ON IDS.OutgoingCars.id = IDS.ArrivalSostav.id WHERE (IDS.ArrivalSostav.date_arrival >= CONVERT(datetime,'" + start.ToString("yyyy-MM-dd HH:mm:ss") + "',120) and IDS.ArrivalSostav.date_arrival <= CONVERT(datetime,'" + stop.ToString("yyyy-MM-dd HH:mm:ss") + "',120) and num in("+ nums + "))";
+        //        //List<OutgoingCars> list = this.ef_ids.Database.SqlQuery<OutgoingCars>(sql).ToList().Select(c => c.GetArrivalCars_ArrivalSostav()).ToList();
+        //        List<OutgoingCars> list_result = new List<OutgoingCars>();
+        //        List<OutgoingCars> list = this.ef_ids
+        //            .Context
+        //            .Where(s => s.ArrivalSostav.date_arrival >= value.start && s.ArrivalSostav.date_arrival <= value.stop)
+        //            //.ToList()
+        //            //.TakeWhile(x => nums.IndexOf(x.num.ToString()) > -1)
+        //            .ToList()
+        //            .Select(c => c.GetArrivalCars_ArrivalSostav()).ToList();
+        //        foreach (OutgoingCars car in list)
+        //        {
+        //            int num = value.nums.Find(n=>n == car.num);
+
+        //            if (num>0)
+        //            {
+        //                list_result.Add(car);
+        //            }
+        //        }
+        //        return Ok(list_result);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest(e.Message);
+        //    }
+        //}
+
+        // POST api/ids/rwt/outgoing_cars/
+        [HttpPost]
+        [Route("")]
+        public long PostOutgoingCars([FromBody]OutgoingCars value)
+        {
+            try
+            {
+                this.ef_ids.Add(value);
+                int res = this.ef_ids.Save();
+                return res > 0 ? value.id : res;
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+        }
+
+        // PUT api/ids/rwt/outgoing_cars/id
+        [HttpPut]
+        [Route("id/{id:long}")]
+        public long PutOutgoingCars(long id, [FromBody]OutgoingCars value)
+        {
+            try
+            {
+                this.ef_ids.Update(value);
+                int res = this.ef_ids.Save();
+                return res > 0 ? value.id : res;
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+        }
+
+        // DELETE api/ids/rwt/outgoing_cars/id
+        [HttpDelete]
+        [Route("id/{id:long}")]
+        public int DeleteOutgoingCars(long id)
+        {
+            try
+            {
+                this.ef_ids.Delete(id);
+                return this.ef_ids.Save();
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+        }
+
+        // DELETE api/ids/rwt/outgoing_cars/sostav/id/17
+        [HttpDelete]
+        [Route("sostav/id/{id:long}")]
+        public int DeleteOutgoingCarsOfSostav(long id)
+        {
+            try
+            {
+                List<OutgoingCars> list = this.ef_ids
+                    .Context
+                    .Where(s => s.id_outgoing == id)
+                    .ToList()
+                    .Select(c => c.GetOutgoingCars()).ToList();
+                List<long> list_del = new List<long>();
+
+                foreach (OutgoingCars car in list) {
+                    list_del.Add(car.id);
+                }
+
+                this.ef_ids.Delete(list_del);
+                return this.ef_ids.Save();
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+        }
+
+    }
+}

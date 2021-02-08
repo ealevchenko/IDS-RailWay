@@ -133,6 +133,24 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Адм.(код).
+        /// </summary>
+        public static string title_adm_kod {
+            get {
+                return ResourceManager.GetString("title_adm_kod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Администрация.
+        /// </summary>
+        public static string title_adm_name {
+            get {
+                return ResourceManager.GetString("title_adm_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Количество вагонов.
         /// </summary>
         public static string title_arrival_count_car {
@@ -178,11 +196,29 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Бригадир погрузки.
+        /// </summary>
+        public static string title_brigadier_loading {
+            get {
+                return ResourceManager.GetString("title_brigadier_loading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Время и дата приема по акту.
         /// </summary>
         public static string title_car_date_adoption_act {
             get {
                 return ResourceManager.GetString("title_car_date_adoption_act", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Дата сдачи по акту.
+        /// </summary>
+        public static string title_car_date_outgoing_act {
+            get {
+                return ResourceManager.GetString("title_car_date_outgoing_act", resourceCulture);
             }
         }
         
@@ -210,6 +246,15 @@ namespace WEB_UI.App_LocalResources {
         public static string title_cargo_analysis {
             get {
                 return ResourceManager.GetString("title_cargo_analysis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Наименование груза.
+        /// </summary>
+        public static string title_cargo_name {
+            get {
+                return ResourceManager.GetString("title_cargo_name", resourceCulture);
             }
         }
         
@@ -286,6 +331,24 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Разметка (прибытие).
+        /// </summary>
+        public static string title_condition_arrival {
+            get {
+                return ResourceManager.GetString("title_condition_arrival", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Разметка (выгрузка).
+        /// </summary>
+        public static string title_condition_provide {
+            get {
+                return ResourceManager.GetString("title_condition_provide", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Контейнера.
         /// </summary>
         public static string title_container {
@@ -318,6 +381,15 @@ namespace WEB_UI.App_LocalResources {
         public static string title_danger_name {
             get {
                 return ResourceManager.GetString("title_danger_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Данные о прибытии.
+        /// </summary>
+        public static string title_data_arrival {
+            get {
+                return ResourceManager.GetString("title_data_arrival", resourceCulture);
             }
         }
         
@@ -372,6 +444,33 @@ namespace WEB_UI.App_LocalResources {
         public static string title_date_rem_vag {
             get {
                 return ResourceManager.GetString("title_date_rem_vag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Задержание.
+        /// </summary>
+        public static string title_detention {
+            get {
+                return ResourceManager.GetString("title_detention", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Задержание.
+        /// </summary>
+        public static string title_detention_bit {
+            get {
+                return ResourceManager.GetString("title_detention_bit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Задержание/Возврат.
+        /// </summary>
+        public static string title_detention_return {
+            get {
+                return ResourceManager.GetString("title_detention_return", resourceCulture);
             }
         }
         
@@ -435,6 +534,15 @@ namespace WEB_UI.App_LocalResources {
         public static string title_dt_input_sipply {
             get {
                 return ResourceManager.GetString("title_dt_input_sipply", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на ЭПД (после принятия УЗ).
+        /// </summary>
+        public static string title_epd {
+            get {
+                return ResourceManager.GetString("title_epd", resourceCulture);
             }
         }
         
@@ -529,6 +637,24 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Ограничение (АМКР).
+        /// </summary>
+        public static string title_limiting_loading_amkr {
+            get {
+                return ResourceManager.GetString("title_limiting_loading_amkr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ограничение (УЗ).
+        /// </summary>
+        public static string title_limiting_loading_uz {
+            get {
+                return ResourceManager.GetString("title_limiting_loading_uz", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Инструктивные письма.
         /// </summary>
         public static string title_link_letters {
@@ -570,6 +696,33 @@ namespace WEB_UI.App_LocalResources {
         public static string title_link_wagon_marking {
             get {
                 return ResourceManager.GetString("title_link_wagon_marking", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Груж/порожний.
+        /// </summary>
+        public static string title_loaded_car {
+            get {
+                return ResourceManager.GetString("title_loaded_car", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Данные о погрузке.
+        /// </summary>
+        public static string title_loading_data {
+            get {
+                return ResourceManager.GetString("title_loading_data", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Цех погрузки.
+        /// </summary>
+        public static string title_loading_devision {
+            get {
+                return ResourceManager.GetString("title_loading_devision", resourceCulture);
             }
         }
         
@@ -705,6 +858,15 @@ namespace WEB_UI.App_LocalResources {
         public static string title_num_car {
             get {
                 return ResourceManager.GetString("title_num_car", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на № контейнера.
+        /// </summary>
+        public static string title_num_cont {
+            get {
+                return ResourceManager.GetString("title_num_cont", resourceCulture);
             }
         }
         
@@ -954,9 +1116,9 @@ namespace WEB_UI.App_LocalResources {
         /// <summary>
         ///   Ищет локализованную строку, похожую на № в поезде.
         /// </summary>
-        public static string title_position_arrival {
+        public static string title_position {
             get {
-                return ResourceManager.GetString("title_position_arrival", resourceCulture);
+                return ResourceManager.GetString("title_position", resourceCulture);
             }
         }
         
@@ -970,11 +1132,56 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Причина расх. сдачи по времени АМКР.
+        /// </summary>
+        public static string title_reason_discrepancy_amkr {
+            get {
+                return ResourceManager.GetString("title_reason_discrepancy_amkr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Причина расх. сдачи по времени УЗ.
+        /// </summary>
+        public static string title_reason_discrepancy_uz {
+            get {
+                return ResourceManager.GetString("title_reason_discrepancy_uz", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Начало аренды.
         /// </summary>
         public static string title_rent_start {
             get {
                 return ResourceManager.GetString("title_rent_start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Возврат.
+        /// </summary>
+        public static string title_return {
+            get {
+                return ResourceManager.GetString("title_return", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Возврат.
+        /// </summary>
+        public static string title_return_bit {
+            get {
+                return ResourceManager.GetString("title_return_bit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Род(абр).
+        /// </summary>
+        public static string title_rod_vag_abbr {
+            get {
+                return ResourceManager.GetString("title_rod_vag_abbr", resourceCulture);
             }
         }
         
@@ -1006,6 +1213,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на SAP (Исходящая поставка).
+        /// </summary>
+        public static string title_sap_outbound_supply {
+            get {
+                return ResourceManager.GetString("title_sap_outbound_supply", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Судно.
         /// </summary>
         public static string title_ship {
@@ -1029,6 +1245,15 @@ namespace WEB_UI.App_LocalResources {
         public static string title_station_from_invalid {
             get {
                 return ResourceManager.GetString("title_station_from_invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Станция назначения.
+        /// </summary>
+        public static string title_station_name_on {
+            get {
+                return ResourceManager.GetString("title_station_name_on", resourceCulture);
             }
         }
         
@@ -1231,6 +1456,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Вес тары.
+        /// </summary>
+        public static string title_ves_tary_uz {
+            get {
+                return ResourceManager.GetString("title_ves_tary_uz", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Разница, т.
         /// </summary>
         public static string title_vesg_difference {
@@ -1254,6 +1488,15 @@ namespace WEB_UI.App_LocalResources {
         public static string title_vesg_reweighing {
             get {
                 return ResourceManager.GetString("title_vesg_reweighing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вес груза.
+        /// </summary>
+        public static string title_vesg_uz_doc {
+            get {
+                return ResourceManager.GetString("title_vesg_uz_doc", resourceCulture);
             }
         }
         

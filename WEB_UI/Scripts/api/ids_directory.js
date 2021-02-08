@@ -4888,11 +4888,14 @@ IDS_DIRECTORY.prototype.getListLocomotive = function (fvalue, ftext, lang, filte
 
 
 //*======= IDS_DIRECTORY.list_station  (Справочник станций) ======================================
-IDS_DIRECTORY.prototype.getStation_Internal_Of_ID = function (id_station) {
+IDS_DIRECTORY.prototype.getStation_Internal_Of_ID = function (id) {
+    var station = null;
     if (this.list_station) {
-        var obj = getObjects(this.list_station, 'id', id_station)
-        return obj && obj.length > 0 ? obj[0] : null;
+        //var obj = getObjects(this.list_station, 'id', id_station)
+        //return obj && obj.length > 0 ? obj[0] : null;
+        station = this.list_station.find(function (o) { return o.id === id });
     }
+    return station;
 };
 //
 IDS_DIRECTORY.prototype.getValue_Station_Of_ID = function (id_station, name, lang) {
@@ -4924,11 +4927,14 @@ IDS_DIRECTORY.prototype.getListStation = function (fvalue, ftext, lang, filter) 
     return list;
 };
 //*======= IDS_DIRECTORY.list_ways  (Справочник путей) ======================================
-IDS_DIRECTORY.prototype.getWays_Internal_Of_ID = function (id_way) {
+IDS_DIRECTORY.prototype.getWays_Internal_Of_ID = function (id) {
+    var way = null;
     if (this.list_ways) {
-        var obj = getObjects(this.list_ways, 'id', id_way);
-        return obj && obj.length > 0 ? obj[0] : null;
+        //var obj = getObjects(this.list_ways, 'id', id_way);
+        //return obj && obj.length > 0 ? obj[0] : null;
+        way = this.list_ways.find(function (o) { return o.id === id });
     }
+    return way;
 };
 //
 IDS_DIRECTORY.prototype.getValue_Ways_Of_ID = function (id_way, name, lang) {

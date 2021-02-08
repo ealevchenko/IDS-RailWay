@@ -11,11 +11,11 @@ using EFIDS.Entities;
 
 namespace WEB_UI.Controllers.api
 {
-    public class OperationPeriodNums {
-        public DateTime start { get; set; }
-        public DateTime stop { get; set; }
-        public List<int> nums { get; set; }
-    }
+    //public class OperationPeriodNums {
+    //    public DateTime start { get; set; }
+    //    public DateTime stop { get; set; }
+    //    public List<int> nums { get; set; }
+    //}
     
     [RoutePrefix("api/ids/rwt/arrival_cars")]
     public class IDS_RWT_Incoming_ArrivalCarsController : ApiController

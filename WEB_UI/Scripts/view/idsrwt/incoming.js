@@ -309,7 +309,7 @@
             'mess_print': 'Preparing a document for printing ...',
 
 
-         }
+        }
     };
 
     //*************************************************************************************
@@ -2721,8 +2721,8 @@
                 if (cars_detali.sostav && cars_detali.sostav.status < 2) {
                     $('[data-form="transceiver"]').each(function (i, el) {
                         $(el).attr('data-edit', 'open');
-                        cars_detali.set_mode(false);
                     });
+                    cars_detali.set_mode(false);
                 }
             },
             // Открыть элементы для редактирования (вагон новый или принемается)
@@ -7646,13 +7646,13 @@
                         var count_c = car_out.length;
                         for (var ic = 0; ic < car_out.length; ic++) {
                             //
-                            var position = ic+1;
+                            var position = ic + 1;
                             pn_manual_car.get_id_doc_new_cars(car_out[ic], position, function (result_car) {
                                 new_car.push({ position: result_car.position, car: result_car });
                                 count_c -= 1;
                                 if (count_c === 0) {
                                     var car_doc = [];
-                                    $.each(new_car.sort(function (a,b) {
+                                    $.each(new_car.sort(function (a, b) {
                                         return a.position - b.position;
                                     }), function (i, el) {
                                         car_doc.push(el.car);
