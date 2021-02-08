@@ -297,7 +297,7 @@ namespace Test.TestModule
         public void IDS_WIR_ReturnWagons()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            List<int> list = new List<int>() { 52868973,63684583, 63051668, 63516264, 63686372};
+            List<int> list = new List<int>() { 67899310 };
             int res = ids.ReturnWagons(list, "Вагон возвращен с УЗ вручную", @"EUROPE\ealevchenko");
         }
 

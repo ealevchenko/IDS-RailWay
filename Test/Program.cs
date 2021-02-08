@@ -252,8 +252,8 @@ namespace Test
 
             #region Администрирование
             //tids.IDS_WIR_CloseWir();                            // Административной функции закрыть внутренее перемещение
-            tids.IDS_WIR_DeleteDoubleWir();                        // Административной функции закрыть задвоение операций и дислокаций внутренего перемещения
-            //tids.IDS_WIR_ReturnWagons();    // Административной функции вернуть вагон из отправки
+            //tids.IDS_WIR_DeleteDoubleWir();                        // Административной функции закрыть задвоение операций и дислокаций внутренего перемещения
+            tids.IDS_WIR_ReturnWagons();    // Административной функции вернуть вагон из отправки
             #endregion
 
             Console.WriteLine("Press any key to exit...");
