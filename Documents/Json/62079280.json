@@ -1,0 +1,18 @@
+{
+    "num": 62079280,
+    "admin": "УЗ",
+    "owner": "ООО «АУРУМ ТРАНС»",
+    "tenant_admin": null,
+    "tenant": null,
+    "operat": "ООО \"ЕвразТрансУкраина\"",
+    "tara": 23.7,
+    "carrying_capacity": 70.0,
+    "resource": "142839",
+    "repair_date": "2023-09-08T00:00:00",
+    "baseness": null,
+    "rtp": null,
+    "new_construction": null,
+    "closed_route": null,
+    "exit_ban": null,
+    "other_bans": "Заборона НКАТО"
+}
