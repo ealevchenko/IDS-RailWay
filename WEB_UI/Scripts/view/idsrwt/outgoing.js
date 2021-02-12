@@ -572,7 +572,7 @@
                                             // Выполнить операцию отправки postSendingWagonsOfStation
                                             ids_inc.postReturnProvideWagonsOfStation(operation_provide, function (result_provide) {
                                                 if (result_provide && result_provide.result > 0) {
-                                                    table_sostav.view(typeof filter === 'function' ? list_sostav.filter(filter) : list_sostav);
+                                                    pn_sel.view(false);
                                                     outgoing_alert.out_info_message("Операция «Вернуть состав, сформированный для предъявления» - Выполнена");
                                                 } else {
                                                     outgoing_alert.out_error_message("Ошибка выполнения операции «Вернуть состав, сформированный для предъявления», код ошибки = " + (result_provide ? result_provide.result : null));
