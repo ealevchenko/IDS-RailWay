@@ -105,6 +105,8 @@ namespace EFIDS.Concrete
 
         public virtual DbSet<Directory_WagonLoadingStatus> Directory_WagonLoadingStatus { get; set; }
         public virtual DbSet<Directory_WagonOperations> Directory_WagonOperations { get; set; }
+
+        public virtual DbSet<Directory_Reason_Discrepancy> Directory_Reason_Discrepancy { get; set; }
         // Состояние парка
         public virtual DbSet<ParkState_Station> ParkState_Station { get; set; }
         public virtual DbSet<ParkState_Wagon> ParkState_Wagon { get; set; }

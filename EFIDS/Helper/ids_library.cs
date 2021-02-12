@@ -826,6 +826,24 @@ namespace EFIDS.Helper
                 change_user = w.change_user,
             };
         }
+        // Справочник причин расхождений
+        public static Directory_Reason_Discrepancy GetDirectory_Reason_Discrepancy(this Directory_Reason_Discrepancy d)
+        {
+            if (d == null) return null;
+            return new Directory_Reason_Discrepancy()
+            {
+                id = d.id,
+                reason_discrepancy_name_ru = d.reason_discrepancy_name_ru,
+                reason_discrepancy_name_en = d.reason_discrepancy_name_en,
+                create = d.create,
+                create_user = d.create_user,
+                change = d.change,
+                change_user = d.change_user,
+                delete = d.delete,
+                delete_user = d.delete_user
+            };
+        }
+
 
         #endregion
 
@@ -1431,7 +1449,8 @@ namespace EFIDS.Helper
                 change = c.change,
                 change_user = c.change_user,
                 UZ_DOC = c.UZ_DOC.GetUZ_DOC(),
-                ArrivalSostav = c.ArrivalSostav.GetArrivalSostav()
+                ArrivalSostav = c.ArrivalSostav.GetArrivalSostav(),
+                Arrival_UZ_Vagon = c.Arrival_UZ_Vagon.GetArrival_UZ_Vagon_Arrival_UZ_Document()
             };
         }
 
@@ -1489,6 +1508,42 @@ namespace EFIDS.Helper
                     close = s.close,
                     close_user = s.close_user,
                     ArrivalCars = null
+                };
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        public static OutgoingSostav GetOutgoingSostav(this OutgoingSostav s)
+        {
+            try
+            {
+                if (s == null) return null;
+                return new OutgoingSostav()
+                {
+                    id = s.id,
+                    num_doc = s.num_doc,
+                    id_station_from = s.id_station_from,
+                    id_way_from = s.id_way_from,
+                    id_station_on = s.id_station_on,
+                    date_readiness_amkr = s.date_readiness_amkr,
+                    date_show_wagons = s.date_show_wagons,
+                    date_readiness_uz = s.date_readiness_uz,
+                    date_outgoing = s.date_outgoing,
+                    date_outgoing_act = s.date_outgoing_act,
+                    composition_index = s.composition_index,
+                    status = s.status,
+                    note = s.note,
+                    create = s.create,
+                    create_user = s.create_user,
+                    change = s.change,
+                    change_user = s.change_user,
+                    OutgoingCars = null,
+                    Directory_Station = s.Directory_Station.GetDirectory_Station(),
+                    Directory_Station1 = s.Directory_Station1.GetDirectory_Station(),
+                    Directory_Ways = s.Directory_Ways.GetDirectory_Ways()
                 };
             }
             catch (Exception e)
@@ -1557,7 +1612,42 @@ namespace EFIDS.Helper
                     id_outgoing_uz_vagon = c.id_outgoing_uz_vagon,
                     UZ_DOC_OUT = c.UZ_DOC_OUT.GetUZ_DOC_OUT(),
                     Directory_Wagons = c.Directory_Wagons.GetDirectory_Wagons_Directory_WagonsRent(),
-                    OutgoingSostav = null, 
+                    OutgoingSostav = null,
+                    //WagonInternalRoutes = c.WagonInternalRoutes.ToList().Select(w => w.GetWagonInternalRoutes()).ToList(),
+                };
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        public static OutgoingCars GetOutgoingCars_OutgoingSostav(this OutgoingCars c)
+        {
+            try
+            {
+                if (c == null) return null;
+                return new OutgoingCars()
+                {
+                    id = c.id,
+                    id_outgoing = c.id_outgoing,
+                    num = c.num,
+                    position = c.position,
+                    position_outgoing = c.position_outgoing,
+                    num_doc = c.num_doc,
+                    note = c.note,
+                    date_outgoing_act = c.date_outgoing_act,
+                    outgoing = c.outgoing,
+                    outgoing_user = c.outgoing_user,
+                    create = c.create,
+                    create_user = c.create_user,
+                    change = c.change,
+                    change_user = c.change_user,
+                    id_outgoing_uz_vagon = c.id_outgoing_uz_vagon,
+                    UZ_DOC_OUT = c.UZ_DOC_OUT.GetUZ_DOC_OUT(),
+                    Directory_Wagons = c.Directory_Wagons.GetDirectory_Wagons_Directory_WagonsRent(),
+                    OutgoingSostav = c.OutgoingSostav.GetOutgoingSostav(),
+                    //WagonInternalRoutes = c.WagonInternalRoutes.ToList().Select(w => w.GetWagonInternalRoutes()).ToList(),
                 };
             }
             catch (Exception e)
@@ -1636,11 +1726,73 @@ namespace EFIDS.Helper
                 delete = p.delete,
                 delete_user = p.delete_user,
                 applied = p.applied,
-                applied_user = p.applied_user, 
+                applied_user = p.applied_user,
                 ParkState_Way = null
 
             };
         }
+
+        #region Внутренее перемещение
+
+        public static WagonInternalRoutes GetWagonInternalRoutes(this WagonInternalRoutes r)
+        {
+            if (r == null) return null;
+            return new WagonInternalRoutes()
+            {
+                id = r.id,
+                num = r.num,
+                id_arrival_car = r.id_arrival_car,
+                id_sap_incoming_supply = r.id_sap_incoming_supply,
+                doc_outgoing_car = r.doc_outgoing_car,
+                id_outgoing_car = r.id_outgoing_car,
+                id_sap_outbound_supply = r.id_sap_outbound_supply,
+                note = r.note,
+                create = r.create,
+                create_user = r.create_user,
+                close = r.close,
+                close_user = r.close_user,
+                parent_id = r.parent_id,
+                ArrivalCars = r.ArrivalCars.GetArrivalCars_ArrivalSostav(),
+                Directory_Wagons = r.Directory_Wagons.GetDirectory_Wagons_Directory_WagonsRent(),
+                OutgoingCars = r.OutgoingCars.GetOutgoingCars_OutgoingSostav(),
+                SAPIncomingSupply = r.SAPIncomingSupply.GetSAPIncomingSupply(),
+                WagonInternalOperation = r.WagonInternalOperation.ToList().Select(w => w.GetWagonInternalOperation()).ToList(),
+
+            };
+        }
+
+        public static WagonInternalOperation GetWagonInternalOperation(this WagonInternalOperation o)
+        {
+            if (o == null) return null;
+            return new WagonInternalOperation()
+            {
+                id = o.id,
+                id_wagon_internal_routes = o.id_wagon_internal_routes,
+                id_operation = o.id_operation,
+                operation_start = o.operation_start,
+                operation_end = o.operation_end,
+                id_condition = o.id_condition,
+                id_loading_status = o.id_loading_status,
+                locomotive1 = o.locomotive1,
+                locomotive2 = o.locomotive2,
+                note = o.note,
+                create = o.create,
+                create_user = o.create_user,
+                close = o.close,
+                close_user = o.close_user,
+                parent_id = o.parent_id,
+                Directory_ConditionArrival = o.Directory_ConditionArrival.GetDirectory_ConditionArrival(),
+                //Directory_Locomotive 
+                //Directory_Locomotive1
+                //Directory_WagonLoadingStatus
+                //Directory_WagonOperations  
+
+
+            };
+        }
+
+        #endregion
+
 
         #endregion
     }

@@ -86,6 +86,8 @@ IDS_DIRECTORY.list_type_division = [];
 
 IDS_DIRECTORY.list_divisions = [];
 
+IDS_DIRECTORY.list_reason_discrepancy = [];
+
 /* ----------------------------------------------------------
 ЗАГРУЗКА СПРАВОЧНИКОВ
 -------------------------------------------------------------*/
@@ -580,6 +582,18 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
                 }
             });
         };
+        if (el === 'reason_discrepancy') {
+            IDS_DIRECTORY.prototype.getReason_Discrepancy(function (reason_discrepancy) {
+                obj.list_reason_discrepancy = reason_discrepancy;
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        if (lockOff) { LockScreenOff(); }
+                        callback();
+                    }
+                }
+            });
+        };
     });
 };
 // Загрузка справочника грузоотправителей
@@ -778,6 +792,17 @@ IDS_DIRECTORY.prototype.loadHazardClass = function (callback) {
     var obj = this;
     IDS_DIRECTORY.prototype.getHazardClass(function (result_hazard_class) {
         obj.list_hazard_class = result_hazard_class;
+        if (typeof callback === 'function') {
+            callback();
+        }
+    });
+};
+
+// Загрузка справочника причина расхождений
+IDS_DIRECTORY.prototype.loadReason_Discrepancy = function (callback) {
+    var obj = this;
+    IDS_DIRECTORY.prototype.getReason_Discrepancy(function (result_reason_discrepancy) {
+        obj.list_reason_discrepancy = result_reason_discrepancy;
         if (typeof callback === 'function') {
             callback();
         }
@@ -4346,6 +4371,30 @@ IDS_DIRECTORY.prototype.postDivisions = function (division, callback) {
         },
     });
 };
+//======= Directory_Reason_Discrepancy (Справочник причин расхождения) ======================================
+IDS_DIRECTORY.prototype.getReason_Discrepancy = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/reason_discrepancy/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getReason_Discrepancy", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 /* ----------------------------------------------------------
 функции для работы с объектами
 -------------------------------------------------------------*/
@@ -4360,6 +4409,45 @@ IDS_DIRECTORY.prototype.getValueObj = function (obj, name, lang) {
 IDS_DIRECTORY.prototype.getValueCultureObj = function (obj, name) {
     return obj ? obj[name + '_' + this.lang] : null;
 };
+// Вернуть спсисок объектов таблицы в формате {value:, text:}
+IDS_DIRECTORY.prototype.getListObj = function (list_obj, fvalue, ftext, lang, filter) {
+    var list = [];
+    var list_filtr = null;
+    if (list_obj) {
+        if (typeof filter === 'function') {
+            list_filtr = list_obj.filter(filter);
+        } else { list_filtr = list_obj; }
+        for (i = 0, j = list_filtr.length; i < j; i++) {
+            var l = list_filtr[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
+// Вернуть объект по id
+IDS_DIRECTORY.prototype.getObj_Of_ID = function (list_obj, id) {
+    var obj = null;
+    if (list_obj && list_obj.length>0) {
+        obj = list_obj.find(function (o) { return o.id === id });
+    }
+    return obj;
+};
+//  Вернуть объекты в указаным поле которых есть текст text
+IDS_DIRECTORY.prototype.getObjs_Of_text = function (list_obj, text, ftext, lang) {
+    var objs = null;
+    var field = lang ? ftext + '_' + lang : ftext;
+    if (list_obj && list_obj.length>0) {
+        objs = list_obj.filter(function (i) {
+            return i[field] === text ? true : false;
+        });
+    }
+    return objs;
+};
+
 /* ----------------------------------------------------------
 функции для работы с внутреним массивом
 -------------------------------------------------------------*/
@@ -5445,22 +5533,25 @@ IDS_DIRECTORY.prototype.getPayerArrival_Of_CultureName = function (name, lang, t
 
 //*======= IDS_DIRECTORY.list_cargo  (Справочник грузов ГНГ) ======================================
 IDS_DIRECTORY.prototype.getCargo_Of_ID = function (id) {
-    if (this.list_cargo) {
-        var obj = getObjects(this.list_cargo, 'id', id);
-        return obj && obj.length > 0 ? obj[0] : null;
-    }
+    return getObj_Of_ID(this.list_cargo, id);
+    //var cargo = null;
+    //if (this.list_cargo) {
+    //    cargo = this.list_cargo.find(function (o) { return o.id === id });
+    //}
+    //return cargo;
 };
 //
-IDS_DIRECTORY.prototype.getCargo_Internal_Of_Name = function (text, ftext, lang) {
-    if (this.list_cargo) {
-        var obj = getObjects(this.list_cargo, (lang ? ftext + '_' + lang : name), text);
-        return obj && obj.length > 0 ? obj[0] : null;
-    }
+IDS_DIRECTORY.prototype.getCargo_Of_Name = function (text, ftext, lang) {
+    return this.getObjs_Of_text(this.list_cargo, text, ftext, lang);
+    //if (this.list_cargo) {
+    //    var obj = getObjects(this.list_cargo, (lang ? ftext + '_' + lang : name), text);
+    //    return obj && obj.length > 0 ? obj[0] : null;
+    //}
 };
 //
 IDS_DIRECTORY.prototype.getID_Cargo_Internal_Of_Name = function (text, ftext, lang) {
-    var obj = this.getCargo_Internal_Of_Name(text, ftext, lang);
-    return obj ? obj.id : null;
+    var objs = this.getCargo_Of_Name(text, ftext, lang);
+    return objs & objs.length>0 ? obj[0].id : null;
 };
 //
 IDS_DIRECTORY.prototype.getValue_Cargo_Of_ID = function (id, name, lang) {
@@ -5474,22 +5565,23 @@ IDS_DIRECTORY.prototype.getValueCulture_Cargo_Of_ID = function (id, name) {
 };
 //
 IDS_DIRECTORY.prototype.getListCargo = function (fvalue, ftext, lang, filter) {
-    var list = [];
-    var list_filtr = null;
-    if (this.list_cargo) {
-        if (typeof filter === 'function') {
-            list_filtr = this.list_cargo.filter(filter);
-        } else { list_filtr = this.list_cargo; }
-        for (i = 0, j = list_filtr.length; i < j; i++) {
-            var l = list_filtr[i];
-            if (lang) {
-                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
-            } else {
-                list.push({ value: l[fvalue], text: l[ftext] });
-            }
-        }
-    }
-    return list;
+    return this.getListObj(this.list_cargo, fvalue, ftext, lang, filter);
+    //var list = [];
+    //var list_filtr = null;
+    //if (this.list_cargo) {
+    //    if (typeof filter === 'function') {
+    //        list_filtr = this.list_cargo.filter(filter);
+    //    } else { list_filtr = this.list_cargo; }
+    //    for (i = 0, j = list_filtr.length; i < j; i++) {
+    //        var l = list_filtr[i];
+    //        if (lang) {
+    //            list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+    //        } else {
+    //            list.push({ value: l[fvalue], text: l[ftext] });
+    //        }
+    //    }
+    //}
+    //return list;
 };
 // Получить груз по id строки ЕТСНГ
 IDS_DIRECTORY.prototype.getCargo_Of_IDETSNG = function (id_cargo_etsng) {
@@ -5888,52 +5980,55 @@ IDS_DIRECTORY.prototype.getList2ConditionArrival = function (fvalue, ftext1, fte
     return list;
 };
 //*======= IDS_DIRECTORY.list_divisions  (Справочник подразделений) ======================================
-IDS_DIRECTORY.prototype.getDivisions_Internal_Of_ID = function (id) {
-    if (this.list_divisions) {
-        var obj = getObjects(this.list_divisions, 'id', id);
-        return obj && obj.length > 0 ? obj[0] : null;
-    }
+IDS_DIRECTORY.prototype.getDivisions_Of_ID = function (id) {
+    return getObj_Of_ID(this.list_divisions, id);
+    //if (this.list_divisions) {
+    //    var obj = getObjects(this.list_divisions, 'id', id);
+    //    return obj && obj.length > 0 ? obj[0] : null;
+    //}
 };
 //
 IDS_DIRECTORY.prototype.getValue_Divisions_Of_ID = function (id, name, lang) {
-    var obj = this.getDivisions_Internal_Of_ID(id);
+    var obj = this.getDivisions_Of_ID(id);
     return this.getValueObj(obj, name, lang);
 };
 //
 IDS_DIRECTORY.prototype.getValueCulture_Divisions_Of_ID = function (id, name) {
-    var obj = this.getDivisions_Internal_Of_ID(id);
+    var obj = this.getDivisions_Of_ID(id);
     return obj ? obj[name + '_' + this.lang] : null;
 };
 //
-IDS_DIRECTORY.prototype.getDivisions_Internal_Of_Name = function (text, ftext, lang) {
-    if (this.list_divisions) {
-        var obj = getObjects(this.list_divisions, (lang ? ftext + '_' + lang : name), text);
-        return obj && obj.length > 0 ? obj[0] : null;
-    }
+IDS_DIRECTORY.prototype.getDivisions_Of_Name = function (text, ftext, lang) {
+    return this.getObjs_Of_text(this.list_divisions, text, ftext, lang);
+    //if (this.list_divisions) {
+    //    var obj = getObjects(this.list_divisions, (lang ? ftext + '_' + lang : name), text);
+    //    return obj && obj.length > 0 ? obj[0] : null;
+    //}
 };
 //
 IDS_DIRECTORY.prototype.getID_Divisions_Internal_Of_Name = function (text, ftext, lang) {
-    var obj = this.getDivisions_Internal_Of_Name(text, ftext, lang);
+    var obj = this.getDivisions_Of_Name(text, ftext, lang);
     return obj ? obj.id : null;
 };
 //
 IDS_DIRECTORY.prototype.getListDivisions = function (fvalue, ftext, lang, filter) {
-    var list = [];
-    var list_filtr = null;
-    if (this.list_divisions) {
-        if (typeof filter === 'function') {
-            list_filtr = this.list_divisions.filter(filter);
-        } else { list_filtr = this.list_divisions; }
-        for (i = 0, j = list_filtr.length; i < j; i++) {
-            var l = list_filtr[i];
-            if (lang) {
-                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
-            } else {
-                list.push({ value: l[fvalue], text: l[ftext] });
-            }
-        }
-    }
-    return list;
+    return this.getListObj(this.list_divisions, fvalue, ftext, lang, filter);
+    //var list = [];
+    //var list_filtr = null;
+    //if (this.list_divisions) {
+    //    if (typeof filter === 'function') {
+    //        list_filtr = this.list_divisions.filter(filter);
+    //    } else { list_filtr = this.list_divisions; }
+    //    for (i = 0, j = list_filtr.length; i < j; i++) {
+    //        var l = list_filtr[i];
+    //        if (lang) {
+    //            list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+    //        } else {
+    //            list.push({ value: l[fvalue], text: l[ftext] });
+    //        }
+    //    }
+    //}
+    //return list;
 };
 //
 // Получим список с выборкой по полю
@@ -5946,29 +6041,35 @@ IDS_DIRECTORY.prototype.getDivisions_Of_CultureName = function (name, lang, text
 };
 //*======= IDS_DIRECTORY.list_wagon  (Справочник вагонов) ======================================
 IDS_DIRECTORY.prototype.getWagons_Of_num = function (num) {
-    if (this.list_wagon) {
-        var obj = getObjects(this.list_wagon, 'num', num);
-        return obj && obj.length > 0 ? obj[0] : null;
+    var wagon = null;
+    if (this.list_wagon && this.list_wagon.length > 0) {
+        wagon = this.list_wagon.find(function (o) { return o.num === num });
     }
+    return wagon;
+    //if (this.list_wagon) {
+    //    var obj = getObjects(this.list_wagon, 'num', num);
+    //    return obj && obj.length > 0 ? obj[0] : null;
+    //}
 };
 //
 IDS_DIRECTORY.prototype.getListWagons = function (fvalue, ftext, lang, filter) {
-    var list = [];
-    var list_filtr = null;
-    if (this.list_wagon) {
-        if (typeof filter === 'function') {
-            list_filtr = this.list_wagon.filter(filter);
-        } else { list_filtr = this.list_wagon; }
-        for (i = 0, j = list_filtr.length; i < j; i++) {
-            var l = list_filtr[i];
-            if (lang) {
-                list.push({ value: $.trim(l[fvalue]), text: l[ftext + '_' + lang] });
-            } else {
-                list.push({ value: l[fvalue], text: l[ftext] });
-            }
-        }
-    }
-    return list;
+    return this.getObjs_Of_text(this.list_wagon, text, ftext, lang);
+    //var list = [];
+    //var list_filtr = null;
+    //if (this.list_wagon) {
+    //    if (typeof filter === 'function') {
+    //        list_filtr = this.list_wagon.filter(filter);
+    //    } else { list_filtr = this.list_wagon; }
+    //    for (i = 0, j = list_filtr.length; i < j; i++) {
+    //        var l = list_filtr[i];
+    //        if (lang) {
+    //            list.push({ value: $.trim(l[fvalue]), text: l[ftext + '_' + lang] });
+    //        } else {
+    //            list.push({ value: l[fvalue], text: l[ftext] });
+    //        }
+    //    }
+    //}
+    //return list;
 };
 // Вернуть копию без связей
 IDS_DIRECTORY.prototype.getCloneWagons = function (wagon) {
@@ -6001,8 +6102,6 @@ IDS_DIRECTORY.prototype.getCloneWagons = function (wagon) {
         change_user: wagon.change_user ,
     };
 }
-
-
 //*======= IDS_DIRECTORY.list_wagon_rent  (Справочник аренд вагонов) ======================================
 // Вернуть текущую аренду вагона
 IDS_DIRECTORY.prototype.getCurrentRentOfWagon = function (vagon) {
@@ -6011,14 +6110,26 @@ IDS_DIRECTORY.prototype.getCurrentRentOfWagon = function (vagon) {
             return o.rent_end === null;
         });
         return rent_current;
-        //var rent = vagon.Directory_WagonsRent.filter(function (i) {
-        //    return (i.rent_end) ? false : true;
-        //});
-        //if (rent && rent.length > 0) {
-        //    return rent[0];
-        //}
     }
     return null;
+};
+// Вернуть аренду до указаного времени
+IDS_DIRECTORY.prototype.getCurrentRentOfWagonOfDate = function (vagon, date) {
+    var rent = null;
+    if (vagon && vagon.Directory_WagonsRent && vagon.Directory_WagonsRent.length > 0) {
+        var rents = vagon.Directory_WagonsRent.filter(function (i) {
+            return moment(i.rent_start) <= date;
+        });
+        if (rents && rents.length > 0) {
+            $.each(rents, function (i, el) {
+                var r = el;
+                if (rent === null || r.id > rent.id) {
+                    rent = r;
+                }
+            });
+        }
+    }
+    return rent;
 };
 // Вернуть копию без связй
 IDS_DIRECTORY.prototype.getCloneWagonsRent = function (wagon_rent) {
@@ -6036,4 +6147,61 @@ IDS_DIRECTORY.prototype.getCloneWagonsRent = function (wagon_rent) {
         "change_user": wagon_rent.change_user,
         "parent_id": wagon_rent.parent_id
     }
-}
+};
+//*======= IDS_DIRECTORY.list_reason_discrepancy  (Справочник расхождений) ======================================
+IDS_DIRECTORY.prototype.getReason_Discrepancy_Of_ID = function (id) {
+    var reason_discrepancy = null;
+    if (this.list_reason_discrepancy) {
+        reason_discrepancy = this.list_reason_discrepancy.find(function (o) { return o.id === id });
+    }
+    return reason_discrepancy;
+};
+//
+IDS_DIRECTORY.prototype.getValue_Reason_Discrepancy_Of_ID = function (id, name, lang) {
+    var obj = this.getReason_Discrepancy_Of_ID(id);
+    return this.getValueObj(obj, name, lang);
+};
+//
+IDS_DIRECTORY.prototype.getValueCulture_Reason_Discrepancy_Of_ID = function (id, name) {
+    var obj = this.getReason_Discrepancy_Of_ID(id);
+    return obj ? obj[name + '_' + this.lang] : null;
+};
+//
+IDS_DIRECTORY.prototype.getReason_Discrepancy_Internal_Of_Name = function (text, ftext, lang) {
+    if (this.list_reason_discrepancy) {
+        var obj = getObjects(this.list_reason_discrepancy, (lang ? ftext + '_' + lang : name), text);
+        return obj && obj.length > 0 ? obj[0] : null;
+    }
+};
+//
+IDS_DIRECTORY.prototype.getID_Reason_Discrepancy_Internal_Of_Name = function (text, ftext, lang) {
+    var obj = this.getReason_Discrepancy_Internal_Of_Name(text, ftext, lang);
+    return obj ? obj.id : null;
+};
+//
+IDS_DIRECTORY.prototype.getListReason_Discrepancy = function (fvalue, ftext, lang, filter) {
+    var list = [];
+    var list_filtr = null;
+    if (this.list_reason_discrepancy) {
+        if (typeof filter === 'function') {
+            list_filtr = this.list_reason_discrepancy.filter(filter);
+        } else { list_filtr = this.list_reason_discrepancy; }
+        for (i = 0, j = list_filtr.length; i < j; i++) {
+            var l = list_filtr[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext] });
+            }
+        }
+    }
+    return list;
+};
+// Получим список с выборкой по полю
+IDS_DIRECTORY.prototype.getReason_Discrepancy_Of_CultureName = function (name, lang, text) {
+    if (this.list_reason_discrepancy) {
+        var obj = getObjects(this.list_reason_discrepancy, name + '_' + lang, text);
+        return obj
+    }
+    return null;
+};

@@ -142,9 +142,6 @@ UZ_DIRECTORY.prototype.getStationsOfCodeCS = function (code, callback) {
         },
     });
 };
-
-
-
 //======= Directory_InternalRailroad (Справочник регионов ж.д. дорог) ======================================
 UZ_DIRECTORY.prototype.getInternalRailroad = function (callback) {
     $.ajax({
@@ -191,8 +188,33 @@ UZ_DIRECTORY.prototype.getCargo = function (callback) {
         },
     });
 };
-
-
+/* ----------------------------------------------------------
+ ЗАПРОСЫ К БД УЗ 
+-------------------------------------------------------------*/
+//======= UZWagonInfo (Справочник вагонов УЗ ) ======================================
+// Получить информацию по вагону из базы данных УЗ
+UZ_DIRECTORY.prototype.getInfoWagonOfNum = function (num, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/uz/web/client/car_info/num/' + num,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("UZ_DIRECTORY.getInfoWagonOfNum", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 /* ----------------------------------------------------------
 функции для работы с объектами
 -------------------------------------------------------------*/

@@ -57,6 +57,7 @@
     <Compile Include="Abstract\IWebView.cs" />
     <Compile Include="Abstract\IWebAccess.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_BorderCheckpoint.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_Reason_Discrepancy.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_DetentionReturn.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Locomotive.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_OuterWays.cs" />
@@ -135,6 +136,7 @@
     <Compile Include="Concrete\Shared\EFWebView.cs" />
     <Compile Include="Concrete\Shared\EFWebAccess.cs" />
     <Compile Include="Entities\Directory\Directory_DetentionReturn.cs" />
+    <Compile Include="Entities\Directory\Directory_Reason_Discrepancy.cs" />
     <Compile Include="Entities\MORS\CardsWagons.cs" />
     <Compile Include="Entities\MORS\CardsWagonsRepairs.cs" />
     <Compile Include="Entities\Directory\Directory_DEPO.cs" />

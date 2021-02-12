@@ -627,4 +627,7 @@
   <data name="title_ves_tary_uz" xml:space="preserve">
     <value>Вес тары</value>
   </data>
+  <data name="title_loading_devision_code" xml:space="preserve">
+    <value>Шифр</value>
+  </data>
 </root>

@@ -168,6 +168,8 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFUZ.Abstract.IRepository<EFUZ.Entities.Directory_Stations>>().To<EFUZ.Concrete.EFDirectory_Stations>();
             kernel.Bind<EFUZ.Abstract.IRepository<EFUZ.Entities.Directory_Cargo>>().To<EFUZ.Concrete.EFDirectory_Cargo>();
 
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_Reason_Discrepancy>>().To<EFIDS.Concrete.EFDirectory_Reason_Discrepancy>();
+
 
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.Arrival_UZ_Document>>().To<EFIDS.Concrete.EFArrival_UZ_Document>();
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.Arrival_UZ_Vagon>>().To<EFIDS.Concrete.EFArrival_UZ_Vagon>();
@@ -194,6 +196,11 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.ParkState_Station>>().To<EFIDS.Concrete.EFParkState_Station>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.ParkState_Wagon>>().To<EFIDS.Concrete.EFParkState_Wagon>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.ParkState_Way>>().To<EFIDS.Concrete.EFParkState_Way>();
+
+            kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.WagonInternalRoutes>>().To<EFIDS.Concrete.EFWagonInternalRoutes>();
+            kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.WagonInternalMovement>>().To<EFIDS.Concrete.EFWagonInternalMovement>();
+            kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.WagonInternalOperation>>().To<EFIDS.Concrete.EFWagonInternalOperation>();
+
 
         }
     }

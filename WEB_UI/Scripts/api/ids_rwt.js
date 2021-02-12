@@ -3325,7 +3325,6 @@ IDS_RWT.prototype.getViewWaysOfID = function (id, callback) {
         },
     });
 };
-
 // Получить состояние всех путей по указаной станции
 IDS_RWT.prototype.getViewWaysStatusOfIDStation= function (id_station, callback) {
     $.ajax({
@@ -3521,6 +3520,47 @@ IDS_RWT.prototype.postTransferProvideWagonsOfStation = function (operation_trans
             AJAXComplete();
         },
     });
+};
+//======================================================================================================
+//                                  РАЗДЕЛ ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ ВАГОНОВ
+//======= WagonInternalRoutes (Состояние парка) =========================================================================
+// Вернуть внутренее перемещение по id таблицы OutgoingCars
+IDS_RWT.prototype.getWagonInternalRoutesOfOutgoingCarsID = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/wir/wagon/outgoing/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getWagonInternalRoutesOfOutgoingCarsID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
+
+// Вернуть песледнюю запись операций из внутренего перемещения вагонов
+IDS_RWT.prototype.getLastWagonInternalOperationOfWIR = function (wir) {
+    var last_wio = null;
+    if (wir && wir.WagonInternalOperation && wir.WagonInternalOperation.length > 0) {
+        $.each(wir.WagonInternalOperation, function (i, el) {
+            var wio = el;
+            if (last_wio === null || wio.id > last_wio.id) {
+                last_wio = wio;
+            }
+        });
+    }
+    return last_wio;
 };
 
 
@@ -3935,3 +3975,4 @@ IDS_RWT.prototype.getListStatusArrival = function (fvalue, ftext, lang, filter) 
     }
     return list;
 };
+

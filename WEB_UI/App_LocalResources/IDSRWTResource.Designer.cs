@@ -727,6 +727,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Шифр.
+        /// </summary>
+        public static string title_loading_devision_code {
+            get {
+                return ResourceManager.GetString("title_loading_devision_code", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Материал.
         /// </summary>
         public static string title_material {
