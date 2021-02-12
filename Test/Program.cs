@@ -199,7 +199,7 @@ namespace Test
             //tids.IDSTransfer_SetStationOutgoingWagonsOfKIS();       // Найти и поставить все вагоны по отправляемому составу на станцию и путь отправки АМКР (По данным КИС, операция перед закрытием WIR отправка состава на УЗ)
             //tids.IDSTransfer_SendingOutgoingSostav();             // Закрытие WIR отправка состава на УЗ
 
-            //tids.IDS_SAP_GetCurrentIncomingSupplyOfWebSAP();      // Чтение и обновление строки САП входящие поставки
+            tids.IDS_SAP_GetCurrentIncomingSupplyOfWebSAP();      // Чтение и обновление строки САП входящие поставки
             //tids.IDS_SAP_UpdateIncomingSupply();                    // Обновление данных по входящей поставке
             //tids.IDSThread_Start_UpdateIncomingSupply();                // Тест потока "Обновление данных по входящей поставке"
 
@@ -209,7 +209,7 @@ namespace Test
             //tids.IDS_WIR_DissolutionWagonsOfStation();                // Операция роспуск
             //tids.IDS_WIR_SendingWagonsOfStation();                // Операция роспуск
             //tids.IDS_WIR_ArrivalWagonsOfStation();                // Операция роспуск
-            tids.IDS_WIR_OperationReturnProvideWagons();            // Тест операции вернуть пръедявленый состав
+            //tids.IDS_WIR_OperationReturnProvideWagons();            // Тест операции вернуть пръедявленый состав
 
 
             #endregion

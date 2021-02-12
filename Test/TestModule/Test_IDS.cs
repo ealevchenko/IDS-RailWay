@@ -84,16 +84,16 @@ namespace Test.TestModule
             IDS_SAP ids = new IDS_SAP(service.Test);
 
             EFSAPIncomingSupply ef_sap = new EFSAPIncomingSupply(new EFDbContext());
-            SAPIncomingSupply sap = new SAPIncomingSupply()
-            {
-                id = 0,
-                id_arrival_car = 0,
-                num = 54905161,
-                num_doc_uz = "29426762",
-                create = DateTime.Now,
-                create_user = "test_sap"
-            };
-            //SAPIncomingSupply sap = ef_sap.Context.Where(s => s.id == 8091).FirstOrDefault();
+            //SAPIncomingSupply sap = new SAPIncomingSupply()
+            //{
+            //    id = 0,
+            //    id_arrival_car = 0,
+            //    num = 54905161,
+            //    num_doc_uz = "29426762",
+            //    create = DateTime.Now,
+            //    create_user = "test_sap"
+            //};
+            SAPIncomingSupply sap = ef_sap.Context.Where(s => s.id == 141716).FirstOrDefault();
             //sap.num = 54905161;
             //sap.num_doc_uz = "29426762";
             SAPIncomingSupply res = ids.GetCurrentIncomingSupplyOfWebSAP(sap);
