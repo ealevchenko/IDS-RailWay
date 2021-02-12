@@ -358,6 +358,12 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string user { get; set; }
     }
 
+    public class OperationReturnProvideWagons
+    {
+        public int id_sostav { get; set; }
+        public string user { get; set; }
+    }
+
     public class OperationTransferProvideWagons
     {
         public int id_way_on { get; set; }
@@ -717,6 +723,28 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             }
         }
 
+        // POST api/ids/rwt/wsd/operation/return_provide
+        /// <summary>
+        /// Операция вернуть состав , отменить пръедявление
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("operation/return_provide")]
+        [ResponseType(typeof(ResultUpdateWagon))]
+        public IHttpActionResult PostReturnProvideWagonsOfStation([FromBody] OperationReturnProvideWagons value)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                ResultUpdateWagon result = ids_wir.OperationReturnProvideWagons(value.id_sostav, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
         #region ПОИСК ВАГОНОВ
         // GET: api/ids/rwt/wsd/view/dislocation/amkr/wagon/num/63531040

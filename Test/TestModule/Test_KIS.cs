@@ -110,8 +110,8 @@ namespace Test.TestModule
         {
             try
             {
-                KISTransfer kis_tr = new KISTransfer();
-                kis_tr.TransferOutgoingIDSOfKis();
+                //KISTransfer kis_tr = new KISTransfer();
+                //kis_tr.TransferOutgoingIDSOfKis();
             }
             catch (Exception e)
             {

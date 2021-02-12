@@ -275,6 +275,16 @@ namespace Test.TestModule
 
         }
         /// <summary>
+        /// Тест операции вернуть пръедявленый состав
+        /// </summary>
+        public void IDS_WIR_OperationReturnProvideWagons()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            ResultUpdateWagon res = ids.OperationReturnProvideWagons(62606, "TEST");
+        }
+
+
+        /// <summary>
         /// Тест административной функции закрыть внутренее перемещение
         /// </summary>
         /// <returns></returns>
@@ -284,11 +294,13 @@ namespace Test.TestModule
             List<int> list = new List<int>() { 192686, 188306, 191453, 189387, 189353, 189354, 189842, 188724, 189887, 189888, 185045, 185046, 185049, 184964, 188083, 188064, 189071, 187310, 189072, 188777, 188775, 187774, 188742, 188741, 188740, 188739, 188738, 188207, 188205, 188204, 188203, 188202, 188196, 188195, 188194, 189496, 189495, 189478, 188786, 188785, 189380, 189381, 189403, 189816, 189063, 189230, 188201, 187785, 187786, 187787 };
             int res = ids.CloseWir(list, DateTime.Now, "Запись закрыта принудительно (очистка согласно положению парка)", @"EUROPE\ealevchenko");
         }
-
+        /// <summary>
+        /// Тест административной функции убрать дубликаты
+        /// </summary>
         public void IDS_WIR_DeleteDoubleWir()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            List<int> list = new List<int>() { 193775, 195590, 189877, 180486, 186951, 195608, 174111, 186956, 193774, 194544, 179823, 186928, 192708, 193076, 193446, 195582, 195584, 180487, 186221, 186964, 191787, 192705, 193773, 195581, 195606, 189893, 189894, 190679, 186917, 192701, 192702, 193447, 194017, 194717, 179690, 195568, 195583, 188950, 188967, 190837, 195562, 188969, 188978, 188980, 189512, 189514, 191745, 188976, 191730, 191733, 192165, 176225, 195563, 188972, 188979, 189515, 189797, 191726, 191744, 191762, 188951, 189785, 172586, 189796, 189798, 191727, 191729, 191770, 192163, 189795, 191731, 191732, 193522, 188970, 188977, 191728, 191746 };
+            List<int> list = new List<int>() { 199334 };
             int res = ids.DeleteDoubleWir(list);
         }
         /// <summary>
@@ -297,7 +309,7 @@ namespace Test.TestModule
         public void IDS_WIR_ReturnWagons()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            List<int> list = new List<int>() { 60019288 };
+            List<int> list = new List<int>() { 55268130 };
             int res = ids.ReturnWagons(list, "Вагон возвращен с УЗ вручную", @"EUROPE\ealevchenko");
         }
 

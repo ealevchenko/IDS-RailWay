@@ -564,7 +564,28 @@
                                 if (table_sostav.select_sostav && table_sostav.select_sostav.status === 0) {
                                     dc.dialog_confirm('Open', 'Вернуть?', 'Вы уверены что хотите вернуть состав, сформированый с № : ' + table_sostav.select_sostav.num_doc, function (result) {
                                         if (result) {
-
+                                            // Определим пакет данных отправки на другую станцию
+                                            var operation_provide = {
+                                                id_sostav: table_sostav.select_sostav.id,
+                                                user: user_name,
+                                            }
+                                            // Выполнить операцию отправки postSendingWagonsOfStation
+                                            ids_inc.postReturnProvideWagonsOfStation(operation_provide, function (result_provide) {
+                                                if (result_provide && result_provide.result > 0) {
+                                                    table_sostav.view(typeof filter === 'function' ? list_sostav.filter(filter) : list_sostav);
+                                                    outgoing_alert.out_info_message("Операция «Вернуть состав, сформированный для предъявления» - Выполнена");
+                                                } else {
+                                                    outgoing_alert.out_error_message("Ошибка выполнения операции «Вернуть состав, сформированный для предъявления», код ошибки = " + (result_provide ? result_provide.result : null));
+                                                    if (result_provide && result_provide.listResult && result_provide.listResult.length > 0) {
+                                                        $.each(result_provide.listResult, function (i, el) {
+                                                            if (el.result < 0) {
+                                                                outgoing_alert.out_error_message("№ вагона :" + el.num + ", код ошибки -" + el.result);
+                                                            }
+                                                        });
+                                                    }
+                                                    LockScreenOff();
+                                                }
+                                            });
                                         } else {
                                             // Состав уже в работе удаление запрещено
                                             outgoing_alert.clear_message();
@@ -726,41 +747,6 @@
                 table_sostav.obj.draw();
                 LockScreenOff();
             },
-            //// Получить полную информацию по составау
-            //get_sostav: function (data) {
-            //    var car_outgoing = data.OutgoingCars !== null ? data.OutgoingCars.filter(function (i) {
-            //        return i.outgoing ? true : false;
-            //    }) : [];
-            //    var car_not_outgoing = data.OutgoingCars !== null ? data.OutgoingCars.filter(function (i) {
-            //        return !i.outgoing ? true : false;
-            //    }) : [];
-            //    return {
-            //        "id": data.id,
-            //        "num_doc": data.num_doc,
-            //        "id_station_from": data.id_station_from,
-            //        "station_from": data.id_station_from !== null && ids_inc !== null ? ids_inc.ids_dir.getValue_Station_Of_ID(data.id_station_from, 'station_name', lang) : '',
-            //        "id_way_from": data.id_way_from,
-            //        "way_from": data.id_way !== null && ids_inc !== null ? ids_inc.ids_dir.getValue_Ways_Of_ID(data.id_way, 'way_num', lang) : '',
-            //        "id_station_on": data.id_station_on,
-            //        "station_on": data.id_station_on !== null && ids_inc !== null ? ids_inc.ids_dir.getValue_Station_Of_ID(data.id_station_on, 'station_name', lang) : '',
-            //        "date_readiness_amkr": data.date_readiness_amkr.replace(/T/g, ' '),
-            //        "date_show_wagons": data.date_show_wagons !== null ? data.date_show_wagons.replace(/T/g, ' ') : null,
-            //        "date_readiness_uz": data.date_readiness_uz !== null ? data.date_readiness_uz.replace(/T/g, ' ') : null,
-            //        "date_outgoing": data.date_outgoing !== null ? data.date_outgoing.replace(/T/g, ' ') : null,
-            //        "date_outgoing_act": data.date_outgoing_act !== null ? data.date_outgoing_act.replace(/T/g, ' ') : null,
-            //        "composition_index": data.composition_index,
-            //        "status": data.status,
-            //        "note": data.note,
-            //        "create": data.create !== null ? data.create.replace(/T/g, ' ') : null,
-            //        "create_user": data.create_user,
-            //        "change": data.change !== null ? data.change.replace(/T/g, ' ') : null,
-            //        "change_user": data.change_user,
-            //        "create_sostav": data.create !== null && data.create_user !== null ? data.create_user + ' (' + data.create.replace(/T/g, ' ') + ')' : null,
-            //        "change_sostav": data.change !== null && data.change_user !== null ? data.change_user + ' (' + data.change.replace(/T/g, ' ') + ')' : null,
-            //        "count": data.OutgoingCars !== null ? data.OutgoingCars.length : 0,
-            //        "count_all": (car_outgoing !== null ? car_outgoing.length : 0) + ' - ' + (car_not_outgoing !== null ? car_not_outgoing.length : 0)
-            //    };
-            //},
             // Обновить данные в таблице
             update_sostav: function (data) {
                 //if (data) {
