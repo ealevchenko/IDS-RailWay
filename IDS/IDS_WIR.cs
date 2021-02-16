@@ -1222,7 +1222,7 @@ namespace IDS
         /// <param name="lead_time"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public ResultTransfer OperationProvideWagons(int id_way, List<ListOperationWagon> list_provide, DateTime lead_time, string user)
+        public ResultTransfer OperationProvideWagons(int id_way, List<ListOperationWagon> list_provide, int position, DateTime lead_time, string user)
         {
             ResultTransfer res = new ResultTransfer(0);
             DateTime start = DateTime.Now;
@@ -1247,7 +1247,7 @@ namespace IDS
                     if (way.crossing_uz == true)
                     {
                         List<long> list_id = list_provide.ToList().OrderBy(p => p.position).Select(p => p.wir_id).ToList();
-                        res = ids_tr.InsertOutgoingSostav(ref context, way.id_station, id_way, lead_time, list_id, user);
+                        res = ids_tr.InsertOutgoingSostav(ref context, way.id_station, id_way, position, lead_time, list_id, user);
                     }
                     else
                     {

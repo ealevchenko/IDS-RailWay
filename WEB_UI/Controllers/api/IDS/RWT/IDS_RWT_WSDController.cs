@@ -354,6 +354,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
     {
         public int id_way_from { get; set; }
         public List<ListOperationWagon> list_provide { get; set; }
+        public int position { get; set; }
         public DateTime lead_time { get; set; }
         public string user { get; set; }
     }
@@ -714,7 +715,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             try
             {
                 IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
-                ResultTransfer result = ids_wir.OperationProvideWagons(value.id_way_from, value.list_provide, value.lead_time, value.user);
+                ResultTransfer result = ids_wir.OperationProvideWagons(value.id_way_from, value.list_provide, value.position, value.lead_time, value.user);
                 return Ok(result);
             }
             catch (Exception e)

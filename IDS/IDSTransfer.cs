@@ -529,29 +529,36 @@ namespace IDS
                 DateTime start_date = new DateTime(DateTime.Now.Year, 1, 1, 0, 0, 0);
                 OutgoingSostav sostav = context.OutgoingSostav.Where(s => s.id_station_from == id_station_from && s.date_readiness_amkr >= start_date).OrderByDescending(c => c.num_doc).FirstOrDefault();
                 int num_doc = sostav != null ? sostav.num_doc + 1 : 1;
-                // Создадим запись состав для отправки OutgoingSostav
-                OutgoingSostav new_out_sostav = new OutgoingSostav()
+
+                OutgoingSostav new_out_sostav = context.OutgoingSostav.Where(s => s.id_station_from == id_station_from && s.id_way_from == id_way_from && s.date_readiness_amkr == lead_time && s.id_station_on == null).OrderByDescending(c => c.num_doc).FirstOrDefault();
+
+                if (new_out_sostav == null)
                 {
-                    id = 0,
-                    num_doc = num_doc,
-                    id_station_from = id_station_from,
-                    id_way_from = id_way_from,
-                    id_station_on = null,
-                    date_readiness_amkr = lead_time,
-                    date_end_inspection_acceptance_delivery = null,
-                    date_end_inspection_loader = null,
-                    date_end_inspection_vagonnik = null,
-                    date_show_wagons = null,
-                    date_readiness_uz = null,
-                    date_outgoing = null,
-                    date_outgoing_act = null,
-                    date_departure = null,
-                    composition_index = null,
-                    status = 0,
-                    note = null,
-                    create = DateTime.Now,
-                    create_user = user,
-                };
+                    // Создадим запись состав для отправки OutgoingSostav
+                    new_out_sostav = new OutgoingSostav()
+                    {
+                        id = 0,
+                        num_doc = num_doc,
+                        id_station_from = id_station_from,
+                        id_way_from = id_way_from,
+                        id_station_on = null,
+                        date_readiness_amkr = lead_time,
+                        date_end_inspection_acceptance_delivery = null,
+                        date_end_inspection_loader = null,
+                        date_end_inspection_vagonnik = null,
+                        date_show_wagons = null,
+                        date_readiness_uz = null,
+                        date_outgoing = null,
+                        date_outgoing_act = null,
+                        date_departure = null,
+                        composition_index = null,
+                        status = 0,
+                        note = null,
+                        create = DateTime.Now,
+                        create_user = user,
+                    };
+                }
+
                 return new_out_sostav;
             }
             catch (Exception e)
@@ -656,7 +663,7 @@ namespace IDS
             }
         }
 
-        public ResultTransfer InsertOutgoingSostav(ref EFDbContext context, int id_station_from, int id_way_from, DateTime lead_time, List<long> list, string user)
+        public ResultTransfer InsertOutgoingSostav(ref EFDbContext context, int id_station_from, int id_way_from, int position, DateTime lead_time, List<long> list, string user)
         {
             ResultTransfer res = new ResultTransfer(list.Count());
             try
@@ -665,7 +672,7 @@ namespace IDS
 
                 OutgoingSostav new_sostav = CreateOutgoingSostav(ref context, id_station_from, id_way_from, lead_time, user);
 
-                int position = 0;
+                //int position = 0;
                 foreach (long id_wir in list.ToList())
                 {
                     position++;
