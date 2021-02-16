@@ -98,7 +98,7 @@ SELECT [N_VAG]
       ,[PAY]
   --FROM [WAGONS]..[PROM].[NAT_HIST]
   FROM [WAGONS]..[PROM].[VAGON]
-  where [N_NATUR] = 7953 --and [D_SD_DD]=29
+  where [N_NATUR] = 8176 --and [D_SD_DD]=29
   --where [N_NATUR] = 3259 and [D_SD_DD]=28
   --where [N_VAG] = 56098700
   order by [DAT_VVOD] desc
@@ -202,7 +202,7 @@ SELECT [N_VAG]
       ,[R]
       ,[PAY]
   FROM [WAGONS]..[PROM].[NAT_HIST]
-  where [N_NATUR] = 7953 --and [D_SD_DD]=29
+  where [N_NATUR] = 8176 --and [D_SD_DD]=29
   --where [N_NATUR] = 3259 and [D_SD_DD]=28
  -- where N_VAG = 56098700
     order by [DAT_VVOD] desc

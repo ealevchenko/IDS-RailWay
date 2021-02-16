@@ -79,7 +79,7 @@ SELECT [N_NATUR]
       ,[PAY]
   FROM [WAGONS]..[PROM].[SOSTAV]
   --where P_OT =1 and [N_NATUR] = 3259
-  where P_OT =1 and [N_NATUR] = 3267
+  where P_OT =1 and [N_NATUR] = 8176
 
 GO
 
