@@ -689,7 +689,7 @@ namespace IDS
                     // Сохраним рзультат выполнения
                     res.SetMovedResult(result, wir.num);
                 }
-                ef_out_sos.Add(new_sostav);
+                ef_out_sos.AddOrUpdate(new_sostav);
                 // Если нет ошибок, сохраним изменения в базе
                 if (res.error == 0)
                 {

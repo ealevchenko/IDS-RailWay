@@ -1034,6 +1034,13 @@
                     title: langView('field_wagons_position', langs), width: "30px", orderable: false, searchable: false
                 },
                 {
+                    field: 'wagons_position_provide_exist',
+                    data: function (row, type, val, meta) {
+                        return row.position_provide_exist;
+                    },
+                    title: langView('field_wagons_position', langs), width: "30px", orderable: false, searchable: false
+                },
+                {
                     field: 'wagons_num',
                     data: function (row, type, val, meta) {
                         return row.num;
@@ -1472,7 +1479,32 @@
                     "sap_is_create_date",
                     "sap_is_create_time"])
             },
-
+            // инициализация полей таблицы вагоны выбранные для предъявления на УЗ
+            init_columns_wagon_provide_exist_on: function () {
+                return operation_detali.init_columns([
+                    'wagons_position_provide_exist',
+                    'wagons_num',
+                    'wagon_operators_abbr',
+                    'wagon_limiting_abbr',
+                    "wagon_operators_paid",
+                    "current_operation_wagon_busy",
+                    "wagon_rod",
+                    "wagon_type",
+                    "wagon_gruzp_doc",
+                    "wagon_adm",
+                    "current_condition_abbr",
+                    "current_loading_status",
+                    "arrival_cargo_name",
+                    "arrival_certification_data",
+                    "arrival_station_from_name",
+                    "arrival_station_amkr_name",
+                    "current_operation_wagon_name",
+                    "current_operation_wagon_end",
+                    "arrival_division_amkr_abbr",
+                    "sap_is_num",
+                    "sap_is_create_date",
+                    "sap_is_create_time"])
+            },
             // -------------------------------------------------------------------------------------------------
             // Операция дислокация
             all_obj_dislocation: $([]),
@@ -1613,7 +1645,7 @@
                                         idrows.push('#' + i);
                                     }
                                 } else {
-                                    for (var i = max - (count - 1) ; i < max + 1; i++) {
+                                    for (var i = max - (count - 1); i < max + 1; i++) {
                                         idrows.push('#' + i);
                                     }
                                 }
@@ -4887,6 +4919,7 @@
                                                         // Обновим данные в таблице
                                                         operation_detali.table_wagons_provide_way_from.load(operation_detali.id_way_from_provide, function () {
                                                             operation_detali.table_wagons_provide.view();
+                                                            operation_detali.table_wagons_provide_exist.view();
                                                             LockScreenOff();
                                                         });
                                                     });
@@ -5017,14 +5050,22 @@
                                     // Выделим выбранные вагоны
                                     var index_wagon = operation_detali.table_wagons_provide_way_from.index_select_wagons;
                                     var row_select_wagon = operation_detali.table_wagons_provide_way_from.obj.rows(index_wagon).data();
-                                    // Получим последнюю позицию вагонов состава для отправки
+                                    // Получим последнюю позицию вагонов состава для отправки (c учетом операции добавить)
+                                    var position_provide = 0;
                                     var wagon_max_poz = operation_detali.wagons_provide_from.reduce(function (prev, current, index, array) { return prev.position_provide > current.position_provide ? prev : current });
-                                    var position_provide = wagon_max_poz && wagon_max_poz.position_provide !== null ? wagon_max_poz.position_provide + 1 : 1;
+                                    if (operation_detali.wagons_provide_max_position === 0) {
+                                        // Это новый или добавить в непримененый
+                                        position_provide = wagon_max_poz && wagon_max_poz.position_provide !== null ? wagon_max_poz.position_provide + 1 : 1;
+                                    } else {
+                                        // Это добавить в существующий 
+                                        position_provide = wagon_max_poz && wagon_max_poz.position_provide !== null ? wagon_max_poz.position_provide + 1 : operation_detali.wagons_provide_max_position + 1;
+                                    }
                                     // Проставим сформируем состав для отправки
                                     if (row_select_wagon && row_select_wagon.length > 0) {
                                         operation_detali.table_wagons_provide_way_from.wagons_provide_async(row_select_wagon, position_provide, function () {
                                             // Отобразим вагоны состава для отправки
                                             operation_detali.table_wagons_provide.view();
+                                            operation_detali.table_wagons_provide_exist.view();
                                             // Отобразим вагоны на пути для роспуска (будут указан путь роспуска)
                                             operation_detali.table_wagons_provide_way_from.view(operation_detali.wagons_provide_from, function () {
                                                 LockScreenOff();
@@ -5097,16 +5138,18 @@
                         //current_id_operation_wagon = 8
                         var max_position = 0;
                         var date_operation_start = null;
+                        //var position_provide = 1;
                         // Добавим поле путь роспуска
                         if (operation_detali.wagons_provide_from) {
                             $.each(operation_detali.wagons_provide_from, function (i, el) {
                                 el['position_provide'] = null;
                                 if (el.current_id_operation_wagon === 9) {
+                                    max_position++;
                                     date_operation_start = moment(el.current_operation_wagon_start);
-                                    var pos = el.position;
-                                    if (max_position === null || pos > max_position) {
-                                        max_position = pos;
-                                    }
+                                    //var pos = el.position;
+                                    //if (max_position === null || pos > max_position) {
+                                    //    max_position = pos;
+                                    //}
                                 }
 
                             });
@@ -5265,6 +5308,82 @@
                     ClearWagonAsync(0);
                 },
             },
+            // Таблица вагонов состав сформирован ранее
+            table_wagons_provide_exist: {
+                html_table: $('table#wagons-provide-exist'),
+                obj: null,
+                init: function () {
+                    this.obj = this.html_table.DataTable({
+                        "paging": false,
+                        "searching": false,
+                        "ordering": false,
+                        "info": false,
+                        "keys": true,
+                        select: false,
+                        "autoWidth": false,
+                        sScrollX: "100%",
+                        scrollX: true,
+                        language: language_table(langs),
+                        jQueryUI: false,
+                        "createdRow": function (row, data, index) {
+                        },
+                        columns: operation_detali.init_columns_wagon_provide_exist_on(),
+                        //dom: 'Bfrtip',
+                    });
+                },
+                // Показать таблицу с данными
+                view: function () {
+                    LockScreen(langView('mess_delay', langs));
+                    if (operation_detali.wagons_provide_from) {
+                        // Отфильтруем вагоны по которым выставлена новая позиция и отсортируем по position_provide
+                        var position = 1;
+                        var wagons = [];
+                        $.each(operation_detali.wagons_provide_from, function (i, el) {
+                            if (el.current_id_operation_wagon === 9) {
+                                el['position_provide_exist'] = position;
+                                position++;
+                                wagons.push(el);
+                            }
+                        });
+
+
+                        //var wagons = operation_detali.wagons_provide_from.filter(function (i) {
+                        //    return i.current_id_operation_wagon === 9;
+                        //}).sort(function (a, b) {
+                        //    return Number(a.position) - Number(b.position)
+                        //});
+                        operation_detali.table_wagons_provide_exist.obj.clear();
+                        operation_detali.table_wagons_provide_exist.obj.rows.add(wagons);
+                        //$.each(wagons, function (i, el) {
+                        //    operation_detali.table_wagons_provide_exist.obj.row.add(operation_detali.table_wagons_provide_exist.get_wagon(el));
+                        //});
+                    } else {
+                        operation_detali.table_wagons_provide_exist.obj.clear();
+                    }
+                    operation_detali.table_wagons_provide_exist.obj.draw();
+                    LockScreenOff();
+                },
+                // Выполнить сброс вагонов (асинхронный режим)
+                clear_wagons_async: function (row, callback) {
+                    var len = row.length;
+                    if (len === 0) {
+                        return 0;
+                    }
+                    function ClearWagonAsync(i) {
+                        if (i < len) {
+                            // Поместим следующий вызов функции в цикл событий.
+                            setTimeout(function () {
+                                row[i].position_provide = null;
+                                ClearWagonAsync(i + 1);
+                            }, 0);
+                        } else {
+                            // Так как достигнут конец массива, мы вызываем коллбэк
+                            callback();
+                        }
+                    }
+                    ClearWagonAsync(0);
+                },
+            },
             // Показать окно предъявления
             view_provide: function (id_way) {
                 operation_detali.div_provide_collect_wagon.collapse('hide');
@@ -5324,6 +5443,7 @@
                 //operation_detali.operation_detali_provide_lead_time.setDateTime(null);
                 operation_detali.table_wagons_provide_way_from.load(operation_detali.id_way_from_provide, function () {
                     operation_detali.table_wagons_provide.view();
+                    operation_detali.table_wagons_provide_exist.view();
                     LockScreenOff();
                 });
                 operation_detali.operation_provide.show();
@@ -5434,7 +5554,7 @@
                     .add(operation_detali.operation_detali_dislocation_locomotive1)
                     .add(operation_detali.operation_detali_dislocation_locomotive2)
                     .add(operation_detali.operation_detali_dislocation_lead_time.obj)
-                ;
+                    ;
                 // Проверка валидации операции роспуска
                 operation_detali.val_dislocation = new VALIDATION(operation_detali.lang, operation_detali.alert, operation_detali.all_obj_dislocation); // Создадим класс VALIDATION
                 //------------- Операция "РОСПУСК" ---------------------------------------------------------------------------
@@ -5498,9 +5618,9 @@
                     .add(operation_detali.operation_detali_sending_locomotive1)
                     .add(operation_detali.operation_detali_sending_locomotive2)
                     .add(operation_detali.operation_detali_sending_lead_time.obj)
-                //.add(operation_detali.operation_detali_sending_start.obj)
-                //.add(operation_detali.operation_detali_sending_stop.obj)
-                ;
+                    //.add(operation_detali.operation_detali_sending_start.obj)
+                    //.add(operation_detali.operation_detali_sending_stop.obj)
+                    ;
                 operation_detali.val_sending = new VALIDATION(operation_detali.lang, operation_detali.alert, operation_detali.all_obj_sending); // Создадим класс VALIDATION
                 //------------- Операция "ПРИБЫТИЯ" ---------------------------------------------------------------------------
                 // Настроим компоненты
@@ -5570,7 +5690,7 @@
                     .add(operation_detali.operation_detali_arrival_lead_time.obj)
                     .add(operation_detali.operation_detali_arrival_locomotive1)
                     .add(operation_detali.operation_detali_arrival_locomotive2)
-                ;
+                    ;
                 operation_detali.val_arrival = new VALIDATION(operation_detali.lang, operation_detali.alert, operation_detali.all_obj_arrival); // Создадим класс VALIDATION
 
                 //------------- Операция "ПРЕДЪЯВЛЕНИЯ" ---------------------------------------------------------------------------
@@ -5609,6 +5729,7 @@
                 // Инициализация таблиц
                 operation_detali.table_wagons_provide_way_from.init();
                 operation_detali.table_wagons_provide.init();
+                operation_detali.table_wagons_provide_exist.init();
                 // Соберем все элементы в массив операции "Отправки"
                 operation_detali.all_obj_provide = $([])
                     .add(operation_detali.operation_detali_provide_way_from)
@@ -5618,9 +5739,9 @@
                     //.add(operation_detali.operation_detali_provide_locomotive1)
                     //.add(operation_detali.operation_detali_provide_locomotive2)
                     .add(operation_detali.operation_detali_provide_lead_time.obj)
-                //.add(operation_detali.operation_detali_provide_start.obj)
-                //.add(operation_detali.operation_detali_provide_stop.obj)
-                ;
+                    //.add(operation_detali.operation_detali_provide_start.obj)
+                    //.add(operation_detali.operation_detali_provide_stop.obj)
+                    ;
                 operation_detali.val_provide = new VALIDATION(operation_detali.lang, operation_detali.alert, operation_detali.all_obj_provide); // Создадим класс VALIDATION
 
                 //$("a.dt-button").removeClass('dt-button').addClass('btn btn-secondary');
