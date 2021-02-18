@@ -34,6 +34,13 @@ namespace WEB_UI.Areas.Directory.Controllers
         {
             return View();
         }
+        // GET: Directory/ExternalStation
+        [AccessOfDB(LogVisit = true)]
+        public ActionResult ExternalStation()
+        {
+            return View();
+        }
+
 
         //******************************************************
         // СЕРВИСЫ

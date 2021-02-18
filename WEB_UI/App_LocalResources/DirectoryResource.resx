@@ -126,6 +126,9 @@
   <data name="cars_title" xml:space="preserve">
     <value>Справочник "Вагонов ИДС"</value>
   </data>
+  <data name="external_station_title" xml:space="preserve">
+    <value>Справочник "Внешние станции"</value>
+  </data>
   <data name="home_title" xml:space="preserve">
     <value>Справочники</value>
   </data>
@@ -183,6 +186,9 @@
   <data name="title_add_edit_gruzp" xml:space="preserve">
     <value>Груз-сть (УЗ)</value>
   </data>
+  <data name="title_add_edit_inlandrailway" xml:space="preserve">
+    <value>Дорога</value>
+  </data>
   <data name="title_add_edit_inventory_number" xml:space="preserve">
     <value>Инвентарный №</value>
   </data>
@@ -191,6 +197,9 @@
   </data>
   <data name="title_add_edit_kod_rod" xml:space="preserve">
     <value>Код</value>
+  </data>
+  <data name="title_add_edit_kod_station" xml:space="preserve">
+    <value>Код станции</value>
   </data>
   <data name="title_add_edit_limiting" xml:space="preserve">
     <value>Ограничение (АМКР)</value>
@@ -236,6 +245,12 @@
   </data>
   <data name="title_add_edit_sign" xml:space="preserve">
     <value>Призн. сход\не груз.</value>
+  </data>
+  <data name="title_add_edit_station_name_en" xml:space="preserve">
+    <value>Название станции (анг)</value>
+  </data>
+  <data name="title_add_edit_station_name_ru" xml:space="preserve">
+    <value>Название станции (рус)</value>
   </data>
   <data name="title_add_edit_tara" xml:space="preserve">
     <value>Тара (УЗ)</value>

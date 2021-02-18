@@ -5290,16 +5290,20 @@ IDS_DIRECTORY.prototype.getListRailway = function (fvalue, ftext, lang, filter) 
     return list;
 };
 //*======= IDS_DIRECTORY.list_inlandrailway  (Справочник внутрених Ж.Д.) ======================================
-IDS_DIRECTORY.prototype.getInlandRailway_Of_Code = function (id) {
+IDS_DIRECTORY.prototype.getInlandRailway_Of_Code = function (code) {
+    var inlandrailway = null;
     if (this.list_inlandrailway) {
-        var obj = getObjects(this.list_InlandRailway, 'id', id);
-        return obj && obj.length > 0 ? obj[0] : null;
+        inlandrailway = this.list_inlandrailway.find(function (o) { return o.code === code });
     }
+    return inlandrailway;
 };
 //
-IDS_DIRECTORY.prototype.getValue_InlandRailway_Of_ID = function (id, name, lang) {
-    var obj = this.getInlandRailway_Of_Code(id);
+IDS_DIRECTORY.prototype.getValue_InlandRailway_Of_Code = function (code, name, lang) {
+    var obj = this.getInlandRailway_Of_Code(code);
     return this.getValueObj(obj, name, lang);
+};
+IDS_DIRECTORY.prototype.getInlandRailway_Of_Name = function (text, ftext, lang) {
+    return this.getObjs_Of_text(this.list_inlandrailway, text, ftext, lang);
 };
 //
 IDS_DIRECTORY.prototype.getValueCulture_InlandRailway_Of_ID = function (id, name) {
@@ -5308,29 +5312,36 @@ IDS_DIRECTORY.prototype.getValueCulture_InlandRailway_Of_ID = function (id, name
 };
 //
 IDS_DIRECTORY.prototype.getListInlandRailway = function (fvalue, ftext, lang, filter) {
-    var list = [];
-    var list_filtr = null;
-    if (this.list_inlandrailway) {
-        if (typeof filter === 'function') {
-            list_filtr = this.list_inlandrailway.filter(filter);
-        } else { list_filtr = this.list_inlandrailway; }
-        for (i = 0, j = list_filtr.length; i < j; i++) {
-            var l = list_filtr[i];
-            if (lang) {
-                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
-            } else {
-                list.push({ value: l[fvalue], text: l[ftext] });
-            }
-        }
-    }
-    return list;
+    return this.getListObj(this.list_inlandrailway, fvalue, ftext, lang, filter);
+    //var list = [];
+    //var list_filtr = null;
+    //if (this.list_inlandrailway) {
+    //    if (typeof filter === 'function') {
+    //        list_filtr = this.list_inlandrailway.filter(filter);
+    //    } else { list_filtr = this.list_inlandrailway; }
+    //    for (i = 0, j = list_filtr.length; i < j; i++) {
+    //        var l = list_filtr[i];
+    //        if (lang) {
+    //            list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+    //        } else {
+    //            list.push({ value: l[fvalue], text: l[ftext] });
+    //        }
+    //    }
+    //}
+    //return list;
+
 };
 //*======= IDS_DIRECTORY.list_external_station  (Справочник внешних станций) ======================================
 IDS_DIRECTORY.prototype.getExternalStation_Of_Code = function (code) {
+    var station = null;
     if (this.list_external_station) {
-        var obj = getObjects(this.list_external_station, 'code', code);
-        return obj && obj.length > 0 ? obj[0] : null;
+        station = this.list_external_station.find(function (o) { return o.code === code });
     }
+    return station;
+    //if (this.list_external_station) {
+    //    var obj = getObjects(this.list_external_station, 'code', code);
+    //    return obj && obj.length > 0 ? obj[0] : null;
+    //}
 };
 //
 IDS_DIRECTORY.prototype.getValue_ExternalStation_Of_Code = function (code, name, lang) {

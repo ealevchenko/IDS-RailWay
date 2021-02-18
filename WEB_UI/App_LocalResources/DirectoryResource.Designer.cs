@@ -19,7 +19,7 @@ namespace WEB_UI.App_LocalResources {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class DirectoryResource {
@@ -84,6 +84,15 @@ namespace WEB_UI.App_LocalResources {
         public static string cars_title {
             get {
                 return ResourceManager.GetString("cars_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Справочник &quot;Внешние станции&quot;.
+        /// </summary>
+        public static string external_station_title {
+            get {
+                return ResourceManager.GetString("external_station_title", resourceCulture);
             }
         }
         
@@ -259,6 +268,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Дорога.
+        /// </summary>
+        public static string title_add_edit_inlandrailway {
+            get {
+                return ResourceManager.GetString("title_add_edit_inlandrailway", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Инвентарный №.
         /// </summary>
         public static string title_add_edit_inventory_number {
@@ -282,6 +300,15 @@ namespace WEB_UI.App_LocalResources {
         public static string title_add_edit_kod_rod {
             get {
                 return ResourceManager.GetString("title_add_edit_kod_rod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Код станции.
+        /// </summary>
+        public static string title_add_edit_kod_station {
+            get {
+                return ResourceManager.GetString("title_add_edit_kod_station", resourceCulture);
             }
         }
         
@@ -417,6 +444,24 @@ namespace WEB_UI.App_LocalResources {
         public static string title_add_edit_sign {
             get {
                 return ResourceManager.GetString("title_add_edit_sign", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Название станции (анг).
+        /// </summary>
+        public static string title_add_edit_station_name_en {
+            get {
+                return ResourceManager.GetString("title_add_edit_station_name_en", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Название станции (рус).
+        /// </summary>
+        public static string title_add_edit_station_name_ru {
+            get {
+                return ResourceManager.GetString("title_add_edit_station_name_ru", resourceCulture);
             }
         }
         
