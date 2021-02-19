@@ -40,7 +40,12 @@ namespace WEB_UI.Areas.Directory.Controllers
         {
             return View();
         }
-
+        // GET: Directory/InlandRailway
+        [AccessOfDB(LogVisit = true)]
+        public ActionResult InlandRailway()
+        {
+            return View();
+        }
 
         //******************************************************
         // СЕРВИСЫ

@@ -132,6 +132,9 @@
   <data name="home_title" xml:space="preserve">
     <value>Справочники</value>
   </data>
+  <data name="inland_railway_title" xml:space="preserve">
+    <value>Справочник «Внутренних железных дорог»</value>
+  </data>
   <data name="instructional_letters_description" xml:space="preserve">
     <value>Инструктивные письма по оформлению ЭПД на отправляемые вагоны.</value>
   </data>
@@ -189,11 +192,26 @@
   <data name="title_add_edit_inlandrailway" xml:space="preserve">
     <value>Дорога</value>
   </data>
+  <data name="title_add_edit_inlandrailway_abbr_en" xml:space="preserve">
+    <value>Краткое название дороги (анг)</value>
+  </data>
+  <data name="title_add_edit_inlandrailway_abbr_ru" xml:space="preserve">
+    <value>Краткое название дороги (рус)</value>
+  </data>
+  <data name="title_add_edit_inlandrailway_name_en" xml:space="preserve">
+    <value>Полное название дороги (анг)</value>
+  </data>
+  <data name="title_add_edit_inlandrailway_name_ru" xml:space="preserve">
+    <value>Полное название дороги (рус)</value>
+  </data>
   <data name="title_add_edit_inventory_number" xml:space="preserve">
     <value>Инвентарный №</value>
   </data>
   <data name="title_add_edit_kod_adm" xml:space="preserve">
     <value>Код</value>
+  </data>
+  <data name="title_add_edit_kod_railway" xml:space="preserve">
+    <value>Код дороги</value>
   </data>
   <data name="title_add_edit_kod_rod" xml:space="preserve">
     <value>Код</value>
@@ -239,6 +257,9 @@
   </data>
   <data name="title_add_edit_owner_car" xml:space="preserve">
     <value>Собственник (УЗ)</value>
+  </data>
+  <data name="title_add_edit_railway" xml:space="preserve">
+    <value>Дорога страны</value>
   </data>
   <data name="title_add_edit_sending" xml:space="preserve">
     <value>Отправляемые грузы</value>

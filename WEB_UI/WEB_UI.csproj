@@ -413,6 +413,7 @@
     <Content Include="Scripts\moment-with-locales.min.js.map" />
     <Content Include="Areas\Directory\Views\Home\ParkState.cshtml" />
     <Content Include="Areas\Directory\Views\Home\ExternalStation.cshtml" />
+    <Content Include="Areas\Directory\Views\Home\InlandRailway.cshtml" />
     <None Include="_app_offline.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -969,6 +970,7 @@
     <Content Include="Scripts\view\directory\cargo.js" />
     <Content Include="Scripts\view\directory\cargo_group.js" />
     <Content Include="Scripts\view\directory\cars.js" />
+    <Content Include="Scripts\view\directory\inland_railway.js" />
     <Content Include="Scripts\view\directory\external_station.js" />
     <Content Include="Scripts\view\directory\instructional_letters.js" />
     <Content Include="Scripts\view\directory\park_state.js" />

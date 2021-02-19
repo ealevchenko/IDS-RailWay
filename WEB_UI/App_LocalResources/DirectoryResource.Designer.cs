@@ -106,6 +106,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Справочник «Внутренних железных дорог».
+        /// </summary>
+        public static string inland_railway_title {
+            get {
+                return ResourceManager.GetString("inland_railway_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Инструктивные письма по оформлению ЭПД на отправляемые вагоны..
         /// </summary>
         public static string instructional_letters_description {
@@ -277,6 +286,42 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Краткое название дороги (анг).
+        /// </summary>
+        public static string title_add_edit_inlandrailway_abbr_en {
+            get {
+                return ResourceManager.GetString("title_add_edit_inlandrailway_abbr_en", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Краткое название дороги (рус).
+        /// </summary>
+        public static string title_add_edit_inlandrailway_abbr_ru {
+            get {
+                return ResourceManager.GetString("title_add_edit_inlandrailway_abbr_ru", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Полное название дороги (анг).
+        /// </summary>
+        public static string title_add_edit_inlandrailway_name_en {
+            get {
+                return ResourceManager.GetString("title_add_edit_inlandrailway_name_en", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Полное название дороги (рус).
+        /// </summary>
+        public static string title_add_edit_inlandrailway_name_ru {
+            get {
+                return ResourceManager.GetString("title_add_edit_inlandrailway_name_ru", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Инвентарный №.
         /// </summary>
         public static string title_add_edit_inventory_number {
@@ -291,6 +336,15 @@ namespace WEB_UI.App_LocalResources {
         public static string title_add_edit_kod_adm {
             get {
                 return ResourceManager.GetString("title_add_edit_kod_adm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Код дороги.
+        /// </summary>
+        public static string title_add_edit_kod_railway {
+            get {
+                return ResourceManager.GetString("title_add_edit_kod_railway", resourceCulture);
             }
         }
         
@@ -426,6 +480,15 @@ namespace WEB_UI.App_LocalResources {
         public static string title_add_edit_owner_car {
             get {
                 return ResourceManager.GetString("title_add_edit_owner_car", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Дорога страны.
+        /// </summary>
+        public static string title_add_edit_railway {
+            get {
+                return ResourceManager.GetString("title_add_edit_railway", resourceCulture);
             }
         }
         

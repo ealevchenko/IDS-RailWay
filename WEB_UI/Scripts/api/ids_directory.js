@@ -1200,7 +1200,7 @@ IDS_DIRECTORY.prototype.getWagonsRent = function (callback) {
 IDS_DIRECTORY.prototype.getWagonsRentOfNum = function (num, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/directory/wagon_rent/num/'+ num,
+        url: '../../api/ids/directory/wagon_rent/num/' + num,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -4431,7 +4431,7 @@ IDS_DIRECTORY.prototype.getListObj = function (list_obj, fvalue, ftext, lang, fi
 // Вернуть объект по id
 IDS_DIRECTORY.prototype.getObj_Of_ID = function (list_obj, id) {
     var obj = null;
-    if (list_obj && list_obj.length>0) {
+    if (list_obj && list_obj.length > 0) {
         obj = list_obj.find(function (o) { return o.id === id });
     }
     return obj;
@@ -4440,7 +4440,7 @@ IDS_DIRECTORY.prototype.getObj_Of_ID = function (list_obj, id) {
 IDS_DIRECTORY.prototype.getObjs_Of_text = function (list_obj, text, ftext, lang) {
     var objs = null;
     var field = lang ? ftext + '_' + lang : ftext;
-    if (list_obj && list_obj.length>0) {
+    if (list_obj && list_obj.length > 0) {
         objs = list_obj.filter(function (i) {
             return i[field] === text ? true : false;
         });
@@ -5254,11 +5254,16 @@ IDS_DIRECTORY.prototype.getListCountrys = function (fvalue, ftext, lang, filter)
     return list;
 };
 //*======= IDS_DIRECTORY.list_railway  (Справочник Ж.Д.) ======================================
-IDS_DIRECTORY.prototype.getRailway_Of_Code = function (id) {
-    if (this.list_railway) {
-        var obj = getObjects(this.list_Railway, 'id', id);
-        return obj && obj.length > 0 ? obj[0] : null;
+IDS_DIRECTORY.prototype.getRailway_Of_Code = function (code) {
+    var rw = null;
+    if (this.list_ways) {
+        rw = this.list_railway.find(function (o) { return o.code === code });
     }
+    return rw;
+    //if (this.list_railway) {
+    //    var obj = getObjects(this.list_Railway, 'id', id);
+    //    return obj && obj.length > 0 ? obj[0] : null;
+    //}
 };
 //
 IDS_DIRECTORY.prototype.getValue_Railway_Of_ID = function (id, name, lang) {
@@ -5558,7 +5563,7 @@ IDS_DIRECTORY.prototype.getCargo_Of_Name = function (text, ftext, lang) {
 //
 IDS_DIRECTORY.prototype.getID_Cargo_Internal_Of_Name = function (text, ftext, lang) {
     var objs = this.getCargo_Of_Name(text, ftext, lang);
-    return objs & objs.length>0 ? obj[0].id : null;
+    return objs & objs.length > 0 ? obj[0].id : null;
 };
 //
 IDS_DIRECTORY.prototype.getValue_Cargo_Of_ID = function (id, name, lang) {
@@ -6082,31 +6087,31 @@ IDS_DIRECTORY.prototype.getListWagons = function (fvalue, ftext, lang, filter) {
 IDS_DIRECTORY.prototype.getCloneWagons = function (wagon) {
     if (!wagon) return null;
     return {
-        num: wagon.num ,
-        id_countrys: wagon.id_countrys ,
-        id_genus: wagon.id_genus ,
-        id_owner: wagon. id_owner,
-        id_operator: wagon.id_operator ,
-        change_operator: wagon.change_operator ,
+        num: wagon.num,
+        id_countrys: wagon.id_countrys,
+        id_genus: wagon.id_genus,
+        id_owner: wagon.id_owner,
+        id_operator: wagon.id_operator,
+        change_operator: wagon.change_operator,
         gruzp: wagon.gruzp,
-        tara: wagon.tara ,
-        kol_os: wagon.kol_os ,
-        usl_tip: wagon.usl_tip ,
-        date_rem_uz: wagon.date_rem_uz ,
-        date_rem_vag: wagon.date_rem_vag ,
-        id_type_ownership: wagon.id_type_ownership ,
+        tara: wagon.tara,
+        kol_os: wagon.kol_os,
+        usl_tip: wagon.usl_tip,
+        date_rem_uz: wagon.date_rem_uz,
+        date_rem_vag: wagon.date_rem_vag,
+        id_type_ownership: wagon.id_type_ownership,
         sign: wagon.sign,
         factory_number: wagon.factory_number,
         inventory_number: wagon.inventory_number,
         year_built: wagon.year_built,
         exit_ban: wagon.exit_ban,
-        note: wagon.note ,
-        sobstv_kis: wagon.sobstv_kis ,
-        bit_warning: wagon.bit_warning ,
-        create: wagon.create ,
-        create_user: wagon.create_user ,
-        change: wagon.change ,
-        change_user: wagon.change_user ,
+        note: wagon.note,
+        sobstv_kis: wagon.sobstv_kis,
+        bit_warning: wagon.bit_warning,
+        create: wagon.create,
+        create_user: wagon.create_user,
+        change: wagon.change,
+        change_user: wagon.change_user,
     };
 }
 //*======= IDS_DIRECTORY.list_wagon_rent  (Справочник аренд вагонов) ======================================
