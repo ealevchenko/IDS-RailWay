@@ -584,7 +584,7 @@ var get_input_number_value = function (obj) {
 // Врнуть значение Input с проверкой
 var get_input_string_value = function (obj) {
     if (obj) {
-        return obj.val() !== '' ? obj.val() : null;
+        return obj.val() !== '' ? $.trim(String(obj.val())) : null;
     }
     return null;
 };
@@ -800,6 +800,26 @@ VALIDATION.prototype.checkRegexp = function (o, regexp, mes_error, mes_ok) {
         return true;
     }
 };
+// Проверим Input введенное значение входит в размер строки (пустое значение - не допускается)
+VALIDATION.prototype.checkInputOfLength = function (o, min, max, mes_error, mes_ok) {
+    if (o.val() !== '' && o.val() !== null) {
+        var count = o.val().length;
+        if (isNaN(count) || count > max || count < min) {
+            this.set_control_error(o, mes_error);
+            this.out_error_message(mes_error);
+            return false;
+        } else {
+            this.set_control_ok(o, mes_ok);
+            this.out_info_message(mes_ok);
+            return true;
+        }
+    } else {
+        this.set_control_error(o, mes_error);
+        this.out_error_message(mes_error);
+        return false;
+    }
+};
+
 // Проверим Input введенное значение входит в диапазон (пустое значение - не допускается)
 VALIDATION.prototype.checkInputOfRange = function (o, min, max, mes_error, mes_ok) {
     if (o.val() !== '' && o.val() !== null) {
