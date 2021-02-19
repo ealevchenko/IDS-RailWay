@@ -5338,10 +5338,6 @@ IDS_DIRECTORY.prototype.getExternalStation_Of_Code = function (code) {
         station = this.list_external_station.find(function (o) { return o.code === code });
     }
     return station;
-    //if (this.list_external_station) {
-    //    var obj = getObjects(this.list_external_station, 'code', code);
-    //    return obj && obj.length > 0 ? obj[0] : null;
-    //}
 };
 //
 IDS_DIRECTORY.prototype.getValue_ExternalStation_Of_Code = function (code, name, lang) {
