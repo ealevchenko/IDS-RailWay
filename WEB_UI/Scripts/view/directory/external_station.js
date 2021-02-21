@@ -183,7 +183,7 @@
                             pn_add_edit.add_edit_code.val(pn_add_edit.select_obj.code).prop("disabled", true);
                             pn_add_edit.add_edit_station_name_ru.val(pn_add_edit.select_obj.station_name_ru);
                             pn_add_edit.add_edit_station_name_en.val(pn_add_edit.select_obj.station_name_en);
-                            var inlandrailway = ids_dir.getInlandRailway_Of_Code(ir.code_inlandrailway)
+                            var inlandrailway = pn_add_edit.ids_dir.getInlandRailway_Of_Code(ir.code_inlandrailway)
                             pn_add_edit.update_inland_railway(inlandrailway ? inlandrailway['inlandrailway_name_' + pn_add_edit.lang] : '');
                             pn_add_edit.obj.dialog("open");
                         } else {

@@ -5256,14 +5256,10 @@ IDS_DIRECTORY.prototype.getListCountrys = function (fvalue, ftext, lang, filter)
 //*======= IDS_DIRECTORY.list_railway  (Справочник Ж.Д.) ======================================
 IDS_DIRECTORY.prototype.getRailway_Of_Code = function (code) {
     var rw = null;
-    if (this.list_ways) {
+    if (this.list_railway) {
         rw = this.list_railway.find(function (o) { return o.code === code });
     }
     return rw;
-    //if (this.list_railway) {
-    //    var obj = getObjects(this.list_Railway, 'id', id);
-    //    return obj && obj.length > 0 ? obj[0] : null;
-    //}
 };
 //
 IDS_DIRECTORY.prototype.getValue_Railway_Of_ID = function (id, name, lang) {
