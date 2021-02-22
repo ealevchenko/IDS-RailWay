@@ -3221,6 +3221,102 @@ IDS_DIRECTORY.prototype.getInlandRailway = function (callback) {
         },
     });
 };
+// Получить по коду
+IDS_DIRECTORY.prototype.getInlandRailwayOfCode = function (code, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/inlandrailway/code/' + code,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getInlandRailwayOfCode", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Обновить 
+IDS_DIRECTORY.prototype.putInlandRailway = function (ir, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/directory/inlandrailway/code/' + ir.code,
+        data: JSON.stringify(ir),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.putInlandRailway", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Удалить 
+IDS_DIRECTORY.prototype.deleteInlandRailway = function (code, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/inlandrailway/code/' + code,
+        type: 'DELETE',
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.deleteInlandRailway", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Добавить 
+IDS_DIRECTORY.prototype.postInlandRailway = function (ir, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/inlandrailway/',
+        type: 'POST',
+        data: JSON.stringify(ir),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_DIRECTORY.postInlandRailway", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 //======= Directory_ExternalStation (Справочник внешних станций) ======================================
 IDS_DIRECTORY.prototype.getExternalStation = function (callback) {
     $.ajax({
@@ -5262,33 +5358,22 @@ IDS_DIRECTORY.prototype.getRailway_Of_Code = function (code) {
     return rw;
 };
 //
-IDS_DIRECTORY.prototype.getValue_Railway_Of_ID = function (id, name, lang) {
-    var obj = this.getRailway_Of_Code(id);
+IDS_DIRECTORY.prototype.getValue_Railway_Of_Code = function (code, name, lang) {
+    var obj = this.getRailway_Of_Code(code);
     return this.getValueObj(obj, name, lang);
 };
 //
-IDS_DIRECTORY.prototype.getValueCulture_Railway_Of_ID = function (id, name) {
-    var obj = this.getRailway_Of_Code(id);
+IDS_DIRECTORY.prototype.getValueCulture_Railway_Of_Code = function (code, name) {
+    var obj = this.getRailway_Of_Code(code);
     return obj ? obj[name + '_' + this.lang] : null;
+};
+
+IDS_DIRECTORY.prototype.getRailway_Of_Name = function (text, ftext, lang) {
+    return this.getObjs_Of_text(this.list_railway, text, ftext, lang);
 };
 //
 IDS_DIRECTORY.prototype.getListRailway = function (fvalue, ftext, lang, filter) {
-    var list = [];
-    var list_filtr = null;
-    if (this.list_railway) {
-        if (typeof filter === 'function') {
-            list_filtr = this.list_railway.filter(filter);
-        } else { list_filtr = this.list_railway; }
-        for (i = 0, j = list_filtr.length; i < j; i++) {
-            var l = list_filtr[i];
-            if (lang) {
-                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
-            } else {
-                list.push({ value: l[fvalue], text: l[ftext] });
-            }
-        }
-    }
-    return list;
+    return this.getListObj(this.list_railway, fvalue, ftext, lang, filter);
 };
 //*======= IDS_DIRECTORY.list_inlandrailway  (Справочник внутрених Ж.Д.) ======================================
 IDS_DIRECTORY.prototype.getInlandRailway_Of_Code = function (code) {
@@ -5303,6 +5388,7 @@ IDS_DIRECTORY.prototype.getValue_InlandRailway_Of_Code = function (code, name, l
     var obj = this.getInlandRailway_Of_Code(code);
     return this.getValueObj(obj, name, lang);
 };
+
 IDS_DIRECTORY.prototype.getInlandRailway_Of_Name = function (text, ftext, lang) {
     return this.getObjs_Of_text(this.list_inlandrailway, text, ftext, lang);
 };
@@ -5314,23 +5400,6 @@ IDS_DIRECTORY.prototype.getValueCulture_InlandRailway_Of_ID = function (id, name
 //
 IDS_DIRECTORY.prototype.getListInlandRailway = function (fvalue, ftext, lang, filter) {
     return this.getListObj(this.list_inlandrailway, fvalue, ftext, lang, filter);
-    //var list = [];
-    //var list_filtr = null;
-    //if (this.list_inlandrailway) {
-    //    if (typeof filter === 'function') {
-    //        list_filtr = this.list_inlandrailway.filter(filter);
-    //    } else { list_filtr = this.list_inlandrailway; }
-    //    for (i = 0, j = list_filtr.length; i < j; i++) {
-    //        var l = list_filtr[i];
-    //        if (lang) {
-    //            list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
-    //        } else {
-    //            list.push({ value: l[fvalue], text: l[ftext] });
-    //        }
-    //    }
-    //}
-    //return list;
-
 };
 //*======= IDS_DIRECTORY.list_external_station  (Справочник внешних станций) ======================================
 IDS_DIRECTORY.prototype.getExternalStation_Of_Code = function (code) {
