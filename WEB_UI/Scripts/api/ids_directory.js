@@ -3198,6 +3198,101 @@ IDS_DIRECTORY.prototype.getRailway = function (callback) {
         },
     });
 };
+// Получить по коду
+IDS_DIRECTORY.prototype.getRailwayOfCode = function (code, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/railway/code/' + code,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getRailwayOfCode", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Обновить 
+IDS_DIRECTORY.prototype.putRailway = function (rw, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/directory/railway/code/' + rw.code,
+        data: JSON.stringify(rw),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.putRailway", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Удалить 
+IDS_DIRECTORY.prototype.deleteRailway = function (code, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/railway/code/' + code,
+        type: 'DELETE',
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.deleteRailway", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//Добавить 
+IDS_DIRECTORY.prototype.postRailway = function (rw, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/railway/',
+        type: 'POST',
+        data: JSON.stringify(rw),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_DIRECTORY.postRailway", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 //======= Directory_InlandRailway (Справочник внутрених дорог) ======================================
 IDS_DIRECTORY.prototype.getInlandRailway = function (callback) {
     $.ajax({
@@ -5315,10 +5410,7 @@ IDS_DIRECTORY.prototype.getBorderCheckpoint_Of_CultureName = function (name, lan
 
 //*======= IDS_DIRECTORY.list_countrys  (Справочник стран) ======================================
 IDS_DIRECTORY.prototype.getCountrys_Internal_Of_ID = function (id) {
-    if (this.list_countrys) {
-        var obj = getObjects(this.list_countrys, 'id', id);
-        return obj && obj.length > 0 ? obj[0] : null;
-    }
+    return this.getObj_Of_ID(this.list_countrys, id);
 };
 //
 IDS_DIRECTORY.prototype.getValue_Countrys_Of_ID = function (id, name, lang) {
@@ -5330,24 +5422,28 @@ IDS_DIRECTORY.prototype.getValueCulture_Countrys_Of_ID = function (id, name) {
     var obj = this.getCountrys_Internal_Of_ID(id);
     return obj ? obj[name + '_' + this.lang] : null;
 };
+IDS_DIRECTORY.prototype.getCountrys_Of_Name = function (text, ftext, lang) {
+    return this.getObjs_Of_text(this.list_countrys, text, ftext, lang);
+};
 //
 IDS_DIRECTORY.prototype.getListCountrys = function (fvalue, ftext, lang, filter) {
-    var list = [];
-    var list_filtr = null;
-    if (this.list_countrys) {
-        if (typeof filter === 'function') {
-            list_filtr = this.list_countrys.filter(filter);
-        } else { list_filtr = this.list_countrys; }
-        for (i = 0, j = list_filtr.length; i < j; i++) {
-            var l = list_filtr[i];
-            if (lang) {
-                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
-            } else {
-                list.push({ value: l[fvalue], text: l[ftext] });
-            }
-        }
-    }
-    return list;
+    return this.getListObj(this.list_countrys, fvalue, ftext, lang, filter);
+    //var list = [];
+    //var list_filtr = null;
+    //if (this.list_countrys) {
+    //    if (typeof filter === 'function') {
+    //        list_filtr = this.list_countrys.filter(filter);
+    //    } else { list_filtr = this.list_countrys; }
+    //    for (i = 0, j = list_filtr.length; i < j; i++) {
+    //        var l = list_filtr[i];
+    //        if (lang) {
+    //            list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+    //        } else {
+    //            list.push({ value: l[fvalue], text: l[ftext] });
+    //        }
+    //    }
+    //}
+    //return list;
 };
 //*======= IDS_DIRECTORY.list_railway  (Справочник Ж.Д.) ======================================
 IDS_DIRECTORY.prototype.getRailway_Of_Code = function (code) {
@@ -5610,20 +5706,11 @@ IDS_DIRECTORY.prototype.getPayerArrival_Of_CultureName = function (name, lang, t
 
 //*======= IDS_DIRECTORY.list_cargo  (Справочник грузов ГНГ) ======================================
 IDS_DIRECTORY.prototype.getCargo_Of_ID = function (id) {
-    return getObj_Of_ID(this.list_cargo, id);
-    //var cargo = null;
-    //if (this.list_cargo) {
-    //    cargo = this.list_cargo.find(function (o) { return o.id === id });
-    //}
-    //return cargo;
+    return this.getObj_Of_ID(this.list_cargo, id);
 };
 //
 IDS_DIRECTORY.prototype.getCargo_Of_Name = function (text, ftext, lang) {
     return this.getObjs_Of_text(this.list_cargo, text, ftext, lang);
-    //if (this.list_cargo) {
-    //    var obj = getObjects(this.list_cargo, (lang ? ftext + '_' + lang : name), text);
-    //    return obj && obj.length > 0 ? obj[0] : null;
-    //}
 };
 //
 IDS_DIRECTORY.prototype.getID_Cargo_Internal_Of_Name = function (text, ftext, lang) {
@@ -5643,22 +5730,6 @@ IDS_DIRECTORY.prototype.getValueCulture_Cargo_Of_ID = function (id, name) {
 //
 IDS_DIRECTORY.prototype.getListCargo = function (fvalue, ftext, lang, filter) {
     return this.getListObj(this.list_cargo, fvalue, ftext, lang, filter);
-    //var list = [];
-    //var list_filtr = null;
-    //if (this.list_cargo) {
-    //    if (typeof filter === 'function') {
-    //        list_filtr = this.list_cargo.filter(filter);
-    //    } else { list_filtr = this.list_cargo; }
-    //    for (i = 0, j = list_filtr.length; i < j; i++) {
-    //        var l = list_filtr[i];
-    //        if (lang) {
-    //            list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
-    //        } else {
-    //            list.push({ value: l[fvalue], text: l[ftext] });
-    //        }
-    //    }
-    //}
-    //return list;
 };
 // Получить груз по id строки ЕТСНГ
 IDS_DIRECTORY.prototype.getCargo_Of_IDETSNG = function (id_cargo_etsng) {
@@ -6058,7 +6129,7 @@ IDS_DIRECTORY.prototype.getList2ConditionArrival = function (fvalue, ftext1, fte
 };
 //*======= IDS_DIRECTORY.list_divisions  (Справочник подразделений) ======================================
 IDS_DIRECTORY.prototype.getDivisions_Of_ID = function (id) {
-    return getObj_Of_ID(this.list_divisions, id);
+    return this.getObj_Of_ID(this.list_divisions, id);
 };
 //
 IDS_DIRECTORY.prototype.getValue_Divisions_Of_ID = function (id, name, lang) {

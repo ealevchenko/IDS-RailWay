@@ -151,6 +151,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Справочник «Железных дорог».
+        /// </summary>
+        public static string railway_title {
+            get {
+                return ResourceManager.GetString("railway_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Найти вагон, показать историю перемещения..
         /// </summary>
         public static string search_wagon_description {
@@ -228,6 +237,15 @@ namespace WEB_UI.App_LocalResources {
         public static string title_add_edit_code_sap {
             get {
                 return ResourceManager.GetString("title_add_edit_code_sap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Страна дороги.
+        /// </summary>
+        public static string title_add_edit_countrys {
+            get {
+                return ResourceManager.GetString("title_add_edit_countrys", resourceCulture);
             }
         }
         
@@ -489,6 +507,42 @@ namespace WEB_UI.App_LocalResources {
         public static string title_add_edit_railway {
             get {
                 return ResourceManager.GetString("title_add_edit_railway", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Краткое название дороги (анг).
+        /// </summary>
+        public static string title_add_edit_railway_abbr_en {
+            get {
+                return ResourceManager.GetString("title_add_edit_railway_abbr_en", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Краткое название дороги (рус).
+        /// </summary>
+        public static string title_add_edit_railway_abbr_ru {
+            get {
+                return ResourceManager.GetString("title_add_edit_railway_abbr_ru", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Полное название дороги (анг).
+        /// </summary>
+        public static string title_add_edit_railway_name_en {
+            get {
+                return ResourceManager.GetString("title_add_edit_railway_name_en", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Полное название дороги (рус).
+        /// </summary>
+        public static string title_add_edit_railway_name_ru {
+            get {
+                return ResourceManager.GetString("title_add_edit_railway_name_ru", resourceCulture);
             }
         }
         

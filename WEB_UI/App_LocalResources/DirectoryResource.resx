@@ -147,6 +147,9 @@
   <data name="park_state_title" xml:space="preserve">
     <value>Соcтояние парка</value>
   </data>
+  <data name="railway_title" xml:space="preserve">
+    <value>Справочник «Железных дорог»</value>
+  </data>
   <data name="search_wagon_description" xml:space="preserve">
     <value>Найти вагон, показать историю перемещения.</value>
   </data>
@@ -173,6 +176,9 @@
   </data>
   <data name="title_add_edit_code_sap" xml:space="preserve">
     <value>Код в SAP</value>
+  </data>
+  <data name="title_add_edit_countrys" xml:space="preserve">
+    <value>Страна дороги</value>
   </data>
   <data name="title_add_edit_date_rem_uz" xml:space="preserve">
     <value>Дата рем. (УЗ)</value>
@@ -260,6 +266,18 @@
   </data>
   <data name="title_add_edit_railway" xml:space="preserve">
     <value>Дорога страны</value>
+  </data>
+  <data name="title_add_edit_railway_abbr_en" xml:space="preserve">
+    <value>Краткое название дороги (анг)</value>
+  </data>
+  <data name="title_add_edit_railway_abbr_ru" xml:space="preserve">
+    <value>Краткое название дороги (рус)</value>
+  </data>
+  <data name="title_add_edit_railway_name_en" xml:space="preserve">
+    <value>Полное название дороги (анг)</value>
+  </data>
+  <data name="title_add_edit_railway_name_ru" xml:space="preserve">
+    <value>Полное название дороги (рус)</value>
   </data>
   <data name="title_add_edit_sending" xml:space="preserve">
     <value>Отправляемые грузы</value>

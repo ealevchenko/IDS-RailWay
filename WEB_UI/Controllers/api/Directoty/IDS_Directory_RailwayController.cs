@@ -44,7 +44,7 @@ namespace WEB_UI.Controllers.api
         // GET: api/ids/directory/railway/code/
         [Route("code/{code:int}")]
         [ResponseType(typeof(Directory_Railway))]
-        public IHttpActionResult GetRailwayOfID(int code)
+        public IHttpActionResult GetRailwayOfCode(int code)
         {
             try
             {

@@ -46,6 +46,12 @@ namespace WEB_UI.Areas.Directory.Controllers
         {
             return View();
         }
+        // GET: Directory/Railway
+        [AccessOfDB(LogVisit = true)]
+        public ActionResult Railway()
+        {
+            return View();
+        }
 
         //******************************************************
         // СЕРВИСЫ
