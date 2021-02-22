@@ -473,10 +473,7 @@
                                                 alert.out_error_message('Ошибка удаления строки справочника!');
                                             }
                                             //
-                                            ids_dir.loadCargo(function () {
-                                                table_directory.load();
-
-                                            });
+                                            table_directory.load();
                                         });
                                     } else {
 

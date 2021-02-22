@@ -104,12 +104,12 @@
                     // Соберем все элементы в массив
                     pn_add_edit.all_obj = $([])
                         .add(pn_add_edit.add_edit_code)
-                    .add(pn_add_edit.add_edit_inlandrailway_name_ru)
-                    .add(pn_add_edit.add_edit_inlandrailway_name_en)
-                    .add(pn_add_edit.add_edit_inlandrailway_abbr_ru)
-                    .add(pn_add_edit.add_edit_inlandrailway_abbr_en)
-                    .add(pn_add_edit.add_edit_railway_code)
-                    .add(pn_add_edit.add_edit_railway);
+                        .add(pn_add_edit.add_edit_inlandrailway_name_ru)
+                        .add(pn_add_edit.add_edit_inlandrailway_name_en)
+                        .add(pn_add_edit.add_edit_inlandrailway_abbr_ru)
+                        .add(pn_add_edit.add_edit_inlandrailway_abbr_en)
+                        .add(pn_add_edit.add_edit_railway_code)
+                        .add(pn_add_edit.add_edit_railway);
                 // создадим классы 
                 //pn_add_edit.alert = new ALERT($('div#arrival-sostav-alert'));// Создадим класс ALERTG
                 pn_add_edit.val = new VALIDATION(pn_add_edit.lang, pn_add_edit.alert, pn_add_edit.all_obj); // Создадим класс VALIDATION
@@ -173,7 +173,7 @@
                             pn_add_edit.add_edit_inlandrailway_abbr_ru.val(pn_add_edit.select_obj.inlandrailway_abbr_ru);
                             pn_add_edit.add_edit_inlandrailway_abbr_en.val(pn_add_edit.select_obj.inlandrailway_abbr_en);
                             var railway = pn_add_edit.ids_dir.getRailway_Of_Code(ir.code_railway)
-                            pn_add_edit.add_edit_railway_code.val(railway ? railway.code: '');
+                            pn_add_edit.add_edit_railway_code.val(railway ? railway.code : '');
                             pn_add_edit.update_railway(railway ? railway['railway_name_' + pn_add_edit.lang] : '');
                             pn_add_edit.obj.dialog("open");
                         } else {
@@ -494,10 +494,7 @@
                                                 alert.out_error_message('Ошибка удаления строки справочника!');
                                             }
                                             //
-                                            ids_dir.loadCargo(function () {
-                                                table_directory.load();
-
-                                            });
+                                            table_directory.load();
                                         });
                                     } else {
 
