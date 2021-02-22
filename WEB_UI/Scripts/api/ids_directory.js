@@ -5353,7 +5353,7 @@ IDS_DIRECTORY.prototype.getListCountrys = function (fvalue, ftext, lang, filter)
 IDS_DIRECTORY.prototype.getRailway_Of_Code = function (code) {
     var rw = null;
     if (this.list_railway) {
-        rw = this.list_railway.find(function (o) { return o.code === code });
+        rw = this.list_railway.find(function (o) { return o.code === (code ? Number(code): code) });
     }
     return rw;
 };
@@ -5379,7 +5379,7 @@ IDS_DIRECTORY.prototype.getListRailway = function (fvalue, ftext, lang, filter) 
 IDS_DIRECTORY.prototype.getInlandRailway_Of_Code = function (code) {
     var inlandrailway = null;
     if (this.list_inlandrailway) {
-        inlandrailway = this.list_inlandrailway.find(function (o) { return o.code === code });
+        inlandrailway = this.list_inlandrailway.find(function (o) { return o.code === (code ? Number(code) : code) });
     }
     return inlandrailway;
 };
@@ -5405,7 +5405,7 @@ IDS_DIRECTORY.prototype.getListInlandRailway = function (fvalue, ftext, lang, fi
 IDS_DIRECTORY.prototype.getExternalStation_Of_Code = function (code) {
     var station = null;
     if (this.list_external_station) {
-        station = this.list_external_station.find(function (o) { return o.code === code });
+        station = this.list_external_station.find(function (o) { return o.code === (code ? Number(code) : code) });
     }
     return station;
 };
@@ -6059,10 +6059,6 @@ IDS_DIRECTORY.prototype.getList2ConditionArrival = function (fvalue, ftext1, fte
 //*======= IDS_DIRECTORY.list_divisions  (Справочник подразделений) ======================================
 IDS_DIRECTORY.prototype.getDivisions_Of_ID = function (id) {
     return getObj_Of_ID(this.list_divisions, id);
-    //if (this.list_divisions) {
-    //    var obj = getObjects(this.list_divisions, 'id', id);
-    //    return obj && obj.length > 0 ? obj[0] : null;
-    //}
 };
 //
 IDS_DIRECTORY.prototype.getValue_Divisions_Of_ID = function (id, name, lang) {
@@ -6077,15 +6073,11 @@ IDS_DIRECTORY.prototype.getValueCulture_Divisions_Of_ID = function (id, name) {
 //
 IDS_DIRECTORY.prototype.getDivisions_Of_Name = function (text, ftext, lang) {
     return this.getObjs_Of_text(this.list_divisions, text, ftext, lang);
-    //if (this.list_divisions) {
-    //    var obj = getObjects(this.list_divisions, (lang ? ftext + '_' + lang : name), text);
-    //    return obj && obj.length > 0 ? obj[0] : null;
-    //}
 };
 //
 IDS_DIRECTORY.prototype.getID_Divisions_Internal_Of_Name = function (text, ftext, lang) {
     var obj = this.getDivisions_Of_Name(text, ftext, lang);
-    return obj ? obj.id : null;
+    return obj && obj.length>0 ? obj[0].id : null;
 };
 //
 IDS_DIRECTORY.prototype.getListDivisions = function (fvalue, ftext, lang, filter) {
