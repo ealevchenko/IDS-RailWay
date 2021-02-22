@@ -340,6 +340,7 @@
                     language: language_table(langs),
                     jQueryUI: false,
                     "createdRow": function (row, data, index) {
+                        $(row).attr('id', data.code);
                     },
                     columns: [
                         {
