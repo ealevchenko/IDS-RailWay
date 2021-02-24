@@ -126,6 +126,9 @@
   <data name="cars_title" xml:space="preserve">
     <value>Справочник "Вагонов ИДС"</value>
   </data>
+  <data name="countrys_title" xml:space="preserve">
+    <value>Справочник "Страны"</value>
+  </data>
   <data name="external_station_title" xml:space="preserve">
     <value>Справочник "Внешние станции"</value>
   </data>
@@ -174,11 +177,32 @@
   <data name="title_add_edit_closed_route" xml:space="preserve">
     <value>Замкнутый маршрут</value>
   </data>
+  <data name="title_add_edit_code_europe" xml:space="preserve">
+    <value>Код Europe</value>
+  </data>
+  <data name="title_add_edit_code_iso" xml:space="preserve">
+    <value>Код ISO</value>
+  </data>
   <data name="title_add_edit_code_sap" xml:space="preserve">
     <value>Код в SAP</value>
   </data>
+  <data name="title_add_edit_code_sng" xml:space="preserve">
+    <value>Код СНГ</value>
+  </data>
   <data name="title_add_edit_countrys" xml:space="preserve">
     <value>Страна дороги</value>
+  </data>
+  <data name="title_add_edit_countrys_name_en" xml:space="preserve">
+    <value>Полное название страны (анг)</value>
+  </data>
+  <data name="title_add_edit_countrys_name_ru" xml:space="preserve">
+    <value>Полное название страны (рус)</value>
+  </data>
+  <data name="title_add_edit_country_abbr_en" xml:space="preserve">
+    <value>Краткое название страны (анг)</value>
+  </data>
+  <data name="title_add_edit_country_abbr_ru" xml:space="preserve">
+    <value>Краткое название страны (рус)</value>
   </data>
   <data name="title_add_edit_date_rem_uz" xml:space="preserve">
     <value>Дата рем. (УЗ)</value>
@@ -329,5 +353,8 @@
   </data>
   <data name="wagon_marking_title" xml:space="preserve">
     <value>Разметить вагоны</value>
+  </data>
+  <data name="shipper_title" xml:space="preserve">
+    <value>Справочник "Грузоотправители"</value>
   </data>
 </root>

@@ -6,11 +6,11 @@
             'default':  //default language: ru
             {
                 'field_code': 'Код',
-                'field_railway_name_ru': 'Полное название дороги (рус)',
-                'field_railway_name_en': 'Полное название дороги (eng)',
-                'field_railway_abbr_ru': 'Краткое название дороги (рус)',
-                'field_railway_abbr_en': 'Краткое название дороги (eng)',
-                'field_countrys': 'Cтрана дороги',
+                'field_inlandrailway_name_ru': 'Полное название дороги (рус)',
+                'field_inlandrailway_name_en': 'Полное название дороги (eng)',
+                'field_inlandrailway_abbr_ru': 'Краткое название дороги (рус)',
+                'field_inlandrailway_abbr_en': 'Краткое название дороги (eng)',
+                'field_code_railway': 'Дорога страны',
 
                 'field_create': 'Строка создана',
                 'field_change': 'Строку правил',
@@ -52,7 +52,7 @@
         loadReference = function (callback) {
             LockScreen(langView('mess_load', langs));
             var count = 1;
-            ids_dir.load(['countrys'], false, function () {
+            ids_dir.load(['railway'], false, function () {
                 count -= 1;
                 if (count === 0) {
                     if (typeof callback === 'function') {
@@ -74,19 +74,20 @@
             val: null,                                                                  // класс валидации
             select_code: null,                                                          // код строки
             select_obj: null,                                                           // строка
-            select_ctr_id: null,                                                       // код строки
+            select_rw_code: null,                                                       // код строки
             // Поля формы
             add_edit_code: $('input#add_edit_code'),
-            add_edit_railway_name_ru: $('textarea#add_edit_railway_name_ru'),
-            add_edit_railway_name_en: $('textarea#add_edit_railway_name_en'),
-            add_edit_railway_abbr_ru: $('input#add_edit_railway_abbr_ru'),
-            add_edit_railway_abbr_en: $('input#add_edit_railway_abbr_en'),
-            add_edit_countrys: $('input#add_edit_countrys'),
+            add_edit_inlandrailway_name_ru: $('textarea#add_edit_inlandrailway_name_ru'),
+            add_edit_inlandrailway_name_en: $('textarea#add_edit_inlandrailway_name_en'),
+            add_edit_inlandrailway_abbr_ru: $('input#add_edit_inlandrailway_abbr_ru'),
+            add_edit_inlandrailway_abbr_en: $('input#add_edit_inlandrailway_abbr_en'),
+            add_edit_railway_code: $('input#add_edit_railway_code'),
+            add_edit_railway: $('textarea#add_edit_railway'),
             // загрузка библиотек
             loadReference: function (callback) {
                 LockScreen(langView('mess_load', langs));
                 var count = 1;
-                pn_add_edit.ids_dir.load(['railway', 'countrys'], false, function () {
+                pn_add_edit.ids_dir.load(['inlandrailway', 'railway'], false, function () {
                     count -= 1;
                     if (count === 0) {
                         if (typeof callback === 'function') {
@@ -103,11 +104,12 @@
                     // Соберем все элементы в массив
                     pn_add_edit.all_obj = $([])
                         .add(pn_add_edit.add_edit_code)
-                        .add(pn_add_edit.add_edit_railway_name_ru)
-                        .add(pn_add_edit.add_edit_railway_name_en)
-                        .add(pn_add_edit.add_edit_railway_abbr_ru)
-                        .add(pn_add_edit.add_edit_railway_abbr_en)
-                        .add(pn_add_edit.add_edit_countrys);
+                        .add(pn_add_edit.add_edit_inlandrailway_name_ru)
+                        .add(pn_add_edit.add_edit_inlandrailway_name_en)
+                        .add(pn_add_edit.add_edit_inlandrailway_abbr_ru)
+                        .add(pn_add_edit.add_edit_inlandrailway_abbr_en)
+                        .add(pn_add_edit.add_edit_railway_code)
+                        .add(pn_add_edit.add_edit_railway);
                 // создадим классы 
                 //pn_add_edit.alert = new ALERT($('div#arrival-sostav-alert'));// Создадим класс ALERTG
                 pn_add_edit.val = new VALIDATION(pn_add_edit.lang, pn_add_edit.alert, pn_add_edit.all_obj); // Создадим класс VALIDATION
@@ -162,16 +164,17 @@
                     if (pn_add_edit.select_code) {
                         // Правим запись
                         pn_add_edit.obj.dialog("option", "title", "Править");
-                        var rw = pn_add_edit.ids_dir.getRailway_Of_Code(code);
-                        if (rw) {
-                            pn_add_edit.select_obj = rw;
+                        var ir = pn_add_edit.ids_dir.getInlandRailway_Of_Code(code);
+                        if (ir) {
+                            pn_add_edit.select_obj = ir;
                             pn_add_edit.add_edit_code.val(pn_add_edit.select_obj.code).prop("disabled", true);
-                            pn_add_edit.add_edit_railway_name_ru.val(pn_add_edit.select_obj.railway_name_ru);
-                            pn_add_edit.add_edit_railway_name_en.val(pn_add_edit.select_obj.railway_name_en);
-                            pn_add_edit.add_edit_railway_abbr_ru.val(pn_add_edit.select_obj.railway_abbr_ru);
-                            pn_add_edit.add_edit_railway_abbr_en.val(pn_add_edit.select_obj.railway_abbr_en);
-                            var countrys = ids_dir.getCountrys_Of_ID(rw.id_countrys)
-                            pn_add_edit.update_countrys(countrys ? countrys['countrys_name_' + pn_add_edit.lang] : '');
+                            pn_add_edit.add_edit_inlandrailway_name_ru.val(pn_add_edit.select_obj.inlandrailway_name_ru);
+                            pn_add_edit.add_edit_inlandrailway_name_en.val(pn_add_edit.select_obj.inlandrailway_name_en);
+                            pn_add_edit.add_edit_inlandrailway_abbr_ru.val(pn_add_edit.select_obj.inlandrailway_abbr_ru);
+                            pn_add_edit.add_edit_inlandrailway_abbr_en.val(pn_add_edit.select_obj.inlandrailway_abbr_en);
+                            var railway = pn_add_edit.ids_dir.getRailway_Of_Code(ir.code_railway)
+                            pn_add_edit.add_edit_railway_code.val(railway ? railway.code : '');
+                            pn_add_edit.update_railway(railway ? railway['railway_name_' + pn_add_edit.lang] : '');
                             pn_add_edit.obj.dialog("open");
                         } else {
                             pn_add_edit.val.clear_all();
@@ -180,11 +183,12 @@
                     } else {
                         pn_add_edit.obj.dialog("option", "title", "Добавить");
                         pn_add_edit.add_edit_code.val('').prop("disabled", false);
-                        pn_add_edit.add_edit_railway_name_ru.val('');
-                        pn_add_edit.add_edit_railway_name_en.val('');
-                        pn_add_edit.add_edit_railway_abbr_ru.val('');
-                        pn_add_edit.add_edit_railway_abbr_en.val('');
-                        pn_add_edit.update_countrys('');
+                        pn_add_edit.add_edit_inlandrailway_name_ru.val('');
+                        pn_add_edit.add_edit_inlandrailway_name_en.val('');
+                        pn_add_edit.add_edit_inlandrailway_abbr_ru.val('');
+                        pn_add_edit.add_edit_inlandrailway_abbr_en.val('');
+                        pn_add_edit.add_edit_railway_code.val('');
+                        pn_add_edit.update_railway('');
                         // Добавим запись
                         pn_add_edit.obj.dialog("open");
                     }
@@ -192,71 +196,73 @@
                 });
             },
             // Обновим дороги
-            update_countrys: function (text) {
-                pn_add_edit.add_edit_countrys = initAutocomplete(
-                    pn_add_edit.add_edit_countrys,
+            update_railway: function (text) {
+                pn_add_edit.add_edit_railway = initAutocomplete(
+                    pn_add_edit.add_edit_railway,
                     { lang: pn_add_edit.lang, minLength: 1 },
-                    getAutocompleteListText(pn_add_edit.ids_dir.getListCountrys('id', 'countrys_name', pn_add_edit.lang, null), 'text'),
-                    pn_add_edit.view_countrys_manual,
+                    getAutocompleteList(pn_add_edit.ids_dir.getListRailway('code', 'railway_name', pn_add_edit.lang, null), 'text'),
+                    pn_add_edit.view_railway_manual,
                     text
                 );
             },
-            // Отобразим и проверим выбрваную страну
-            view_countrys_manual: function (text) {
+            // Отобразим и проверим выбрваную дорогу
+            view_railway_manual: function (text) {
                 var valid = true;
-                var id = null;
+                var code = null;
                 if (text) {
-                    var objs = pn_add_edit.ids_dir.getCountrys_Of_Name(text, 'countrys_name', pn_add_edit.lang)
+                    var objs = pn_add_edit.ids_dir.getRailway_Of_Name(text, 'railway_name', pn_add_edit.lang)
                     if (objs && objs.length > 0) {
-                        id = objs[0].id;
-                        pn_add_edit.val.set_control_ok(pn_add_edit.add_edit_countrys, "");
+                        code = objs[0].code;
+                        pn_add_edit.val.set_control_ok(pn_add_edit.add_edit_railway, "");
+                        pn_add_edit.val.set_control_ok(pn_add_edit.add_edit_railway_code, "");
                     } else {
-                        pn_add_edit.val.set_control_error(pn_add_edit.add_edit_countrys, "Указанной страны нет в справочнике, создайте!");
+                        pn_add_edit.val.set_control_error(pn_add_edit.add_edit_railway, "Указанной дороги страны нет в справочнике, создайте!");
                         valid = false;
                     }
                 }
                 else {
-                    pn_add_edit.val.set_control_error(pn_add_edit.add_edit_countrys, "Укажите страну");
+                    pn_add_edit.val.set_control_error(pn_add_edit.add_edit_railway, "Укажите дорогу страны");
                     valid = false;
                 }
-                pn_add_edit.add_edit_countrys.val(text);
-                pn_add_edit.select_ctr_id = id;
+                pn_add_edit.add_edit_railway.val(text);
+                pn_add_edit.add_edit_railway_code.val(code);
+                pn_add_edit.select_rw_code = code;
                 return valid;
             },
             // Валидация данных
             validation: function () {
                 pn_add_edit.val.clear_all();
                 var valid = true;
-                valid = valid & pn_add_edit.val.checkInputOfNull(pn_add_edit.add_edit_code, "Не указан код дороги");
+                valid = valid & pn_add_edit.val.checkInputOfNull(pn_add_edit.add_edit_code, "Не указан код внутренней дороги");
                 if (pn_add_edit.select_code === null) {
                     // Добавлена дорога
-                    var rw = pn_add_edit.ids_dir.getRailway_Of_Code(get_input_number_value(pn_add_edit.add_edit_code))
-                    if (rw) {
-                        pn_add_edit.val.set_control_error(pn_add_edit.add_edit_code, "Дорога с таким кодом существует");
+                    var ir = pn_add_edit.ids_dir.getInlandRailway_Of_Code(get_input_number_value(pn_add_edit.add_edit_code))
+                    if (ir) {
+                        pn_add_edit.val.set_control_error(pn_add_edit.add_edit_code, "Внутренняя дорога с таким кодом существует");
                         valid = valid & false;
                     }
                 }
-                var val_rw = pn_add_edit.val.checkInputOfNull(pn_add_edit.add_edit_railway_name_ru, "Не указано полное название дороги на русском");
-                valid = valid & val_rw;
-                if (val_rw) {
-                    valid = valid & pn_add_edit.val.checkInputOfLength(pn_add_edit.add_edit_railway_name_ru, 1, 150, "Полное название дороги должно быть в диапазоне от 1-150 символов");
+                var val_ir = pn_add_edit.val.checkInputOfNull(pn_add_edit.add_edit_inlandrailway_name_ru, "Не указано полное название дороги на русском");
+                valid = valid & val_ir;
+                if (val_ir) {
+                    valid = valid & pn_add_edit.val.checkInputOfLength(pn_add_edit.add_edit_inlandrailway_name_ru, 1, 150, "Полное название дороги должно быть в диапазоне от 1-150 символов");
                 }
-                val_rw = pn_add_edit.val.checkInputOfNull(pn_add_edit.add_edit_railway_name_en, "Не указано полное название дороги на английском");
-                valid = valid & val_rw;
-                if (val_rw) {
-                    valid = valid & pn_add_edit.val.checkInputOfLength(pn_add_edit.add_edit_railway_name_en, 1, 150, "Полное название дороги должно быть в диапазоне от 1-150 символов");
+                var val_ir = pn_add_edit.val.checkInputOfNull(pn_add_edit.add_edit_inlandrailway_name_en, "Не указано полное название дороги на английском");
+                valid = valid & val_ir;
+                if (val_ir) {
+                    valid = valid & pn_add_edit.val.checkInputOfLength(pn_add_edit.add_edit_inlandrailway_name_en, 1, 150, "Полное название дороги должно быть в диапазоне от 1-150 символов");
                 }
-                val_rw = pn_add_edit.val.checkInputOfNull(pn_add_edit.add_edit_railway_abbr_ru, "Не указано краткое название дороги на русском");
-                valid = valid & val_rw;
-                if (val_rw) {
-                    valid = valid & pn_add_edit.val.checkInputOfLength(pn_add_edit.add_edit_railway_abbr_ru, 1, 50, "Краткое название дороги должно быть в диапазоне от 1-50 символов");
+                val_ir = pn_add_edit.val.checkInputOfNull(pn_add_edit.add_edit_inlandrailway_abbr_ru, "Не указано краткое название дороги на русском");
+                valid = valid & val_ir;
+                if (val_ir) {
+                    valid = valid & pn_add_edit.val.checkInputOfLength(pn_add_edit.add_edit_inlandrailway_abbr_ru, 1, 50, "Краткое название дороги должно быть в диапазоне от 1-50 символов");
                 }
-                val_rw = pn_add_edit.val.checkInputOfNull(pn_add_edit.add_edit_railway_abbr_en, "Не указано краткое название дороги на английском");
-                valid = valid & val_rw;
-                if (val_rw) {
-                    valid = valid & pn_add_edit.val.checkInputOfLength(pn_add_edit.add_edit_railway_abbr_en, 1, 50, "Краткое название дороги должно быть в диапазоне от 1-50 символов");
+                var val_ir = pn_add_edit.val.checkInputOfNull(pn_add_edit.add_edit_inlandrailway_abbr_en, "Не указано краткое название дороги на английском");
+                valid = valid & val_ir;
+                if (val_ir) {
+                    valid = valid & pn_add_edit.val.checkInputOfLength(pn_add_edit.add_edit_inlandrailway_abbr_en, 1, 50, "Краткое название дороги должно быть в диапазоне от 1-50 символов");
                 }
-                valid = valid & pn_add_edit.view_countrys_manual(pn_add_edit.add_edit_countrys.val());
+                valid = valid & pn_add_edit.view_railway_manual(pn_add_edit.add_edit_railway.val());
                 return valid;
             },
             // Сохранить прибытие состава
@@ -267,7 +273,7 @@
                     var new_object = pn_add_edit.get_object();
                     if (pn_add_edit.select_obj) {
                         // Править
-                        pn_add_edit.ids_dir.putRailway(new_object, function (result_upd) {
+                        pn_add_edit.ids_dir.putInlandRailway(new_object, function (result_upd) {
                             if (result_upd > 0) {
                                 if (typeof callback_ok === 'function') {
                                     pn_add_edit.obj.dialog("close");
@@ -275,13 +281,13 @@
                                 }
                             } else {
                                 pn_add_edit.val.clear_all();
-                                pn_add_edit.val.out_error_message("Ошибка. При обновлении строки дороги, произошла ошибка!");
+                                pn_add_edit.val.out_error_message("Ошибка. При обновлении строки внутренней дороги, произошла ошибка!");
                                 LockScreenOff();
                             }
                         });
                     } else {
                         // добавить
-                        pn_add_edit.ids_dir.postRailway(new_object, function (result_add) {
+                        pn_add_edit.ids_dir.postInlandRailway(new_object, function (result_add) {
                             if (result_add > 0) {
                                 if (typeof callback_ok === 'function') {
                                     pn_add_edit.obj.dialog("close");
@@ -289,22 +295,22 @@
                                 }
                             } else {
                                 pn_add_edit.val.clear_all();
-                                pn_add_edit.val.out_error_message("Ошибка. При добавлении строки дороги, произошла ошибка!");
+                                pn_add_edit.val.out_error_message("Ошибка. При добавлении строки внутренней дороги, произошла ошибка!");
                                 LockScreenOff();
                             }
                         });
                     }
                 }
             },
-            // Получить новый или обновить объект
+            // Получить новый груз с измененной группой
             get_object: function () {
                 return {
                     code: get_input_number_value(pn_add_edit.add_edit_code),
-                    railway_name_ru: get_input_string_value(pn_add_edit.add_edit_railway_name_ru),
-                    railway_name_en: get_input_string_value(pn_add_edit.add_edit_railway_name_en),
-                    railway_abbr_ru: get_input_string_value(pn_add_edit.add_edit_railway_abbr_ru),
-                    railway_abbr_en: get_input_string_value(pn_add_edit.add_edit_railway_abbr_en),
-                    id_countrys: pn_add_edit.select_ctr_id,
+                    inlandrailway_name_ru: get_input_string_value(pn_add_edit.add_edit_inlandrailway_name_ru),
+                    inlandrailway_name_en: get_input_string_value(pn_add_edit.add_edit_inlandrailway_name_en),
+                    inlandrailway_abbr_ru: get_input_string_value(pn_add_edit.add_edit_inlandrailway_abbr_ru),
+                    inlandrailway_abbr_en: get_input_string_value(pn_add_edit.add_edit_inlandrailway_abbr_en),
+                    code_railway: pn_add_edit.select_rw_code,
                     create: pn_add_edit.select_obj ? pn_add_edit.select_obj.create : toISOStringTZ(new Date()),
                     create_user: pn_add_edit.select_obj ? pn_add_edit.select_obj.create_user : pn_add_edit.user_name,
                     change: pn_add_edit.select_obj ? toISOStringTZ(new Date()) : null,
@@ -323,8 +329,8 @@
             count_string: null,
             init: function () {
                 this.obj = this.html_table.DataTable({
-                    "lengthMenu": [[20, 50, -1], [20, 50, "All"]],
-                    "pageLength": 20,
+                    "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "All"]],
+                    "pageLength": 10,
                     "paging": true,
                     "searching": true,
                     "ordering": true,
@@ -345,6 +351,7 @@
                     },
                     columns: [
                         {
+                            //data: "id",
                             data: function (row, type, val, meta) {
                                 return row.code;
                             },
@@ -353,54 +360,54 @@
                         },
                         {
                             data: function (row, type, val, meta) {
-                                return row.railway_name_ru;
+                                return row.inlandrailway_name_ru;
                             },
                             className: 'dt-body-left',
-                            title: langView('field_railway_name_ru', langs), width: "250px", orderable: true, searchable: true
+                            title: langView('field_inlandrailway_name_ru', langs), width: "150px", orderable: true, searchable: true
                         },
                         {
                             data: function (row, type, val, meta) {
-                                return row.railway_name_en;
+                                return row.inlandrailway_name_en;
                             },
                             className: 'dt-body-left',
-                            title: langView('field_railway_name_en', langs), width: "250px", orderable: true, searchable: true
+                            title: langView('field_inlandrailway_name_en', langs), width: "150px", orderable: true, searchable: true
                         },
                         {
                             data: function (row, type, val, meta) {
-                                return row.railway_abbr_ru;
+                                return row.inlandrailway_abbr_ru;
                             },
                             className: 'dt-body-left',
-                            title: langView('field_railway_abbr_ru', langs), width: "50px", orderable: true, searchable: true
+                            title: langView('field_inlandrailway_abbr_ru', langs), width: "50px", orderable: true, searchable: true
                         },
                         {
                             data: function (row, type, val, meta) {
-                                return row.railway_abbr_en;
+                                return row.inlandrailway_abbr_en;
                             },
                             className: 'dt-body-left',
-                            title: langView('field_railway_abbr_en', langs), width: "50px", orderable: true, searchable: true
+                            title: langView('field_inlandrailway_abbr_en', langs), width: "50px", orderable: true, searchable: true
                         },
                         {
                             data: function (row, type, val, meta) {
 
-                                var countrys = ids_dir.getCountrys_Of_ID(row.id_countrys)
-                                return countrys ? countrys['countrys_name_' + lang] : '';
+                                var railway = ids_dir.getRailway_Of_Code(row.code_railway)
+                                return railway ? railway['railway_name_' + lang] : '';
                             },
                             className: 'dt-body-left',
-                            title: langView('field_countrys', langs), width: "50px", orderable: true, searchable: true
+                            title: langView('field_code_railway', langs), width: "200px", orderable: true, searchable: true
                         },
                         {
                             data: function (row, type, val, meta) {
                                 return row.create_user + ' (' + getReplaceTOfDT(row.create) + ')';
                             },
                             className: 'dt-body-left',
-                            title: langView('field_create', langs), width: "150px", orderable: false, searchable: true
+                            title: langView('field_create', langs), width: "250px", orderable: false, searchable: true
                         },
                         {
                             data: function (row, type, val, meta) {
                                 return row.change ? (row.change_user + ' (' + getReplaceTOfDT(row.change) + ')') : '';
                             },
                             className: 'dt-body-left',
-                            title: langView('field_change', langs), width: "150px", orderable: false, searchable: true
+                            title: langView('field_change', langs), width: "250px", orderable: false, searchable: true
                         },
                     ],
                     dom: 'Bfrtip',
@@ -476,10 +483,10 @@
                             text: langView('title_button_del', langs),
                             action: function (e, dt, node, config) {
                                 alert.clear_message();
-                                dc.dialog_confirm('Open', 'Удалить?', 'Вы уверены что хотите удалить дорогу : ' + table_directory.select_string['railway_name_' + lang], function (result) {
+                                dc.dialog_confirm('Open', 'Удалить?', 'Вы уверены что хотите удалить внутреннюю дорогу : ' + table_directory.select_string['inlandrailway_name_' + lang], function (result) {
                                     if (result) {
                                         LockScreen(langView('mess_operation', langs));
-                                        ids_dir.deleteRailway(table_directory.select_string.code, function (result_del) {
+                                        ids_dir.deleteInlandRailway(table_directory.select_string.code, function (result_del) {
                                             alert.clear_message();
                                             if (result_del > 0) {
                                                 alert.out_info_message('Строка справочника - удалена!');
@@ -491,7 +498,7 @@
                                         });
                                     } else {
 
-                                        alert.out_warning_message('Оперрация "Удалить дорогу" - Отменена!');
+                                        alert.out_warning_message('Оперрация "Удалить внутреннюю дорогу" - Отменена!');
                                     }
                                 });
                             },
@@ -554,7 +561,7 @@
             //
             load: function () {
                 LockScreen(langView('mess_load_data', langs));
-                ids_dir.getRailway(function (list_directory) {
+                ids_dir.getInlandRailway(function (list_directory) {
                     table_directory.list_directory = list_directory;
                     table_directory.view(table_directory.list_directory)
                 });

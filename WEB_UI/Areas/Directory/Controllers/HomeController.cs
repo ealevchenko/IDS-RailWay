@@ -52,7 +52,18 @@ namespace WEB_UI.Areas.Directory.Controllers
         {
             return View();
         }
-
+        // GET: Directory/Countrys
+        [AccessOfDB(LogVisit = true)]
+        public ActionResult Countrys()
+        {
+            return View();
+        }
+        // GET: Directory/Shipper
+        [AccessOfDB(LogVisit = true)]
+        public ActionResult Shipper()
+        {
+            return View();
+        }
         //******************************************************
         // СЕРВИСЫ
         //******************************************************

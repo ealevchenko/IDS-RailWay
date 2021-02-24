@@ -88,6 +88,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Справочник &quot;Страны&quot;.
+        /// </summary>
+        public static string countrys_title {
+            get {
+                return ResourceManager.GetString("countrys_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Справочник &quot;Внешние станции&quot;.
         /// </summary>
         public static string external_station_title {
@@ -178,6 +187,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Справочник &quot;Грузоотправители&quot;.
+        /// </summary>
+        public static string shipper_title {
+            get {
+                return ResourceManager.GetString("shipper_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Кол. ос..
         /// </summary>
         public static string title_add_add_edit_kol_os {
@@ -232,6 +250,24 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Код Europe.
+        /// </summary>
+        public static string title_add_edit_code_europe {
+            get {
+                return ResourceManager.GetString("title_add_edit_code_europe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Код ISO.
+        /// </summary>
+        public static string title_add_edit_code_iso {
+            get {
+                return ResourceManager.GetString("title_add_edit_code_iso", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Код в SAP.
         /// </summary>
         public static string title_add_edit_code_sap {
@@ -241,11 +277,56 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Код СНГ.
+        /// </summary>
+        public static string title_add_edit_code_sng {
+            get {
+                return ResourceManager.GetString("title_add_edit_code_sng", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Краткое название страны (анг).
+        /// </summary>
+        public static string title_add_edit_country_abbr_en {
+            get {
+                return ResourceManager.GetString("title_add_edit_country_abbr_en", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Краткое название страны (рус).
+        /// </summary>
+        public static string title_add_edit_country_abbr_ru {
+            get {
+                return ResourceManager.GetString("title_add_edit_country_abbr_ru", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Страна дороги.
         /// </summary>
         public static string title_add_edit_countrys {
             get {
                 return ResourceManager.GetString("title_add_edit_countrys", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Полное название страны (анг).
+        /// </summary>
+        public static string title_add_edit_countrys_name_en {
+            get {
+                return ResourceManager.GetString("title_add_edit_countrys_name_en", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Полное название страны (рус).
+        /// </summary>
+        public static string title_add_edit_countrys_name_ru {
+            get {
+                return ResourceManager.GetString("title_add_edit_countrys_name_ru", resourceCulture);
             }
         }
         

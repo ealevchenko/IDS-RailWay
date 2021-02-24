@@ -5409,17 +5409,38 @@ IDS_DIRECTORY.prototype.getBorderCheckpoint_Of_CultureName = function (name, lan
 };
 
 //*======= IDS_DIRECTORY.list_countrys  (Справочник стран) ======================================
-IDS_DIRECTORY.prototype.getCountrys_Internal_Of_ID = function (id) {
+IDS_DIRECTORY.prototype.getCountrys_Of_ID = function (id) {
     return this.getObj_Of_ID(this.list_countrys, id);
+};
+IDS_DIRECTORY.prototype.getCountrys_Of_CodeSNG = function (code_sng) {
+    var obj = null;
+    if (this.list_countrys && this.list_countrys.length > 0) {
+        obj = this.list_countrys.find(function (o) { return o.code_sng === code_sng });
+    }
+    return obj;
+};
+IDS_DIRECTORY.prototype.getCountrys_Of_CodeEUROPE = function (code_europe) {
+    var obj = null;
+    if (this.list_countrys && this.list_countrys.length > 0) {
+        obj = this.list_countrys.find(function (o) { return o.code_europe === code_europe });
+    }
+    return obj;
+};
+IDS_DIRECTORY.prototype.getCountrys_Of_CodeISO = function (code_iso) {
+    var obj = null;
+    if (this.list_countrys && this.list_countrys.length > 0) {
+        obj = this.list_countrys.find(function (o) { return o.code_iso === code_iso });
+    }
+    return obj;
 };
 //
 IDS_DIRECTORY.prototype.getValue_Countrys_Of_ID = function (id, name, lang) {
-    var obj = this.getCountrys_Internal_Of_ID(id);
+    var obj = this.getCountrys_Of_ID(id);
     return this.getValueObj(obj, name, lang);
 };
 //
 IDS_DIRECTORY.prototype.getValueCulture_Countrys_Of_ID = function (id, name) {
-    var obj = this.getCountrys_Internal_Of_ID(id);
+    var obj = this.getCountrys_Of_ID(id);
     return obj ? obj[name + '_' + this.lang] : null;
 };
 IDS_DIRECTORY.prototype.getCountrys_Of_Name = function (text, ftext, lang) {

@@ -6564,14 +6564,14 @@
             // Получить текущий вагон из справочника (в ручном режиме)
             get_vagon_of_num_dir: function (num, callback) {
                 cars_detali.get_vagon_of_num(num, function (vagon) {
-                    var adm = cars_detali.ids_inc.ids_dir.getCountrys_Internal_Of_ID(0);
+                    var adm = cars_detali.ids_inc.ids_dir.getCountrys_Of_ID(0);
                     var rod = cars_detali.ids_inc.ids_dir.getGenusWagons_Internal_Of_ID(0);
                     var kol_os = 0;
                     var usl_tip = null;
                     // Вагон есть в базе
                     if (vagon) {
                         // Преобразуем переменные
-                        adm = cars_detali.ids_inc.ids_dir.getCountrys_Internal_Of_ID(vagon.id_countrys);
+                        adm = cars_detali.ids_inc.ids_dir.getCountrys_Of_ID(vagon.id_countrys);
                         rod = cars_detali.ids_inc.ids_dir.getGenusWagons_Internal_Of_ID(vagon.id_genus);
                         kol_os = vagon.kol_os;
                         usl_tip = vagon.usl_tip;

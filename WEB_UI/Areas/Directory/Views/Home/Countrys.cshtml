@@ -1,0 +1,109 @@
+﻿@using WEB_UI.App_LocalResources;
+@{
+    ViewBag.Title = @DirectoryResource.countrys_title;
+}
+
+@section styles {
+    @Styles.Render("~/DataTables/css")
+    <link rel="stylesheet" type="text/css" href="~/Content/view/directory/home.css">
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/Moment")
+    @Scripts.Render("~/bundles/DataTables")
+
+    <script src="~/Scripts/view/shared/common.js"></script> <!-- Общая библиотека методов программы -->
+    <script src="~/Scripts/api/shared.js"></script> <!-- Общая библиотека методов API -->
+    <script src="~/Scripts/api/ids_directory.js"></script> <!-- Class API ИДС Справочники -->
+
+    <script src="~/Scripts/plugins/pl_dialog_confirm.js"></script> <!-- Плагин -->
+
+    <script src="~/Scripts/view/directory/countrys.js"></script> <!--  -->
+}
+
+<input id="username" type="hidden" value="@User.Identity.Name" />
+
+<div id="dialog-confirm"></div>
+
+<div class="container-fluid">
+    <div class="alert" id="main-alert"></div>
+    <div class="row">
+        <div class="col-xl-12 mb-3 mt-2">
+            <div class="card border-dark mb-3">
+                <div class="card-header bg-secondary text-white">
+                    <div class="row">
+                        <div class="col-xl-12 text-center">
+                            @DirectoryResource.countrys_title
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body text-dark pl-3 pr-3" style="font-size:1.3rem">
+                    <div class="row">
+                        <div class="col-xl-12 text-center">
+                            <table id="table-directory" class="display compact cell-border row-border hover" style="width:100%"></table>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-dark">&copy; @DateTime.Now.Year ДАТП & ТД</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="add_edit" title="" style="display:none">
+    <div class="alert" id="add_edit_alert"></div>
+    <form id="form_add_edit">
+        <div class="form-group row" style="margin-bottom:0.5rem">
+            <label for="add_edit_code_sng" class="col-xl-6 col-form-label">@DirectoryResource.title_add_edit_code_sng:</label>
+            <div class="col-xl-6">
+                <input type="number" class="form-control" id="add_edit_code_sng" name="add_edit_code_sng">
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+        <div class="form-group row" style="margin-bottom:0.5rem">
+            <label for="add_edit_code_europe" class="col-xl-6 col-form-label">@DirectoryResource.title_add_edit_code_europe:</label>
+            <div class="col-xl-6">
+                <input type="number" class="form-control" id="add_edit_code_europe" name="add_edit_code_europe">
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+        <div class="form-group row" style="margin-bottom:0.5rem">
+            <label for="add_edit_code_iso" class="col-xl-6 col-form-label">@DirectoryResource.title_add_edit_code_iso:</label>
+            <div class="col-xl-6">
+                <input type="number" class="form-control" id="add_edit_code_iso" name="add_edit_code_iso">
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+        <div class="form-group row" style="margin-bottom:0.5rem">
+            <label for="add_edit_countrys_name_ru" class="col-xl-6 col-form-label">@DirectoryResource.title_add_edit_countrys_name_ru:</label>
+            <div class="col-xl-6">
+                <input type="text" class="form-control" id="add_edit_countrys_name_ru" name="add_edit_countrys_name_ru" placeholder="">
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+        <div class="form-group row" style="margin-bottom:0.5rem">
+            <label for="add_edit_countrys_name_en" class="col-xl-6 col-form-label">@DirectoryResource.title_add_edit_countrys_name_en:</label>
+            <div class="col-xl-6">
+                <input type="text" class="form-control" id="add_edit_countrys_name_en" name="add_edit_countrys_name_en" placeholder="">
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+        <div class="form-group row" style="margin-bottom:0.5rem">
+            <label for="add_edit_country_abbr_ru" class="col-xl-6 col-form-label">@DirectoryResource.title_add_edit_country_abbr_ru:</label>
+            <div class="col-xl-6">
+                <input type="text" class="form-control" id="add_edit_country_abbr_ru" name="add_edit_country_abbr_ru" min="0" max="20">
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+        <div class="form-group row" style="margin-bottom:0.5rem">
+            <label for="add_edit_country_abbr_en" class="col-xl-6 col-form-label">@DirectoryResource.title_add_edit_country_abbr_en:</label>
+            <div class="col-xl-6">
+                <input type="text" class="form-control" id="add_edit_country_abbr_en" name="add_edit_country_abbr_en" min="0" max="20">
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+        <!-- Allow form submission with keyboard without duplicating the dialog button -->
+        <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </form>
+</div>
+

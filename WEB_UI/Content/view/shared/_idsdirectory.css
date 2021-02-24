@@ -1164,4 +1164,10 @@ support for no js
   }
 }
 
+a.disabled {
+    pointer-events: none ; /* делаем элемент неактивным для взаимодействия */
+    cursor: default; /*  курсор в виде стрелки */
+    color: #888 !important; /* цвет текста серый */
+}
+
 
