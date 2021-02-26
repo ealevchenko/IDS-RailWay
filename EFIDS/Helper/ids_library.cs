@@ -843,7 +843,21 @@ namespace EFIDS.Helper
                 delete_user = d.delete_user
             };
         }
-
+        // Справочник причин возврата и задержания
+        public static Directory_DetentionReturn GetDirectory_DetentionReturn(this Directory_DetentionReturn d)
+        {
+            if (d == null) return null;
+            return new Directory_DetentionReturn()
+            {
+                id = d.id,
+                cause_ru = d.cause_ru,
+                cause_en = d.cause_en,
+                create = d.create,
+                create_user = d.create_user,
+                change = d.change,
+                change_user = d.change_user,
+            };
+        }
 
         #endregion
 
@@ -1648,6 +1662,35 @@ namespace EFIDS.Helper
                     Directory_Wagons = c.Directory_Wagons.GetDirectory_Wagons_Directory_WagonsRent(),
                     OutgoingSostav = c.OutgoingSostav.GetOutgoingSostav(),
                     //WagonInternalRoutes = c.WagonInternalRoutes.ToList().Select(w => w.GetWagonInternalRoutes()).ToList(),
+                };
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        public static OutgoingDetentionReturn GetOutgoingDetentionReturn(this OutgoingDetentionReturn o)
+        {
+            try
+            {
+                if (o == null) return null;
+                return new OutgoingDetentionReturn()
+                {
+                    id = o.id,
+                    num = o.num,
+                    id_detention_return = o.id_detention_return,
+                    type_detention_return = o.type_detention_return,
+                    date_start = o.date_start,
+                    date_stop = o.date_stop,
+                    num_act = o.num_act,
+                    date_act = o.date_act,
+                    note = o.note,
+                    create = o.create,
+                    create_user = o.create_user,
+                    change = o.change,
+                    change_user = o.change_user,
+                    Directory_DetentionReturn = o.Directory_DetentionReturn.GetDirectory_DetentionReturn()
                 };
             }
             catch (Exception e)

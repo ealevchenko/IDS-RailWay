@@ -223,6 +223,35 @@
                                                     <div class="col-xl-12 mb-1 text-left">
                                                         <fieldset class="border-warning">
                                                             <legend>@IDSRWTResource.title_detention</legend>
+                                                            <div class="form-row">
+                                                                <div class="col-xl-5 mb-1 text-left">
+                                                                    <label for="cause_detention" class="mb-1">@IDSRWTResource.title_cause_detention:</label>
+                                                                    <div class="input-group">
+                                                                        <input type="text" class="form-control inp-manual" id="cause_detention" name="cause_detention" title="" data-mode="edit" data-edit="" data-form="transceiver">
+                                                                        <div class="invalid-feedback"></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xl-3 mb-1 text-left">
+                                                                    <label for="detention_start" class="mb-1">@IDSRWTResource.title_detention_start</label>
+                                                                    <input type="text" class="form-control inp-manual" id="detention_start" name="detention_start" title="" data-mode="edit" data-edit="" data-form="transceiver">
+                                                                    <div class="invalid-feedback">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xl-3 mb-1 text-left">
+                                                                    <label for="detention_stop" class="mb-1">@IDSRWTResource.title_detention_stop:</label>
+                                                                    <input type="text" class="form-control inp-manual" id="detention_stop" name="detention_stop" title="" data-mode="edit" data-edit="" data-form="transceiver">
+                                                                    <div class="invalid-feedback">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xl-1 mb-1 text-left">
+                                                                    <button type="button" class="btn btn-warning btn" id="detention_save" title="" data-mode="edit" data-edit="" data-form="transceiver">
+                                                                        <i class="fa fa-save" aria-hidden="true"></i>
+                                                                    </button>
+                                                                    <button type="button" class="btn btn-danger btn" id="detention_close" title="" data-mode="edit" data-edit="" data-form="transceiver">
+                                                                        <i class="fa fa-close" aria-hidden="true"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
                                                         </fieldset>
                                                     </div>
                                                 </div>
@@ -248,7 +277,7 @@
                                                         <input type="text" class="form-control inp-auto" id="loading_devision_code" name="loading_devision_code" title="" data-mode="" data-edit="" data-form="transceiver">
                                                         <div class="invalid-feedback">
                                                         </div>
-                                                    </div>                                                    
+                                                    </div>
                                                     <div class="col-xl-5 mb-1 text-left">
                                                         <label for="loading_devision" class="mb-1">@IDSRWTResource.title_loading_devision:</label>
                                                         <input type="text" class="form-control inp-manual" id="loading_devision" name="loading_devision" title="" data-mode="edit" data-edit="" data-form="transceiver">

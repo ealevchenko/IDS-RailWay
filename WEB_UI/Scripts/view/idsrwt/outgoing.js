@@ -885,40 +885,49 @@
                 //
                 // Соберем все элементы для валидации отправки вагона в массив 
                 cars_detali.all_obj_outgoing_car = $([])
-                .add(cars_detali.position_outgoing)
-                .add(cars_detali.date_outgoing_act)
-                .add(cars_detali.date_outgoing_act.obj)
-                .add(cars_detali.rod_vag_abbr)
-                .add(cars_detali.rod_vag_name)
-                .add(cars_detali.adm_kod)
-                .add(cars_detali.adm_name)
-                .add(cars_detali.num_cont_1)
-                .add(cars_detali.num_cont_2)
-                .add(cars_detali.loaded_car)
-                .add(cars_detali.condition_arrival)
-                .add(cars_detali.condition_provide)
+                    .add(cars_detali.position_outgoing)
+                    .add(cars_detali.date_outgoing_act)
+                    .add(cars_detali.date_outgoing_act.obj)
+                    .add(cars_detali.rod_vag_abbr)
+                    .add(cars_detali.rod_vag_name)
+                    .add(cars_detali.adm_kod)
+                    .add(cars_detali.adm_name)
+                    .add(cars_detali.num_cont_1)
+                    .add(cars_detali.num_cont_2)
+                    .add(cars_detali.loaded_car)
+                    .add(cars_detali.condition_arrival)
+                    .add(cars_detali.condition_provide)
 
-                .add(cars_detali.cargo_name)
-                .add(cars_detali.loading_devision_code)
-                .add(cars_detali.loading_devision)
-                .add(cars_detali.owner_name)
-                .add(cars_detali.operator_name)
-                .add(cars_detali.limiting_loading_uz)
-                .add(cars_detali.limiting_loading_amkr)
+                    .add(cars_detali.cargo_name)
+                    .add(cars_detali.loading_devision_code)
+                    .add(cars_detali.loading_devision)
+                    .add(cars_detali.owner_name)
+                    .add(cars_detali.operator_name)
+                    .add(cars_detali.limiting_loading_uz)
+                    .add(cars_detali.limiting_loading_amkr)
 
-                .add(cars_detali.cargo_arrival)
-                .add(cars_detali.cargo_sap)
-                .add(cars_detali.date_arrival)
-                .add(cars_detali.gruzp_arrival)
-                .add(cars_detali.tara_arrival)
-                .add(cars_detali.owner_name_arrival)
-                .add(cars_detali.operator_name_arrival)
-                .add(cars_detali.limiting_loading_arrival)
-                ;
+                    .add(cars_detali.cause_detention)
+                    .add(cars_detali.detention_start.obj)
+                    .add(cars_detali.detention_stop.obj)
 
+                    .add(cars_detali.cargo_arrival)
+                    .add(cars_detali.cargo_sap)
+                    .add(cars_detali.date_arrival)
+                    .add(cars_detali.gruzp_arrival)
+                    .add(cars_detali.tara_arrival)
+                    .add(cars_detali.owner_name_arrival)
+                    .add(cars_detali.operator_name_arrival)
+                    .add(cars_detali.limiting_loading_arrival)
+                    ;
 
+                // Соберем все элементы для валидации отправки вагона в массив 
+                cars_detali.all_obj_outgoing_car_detention = $([])
+                    .add(cars_detali.cause_detention)
+                    .add(cars_detali.detention_start.obj)
+                    .add(cars_detali.detention_stop.obj);
                 // Валидации
                 cars_detali.val_outgoing_car = new VALIDATION(cars_detali.lang, cars_detali.alert_outgoing_car, cars_detali.all_obj_outgoing_car); // Создадим класс VALIDATION
+                cars_detali.val_outgoing_car_detention = new VALIDATION(cars_detali.lang, cars_detali.alert_outgoing_car, cars_detali.all_obj_outgoing_car_detention); // Создадим класс VALIDATION
                 // Таблицы
                 //cars_detali.table_dosc.init();// Инициализация таблицы с документами
                 //cars_detali.table_acts.init();// Инициализация таблицы с акт
@@ -957,28 +966,8 @@
                 cars_detali.update_reason_discrepancy_uz(null);             // Причина расхождения УЗ
                 cars_detali.update_cargo(null);                             // Груз
                 cars_detali.update_loading_devision(null);                  // Цех погрузки
-                //cars_detali.update_list_station_name_on(null);          // Станция получатель
-                //cars_detali.update_list_station_border(null);           // Пограничный пункт
-                //cars_detali.update_list_consignee(null);                // Грузополучатели
-                //cars_detali.update_list_shipper(null);                  // Грузопоотправитель
-                //cars_detali.update_list_station_on_amkr(-1);            // Станция АМКР
-                ////cars_detali.update_list_devision_on_amkr(-1);           // Цеха АМКР
-                //cars_detali.update_list_devision_on_amkr(null);           // Цеха АМКР
-                //cars_detali.update_list_adm(-1);                        // Администрации
-                //cars_detali.update_list_rod(null);                      // Род вагона
-                //cars_detali.update_list_owner(null);                    // Владелец вагона
-                //cars_detali.update_list_operator(null);                 // Оператор вагона
-                //cars_detali.update_list_kol_os(0);                      // Количество осей
-                //cars_detali.update_list_limiting_loading(null);         // Ограничение погрузки
-                //cars_detali.update_list_type_ownership(-1);             // Признак собственности
-                //cars_detali.update_list_condition_arrival(-1);          // Годность по прибытию
-                //cars_detali.update_list_type_wagon(-1);                 // Тип вагона
-                //cars_detali.update_list_name_plat(null);                // Плательщик по прибытию
-                //cars_detali.update_list_cargo_etsng(null);              // Грузы ЕТ СНГ
-                //cars_detali.update_list_cargo_gng(null);                // Грузы ЕТ ГНГ
-                //cars_detali.update_list_certificate_data(-1);           // сертификационные данные
-                //cars_detali.update_list_commercial_condition(-1);       // комерчиское состояние
-                //cars_detali.update_list_danger_name(-1);                // класс опасности
+                cars_detali.update_cause_detention(null);                   // Причина задержания
+
             },
             //-------------------------------------------------------------------------------------
             // Управление режимами и состоянием окна "Предъявить и отправить вагоны"
@@ -1092,10 +1081,11 @@
                     LockScreen(langView('mess_searsh_info_wagon', langs));
                     cars_detali.alert.clear_message();
                     cars_detali.val_outgoing_car.clear_all(); // Очистить ошибки если принимали вагон, с ошибкой
-                    cars_detali.select_id = null;       // Сбросим id выбранного вагона
-                    cars_detali.select_num = null;      // Сбросим номер вагона
-                    cars_detali.select_wir = null;      // Сбросим внутреенее перемещение вагона
-                    cars_detali.wagon_info_uz = null;   // Сбросим информацию о вагоне с базы днных УЗ
+                    cars_detali.select_id = null;               // Сбросим id выбранного вагона
+                    cars_detali.select_num = null;              // Сбросим номер вагона
+                    cars_detali.select_wir = null;              // Сбросим внутреенее перемещение вагона
+                    cars_detali.list_detention_return = null;   // Сбросим список возвратов и задержаний
+                    cars_detali.wagon_info_uz = null;           // Сбросим информацию о вагоне с базы днных УЗ
                     cars_detali.ids_inc.getOutgoingCarsOfID(id, function (car) {
                         if (car !== null) {
                             cars_detali.select_id = car.id; // Сохраним id вагона
@@ -1103,15 +1093,16 @@
                             // Найдем информацию по внутренему перемещению
                             cars_detali.ids_inc.getWagonInternalRoutesOfOutgoingCarsID(id, function (wir) {
                                 if (wir) {
-                                    cars_detali.select_wir = wir;
-                                    cars_detali.ids_inc.uz_dir.getInfoWagonOfNum(cars_detali.select_num, function (car_info) {
-                                        cars_detali.wagon_info_uz = car_info;
-                                        // Внутренее перемещение есть
-                                        cars_detali.view_cars(car, cars_detali.select_wir, cars_detali.wagon_info_uz);
+                                    // Найдем всю информацию по возвратам и задержаниям
+                                    cars_detali.ids_inc.getOutgoingDetentionReturnOfNum(cars_detali.select_num, function (list_detention_return) {
+                                        cars_detali.list_detention_return = list_detention_return; // сохраним список задержаний и возвратов
+                                        cars_detali.select_wir = wir;
+                                        cars_detali.ids_inc.uz_dir.getInfoWagonOfNum(cars_detali.select_num, function (car_info) {
+                                            cars_detali.wagon_info_uz = car_info;
+                                            // Внутренее перемещение есть
+                                            cars_detali.view_cars(car, cars_detali.select_wir, cars_detali.wagon_info_uz);
+                                        });
                                     });
-
-
-
                                 } else {
                                     // нет информации о внутренем перемещениии
                                     cars_detali.alert.out_error_message('В базе данных нет записи по внутренему перемещению вагона c id_outgoing_car = ' + id);
@@ -1146,6 +1137,7 @@
             select_id: null,                                    // Выбранный id вагона
             select_num: null,                                   // Выбранный вагон
             select_wir: null,                                   // Выбранное внутренее перемещение вагона
+            list_detention_return: null,                        // Список задержаний и возвратов
             wagon_info_uz: null,                                // Информация о вагоне из БД УЗ (текущая)
 
             //select_id_cargo: null,                              // Выбранный груз (таблица [KRR-PA-CNT-Railway].[IDS].[Directory_Cargo])
@@ -1160,6 +1152,7 @@
             //select_vagon_mode: false,                           // Режим вывода вагона из справочника (select_vagon_mode = false-вагон режим просмотра true-режим ввода в ручную)
             // ВАЛИДАЦИЯ --------------------------------------------------------------------
             val_outgoing_car: null,                              // класс валидации val_arrival_car
+            val_outgoing_car_detention: null,                    // класс валидации val_outgoing_car_detention
             alert_outgoing_car: $('div#car-detali-alert'),       // класс сообщений alert_arrival_car
             all_obj_outgoing_car: null,                          // массив всех элементов валидации all_obj_outgoingl_car
             //-------------------------------------------------------------------------------------
@@ -1190,7 +1183,25 @@
             condition_provide: $('input#condition_provide'), // Разметка выгрузка
             reason_discrepancy_amkr: $('input#reason_discrepancy_amkr'), // причина расхождения АМКР
             reason_discrepancy_uz: $('input#reason_discrepancy_uz'), // причина расхождения УЗ
+            cause_detention: $('input#cause_detention'), // причина задержания
+            // начало задержания
+            detention_start: cd_initDateTimeRangePicker($('input#detention_start'), { lang: lang, time: true }, function (datetime) {
 
+            }),
+            // конец задержания
+            detention_stop: cd_initDateTimeRangePicker($('input#detention_stop'), { lang: lang, time: true }, function (datetime) {
+
+            }),
+            // Кнопка добавить 
+            detention_save: $('button#detention_save').on('click', function () {
+                event.preventDefault();
+                var valid = cars_detali.validation_outgoing_car_detention();
+
+            }),
+            // Кнопка закрыть 
+            detention_close: $('button#detention_close').on('click', function () {
+                event.preventDefault();
+            }),
             cargo_name: $('input#cargo_name'), // Наименование груза
             loading_devision_code: $('input#loading_devision_code'), // цех погрузки
             loading_devision: $('input#loading_devision'), // цех погрузки
@@ -1237,6 +1248,9 @@
                 cars_detali.operator_name.val('');
                 cars_detali.limiting_loading_uz.val('');
                 cars_detali.limiting_loading_amkr.val('');
+                cars_detali.cause_detention.val('');
+                cars_detali.detention_start.setDateTime(null); // уберем дату
+                cars_detali.detention_stop.setDateTime(null); // уберем дату
 
                 cars_detali.cargo_arrival.val('');
                 cars_detali.cargo_sap.val('');
@@ -1290,6 +1304,17 @@
                     text
                 );
             },
+            // Обновить компонент причина задержания
+            update_cause_detention: function (text) {
+                cars_detali.cause_detention = initAutocomplete(
+                    this.cause_detention,
+                    { lang: cars_detali.lang, minLength: 2 },
+                    getAutocompleteList(cars_detali.ids_inc.ids_dir.getListDetention_Return('id', 'cause', cars_detali.lang, null), 'text'),
+                    cars_detali.view_cause_detention_manual,
+                    text
+                );
+            },
+
             //-------------------------------------------------------------------------------------
             // Отображение компонентов раздела "Информация о вагоне и ЭПД"
             //-------------------------------------------------------------------------------------
@@ -1350,6 +1375,43 @@
                 //cars_detali.validation_vag_devision_on_amkr(true, true);
 
             },
+            // Показать причину возврата или задержания
+            view_cause_detention_manual: function (text) {
+                var valid = true;
+                var id = null;
+                if (text) {
+                    var objs = cars_detali.ids_inc.ids_dir.getDetention_Return_Of_Name(text, 'cause', cars_detali.lang)
+                    if (objs && objs.length > 0) {
+                        code = objs[0].id;
+                        cars_detali.val_outgoing_car.set_control_ok(cars_detali.cause_detention, "");
+                    } else {
+                        cars_detali.val_outgoing_car.set_control_error(cars_detali.cause_detention, "Указанной причины задержания нет в справочнике ИДС.");
+                        valid = false;
+                    }
+                }
+                cars_detali.cause_detention.val(text);
+                return valid;
+            },
+            // Показать текущий статус вагона по задержанию
+            view_cars_detention_current: function () {
+                if (cars_detali.list_detention_return && cars_detali.list_detention_return.length > 0) {
+                    var list_detention = cars_detali.list_detention_return.filter(function (i) {
+                        return i.type_detention_return === 0 && i.date_stop === null;
+                    });
+                    if (list_detention && list_detention.length > 0) {
+                        cars_detali.detention_save.hide();
+                        cars_detali.detention_close.show();
+                    } else {
+                        cars_detali.detention_save.show();
+                        cars_detali.detention_close.hide();
+                    }
+
+                } else {
+                    cars_detali.detention_save.show();
+                    cars_detali.detention_close.hide();
+                }
+
+            },
             // Показать вагон
             view_cars: function (car, wir, wagon_info_uz) {
                 cars_detali.set_open_edit();   // Перевести в режим "open-edit"
@@ -1401,6 +1463,8 @@
                     if (condition_provide) {
                         cars_detali.condition_provide.val(condition_provide['condition_abbr_' + cars_detali.lang]);
                     }
+                    // ЗАДЕРЖАНИЕ -------------------------------------------------------------
+                    cars_detali.view_cars_detention_current();
                     // ДАННЫЕ О ПОГРУЗКЕ -------------------------------------------------------------
                     if (wagon_info_uz) {
                         cars_detali.owner_name.val(wagon_info_uz.owner);// Собственник (по УЗ)
@@ -1451,6 +1515,9 @@
                     cars_detali.alert.clear_message();
                 }
                 cars_detali.val_outgoing_car.clear_error();
+                // кнопки 
+                cars_detali.detention_save.hide();
+                cars_detali.detention_close.hide();
                 // Очистить не принятые вагоны.. ! добавить остальные ячейки
                 //cars_detali.select_otpr = null;
                 //cars_detali.select_main_otpr = null;
@@ -1473,7 +1540,7 @@
                 LockScreen(langView('mess_load', langs));
                 var count = 1;
                 //cars_detali.ids_inc.load([], ['hazard_class', 'commercial_condition', 'certification_data', 'payer_arrival', 'cargo', 'cargo_gng', 'cargo_etsng', 'cargo_group', 'type_wagons', 'condition_arrival', 'type_owner_ship', 'limiting_loading', 'operators_wagons', 'owners_wagons', 'genus_wagon', 'countrys', 'railway', 'inlandrailway', 'external_station', 'station', 'consignee', 'shipper', 'border_checkpoint', 'divisions'], ['internal_railroad', 'cargo'], false, function () {
-                cars_detali.ids_inc.load([], ['station', 'ways', 'reason_discrepancy', 'cargo', 'divisions'], [], false, function () {
+                cars_detali.ids_inc.load([], ['station', 'ways', 'reason_discrepancy', 'cargo', 'divisions', 'detention_return'], [], false, function () {
                     count -= 1;
                     if (count === 0) {
                         if (typeof callback === 'function') {
@@ -1481,6 +1548,21 @@
                         }
                     }
                 });
+            },
+            //-------------------------------------------------------------------------------------
+            // Валидация справочников и списков
+            //-------------------------------------------------------------------------------------
+            //
+            validation_outgoing_car_detention: function () {
+                cars_detali.val_outgoing_car_detention.clear_all();
+                var valid = true;
+                var val_det = cars_detali.val_outgoing_car_detention.checkInputOfNull(cars_detali.cause_detention, "Укажите причину задержания");
+                valid = valid & val_det;
+                if (val_det) {
+                    valid = valid & cars_detali.view_cause_detention_manual(cars_detali.cause_detention.val());
+                }
+                valid = valid & cars_detali.val_outgoing_car_detention.checkInputOfNull(cars_detali.detention_start.obj, "Укажите время начало задержания");
+                return valid;
             },
         };
 

@@ -630,4 +630,16 @@
   <data name="title_loading_devision_code" xml:space="preserve">
     <value>Шифр</value>
   </data>
+  <data name="title_cause_detention" xml:space="preserve">
+    <value>Причина задержания</value>
+  </data>
+  <data name="title_cause_return" xml:space="preserve">
+    <value>Причина возврата</value>
+  </data>
+  <data name="title_detention_start" xml:space="preserve">
+    <value>Начало зад.</value>
+  </data>
+  <data name="title_detention_stop" xml:space="preserve">
+    <value>Конец зад.</value>
+  </data>
 </root>

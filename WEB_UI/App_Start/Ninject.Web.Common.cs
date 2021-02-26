@@ -154,8 +154,6 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_Ways>>().To<EFIDS.Concrete.EFDirectory_Ways>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_OuterWays>>().To<EFIDS.Concrete.EFDirectory_OuterWays>();
 
-            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_DetentionReturn>>().To<EFIDS.Concrete.EFDirectory_DetentionReturn>();
-
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.CardsWagons>>().To<EFIDS.Concrete.EFCardsWagons>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.CardsWagonsRepairs>>().To<EFIDS.Concrete.EFCardsWagonsRepairs>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.ParksWagons>>().To<EFIDS.Concrete.EFParksWagons>();
@@ -169,7 +167,7 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFUZ.Abstract.IRepository<EFUZ.Entities.Directory_Cargo>>().To<EFUZ.Concrete.EFDirectory_Cargo>();
 
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_Reason_Discrepancy>>().To<EFIDS.Concrete.EFDirectory_Reason_Discrepancy>();
-
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_DetentionReturn>>().To<EFIDS.Concrete.EFDirectory_DetentionReturn>();
 
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.Arrival_UZ_Document>>().To<EFIDS.Concrete.EFArrival_UZ_Document>();
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.Arrival_UZ_Vagon>>().To<EFIDS.Concrete.EFArrival_UZ_Vagon>();

@@ -19,7 +19,7 @@ namespace WEB_UI.App_LocalResources {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class IDSRWTResource {
@@ -268,6 +268,24 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Причина задержания.
+        /// </summary>
+        public static string title_cause_detention {
+            get {
+                return ResourceManager.GetString("title_cause_detention", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Причина возврата.
+        /// </summary>
+        public static string title_cause_return {
+            get {
+                return ResourceManager.GetString("title_cause_return", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Сертификатные данные.
         /// </summary>
         public static string title_certificate_data {
@@ -471,6 +489,24 @@ namespace WEB_UI.App_LocalResources {
         public static string title_detention_return {
             get {
                 return ResourceManager.GetString("title_detention_return", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Начало зад..
+        /// </summary>
+        public static string title_detention_start {
+            get {
+                return ResourceManager.GetString("title_detention_start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Конец зад..
+        /// </summary>
+        public static string title_detention_stop {
+            get {
+                return ResourceManager.GetString("title_detention_stop", resourceCulture);
             }
         }
         

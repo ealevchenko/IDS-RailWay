@@ -222,6 +222,7 @@
     <Compile Include="Areas\IDSRWT\Controllers\HomeController.cs" />
     <Compile Include="Areas\IDSRWT\IDSRWTAreaRegistration.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_BorderCheckpointController.cs" />
+    <Compile Include="Controllers\api\Directoty\IDS_Directory_DetentionReturnController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_Reason_DiscrepancyController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_CargoGNGController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_CargoController.cs" />
@@ -271,6 +272,7 @@
     <Compile Include="Controllers\api\Directoty\IDS_Directory_ModelsWagonsController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_TypesRepairsWagonsController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_WagonManufacturersController.cs" />
+    <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_OutgoingDetentionReturnController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_WagonInternalRoutesController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_OutgoingCarsController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_ParkStateController.cs" />

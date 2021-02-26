@@ -88,6 +88,8 @@ IDS_DIRECTORY.list_divisions = [];
 
 IDS_DIRECTORY.list_reason_discrepancy = [];
 
+IDS_DIRECTORY.list_detention_return = [];
+
 /* ----------------------------------------------------------
 ЗАГРУЗКА СПРАВОЧНИКОВ
 -------------------------------------------------------------*/
@@ -594,6 +596,18 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
                 }
             });
         };
+        if (el === 'detention_return') {
+            IDS_DIRECTORY.prototype.getDetention_Return(function (detention_return) {
+                obj.list_detention_return = detention_return;
+                count -= 1;
+                if (count === 0) {
+                    if (typeof callback === 'function') {
+                        if (lockOff) { LockScreenOff(); }
+                        callback();
+                    }
+                }
+            });
+        };
     });
 };
 // Загрузка справочника грузоотправителей
@@ -808,6 +822,18 @@ IDS_DIRECTORY.prototype.loadReason_Discrepancy = function (callback) {
         }
     });
 };
+
+// Загрузка справочника причина задержаний и возвратов
+IDS_DIRECTORY.prototype.loadDetention_Return = function (callback) {
+    var obj = this;
+    IDS_DIRECTORY.prototype.getDetention_Return(function (result_detention_return) {
+        obj.list_detention_return = result_detention_return;
+        if (typeof callback === 'function') {
+            callback();
+        }
+    });
+};
+
 /* ----------------------------------------------------------
 AJAX функции
 -------------------------------------------------------------*/
@@ -4586,6 +4612,30 @@ IDS_DIRECTORY.prototype.getReason_Discrepancy = function (callback) {
     });
 };
 
+//======= Directory_DetentionReturn (Справочник причин возвратов и задержаний) ======================================
+IDS_DIRECTORY.prototype.getDetention_Return = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/detention_return/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getDetention_Return", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 /* ----------------------------------------------------------
 функции для работы с объектами
 -------------------------------------------------------------*/
@@ -6311,11 +6361,7 @@ IDS_DIRECTORY.prototype.getCloneWagonsRent = function (wagon_rent) {
 };
 //*======= IDS_DIRECTORY.list_reason_discrepancy  (Справочник расхождений) ======================================
 IDS_DIRECTORY.prototype.getReason_Discrepancy_Of_ID = function (id) {
-    var reason_discrepancy = null;
-    if (this.list_reason_discrepancy) {
-        reason_discrepancy = this.list_reason_discrepancy.find(function (o) { return o.id === id });
-    }
-    return reason_discrepancy;
+    return this.getObj_Of_ID(this.list_reason_discrepancy, id);
 };
 //
 IDS_DIRECTORY.prototype.getValue_Reason_Discrepancy_Of_ID = function (id, name, lang) {
@@ -6339,24 +6385,9 @@ IDS_DIRECTORY.prototype.getID_Reason_Discrepancy_Internal_Of_Name = function (te
     var obj = this.getReason_Discrepancy_Internal_Of_Name(text, ftext, lang);
     return obj ? obj.id : null;
 };
-//
+// Вернуть список в формате value: text
 IDS_DIRECTORY.prototype.getListReason_Discrepancy = function (fvalue, ftext, lang, filter) {
-    var list = [];
-    var list_filtr = null;
-    if (this.list_reason_discrepancy) {
-        if (typeof filter === 'function') {
-            list_filtr = this.list_reason_discrepancy.filter(filter);
-        } else { list_filtr = this.list_reason_discrepancy; }
-        for (i = 0, j = list_filtr.length; i < j; i++) {
-            var l = list_filtr[i];
-            if (lang) {
-                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
-            } else {
-                list.push({ value: l[fvalue], text: l[ftext] });
-            }
-        }
-    }
-    return list;
+    return this.getListObj(this.list_reason_discrepancy, fvalue, ftext, lang, filter);
 };
 // Получим список с выборкой по полю
 IDS_DIRECTORY.prototype.getReason_Discrepancy_Of_CultureName = function (name, lang, text) {
@@ -6365,4 +6396,18 @@ IDS_DIRECTORY.prototype.getReason_Discrepancy_Of_CultureName = function (name, l
         return obj
     }
     return null;
+};
+
+//*======= IDS_DIRECTORY.list_detention_return  (Справочник возвратов и задержаний) ======================================
+// Вернуть по id
+IDS_DIRECTORY.prototype.getDetention_Return_Of_ID = function (id) {
+    return this.getObj_Of_ID(this.list_detention_return, id);
+};
+// Вернуть список по полному названию причины
+IDS_DIRECTORY.prototype.getDetention_Return_Of_Name = function (text, ftext, lang) {
+    return this.getObjs_Of_text(this.list_detention_return, text, ftext, lang);
+};
+// Вернуть список в формате value: text
+IDS_DIRECTORY.prototype.getListDetention_Return = function (fvalue, ftext, lang, filter) {
+    return this.getListObj(this.list_detention_return, fvalue, ftext, lang, filter);
 };

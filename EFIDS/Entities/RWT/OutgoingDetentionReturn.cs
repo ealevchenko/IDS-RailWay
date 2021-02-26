@@ -21,6 +21,8 @@ namespace EFIDS.Entities
 
         public int id_detention_return { get; set; }
 
+        public int type_detention_return { get; set; }
+
         public DateTime date_start { get; set; }
 
         public DateTime? date_stop { get; set; }
