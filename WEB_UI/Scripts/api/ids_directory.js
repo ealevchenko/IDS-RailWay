@@ -4683,7 +4683,7 @@ IDS_DIRECTORY.prototype.getObjs_Of_text = function (list_obj, text, ftext, lang)
     var field = lang ? ftext + '_' + lang : ftext;
     if (list_obj && list_obj.length > 0) {
         objs = list_obj.filter(function (i) {
-            return i[field] === text ? true : false;
+            return $.trim(i[field]) === $.trim(text) ? true : false;
         });
     }
     return objs;
@@ -6406,6 +6406,10 @@ IDS_DIRECTORY.prototype.getDetention_Return_Of_ID = function (id) {
 // Вернуть список по полному названию причины
 IDS_DIRECTORY.prototype.getDetention_Return_Of_Name = function (text, ftext, lang) {
     return this.getObjs_Of_text(this.list_detention_return, text, ftext, lang);
+};
+IDS_DIRECTORY.prototype.getID_Detention_Return_Of_Name = function (text, ftext, lang) {
+    var objs = this.getDetention_Return_Of_Name(text, ftext, lang);
+    return objs && objs.length > 0 ? objs[0].id : null;
 };
 // Вернуть список в формате value: text
 IDS_DIRECTORY.prototype.getListDetention_Return = function (fvalue, ftext, lang, filter) {

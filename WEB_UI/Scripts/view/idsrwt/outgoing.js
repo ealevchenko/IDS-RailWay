@@ -1,302 +1,302 @@
 ﻿jQuery(document).ready(function ($) {
     // Массив текстовых сообщений 
     $.Text_View =
+    {
+        'default':  //default language: ru
         {
-            'default':  //default language: ru
-            {
-                'field_num_doc': '№ Ведомости',
-                'field_date_readiness_amkr': 'Время предъявления на УЗ',
-                'field_station_from': 'Стоит на станции',
-                'field_way_from': 'Стоит на пути',
-                'field_count': 'Кол. вагонов',
-                'field_station_on': 'Отправлен на станцию УЗ',
-                'field_date_show_wagons': 'Время готовности сдачи',
-                'field_date_end_inspection_acceptance_delivery': 'Время окон. осм. приемосд.',
-                'field_date_end_inspection_loader': 'Время окон. осм. грузчиками',
-                'field_date_end_inspection_vagonnik': 'Время окон. осм. вагонниками',
-                'field_date_readiness_uz': 'Время готовности к сдаче на УЗ                                    ',
-                'field_date_outgoing': 'Время сдачи на УЗ',
-                'field_date_outgoing_act': 'Время сдачи на УЗ (по акту)',
-                'field_date_departure': 'Время отправления с АМКР',
-                'field_count_all': 'Всего|отпр.|ост.|задерж.',
-                'field_composition_index': 'Индекс поезда',
-                'field_note': 'Примечание',
-                'field_status': 'Статус',
-                'field_create': 'Строка создана',
-                'field_create_user': 'Создал',
-                'field_change': 'Строка изменена',
-                'field_change_user': 'Правил',
-                'field_create_sostav': 'Добавил',
-                'field_change_sostav': 'Правил',
+            'field_num_doc': '№ Ведомости',
+            'field_date_readiness_amkr': 'Время предъявления на УЗ',
+            'field_station_from': 'Стоит на станции',
+            'field_way_from': 'Стоит на пути',
+            'field_count': 'Кол. вагонов',
+            'field_station_on': 'Отправлен на станцию УЗ',
+            'field_date_show_wagons': 'Время готовности сдачи',
+            'field_date_end_inspection_acceptance_delivery': 'Время окон. осм. приемосд.',
+            'field_date_end_inspection_loader': 'Время окон. осм. грузчиками',
+            'field_date_end_inspection_vagonnik': 'Время окон. осм. вагонниками',
+            'field_date_readiness_uz': 'Время готовности к сдаче на УЗ                                    ',
+            'field_date_outgoing': 'Время сдачи на УЗ',
+            'field_date_outgoing_act': 'Время сдачи на УЗ (по акту)',
+            'field_date_departure': 'Время отправления с АМКР',
+            'field_count_all': 'Всего|отпр.|ост.|задерж.',
+            'field_composition_index': 'Индекс поезда',
+            'field_note': 'Примечание',
+            'field_status': 'Статус',
+            'field_create': 'Строка создана',
+            'field_create_user': 'Создал',
+            'field_change': 'Строка изменена',
+            'field_change_user': 'Правил',
+            'field_create_sostav': 'Добавил',
+            'field_change_sostav': 'Правил',
 
-                'field_carrier_kod': 'Код перевізника',
-                'field_carrier_name': 'Скорочене найменування перевізника',
-                'field_date_akt': 'Дата складання акту',
-                'field_date_dved': 'Дата укладання досильної дорожньої відомості',
-                'field_esr_akt': 'ЄСР станції складання акту ',
-                'field_stn_name_akt': 'Найменування станції складання акту',
-                'field_nom_akt': 'Номер акту',
-                'field_nom_dved': 'Номер досильної дорожньої відомості',
-                'field_oper_date': 'Дата внесення даних по акту у перевізний документ',
-                'field_prichina_akt': 'Причина',
-                'field_responsible_person': 'Ім`я особи, відповідальної за внесення данних по акту у перевізний документ',
-                'field_ser_dved': 'Серія досильної дорожньої відомості',
-                'field_type': 'Тип акту',
-                'field_vagon_nom': 'Номер вагону ',
-                'field_zd_kod': 'Код залізниці перевантаження',
+            'field_carrier_kod': 'Код перевізника',
+            'field_carrier_name': 'Скорочене найменування перевізника',
+            'field_date_akt': 'Дата складання акту',
+            'field_date_dved': 'Дата укладання досильної дорожньої відомості',
+            'field_esr_akt': 'ЄСР станції складання акту ',
+            'field_stn_name_akt': 'Найменування станції складання акту',
+            'field_nom_akt': 'Номер акту',
+            'field_nom_dved': 'Номер досильної дорожньої відомості',
+            'field_oper_date': 'Дата внесення даних по акту у перевізний документ',
+            'field_prichina_akt': 'Причина',
+            'field_responsible_person': 'Ім`я особи, відповідальної за внесення данних по акту у перевізний документ',
+            'field_ser_dved': 'Серія досильної дорожньої відомості',
+            'field_type': 'Тип акту',
+            'field_vagon_nom': 'Номер вагону ',
+            'field_zd_kod': 'Код залізниці перевантаження',
 
-                'field_nom_cont': 'Номер контейнеру',
-                'field_kod_tiporazmer': 'Типорозмір контейнеру',
-                'field_gruzp': 'Маса брутто за трафаретом (т)',
-                'field_ves_tary_arc': 'Маса тари контейнеру (кг)',
-                'field_vesg': 'Вага вантажу нетто (кг)',
-                'field_brutto': 'Вага вантажу брутто',
-                'field_kod': 'Код платежу ',
-                'field_summa': 'Cума платежу (коп.)',
-                'field_nom_zpu': 'Номер ЗПП',
-                'field_kol_pac': 'Кількість місць упаковки',
-                'field_kod_etsng': 'Код вантажу по ЄТСНВ',
+            'field_nom_cont': 'Номер контейнеру',
+            'field_kod_tiporazmer': 'Типорозмір контейнеру',
+            'field_gruzp': 'Маса брутто за трафаретом (т)',
+            'field_ves_tary_arc': 'Маса тари контейнеру (кг)',
+            'field_vesg': 'Вага вантажу нетто (кг)',
+            'field_brutto': 'Вага вантажу брутто',
+            'field_kod': 'Код платежу ',
+            'field_summa': 'Cума платежу (коп.)',
+            'field_nom_zpu': 'Номер ЗПП',
+            'field_kol_pac': 'Кількість місць упаковки',
+            'field_kod_etsng': 'Код вантажу по ЄТСНВ',
 
-                'field_epd_num_doc': 'id-док.',
-                'field_epd_revision': '№ рев.',
-                'field_epd_status': 'Статус',
-                'field_epd_dt': 'Обновлен',
-                'field_epd_code_from': 'Грузоотправитель',
-                'field_epd_code_on': 'Грузополучатель',
-                'field_epd_xml': 'XML',
+            'field_epd_num_doc': 'id-док.',
+            'field_epd_revision': '№ рев.',
+            'field_epd_status': 'Статус',
+            'field_epd_dt': 'Обновлен',
+            'field_epd_code_from': 'Грузоотправитель',
+            'field_epd_code_on': 'Грузополучатель',
+            'field_epd_xml': 'XML',
 
-                'field_epd_car_num': '№ вагона',
-                'field_epd_car_operation': 'Будет прим. операц.',
-                'field_epd_car_composition_index': 'Индекс состава',
-                'field_epd_car_train': 'Поезд',
-                'field_epd_sostav_arrival': 'Состав прибыл',
-                'field_epd_car_staus': 'Статус состава',
-                'field_epd_car_arrival': 'Вагон принят',
+            'field_epd_car_num': '№ вагона',
+            'field_epd_car_operation': 'Будет прим. операц.',
+            'field_epd_car_composition_index': 'Индекс состава',
+            'field_epd_car_train': 'Поезд',
+            'field_epd_sostav_arrival': 'Состав прибыл',
+            'field_epd_car_staus': 'Статус состава',
+            'field_epd_car_arrival': 'Вагон принят',
 
-                'field_manual_car_num': '№ вагона',
-                'field_manual_car_operation': 'Будет прим. операц.',
-                'field_manual_car_id_doc_new': 'Найденный id-док',
-                'field_manual_car_id_doc_arrival': 'Привязаный id-док',
-                'field_manual_car_composition_index': 'Индекс состава',
-                'field_manual_car_train': 'Поезд',
-                'field_manual_sostav_arrival': 'Состав прибыл',
-                'field_manual_car_staus': 'Статус состава',
-                'field_manual_car_arrival': 'Вагон принят',
+            'field_manual_car_num': '№ вагона',
+            'field_manual_car_operation': 'Будет прим. операц.',
+            'field_manual_car_id_doc_new': 'Найденный id-док',
+            'field_manual_car_id_doc_arrival': 'Привязаный id-док',
+            'field_manual_car_composition_index': 'Индекс состава',
+            'field_manual_car_train': 'Поезд',
+            'field_manual_sostav_arrival': 'Состав прибыл',
+            'field_manual_car_staus': 'Статус состава',
+            'field_manual_car_arrival': 'Вагон принят',
 
-                'field_position_arrival': '№',
-                'field_nom_doc_arrival': '№ накл.',
-                'field_nom_main_doc_arrival': '№ осн. накл',
-                'field_num_arrival': '№ вагона',
-                'field_car_countrys_arrival': 'Адм.',
-                'field_car_rod_arrival': 'Род',
-                'field_gruzp_arrival': 'ГП,т',
-                'field_u_tara_arrival': 'Тара,т',
-                'field_car_date_rem_uz_arrival': 'Рем. УЗ',
-                'field_car_date_rem_vag_arrival': 'Рем. вагон',
+            'field_position_arrival': '№',
+            'field_nom_doc_arrival': '№ накл.',
+            'field_nom_main_doc_arrival': '№ осн. накл',
+            'field_num_arrival': '№ вагона',
+            'field_car_countrys_arrival': 'Адм.',
+            'field_car_rod_arrival': 'Род',
+            'field_gruzp_arrival': 'ГП,т',
+            'field_u_tara_arrival': 'Тара,т',
+            'field_car_date_rem_uz_arrival': 'Рем. УЗ',
+            'field_car_date_rem_vag_arrival': 'Рем. вагон',
 
 
-                'field_car_owner_arrival': 'Собств.',
-                'field_car_operator_arrival': 'Операт.',
-                'field_limiting_arrival': 'Огран.',
-                'field_car_rent_start_arrival': 'Нач. аренды',
+            'field_car_owner_arrival': 'Собств.',
+            'field_car_operator_arrival': 'Операт.',
+            'field_limiting_arrival': 'Огран.',
+            'field_car_rent_start_arrival': 'Нач. аренды',
 
-                'field_condition_arrival': 'Разм. по приб.',
+            'field_condition_arrival': 'Разм. по приб.',
 
-                'field_code_stn_from_arrival': 'Код. ст. отпр.',
-                'field_name_stn_from_arrival': 'Ст. отпр.',
-                'field_code_stn_to_arrival': 'Код. ст. приб.',
-                'field_name_stn_to_arrival': 'Ст. приб.',
-                'field_code_border_checkpoint_arrival': 'Код. погр. перех',
-                'field_name_border_checkpoint_arrival': 'Погр. перех.',
-                'field_cross_time_arrival': 'Вр. перех.',
-                'field_code_shipper_arrival': 'Код. гру-отпр.',
-                'field_name_shipper_arrival': 'Гру-отпр.',
-                'field_code_consignee_arrival': 'Код. гру-пол.',
-                'field_name_consignee_arrival': 'Гру-пол.',
+            'field_code_stn_from_arrival': 'Код. ст. отпр.',
+            'field_name_stn_from_arrival': 'Ст. отпр.',
+            'field_code_stn_to_arrival': 'Код. ст. приб.',
+            'field_name_stn_to_arrival': 'Ст. приб.',
+            'field_code_border_checkpoint_arrival': 'Код. погр. перех',
+            'field_name_border_checkpoint_arrival': 'Погр. перех.',
+            'field_cross_time_arrival': 'Вр. перех.',
+            'field_code_shipper_arrival': 'Код. гру-отпр.',
+            'field_name_shipper_arrival': 'Гру-отпр.',
+            'field_code_consignee_arrival': 'Код. гру-пол.',
+            'field_name_consignee_arrival': 'Гру-пол.',
 
-                'field_code_payer_sender_arrival': 'Код. плат. по отпр.',
-                'field_name_payer_sender_arrival': 'Плат. по отпр',
-                'field_distance_way_arrival': 'Тар. расс.',
+            'field_code_payer_sender_arrival': 'Код. плат. по отпр.',
+            'field_name_payer_sender_arrival': 'Плат. по отпр',
+            'field_distance_way_arrival': 'Тар. расс.',
 
-                'field_vesg_arrival': 'Вес,т',
-                'field_cargo_arrival': 'Груз',
-                'field_car_kol_os_arrival': 'Кол. ос.',
-                'field_car_usl_tip_arrival': 'Тип цс',
-                'field_station_on_amkr_arrival': 'Следует на ст.',
-                'field_division_on_amkr_arrival': 'Цех получатель',
+            'field_vesg_arrival': 'Вес,т',
+            'field_cargo_arrival': 'Груз',
+            'field_car_kol_os_arrival': 'Кол. ос.',
+            'field_car_usl_tip_arrival': 'Тип цс',
+            'field_station_on_amkr_arrival': 'Следует на ст.',
+            'field_division_on_amkr_arrival': 'Цех получатель',
 
-                'title_button_export': 'Экспорт',
-                'title_button_buffer': 'Буфер',
-                'title_button_excel': 'Excel',
-                'title_button_field': 'Поля',
-                'title_button_field_select': 'Выбрать',
-                'title_button_field_view_all': 'Показать все',
-                'title_button_field_clear': 'Сбросить',
-                'title_button_return': 'Вернуть состав',
+            'title_button_export': 'Экспорт',
+            'title_button_buffer': 'Буфер',
+            'title_button_excel': 'Excel',
+            'title_button_field': 'Поля',
+            'title_button_field_select': 'Выбрать',
+            'title_button_field_view_all': 'Показать все',
+            'title_button_field_clear': 'Сбросить',
+            'title_button_return': 'Вернуть состав',
 
-                'title_button_wagon': 'Вагоны',
-                'title_button_wagon_accept': 'Отправить вагоны',
-                'title_button_wagon_view': 'Показать вагоны',
-                'title_arrival_sostav': 'Принять состав',
-                'title_return_car': 'Вернуть вагон',
+            'title_button_wagon': 'Вагоны',
+            'title_button_wagon_accept': 'Отправить вагоны',
+            'title_button_wagon_view': 'Показать вагоны',
+            'title_arrival_sostav': 'Принять состав',
+            'title_return_car': 'Вернуть вагон',
 
-                'mess_searsh_info_wagon': 'Сбор информации по вагону ...',
-                'mess_searsh_vagon': 'Поиск вагона ...',
-                'mess_not_searsh_epd': 'Автоматически ЭПД не найден, попробуйте найти документ по номеру вагона в промежуточной базе данных (воспользовавшись кнопкой поиска справа от поля "№ Вагона") или получите номер вагона по номеру накладной (колонка "Сведения ЭПД").',
-                'mess_not_searsh_epd_vagon': 'Автоматически ЭПД найден но в нем нет выбранного вагона, попробуйте найти документ по номеру вагона в промежуточной базе данных (воспользовавшись кнопкой поиска справа от поля "№ Вагона") или получите номер вагона по номеру накладной (колонка "Сведения ЭПД").',
+            'mess_searsh_info_wagon': 'Сбор информации по вагону ...',
+            'mess_searsh_vagon': 'Поиск вагона ...',
+            'mess_not_searsh_epd': 'Автоматически ЭПД не найден, попробуйте найти документ по номеру вагона в промежуточной базе данных (воспользовавшись кнопкой поиска справа от поля "№ Вагона") или получите номер вагона по номеру накладной (колонка "Сведения ЭПД").',
+            'mess_not_searsh_epd_vagon': 'Автоматически ЭПД найден но в нем нет выбранного вагона, попробуйте найти документ по номеру вагона в промежуточной базе данных (воспользовавшись кнопкой поиска справа от поля "№ Вагона") или получите номер вагона по номеру накладной (колонка "Сведения ЭПД").',
 
-                'mess_not_manual_epd': 'В промежуточной базе данных ЭПД не найден, введите данные вручную перейдя в режим "Ручной ввод" (воспользовавшись кнопкой "Правка" справа от поля "№ Вагона" или выбрав грузополучателя не "АМКР") или получите номер вагона по номеру накладной (колонка "Сведения ЭПД").',
-                'mess_arrival_vagon': 'Переношу вагон в базу данных как прибывший ...',
-                'mess_clear_vagon': 'Возвращаю вагон в базу данных на подходах ...',
-                'mess_print': 'Готовлю документ для печати ...',
-            },
-            'en':  //default language: English
-            {
-                'field_num_doc': 'No. of the Statement',
-                'field_date_readiness_amkr': 'Presentation time on UZ',
-                'field_station_from': 'Standing at a station',
-                'field_way_from': 'Is in the way',
-                'field_count': 'Count. wagons',
-                'field_station_on': 'Sent to UZ station',
-                'field_date_show_wagons': 'Surrender ready time',
-                'field_date_end_inspection_acceptance_delivery': 'Window time. osm. reception. ',
-                'field_date_end_inspection_loader': 'Window time. osm. loaders',
-                'field_date_end_inspection_vagonnik': 'Window time. osm. carriages',
-                'field_date_readiness_uz': 'Readiness time for delivery to UZ',
-                'field_date_outgoing': 'Time of delivery to UZ',
-                'field_date_outgoing_act': 'Time of delivery to UZ (by act)',
-                'field_date_departure': 'Departure time from AMKR',
-                'field_count_all': 'Total | send | stop | delay',
-                'field_composition_index': 'Train index',
-                'field_note': 'Note',
-                'field_status': 'Status',
-                'field_create': 'String created',
-                'field_create_user': 'Created',
-                'field_change': 'String changed',
-                'field_change_user': 'Rules',
-                'field_create_sostav': 'Added',
-                'field_change_sostav': 'Rules',
+            'mess_not_manual_epd': 'В промежуточной базе данных ЭПД не найден, введите данные вручную перейдя в режим "Ручной ввод" (воспользовавшись кнопкой "Правка" справа от поля "№ Вагона" или выбрав грузополучателя не "АМКР") или получите номер вагона по номеру накладной (колонка "Сведения ЭПД").',
+            'mess_arrival_vagon': 'Переношу вагон в базу данных как прибывший ...',
+            'mess_clear_vagon': 'Возвращаю вагон в базу данных на подходах ...',
+            'mess_print': 'Готовлю документ для печати ...',
+        },
+        'en':  //default language: English
+        {
+            'field_num_doc': 'No. of the Statement',
+            'field_date_readiness_amkr': 'Presentation time on UZ',
+            'field_station_from': 'Standing at a station',
+            'field_way_from': 'Is in the way',
+            'field_count': 'Count. wagons',
+            'field_station_on': 'Sent to UZ station',
+            'field_date_show_wagons': 'Surrender ready time',
+            'field_date_end_inspection_acceptance_delivery': 'Window time. osm. reception. ',
+            'field_date_end_inspection_loader': 'Window time. osm. loaders',
+            'field_date_end_inspection_vagonnik': 'Window time. osm. carriages',
+            'field_date_readiness_uz': 'Readiness time for delivery to UZ',
+            'field_date_outgoing': 'Time of delivery to UZ',
+            'field_date_outgoing_act': 'Time of delivery to UZ (by act)',
+            'field_date_departure': 'Departure time from AMKR',
+            'field_count_all': 'Total | send | stop | delay',
+            'field_composition_index': 'Train index',
+            'field_note': 'Note',
+            'field_status': 'Status',
+            'field_create': 'String created',
+            'field_create_user': 'Created',
+            'field_change': 'String changed',
+            'field_change_user': 'Rules',
+            'field_create_sostav': 'Added',
+            'field_change_sostav': 'Rules',
 
-                'field_carrier_kod': 'Carrier code',
-                'field_carrier_name': 'Carrier name is not fast enough',
-                'field_date_akt': 'Date the act was folded',
-                'field_date_dved': 'Date when the road was set to the right size',
-                'field_esr_akt': 'ЄСР station folding to act',
-                'field_stn_name_akt': 'Naming the station for the act',
-                'field_nom_akt': 'Act number',
-                'field_nom_dved': 'Number of sufficient road views',
-                'field_oper_date': 'The date of the entry of the tribute according to the act of the rewinding document',
-                'field_prichina_akt': 'Reason',
-                'field_responsible_person': 'I`m individual, based on the data entered according to the act of the re-transfer document',
-                'field_ser_dved': 'Serious road views',
-                'field_type': 'Act type',
-                'field_vagon_nom': 'Number of the car',
-                'field_zd_kod': 'Code of zd_zd_kod',
+            'field_carrier_kod': 'Carrier code',
+            'field_carrier_name': 'Carrier name is not fast enough',
+            'field_date_akt': 'Date the act was folded',
+            'field_date_dved': 'Date when the road was set to the right size',
+            'field_esr_akt': 'ЄСР station folding to act',
+            'field_stn_name_akt': 'Naming the station for the act',
+            'field_nom_akt': 'Act number',
+            'field_nom_dved': 'Number of sufficient road views',
+            'field_oper_date': 'The date of the entry of the tribute according to the act of the rewinding document',
+            'field_prichina_akt': 'Reason',
+            'field_responsible_person': 'I`m individual, based on the data entered according to the act of the re-transfer document',
+            'field_ser_dved': 'Serious road views',
+            'field_type': 'Act type',
+            'field_vagon_nom': 'Number of the car',
+            'field_zd_kod': 'Code of zd_zd_kod',
 
-                'field_nom_cont': 'Container number',
-                'field_kod_tiporazmer': 'Type size for container',
-                'field_gruzp': 'Masa gross per stencil (t)',
-                'field_ves_tary_arc': 'Masa tary container (kg)',
-                'field_vesg': 'Vaha vantage net (kg)',
-                'field_brutto': 'Wagah vantage gross',
-                'field_kod': 'Payment code',
-                'field_summa': 'Amount for payment (cop.)',
-                'field_nom_zpu': 'ZPP number',
-                'field_kol_pac': 'Number of packs',
-                'field_kod_etsng': 'Vantage code for ЄTSNV',
+            'field_nom_cont': 'Container number',
+            'field_kod_tiporazmer': 'Type size for container',
+            'field_gruzp': 'Masa gross per stencil (t)',
+            'field_ves_tary_arc': 'Masa tary container (kg)',
+            'field_vesg': 'Vaha vantage net (kg)',
+            'field_brutto': 'Wagah vantage gross',
+            'field_kod': 'Payment code',
+            'field_summa': 'Amount for payment (cop.)',
+            'field_nom_zpu': 'ZPP number',
+            'field_kol_pac': 'Number of packs',
+            'field_kod_etsng': 'Vantage code for ЄTSNV',
 
-                'field_epd_num_doc': 'doc-id',
-                'field_epd_revision': 'rev. no.',
-                'field_epd_status': 'Status',
-                'field_epd_dt': 'Updated',
-                'field_epd_code_from': 'Shipper',
-                'field_epd_code_on': 'Consignee',
-                'field_epd_xml': 'XML',
+            'field_epd_num_doc': 'doc-id',
+            'field_epd_revision': 'rev. no.',
+            'field_epd_status': 'Status',
+            'field_epd_dt': 'Updated',
+            'field_epd_code_from': 'Shipper',
+            'field_epd_code_on': 'Consignee',
+            'field_epd_xml': 'XML',
 
-                'field_epd_car_num': 'Car number',
-                'field_epd_car_operation': 'Will be approx. oper. ',
-                'field_epd_car_composition_index': 'Composition Index',
-                'field_epd_car_train': 'Train',
-                'field_epd_sostav_arrival': 'The train has arrived',
-                'field_epd_car_staus': 'Train Status',
-                'field_epd_car_arrival': 'Carriage accepted',
+            'field_epd_car_num': 'Car number',
+            'field_epd_car_operation': 'Will be approx. oper. ',
+            'field_epd_car_composition_index': 'Composition Index',
+            'field_epd_car_train': 'Train',
+            'field_epd_sostav_arrival': 'The train has arrived',
+            'field_epd_car_staus': 'Train Status',
+            'field_epd_car_arrival': 'Carriage accepted',
 
-                'field_manual_car_num': 'Car number',
-                'field_manual_car_operation': 'Will be approx. oper. ',
-                'field_manual_car_id_doc_new': 'Found id-doc',
-                'field_manual_car_id_doc_arrival': 'Bound dock id',
-                'field_manual_car_composition_index': 'Composition Index',
-                'field_manual_car_train': 'Train',
-                'field_manual_sostav_arrival': 'The train has arrived',
-                'field_manual_car_staus': 'Train status',
-                'field_manual_car_arrival': 'Carriage accepted',
+            'field_manual_car_num': 'Car number',
+            'field_manual_car_operation': 'Will be approx. oper. ',
+            'field_manual_car_id_doc_new': 'Found id-doc',
+            'field_manual_car_id_doc_arrival': 'Bound dock id',
+            'field_manual_car_composition_index': 'Composition Index',
+            'field_manual_car_train': 'Train',
+            'field_manual_sostav_arrival': 'The train has arrived',
+            'field_manual_car_staus': 'Train status',
+            'field_manual_car_arrival': 'Carriage accepted',
 
-                'field_position_arrival': 'No.',
-                'field_nom_doc_arrival': 'Incl. no.',
-                'field_nom_main_doc_arrival': 'Main no. tilt ',
-                'field_num_arrival': 'Wagon number',
-                'field_car_countrys_arrival': 'Adm.',
-                'field_car_rod_arrival': 'Rod',
-                'field_gruzp_arrival': 'GP, t',
-                'field_u_tara_arrival': 'Tara, t',
-                'field_car_date_rem_uz_arrival': 'Rem. UZ ',
-                'field_car_date_rem_vag_arrival': 'Rem. railway carriage',
-                'field_car_owner_arrival': 'Own',
-                'field_car_operator_arrival': 'Operator',
-                'field_limiting_arrival': 'Limiting',
-                'field_car_rent_start_arrival': 'Start. rent ',
+            'field_position_arrival': 'No.',
+            'field_nom_doc_arrival': 'Incl. no.',
+            'field_nom_main_doc_arrival': 'Main no. tilt ',
+            'field_num_arrival': 'Wagon number',
+            'field_car_countrys_arrival': 'Adm.',
+            'field_car_rod_arrival': 'Rod',
+            'field_gruzp_arrival': 'GP, t',
+            'field_u_tara_arrival': 'Tara, t',
+            'field_car_date_rem_uz_arrival': 'Rem. UZ ',
+            'field_car_date_rem_vag_arrival': 'Rem. railway carriage',
+            'field_car_owner_arrival': 'Own',
+            'field_car_operator_arrival': 'Operator',
+            'field_limiting_arrival': 'Limiting',
+            'field_car_rent_start_arrival': 'Start. rent ',
 
-                'field_condition_arrival': 'Resize by arr. ',
+            'field_condition_arrival': 'Resize by arr. ',
 
-                'field_code_stn_from_arrival': 'Code. Art. send. ',
-                'field_name_stn_from_arrival': 'Art. send. ',
-                'field_code_stn_to_arrival': 'Code. Art. arr. ',
-                'field_name_stn_to_arrival': 'Art. arr. ',
-                'field_code_border_checkpoint_arrival': 'Code. burial cross',
-                'field_name_border_checkpoint_arrival': 'Border. junction. ',
-                'field_cross_time_arrival': 'Arrival time junction. ',
-                'field_code_shipper_arrival': 'Code. gru-send ',
-                'field_name_shipper_arrival': 'Ship shipper',
-                'field_code_consignee_arrival': 'Code. gru-pol. ',
-                'field_name_consignee_arrival': 'Gru-pol.',
+            'field_code_stn_from_arrival': 'Code. Art. send. ',
+            'field_name_stn_from_arrival': 'Art. send. ',
+            'field_code_stn_to_arrival': 'Code. Art. arr. ',
+            'field_name_stn_to_arrival': 'Art. arr. ',
+            'field_code_border_checkpoint_arrival': 'Code. burial cross',
+            'field_name_border_checkpoint_arrival': 'Border. junction. ',
+            'field_cross_time_arrival': 'Arrival time junction. ',
+            'field_code_shipper_arrival': 'Code. gru-send ',
+            'field_name_shipper_arrival': 'Ship shipper',
+            'field_code_consignee_arrival': 'Code. gru-pol. ',
+            'field_name_consignee_arrival': 'Gru-pol.',
 
-                'field_code_payer_sender_arrival': 'Code. boards. to send ',
-                'field_name_payer_sender_arrival': 'Pay. by send ',
-                'field_distance_way_arrival': 'Tar. rass. ',
+            'field_code_payer_sender_arrival': 'Code. boards. to send ',
+            'field_name_payer_sender_arrival': 'Pay. by send ',
+            'field_distance_way_arrival': 'Tar. rass. ',
 
-                'field_vesg_arrival': 'Weight, t',
-                'field_cargo_arrival': 'Cargo',
-                'field_car_kol_os_arrival': 'Qty. os. ',
-                'field_car_usl_tip_arrival': 'Type cs',
-                'field_station_on_amkr_arrival': 'Follows the station',
-                'field_division_on_amkr_arrival': 'Shop recipient',
+            'field_vesg_arrival': 'Weight, t',
+            'field_cargo_arrival': 'Cargo',
+            'field_car_kol_os_arrival': 'Qty. os. ',
+            'field_car_usl_tip_arrival': 'Type cs',
+            'field_station_on_amkr_arrival': 'Follows the station',
+            'field_division_on_amkr_arrival': 'Shop recipient',
 
-                'title_button_export': 'Export',
-                'title_button_buffer': 'Buffer',
-                'title_button_excel': 'Excel',
-                'title_button_field': 'Fields',
-                'title_button_field_select': 'Select',
-                'title_button_field_view_all': 'Show all',
-                'title_button_field_clear': 'Reset',
-                'title_button_return': 'Return wagon',
+            'title_button_export': 'Export',
+            'title_button_buffer': 'Buffer',
+            'title_button_excel': 'Excel',
+            'title_button_field': 'Fields',
+            'title_button_field_select': 'Select',
+            'title_button_field_view_all': 'Show all',
+            'title_button_field_clear': 'Reset',
+            'title_button_return': 'Return wagon',
 
-                'title_button_wagon': 'Wagons',
-                'title_button_wagon_accept': 'Send wagons',
-                'title_button_wagon_view': 'Show wagons',
-                'title_arrival_sostav': 'Receive Arrival',
-                'title_return_car': 'Return the car',
+            'title_button_wagon': 'Wagons',
+            'title_button_wagon_accept': 'Send wagons',
+            'title_button_wagon_view': 'Show wagons',
+            'title_arrival_sostav': 'Receive Arrival',
+            'title_return_car': 'Return the car',
 
-                'mess_searsh_info_wagon': 'Search for wagon ...',
-                'mess_searsh_vagon': 'Searching for a car ...',
-                'mess_not_searsh_epd': 'Automatically EPD was not found, try to find the document by car number in the intermediate database (using the search button to the right of the "Car number" field) or get the car number by the consignment note number ("EPD details" column).',
-                'mess_not_searsh_epd_vagon': 'Automatically EPD was found but the selected wagon does not exist in it, try to find the document by wagon number in the intermediate database (using the search button to the right of the "Wagon number" field) or get the wagon number by the consignment note number ("EPD details" column ). ',
+            'mess_searsh_info_wagon': 'Search for wagon ...',
+            'mess_searsh_vagon': 'Searching for a car ...',
+            'mess_not_searsh_epd': 'Automatically EPD was not found, try to find the document by car number in the intermediate database (using the search button to the right of the "Car number" field) or get the car number by the consignment note number ("EPD details" column).',
+            'mess_not_searsh_epd_vagon': 'Automatically EPD was found but the selected wagon does not exist in it, try to find the document by wagon number in the intermediate database (using the search button to the right of the "Wagon number" field) or get the wagon number by the consignment note number ("EPD details" column ). ',
 
-                'mess_not_manual_epd': 'EPD was not found in the intermediate database, enter the data manually by switching to the "Manual input" mode (using the "Edit" button to the right of the "Car number" field or by selecting the consignee not "AMKR") or get the car number by number consignment note (column "EPD details"). ',
-                'mess_arrival_vagon': 'Transferring the wagon to the database as arrived ...',
-                'mess_clear_vagon': 'Returning the wagon to the database on the way ...',
-                'mess_print': 'Preparing a document for printing ...',
-            }
-        };
+            'mess_not_manual_epd': 'EPD was not found in the intermediate database, enter the data manually by switching to the "Manual input" mode (using the "Edit" button to the right of the "Car number" field or by selecting the consignee not "AMKR") or get the car number by number consignment note (column "EPD details"). ',
+            'mess_arrival_vagon': 'Transferring the wagon to the database as arrived ...',
+            'mess_clear_vagon': 'Returning the wagon to the database on the way ...',
+            'mess_print': 'Preparing a document for printing ...',
+        }
+    };
 
     //*************************************************************************************
     // ОБЪЯВЛЕНИЕ ОСНОВНЫХ ОБЪЕКТОВ ПРИЛОЖЕНИЯ
@@ -1080,23 +1080,24 @@
                     var id = $(this).attr('id');
                     LockScreen(langView('mess_searsh_info_wagon', langs));
                     cars_detali.alert.clear_message();
-                    cars_detali.val_outgoing_car.clear_all(); // Очистить ошибки если принимали вагон, с ошибкой
-                    cars_detali.select_id = null;               // Сбросим id выбранного вагона
-                    cars_detali.select_num = null;              // Сбросим номер вагона
-                    cars_detali.select_wir = null;              // Сбросим внутреенее перемещение вагона
-                    cars_detali.list_detention_return = null;   // Сбросим список возвратов и задержаний
-                    cars_detali.wagon_info_uz = null;           // Сбросим информацию о вагоне с базы днных УЗ
+                    cars_detali.val_outgoing_car.clear_all();               // Очистить ошибки если принимали вагон, с ошибкой
+                    cars_detali.select_id = null;                           // Сбросим id выбранного вагона
+                    cars_detali.select_num = null;                          // Сбросим номер вагона
+                    cars_detali.select_id_outgoing_detention_return = null; // Сбросим id задержания
+                    cars_detali.select_wir = null;                          // Сбросим внутреенее перемещение вагона
+                    cars_detali.list_detention_return = null;               // Сбросим список возвратов и задержаний
+                    cars_detali.wagon_info_uz = null;                       // Сбросим информацию о вагоне с базы днных УЗ
                     cars_detali.ids_inc.getOutgoingCarsOfID(id, function (car) {
                         if (car !== null) {
-                            cars_detali.select_id = car.id; // Сохраним id вагона
-                            cars_detali.select_num = car.num;   // Сохраним номер вагона
+                            cars_detali.select_id = car.id;                                             // Сохраним id вагона
+                            cars_detali.select_num = car.num;                                           // Сохраним номер вагона
+                            cars_detali.select_id_outgoing_detention_return = car.id_outgoing_detention_return;     // Сохраним id задержания
                             // Найдем информацию по внутренему перемещению
                             cars_detali.ids_inc.getWagonInternalRoutesOfOutgoingCarsID(id, function (wir) {
                                 if (wir) {
+                                    cars_detali.select_wir = wir;
                                     // Найдем всю информацию по возвратам и задержаниям
-                                    cars_detali.ids_inc.getOutgoingDetentionReturnOfNum(cars_detali.select_num, function (list_detention_return) {
-                                        cars_detali.list_detention_return = list_detention_return; // сохраним список задержаний и возвратов
-                                        cars_detali.select_wir = wir;
+                                    cars_detali.loadOutgoingDetentionReturnOfnum(cars_detali.select_num, function () {
                                         cars_detali.ids_inc.uz_dir.getInfoWagonOfNum(cars_detali.select_num, function (car_info) {
                                             cars_detali.wagon_info_uz = car_info;
                                             // Внутренее перемещение есть
@@ -1136,6 +1137,7 @@
             // 2-ручной ввод (выбран и не принят и вся информация вводится в ручную и из существующих справочников)
             select_id: null,                                    // Выбранный id вагона
             select_num: null,                                   // Выбранный вагон
+            select_id_outgoing_detention_return: null,          // Выбранное id задержания
             select_wir: null,                                   // Выбранное внутренее перемещение вагона
             list_detention_return: null,                        // Список задержаний и возвратов
             wagon_info_uz: null,                                // Информация о вагоне из БД УЗ (текущая)
@@ -1196,11 +1198,64 @@
             detention_save: $('button#detention_save').on('click', function () {
                 event.preventDefault();
                 var valid = cars_detali.validation_outgoing_car_detention();
+                if (valid) {
+                    if (valid) {
+                        LockScreen(langView('mess_operation', langs));
+                        var new_detention = {
+                            id: 0,
+                            num: cars_detali.select_num,
+                            id_detention_return: cars_detali.ids_inc.ids_dir.getID_Detention_Return_Of_Name(get_input_string_value(cars_detali.cause_detention), 'cause', cars_detali.lang),
+                            type_detention_return: 0,
+                            date_start: toISOStringTZ(get_datetime_value(cars_detali.detention_start.val(), cars_detali.lang)),
+                            date_stop: toISOStringTZ(get_datetime_value(cars_detali.detention_stop.val(), cars_detali.lang)),
+                            num_act: null,
+                            date_act: null,
+                            note: '',
+                            create: toISOStringTZ(new Date()),
+                            create_user: cars_detali.user,
+                            change: null,
+                            change_user: null,
+                        }
+                        // добавить
+                        cars_detali.val_outgoing_car_detention.clear_all();
+                        cars_detali.ids_inc.postOutgoingDetentionReturn(new_detention, function (result_add) {
+                            if (result_add > 0) {
+                                // Добавил задержанание
+                                cars_detali.select_id_outgoing_detention_return = result_add; // Запомним новую ссылку на задержание
+                                cars_detali.ids_inc.getOutgoingCarsOfID(cars_detali.select_id, function (car) {
+                                    if (car !== null) {
+                                        car.id_outgoing_detention_return = result_add;
+                                        car.Directory_Wagons = null;
+                                        car.WagonInternalRoutes = null;
+                                        car.change = toISOStringTZ(new Date());
+                                        car.change_user = cars_detali.user;
+                                        cars_detali.ids_inc.putOutgoingCars(car, function (result_car_upd) {
+                                            if (result_car_upd > 0) {
+                                                // Обновим список задержаний
+                                                cars_detali.loadOutgoingDetentionReturnOfnum(cars_detali.select_num, function () {
+                                                    // Покажем текущий статус
+                                                    cars_detali.view_cars_detention_current();
+                                                    LockScreenOff();
+                                                });
+                                            } else {
+                                                cars_detali.val_outgoing_car_detention.out_error_message("Ошибка обновления строки вагона для предъявления, ссылка на строку таблицы задержания [IDS].[OutgoingDetentionReturn] с id=" + result_add + "- не добавлена!");
+                                                LockScreenOff();
+                                            }
+                                        });
+                                    } else {
+                                        cars_detali.val_outgoing_car_detention.out_error_message("Ошибка обновления строки вагона для предъявления, строка таблицы [IDS].[OutgoingCars] c id=" + cars_detali.select_id + " не найдена");
+                                        LockScreenOff();
+                                    }
+                                });
 
-            }),
-            // Кнопка закрыть 
-            detention_close: $('button#detention_close').on('click', function () {
-                event.preventDefault();
+                            } else {
+                                cars_detali.val_outgoing_car_detention.out_error_message("Ошибка добавления новой строки задержания!");
+                                LockScreenOff();
+                            }
+                        });
+
+                    }
+                }
             }),
             cargo_name: $('input#cargo_name'), // Наименование груза
             loading_devision_code: $('input#loading_devision_code'), // цех погрузки
@@ -1308,7 +1363,7 @@
             update_cause_detention: function (text) {
                 cars_detali.cause_detention = initAutocomplete(
                     this.cause_detention,
-                    { lang: cars_detali.lang, minLength: 2 },
+                    { lang: cars_detali.lang, minLength: 3 },
                     getAutocompleteList(cars_detali.ids_inc.ids_dir.getListDetention_Return('id', 'cause', cars_detali.lang, null), 'text'),
                     cars_detali.view_cause_detention_manual,
                     text
@@ -1375,14 +1430,12 @@
                 //cars_detali.validation_vag_devision_on_amkr(true, true);
 
             },
-            // Показать причину возврата или задержания
+            // Показать причину задержания
             view_cause_detention_manual: function (text) {
                 var valid = true;
-                var id = null;
                 if (text) {
                     var objs = cars_detali.ids_inc.ids_dir.getDetention_Return_Of_Name(text, 'cause', cars_detali.lang)
                     if (objs && objs.length > 0) {
-                        code = objs[0].id;
                         cars_detali.val_outgoing_car.set_control_ok(cars_detali.cause_detention, "");
                     } else {
                         cars_detali.val_outgoing_car.set_control_error(cars_detali.cause_detention, "Указанной причины задержания нет в справочнике ИДС.");
@@ -1392,23 +1445,35 @@
                 cars_detali.cause_detention.val(text);
                 return valid;
             },
+
             // Показать текущий статус вагона по задержанию
             view_cars_detention_current: function () {
                 if (cars_detali.list_detention_return && cars_detali.list_detention_return.length > 0) {
-                    var list_detention = cars_detali.list_detention_return.filter(function (i) {
-                        return i.type_detention_return === 0 && i.date_stop === null;
+                    var detention = cars_detali.list_detention_return.find(function (o) {
+                        return o.id === cars_detali.select_id_outgoing_detention_return && o.type_detention_return === 0;
                     });
-                    if (list_detention && list_detention.length > 0) {
+
+                    if (detention) {
                         cars_detali.detention_save.hide();
-                        cars_detali.detention_close.show();
+                        // Показать
+                        var dr = detention.Directory_DetentionReturn;
+                        cars_detali.view_cause_detention_manual(dr ? dr['cause_' + cars_detali.lang] : null);
+                        cars_detali.cause_detention.prop("disabled", true);
+                        cars_detali.detention_start.obj.prop("disabled", true);
+                        cars_detali.detention_stop.obj.prop("disabled", true);
+                        cars_detali.detention_start.setDateTime(detention.date_start);
+                        cars_detali.detention_stop.setDateTime(detention.date_stop);
                     } else {
                         cars_detali.detention_save.show();
-                        cars_detali.detention_close.hide();
+                        cars_detali.cause_detention.prop("disabled", false);
+                        cars_detali.detention_start.obj.prop("disabled", false);
+                        cars_detali.detention_stop.obj.prop("disabled", false);
                     }
-
                 } else {
                     cars_detali.detention_save.show();
-                    cars_detali.detention_close.hide();
+                    cars_detali.cause_detention.prop("disabled", false);
+                    cars_detali.detention_start.obj.prop("disabled", false);
+                    cars_detali.detention_stop.obj.prop("disabled", false);
                 }
 
             },
@@ -1517,7 +1582,6 @@
                 cars_detali.val_outgoing_car.clear_error();
                 // кнопки 
                 cars_detali.detention_save.hide();
-                cars_detali.detention_close.hide();
                 // Очистить не принятые вагоны.. ! добавить остальные ячейки
                 //cars_detali.select_otpr = null;
                 //cars_detali.select_main_otpr = null;
@@ -1549,6 +1613,16 @@
                     }
                 });
             },
+            // Загрузка задержаний по номеру вагона
+            loadOutgoingDetentionReturnOfnum: function (num, callback) {
+                cars_detali.ids_inc.getOutgoingDetentionReturnOfNum(num, function (list_detention_return) {
+                    cars_detali.list_detention_return = list_detention_return; // сохраним список задержаний и возвратов
+                    if (typeof callback === 'function') {
+                        callback(list_detention_return);
+                    }
+                });
+            },
+
             //-------------------------------------------------------------------------------------
             // Валидация справочников и списков
             //-------------------------------------------------------------------------------------
@@ -1562,6 +1636,18 @@
                     valid = valid & cars_detali.view_cause_detention_manual(cars_detali.cause_detention.val());
                 }
                 valid = valid & cars_detali.val_outgoing_car_detention.checkInputOfNull(cars_detali.detention_start.obj, "Укажите время начало задержания");
+                valid = valid & cars_detali.val_outgoing_car_detention.checkInputOfNull(cars_detali.detention_stop.obj, "Укажите время конца задержания");
+                if (valid) {
+                    var start = moment(cars_detali.detention_start.getDateTime());
+                    var stop = moment(cars_detali.detention_stop.getDateTime());
+                    if (start.isBefore(stop)) {  //|| !start.isSame(stop)
+                        valid = valid & true;
+                    } else {
+                        cars_detali.val_outgoing_car_detention.set_object_error(cars_detali.detention_start.obj, "Время начала должно быть меньше времени конца.");
+                        cars_detali.val_outgoing_car_detention.set_object_error(cars_detali.detention_stop.obj, "Время начала должно быть меньше времени конца.");
+                        valid = valid & false;
+                    }
+                }
                 return valid;
             },
         };

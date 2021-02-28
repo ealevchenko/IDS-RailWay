@@ -1624,6 +1624,8 @@ namespace EFIDS.Helper
                     change = c.change,
                     change_user = c.change_user,
                     id_outgoing_uz_vagon = c.id_outgoing_uz_vagon,
+                    id_outgoing_detention_return = c.id_outgoing_detention_return,
+                    OutgoingDetentionReturn = c.OutgoingDetentionReturn.GetOutgoingDetentionReturn(),
                     UZ_DOC_OUT = c.UZ_DOC_OUT.GetUZ_DOC_OUT(),
                     Directory_Wagons = c.Directory_Wagons.GetDirectory_Wagons_Directory_WagonsRent(),
                     OutgoingSostav = null,

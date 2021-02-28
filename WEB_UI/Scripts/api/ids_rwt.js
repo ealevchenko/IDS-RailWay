@@ -3131,8 +3131,33 @@ IDS_RWT.prototype.getOutgoingCarsOfID = function (id, callback) {
         },
     });
 };
+//Обновить вагон для предъявления
+IDS_RWT.prototype.putOutgoingCars = function (outgoing_cars, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/rwt/outgoing_cars/id/' + outgoing_cars.id,
+        data: JSON.stringify(outgoing_cars),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.putOutgoingCars", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 //======= OutgoingDetentionReturn (Таблица задержаных-возвращеных вагонов) ======================================
-// Получить все вагоны
+// Получить все задержания и возвраты
 IDS_RWT.prototype.getOutgoingDetentionReturn = function (callback) {
     $.ajax({
         type: 'GET',
@@ -3155,7 +3180,7 @@ IDS_RWT.prototype.getOutgoingDetentionReturn = function (callback) {
         },
     });
 };
-// Получить вагоны по id
+// Получить вагоны по id задержания и возврата
 IDS_RWT.prototype.getOutgoingDetentionReturnOfID = function (id, callback) {
     $.ajax({
         type: 'GET',
@@ -3178,7 +3203,7 @@ IDS_RWT.prototype.getOutgoingDetentionReturnOfID = function (id, callback) {
         },
     });
 };
-// Получить вагоны по номеру
+// Получить все задержания и возвраты по номеру вагона 
 IDS_RWT.prototype.getOutgoingDetentionReturnOfNum= function (num, callback) {
     $.ajax({
         type: 'GET',
@@ -3201,6 +3226,32 @@ IDS_RWT.prototype.getOutgoingDetentionReturnOfNum= function (num, callback) {
         },
     });
 };
+//Добавить задержание или возврат
+IDS_RWT.prototype.postOutgoingDetentionReturn = function (obj, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/outgoing_detention_return/',
+        type: 'POST',
+        data: JSON.stringify(obj),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postOutgoingDetentionReturn", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 //======================================================================================================
 //                              РАЗДЕЛ ПРАВКА ДОКУМЕНТОВ ПО ПРИБЫТИЮ
 //======================================================================================================
