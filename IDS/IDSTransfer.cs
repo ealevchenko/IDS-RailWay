@@ -297,6 +297,25 @@ namespace IDS
 
         #region UZ_DOC
         /// <summary>
+        /// Получить последнюю дату записи в промежуточную базу
+        /// </summary>
+        /// <returns></returns>
+        public DateTime? GetLastDT_UZ_DOC_DB()
+        {
+            try
+            {
+                UZ.UZ_SMS uz_sms = new UZ.UZ_SMS(this.servece_owner);
+                DateTime? last_data = uz_sms.GetLastDT_UZ_DOC();
+                return last_data;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetLastDT_UZ_DOC_DB()"), servece_owner, eventID);
+                return null;// Ошибка
+            }
+        }
+
+        /// <summary>
         /// Получить документ из промежуточной базы данных по номеру вагона добавить или обновить его в базе ИДС и вернуть id документа (УЗ)
         /// </summary>
         /// <param name="num_car"></param>

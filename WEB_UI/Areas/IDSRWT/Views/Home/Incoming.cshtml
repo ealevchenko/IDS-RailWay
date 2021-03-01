@@ -18,6 +18,7 @@
 
     <script src="~/Scripts/view/shared/common.js"></script> <!-- Общая библиотека методов программы -->
     <script src="~/Scripts/api/shared.js"></script> <!-- Общая библиотека методов API -->
+    <script src="~/Scripts/api/ids_global.js"></script> <!-- Общая библиотека методов API -->
     <script src="~/Scripts/api/ids_sap.js"></script> <!-- Class API SAP функции для работы с САП -->
     <script src="~/Scripts/api/uz_directory.js"></script> <!-- Class API УЗ Справочники -->
     <script src="~/Scripts/api/ids_directory.js"></script> <!-- Class API ИДС Справочники -->
@@ -59,6 +60,12 @@
                             <input type="datetime" class="form-control-sm" id="date-stop" name="date-stop">
                         </span>
                     </div>
+
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link curent-info" href="#">
+                        На <label id="curent_date"></label> подключилось : <label id="client_count"></label> клиентов.
+                    </a>
 
                 </li>
                 @*<li class="nav-item dropdown">
@@ -218,8 +225,8 @@
                                                             <i class="fa fa-search" aria-hidden="true"></i>
                                                         </button>
                                                         @*<button type="button" class="btn btn-warning btn" id="search-car-num-doc-manual" title="Найти ЭПД по номеру вагона в ручную" data-mode="edit-global" data-edit="" data-form="transceiver">
-                                                            <i class="fa fa-search" aria-hidden="true"></i>
-                                                        </button>*@
+                                                                <i class="fa fa-search" aria-hidden="true"></i>
+                                                            </button>*@
                                                         <button type="button" class="btn btn-danger btn" id="edit-car-num-doc" title="Ввести данные в ручную" data-mode="edit-global" data-edit="" data-form="transceiver">
                                                             <i class="fa fa-edit" aria-hidden="true"></i>
                                                         </button>

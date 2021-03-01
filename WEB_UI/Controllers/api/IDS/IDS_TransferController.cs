@@ -19,6 +19,28 @@ namespace WEB_UI.Controllers.api.RWT
     [RoutePrefix("api/ids/transfer")]
     public class IDS_TransferController : ApiController
     {
+        
+        // GET: api/ids/transfer/epd/db_uz/last_datatime
+        /// <summary>
+        /// Получить последнюю дату и время записи в промежуточной базе
+        /// </summary>
+        /// <returns></returns>
+        [Route("epd/db_uz/last_datatime")]
+        [ResponseType(typeof(DateTime?))]
+        public IHttpActionResult GetUZ_DOC_DB_UZ_OfNum()
+        {
+            try
+            {
+                IDSTransfer ids_tr = new IDSTransfer(service.WebAPI_IDS);
+                DateTime? last_dt = ids_tr.GetLastDT_UZ_DOC_DB();
+                return Ok(last_dt);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        } 
+       
         // GET: api/ids/transfer/epd/db_uz/add_update_db_ids/num/71113418/datetime/2020-03-20T23:59:59
         [Route("epd/db_uz/add_update_db_ids/num/{num:int}/datetime/{datetime:datetime}")]
         [ResponseType(typeof(string))]

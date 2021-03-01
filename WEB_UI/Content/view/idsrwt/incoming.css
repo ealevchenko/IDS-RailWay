@@ -620,3 +620,12 @@ fieldset {
     height: 500px; /* Высота блока */
     margin-right:10px;
 }
+
+.buttons-error {    
+  background-color: red !important;
+  color: white !important; 
+  border: 1px outset !important;
+}
+/*.buttons-error:hover {
+  background-color: pink !important;
+}*/

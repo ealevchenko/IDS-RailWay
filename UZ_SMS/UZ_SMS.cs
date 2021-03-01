@@ -519,6 +519,25 @@ namespace UZ
                 return null;
             }
         }
+        /// <summary>
+        /// Получить последнее время записи в промежуточную базу
+        /// </summary>
+        /// <returns></returns>
+        public DateTime? GetLastDT_UZ_DOC()
+        {
+            try
+            {
+                EFUZ_Data ef_data = new EFUZ_Data(new EFSMSDbContext());
+                string sql = "SELECT top(1)[dt] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data] order by dt desc";
+                DateTime last_uz_data = ef_data.Database.SqlQuery<DateTime>(sql).FirstOrDefault();
+                return last_uz_data;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetLastDT_UZ_DOC()"), this.servece_owner, eventID);
+                return null;
+            }
+        }
 
         #endregion
     }

@@ -142,6 +142,9 @@
             'title_button_wagon': 'Вагоны',
             'title_button_wagon_accept': 'Принять вагоны',
             'title_button_wagon_view': 'Показать вагоны',
+            'title_button_send_db_us_doc': 'Ошибка ЭПД',
+            'title_button_send_db_mt': 'Ошибка МТ',
+
             'title_arrival_sostav': 'Принять состав',
             'title_return_car': 'Вернуть вагон',
 
@@ -295,6 +298,9 @@
             'title_button_wagon': 'Wagons',
             'title_button_wagon_accept': 'Accept wagon',
             'title_button_wagon_view': 'Show wagons',
+            'title_button_send_db_us_doc': 'Error EPD',
+            'title_button_send_db_mt': 'Error MT',
+
             'title_arrival_sostav': 'Receive Arrival',
             'title_return_car': 'Return the car',
 
@@ -321,6 +327,7 @@
         dc = $('div#dialog-confirm').dialog_confirm({}),
         incoming_alert = new ALERT($('div#incoming-alert')),// Создадим класс ALERTG
         ids_inc = new IDS_RWT(lang),    // Создадим класс IDS_RWT
+        ids_gl = new IDS_GLOBAL(), // Создадим класс IDS_RWT
         //uz_sms = new UZ_SMS(lang),      // Создадим класс UZ_SMS
         list_sostav = null,
         data_start = null,
@@ -1653,6 +1660,21 @@
                         },
                         {
                             extend: 'pageLength',
+                        },
+                        {
+                            text: langView('title_button_send_db_us_doc', langs),
+                            className: 'buttons-error',
+                            action: function (e, dt, node, config) {
+                                window.open('mailto:KRR.IT.Service@arcelormittal.com;vasiliy.litvin@arcelormittal.com?subject=Не заполняется промежуточная база ЭПД&body=Инцидент направить на группу: KRR-ДАТП - DDICS / Литвин Василий Николаевич (vnlitvin)', '_self');
+                            },
+                            enabled: false
+                        },
+                        {
+                            text: langView('title_button_send_db_mt', langs),
+                            className: 'buttons-error',
+                            action: function (e, dt, node, config) {
+                            },
+                            enabled: false
                         }
                     ]
                 }).on('select', function (e, dt, type, indexes) {
@@ -8270,16 +8292,48 @@
     // Загрузка основных библиотек
 
     loadReference(function (result) {
-
-
         // Инициализация
         if (lang === 'ru') $.datepicker.setDefaults($.datepicker.regional.ru);
-        var list_station = ids_inc.ids_dir.getListStation('id', 'station_name', lang, function (i) { return i.station_uz === true ? true : false; });
+
+        // Обновить
+        setInterval(function () {
+            $('label#curent_date').text(getReplaceTOfDT(toISOStringTZ(new Date())));
+            ids_gl.getCountClient(function (count) {
+                $('label#client_count').text(count);
+            });
+        }, 1000);
+
+        // Проверка ошибок
+        setInterval(function () {
+
+            ids_inc.ids_tr.getLastDT_UZ_DOC_DB_IDS(function (last_date) {
+                var curent = moment();
+                var last_db = moment(last_date);
+                var duration = moment.duration(curent.diff(last_db))
+                var duration_min = duration.as('minutes');
+                //table_sostav.obj.button(7).enable(false);
+                table_sostav.obj.button(7).text(langView('title_button_send_db_us_doc', langs) + '-' + duration_min.toFixed(1));
+                if (duration_min > 90) {
+                    table_sostav.obj.button(7).enable(true);
+                    //$(table_sostav.obj.button(7)).addClass('buttons-error')
+                } else {
+                    table_sostav.obj.button(7).enable(false);
+                    //$(table_sostav.obj.button(7)).removeClass('buttons-error')
+                }
+            });
+        }, 60000);
+
+
+        var list_station = ids_inc.ids_dir.getListStation('id', 'station_name', lang, function (i) {
+            return i.station_uz === true ? true : false;
+        });
         // Считаем строку с дополнительными параметрами
         var id_arrival = getUrlVar('id_arrival');
         var arrival = getUrlVar('arrival');
         if (id_arrival && arrival) {
-            pn_sel.cur_dt = moment(arrival).set({ 'hour': 0, 'minute': 0, 'second': 0, 'millisecond': 0 });
+            pn_sel.cur_dt = moment(arrival).set({
+                'hour': 0, 'minute': 0, 'second': 0, 'millisecond': 0
+            });
             start_id_sostav = Number(id_arrival);
         }
 

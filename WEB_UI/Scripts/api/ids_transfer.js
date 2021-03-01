@@ -10,6 +10,30 @@ var IDS_TRANSFER = function (lang) {
 AJAX функции
 -------------------------------------------------------------*/
 //======= Поиск и перенос ЭПД ========================================================================================================
+// Получить последнюю дату и время записи в промежуточной базе
+IDS_TRANSFER.prototype.getLastDT_UZ_DOC_DB_IDS = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/transfer/epd/db_uz/last_datatime/',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_TRANSFER.getLastDT_UZ_DOC_DB_IDS", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 // Найти документ в промежуточной базе, если есть - добавить или обновить в базе документов ИДС, если нет вернуть null
 IDS_TRANSFER.prototype.AddUpdateUZ_DOC_To_DB_IDS = function (num, datetime, callback) {
     //var s = '../../api/ids/transfer/epd/db_uz/add_update_db_ids/num/' + num + '/datetime/' + (datetime).substring(0, 19);
