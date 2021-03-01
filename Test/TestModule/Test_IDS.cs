@@ -300,7 +300,7 @@ namespace Test.TestModule
         public void IDS_WIR_DeleteDoubleWir()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            List<int> list = new List<int>() { 202928, 202927, 203331, 201910, 201909, 202874, 168796, 203324, 203328, 203327, 203361, 203323, 203321, 203326, 203329, 203362, 201911, 203322 };
+            List<int> list = new List<int>() { 213219, 213221, 211662, 211660, 211664, 213222, 211665, 211663, 211661 };
             int res = ids.DeleteDoubleWir(list);
         }
         /// <summary>

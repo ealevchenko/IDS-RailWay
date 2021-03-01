@@ -84,6 +84,12 @@ namespace Test.TestModule
             List<UZ_DOC> docs = sms.GetDocumentOfDB_NumConsignees(67860718, new int[] { 7932, 6302, 659 }, 15);
         }
 
+        public void UZ_SMS_GetLastDTOfUZ_Data()
+        {
+            UZ_SMS sms = new UZ_SMS();
+            DateTime? ве = sms.GetLastDT_UZ_DOC();
+        }
+
 
         #endregion
     }

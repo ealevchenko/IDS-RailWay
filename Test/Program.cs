@@ -248,11 +248,12 @@ namespace Test
             //tuz.UZ_SMS_GetDocumentOfDB_Num();
             //tuz.UZ_SMS_GetArrivalDocumentOfDB_Num();
             //tuz.UZ_SMS_GetDocumentOfDB_NumConsignees();
+            //tuz.UZ_SMS_GetLastDTOfUZ_Data(); // тест получить время последней записи промежуточной базы
             #endregion
 
             #region Администрирование
-            tids.IDS_WIR_CloseWir();                            // Административной функции закрыть внутренее перемещение
-            //tids.IDS_WIR_DeleteDoubleWir();                        // Административной функции закрыть задвоение операций и дислокаций внутренего перемещения
+            //tids.IDS_WIR_CloseWir();                            // Административной функции закрыть внутренее перемещение
+            tids.IDS_WIR_DeleteDoubleWir();                        // Административной функции закрыть задвоение операций и дислокаций внутренего перемещения
             //tids.IDS_WIR_ReturnWagons();    // Административной функции вернуть вагон из отправки
             #endregion
 
