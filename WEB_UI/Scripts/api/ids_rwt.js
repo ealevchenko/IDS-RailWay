@@ -3251,6 +3251,32 @@ IDS_RWT.prototype.postOutgoingDetentionReturn = function (obj, callback) {
         },
     });
 };
+//Операция добавить или обновить задержание 
+IDS_RWT.prototype.postUpdateOutgoingDetention = function (operation_detention, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/wsd/operation/detention/',
+        type: 'POST',
+        data: JSON.stringify(operation_detention),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postUpdateOutgoingDetention", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 
 //======================================================================================================
 //                              РАЗДЕЛ ПРАВКА ДОКУМЕНТОВ ПО ПРИБЫТИЮ

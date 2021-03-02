@@ -47,19 +47,6 @@ namespace IDS
 
         }
 
-        //public IDSTransfer()
-        //{
-
-        //}
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="servece_owner"></param>
-        //public IDSTransfer(service servece_owner)
-        //{
-        //    this.servece_owner = servece_owner;
-        //}
-
         #region ArrivalSostav
         /// <summary>
         /// Добавить новый состав находящийся на станциях УЗ Кривого Рога в систему ИДС
@@ -728,7 +715,6 @@ namespace IDS
             }
             return res;
         }
-
 
         /// <summary>
         /// Перенос составов на отправление УЗ по данным КИС

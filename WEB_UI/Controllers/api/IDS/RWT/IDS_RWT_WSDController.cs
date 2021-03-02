@@ -373,6 +373,15 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string user { get; set; }
     }
 
+    public class OperationUpdateOutgoingDetention
+    {
+        public long id_outgoing_car { get; set; }
+        public int id_detention_return { get; set; }
+        public DateTime date_start { get; set; }
+        public DateTime date_stop { get; set; }
+        public string user { get; set; }
+    }
+
     public class view_wagon_dislocation
     {
         public long id_wir { get; set; }
@@ -707,6 +716,11 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         }       
         
         // POST api/ids/rwt/wsd/operation/provide
+        /// <summary>
+        /// Операция предъявить состав на УЗ
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("operation/provide")]
         [ResponseType(typeof(ResultTransfer))]
@@ -739,6 +753,29 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             {
                 IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
                 ResultUpdateWagon result = ids_wir.OperationReturnProvideWagons(value.id_sostav, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST api/ids/rwt/wsd/operation/detention
+        /// <summary>
+        /// Операция добавить или обновить задержание
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("operation/detention")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostUpdateOutgoingDetention([FromBody] OperationUpdateOutgoingDetention value)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                int result = ids_wir.OperationUpdateOutgoingDetention(value.id_outgoing_car, value.id_detention_return, value.date_start, value.date_stop, value.user);
                 return Ok(result);
             }
             catch (Exception e)

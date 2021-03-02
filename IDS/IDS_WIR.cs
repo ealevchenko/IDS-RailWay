@@ -1388,7 +1388,7 @@ namespace IDS
 
                 }
                 string mess = String.Format("Операция «Вернуть состав, сформированный для предъявления». Код выполнения={0}. Результат [состав id = {1}, вагонов в составе = {2}, возвращено = {3}, ошибок = {4}].",
-                    res.result, id_sostav,  res.count, res.update, res.error);
+                    res.result, id_sostav, res.count, res.update, res.error);
                 mess.WarningLog(servece_owner, eventID);
                 mess.EventLog(res.result < 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
                 DateTime stop = DateTime.Now;
@@ -1624,6 +1624,70 @@ namespace IDS
                 return rt;// Возвращаем id=-1 , Ошибка
             }
         }
+
+        #region Операция "Задержание вагона"
+        /// <summary>
+        /// Выполнить операцию обновить или добавить задержание вагона предяъявленого на УЗ
+        /// </summary>
+        /// <param name="id_outgoing_car"></param>
+        /// <param name="odr"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationUpdateOutgoingDetention(long id_outgoing_car, int id_detention_return, DateTime date_start, DateTime date_stop, string user)
+        {
+            try
+            {
+                IDSTransfer ids_tr = new IDSTransfer(servece_owner);
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDbContext context = new EFDbContext();
+                EFOutgoingCars ef_out_car = new EFOutgoingCars(context);
+                EFOutgoingDetentionReturn ef_out_dr = new EFOutgoingDetentionReturn(context);
+                OutgoingCars car = ef_out_car.Context.Where(c => c.id == id_outgoing_car).FirstOrDefault();
+                if (car == null) return (int)errors_base.not_outgoing_cars_db; // В базе нет вагона для предявдения
+
+                if (car.id_outgoing_detention_return == null)
+                {
+                    // Добавить
+                    OutgoingDetentionReturn dr = new OutgoingDetentionReturn()
+                    {
+                        id = 0,
+                        type_detention_return = 0,
+                        id_detention_return = id_detention_return,
+                        date_start = date_start,
+                        date_stop = date_stop,
+                        create = DateTime.Now,
+                        create_user = user
+                    };
+                    car.OutgoingDetentionReturn = dr;
+                    car.change = DateTime.Now;
+                    car.change_user = user;
+                    ef_out_car.Update(car);
+                }
+                else
+                {
+                    // обновить
+                    OutgoingDetentionReturn dr = ef_out_dr.Context.Where(d => d.id == car.id_outgoing_detention_return).FirstOrDefault();
+                    dr.id_detention_return = id_detention_return;
+                    dr.date_start = date_start;
+                    dr.date_stop = date_stop;
+                    dr.change = DateTime.Now;
+                    dr.change_user = user;
+                    ef_out_dr.Update(dr);
+                }
+                return context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationUpdateOutgoingDetention(id_outgoing_car={0}, id_detention_return={1}, date_start={2}, date_stop={3}, user={4})",
+                    id_outgoing_car, id_detention_return, date_start, date_stop, user), servece_owner, eventID);
+                return (int)errors_base.global; // Глобальная ошибка
+            }
+        }
+        #endregion
 
         #endregion
 

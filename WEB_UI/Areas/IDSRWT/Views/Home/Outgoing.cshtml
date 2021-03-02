@@ -223,6 +223,7 @@
                                                     <div class="col-xl-12 mb-1 text-left">
                                                         <fieldset class="border-warning">
                                                             <legend>@IDSRWTResource.title_detention</legend>
+                                                            <div class="alert" id="car-detention-alert"></div>
                                                             <div class="form-row">
                                                                 <div class="col-xl-5 mb-1 text-left">
                                                                     <label for="cause_detention" class="mb-1">@IDSRWTResource.title_cause_detention:</label>
@@ -244,8 +245,11 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-xl-1 mb-1 text-left" style="padding-top:1rem">
-                                                                    <button type="button" class="btn btn-warning btn" id="detention_save" title="" data-mode="edit" data-edit="" data-form="transceiver">
+                                                                    <button type="button" class="btn btn-warning btn" id="detention_save" title="Сохранить" data-mode="edit" data-edit="" data-form="transceiver">
                                                                         <i class="fa fa-save" aria-hidden="true"></i>
+                                                                    </button>
+                                                                    <button type="button" class="btn btn-warning btn" id="detention_edit" title="Править" data-mode="edit" data-edit="" data-form="transceiver">
+                                                                        <i class="fa fa-edit" aria-hidden="true"></i>
                                                                     </button>
                                                                 </div>
                                                             </div>

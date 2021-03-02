@@ -30,7 +30,7 @@ namespace IDS
         not_outgoing_sostav_db = -601,              // В базе данных нет записи состава для оправки
         error_status_outgoing_sostav = -602,        // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
         not_outgoing_cars_db = -605,                // В базе данных нет записи по вагонам для отпправки
-
+        not_outgoing_detention_return = -610,       // Объект OutgoingDetentionReturn не определен
         // Справочники -1000.....
         // Directory_Ways -1100..
         not_dir_way_db = -1101,                     // В базе данных нет записи указаной строки пути
@@ -40,14 +40,17 @@ namespace IDS
 
     }
 
-
-
+    /// <summary>
+    /// 
+    /// </summary>
     public class ResultWagon
     {
         public int num { get; set; }
         public int result { get; set; }
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
     public class ResultID
     {
         public long id { get; set; }
@@ -200,7 +203,9 @@ namespace IDS
             this.close++;
         }
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
     public class ResultUpdateID
     {
         public int result { get; set; } // Глобальный ресурс выполнения всего переноса
