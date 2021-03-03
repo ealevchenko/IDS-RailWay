@@ -637,9 +637,24 @@
     <value>Причина возврата</value>
   </data>
   <data name="title_detention_start" xml:space="preserve">
-    <value>Начало зад.</value>
+    <value>Начало задержания</value>
   </data>
   <data name="title_detention_stop" xml:space="preserve">
-    <value>Конец зад.</value>
+    <value>Окончание задержания</value>
+  </data>
+  <data name="title_return_date_act" xml:space="preserve">
+    <value>Дата акта возврата</value>
+  </data>
+  <data name="title_return_note" xml:space="preserve">
+    <value>Примечание возврат</value>
+  </data>
+  <data name="title_return_num_act" xml:space="preserve">
+    <value>Номер акта возврата</value>
+  </data>
+  <data name="title_return_start" xml:space="preserve">
+    <value>Время возврата</value>
+  </data>
+  <data name="title_return_stop" xml:space="preserve">
+    <value>Окончание возврата</value>
   </data>
 </root>

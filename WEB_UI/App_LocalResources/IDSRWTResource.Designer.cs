@@ -493,7 +493,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Начало зад..
+        ///   Ищет локализованную строку, похожую на Начало задержания.
         /// </summary>
         public static string title_detention_start {
             get {
@@ -502,7 +502,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Конец зад..
+        ///   Ищет локализованную строку, похожую на Окончание задержания.
         /// </summary>
         public static string title_detention_stop {
             get {
@@ -1218,6 +1218,51 @@ namespace WEB_UI.App_LocalResources {
         public static string title_return_bit {
             get {
                 return ResourceManager.GetString("title_return_bit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Дата акта возврата.
+        /// </summary>
+        public static string title_return_date_act {
+            get {
+                return ResourceManager.GetString("title_return_date_act", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Примечание возврат.
+        /// </summary>
+        public static string title_return_note {
+            get {
+                return ResourceManager.GetString("title_return_note", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Номер акта возврата.
+        /// </summary>
+        public static string title_return_num_act {
+            get {
+                return ResourceManager.GetString("title_return_num_act", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Время возврата.
+        /// </summary>
+        public static string title_return_start {
+            get {
+                return ResourceManager.GetString("title_return_start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Окончание возврата.
+        /// </summary>
+        public static string title_return_stop {
+            get {
+                return ResourceManager.GetString("title_return_stop", resourceCulture);
             }
         }
         

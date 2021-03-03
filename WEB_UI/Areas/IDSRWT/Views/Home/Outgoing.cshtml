@@ -223,9 +223,21 @@
                                                     <div class="col-xl-12 mb-1 text-left">
                                                         <fieldset class="border-warning">
                                                             <legend>@IDSRWTResource.title_detention</legend>
-                                                            <div class="alert" id="car-detention-alert"></div>
                                                             <div class="form-row">
-                                                                <div class="col-xl-5 mb-1 text-left">
+                                                                <div class=" col-xl-11">
+                                                                    <div class="alert" id="car-detention-alert"></div>
+                                                                </div>
+                                                                <div class="col-xl-1 pull-right mb-1 text-left">
+                                                                    <button type="button" class="btn btn-danger btn" id="detention_save" title="Сохранить" data-mode="edit" data-edit="" data-form="transceiver">
+                                                                        <i class="fa fa-save" aria-hidden="true"></i>
+                                                                    </button>
+                                                                    <button type="button" class="btn btn-warning btn" id="detention_edit" title="Править" data-mode="edit" data-edit="" data-form="transceiver">
+                                                                        <i class="fa fa-edit" aria-hidden="true"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-row">
+                                                                <div class="col-xl-6 mb-1 text-left">
                                                                     <label for="cause_detention" class="mb-1">@IDSRWTResource.title_cause_detention:</label>
                                                                     <div class="input-group">
                                                                         <input type="text" class="form-control inp-manual" id="cause_detention" name="cause_detention" title="" data-mode="edit" data-edit="" data-form="transceiver">
@@ -244,15 +256,7 @@
                                                                     <div class="invalid-feedback">
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-xl-1 mb-1 text-left" style="padding-top:1rem">
-                                                                    <button type="button" class="btn btn-warning btn" id="detention_save" title="Сохранить" data-mode="edit" data-edit="" data-form="transceiver">
-                                                                        <i class="fa fa-save" aria-hidden="true"></i>
-                                                                    </button>
-                                                                    <button type="button" class="btn btn-warning btn" id="detention_edit" title="Править" data-mode="edit" data-edit="" data-form="transceiver">
-                                                                        <i class="fa fa-edit" aria-hidden="true"></i>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
+                                                               </div>
                                                         </fieldset>
                                                     </div>
                                                 </div>
@@ -260,6 +264,66 @@
                                                     <div class="col-xl-12 mb-1 text-left">
                                                         <fieldset class="border-danger">
                                                             <legend>@IDSRWTResource.title_return</legend>
+                                                            <div class="form-row">
+                                                                <div class=" col-xl-11">
+                                                                    <div class="alert" id="car-return-alert"></div>
+                                                                </div>
+                                                                <div class="col-xl-1  pull-right mb-1 text-left">
+                                                                    <button type="button" class="btn btn-danger btn" id="return_open" title="Выполнить возврат" data-mode="edit" data-edit="" data-form="transceiver">
+                                                                        <i class="fa fa-save" aria-hidden="true"></i>
+                                                                    </button>
+                                                                    <button type="button" class="btn btn-success btn" id="return_close" title="Закрыть возврат" data-mode="edit" data-edit="" data-form="transceiver">
+                                                                        <i class="fa fa-edit" aria-hidden="true"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-row">
+                                                                <div class="col-xl-6 mb-1 text-left">
+                                                                    <label for="cause_return" class="mb-1">@IDSRWTResource.title_cause_return:</label>
+                                                                    <div class="input-group">
+                                                                        <input type="text" class="form-control inp-manual" id="cause_return" name="cause_return" title="" data-mode="edit" data-edit="" data-form="transceiver">
+                                                                        <div class="invalid-feedback"></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xl-3 mb-1 text-left">
+                                                                    <label for="return_start" class="mb-1">@IDSRWTResource.title_return_start</label>
+                                                                    <input type="text" class="form-control inp-manual" id="return_start" name="return_start" title="" data-mode="edit" data-edit="" data-form="transceiver">
+                                                                    <div class="invalid-feedback">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xl-3 mb-1 text-left">
+                                                                    <label for="return_stop" class="mb-1">@IDSRWTResource.title_return_stop:</label>
+                                                                    <input type="text" class="form-control inp-manual" id="return_stop" name="return_stop" title="" data-mode="edit" data-edit="" data-form="transceiver">
+                                                                    <div class="invalid-feedback">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-row">
+                                                                <div class="col-xl-3 mb-1 text-left">
+                                                                    <label for="return_num_act" class="mb-1">@IDSRWTResource.title_return_num_act:</label>
+                                                                    <div class="input-group">
+                                                                        <input type="text" class="form-control inp-manual" id="return_num_act" name="return_num_act" title="" data-mode="edit" data-edit="" data-form="transceiver">
+                                                                        <div class="invalid-feedback"></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xl-3 mb-1 text-left">
+                                                                    <label for="return_date_act" class="mb-1">@IDSRWTResource.title_return_date_act</label>
+                                                                    <input type="text" class="form-control inp-manual" id="return_date_act" name="return_date_act" title="" data-mode="edit" data-edit="" data-form="transceiver">
+                                                                    <div class="invalid-feedback">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xl-6 mb-1 text-left">
+                                                                    <label for="return_note" class="mb-1">@IDSRWTResource.title_return_note:</label>
+                                                                    <textarea class="form-control inp-manual" id="return_note" name="return_note" title="" data-mode="edit" data-edit="" data-form="transceiver"></textarea>
+                                                                    <div class="invalid-feedback">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-row">
+                                                                <div class="col-xl-12 mb-1">
+                                                                    <table class="display compact cell-border row-border hover" id="table-return-car" style="width:100%;"></table>
+                                                                </div>
+                                                            </div>
                                                         </fieldset>
                                                     </div>
                                                 </div>
