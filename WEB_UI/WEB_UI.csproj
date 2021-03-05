@@ -359,6 +359,7 @@
     <Content Include="Content\view\directory\search_wagon.css" />
     <Content Include="Content\view\shared\print_way.css" />
     <Content Include="Content\view\shared\print_gfa.css" />
+    <Content Include="Images\8m.png" />
     <Content Include="Images\directory\line-icon-3_.svg" />
     <Content Include="Scripts\api\ids_global.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />

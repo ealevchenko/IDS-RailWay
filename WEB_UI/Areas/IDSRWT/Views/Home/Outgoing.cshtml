@@ -7,8 +7,6 @@
     @Styles.Render("~/DataTables/css")
     @Styles.Render("~/DateTime/css")
     <link rel="stylesheet" type="text/css" href="~/Content/view/idsrwt/outgoing.css">
-
-
 }
 
 @section scripts {
@@ -32,6 +30,8 @@
 }
 
 <input id="username" type="hidden" value="@User.Identity.Name" />
+
+
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
@@ -78,6 +78,7 @@
         </div>
     </div>
 </nav>
+<div><img width="100%" height="100%" src="~/Images/8m.png" /></div>
 <div class="alert" id="outgoing-alert"></div>
 <div class="row">
     <div class="col-xl-12 mb-3 mt-2">
@@ -143,11 +144,16 @@
                                                         <div class="invalid-feedback">
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-6 mb-1 text-left">
+                                                    <div class="col-xl-5 mb-1 text-left">
                                                         <label for="date_outgoing_act" class="mb-1">@IDSRWTResource.title_car_date_outgoing_act:</label>
                                                         <input type="datetime" class="form-control inp-manual" id="date_outgoing_act" name="date_outgoing_act" title="Ручной ввод (если вагон сдается по акту)" data-mode="edit" data-edit="" data-form="transceiver">
                                                         <div class="invalid-feedback">
                                                         </div>
+                                                    </div>
+                                                    <div class="col-xl-1 mb-1 text-left">
+                                                        <button type="button" class="btn btn-warning btn" id="car_return" title="Вернуть вагон" data-mode="edit" data-edit="" data-form="transceiver">
+                                                            <i class="fa fa-retweet" aria-hidden="true"></i>
+                                                        </button>
                                                     </div>
                                                 </div>
                                                 <div class="form-row">
@@ -256,7 +262,7 @@
                                                                     <div class="invalid-feedback">
                                                                     </div>
                                                                 </div>
-                                                               </div>
+                                                            </div>
                                                         </fieldset>
                                                     </div>
                                                 </div>
@@ -273,7 +279,7 @@
                                                                         <i class="fa fa-save" aria-hidden="true"></i>
                                                                     </button>
                                                                     <button type="button" class="btn btn-success btn" id="return_close" title="Закрыть возврат" data-mode="edit" data-edit="" data-form="transceiver">
-                                                                        <i class="fa fa-edit" aria-hidden="true"></i>
+                                                                        <i class="fa fa-close" aria-hidden="true"></i>
                                                                     </button>
                                                                 </div>
                                                             </div>

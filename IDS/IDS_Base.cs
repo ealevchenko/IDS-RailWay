@@ -16,6 +16,7 @@ namespace IDS
         not_input_value = -100,
         // таблица wir -200...
         not_wir_db = -201,                          // В базе данных нет записи по WagonInternalRoutes (Внутренее перемещение вагонов)
+        close_wir = -202,                           // Записи по WagonInternalRoutes - закрыта
         // таблица wim -300...
         not_wim_db = -301,                          // В базе данных нет записи по WagonInternalMovement (Внутреняя дислокация вагонов)
         wagon_not_way = -302,                       // Вагон не стоит на пути
@@ -30,6 +31,7 @@ namespace IDS
         not_outgoing_sostav_db = -601,              // В базе данных нет записи состава для оправки
         error_status_outgoing_sostav = -602,        // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
         not_outgoing_cars_db = -605,                // В базе данных нет записи по вагонам для отпправки
+        outgoing_cars_outgoing = -606,              // Запрет операции вагон уже отправлен
         not_outgoing_detention_return = -610,       // Объект OutgoingDetentionReturn не определен
         // Справочники -1000.....
         // Directory_Ways -1100..

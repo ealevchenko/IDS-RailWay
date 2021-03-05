@@ -1033,9 +1033,8 @@
                 cars_detali.loadReference(function () {
                     // Получим текуший состав
                     LockScreen(langView('mess_delay', langs));
-                    cars_detali.ids_inc.getOutgoingSostavOfID(cars_detali.id_sostav, function (result_sostav) {
-                        // Запомним результат
-                        cars_detali.sostav = result_sostav;
+                    // Загрузим состав
+                    cars_detali.loadOutgoingCarsOfSostav(cars_detali.id_sostav, function (result_sostav) {
                         if (result_sostav) {
                             // Запись есть
                             // определим станцию и путь
@@ -1056,8 +1055,11 @@
                             cars_detali.alert.out_error_message('В базе данных нет записи по составу с id=' + cars_detali.id_sostav);
                             LockScreenOff();
                         }
-
                     });
+                    //cars_detali.ids_inc.getOutgoingSostavOfID(cars_detali.id_sostav, function (result_sostav) {
+                    //    // Запомним результат
+                    //    cars_detali.sostav = result_sostav;
+                    //});
                 });
             },
 
@@ -1107,6 +1109,7 @@
                     cars_detali.alert.clear_message();
                     cars_detali.val_outgoing_car.clear_all();                 // Очистить ошибки если принимали вагон, с ошибкой
                     cars_detali.val_outgoing_car_detention.clear_all();       // Очистить ошибки по задержаниям
+                    cars_detali.val_outgoing_car_return.clear_all();        // Очистить ошибки по возвратам
                     cars_detali.select_wir = null;                          // Сбросим внутреенее перемещение вагона
                     cars_detali.list_detention_return = null;               // Сбросим список возвратов и задержаний
                     cars_detali.wagon_info_uz = null;                       // Сбросим информацию о вагоне с базы днных УЗ
@@ -1168,11 +1171,11 @@
             select_id: null,                                    // Выбранный id вагона
             select_num: null,                                   // Выбранный номер вагона
             select_car: null,                                   // Выбранный вагон
-            //select_id_outgoing_detention_return: null,          // Выбранное id задержания
+            //select_id_outgoing_detention_return: null,        // Выбранное id задержания
             select_wir: null,                                   // Выбранное внутренее перемещение вагона
             list_detention_return: null,                        // Список задержаний и возвратов
+            current_cars_return: null,                          // Текущий возврат
             wagon_info_uz: null,                                // Информация о вагоне из БД УЗ (текущая)
-
             //select_id_cargo: null,                              // Выбранный груз (таблица [KRR-PA-CNT-Railway].[IDS].[Directory_Cargo])
             //select_id_cargo_gng: null,                          // Выбранный груз (таблица [KRR-PA-CNT-Railway].[IDS].[Directory_CargoGNG])
             //select_otpr: null,                                  // Выбранный документ
@@ -1208,6 +1211,52 @@
             date_outgoing_act: cd_initDateTimeRangePicker($('input#date_outgoing_act'), { lang: lang, time: true }, function (datetime) {
 
             }),
+            car_return: $('button#car_return').on('click', function() {
+                event.preventDefault();
+                // Подтверждение выполнения операции.
+                dc.dialog_confirm('Open', 'Отменить?', 'Отменить предъявление вагона №' + cars_detali.select_num+'. Вагон будет убран из состава для предъявления и возвращен на путь и открыт для операций перемещения.', function (result) {
+                    if (result) {
+                        // Выполнить операцию
+                        LockScreen(langView('mess_operation', langs));
+                        cars_detali.val_outgoing_car_return.clear_all();
+                        // Ок, возврат определен
+                        // Подготовим операцию
+                        var operation_return = {
+                            id_outgoing_car: cars_detali.select_id,
+                            date_start: toISOStringTZ(new Date()),
+                            user: cars_detali.user
+                        };
+                        // Выполним операцию
+                        cars_detali.ids_inc.postPostOperationReturnProvideWagon(operation_return, function (result_operation) {
+                            if (result_operation > 0) {
+                                cars_detali.alert.out_info_message("Операция «ОТМЕНА ПРЕДЪЯВЛЕНИЯ ВАГОНА» – выполнена!");
+                            } else {
+                                // Ошибка выполнения
+                                cars_detali.alert.out_error_message("Ошибка выполнения операции «ОТМЕНА ПРЕДЪЯВЛЕНИЯ ВАГОНА», код ошибки = " + result_operation);
+                                //cars_detali.return_open.prop("disabled", false);
+                                LockScreenOff();
+                            }
+                            // Обновим данные
+                            cars_detali.loadOutgoingCarsOfSostav(cars_detali.id_sostav, function (result_sostav) {
+                                //cars_detali.return_open.prop("disabled", false);
+                                if (result_sostav) {
+                                    // Показать список не отправленных вагонов, отсортировав по позиции
+                                    cars_detali.clear(false);            // Очистить все ячейки
+                                    cars_detali.set_close_edit();          // Перевести в режим "close" по умолчанию
+                                    cars_detali.view_cars_not_outgoing(cars_detali.sostav.OutgoingCars.filter(function (i) { return i.outgoing === null ? true : false; }).sort(function (a, b) { return Number(a.position) - Number(b.position); }));
+                                    cars_detali.update_sostav = true;
+                                    LockScreenOff();
+                                } else {
+                                    cars_detali.alert.out_error_message('В базе данных нет записи по составу с id=' + cars_detali.id_sostav);
+                                    LockScreenOff();
+                                }
+                            });
+                        });
+                    } else {
+                        cars_detali.alert.out_warning_message("Выполнение операции «ОТМЕНИТЬ ПРЕДЪЯВЛЕНИЕ ВАГОНА» - отменено!");
+                    }
+                });
+            }),
             num_cont_1: $('input#num_cont_1'), // Номер контейнера 1
             num_cont_2: $('input#num_cont_2'), // Номер контейнера 2
             rod_vag_abbr: $('input#rod_vag_abbr'), // Род вагона абрив.
@@ -1233,6 +1282,7 @@
             // Кнопка добавить 
             detention_save: $('button#detention_save').on('click', function () {
                 event.preventDefault();
+                cars_detali.detention_save.prop("disabled", true);
                 var valid = cars_detali.validation_outgoing_car_detention();
                 if (valid) {
                     // Подтверждение выполнения операции.
@@ -1260,6 +1310,7 @@
                                 }
                                 // Обновим данные
                                 cars_detali.load_car_of_db(cars_detali.select_id, function (car) {
+                                    cars_detali.detention_save.prop("disabled", false);
                                     cars_detali.view_cars_detention_current(car.OutgoingDetentionReturn);
                                     LockScreenOff();
                                 });
@@ -1269,6 +1320,8 @@
                             cars_detali.val_outgoing_car_detention.out_warning_message("Выполнение операции «Сохранить задержание» - отменено!");
                         }
                     });
+                } else {
+                    cars_detali.detention_save.prop("disabled", false);
                 }
             }),
             // Кнопка добавить 
@@ -1289,48 +1342,120 @@
             // Кнопка добавить 
             return_open: $('button#return_open').on('click', function () {
                 event.preventDefault();
+                cars_detali.return_open.prop("disabled", true);
                 var valid = cars_detali.validation_outgoing_car_return(false);
                 if (valid) {
-                    //        // Подтверждение выполнения операции.
-                    //        dc.dialog_confirm('Open', 'Сохранить?', 'Подтвердите выполнение операции «СОХРАНИТЬ ЗАДЕРЖАНИЕ»', function (result) {
-                    //            if (result) {
-                    //                // Выполнить операцию
-                    //                LockScreen(langView('mess_operation', langs));
-                    //                cars_detali.val_outgoing_car_detention.clear_all();
-                    //                // Подготовим операцию
-                    //                var operation_detentions = {
-                    //                    id_outgoing_car: cars_detali.select_id,
-                    //                    id_detention_return: cars_detali.ids_inc.ids_dir.getID_Detention_Return_Of_Name(get_input_string_value(cars_detali.cause_detention), 'cause', cars_detali.lang),
-                    //                    date_start: toISOStringTZ(get_datetime_value(cars_detali.detention_start.val(), cars_detali.lang)),
-                    //                    date_stop: toISOStringTZ(get_datetime_value(cars_detali.detention_stop.val(), cars_detali.lang)),
-                    //                    user: cars_detali.user
-                    //                };
-                    //                // Выполним операцию
-                    //                cars_detali.ids_inc.postUpdateOutgoingDetention(operation_detentions, function (result_operation) {
-                    //                    if (result_operation > 0) {
-                    //                        cars_detali.val_outgoing_car_detention.out_info_message("Операция «Добавить или обновить задержание» – выполнена!");
-                    //                    } else {
-                    //                        // Ошибка выполнения
-                    //                        cars_detali.val_outgoing_car_detention.out_error_message("Ошибка выполнения операции «Добавить или обновить задержание», код ошибки = " + result_operation);
-                    //                        LockScreenOff();
-                    //                    }
-                    //                    // Обновим данные
-                    //                    cars_detali.load_car_of_db(cars_detali.select_id, function (car) {
-                    //                        cars_detali.view_cars_detention_current(car.OutgoingDetentionReturn);
-                    //                        LockScreenOff();
-                    //                    });
-                    //                });
-                    //            } else {
-                    //                cars_detali.detention_save.prop("disabled", false);
-                    //                cars_detali.val_outgoing_car_detention.out_warning_message("Выполнение операции «Сохранить задержание» - отменено!");
-                    //            }
-                    //        });
+                    // Подтверждение выполнения операции.
+                    dc.dialog_confirm('Open', 'Открыть?', 'Подтвердите выполнение операции «ОТКРЫТЬ ВОЗВРАТ». Вагон будет убран из состава для предъявления и возвращен на путь и открыт для операций перемещения.', function (result) {
+                        if (result) {
+                            // Выполнить операцию
+                            LockScreen(langView('mess_operation', langs));
+                            cars_detali.val_outgoing_car_return.clear_all();
+                            // Ок, возврат определен
+                            // Подготовим операцию
+                            var operation_return = {
+                                id_outgoing_car: cars_detali.select_id,
+                                id_detention_return: cars_detali.ids_inc.ids_dir.getID_Detention_Return_Of_Name(get_input_string_value(cars_detali.cause_return), 'cause', cars_detali.lang),
+                                date_start: toISOStringTZ(get_datetime_value(cars_detali.return_start.val(), cars_detali.lang)),
+                                num_act: get_input_string_value(cars_detali.return_num_act),
+                                date_act: toISOStringTZ(get_date_value(cars_detali.return_date_act.val(), cars_detali.lang)),
+                                note: get_input_string_value(cars_detali.return_note),
+                                user: cars_detali.user
+                            };
+                            // Выполним операцию
+                            cars_detali.ids_inc.postOpenOutgoingReturn(operation_return, function (result_operation) {
+                                if (result_operation > 0) {
+                                    cars_detali.val_outgoing_car_return.out_info_message("Операция «ОТКРЫТЬ ВОЗВРАТ» – выполнена!");
+                                } else {
+                                    // Ошибка выполнения
+                                    cars_detali.val_outgoing_car_return.out_error_message("Ошибка выполнения операции «ОТКРЫТЬ ВОЗВРАТ», код ошибки = " + result_operation);
+                                    cars_detali.return_open.prop("disabled", false);
+                                    LockScreenOff();
+                                }
+                                // Обновим данные
+                                cars_detali.loadOutgoingCarsOfSostav(cars_detali.id_sostav, function (result_sostav) {
+                                    cars_detali.return_open.prop("disabled", false);
+                                    if (result_sostav) {
+                                        // Показать список не отправленных вагонов, отсортировав по позиции
+                                        cars_detali.clear(false);            // Очистить все ячейки
+                                        cars_detali.set_close_edit();          // Перевести в режим "close" по умолчанию
+                                        cars_detali.view_cars_not_outgoing(cars_detali.sostav.OutgoingCars.filter(function (i) { return i.outgoing === null ? true : false; }).sort(function (a, b) { return Number(a.position) - Number(b.position); }));
+                                        cars_detali.update_sostav = true;
+                                        LockScreenOff();
+                                    } else {
+                                        cars_detali.alert.out_error_message('В базе данных нет записи по составу с id=' + cars_detali.id_sostav);
+                                        LockScreenOff();
+                                    }
+                                });
+                            });
+                        } else {
+                            cars_detali.return_open.prop("disabled", false);
+                            cars_detali.val_outgoing_car_return.out_warning_message("Выполнение операции «Сохранить задержание» - отменено!");
+                        }
+                    });
+                } else {
+                    cars_detali.return_open.prop("disabled", false);
                 }
             }),
             // Кнопка добавить 
             return_close: $('button#return_close').on('click', function () {
                 event.preventDefault();
-                //cars_detali.view_cars_detention_buttons(false); // edit
+                cars_detali.return_close.prop("disabled", true);
+                var valid = cars_detali.validation_outgoing_car_return(true);
+                if (valid) {
+                    // Подтверждение выполнения операции.
+                    dc.dialog_confirm('Open', 'ЗАКРЫТЬ?', 'Подтвердите выполнение операции «ЗАКРЫТЬ ВОЗВРАТ»', function (result) {
+                        if (result) {
+                            // Выполнить операцию
+                            LockScreen(langView('mess_operation', langs));
+                            cars_detali.val_outgoing_car_return.clear_all();
+                            if (cars_detali.current_cars_return) {
+                                // Ок, возврат определен
+                                // Обновим строку
+                                car_return = {
+                                    id: cars_detali.current_cars_return.id,
+                                    num: cars_detali.current_cars_return.num,
+                                    id_detention_return: cars_detali.current_cars_return.id_detention_return,
+                                    type_detention_return: cars_detali.current_cars_return.type_detention_return,
+                                    date_start: cars_detali.current_cars_return.date_start,
+                                    date_stop: toISOStringTZ(get_datetime_value(cars_detali.return_stop.val(), cars_detali.lang)),
+                                    num_act: get_input_string_value(cars_detali.return_num_act),
+                                    date_act: toISOStringTZ(get_date_value(cars_detali.return_date_act.val(), cars_detali.lang)),
+                                    note: get_input_string_value(cars_detali.return_note),
+                                    create: cars_detali.current_cars_return.create,
+                                    create_user: cars_detali.current_cars_return.create_user,
+                                    change: toISOStringTZ(new Date()),
+                                    change_user: cars_detali.user,
+                                };
+                                // Выполним операцию
+                                cars_detali.ids_inc.putOutgoingDetentionReturn(car_return, function (result_upd) {
+                                    if (result_upd > 0) {
+                                        cars_detali.val_outgoing_car_return.out_info_message("Операция «ЗАКРЫТЬ ВОЗВРАТ» – выполнена!");
+                                    } else {
+                                        // Ошибка выполнения
+                                        cars_detali.return_close.prop("disabled", false);
+                                        cars_detali.val_outgoing_car_return.out_error_message("Ошибка выполнения операции «ЗАКРЫТЬ ВОЗВРАТ», код ошибки = " + result_upd);
+                                        LockScreenOff();
+                                    }
+                                    // Обновим данные
+                                    cars_detali.loadOutgoingDetentionReturnOfnum(cars_detali.select_num, function (list_detention_return) {
+                                        cars_detali.return_close.prop("disabled", false);
+                                        cars_detali.view_cars_return_current(cars_detali.select_num);
+                                        LockScreenOff();
+                                    });
+                                });
+                            } else {
+                                cars_detali.val_outgoing_car_return.out_error_message("Ошибка выполнения операции «ЗАКРЫТЬ ВОЗВРАТ», cтрока возврата неопределенна!");
+                                LockScreenOff();
+                            }
+                        } else {
+                            cars_detali.return_close.prop("disabled", false);
+                            cars_detali.val_outgoing_car_return.out_warning_message("Выполнение операции «ЗАКРЫТЬ ВОЗВРАТ» - отменено!");
+                        }
+                    });
+                } else {
+                    cars_detali.return_close.prop("disabled", false);
+                }
             }),
             // Таблица списка возвратов вогона
             table_return_cars: {
@@ -1381,52 +1506,10 @@
                             },
                             {
                                 data: function (row, type, val, meta) {
-                                    return getReplaceTOfDT(row.date_act);
+                                    return getSupstrTOfDT(row.date_act);
                                 },
                                 title: langView('field_return_date_act', langs), width: "50px", orderable: true, searchable: true
                             },
-                            //{
-                            //    //data: "station_from",
-                            //    data: function (row, type, val, meta) {
-                            //        return row['station_from_name_' + lang];
-                            //    },
-                            //    title: langView('field_station_from', langs), width: "150px", orderable: true, searchable: true
-                            //},
-                            //{
-                            //    //data: "way_from",
-                            //    data: function (row, type, val, meta) {
-                            //        return row['way_from_num_' + lang];
-                            //    },
-                            //    title: langView('field_way_from', langs), width: "150px", orderable: true, searchable: true
-                            //},
-                            //{
-                            //    //data: "count",
-                            //    data: function (row, type, val, meta) {
-                            //        return row.count_all;
-                            //    },
-                            //    title: langView('field_count', langs), width: "50px", orderable: true, searchable: true
-                            //},
-                            //{
-                            //    //data: "station_on",
-                            //    data: function (row, type, val, meta) {
-                            //        return row['station_on_name_' + lang];
-                            //    },
-                            //    title: langView('field_station_on', langs), width: "150px", orderable: true, searchable: true
-                            //},
-                            //{
-                            //    //data: "date_show_wagons",
-                            //    data: function (row, type, val, meta) {
-                            //        return getReplaceTOfDT(row.date_end_inspection_acceptance_delivery);
-                            //    },
-                            //    title: langView('field_date_end_inspection_acceptance_delivery', langs), width: "150px", orderable: true, searchable: true
-                            //},
-                            //{
-                            //    data: function (row, type, val, meta) {
-                            //        return getReplaceTOfDT(row.date_end_inspection_loader);
-                            //    },
-                            //    title: langView('field_date_end_inspection_loader', langs), width: "150px", orderable: true, searchable: true
-                            //}
-
                         ]
                     });
                 },
@@ -1458,8 +1541,6 @@
             owner_name_arrival: $('input#owner_name_arrival'), // Владелец прибытие
             operator_name_arrival: $('input#operator_name_arrival'), // Оператор прибытие
             limiting_loading_arrival: $('input#limiting_loading_arrival'), // Ограничение прибытие
-
-
             //-------------------------------------------------------------------------------------
             // КОМПОНЕНТЫ РАЗДЕЛА
             //-------------------------------------------------------------------------------------
@@ -1500,6 +1581,7 @@
                 cars_detali.return_num_act.val('');
                 cars_detali.return_date_act.setDateTime(null); // уберем дату
                 cars_detali.return_note.val('');
+                cars_detali.table_return_cars.view(null) // Очистить таблицу возвратов
 
                 cars_detali.cargo_arrival.val('');
                 cars_detali.cargo_sap.val('');
@@ -1573,7 +1655,6 @@
                     text
                 );
             },
-
             //-------------------------------------------------------------------------------------
             // Отображение компонентов раздела "Информация о вагоне и ЭПД"
             //-------------------------------------------------------------------------------------
@@ -1718,6 +1799,7 @@
                     var current_cars_return = list_cars_return.find(function (o) {
                         return o.date_stop === null;
                     });
+                    cars_detali.current_cars_return = current_cars_return;
                     if (current_cars_return) {
                         cars_detali.view_cars_return_buttons(true);
                         // Показать причину
@@ -1729,6 +1811,12 @@
                         cars_detali.return_date_act.setDateTime(current_cars_return.date_act)
                         cars_detali.return_note.val(current_cars_return.note);
                     } else {
+                        cars_detali.view_cause_return_manual(null);
+                        cars_detali.return_start.setDateTime(null); // уберем дату
+                        cars_detali.return_stop.setDateTime(null); // уберем дату
+                        cars_detali.return_num_act.val('');
+                        cars_detali.return_date_act.setDateTime(null); // уберем дату
+                        cars_detali.return_note.val('');
                         cars_detali.view_cars_return_buttons(false);
                     }
                 } else {
@@ -1804,6 +1892,7 @@
                     var sap_is = wir.SAPIncomingSupply;
 
                     // ОСНОВНОЕ ОКНО ------------------------------------------------------
+                    cars_detali.car_return.prop("disabled", false);
                     // род вагона
                     var genus = dir_wag !== null ? dir_wag.Directory_GenusWagons : null;
                     if (genus) {
@@ -1829,7 +1918,8 @@
                     // ЗАДЕРЖАНИЕ -------------------------------------------------------------
                     cars_detali.view_cars_detention_current(car.OutgoingDetentionReturn);
                     // ВОЗВРАТ -------------------------------------------------------------
-                    cars_detali.view_cars_return_current(cars_detali.select_num);                   // ДАННЫЕ О ПОГРУЗКЕ -------------------------------------------------------------
+                    cars_detali.view_cars_return_current(cars_detali.select_num);
+                    // ДАННЫЕ О ПОГРУЗКЕ -------------------------------------------------------------
                     if (wagon_info_uz) {
                         cars_detali.owner_name.val(wagon_info_uz.owner);// Собственник (по УЗ)
                         cars_detali.limiting_loading_uz.val((wagon_info_uz.exit_ban !== null ? wagon_info_uz.exit_ban + '; ' : '') + (wagon_info_uz.other_bans !== null ? wagon_info_uz.other_bans.replace(/<br>/g, '') : ''));// Ограничения (по УЗ)
@@ -1880,6 +1970,8 @@
                     cars_detali.alert.clear_message();
                 }
                 cars_detali.val_outgoing_car.clear_error();
+                cars_detali.val_outgoing_car_detention.clear_all();       // Очистить ошибки по задержаниям
+                cars_detali.val_outgoing_car_return.clear_all();        // Очистить ошибки по возвратам
                 // кнопки 
                 cars_detali.detention_save.hide();
                 cars_detali.detention_edit.hide();
@@ -1914,6 +2006,16 @@
                     }
                 });
             },
+            // Загрузить вагоны состава
+            loadOutgoingCarsOfSostav: function (id_sostav, callback) {
+                cars_detali.ids_inc.getOutgoingSostavOfID(id_sostav, function (result_sostav) {
+                    // Запомним результат
+                    cars_detali.sostav = result_sostav;
+                    if (typeof callback === 'function') {
+                        callback(result_sostav);
+                    }
+                });
+            },
             // Загрузка задержаний и возвратов по номеру вагона
             loadOutgoingDetentionReturnOfnum: function (num, callback) {
                 cars_detali.ids_inc.getOutgoingDetentionReturnOfNum(num, function (list_detention_return) {
@@ -1923,7 +2025,6 @@
                     }
                 });
             },
-
             //-------------------------------------------------------------------------------------
             // Валидация справочников и списков
             //-------------------------------------------------------------------------------------
@@ -1999,5 +2100,6 @@
         table_sostav.init();
         pn_sel.view(true);
         LockScreenOff();
+        //var sd = window;
     });
 });

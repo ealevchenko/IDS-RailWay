@@ -1402,6 +1402,51 @@ namespace IDS
             }
             return res;
         }
+        /// <summary>
+        /// Вернуть вагон с пръедявления
+        /// </summary>
+        /// <param name="id_outgoing_car"></param>
+        /// <param name="date_start"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationReturnProvideCar(long id_outgoing_car, DateTime date_start, string user)
+        {
+            try
+            {
+                IDSTransfer ids_tr = new IDSTransfer(servece_owner);
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDbContext context = new EFDbContext();
+                EFOutgoingCars ef_out_car = new EFOutgoingCars(context);
+                EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
+                EFOutgoingDetentionReturn ef_out_dr = new EFOutgoingDetentionReturn(context);
+                OutgoingCars car = ef_out_car.Context.Where(c => c.id == id_outgoing_car).FirstOrDefault();
+
+                if (car == null) return (int)errors_base.not_outgoing_cars_db; // В базе нет вагона для предявдения
+                if (car.outgoing != null) return (int)errors_base.outgoing_cars_outgoing; // Запрет операции вагон отправлен
+                // Получим строку внутреннего перемещения
+                WagonInternalRoutes wir = ef_wir.Context.Where(w => w.id_outgoing_car == car.id).FirstOrDefault();
+                if (wir == null) return (int)errors_base.not_wir_db; // В базе данных нет записи по WagonInternalRoutes (Внутренее перемещение вагонов)
+                if (wir.close != null) return (int)errors_base.close_wir; // Запись закрыта (операции не возможны)
+                // Применить операцию ВОЗВРАТ
+                wir.SetOpenOperation(10, date_start.AddMinutes(-1), null, null, null, null, null, user).SetCloseOperation(date_start, "Отмена предъявления вагона на УЗ", user);
+                // Убрать вагон из предъявления
+                wir.id_outgoing_car = null;
+                ef_wir.Update(wir); // обновим
+                ef_out_car.Delete(car.id); // Удалим запись вогона в предъявлении
+                return context.SaveChanges(); // Применить операции
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationReturnProvideCar(id_outgoing_car={0}, date_start={1}, user={2})",
+                    id_outgoing_car,  date_start,  user), servece_owner, eventID);
+                return (int)errors_base.global; // Глобальная ошибка
+            }
+        }
+
         #endregion
 
         #endregion
@@ -1655,6 +1700,7 @@ namespace IDS
                     OutgoingDetentionReturn dr = new OutgoingDetentionReturn()
                     {
                         id = 0,
+                        num = car.num,
                         type_detention_return = 0,
                         id_detention_return = id_detention_return,
                         date_start = date_start,
@@ -1684,6 +1730,73 @@ namespace IDS
             {
                 e.ExceptionMethodLog(String.Format("OperationUpdateOutgoingDetention(id_outgoing_car={0}, id_detention_return={1}, date_start={2}, date_stop={3}, user={4})",
                     id_outgoing_car, id_detention_return, date_start, date_stop, user), servece_owner, eventID);
+                return (int)errors_base.global; // Глобальная ошибка
+            }
+        }
+        #endregion
+
+        #region Операция "Возврат вагона вагона"
+        /// <summary>
+        /// Выполнить операцию возврат вагона
+        /// </summary>
+        /// <param name="id_outgoing_car"></param>
+        /// <param name="id_detention_return"></param>
+        /// <param name="date_start"></param>
+        /// <param name="num_act"></param>
+        /// <param name="date_act"></param>
+        /// <param name="note"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationOpenOutgoingReturn(long id_outgoing_car, int id_detention_return, DateTime date_start, string num_act, DateTime? date_act, string note, string user)
+        {
+            try
+            {
+                IDSTransfer ids_tr = new IDSTransfer(servece_owner);
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDbContext context = new EFDbContext();
+                EFOutgoingCars ef_out_car = new EFOutgoingCars(context);
+                EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
+                EFOutgoingDetentionReturn ef_out_dr = new EFOutgoingDetentionReturn(context);
+                OutgoingCars car = ef_out_car.Context.Where(c => c.id == id_outgoing_car).FirstOrDefault();
+
+                if (car == null) return (int)errors_base.not_outgoing_cars_db; // В базе нет вагона для предявдения
+                if (car.outgoing != null) return (int)errors_base.outgoing_cars_outgoing; // Запрет операции вагон отправлен
+                // Создать возврат
+                OutgoingDetentionReturn outgoingreturn = new OutgoingDetentionReturn()
+                {
+                    id = 0,
+                    num = car.num,
+                    type_detention_return = 1,
+                    id_detention_return = id_detention_return,
+                    date_start = date_start,
+                    date_stop = null,
+                    num_act = num_act,
+                    date_act = date_act,
+                    note = note,
+                    create = DateTime.Now,
+                    create_user = user
+                };
+                ef_out_dr.Add(outgoingreturn); // Добавим строку
+                // Получим строку внутреннего перемещения
+                WagonInternalRoutes wir = ef_wir.Context.Where(w => w.id_outgoing_car == car.id).FirstOrDefault();
+                if (wir == null) return (int)errors_base.not_wir_db; // В базе данных нет записи по WagonInternalRoutes (Внутренее перемещение вагонов)
+                if (wir.close != null) return (int)errors_base.close_wir; // Запись закрыта (операции не возможны)
+                // Применить операцию ВОЗВРАТ
+                wir.SetOpenOperation(10, date_start.AddMinutes(-1), null, null, null, null, note, user).SetCloseOperation(date_start, note, user);
+                // Убрать вагон из предъявления
+                wir.id_outgoing_car = null;
+                ef_wir.Update(wir); // обновим
+                ef_out_car.Delete(car.id); // Удалим запись вогона в предъявлении
+                return context.SaveChanges(); // Применить операции
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationOpenOutgoingReturn(id_outgoing_car={0}, id_detention_return={1}, date_start={2}, num_act={3}, date_act={4}, note={5},user={6})",
+                    id_outgoing_car, id_detention_return, date_start, num_act, date_act, note, user), servece_owner, eventID);
                 return (int)errors_base.global; // Глобальная ошибка
             }
         }

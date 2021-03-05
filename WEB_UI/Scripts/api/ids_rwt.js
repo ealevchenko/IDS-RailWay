@@ -3251,6 +3251,30 @@ IDS_RWT.prototype.postOutgoingDetentionReturn = function (obj, callback) {
         },
     });
 };
+//Обновить задержание или возврат
+IDS_RWT.prototype.putOutgoingDetentionReturn = function (obj, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: '../../api/ids/rwt/outgoing_detention_return/id/' + obj.id,
+        data: JSON.stringify(obj),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.putOutgoingDetentionReturn", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 //Операция добавить или обновить задержание 
 IDS_RWT.prototype.postUpdateOutgoingDetention = function (operation_detention, callback) {
     $.ajax({
@@ -3276,7 +3300,31 @@ IDS_RWT.prototype.postUpdateOutgoingDetention = function (operation_detention, c
         },
     });
 };
-
+//Операция открыть возврат 
+IDS_RWT.prototype.postOpenOutgoingReturn = function (operation_return, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/wsd/operation/open_return/',
+        type: 'POST',
+        data: JSON.stringify(operation_return),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postOpenOutgoingReturn", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 
 //======================================================================================================
 //                              РАЗДЕЛ ПРАВКА ДОКУМЕНТОВ ПО ПРИБЫТИЮ
@@ -3692,6 +3740,32 @@ IDS_RWT.prototype.postTransferProvideWagonsOfStation = function (operation_trans
         },
     });
 };
+//Операция вернуть вагон с пръедявления
+IDS_RWT.prototype.postPostOperationReturnProvideWagon = function (operation_return, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/wsd/operation/return_provide/wagon/',
+        type: 'POST',
+        data: JSON.stringify(operation_return),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postPostOperationReturnProvideWagon", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 //======================================================================================================
 //                                  РАЗДЕЛ ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ ВАГОНОВ
 //======= WagonInternalRoutes (Состояние парка) =========================================================================
