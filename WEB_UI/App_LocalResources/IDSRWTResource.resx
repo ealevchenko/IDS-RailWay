@@ -565,10 +565,10 @@
     <value>№ контейнера</value>
   </data>
   <data name="title_reason_discrepancy_amkr" xml:space="preserve">
-    <value>Причина расх. сдачи по времени АМКР</value>
+    <value>Причина расхождения сдачи (АМКР)</value>
   </data>
   <data name="title_reason_discrepancy_uz" xml:space="preserve">
-    <value>Причина расх. сдачи по времени УЗ</value>
+    <value>Причина расхождения сдачи (УЗ)</value>
   </data>
   <data name="title_return_bit" xml:space="preserve">
     <value>Возврат</value>

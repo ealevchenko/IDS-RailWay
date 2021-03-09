@@ -1177,7 +1177,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Причина расх. сдачи по времени АМКР.
+        ///   Ищет локализованную строку, похожую на Причина расхождения сдачи (АМКР).
         /// </summary>
         public static string title_reason_discrepancy_amkr {
             get {
@@ -1186,7 +1186,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Причина расх. сдачи по времени УЗ.
+        ///   Ищет локализованную строку, похожую на Причина расхождения сдачи (УЗ).
         /// </summary>
         public static string title_reason_discrepancy_uz {
             get {

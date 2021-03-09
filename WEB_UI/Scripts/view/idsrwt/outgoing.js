@@ -1530,7 +1530,7 @@
             loading_devision: $('input#loading_devision'), // цех погрузки
             owner_name: $('input#owner_name'), // собственник по уз
             operator_name: $('input#operator_name'), // Оператр который выставили на АМКР
-            limiting_loading_uz: $('input#limiting_loading_uz'), // Ограничения по УЗ
+            limiting_loading_uz: $('textarea#limiting_loading_uz'), // Ограничения по УЗ
             limiting_loading_amkr: $('input#limiting_loading_amkr'), // Ограничения по УЗ
 
             cargo_arrival: $('input#cargo_arrival'), // Груз по прибытию
