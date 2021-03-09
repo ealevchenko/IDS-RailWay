@@ -53,6 +53,10 @@ namespace EFIDS.Entities
 
         public int? id_outgoing_detention_return { get; set; }
 
+        public int? id_reason_discrepancy_amkr { get; set; }
+
+        public int? id_reason_discrepancy_uz { get; set; }
+
         public virtual UZ_DOC_OUT UZ_DOC_OUT { get; set; }
 
         public virtual Directory_Wagons Directory_Wagons { get; set; }
