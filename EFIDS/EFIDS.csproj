@@ -215,6 +215,13 @@
     <Compile Include="Entities\RWT\ParkState_Wagon.cs" />
     <Compile Include="Entities\RWT\ParkState_Way.cs" />
     <Compile Include="Entities\RWT\OutgoingDetentionReturn.cs" />
+    <Compile Include="Entities\RWT\Outgoing_UZ_Cont_Pay.cs" />
+    <Compile Include="Entities\RWT\Outgoing_UZ_Document.cs" />
+    <Compile Include="Entities\RWT\Outgoing_UZ_Document_Pay.cs" />
+    <Compile Include="Entities\RWT\Outgoing_UZ_Vagon.cs" />
+    <Compile Include="Entities\RWT\Outgoing_UZ_Vagon_Acts.cs" />
+    <Compile Include="Entities\RWT\Outgoing_UZ_Vagon_Cont.cs" />
+    <Compile Include="Entities\RWT\Outgoing_UZ_Vagon_Pay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

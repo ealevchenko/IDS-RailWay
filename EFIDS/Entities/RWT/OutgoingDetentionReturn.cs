@@ -13,6 +13,7 @@ namespace EFIDS.Entities
         public OutgoingDetentionReturn()
         {
             OutgoingCars = new HashSet<OutgoingCars>();
+            Outgoing_UZ_Vagon = new HashSet<Outgoing_UZ_Vagon>();
         }
 
         public int id { get; set; }
@@ -50,5 +51,9 @@ namespace EFIDS.Entities
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OutgoingCars> OutgoingCars { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Outgoing_UZ_Vagon> Outgoing_UZ_Vagon { get; set; }
+
     }
 }

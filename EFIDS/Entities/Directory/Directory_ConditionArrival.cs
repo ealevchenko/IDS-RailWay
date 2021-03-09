@@ -13,6 +13,7 @@ namespace EFIDS.Entities
         public Directory_ConditionArrival()
         {
             Arrival_UZ_Vagon = new HashSet<Arrival_UZ_Vagon>();
+            Outgoing_UZ_Vagon = new HashSet<Outgoing_UZ_Vagon>();
             WagonInternalOperation = new HashSet<WagonInternalOperation>();
         }
 
@@ -54,6 +55,9 @@ namespace EFIDS.Entities
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Arrival_UZ_Vagon> Arrival_UZ_Vagon { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Outgoing_UZ_Vagon> Outgoing_UZ_Vagon { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WagonInternalOperation> WagonInternalOperation { get; set; }

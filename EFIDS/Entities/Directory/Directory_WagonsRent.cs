@@ -13,6 +13,8 @@ namespace EFIDS.Entities
         public Directory_WagonsRent()
         {
             Directory_WagonsRent1 = new HashSet<Directory_WagonsRent>();
+            Outgoing_UZ_Vagon = new HashSet<Outgoing_UZ_Vagon>();
+            Outgoing_UZ_Vagon1 = new HashSet<Outgoing_UZ_Vagon>();
         }
 
         public int id { get; set; }
@@ -50,5 +52,11 @@ namespace EFIDS.Entities
         public virtual ICollection<Directory_WagonsRent> Directory_WagonsRent1 { get; set; }
 
         public virtual Directory_WagonsRent Directory_WagonsRent2 { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Outgoing_UZ_Vagon> Outgoing_UZ_Vagon { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Outgoing_UZ_Vagon> Outgoing_UZ_Vagon1 { get; set; }
     }
 }
