@@ -735,7 +735,15 @@ namespace EFIDS.Concrete
             #endregion
 
             #region Directory_Reason_Discrepancy - подключить
+            modelBuilder.Entity<Directory_Reason_Discrepancy>()
+                .HasMany(e => e.OutgoingCars)
+                .WithOptional(e => e.Directory_Reason_Discrepancy)
+                .HasForeignKey(e => e.id_reason_discrepancy_uz);
 
+            modelBuilder.Entity<Directory_Reason_Discrepancy>()
+                .HasMany(e => e.OutgoingCars1)
+                .WithOptional(e => e.Directory_Reason_Discrepancy1)
+                .HasForeignKey(e => e.id_reason_discrepancy_amkr);
             #endregion
 
             #region Directory_Shipper

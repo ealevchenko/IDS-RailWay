@@ -58,6 +58,10 @@ namespace EFIDS.Entities
 
         public int? id_reason_discrepancy_uz { get; set; }
 
+        public virtual Directory_Reason_Discrepancy Directory_Reason_Discrepancy { get; set; }
+
+        public virtual Directory_Reason_Discrepancy Directory_Reason_Discrepancy1 { get; set; }
+
         public virtual UZ_DOC_OUT UZ_DOC_OUT { get; set; }
 
         public virtual Directory_Wagons Directory_Wagons { get; set; }
