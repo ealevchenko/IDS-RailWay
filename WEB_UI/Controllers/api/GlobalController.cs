@@ -107,23 +107,24 @@ namespace WEB_UI.Controllers.api
                     {
                         result = value.ToString();
                         park_state_apply = value.ToString();
+                        HttpContext.Current.Application["park_state_apply"] = park_state_apply;
                     }
-                    else
-                    {
-                        string[] arr_park_state_apply = park_state_apply.Split(';');
-                        foreach (string ps in arr_park_state_apply)
-                        {
-                            if (ps == value.ToString())
-                            {
-                                // Снять закрытый доступ 
-                                HttpContext.Current.Application.UnLock();
-                                return Ok(result); 
-                            }
-                        }
-                        result = value.ToString();
-                        park_state_apply = park_state_apply + ";" + result;
-                    }
-                    HttpContext.Current.Application["park_state_apply"] = park_state_apply;
+                    //else
+                    //{
+                    //    string[] arr_park_state_apply = park_state_apply.Split(';');
+                    //    foreach (string ps in arr_park_state_apply)
+                    //    {
+                    //        if (ps == value.ToString())
+                    //        {
+                    //            // Снять закрытый доступ 
+                    //            HttpContext.Current.Application.UnLock();
+                    //            return Ok(result); 
+                    //        }
+                    //    }
+                    //    result = value.ToString();
+                    //    park_state_apply = park_state_apply + ";" + result;
+                    //}
+                    //HttpContext.Current.Application["park_state_apply"] = park_state_apply;
                 }
                 // Снять закрытый доступ        
                 HttpContext.Current.Application.UnLock();
