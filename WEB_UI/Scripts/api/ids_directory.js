@@ -5587,23 +5587,33 @@ IDS_DIRECTORY.prototype.getValueCulture_ExternalStation_Of_Code = function (code
     return obj ? obj[name + '_' + this.lang] : null;
 };
 //
+IDS_DIRECTORY.prototype.geExternalStation_Of_Name = function (text, ftext, lang) {
+    return this.getObjs_Of_text(this.list_external_station, text, ftext, lang);
+};
+//
+IDS_DIRECTORY.prototype.getID_ExternalStation_Of_Name = function (text, ftext, lang) {
+    var obj = this.geExternalStation_Of_Name(text, ftext, lang);
+    return obj && obj.length > 0 ? obj[0].id : null;
+};
+//
 IDS_DIRECTORY.prototype.getListExternalStation = function (fvalue, ftext, lang, filter) {
-    var list = [];
-    var list_filtr = null;
-    if (this.list_external_station) {
-        if (typeof filter === 'function') {
-            list_filtr = this.list_external_station.filter(filter);
-        } else { list_filtr = this.list_external_station; }
-        for (i = 0, j = list_filtr.length; i < j; i++) {
-            var l = list_filtr[i];
-            if (lang) {
-                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
-            } else {
-                list.push({ value: l[fvalue], text: l[ftext] });
-            }
-        }
-    }
-    return list;
+    return this.getListObj(this.list_external_station, fvalue, ftext, lang, filter);
+    //var list = [];
+    //var list_filtr = null;
+    //if (this.list_external_station) {
+    //    if (typeof filter === 'function') {
+    //        list_filtr = this.list_external_station.filter(filter);
+    //    } else { list_filtr = this.list_external_station; }
+    //    for (i = 0, j = list_filtr.length; i < j; i++) {
+    //        var l = list_filtr[i];
+    //        if (lang) {
+    //            list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+    //        } else {
+    //            list.push({ value: l[fvalue], text: l[ftext] });
+    //        }
+    //    }
+    //}
+    //return list;
 };
 // Получим список с выборкой по полю
 IDS_DIRECTORY.prototype.getExternalStation_Of_CultureName = function (name, lang, text) {

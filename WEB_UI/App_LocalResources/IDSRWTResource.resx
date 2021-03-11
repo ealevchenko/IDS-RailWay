@@ -553,7 +553,7 @@
     <value>Разметка (прибытие)</value>
   </data>
   <data name="title_condition_provide" xml:space="preserve">
-    <value>Разметка (выгрузка)</value>
+    <value>Разметка (текущая)</value>
   </data>
   <data name="title_detention_bit" xml:space="preserve">
     <value>Задержание</value>
@@ -656,5 +656,11 @@
   </data>
   <data name="title_return_stop" xml:space="preserve">
     <value>Окончание возврата</value>
+  </data>
+  <data name="title_code_station_to" xml:space="preserve">
+    <value>Код</value>
+  </data>
+  <data name="title_name_station_to" xml:space="preserve">
+    <value>Станция назначения</value>
   </data>
 </root>

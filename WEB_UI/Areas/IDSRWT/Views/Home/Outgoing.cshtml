@@ -180,29 +180,37 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-row">
-                                                    <div class="col-xl-2 mb-1 text-left">
+                                                    <div class="col-xl-3 mb-1 text-left">
                                                         <label for="adm_kod" class="mb-1">@IDSRWTResource.title_adm_kod:</label>
                                                         <input type="text" class="form-control inp-auto" id="adm_kod" name="adm_kod" title="" data-mode="" data-edit="" data-form="transceiver">
                                                         <div class="invalid-feedback">
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-4 mb-1 text-left">
-                                                        <label for="adm_name" class="mb-1">@IDSRWTResource.title_adm_name:</label>
-                                                        <input type="text" class="form-control inp-auto" id="adm_name" name="adm_name" title="" data-mode="" data-edit="" data-form="transceiver">
-                                                        <div class="invalid-feedback">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-2 mb-1 text-left">
+                                                    @*<div class="col-xl-4 mb-1 text-left">
+                                                            <label for="adm_name" class="mb-1">@IDSRWTResource.title_adm_name:</label>
+                                                            <input type="text" class="form-control inp-auto" id="adm_name" name="adm_name" title="" data-mode="" data-edit="" data-form="transceiver">
+                                                            <div class="invalid-feedback">
+                                                            </div>
+                                                        </div>*@
+                                                    <div class="col-xl-3 mb-1 text-left">
                                                         <label for="rod_vag_abbr" class="mb-1">@IDSRWTResource.title_rod_vag_abbr:</label>
                                                         <input type="text" class="form-control inp-auto" id="rod_vag_abbr" name="rod_vag_abbr" title="Справочник 'Карточка вагона' -> Название 'Рода вагона (абр.)'" data-mode="" data-edit="" data-form="transceiver">
                                                         <div class="invalid-feedback">
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-4 mb-1 text-left">
-                                                        <label for="rod_vag_name" class="mb-1">@IDSRWTResource.title_name_rod_vag:</label>
-                                                        <input type="text" class="form-control inp-auto" id="rod_vag_name" name="rod_vag_name" title="Справочник 'Карточка вагона' -> Название 'Рода вагона'" data-mode="" data-edit="" data-form="transceiver">
-                                                        <div class="invalid-feedback">
-                                                        </div>
+                                                    @*<div class="col-xl-4 mb-1 text-left">
+                                                            <label for="rod_vag_name" class="mb-1">@IDSRWTResource.title_name_rod_vag:</label>
+                                                            <input type="text" class="form-control inp-auto" id="rod_vag_name" name="rod_vag_name" title="Справочник 'Карточка вагона' -> Название 'Рода вагона'" data-mode="" data-edit="" data-form="transceiver">
+                                                            <div class="invalid-feedback">
+                                                            </div>
+                                                        </div>*@
+                                                    <div class="col-xl-3 mb-1 text-left">
+                                                        <label for="gruzp_arrival" class="mb-1">@IDSRWTResource.title_gruzp_uz:</label>
+                                                        <input type="text" class="form-control inp-auto" id="gruzp_arrival" name="gruzp_arrival" title="" data-mode="" data-edit="" data-form="transceiver">
+                                                    </div>
+                                                    <div class="col-xl-3 mb-1 text-left">
+                                                        <label for="tara_arrival" class="mb-1">@IDSRWTResource.title_tara_uz:</label>
+                                                        <input type="text" class="form-control inp-auto" id="tara_arrival" name="tara_arrival" title="" data-mode="" data-edit="" data-form="transceiver">
                                                     </div>
                                                 </div>
                                                 <div class="form-row">
@@ -330,37 +338,43 @@
                                             <fieldset class="border-primary">
                                                 <legend>@IDSRWTResource.title_loading_data</legend>
                                                 <div class="form-row">
-                                                    <div class="col-xl-3 mb-1">
-                                                        <div class="custom-control custom-checkbox" style="margin-top:10%">
+                                                    <div class="col-xl-12 mb-1 text-left">
+                                                        <div class="custom-control custom-checkbox">
                                                             <input type="checkbox" class="custom-control-input inp-manual" id="loaded_car" name="loaded_car" data-mode="edit" data-edit="" data-form="transceiver">
                                                             <label class="custom-control-label" for="loaded_car">@IDSRWTResource.title_loaded_car</label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-5 mb-1 text-left">
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="col-xl-7 mb-1 text-left">
                                                         <label for="cargo_name" class="mb-1">@IDSRWTResource.title_cargo_name:</label>
                                                         <input type="text" class="form-control inp-manual" id="cargo_name" name="cargo_name" title="" data-mode="edit" data-edit="" data-form="transceiver">
                                                         <div class="invalid-feedback">
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-2 mb-1 text-left">
-                                                        <label for="gruzp_arrival" class="mb-1">@IDSRWTResource.title_gruzp_uz:</label>
-                                                        <input type="text" class="form-control inp-auto" id="gruzp_arrival" name="gruzp_arrival" title="" data-mode="" data-edit="" data-form="transceiver">
-                                                    </div>
-                                                    <div class="col-xl-2 mb-1 text-left">
-                                                        <label for="tara_arrival" class="mb-1">@IDSRWTResource.title_tara_uz:</label>
-                                                        <input type="text" class="form-control inp-auto" id="tara_arrival" name="tara_arrival" title="" data-mode="" data-edit="" data-form="transceiver">
-                                                    </div>
-                                                </div>
-                                                <div class="form-row">
-                                                    <div class="col-xl-2 mb-1 text-left">
                                                         <label for="loading_devision_code" class="mb-1">@IDSRWTResource.title_loading_devision_code:</label>
                                                         <input type="text" class="form-control inp-auto" id="loading_devision_code" name="loading_devision_code" title="" data-mode="" data-edit="" data-form="transceiver">
                                                         <div class="invalid-feedback">
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-4 mb-1 text-left">
+                                                    <div class="col-xl-3 mb-1 text-left">
                                                         <label for="loading_devision" class="mb-1">@IDSRWTResource.title_loading_devision:</label>
                                                         <input type="text" class="form-control inp-manual" id="loading_devision" name="loading_devision" title="" data-mode="edit" data-edit="" data-form="transceiver">
+                                                        <div class="invalid-feedback">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="col-xl-2 mb-1 text-left">
+                                                        <label for="code_station_to" class="mb-1">@IDSRWTResource.title_code_station_to:</label>
+                                                        <input type="text" class="form-control inp-auto" id="code_station_to" name="code_station_to" title="" data-mode="" data-edit="" data-form="transceiver">
+                                                        <div class="invalid-feedback">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-4 mb-1 text-left">
+                                                        <label for="name_station_to" class="mb-1">@IDSRWTResource.title_name_station_to:</label>
+                                                        <input type="text" class="form-control inp-manual" id="name_station_to" name="name_station_to" title="" data-mode="edit" data-edit="" data-form="transceiver">
                                                         <div class="invalid-feedback">
                                                         </div>
                                                     </div>

@@ -322,6 +322,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Код.
+        /// </summary>
+        public static string title_code_station_to {
+            get {
+                return ResourceManager.GetString("title_code_station_to", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Коммерческое состояние.
         /// </summary>
         public static string title_commercial_condition {
@@ -358,7 +367,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Разметка (выгрузка).
+        ///   Ищет локализованную строку, похожую на Разметка (текущая).
         /// </summary>
         public static string title_condition_provide {
             get {
@@ -858,6 +867,15 @@ namespace WEB_UI.App_LocalResources {
         public static string title_name_rod_vag {
             get {
                 return ResourceManager.GetString("title_name_rod_vag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Станция назначения.
+        /// </summary>
+        public static string title_name_station_to {
+            get {
+                return ResourceManager.GetString("title_name_station_to", resourceCulture);
             }
         }
         

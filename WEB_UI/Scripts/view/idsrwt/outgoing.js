@@ -896,9 +896,9 @@
                     .add(cars_detali.date_outgoing_act)
                     .add(cars_detali.date_outgoing_act.obj)
                     .add(cars_detali.rod_vag_abbr)
-                    .add(cars_detali.rod_vag_name)
+                    //.add(cars_detali.rod_vag_name)
                     .add(cars_detali.adm_kod)
-                    .add(cars_detali.adm_name)
+                    //.add(cars_detali.adm_name)
                     .add(cars_detali.num_cont_1)
                     .add(cars_detali.num_cont_2)
                     .add(cars_detali.loaded_car)
@@ -908,6 +908,8 @@
                     .add(cars_detali.cargo_name)
                     .add(cars_detali.loading_devision_code)
                     .add(cars_detali.loading_devision)
+                    .add(cars_detali.code_station_to)
+                    .add(cars_detali.name_station_to)
                     .add(cars_detali.owner_name)
                     .add(cars_detali.operator_name)
                     .add(cars_detali.limiting_loading_uz)
@@ -990,6 +992,7 @@
                 cars_detali.update_reason_discrepancy_uz(null);             // Причина расхождения УЗ
                 cars_detali.update_cargo(null);                             // Груз
                 cars_detali.update_loading_devision(null);                  // Цех погрузки
+                cars_detali.update_station_on(null);                        // Станция назанчения
                 cars_detali.update_cause_detention(null);                   // Причина задержания
                 cars_detali.update_cause_return(null);                      // Причина возврата
 
@@ -1260,9 +1263,9 @@
             num_cont_1: $('input#num_cont_1'), // Номер контейнера 1
             num_cont_2: $('input#num_cont_2'), // Номер контейнера 2
             rod_vag_abbr: $('input#rod_vag_abbr'), // Род вагона абрив.
-            rod_vag_name: $('input#rod_vag_name'), // Род вагона полное назв.
+            //rod_vag_name: $('input#rod_vag_name'), // Род вагона полное назв.
             adm_kod: $('input#adm_kod'), // Код адм.
-            adm_name: $('input#adm_name'), // Имя Адм.
+            //adm_name: $('input#adm_name'), // Имя Адм.
             num_cont_1: $('input#num_cont_1'), // Номер контейнера 1
             num_cont_2: $('input#num_cont_2'), // Номер контейнера 1
             loaded_car: $('input#loaded_car'), // Груженный/порожний
@@ -1528,6 +1531,9 @@
             cargo_name: $('input#cargo_name'), // Наименование груза
             loading_devision_code: $('input#loading_devision_code'), // цех погрузки
             loading_devision: $('input#loading_devision'), // цех погрузки
+            code_station_to: $('input#code_station_to'), // код станции назначения
+            name_station_to: $('input#name_station_to'), // станция назначения
+
             owner_name: $('input#owner_name'), // собственник по уз
             operator_name: $('input#operator_name'), // Оператр который выставили на АМКР
             limiting_loading_uz: $('textarea#limiting_loading_uz'), // Ограничения по УЗ
@@ -1553,9 +1559,9 @@
                 cars_detali.position_outgoing.val('');
                 cars_detali.date_outgoing_act.setDateTime(null); // уберем дату
                 cars_detali.rod_vag_abbr.val('');
-                cars_detali.rod_vag_name.val('');
+                //cars_detali.rod_vag_name.val('');
                 cars_detali.adm_kod.val('');
-                cars_detali.adm_name.val('');
+                //cars_detali.adm_name.val('');
                 cars_detali.num_cont_1.val('');
                 cars_detali.num_cont_2.val('');
                 cars_detali.loaded_car.prop('checked', false);
@@ -1591,6 +1597,8 @@
                 cars_detali.owner_name_arrival.val('');
                 cars_detali.operator_name_arrival.val('');
                 cars_detali.limiting_loading_arrival.val('');
+
+
             },
             //-------------------------------------------------------------------------------------
             // Обновление компонентов раздела "Информация о вагоне и ЭПД"
@@ -1632,6 +1640,16 @@
                     { lang: cars_detali.lang, minLength: 1 },
                     getAutocompleteList(cars_detali.ids_inc.ids_dir.getListDivisions('code', 'division_abbr', cars_detali.lang, null), 'text'),
                     cars_detali.view_loading_devision_manual,
+                    text
+                );
+            },
+            // Обновить компонент станция назначения
+            update_station_on: function (text) {
+                cars_detali.name_station_to = initAutocomplete(
+                    this.name_station_to,
+                    { lang: cars_detali.lang, minLength: 2 },
+                    getAutocompleteList(cars_detali.ids_inc.ids_dir.getListExternalStation('code', 'station_name', cars_detali.lang, null), 'text'),
+                    cars_detali.view_station_on_manual,
                     text
                 );
             },
@@ -1714,6 +1732,22 @@
                 cars_detali.loading_devision.val(text);
                 //cars_detali.validation_vag_devision_on_amkr(true, true);
 
+            },
+            // Показать станцию получения
+            view_station_on_manual: function (text) {
+                var code = null;
+                if (text) {
+                    var objs = cars_detali.ids_inc.ids_dir.geExternalStation_Of_Name(text, 'station_name', cars_detali.lang)
+                    if (objs && objs.length > 0) {
+                        code = objs[0].code;
+                        cars_detali.val_outgoing_car.set_control_ok(cars_detali.code_station_to, "");
+                        cars_detali.val_outgoing_car.set_control_ok(cars_detali.name_station_to, "");
+                    } else {
+                        cars_detali.val_outgoing_car.set_control_error(cars_detali.name_station_to, "Указанной станции нет в справочнике ИДС.");
+                    }
+                }
+                cars_detali.code_station_to.val(code);
+                cars_detali.name_station_to.val(text);
             },
             // Показать причину задержания
             view_cause_detention_manual: function (text) {
@@ -1897,13 +1931,13 @@
                     var genus = dir_wag !== null ? dir_wag.Directory_GenusWagons : null;
                     if (genus) {
                         cars_detali.rod_vag_abbr.val(genus['abbr_' + cars_detali.lang]);
-                        cars_detali.rod_vag_name.val(genus['genus_' + cars_detali.lang]);
+                        //cars_detali.rod_vag_name.val(genus['genus_' + cars_detali.lang]);
                     }
                     // Администрация
                     var countrys = dir_wag !== null ? dir_wag.Directory_Countrys : null;
                     if (countrys) {
                         cars_detali.adm_kod.val(countrys['code_sng']);
-                        cars_detali.adm_name.val(countrys['countrys_name_' + cars_detali.lang]);
+                        //cars_detali.adm_name.val(countrys['countrys_name_' + cars_detali.lang]);
                     }
                     // Разметка приб
                     var condition_arrival = arrival_uz_vagon !== null ? arrival_uz_vagon.Directory_ConditionArrival : null;
@@ -1997,7 +2031,7 @@
                 LockScreen(langView('mess_load', langs));
                 var count = 1;
                 //cars_detali.ids_inc.load([], ['hazard_class', 'commercial_condition', 'certification_data', 'payer_arrival', 'cargo', 'cargo_gng', 'cargo_etsng', 'cargo_group', 'type_wagons', 'condition_arrival', 'type_owner_ship', 'limiting_loading', 'operators_wagons', 'owners_wagons', 'genus_wagon', 'countrys', 'railway', 'inlandrailway', 'external_station', 'station', 'consignee', 'shipper', 'border_checkpoint', 'divisions'], ['internal_railroad', 'cargo'], false, function () {
-                cars_detali.ids_inc.load([], ['station', 'ways', 'reason_discrepancy', 'cargo', 'divisions', 'detention_return'], [], false, function () {
+                cars_detali.ids_inc.load([], ['station', 'ways', 'reason_discrepancy', 'cargo', 'divisions', 'detention_return', 'external_station'], [], false, function () {
                     count -= 1;
                     if (count === 0) {
                         if (typeof callback === 'function') {
