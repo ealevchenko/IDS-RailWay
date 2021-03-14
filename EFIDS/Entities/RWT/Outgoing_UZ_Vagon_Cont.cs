@@ -41,8 +41,6 @@ namespace EFIDS.Entities
 
         public int? vesg { get; set; }
 
-        public double? vesg_reweighing { get; set; }
-
         [StringLength(20)]
         public string nom_zpu { get; set; }
 

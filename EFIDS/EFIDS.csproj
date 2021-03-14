@@ -108,6 +108,13 @@
     <Compile Include="Concrete\Directory\EFDirectory_WagonManufacturers.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_GenusWagons.cs" />
     <Compile Include="Concrete\EFRepository.cs" />
+    <Compile Include="Concrete\RWT\EFOutgoing_UZ_Document_Pay.cs" />
+    <Compile Include="Concrete\RWT\EFOutgoing_UZ_Document.cs" />
+    <Compile Include="Concrete\RWT\EFOutgoing_UZ_Vagon_Pay.cs" />
+    <Compile Include="Concrete\RWT\EFOutgoing_UZ_Vagon_Acts.cs" />
+    <Compile Include="Concrete\RWT\EFOutgoing_UZ_Vagon_Cont.cs" />
+    <Compile Include="Concrete\RWT\EFOutgoing_UZ_Cont_Pay.cs" />
+    <Compile Include="Concrete\RWT\EFOutgoing_UZ_Vagon.cs" />
     <Compile Include="Concrete\RWT\EFOutgoingDetentionReturn.cs" />
     <Compile Include="Concrete\RWT\EFParkState_Wagon.cs" />
     <Compile Include="Concrete\RWT\EFParkState_Way.cs" />

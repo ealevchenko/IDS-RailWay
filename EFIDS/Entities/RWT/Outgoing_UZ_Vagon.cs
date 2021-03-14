@@ -39,11 +39,10 @@ namespace EFIDS.Entities
 
         public int id_owner { get; set; }
 
-        public double gruzp_uz { get; set; }
+        public double? gruzp_uz { get; set; }
 
         public double? tara_uz { get; set; }
 
-        [Required]
         [StringLength(1000)]
         public string note_uz { get; set; }
 
