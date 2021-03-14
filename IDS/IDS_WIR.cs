@@ -77,7 +77,7 @@ namespace IDS
 
         }
 
-        #region ПРИБЫТИЕ ВАГОНОВ АРМ ДИСПЕТЧЕРА
+        #region ПРИБЫТИЕ ВАГОНОВ (АРМ ДИСПЕТЧЕРА)
         /// <summary>
         /// Принять вагон
         /// </summary>
@@ -1442,7 +1442,7 @@ namespace IDS
             catch (Exception e)
             {
                 e.ExceptionMethodLog(String.Format("OperationReturnProvideCar(id_outgoing_car={0}, date_start={1}, user={2})",
-                    id_outgoing_car,  date_start,  user), servece_owner, eventID);
+                    id_outgoing_car, date_start, user), servece_owner, eventID);
                 return (int)errors_base.global; // Глобальная ошибка
             }
         }
@@ -1797,6 +1797,170 @@ namespace IDS
             {
                 e.ExceptionMethodLog(String.Format("OperationOpenOutgoingReturn(id_outgoing_car={0}, id_detention_return={1}, date_start={2}, num_act={3}, date_act={4}, note={5},user={6})",
                     id_outgoing_car, id_detention_return, date_start, num_act, date_act, note, user), servece_owner, eventID);
+                return (int)errors_base.global; // Глобальная ошибка
+            }
+        }
+        #endregion
+
+        #region Операция "ВАГОН ПРЕДЪЯВЛЕН УЗ"
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id_outgoing_car"></param>
+        /// <param name="position"></param>
+        /// <param name="date_outgoing_act"></param>
+        /// <param name="id_reason_discrepancy_amkr"></param>
+        /// <param name="id_reason_discrepancy_uz"></param>
+        /// <param name="id_outgoing_detention_return"></param>
+        /// <param name="id_condition"></param>
+        /// <param name="id_wagons_rent_arrival"></param>
+        /// <param name="id_wagons_rent_outgoing"></param>
+        /// <param name="id_countrys"></param>
+        /// <param name="id_genus"></param>
+        /// <param name="id_owner"></param>
+        /// <param name="gruzp_uz"></param>
+        /// <param name="tara_uz"></param>
+        /// <param name="note_uz"></param>
+        /// <param name="id_warehouse"></param>
+        /// <param name="id_division"></param>
+        /// <param name="laden"></param>
+        /// <param name="id_cargo"></param>
+        /// <param name="nom_cont1"></param>
+        /// <param name="nom_cont2"></param>
+        /// <param name="code_stn_to"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationPresentWagon(long id_outgoing_car, int position, DateTime? date_outgoing_act, int? id_reason_discrepancy_amkr, int? id_reason_discrepancy_uz,
+            //int? id_outgoing_detention_return, 
+            int? id_condition, int? id_wagons_rent_arrival, int? id_wagons_rent_outgoing, int id_countrys, int id_genus, int id_owner,
+            double? gruzp_uz, double? tara_uz, string note_uz, int? id_warehouse, int? id_division, bool laden, int id_cargo, string nom_cont1, string nom_cont2, int? code_stn_to, string user)
+        {
+            try
+            {
+                //IDSTransfer ids_tr = new IDSTransfer(servece_owner);
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDbContext context = new EFDbContext();
+                EFOutgoingCars ef_out_car = new EFOutgoingCars(context);
+                EFOutgoing_UZ_Vagon ef_out_uz_vag = new EFOutgoing_UZ_Vagon(context);
+                EFOutgoing_UZ_Vagon_Cont ef_out_uz_vag_cont = new EFOutgoing_UZ_Vagon_Cont(context);
+
+                //EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
+                //EFOutgoingDetentionReturn ef_out_dr = new EFOutgoingDetentionReturn(context);
+                OutgoingCars car = ef_out_car.Context.Where(c => c.id == id_outgoing_car).FirstOrDefault();
+                if (car == null) return (int)errors_base.not_outgoing_cars_db; // В базе нет вагона для предявдения
+                if (car.outgoing != null) return (int)errors_base.outgoing_cars_outgoing; // Запрет операции вагон отправлен
+                // Проверим запись на вагон
+                Outgoing_UZ_Vagon out_uz_vag = ef_out_uz_vag.Context.Where(v => v.id_car == id_outgoing_car).FirstOrDefault();
+                if (out_uz_vag != null) return (int)errors_base.exist_out_uz_vag; // Запрет операции, строка по вагону уже создана. 
+
+                // Обновим информацию о вагоне
+                car.position_outgoing = position;
+                car.date_outgoing_act = date_outgoing_act;
+                car.id_reason_discrepancy_amkr = id_reason_discrepancy_amkr;
+                car.id_reason_discrepancy_uz = id_reason_discrepancy_uz;
+                //car.id_outgoing_detention_return = id_outgoing_detention_return;
+                car.change = DateTime.Now;
+                car.change_user = user;
+                ef_out_car.Update(car);
+
+                // Создадимк строки документа по контейнерам
+                Outgoing_UZ_Vagon_Cont vag_cont1 = null;
+                Outgoing_UZ_Vagon_Cont vag_cont2 = null;
+                if (!String.IsNullOrWhiteSpace(nom_cont1))
+                {
+                    vag_cont1 = new Outgoing_UZ_Vagon_Cont()
+                    {
+                        id = 0,
+                        id_vagon = 0,
+                        nom_cont = nom_cont1,
+                        kod_tiporazmer = null,
+                        gruzp = null,
+                        ves_tary_arc = null,
+                        id_cargo = null,
+                        id_cargo_gng = null,
+                        kol_pac = null,
+                        pac = null,
+                        vesg = null,
+                        nom_zpu = null,
+                    };
+                    ef_out_uz_vag_cont.Add(vag_cont1);
+                }
+                if (!String.IsNullOrWhiteSpace(nom_cont2))
+                {
+                    vag_cont2 = new Outgoing_UZ_Vagon_Cont()
+                    {
+                        id = 0,
+                        id_vagon = 0,
+                        nom_cont = nom_cont2,
+                        kod_tiporazmer = null,
+                        gruzp = null,
+                        ves_tary_arc = null,
+                        id_cargo = null,
+                        id_cargo_gng = null,
+                        kol_pac = null,
+                        pac = null,
+                        vesg = null,
+                        nom_zpu = null,
+                    };
+                    ef_out_uz_vag_cont.Add(vag_cont2);
+                }
+                // добавим документ по отправке вагоне
+                out_uz_vag = new Outgoing_UZ_Vagon()
+                {
+                    id = 0,
+                    id_document = null,
+                    num = car.num,
+                    id_outgoing = (long)car.id_outgoing,
+                    id_car = car.id,
+                    id_condition = id_condition,
+                    id_wagons_rent_arrival = id_wagons_rent_arrival,
+                    id_wagons_rent_outgoing = id_wagons_rent_outgoing,
+                    id_countrys = id_countrys,
+                    id_genus = id_genus,
+                    id_owner = id_owner,
+                    gruzp_uz = (double)gruzp_uz,
+                    tara_uz = tara_uz,
+                    note_uz = note_uz,
+                    gruzp = null,
+                    u_tara = null,
+                    ves_tary_arc = null,
+                    id_warehouse = id_warehouse,
+                    id_division = id_division,
+                    laden = laden,
+                    id_cargo = id_cargo,
+                    id_cargo_gng = null,
+                    vesg = null,
+                    id_outgoing_detention_return = null,
+                    create = DateTime.Now,
+                    create_user = user,
+                    change = null,
+                    change_user = null,
+                };
+                // Обновим ссылки на строки OutgoingCars и Outgoing_UZ_Vagon_Cont
+                out_uz_vag.OutgoingCars = car;// ссылка на OutgoingCars
+                // Добавим контейнер1
+                if (vag_cont1 != null)
+                {
+                    out_uz_vag.Outgoing_UZ_Vagon_Cont.Add(vag_cont1);
+                }
+                // Добавим контейнер2
+                if (vag_cont1 != null)
+                {
+                    out_uz_vag.Outgoing_UZ_Vagon_Cont.Add(vag_cont1);
+                }
+                
+                ef_out_uz_vag.Add(out_uz_vag); // добавим строку
+
+                return context.SaveChanges(); // Применить операции
+            }
+            catch (Exception e)
+            {
+                //e.ExceptionMethodLog(String.Format("OperationOpenOutgoingReturn(id_outgoing_car={0}, id_detention_return={1}, date_start={2}, num_act={3}, date_act={4}, note={5},user={6})",
+                //    id_outgoing_car, id_detention_return, date_start, num_act, date_act, note, user), servece_owner, eventID);
                 return (int)errors_base.global; // Глобальная ошибка
             }
         }

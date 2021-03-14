@@ -33,6 +33,10 @@ namespace IDS
         not_outgoing_cars_db = -605,                // В базе данных нет записи по вагонам для отпправки
         outgoing_cars_outgoing = -606,              // Запрет операции вагон уже отправлен
         not_outgoing_detention_return = -610,       // Объект OutgoingDetentionReturn не определен
+        // документы на отправку
+        exist_out_uz_vag = -651,                    // Запрет операции, строка по вагону уже создана.    
+
+        
         // Справочники -1000.....
         // Directory_Ways -1100..
         not_dir_way_db = -1101,                     // В базе данных нет записи указаной строки пути
