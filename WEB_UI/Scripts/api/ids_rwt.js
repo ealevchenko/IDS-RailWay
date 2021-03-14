@@ -2352,7 +2352,7 @@ IDS_RWT.prototype.deleteArrival_UZ_Cont_PayOfListCont = function (list_cont, cal
     });
 };
 //======================================================================================================
-//                                  РАЗДЕЛ ПРИБЫТИЕ ОТПРАВКА
+// РАЗДЕЛ ПРИБЫТИЕ
 //======= ArrivalSostav (Таблица составов) =============================================================
 // Получить все составы
 IDS_RWT.prototype.getArrivalSostav = function (start, stop, callback) {
@@ -2682,7 +2682,6 @@ IDS_RWT.prototype.postArrivalCarsOfPeriodNums = function (period, callback) {
         },
     });
 };
-
 //Обновить 
 IDS_RWT.prototype.putArrivalCars = function (arrival_cars, callback) {
     $.ajax({
@@ -2919,6 +2918,8 @@ IDS_RWT.prototype.postUZ_DOC = function (uz_doc, callback) {
         },
     });
 };
+//======================================================================================================
+// РАЗДЕЛ ОТПРАВКА
 //======= OutgoingSostav (Таблица составов на отправку) ======================================
 // Получить все составы
 IDS_RWT.prototype.getOutgoingSostav = function (start, stop, callback) {
@@ -3155,7 +3156,6 @@ IDS_RWT.prototype.putOutgoingCars = function (outgoing_cars, callback) {
         },
     });
 };
-
 //======= OutgoingDetentionReturn (Таблица задержаных-возвращеных вагонов) ======================================
 // Получить все задержания и возвраты
 IDS_RWT.prototype.getOutgoingDetentionReturn = function (callback) {
@@ -3325,7 +3325,31 @@ IDS_RWT.prototype.postOpenOutgoingReturn = function (operation_return, callback)
         },
     });
 };
-
+// Операция предъявить вагон
+IDS_RWT.prototype.postOutgoingPresentWagon = function (operation_present, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/wsd/operation/present/wagon/',
+        type: 'POST',
+        data: JSON.stringify(operation_present),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postOutgoingPresentWagon", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 //======================================================================================================
 //                              РАЗДЕЛ ПРАВКА ДОКУМЕНТОВ ПО ПРИБЫТИЮ
 //======================================================================================================

@@ -400,6 +400,33 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string user { get; set; }
     }
 
+    public class OperationPresentWagon
+    {
+        public long id_outgoing_car { get; set; }
+        public int position { get; set; }
+        public DateTime? date_outgoing_act { get; set; }
+        public int? id_reason_discrepancy_amkr { get; set; }
+        public int? id_reason_discrepancy_uz { get; set; }
+        //public int? id_outgoing_detention_return { get; set; }
+        public int? id_condition { get; set; }
+        public int? id_wagons_rent_arrival { get; set; }
+        public int? id_wagons_rent_outgoing { get; set; }
+        public int id_countrys { get; set; }
+        public int id_genus { get; set; }
+        public int id_owner { get; set; }
+        public double? gruzp_uz { get; set; }
+        public double? tara_uz { get; set; }
+        public string note_uz { get; set; }
+        public int? id_warehouse { get; set; }
+        public int? id_division { get; set; }
+        public bool laden { get; set; }
+        public int id_cargo { get; set; }
+        public string nom_cont1 { get; set; }
+        public string nom_cont2 { get; set; }
+        public int? code_stn_to { get; set; }
+        public string user { get; set; }
+    }
+
     public class view_wagon_dislocation
     {
         public long id_wir { get; set; }
@@ -715,7 +742,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             }
         }
 
-         // POST api/ids/rwt/wsd/operation/transfer_provide
+        // POST api/ids/rwt/wsd/operation/transfer_provide
         [HttpPost]
         [Route("operation/transfer_provide")]
         [ResponseType(typeof(ResultTransfer))]
@@ -731,8 +758,8 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             {
                 return BadRequest(e.Message);
             }
-        }       
-        
+        }
+
         // POST api/ids/rwt/wsd/operation/provide
         /// <summary>
         /// Операция предъявить состав на УЗ
@@ -827,7 +854,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
 
         // POST api/ids/rwt/wsd/operation/return_provide/wagon
         /// <summary>
-        /// Операция открыть возврат вагона
+        /// Операция вернуть вагон с пръедявления
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -840,6 +867,32 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             {
                 IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
                 int result = ids_wir.OperationReturnProvideCar(value.id_outgoing_car, value.date_start, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST api/ids/rwt/wsd/operation/present/wagon
+        /// <summary>
+        /// Операция 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("operation/present/wagon")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostOperationPresentWagon([FromBody] OperationPresentWagon value)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                int result = ids_wir.OperationPresentWagon(value.id_outgoing_car, value.position, value.date_outgoing_act, value.id_reason_discrepancy_amkr, value.id_reason_discrepancy_uz, 
+                    //value.id_outgoing_detention_return, 
+                    value.id_condition, value.id_wagons_rent_arrival, value.id_wagons_rent_outgoing, value.id_countrys, value.id_genus, value.id_owner, 
+                    value.gruzp_uz, value.tara_uz, value.note_uz, value.id_warehouse, value.id_division, value.laden, value.id_cargo, value.nom_cont1, value.nom_cont2, value.code_stn_to, value.user);
                 return Ok(result);
             }
             catch (Exception e)

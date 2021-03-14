@@ -5667,7 +5667,7 @@
                     //cargo_returns: cars_detali.uz_cargo_returns.prop('checked'),
                     cargo_returns: null, // возврат будет определен позже!
                     id_station_on_amkr: id_station_amkr > 0 ? id_station_amkr : null,
-                    id_division_on_amkr: cars_detali.ids_inc.ids_dir.getID_Divisions_Internal_Of_Name(cars_detali.uz_vag_devision_on_amkr_name.val(), 'division_abbr', cars_detali.lang), //get_select_number_value(cars_detali.uz_vag_devision_on_amkr),
+                    id_division_on_amkr: cars_detali.ids_inc.ids_dir.getID_Divisions_Of_Name(cars_detali.uz_vag_devision_on_amkr_name.val(), 'division_abbr', cars_detali.lang), //get_select_number_value(cars_detali.uz_vag_devision_on_amkr),
                     empty_car: id_station_amkr === 0 ? true : null,
                     kol_conductor: num < 2 ? cars_detali.get_epd_vagon_kol_conductor(cars_detali.select_otpr_vagon) : null, //
                     create: toISOStringTZ(new Date()),

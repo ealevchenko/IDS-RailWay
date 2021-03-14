@@ -5794,9 +5794,9 @@ IDS_DIRECTORY.prototype.getCargo_Of_Name = function (text, ftext, lang) {
     return this.getObjs_Of_text(this.list_cargo, text, ftext, lang);
 };
 //
-IDS_DIRECTORY.prototype.getID_Cargo_Internal_Of_Name = function (text, ftext, lang) {
+IDS_DIRECTORY.prototype.getID_Cargo_Of_Name = function (text, ftext, lang) {
     var objs = this.getCargo_Of_Name(text, ftext, lang);
-    return objs & objs.length > 0 ? obj[0].id : null;
+    return objs && objs.length > 0 ? objs[0].id : null;
 };
 //
 IDS_DIRECTORY.prototype.getValue_Cargo_Of_ID = function (id, name, lang) {
@@ -6227,7 +6227,7 @@ IDS_DIRECTORY.prototype.getDivisions_Of_Name = function (text, ftext, lang) {
     return this.getObjs_Of_text(this.list_divisions, text, ftext, lang);
 };
 //
-IDS_DIRECTORY.prototype.getID_Divisions_Internal_Of_Name = function (text, ftext, lang) {
+IDS_DIRECTORY.prototype.getID_Divisions_Of_Name = function (text, ftext, lang) {
     var obj = this.getDivisions_Of_Name(text, ftext, lang);
     return obj && obj.length>0 ? obj[0].id : null;
 };

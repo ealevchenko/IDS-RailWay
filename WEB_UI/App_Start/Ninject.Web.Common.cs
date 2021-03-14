@@ -181,6 +181,14 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.ArrivalSostav>>().To<EFIDS.Concrete.EFArrivalSostav>();
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.ArrivalCars>>().To<EFIDS.Concrete.EFArrivalCars>();
             kernel.Bind<EFIDS.Abstract.IStringRepository<EFIDS.Entities.UZ_DOC>>().To<EFIDS.Concrete.EFUZ_DOC>();
+
+            kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.Outgoing_UZ_Document>>().To<EFIDS.Concrete.EFOutgoing_UZ_Document>();
+            kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.Outgoing_UZ_Vagon>>().To<EFIDS.Concrete.EFOutgoing_UZ_Vagon>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Outgoing_UZ_Cont_Pay>>().To<EFIDS.Concrete.EFOutgoing_UZ_Cont_Pay>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Outgoing_UZ_Document_Pay>>().To<EFIDS.Concrete.EFOutgoing_UZ_Document_Pay>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Outgoing_UZ_Vagon_Acts>>().To<EFIDS.Concrete.EFOutgoing_UZ_Vagon_Acts>();
+            kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.Outgoing_UZ_Vagon_Cont>>().To<EFIDS.Concrete.EFOutgoing_UZ_Vagon_Cont>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Outgoing_UZ_Vagon_Pay>>().To<EFIDS.Concrete.EFOutgoing_UZ_Vagon_Pay>();
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.OutgoingSostav>>().To<EFIDS.Concrete.EFOutgoingSostav>();
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.OutgoingCars>>().To<EFIDS.Concrete.EFOutgoingCars>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.OutgoingDetentionReturn>>().To<EFIDS.Concrete.EFOutgoingDetentionReturn>();
