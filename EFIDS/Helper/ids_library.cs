@@ -1706,7 +1706,8 @@ namespace EFIDS.Helper
                 Directory_Cargo = v.Directory_Cargo.GetDirectory_Cargo(),
                 Directory_CargoGNG = v.Directory_CargoGNG.GetDirectory_CargoGNG(),
                 Directory_ConditionArrival = v.Directory_ConditionArrival.GetDirectory_ConditionArrival(),
-                Directory_Divisions = v.Directory_Divisions.GetDirectory_Divisions()
+                Directory_Divisions = v.Directory_Divisions.GetDirectory_Divisions(), 
+                Directory_ExternalStation = v.Directory_ExternalStation.GetDirectory_ExternalStation()
             };
         }
 

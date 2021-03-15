@@ -16,6 +16,7 @@ namespace EFIDS.Entities
             Arrival_UZ_Document1 = new HashSet<Arrival_UZ_Document>();
             Outgoing_UZ_Document = new HashSet<Outgoing_UZ_Document>();
             Outgoing_UZ_Document1 = new HashSet<Outgoing_UZ_Document>();
+            Outgoing_UZ_Vagon = new HashSet<Outgoing_UZ_Vagon>();
         }
 
         [Key]
@@ -56,5 +57,8 @@ namespace EFIDS.Entities
         public virtual ICollection<Outgoing_UZ_Document> Outgoing_UZ_Document1 { get; set; }
 
         public virtual Directory_InlandRailway Directory_InlandRailway { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Outgoing_UZ_Vagon> Outgoing_UZ_Vagon { get; set; }
     }
 }

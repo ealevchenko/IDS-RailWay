@@ -567,6 +567,12 @@ namespace EFIDS.Concrete
                 .HasMany(e => e.Outgoing_UZ_Document1)
                 .WithOptional(e => e.Directory_ExternalStation1)
                 .HasForeignKey(e => e.code_stn_to);
+
+            modelBuilder.Entity<Directory_ExternalStation>()
+                .HasMany(e => e.Outgoing_UZ_Vagon)
+                .WithOptional(e => e.Directory_ExternalStation)
+                .HasForeignKey(e => e.code_stn_to);
+
             #endregion
 
             #region Directory_GenusWagons
