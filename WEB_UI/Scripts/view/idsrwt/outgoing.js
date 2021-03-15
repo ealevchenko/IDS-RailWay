@@ -38,6 +38,14 @@
                 'field_position_outgoing': '№ поз.',
                 'field_num_outgoing': '№ вагона',
                 'field_num_doc_uz': '№ накл',
+                'field_cargo': 'Груз',
+                'field_station_on': 'Станция назначения',
+                'field_adm': 'Адм.',
+                'field_rod': 'Род',
+                'field_divisions': 'Цех погр.',
+                'field_owner': 'Собственник',
+                'field_operator': 'Оператор АМКР',
+                'field_limiting': 'Ограничение',
 
                 //'field_carrier_kod': 'Код перевізника',
                 //'field_carrier_name': 'Скорочене найменування перевізника',
@@ -2190,10 +2198,77 @@
                             },
                             {
                                 data: function (row, type, val, meta) {
-
-                                    return row.num;
+                                    var vag_uz = row && row.Outgoing_UZ_Vagon ? row.Outgoing_UZ_Vagon : null;
+                                    var doc_uz = vag_uz && vag_uz.Outgoing_UZ_Document ? vag_uz.Outgoing_UZ_Document : null;
+                                    return doc_uz ? doc_uz.nom_doc : null ;
                                 },
                                 title: langView('field_num_doc_uz', langs), width: "50px", orderable: true, searchable: false
+                            },
+                            {
+                                data: function (row, type, val, meta) {
+                                    var vag_uz = row && row.Outgoing_UZ_Vagon ? row.Outgoing_UZ_Vagon : null;
+                                    var cargo = vag_uz && vag_uz.Directory_Cargo ? vag_uz.Directory_Cargo : null;
+                                    return cargo ? cargo['cargo_name_' + cars_detali.lang] : null ;
+                                },
+                                title: langView('field_cargo', langs), width: "150px", orderable: true, searchable: false
+                            },
+                            {
+                                data: function (row, type, val, meta) {
+                                    var vag_uz = row && row.Outgoing_UZ_Vagon ? row.Outgoing_UZ_Vagon : null;
+                                    var station = vag_uz && vag_uz.Directory_ExternalStation ? vag_uz.Directory_ExternalStation : null;
+                                    return station ? station['station_name_' + cars_detali.lang] : null ;
+                                },
+                                title: langView('field_station_on', langs), width: "150px", orderable: true, searchable: false
+                            },
+                            {
+                                data: function (row, type, val, meta) {
+                                    var vag_uz = row && row.Outgoing_UZ_Vagon ? row.Outgoing_UZ_Vagon : null;
+                                    var countrys = vag_uz && vag_uz.Directory_Countrys ? vag_uz.Directory_Countrys : null;
+                                    return countrys ? countrys.code_sng : null ;
+                                },
+                                title: langView('field_adm', langs), width: "50px", orderable: true, searchable: false
+                            },
+                            {
+                                data: function (row, type, val, meta) {
+                                    var vag_uz = row && row.Outgoing_UZ_Vagon ? row.Outgoing_UZ_Vagon : null;
+                                    var genus = vag_uz && vag_uz.Directory_GenusWagons ? vag_uz.Directory_GenusWagons : null;
+                                    return genus ? genus['abbr_' + cars_detali.lang] : null ;
+                                },
+                                title: langView('field_rod', langs), width: "50px", orderable: true, searchable: false
+                            },
+                            {
+                                data: function (row, type, val, meta) {
+                                    var vag_uz = row && row.Outgoing_UZ_Vagon ? row.Outgoing_UZ_Vagon : null;
+                                    var divisions = vag_uz && vag_uz.Directory_Divisions ? vag_uz.Directory_Divisions : null;
+                                    return divisions ? divisions['division_abbr_' + cars_detali.lang] : null ;
+                                },
+                                title: langView('field_divisions', langs), width: "50px", orderable: true, searchable: false
+                            },
+                            {
+                                data: function (row, type, val, meta) {
+                                    var vag_uz = row && row.Outgoing_UZ_Vagon ? row.Outgoing_UZ_Vagon : null;
+                                    var owner = vag_uz && vag_uz.Directory_OwnersWagons ? vag_uz.Directory_OwnersWagons : null;
+                                    return owner ? owner['abbr_' + cars_detali.lang] : null ;
+                                },
+                                title: langView('field_owner', langs), width: "100px", orderable: true, searchable: false
+                            },
+                            {
+                                data: function (row, type, val, meta) {
+                                    var vag_uz = row && row.Outgoing_UZ_Vagon ? row.Outgoing_UZ_Vagon : null;
+                                    var rent = vag_uz && vag_uz.Directory_WagonsRent1 ? vag_uz.Directory_WagonsRent1 : null;
+                                    var operator = rent && rent.Directory_OperatorsWagons ? rent.Directory_OperatorsWagons : null;
+                                    return operator ? operator['abbr_' + cars_detali.lang] : null ;
+                                },
+                                title: langView('field_operator', langs), width: "100px", orderable: true, searchable: false
+                            },
+                            {
+                                data: function (row, type, val, meta) {
+                                    var vag_uz = row && row.Outgoing_UZ_Vagon ? row.Outgoing_UZ_Vagon : null;
+                                    var rent = vag_uz && vag_uz.Directory_WagonsRent1 ? vag_uz.Directory_WagonsRent1 : null;
+                                    var limiting = rent && rent.Directory_LimitingLoading ? rent.Directory_LimitingLoading : null;
+                                    return limiting ? limiting['limiting_abbr_' + cars_detali.lang] : null ;
+                                },
+                                title: langView('field_limiting', langs), width: "100px", orderable: true, searchable: false
                             },
                         ],
                         stateSave: false,
