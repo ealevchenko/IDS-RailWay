@@ -517,7 +517,7 @@
                                             // проверим вагоны которые ушли
                                             if (wagons_exit && wagons_exit.length > 0) {
                                                 valid = false;
-                                                pn_select.val_add_park_status.out_error_message('Ошибка, найдено :' + wagons_exit.length + ' вагонов которые уже зданы на УЗ');
+                                                pn_select.val_add_park_status.out_error_message('Ошибка, найдено :' + wagons_exit.length + ' вагонов которые уже сданы на УЗ');
                                             }
                                             // Есть вагоны на амкр, проверим на повтор
                                             if (wagons_amkr && wagons_amkr.length > 0) {
