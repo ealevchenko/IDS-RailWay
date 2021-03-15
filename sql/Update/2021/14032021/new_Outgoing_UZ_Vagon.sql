@@ -156,3 +156,10 @@ GO
 
 ALTER TABLE [IDS].[Outgoing_UZ_Vagon_Pay] CHECK CONSTRAINT [FK_Outgoing_UZ_Vagon_Pay_Outgoing_UZ_Vagon]
 GO
+
+ALTER TABLE [IDS].[OutgoingCars]  WITH CHECK ADD  CONSTRAINT [FK_OutgoingCars_Outgoing_UZ_Vagon] FOREIGN KEY([id_outgoing_uz_vagon])
+REFERENCES [IDS].[Outgoing_UZ_Vagon] ([id])
+GO
+
+ALTER TABLE [IDS].[OutgoingCars] CHECK CONSTRAINT [FK_OutgoingCars_Outgoing_UZ_Vagon]
+GO
