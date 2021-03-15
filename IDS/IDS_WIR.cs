@@ -1863,6 +1863,8 @@ namespace IDS
                 car.id_reason_discrepancy_amkr = id_reason_discrepancy_amkr;
                 car.id_reason_discrepancy_uz = id_reason_discrepancy_uz;
                 //car.id_outgoing_detention_return = id_outgoing_detention_return;
+                car.outgoing = DateTime.Now;
+                car.outgoing_user = user;
                 car.change = DateTime.Now;
                 car.change_user = user;
                 ef_out_car.Update(car);

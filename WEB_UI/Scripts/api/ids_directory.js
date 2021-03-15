@@ -6384,16 +6384,19 @@ IDS_DIRECTORY.prototype.getValueCulture_Reason_Discrepancy_Of_ID = function (id,
     return obj ? obj[name + '_' + this.lang] : null;
 };
 //
-IDS_DIRECTORY.prototype.getReason_Discrepancy_Internal_Of_Name = function (text, ftext, lang) {
-    if (this.list_reason_discrepancy) {
-        var obj = getObjects(this.list_reason_discrepancy, (lang ? ftext + '_' + lang : name), text);
-        return obj && obj.length > 0 ? obj[0] : null;
-    }
+IDS_DIRECTORY.prototype.getReason_Discrepancy_Of_Name = function (text, ftext, lang) {
+    return this.getObjs_Of_text(this.list_reason_discrepancy, text, ftext, lang);
+    //if (this.list_reason_discrepancy) {
+    //    var obj = getObjects(this.list_reason_discrepancy, (lang ? ftext + '_' + lang : name), text);
+    //    return obj && obj.length > 0 ? obj[0] : null;
+    //}
 };
 //
-IDS_DIRECTORY.prototype.getID_Reason_Discrepancy_Internal_Of_Name = function (text, ftext, lang) {
-    var obj = this.getReason_Discrepancy_Internal_Of_Name(text, ftext, lang);
-    return obj ? obj.id : null;
+IDS_DIRECTORY.prototype.getID_Reason_Discrepancy_Of_Name = function (text, ftext, lang) {
+    var objs = this.getReason_Discrepancy_Of_Name(text, ftext, lang);
+    return objs && objs.length > 0 ? objs[0].id : null;
+    //var obj = this.getReason_Discrepancy_Of_Name(text, ftext, lang);
+    //return obj ? obj.id : null;
 };
 // Вернуть список в формате value: text
 IDS_DIRECTORY.prototype.getListReason_Discrepancy = function (fvalue, ftext, lang, filter) {
@@ -6407,6 +6410,8 @@ IDS_DIRECTORY.prototype.getReason_Discrepancy_Of_CultureName = function (name, l
     }
     return null;
 };
+
+
 
 //*======= IDS_DIRECTORY.list_detention_return  (Справочник возвратов и задержаний) ======================================
 // Вернуть по id

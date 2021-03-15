@@ -1036,6 +1036,8 @@
                 cars_detali.loadReference(function () {
                     // Получим текуший состав
                     LockScreen(langView('mess_delay', langs));
+                    // Загрузим списочные компоненты
+                    cars_detali.init_select();
                     // Загрузим состав
                     cars_detali.loadOutgoingCarsOfSostav(cars_detali.id_sostav, function (result_sostav) {
                         if (result_sostav) {
@@ -1045,12 +1047,8 @@
                             var way = cars_detali.ids_inc.ids_dir.getWays_Internal_Of_ID(result_sostav.id_way_from);
                             // Покаать информацию по составу
                             cars_detali.sostav_title.text('Информация по составу [ № Накладной :' + cars_detali.sostav.num_doc + ', время предъявления на УЗ :' + getReplaceTOfDT(cars_detali.sostav.date_readiness_amkr) + ', станция :' + (station !== null ? station['station_name_' + cars_detali.lang] : null) + ', путь :' + (way !== null ? way['way_num_' + cars_detali.lang] + '-' + way['way_name_' + cars_detali.lang] : null) + ' ]');
-                            // Загрузим списочные компоненты
-                            cars_detali.init_select();
-                            // Показать список не отправленных вагонов, отсортировав по позиции
-                            cars_detali.view_cars_not_outgoing(cars_detali.sostav.OutgoingCars.filter(function (i) { return i.outgoing === null ? true : false; }).sort(function (a, b) { return Number(a.position) - Number(b.position); }));
-                            // Показать список принятых вагонов
-                            //cars_detali.table_arrival_cars.view(cars_detali.sostav.ArrivalCars.filter(function (i) { return i.arrival !== null ? true : false; }).sort(function (a, b) { return Number(a.position_arrival) - Number(b.position_arrival); }));
+                            // Обновим вагоны принятые и непринятые на экране
+                            cars_detali.update_cars_outgoing();
                             // Показать страницу детально
                             cars_detali.content.addClass('is-visible');
                             LockScreenOff();
@@ -1064,6 +1062,15 @@
                     //    cars_detali.sostav = result_sostav;
                     //});
                 });
+            },
+            // Отобразить информацию по вагонам (принятым и не принятым)
+            update_cars_outgoing: function () {
+                cars_detali.clear(false);            // Очистить все ячейки
+                cars_detali.set_close_edit();          // Перевести в режим "close" по умолчанию
+                // Показать список не отправленных вагонов, отсортировав по позиции
+                cars_detali.view_cars_not_outgoing(cars_detali.sostav.OutgoingCars.filter(function (i) { return i.outgoing === null ? true : false; }).sort(function (a, b) { return Number(a.position) - Number(b.position); }));
+                // Показать список принятых вагонов
+                //cars_detali.table_arrival_cars.view(cars_detali.sostav.ArrivalCars.filter(function (i) { return i.arrival !== null ? true : false; }).sort(function (a, b) { return Number(a.position_arrival) - Number(b.position_arrival); }));
             },
 
             // ФУНКЦИИ РАЗДЕЛА "ВАГОНЫ" ******************************************************************************************************************************************
@@ -1224,15 +1231,15 @@
                                 id_outgoing_car: cars_detali.select_id,
                                 position: get_input_number_value(cars_detali.position_outgoing),
                                 date_outgoing_act: toISOStringTZ(get_datetime_value(cars_detali.date_outgoing_act.val(), cars_detali.lang)),
-                                id_reason_discrepancy_amkr: get_input_number_value(cars_detali.reason_discrepancy_amkr),
-                                id_reason_discrepancy_uz: get_input_number_value(cars_detali.reason_discrepancy_uz),
+                                id_reason_discrepancy_amkr: cars_detali.ids_inc.ids_dir.getID_Reason_Discrepancy_Of_Name(cars_detali.reason_discrepancy_amkr.val(), 'reason_discrepancy_name', cars_detali.lang),
+                                id_reason_discrepancy_uz: cars_detali.ids_inc.ids_dir.getID_Reason_Discrepancy_Of_Name(cars_detali.reason_discrepancy_uz.val(), 'reason_discrepancy_name', cars_detali.lang),
                                 //id_outgoing_detention_return: null,
                                 id_condition: cars_detali.select_id_condition_provide, // разметка по отправке
                                 id_wagons_rent_arrival: cars_detali.select_id_arrival_rent,
                                 id_wagons_rent_outgoing: cars_detali.select_id_current_rent,
                                 id_countrys: cars_detali.select_dir_wagon ? cars_detali.select_dir_wagon.id_countrys : null,
-                                id_genus: cars_detali.select_dir_wagon ? cars_detali.select_dir_wagon.id_genus :  null,
-                                id_owner: cars_detali.select_dir_wagon ? cars_detali.select_dir_wagon.id_owner :  null,
+                                id_genus: cars_detali.select_dir_wagon ? cars_detali.select_dir_wagon.id_genus : null,
+                                id_owner: cars_detali.select_dir_wagon ? cars_detali.select_dir_wagon.id_owner : null,
                                 gruzp_uz: get_input_number_value(cars_detali.gruzp_uz),
                                 tara_uz: get_input_number_value(cars_detali.tara_uz),
                                 note_uz: get_input_string_value(cars_detali.limiting_loading_uz),
@@ -1249,16 +1256,23 @@
                             cars_detali.ids_inc.postOutgoingPresentWagon(operation_present, function (result_operation) {
                                 if (result_operation > 0) {
                                     cars_detali.val_outgoing_car.out_info_message("Операция «ВАГОН ПРЕДЪЯВЛЕН УЗ» – выполнена!");
+
                                 } else {
                                     // Ошибка выполнения
                                     cars_detali.val_outgoing_car.out_error_message("Ошибка выполнения операции «ВАГОН ПРЕДЪЯВЛЕН УЗ», код ошибки = " + result_operation);
                                     LockScreenOff();
                                 }
-                                // Обновим данные
-                                cars_detali.load_car_of_db(cars_detali.select_id, function (car) {
+                                // Обновим данные, загрузим состав, и обновим вагоны
+                                cars_detali.loadOutgoingCarsOfSostav(cars_detali.id_sostav, function (result_sostav) {
                                     cars_detali.bt_present_car.prop("disabled", false);
-                                    //cars_detali.view_cars_detention_current(car.OutgoingDetentionReturn);
-                                    LockScreenOff();
+                                    if (result_sostav) {
+                                        // Обновим вагоны принятые и непринятые на экране
+                                        cars_detali.update_cars_outgoing();
+                                        LockScreenOff();
+                                    } else {
+                                        cars_detali.val_outgoing_car.out_error_message('В базе данных нет записи по составу с id=' + cars_detali.id_sostav);
+                                        LockScreenOff();
+                                    }
                                 });
                             });
                             //var d = 1;
@@ -1278,10 +1292,10 @@
             date_outgoing_act: cd_initDateTimeRangePicker($('input#date_outgoing_act'), { lang: lang, time: true }, function (datetime) {
 
             }),
-            car_return: $('button#car_return').on('click', function() {
+            car_return: $('button#car_return').on('click', function () {
                 event.preventDefault();
                 // Подтверждение выполнения операции.
-                dc.dialog_confirm('Open', 'Отменить?', 'Отменить предъявление вагона №' + cars_detali.select_num+'. Вагон будет убран из состава для предъявления и возвращен на путь и открыт для операций перемещения.', function (result) {
+                dc.dialog_confirm('Open', 'Отменить?', 'Отменить предъявление вагона №' + cars_detali.select_num + '. Вагон будет убран из состава для предъявления и возвращен на путь и открыт для операций перемещения.', function (result) {
                     if (result) {
                         // Выполнить операцию
                         LockScreen(langView('mess_operation', langs));
