@@ -33,6 +33,7 @@ CREATE TABLE [IDS].[Outgoing_UZ_Vagon](
 	[id_cargo_gng] [int] NULL,
 	[vesg] [int] NULL,
 	[id_outgoing_detention_return] [int] NULL,
+	[code_stn_to] [int] NULL,
 	[create] [datetime] NOT NULL,
 	[create_user] [nvarchar](50) NOT NULL,
 	[change] [datetime] NULL,
