@@ -115,13 +115,6 @@ GO
 ALTER TABLE [IDS].[Outgoing_UZ_Vagon] CHECK CONSTRAINT [FK_Outgoing_UZ_Vagon_Outgoing_UZ_Document]
 GO
 
-ALTER TABLE [IDS].[Outgoing_UZ_Vagon]  WITH CHECK ADD  CONSTRAINT [FK_Outgoing_UZ_Vagon_OutgoingCars] FOREIGN KEY([id_car])
-REFERENCES [IDS].[OutgoingCars] ([id])
-GO
-
-ALTER TABLE [IDS].[Outgoing_UZ_Vagon] CHECK CONSTRAINT [FK_Outgoing_UZ_Vagon_OutgoingCars]
-GO
-
 ALTER TABLE [IDS].[Outgoing_UZ_Vagon]  WITH CHECK ADD  CONSTRAINT [FK_Outgoing_UZ_Vagon_OutgoingDetentionReturn] FOREIGN KEY([id_outgoing_detention_return])
 REFERENCES [IDS].[OutgoingDetentionReturn] ([id])
 GO
