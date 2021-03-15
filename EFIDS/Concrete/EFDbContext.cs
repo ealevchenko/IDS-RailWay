@@ -307,12 +307,6 @@ namespace EFIDS.Concrete
                 .WithOptional(e => e.OutgoingCars)
                 .HasForeignKey(e => e.id_outgoing_car);
 
-            modelBuilder.Entity<OutgoingCars>()
-                .HasMany(e => e.Outgoing_UZ_Vagon)
-                .WithRequired(e => e.OutgoingCars)
-                .HasForeignKey(e => e.id_car)
-                .WillCascadeOnDelete(false);
-
             modelBuilder.Entity<OutgoingDetentionReturn>()
                 .HasMany(e => e.Outgoing_UZ_Vagon)
                 .WithOptional(e => e.OutgoingDetentionReturn)
@@ -336,6 +330,11 @@ namespace EFIDS.Concrete
                 .HasMany(e => e.Outgoing_UZ_Vagon)
                 .WithOptional(e => e.Outgoing_UZ_Document)
                 .HasForeignKey(e => e.id_document);
+
+            modelBuilder.Entity<Outgoing_UZ_Vagon>()
+                .HasMany(e => e.OutgoingCars)
+                .WithOptional(e => e.Outgoing_UZ_Vagon)
+                .HasForeignKey(e => e.id_outgoing_uz_vagon);
 
             modelBuilder.Entity<Outgoing_UZ_Vagon>()
                 .HasMany(e => e.Outgoing_UZ_Vagon_Acts)

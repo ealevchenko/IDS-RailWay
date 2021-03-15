@@ -1845,6 +1845,7 @@ namespace IDS
                 }
                 EFDbContext context = new EFDbContext();
                 EFOutgoingCars ef_out_car = new EFOutgoingCars(context);
+                //EFOutgoingSostav ef_out_sostav = new EFOutgoingSostav(context);
                 EFOutgoing_UZ_Vagon ef_out_uz_vag = new EFOutgoing_UZ_Vagon(context);
                 EFOutgoing_UZ_Vagon_Cont ef_out_uz_vag_cont = new EFOutgoing_UZ_Vagon_Cont(context);
 
@@ -1853,21 +1854,11 @@ namespace IDS
                 OutgoingCars car = ef_out_car.Context.Where(c => c.id == id_outgoing_car).FirstOrDefault();
                 if (car == null) return (int)errors_base.not_outgoing_cars_db; // В базе нет вагона для предявдения
                 if (car.outgoing != null) return (int)errors_base.outgoing_cars_outgoing; // Запрет операции вагон отправлен
+                if (car.OutgoingSostav.status == 2) return (int)errors_base.error_status_outgoing_sostav; // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
+
                 // Проверим запись на вагон
                 Outgoing_UZ_Vagon out_uz_vag = ef_out_uz_vag.Context.Where(v => v.id_car == id_outgoing_car).FirstOrDefault();
                 if (out_uz_vag != null) return (int)errors_base.exist_out_uz_vag; // Запрет операции, строка по вагону уже создана. 
-
-                // Обновим информацию о вагоне
-                car.position_outgoing = position;
-                car.date_outgoing_act = date_outgoing_act;
-                car.id_reason_discrepancy_amkr = id_reason_discrepancy_amkr;
-                car.id_reason_discrepancy_uz = id_reason_discrepancy_uz;
-                //car.id_outgoing_detention_return = id_outgoing_detention_return;
-                car.outgoing = DateTime.Now;
-                car.outgoing_user = user;
-                car.change = DateTime.Now;
-                car.change_user = user;
-                ef_out_car.Update(car);
 
                 // Создадимк строки документа по контейнерам
                 Outgoing_UZ_Vagon_Cont vag_cont1 = null;
@@ -1924,7 +1915,7 @@ namespace IDS
                     id_countrys = id_countrys,
                     id_genus = id_genus,
                     id_owner = id_owner,
-                    gruzp_uz = (double)gruzp_uz,
+                    gruzp_uz = gruzp_uz,
                     tara_uz = tara_uz,
                     note_uz = note_uz,
                     gruzp = null,
@@ -1937,13 +1928,14 @@ namespace IDS
                     id_cargo_gng = null,
                     vesg = null,
                     id_outgoing_detention_return = null,
+                    code_stn_to = code_stn_to,
                     create = DateTime.Now,
                     create_user = user,
                     change = null,
                     change_user = null,
                 };
                 // Обновим ссылки на строки OutgoingCars и Outgoing_UZ_Vagon_Cont
-                out_uz_vag.OutgoingCars = car;// ссылка на OutgoingCars
+                //out_uz_vag.OutgoingCars.Add(car);// ссылка на OutgoingCars
                 // Добавим контейнер1
                 if (vag_cont1 != null)
                 {
@@ -1954,9 +1946,27 @@ namespace IDS
                 {
                     out_uz_vag.Outgoing_UZ_Vagon_Cont.Add(vag_cont1);
                 }
-                
+
                 ef_out_uz_vag.Add(out_uz_vag); // добавим строку
 
+                // Обновим информацию о вагоне
+                car.position_outgoing = position;
+                car.date_outgoing_act = date_outgoing_act;
+                car.id_reason_discrepancy_amkr = id_reason_discrepancy_amkr;
+                car.id_reason_discrepancy_uz = id_reason_discrepancy_uz;
+                //car.id_outgoing_detention_return = id_outgoing_detention_return;
+                car.outgoing = DateTime.Now;
+                car.outgoing_user = user;
+                car.change = DateTime.Now;
+                car.change_user = user;
+                // Состав
+                car.OutgoingSostav.status = 1;
+                car.OutgoingSostav.change = DateTime.Now;
+                car.OutgoingSostav.change_user = user;
+                // Привяжем документ
+                car.Outgoing_UZ_Vagon = out_uz_vag;
+
+                ef_out_car.Update(car);// Обновим  вагон
                 return context.SaveChanges(); // Применить операции
             }
             catch (Exception e)

@@ -13,7 +13,7 @@ namespace EFIDS.Entities
         public OutgoingCars()
         {
             WagonInternalRoutes = new HashSet<WagonInternalRoutes>();
-            Outgoing_UZ_Vagon = new HashSet<Outgoing_UZ_Vagon>();
+            //Outgoing_UZ_Vagon = new HashSet<Outgoing_UZ_Vagon>();
         }
 
         public long id { get; set; }
@@ -73,7 +73,6 @@ namespace EFIDS.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WagonInternalRoutes> WagonInternalRoutes { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Outgoing_UZ_Vagon> Outgoing_UZ_Vagon { get; set; }
+        public virtual Outgoing_UZ_Vagon Outgoing_UZ_Vagon { get; set; }
     }
 }

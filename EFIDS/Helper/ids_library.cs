@@ -716,7 +716,7 @@ namespace EFIDS.Helper
                 ArrivalSostav1 = null,
                 Arrival_UZ_Vagon = null,
                 OutgoingSostav = null,
-                OutgoingSostav1 = null
+                OutgoingSostav1 = null, 
 
             };
         }
@@ -1530,6 +1530,254 @@ namespace EFIDS.Helper
             }
         }
 
+        // -------------------------------------------------------------------------------------------
+
+        public static Outgoing_UZ_Cont_Pay GetOutgoing_UZ_Cont_Pay(this Outgoing_UZ_Cont_Pay p)
+        {
+            if (p == null) return null;
+            return new Outgoing_UZ_Cont_Pay()
+            {
+                id = p.id,
+                id_cont = p.id_cont,
+                kod = p.kod,
+                summa = p.summa,
+                Outgoing_UZ_Vagon_Cont = null
+            };
+        }
+
+        public static Outgoing_UZ_Vagon_Cont GetOutgoing_UZ_Vagon_Cont(this Outgoing_UZ_Vagon_Cont c)
+        {
+            if (c == null) return null;
+            return new Outgoing_UZ_Vagon_Cont()
+            {
+                id = c.id,
+                id_vagon = c.id_vagon,
+                nom_cont = c.nom_cont,
+                kod_tiporazmer = c.kod_tiporazmer,
+                gruzp = c.gruzp,
+                ves_tary_arc = c.ves_tary_arc,
+                id_cargo = c.id_cargo,
+                id_cargo_gng = c.id_cargo_gng,
+                kol_pac = c.kol_pac,
+                pac = c.pac,
+                vesg = c.vesg,
+                nom_zpu = c.nom_zpu,
+                Outgoing_UZ_Cont_Pay = c.Outgoing_UZ_Cont_Pay.ToList().Select(p => p.GetOutgoing_UZ_Cont_Pay()).ToList(),
+                Directory_Cargo = c.Directory_Cargo.GetDirectory_Cargo(),
+                Directory_CargoGNG = c.Directory_CargoGNG.GetDirectory_CargoGNG(),
+                Outgoing_UZ_Vagon = null
+            };
+        }
+
+        public static Outgoing_UZ_Vagon_Pay GetOutgoing_UZ_Vagon_Pay(this Outgoing_UZ_Vagon_Pay p)
+        {
+            if (p == null) return null;
+            return new Outgoing_UZ_Vagon_Pay()
+            {
+                id = p.id,
+                id_vagon = p.id_vagon,
+                kod = p.kod,
+                summa = p.summa,
+                Outgoing_UZ_Vagon = null
+            };
+        }
+
+        public static Outgoing_UZ_Vagon_Acts GetOutgoing_UZ_Vagon_Acts(this Outgoing_UZ_Vagon_Acts a)
+        {
+            if (a == null) return null;
+            return new Outgoing_UZ_Vagon_Acts()
+            {
+                id = a.id,
+                id_vagon = a.id_vagon,
+                date_akt = a.date_akt,
+                date_dved = a.date_dved,
+                nom_akt = a.nom_akt,
+                nom_dved = a.nom_dved,
+                prichina_akt = a.prichina_akt,
+                stn_akt = a.stn_akt,
+                stn_name_akt = a.stn_name_akt,
+                type = a.type,
+                vagon_nom = a.vagon_nom,
+                Outgoing_UZ_Vagon = null
+            };
+        }
+
+        public static Outgoing_UZ_Vagon GetOutgoing_UZ_Vagon(this Outgoing_UZ_Vagon v)
+        {
+            if (v == null) return null;
+            return new Outgoing_UZ_Vagon()
+            {
+                id = v.id,
+                id_document = v.id_document,
+                num = v.num,
+                id_outgoing = v.id_outgoing,
+                id_car = v.id_car,
+                id_condition = v.id_condition,
+                id_wagons_rent_arrival = v.id_wagons_rent_arrival,
+                id_wagons_rent_outgoing = v.id_wagons_rent_outgoing,
+                id_countrys = v.id_countrys,
+                id_genus = v.id_genus,
+                id_owner = v.id_owner,
+                gruzp_uz = v.gruzp_uz,
+                tara_uz = v.tara_uz,
+                note_uz = v.note_uz,
+                gruzp = v.gruzp,
+                u_tara = v.u_tara,
+                ves_tary_arc = v.ves_tary_arc,
+                id_warehouse = v.id_warehouse,
+                id_division = v.id_division,
+                laden = v.laden,
+                id_cargo = v.id_cargo,
+                id_cargo_gng = v.id_cargo_gng,
+                vesg = v.vesg,
+                id_outgoing_detention_return = v.id_outgoing_detention_return,
+                code_stn_to = v.code_stn_to,
+                create = v.create,
+                create_user = v.create_user,
+                change = v.change,
+                change_user = v.change_user,
+                Outgoing_UZ_Document = null,
+                OutgoingSostav = null,
+                OutgoingCars = null,
+                Directory_WagonsRent = v.Directory_WagonsRent.GetDirectory_WagonsRent(),
+                Directory_WagonsRent1 = v.Directory_WagonsRent1.GetDirectory_WagonsRent(),
+                //Directory_Wagons = v.Directory_Wagons.GetDirectory_Wagons_Directory_WagonsRent(),
+                Outgoing_UZ_Vagon_Acts = v.Outgoing_UZ_Vagon_Acts.ToList().Select(a => a.GetOutgoing_UZ_Vagon_Acts()).ToList(),
+                Outgoing_UZ_Vagon_Pay = v.Outgoing_UZ_Vagon_Pay.ToList().Select(p => p.GetOutgoing_UZ_Vagon_Pay()).ToList(),
+                Outgoing_UZ_Vagon_Cont = v.Outgoing_UZ_Vagon_Cont.ToList().Select(c => c.GetOutgoing_UZ_Vagon_Cont()).ToList(),
+                Directory_Countrys = v.Directory_Countrys.GetDirectory_Countrys(),
+                Directory_GenusWagons = v.Directory_GenusWagons.GetGenusWagons(),
+                Directory_OwnersWagons = v.Directory_OwnersWagons.GetOwnersWagons(),
+                OutgoingDetentionReturn = v.OutgoingDetentionReturn.GetOutgoingDetentionReturn(),
+                Directory_Cargo = v.Directory_Cargo.GetDirectory_Cargo(),
+                Directory_CargoGNG = v.Directory_CargoGNG.GetDirectory_CargoGNG(),
+                Directory_ConditionArrival = v.Directory_ConditionArrival.GetDirectory_ConditionArrival(),
+                Directory_Divisions = v.Directory_Divisions.GetDirectory_Divisions()
+            };
+        }
+
+        public static Outgoing_UZ_Vagon GetOutgoing_UZ_Vagon_Outgoing_UZ_Document(this Outgoing_UZ_Vagon v)
+        {
+            if (v == null) return null;
+            return new Outgoing_UZ_Vagon()
+            {
+                id = v.id,
+                id_document = v.id_document,
+                num = v.num,
+                id_outgoing = v.id_outgoing,
+                id_car = v.id_car,
+                id_condition = v.id_condition,
+                id_wagons_rent_arrival = v.id_wagons_rent_arrival,
+                id_wagons_rent_outgoing = v.id_wagons_rent_outgoing,
+                id_countrys = v.id_countrys,
+                id_genus = v.id_genus,
+                id_owner = v.id_owner,
+                gruzp_uz = v.gruzp_uz,
+                tara_uz = v.tara_uz,
+                note_uz = v.note_uz,
+                gruzp = v.gruzp,
+                u_tara = v.u_tara,
+                ves_tary_arc = v.ves_tary_arc,
+                id_warehouse = v.id_warehouse,
+                id_division = v.id_division,
+                laden = v.laden,
+                id_cargo = v.id_cargo,
+                id_cargo_gng = v.id_cargo_gng,
+                vesg = v.vesg,
+                id_outgoing_detention_return = v.id_outgoing_detention_return,
+                code_stn_to = v.code_stn_to,
+                create = v.create,
+                create_user = v.create_user,
+                change = v.change,
+                change_user = v.change_user,
+                Outgoing_UZ_Document = v.Outgoing_UZ_Document.GetOutgoing_UZ_Document(),
+                OutgoingSostav = null,
+                OutgoingCars = null,
+                Directory_WagonsRent = v.Directory_WagonsRent.GetDirectory_WagonsRent(),
+                Directory_WagonsRent1 = v.Directory_WagonsRent1.GetDirectory_WagonsRent(),
+                //Directory_Wagons = v.Directory_Wagons.GetDirectory_Wagons_Directory_WagonsRent(),
+                Outgoing_UZ_Vagon_Acts = v.Outgoing_UZ_Vagon_Acts.ToList().Select(a => a.GetOutgoing_UZ_Vagon_Acts()).ToList(),
+                Outgoing_UZ_Vagon_Pay = v.Outgoing_UZ_Vagon_Pay.ToList().Select(p => p.GetOutgoing_UZ_Vagon_Pay()).ToList(),
+                Outgoing_UZ_Vagon_Cont = v.Outgoing_UZ_Vagon_Cont.ToList().Select(c => c.GetOutgoing_UZ_Vagon_Cont()).ToList(),
+                Directory_Countrys = v.Directory_Countrys.GetDirectory_Countrys(),
+                Directory_GenusWagons = v.Directory_GenusWagons.GetGenusWagons(),
+                Directory_OwnersWagons = v.Directory_OwnersWagons.GetOwnersWagons(),
+                OutgoingDetentionReturn = v.OutgoingDetentionReturn.GetOutgoingDetentionReturn(),
+                Directory_Cargo = v.Directory_Cargo.GetDirectory_Cargo(),
+                Directory_CargoGNG = v.Directory_CargoGNG.GetDirectory_CargoGNG(),
+                Directory_ConditionArrival = v.Directory_ConditionArrival.GetDirectory_ConditionArrival(),
+                Directory_Divisions = v.Directory_Divisions.GetDirectory_Divisions()
+            };
+        }
+
+        public static Outgoing_UZ_Document_Pay GetOutgoing_UZ_Document_Pay(this Outgoing_UZ_Document_Pay p)
+        {
+            if (p == null) return null;
+            return new Outgoing_UZ_Document_Pay()
+            {
+                id = p.id,
+                id_document = p.id_document,
+                code_payer = p.code_payer,
+                type_payer = p.type_payer,
+                kod = p.kod,
+                summa = p.summa,
+                Outgoing_UZ_Document = null,
+            };
+        }
+
+        public static Outgoing_UZ_Document GetOutgoing_UZ_Document(this Outgoing_UZ_Document d)
+        {
+            try
+            {
+                if (d == null) return null;
+                return new Outgoing_UZ_Document()
+                {
+                    id = d.id, 
+                    id_doc_uz = d.id_doc_uz,
+                    nom_doc = d.nom_doc,
+                    code_stn_from = d.code_stn_from,
+                    code_stn_to = d.code_stn_to,
+                    country_nazn = d.country_nazn,
+                    code_border_checkpoint = d.code_border_checkpoint,
+                    cross_date = d.cross_date,
+                    code_shipper = d.code_shipper,
+                    code_consignee = d.code_consignee,
+                    vid = d.vid,
+                    code_payer = d.code_payer,
+                    distance_way = d.distance_way,
+                    osum = d.osum,
+                    date_sozdan = d.date_sozdan,
+                    date_otpr = d.date_otpr,
+                    date_pr = d.date_pr,
+                    date_grpol = d.date_grpol,
+                    date_vid = d.date_vid,
+                    info_sht = d.info_sht,
+                    name_gr = d.name_gr,
+                    note = d.note,
+                    create = d.create,
+                    create_user = d.create_user,
+                    change = d.change,
+                    change_user = d.change_user,
+                    Outgoing_UZ_Vagon = null,
+                    Outgoing_UZ_Document_Pay = d.Outgoing_UZ_Document_Pay.ToList().Select(a => a.GetOutgoing_UZ_Document_Pay()).ToList(),
+                    //UZ_DOC = d.UZ_DOC.GetUZ_DOC(),
+                    Directory_ExternalStation = d.Directory_ExternalStation.GetDirectory_ExternalStation(),
+                    Directory_ExternalStation1 = d.Directory_ExternalStation1.GetDirectory_ExternalStation(),
+                    Directory_BorderCheckpoint = d.Directory_BorderCheckpoint.GetDirectory_BorderCheckpoint(),
+                    Directory_Shipper = d.Directory_Shipper.GetDirectory_Shipper(),
+                    Directory_Consignee = d.Directory_Consignee.GetDirectory_Consignee(),
+                    Directory_PayerSender = d.Directory_PayerSender.GetDirectory_PayerSender(),
+                    //Directory_PayerOutgoing = d.Directory_PayerOutgoing.GetDirectory_PayerOutgoing(),
+
+
+                };
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
         public static OutgoingSostav GetOutgoingSostav(this OutgoingSostav s)
         {
             try
@@ -1624,13 +1872,14 @@ namespace EFIDS.Helper
                     change = c.change,
                     change_user = c.change_user,
                     id_outgoing_uz_vagon = c.id_outgoing_uz_vagon,
-                    id_outgoing_detention_return = c.id_outgoing_detention_return, 
-                    id_reason_discrepancy_amkr = c.id_reason_discrepancy_amkr, 
+                    id_outgoing_detention_return = c.id_outgoing_detention_return,
+                    id_reason_discrepancy_amkr = c.id_reason_discrepancy_amkr,
                     id_reason_discrepancy_uz = c.id_reason_discrepancy_uz,
                     OutgoingDetentionReturn = c.OutgoingDetentionReturn.GetOutgoingDetentionReturn(),
                     UZ_DOC_OUT = c.UZ_DOC_OUT.GetUZ_DOC_OUT(),
                     Directory_Wagons = c.Directory_Wagons.GetDirectory_Wagons_Directory_WagonsRent(),
                     OutgoingSostav = null,
+                    Outgoing_UZ_Vagon = c.Outgoing_UZ_Vagon.GetOutgoing_UZ_Vagon_Outgoing_UZ_Document(), 
                     //WagonInternalRoutes = c.WagonInternalRoutes.ToList().Select(w => w.GetWagonInternalRoutes()).ToList(),
                 };
             }

@@ -66,6 +66,8 @@ namespace EFIDS.Entities
 
         public int? id_outgoing_detention_return { get; set; }
 
+        public int? code_stn_to { get; set; }
+
         public DateTime create { get; set; }
 
         [Required]
@@ -103,7 +105,7 @@ namespace EFIDS.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Outgoing_UZ_Vagon_Cont> Outgoing_UZ_Vagon_Cont { get; set; }
 
-        public virtual OutgoingCars OutgoingCars { get; set; }
+        //public virtual OutgoingCars OutgoingCars { get; set; }
 
         public virtual OutgoingDetentionReturn OutgoingDetentionReturn { get; set; }
 
@@ -111,5 +113,8 @@ namespace EFIDS.Entities
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Outgoing_UZ_Vagon_Pay> Outgoing_UZ_Vagon_Pay { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OutgoingCars> OutgoingCars { get; set; }
     }
 }
