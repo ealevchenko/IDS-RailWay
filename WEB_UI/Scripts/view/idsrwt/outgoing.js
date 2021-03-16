@@ -905,18 +905,24 @@
                 cars_detali.alert = new ALERT($('div#car-detali-alert'));// Создадим класс ALERTG
                 // Соберем все элементы для валидации отправки вагона в массив 
                 cars_detali.all_obj_outgoing_car = $([])
+                    // общая
                     .add(cars_detali.position_outgoing)
-                    .add(cars_detali.date_outgoing_act)
-                    .add(cars_detali.date_outgoing_act.obj)
-                    .add(cars_detali.rod_vag_abbr)
-                    //.add(cars_detali.rod_vag_name)
-                    .add(cars_detali.adm_kod)
-                    //.add(cars_detali.adm_name)
                     .add(cars_detali.num_cont_1)
                     .add(cars_detali.num_cont_2)
-                    .add(cars_detali.loaded_car)
+                    .add(cars_detali.date_outgoing_act.obj)
+                    .add(cars_detali.reason_discrepancy_amkr)
+                    .add(cars_detali.reason_discrepancy_uz)
+                    .add(cars_detali.adm_kod)
+                    .add(cars_detali.rod_vag_abbr)
+                    //.add(cars_detali.rod_vag_name)
+                    //.add(cars_detali.adm_name)
                     .add(cars_detali.condition_arrival)
                     .add(cars_detali.condition_provide)
+                    // Задержание
+
+                    // Возврат
+                    .add(cars_detali.loaded_car)
+
 
                     .add(cars_detali.cargo_name)
                     .add(cars_detali.loading_devision_code)
@@ -1041,6 +1047,7 @@
             view: function (id, message) {
                 cars_detali.clear(message);            // Очистить все ячейки
                 cars_detali.set_close_edit();          // Перевести в режим "close" по умолчанию
+                cars_detali.view_button_cars(null);     // Сбросить кнопки предявить и вернуть
                 if (id === null) return;
                 cars_detali.id_sostav = id;
                 // Загрузка библиотек
@@ -1076,8 +1083,9 @@
             },
             // Отобразить информацию по вагонам (принятым и не принятым)
             update_cars_outgoing: function () {
-                cars_detali.clear(false);            // Очистить все ячейки
-                cars_detali.set_close_edit();          // Перевести в режим "close" по умолчанию
+                cars_detali.clear(false);               // Очистить все ячейки
+                cars_detali.set_close_edit();           // Перевести в режим "close" по умолчанию
+                cars_detali.view_button_cars(null);     // Сбросить кнопки предявить и вернуть
                 // Показать список не отправленных вагонов, отсортировав по позиции
                 cars_detali.view_cars_not_outgoing(cars_detali.sostav.OutgoingCars.filter(function (i) { return i.outgoing === null ? true : false; }).sort(function (a, b) { return Number(a.position) - Number(b.position); }));
                 // Показать список принятых вагонов
@@ -1126,40 +1134,44 @@
                 $('#list-cars-not-outgoing a').on('click', function (e) {
                     e.preventDefault();
                     var id = $(this).attr('id');
-                    LockScreen(langView('mess_searsh_info_wagon', langs));
-                    cars_detali.alert.clear_message();
-                    cars_detali.val_outgoing_car.clear_all();                 // Очистить ошибки если принимали вагон, с ошибкой
-                    cars_detali.val_outgoing_car_detention.clear_all();       // Очистить ошибки по задержаниям
-                    cars_detali.val_outgoing_car_return.clear_all();        // Очистить ошибки по возвратам
-                    cars_detali.select_wir = null;                          // Сбросим внутреенее перемещение вагона
-                    cars_detali.list_detention_return = null;               // Сбросим список возвратов и задержаний
-                    cars_detali.wagon_info_uz = null;                       // Сбросим информацию о вагоне с базы днных УЗ
-                    cars_detali.load_car_of_db(id, function (car) {
-                        if (car !== null) {
-                            // Найдем информацию по внутренему перемещению
-                            cars_detali.ids_inc.getWagonInternalRoutesOfOutgoingCarsID(id, function (wir) {
-                                if (wir) {
-                                    cars_detali.select_wir = wir;
-                                    // Найдем и обновим всю информацию по возвратам и задержаниям
-                                    cars_detali.loadOutgoingDetentionReturnOfnum(cars_detali.select_num, function (list_detention_return) {
-                                        cars_detali.ids_inc.uz_dir.getInfoWagonOfNum(cars_detali.select_num, function (car_info) {
-                                            cars_detali.wagon_info_uz = car_info;
-                                            // Внутренее перемещение есть
-                                            cars_detali.view_cars(cars_detali.select_car, cars_detali.select_wir, cars_detali.wagon_info_uz);
-                                        });
+                    cars_detali.view_select_car(id, true);
+                });
+            },
+            // Отобразить детальную информацию о вагоне
+            view_select_car: function (id, present) {
+                LockScreen(langView('mess_searsh_info_wagon', langs));
+                cars_detali.alert.clear_message();
+                cars_detali.val_outgoing_car.clear_all();                   // Очистить ошибки если принимали вагон, с ошибкой
+                cars_detali.val_outgoing_car_detention.clear_all();         // Очистить ошибки по задержаниям
+                cars_detali.val_outgoing_car_return.clear_all();            // Очистить ошибки по возвратам
+                cars_detali.select_wir = null;                              // Сбросим внутреенее перемещение вагона
+                cars_detali.list_detention_return = null;                   // Сбросим список возвратов и задержаний
+                cars_detali.wagon_info_uz = null;                           // Сбросим информацию о вагоне с базы днных УЗ
+                cars_detali.view_button_cars(present);                      // Отобразить кнопку предявить
+                cars_detali.load_car_of_db(id, function (car) {
+                    if (car !== null) {
+                        // Найдем информацию по внутренему перемещению
+                        cars_detali.ids_inc.getWagonInternalRoutesOfOutgoingCarsID(id, function (wir) {
+                            if (wir) {
+                                cars_detali.select_wir = wir;
+                                // Найдем и обновим всю информацию по возвратам и задержаниям
+                                cars_detali.loadOutgoingDetentionReturnOfnum(cars_detali.select_num, function (list_detention_return) {
+                                    cars_detali.ids_inc.uz_dir.getInfoWagonOfNum(cars_detali.select_num, function (car_info) {
+                                        cars_detali.wagon_info_uz = car_info;
+                                        // Внутренее перемещение есть
+                                        cars_detali.view_cars(cars_detali.select_car, cars_detali.select_wir, cars_detali.wagon_info_uz, present);
                                     });
-                                } else {
-                                    // нет информации о внутренем перемещениии
-                                    cars_detali.alert.out_error_message('В базе данных нет записи по внутренему перемещению вагона c id_outgoing_car = ' + id);
-                                    LockScreenOff();
-                                }
-                            });
-                        } else {
-                            cars_detali.alert.out_error_message('В базе данных нет записи по вагону c id = ' + id);
-                            LockScreenOff();
-                        }
-                    });
-
+                                });
+                            } else {
+                                // нет информации о внутренем перемещениии
+                                cars_detali.alert.out_error_message('В базе данных нет записи по внутренему перемещению вагона c id_outgoing_car = ' + id);
+                                LockScreenOff();
+                            }
+                        });
+                    } else {
+                        cars_detali.alert.out_error_message('В базе данных нет записи по вагону c id = ' + id);
+                        LockScreenOff();
+                    }
                 });
             },
             // Загрузить вагон
@@ -1260,6 +1272,7 @@
                                 id_cargo: cars_detali.ids_inc.ids_dir.getID_Cargo_Of_Name(cars_detali.cargo_name.val(), 'cargo_name', cars_detali.lang),
                                 nom_cont1: get_input_string_value(cars_detali.num_cont_1),
                                 nom_cont2: get_input_string_value(cars_detali.num_cont_2),
+                                id_outgoing_detention_return: cars_detali.current_cars_return ? cars_detali.current_cars_return.id : null,
                                 code_stn_to: get_input_number_value(cars_detali.code_station_to),
                                 user: cars_detali.user
                             };
@@ -1294,6 +1307,10 @@
                 } else {
                     cars_detali.bt_present_car.prop("disabled", false);
                 }
+            }),
+            // Кнопка "Вернуть вагон"
+            bt_return_car: $('button#return_car').on('click', function (event) {
+                event.preventDefault();
             }),
             // Раздел основная информация
             num_car: $('input#num_car'), // Номер вагона
@@ -1647,6 +1664,9 @@
                 cars_detali.num_car.val('');
                 cars_detali.position_outgoing.val('');
                 cars_detali.date_outgoing_act.setDateTime(null); // уберем дату
+                cars_detali.reason_discrepancy_amkr.val('');
+                cars_detali.reason_discrepancy_uz.val('');
+
                 cars_detali.rod_vag_abbr.val('');
                 //cars_detali.rod_vag_name.val('');
                 cars_detali.adm_kod.val('');
@@ -1656,8 +1676,7 @@
                 cars_detali.loaded_car.prop('checked', false);
                 cars_detali.condition_arrival.val('');
                 cars_detali.condition_provide.val('');
-                cars_detali.reason_discrepancy_amkr.val('');
-                cars_detali.reason_discrepancy_uz.val('');
+
                 cars_detali.cargo_name.val('');
                 cars_detali.loading_devision_code.val('');
                 cars_detali.loading_devision.val('');
@@ -1765,6 +1784,27 @@
             //-------------------------------------------------------------------------------------
             // Отображение компонентов раздела "Информация о вагоне и ЭПД"
             //-------------------------------------------------------------------------------------
+            view_button_cars: function (visible) {
+                if (visible !== null) {
+                    if (visible) {
+                        // Кнопка предъявить
+                        cars_detali.bt_present_car.show();
+                        cars_detali.bt_return_car.hide();
+                        cars_detali.table_outgoing_cars.obj.rows().deselect();
+                    } else {
+                        // Кнопка вернуть
+                        cars_detali.bt_present_car.hide();
+                        cars_detali.bt_return_car.show();
+                        // сбросить выбор
+                        $('#list-cars-not-outgoing a').each(function () {
+                            $(this).removeClass("active");
+                        });
+                    }
+                } else {
+                    cars_detali.bt_present_car.hide();
+                    cars_detali.bt_return_car.hide();
+                }
+            },
             // Показать причинцу расхождения АМКР (ручной режим)
             view_reason_discrepancy_amkr_manual: function (text) {
                 cars_detali.view_reason_discrepancy_manual(cars_detali.reason_discrepancy_amkr, text);
@@ -1869,16 +1909,16 @@
                 return valid;
             },
             // Показать текущий статус вагона по задержанию
-            view_cars_detention_current: function (detention) {
+            view_cars_detention_current: function (detention, present) {
                 if (detention) {
-                    cars_detali.view_cars_detention_buttons(true); // save
+                    cars_detali.view_cars_detention_buttons(present ? true : null); // save
                     // Показать причину
                     var dr = detention.Directory_DetentionReturn;
                     cars_detali.view_cause_detention_manual(dr ? dr['cause_' + cars_detali.lang] : null);
                     cars_detali.detention_start.setDateTime(detention.date_start);
                     cars_detali.detention_stop.setDateTime(detention.date_stop);
                 } else {
-                    cars_detali.view_cars_detention_buttons(false); // edit
+                    cars_detali.view_cars_detention_buttons(present ? false : null); // edit
                 }
             },
             // Отобразить кнопки задержания
@@ -1905,7 +1945,7 @@
                 }
             },
             // Показать текущий статус вагона по возврату
-            view_cars_return_current: function (num) {
+            view_cars_return_current: function (outgoing_detention_return, present) {
                 var list_cars_return;
                 if (cars_detali.list_detention_return && cars_detali.list_detention_return.length > 0) {
                     // Список есть
@@ -1982,27 +2022,71 @@
                 }
             },
             // Показать вагон
-            view_cars: function (car, wir, wagon_info_uz) {
-                cars_detali.set_open_edit();                    // Перевести в режим "open-edit"
+            view_cars: function (car, wir, wagon_info_uz, present) {
+                if (present) {
+                    cars_detali.set_open_edit();        // Перевести в режим "open-edit"
+                } else {
+                    cars_detali.set_close_edit();       // Перевести в режим "close-edit"
+                }
                 cars_detali.clear_cars_view();                  // Очистить параметры окна ЭПД
                 cars_detali.select_id_current_rent = null;      // Очистить текущую аренду
                 cars_detali.select_id_arrival_rent = null;      // Очистить текущую аренду
                 cars_detali.select_dir_wagon = null;            // Очистить справочник по вагону
                 cars_detali.select_id_condition_provide = null; // Очистить разметку
                 if (car && wir) {
-                    cars_detali.num_car.val(cars_detali.select_num);// Номер вагона
-                    cars_detali.position_outgoing.val(car.position);// Позиция
+
                     // справочник вагонов
                     var dir_wag = wir.Directory_Wagons; // Получим информацию из справочника вагона
                     cars_detali.select_dir_wagon = dir_wag;
+                    // прибытие вагона
+                    var arrival_car = wir.ArrivalCars;  // Получим информацию с прибытия
+                    var arrival_uz_vagon = arrival_car ? arrival_car.Arrival_UZ_Vagon : null;  // Получим информацию c документа по прибытию
+                    // последняя операция над вагоном
+                    var last_wio = cars_detali.ids_inc.getLastWagonInternalOperationOfWIR(wir);
+                    // САП входящая поставка
+                    var sap_is = wir.SAPIncomingSupply;
+
+                    // Разделим вычисления до и после предъявления
+                    var countrys = null;
+                    var genus = null;
+                    var gruzp_uz = null;
+                    var tara_uz = null;
+                    var owner_uz = null;
+                    var note_uz = null;
+                    var condition_arrival = arrival_uz_vagon !== null ? arrival_uz_vagon.Directory_ConditionArrival : null; // Общая информация
+                    var condition_provide = null;
+                    var outgoing_detention_return = null;
+                    if (present) {
+                        // до предъявления
+                        countrys = dir_wag !== null ? dir_wag.Directory_Countrys : null;
+                        genus = dir_wag !== null ? dir_wag.Directory_GenusWagons : null;
+                        if (wagon_info_uz) {
+                            gruzp_uz = wagon_info_uz.carrying_capacity;         // 
+                            tara_uz = wagon_info_uz.tara;                       //
+                            owner_uz = wagon_info_uz.owner;
+                            note_uz = (wagon_info_uz.exit_ban !== null ? wagon_info_uz.exit_ban + '; ' : '') + (wagon_info_uz.other_bans !== null ? wagon_info_uz.other_bans.replace(/<br>/g, '') : '');
+                        }
+                        condition_provide = last_wio !== null ? last_wio.Directory_ConditionArrival : null;
+                    } else {
+                        // после предъявления
+                        var vag_uz = car.Outgoing_UZ_Vagon;
+                        countrys = vag_uz !== null ? vag_uz.Directory_Countrys : null;
+                        genus = vag_uz !== null ? vag_uz.Directory_GenusWagons : null;
+                        gruzp_uz = vag_uz !== null ? vag_uz.gruzp_uz : null;
+                        tara_uz = vag_uz !== null ? vag_uz.tara_uz : null;
+                        //owner_uz = vag_uz !== null ? vag_uz.owner_uz : null;
+                        note_uz = vag_uz !== null ? vag_uz.note_uz : null;
+                        condition_provide = vag_uz !== null ? vag_uz.Directory_ConditionArrival : null;
+                        // возврат
+                        outgoing_detention_return = vag_uz !== null ? vag_uz.OutgoingDetentionReturn : null;
+                    }
+
                     // Аренда
                     var wag_current_rent = cars_detali.ids_inc.ids_dir.getCurrentRentOfWagon(dir_wag); // Получим текущую аренду
                     cars_detali.select_id_current_rent = wag_current_rent !== null ? wag_current_rent.id : null;
                     var wag_current_rent_operator = wag_current_rent ? wag_current_rent.Directory_OperatorsWagons : null; // Получим текущего оператора по данным АМКР
                     var wag_current_rent_limiting = wag_current_rent ? wag_current_rent.Directory_LimitingLoading : null; // Получим текущее ограничение по данным АМКР
-                    // прибытие вагона
-                    var arrival_car = wir.ArrivalCars;  // Получим информацию с прибытия
-                    var arrival_uz_vagon = arrival_car ? arrival_car.Arrival_UZ_Vagon : null;  // Получим информацию c документа по прибытию
+
 
                     var arrival_sostav = arrival_car ? arrival_car.ArrivalSostav : null;
                     if (arrival_sostav) {
@@ -2017,47 +2101,60 @@
                     }
 
 
-                    // последняя операция над вагоном
-                    var last_wio = cars_detali.ids_inc.getLastWagonInternalOperationOfWIR(wir);
-                    // САП входящая поставка
-                    var sap_is = wir.SAPIncomingSupply;
+
 
                     // ОСНОВНОЕ ОКНО ------------------------------------------------------
-                    cars_detali.car_return.prop("disabled", false);
-                    // род вагона
-                    var genus = dir_wag !== null ? dir_wag.Directory_GenusWagons : null;
-                    if (genus) {
-                        cars_detali.rod_vag_abbr.val(genus['abbr_' + cars_detali.lang]);
-                        //cars_detali.rod_vag_name.val(genus['genus_' + cars_detali.lang]);
-                    }
+                    cars_detali.num_car.val(cars_detali.select_num);// Номер вагона
+                    cars_detali.position_outgoing.val(present ? car.position : car.position_outgoing);// Позиция
+                    // контейнера
+
+                    // Сдача по Акту
+                    cars_detali.date_outgoing_act.setDateTime(present ? null : car.date_outgoing_act); // Покажем дату предъявления по акту
+                    var reason_amkr = car.Directory_Reason_Discrepancy1;
+                    var reason_uz = car.Directory_Reason_Discrepancy;
+                    cars_detali.reason_discrepancy_amkr.val(reason_amkr ? reason_amkr['reason_discrepancy_name_' + cars_detali.lang] : '');
+                    cars_detali.reason_discrepancy_uz.val(reason_amkr ? reason_uz['reason_discrepancy_name_' + cars_detali.lang] : '');
+                    // Информация по вагону
                     // Администрация
-                    var countrys = dir_wag !== null ? dir_wag.Directory_Countrys : null;
                     if (countrys) {
                         cars_detali.adm_kod.val(countrys['code_sng']);
                         //cars_detali.adm_name.val(countrys['countrys_name_' + cars_detali.lang]);
                     }
+                    // род вагона
+                    if (genus) {
+                        cars_detali.rod_vag_abbr.val(genus['abbr_' + cars_detali.lang]);
+                        //cars_detali.rod_vag_name.val(genus['genus_' + cars_detali.lang]);
+                    }
+                    // Грузоподъемность и тарра
+                    cars_detali.gruzp_uz.val(gruzp_uz);// 
+                    cars_detali.tara_uz.val(tara_uz);//
                     // Разметка приб
-                    var condition_arrival = arrival_uz_vagon !== null ? arrival_uz_vagon.Directory_ConditionArrival : null;
                     if (condition_arrival) {
                         cars_detali.condition_arrival.val(condition_arrival['condition_abbr_' + cars_detali.lang]);
                     }
                     // Разметка выгр
-                    var condition_provide = last_wio !== null ? last_wio.Directory_ConditionArrival : null;
                     if (condition_provide) {
                         cars_detali.select_id_condition_provide = condition_provide.id;
                         cars_detali.condition_provide.val(condition_provide['condition_abbr_' + cars_detali.lang]);
                     }
                     // ЗАДЕРЖАНИЕ -------------------------------------------------------------
-                    cars_detali.view_cars_detention_current(car.OutgoingDetentionReturn);
+                    cars_detali.view_cars_detention_current(car.OutgoingDetentionReturn, present); // Общая
                     // ВОЗВРАТ -------------------------------------------------------------
-                    cars_detali.view_cars_return_current(cars_detali.select_num);
+                    cars_detali.view_cars_return_current(outgoing_detention_return, present);
+
+
+                    cars_detali.car_return.prop("disabled", false);
+
+
+
+                    cars_detali.owner_name.val(owner_uz);    // Собственник (по УЗ)
+                    cars_detali.limiting_loading_uz.val(note_uz);// Ограничения (по УЗ)
+
+
+
+
                     // ДАННЫЕ О ПОГРУЗКЕ -------------------------------------------------------------
-                    if (wagon_info_uz) {
-                        cars_detali.owner_name.val(wagon_info_uz.owner);// Собственник (по УЗ)
-                        cars_detali.gruzp_uz.val(wagon_info_uz.carrying_capacity);// 
-                        cars_detali.tara_uz.val(wagon_info_uz.tara);//
-                        cars_detali.limiting_loading_uz.val((wagon_info_uz.exit_ban !== null ? wagon_info_uz.exit_ban + '; ' : '') + (wagon_info_uz.other_bans !== null ? wagon_info_uz.other_bans.replace(/<br>/g, '') : ''));// Ограничения (по УЗ)
-                    }
+
                     if (wag_current_rent_operator) {
                         cars_detali.operator_name.val(wag_current_rent_operator['operators_' + cars_detali.lang]);// Собственник (по УЗ)
                     }
@@ -2181,7 +2278,7 @@
                         language: language_table(langs),
                         jQueryUI: false,
                         "createdRow": function (row, data, index) {
-                            //$(row).attr('id', data.num);
+                            $(row).attr('id', data.id);
                         },
                         columns: [
                             {
@@ -2200,7 +2297,7 @@
                                 data: function (row, type, val, meta) {
                                     var vag_uz = row && row.Outgoing_UZ_Vagon ? row.Outgoing_UZ_Vagon : null;
                                     var doc_uz = vag_uz && vag_uz.Outgoing_UZ_Document ? vag_uz.Outgoing_UZ_Document : null;
-                                    return doc_uz ? doc_uz.nom_doc : null ;
+                                    return doc_uz ? doc_uz.nom_doc : null;
                                 },
                                 title: langView('field_num_doc_uz', langs), width: "50px", orderable: true, searchable: false
                             },
@@ -2208,7 +2305,7 @@
                                 data: function (row, type, val, meta) {
                                     var vag_uz = row && row.Outgoing_UZ_Vagon ? row.Outgoing_UZ_Vagon : null;
                                     var cargo = vag_uz && vag_uz.Directory_Cargo ? vag_uz.Directory_Cargo : null;
-                                    return cargo ? cargo['cargo_name_' + cars_detali.lang] : null ;
+                                    return cargo ? cargo['cargo_name_' + cars_detali.lang] : null;
                                 },
                                 title: langView('field_cargo', langs), width: "150px", orderable: true, searchable: false
                             },
@@ -2216,7 +2313,7 @@
                                 data: function (row, type, val, meta) {
                                     var vag_uz = row && row.Outgoing_UZ_Vagon ? row.Outgoing_UZ_Vagon : null;
                                     var station = vag_uz && vag_uz.Directory_ExternalStation ? vag_uz.Directory_ExternalStation : null;
-                                    return station ? station['station_name_' + cars_detali.lang] : null ;
+                                    return station ? station['station_name_' + cars_detali.lang] : null;
                                 },
                                 title: langView('field_station_on', langs), width: "150px", orderable: true, searchable: false
                             },
@@ -2224,7 +2321,7 @@
                                 data: function (row, type, val, meta) {
                                     var vag_uz = row && row.Outgoing_UZ_Vagon ? row.Outgoing_UZ_Vagon : null;
                                     var countrys = vag_uz && vag_uz.Directory_Countrys ? vag_uz.Directory_Countrys : null;
-                                    return countrys ? countrys.code_sng : null ;
+                                    return countrys ? countrys.code_sng : null;
                                 },
                                 title: langView('field_adm', langs), width: "50px", orderable: true, searchable: false
                             },
@@ -2232,7 +2329,7 @@
                                 data: function (row, type, val, meta) {
                                     var vag_uz = row && row.Outgoing_UZ_Vagon ? row.Outgoing_UZ_Vagon : null;
                                     var genus = vag_uz && vag_uz.Directory_GenusWagons ? vag_uz.Directory_GenusWagons : null;
-                                    return genus ? genus['abbr_' + cars_detali.lang] : null ;
+                                    return genus ? genus['abbr_' + cars_detali.lang] : null;
                                 },
                                 title: langView('field_rod', langs), width: "50px", orderable: true, searchable: false
                             },
@@ -2240,7 +2337,7 @@
                                 data: function (row, type, val, meta) {
                                     var vag_uz = row && row.Outgoing_UZ_Vagon ? row.Outgoing_UZ_Vagon : null;
                                     var divisions = vag_uz && vag_uz.Directory_Divisions ? vag_uz.Directory_Divisions : null;
-                                    return divisions ? divisions['division_abbr_' + cars_detali.lang] : null ;
+                                    return divisions ? divisions['division_abbr_' + cars_detali.lang] : null;
                                 },
                                 title: langView('field_divisions', langs), width: "50px", orderable: true, searchable: false
                             },
@@ -2248,7 +2345,7 @@
                                 data: function (row, type, val, meta) {
                                     var vag_uz = row && row.Outgoing_UZ_Vagon ? row.Outgoing_UZ_Vagon : null;
                                     var owner = vag_uz && vag_uz.Directory_OwnersWagons ? vag_uz.Directory_OwnersWagons : null;
-                                    return owner ? owner['abbr_' + cars_detali.lang] : null ;
+                                    return owner ? owner['abbr_' + cars_detali.lang] : null;
                                 },
                                 title: langView('field_owner', langs), width: "100px", orderable: true, searchable: false
                             },
@@ -2257,7 +2354,7 @@
                                     var vag_uz = row && row.Outgoing_UZ_Vagon ? row.Outgoing_UZ_Vagon : null;
                                     var rent = vag_uz && vag_uz.Directory_WagonsRent1 ? vag_uz.Directory_WagonsRent1 : null;
                                     var operator = rent && rent.Directory_OperatorsWagons ? rent.Directory_OperatorsWagons : null;
-                                    return operator ? operator['abbr_' + cars_detali.lang] : null ;
+                                    return operator ? operator['abbr_' + cars_detali.lang] : null;
                                 },
                                 title: langView('field_operator', langs), width: "100px", orderable: true, searchable: false
                             },
@@ -2266,7 +2363,7 @@
                                     var vag_uz = row && row.Outgoing_UZ_Vagon ? row.Outgoing_UZ_Vagon : null;
                                     var rent = vag_uz && vag_uz.Directory_WagonsRent1 ? vag_uz.Directory_WagonsRent1 : null;
                                     var limiting = rent && rent.Directory_LimitingLoading ? rent.Directory_LimitingLoading : null;
-                                    return limiting ? limiting['limiting_abbr_' + cars_detali.lang] : null ;
+                                    return limiting ? limiting['limiting_abbr_' + cars_detali.lang] : null;
                                 },
                                 title: langView('field_limiting', langs), width: "100px", orderable: true, searchable: false
                             },
@@ -2329,53 +2426,61 @@
                                 },
                                 enabled: false
                             },
-                            {
-                                text: langView('title_return_car', langs),
-                                action: function (e, dt, node, config) {
+                            //{
+                            //    text: langView('title_return_car', langs),
+                            //    action: function (e, dt, node, config) {
 
-                                    //var index = cars_detali.table_outgoing_cars.obj.rows({ selected: true });
-                                    //var row_cars = cars_detali.table_outgoing_cars.obj.rows(index[0]).data();
-                                    //if (row_cars && row_cars.length > 0) {
+                            //        //var index = cars_detali.table_outgoing_cars.obj.rows({ selected: true });
+                            //        //var row_cars = cars_detali.table_outgoing_cars.obj.rows(index[0]).data();
+                            //        //if (row_cars && row_cars.length > 0) {
 
-                                    //    dialog_confirm.open('Вернуть вагон', 'Вы уверены что хотите вернуть вагон №' + row_cars[0].num + ' в состав на подходах', function (result) {
-                                    //        if (result) {
-                                    //            LockScreen(langView('mess_clear_vagon', langs));
-                                    //            var id = row_cars[0].id;
-                                    //            var list_cont;
-                                    //            // Найдем контейнеры принадлежащие вагону
-                                    //            cars_detali.ids_inc.getArrivalCarsOfID(id, function (cars) {
-                                    //                if (cars) {
-                                    //                    // вагон получен
-                                    //                    cars_detali.del_vagon(cars, function (result) {
-                                    //                        if (result > 0) {
+                            //        //    dialog_confirm.open('Вернуть вагон', 'Вы уверены что хотите вернуть вагон №' + row_cars[0].num + ' в состав на подходах', function (result) {
+                            //        //        if (result) {
+                            //        //            LockScreen(langView('mess_clear_vagon', langs));
+                            //        //            var id = row_cars[0].id;
+                            //        //            var list_cont;
+                            //        //            // Найдем контейнеры принадлежащие вагону
+                            //        //            cars_detali.ids_inc.getArrivalCarsOfID(id, function (cars) {
+                            //        //                if (cars) {
+                            //        //                    // вагон получен
+                            //        //                    cars_detali.del_vagon(cars, function (result) {
+                            //        //                        if (result > 0) {
 
 
-                                    //                            cars_detali.alert.out_info_message('Вагон №' + row_cars[0].num + ' - возвращен в сотав на подходах!');
-                                    //                            cars_detali.update_sostav = true;
-                                    //                            // Показать 
-                                    //                            cars_detali.view(table_sostav.select_sostav.id, false);
-                                    //                        }
-                                    //                        LockScreenOff();
-                                    //                    });
+                            //        //                            cars_detali.alert.out_info_message('Вагон №' + row_cars[0].num + ' - возвращен в сотав на подходах!');
+                            //        //                            cars_detali.update_sostav = true;
+                            //        //                            // Показать 
+                            //        //                            cars_detali.view(table_sostav.select_sostav.id, false);
+                            //        //                        }
+                            //        //                        LockScreenOff();
+                            //        //                    });
 
-                                    //                } else {
-                                    //                    // вагона нет
-                                    //                    cars_detali.alert.clear_message();
-                                    //                    cars_detali.alert.out_warning_message("Вагон №" + row_cars[0].num + " в таблице [IDS].[ArrivalCars] перечня вагонов составов на подходах  - не найден!");
-                                    //                    LockScreenOff();
-                                    //                }
-                                    //            });
-                                    //        }
-                                    //    });
-                                    //}
-                                },
-                                enabled: false
-                            },
+                            //        //                } else {
+                            //        //                    // вагона нет
+                            //        //                    cars_detali.alert.clear_message();
+                            //        //                    cars_detali.alert.out_warning_message("Вагон №" + row_cars[0].num + " в таблице [IDS].[ArrivalCars] перечня вагонов составов на подходах  - не найден!");
+                            //        //                    LockScreenOff();
+                            //        //                }
+                            //        //            });
+                            //        //        }
+                            //        //    });
+                            //        //}
+                            //    },
+                            //    enabled: false
+                            //},
                             {
                                 extend: 'pageLength',
                             }
                         ]
-                    }).on('select deselect', function (e, dt, type, indexes) {
+                    }).on('select', function (e, dt, type, indexes) {
+                        var rowData = cars_detali.table_outgoing_cars.obj.rows(indexes).data();
+                        if (rowData && rowData.length > 0) {
+                            var id = rowData[0].id;
+                            cars_detali.view_select_car(id, false);
+                        }
+                        // Определим активность кнопки венрнуть вагон
+                        cars_detali.table_outgoing_cars.enable_button_return();
+                    }).on('deselect', function (e, dt, type, indexes) {
                         // Определим активность кнопки венрнуть вагон
                         cars_detali.table_outgoing_cars.enable_button_return();
                     });
@@ -2400,74 +2505,16 @@
                     cars_detali.table_outgoing_cars.obj.clear();
                     cars_detali.table_outgoing_cars.obj.rows.add(outgoing_vagons);
                 },
-                // Получить строку для таблицы
-                get_row: function (data) {
-                    var doc_uz = data.Arrival_UZ_Vagon && data.Arrival_UZ_Vagon.Arrival_UZ_Document ? data.Arrival_UZ_Vagon.Arrival_UZ_Document : null;
-                    var vag_uz = data.Arrival_UZ_Vagon ? data.Arrival_UZ_Vagon : null;
-                    // Вагон
-                    var dir_car = vag_uz && vag_uz.Directory_Wagons ? vag_uz.Directory_Wagons : null;
-                    // Последняяаренда
-                    var current_rent = cars_detali.get_current_rent(dir_car);
-
-                    var dir_division = vag_uz && vag_uz.Directory_Divisions ? vag_uz.Directory_Divisions : null;
-
-                    var dir_commercial = vag_uz && vag_uz.Directory_CommercialCondition ? vag_uz.Directory_CommercialCondition : null;
-
-                    return {
-                        "id": data.id,
-                        "position": data.position_arrival,
-                        "num": data.num,
-                        // Cars
-                        "car_countrys": dir_car && dir_car.Directory_Countrys ? cars_detali.ids_inc.ids_dir.getValueObj(dir_car.Directory_Countrys, 'country_abbr', cars_detali.lang) : null,
-                        "car_adm": dir_car && dir_car.Directory_Countrys ? cars_detali.ids_inc.ids_dir.getValueObj(dir_car.Directory_Countrys, 'code_sng') : null,
-                        "car_rod": dir_car && dir_car.Directory_GenusWagons ? cars_detali.ids_inc.ids_dir.getValueObj(dir_car.Directory_GenusWagons, 'abbr', cars_detali.lang) : null,
-                        "car_kol_os": dir_car && dir_car.kol_os ? Number(dir_car.kol_os) : null,
-                        "car_usl_tip": dir_car ? dir_car.usl_tip : null,
-                        "car_date_rem_uz": dir_car && dir_car.date_rem_uz ? dir_car.date_rem_uz.replace(/T/g, ' ') : null,
-                        "car_date_rem_vag": dir_car && dir_car.date_rem_vag ? dir_car.date_rem_vag.replace(/T/g, ' ') : null,
-                        "car_owner": dir_car && dir_car.Directory_OwnersWagons ? cars_detali.ids_inc.ids_dir.getValueObj(dir_car.Directory_OwnersWagons, 'abbr', cars_detali.lang) : null,
-                        "car_operator": current_rent && current_rent.Directory_OperatorsWagons ? cars_detali.ids_inc.ids_dir.getValueObj(current_rent.Directory_OperatorsWagons, 'abbr', cars_detali.lang) : null,
-                        "limiting": current_rent ? cars_detali.ids_inc.ids_dir.getValue_LimitingLoading_Of_Code(current_rent.limiting, 'abbr', cars_detali.lang) : null,
-                        "car_rent_start": doc_uz && doc_uz.rent_start ? doc_uz.rent_start.replace(/T/g, ' ') : null,
-
-                        // По документу
-                        "nom_doc": doc_uz ? doc_uz.nom_doc : null,
-                        "nom_main_doc": doc_uz ? doc_uz.nom_main_doc : null,
-
-                        "gruzp": vag_uz ? Number(vag_uz.gruzp) : null,
-                        "u_tara": vag_uz && vag_uz.u_tara ? Number(Number(vag_uz.u_tara) / 1000).toFixed(3) : null,
-
-                        "condition": vag_uz && vag_uz.id_condition ? cars_detali.ids_inc.ids_dir.getValue_ConditionArrival_Of_ID(vag_uz.id_condition, 'condition_abbr', cars_detali.lang) : null,
-
-                        "code_stn_from": doc_uz ? doc_uz.code_stn_from : null,
-                        "name_stn_from": doc_uz ? cars_detali.ids_inc.ids_dir.getValue_ExternalStation_Of_Code(doc_uz.code_stn_from, 'station_name', cars_detali.lang) : null,
-                        "code_stn_to": doc_uz ? doc_uz.code_stn_to : null,
-                        "name_stn_to": doc_uz ? cars_detali.ids_inc.ids_dir.getValue_ExternalStation_Of_Code(doc_uz.code_stn_to, 'station_name', cars_detali.lang) : null,
-                        "code_border_checkpoint": doc_uz ? doc_uz.code_border_checkpoint : null,
-                        "name_border_checkpoint": doc_uz ? cars_detali.ids_inc.ids_dir.getValue_BorderCheckpoint_Of_Code(doc_uz.code_border_checkpoint, 'station_name', cars_detali.lang) : null,
-                        "cross_time": doc_uz && doc_uz.cross_time ? doc_uz.cross_time.replace(/T/g, ' ') : null,
-                        "code_shipper": doc_uz ? doc_uz.code_shipper : null,
-                        "name_shipper": doc_uz ? cars_detali.ids_inc.ids_dir.getValue_Shipper_Of_Code(doc_uz.code_shipper, 'shipper_name', cars_detali.lang) : null,
-                        "code_consignee": doc_uz ? doc_uz.code_consignee : null,
-                        "name_consignee": doc_uz ? cars_detali.ids_inc.ids_dir.getValue_Consignee_Of_Code(doc_uz.code_consignee, 'name', null) : null,
-
-                        "code_payer_sender": doc_uz ? doc_uz.code_payer_sender : null,
-                        "name_payer_sender": doc_uz ? cars_detali.ids_inc.ids_dir.getValue_PayerSender_Of_Code(doc_uz.code_payer_sender, 'payer_name', cars_detali.lang) : null,
-                        "distance_way": doc_uz ? doc_uz.distance_way : null,
-                        "note": doc_uz ? doc_uz.note : null,
-
-                        "vesg": vag_uz && vag_uz.vesg ? Number(Number(vag_uz.vesg) / 1000).toFixed(3) : null,
-                        "cargo": vag_uz && vag_uz.Directory_Cargo ? cars_detali.ids_inc.ids_dir.getValueObj(vag_uz.Directory_Cargo, 'cargo_name', cars_detali.lang) : null,
-                        "station_on_amkr": vag_uz && vag_uz.Directory_Station ? cars_detali.ids_inc.ids_dir.getValueObj(vag_uz.Directory_Station, 'station_name', cars_detali.lang) : 'Под погрузку',
-                        "division_on_amkr": dir_division ? cars_detali.ids_inc.ids_dir.getValueObj(dir_division, 'division_abbr', cars_detali.lang) : null,
-                        "commercial_condition": dir_commercial ? dir_commercial['commercial_condition_' + lang] : null,
-
-                    };
-                },
                 // Состяние кнопки "Вернуть вагон"
                 enable_button_return: function () {
                     var count = cars_detali.table_outgoing_cars.obj.rows({ selected: true }).count();
-                    cars_detali.table_outgoing_cars.obj.button(3).enable(count > 0 && cars_detali.sostav && cars_detali.sostav.status < 2 ? true : false);
+                    if (count > 0 && cars_detali.sostav && cars_detali.sostav.status < 2) {
+                        cars_detali.view_button_cars(false);     // Сбросить кнопки предявить и вернуть
+                    }
+                    //else {
+                    //    cars_detali.view_button_cars(null);     // Сбросить кнопки предявить и вернуть
+                    //}
+                    //cars_detali.table_outgoing_cars.obj.button(3).enable(count > 0 && cars_detali.sostav && cars_detali.sostav.status < 2 ? true : false);
                 }
             },
 

@@ -1833,7 +1833,7 @@ namespace IDS
         public int OperationPresentWagon(long id_outgoing_car, int position, DateTime? date_outgoing_act, int? id_reason_discrepancy_amkr, int? id_reason_discrepancy_uz,
             //int? id_outgoing_detention_return, 
             int? id_condition, int? id_wagons_rent_arrival, int? id_wagons_rent_outgoing, int id_countrys, int id_genus, int id_owner,
-            double? gruzp_uz, double? tara_uz, string note_uz, int? id_warehouse, int? id_division, bool laden, int id_cargo, string nom_cont1, string nom_cont2, int? code_stn_to, string user)
+            double? gruzp_uz, double? tara_uz, string note_uz, int? id_warehouse, int? id_division, bool laden, int id_cargo, string nom_cont1, string nom_cont2, int? id_outgoing_detention_return, int? code_stn_to, string user)
         {
             try
             {
@@ -1927,7 +1927,7 @@ namespace IDS
                     id_cargo = id_cargo,
                     id_cargo_gng = null,
                     vesg = null,
-                    id_outgoing_detention_return = null,
+                    id_outgoing_detention_return = id_outgoing_detention_return,
                     code_stn_to = code_stn_to,
                     create = DateTime.Now,
                     create_user = user,

@@ -423,6 +423,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public int id_cargo { get; set; }
         public string nom_cont1 { get; set; }
         public string nom_cont2 { get; set; }
+        public int? id_outgoing_detention_return { get; set; }
         public int? code_stn_to { get; set; }
         public string user { get; set; }
     }
@@ -892,7 +893,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 int result = ids_wir.OperationPresentWagon(value.id_outgoing_car, value.position, value.date_outgoing_act, value.id_reason_discrepancy_amkr, value.id_reason_discrepancy_uz, 
                     //value.id_outgoing_detention_return, 
                     value.id_condition, value.id_wagons_rent_arrival, value.id_wagons_rent_outgoing, value.id_countrys, value.id_genus, value.id_owner, 
-                    value.gruzp_uz, value.tara_uz, value.note_uz, value.id_warehouse, value.id_division, value.laden, value.id_cargo, value.nom_cont1, value.nom_cont2, value.code_stn_to, value.user);
+                    value.gruzp_uz, value.tara_uz, value.note_uz, value.id_warehouse, value.id_division, value.laden, value.id_cargo, value.nom_cont1, value.nom_cont2, value.id_outgoing_detention_return, value.code_stn_to, value.user);
                 return Ok(result);
             }
             catch (Exception e)

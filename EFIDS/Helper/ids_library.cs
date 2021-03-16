@@ -1880,7 +1880,9 @@ namespace EFIDS.Helper
                     UZ_DOC_OUT = c.UZ_DOC_OUT.GetUZ_DOC_OUT(),
                     Directory_Wagons = c.Directory_Wagons.GetDirectory_Wagons_Directory_WagonsRent(),
                     OutgoingSostav = null,
-                    Outgoing_UZ_Vagon = c.Outgoing_UZ_Vagon.GetOutgoing_UZ_Vagon_Outgoing_UZ_Document(), 
+                    Outgoing_UZ_Vagon = c.Outgoing_UZ_Vagon.GetOutgoing_UZ_Vagon_Outgoing_UZ_Document(),
+                    Directory_Reason_Discrepancy = c.Directory_Reason_Discrepancy.GetDirectory_Reason_Discrepancy(),
+                    Directory_Reason_Discrepancy1 = c.Directory_Reason_Discrepancy1.GetDirectory_Reason_Discrepancy(), 
                     //WagonInternalRoutes = c.WagonInternalRoutes.ToList().Select(w => w.GetWagonInternalRoutes()).ToList(),
                 };
             }
@@ -1918,6 +1920,8 @@ namespace EFIDS.Helper
                     UZ_DOC_OUT = c.UZ_DOC_OUT.GetUZ_DOC_OUT(),
                     Directory_Wagons = c.Directory_Wagons.GetDirectory_Wagons_Directory_WagonsRent(),
                     OutgoingSostav = c.OutgoingSostav.GetOutgoingSostav(),
+                    Directory_Reason_Discrepancy = c.Directory_Reason_Discrepancy.GetDirectory_Reason_Discrepancy(),
+                    Directory_Reason_Discrepancy1 = c.Directory_Reason_Discrepancy1.GetDirectory_Reason_Discrepancy(),
                     //WagonInternalRoutes = c.WagonInternalRoutes.ToList().Select(w => w.GetWagonInternalRoutes()).ToList(),
                 };
             }
