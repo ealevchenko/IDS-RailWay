@@ -1087,7 +1087,11 @@
                 cars_detali.set_close_edit();           // Перевести в режим "close" по умолчанию
                 cars_detali.view_button_cars(null);     // Сбросить кнопки предявить и вернуть
                 // Показать список не отправленных вагонов, отсортировав по позиции
-                cars_detali.view_cars_not_outgoing(cars_detali.sostav.OutgoingCars.filter(function (i) { return i.outgoing === null ? true : false; }).sort(function (a, b) { return Number(a.position) - Number(b.position); }));
+                cars_detali.view_cars_not_outgoing(cars_detali.sostav.OutgoingCars.filter(function (i) {
+                    return i.outgoing === null ? true : false;
+                }).sort(function (a, b) {
+                    return Number(a.position) - Number(b.position);
+                }));
                 // Показать список принятых вагонов
                 cars_detali.table_outgoing_cars.view(cars_detali.sostav.OutgoingCars.filter(function (i) { return i.outgoing !== null ? true : false; }).sort(function (a, b) { return Number(a.position_outgoing) - Number(b.position_outgoing); }));
             },
@@ -1115,7 +1119,7 @@
             view_cars_not_outgoing: function (list) {
                 $('div#list-cars-not-outgoing').empty();
                 $.each(list, function (i, el) {
-                    var icon_arrival = 'fa-train';
+                    var icon_arrival = (el.parent_wir_id ? 'fa-retweet' : 'fa-train');
                     //if (el.id_transfer) {
                     //    icon_arrival = 'fa-share';
                     //} else {
@@ -1124,6 +1128,9 @@
                     //    }
                     //}
                     var link = $('<a class="list-group-item list-group-item-action" id="' + el.id + '" data-toggle="list" href="#" role="tab" aria-controls="">' + el.num + ' <i class="fa ' + icon_arrival + '" aria-hidden="true"></i> ' + (el.num_doc ? '<i class="fa fa-file-text-o" aria-hidden="true" title="Документ найден"></i>' : '') + '</a>');
+                    if (el.parent_wir_id) {
+                        link.addClass('disabled');
+                    }
                     //if (el.consignee === 7932) {
                     //    link.addClass('list-group-item-success');
                     //}
@@ -1419,7 +1426,7 @@
                                 // Обновим данные
                                 cars_detali.load_car_of_db(cars_detali.select_id, function (car) {
                                     cars_detali.detention_save.prop("disabled", false);
-                                    cars_detali.view_cars_detention_current(car.OutgoingDetentionReturn);
+                                    cars_detali.view_cars_detention_current(car.OutgoingDetentionReturn, true);
                                     LockScreenOff();
                                 });
                             });
@@ -1518,39 +1525,33 @@
                             LockScreen(langView('mess_operation', langs));
                             cars_detali.val_outgoing_car_return.clear_all();
                             if (cars_detali.current_cars_return) {
-                                // Ок, возврат определен
-                                // Обновим строку
-                                car_return = {
-                                    id: cars_detali.current_cars_return.id,
-                                    num: cars_detali.current_cars_return.num,
-                                    id_detention_return: cars_detali.current_cars_return.id_detention_return,
-                                    type_detention_return: cars_detali.current_cars_return.type_detention_return,
-                                    date_start: cars_detali.current_cars_return.date_start,
+                                // Ок, возврат определен, обновим строку
+                                var operation_return = {
+                                    id_outgoing_car: cars_detali.select_id,
+                                    id_outgoin_return: cars_detali.current_cars_return.id,
                                     date_stop: toISOStringTZ(get_datetime_value(cars_detali.return_stop.val(), cars_detali.lang)),
                                     num_act: get_input_string_value(cars_detali.return_num_act),
                                     date_act: toISOStringTZ(get_date_value(cars_detali.return_date_act.val(), cars_detali.lang)),
                                     note: get_input_string_value(cars_detali.return_note),
-                                    create: cars_detali.current_cars_return.create,
-                                    create_user: cars_detali.current_cars_return.create_user,
-                                    change: toISOStringTZ(new Date()),
-                                    change_user: cars_detali.user,
+                                    user: cars_detali.user
                                 };
                                 // Выполним операцию
-                                cars_detali.ids_inc.putOutgoingDetentionReturn(car_return, function (result_upd) {
+                                cars_detali.ids_inc.postCloseOutgoingReturn(operation_return, function (result_upd) {
                                     if (result_upd > 0) {
                                         cars_detali.val_outgoing_car_return.out_info_message("Операция «ЗАКРЫТЬ ВОЗВРАТ» – выполнена!");
+                                        // Обновим данные
+                                        cars_detali.loadOutgoingDetentionReturnOfnum(cars_detali.select_num, function (list_detention_return) {
+                                            cars_detali.return_close.prop("disabled", false);
+                                            cars_detali.view_cars_return_current(cars_detali.select_num);
+                                            LockScreenOff();
+                                        });
                                     } else {
                                         // Ошибка выполнения
                                         cars_detali.return_close.prop("disabled", false);
                                         cars_detali.val_outgoing_car_return.out_error_message("Ошибка выполнения операции «ЗАКРЫТЬ ВОЗВРАТ», код ошибки = " + result_upd);
                                         LockScreenOff();
                                     }
-                                    // Обновим данные
-                                    cars_detali.loadOutgoingDetentionReturnOfnum(cars_detali.select_num, function (list_detention_return) {
-                                        cars_detali.return_close.prop("disabled", false);
-                                        cars_detali.view_cars_return_current(cars_detali.select_num);
-                                        LockScreenOff();
-                                    });
+
                                 });
                             } else {
                                 cars_detali.val_outgoing_car_return.out_error_message("Ошибка выполнения операции «ЗАКРЫТЬ ВОЗВРАТ», cтрока возврата неопределенна!");

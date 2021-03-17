@@ -15,6 +15,7 @@ namespace EFIDS.Entities
             Outgoing_UZ_Vagon_Acts = new HashSet<Outgoing_UZ_Vagon_Acts>();
             Outgoing_UZ_Vagon_Cont = new HashSet<Outgoing_UZ_Vagon_Cont>();
             Outgoing_UZ_Vagon_Pay = new HashSet<Outgoing_UZ_Vagon_Pay>();
+            OutgoingCars = new HashSet<OutgoingCars>();
         }
 
         public long id { get; set; }

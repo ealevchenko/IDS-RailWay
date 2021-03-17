@@ -3325,6 +3325,31 @@ IDS_RWT.prototype.postOpenOutgoingReturn = function (operation_return, callback)
         },
     });
 };
+//Операция закрыть возврат 
+IDS_RWT.prototype.postCloseOutgoingReturn = function (operation_return, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/wsd/operation/close_return/',
+        type: 'POST',
+        data: JSON.stringify(operation_return),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postCloseOutgoingReturn", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 // Операция предъявить вагон
 IDS_RWT.prototype.postOutgoingPresentWagon = function (operation_present, callback) {
     $.ajax({

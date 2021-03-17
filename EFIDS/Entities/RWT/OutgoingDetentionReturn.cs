@@ -15,7 +15,7 @@ namespace EFIDS.Entities
             OutgoingCars = new HashSet<OutgoingCars>();
             OutgoingCars1 = new HashSet<OutgoingCars>();
             OutgoingCars2 = new HashSet<OutgoingCars>();
-            Outgoing_UZ_Vagon = new HashSet<Outgoing_UZ_Vagon>();
+            //Outgoing_UZ_Vagon = new HashSet<Outgoing_UZ_Vagon>();
         }
 
         public int id { get; set; }
@@ -60,8 +60,8 @@ namespace EFIDS.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OutgoingCars> OutgoingCars2 { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Outgoing_UZ_Vagon> Outgoing_UZ_Vagon { get; set; }
+        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        //public virtual ICollection<Outgoing_UZ_Vagon> Outgoing_UZ_Vagon { get; set; }
 
     }
 }

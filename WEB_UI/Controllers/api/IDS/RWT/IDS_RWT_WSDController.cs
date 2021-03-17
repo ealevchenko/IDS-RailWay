@@ -393,6 +393,17 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string user { get; set; }
     }
 
+    public class OperationCloseOutgoingReturn
+    {
+        public long id_outgoing_car { get; set; }
+        public int id_outgoin_return { get; set; }
+        public DateTime date_stop { get; set; }
+        public string num_act { get; set; }
+        public DateTime? date_act { get; set; }
+        public string note { get; set; }
+        public string user { get; set; }
+    }
+
     public class OperationReturnProvideCar
     {
         public long id_outgoing_car { get; set; }
@@ -851,7 +862,28 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 return BadRequest(e.Message);
             }
         }
-
+        // POST api/ids/rwt/wsd/operation/close_return
+        /// <summary>
+        /// Операция закрыть возврат вагона
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("operation/close_return")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostOperationCloseOutgoingReturn([FromBody] OperationCloseOutgoingReturn value)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                int result = ids_wir.OperationCloseOutgoingReturn(value.id_outgoing_car, value.id_outgoin_return, value.date_stop, value.num_act, value.date_act, value.note, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
         // POST api/ids/rwt/wsd/operation/return_provide/wagon
         /// <summary>
         /// Операция вернуть вагон с пръедявления

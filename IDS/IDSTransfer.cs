@@ -603,7 +603,12 @@ namespace IDS
                     create = DateTime.Now,
                     create_user = user,
                     id_outgoing_uz_vagon = null,
-                    id_outgoing_detention = null
+                    id_outgoing_detention = null,
+                    id_reason_discrepancy_amkr = null,
+                    id_reason_discrepancy_uz = null,
+                    id_outgoing_return_start = null,
+                    id_outgoing_return_stop = null,
+                    parent_wir_id = null, 
                 };
                 return car;
             }
@@ -819,6 +824,12 @@ namespace IDS
                                                 create = sostav.DAT_VVOD != null ? (DateTime)sostav.DAT_VVOD : DateTime.Now,
                                                 create_user = user,
                                                 id_outgoing_uz_vagon = null,
+                                                id_outgoing_detention = null,
+                                                id_reason_discrepancy_amkr = null,
+                                                id_reason_discrepancy_uz = null,
+                                                id_outgoing_return_start = null,
+                                                id_outgoing_return_stop = null,
+                                                parent_wir_id = null,
                                             };
                                             list_cars.Add(car);
                                         }

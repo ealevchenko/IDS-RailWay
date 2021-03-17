@@ -62,6 +62,8 @@ namespace EFIDS.Entities
 
         public int? id_outgoing_return_stop { get; set; }
 
+        public long? parent_wir_id { get; set; }
+
         public virtual Directory_Reason_Discrepancy Directory_Reason_Discrepancy { get; set; }
 
         public virtual Directory_Reason_Discrepancy Directory_Reason_Discrepancy1 { get; set; }

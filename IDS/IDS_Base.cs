@@ -32,7 +32,8 @@ namespace IDS
         error_status_outgoing_sostav = -602,        // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
         not_outgoing_cars_db = -605,                // В базе данных нет записи по вагонам для отпправки
         outgoing_cars_outgoing = -606,              // Запрет операции вагон уже отправлен
-        not_outgoing_detention_return = -610,       // Объект OutgoingDetentionReturn не определен
+        not_outgoing_detention_return_db = -610,    // В базе данных нет записи OutgoingDetentionReturn
+        close_outgoing_detention_return = -611,     // В базе данных нет запись OutgoingDetentionReturn закрыта
         // документы на отправку
         exist_out_uz_vag = -651,                    // Запрет операции, строка по вагону уже создана.    
 
