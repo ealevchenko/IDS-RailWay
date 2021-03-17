@@ -1272,7 +1272,7 @@
                                 id_cargo: cars_detali.ids_inc.ids_dir.getID_Cargo_Of_Name(cars_detali.cargo_name.val(), 'cargo_name', cars_detali.lang),
                                 nom_cont1: get_input_string_value(cars_detali.num_cont_1),
                                 nom_cont2: get_input_string_value(cars_detali.num_cont_2),
-                                id_outgoing_detention_return: cars_detali.current_cars_return ? cars_detali.current_cars_return.id : null,
+                                //id_outgoing_detention_return: cars_detali.current_cars_return ? cars_detali.current_cars_return.id : null,
                                 code_stn_to: get_input_number_value(cars_detali.code_station_to),
                                 user: cars_detali.user
                             };

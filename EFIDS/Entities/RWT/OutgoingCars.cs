@@ -52,11 +52,15 @@ namespace EFIDS.Entities
 
         public long? id_outgoing_uz_vagon { get; set; }
 
-        public int? id_outgoing_detention_return { get; set; }
+        public int? id_outgoing_detention { get; set; }
 
         public int? id_reason_discrepancy_amkr { get; set; }
 
         public int? id_reason_discrepancy_uz { get; set; }
+
+        public int? id_outgoing_return_start { get; set; }
+
+        public int? id_outgoing_return_stop { get; set; }
 
         public virtual Directory_Reason_Discrepancy Directory_Reason_Discrepancy { get; set; }
 
@@ -67,6 +71,10 @@ namespace EFIDS.Entities
         public virtual Directory_Wagons Directory_Wagons { get; set; }
 
         public virtual OutgoingDetentionReturn OutgoingDetentionReturn { get; set; }
+
+        public virtual OutgoingDetentionReturn OutgoingDetentionReturn1 { get; set; }
+
+        public virtual OutgoingDetentionReturn OutgoingDetentionReturn2 { get; set; }
 
         public virtual OutgoingSostav OutgoingSostav { get; set; }
 

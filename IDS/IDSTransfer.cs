@@ -603,7 +603,7 @@ namespace IDS
                     create = DateTime.Now,
                     create_user = user,
                     id_outgoing_uz_vagon = null,
-                    id_outgoing_detention_return = null
+                    id_outgoing_detention = null
                 };
                 return car;
             }

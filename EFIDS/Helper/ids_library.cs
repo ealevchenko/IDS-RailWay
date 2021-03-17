@@ -716,7 +716,7 @@ namespace EFIDS.Helper
                 ArrivalSostav1 = null,
                 Arrival_UZ_Vagon = null,
                 OutgoingSostav = null,
-                OutgoingSostav1 = null, 
+                OutgoingSostav1 = null,
 
             };
         }
@@ -1630,7 +1630,7 @@ namespace EFIDS.Helper
                 id_cargo = v.id_cargo,
                 id_cargo_gng = v.id_cargo_gng,
                 vesg = v.vesg,
-                id_outgoing_detention_return = v.id_outgoing_detention_return,
+                //id_outgoing_detention_return = v.id_outgoing_detention_return,
                 code_stn_to = v.code_stn_to,
                 create = v.create,
                 create_user = v.create_user,
@@ -1648,7 +1648,7 @@ namespace EFIDS.Helper
                 Directory_Countrys = v.Directory_Countrys.GetDirectory_Countrys(),
                 Directory_GenusWagons = v.Directory_GenusWagons.GetGenusWagons(),
                 Directory_OwnersWagons = v.Directory_OwnersWagons.GetOwnersWagons(),
-                OutgoingDetentionReturn = v.OutgoingDetentionReturn.GetOutgoingDetentionReturn(),
+                //OutgoingDetentionReturn = v.OutgoingDetentionReturn.GetOutgoingDetentionReturn(),
                 Directory_Cargo = v.Directory_Cargo.GetDirectory_Cargo(),
                 Directory_CargoGNG = v.Directory_CargoGNG.GetDirectory_CargoGNG(),
                 Directory_ConditionArrival = v.Directory_ConditionArrival.GetDirectory_ConditionArrival(),
@@ -1684,7 +1684,7 @@ namespace EFIDS.Helper
                 id_cargo = v.id_cargo,
                 id_cargo_gng = v.id_cargo_gng,
                 vesg = v.vesg,
-                id_outgoing_detention_return = v.id_outgoing_detention_return,
+                //id_outgoing_detention_return = v.id_outgoing_detention_return,
                 code_stn_to = v.code_stn_to,
                 create = v.create,
                 create_user = v.create_user,
@@ -1702,11 +1702,11 @@ namespace EFIDS.Helper
                 Directory_Countrys = v.Directory_Countrys.GetDirectory_Countrys(),
                 Directory_GenusWagons = v.Directory_GenusWagons.GetGenusWagons(),
                 Directory_OwnersWagons = v.Directory_OwnersWagons.GetOwnersWagons(),
-                OutgoingDetentionReturn = v.OutgoingDetentionReturn.GetOutgoingDetentionReturn(),
+                //OutgoingDetentionReturn = v.OutgoingDetentionReturn.GetOutgoingDetentionReturn(),
                 Directory_Cargo = v.Directory_Cargo.GetDirectory_Cargo(),
                 Directory_CargoGNG = v.Directory_CargoGNG.GetDirectory_CargoGNG(),
                 Directory_ConditionArrival = v.Directory_ConditionArrival.GetDirectory_ConditionArrival(),
-                Directory_Divisions = v.Directory_Divisions.GetDirectory_Divisions(), 
+                Directory_Divisions = v.Directory_Divisions.GetDirectory_Divisions(),
                 Directory_ExternalStation = v.Directory_ExternalStation.GetDirectory_ExternalStation()
             };
         }
@@ -1733,7 +1733,7 @@ namespace EFIDS.Helper
                 if (d == null) return null;
                 return new Outgoing_UZ_Document()
                 {
-                    id = d.id, 
+                    id = d.id,
                     id_doc_uz = d.id_doc_uz,
                     nom_doc = d.nom_doc,
                     code_stn_from = d.code_stn_from,
@@ -1873,16 +1873,21 @@ namespace EFIDS.Helper
                     change = c.change,
                     change_user = c.change_user,
                     id_outgoing_uz_vagon = c.id_outgoing_uz_vagon,
-                    id_outgoing_detention_return = c.id_outgoing_detention_return,
+                    id_outgoing_detention = c.id_outgoing_detention,
+                    id_outgoing_return_start = c.id_outgoing_return_start,
+                    id_outgoing_return_stop = c.id_outgoing_return_stop,
+                    //id_outgoing_detention_return = c.id_outgoing_detention_return,
                     id_reason_discrepancy_amkr = c.id_reason_discrepancy_amkr,
                     id_reason_discrepancy_uz = c.id_reason_discrepancy_uz,
                     OutgoingDetentionReturn = c.OutgoingDetentionReturn.GetOutgoingDetentionReturn(),
+                    OutgoingDetentionReturn1 = c.OutgoingDetentionReturn1.GetOutgoingDetentionReturn(),
+                    OutgoingDetentionReturn2 = c.OutgoingDetentionReturn2.GetOutgoingDetentionReturn(),
                     UZ_DOC_OUT = c.UZ_DOC_OUT.GetUZ_DOC_OUT(),
                     Directory_Wagons = c.Directory_Wagons.GetDirectory_Wagons_Directory_WagonsRent(),
                     OutgoingSostav = null,
                     Outgoing_UZ_Vagon = c.Outgoing_UZ_Vagon.GetOutgoing_UZ_Vagon_Outgoing_UZ_Document(),
                     Directory_Reason_Discrepancy = c.Directory_Reason_Discrepancy.GetDirectory_Reason_Discrepancy(),
-                    Directory_Reason_Discrepancy1 = c.Directory_Reason_Discrepancy1.GetDirectory_Reason_Discrepancy(), 
+                    Directory_Reason_Discrepancy1 = c.Directory_Reason_Discrepancy1.GetDirectory_Reason_Discrepancy(),
                     //WagonInternalRoutes = c.WagonInternalRoutes.ToList().Select(w => w.GetWagonInternalRoutes()).ToList(),
                 };
             }
@@ -1914,7 +1919,10 @@ namespace EFIDS.Helper
                     change = c.change,
                     change_user = c.change_user,
                     id_outgoing_uz_vagon = c.id_outgoing_uz_vagon,
-                    id_outgoing_detention_return = c.id_outgoing_detention_return,
+                    id_outgoing_detention = c.id_outgoing_detention,
+                    id_outgoing_return_start = c.id_outgoing_return_start,
+                    id_outgoing_return_stop = c.id_outgoing_return_stop,
+                    //id_outgoing_detention_return = c.id_outgoing_detention_return,
                     id_reason_discrepancy_amkr = c.id_reason_discrepancy_amkr,
                     id_reason_discrepancy_uz = c.id_reason_discrepancy_uz,
                     UZ_DOC_OUT = c.UZ_DOC_OUT.GetUZ_DOC_OUT(),
@@ -1922,6 +1930,9 @@ namespace EFIDS.Helper
                     OutgoingSostav = c.OutgoingSostav.GetOutgoingSostav(),
                     Directory_Reason_Discrepancy = c.Directory_Reason_Discrepancy.GetDirectory_Reason_Discrepancy(),
                     Directory_Reason_Discrepancy1 = c.Directory_Reason_Discrepancy1.GetDirectory_Reason_Discrepancy(),
+                    OutgoingDetentionReturn = c.OutgoingDetentionReturn.GetOutgoingDetentionReturn(), 
+                    OutgoingDetentionReturn1 = c.OutgoingDetentionReturn1.GetOutgoingDetentionReturn(), 
+                    OutgoingDetentionReturn2 = c.OutgoingDetentionReturn2.GetOutgoingDetentionReturn(),
                     //WagonInternalRoutes = c.WagonInternalRoutes.ToList().Select(w => w.GetWagonInternalRoutes()).ToList(),
                 };
             }
@@ -1951,7 +1962,7 @@ namespace EFIDS.Helper
                     create_user = o.create_user,
                     change = o.change,
                     change_user = o.change_user,
-                    Directory_DetentionReturn = o.Directory_DetentionReturn.GetDirectory_DetentionReturn()
+                    Directory_DetentionReturn = o.Directory_DetentionReturn.GetDirectory_DetentionReturn(),
                 };
             }
             catch (Exception e)

@@ -308,14 +308,20 @@ namespace EFIDS.Concrete
                 .HasForeignKey(e => e.id_outgoing_car);
 
             modelBuilder.Entity<OutgoingDetentionReturn>()
-                .HasMany(e => e.Outgoing_UZ_Vagon)
-                .WithOptional(e => e.OutgoingDetentionReturn)
-                .HasForeignKey(e => e.id_outgoing_detention_return);
-
-            modelBuilder.Entity<OutgoingDetentionReturn>()
                 .HasMany(e => e.OutgoingCars)
                 .WithOptional(e => e.OutgoingDetentionReturn)
-                .HasForeignKey(e => e.id_outgoing_detention_return);
+                .HasForeignKey(e => e.id_outgoing_detention);
+
+            modelBuilder.Entity<OutgoingDetentionReturn>()
+                .HasMany(e => e.OutgoingCars1)
+                .WithOptional(e => e.OutgoingDetentionReturn1)
+                .HasForeignKey(e => e.id_outgoing_return_start);
+
+            modelBuilder.Entity<OutgoingDetentionReturn>()
+                .HasMany(e => e.OutgoingCars2)
+                .WithOptional(e => e.OutgoingDetentionReturn2)
+                .HasForeignKey(e => e.id_outgoing_return_stop);
+
 
             #endregion
 
