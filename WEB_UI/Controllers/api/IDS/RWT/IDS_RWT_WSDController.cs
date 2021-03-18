@@ -438,6 +438,12 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string user { get; set; }
     }
 
+    public class OperationReturnPresentWagon
+    {
+        public long id_outgoing_car { get; set; }
+        public string user { get; set; }
+    }
+
     public class view_wagon_dislocation
     {
         public long id_wir { get; set; }
@@ -909,7 +915,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
 
         // POST api/ids/rwt/wsd/operation/present/wagon
         /// <summary>
-        /// Операция 
+        /// Операция предявить вагон на уз
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -925,6 +931,29 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                     //value.id_outgoing_detention_return, 
                     value.id_condition, value.id_wagons_rent_arrival, value.id_wagons_rent_outgoing, value.id_countrys, value.id_genus, value.id_owner, 
                     value.gruzp_uz, value.tara_uz, value.note_uz, value.id_warehouse, value.id_division, value.laden, value.id_cargo, value.nom_cont1, value.nom_cont2, value.code_stn_to, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST api/ids/rwt/wsd/operation/return_present/wagon
+        /// <summary>
+        /// Операция вернуть предявленный вагон на уз в правую часть
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("operation/return_present/wagon")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostOperationReturnPresentWagon([FromBody] OperationReturnPresentWagon value)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                int result = ids_wir.OperationReturnPresentWagon(value.id_outgoing_car, value.user);
                 return Ok(result);
             }
             catch (Exception e)

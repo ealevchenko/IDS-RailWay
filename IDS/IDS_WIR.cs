@@ -1349,21 +1349,32 @@ namespace IDS
                         List<OutgoingCars> list_cars = ef_out_car.Context.Where(w => w.id_outgoing == id_sostav).ToList();
                         if (list_cars != null && list_cars.Count() > 0)
                         {
+                            bool not_delete_sostav = false;
                             // Обновим количество вагонов
                             res.count = list_cars.Count();
                             foreach (OutgoingCars car in list_cars)
                             {
-                                int result = OperationReturnProvideWagon(ref context, car, sostav.id_way_from, user);
-                                if (result > 0)
+                                if (car.parent_wir_id == null)
                                 {
-                                    ef_out_car.Delete(car.id);
+                                    // Это реальный вагон а не неактивная ссылка на изменения по задержанию
+                                    int result = OperationReturnProvideWagon(ref context, car, sostav.id_way_from, user);
+                                    if (result > 0)
+                                    {
+                                        ef_out_car.Delete(car.id);
+                                    }
+                                    res.SetUpdateResult(result, car.num);
                                 }
-                                res.SetUpdateResult(result, car.num);
+                                else
+                                {
+                                    res.SetUpdateResult(0, car.num);
+                                    not_delete_sostav = true;
+                                }
+
                             }
                             // проверим на ошибки
                             if (res.error == 0)
                             {
-                                ef_out_sost.Delete(id_sostav);
+                                if (!not_delete_sostav) { ef_out_sost.Delete(id_sostav); }
                                 // Сохраним изменения
                                 res.SetResult(context.SaveChanges());
                             }
@@ -1737,7 +1748,7 @@ namespace IDS
 
         #region Операция "Возврат вагона вагона"
         /// <summary>
-        /// Выполнить операцию возврат вагона
+        /// Выполнить операцию открыть возврат
         /// </summary>
         /// <param name="id_outgoing_car"></param>
         /// <param name="id_detention_return"></param>
@@ -1778,7 +1789,7 @@ namespace IDS
                     num_act = num_act,
                     date_act = date_act,
                     note = note,
-                    create = DateTime.Now,  
+                    create = DateTime.Now,
                     create_user = user
                 };
                 ef_out_dr.Add(outgoingreturn); // Добавим строку
@@ -1795,8 +1806,8 @@ namespace IDS
                 // Сбросим информацию о вагоне
                 car.position_outgoing = null;
                 car.date_outgoing_act = null;
-                car.id_reason_discrepancy_amkr = null;  
-                car.id_reason_discrepancy_uz = null;  
+                car.id_reason_discrepancy_amkr = null;
+                car.id_reason_discrepancy_uz = null;
                 car.outgoing = null;
                 car.outgoing_user = null;
                 car.note = "Открыт возврат";
@@ -1819,7 +1830,17 @@ namespace IDS
                 return (int)errors_base.global; // Глобальная ошибка
             }
         }
-        
+        /// <summary>
+        /// Выполнить закрыть возврат
+        /// </summary>
+        /// <param name="id_outgoing_car"></param>
+        /// <param name="id_outgoin_return"></param>
+        /// <param name="date_stop"></param>
+        /// <param name="num_act"></param>
+        /// <param name="date_act"></param>
+        /// <param name="note"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public int OperationCloseOutgoingReturn(long id_outgoing_car, int id_outgoin_return, DateTime date_stop, string num_act, DateTime? date_act, string note, string user)
         {
             try
@@ -1840,8 +1861,8 @@ namespace IDS
                 if (car.OutgoingSostav.status == 2) return (int)errors_base.error_status_outgoing_sostav; // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
                 // Найдем возврат
                 OutgoingDetentionReturn outgoin_greturn = ef_out_dr.Context.Where(r => r.id == id_outgoin_return).FirstOrDefault();
-                if (outgoin_greturn == null) { return (int)errors_base.not_outgoing_detention_return_db;  } // Ошибка в базе нет задержания
-                if (outgoin_greturn.date_stop != null) { return (int)errors_base.close_outgoing_detention_return;  } // Ошибка в запись задержания закрыта
+                if (outgoin_greturn == null) { return (int)errors_base.not_outgoing_detention_return_db; } // Ошибка в базе нет задержания
+                if (outgoin_greturn.date_stop != null) { return (int)errors_base.close_outgoing_detention_return; } // Ошибка в запись задержания закрыта
                 // Закроем задержание
                 outgoin_greturn.date_stop = date_stop;
                 outgoin_greturn.num_act = num_act;
@@ -1867,19 +1888,18 @@ namespace IDS
                     id_outgoing_car, id_outgoin_return, date_stop, num_act, date_act, note, user), servece_owner, eventID);
                 return (int)errors_base.global; // Глобальная ошибка
             }
-        }       
+        }
         #endregion
 
         #region Операция "ВАГОН ПРЕДЪЯВЛЕН УЗ"
         /// <summary>
-        /// 
+        /// Выполнить операцию пръедявит вагон
         /// </summary>
         /// <param name="id_outgoing_car"></param>
         /// <param name="position"></param>
         /// <param name="date_outgoing_act"></param>
         /// <param name="id_reason_discrepancy_amkr"></param>
         /// <param name="id_reason_discrepancy_uz"></param>
-        /// <param name="id_outgoing_detention_return"></param>
         /// <param name="id_condition"></param>
         /// <param name="id_wagons_rent_arrival"></param>
         /// <param name="id_wagons_rent_outgoing"></param>
@@ -2044,6 +2064,112 @@ namespace IDS
                 return (int)errors_base.global; // Глобальная ошибка
             }
         }
+
+        /// <summary>
+        /// Вернуть вагон, отменить операцию предъявить вагон 
+        /// </summary>
+        /// <param name="id_outgoing_car"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationReturnPresentWagon(long id_outgoing_car, string user)
+        {
+            try
+            {
+                //IDSTransfer ids_tr = new IDSTransfer(servece_owner);
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDbContext context = new EFDbContext();
+                EFOutgoingCars ef_out_car = new EFOutgoingCars(context);
+                EFOutgoingSostav ef_out_sostav = new EFOutgoingSostav(context);
+                EFOutgoing_UZ_Vagon ef_out_uz_vag = new EFOutgoing_UZ_Vagon(context);
+                EFOutgoing_UZ_Cont_Pay ef_out_uz_vag_cont_pay = new EFOutgoing_UZ_Cont_Pay(context);
+                EFOutgoing_UZ_Vagon_Cont ef_out_uz_vag_cont = new EFOutgoing_UZ_Vagon_Cont(context);
+                EFOutgoing_UZ_Vagon_Acts ef_out_uz_vag_act = new EFOutgoing_UZ_Vagon_Acts(context);
+                EFOutgoing_UZ_Vagon_Pay ef_out_uz_vag_pay = new EFOutgoing_UZ_Vagon_Pay(context);
+
+                //EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
+                EFOutgoingDetentionReturn ef_out_dr = new EFOutgoingDetentionReturn(context);
+                OutgoingCars car = ef_out_car.Context.Where(c => c.id == id_outgoing_car).FirstOrDefault();
+                if (car == null) return (int)errors_base.not_outgoing_cars_db; // В базе нет вагона для предявдения
+                if (car.OutgoingSostav.status == 2) return (int)errors_base.error_status_outgoing_sostav; // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
+
+                // Проверим наличие задержания и удалим его
+                if (car.id_outgoing_detention != null)
+                {
+                    ef_out_dr.Delete((int)car.id_outgoing_detention); // удалим
+                    car.id_outgoing_detention = null;
+                }
+                // Проверим наличие закрытого возврата и откроем его
+                if (car.id_outgoing_return_stop != null)
+                {
+                    OutgoingDetentionReturn outgoing_return_stop = ef_out_dr.Context.Where(r => r.id == car.id_outgoing_return_stop).FirstOrDefault();
+                    if (outgoing_return_stop != null)
+                    {
+                        outgoing_return_stop.date_stop = null;
+                        outgoing_return_stop.change = DateTime.Now;
+                        outgoing_return_stop.create_user = user;
+                        ef_out_dr.Update(outgoing_return_stop); // обновим
+                    }
+                    car.id_outgoing_return_stop = null;
+                }
+                // Удалим информацию по документам
+                // Проверим запись на вагон
+                Outgoing_UZ_Vagon out_uz_vag = ef_out_uz_vag.Context.Where(v => v.id_car == id_outgoing_car).FirstOrDefault();
+                if (out_uz_vag != null)
+                {
+                    // Удалим информацию по контейнерам
+                    List<Outgoing_UZ_Vagon_Cont> list = ef_out_uz_vag_cont.Context.Where(c => c.id_vagon == out_uz_vag.id).ToList();
+                    foreach (Outgoing_UZ_Vagon_Cont cont in list)
+                    {
+                        List<Outgoing_UZ_Cont_Pay> list_cont_pay = ef_out_uz_vag_cont_pay.Context.Where(c => c.id_cont == cont.id).ToList();
+                        ef_out_uz_vag_cont_pay.Delete(list_cont_pay.Select(n => n.id).ToList()); // Удалим pay по контейнерам
+                    }
+                    ef_out_uz_vag_cont.Delete(list.Select(n => n.id).ToList()); // удалим контейнера
+                    // Удалим Акты
+                    List<Outgoing_UZ_Vagon_Acts> list_act = ef_out_uz_vag_act.Context.Where(a => a.id_vagon == out_uz_vag.id).ToList();
+                    ef_out_uz_vag_act.Delete(list_act.Select(n => n.id).ToList()); // удалим акты
+                    // Удалим pay
+                    List<Outgoing_UZ_Vagon_Pay> list_pay = ef_out_uz_vag_pay.Context.Where(p => p.id_vagon == out_uz_vag.id).ToList();
+                    ef_out_uz_vag_pay.Delete(list_pay.Select(n => n.id).ToList()); // удалим акты
+                    //TODO: ! добавить проверку количества вагонов в документе если = 1 или меньше удалить документ и Pay документа
+
+                    // Удалим сам документ
+                    ef_out_uz_vag.Delete(out_uz_vag.id);
+                }
+                // Обновим информацию о вагоне
+                car.id_outgoing_uz_vagon = null;
+                car.position_outgoing = null;
+                car.date_outgoing_act = null;
+                car.id_reason_discrepancy_amkr = null;
+                car.id_reason_discrepancy_uz = null;
+                car.note = null;
+                car.outgoing = null;
+                car.outgoing_user = null;
+                car.change = DateTime.Now;
+                car.change_user = user;
+                // Состав
+                OutgoingSostav sostav = ef_out_sostav.Context.Where(s => s.id == car.id_outgoing).FirstOrDefault();
+
+                if (sostav != null && sostav.OutgoingCars.Where(c => c.outgoing != null).ToList().Count <= 1)
+                {
+                    car.OutgoingSostav.status = 0;
+                }
+                car.OutgoingSostav.change = DateTime.Now;
+                car.OutgoingSostav.change_user = user;
+                ef_out_car.Update(car);// Обновим  вагон
+                return context.SaveChanges(); // Применить операции
+            }
+            catch (Exception e)
+            {
+                //e.ExceptionMethodLog(String.Format("OperationReturnPresentWagon(id_outgoing_car={0}, id_detention_return={1}, date_start={2}, num_act={3}, date_act={4}, note={5},user={6})",
+                //    id_outgoing_car, id_detention_return, date_start, num_act, date_act, note, user), servece_owner, eventID);
+                return (int)errors_base.global; // Глобальная ошибка
+            }
+        }
+
         #endregion
 
         #endregion

@@ -3350,7 +3350,7 @@ IDS_RWT.prototype.postCloseOutgoingReturn = function (operation_return, callback
         },
     });
 };
-// Операция предъявить вагон
+// Операция предъявить вагон (перенести в левую часть)
 IDS_RWT.prototype.postOutgoingPresentWagon = function (operation_present, callback) {
     $.ajax({
         url: '../../api/ids/rwt/wsd/operation/present/wagon/',
@@ -3375,6 +3375,32 @@ IDS_RWT.prototype.postOutgoingPresentWagon = function (operation_present, callba
         },
     });
 };
+// Операция вернуть предъявленный вагон (вернуть в правую часть)
+IDS_RWT.prototype.postOutgoingReturnPresentWagon = function (operation_return, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/wsd/operation/return_present/wagon/',
+        type: 'POST',
+        data: JSON.stringify(operation_return),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postOutgoingReturnPresentWagon", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 //======================================================================================================
 //                              РАЗДЕЛ ПРАВКА ДОКУМЕНТОВ ПО ПРИБЫТИЮ
 //======================================================================================================
