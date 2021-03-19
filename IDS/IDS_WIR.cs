@@ -2152,8 +2152,8 @@ namespace IDS
                 car.change_user = user;
                 // Состав
                 OutgoingSostav sostav = ef_out_sostav.Context.Where(s => s.id == car.id_outgoing).FirstOrDefault();
-
-                if (sostav != null && sostav.OutgoingCars.Where(c => c.outgoing != null).ToList().Count <= 1)
+                //int count_car = sostav.OutgoingCars.Where(c => c.outgoing != null).ToList().Count();
+                if (sostav != null && sostav.OutgoingCars.Where(c => c.outgoing != null).ToList().Count == 0)
                 {
                     car.OutgoingSostav.status = 0;
                 }

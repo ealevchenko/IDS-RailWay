@@ -1304,6 +1304,7 @@
                                 }
                                 // Обновим данные, загрузим состав, и обновим вагоны
                                 cars_detali.loadOutgoingCarsOfSostav(cars_detali.id_sostav, function (result_sostav) {
+                                    cars_detali.update_sostav = true;
                                     cars_detali.bt_present_car.prop("disabled", false);
                                     if (result_sostav) {
                                         // Обновим вагоны принятые и непринятые на экране
@@ -1350,6 +1351,7 @@
                             }
                             // Обновим данные, загрузим состав, и обновим вагоны
                             cars_detali.loadOutgoingCarsOfSostav(cars_detali.id_sostav, function (result_sostav) {
+                                cars_detali.update_sostav = true;
                                 cars_detali.bt_return_car.prop("disabled", false);
                                 if (result_sostav) {
                                     // Обновим вагоны принятые и непринятые на экране
@@ -1374,6 +1376,7 @@
             date_outgoing_act: cd_initDateTimeRangePicker($('input#date_outgoing_act'), { lang: lang, time: true }, function (datetime) {
 
             }),
+            // вернуть вагон на родину
             car_return: $('button#car_return').on('click', function () {
                 event.preventDefault();
                 // Подтверждение выполнения операции.
@@ -1858,11 +1861,11 @@
             },
             // Показать причинцу расхождения АМКР (ручной режим)
             view_reason_discrepancy_amkr_manual: function (text, message) {
-                cars_detali.view_reason_discrepancy_manual(cars_detali.reason_discrepancy_amkr, text, message);
+                return cars_detali.view_reason_discrepancy_manual(cars_detali.reason_discrepancy_amkr, text, message);
             },
             // Показать причинцу расхождения УЗ (ручной режим)
-            view_reason_discrepancy_uz_manual: function (text) {
-                cars_detali.view_reason_discrepancy_manual(cars_detali.reason_discrepancy_uz, text);
+            view_reason_discrepancy_uz_manual: function (text, message) {
+                return cars_detali.view_reason_discrepancy_manual(cars_detali.reason_discrepancy_uz, text, message);
             },
             // Показать причинцу расхождения (ручной режим)
             view_reason_discrepancy_manual: function (inp, text, message) {
@@ -1877,6 +1880,8 @@
                         cars_detali.val_outgoing_car.set_control_error(inp, "Указанной причины расхождения нет в справочнике ИДС.");
                         if (message) cars_detali.val_outgoing_car.out_error_message("Указанной причины расхождения нет в справочнике ИДС.")
                     }
+                } else {
+                    valid = true;
                 }
                 inp.val(text);
                 return valid;
@@ -2008,7 +2013,8 @@
             },
             // Показать текущий статусы вагона по возврату
             view_cars_return_current: function (outgoing_return, present) {
-                // Найдем 
+                // Найдем
+                cars_detali.current_cars_return = null;
                 var list_cars_return;
                 if (cars_detali.list_detention_return && cars_detali.list_detention_return.length > 0) {
                     // Список есть
@@ -2333,33 +2339,25 @@
                 valid = valid & cars_detali.view_cargo_name_manual(cars_detali.cargo_name.val(), true);
                 var date_outgoing_act = get_datetime_value(cars_detali.date_outgoing_act.val(), cars_detali.lang);
                 if (date_outgoing_act) {
-                    var val_reason = cars_detali.val_outgoing_car.checkInputOfNull(cars_detali.reason_discrepancy_amkr, "Укажите причину расхождения");
-                    valid = valid & val_reason;
-                    if (val_reason) {
-                        valid = valid & cars_detali.view_reason_discrepancy_amkr_manual(cars_detali.reason_discrepancy_amkr.val(), true);
+                    valid = valid & cars_detali.val_outgoing_car.checkInputOfNull(cars_detali.reason_discrepancy_amkr, "Укажите причину расхождения");
+                } else {
+                    if (get_input_string_value(cars_detali.reason_discrepancy_amkr) !== null || get_input_string_value(cars_detali.reason_discrepancy_uz) !== null) {
+                        cars_detali.val_outgoing_car.set_object_error(cars_detali.date_outgoing_act.obj, "Указана причина расхождения, но не указано время.");
                     }
                 }
-                //var val_det = cars_detali.val_outgoing_car_detention.checkInputOfNull(cars_detali.cause_detention, "Укажите причину задержания");
-                //valid = valid & val_det;
-                //if (val_det) {
-                //    valid = valid & cars_detali.view_cause_detention_manual(cars_detali.cause_detention.val());
-                //}
-                //valid = valid & cars_detali.val_outgoing_car_detention.checkInputOfNull(cars_detali.detention_start.obj, "Укажите время начало задержания");
-                //valid = valid & cars_detali.val_outgoing_car_detention.checkInputOfNull(cars_detali.detention_stop.obj, "Укажите время конца задержания");
-                //if (valid) {
-                //    var start = moment(cars_detali.detention_start.getDateTime());
-                //    var stop = moment(cars_detali.detention_stop.getDateTime());
-                //    if (start.isBefore(stop)) {  //|| !start.isSame(stop)
-                //        valid = valid & true;
-                //    } else {
-                //        cars_detali.val_outgoing_car_detention.set_object_error(cars_detali.detention_start.obj, "Время начала должно быть меньше времени конца.");
-                //        cars_detali.val_outgoing_car_detention.set_object_error(cars_detali.detention_stop.obj, "Время начала должно быть меньше времени конца.");
-                //        valid = valid & false;
-                //    }
-                //}
+                // Проверим прицины
+                valid = valid & cars_detali.view_reason_discrepancy_amkr_manual(cars_detali.reason_discrepancy_amkr.val(), true);
+                valid = valid & cars_detali.view_reason_discrepancy_uz_manual(cars_detali.reason_discrepancy_uz.val(), true);
+                // Задержания
+                if (cars_detali.current_cars_return && cars_detali.current_cars_return.date_stop === null) {
+                    cars_detali.val_outgoing_car.out_error_message("Закройте возврат.")
+                    valid = valid & cars_detali.val_outgoing_car_return.checkInputOfNull(cars_detali.return_stop.obj, "Укажите время конца возврата");
+                }
+                if (cars_detali.loaded_car.prop("checked") === true) {
+                    valid = valid & cars_detali.val_outgoing_car.checkInputOfNull(cars_detali.loading_devision_code, "Укажите цех погрузки");
+                }
                 return valid;
             },
-
             // ФУНКЦИИ РАЗДЕЛА "ПРЕДЪЯВЛЕННЫЕ ВАГОНЫ" ************************************************************************************************************************************
             //
             // Таблица c информацией о предявленых вагонах
