@@ -1,0 +1,65 @@
+/****** Скрипт для команды SelectTopNRows из среды SSMS  ******/
+declare @sostav int = 85371
+select N'ПРИНЯТЫЙ СОСТАВ И ВАГОНЫ'
+SELECT [id]
+      ,[id_arrived]
+      ,[id_sostav]
+      ,[train]
+      ,[composition_index]
+      ,[date_arrival]
+      ,[date_adoption]
+      ,[date_adoption_act]
+      ,[id_station_from]
+      ,[id_station_on]
+      ,[id_way]
+      ,[numeration]
+      ,[num_doc]
+      ,[count]
+      ,[status]
+      ,[note]
+      ,[create]
+      ,[create_user]
+      ,[change]
+      ,[change_user]
+  FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalSostav]
+  where [id] =@sostav
+/****** Скрипт для команды SelectTopNRows из среды SSMS  ******/
+SELECT [id]
+      ,[id_arrival]
+      ,[num]
+      ,[position]
+      ,[position_arrival]
+      ,[consignee]
+      ,[num_doc]
+      ,[id_transfer]
+      ,[note]
+      ,[date_adoption_act]
+      ,[arrival]
+      ,[arrival_user]
+      ,[create]
+      ,[create_user]
+      ,[change]
+      ,[change_user]
+      ,[id_arrival_uz_vagon]
+  FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars]
+  --where [num]=54893623
+where [id_arrival]=@sostav
+  order by 1 desc
+select N'ИДС ВАГОНЫ ПОСТАВЛЕННЫЕ НА ПУТЬ'
+SELECT TOP (1000) [id]
+      ,[num]
+      ,[id_arrival_car]
+      ,[id_sap_incoming_supply]
+      ,[doc_outgoing_car]
+      ,[id_outgoing_car]
+      ,[id_sap_outbound_supply]
+      ,[note]
+      ,[create]
+      ,[create_user]
+      ,[close]
+      ,[close_user]
+      ,[parent_id]
+  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes]
+--where [id_arrival_car] = 767297
+  where [id_arrival_car] in (select id FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars] where [id_arrival]=@sostav)
+  --where [num] in (select num) --and [close] is null
