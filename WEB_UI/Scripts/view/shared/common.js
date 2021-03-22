@@ -2,31 +2,31 @@
     Список слов
 -------------------------------------------------------------*/
 $.Text_Common =
-{
-    'default':  //default language: ru
     {
-        'mess_delay': 'Мы обрабатываем ваш запрос...',
-        'mess_load_table': 'Формируем таблицу...',
-        'mess_load': 'Загрузка справочников...',
-        'mess_save': 'Запись и обновление данных...',
-        'mess_load_data': 'Получение запрашиваемых данных...',
-        'mess_operation': 'Выполняю операцию...',
-        'mess_update_uz': 'Обновляю данные на УЗ...',
-        'mess_checking_data': 'Проверяю данные...',
-    },
-    'en':  //default language: English
-    {
-        'mess_delay': 'We are processing your request ...',
-        'mess_load_table': 'Forming table ...',
-        'mess_load': 'Downloading reference books...',
-        'mess_save': 'Writing and updating data ...',
-        'mess_load_data': 'Receiving the requested data...',
-        'mess_operation': 'Performing an operation...',
-        'mess_update_uz': 'I am updating the data on the UZ ...',
-        'mess_checking_data': 'Checking data...',
-    }
+        'default':  //default language: ru
+        {
+            'mess_delay': 'Мы обрабатываем ваш запрос...',
+            'mess_load_table': 'Формируем таблицу...',
+            'mess_load': 'Загрузка справочников...',
+            'mess_save': 'Запись и обновление данных...',
+            'mess_load_data': 'Получение запрашиваемых данных...',
+            'mess_operation': 'Выполняю операцию...',
+            'mess_update_uz': 'Обновляю данные на УЗ...',
+            'mess_checking_data': 'Проверяю данные...',
+        },
+        'en':  //default language: English
+        {
+            'mess_delay': 'We are processing your request ...',
+            'mess_load_table': 'Forming table ...',
+            'mess_load': 'Downloading reference books...',
+            'mess_save': 'Writing and updating data ...',
+            'mess_load_data': 'Receiving the requested data...',
+            'mess_operation': 'Performing an operation...',
+            'mess_update_uz': 'I am updating the data on the UZ ...',
+            'mess_checking_data': 'Checking data...',
+        }
 
-};
+    };
 //==============================================================================================
 /* ----------------------------------------------------------
     Вывод текста согласно региональных настроек
@@ -199,61 +199,61 @@ var test_event = function test(elem, event, fun) {
 -------------------------------------------------------------*/
 // Список слов для описания таблиц
 $.Text_Table =
-{
-    'default':  //default language: ru
     {
-        "dt_decimal": "",
-        "dt_emptyTable": "Нет данных в таблице",
-        "dt_info": "Отображение _START_ по _END_ из _TOTAL_ записей",
-        "dt_infoEmpty": "Отображение 0 to 0 of 0 записей",
-        "dt_infoFiltered": "(отфильтровано из _MAX_ всего записей)",
-        "dt_infoPostFix": "",
-        "dt_thousands": ".",
-        "dt_lengthMenu": "Показать  _MENU_ записей",
-        "dt_loadingRecords": "Загрузка...",
-        "dt_processing": "Обработка ...",
-        "dt_search": "Найти:",
-        "dt_zeroRecords": "Не найдено совпадающих записей",
-        "dt_paginate": {
-            "first": "Первая",
-            "last": "Последняя",
-            "next": "Следующая",
-            "previous": "Предыдущая"
+        'default':  //default language: ru
+        {
+            "dt_decimal": "",
+            "dt_emptyTable": "Нет данных в таблице",
+            "dt_info": "Отображение _START_ по _END_ из _TOTAL_ записей",
+            "dt_infoEmpty": "Отображение 0 to 0 of 0 записей",
+            "dt_infoFiltered": "(отфильтровано из _MAX_ всего записей)",
+            "dt_infoPostFix": "",
+            "dt_thousands": ".",
+            "dt_lengthMenu": "Показать  _MENU_ записей",
+            "dt_loadingRecords": "Загрузка...",
+            "dt_processing": "Обработка ...",
+            "dt_search": "Найти:",
+            "dt_zeroRecords": "Не найдено совпадающих записей",
+            "dt_paginate": {
+                "first": "Первая",
+                "last": "Последняя",
+                "next": "Следующая",
+                "previous": "Предыдущая"
+            },
+            "dt_aria": {
+                "sortAscending": ": активировать сортировку столбца по возрастанию",
+                "sortDescending": ": активировать сортировку колонки по убыванию"
+            }
+
         },
-        "dt_aria": {
-            "sortAscending": ": активировать сортировку столбца по возрастанию",
-            "sortDescending": ": активировать сортировку колонки по убыванию"
+        'en':  //default language: English
+        {
+            "dt_decimal": "",
+            "dt_emptyTable": "No data available in table",
+            "dt_info": "Showing _START_ to _END_ of _TOTAL_ entries",
+            "dt_infoEmpty": "Showing 0 to 0 of 0 entries",
+            "dt_infoFiltered": "(filtered from _MAX_ total entries)",
+            "dt_infoPostFix": "",
+            "dt_thousands": ",",
+            "dt_lengthMenu": "Show _MENU_ entries",
+            "dt_loadingRecords": "Loading...",
+            "dt_processing": "Processing...",
+            "dt_search": "Search:",
+            "dt_zeroRecords": "No matching records found",
+            "dt_paginate": {
+                "first": "First",
+                "last": "Last",
+                "next": "Next",
+                "previous": "Previous"
+            },
+            "dt_aria": {
+                "sortAscending": ": activate to sort column ascending",
+                "sortDescending": ": activate to sort column descending"
+            }
+
         }
 
-    },
-    'en':  //default language: English
-    {
-        "dt_decimal": "",
-        "dt_emptyTable": "No data available in table",
-        "dt_info": "Showing _START_ to _END_ of _TOTAL_ entries",
-        "dt_infoEmpty": "Showing 0 to 0 of 0 entries",
-        "dt_infoFiltered": "(filtered from _MAX_ total entries)",
-        "dt_infoPostFix": "",
-        "dt_thousands": ",",
-        "dt_lengthMenu": "Show _MENU_ entries",
-        "dt_loadingRecords": "Loading...",
-        "dt_processing": "Processing...",
-        "dt_search": "Search:",
-        "dt_zeroRecords": "No matching records found",
-        "dt_paginate": {
-            "first": "First",
-            "last": "Last",
-            "next": "Next",
-            "previous": "Previous"
-        },
-        "dt_aria": {
-            "sortAscending": ": activate to sort column ascending",
-            "sortDescending": ": activate to sort column descending"
-        }
-
-    }
-
-};
+    };
 // Настройка language(DataTables)
 var language_table = function (langs) {
     return {
@@ -799,6 +799,25 @@ VALIDATION.prototype.checkRegexp = function (o, regexp, mes_error, mes_ok) {
         this.out_info_message(mes_ok);
         return true;
     }
+};
+// проверка на шаблон (пустое значение - допускается)
+VALIDATION.prototype.checkRegexp_IsNull = function (o, regexp, mes_error, mes_ok) {
+    if (o.val() !== '' && o.val() !== null) {
+        if (!(regexp.test(o.val()))) {
+            this.set_control_error(o, mes_error);
+            this.out_error_message(mes_error);
+            return false;
+        } else {
+            this.set_control_ok(o, mes_ok);
+            this.out_info_message(mes_ok);
+            return true;
+        }
+    } else {
+        this.set_control_ok(o, mes_ok);
+        this.out_info_message(mes_ok);
+        return true;
+    }
+
 };
 // Проверим Input введенное значение входит в размер строки (пустое значение - не допускается)
 VALIDATION.prototype.checkInputOfLength = function (o, min, max, mes_error, mes_ok) {

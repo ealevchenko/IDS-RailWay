@@ -457,6 +457,60 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Время окон. осм. приемосд..
+        /// </summary>
+        public static string title_date_end_inspection_acceptance_delivery {
+            get {
+                return ResourceManager.GetString("title_date_end_inspection_acceptance_delivery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Время окон. осм. грузчиками.
+        /// </summary>
+        public static string title_date_end_inspection_loader {
+            get {
+                return ResourceManager.GetString("title_date_end_inspection_loader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Время окон. осм. вагонниками.
+        /// </summary>
+        public static string title_date_end_inspection_vagonnik {
+            get {
+                return ResourceManager.GetString("title_date_end_inspection_vagonnik", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Время сдачи на УЗ.
+        /// </summary>
+        public static string title_date_outgoing {
+            get {
+                return ResourceManager.GetString("title_date_outgoing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Время сдачи на УЗ (по акту).
+        /// </summary>
+        public static string title_date_outgoing_act {
+            get {
+                return ResourceManager.GetString("title_date_outgoing_act", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Время готовности к сдаче на УЗ.
+        /// </summary>
+        public static string title_date_readiness_uz {
+            get {
+                return ResourceManager.GetString("title_date_readiness_uz", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Дата ремонта (БД УЗ).
         /// </summary>
         public static string title_date_rem_uz {
@@ -1155,6 +1209,33 @@ namespace WEB_UI.App_LocalResources {
         public static string title_operation_stop {
             get {
                 return ResourceManager.GetString("title_operation_stop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Маршрут.
+        /// </summary>
+        public static string title_outgoing_route {
+            get {
+                return ResourceManager.GetString("title_outgoing_route", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Признак.
+        /// </summary>
+        public static string title_outgoing_sign {
+            get {
+                return ResourceManager.GetString("title_outgoing_sign", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отправить на станцию.
+        /// </summary>
+        public static string title_outgoing_station_on {
+            get {
+                return ResourceManager.GetString("title_outgoing_station_on", resourceCulture);
             }
         }
         

@@ -663,4 +663,31 @@
   <data name="title_name_station_to" xml:space="preserve">
     <value>Станция назначения</value>
   </data>
+  <data name="title_date_end_inspection_acceptance_delivery" xml:space="preserve">
+    <value>Время окон. осм. приемосд.</value>
+  </data>
+  <data name="title_date_end_inspection_loader" xml:space="preserve">
+    <value>Время окон. осм. грузчиками</value>
+  </data>
+  <data name="title_date_end_inspection_vagonnik" xml:space="preserve">
+    <value>Время окон. осм. вагонниками</value>
+  </data>
+  <data name="title_date_outgoing" xml:space="preserve">
+    <value>Время сдачи на УЗ</value>
+  </data>
+  <data name="title_date_outgoing_act" xml:space="preserve">
+    <value>Время сдачи на УЗ (по акту)</value>
+  </data>
+  <data name="title_date_readiness_uz" xml:space="preserve">
+    <value>Время готовности к сдаче на УЗ</value>
+  </data>
+  <data name="title_outgoing_route" xml:space="preserve">
+    <value>Маршрут</value>
+  </data>
+  <data name="title_outgoing_sign" xml:space="preserve">
+    <value>Признак</value>
+  </data>
+  <data name="title_outgoing_station_on" xml:space="preserve">
+    <value>Отправить на станцию</value>
+  </data>
 </root>
