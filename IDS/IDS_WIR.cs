@@ -1891,7 +1891,7 @@ namespace IDS
         }
         #endregion
 
-        #region Операция "ВАГОН ПРЕДЪЯВЛЕН УЗ"
+        #region ОПЕРАЦИИ "ПРЕДЪЯВЛЕНИЯ ВАГОНОВ И СОСТАВА"
         /// <summary>
         /// Выполнить операцию пръедявит вагон
         /// </summary>
@@ -2064,7 +2064,6 @@ namespace IDS
                 return (int)errors_base.global; // Глобальная ошибка
             }
         }
-
         /// <summary>
         /// Вернуть вагон, отменить операцию предъявить вагон 
         /// </summary>
@@ -2160,6 +2159,63 @@ namespace IDS
                 car.OutgoingSostav.change = DateTime.Now;
                 car.OutgoingSostav.change_user = user;
                 ef_out_car.Update(car);// Обновим  вагон
+                return context.SaveChanges(); // Применить операции
+            }
+            catch (Exception e)
+            {
+                //e.ExceptionMethodLog(String.Format("OperationReturnPresentWagon(id_outgoing_car={0}, id_detention_return={1}, date_start={2}, num_act={3}, date_act={4}, note={5},user={6})",
+                //    id_outgoing_car, id_detention_return, date_start, num_act, date_act, note, user), servece_owner, eventID);
+                return (int)errors_base.global; // Глобальная ошибка
+            }
+        }
+        /// <summary>
+        /// Выполнить операцию предъявить состав на УЗ
+        /// </summary>
+        /// <param name="id_outgoing_sostav"></param>
+        /// <param name="date_end_inspection_acceptance_delivery"></param>
+        /// <param name="date_end_inspection_loader"></param>
+        /// <param name="date_end_inspection_vagonnik"></param>
+        /// <param name="date_readiness_uz"></param>
+        /// <param name="date_outgoing"></param>
+        /// <param name="date_outgoing_act"></param>
+        /// <param name="station_on"></param>
+        /// <param name="route_sign"></param>
+        /// <param name="composition_index"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationPresentSostav(long id_outgoing_sostav, DateTime date_end_inspection_acceptance_delivery,
+            DateTime date_end_inspection_loader, DateTime date_end_inspection_vagonnik, DateTime date_readiness_uz,
+            DateTime date_outgoing, DateTime? date_outgoing_act, int station_on, bool route_sign, string composition_index, string user)
+        {
+            try
+            {
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDbContext context = new EFDbContext();
+                EFOutgoingSostav ef_out_sostav = new EFOutgoingSostav(context);
+
+                OutgoingSostav sostav = ef_out_sostav.Context.Where(s => s.id == id_outgoing_sostav).FirstOrDefault();
+                if (sostav == null) return (int)errors_base.not_outgoing_sostav_db; //В базе данных нет записи состава для оправки
+                if (sostav.status >= 2) return (int)errors_base.error_status_outgoing_sostav; // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
+                int count_car = sostav.OutgoingCars.Where(c => c.outgoing != null).ToList().Count();
+                if (count_car == 0) return (int)errors_base.not_outgoing_cars_db; // В базе данных нет записи по вагонам для отпправки
+                // Обновим состав
+                sostav.status = 2;
+                sostav.date_end_inspection_acceptance_delivery = date_end_inspection_acceptance_delivery;
+                sostav.date_end_inspection_loader = date_end_inspection_loader;
+                sostav.date_end_inspection_vagonnik = date_end_inspection_vagonnik;
+                sostav.date_readiness_uz = date_readiness_uz;
+                sostav.date_outgoing = date_outgoing;
+                sostav.date_outgoing_act = date_outgoing_act;
+                sostav.id_station_on = station_on;
+                sostav.route_sign = route_sign;
+                sostav.composition_index = composition_index;
+                sostav.change = DateTime.Now;
+                sostav.change_user = user;
+                ef_out_sostav.Update(sostav);
                 return context.SaveChanges(); // Применить операции
             }
             catch (Exception e)

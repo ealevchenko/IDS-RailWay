@@ -438,6 +438,21 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string user { get; set; }
     }
 
+    public class OperationPresentSostav
+    {
+        public long id_outgoing_sostav { get; set; }
+        public DateTime date_end_inspection_acceptance_delivery { get; set; }
+        public DateTime date_end_inspection_loader { get; set; }
+        public DateTime date_end_inspection_vagonnik { get; set; }
+        public DateTime date_readiness_uz { get; set; }
+        public DateTime date_outgoing { get; set; }
+        public DateTime? date_outgoing_act { get; set; }
+        public int station_on { get; set; }
+        public bool route_sign { get; set; }
+        public string composition_index { get; set; }
+        public string user { get; set; }
+    }
+
     public class OperationReturnPresentWagon
     {
         public long id_outgoing_car { get; set; }
@@ -927,10 +942,34 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             try
             {
                 IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
-                int result = ids_wir.OperationPresentWagon(value.id_outgoing_car, value.position, value.date_outgoing_act, value.id_reason_discrepancy_amkr, value.id_reason_discrepancy_uz, 
+                int result = ids_wir.OperationPresentWagon(value.id_outgoing_car, value.position, value.date_outgoing_act, value.id_reason_discrepancy_amkr, value.id_reason_discrepancy_uz,
                     //value.id_outgoing_detention_return, 
-                    value.id_condition, value.id_wagons_rent_arrival, value.id_wagons_rent_outgoing, value.id_countrys, value.id_genus, value.id_owner, 
+                    value.id_condition, value.id_wagons_rent_arrival, value.id_wagons_rent_outgoing, value.id_countrys, value.id_genus, value.id_owner,
                     value.gruzp_uz, value.tara_uz, value.note_uz, value.id_warehouse, value.id_division, value.laden, value.id_cargo, value.nom_cont1, value.nom_cont2, value.code_stn_to, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST api/ids/rwt/wsd/operation/present/sostav
+        /// <summary>
+        /// Операция предявить весь состав на уз
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("operation/present/sostav")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostOperationPresentSostav([FromBody] OperationPresentSostav value)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                int result = ids_wir.OperationPresentSostav(value.id_outgoing_sostav, value.date_end_inspection_acceptance_delivery, value.date_end_inspection_loader, 
+                    value.date_end_inspection_vagonnik, value.date_readiness_uz,  value.date_outgoing, value.date_outgoing_act, value.station_on, value.route_sign, value.composition_index, value.user);
                 return Ok(result);
             }
             catch (Exception e)

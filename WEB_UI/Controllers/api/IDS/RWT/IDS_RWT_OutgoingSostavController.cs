@@ -38,10 +38,11 @@ namespace WEB_UI.Controllers.api
         public DateTime? date_readiness_uz { get; set; }
         public DateTime? date_outgoing { get; set; }
         public DateTime? date_outgoing_act { get; set; }
-        public DateTime? date_departure { get; set; }
+        public DateTime? date_departure_amkr { get; set; }
         public string composition_index { get; set; }
         public int status { get; set; }
         public string note { get; set; }
+        public bool? route_sign { get; set; }
         public DateTime create { get; set; }
         public string create_user { get; set; }
         public DateTime? change { get; set; }

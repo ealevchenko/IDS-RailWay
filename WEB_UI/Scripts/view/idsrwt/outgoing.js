@@ -487,7 +487,7 @@
                         },
                         {
                             data: function (row, type, val, meta) {
-                                return getReplaceTOfDT(row.date_departure);
+                                return getReplaceTOfDT(row.date_departure_amkr);
                             },
                             title: langView('field_date_departure', langs), width: "150px", orderable: true, searchable: true
                         },
@@ -989,15 +989,19 @@
                 cars_detali.table_outgoing_cars.init();// Инициализация таблицы с предъявленными вагонами
 
                 // Инициализация окна принять состав
-                pn_outgoing_sostav.init(cars_detali.lang, cars_detali.user, function (result_outgoing_sostav) {
-                    // !!! сделать обработку результата
-                    //cars_detali.alert.clear_message();
-                    //cars_detali.alert.out_info_message('Состав (№ поезда :' + cars_detali.sostav.train + ', Индекс поезда :' + cars_detali.sostav.composition_index + ') - Принят на АМКР');
-                    //// Установить признак обновления составов
-                    //cars_detali.update_sostav = true;
-
-                    //// Показать 
-                    //cars_detali.view(table_sostav.select_sostav.id, false);
+                pn_outgoing_sostav.init(cars_detali.lang, cars_detali.user, function (result_operation) {
+                    // Обновим данные, загрузим состав, и обновим вагоны
+                    cars_detali.loadOutgoingCarsOfSostav(cars_detali.id_sostav, function (result_sostav) {
+                        cars_detali.update_sostav = true;
+                        if (result_sostav) {
+                            // Обновим вагоны принятые и непринятые на экране
+                            cars_detali.update_cars_outgoing();
+                            LockScreenOff();
+                        } else {
+                            cars_detali.val_outgoing_car.out_error_message('В базе данных нет записи по составу с id=' + cars_detali.id_sostav);
+                            LockScreenOff();
+                        }
+                    });
                 });
                 // Sumbit form
                 cars_detali.content.find("form").on("submit", function (event) {
@@ -2070,7 +2074,7 @@
             },
             // Отобразить кнопки возврата
             view_cars_return_buttons: function (open_close) {
-                if (open_close !== null) {
+                if ((cars_detali.sostav && cars_detali.sostav.status < 2) && open_close !== null) {
                     if (open_close) {
                         // open
                         cars_detali.return_open.hide();
@@ -2813,7 +2817,6 @@
                         event.preventDefault();
                     });
                 });
-
             },
             // открыть окно добавмить вагоны вручную
             Open: function (id) {
@@ -2862,116 +2865,89 @@
                 valid = valid & pn_outgoing_sostav.val.checkInputOfNull(pn_outgoing_sostav.sostav_date_end_inspection_vagonnik.obj, "Укажите время окончания осмотра вагонниками.");
                 valid = valid & pn_outgoing_sostav.val.checkInputOfNull(pn_outgoing_sostav.sostav_date_readiness_uz.obj, "Укажите время готовности к сдаче на УЗ.");
                 valid = valid & pn_outgoing_sostav.val.checkInputOfNull(pn_outgoing_sostav.sostav_date_outgoing.obj, "Укажите время сдачи на УЗ.");
-                valid = valid & pn_outgoing_sostav.val.checkSelection(pn_outgoing_sostav.sostav_station_on, "Укажите станцию УЗ на которую будет отправлен состав.");
-                valid = valid & pn_outgoing_sostav.val.checkRegexp_IsNull(pn_outgoing_sostav.sostav_composition_index, /[0-9]{4}[-]{1}[0-9]{3}[-]{1}[0-9]{4}/, "Индекс поезда должен быть в формате (XXXX-XXX-XXXX)");
+                valid = valid & pn_outgoing_sostav.val.checkInputOfDateTime_IsNull(pn_outgoing_sostav.sostav_date_outgoing_act.obj, lang === 'ru' ? 'DD.MM.YYYY HH:mm' : 'MM/DD/YYYY HH:mm');
                 if (valid) {
                     var date_readiness_amkr = moment(pn_outgoing_sostav.sostav.date_readiness_amkr);
                     var sostav_date_end_inspection_acceptance_delivery = moment(pn_outgoing_sostav.sostav_date_end_inspection_acceptance_delivery.val(), 'DD.MM.YYYY HH:mm:ss');
-                    //get_datetime_value(pn_outgoing_sostav.sostav_date_end_inspection_acceptance_delivery.val(), pn_outgoing_sostav.lang)
                     var sostav_date_end_inspection_loader = moment(pn_outgoing_sostav.sostav_date_end_inspection_loader.val(), 'DD.MM.YYYY HH:mm:ss');
                     var sostav_date_end_inspection_vagonnik = moment(pn_outgoing_sostav.sostav_date_end_inspection_vagonnik.val(), 'DD.MM.YYYY HH:mm:ss');
                     var sostav_date_readiness_uz = moment(pn_outgoing_sostav.sostav_date_readiness_uz.val(), 'DD.MM.YYYY HH:mm:ss');
                     var sostav_date_outgoing = moment(pn_outgoing_sostav.sostav_date_outgoing.val(), 'DD.MM.YYYY HH:mm:ss');
+                    var sostav_date_outgoing_act = moment(pn_outgoing_sostav.sostav_date_outgoing_act.val(), 'DD.MM.YYYY HH:mm:ss');
                     // Проверим на интервалы времени
                     if (!date_readiness_amkr.isBefore(sostav_date_end_inspection_acceptance_delivery)) {
                         pn_outgoing_sostav.val.set_object_error(pn_outgoing_sostav.sostav_date_end_inspection_acceptance_delivery.obj, "Время окончания осмотра должно быть больше времени предъявления АМКР");
                     }
-                }
+                    if (!date_readiness_amkr.isBefore(sostav_date_end_inspection_loader)) {
+                        pn_outgoing_sostav.val.set_object_error(pn_outgoing_sostav.sostav_date_end_inspection_loader.obj, "Время окончания осмотра должно быть больше времени предъявления АМКР");
+                    }
+                    if (!date_readiness_amkr.isBefore(sostav_date_end_inspection_vagonnik)) {
+                        pn_outgoing_sostav.val.set_object_error(pn_outgoing_sostav.sostav_date_end_inspection_vagonnik.obj, "Время окончания осмотра должно быть больше времени предъявления АМКР");
+                    }
+                    if (!sostav_date_readiness_uz.isAfter(sostav_date_end_inspection_acceptance_delivery) ||
+                        !sostav_date_readiness_uz.isAfter(sostav_date_end_inspection_loader) ||
+                        !sostav_date_readiness_uz.isAfter(sostav_date_end_inspection_vagonnik)) {
+                        pn_outgoing_sostav.val.set_object_error(pn_outgoing_sostav.sostav_date_readiness_uz.obj, "Время готовности к сдаче на УЗ должно быть больше времени осмотра");
+                    }
+                    if (!sostav_date_outgoing.isAfter(sostav_date_readiness_uz)) {
+                        pn_outgoing_sostav.val.set_object_error(pn_outgoing_sostav.sostav_date_outgoing.obj, "Время сдаче на УЗ должно быть больше времени готовности сдачи на УЗ");
+                    }
+                    if (sostav_date_outgoing_act.isValid()) {
+                        if (sostav_date_outgoing_act && !sostav_date_outgoing_act.isAfter(sostav_date_readiness_uz)) {
+                            pn_outgoing_sostav.val.set_object_error(pn_outgoing_sostav.sostav_date_outgoing_act.obj, "Время сдаче на УЗ по акту должно быть больше времени сдачи на УЗ");
+                        }
+                    } else {
+                        pn_outgoing_sostav.val.set_object_ok(pn_outgoing_sostav.sostav_date_outgoing_act.obj, "");
+                    }
 
-                //valid = valid & valid_date_arrival;
-                //if (valid_date_arrival)
-                //    valid = valid & pn_outgoing_sostav.val.checkInputOfDateTime_IsNull(pn_outgoing_sostav.arrival_sostav_date_arrival.obj, lang === 'ru' ? 'DD.MM.YYYY HH:mm' : 'MM/DD/YYYY HH:mm');
-                //var valid_date_adoption = pn_outgoing_sostav.val.checkInputOfNull(pn_outgoing_sostav.arrival_sostav_date_adoption.obj, "Укажите время принятия поезда");
-                //valid = valid & valid_date_adoption;
-                //if (valid_date_adoption)
-                //    valid = valid & pn_outgoing_sostav.val.checkInputOfDateTime_IsNull(pn_outgoing_sostav.arrival_sostav_date_adoption.obj, lang === 'ru' ? 'DD.MM.YYYY HH:mm' : 'MM/DD/YYYY HH:mm');
-                //valid = valid & pn_outgoing_sostav.val.checkInputOfDateTime_IsNull(pn_outgoing_sostav.arrival_sostav_date_adoption_act.obj, lang === 'ru' ? 'DD.MM.YYYY HH:mm' : 'MM/DD/YYYY HH:mm');
-                //valid = valid & pn_outgoing_sostav.val.checkSelection(pn_outgoing_sostav.arrival_sostav_station_on, "Укажите станцию приема сотава");
-                //valid = valid & pn_outgoing_sostav.val.checkSelection(pn_outgoing_sostav.arrival_sostav_way_on, "Укажите путь приема сотава");
-                //// Определим голова хвост
-                //var head = pn_outgoing_sostav.arrival_sostav_head.prop('checked');
-                //var tail = pn_outgoing_sostav.arrival_sostav_tail.prop('checked');
-                //if (!head && !tail) {
-                //    valid = valid & pn_outgoing_sostav.val.set_object_error(pn_outgoing_sostav.arrival_sostav_numeration, "Укажите начало нумерации");
-                //} else {
-                //    pn_outgoing_sostav.val.set_object_ok(pn_outgoing_sostav.arrival_sostav_head, "");
-                //    pn_outgoing_sostav.val.set_object_ok(pn_outgoing_sostav.arrival_sostav_tail, "");
-                //    valid = valid & pn_outgoing_sostav.val.set_object_ok(pn_outgoing_sostav.arrival_sostav_numeration, "");
-                //}
+                }
+                valid = valid & pn_outgoing_sostav.val.checkSelection(pn_outgoing_sostav.sostav_station_on, "Укажите станцию УЗ на которую будет отправлен состав.");
+                valid = valid & pn_outgoing_sostav.val.checkRegexp_IsNull(pn_outgoing_sostav.sostav_composition_index, /[0-9]{4}[-]{1}[0-9]{3}[-]{1}[0-9]{4}/, "Индекс поезда должен быть в формате (XXXX-XXX-XXXX)");
                 return valid;
             },
             // Сохранить прибытие состава
             add_outgoing_sostav: function (callback_ok) {
                 var valid = pn_outgoing_sostav.validation();
                 if (valid) {
-                    //LockScreen(langView('mess_save', langs));
-                    //// добавить состав
-                    //var arr_sostav = pn_outgoing_sostav.getArrivalSostav(pn_outgoing_sostav.sostav);
-                    //if (arr_sostav) {
-                    //    pn_outgoing_sostav.ids_inc.putArrivalSostav(arr_sostav, function (result_upd) {
-                    //        if (result_upd > 0) {
-                    //            //ПЕРЕНОС ВАГОНОВ В ПРИБЫТИЕ
-                    //            var transfer_sostav = { id: arr_sostav.id, user: pn_outgoing_sostav.user_name };
-                    //            pn_outgoing_sostav.ids_inc.ids_tr.postIncomingArrivalSostav(transfer_sostav, function (result_transfer) {
-                    //                if (result_transfer > 0) {
-
-                    //                    if (typeof callback_ok === 'function') {
-                    //                        pn_outgoing_sostav.obj.dialog("close");
-                    //                        LockScreenOff();
-                    //                        callback_ok(result_upd);
-                    //                    }
-                    //                } else {
-                    //                    pn_outgoing_sostav.val.clear_all();
-                    //                    pn_outgoing_sostav.val.out_error_message("Ошибка. При переносе вагонов на станцию прибытия АМКР - возникла ошибка!");
-                    //                    LockScreenOff();
-                    //                }
-                    //            });
-
-                    //        } else {
-                    //            pn_outgoing_sostav.val.clear_all();
-                    //            pn_outgoing_sostav.val.out_error_message("Ошибка. При обновлении записи состава возникла ошибка.");
-                    //            LockScreenOff();
-                    //        }
-                    //    });
-                    //} else {
-                    //    pn_outgoing_sostav.val.clear_all();
-                    //    pn_outgoing_sostav.val.out_error_message("Ошибка. При обновлении записи состава возникла ошибка.");
-                    //}
+                    // Подтверждение выполнения операции.
+                    dc.dialog_confirm('Open', 'Выполнить?', 'Подтвердите выполнение операции «ПРЕДЪЯВИТЬ СОСТАВ НА УЗ»', function (result) {
+                        if (result) {
+                            LockScreen(langView('mess_operation', langs));
+                            pn_outgoing_sostav.val.clear_all();
+                            // Подготовим операцию
+                            var operation_outgoing_sostav = {
+                                id_outgoing_sostav: pn_outgoing_sostav.sostav.id,
+                                date_end_inspection_acceptance_delivery: toISOStringTZ(get_datetime_value(pn_outgoing_sostav.sostav_date_end_inspection_acceptance_delivery.val(), pn_outgoing_sostav.lang)),
+                                date_end_inspection_loader: toISOStringTZ(get_datetime_value(pn_outgoing_sostav.sostav_date_end_inspection_loader.val(), pn_outgoing_sostav.lang)),
+                                date_end_inspection_vagonnik: toISOStringTZ(get_datetime_value(pn_outgoing_sostav.sostav_date_end_inspection_vagonnik.val(), pn_outgoing_sostav.lang)),
+                                date_readiness_uz: toISOStringTZ(get_datetime_value(pn_outgoing_sostav.sostav_date_readiness_uz.val(), pn_outgoing_sostav.lang)),
+                                date_outgoing: toISOStringTZ(get_datetime_value(pn_outgoing_sostav.sostav_date_outgoing.val(), pn_outgoing_sostav.lang)),
+                                date_outgoing_act: toISOStringTZ(get_datetime_value(pn_outgoing_sostav.sostav_date_outgoing_act.val(), pn_outgoing_sostav.lang)),
+                                station_on: get_select_number_value(pn_outgoing_sostav.sostav_station_on),
+                                route_sign: pn_outgoing_sostav.sostav_outgoing_route_sign.prop("checked"),
+                                composition_index: get_input_string_value(pn_outgoing_sostav.sostav_composition_index),
+                                user: cars_detali.user
+                            };
+                            // Выполним операцию
+                            cars_detali.ids_inc.postOperationPresentSostav(operation_outgoing_sostav, function (result_operation) {
+                                if (result_operation > 0) {
+                                    cars_detali.val_outgoing_car.out_info_message("Операция «ПРЕДЪЯВИТЬ СОСТАВ НА УЗ» – выполнена!");
+                                    if (typeof callback_ok === 'function') {
+                                        pn_outgoing_sostav.obj.dialog("close");
+                                        LockScreenOff();
+                                        callback_ok(result_operation);
+                                    }
+                                } else {
+                                    // Ошибка выполнения
+                                    cars_detali.val_outgoing_car.out_error_message("Ошибка выполнения операции «ПРЕДЪЯВИТЬ СОСТАВ НА УЗ», код ошибки = " + result_operation);
+                                    LockScreenOff();
+                                }
+                            });
+                        }
+                    });
 
                 }
             },
-            // Получить новый состав
-            getArrivalSostav: function (arrival_sostsv) {
-                if (arrival_sostsv) {
-
-                    var head = pn_outgoing_sostav.arrival_sostav_head.prop('checked');
-                    var tail = pn_outgoing_sostav.arrival_sostav_tail.prop('checked');
-
-                    return {
-                        id: arrival_sostsv.id,
-                        id_arrived: arrival_sostsv.id_arrived,
-                        id_sostav: arrival_sostsv.id_sostav,
-                        train: arrival_sostsv.train,
-                        composition_index: arrival_sostsv.composition_index,
-                        date_arrival: toISOStringTZ(get_datetime_value(pn_outgoing_sostav.arrival_sostav_date_arrival.val(), pn_outgoing_sostav.lang)),
-                        date_adoption: toISOStringTZ(get_datetime_value(pn_outgoing_sostav.arrival_sostav_date_adoption.val(), pn_outgoing_sostav.lang)),
-                        date_adoption_act: toISOStringTZ(get_datetime_value(pn_outgoing_sostav.arrival_sostav_date_adoption_act.val(), pn_outgoing_sostav.lang)),
-                        id_station_from: arrival_sostsv.id_station_from,
-                        id_station_on: get_input_number_value(pn_outgoing_sostav.arrival_sostav_station_on),
-                        id_way: get_input_number_value(pn_outgoing_sostav.arrival_sostav_way_on),
-                        num_doc: get_input_number_value(pn_outgoing_sostav.arrival_sostav_num_sheet),
-                        count: get_input_number_value(pn_outgoing_sostav.arrival_count_car),
-                        status: 2,
-                        note: arrival_sostsv.note,
-                        create: arrival_sostsv.create,
-                        create_user: arrival_sostsv.create_user,
-                        change: toISOStringTZ(new Date()),
-                        change_user: pn_outgoing_sostav.user_name,
-                        numeration: tail && !head ? true : !tail && head ? false : null,
-                    };
-                }
-                return null;
-            }
         };
 
     //================================================================
