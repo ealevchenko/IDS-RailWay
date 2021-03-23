@@ -34,6 +34,8 @@ namespace EFIDS.Entities
 
         public DateTime? date_outgoing_act { get; set; }
 
+        //public DateTime? date_departure { get; set; }
+
         public DateTime? outgoing { get; set; }
 
         [StringLength(50)]

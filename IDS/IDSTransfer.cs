@@ -556,7 +556,7 @@ namespace IDS
                         date_readiness_uz = null,
                         date_outgoing = null,
                         date_outgoing_act = null,
-                        date_departure = null,
+                        date_departure_amkr = null,
                         composition_index = null,
                         status = 0,
                         note = null,
@@ -784,13 +784,13 @@ namespace IDS
                                     date_show_wagons = null,
                                     date_readiness_uz = this.transfer_set_outgoing_wagon_of_kis == true ? (DateTime?)sostav.DT : null,
                                     date_outgoing = this.transfer_set_outgoing_wagon_of_kis == true ? (DateTime?)sostav.DT : null,
-                                    date_departure = this.transfer_set_outgoing_wagon_of_kis == true ? (DateTime?)sostav.DT : null,
+                                    date_departure_amkr = this.transfer_set_outgoing_wagon_of_kis == true ? (DateTime?)sostav.DT : null,
                                     date_outgoing_act = null,
                                     composition_index = null,
                                     status = this.transfer_set_outgoing_wagon_of_kis == true ? 2 : 0,
                                     note = "Перенесен по данным КИС" + (this.transfer_set_outgoing_wagon_of_kis == true ? "(и сдан на УЗ автоматически)" : ""),
                                     create = sostav.DAT_VVOD != null ? (DateTime)sostav.DAT_VVOD : DateTime.Now,
-                                    create_user = user,
+                                    create_user = user, 
                                 };
                                 ef_sostav.Add(ids_sostav);
                                 res = ef_sostav.Save();
