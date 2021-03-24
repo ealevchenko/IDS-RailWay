@@ -27,6 +27,7 @@
                 'field_pb_station_duration': 'Инд. пр. ст',
                 'field_current_station_amkr_duration': 'Прост. ст',
                 'field_current_station_amkr_idle_time': 'Прост. норм.',
+                'field_out_sostav_status': 'Статус отправляемого состава',
                 'field_sap_is_num': '№ Вх поставки',
                 'field_sap_is_create_num': 'Дата созд. вх. пост.',
                 'field_sap_is_create_date': 'Дата созд. вх. пост.',
@@ -85,8 +86,7 @@
                 'title_button_clear_all': 'Сбросить все',
                 'title_button_move_wagon': 'Перенести вагоны на путь',
 
-
-
+                'title_mess_load_station': 'Загрузка состояния путей станций АМКР…',
             },
             'en':  //default language: English
             {
@@ -113,6 +113,7 @@
                 'field_pb_station_duration': 'Ind. pr. st ',
                 'field_current_station_amkr_duration': 'Simple. st ',
                 'field_current_station_amkr_idle_time': 'Simple. ok. ',
+                'field_out_sostav_status': 'Статус отправляемого состава',
                 'field_sap_is_num': 'In delivery no.',
                 'field_sap_is_create_num': 'Created date. in. fast.',
                 'field_sap_is_create_date': 'Created date. in. fast.',
@@ -160,6 +161,7 @@
                 'title_button_clear_wagon': 'Remove all wagons',
                 'title_button_clear_all': 'Reset All',
                 'title_button_move_wagon': 'Move the wagons to the track',
+                'title_mess_load_station': 'Loading the state of tracks of AMKR stations ...',
             }
         };
 
@@ -299,6 +301,21 @@
                     alert.out_warning_message("Выберите путь, c которого будет произведена отправка.");
                 }
             }),
+        // Отобразить статус вагонов в цвете
+        create_row_ststus_wagon = function (row, data, index) {
+            // Прибыл
+            if (data.current_id_operation_wagon === 1) {
+                $(row).addClass('arrival-wagon');
+            }
+            // Предъявлен или сдан
+            if (data.current_id_operation_wagon === 9) {
+                if (data.out_sostav_status === 2) {
+                    $(row).addClass('handed-wagon');
+                } else {
+                    $(row).addClass('prisent-wagon');
+                }
+            }
+        },
         //*************************************************************************************
         // ОСНОВНАЯ ТАБЛИЦА СОСТАВОВ
         //*************************************************************************************
@@ -368,7 +385,7 @@
             },
             // Загрузить станции
             load_station: function () {
-                LockScreen(langView('mess_delay', langs));
+                LockScreen(langView('title_mess_load_station', langs));
                 ids_inc.getViewStationStatus(function (station) {
                     table_tree_way.view_station(station.filter(function (i) { return !i.station_uz; }));
                 });
@@ -616,11 +633,7 @@
                     jQueryUI: false,
                     "createdRow": function (row, data, index) {
                         $(row).attr('id', index + 1);
-
-                        if (data.current_id_operation_wagon === 9 && data.current_operation_wagon_end === null) {
-                            $(row).addClass('look-wagon');
-                        }
-
+                        create_row_ststus_wagon(row, data, index);
                         // Определим компонент прогресс бар
                         var max = data.current_station_amkr_idle_time ? Number(data.current_station_amkr_idle_time) : 0
                         var duration = data.current_station_amkr_duration ? Number(data.current_station_amkr_duration) : 0
@@ -1184,6 +1197,15 @@
                 //{ data: null, defaultContent: '', title: langView('field_pb_station_duration', langs), width: "50px", orderable: false, searchable: false },
                 //{ data: "current_station_amkr_duration", title: langView('field_current_station_amkr_duration', langs), width: "100px", orderable: true, searchable: false },
                 //{ data: "current_station_amkr_idle_time", title: langView('field_current_station_amkr_idle_time', langs), width: "100px", orderable: false, searchable: false },
+                // ОТПРАВКА ВАГОНОВ
+                {
+                    field: "out_sostav_status",
+                    data: function (row, type, val, meta) {
+                        return row.out_sostav_status;
+                    },
+                    title: langView('field_out_sostav_status', langs), width: "50px", orderable: false, searchable: false
+                },
+                // САП
                 {
                     field: "sap_is_num",
                     data: function (row, type, val, meta) {
@@ -1268,6 +1290,7 @@
             init_columns_wagon_from: function () {
                 return operation_detali.init_columns([
                     'wagons_position',
+                    'out_sostav_status',
                     'wagons_num',
                     'wagon_operators_abbr',
                     'wagon_limiting_abbr',
@@ -1703,16 +1726,17 @@
                         jQueryUI: false,
                         "createdRow": function (row, data, index) {
                             $(row).attr('id', index + 1);
+                            create_row_ststus_wagon(row, data, index);
+                            ////if (data.position_dislocation !== null) {
+                            ////    $('td:eq(1)', row).addClass('not-select-wagon');
+                            ////}
                             //if (data.position_dislocation !== null) {
                             //    $('td:eq(1)', row).addClass('not-select-wagon');
+                            //    $(row).addClass('select-wagon');
                             //}
-                            if (data.position_dislocation !== null) {
-                                $('td:eq(1)', row).addClass('not-select-wagon');
-                                $(row).addClass('select-wagon');
-                            }
-                            if (data.current_id_operation_wagon === 9 && data.current_operation_wagon_end === null) {
-                                $(row).addClass('look-wagon');
-                            }
+                            //if (data.current_id_operation_wagon === 9 && data.current_operation_wagon_end === null) {
+                            //    $(row).addClass('look-wagon');
+                            //}
 
                         },
                         columns: operation_detali.init_columns_wagon_from(),
@@ -2629,16 +2653,17 @@
                         language: language_table(langs),
                         jQueryUI: false,
                         "createdRow": function (row, data, index) {
+                            create_row_ststus_wagon(row, data, index);
+                            ////if (data.id_way_dissolution !== null) {
+                            ////    $('td:eq(1)', row).addClass('not-select-wagon');
+                            ////}
                             //if (data.id_way_dissolution !== null) {
                             //    $('td:eq(1)', row).addClass('not-select-wagon');
+                            //    $(row).addClass('select-wagon');
                             //}
-                            if (data.id_way_dissolution !== null) {
-                                $('td:eq(1)', row).addClass('not-select-wagon');
-                                $(row).addClass('select-wagon');
-                            }
-                            if (data.current_id_operation_wagon === 9 && data.current_operation_wagon_end === null) {
-                                $(row).addClass('look-wagon');
-                            }
+                            //if (data.current_id_operation_wagon === 9 && data.current_operation_wagon_end === null) {
+                            //    $(row).addClass('look-wagon');
+                            //}
                         },
                         columns: operation_detali.init_columns_wagon_dissolution_from(),
                         //columns: [
@@ -3276,17 +3301,18 @@
                         language: language_table(langs),
                         jQueryUI: false,
                         "createdRow": function (row, data, index) {
+                            create_row_ststus_wagon(row, data, index);
+                            ////if (data.position_sending !== null) {
+                            ////    $('td:eq(1)', row).addClass('not-select-wagon');
+                            ////    $(row).addClass('select-sending')
+                            ////}
                             //if (data.position_sending !== null) {
                             //    $('td:eq(1)', row).addClass('not-select-wagon');
-                            //    $(row).addClass('select-sending')
+                            //    $(row).addClass('select-wagon');
                             //}
-                            if (data.position_sending !== null) {
-                                $('td:eq(1)', row).addClass('not-select-wagon');
-                                $(row).addClass('select-wagon');
-                            }
-                            if (data.current_id_operation_wagon === 9 && data.current_operation_wagon_end === null) {
-                                $(row).addClass('look-wagon');
-                            }
+                            //if (data.current_id_operation_wagon === 9 && data.current_operation_wagon_end === null) {
+                            //    $(row).addClass('look-wagon');
+                            //}
                         },
                         columns: operation_detali.init_columns_wagon_from(),
                         //columns: [
@@ -5017,17 +5043,18 @@
                         language: language_table(langs),
                         jQueryUI: false,
                         "createdRow": function (row, data, index) {
-                            //if (data.position_provide !== null || (data.current_id_operation_wagon === 9 && data.current_operation_wagon_end === null)) {
+                            create_row_ststus_wagon(row, data, index);
+                            ////if (data.position_provide !== null || (data.current_id_operation_wagon === 9 && data.current_operation_wagon_end === null)) {
+                            ////    $('td:eq(1)', row).addClass('not-select-wagon');
+                            ////    //$(row).addClass('select-provide')
+                            ////}
+                            //if (data.position_provide !== null) {
                             //    $('td:eq(1)', row).addClass('not-select-wagon');
-                            //    //$(row).addClass('select-provide')
+                            //    $(row).addClass('select-wagon');
                             //}
-                            if (data.position_provide !== null) {
-                                $('td:eq(1)', row).addClass('not-select-wagon');
-                                $(row).addClass('select-wagon');
-                            }
-                            if (data.current_id_operation_wagon === 9 && data.current_operation_wagon_end === null) {
-                                $(row).addClass('look-wagon');
-                            }
+                            //if (data.current_id_operation_wagon === 9 && data.current_operation_wagon_end === null) {
+                            //    $(row).addClass('look-wagon');
+                            //}
                         },
                         columns: operation_detali.init_columns_wagon_from(),
                         dom: 'Bfrtip',
@@ -5143,7 +5170,7 @@
                         if (operation_detali.wagons_provide_from) {
                             $.each(operation_detali.wagons_provide_from, function (i, el) {
                                 el['position_provide'] = null;
-                                if (el.current_id_operation_wagon === 9) {
+                                if (el.current_id_operation_wagon === 9 && el.out_sostav_status < 2) {
                                     max_position++;
                                     date_operation_start = moment(el.current_operation_wagon_start);
                                     //var pos = el.position;
@@ -5809,7 +5836,7 @@
         });
         pn_loading_way_detail.init(lang);
         table_tree_way.load_station();
-        LockScreenOff();
+        //LockScreenOff();
         //$("a.dt-button").removeClass('dt-button').addClass('btn btn-secondary');
     });
 });

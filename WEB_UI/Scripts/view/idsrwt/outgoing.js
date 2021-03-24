@@ -151,6 +151,7 @@
                 'title_button_field_view_all': 'Показать все',
                 'title_button_field_clear': 'Сбросить',
                 'title_button_return': 'Вернуть состав',
+                'title_button_sostav_return': 'Отменить сдачу',
                 'title_button_wagon': 'Вагоны',
                 'title_button_wagon_accept': 'Отправить вагоны',
                 'title_button_wagon_view': 'Показать вагоны',
@@ -297,7 +298,8 @@
                 'title_button_field_select': 'Select',
                 'title_button_field_view_all': 'Show all',
                 'title_button_field_clear': 'Reset',
-                'title_button_return': 'Return wagon',
+                'title_button_return': 'Return sostav',
+                'title_button_sostav_return': 'Cancel сдачу',
 
                 'title_button_wagon': 'Wagons',
                 'title_button_wagon_accept': 'Send wagons',
@@ -389,7 +391,8 @@
                         switch (data.status) {
                             case 1: $(row).addClass('status-in-work'); $('td', row).eq(0).addClass('icon-warning'); break;
                             case 2: $(row).addClass('status-accepted'); $('td', row).eq(0).addClass('icon-ok'); break;
-                            case 3: $(row).addClass('status-rejected'); $('td', row).eq(0).addClass('icon-delete'); break;
+                            case 3: $(row).addClass('status-outgoing'); $('td', row).eq(0).addClass('icon-out'); break;
+                            case 4: $(row).addClass('status-rejected'); $('td', row).eq(0).addClass('icon-delete'); break;
                         }
                         if (data.id_arrived !== null && data.id_sostav !== null) {
                             $('td', row).eq(1).addClass('icon-right');
@@ -616,6 +619,43 @@
                             enabled: true
                         },
                         {
+                            text: langView('title_button_sostav_return', langs),
+                            action: function (e, dt, node, config) {
+                                if (table_sostav.select_sostav) {
+                                    // Сбросим признак обновлять информацию о составах
+                                    cars_detali.update_sostav = false;
+                                    // Подтверждение выполнения операции.
+                                    dc.dialog_confirm('Open', 'Выполнить?', 'Подтвердите выполнение операции «ВЕРНУТЬ СДАННЫЙ СОСТАВ НА УЗ»', function (result) {
+                                        if (result) {
+                                            LockScreen(langView('mess_operation', langs));
+                                            outgoing_alert.clear_message();
+                                            // Подготовим операцию
+                                            var operation_return_sostav = {
+                                                id_outgoing_sostav: table_sostav.select_sostav.id,
+                                                user: user_name
+                                            };
+                                            // Выполним операцию
+                                            ids_inc.postOperationReturnPresentSostav(operation_return_sostav, function (result_operation) {
+                                                if (result_operation > 0) {
+                                                    pn_sel.view(true);
+                                                    outgoing_alert.out_info_message("Операция «ВЕРНУТЬ СДАННЫЙ СОСТАВ НА УЗ» - Выполнена");
+                                                } else {
+                                                    // Ошибка выполнения
+                                                    outgoing_alert.out_error_message("Ошибка выполнения операции «ВЕРНУТЬ СДАННЫЙ СОСТАВ НА УЗ», код ошибки = " + result_operation);
+                                                    LockScreenOff();
+                                                }
+                                            });
+                                        } else {
+                                            // Состав уже в работе удаление запрещено
+                                            outgoing_alert.clear_message();
+                                            outgoing_alert.out_warning_message("Операция «ВЕРНУТЬ СДАННЫЙ СОСТАВ НА УЗ» - Отменена!");
+                                        }
+                                    });
+                                }
+                            },
+                            enabled: false
+                        },
+                        {
                             text: langView('title_button_wagon', langs),
                             action: function (e, dt, node, config) {
                                 if (table_sostav.select_sostav) {
@@ -625,127 +665,33 @@
                                 }
                             },
                             enabled: false
+                        },
+                        {
+                            extend: 'pageLength',
                         }
-                        //{
-                        //    text: langView('title_button_add', langs),
-                        //    action: function (e, dt, node, config) {
-                        //        pn_edit_sostav.Open(null);
-                        //    },
-                        //    enabled: true
-                        //},
-                        //{
-                        //    text: langView('title_button_edit', langs),
-                        //    action: function (e, dt, node, config) {
-                        //        if (table_sostav.select_sostav) {
-                        //            pn_edit_sostav.Open(table_sostav.select_sostav.id);
-                        //        }
-                        //    },
-                        //    enabled: false
-                        //},
-                        //{
-                        //    text: langView('title_button_del', langs),
-                        //    action: function (e, dt, node, config) {
-                        //        if (table_sostav.select_sostav) {
-                        //            if (table_sostav.select_sostav.id_arrived === null) {
-                        //                // Состав был добавлен вручную, можно удалить
-                        //                if (table_sostav.select_sostav.status === 0) {
-                        //                    // Состав не принимался, можно удалить
-                        //                    dialog_confirm.open('Удалить?', 'Вы уверены что хотите удалить состав : ' + table_sostav.select_sostav.composition_index, function (result) {
-                        //                        if (result) {
-                        //                            ids_inc.getArrivalSostavOfID(table_sostav.select_sostav.id, function (result_sostav) {
-                        //                                if (result_sostav) {
-                        //                                    var sostav = result_sostav;
-                        //                                    // Состав найден, вагоны есть?
-                        //                                    if (sostav.ArrivalCars && sostav.ArrivalCars.length > 0) {
-                        //                                        // Вагоны есть, удалим вагоны
-                        //                                        ids_inc.deleteArrivalCarsOfSostav(sostav.id, function (result_del_cars) {
-                        //                                            if (result_del_cars > 0) {
-                        //                                                // Вагоны удалены, удалим состав
-                        //                                                ids_inc.deleteArrivalSostav(sostav.id,
-                        //                                                    function (result_del) {
-                        //                                                        if (result_del > 0) {
-                        //                                                            pn_sel.view(true);
-                        //                                                        } else {
-                        //                                                            outgoing_alert.clear_message();
-                        //                                                            outgoing_alert.out_error_message("При удалении сотава произошла ошибка");
-                        //                                                        }
-                        //                                                    });
-                        //                                            } else {
-                        //                                                // Ошибка удаления вагонов
-                        //                                                outgoing_alert.clear_message();
-                        //                                                outgoing_alert.out_error_message("При удалении вагонов сотава произошла ошибка");
-                        //                                            }
-                        //                                        });
-                        //                                    } else {
-                        //                                        // Вагонов нет удалим состав
-                        //                                        ids_inc.deleteArrivalSostav(sostav.id, function (result_del) {
-                        //                                            if (result_del > 0) {
-                        //                                                pn_sel.view(true);
-                        //                                            } else {
-                        //                                                outgoing_alert.clear_message();
-                        //                                                outgoing_alert.out_error_message("При удалении сотава произошла ошибка");
-                        //                                            }
-                        //                                        });
-                        //                                    }
-                        //                                } else {
-                        //                                    // Состав не найден
-                        //                                    outgoing_alert.clear_message();
-                        //                                    outgoing_alert.out_error_message("Перед процедурой удаления, не удалось получить информацию о составе!");
-                        //                                }
-                        //                            });
-                        //                        }
-                        //                    });
-                        //                } else {
-                        //                    // Состав уже в работе удаление запрещено
-                        //                    outgoing_alert.clear_message();
-                        //                    outgoing_alert.out_error_message("Состав в работе, удаление – отклонено!");
-                        //                }
-                        //            } else {
-                        //                // Состав добавлен автоматически, только отклонить
-                        //                dialog_confirm.open('Отклонить?', 'Вы уверены что хотите отклонить состав : ' + table_sostav.select_sostav.composition_index, function (result) {
-                        //                    if (result) {
-                        //                        table_sostav.select_sostav.status = 3;                          // Присвоим статус отклонить
-                        //                        table_sostav.select_sostav.change = toISOStringTZ(new Date());  // Сохраним кто менял
-                        //                        table_sostav.select_sostav.change_user = user_name;
-                        //                        ids_inc.putArrivalSostav(table_sostav.select_sostav,
-                        //                            function (result_upd) {
-                        //                                if (result_upd > 0) {
-                        //                                    pn_sel.view(true);
-                        //                                    outgoing_alert.clear_message();
-                        //                                    outgoing_alert.out_info_message("Статус состава (отклонить) - установлен.");
-                        //                                } else {
-                        //                                    outgoing_alert.clear_message();
-                        //                                    outgoing_alert.out_error_message("При обновлении статуса сотава произошла ошибка");
-                        //                                }
-                        //                            });
-                        //                    }
-                        //                });
-                        //            }
-                        //        }
-                        //    },
-                        //    enabled: false
-                        //},
-
                     ]
                 }).on('select', function (e, dt, type, indexes) {
                     var rowData = table_sostav.obj.rows(indexes).data();
                     if (rowData && rowData.length > 0) {
                         table_sostav.select_sostav = rowData[0];
-                        table_sostav.obj.button(3).enable(true);
+                        table_sostav.obj.button(4).enable(true);
                         if (table_sostav.select_sostav.status < 1) {
                             //table_sostav.obj.button(5).enable(true);
                             table_sostav.obj.button(2).enable(true);
-                            table_sostav.obj.button(3).text(langView('title_button_wagon_accept', langs));
+                            table_sostav.obj.button(3).enable(false); // отмена сдачи состава
+                            table_sostav.obj.button(4).text(langView('title_button_wagon_accept', langs));
                         } else {
                             // Если статус в работе принят или удален 
                             //table_sostav.obj.button(5).enable(false);
                             table_sostav.obj.button(2).enable(false);
-                            table_sostav.obj.button(3).text(langView('title_button_wagon_view', langs));
+                            if (table_sostav.select_sostav.status > 1) { table_sostav.obj.button(3).enable(true); } else { table_sostav.obj.button(3).enable(false);}
+                            table_sostav.obj.button(4).text(langView('title_button_wagon_view', langs));
                         }
                     } else {
                         //table_sostav.obj.button(5).enable(false);
                         table_sostav.obj.button(2).enable(false);
                         table_sostav.obj.button(3).enable(false);
+                        table_sostav.obj.button(4).enable(false);
                     }
                 }).on('deselect', function (e, dt, type, indexes) {
                     table_sostav.deselect();
@@ -766,33 +712,14 @@
                 table_sostav.obj.draw();
                 LockScreenOff();
             },
-            // Обновить данные в таблице
-            update_sostav: function (data) {
-                //if (data) {
-                //    var row = table_sostav.get_sostav(data);
-                //    var index = table_sostav.obj.row('#' + data.id).index();
-
-                //    table_sostav.obj.cell(index, 1).data(row.train);
-                //    table_sostav.obj.cell(index, 2).data(row.composition_index);
-                //    table_sostav.obj.cell(index, 3).data(row.date_arrival);
-                //    table_sostav.obj.cell(index, 4).data(row.date_adoption);
-                //    table_sostav.obj.cell(index, 5).data(row.date_adoption_act);
-                //    table_sostav.obj.cell(index, 6).data(row.station_from);
-                //    table_sostav.obj.cell(index, 7).data(row.station_on);
-                //    table_sostav.obj.cell(index, 8).data(row.id_way);
-                //    table_sostav.obj.cell(index, 9).data(row.num_doc);
-                //    table_sostav.obj.cell(index, 10).data(row.count_all);
-                //    table_sostav.obj.cell(index, 11).data(row.create_sostav);
-                //    table_sostav.obj.cell(index, 12).data(row.change_sostav);
-                //    table_sostav.obj.draw();
-                //}
-            },
             // Deselect
             deselect: function () {
                 table_sostav.select_sostav = null;
                 //table_sostav.obj.button(5).enable(false);
                 //table_sostav.obj.button(6).enable(false);
                 table_sostav.obj.button(2).enable(false);
+                table_sostav.obj.button(3).enable(false);
+                table_sostav.obj.button(4).enable(false);
             }
         },
 
@@ -1395,7 +1322,7 @@
                         // Подготовим операцию
                         var operation_return = {
                             id_outgoing_car: cars_detali.select_id,
-                            date_start: toISOStringTZ(new Date()),
+                            //date_start: toISOStringTZ(new Date()),
                             user: cars_detali.user
                         };
                         // Выполним операцию
@@ -1722,7 +1649,7 @@
             clear_cars_view: function () {
                 // Показать кнопку поиска по номеру вагона
                 cars_detali.num_car.val('');
-                cars_detali.position_outgoing.val('');
+                cars_detali.position_outgoing.val('1');
                 cars_detali.num_cont_1.val('');
                 cars_detali.num_cont_2.val('');
                 cars_detali.date_outgoing_act.setDateTime(null); // уберем дату
@@ -1846,7 +1773,7 @@
             // Отображение компонентов раздела "Информация о вагоне и ЭПД"
             //-------------------------------------------------------------------------------------
             view_button_cars: function (visible) {
-                if (visible !== null) {
+                if (cars_detali.sostav && cars_detali.sostav.status < 2 && visible !== null) {
                     if (visible) {
                         // Кнопка предъявить
                         cars_detali.bt_present_car.show();
@@ -1997,7 +1924,7 @@
             },
             // Отобразить кнопки задержания
             view_cars_detention_buttons: function (save_edit) {
-                if (save_edit !== null) {
+                if ((cars_detali.sostav && cars_detali.sostav.status < 2) && save_edit !== null) {
                     if (save_edit) {
                         // save
                         cars_detali.detention_save.hide();
@@ -2152,9 +2079,16 @@
                     var outgoing_rent_limiting = null;
                     var arrival_rent_operator = null;
                     var arrival_rent_limiting = null;
+                    var num_pos = 1;
                     // Подготовим данные для разного режима
                     if (present) {
                         // до предъявления
+                        var result_pos = cars_detali.table_outgoing_cars.list.filter(function (i) {
+                            return Number(i.position_outgoing) > 0 ? true : false;
+                        }).sort(function (a, b) {
+                            return a.position_outgoing - b.position_outgoing
+                        });
+                        num_pos = result_pos && result_pos.length > 0 ? Number(Number(result_pos[result_pos.length - 1].position_outgoing) + 1) : 1;
                         countrys = dir_wag !== null ? dir_wag.Directory_Countrys : null;
                         genus = dir_wag !== null ? dir_wag.Directory_GenusWagons : null;
                         if (wagon_info_uz) {
@@ -2180,6 +2114,7 @@
                         }
                     } else {
                         // после предъявления
+                        num_pos = car.position_outgoing;
                         var vag_uz = car.Outgoing_UZ_Vagon;
                         var cont_vag_uz = vag_uz !== null ? vag_uz.Outgoing_UZ_Vagon_Cont : null;
                         num_cont_1 = cont_vag_uz && cont_vag_uz.length >= 1 ? cont_vag_uz[0].nom_cont : null;
@@ -2209,7 +2144,8 @@
                     // ---------------------------------------------------------------------------------------------------------------------------------------
                     // ОСНОВНОЕ ОКНО ------------------------------------------------------
                     cars_detali.num_car.val(cars_detali.select_num);// Номер вагона
-                    cars_detali.position_outgoing.val(present ? car.position : car.position_outgoing);// Позиция
+                    // Показать позицию
+                    cars_detali.position_outgoing.val(num_pos);// Позиция
                     // контейнера
                     cars_detali.num_cont_1.val(num_cont_1);// Номер вагона
                     cars_detali.num_cont_2.val(num_cont_2);// Номер вагона
@@ -2343,6 +2279,18 @@
                 cars_detali.val_outgoing_car_detention.clear_all();
                 cars_detali.val_outgoing_car_return.clear_all();
                 var valid = true;
+
+                // Вычисление позиции
+                var pos = get_input_number_value(cars_detali.position_outgoing);
+                var result_pos = cars_detali.table_outgoing_cars.list.find(function (o) {
+                    return o.position_outgoing === pos;
+                });
+                // Проверка позиции
+                if (result_pos) {
+                    valid = valid & cars_detali.val_outgoing_car.set_object_error(cars_detali.position_outgoing, "Указаная позиция уже существует");
+                } else {
+                    valid = valid & cars_detali.val_outgoing_car.set_object_ok(cars_detali.position_outgoing, "");
+                }
                 valid = valid & cars_detali.view_cargo_name_manual(cars_detali.cargo_name.val(), true);
                 var date_outgoing_act = get_datetime_value(cars_detali.date_outgoing_act.val(), cars_detali.lang);
                 if (date_outgoing_act) {
@@ -2352,7 +2300,7 @@
                         cars_detali.val_outgoing_car.set_object_error(cars_detali.date_outgoing_act.obj, "Указана причина расхождения, но не указано время.");
                     }
                 }
-                // Проверим прицины
+                // Проверим причины
                 valid = valid & cars_detali.view_reason_discrepancy_amkr_manual(cars_detali.reason_discrepancy_amkr.val(), true);
                 valid = valid & cars_detali.view_reason_discrepancy_uz_manual(cars_detali.reason_discrepancy_uz.val(), true);
                 // Задержания
@@ -2779,7 +2727,7 @@
                     pn_outgoing_sostav.val = new VALIDATION(pn_outgoing_sostav.lang, pn_outgoing_sostav.alert, pn_outgoing_sostav.all_obj); // Создадим класс VALIDATION
                     pn_outgoing_sostav.obj = $("div#outgoing-sostav").dialog({
                         resizable: false,
-                        title: 'Предъявить состав на УЗ',
+                        title: 'Сдать состав на УЗ',
                         modal: true,
                         autoOpen: false,
                         height: "auto",
@@ -2876,28 +2824,28 @@
                     var sostav_date_outgoing_act = moment(pn_outgoing_sostav.sostav_date_outgoing_act.val(), 'DD.MM.YYYY HH:mm:ss');
                     // Проверим на интервалы времени
                     if (!date_readiness_amkr.isBefore(sostav_date_end_inspection_acceptance_delivery)) {
-                        pn_outgoing_sostav.val.set_object_error(pn_outgoing_sostav.sostav_date_end_inspection_acceptance_delivery.obj, "Время окончания осмотра должно быть больше времени предъявления АМКР");
+                        valid = valid & pn_outgoing_sostav.val.set_object_error(pn_outgoing_sostav.sostav_date_end_inspection_acceptance_delivery.obj, "Время окончания осмотра должно быть больше времени предъявления АМКР");
                     }
                     if (!date_readiness_amkr.isBefore(sostav_date_end_inspection_loader)) {
-                        pn_outgoing_sostav.val.set_object_error(pn_outgoing_sostav.sostav_date_end_inspection_loader.obj, "Время окончания осмотра должно быть больше времени предъявления АМКР");
+                        valid = valid & pn_outgoing_sostav.val.set_object_error(pn_outgoing_sostav.sostav_date_end_inspection_loader.obj, "Время окончания осмотра должно быть больше времени предъявления АМКР");
                     }
                     if (!date_readiness_amkr.isBefore(sostav_date_end_inspection_vagonnik)) {
-                        pn_outgoing_sostav.val.set_object_error(pn_outgoing_sostav.sostav_date_end_inspection_vagonnik.obj, "Время окончания осмотра должно быть больше времени предъявления АМКР");
+                        valid = valid & pn_outgoing_sostav.val.set_object_error(pn_outgoing_sostav.sostav_date_end_inspection_vagonnik.obj, "Время окончания осмотра должно быть больше времени предъявления АМКР");
                     }
                     if (!sostav_date_readiness_uz.isAfter(sostav_date_end_inspection_acceptance_delivery) ||
                         !sostav_date_readiness_uz.isAfter(sostav_date_end_inspection_loader) ||
                         !sostav_date_readiness_uz.isAfter(sostav_date_end_inspection_vagonnik)) {
-                        pn_outgoing_sostav.val.set_object_error(pn_outgoing_sostav.sostav_date_readiness_uz.obj, "Время готовности к сдаче на УЗ должно быть больше времени осмотра");
+                        valid = valid & pn_outgoing_sostav.val.set_object_error(pn_outgoing_sostav.sostav_date_readiness_uz.obj, "Время готовности к сдаче на УЗ должно быть больше времени осмотра");
                     }
                     if (!sostav_date_outgoing.isAfter(sostav_date_readiness_uz)) {
-                        pn_outgoing_sostav.val.set_object_error(pn_outgoing_sostav.sostav_date_outgoing.obj, "Время сдаче на УЗ должно быть больше времени готовности сдачи на УЗ");
+                        valid = valid & pn_outgoing_sostav.val.set_object_error(pn_outgoing_sostav.sostav_date_outgoing.obj, "Время сдаче на УЗ должно быть больше времени готовности сдачи на УЗ");
                     }
                     if (sostav_date_outgoing_act.isValid()) {
                         if (sostav_date_outgoing_act && !sostav_date_outgoing_act.isAfter(sostav_date_readiness_uz)) {
-                            pn_outgoing_sostav.val.set_object_error(pn_outgoing_sostav.sostav_date_outgoing_act.obj, "Время сдаче на УЗ по акту должно быть больше времени сдачи на УЗ");
+                            valid = valid & pn_outgoing_sostav.val.set_object_error(pn_outgoing_sostav.sostav_date_outgoing_act.obj, "Время сдаче на УЗ по акту должно быть больше времени сдачи на УЗ");
                         }
                     } else {
-                        pn_outgoing_sostav.val.set_object_ok(pn_outgoing_sostav.sostav_date_outgoing_act.obj, "");
+                        valid = valid & pn_outgoing_sostav.val.set_object_ok(pn_outgoing_sostav.sostav_date_outgoing_act.obj, "");
                     }
 
                 }
@@ -2910,7 +2858,7 @@
                 var valid = pn_outgoing_sostav.validation();
                 if (valid) {
                     // Подтверждение выполнения операции.
-                    dc.dialog_confirm('Open', 'Выполнить?', 'Подтвердите выполнение операции «ПРЕДЪЯВИТЬ СОСТАВ НА УЗ»', function (result) {
+                    dc.dialog_confirm('Open', 'Выполнить?', 'Подтвердите выполнение операции «СДАТЬ СОСТАВ НА УЗ»', function (result) {
                         if (result) {
                             LockScreen(langView('mess_operation', langs));
                             pn_outgoing_sostav.val.clear_all();
@@ -2931,7 +2879,7 @@
                             // Выполним операцию
                             cars_detali.ids_inc.postOperationPresentSostav(operation_outgoing_sostav, function (result_operation) {
                                 if (result_operation > 0) {
-                                    cars_detali.val_outgoing_car.out_info_message("Операция «ПРЕДЪЯВИТЬ СОСТАВ НА УЗ» – выполнена!");
+                                    cars_detali.val_outgoing_car.out_info_message("Операция «СДАТЬ СОСТАВ НА УЗ» – выполнена!");
                                     if (typeof callback_ok === 'function') {
                                         pn_outgoing_sostav.obj.dialog("close");
                                         LockScreenOff();
@@ -2939,7 +2887,7 @@
                                     }
                                 } else {
                                     // Ошибка выполнения
-                                    cars_detali.val_outgoing_car.out_error_message("Ошибка выполнения операции «ПРЕДЪЯВИТЬ СОСТАВ НА УЗ», код ошибки = " + result_operation);
+                                    cars_detali.val_outgoing_car.out_error_message("Ошибка выполнения операции «СДАТЬ СОСТАВ НА УЗ», код ошибки = " + result_operation);
                                     LockScreenOff();
                                 }
                             });

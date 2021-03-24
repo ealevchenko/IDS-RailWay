@@ -11,8 +11,12 @@ td.icon-user {
     background: url('../../../Images/idsrwt/user.png') no-repeat left center;
 }
 
-td.icon-ok {
+icon-ok {
     background: url('../../../Images/idsrwt/ok.png') no-repeat center center;
+}
+
+td.icon-out {
+    background: url('../../../Images/idsrwt/out.png') no-repeat center center;
 }
 
 td.icon-warning {
@@ -29,6 +33,10 @@ table.dataTable tbody tr:not(.selected).status-in-work.odd, table.dataTable tbod
 
 table.dataTable tbody tr:not(.selected).status-accepted.odd, table.dataTable tbody tr:not(.selected).status-accepted.even {
     background-color: #aeffb9;
+}
+
+table.dataTable tbody tr:not(.selected).status-outgoing.odd, table.dataTable tbody tr:not(.selected).status-outgoing.even {
+    background-color: #0094ff;
 }
 
 table.dataTable tbody tr:not(.selected).status-rejected.odd, table.dataTable tbody tr:not(.selected).status-rejected.even {
@@ -48,6 +56,14 @@ table.dataTable.display tbody tr:not(.selected).odd.status-accepted > .sorting_1
 
 table.dataTable.display tbody tr:not(.selected).even.status-accepted > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.status-accepted > .sorting_1 {
     background-color: #8EFFA8;
+}
+
+table.dataTable.display tbody tr:not(.selected).odd.status-outgoing > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.status-outgoing > .sorting_1 {
+    background-color: #1075be;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.status-outgoing > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.status-outgoing > .sorting_1 {
+    background-color: #1075be;
 }
 
 table.dataTable.display tbody tr:not(.selected).odd.status-rejected > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.status-rejected > .sorting_1 {

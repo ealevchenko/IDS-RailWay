@@ -3425,6 +3425,31 @@ IDS_RWT.prototype.postOperationPresentSostav = function (operation_present, call
         },
     });
 };
+//Операция отменить сдачу состава на УЗ
+IDS_RWT.prototype.postOperationReturnPresentSostav = function (operation_present, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/wsd/operation/return_present/sostav/',
+        type: 'POST',
+        data: JSON.stringify(operation_present),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postOperationReturnPresentSostav", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 //======================================================================================================
 //                              РАЗДЕЛ ПРАВКА ДОКУМЕНТОВ ПО ПРИБЫТИЮ
 //======================================================================================================

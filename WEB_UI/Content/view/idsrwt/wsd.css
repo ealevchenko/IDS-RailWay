@@ -317,9 +317,22 @@ fieldset {
     background-color:#f5cdb0 !important;
 }
 
-.look-wagon {
-    background-color:#e8da92 !important;
+.arrival-wagon {
+    background-color:lightpink !important;
 }
+.prisent-wagon {
+    background-color:wheat !important;
+}
+.handed-wagon {
+    background-color:darkseagreen !important;
+}
+
+
+/*.look-wagon {
+    background-color:#e8da92 !important;
+}*/
+
+
 .select-wagon {
     background-color:#9cdd81 !important;
 }
