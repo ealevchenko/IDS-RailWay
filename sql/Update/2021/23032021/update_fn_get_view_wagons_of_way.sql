@@ -8,7 +8,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-
+--drop FUNCTION [IDS].[get_view_wagons_of_way]
 
 
 
