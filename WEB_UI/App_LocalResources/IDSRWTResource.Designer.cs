@@ -1141,6 +1141,24 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Станция с которой будет отправлен состав на УЗ.
+        /// </summary>
+        public static string title_operation_detali_sending_uz_station_from {
+            get {
+                return ResourceManager.GetString("title_operation_detali_sending_uz_station_from", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Путь с которого будет отправлен состав на УЗ.
+        /// </summary>
+        public static string title_operation_detali_sending_uz_way_from {
+            get {
+                return ResourceManager.GetString("title_operation_detali_sending_uz_way_from", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Сторона.
         /// </summary>
         public static string title_operation_detali_side {

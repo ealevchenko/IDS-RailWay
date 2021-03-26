@@ -1002,8 +1002,8 @@
                         if (result_sostav) {
                             // Запись есть
                             // определим станцию и путь
-                            var station = cars_detali.ids_inc.ids_dir.getStation_Internal_Of_ID(result_sostav.id_station_from);
-                            var way = cars_detali.ids_inc.ids_dir.getWays_Internal_Of_ID(result_sostav.id_way_from);
+                            var station = cars_detali.ids_inc.ids_dir.getStation_Of_ID(result_sostav.id_station_from);
+                            var way = cars_detali.ids_inc.ids_dir.getWays_Of_ID(result_sostav.id_way_from);
                             // Покаать информацию по составу
                             cars_detali.sostav_title.text('Информация по составу [ № Накладной :' + cars_detali.sostav.num_doc + ', время предъявления на УЗ :' + getReplaceTOfDT(cars_detali.sostav.date_readiness_amkr) + ', станция :' + (station !== null ? station['station_name_' + cars_detali.lang] : null) + ', путь :' + (way !== null ? way['way_num_' + cars_detali.lang] + '-' + way['way_name_' + cars_detali.lang] : null) + ' ]');
                             // Обновим вагоны принятые и непринятые на экране

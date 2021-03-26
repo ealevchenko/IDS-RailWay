@@ -8031,7 +8031,7 @@
                             var id = Number($(this).val());
                             if (id > 0) {
                                 pn_arrival_sostav.arrival_sostav_way_on.prop("disabled", false);
-                                var station = pn_arrival_sostav.ids_inc.ids_dir.getStation_Internal_Of_ID(id);
+                                var station = pn_arrival_sostav.ids_inc.ids_dir.getStation_Of_ID(id);
                                 if (station && station.Directory_Ways && station.Directory_Ways.length > 0) {
                                     // Определим текущий номер накладной по указаной станции
                                     pn_arrival_sostav.ids_inc.getCurrentNumArrivalSostavOfStation(station.id, function (current_num) {

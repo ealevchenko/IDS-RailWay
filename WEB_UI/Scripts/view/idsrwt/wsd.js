@@ -301,6 +301,19 @@
                     alert.out_warning_message("Выберите путь, c которого будет произведена отправка.");
                 }
             }),
+        // Отправить состав на УЗ
+        bt_sending_uz = $('button#sending_uz').on('click',
+            function (event) {
+                alert.clear_message();
+                event.preventDefault();
+                // Определим выбранный путь
+                var select_row = table_tree_way.html_table.find('tr.selected');
+                var id_station = select_row && select_row.length > 0 ? Number($(select_row[0]).attr("station")) : null;
+                var id_park = select_row && select_row.length > 0 ? Number($(select_row[0]).attr("park")) : null;
+                var id_way = select_row && select_row.length > 0 ? Number($(select_row[0]).attr("way")) : null;
+                operation_detali.view_sending_uz(id_way);
+
+            }),
         // Отобразить статус вагонов в цвете
         create_row_ststus_wagon = function (row, data, index) {
             // Прибыл
@@ -5498,6 +5511,294 @@
                 return valid;
             },
             // -------------------------------------------------------------------------------------------------
+            // Операция отравить на УЗ
+            all_obj_sending_uz: $([]),
+            val_sending_uz: null,                               // Класс валидации операции роспуска
+            operation_sending_uz: $('.operation-sending-uz').hide(),
+            operation_detali_sending_uz_station_from: $('select#operation_detali_sending_uz_station_from'),
+            operation_detali_sending_uz_way_from: $('select#operation_detali_sending_uz_way_from'),
+            operation_detali_sending_uz_lead_time: $('input#operation_detali_sending_uz_lead_time'),
+
+            //operation_detali_sending_uz_station: $('select#operation_detali_provide_station'),
+
+            list_stations_sending_uz: null,                 // список станции по которым можно отправить состав на УЗ
+            list_ways_sending_uz: null,                     // список путей по которым можно отправить состав на УЗ
+            sending_uz_way_from: null,                      // Путь выбранный с которого будет выполненно отправление
+            select_sending_uz_id_station: null,             // id выбраной станции
+            select_sending_uz_id_way: null,                 // id выбранного пути
+
+            table_operation_detali_sending_uz_sostav_out : {
+                html_table: $('table#operation_detali_sending_uz_sostav_out'),
+                obj: null,
+                init: function () {
+                    this.obj = this.html_table.DataTable({
+                        "paging": false,
+                        "searching": false,
+                        "ordering": false,
+                        "info": false,
+                        "keys": false,
+                        select: {
+                            style: "single"
+                        },
+                        "autoWidth": true,
+                        //"filter": true,
+                        //"scrollY": "600px",
+                        sScrollX: "100%",
+                        scrollX: true,
+                        language: language_table(langs),
+                        jQueryUI: false,
+                        "createdRow": function (row, data, index) {
+                            $(row).attr('id', data.id);
+                        },
+                        columns: [
+                            {
+                                data: function (row, type, val, meta) {
+                                    return row.num_doc;
+                                },
+                                title: langView('field_num_doc', langs), width: "50px", orderable: true, searchable: true
+                            },
+                            //{
+                            //    //data: "date_readiness_amkr",
+                            //    data: function (row, type, val, meta) {
+                            //        return getReplaceTOfDT(row.date_readiness_amkr);
+                            //    },
+                            //    title: langView('field_date_readiness_amkr', langs), width: "150px", orderable: true, searchable: true
+                            //},
+                            //{
+                            //    //data: "station_from",
+                            //    data: function (row, type, val, meta) {
+                            //        return row['station_from_name_' + lang];
+                            //    },
+                            //    title: langView('field_station_from', langs), width: "150px", orderable: true, searchable: true
+                            //},
+                            //{
+                            //    //data: "way_from",
+                            //    data: function (row, type, val, meta) {
+                            //        return row['way_from_num_' + lang];
+                            //    },
+                            //    title: langView('field_way_from', langs), width: "150px", orderable: true, searchable: true
+                            //},
+                            {
+                                //data: "count",
+                                data: function (row, type, val, meta) {
+                                    return row.count_all;
+                                },
+                                title: langView('field_count', langs), width: "50px", orderable: true, searchable: true
+                            },
+                            {
+                                //data: "station_on",
+                                data: function (row, type, val, meta) {
+                                    return row['station_on_name_' + lang];
+                                },
+                                title: langView('field_station_on', langs), width: "150px", orderable: true, searchable: true
+                            },
+                            //{
+                            //    //data: "date_show_wagons",
+                            //    data: function (row, type, val, meta) {
+                            //        return getReplaceTOfDT(row.date_end_inspection_acceptance_delivery);
+                            //    },
+                            //    title: langView('field_date_end_inspection_acceptance_delivery', langs), width: "150px", orderable: true, searchable: true
+                            //},
+                            //{
+                            //    data: function (row, type, val, meta) {
+                            //        return getReplaceTOfDT(row.date_end_inspection_loader);
+                            //    },
+                            //    title: langView('field_date_end_inspection_loader', langs), width: "150px", orderable: true, searchable: true
+                            //},
+                            //{
+                            //    data: function (row, type, val, meta) {
+                            //        return getReplaceTOfDT(row.date_end_inspection_vagonnik);
+                            //    },
+                            //    title: langView('field_date_end_inspection_vagonnik', langs), width: "150px", orderable: true, searchable: true
+                            //},
+                            //{
+                            //    //data: "date_readiness_uz",
+                            //    data: function (row, type, val, meta) {
+                            //        return getReplaceTOfDT(row.date_readiness_uz);
+                            //    },
+                            //    title: langView('field_date_readiness_uz', langs), width: "150px", orderable: true, searchable: true
+                            //},
+                            {
+                                //data: "date_outgoing",
+                                data: function (row, type, val, meta) {
+                                    return getReplaceTOfDT(row.date_outgoing);
+                                },
+                                title: langView('field_date_outgoing', langs), width: "150px", orderable: true, searchable: true
+                            },
+                            //{
+                            //    //data: "date_outgoing_act",                            
+                            //    data: function (row, type, val, meta) {
+                            //        return getReplaceTOfDT(row.date_outgoing_act);
+                            //    },
+                            //    title: langView('field_date_outgoing_act', langs), width: "150px", orderable: true, searchable: true
+                            //},
+                            //{
+                            //    data: function (row, type, val, meta) {
+                            //        return getReplaceTOfDT(row.date_departure_amkr);
+                            //    },
+                            //    title: langView('field_date_departure', langs), width: "150px", orderable: true, searchable: true
+                            //},
+                            //{
+                            //    //data: "count_all",
+                            //    data: function (row, type, val, meta) {
+                            //        return row.count_all + " | " + row.count_outgoing + " | " + row.count_not_outgoing + " | " + row.count_detention_return;
+                            //    },
+                            //    title: langView('field_count_all', langs), width: "50px", orderable: true, searchable: true
+                            //},
+                            //{
+                            //    //data: "composition_index",
+                            //    data: function (row, type, val, meta) {
+                            //        return row.composition_index;
+                            //    },
+                            //    title: langView('field_composition_index', langs), width: "150px", orderable: true, searchable: true
+                            //},
+                            //{
+                            //    //data: "note",
+                            //    data: function (row, type, val, meta) {
+                            //        return row.note;
+                            //    },
+                            //    title: langView('field_note', langs), width: "150px", orderable: true, searchable: true
+                            //},
+                            //{
+                            //    //data: "create_sostav",
+                            //    data: function (row, type, val, meta) {
+                            //        return row.create !== null && row.create_user !== null ? row.create_user + ' (' + row.create.replace(/T/g, ' ') + ')' : null
+                            //    },
+                            //    title: langView('field_create_sostav', langs), width: "150px", orderable: true, searchable: true
+                            //},
+                            //{
+                            //    //data: "change_sostav",
+                            //    data: function (row, type, val, meta) {
+                            //        return row.change !== null && row.change_user !== null ? row.change_user + ' (' + row.change.replace(/T/g, ' ') + ')' : null
+                            //    },
+                            //    title: langView('field_change_sostav', langs), width: "150px", orderable: true, searchable: true
+                            //}
+                        ],
+                    });
+                },
+                // Показать таблицу с данными
+                view: function (data) {
+                    operation_detali.table_operation_detali_sending_uz_sostav_out.obj.clear();
+                    // Сбросить выделенный состав
+                    operation_detali.table_operation_detali_sending_uz_sostav_out.obj.rows.add(data);
+                    operation_detali.table_operation_detali_sending_uz_sostav_out.obj.draw();
+                    LockScreenOff();
+                },
+            },
+
+            // Отобразить пути станции отправления
+            view_sending_uz_ways_from: function (id_station, id_way) {
+                if (id_station > 0) {
+                    operation_detali.operation_detali_sending_uz_way_from.prop("disabled", false);
+                    operation_detali.list_ways_sending_uz = ids_inc.ids_dir.getListWays2('id', 'way_num', 'way_name', operation_detali.lang, function (i) {
+                        return i.id_station === id_station && i.crossing_uz === true;
+                    });
+                    operation_detali.operation_detali_sending_uz_way_from = cd_updateSelect(
+                        operation_detali.operation_detali_sending_uz_way_from,
+                        { lang: operation_detali.lang },
+                        operation_detali.list_ways_sending_uz,
+                        null,
+                        id_way,
+                        null);
+                } else {
+                    operation_detali.operation_detali_sending_uz_way_from.prop("disabled", true);
+                }
+                // Показать пути
+                operation_detali.view_sending_uz_sostav(operation_detali.select_sending_uz_id_way);
+            },
+            // Показать составы для отправки на пути
+            view_sending_uz_sostav: function (id_way) {
+                ids_inc.getOutgoingSostavOfStatus(2, function (list_sostav) {
+                    var list = list_sostav.filter(function (i) {
+                        return i.id_way_from === id_way;
+                    });
+                    operation_detali.table_operation_detali_sending_uz_sostav_out.view(list)
+                });
+            },
+            // Показать окно предъявления
+            view_sending_uz: function (id_way) {
+                operation_detali.sending_uz_way_from = ids_inc.ids_dir.getWays_Of_ID(id_way);
+                operation_detali.select_sending_uz_id_way = operation_detali.sending_uz_way_from ? operation_detali.sending_uz_way_from.id : -1;
+                operation_detali.list_stations_sending_uz = ids_inc.ids_dir.getListStation('id', 'station_name', operation_detali.lang, function (i) {
+                    return i.exit_uz === true;
+                });
+                // Настроим компонент станций приема
+                operation_detali.operation_detali_sending_uz_station_from = cd_initSelect(
+                    operation_detali.operation_detali_sending_uz_station_from,
+                    { lang: operation_detali.lang },
+                    operation_detali.list_stations_sending_uz,
+                    null,
+                    -1,
+                    function (event) {
+                        event.preventDefault();
+                        var id_station = Number($(this).val());
+                        if (id_station !== operation_detali.select_sending_uz_id_station) {
+                            operation_detali.select_sending_uz_id_way = -1;
+                            operation_detali.select_sending_uz_id_station = id_station;
+                        }
+                        // Обновим пути
+                        operation_detali.view_sending_uz_ways_from(operation_detali.select_sending_uz_id_station, operation_detali.select_sending_uz_id_way);
+                    }, null);
+
+                operation_detali.select_sending_uz_id_station = operation_detali.sending_uz_way_from ? operation_detali.sending_uz_way_from.id_station : -1;
+                operation_detali.operation_detali_sending_uz_station_from.val(operation_detali.select_sending_uz_id_station);
+                operation_detali.view_sending_uz_ways_from(operation_detali.select_sending_uz_id_station, operation_detali.select_sending_uz_id_way);
+                //
+                ////
+                //operation_detali.id_way_from_provide = id_way;
+                //// Путь отправки
+                //var way_from = ids_inc.ids_dir.list_ways.find(function (o) {
+                //    return o.id === id_way;
+                //});
+                //// Сохраним путь отправки
+                //operation_detali.way_from_provide = way_from;
+                //// Проверим путь найден
+                //if (way_from) {
+                //    operation_detali.operation_detali_provide_way_from.val(operation_detali.way_from_provide ? (operation_detali.way_from_provide["way_num_" + operation_detali.lang] + ' - ' + operation_detali.way_from_provide["way_name_" + operation_detali.lang]) : "");
+                //    // Настроим компонент станций приема
+                //    operation_detali.operation_detali_provide_station = cd_initSelect(
+                //        operation_detali.operation_detali_provide_station,
+                //        { lang: operation_detali.lang },
+                //        operation_detali.list_stations_provide,
+                //        null,
+                //        -1,
+                //        function (event) {
+                //            event.preventDefault();
+                //            //var id_station_on = Number($(this).val());
+                //            //if (id_station_on > 0) {
+                //            //    operation_detali.operation_detali_provide_outer_ways.prop("disabled", false);
+
+                //            //} else {
+                //            //    operation_detali.operation_detali_provide_outer_ways.prop("disabled", true);
+                //            //}
+                //            //// Обновим компонент
+                //            //operation_detali.update_outer_ways(id_station_on);
+                //        }, null);
+                //    // Сбросим бит обновления и список путей обновления
+                //    operation_detali.bit_update = false;
+                //    operation_detali.rows_update = [];
+                operation_detali.refresh_sending_uz();
+                //    // Показать операцию детально
+                operation_detali.content.addClass('is-visible');
+                LockScreenOff();
+                //}
+            },
+            // Показать отправку
+            refresh_sending_uz: function () {
+                operation_detali.val_provide.clear_all();
+                //// Отображаем путь и станцию
+                //operation_detali.operation_detali_provide_station.val(operation_detali.way_from_provide.id_station);
+                ////operation_detali.operation_detali_provide_lead_time.setDateTime(null);
+                //operation_detali.table_wagons_provide_way_from.load(operation_detali.id_way_from_provide, function () {
+                //    operation_detali.table_wagons_provide.view();
+                //    operation_detali.table_wagons_provide_exist.view();
+                //    LockScreenOff();
+                //});
+                operation_detali.operation_sending_uz.show();
+                //LockScreenOff();
+            },
+
+            // -------------------------------------------------------------------------------------------------
             // Инициализация
             init: function (lang, user_name, callback_close) {
                 operation_detali.lang = lang;
@@ -5721,36 +6022,10 @@
                 operation_detali.val_arrival = new VALIDATION(operation_detali.lang, operation_detali.alert, operation_detali.all_obj_arrival); // Создадим класс VALIDATION
 
                 //------------- Операция "ПРЕДЪЯВЛЕНИЯ" ---------------------------------------------------------------------------
-
-
                 // настроим компонент выбора времени начала
                 operation_detali.operation_detali_provide_lead_time = cd_initDateTimeRangePicker(operation_detali.operation_detali_provide_lead_time, { lang: operation_detali.lang, time: true }, function (datetime) {
 
                 });
-                //// Настроим компонент локомотив1
-                //operation_detali.operation_detali_provide_locomotive1 = cd_initSelect(
-                //    operation_detali.operation_detali_provide_locomotive1,
-                //    { lang: operation_detali.lang },
-                //    operation_detali.list_locomotive,
-                //    null,
-                //    -1,
-                //    function (event) {
-                //        event.preventDefault();
-                //        var locomotive = $(this).val();
-
-                //    }, null);
-                //// Настроим компонент локомотив2
-                //operation_detali.operation_detali_provide_locomotive2 = cd_initSelect(
-                //    operation_detali.operation_detali_provide_locomotive2,
-                //    { lang: operation_detali.lang },
-                //    operation_detali.list_locomotive,
-                //    null,
-                //    -1,
-                //    function (event) {
-                //        event.preventDefault();
-                //        var locomotive = $(this).val();
-
-                //    }, null);
                 // Инициализация панели "Собрать вагоны"
                 operation_detali.pn_collect_wagon.init();
                 // Инициализация таблиц
@@ -5771,6 +6046,31 @@
                     ;
                 operation_detali.val_provide = new VALIDATION(operation_detali.lang, operation_detali.alert, operation_detali.all_obj_provide); // Создадим класс VALIDATION
 
+                //------------- Операция "ОТПРАВИТЬ СОСТАВ НА УЗ" ---------------------------------------------------------------------------
+
+                // Настроим компонент сторона приема
+                operation_detali.operation_detali_sending_uz_way_from = cd_initSelect(
+                    operation_detali.operation_detali_sending_uz_way_from,
+                    { lang: operation_detali.lang },
+                    null,
+                    null,
+                    0,
+                    function (event) {
+                        event.preventDefault();
+                        //var id = Number($(this).val());
+                    }, null);
+                // настроим компонент выбора времени начала
+                operation_detali.operation_detali_sending_uz_lead_time = cd_initDateTimeRangePicker(operation_detali.operation_detali_sending_uz_lead_time, { lang: operation_detali.lang, time: true }, function (datetime) {
+
+                });
+                // Инициализация таблиц
+                operation_detali.table_operation_detali_sending_uz_sostav_out.init();
+                // Соберем все элементы в массив операции "Отправки"
+                operation_detali.all_obj_sending_uz = $([])
+                    .add(operation_detali.operation_detali_sending_uz_station_from)
+                    .add(operation_detali.operation_detali_sending_uz_lead_time.obj)
+                    ;
+                operation_detali.val_sending_uz = new VALIDATION(operation_detali.lang, operation_detali.alert, operation_detali.all_obj_sending_uz); // Создадим класс VALIDATION
                 //$("a.dt-button").removeClass('dt-button').addClass('btn btn-secondary');
 
                 // Sumbit form
@@ -5785,6 +6085,7 @@
                     operation_detali.operation_sending.hide();
                     operation_detali.operation_arrival.hide();
                     operation_detali.operation_provide.hide();
+                    operation_detali.operation_sending_uz.hide();
                     if (typeof operation_detali.callback_close === 'function') {
                         operation_detali.callback_close(operation_detali.bit_update, operation_detali.rows_update);
                     }

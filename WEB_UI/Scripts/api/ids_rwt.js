@@ -2990,6 +2990,29 @@ IDS_RWT.prototype.getOutgoingSostavOfID = function (id, callback) {
         },
     });
 };
+// Получить составы с указаным статусом
+IDS_RWT.prototype.getOutgoingSostavOfStatus= function (status, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/outgoing_sostav/view/sostav/status/' + status,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getOutgoingSostavOfStatus", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 //Обновить 
 IDS_RWT.prototype.putOutgoingSostav = function (outgoing_sostav, callback) {
     $.ajax({

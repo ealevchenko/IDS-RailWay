@@ -160,6 +160,28 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // GET: api/ids/rwt/outgoing_sostav/view/sostav/status/2
+        /// <summary>
+        /// Выбрать составы сданные на уз
+        /// </summary>
+        /// <returns></returns>
+        [Route("view/sostav/status/{status:int}")]
+        [ResponseType(typeof(ViewOutgoingSostav))]
+        public IHttpActionResult GetViewOutgoingSostavOfStatus(int status)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter p_status = new System.Data.SqlClient.SqlParameter("@status", status);
+                string sql = "select top(10) * from [IDS].[get_outgoing_sostav_of_status](@status) order by date_outgoing desc";
+                List<ViewOutgoingSostav> list = this.ef_ids.Database.SqlQuery<ViewOutgoingSostav>(sql, p_status).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
 
         // POST api/ids/rwt/outgoing_sostav/
         [HttpPost]

@@ -690,4 +690,10 @@
   <data name="title_outgoing_station_on" xml:space="preserve">
     <value>Отправить на станцию</value>
   </data>
+  <data name="title_operation_detali_sending_uz_station_from" xml:space="preserve">
+    <value>Станция с которой будет отправлен состав на УЗ</value>
+  </data>
+  <data name="title_operation_detali_sending_uz_way_from" xml:space="preserve">
+    <value>Путь с которого будет отправлен состав на УЗ</value>
+  </data>
 </root>

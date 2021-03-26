@@ -4669,6 +4669,25 @@ IDS_DIRECTORY.prototype.getListObj = function (list_obj, fvalue, ftext, lang, fi
     }
     return list;
 };
+// Вернуть спсисок объектов таблицы в формате {value:, text:}
+IDS_DIRECTORY.prototype.getListObj2 = function (list_obj, fvalue, ftext1, ftext2, lang, filter) {
+    var list = [];
+    var list_filtr = null;
+    if (list_obj) {
+        if (typeof filter === 'function') {
+            list_filtr = list_obj.filter(filter);
+        } else { list_filtr = list_obj; }
+        for (i = 0, j = list_filtr.length; i < j; i++) {
+            var l = list_filtr[i];
+            if (lang) {
+                list.push({ value: l[fvalue], text: l[ftext1 + '_' + lang] + ' - ' + l[ftext2 + '_' + lang] });
+            } else {
+                list.push({ value: l[fvalue], text: l[ftext1] + ' - ' + l[ftext2] });
+            }
+        }
+    }
+    return list;
+};
 // Вернуть объект по id
 IDS_DIRECTORY.prototype.getObj_Of_ID = function (list_obj, id) {
     var obj = null;
@@ -5217,83 +5236,92 @@ IDS_DIRECTORY.prototype.getListLocomotive = function (fvalue, ftext, lang, filte
 
 
 //*======= IDS_DIRECTORY.list_station  (Справочник станций) ======================================
-IDS_DIRECTORY.prototype.getStation_Internal_Of_ID = function (id) {
-    var station = null;
-    if (this.list_station) {
-        //var obj = getObjects(this.list_station, 'id', id_station)
-        //return obj && obj.length > 0 ? obj[0] : null;
-        station = this.list_station.find(function (o) { return o.id === id });
-    }
-    return station;
+IDS_DIRECTORY.prototype.getStation_Of_ID = function (id) {
+    //var station = null;
+    //if (this.list_station) {
+    //    //var obj = getObjects(this.list_station, 'id', id_station)
+    //    //return obj && obj.length > 0 ? obj[0] : null;
+    //    station = this.list_station.find(function (o) { return o.id === id });
+    //}
+    //return station;
+    return this.getObj_Of_ID(this.list_station, id);
 };
 //
 IDS_DIRECTORY.prototype.getValue_Station_Of_ID = function (id_station, name, lang) {
-    var obj = this.getStation_Internal_Of_ID(id_station);
+    var obj = this.getStation_Of_ID(id_station);
     return this.getValueObj(obj, name, lang);
 };
 //
 IDS_DIRECTORY.prototype.getValueCulture_Stations_Of_ID = function (id_station, name) {
-    var obj = this.getStation_Internal_Of_ID(id_station);
+    var obj = this.getStation_Of_ID(id_station);
     return obj ? obj[name + '_' + this.lang] : null;
 };
 //
 IDS_DIRECTORY.prototype.getListStation = function (fvalue, ftext, lang, filter) {
-    var list = [];
-    var list_filtr = null;
-    if (this.list_station) {
-        if (typeof filter === 'function') {
-            list_filtr = this.list_station.filter(filter);
-        } else { list_filtr = this.list_station; }
-        for (i = 0, j = list_filtr.length; i < j; i++) {
-            var l = list_filtr[i];
-            if (lang) {
-                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
-            } else {
-                list.push({ value: l[fvalue], text: l[ftext] });
-            }
-        }
-    }
-    return list;
+    return this.getListObj(this.list_station, fvalue, ftext, lang, filter);
+    //var list = [];
+    //var list_filtr = null;
+    //if (this.list_station) {
+    //    if (typeof filter === 'function') {
+    //        list_filtr = this.list_station.filter(filter);
+    //    } else { list_filtr = this.list_station; }
+    //    for (i = 0, j = list_filtr.length; i < j; i++) {
+    //        var l = list_filtr[i];
+    //        if (lang) {
+    //            list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+    //        } else {
+    //            list.push({ value: l[fvalue], text: l[ftext] });
+    //        }
+    //    }
+    //}
+    //return list;
 };
 //*======= IDS_DIRECTORY.list_ways  (Справочник путей) ======================================
-IDS_DIRECTORY.prototype.getWays_Internal_Of_ID = function (id) {
-    var way = null;
-    if (this.list_ways) {
-        //var obj = getObjects(this.list_ways, 'id', id_way);
-        //return obj && obj.length > 0 ? obj[0] : null;
-        way = this.list_ways.find(function (o) { return o.id === id });
-    }
-    return way;
+IDS_DIRECTORY.prototype.getWays_Of_ID = function (id) {
+    //var way = null;
+    //if (this.list_ways) {
+    //    //var obj = getObjects(this.list_ways, 'id', id_way);
+    //    //return obj && obj.length > 0 ? obj[0] : null;
+    //    way = this.list_ways.find(function (o) { return o.id === id });
+    //}
+    //return way;
+    return this.getObj_Of_ID(this.list_ways, id);
 };
 //
 IDS_DIRECTORY.prototype.getValue_Ways_Of_ID = function (id_way, name, lang) {
-    var obj = this.getWays_Internal_Of_ID(id_way);
+    var obj = this.getWays_Of_ID(id_way);
     return this.getValueObj(obj, name, lang);
 };
 //
 IDS_DIRECTORY.prototype.getValueCulture_Wayss_Of_ID = function (id_way, name) {
-    var obj = this.getWays_Internal_Of_ID(id_way);
+    var obj = this.getWays_Of_ID(id_way);
     return obj ? obj[name + '_' + this.lang] : null;
 };
 //
 IDS_DIRECTORY.prototype.getListWays = function (fvalue, ftext, lang, filter) {
-    var list = [];
-    var list_filtr = null;
-    if (this.list_ways) {
-        if (typeof filter === 'function') {
-            list_filtr = this.list_ways.filter(filter);
-        } else { list_filtr = this.list_ways; }
-        for (i = 0, j = list_filtr.length; i < j; i++) {
-            var l = list_filtr[i];
-            if (lang) {
-                list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
-            } else {
-                list.push({ value: l[fvalue], text: l[ftext] });
-            }
-        }
-    }
-    return list;
+    //var list = [];
+    //var list_filtr = null;
+    //if (this.list_ways) {
+    //    if (typeof filter === 'function') {
+    //        list_filtr = this.list_ways.filter(filter);
+    //    } else { list_filtr = this.list_ways; }
+    //    for (i = 0, j = list_filtr.length; i < j; i++) {
+    //        var l = list_filtr[i];
+    //        if (lang) {
+    //            list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
+    //        } else {
+    //            list.push({ value: l[fvalue], text: l[ftext] });
+    //        }
+    //    }
+    //}
+    //return list;
+    return this.getListObj(this.list_ways, fvalue, ftext, lang, filter);
 };
+//
+IDS_DIRECTORY.prototype.getListWays2 = function (fvalue, ftext1, ftext2, lang, filter) {
+    return this.getListObj2(this.list_ways, fvalue, ftext1, ftext2, lang, filter);
+};
+
 //
 IDS_DIRECTORY.prototype.getListWaysOfAray = function (aray, fvalue, ftext, lang, filter) {
     var list = [];
