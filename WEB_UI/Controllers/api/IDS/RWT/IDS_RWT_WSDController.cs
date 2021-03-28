@@ -111,6 +111,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public DateTime current_wim_create { get; set; }
         public string current_wim_create_user { get; set; }
         public decimal usage_fee { get; set; }
+        public int? id_out_sostav { get; set; }
         public int? out_sostav_status { get; set; }
         public string instructional_letters_num { get; set; }
         public DateTime? instructional_letters_datetime { get; set; }
