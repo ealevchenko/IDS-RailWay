@@ -684,7 +684,7 @@
                             // Если статус в работе принят или удален 
                             //table_sostav.obj.button(5).enable(false);
                             table_sostav.obj.button(2).enable(false);
-                            if (table_sostav.select_sostav.status > 1) { table_sostav.obj.button(3).enable(true); } else { table_sostav.obj.button(3).enable(false);}
+                            if (table_sostav.select_sostav.status === 2 ) { table_sostav.obj.button(3).enable(true); } else { table_sostav.obj.button(3).enable(false);}
                             table_sostav.obj.button(4).text(langView('title_button_wagon_view', langs));
                         }
                     } else {
