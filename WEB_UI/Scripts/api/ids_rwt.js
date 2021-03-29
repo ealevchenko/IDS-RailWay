@@ -3912,6 +3912,31 @@ IDS_RWT.prototype.postPostOperationReturnProvideWagon = function (operation_retu
         },
     });
 };
+//Операция отправить состав на УЗ
+IDS_RWT.prototype.postOperationSendingSostavOnUZ = function (operation_sending, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/wsd/operation/sending_uz/sostav/',
+        type: 'POST',
+        data: JSON.stringify(operation_sending),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postOperationSendingSostavOnUZ", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 //======================================================================================================
 //                                  РАЗДЕЛ ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ ВАГОНОВ
 //======= WagonInternalRoutes (Состояние парка) =========================================================================

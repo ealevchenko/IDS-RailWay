@@ -478,37 +478,37 @@ namespace IDS
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public int GetIDStationIDSOfIDKis(int? id)
-        {
-            switch (id)
-            {
-                case 1: return 6;
-                case 29: return 16;
-                case 18: return 27;
-                case 23: return 19;
-                case 28: return 14;
-                case 30: return 15;
-                case 31: return 3;
-                case 36: return 18;
-                case 39: return 29;
-                default: return 0;
-            }
-        }
+        //public int GetIDStationIDSOfIDKis(int? id)
+        //{
+        //    switch (id)
+        //    {
+        //        case 1: return 6;
+        //        case 29: return 16;
+        //        case 18: return 27;
+        //        case 23: return 19;
+        //        case 28: return 14;
+        //        case 30: return 15;
+        //        case 31: return 3;
+        //        case 36: return 18;
+        //        case 39: return 29;
+        //        default: return 0;
+        //    }
+        //}
         /// <summary>
         /// 
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public int GetIDWayIDSOfIDKis(int? id)
-        {
-            switch (id)
-            {
-                case 1: return 114;
-                case 18: return 778;
-                case 23: return 475;
-                default: return 114;
-            }
-        }
+        //public int GetIDWayIDSOfIDKis(int? id)
+        //{
+        //    switch (id)
+        //    {
+        //        case 1: return 114;
+        //        case 18: return 778;
+        //        case 23: return 475;
+        //        default: return 114;
+        //    }
+        //}
 
         /// <summary>
         /// Создать состав для отправки
@@ -608,7 +608,7 @@ namespace IDS
                     id_reason_discrepancy_uz = null,
                     id_outgoing_return_start = null,
                     id_outgoing_return_stop = null,
-                    parent_wir_id = null, 
+                    parent_wir_id = null,
                 };
                 return car;
             }
@@ -691,7 +691,15 @@ namespace IDS
                     int result = 0;
                     if (wir != null)
                     {
-                        result = InsertOutgoingCars(ref context, new_sostav, id_way_from, position, wir, lead_time, user); // Получим результат выполнения операции
+                        //TODO: Добавить позже
+                        //if (wir.id_outgoing_car == null)
+                        //{
+                            result = InsertOutgoingCars(ref context, new_sostav, id_way_from, position, wir, lead_time, user); // Получим результат выполнения операции
+                        //}
+                        //else
+                        //{
+                        //    result = (int)errors_base.outgoing_cars_wir; // Записи по WagonInternalRoutes - уже имеет ссылку на отправку
+                        //}
                     }
                     else
                     {
@@ -725,174 +733,174 @@ namespace IDS
         /// Перенос составов на отправление УЗ по данным КИС
         /// </summary>
         /// <returns></returns>
-        public int InsertOutgoingSostavOfKis()
-        {
-            try
-            {
+        //public int InsertOutgoingSostavOfKis()
+        //{
+        //    try
+        //    {
 
-                string user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
-                EFOutgoingSostav ef_sostav = new EFOutgoingSostav(new EFDbContext());
-                EFOutgoingCars ef_car = new EFOutgoingCars(new EFDbContext());
-                KISWagon kis_wagon = new KISWagon(this.servece_owner);
+        //        string user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+        //        EFOutgoingSostav ef_sostav = new EFOutgoingSostav(new EFDbContext());
+        //        EFOutgoingCars ef_car = new EFOutgoingCars(new EFDbContext());
+        //        KISWagon kis_wagon = new KISWagon(this.servece_owner);
 
-                int add_sostav = 0;
-                int skip_sostav = 0;
-                int err_sostav = 0;
+        //        int add_sostav = 0;
+        //        int skip_sostav = 0;
+        //        int err_sostav = 0;
 
-                // Определим время начало и конца выборки для переноса
-                DateTime td_start = DateTime.Now.AddHours(-1 * this.transfer_control_time_interval_kis);
-                DateTime td_stop = DateTime.Now;
-                // Определим последнюю запись в ИДС и уточним начало выборки
-                OutgoingSostav outgoing = ef_sostav.Context.OrderByDescending(s => s.date_readiness_amkr).FirstOrDefault();
-                if (outgoing != null && outgoing.date_readiness_amkr != null)
-                {
-                    td_start = ((DateTime)outgoing.date_readiness_amkr).AddHours(-1 * this.transfer_control_time_interval_kis);
+        //        // Определим время начало и конца выборки для переноса
+        //        DateTime td_start = DateTime.Now.AddHours(-1 * this.transfer_control_time_interval_kis);
+        //        DateTime td_stop = DateTime.Now;
+        //        // Определим последнюю запись в ИДС и уточним начало выборки
+        //        OutgoingSostav outgoing = ef_sostav.Context.OrderByDescending(s => s.date_readiness_amkr).FirstOrDefault();
+        //        if (outgoing != null && outgoing.date_readiness_amkr != null)
+        //        {
+        //            td_start = ((DateTime)outgoing.date_readiness_amkr).AddHours(-1 * this.transfer_control_time_interval_kis);
 
-                }
-                // Получим вагоны из КИС
-                List<PROM_SOSTAV> out_sostav = kis_wagon.GetOutSostavOfKis(td_start, td_stop);
-                // Получим вагоны которые уже перенесеры
-                List<OutgoingSostav> list_ids_sostav = ef_sostav.Context.OrderByDescending(s => s.date_readiness_amkr >= td_start & s.date_readiness_amkr <= td_stop).ToList();
-                // Перенесем в ИДС
-                foreach (PROM_SOSTAV sostav in out_sostav)
-                {
-                    if (sostav.D_DD != null && sostav.D_MM != null && sostav.D_YY != null && sostav.T_HH != null && sostav.T_MI != null)
-                    {
-                        List<PROM_NATHIST> list_car_nh = kis_wagon.GetOutProm_NatHistOfNaturDateTime(sostav.N_NATUR, (int)sostav.D_DD, (int)sostav.D_MM, (int)sostav.D_YY, (int)sostav.T_HH, (int)sostav.T_MI, false);
-                        int res;
-                        //DateTime date_outgoing = sostav.DT;
-                        // Дата и время заолнены можно получить перечень вагонов
-                        // Определим состав с такой натуркой есть ?
-                        OutgoingSostav ids_sostav = list_ids_sostav.Where(s => s.num_doc == sostav.N_NATUR).FirstOrDefault();
-                        List<OutgoingCars> list_cars = new List<OutgoingCars>();
-                        // Проверим состав в ИДС есть
-                        // Если нет добавим и добавим вагоны
-                        // Если есть проверим на кол вагонов, если =0, тогда добавим вагоны
-                        if ((ids_sostav == null && (list_car_nh != null && list_car_nh.Count() > 0)) || (ids_sostav != null && ids_sostav.OutgoingCars.Count() == 0) && (list_car_nh != null && list_car_nh.Count() > 0))
-                        {
-                            if (ids_sostav == null)
-                            {
-                                // состава нет добавим
-                                ids_sostav = new OutgoingSostav()
-                                {
-                                    id = 0,
-                                    num_doc = sostav.N_NATUR,
-                                    id_station_from = GetIDStationIDSOfIDKis(sostav.K_ST),
-                                    id_way_from = GetIDWayIDSOfIDKis(sostav.K_ST),
-                                    id_station_on = sostav.K_ST_PR != null ? (int?)GetIDStationIDSOfIDKis(sostav.K_ST_PR) : null,
-                                    date_readiness_amkr = sostav.DT_PR,
-                                    date_show_wagons = null,
-                                    date_readiness_uz = this.transfer_set_outgoing_wagon_of_kis == true ? (DateTime?)sostav.DT : null,
-                                    date_outgoing = this.transfer_set_outgoing_wagon_of_kis == true ? (DateTime?)sostav.DT : null,
-                                    date_departure_amkr = this.transfer_set_outgoing_wagon_of_kis == true ? (DateTime?)sostav.DT : null,
-                                    date_outgoing_act = null,
-                                    composition_index = null,
-                                    status = this.transfer_set_outgoing_wagon_of_kis == true ? 2 : 0,
-                                    note = "Перенесен по данным КИС" + (this.transfer_set_outgoing_wagon_of_kis == true ? "(и сдан на УЗ автоматически)" : ""),
-                                    create = sostav.DAT_VVOD != null ? (DateTime)sostav.DAT_VVOD : DateTime.Now,
-                                    create_user = user, 
-                                };
-                                ef_sostav.Add(ids_sostav);
-                                res = ef_sostav.Save();
-                            }
-                            else
-                            {
-                                res = 1; // Состав добавлен ранее
-                            }
-                            if (res > 0)
-                            {
-                                try
-                                {
-                                    // Теперь добавим вагоны
-                                    //List<PROM_NATHIST> list_car = kis_wagon.GetOutProm_NatHistOfNaturDateTime(sostav.N_NATUR, (int)sostav.D_DD, (int)sostav.D_MM, (int)sostav.D_YY, (int)sostav.T_HH, (int)sostav.T_MI, false);
-                                    if (list_car_nh != null && list_car_nh.Count() > 0)
-                                    {
-                                        foreach (PROM_NATHIST pnh in list_car_nh)
-                                        {
-                                            OutgoingCars car = new OutgoingCars()
-                                            {
-                                                id = 0,
-                                                id_outgoing = ids_sostav.id,
-                                                num = pnh.N_VAG,
-                                                position = pnh.NPP != null ? (int)pnh.NPP : 0,
-                                                position_outgoing = this.transfer_set_outgoing_wagon_of_kis == true ? (pnh.NPP != null ? (int)pnh.NPP : 0) : 0,
-                                                UZ_DOC_OUT = null,
-                                                note = "Перенесен по данным КИС" + (this.transfer_set_outgoing_wagon_of_kis == true ? "(и сдан на УЗ автоматически)" : ""),
-                                                date_outgoing_act = null,
-                                                outgoing = this.transfer_set_outgoing_wagon_of_kis == true ? (DateTime?)sostav.DT : null,
-                                                outgoing_user = this.transfer_set_outgoing_wagon_of_kis == true ? user : null,
-                                                create = sostav.DAT_VVOD != null ? (DateTime)sostav.DAT_VVOD : DateTime.Now,
-                                                create_user = user,
-                                                id_outgoing_uz_vagon = null,
-                                                id_outgoing_detention = null,
-                                                id_reason_discrepancy_amkr = null,
-                                                id_reason_discrepancy_uz = null,
-                                                id_outgoing_return_start = null,
-                                                id_outgoing_return_stop = null,
-                                                parent_wir_id = null,
-                                            };
-                                            list_cars.Add(car);
-                                        }
-                                        ef_car.Add(list_cars);
-                                        int res_car = ef_car.Save();
-                                        if (res_car >= 0)
-                                        {
-                                            add_sostav++;
-                                            // Поставить вагоны та путь
-                                            int result_set = SetStationOutgoingWagonsOfKIS(ids_sostav.id, user);
-                                            // Проверим вагоны перенесены на станцию отправки и бит закрывать автоматом = true, тогда закроем
-                                            if (result_set > 0 && this.transfer_set_outgoing_wagon_of_kis == true)
-                                            {
-                                                int result_sending = SendingOutgoingSostav(ids_sostav.id, user);
-                                            }
+        //        }
+        //        // Получим вагоны из КИС
+        //        List<PROM_SOSTAV> out_sostav = kis_wagon.GetOutSostavOfKis(td_start, td_stop);
+        //        // Получим вагоны которые уже перенесеры
+        //        List<OutgoingSostav> list_ids_sostav = ef_sostav.Context.OrderByDescending(s => s.date_readiness_amkr >= td_start & s.date_readiness_amkr <= td_stop).ToList();
+        //        // Перенесем в ИДС
+        //        foreach (PROM_SOSTAV sostav in out_sostav)
+        //        {
+        //            if (sostav.D_DD != null && sostav.D_MM != null && sostav.D_YY != null && sostav.T_HH != null && sostav.T_MI != null)
+        //            {
+        //                List<PROM_NATHIST> list_car_nh = kis_wagon.GetOutProm_NatHistOfNaturDateTime(sostav.N_NATUR, (int)sostav.D_DD, (int)sostav.D_MM, (int)sostav.D_YY, (int)sostav.T_HH, (int)sostav.T_MI, false);
+        //                int res;
+        //                //DateTime date_outgoing = sostav.DT;
+        //                // Дата и время заолнены можно получить перечень вагонов
+        //                // Определим состав с такой натуркой есть ?
+        //                OutgoingSostav ids_sostav = list_ids_sostav.Where(s => s.num_doc == sostav.N_NATUR).FirstOrDefault();
+        //                List<OutgoingCars> list_cars = new List<OutgoingCars>();
+        //                // Проверим состав в ИДС есть
+        //                // Если нет добавим и добавим вагоны
+        //                // Если есть проверим на кол вагонов, если =0, тогда добавим вагоны
+        //                if ((ids_sostav == null && (list_car_nh != null && list_car_nh.Count() > 0)) || (ids_sostav != null && ids_sostav.OutgoingCars.Count() == 0) && (list_car_nh != null && list_car_nh.Count() > 0))
+        //                {
+        //                    if (ids_sostav == null)
+        //                    {
+        //                        // состава нет добавим
+        //                        ids_sostav = new OutgoingSostav()
+        //                        {
+        //                            id = 0,
+        //                            num_doc = sostav.N_NATUR,
+        //                            id_station_from = GetIDStationIDSOfIDKis(sostav.K_ST),
+        //                            id_way_from = GetIDWayIDSOfIDKis(sostav.K_ST),
+        //                            id_station_on = sostav.K_ST_PR != null ? (int?)GetIDStationIDSOfIDKis(sostav.K_ST_PR) : null,
+        //                            date_readiness_amkr = sostav.DT_PR,
+        //                            date_show_wagons = null,
+        //                            date_readiness_uz = this.transfer_set_outgoing_wagon_of_kis == true ? (DateTime?)sostav.DT : null,
+        //                            date_outgoing = this.transfer_set_outgoing_wagon_of_kis == true ? (DateTime?)sostav.DT : null,
+        //                            date_departure_amkr = this.transfer_set_outgoing_wagon_of_kis == true ? (DateTime?)sostav.DT : null,
+        //                            date_outgoing_act = null,
+        //                            composition_index = null,
+        //                            status = this.transfer_set_outgoing_wagon_of_kis == true ? 2 : 0,
+        //                            note = "Перенесен по данным КИС" + (this.transfer_set_outgoing_wagon_of_kis == true ? "(и сдан на УЗ автоматически)" : ""),
+        //                            create = sostav.DAT_VVOD != null ? (DateTime)sostav.DAT_VVOD : DateTime.Now,
+        //                            create_user = user, 
+        //                        };
+        //                        ef_sostav.Add(ids_sostav);
+        //                        res = ef_sostav.Save();
+        //                    }
+        //                    else
+        //                    {
+        //                        res = 1; // Состав добавлен ранее
+        //                    }
+        //                    if (res > 0)
+        //                    {
+        //                        try
+        //                        {
+        //                            // Теперь добавим вагоны
+        //                            //List<PROM_NATHIST> list_car = kis_wagon.GetOutProm_NatHistOfNaturDateTime(sostav.N_NATUR, (int)sostav.D_DD, (int)sostav.D_MM, (int)sostav.D_YY, (int)sostav.T_HH, (int)sostav.T_MI, false);
+        //                            if (list_car_nh != null && list_car_nh.Count() > 0)
+        //                            {
+        //                                foreach (PROM_NATHIST pnh in list_car_nh)
+        //                                {
+        //                                    OutgoingCars car = new OutgoingCars()
+        //                                    {
+        //                                        id = 0,
+        //                                        id_outgoing = ids_sostav.id,
+        //                                        num = pnh.N_VAG,
+        //                                        position = pnh.NPP != null ? (int)pnh.NPP : 0,
+        //                                        position_outgoing = this.transfer_set_outgoing_wagon_of_kis == true ? (pnh.NPP != null ? (int)pnh.NPP : 0) : 0,
+        //                                        UZ_DOC_OUT = null,
+        //                                        note = "Перенесен по данным КИС" + (this.transfer_set_outgoing_wagon_of_kis == true ? "(и сдан на УЗ автоматически)" : ""),
+        //                                        date_outgoing_act = null,
+        //                                        outgoing = this.transfer_set_outgoing_wagon_of_kis == true ? (DateTime?)sostav.DT : null,
+        //                                        outgoing_user = this.transfer_set_outgoing_wagon_of_kis == true ? user : null,
+        //                                        create = sostav.DAT_VVOD != null ? (DateTime)sostav.DAT_VVOD : DateTime.Now,
+        //                                        create_user = user,
+        //                                        id_outgoing_uz_vagon = null,
+        //                                        id_outgoing_detention = null,
+        //                                        id_reason_discrepancy_amkr = null,
+        //                                        id_reason_discrepancy_uz = null,
+        //                                        id_outgoing_return_start = null,
+        //                                        id_outgoing_return_stop = null,
+        //                                        parent_wir_id = null,
+        //                                    };
+        //                                    list_cars.Add(car);
+        //                                }
+        //                                ef_car.Add(list_cars);
+        //                                int res_car = ef_car.Save();
+        //                                if (res_car >= 0)
+        //                                {
+        //                                    add_sostav++;
+        //                                    // Поставить вагоны та путь
+        //                                    int result_set = SetStationOutgoingWagonsOfKIS(ids_sostav.id, user);
+        //                                    // Проверим вагоны перенесены на станцию отправки и бит закрывать автоматом = true, тогда закроем
+        //                                    if (result_set > 0 && this.transfer_set_outgoing_wagon_of_kis == true)
+        //                                    {
+        //                                        int result_sending = SendingOutgoingSostav(ids_sostav.id, user);
+        //                                    }
 
-                                        }
-                                    }
-                                    else
-                                    {
-                                        String.Format("Метод InsertOutgoingSostavOfKis(), ошибка добавления вагонов состава id={0}, По натурке №{1} за {2} - отсутсвует информация о вагонах!", ids_sostav.id, sostav.N_NATUR, sostav.DT).ErrorLog(servece_owner, this.eventID);
-                                        // Счетчик ошибок
-                                        err_sostav++;
-                                    }
-                                }
-                                catch (Exception e)
-                                {
-                                    String.Format("Метод InsertOutgoingSostavOfKis(), ошибка добавления вагонов состава id={0}, Натурка:{1}, Дата={2}", ids_sostav.id, sostav.N_NATUR, sostav.DT).ErrorLog(servece_owner, this.eventID);
-                                    // Счетчик ошибок
-                                    err_sostav++;
-                                }
-                            }
-                            else
-                            {
-                                // Счетчик ошибок
-                                err_sostav++;
-                                String.Format("Метод InsertOutgoingSostavOfKis(), ошибка переноса состава в ИДС Натурка:{0}, Дата={1}, Код ошибки={2}", sostav.N_NATUR, sostav.DT, res).ErrorLog(servece_owner, this.eventID);
-                            }
-                        }
-                        else
-                        {
-                            // Счетчик пропущеных
-                            skip_sostav++;
-                        }
-                    }
-                    else
-                    {
-                        // Дата и время не заполнены не могу получить вагоны
-                        err_sostav++;
-                        String.Format("Метод InsertOutgoingSostavOfKis(), ошибка определения даты и времени Натурка:{0}, D_DD={1},D_MM={2},D_YY={3},T_HH={4},T_MI={5}",
-                          sostav.N_NATUR, sostav.D_DD, sostav.D_MM, sostav.D_YY, sostav.T_HH, sostav.T_MI).ErrorLog(servece_owner, this.eventID);
-                    }
-                }
-                String.Format("Перенос составов из системы КИС «Транспорт», определено для переноса: {0} составов, перенесено: {1} , пропущено: {2} , ошибок переноса:{3}.",
-                    out_sostav.Count(), add_sostav, skip_sostav, err_sostav).InformationLog(servece_owner, this.eventID);
-                return add_sostav;
-            }
-            catch (Exception e)
-            {
-                e.ExceptionMethodLog(String.Format("InsertOutgoingSostavOfKis()"), servece_owner, eventID);
-                return -1;// Возвращаем id=-1 , Ошибка
-            }
-        }
+        //                                }
+        //                            }
+        //                            else
+        //                            {
+        //                                String.Format("Метод InsertOutgoingSostavOfKis(), ошибка добавления вагонов состава id={0}, По натурке №{1} за {2} - отсутсвует информация о вагонах!", ids_sostav.id, sostav.N_NATUR, sostav.DT).ErrorLog(servece_owner, this.eventID);
+        //                                // Счетчик ошибок
+        //                                err_sostav++;
+        //                            }
+        //                        }
+        //                        catch (Exception e)
+        //                        {
+        //                            String.Format("Метод InsertOutgoingSostavOfKis(), ошибка добавления вагонов состава id={0}, Натурка:{1}, Дата={2}", ids_sostav.id, sostav.N_NATUR, sostav.DT).ErrorLog(servece_owner, this.eventID);
+        //                            // Счетчик ошибок
+        //                            err_sostav++;
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        // Счетчик ошибок
+        //                        err_sostav++;
+        //                        String.Format("Метод InsertOutgoingSostavOfKis(), ошибка переноса состава в ИДС Натурка:{0}, Дата={1}, Код ошибки={2}", sostav.N_NATUR, sostav.DT, res).ErrorLog(servece_owner, this.eventID);
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    // Счетчик пропущеных
+        //                    skip_sostav++;
+        //                }
+        //            }
+        //            else
+        //            {
+        //                // Дата и время не заполнены не могу получить вагоны
+        //                err_sostav++;
+        //                String.Format("Метод InsertOutgoingSostavOfKis(), ошибка определения даты и времени Натурка:{0}, D_DD={1},D_MM={2},D_YY={3},T_HH={4},T_MI={5}",
+        //                  sostav.N_NATUR, sostav.D_DD, sostav.D_MM, sostav.D_YY, sostav.T_HH, sostav.T_MI).ErrorLog(servece_owner, this.eventID);
+        //            }
+        //        }
+        //        String.Format("Перенос составов из системы КИС «Транспорт», определено для переноса: {0} составов, перенесено: {1} , пропущено: {2} , ошибок переноса:{3}.",
+        //            out_sostav.Count(), add_sostav, skip_sostav, err_sostav).InformationLog(servece_owner, this.eventID);
+        //        return add_sostav;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        e.ExceptionMethodLog(String.Format("InsertOutgoingSostavOfKis()"), servece_owner, eventID);
+        //        return -1;// Возвращаем id=-1 , Ошибка
+        //    }
+        //}
 
         #endregion
 
@@ -1028,136 +1036,136 @@ namespace IDS
         /// <param name="id_outgoing"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public int SetStationOutgoingWagonsOfKIS(long id_outgoing, string user)
-        {
-            try
-            {
-                DateTime start = DateTime.Now;
+        //public int SetStationOutgoingWagonsOfKIS(long id_outgoing, string user)
+        //{
+        //    try
+        //    {
+        //        DateTime start = DateTime.Now;
 
-                ResultTransfer res = new ResultTransfer(0);
+        //        ResultTransfer res = new ResultTransfer(0);
 
-                // Проверим и скорректируем пользователя
-                if (String.IsNullOrWhiteSpace(user))
-                {
-                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
-                }
+        //        // Проверим и скорректируем пользователя
+        //        if (String.IsNullOrWhiteSpace(user))
+        //        {
+        //            user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+        //        }
 
-                EFOutgoingSostav ef_sostav = new EFOutgoingSostav(new EFDbContext());
-                EFOutgoingCars ef_car = new EFOutgoingCars(new EFDbContext());
+        //        EFOutgoingSostav ef_sostav = new EFOutgoingSostav(new EFDbContext());
+        //        EFOutgoingCars ef_car = new EFOutgoingCars(new EFDbContext());
 
-                OutgoingSostav sostav = ef_sostav.Context.Where(s => s.id == id_outgoing).FirstOrDefault();
+        //        OutgoingSostav sostav = ef_sostav.Context.Where(s => s.id == id_outgoing).FirstOrDefault();
 
-                if (sostav != null && sostav.date_outgoing != null && (sostav.OutgoingCars != null && sostav.OutgoingCars.Count() > 0))
-                {
-                    List<OutgoingCars> list_wagon = sostav.OutgoingCars.Where(c => c.position_outgoing != null).ToList();
-                    if (list_wagon != null && list_wagon.Count() > 0)
-                    {
-                        // Переносим 
-                        // Состав определен, принятые вагоны определены
+        //        if (sostav != null && sostav.date_outgoing != null && (sostav.OutgoingCars != null && sostav.OutgoingCars.Count() > 0))
+        //        {
+        //            List<OutgoingCars> list_wagon = sostav.OutgoingCars.Where(c => c.position_outgoing != null).ToList();
+        //            if (list_wagon != null && list_wagon.Count() > 0)
+        //            {
+        //                // Переносим 
+        //                // Состав определен, принятые вагоны определены
 
-                        int id_station = (int)sostav.id_station_from;
-                        int id_way = (int)sostav.id_way_from;
-                        DateTime date_arrival = sostav.date_readiness_amkr;
+        //                int id_station = (int)sostav.id_station_from;
+        //                int id_way = (int)sostav.id_way_from;
+        //                DateTime date_arrival = sostav.date_readiness_amkr;
 
-                        EFDbContext curent = new EFDbContext();
-                        IDS_WIR wir = new IDS_WIR(this.servece_owner);
-                        res = wir.SetStationOutgoingWagonsOfKIS(ref curent, id_station, id_way, date_arrival, list_wagon, false, user);
-                    }
-                    else
-                    {
-                        res.SetResult((int)errors_wir.not_wagon);
-                    }
-                }
-                else
-                {
-                    res.SetResult((int)errors_wir.not_sostav);
-                }
+        //                EFDbContext curent = new EFDbContext();
+        //                IDS_WIR wir = new IDS_WIR(this.servece_owner);
+        //                res = wir.SetStationOutgoingWagonsOfKIS(ref curent, id_station, id_way, date_arrival, list_wagon, false, user);
+        //            }
+        //            else
+        //            {
+        //                res.SetResult((int)errors_wir.not_wagon);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            res.SetResult((int)errors_wir.not_sostav);
+        //        }
 
-                string mess = String.Format("Операция переноса вагонов в составе (отправляемого на УЗ) на станцию и путь отправки АМКР. Код выполнения = {0}. Состав [id = {1}, готовность АМКР = {2}, станция отправитель АМКР = {3}, станция УЗ = {4}, количество вагонов = {5}]. Результат переноса [выбрано для переноса = {6}, перенесено = {7}, пропущено = {8}, ошибок переноса = {9}].",
-                    res.result, id_outgoing, sostav.date_readiness_amkr, (sostav.Directory_Station != null ? sostav.Directory_Station.station_name_ru : null), (sostav.Directory_Station1 != null ? sostav.Directory_Station1.station_name_ru : null), res.count,
-                    res.count, res.moved, res.skip, res.error);
-                mess.WarningLog(servece_owner, eventID);
-                mess.EventLog(res.result < 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
-                DateTime stop = DateTime.Now;
-                servece_owner.ServicesToLog(eventID, String.Format("Перенос состава на ст АМКР для отправки на УЗ, id={0} - перенесен.", id_outgoing), start, stop, res.result);
+        //        string mess = String.Format("Операция переноса вагонов в составе (отправляемого на УЗ) на станцию и путь отправки АМКР. Код выполнения = {0}. Состав [id = {1}, готовность АМКР = {2}, станция отправитель АМКР = {3}, станция УЗ = {4}, количество вагонов = {5}]. Результат переноса [выбрано для переноса = {6}, перенесено = {7}, пропущено = {8}, ошибок переноса = {9}].",
+        //            res.result, id_outgoing, sostav.date_readiness_amkr, (sostav.Directory_Station != null ? sostav.Directory_Station.station_name_ru : null), (sostav.Directory_Station1 != null ? sostav.Directory_Station1.station_name_ru : null), res.count,
+        //            res.count, res.moved, res.skip, res.error);
+        //        mess.WarningLog(servece_owner, eventID);
+        //        mess.EventLog(res.result < 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
+        //        DateTime stop = DateTime.Now;
+        //        servece_owner.ServicesToLog(eventID, String.Format("Перенос состава на ст АМКР для отправки на УЗ, id={0} - перенесен.", id_outgoing), start, stop, res.result);
 
-                return res.result;
-            }
-            catch (Exception e)
-            {
-                e.ExceptionMethodLog(String.Format("OutgoingArrivalSostav(id_outgoing={0}, user={1})", id_outgoing, user), servece_owner, eventID);
-                return -1;// Возвращаем id=-1 , Ошибка
-            }
-        }
+        //        return res.result;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        e.ExceptionMethodLog(String.Format("OutgoingArrivalSostav(id_outgoing={0}, user={1})", id_outgoing, user), servece_owner, eventID);
+        //        return -1;// Возвращаем id=-1 , Ошибка
+        //    }
+        //}
         /// <summary>
         /// Отправить состав на УЗ, закрыть WIR по вагонам.
         /// </summary>
         /// <param name="id_outgoing"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public int SendingOutgoingSostav(long id_outgoing, string user)
-        {
-            try
-            {
-                DateTime start = DateTime.Now;
+        //public int SendingOutgoingSostav(long id_outgoing, string user)
+        //{
+        //    try
+        //    {
+        //        DateTime start = DateTime.Now;
 
-                ResultTransfer res = new ResultTransfer(0);
+        //        ResultTransfer res = new ResultTransfer(0);
 
-                // Проверим и скорректируем пользователя
-                if (String.IsNullOrWhiteSpace(user))
-                {
-                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
-                }
+        //        // Проверим и скорректируем пользователя
+        //        if (String.IsNullOrWhiteSpace(user))
+        //        {
+        //            user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+        //        }
 
-                EFOutgoingSostav ef_sostav = new EFOutgoingSostav(new EFDbContext());
-                EFOutgoingCars ef_car = new EFOutgoingCars(new EFDbContext());
+        //        EFOutgoingSostav ef_sostav = new EFOutgoingSostav(new EFDbContext());
+        //        EFOutgoingCars ef_car = new EFOutgoingCars(new EFDbContext());
 
-                OutgoingSostav sostav = ef_sostav.Context.Where(s => s.id == id_outgoing).FirstOrDefault();
+        //        OutgoingSostav sostav = ef_sostav.Context.Where(s => s.id == id_outgoing).FirstOrDefault();
 
-                if (sostav != null && sostav.date_outgoing != null && (sostav.OutgoingCars != null && sostav.OutgoingCars.Count() > 0))
-                {
-                    List<OutgoingCars> list_wagon = sostav.OutgoingCars.Where(c => c.position_outgoing != null).ToList();
-                    if (list_wagon != null && list_wagon.Count() > 0)
-                    {
-                        // Переносим 
-                        // Состав определен, принятые вагоны определены
+        //        if (sostav != null && sostav.date_outgoing != null && (sostav.OutgoingCars != null && sostav.OutgoingCars.Count() > 0))
+        //        {
+        //            List<OutgoingCars> list_wagon = sostav.OutgoingCars.Where(c => c.position_outgoing != null).ToList();
+        //            if (list_wagon != null && list_wagon.Count() > 0)
+        //            {
+        //                // Переносим 
+        //                // Состав определен, принятые вагоны определены
 
-                        int id_station = (int)sostav.id_station_from;
-                        int id_way = (int)sostav.id_way_from;
-                        DateTime date_arrival = (DateTime)sostav.date_outgoing;
+        //                int id_station = (int)sostav.id_station_from;
+        //                int id_way = (int)sostav.id_way_from;
+        //                DateTime date_arrival = (DateTime)sostav.date_outgoing;
 
-                        EFDbContext curent = new EFDbContext();
-                        //EFDbContext curent = null;
-                        IDS_WIR wir = new IDS_WIR(this.servece_owner);
-                        res = wir.OutgoingWagons(ref curent, id_station, id_way, date_arrival, list_wagon, false, user);
+        //                EFDbContext curent = new EFDbContext();
+        //                //EFDbContext curent = null;
+        //                IDS_WIR wir = new IDS_WIR(this.servece_owner);
+        //                res = wir.OutgoingWagons(ref curent, id_station, id_way, date_arrival, list_wagon, false, user);
 
-                    }
-                    else
-                    {
-                        res.SetResult((int)errors_wir.not_wagon);
-                    }
-                }
-                else
-                {
-                    res.SetResult((int)errors_wir.not_sostav);
-                }
+        //            }
+        //            else
+        //            {
+        //                res.SetResult((int)errors_wir.not_wagon);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            res.SetResult((int)errors_wir.not_sostav);
+        //        }
 
-                string mess = String.Format("Операция закрытия отправляемых на УЗ составов. Код выполнения = {0}. Состав [id = {1}, готовность АМКР = {2}, отправлен = {3}, станция отправитель АМКР = {4}, станция УЗ = {5}, количество вагонов = {6}]. Результат переноса [выбрано для переноса = {7}, перенесено = {8}, пропущено = {9}, ошибок переноса = {10}].",
-                    res.result, id_outgoing, sostav.date_readiness_amkr, sostav.date_outgoing, (sostav.Directory_Station != null ? sostav.Directory_Station.station_name_ru : null), (sostav.Directory_Station1 != null ? sostav.Directory_Station1.station_name_ru : null), res.count,
-                    res.count, res.moved, res.skip, res.error);
-                mess.WarningLog(servece_owner, eventID);
-                mess.EventLog(res.result < 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
-                DateTime stop = DateTime.Now;
-                servece_owner.ServicesToLog(eventID, String.Format("Перенос состава на ст УЗ, id={0} - перенесен.", id_outgoing), start, stop, res.result);
+        //        string mess = String.Format("Операция закрытия отправляемых на УЗ составов. Код выполнения = {0}. Состав [id = {1}, готовность АМКР = {2}, отправлен = {3}, станция отправитель АМКР = {4}, станция УЗ = {5}, количество вагонов = {6}]. Результат переноса [выбрано для переноса = {7}, перенесено = {8}, пропущено = {9}, ошибок переноса = {10}].",
+        //            res.result, id_outgoing, sostav.date_readiness_amkr, sostav.date_outgoing, (sostav.Directory_Station != null ? sostav.Directory_Station.station_name_ru : null), (sostav.Directory_Station1 != null ? sostav.Directory_Station1.station_name_ru : null), res.count,
+        //            res.count, res.moved, res.skip, res.error);
+        //        mess.WarningLog(servece_owner, eventID);
+        //        mess.EventLog(res.result < 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
+        //        DateTime stop = DateTime.Now;
+        //        servece_owner.ServicesToLog(eventID, String.Format("Перенос состава на ст УЗ, id={0} - перенесен.", id_outgoing), start, stop, res.result);
 
-                return res.result;
-            }
-            catch (Exception e)
-            {
-                e.ExceptionMethodLog(String.Format("OutgoingArrivalSostav(id_outgoing={0}, user={1})", id_outgoing, user), servece_owner, eventID);
-                return -1;// Возвращаем id=-1 , Ошибка
-            }
-        }
+        //        return res.result;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        e.ExceptionMethodLog(String.Format("OutgoingArrivalSostav(id_outgoing={0}, user={1})", id_outgoing, user), servece_owner, eventID);
+        //        return -1;// Возвращаем id=-1 , Ошибка
+        //    }
+        //}
 
 
 

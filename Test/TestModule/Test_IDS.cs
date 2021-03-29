@@ -38,12 +38,12 @@ namespace Test.TestModule
         /// <summary>
         /// Тест переноса составов на отправление на УЗ по данным КИС
         /// </summary>
-        public void IDSTransfer_InsertOutgoingSostavOfKis()
-        {
+        //public void IDSTransfer_InsertOutgoingSostavOfKis()
+        //{
 
-            IDSTransfer ids = new IDSTransfer(service.Test);
-            ids.InsertOutgoingSostavOfKis();
-        }
+        //    IDSTransfer ids = new IDSTransfer(service.Test);
+        //    ids.InsertOutgoingSostavOfKis();
+        //}
 
         public void IDSTransfer_IncomingArrivalSostav()
         {
@@ -58,22 +58,22 @@ namespace Test.TestModule
             IDSTransfer ids = new IDSTransfer(service.Test);
             int res = ids.IncomingArrivalSostav();
         }
-        public void IDSTransfer_SetStationOutgoingWagonsOfKIS()
-        {
+        //public void IDSTransfer_SetStationOutgoingWagonsOfKIS()
+        //{
 
-            IDSTransfer ids = new IDSTransfer(service.Test);
-            int res = ids.SetStationOutgoingWagonsOfKIS(513, @"EUROPE\test");
-        }
+        //    IDSTransfer ids = new IDSTransfer(service.Test);
+        //    int res = ids.SetStationOutgoingWagonsOfKIS(513, @"EUROPE\test");
+        //}
 
-        /// <summary>
-        /// Перенос состава на УЗ и закрытие WIR
-        /// </summary>
-        public void IDSTransfer_SendingOutgoingSostav()
-        {
+        ///// <summary>
+        ///// Перенос состава на УЗ и закрытие WIR
+        ///// </summary>
+        //public void IDSTransfer_SendingOutgoingSostav()
+        //{
 
-            IDSTransfer ids = new IDSTransfer(service.Test);
-            int res = ids.SendingOutgoingSostav(499, @"EUROPE\test");
-        }
+        //    IDSTransfer ids = new IDSTransfer(service.Test);
+        //    int res = ids.SendingOutgoingSostav(499, @"EUROPE\test");
+        //}
         #endregion
 
         #region IDS_SAP

@@ -1069,6 +1069,24 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Сдан на УЗ.
+        /// </summary>
+        public static string title_operation_detali_date_outgoing {
+            get {
+                return ResourceManager.GetString("title_operation_detali_date_outgoing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Предъявлен.
+        /// </summary>
+        public static string title_operation_detali_date_readiness_amk {
+            get {
+                return ResourceManager.GetString("title_operation_detali_date_readiness_amk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Время выполнения.
         /// </summary>
         public static string title_operation_detali_lead_time {

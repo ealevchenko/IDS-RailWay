@@ -467,6 +467,13 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string user { get; set; }
     }
 
+    public class OperationSendingSostavOnUZ
+    {
+        public long id_outgoing_sostav { get; set; }
+        public DateTime lead_time { get; set; }
+        public string user { get; set; }
+    }
+
     public class view_wagon_dislocation
     {
         public long id_wir { get; set; }
@@ -1024,6 +1031,29 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             {
                 IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
                 int result = ids_wir.OperationReturnPresentWagon(value.id_outgoing_car, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST api/ids/rwt/wsd/operation/sending_uz/sostav
+        /// <summary>
+        /// Операция отправить состав на УЗ
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("operation/sending_uz/sostav")]
+        [ResponseType(typeof(OperationResultWagon))]
+        public IHttpActionResult PostOperationSendingSostavOnUZ([FromBody] OperationSendingSostavOnUZ value)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                OperationResultWagon result = ids_wir.OperationSendingSostavOnUZ(value.id_outgoing_sostav, value.lead_time, value.user);
                 return Ok(result);
             }
             catch (Exception e)

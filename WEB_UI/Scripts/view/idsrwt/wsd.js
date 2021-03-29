@@ -1,174 +1,174 @@
 ﻿jQuery(document).ready(function ($) {
     // Массив текстовых сообщений 
     $.Text_View =
-    {
-        'default':  //default language: ru
         {
-            'field_wagons_position': '№п.п',
-            'field_wagons_num': '№ вагона',
-            'field_wagons_operator': 'Опер.',
-            'field_wagon_limiting_abbr': 'Огран.',
-            'field_wagons_operators_paid': 'Приз. плат.',
-            'field_current_operation_wagon_busy': 'Занят?',
-            'field_wagon_rod': 'Род',
-            'field_wagon_type': 'Тип',
-            'field_wagon_gruzp_doc': 'Г\п т.',
-            'field_wagon_adm': 'Адм.',
-            'field_current_condition_abbr': 'Размет.',
-            'field_current_loading_status': 'Статус',
-            'field_arrival_cargo_name': 'Груз по прибытию',
-            'field_arrival_certification_data': 'Сертиф. данные',
-            'field_arrival_station_from_name': 'Станция отправления',
-            'field_arrival_station_amkr_name': 'Станция назначения',
-            'field_current_operation_wagon_name': 'Последняя операция',
-            'field_current_operation_wagon_end': 'Дата вып. опер.',
-            'field_arrival_division_amkr_abbr': 'Цех получатель',
-            'field_arrival_duration': 'Простой УЗ ч.',
-            'field_pb_station_duration': 'Инд. пр. ст',
-            'field_current_station_amkr_duration': 'Прост. ст',
-            'field_current_station_amkr_idle_time': 'Прост. норм.',
-            'field_out_sostav_status': 'Статус отправляемого состава',
-            'field_sap_is_num': '№ Вх поставки',
-            'field_sap_is_create_num': 'Дата созд. вх. пост.',
-            'field_sap_is_create_date': 'Дата созд. вх. пост.',
-            'field_sap_is_create_time': 'Время созд. вх. пост.',
-            'field_instructional_letters_num': '№ Инст. письма',
-            'field_instructional_letters_datetime': 'Дата Инст. письма',
-            'field_instructional_letters_station_name': 'Станция Инст. письма',
-            'field_wagon_date_rem_uz': 'ДПО-ой ремонт',
+            'default':  //default language: ru
+            {
+                'field_wagons_position': '№п.п',
+                'field_wagons_num': '№ вагона',
+                'field_wagons_operator': 'Опер.',
+                'field_wagon_limiting_abbr': 'Огран.',
+                'field_wagons_operators_paid': 'Приз. плат.',
+                'field_current_operation_wagon_busy': 'Занят?',
+                'field_wagon_rod': 'Род',
+                'field_wagon_type': 'Тип',
+                'field_wagon_gruzp_doc': 'Г\п т.',
+                'field_wagon_adm': 'Адм.',
+                'field_current_condition_abbr': 'Размет.',
+                'field_current_loading_status': 'Статус',
+                'field_arrival_cargo_name': 'Груз по прибытию',
+                'field_arrival_certification_data': 'Сертиф. данные',
+                'field_arrival_station_from_name': 'Станция отправления',
+                'field_arrival_station_amkr_name': 'Станция назначения',
+                'field_current_operation_wagon_name': 'Последняя операция',
+                'field_current_operation_wagon_end': 'Дата вып. опер.',
+                'field_arrival_division_amkr_abbr': 'Цех получатель',
+                'field_arrival_duration': 'Простой УЗ ч.',
+                'field_pb_station_duration': 'Инд. пр. ст',
+                'field_current_station_amkr_duration': 'Прост. ст',
+                'field_current_station_amkr_idle_time': 'Прост. норм.',
+                'field_out_sostav_status': 'Статус отправляемого состава',
+                'field_sap_is_num': '№ Вх поставки',
+                'field_sap_is_create_num': 'Дата созд. вх. пост.',
+                'field_sap_is_create_date': 'Дата созд. вх. пост.',
+                'field_sap_is_create_time': 'Время созд. вх. пост.',
+                'field_instructional_letters_num': '№ Инст. письма',
+                'field_instructional_letters_datetime': 'Дата Инст. письма',
+                'field_instructional_letters_station_name': 'Станция Инст. письма',
+                'field_wagon_date_rem_uz': 'ДПО-ой ремонт',
 
-            'field_from_station_amkr': 'Отпр. со ст.',
-            'field_on_station_amkr': 'Приб. на ст.',
-            'field_on_current_operation_note': '№ поезда',
-            'field_current_outer_way_amkr_start': 'Вр. отправления',
+                'field_from_station_amkr': 'Отпр. со ст.',
+                'field_on_station_amkr': 'Приб. на ст.',
+                'field_on_current_operation_note': '№ поезда',
+                'field_current_outer_way_amkr_start': 'Вр. отправления',
 
-            'field_way_dissolution': 'Путь росп.',
+                'field_way_dissolution': 'Путь росп.',
 
-            'field_way_park': 'Парк',
-            'field_way_name': 'Путь',
-            'field_way_pb': 'Сост.',
-            'field_way_count': 'Стоит',
-            'field_count_wagon_dissolution': 'План.',
-            'field_way_capacity': 'Вмещ.',
+                'field_way_park': 'Парк',
+                'field_way_name': 'Путь',
+                'field_way_pb': 'Сост.',
+                'field_way_count': 'Стоит',
+                'field_count_wagon_dissolution': 'План.',
+                'field_way_capacity': 'Вмещ.',
 
-            'field_num_train': '№ Поезда',
-            'field_dt_arrival': 'Отпр.',
-            'field_count_wagon': 'Кол.',
-            'field_locomotives': 'Локом.',
+                'field_num_train': '№ Поезда',
+                'field_dt_arrival': 'Отпр.',
+                'field_count_wagon': 'Кол.',
+                'field_locomotives': 'Локом.',
 
-            'field_position': '№ позиции',
-            'field_num': '№ вагона',
-            'field_num_valid': 'Тип нумерации',
-            'field_note': 'Дислокация на АМКР',
-            'field_create_wagon': 'Добавил',
-            'field_change_wagon': 'Правил',
+                'field_position': '№ позиции',
+                'field_num': '№ вагона',
+                'field_num_valid': 'Тип нумерации',
+                'field_note': 'Дислокация на АМКР',
+                'field_create_wagon': 'Добавил',
+                'field_change_wagon': 'Правил',
 
-            'field_num_doc': '№ док.',
-            'field_count': 'кол.',
-            'field_station_on': 'стан. УЗ.',
-            'field_date_outgoing': 'сдан на УЗ',
+                'field_num_doc': '№ док.',
+                'field_count': 'кол.',
+                'field_station_on': 'стан. УЗ.',
+                'field_date_outgoing': 'сдан на УЗ',
 
-            'title_button_export': 'Экспорт',
-            'title_button_buffer': 'Буфер',
-            'title_button_excel': 'Excel',
-            'title_button_field': 'Поля',
-            'title_button_field_select': 'Выбрать',
-            'title_button_field_view_all': 'Показать все',
-            'title_button_field_clear': 'Сбросить',
+                'title_button_export': 'Экспорт',
+                'title_button_buffer': 'Буфер',
+                'title_button_excel': 'Excel',
+                'title_button_field': 'Поля',
+                'title_button_field_select': 'Выбрать',
+                'title_button_field_view_all': 'Показать все',
+                'title_button_field_clear': 'Сбросить',
 
-            'title_button_select': 'Выбрать вагоны',
-            'title_button_select_all': 'Все вагоны',
-            'title_button_select_none': 'Убрать выбор',
-            'title_button_add_way_provide': 'Добавить в состав',
-            'title_button_collect_wagon': 'Собрать вагоны',
-            'title_button_close_collect_wagon': 'Закрыть "Собрать вагоны"',
+                'title_button_select': 'Выбрать вагоны',
+                'title_button_select_all': 'Все вагоны',
+                'title_button_select_none': 'Убрать выбор',
+                'title_button_add_way_provide': 'Добавить в состав',
+                'title_button_collect_wagon': 'Собрать вагоны',
+                'title_button_close_collect_wagon': 'Закрыть "Собрать вагоны"',
 
-            'title_button_add_way_dissolution': 'Добавить на путь роспуска',
-            'title_button_add_way_sending': 'Добавить в состав',
-            'title_button_add_way_dislocation': 'Выбрать для дислокации',
+                'title_button_add_way_dissolution': 'Добавить на путь роспуска',
+                'title_button_add_way_sending': 'Добавить в состав',
+                'title_button_add_way_dislocation': 'Выбрать для дислокации',
 
-            'title_button_clear_wagon': 'Убрать все вагоны',
-            'title_button_clear_all': 'Сбросить все',
-            'title_button_move_wagon': 'Перенести вагоны на путь',
+                'title_button_clear_wagon': 'Убрать все вагоны',
+                'title_button_clear_all': 'Сбросить все',
+                'title_button_move_wagon': 'Перенести вагоны на путь',
 
-            'title_mess_load_station': 'Загрузка состояния путей станций АМКР…',
-        },
-        'en':  //default language: English
-        {
-            'field_wagons_position': 'No. of item',
-            'field_wagons_num': 'Wagons #',
-            'field_wagons_operator': 'Opera.',
-            'field_wagon_limiting_abbr': 'Limiting',
-            'field_wagons_operators_paid': 'Prize. pay. ',
-            'field_current_operation_wagon_busy': 'Busy?',
-            'field_wagon_rod': 'Rod',
-            'field_wagon_type': 'Type',
-            'field_wagon_gruzp_doc': 'W \ n t.',
-            'field_wagon_adm': 'Adm.',
-            'field_current_condition_abbr': 'Layout.',
-            'field_current_loading_status': 'Status',
-            'field_arrival_cargo_name': 'Cargo upon arrival',
-            'field_arrival_certification_data': 'Cert. data',
-            'field_arrival_station_from_name': 'Departure station',
-            'field_arrival_station_amkr_name': 'Destination station',
-            'field_current_operation_wagon_name': 'Last operation',
-            'field_current_operation_wagon_end': 'Issue date opera. ',
-            'field_arrival_division_amkr_abbr': 'Shop recipient',
-            'field_arrival_duration': 'Simple ultrasonic h.',
-            'field_pb_station_duration': 'Ind. pr. st ',
-            'field_current_station_amkr_duration': 'Simple. st ',
-            'field_current_station_amkr_idle_time': 'Simple. ok. ',
-            'field_out_sostav_status': 'Статус отправляемого состава',
-            'field_sap_is_num': 'In delivery no.',
-            'field_sap_is_create_num': 'Created date. in. fast.',
-            'field_sap_is_create_date': 'Created date. in. fast.',
-            'field_sap_is_create_time': 'Created time. in. fast.',
-            'field_instructional_letters_num': 'Inst. letters',
-            'field_instructional_letters_datetime': 'Inst. letters',
-            'field_instructional_letters_station_name': 'Station Inst. letters',
-            'field_wagon_date_rem_uz': 'DPO repair',
+                'title_mess_load_station': 'Загрузка состояния путей станций АМКР…',
+            },
+            'en':  //default language: English
+            {
+                'field_wagons_position': 'No. of item',
+                'field_wagons_num': 'Wagons #',
+                'field_wagons_operator': 'Opera.',
+                'field_wagon_limiting_abbr': 'Limiting',
+                'field_wagons_operators_paid': 'Prize. pay. ',
+                'field_current_operation_wagon_busy': 'Busy?',
+                'field_wagon_rod': 'Rod',
+                'field_wagon_type': 'Type',
+                'field_wagon_gruzp_doc': 'W \ n t.',
+                'field_wagon_adm': 'Adm.',
+                'field_current_condition_abbr': 'Layout.',
+                'field_current_loading_status': 'Status',
+                'field_arrival_cargo_name': 'Cargo upon arrival',
+                'field_arrival_certification_data': 'Cert. data',
+                'field_arrival_station_from_name': 'Departure station',
+                'field_arrival_station_amkr_name': 'Destination station',
+                'field_current_operation_wagon_name': 'Last operation',
+                'field_current_operation_wagon_end': 'Issue date opera. ',
+                'field_arrival_division_amkr_abbr': 'Shop recipient',
+                'field_arrival_duration': 'Simple ultrasonic h.',
+                'field_pb_station_duration': 'Ind. pr. st ',
+                'field_current_station_amkr_duration': 'Simple. st ',
+                'field_current_station_amkr_idle_time': 'Simple. ok. ',
+                'field_out_sostav_status': 'Статус отправляемого состава',
+                'field_sap_is_num': 'In delivery no.',
+                'field_sap_is_create_num': 'Created date. in. fast.',
+                'field_sap_is_create_date': 'Created date. in. fast.',
+                'field_sap_is_create_time': 'Created time. in. fast.',
+                'field_instructional_letters_num': 'Inst. letters',
+                'field_instructional_letters_datetime': 'Inst. letters',
+                'field_instructional_letters_station_name': 'Station Inst. letters',
+                'field_wagon_date_rem_uz': 'DPO repair',
 
-            'field_from_station_amkr': 'Send. with st. ',
-            'field_on_station_amkr': 'Arr. at st. ',
-            'field_on_current_operation_note': 'Train no.',
-            'field_current_outer_way_amkr_start': 'Time. departure ',
+                'field_from_station_amkr': 'Send. with st. ',
+                'field_on_station_amkr': 'Arr. at st. ',
+                'field_on_current_operation_note': 'Train no.',
+                'field_current_outer_way_amkr_start': 'Time. departure ',
 
-            'field_way_dissolution': 'Dissolution path',
+                'field_way_dissolution': 'Dissolution path',
 
-            'field_way_park': 'Park',
-            'field_way_name': 'Path',
-            'field_way_pb': 'Status',
-            'field_way_count': 'Worth',
-            'field_count_wagon_dissolution': 'Plan.',
-            'field_way_capacity': 'Accommodates',
+                'field_way_park': 'Park',
+                'field_way_name': 'Path',
+                'field_way_pb': 'Status',
+                'field_way_count': 'Worth',
+                'field_count_wagon_dissolution': 'Plan.',
+                'field_way_capacity': 'Accommodates',
 
-            'field_num_train': 'Train No.',
-            'field_dt_arrival': 'Disp.',
-            'field_count_wagon': 'Count',
-            'field_locomotives': 'Locomotive.',
+                'field_num_train': 'Train No.',
+                'field_dt_arrival': 'Disp.',
+                'field_count_wagon': 'Count',
+                'field_locomotives': 'Locomotive.',
 
-            'title_button_export': 'Export',
-            'title_button_buffer': 'Buffer',
-            'title_button_excel': 'Excel',
-            'title_button_field': 'Fields',
-            'title_button_field_select': 'Select',
-            'title_button_field_view_all': 'Show all',
-            'title_button_field_clear': 'Reset',
+                'title_button_export': 'Export',
+                'title_button_buffer': 'Buffer',
+                'title_button_excel': 'Excel',
+                'title_button_field': 'Fields',
+                'title_button_field_select': 'Select',
+                'title_button_field_view_all': 'Show all',
+                'title_button_field_clear': 'Reset',
 
-            'title_button_select': 'Select wagons',
-            'title_button_select_all': 'All wagons',
-            'title_button_select_none': 'Remove selection',
+                'title_button_select': 'Select wagons',
+                'title_button_select_all': 'All wagons',
+                'title_button_select_none': 'Remove selection',
 
-            'title_button_add_way_dissolution': 'Add to dissolution path',
-            'title_button_add_way_sending': 'Add to lineup',
-            'title_button_add_way_dislocation': 'Select for location',
+                'title_button_add_way_dissolution': 'Add to dissolution path',
+                'title_button_add_way_sending': 'Add to lineup',
+                'title_button_add_way_dislocation': 'Select for location',
 
-            'title_button_clear_wagon': 'Remove all wagons',
-            'title_button_clear_all': 'Reset All',
-            'title_button_move_wagon': 'Move the wagons to the track',
-            'title_mess_load_station': 'Loading the state of tracks of AMKR stations ...',
-        }
-    };
+                'title_button_clear_wagon': 'Remove all wagons',
+                'title_button_clear_all': 'Reset All',
+                'title_button_move_wagon': 'Move the wagons to the track',
+                'title_mess_load_station': 'Loading the state of tracks of AMKR stations ...',
+            }
+        };
 
     //*************************************************************************************
     // ОБЪЯВЛЕНИЕ ОСНОВНЫХ ОБЪЕКТОВ ПРИЛОЖЕНИЯ
@@ -5523,6 +5523,9 @@
             operation_detali_sending_uz_station_from: $('select#operation_detali_sending_uz_station_from'),
             operation_detali_sending_uz_way_from: $('select#operation_detali_sending_uz_way_from'),
             operation_detali_sending_uz_lead_time: $('input#operation_detali_sending_uz_lead_time'),
+            operation_detali_sending_uz_composition_index: $('input#operation_detali_sending_uz_composition_index'),
+            operation_detali_sending_uz_date_readiness_amkr: $('input#operation_detali_sending_uz_date_readiness_amkr'),
+            operation_detali_sending_uz_date_outgoing: $('input#operation_detali_sending_uz_date_outgoing'),
             // Выполнить отправку состава
             bt_operation_sending_uz_run: $('button#operation_sending_uz_run').on('click',
                 function (event) {
@@ -5535,51 +5538,37 @@
                         dc.dialog_confirm('Open', 'Выполнить?', 'Подтвердите выполнение операции «ОТПРАВИТЬ СОСТАВ НА УЗ»', function (result) {
                             if (result) {
                                 LockScreen(langView('mess_save', langs));
-                                // Подготовим список вагонов для отправки
-                                //var list_provide = [];
-                                //if (operation_detali.wagons_provide_from) {
-                                //    var wagons_provide = operation_detali.wagons_provide_from.filter(function (i) {
-                                //        return i.position_provide !== null ? true : false;
-                                //    }).sort(function (a, b) {
-                                //        return Number(a.position_provide) - Number(b.position_provide)
-                                //    });
-                                //    $.each(wagons_provide, function (i, el) {
-                                //        list_provide.push({ wir_id: el.wir_id, position: el.position_provide })
-                                //    });
-                                //}
-                                //// Определим пакет данных отправки на другую станцию
-                                //var operation_provide = {
-                                //    id_way_from: operation_detali.id_way_from_provide,
-                                //    list_provide: list_provide,
-                                //    position: operation_detali.wagons_provide_max_position,
-                                //    lead_time: toISOStringTZ(get_datetime_value(operation_detali.operation_detali_provide_lead_time.val(), operation_detali.lang)),
-                                //    user: operation_detali.user,
-                                //}
-                                //// Выполнить операцию отправки postSendingWagonsOfStation
-                                //ids_inc.postProvideWagonsOfStation(operation_provide, function (result_provide) {
-                                //    if (result_provide && result_provide.result > 0) {
-                                //        // Обновить путь отправки и станцию отправки
-                                //        if (operation_detali.way_from_provide) {
+                                // Определим операцию
+                                var operation_sending = {
+                                    id_outgoing_sostav: operation_detali.select_sending_uz_id_sostav,
+                                    lead_time: toISOStringTZ(get_datetime_value(operation_detali.operation_detali_sending_uz_lead_time.val(), operation_detali.lang)),
+                                    user: operation_detali.user,
+                                }
+                                // Выполнить операцию отправки postOperationSendingSostavOnUZ
+                                ids_inc.postOperationSendingSostavOnUZ(operation_sending, function (result_sending) {
+                                    if (result_sending && result_sending.result > 0) {
+                                        // Обновить путь отправки и станцию отправки
+                                        if (operation_detali.sending_uz_way_from) {
+                                            operation_detali.rows_update.push({ id_station: operation_detali.sending_uz_way_from.id_station, id_park: operation_detali.sending_uz_way_from.id_park, id_way: operation_detali.sending_uz_way_from.id });
+                                            operation_detali.rows_update.push({ id_station: operation_detali.sending_uz_way_from.id_station, id_park: null, id_way: null });
+                                        }
+                                        operation_detali.bit_update = true;
+                                        operation_detali.refresh_sending_uz();
+                                        operation_detali.val_sending_uz.out_info_message("Операция 'ОТПРАВИТЬ СОСТАВ НА УЗ' - Выполнена");
 
-                                //            operation_detali.rows_update.push({ id_station: operation_detali.way_from_provide.id_station, id_park: operation_detali.way_from_provide.id_park, id_way: operation_detali.way_from_provide.id });
-                                //            operation_detali.rows_update.push({ id_station: operation_detali.way_from_provide.id_station, id_park: null, id_way: null });
-                                //        }
-                                //        operation_detali.bit_update = true;
-                                //        operation_detali.refresh_provide();
-                                //        operation_detali.val_provide.out_info_message("Операция 'ПРЕДЪЯВИТЬ СОСТАВ УЗ' - Выполнена");
-                                //    } else {
-                                //        operation_detali.val_provide.out_error_message("Ошибка выполнения операции «ПРЕДЪЯВИТЬ СОСТАВ УЗ», код ошибки = " + (result_provide ? result_provide.result : null));
-                                //        if (result_provide && result_provide.listResult && result_provide.listResult.length > 0) {
-                                //            $.each(result_provide.listResult, function (i, el) {
-                                //                if (el.result < 0) {
-                                //                    operation_detali.val_provide.out_error_message("№ вагона :" + el.num + ", код ошибки -" + el.result);
-                                //                }
-                                //            });
-                                //        }
-                                       LockScreenOff();
-                                //    }
-
-                                //});
+                                    } else {
+                                        operation_detali.val_sending_uz.out_error_message("Ошибка выполнения операции «ОТПРАВИТЬ СОСТАВ НА УЗ», код ошибки = " + (result_sending ? result_sending.result : null));
+                                        if (result_sending && result_sending.listResultWagon && result_provide.listResultWagon.length > 0) {
+                                            $.each(result_sending.listResultWagon, function (i, el) {
+                                                if (el.result < 0) {
+                                                    operation_detali.val_sending_uz.out_error_message("№ вагона :" + el.num + ", код ошибки -" + el.result);
+                                                }
+                                            });
+                                        }
+                                        LockScreenOff();
+                                    }
+                                    operation_detali.bt_operation_sending_uz_run.prop("disabled", false);
+                                });
 
                             } else {
                                 operation_detali.bt_operation_sending_uz_run.prop("disabled", false);
@@ -5597,6 +5586,7 @@
             select_sending_uz_id_station: null,             // id выбраной станции
             select_sending_uz_id_way: null,                 // id выбранного пути
             select_sending_uz_id_sostav: null,              // id выбранного состава
+            select_sending_uz_sostav: null,                 // Выбранный состав
             // таблица составов для отправки
             table_operation_detali_sending_uz_sostav_out: {
                 html_table: $('table#operation_detali_sending_uz_sostav_out'),
@@ -5844,16 +5834,38 @@
             // Показать выбранный состав
             view_sending_uz_sostav_from: function (id_sostav) {
                 // id получено, работаем...
+                operation_detali.select_sending_uz_sostav = null;
                 LockScreen(langView('mess_delay', langs));
-                var sostav = id_sostav;
-                ids_inc.getViewWagonsOfWay(operation_detali.select_sending_uz_id_way, function (wagons) {
-                    var list_car = wagons.filter(function (i) {
-                        return i.id_out_sostav === sostav;
+                if (id_sostav) {
+                    var id = id_sostav;
+                    ids_inc.getOutgoingSostavOfID(id_sostav, function (sostav) {
+                        if (sostav) {
+                            operation_detali.select_sending_uz_sostav = sostav;
+                            // Состав найден обновим информацию
+                            operation_detali.operation_detali_sending_uz_composition_index.val(operation_detali.select_sending_uz_sostav.composition_index);
+                            operation_detali.operation_detali_sending_uz_date_readiness_amkr.val(operation_detali.select_sending_uz_sostav.date_readiness_amkr);
+                            operation_detali.operation_detali_sending_uz_date_outgoing.val(operation_detali.select_sending_uz_sostav.date_outgoing);
+                            // покажем вагоны состава
+                            ids_inc.getViewWagonsOfWay(operation_detali.select_sending_uz_id_way, function (wagons) {
+                                var list_car = wagons.filter(function (i) {
+                                    return i.id_out_sostav === sostav.id;
+                                });
+                                operation_detali.table_wagons_sending_uz_way_from.view(list_car, function () {
+                                    LockScreenOff();
+                                });
+                            });
+                        } else {
+                            operation_detali.val_sending_uz.out_error_message("По указанному id=" + id + " в базе данных отсутствует состав!");
+                        }
                     });
-                    operation_detali.table_wagons_sending_uz_way_from.view(list_car, function () {
+                } else {
+                    operation_detali.operation_detali_sending_uz_composition_index.val('');
+                    operation_detali.operation_detali_sending_uz_date_readiness_amkr.val('');
+                    operation_detali.operation_detali_sending_uz_date_outgoing.val('');
+                    operation_detali.table_wagons_sending_uz_way_from.view([], function () {
                         LockScreenOff();
                     });
-                });
+                }
             },
             // Отобразить пути станции отправления
             view_sending_uz_ways_from: function (id_station, id_way) {
@@ -5874,9 +5886,11 @@
                 }
                 // Показать пути
                 operation_detali.view_sending_uz_sostav(operation_detali.select_sending_uz_id_way);
+                operation_detali.view_sending_uz_sostav_from(operation_detali.select_sending_uz_id_sostav)
             },
             // Показать составы для отправки на пути
             view_sending_uz_sostav: function (id_way) {
+                operation_detali.select_sending_uz_id_sostav = null;
                 ids_inc.getOutgoingSostavOfStatus(2, function (list_sostav) {
                     var list = list_sostav.filter(function (i) {
                         return i.id_way_from === id_way;
@@ -5911,7 +5925,7 @@
 
                 operation_detali.select_sending_uz_id_station = operation_detali.sending_uz_way_from ? operation_detali.sending_uz_way_from.id_station : -1;
                 operation_detali.operation_detali_sending_uz_station_from.val(operation_detali.select_sending_uz_id_station);
-                operation_detali.view_sending_uz_ways_from(operation_detali.select_sending_uz_id_station, operation_detali.select_sending_uz_id_way);
+
                 //
                 ////
                 //operation_detali.id_way_from_provide = id_way;
@@ -5943,9 +5957,9 @@
                 //            //// Обновим компонент
                 //            //operation_detali.update_outer_ways(id_station_on);
                 //        }, null);
-                //    // Сбросим бит обновления и список путей обновления
-                //    operation_detali.bit_update = false;
-                //    operation_detali.rows_update = [];
+                // Сбросим бит обновления и список путей обновления
+                operation_detali.bit_update = false;
+                operation_detali.rows_update = [];
                 operation_detali.refresh_sending_uz();
                 //    // Показать операцию детально
                 operation_detali.content.addClass('is-visible');
@@ -5954,10 +5968,13 @@
             },
             // Показать отправку
             refresh_sending_uz: function () {
-                operation_detali.val_provide.clear_all();
+                operation_detali.val_sending_uz.clear_all();
+                operation_detali.operation_detali_sending_uz_lead_time.setDateTime(null);
+                operation_detali.operation_detali_sending_uz_composition_index.val('');
+                operation_detali.view_sending_uz_ways_from(operation_detali.select_sending_uz_id_station, operation_detali.select_sending_uz_id_way);
                 //// Отображаем путь и станцию
                 //operation_detali.operation_detali_provide_station.val(operation_detali.way_from_provide.id_station);
-                ////operation_detali.operation_detali_provide_lead_time.setDateTime(null);
+
                 //operation_detali.table_wagons_provide_way_from.load(operation_detali.id_way_from_provide, function () {
                 //    operation_detali.table_wagons_provide.view();
                 //    operation_detali.table_wagons_provide_exist.view();
@@ -6251,7 +6268,9 @@
                 // Соберем все элементы в массив операции "Отправки"
                 operation_detali.all_obj_sending_uz = $([])
                     .add(operation_detali.operation_detali_sending_uz_station_from)
+                    .add(operation_detali.operation_detali_sending_uz_way_from)
                     .add(operation_detali.operation_detali_sending_uz_lead_time.obj)
+                    .add(operation_detali.operation_detali_sending_uz_composition_index)
                     ;
                 operation_detali.val_sending_uz = new VALIDATION(operation_detali.lang, operation_detali.alert, operation_detali.all_obj_sending_uz); // Создадим класс VALIDATION
                 //$("a.dt-button").removeClass('dt-button').addClass('btn btn-secondary');

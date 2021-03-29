@@ -89,7 +89,7 @@ namespace IDS
                     IDSTransfer ids_tr = new IDSTransfer(service);
                     ids_tr.TransferControlTimeIntervalKIS = transfer_control_time_interval_kis;
                     ids_tr.TransferSetOutgoingWagonOfKis = transfer_set_outgoing_wagon_of_kis;
-                    res_transfer = ids_tr.InsertOutgoingSostavOfKis();
+                    //res_transfer = ids_tr.InsertOutgoingSostavOfKis();
                 }
                 TimeSpan ts = DateTime.Now - dt_start;
                 string mes_service_exec = String.Format("Поток {0} сервиса {1} - время выполнения: {2}:{3}:{4}({5}), код выполнения: res_transfer:{6}.", service.ToString(), servece_owner, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds, res_transfer);

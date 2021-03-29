@@ -17,6 +17,7 @@ namespace IDS
         // таблица wir -200...
         not_wir_db = -201,                          // В базе данных нет записи по WagonInternalRoutes (Внутренее перемещение вагонов)
         close_wir = -202,                           // Записи по WagonInternalRoutes - закрыта
+        outgoing_cars_wir = -203,                   // Записи по WagonInternalRoutes - уже имеет ссылку на отправку
         // таблица wim -300...
         not_wim_db = -301,                          // В базе данных нет записи по WagonInternalMovement (Внутреняя дислокация вагонов)
         wagon_not_way = -302,                       // Вагон не стоит на пути

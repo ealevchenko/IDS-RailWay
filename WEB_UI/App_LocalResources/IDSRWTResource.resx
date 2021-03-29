@@ -696,4 +696,10 @@
   <data name="title_operation_detali_sending_uz_way_from" xml:space="preserve">
     <value>Путь с которого будет отправлен состав на УЗ</value>
   </data>
+  <data name="title_operation_detali_date_outgoing" xml:space="preserve">
+    <value>Сдан на УЗ</value>
+  </data>
+  <data name="title_operation_detali_date_readiness_amk" xml:space="preserve">
+    <value>Предъявлен</value>
+  </data>
 </root>
