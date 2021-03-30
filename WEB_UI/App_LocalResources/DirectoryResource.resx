@@ -352,9 +352,18 @@
     <value>Выбрать прибывший состав и произвести разметку вагонов</value>
   </data>
   <data name="wagon_marking_title" xml:space="preserve">
-    <value>Разметить вагоны</value>
+    <value>Разметка по прибытию</value>
   </data>
   <data name="shipper_title" xml:space="preserve">
     <value>Справочник "Грузоотправители"</value>
+  </data>
+  <data name="present_wagon_marking_description" xml:space="preserve">
+    <value>Выбрать предъявленный состав и произвести разметку вагонов</value>
+  </data>
+  <data name="present_wagon_marking_title" xml:space="preserve">
+    <value>Разметка по отправлению</value>
+  </data>
+  <data name="title_edit_note_vagonnik" xml:space="preserve">
+    <value>Разметка после осмотра вагонником</value>
   </data>
 </root>

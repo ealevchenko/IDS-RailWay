@@ -160,6 +160,24 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Выбрать предъявленный состав и произвести разметку вагонов.
+        /// </summary>
+        public static string present_wagon_marking_description {
+            get {
+                return ResourceManager.GetString("present_wagon_marking_description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Разметка по отправлению.
+        /// </summary>
+        public static string present_wagon_marking_title {
+            get {
+                return ResourceManager.GetString("present_wagon_marking_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Справочник «Железных дорог».
         /// </summary>
         public static string railway_title {
@@ -736,6 +754,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Разметка после осмотра вагонником.
+        /// </summary>
+        public static string title_edit_note_vagonnik {
+            get {
+                return ResourceManager.GetString("title_edit_note_vagonnik", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Статусы.
         /// </summary>
         public static string title_park_status {
@@ -772,7 +799,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Разметить вагоны.
+        ///   Ищет локализованную строку, похожую на Разметка по прибытию.
         /// </summary>
         public static string wagon_marking_title {
             get {

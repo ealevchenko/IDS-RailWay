@@ -339,7 +339,7 @@ IDS_RWT.prototype.getInstructionalLettersOfNumDate = function (num, date, callba
     $.ajax({
         url: '../../api/ids/rwt/instructional_letters/num_date/',
         type: 'POST',
-        data: JSON.stringify({num:num, date:date}),
+        data: JSON.stringify({ num: num, date: date }),
         contentType: "application/json;charset=utf-8",
         async: true,
         beforeSend: function () {
@@ -1533,38 +1533,38 @@ IDS_RWT.prototype.deleteArrival_UZ_Vagon = function (id, callback) {
 IDS_RWT.prototype.getCloneArrival_UZ_Vagon = function (vagon) {
     if (!vagon) return null;
     return {
-        id : vagon.id ,
-        id_document : vagon.id_document ,
-        num : vagon.num ,
-        id_arrival : vagon.id_arrival ,
-        id_car : vagon.id_car ,
-        id_condition : vagon.id_condition ,
-        id_type : vagon.id_type ,
-        gruzp : vagon.gruzp ,
-        u_tara : vagon.u_tara ,
-        ves_tary_arc : vagon.ves_tary_arc ,
-        route : vagon.route ,
-        note_vagon : vagon.note_vagon ,
-        id_cargo : vagon.id_cargo ,
-        id_cargo_gng : vagon.id_cargo_gng ,
-        id_certification_data : vagon.id_certification_data ,
-        id_commercial_condition : vagon.id_commercial_condition ,
-        kol_pac : vagon.kol_pac ,
-        pac : vagon.pac ,
-        vesg : vagon.vesg ,
-        vesg_reweighing : vagon.vesg_reweighing ,
-        nom_zpu : vagon.nom_zpu ,
-        danger : vagon.danger ,
-        danger_kod : vagon.danger_kod ,
-        cargo_returns : vagon.cargo_returns ,
-        id_station_on_amkr : vagon.id_station_on_amkr ,
-        id_division_on_amkr : vagon.id_division_on_amkr ,
-        empty_car : vagon.empty_car ,
-        kol_conductor : vagon.kol_conductor ,
-        create : vagon.create ,
-        create_user : vagon.create_user ,
-        change : vagon.change ,
-        change_user : vagon.change_user ,
+        id: vagon.id,
+        id_document: vagon.id_document,
+        num: vagon.num,
+        id_arrival: vagon.id_arrival,
+        id_car: vagon.id_car,
+        id_condition: vagon.id_condition,
+        id_type: vagon.id_type,
+        gruzp: vagon.gruzp,
+        u_tara: vagon.u_tara,
+        ves_tary_arc: vagon.ves_tary_arc,
+        route: vagon.route,
+        note_vagon: vagon.note_vagon,
+        id_cargo: vagon.id_cargo,
+        id_cargo_gng: vagon.id_cargo_gng,
+        id_certification_data: vagon.id_certification_data,
+        id_commercial_condition: vagon.id_commercial_condition,
+        kol_pac: vagon.kol_pac,
+        pac: vagon.pac,
+        vesg: vagon.vesg,
+        vesg_reweighing: vagon.vesg_reweighing,
+        nom_zpu: vagon.nom_zpu,
+        danger: vagon.danger,
+        danger_kod: vagon.danger_kod,
+        cargo_returns: vagon.cargo_returns,
+        id_station_on_amkr: vagon.id_station_on_amkr,
+        id_division_on_amkr: vagon.id_division_on_amkr,
+        empty_car: vagon.empty_car,
+        kol_conductor: vagon.kol_conductor,
+        create: vagon.create,
+        create_user: vagon.create_user,
+        change: vagon.change,
+        change_user: vagon.change_user,
     };
 }
 //======= Arrival_UZ_Vagon_Pay (Платежки по плательщикам ЭПД УЗ по прибытию) ======================================
@@ -2404,7 +2404,7 @@ IDS_RWT.prototype.getViewArrivalSostav = function (start, stop, callback) {
 IDS_RWT.prototype.getArrivalSostavOfDatePeriodIDStationOn = function (start, stop, id_station, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/rwt/arrival_sostav/start/' + toISOStringTZ(start).substring(0, 19) + '/stop/' + toISOStringTZ(stop).substring(0, 19) + '/station/amkr/id/'+id_station,
+        url: '../../api/ids/rwt/arrival_sostav/start/' + toISOStringTZ(start).substring(0, 19) + '/stop/' + toISOStringTZ(stop).substring(0, 19) + '/station/amkr/id/' + id_station,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -2612,7 +2612,7 @@ IDS_RWT.prototype.getArrivalCarsOfID = function (id, callback) {
     });
 };
 // Получить вагон
-IDS_RWT.prototype.getArrivalCarsOfNum= function (num, callback) {
+IDS_RWT.prototype.getArrivalCarsOfNum = function (num, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/arrival_cars/num/' + num,
@@ -2967,6 +2967,29 @@ IDS_RWT.prototype.getViewOutgoingSostav = function (start, stop, callback) {
         },
     });
 };
+// Получить все составы (View)
+IDS_RWT.prototype.getViewOutgoingSostavOfPeriodStation = function (start, stop, id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/outgoing_sostav/view/start/' + toISOStringTZ(start).substring(0, 19) + '/stop/' + toISOStringTZ(stop).substring(0, 19) + '/station/amkr/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getViewOutgoingSostavOfPeriodStation", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 // Получить состав
 IDS_RWT.prototype.getOutgoingSostavOfID = function (id, callback) {
     $.ajax({
@@ -2991,7 +3014,7 @@ IDS_RWT.prototype.getOutgoingSostavOfID = function (id, callback) {
     });
 };
 // Получить составы с указаным статусом
-IDS_RWT.prototype.getOutgoingSostavOfStatus= function (status, callback) {
+IDS_RWT.prototype.getOutgoingSostavOfStatus = function (status, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/outgoing_sostav/view/sostav/status/' + status,
@@ -3227,7 +3250,7 @@ IDS_RWT.prototype.getOutgoingDetentionReturnOfID = function (id, callback) {
     });
 };
 // Получить все задержания и возвраты по номеру вагона 
-IDS_RWT.prototype.getOutgoingDetentionReturnOfNum= function (num, callback) {
+IDS_RWT.prototype.getOutgoingDetentionReturnOfNum = function (num, callback) {
     $.ajax({
         type: 'GET',
         url: '../../api/ids/rwt/outgoing_detention_return/num/' + num,
@@ -3575,10 +3598,10 @@ IDS_RWT.prototype.getViewStationStatus = function (callback) {
     });
 };
 // Получить состояние станции по id
-IDS_RWT.prototype.getViewStationStatusOfIDStation= function (id_station, callback) {
+IDS_RWT.prototype.getViewStationStatusOfIDStation = function (id_station, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/rwt/wsd/view/station/status/id/'+ id_station,
+        url: '../../api/ids/rwt/wsd/view/station/status/id/' + id_station,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -3624,7 +3647,7 @@ IDS_RWT.prototype.getViewParkWaysOfStation = function (id, callback) {
 IDS_RWT.prototype.getViewWaysOfStationPark = function (id_station, id_park, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/rwt/wsd/view/ways/status/station/id/'+id_station+'/park_ways/id/'+id_park,
+        url: '../../api/ids/rwt/wsd/view/ways/status/station/id/' + id_station + '/park_ways/id/' + id_park,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -3667,10 +3690,10 @@ IDS_RWT.prototype.getViewWaysOfID = function (id, callback) {
     });
 };
 // Получить состояние всех путей по указаной станции
-IDS_RWT.prototype.getViewWaysStatusOfIDStation= function (id_station, callback) {
+IDS_RWT.prototype.getViewWaysStatusOfIDStation = function (id_station, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/rwt/wsd/view/ways/status/station/id/'+ id_station,
+        url: '../../api/ids/rwt/wsd/view/ways/status/station/id/' + id_station,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -4058,7 +4081,7 @@ IDS_RWT.prototype.putParkState_Station = function (pss, callback) {
 IDS_RWT.prototype.getViewParkStateOfStation = function (id_station, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/rwt/park_state/view/station_state/station/'+id_station,
+        url: '../../api/ids/rwt/park_state/view/station_state/station/' + id_station,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -4330,7 +4353,7 @@ IDS_RWT.prototype.getCloneInstructionalLetters = function (letter) {
 IDS_RWT.prototype.getCloneInstructionalLettersWagon = function (wagon) {
     if (!wagon) return null;
     return {
-        id : wagon.id,
+        id: wagon.id,
         id_instructional_letters: wagon.id_instructional_letters,
         num: wagon.num,
         close: wagon.close,

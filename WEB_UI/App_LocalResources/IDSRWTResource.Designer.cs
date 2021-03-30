@@ -79,6 +79,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на ВДС «ЖД АМКР.
+        /// </summary>
+        public static string home_vds_title {
+            get {
+                return ResourceManager.GetString("home_vds_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Номерной учет по прибытию, прием груза.
         /// </summary>
         public static string incoming_description {
@@ -772,6 +781,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Разметка предъявление.
+        /// </summary>
+        public static string title_link_present_wagon_marking {
+            get {
+                return ResourceManager.GetString("title_link_present_wagon_marking", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Поиск вагона.
         /// </summary>
         public static string title_link_searsh_wagon {
@@ -790,7 +808,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Разметка вагонов.
+        ///   Ищет локализованную строку, похожую на Разметка прибытие.
         /// </summary>
         public static string title_link_wagon_marking {
             get {

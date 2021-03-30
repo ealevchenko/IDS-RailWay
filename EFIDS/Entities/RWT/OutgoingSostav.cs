@@ -65,6 +65,9 @@ namespace EFIDS.Entities
 
         public bool? route_sign { get; set; }
 
+        [StringLength(50)]
+        public string vagonnik_user { get; set; }
+
         //public long id { get; set; }
 
         //public int num_doc { get; set; }

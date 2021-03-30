@@ -541,7 +541,7 @@
     <value>Карточка вагонов</value>
   </data>
   <data name="title_link_wagon_marking" xml:space="preserve">
-    <value>Разметка вагонов</value>
+    <value>Разметка прибытие</value>
   </data>
   <data name="utilite_title" xml:space="preserve">
     <value>Утилиты</value>
@@ -701,5 +701,11 @@
   </data>
   <data name="title_operation_detali_date_readiness_amk" xml:space="preserve">
     <value>Предъявлен</value>
+  </data>
+  <data name="home_vds_title" xml:space="preserve">
+    <value>ВДС «ЖД АМКР</value>
+  </data>
+  <data name="title_link_present_wagon_marking" xml:space="preserve">
+    <value>Разметка предъявление</value>
   </data>
 </root>

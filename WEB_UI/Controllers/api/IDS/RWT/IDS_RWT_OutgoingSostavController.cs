@@ -160,6 +160,26 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // GET: api/ids/rwt/outgoing_sostav/view/start/2021-03-01T00:00:00/stop/2021-03-20T23:59:59/station/amkr/id/6
+        [Route("view/start/{start:datetime}/stop/{stop:datetime}/station/amkr/id/{id:int}")]
+        [ResponseType(typeof(ViewOutgoingSostav))]
+        public IHttpActionResult GetViewOutgoingSostavOfPeriodStation(DateTime start, DateTime stop, int id)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter p_start = new System.Data.SqlClient.SqlParameter("@start", start);
+                System.Data.SqlClient.SqlParameter p_stop = new System.Data.SqlClient.SqlParameter("@stop", stop);
+                System.Data.SqlClient.SqlParameter p_id = new System.Data.SqlClient.SqlParameter("@id_station", id);
+                string sql = "select * from [IDS].[get_outgoing_sostav]() where date_readiness_amkr>=@start and date_readiness_amkr<=@stop and id_station_from = @id_station order by date_readiness_amkr";
+                List<ViewOutgoingSostav> list = this.ef_ids.Database.SqlQuery<ViewOutgoingSostav>(sql,p_start,p_stop, p_id).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         // GET: api/ids/rwt/outgoing_sostav/view/sostav/status/2
         /// <summary>
         /// Выбрать составы сданные на уз

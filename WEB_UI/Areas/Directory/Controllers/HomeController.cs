@@ -86,6 +86,12 @@ namespace WEB_UI.Areas.Directory.Controllers
         {
             return View();
         }
+        // Разметка по предъявлению
+        [AccessOfDB(LogVisit = true)]
+        public ActionResult PresentWagonMarking()
+        {
+            return View();
+        }
         // Состояние парка
         [AccessOfDB(LogVisit = true)]
         public ActionResult ParkState()
