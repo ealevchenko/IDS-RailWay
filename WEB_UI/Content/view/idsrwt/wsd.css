@@ -320,12 +320,12 @@ fieldset {
 /*.arrival-wagon {
     background-color:lightpink !important;
 }*/
-.prisent-wagon {
+/*.prisent-wagon {
     background-color:wheat !important;
-}
-.handed-wagon {
+}*/
+/*.handed-wagon {
     background-color:darkseagreen !important;
-}
+}*/
 
 
 /*.look-wagon {
@@ -342,11 +342,35 @@ table.dataTable tbody tr:not(.selected).arrival-wagon.odd, table.dataTable tbody
 }
 
 
-
 table.dataTable.display tbody tr:not(.selected).odd.arrival-wagon > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.arrival-wagon > .sorting_1 {
-    background-color: #fbad74;
+    background-color: #f2bf99;
 }
 
 table.dataTable.display tbody tr:not(.selected).even.arrival-wagon > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.arrival-wagon > .sorting_1 {
-    background-color: #fbad74;
+    background-color: #f2bf99;
+}
+
+
+table.dataTable tbody tr:not(.selected).prisent-wagon.odd, table.dataTable tbody tr:not(.selected).prisent-wagon.even {
+    background-color: #f5deb3;
+}
+
+table.dataTable.display tbody tr:not(.selected).odd.prisent-wagon > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.prisent-wagon > .sorting_1 {
+    background-color: #f2d49c;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.prisent-wagon > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.prisent-wagon > .sorting_1 {
+    background-color: #f2d49c;
+}
+
+table.dataTable tbody tr:not(.selected).handed-wagon.odd, table.dataTable tbody tr:not(.selected).handed-wagon.even {
+    background-color: #cbdf95;
+}
+
+table.dataTable.display tbody tr:not(.selected).odd.handed-wagon > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.handed-wagon > .sorting_1 {
+    background-color: #aecd5a;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.handed-wagon > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.handed-wagon > .sorting_1 {
+    background-color: #aecd5a;
 }
