@@ -317,9 +317,9 @@ fieldset {
     background-color:#f5cdb0 !important;
 }
 
-.arrival-wagon {
+/*.arrival-wagon {
     background-color:lightpink !important;
-}
+}*/
 .prisent-wagon {
     background-color:wheat !important;
 }
@@ -335,4 +335,18 @@ fieldset {
 
 .select-wagon {
     background-color:#9cdd81 !important;
+}
+
+table.dataTable tbody tr:not(.selected).arrival-wagon.odd, table.dataTable tbody tr:not(.selected).arrival-wagon.even {
+    background-color: #f5cdb0;
+}
+
+
+
+table.dataTable.display tbody tr:not(.selected).odd.arrival-wagon > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.arrival-wagon > .sorting_1 {
+    background-color: #fbad74;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.arrival-wagon > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.arrival-wagon > .sorting_1 {
+    background-color: #fbad74;
 }

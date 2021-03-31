@@ -34,6 +34,7 @@ namespace WEB_UI.Controllers.api
         public DateTime? date_end_inspection_acceptance_delivery { get; set; }
         public DateTime? date_end_inspection_loader { get; set; }
         public DateTime? date_end_inspection_vagonnik { get; set; }
+        public string vagonnik_user { get; set; }
         public DateTime? date_show_wagons { get; set; }
         public DateTime? date_readiness_uz { get; set; }
         public DateTime? date_outgoing { get; set; }
