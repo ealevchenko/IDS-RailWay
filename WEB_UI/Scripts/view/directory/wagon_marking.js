@@ -2,53 +2,53 @@
 
     // Массив текстовых сообщений 
     $.Text_View =
-    {
-        'default':  //default language: ru
         {
-            'field_position': '№ позиции',
-            'field_num': '№ вагона',
-            'field_rod': 'Род',
-            'field_type': 'Тип',
-            'field_cargo': 'Груз',
-            'field_operator': 'Оператор',
-            'field_limit': 'Ограничение',
-            'field_date_rem_uz': 'Дата ремонта по УЗ',
-            'field_date_rem_vag': 'Дата ремонта на вагоне',
-            'field_condition': 'Разметка по прибытию',
-            'field_create_wagon': 'Добавил',
-            'field_change_wagon': 'Правил',
+            'default':  //default language: ru
+            {
+                'field_position': '№ позиции',
+                'field_num': '№ вагона',
+                'field_rod': 'Род',
+                'field_type': 'Тип',
+                'field_cargo': 'Груз',
+                'field_operator': 'Оператор',
+                'field_limit': 'Ограничение',
+                'field_date_rem_uz': 'Дата ремонта по УЗ',
+                'field_date_rem_vag': 'Дата ремонта на вагоне',
+                'field_condition': 'Разметка по прибытию',
+                'field_create_wagon': 'Добавил',
+                'field_change_wagon': 'Правил',
 
-            'title_button_export': 'Экспорт',
-            'title_button_buffer': 'Буфер',
-            'title_button_excel': 'Excel',
-            'title_button_select_all': 'Выбрать все',
-            'title_button_select_none': 'Убрать все',
-            'title_button_edit': 'Править разметку',
+                'title_button_export': 'Экспорт',
+                'title_button_buffer': 'Буфер',
+                'title_button_excel': 'Excel',
+                'title_button_select_all': 'Выбрать все',
+                'title_button_select_none': 'Убрать все',
+                'title_button_edit': 'Править разметку',
 
-        },
-        'en':  //default language: English
-        {
-            'field_position': 'Position No.',
-            'field_num': 'Wagon number',
-            'field_rod': 'Rod',
-            'field_type': 'Type',
-            'field_cargo': 'Cargo',
-            'field_operator': 'Operator',
-            'field_limit': 'Limit',
-            'field_date_rem_uz': 'Date of repair by ultrasound',
-            'field_date_rem_vag': 'Date of repair on the car',
-            'field_condition': 'Layout on arrival',
-            'field_create_wagon': 'Added',
-            'field_change_wagon': 'Rules',
+            },
+            'en':  //default language: English
+            {
+                'field_position': 'Position No.',
+                'field_num': 'Wagon number',
+                'field_rod': 'Rod',
+                'field_type': 'Type',
+                'field_cargo': 'Cargo',
+                'field_operator': 'Operator',
+                'field_limit': 'Limit',
+                'field_date_rem_uz': 'Date of repair by ultrasound',
+                'field_date_rem_vag': 'Date of repair on the car',
+                'field_condition': 'Layout on arrival',
+                'field_create_wagon': 'Added',
+                'field_change_wagon': 'Rules',
 
-            'title_button_export': 'Export',
-            'title_button_buffer': 'Buffer',
-            'title_button_excel': 'Excel',
-            'title_button_select_all': 'Select All',
-            'title_button_select_none': 'Remove all',
-            'title_button_edit': 'Edit markup',
-        }
-    };
+                'title_button_export': 'Export',
+                'title_button_buffer': 'Buffer',
+                'title_button_excel': 'Excel',
+                'title_button_select_all': 'Select All',
+                'title_button_select_none': 'Remove all',
+                'title_button_edit': 'Edit markup',
+            }
+        };
 
     //*************************************************************************************
     // ОБЪЯВЛЕНИЕ ОСНОВНЫХ ОБЪЕКТОВ ПРИЛОЖЕНИЯ
@@ -373,7 +373,7 @@
                             action: function (e, dt, node, config) {
                                 var items = table_arrival_wagon.obj.rows({ selected: true });
                                 var row_wagon = table_arrival_wagon.obj.rows(items[0]).data();
-                                pn_edit_condition.Open(row_wagon && row_wagon.length>0 ? row_wagon[0].id : null);
+                                pn_edit_condition.Open(row_wagon && row_wagon.length > 0 ? row_wagon[0].id : null);
                             },
                             enabled: false
                         },
@@ -465,7 +465,7 @@
             loadReference: function (callback) {
                 //LockScreen(langView('mess_load', langs));
                 var count = 1;
-                pn_edit_condition.ids_inc.ids_dir.load(['condition_arrival','type_wagons'], false, function () {
+                pn_edit_condition.ids_inc.ids_dir.load(['condition_arrival', 'type_wagons'], false, function () {
                     count -= 1;
                     if (count === 0) {
                         if (typeof callback === 'function') {
@@ -478,88 +478,88 @@
             init: function (lang, user_name, callback_ok) {
                 pn_edit_condition.lang = lang;
                 pn_edit_condition.user_name = user_name;
-                pn_edit_condition.ids_inc = new IDS_RWT(lang), // Создадим класс IDS_RWT
-                    pn_edit_condition.loadReference(function () {
-                        //pn_edit_condition.list_group = pn_edit_condition.ids_dir.getListLimitingLoading('id', 'limiting_name', pn_edit_condition.lang, null);
-                        // Инициализация годности по прибытию
-                        pn_edit_condition.edit_condition_arrival = cd_initSelect(
-                            pn_edit_condition.edit_condition_arrival,
-                            { lang: pn_edit_condition.lang },
-                            pn_edit_condition.ids_inc.ids_dir.getList2ConditionArrival('id', 'condition_abbr', 'condition_name', pn_edit_condition.lang, function (i) {
-                                return i.delete === null;
-                            }),
-                            null,
-                            -1,
-                            function (event) {
-                                event.preventDefault();
-                                //var id = Number($(this).val());
-                            },
-                            null);
-                        // Инициализация типов вагона
-                        pn_edit_condition.edit_condition_type = cd_initSelect(
-                            pn_edit_condition.edit_condition_type,
-                            { lang: pn_edit_condition.lang },
-                            pn_edit_condition.ids_inc.ids_dir.getListTypeWagons('id', 'type', pn_edit_condition.lang, null),
-                            null,
-                            -1,
-                            function (event) {
-                                event.preventDefault();
-                                //var id = Number($(this).val());
-                            },
-                            null);
-                        // Дата ремонта на вагоне
-                        pn_edit_condition.edit_condition_date_rem_vag = cd_initDateTimeRangePicker(pn_edit_condition.edit_condition_date_rem_vag, { lang: pn_edit_condition.lang, time: false }, function (datetime) {
-
-                        });
-                        // Соберем все элементы в массив
-                        pn_edit_condition.all_obj = $([])
-                            .add(pn_edit_condition.edit_condition_arrival)
-                            .add(pn_edit_condition.edit_condition_type)
-                            .add(pn_edit_condition.edit_condition_date_rem_vag.obj)
-                            ;
-                        // создадим классы 
-                        pn_edit_condition.val = new VALIDATION(pn_edit_condition.lang, pn_edit_condition.alert, pn_edit_condition.all_obj); // Создадим класс VALIDATION
-                        //pn_edit_condition.table_car.init();
-                        pn_edit_condition.obj = $("div#edit_condition").dialog({
-                            resizable: false,
-                            title: 'Править разметку',
-                            modal: true,
-                            autoOpen: false,
-                            height: "auto",
-                            width: 600,
-                            classes: {
-                                "ui-dialog": "card",
-                                "ui-dialog-titlebar": "card-header bg-primary text-white",
-                                "ui-dialog-content": "card-body",
-                                "ui-dialog-buttonpane": "card-footer text-muted"
-                            },
-                            open: function (event, ui) {
-
-                            },
-                            buttons: [
-                                {
-
-                                    disabled: false,
-                                    text: "Ок",
-                                    class: "btn btn-outline-primary btn",
-                                    click: function () {
-                                        pn_edit_condition.save(callback_ok);
-                                    }
-                                },
-                                {
-                                    text: "Отмена",
-                                    class: "btn btn-outline-primary btn",
-                                    click: function () {
-                                        $(this).dialog("close");
-                                    }
-                                },
-                            ]
-                        });
-                        // Sumbit form
-                        pn_edit_condition.obj.find("form").on("submit", function (event) {
+                pn_edit_condition.ids_inc = new IDS_RWT(lang); // Создадим класс IDS_RWT
+                pn_edit_condition.loadReference(function () {
+                    //pn_edit_condition.list_group = pn_edit_condition.ids_dir.getListLimitingLoading('id', 'limiting_name', pn_edit_condition.lang, null);
+                    // Инициализация годности по прибытию
+                    pn_edit_condition.edit_condition_arrival = cd_initSelect(
+                        pn_edit_condition.edit_condition_arrival,
+                        { lang: pn_edit_condition.lang },
+                        pn_edit_condition.ids_inc.ids_dir.getList2ConditionArrival('id', 'condition_abbr', 'condition_name', pn_edit_condition.lang, function (i) {
+                            return i.delete === null;
+                        }),
+                        null,
+                        -1,
+                        function (event) {
                             event.preventDefault();
-                        });
+                            //var id = Number($(this).val());
+                        },
+                        null);
+                    // Инициализация типов вагона
+                    pn_edit_condition.edit_condition_type = cd_initSelect(
+                        pn_edit_condition.edit_condition_type,
+                        { lang: pn_edit_condition.lang },
+                        pn_edit_condition.ids_inc.ids_dir.getListTypeWagons('id', 'type', pn_edit_condition.lang, null),
+                        null,
+                        -1,
+                        function (event) {
+                            event.preventDefault();
+                            //var id = Number($(this).val());
+                        },
+                        null);
+                    // Дата ремонта на вагоне
+                    pn_edit_condition.edit_condition_date_rem_vag = cd_initDateTimeRangePicker(pn_edit_condition.edit_condition_date_rem_vag, { lang: pn_edit_condition.lang, time: false }, function (datetime) {
+
                     });
+                    // Соберем все элементы в массив
+                    pn_edit_condition.all_obj = $([])
+                        .add(pn_edit_condition.edit_condition_arrival)
+                        .add(pn_edit_condition.edit_condition_type)
+                        .add(pn_edit_condition.edit_condition_date_rem_vag.obj)
+                        ;
+                    // создадим классы 
+                    pn_edit_condition.val = new VALIDATION(pn_edit_condition.lang, pn_edit_condition.alert, pn_edit_condition.all_obj); // Создадим класс VALIDATION
+                    //pn_edit_condition.table_car.init();
+                    pn_edit_condition.obj = $("div#edit_condition").dialog({
+                        resizable: false,
+                        title: 'Править разметку',
+                        modal: true,
+                        autoOpen: false,
+                        height: "auto",
+                        width: 600,
+                        classes: {
+                            "ui-dialog": "card",
+                            "ui-dialog-titlebar": "card-header bg-primary text-white",
+                            "ui-dialog-content": "card-body",
+                            "ui-dialog-buttonpane": "card-footer text-muted"
+                        },
+                        open: function (event, ui) {
+
+                        },
+                        buttons: [
+                            {
+
+                                disabled: false,
+                                text: "Ок",
+                                class: "btn btn-outline-primary btn",
+                                click: function () {
+                                    pn_edit_condition.save(callback_ok);
+                                }
+                            },
+                            {
+                                text: "Отмена",
+                                class: "btn btn-outline-primary btn",
+                                click: function () {
+                                    $(this).dialog("close");
+                                }
+                            },
+                        ]
+                    });
+                    // Sumbit form
+                    pn_edit_condition.obj.find("form").on("submit", function (event) {
+                        event.preventDefault();
+                    });
+                });
 
             },
             // открыть окно добавмить вагоны вручную
@@ -574,7 +574,7 @@
                             var condition = wagon_arrival.Arrival_UZ_Vagon && wagon_arrival.Arrival_UZ_Vagon.Directory_ConditionArrival ? wagon_arrival.Arrival_UZ_Vagon.Directory_ConditionArrival : null;
                             pn_edit_condition.edit_condition_arrival.val(condition !== null ? condition.id : null); // сбросить выбор
                             var type = wagon_arrival.Arrival_UZ_Vagon && wagon_arrival.Arrival_UZ_Vagon.Directory_TypeWagons ? wagon_arrival.Arrival_UZ_Vagon.Directory_TypeWagons : null;
-                            pn_edit_condition.edit_condition_type.val(type!==null ? type.id : -1); // сбросить выбор
+                            pn_edit_condition.edit_condition_type.val(type !== null ? type.id : -1); // сбросить выбор
                             var dt_rem_uz = wagon_arrival.Arrival_UZ_Vagon && wagon_arrival.Arrival_UZ_Vagon.Directory_Wagons && wagon_arrival.Arrival_UZ_Vagon.Directory_Wagons.date_rem_vag ? wagon_arrival.Arrival_UZ_Vagon.Directory_Wagons.date_rem_vag : null;
                             pn_edit_condition.edit_condition_date_rem_vag.setDateTime(dt_rem_uz); // сбросить выбор
                             pn_edit_condition.obj.dialog("open");
