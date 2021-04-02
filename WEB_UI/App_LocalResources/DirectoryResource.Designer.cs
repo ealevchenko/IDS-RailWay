@@ -736,6 +736,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Время осмотра вагонником.
+        /// </summary>
+        public static string title_close_condition_date {
+            get {
+                return ResourceManager.GetString("title_close_condition_date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Создать.
         /// </summary>
         public static string title_create {

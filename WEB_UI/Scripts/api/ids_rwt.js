@@ -3108,6 +3108,36 @@ IDS_RWT.prototype.postOutgoingSostav = function (outgoing_sostav, callback) {
         },
     });
 };
+// Вернуть копию без связй
+IDS_RWT.prototype.getCloneOutgoingSostav = function (sostav) {
+    if (!sostav) return null;
+    return {
+        id: sostav.id,
+        num_doc: sostav.num_doc,
+        id_station_from: sostav.id_station_from,
+        id_way_from: sostav.id_way_from,
+        id_station_on: sostav.id_station_on,
+        date_readiness_amkr: sostav.date_readiness_amkr,
+        date_end_inspection_acceptance_delivery: sostav.date_end_inspection_acceptance_delivery,
+        date_end_inspection_loader: sostav.date_end_inspection_loader,
+        date_end_inspection_vagonnik: sostav.date_end_inspection_vagonnik,
+        date_show_wagons: sostav.date_show_wagons,
+        date_readiness_uz: sostav.date_readiness_uz,
+        date_outgoing: sostav.date_outgoing,
+        date_outgoing_act: sostav.date_outgoing_act,
+        date_departure_amkr: sostav.date_departure_amkr,
+        composition_index: sostav.composition_index,
+        status: sostav.status,
+        note: sostav.note,
+        create: sostav.create,
+        create_user: sostav.create_user,
+        change: sostav.change,
+        change_user: sostav.change_user,
+        route_sign: sostav.route_sign,
+        vagonnik_user: sostav.vagonnik_user,
+    }
+};
+
 //======= OutgoingCars (Таблица вагонов состава) ======================================
 // Получить все вагоны
 IDS_RWT.prototype.getOutgoingCars = function (callback) {
@@ -3201,6 +3231,34 @@ IDS_RWT.prototype.putOutgoingCars = function (outgoing_cars, callback) {
             AJAXComplete();
         },
     });
+};
+// Вернуть копию без связй
+IDS_RWT.prototype.getCloneOutgoingCars = function (car) {
+    if (!car) return null;
+    return {
+        id: car.id,
+        id_outgoing: car.id_outgoing,
+        num: car.num,
+        position: car.position,
+        position_outgoing: car.position_outgoing,
+        num_doc: car.num_doc,
+        note: car.note,
+        date_outgoing_act: car.date_outgoing_act,
+        outgoing: car.outgoing,
+        outgoing_user: car.outgoing_user,
+        create: car.create,
+        create_user: car.create_user,
+        change: car.change,
+        change_user: car.change_user,
+        id_outgoing_uz_vagon: car.id_outgoing_uz_vagon,
+        id_outgoing_detention: car.id_outgoing_detention,
+        id_reason_discrepancy_amkr: car.id_reason_discrepancy_amkr,
+        id_reason_discrepancy_uz: car.id_reason_discrepancy_uz,
+        id_outgoing_return_start: car.id_outgoing_return_start,
+        id_outgoing_return_stop: car.id_outgoing_return_stop,
+        parent_wir_id: car.parent_wir_id,
+        note_vagonnik: car.note_vagonnik,
+    }
 };
 //======= OutgoingDetentionReturn (Таблица задержаных-возвращеных вагонов) ======================================
 // Получить все задержания и возвраты

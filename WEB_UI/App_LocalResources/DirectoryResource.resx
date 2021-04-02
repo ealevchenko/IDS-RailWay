@@ -366,4 +366,7 @@
   <data name="title_edit_note_vagonnik" xml:space="preserve">
     <value>Разметка после осмотра вагонником</value>
   </data>
+  <data name="title_close_condition_date" xml:space="preserve">
+    <value>Время осмотра вагонником</value>
+  </data>
 </root>
