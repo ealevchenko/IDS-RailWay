@@ -5113,7 +5113,7 @@
 
                                     } else {
                                         operation_detali.val_sending_uz.out_error_message("Ошибка выполнения операции «ОТПРАВИТЬ СОСТАВ НА УЗ», код ошибки = " + (result_sending ? result_sending.result : null));
-                                        if (result_sending && result_sending.listResultWagon && result_provide.listResultWagon.length > 0) {
+                                        if (result_sending && result_sending.listResultWagon && result_sending.listResultWagon.length > 0) {
                                             $.each(result_sending.listResultWagon, function (i, el) {
                                                 if (el.result < 0) {
                                                     operation_detali.val_sending_uz.out_error_message("№ вагона :" + el.num + ", код ошибки -" + el.result);
