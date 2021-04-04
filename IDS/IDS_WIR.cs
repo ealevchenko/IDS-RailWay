@@ -1478,7 +1478,8 @@ namespace IDS
                     ef_out_car.Delete(car.id);
                     return context.SaveChanges(); // Применить операции
                 }
-                else {
+                else
+                {
                     return result;
                 }
             }
@@ -2091,8 +2092,12 @@ namespace IDS
             }
             catch (Exception e)
             {
-                //e.ExceptionMethodLog(String.Format("OperationOpenOutgoingReturn(id_outgoing_car={0}, id_detention_return={1}, date_start={2}, num_act={3}, date_act={4}, note={5},user={6})",
-                //    id_outgoing_car, id_detention_return, date_start, num_act, date_act, note, user), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("OperationPresentWagon(id_outgoing_car={0}, position ={1}, date_outgoing_act ={2}, id_reason_discrepancy_amkr ={3}, id_reason_discrepancy_uz ={4}, " +
+                    "id_condition ={5}, id_wagons_rent_arrival ={6}, id_wagons_rent_outgoing ={7}, id_countrys ={8}, id_genus ={9}, id_owner ={10}, " +
+                    "gruzp_uz ={11}, tara_uz ={12}, note_uz ={13}, id_warehouse ={14}, id_division ={15},laden ={16}, id_cargo ={17}, nom_cont1 ={18}, nom_cont2 ={19}, code_stn_to ={20}, user ={21})",
+                 id_outgoing_car, position, date_outgoing_act, id_reason_discrepancy_amkr, id_reason_discrepancy_uz,
+                 id_condition, id_wagons_rent_arrival, id_wagons_rent_outgoing, id_countrys, id_genus, id_owner,
+                 gruzp_uz, tara_uz, note_uz, id_warehouse, id_division, laden, id_cargo, nom_cont1, nom_cont2, code_stn_to, user), servece_owner, eventID);
                 return (int)errors_base.global; // Глобальная ошибка
             }
         }
@@ -2195,8 +2200,8 @@ namespace IDS
             }
             catch (Exception e)
             {
-                //e.ExceptionMethodLog(String.Format("OperationReturnPresentWagon(id_outgoing_car={0}, id_detention_return={1}, date_start={2}, num_act={3}, date_act={4}, note={5},user={6})",
-                //    id_outgoing_car, id_detention_return, date_start, num_act, date_act, note, user), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("OperationReturnPresentWagon(id_outgoing_car={0}, user={1})",
+                    id_outgoing_car, user), servece_owner, eventID);
                 return (int)errors_base.global; // Глобальная ошибка
             }
         }
@@ -2271,8 +2276,9 @@ namespace IDS
             }
             catch (Exception e)
             {
-                //e.ExceptionMethodLog(String.Format("OperationReturnPresentWagon(id_outgoing_car={0}, id_detention_return={1}, date_start={2}, num_act={3}, date_act={4}, note={5},user={6})",
-                //    id_outgoing_car, id_detention_return, date_start, num_act, date_act, note, user), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("OperationPresentSostav(id_outgoing_sostav={0}, date_end_inspection_acceptance_delivery ={1},date_end_inspection_loader ={2}, date_end_inspection_vagonnik={3}, date_readiness_uz ={4}, date_outgoing ={5}, date_outgoing_act={6}, station_on={7}, route_sign={8}, composition_index={9}, user={10})",
+                    id_outgoing_sostav, date_end_inspection_acceptance_delivery, date_end_inspection_loader, date_end_inspection_vagonnik, date_readiness_uz,
+                    date_outgoing, date_outgoing_act, station_on, route_sign, composition_index, user), servece_owner, eventID);
                 return (int)errors_base.global; // Глобальная ошибка
             }
         }
@@ -2316,8 +2322,8 @@ namespace IDS
             }
             catch (Exception e)
             {
-                //e.ExceptionMethodLog(String.Format("OperationReturnPresentWagon(id_outgoing_car={0}, id_detention_return={1}, date_start={2}, num_act={3}, date_act={4}, note={5},user={6})",
-                //    id_outgoing_car, id_detention_return, date_start, num_act, date_act, note, user), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("OperationReturnPresentSostav(id_outgoing_sostav={0}, user={1})",
+                    id_outgoing_sostav, user), servece_owner, eventID);
                 return (int)errors_base.global; // Глобальная ошибка
             }
         }
@@ -2325,7 +2331,15 @@ namespace IDS
         #endregion
 
         #region ОПЕРАЦИЯ "ОТПРАВКИ СОСТАВА НА УЗ"
-
+        /// <summary>
+        /// Отправить вагон на УЗ
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="car"></param>
+        /// <param name="id_way_from"></param>
+        /// <param name="lead_time"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public int SendingWagonOnUZ(ref EFDbContext context, OutgoingCars car, int id_way_from, DateTime lead_time, string user)
         {
             try
@@ -2362,13 +2376,20 @@ namespace IDS
             }
             catch (Exception e)
             {
-                //e.ExceptionMethodLog(String.Format("OutgoingWagon(context={0}, id_station={1}, id_way={2}, date_start={3}, position={4}, wagon={5}, user={6})",
-                //    context, id_station, id_way, date_start, position, wagon, user), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("SendingWagonOnUZ(context={0}, car={1}, id_way_from={2}, lead_time={3}, user={4})",
+                    context, car, id_way_from, lead_time, user), servece_owner, eventID);
                 return (int)errors_base.global;// Возвращаем id=-1 , Ошибка
             }
         }
-
-        public OperationResultWagon OperationSendingSostavOnUZ(long id_outgoing_sostav, DateTime lead_time, string user)
+        /// <summary>
+        /// Отправить состав на УЗ
+        /// </summary>
+        /// <param name="id_outgoing_sostav"></param>
+        /// <param name="lead_time"></param>
+        /// <param name="composition_index"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public OperationResultWagon OperationSendingSostavOnUZ(long id_outgoing_sostav, DateTime lead_time, string composition_index, string user)
         {
             OperationResultWagon rt = new OperationResultWagon();
             try
@@ -2403,10 +2424,21 @@ namespace IDS
                             {
                                 sostav.status = 3;
                                 sostav.date_departure_amkr = lead_time;
+                                sostav.composition_index = composition_index != null ? composition_index : sostav.composition_index;
                                 sostav.change = DateTime.Now;
                                 sostav.change_user = user;
                                 ef_out_sostav.Update(sostav);
                                 rt.SetResult(context.SaveChanges());
+                                // Если операция успешна, перенумеруем позиции на пути с которого ушли вагоны
+                                if (rt.result > 0)
+                                {
+                                    int result_rnw = RenumberingWagons(ref context, sostav.id_way_from, 1);
+                                    if (result_rnw > 0)
+                                    {
+                                        // Применим перенумерацию
+                                        context.SaveChanges();
+                                    }
+                                }
                             }
                             else
                             {
@@ -2431,8 +2463,8 @@ namespace IDS
             }
             catch (Exception e)
             {
-                //e.ExceptionMethodLog(String.Format("OperationReturnPresentWagon(id_outgoing_car={0}, id_detention_return={1}, date_start={2}, num_act={3}, date_act={4}, note={5},user={6})",
-                //    id_outgoing_car, id_detention_return, date_start, num_act, date_act, note, user), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("OperationSendingSostavOnUZ(id_outgoing_sostav={0}, lead_time={1}, composition_index={2}, user={3})",
+                    id_outgoing_sostav, lead_time, composition_index, user), servece_owner, eventID);
                 rt.SetResult((int)errors_base.global);
                 return rt;// Возвращаем id=-1 , Ошибка
             }
