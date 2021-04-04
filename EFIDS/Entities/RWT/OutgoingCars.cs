@@ -69,6 +69,11 @@ namespace EFIDS.Entities
         [StringLength(100)]
         public string note_vagonnik { get; set; }
 
+        public DateTime? vagonnik { get; set; }
+
+        [StringLength(50)]
+        public string vagonnik_user { get; set; }
+
         public virtual Directory_Reason_Discrepancy Directory_Reason_Discrepancy { get; set; }
 
         public virtual Directory_Reason_Discrepancy Directory_Reason_Discrepancy1 { get; set; }
