@@ -708,4 +708,7 @@
   <data name="title_link_present_wagon_marking" xml:space="preserve">
     <value>Разметка предъявление</value>
   </data>
+  <data name="title_condition_present" xml:space="preserve">
+    <value>Разметка вагонника</value>
+  </data>
 </root>

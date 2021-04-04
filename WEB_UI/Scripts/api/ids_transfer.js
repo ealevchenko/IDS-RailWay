@@ -26,7 +26,7 @@ IDS_TRANSFER.prototype.getLastDT_UZ_DOC_DB_IDS = function (callback) {
             }
         },
         error: function (x, y, z) {
-            OnAJAXError("IDS_TRANSFER.getLastDT_UZ_DOC_DB_IDS", x, y, z);
+            //OnAJAXError("IDS_TRANSFER.getLastDT_UZ_DOC_DB_IDS", x, y, z);
         },
         complete: function () {
             AJAXComplete();

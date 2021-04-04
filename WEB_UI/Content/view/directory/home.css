@@ -151,3 +151,39 @@ tr.group:hover {
 .info-wagon-form-control {
     font-size: 1.2rem;
 }
+/*work-wagon - в работе*/
+table.dataTable tbody tr:not(.selected).work-wagon.odd, table.dataTable tbody tr:not(.selected).work-wagon.even {
+    background-color: #e8e8b5;
+}
+
+table.dataTable.display tbody tr:not(.selected).odd.work-wagon > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.work-wagon > .sorting_1 {
+    background-color: #e2e2a2;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.work-wagon > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.work-wagon > .sorting_1 {
+    background-color: #e2e2a2;
+}
+/*completed-wagon - действие применено*/
+table.dataTable tbody tr:not(.selected).completed-wagon.odd, table.dataTable tbody tr:not(.selected).completed-wagon.even {
+    background-color: #59b300;
+}
+
+table.dataTable.display tbody tr:not(.selected).odd.completed-wagon > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.completed-wagon > .sorting_1 {
+    background-color: #4c9a00;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.completed-wagon > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.completed-wagon > .sorting_1 {
+    background-color: #4c9a00;
+}
+/*cancel-wagon - действие отменено*/
+table.dataTable tbody tr:not(.selected).cancel-wagon.odd, table.dataTable tbody tr:not(.selected).cancel-wagon.even {
+    background-color: #ffcdcd;
+}
+
+table.dataTable.display tbody tr:not(.selected).odd.cancel-wagon > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.cancel-wagon > .sorting_1 {
+    background-color: #ffb4b4;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.cancel-wagon > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.cancel-wagon > .sorting_1 {
+    background-color: #ffb4b4;
+}

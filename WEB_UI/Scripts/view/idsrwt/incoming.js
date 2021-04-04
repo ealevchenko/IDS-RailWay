@@ -142,8 +142,8 @@
             'title_button_wagon': 'Вагоны',
             'title_button_wagon_accept': 'Принять вагоны',
             'title_button_wagon_view': 'Показать вагоны',
-            'title_button_send_db_us_doc': 'Ошибка ЭПД',
-            'title_button_send_db_mt': 'Ошибка МТ',
+            'title_button_send_db_us_doc': 'БД ЭПД',
+            'title_button_send_db_mt': 'БД МТ',
 
             'title_arrival_sostav': 'Принять состав',
             'title_return_car': 'Вернуть вагон',
@@ -322,6 +322,9 @@
     // ОБЪЯВЛЕНИЕ ОСНОВНЫХ ОБЪЕКТОВ ПРИЛОЖЕНИЯ
     //*************************************************************************************
     var lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang')),
+        email_krr_services = 'KRR.IT.Service@arcelormittal.com',
+        email_error_epd = 'vasiliy.litvin@arcelormittal.com',
+        email_error_mt = 'eduard.levchenko@arcelormittal.com',
         langs = $.extend(true, $.extend(true, getLanguages($.Text_View, lang), getLanguages($.Text_Common, lang)), getLanguages($.Text_Table, lang)),
         user_name = $('input#username').val(),
         dc = $('div#dialog-confirm').dialog_confirm({}),
@@ -1665,7 +1668,7 @@
                             text: langView('title_button_send_db_us_doc', langs),
                             className: 'buttons-error',
                             action: function (e, dt, node, config) {
-                                window.open('mailto:KRR.IT.Service@arcelormittal.com;vasiliy.litvin@arcelormittal.com?subject=Не заполняется промежуточная база ЭПД&body=Инцидент направить на группу: KRR-ДАТП - DDICS / Литвин Василий Николаевич (vnlitvin)', '_self');
+                                window.open('mailto:' + email_krr_services + ';' + email_error_epd + '?subject=Не заполняется промежуточная база ЭПД&body=Инцидент направить на группу: KRR-ДАТП - DDICS / Литвин Василий Николаевич (vnlitvin)', '_self');
                             },
                             enabled: false
                         },
@@ -2495,7 +2498,7 @@
                     .add(cars_detali.uz_vag_devision_on_amkr_name)
                     .add(cars_detali.arrival_cars_position_arrival)
                     .add(cars_detali.arrival_cars_car_date_adoption_act.obj)
-                ;
+                    ;
 
                 // Соберем все элементы в массив
                 cars_detali.all_obj_card_vag = $([])
@@ -8103,7 +8106,7 @@
                         .add(pn_arrival_sostav.arrival_sostav_way_on)
                         .add(pn_arrival_sostav.arrival_count_car)
                         .add(pn_arrival_sostav.arrival_sostav_numeration)
-                    ;
+                        ;
                     // создадим классы 
 
                     //pn_arrival_sostav.alert = new ALERT($('div#arrival-sostav-alert'));// Создадим класс ALERTG
@@ -8294,20 +8297,15 @@
     loadReference(function (result) {
         // Инициализация
         if (lang === 'ru') $.datepicker.setDefaults($.datepicker.regional.ru);
-
-        // Обновить
-        setInterval(function () {
-            $('label#curent_date').text(getReplaceTOfDT(toISOStringTZ(new Date())));
-            ids_gl.getCountClient(function (count) {
-                $('label#client_count').text(count);
-            });
-        }, 1000);
-
-        // Проверка ошибок
-        setInterval(function () {
-
-            ids_inc.ids_tr.getLastDT_UZ_DOC_DB_IDS(function (last_date) {
-                var curent = moment();
+        // Получить первую информацию
+        // Запрос клиентов 
+        ids_gl.getCountClient(function (count) {
+            $('label#client_count').text(count);
+        });
+        // Проверка базы ЭПД
+        ids_inc.ids_tr.getLastDT_UZ_DOC_DB_IDS(function (last_date) {
+            var curent = moment();
+            if (last_date) {
                 var last_db = moment(last_date);
                 var duration = moment.duration(curent.diff(last_db))
                 var duration_min = duration.as('minutes');
@@ -8315,10 +8313,42 @@
                 table_sostav.obj.button(7).text(langView('title_button_send_db_us_doc', langs) + '-' + duration_min.toFixed(1));
                 if (duration_min > 90) {
                     table_sostav.obj.button(7).enable(true);
-                    //$(table_sostav.obj.button(7)).addClass('buttons-error')
                 } else {
                     table_sostav.obj.button(7).enable(false);
-                    //$(table_sostav.obj.button(7)).removeClass('buttons-error')
+                }
+            } else {
+                table_sostav.obj.button(7).text(langView('title_button_send_db_us_doc', langs) + '- error!');
+                table_sostav.obj.button(7).enable(true);
+            }
+        });
+
+        // Обновить
+        setInterval(function () {
+            $('label#curent_date').text(getReplaceTOfDT(toISOStringTZ(new Date())));
+        }, 1000);
+        // Запрос информации от сервера (1 раз в минуту)
+        setInterval(function () {
+            // Запрос клиентов 
+            ids_gl.getCountClient(function (count) {
+                $('label#client_count').text(count);
+            });
+            // Проверка базы
+            ids_inc.ids_tr.getLastDT_UZ_DOC_DB_IDS(function (last_date) {
+                var curent = moment();
+                if (last_date) {
+                    var last_db = moment(last_date);
+                    var duration = moment.duration(curent.diff(last_db))
+                    var duration_min = duration.as('minutes');
+                    //table_sostav.obj.button(7).enable(false);
+                    table_sostav.obj.button(7).text(langView('title_button_send_db_us_doc', langs) + '-' + duration_min.toFixed(1));
+                    if (duration_min > 90) {
+                        table_sostav.obj.button(7).enable(true);
+                    } else {
+                        table_sostav.obj.button(7).enable(false);
+                    }
+                } else {
+                    table_sostav.obj.button(7).text(langView('title_button_send_db_us_doc', langs) + '- error!');
+                    table_sostav.obj.button(7).enable(true);
                 }
             });
         }, 60000);

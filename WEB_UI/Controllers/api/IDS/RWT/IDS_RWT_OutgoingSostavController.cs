@@ -51,10 +51,11 @@ namespace WEB_UI.Controllers.api
         public int? count_all { get; set; }
         public int? count_outgoing { get; set; }
         public int? count_not_outgoing { get; set; }
-        public int? count_detention_return { get; set; }
+        public int? count_return { get; set; }
+        public int? count_detention { get; set; }
+        public int? count_vagonnik { get; set; }
     }
-    
-    
+
     [RoutePrefix("api/ids/rwt/outgoing_sostav")]
     public class IDS_RWT_OutgoingSostavController : ApiController
     {

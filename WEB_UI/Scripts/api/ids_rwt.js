@@ -3258,6 +3258,8 @@ IDS_RWT.prototype.getCloneOutgoingCars = function (car) {
         id_outgoing_return_stop: car.id_outgoing_return_stop,
         parent_wir_id: car.parent_wir_id,
         note_vagonnik: car.note_vagonnik,
+        vagonnik: car.vagonnik,
+        vagonnik_user: car.vagonnik_user,
     }
 };
 //======= OutgoingDetentionReturn (Таблица задержаных-возвращеных вагонов) ======================================

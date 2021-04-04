@@ -2,65 +2,67 @@
 
     // Массив текстовых сообщений 
     $.Text_View =
+    {
+        'default':  //default language: ru
         {
-            'default':  //default language: ru
-            {
-                'field_position': '№ позиции',
-                'field_num': '№ вагона',
-                'field_rod': 'Род',
-                'field_adm': 'Адм.',
-                'field_cargo': 'Груз',
-                'field_condition': 'Разметка по прибытию',
-                'field_note_vagonnik': 'Разметка вагонник',
+            'field_position': '№ позиции',
+            'field_num': '№ вагона',
+            'field_rod': 'Род',
+            'field_adm': 'Адм.',
+            'field_cargo': 'Груз',
+            'field_condition': 'Разметка по прибытию',
+            'field_note_vagonnik': 'Разметка вагонник',
 
-                'field_num_doc': '№ Вед.',
-                'field_date_readiness_amkr': 'Время предъявю на УЗ',
-                'field_station_from': 'Стоит на станции',
-                'field_way_from': 'Стоит на пути',
-                'field_count': 'Кол. вагонов',
+            'field_num_doc': '№ Вед.',
+            'field_date_readiness_amkr': 'Время предъявю на УЗ',
+            'field_station_from': 'Стоит на станции',
+            'field_way_from': 'Стоит на пути',
+            'field_count': 'Всего\\разм.',
 
-                'field_date_end_inspection_vagonnik': 'Время окон. осм. вагонн.',
-                'field_vagonnik_user': 'Осматр. (вагонн.)',
+            'field_date_end_inspection_vagonnik': 'Время окон. осм. вагонн.',
+            'field_vagonnik_user': 'Осматр. (вагонн.)',
 
-                'field_status': 'Статус',
 
-                'field_create_sostav': 'Добавил',
-                'field_change_sostav': 'Правил',
+            'field_status': 'Статус',
 
-                'field_create_wagon': 'Добавил',
-                'field_change_wagon': 'Правил',
+            'field_create_sostav': 'Добавил',
+            'field_change_sostav': 'Правил',
 
-                'title_button_export': 'Экспорт',
-                'title_button_buffer': 'Буфер',
-                'title_button_excel': 'Excel',
-                'title_button_end_inspection': 'Закрыть разметку',
+            'field_create_wagon': 'Добавил',
+            'field_vagonnik_wagon': 'Разметил',
+            'field_status_wagon': 'Статус',
 
-                'title_button_select_all': 'Выбрать все',
-                'title_button_select_none': 'Убрать все',
-                'title_button_edit': 'Править разметку',
+            'title_button_export': 'Экспорт',
+            'title_button_buffer': 'Буфер',
+            'title_button_excel': 'Excel',
+            'title_button_end_inspection': 'Закрыть разметку',
 
-            },
-            'en':  //default language: English
-            {
-                'field_position': '№ позиции',
-                'field_num': '№ вагона',
-                'field_rod': 'Род',
-                'field_adm': 'Адм.',
-                'field_cargo': 'Груз',
-                'field_condition': 'Разметка по прибытию',
-                'field_note_vagonnik': 'Разметка вагонник',
+            'title_button_select_all': 'Выбрать все',
+            'title_button_select_none': 'Убрать все',
+            'title_button_edit': 'Править разметку',
 
-                'field_create_wagon': 'Добавил',
-                'field_change_wagon': 'Правил',
+        },
+        'en':  //default language: English
+        {
+            'field_position': '№ позиции',
+            'field_num': '№ вагона',
+            'field_rod': 'Род',
+            'field_adm': 'Адм.',
+            'field_cargo': 'Груз',
+            'field_condition': 'Разметка по прибытию',
+            'field_note_vagonnik': 'Разметка вагонник',
 
-                'title_button_export': 'Export',
-                'title_button_buffer': 'Buffer',
-                'title_button_excel': 'Excel',
-                'title_button_select_all': 'Select All',
-                'title_button_select_none': 'Remove all',
-                'title_button_edit': 'Edit markup',
-            }
-        };
+            'field_create_wagon': 'Добавил',
+            'field_change_wagon': 'Правил',
+
+            'title_button_export': 'Export',
+            'title_button_buffer': 'Buffer',
+            'title_button_excel': 'Excel',
+            'title_button_select_all': 'Select All',
+            'title_button_select_none': 'Remove all',
+            'title_button_edit': 'Edit markup',
+        }
+    };
 
     //*************************************************************************************
     // ОБЪЯВЛЕНИЕ ОСНОВНЫХ ОБЪЕКТОВ ПРИЛОЖЕНИЯ
@@ -185,7 +187,7 @@
                     LockScreen(langView('mess_load_data', langs));
                     ids_inc.getViewOutgoingSostavOfPeriodStation(start, stop, id_station, function (list_sostav) {
                         table_outgoing_wagon.view_wagon(null); //Очистим таблицу
-                        list_present_sostav = list_sostav.filter(function (i) { return i.status === 0; });
+                        list_present_sostav = list_sostav.filter(function (i) { return i.status < 2; });
                         if (typeof callback === 'function') {
                             LockScreenOff();
                             callback(list_present_sostav);
@@ -209,7 +211,9 @@
             select_sostav: null,
             init: function () {
                 this.obj = this.html_table.DataTable({
-                    "paging": false,
+                    "lengthMenu": [[-1, 10, 20, 50], ["All", 10, 20, 50]],
+                    "pageLength": 10,
+                    "paging": true,
                     "searching": true,
                     "ordering": true,
                     "info": true,
@@ -225,6 +229,15 @@
                     jQueryUI: false,
                     "createdRow": function (row, data, index) {
                         $(row).attr('id', data.id);
+                        if (data.count_vagonnik > 0) {
+                            if (data.count_vagonnik === data.count_all) {
+                                // размеченно все
+                                $(row).addClass('completed-wagon');
+                            } else {
+                                // разметка начата
+                                $(row).addClass('work-wagon');
+                            }
+                        };
                     },
                     columns: [
                         {
@@ -253,22 +266,22 @@
                         },
                         {
                             data: function (row, type, val, meta) {
-                                return row.count_all;
+                                return row.count_all + "\\" + row.count_vagonnik;
                             },
                             title: langView('field_count', langs), width: "50px", orderable: true, searchable: true
                         },
-                        {
-                            data: function (row, type, val, meta) {
-                                return getReplaceTOfDT(row.date_end_inspection_vagonnik);
-                            },
-                            title: langView('field_date_end_inspection_vagonnik', langs), width: "150px", orderable: true, searchable: true
-                        },
-                        {
-                            data: function (row, type, val, meta) {
-                                return row.vagonnik_user;
-                            },
-                            title: langView('field_vagonnik_user', langs), width: "50px", orderable: true, searchable: true
-                        },
+                        //{
+                        //    data: function (row, type, val, meta) {
+                        //        return getReplaceTOfDT(row.date_end_inspection_vagonnik);
+                        //    },
+                        //    title: langView('field_date_end_inspection_vagonnik', langs), width: "150px", orderable: true, searchable: true
+                        //},
+                        //{
+                        //    data: function (row, type, val, meta) {
+                        //        return row.vagonnik_user;
+                        //    },
+                        //    title: langView('field_vagonnik_user', langs), width: "50px", orderable: true, searchable: true
+                        //},
                         {
                             //data: "create_sostav",
                             data: function (row, type, val, meta) {
@@ -306,15 +319,15 @@
                             ],
                             autoClose: true
                         },
-                        {
-                            text: langView('title_button_end_inspection', langs),
-                            action: function (e, dt, node, config) {
-                                if (table_sostav.select_sostav) {
-                                    pn_close_condition.Open(table_sostav.select_sostav.id);
-                                }
-                            },
-                            enabled: false
-                        },
+                        //{
+                        //    text: langView('title_button_end_inspection', langs),
+                        //    action: function (e, dt, node, config) {
+                        //        if (table_sostav.select_sostav) {
+                        //            pn_close_condition.Open(table_sostav.select_sostav.id);
+                        //        }
+                        //    },
+                        //    enabled: false
+                        //},
                         {
                             extend: 'pageLength',
                         }
@@ -325,11 +338,11 @@
                     pn_select.view_outgoing_wagon = null;
                     if (rowData && rowData.length > 0) {
                         table_sostav.select_sostav = rowData[0];
-                        if (table_sostav.select_sostav && table_sostav.select_sostav.date_end_inspection_vagonnik === null) {
-                            table_sostav.obj.button(1).enable(true);
-                        } else {
-                            table_sostav.obj.button(1).enable(false);
-                        }
+                        //if (table_sostav.select_sostav && table_sostav.select_sostav.date_end_inspection_vagonnik === null) {
+                        //    table_sostav.obj.button(1).enable(true);
+                        //} else {
+                        //    table_sostav.obj.button(1).enable(false);
+                        //}
                         // Отобразим
                         table_outgoing_wagon.view_wagon(table_sostav.select_sostav ? table_sostav.select_sostav.id : null);
                     } else {
@@ -352,11 +365,6 @@
             // Deselect
             deselect: function () {
                 table_sostav.select_sostav = null;
-                //table_sostav.obj.button(5).enable(false);
-                //table_sostav.obj.button(6).enable(false);
-                //table_sostav.obj.button(2).enable(false);
-                //table_sostav.obj.button(3).enable(false);
-                //table_sostav.obj.button(4).enable(false);
             }
         },
         //*************************************************************************************
@@ -365,7 +373,7 @@
         table_outgoing_wagon = {
             html_table: $('table#table-wagon'),
             obj: null,
-            select_string: null,
+            select_car: null,
             init: function () {
                 this.obj = this.html_table.DataTable({
                     //"lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "All"]],
@@ -376,7 +384,7 @@
                     "keys": true,
                     select: {
                         style: 'single',
-                        //toggleable: false
+                        toggleable: false
                     },
                     "autoWidth": true,
                     //"filter": true,
@@ -389,6 +397,14 @@
                     jQueryUI: false,
                     "createdRow": function (row, data, index) {
                         $(row).attr('id', data.id);
+                        if (data.parent_wir_id) {
+                            $(row).addClass('cancel-wagon');
+                        };
+                        if (data.outgoing) {
+                            $(row).addClass('completed-wagon');
+                        };
+
+
                     },
                     columns: [
                         {
@@ -432,6 +448,22 @@
                                 return row.note_vagonnik;
                             },
                             title: langView('field_note_vagonnik', langs), width: "200px", orderable: true, searchable: true
+                        },
+                        {
+                            data: function (row, type, val, meta) {
+                                if (row.parent_wir_id) {
+                                    return 'Возрат';
+                                }
+                                if (row.outgoing) {
+                                    return 'Сдан';
+                                }
+                                if (!row.outgoing && row.vagonnik) {
+                                    return 'Размечен';
+                                } else {
+                                    return '?';
+                                }
+                            },
+                            title: langView('field_status_wagon', langs), width: "50px", orderable: true, searchable: true
                         },
                         //{
                         //    // Груз
@@ -478,11 +510,10 @@
                             title: langView('field_create_wagon', langs), width: "100px", orderable: false, searchable: false
                         },
                         {
-                            //data: "change_wagon",
                             data: function (row, type, val, meta) {
-                                return row.change ? row.change_user + '</br>(' + getReplaceTOfDT(row.change) + ')' : null;
+                                return row.vagonnik ? row.vagonnik_user + '</br>(' + getReplaceTOfDT(row.vagonnik) + ')' : null;
                             },
-                            title: langView('field_change_wagon', langs), width: "100px", orderable: false, searchable: false
+                            title: langView('field_vagonnik_wagon', langs), width: "100px", orderable: false, searchable: false
                         }
                     ],
                     dom: 'Bfrtip',
@@ -518,38 +549,50 @@
                         },
                     ]
                 }).on('select', function (e, dt, type, indexes) {
-                    table_outgoing_wagon.view_button(indexes);
+                    alert.clear_message();
+                    var rowData = table_outgoing_wagon.obj.rows(indexes).data();
+                    table_outgoing_wagon.select_car = rowData && rowData.length > 0 ? rowData[0] : null;
 
-                }).on('deselect', function (e, dt, type, indexes) {
-                    table_outgoing_wagon.view_button(indexes);
-                });
-            },
-            // Отобразить кнопки редактирования таблицы
-            view_button: function (indexes) {
-                if (table_outgoing_wagon.sostav && table_outgoing_wagon.sostav.date_end_inspection_vagonnik === null) {
-                    // состав открыт, правка разрешена
-                    var items = table_outgoing_wagon.obj.rows({ selected: true });
-                    if (items && items.count() > 0) {
+                    if (table_outgoing_wagon.select_car && table_outgoing_wagon.select_car.outgoing === null && table_outgoing_wagon.select_car.parent_wir_id === null) {
                         table_outgoing_wagon.obj.button(1).enable(true);
                     } else {
                         table_outgoing_wagon.obj.button(1).enable(false);
                     }
-                } else {
-                    // состав закрыт,правка запрещена
-                    table_outgoing_wagon.obj.button(1).enable(false);
-                }
+                    //table_outgoing_wagon.view_button(indexes);
+                });
+                //    .on('deselect', function (e, dt, type, indexes) {
+                //    table_outgoing_wagon.view_button(indexes);
 
+                //});
             },
+            //// Отобразить кнопки редактирования таблицы
+            //view_button: function (indexes) {
+
+
+            //    if (table_outgoing_wagon.sostav && table_outgoing_wagon.sostav.date_end_inspection_vagonnik === null) {
+            //        // состав открыт, правка разрешена
+            //        var items = table_outgoing_wagon.obj.rows({ selected: true });
+            //        if (items && items.count() > 0) {
+            //            table_outgoing_wagon.obj.button(1).enable(true);
+            //        } else {
+            //            table_outgoing_wagon.obj.button(1).enable(false);
+            //        }
+            //    } else {
+            //        // состав закрыт,правка запрещена
+            //        table_outgoing_wagon.obj.button(1).enable(false);
+            //    }
+
+            //},
             //
             view_wagon: function (id_sostav) {
                 LockScreen(langView('mess_load_data', langs));
-                table_outgoing_wagon.sostav = null;
+                //table_outgoing_wagon.select_car = null;
                 if (id_sostav !== null) {
                     // Получить инфу по составу
                     ids_inc.getOutgoingSostavOfID(id_sostav, function (sostav) {
                         table_outgoing_wagon.sostav = sostav;
                         // Вывести информацию о составе
-                        var info = 'Индекс состава : ' + (sostav && sostav.composition_index ? sostav.composition_index : '') + ', предъявлен : ' + (sostav ? getReplaceTOfDT(sostav.date_readiness_amkr) : '');
+                        var info = 'Натурная ведомость : ' + (sostav && sostav.num_doc ? sostav.num_doc : '') + ', состав предъявлен : ' + (sostav ? getReplaceTOfDT(sostav.date_readiness_amkr) : '');
                         pn_select.sostav_info.text(info);
 
                         if (sostav && sostav.OutgoingCars) {
@@ -570,11 +613,13 @@
             },
             // Показать таблицу с данными
             view: function (data) {
+                var id_select = table_outgoing_wagon.select_car ? table_outgoing_wagon.select_car.id : 0;
                 table_outgoing_wagon.obj.clear();
                 // Сбросить выделенный состав
                 table_outgoing_wagon.deselect();
                 table_outgoing_wagon.obj.rows.add(data);
                 table_outgoing_wagon.obj.order([0, 'asc']);
+                table_outgoing_wagon.obj.row('#' + id_select).select();
                 table_outgoing_wagon.obj.draw();
                 LockScreenOff();
             },
@@ -689,8 +734,10 @@
                     if (pn_edit_condition.car !== null) {
                         // Обновим разметку
                         pn_edit_condition.car.note_vagonnik = get_select_string_value(pn_edit_condition.edit_condition_present);
-                        pn_edit_condition.car.change = toISOStringTZ(new Date());
-                        pn_edit_condition.change_user = pn_edit_condition.user_name;
+                        //pn_edit_condition.car.change = toISOStringTZ(new Date());
+                        //pn_edit_condition.car.change_user = pn_edit_condition.user_name;
+                        pn_edit_condition.car.vagonnik = toISOStringTZ(new Date());
+                        pn_edit_condition.car.vagonnik_user = pn_edit_condition.user_name;
                         // Применим разметку
                         pn_edit_condition.ids_inc.putOutgoingCars(pn_edit_condition.car, function (result_upd) {
                             if (result_upd > 0) {
@@ -860,6 +907,10 @@
         pn_edit_condition.init(lang, user_name, function (result) {
             alert.clear_message();
             if (result) {
+                pn_select.update_select_doc(pn_select.start, pn_select.stop, get_select_number_value(pn_select.select_station), function (list_sostav) {
+                    pn_select.list_sostav = list_sostav;
+                    table_sostav.view(list_sostav);
+                });
                 // Показать после изменения
                 table_outgoing_wagon.view_wagon(table_sostav.select_sostav ? table_sostav.select_sostav.id : null);
                 alert.out_info_message('Обновлена разметка по вагону № ' + result.num);

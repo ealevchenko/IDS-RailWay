@@ -471,6 +471,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
     {
         public long id_outgoing_sostav { get; set; }
         public DateTime lead_time { get; set; }
+        public string composition_index { get; set; }
         public string user { get; set; }
     }
 
@@ -1053,7 +1054,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             try
             {
                 IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
-                OperationResultWagon result = ids_wir.OperationSendingSostavOnUZ(value.id_outgoing_sostav, value.lead_time, value.user);
+                OperationResultWagon result = ids_wir.OperationSendingSostavOnUZ(value.id_outgoing_sostav, value.lead_time, value.composition_index, value.user);
                 return Ok(result);
             }
             catch (Exception e)
