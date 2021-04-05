@@ -1,5 +1,5 @@
 use [KRR-PA-CNT-Railway]
-		SELECT
+	SELECT
 		-- id основных таблиц
 		wir.id as wir_id,
 		wim.id as wim_id,
@@ -47,7 +47,6 @@ use [KRR-PA-CNT-Railway]
 		dir_wagon.date_rem_uz as wagon_date_rem_uz,
 		--> ПРИБЫТИЕ И МАРШРУТ
 		ar_sost.date_arrival as arrival_datetime,
-		ar_sost.date_adoption as arrival_date_adoption,
 		[arrival_duration] = DATEDIFF (hour, ar_sost.date_arrival, getdate()),
 		-- Разметка по прибытию
 		arr_dir_cond.condition_name_ru as arrival_condition_name_ru,
@@ -83,6 +82,7 @@ use [KRR-PA-CNT-Railway]
 		arr_dir_division_amkr.division_abbr_en as arrival_division_amkr_abbr_en,
 		--> ТЕКУЩАЯ ОПЕРАЦИЯ
 		-- операция над вагоном
+		cur_wio.id_operation as current_id_operation_wagon,
 		cur_dir_operation.operation_name_ru as current_operation_wagon_name_ru,
 		cur_dir_operation.operation_name_en as current_operation_wagon_name_en,
 		cur_wio.operation_start as current_operation_wagon_start,
@@ -124,6 +124,7 @@ use [KRR-PA-CNT-Railway]
 		-- Оплата
 		[usage_fee] = 0.0,
 		--> ОТПРАВЛЕНИЕ
+		out_sostav.status as out_sostav_status,
 		-- Инструктивные письма
 		il.num as instructional_letters_num,
 		il.dt as instructional_letters_datetime,
@@ -131,21 +132,9 @@ use [KRR-PA-CNT-Railway]
 		let_station_uz.station as instructional_letters_station_name,
 		--> Документ SAP по прибытию
 		sap_is.VBELN as sap_is_num,
-sap_is.NUM_VBELN as sap_is_NUM_VBELN,
 		sap_is.ERDAT as sap_is_create_date,
 		sap_is.ETIME as sap_is_create_time,
-sap_is.WERKS as sap_is_WERKS,
-sap_is.LGORT as sap_is_LGORT,
-sap_is.LGOBE as sap_is_LGOBE,
-sap_is.LGORT_10 as sap_is_LGORT_10,
-sap_is.LGOBE_10 as sap_is_LGOBE_10,
-sap_is.MATNR as sap_is_MATNR,
-sap_is.MAKTX as sap_is_MAKTX,
-sap_is.NAME_SH as sap_is_NAME_SH,
-sap_is.KOD_R_10 as sap_is_KOD_R_10,
-sap_is.note as sap_is_note,
-
-	-- Документ SAP по отправке
+		-- Документ SAP по отправке
 		wir.doc_outgoing_car as sap_os_doc_outgoing_car
 		--......
 		--into view_wagon
@@ -184,9 +173,9 @@ sap_is.note as sap_is_note,
 			IDS.Directory_Station as cur_dir_station ON wim.id_station =  cur_dir_station.id Left JOIN                                  --> Текущая станция дислокации вагона
 			IDS.Directory_ConditionArrival as cur_dir_cond ON cur_wio.id_condition =  cur_dir_cond.id  Left JOIN						--> Текущее техническое сотояние
 			IDS.Directory_Ways as cur_dir_ways ON wim.id_way =  cur_dir_ways.id Left JOIN
+			UZ.Directory_Stations as let_station_uz ON  il.destination_station = let_station_uz.code_cs Left JOIN						--> Станция УЗ по письму
+			IDS.OutgoingCars as out_car ON wir.id_outgoing_car = out_car.id Left JOIN													--> Вагон отправка
+			IDS.OutgoingSostav as out_sostav ON out_car.id_outgoing = out_sostav.id									--> Станция УЗ по письму
 
-
-			UZ.Directory_Stations as let_station_uz ON  il.destination_station = let_station_uz.code_cs									--> Станция УЗ по письму
-
-		WHERE (wim.way_end IS NULL) and wim.id_way =0 --and wir.num = 65297459
+		WHERE (wim.way_end IS NULL) and wim.id_way =0 and out_sostav.status =2 --and wir.num = 65297459
 		order by wim.position
