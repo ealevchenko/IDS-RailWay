@@ -235,7 +235,7 @@
     <value>Название груза по ГНГ</value>
   </data>
   <data name="title_name_operator" xml:space="preserve">
-    <value>Оператор</value>
+    <value>Оператор (АМКР)</value>
   </data>
   <data name="title_name_owner" xml:space="preserve">
     <value>Собственник</value>
