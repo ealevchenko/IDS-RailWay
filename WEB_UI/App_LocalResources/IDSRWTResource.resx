@@ -706,9 +706,9 @@
     <value>ВДС «ЖД АМКР</value>
   </data>
   <data name="title_link_present_wagon_marking" xml:space="preserve">
-    <value>Разметка предъявление</value>
+    <value>Разметка по отправлению</value>
   </data>
   <data name="title_condition_present" xml:space="preserve">
-    <value>Разметка вагонника</value>
+    <value>Разметка по отправлению</value>
   </data>
 </root>

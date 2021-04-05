@@ -11,7 +11,7 @@
             'field_adm': 'Адм.',
             'field_cargo': 'Груз',
             'field_condition': 'Разметка по прибытию',
-            'field_note_vagonnik': 'Разметка вагонник',
+            'field_note_vagonnik': 'Разметка по отправлению',
 
             'field_num_doc': '№ Вед.',
             'field_date_readiness_amkr': 'Время предъявю на УЗ',
@@ -20,7 +20,7 @@
             'field_count': 'Всего\\разм.',
 
             'field_date_end_inspection_vagonnik': 'Время окон. осм. вагонн.',
-            'field_vagonnik_user': 'Осматр. (вагонн.)',
+            'field_vagonnik_user': 'Разметил',
 
 
             'field_status': 'Статус',
@@ -44,20 +44,38 @@
         },
         'en':  //default language: English
         {
-            'field_position': '№ позиции',
-            'field_num': '№ вагона',
-            'field_rod': 'Род',
-            'field_adm': 'Адм.',
-            'field_cargo': 'Груз',
-            'field_condition': 'Разметка по прибытию',
-            'field_note_vagonnik': 'Разметка вагонник',
+            'field_position': 'Position No.',
+            'field_num': 'Wagon number',
+            'field_rod': 'Rod',
+            'field_adm': 'Adm.',
+            'field_cargo': 'Cargo',
+            'field_condition': 'Layout on arrival',
+            'field_note_vagonnik': 'Markup by departure',
 
-            'field_create_wagon': 'Добавил',
-            'field_change_wagon': 'Правил',
+            'field_num_doc': 'Lead No.',
+            'field_date_readiness_amkr': 'I will present the time to the UZ',
+            'field_station_from': 'Standing at a station',
+            'field_way_from': 'Is in the way',
+            'field_count': 'Total \\ size',
+
+            'field_date_end_inspection_vagonnik': 'Time of windows. osm. wagon. ',
+            'field_vagonnik_user': 'Marked up',
+
+
+            'field_status': 'Status',
+
+            'field_create_sostav': 'Added',
+            'field_change_sostav': 'Rules',
+
+            'field_create_wagon': 'Added',
+            'field_vagonnik_wagon': 'Marked up',
+            'field_status_wagon': 'Status',
 
             'title_button_export': 'Export',
             'title_button_buffer': 'Buffer',
             'title_button_excel': 'Excel',
+            'title_button_end_inspection': 'Close markup',
+
             'title_button_select_all': 'Select All',
             'title_button_select_none': 'Remove all',
             'title_button_edit': 'Edit markup',

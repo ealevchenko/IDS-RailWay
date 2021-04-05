@@ -1667,7 +1667,7 @@
                 cars_detali.condition_provide.val('');
 
                 cars_detali.condition_present.val('');
-                cars_detali.condition_present_user.val('Разметка вагонника:');
+                cars_detali.condition_present_user.val('Разметка по отправлению:');
                 // Задержание
                 cars_detali.cause_detention.val('');
                 cars_detali.detention_start.setDateTime(null); // уберем дату
@@ -2190,7 +2190,7 @@
                     }
                     // Разметка вагонником
                     cars_detali.condition_present.val(car.note_vagonnik);
-                    cars_detali.condition_present_user.text('Разметка вагонника:' + (car.vagonnik_user ? ' (' + car.vagonnik_user + ' - ' + getReplaceTOfDT(car.vagonnik) + ')' : ''));
+                    cars_detali.condition_present_user.text('Разметка по отправлению:' + (car.vagonnik_user ? ' (' + car.vagonnik_user + ' - ' + getReplaceTOfDT(car.vagonnik) + ')' : ''));
                     // ЗАДЕРЖАНИЕ -------------------------------------------------------------
                     cars_detali.view_cars_detention_current(car.OutgoingDetentionReturn, present); // Общая
                     // ВОЗВРАТ -------------------------------------------------------------

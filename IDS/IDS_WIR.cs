@@ -1301,7 +1301,7 @@ namespace IDS
 
                 if (car == null) return (int)errors_base.not_outgoing_cars_db; // В базе нет вагона для предявдения
                 if (car.outgoing != null) return (int)errors_base.outgoing_cars_outgoing; // Запрет операции вагон отправлен
-                if (car.OutgoingSostav.status == 2) return (int)errors_base.error_status_outgoing_sostav; // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
+                //if (car.OutgoingSostav.status == 2) return (int)errors_base.error_status_outgoing_sostav; // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
 
                 // Проверим наличие задержания и удалим его
                 if (car.id_outgoing_detention != null)
@@ -1369,10 +1369,11 @@ namespace IDS
                 {
                     if (sostav.status == 0)
                     {
+                        bool not_delete_sostav = false;
                         List<OutgoingCars> list_cars = ef_out_car.Context.Where(w => w.id_outgoing == id_sostav).ToList();
                         if (list_cars != null && list_cars.Count() > 0)
                         {
-                            bool not_delete_sostav = false;
+                            
                             // Обновим количество вагонов
                             res.count = list_cars.Count();
                             foreach (OutgoingCars car in list_cars)
@@ -1394,32 +1395,33 @@ namespace IDS
                                 }
 
                             }
-                            // проверим на ошибки
-                            if (res.error == 0)
+                        }
+                        // проверим на ошибки
+                        if (res.error == 0)
+                        {
+                            if (!not_delete_sostav)
                             {
-                                if (!not_delete_sostav)
-                                {
-                                    ef_out_sost.Delete(id_sostav);
-                                }
-                                else
-                                {
-                                    sostav.status = 4; // Статус состав отменен но остались ссылки на возвраты
-                                    sostav.change = DateTime.Now;
-                                    sostav.change_user = user;
-                                    ef_out_sost.Update(sostav);
-                                }
-                                // Сохраним изменения
-                                res.SetResult(context.SaveChanges());
+                                ef_out_sost.Delete(id_sostav);
                             }
                             else
                             {
-                                res.SetResult((int)errors_base.cancel_save_changes);     // есть ошибки, отмена примененя изменеий
+                                sostav.status = 4; // Статус состав отменен но остались ссылки на возвраты
+                                sostav.change = DateTime.Now;
+                                sostav.change_user = user;
+                                ef_out_sost.Update(sostav);
                             }
+                            // Сохраним изменения
+                            res.SetResult(context.SaveChanges());
                         }
                         else
                         {
-                            res.SetResult((int)errors_base.not_outgoing_cars_db);     // В базе данных нет записи по вагонам для отпправки
+                            res.SetResult((int)errors_base.cancel_save_changes);     // есть ошибки, отмена примененя изменеий
                         }
+
+                        //else
+                        //{
+                        //    res.SetResult((int)errors_base.not_outgoing_cars_db);     // В базе данных нет записи по вагонам для отпправки
+                        //}
                     }
                     else
                     {
@@ -1470,7 +1472,7 @@ namespace IDS
 
                 if (car == null) return (int)errors_base.not_outgoing_cars_db; // В базе нет вагона для предявдения
                 if (car.outgoing != null) return (int)errors_base.outgoing_cars_outgoing; // Запрет операции вагон отправлен
-                if (car.OutgoingSostav.status == 2) return (int)errors_base.error_status_outgoing_sostav; // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
+                //TODO: Отменили, вернуть всегда if (car.OutgoingSostav.status == 2) return (int)errors_base.error_status_outgoing_sostav; // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
 
                 int result = OperationReturnProvideWagon(ref context, car, car.OutgoingSostav.id_way_from, user);
                 if (result > 0)

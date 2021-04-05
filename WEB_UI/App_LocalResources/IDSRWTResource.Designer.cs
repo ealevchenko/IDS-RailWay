@@ -376,7 +376,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Разметка вагонника.
+        ///   Ищет локализованную строку, похожую на Разметка по отправлению.
         /// </summary>
         public static string title_condition_present {
             get {
@@ -790,7 +790,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Разметка предъявление.
+        ///   Ищет локализованную строку, похожую на Разметка по отправлению.
         /// </summary>
         public static string title_link_present_wagon_marking {
             get {
