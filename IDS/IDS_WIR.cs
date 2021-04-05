@@ -2368,7 +2368,7 @@ namespace IDS
                 if (wim.way_end != null || wim.id_way != id_way_from) return (int)errors_base.wagon_not_way; // Вагон не стоит на пути
                 WagonInternalOperation wio = wir.GetLastOperation();
                 if (wio == null) return (int)errors_base.not_wio_db; // В базе данных нет текущей операции
-                if (wio.id_operation != 9 || wio.id_operation != 8) return (int)errors_base.wagon_not_operation; // текущая операция не предъявить вагон на УЗ
+                if (wio.id_operation < 8 || wio.id_operation > 9) return (int)errors_base.wagon_not_operation; // текущая операция не предъявить вагон на УЗ
                 // Все проверки прошел
                 // Установим и закроем операцию отпрака на УЗ             
                 wir.SetOpenOperation(2, lead_time.AddMinutes(-10), null, null, null, null, null, user).SetCloseOperation(lead_time, null, user);
