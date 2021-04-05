@@ -151,7 +151,7 @@
             'title_button_field_view_all': 'Показать все',
             'title_button_field_clear': 'Сбросить',
             'title_button_return': 'Вернуть состав',
-            'title_button_sostav_return': 'Отменить сдачу',
+            'title_button_sostav_return': 'Вернуть состав с УЗ',
             'title_button_wagon': 'Вагоны',
             'title_button_wagon_accept': 'Отправить вагоны',
             'title_button_wagon_view': 'Показать вагоны',
@@ -625,7 +625,7 @@
                                     // Сбросим признак обновлять информацию о составах
                                     cars_detali.update_sostav = false;
                                     // Подтверждение выполнения операции.
-                                    dc.dialog_confirm('Open', 'Выполнить?', 'Подтвердите выполнение операции «ВЕРНУТЬ СДАННЫЙ СОСТАВ НА УЗ»', function (result) {
+                                    dc.dialog_confirm('Open', 'Выполнить?', 'Подтвердите выполнение операции «ВЕРНУТЬ ДАННЫЙ СОСТАВ С УЗ»', function (result) {
                                         if (result) {
                                             LockScreen(langView('mess_operation', langs));
                                             outgoing_alert.clear_message();
@@ -638,17 +638,17 @@
                                             ids_inc.postOperationReturnPresentSostav(operation_return_sostav, function (result_operation) {
                                                 if (result_operation > 0) {
                                                     pn_sel.view(true);
-                                                    outgoing_alert.out_info_message("Операция «ВЕРНУТЬ СДАННЫЙ СОСТАВ НА УЗ» - Выполнена");
+                                                    outgoing_alert.out_info_message("Операция «ВЕРНУТЬ ДАННЫЙ СОСТАВ С УЗ» - Выполнена");
                                                 } else {
                                                     // Ошибка выполнения
-                                                    outgoing_alert.out_error_message("Ошибка выполнения операции «ВЕРНУТЬ СДАННЫЙ СОСТАВ НА УЗ», код ошибки = " + result_operation);
+                                                    outgoing_alert.out_error_message("Ошибка выполнения операции «ВЕРНУТЬ ДАННЫЙ СОСТАВ С УЗ», код ошибки = " + result_operation);
                                                     LockScreenOff();
                                                 }
                                             });
                                         } else {
                                             // Состав уже в работе удаление запрещено
                                             outgoing_alert.clear_message();
-                                            outgoing_alert.out_warning_message("Операция «ВЕРНУТЬ СДАННЫЙ СОСТАВ НА УЗ» - Отменена!");
+                                            outgoing_alert.out_warning_message("Операция «ВЕРНУТЬ ДАННЫЙ СОСТАВ С УЗ» - Отменена!");
                                         }
                                     });
                                 }
