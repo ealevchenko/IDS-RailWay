@@ -11,8 +11,8 @@ GO
 
 
 
---drop FUNCTION [IDS].[get_outgoing_sostav_of_period]
-
+drop FUNCTION [IDS].[get_outgoing_sostav_of_period]
+go
 
 CREATE FUNCTION [IDS].[get_outgoing_sostav_of_period]
  (
