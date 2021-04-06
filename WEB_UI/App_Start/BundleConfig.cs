@@ -47,7 +47,7 @@ namespace WEB_UI
 
             // font-awesome --------------------------------------------------------------------------
             bundles.Add(new StyleBundle("~/font-awesome/css").Include(
-                      "~/Content/font-awesome/css/font-awesome.min.css"));
+                      "~/Content/fontawesome-free/css/all.min.css"));
 
             // magnific-popup --------------------------------------------------------------------------
             bundles.Add(new ScriptBundle("~/bundles/magnific-popup").Include(
