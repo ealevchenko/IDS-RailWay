@@ -2,46 +2,46 @@
 
     // Массив текстовых сообщений 
     $.Text_View =
-    {
-        'default':  //default language: ru
         {
-            'field_way_park': 'Парк',
-            'field_way_name': 'Путь',
-            'field_way_count': 'Стоит',
-            'field_way_capacity': 'Вмещ.',
+            'default':  //default language: ru
+            {
+                'field_way_park': 'Парк',
+                'field_way_name': 'Путь',
+                'field_way_count': 'Стоит',
+                'field_way_capacity': 'Вмещ.',
 
-            'field_position': '№ позиции',
-            'field_num': '№ вагона',
-            'field_num_valid': 'Тип нумерации',
-            'field_note': 'Дислокация на АМКР',
-            'field_create_wagon': 'Добавил',
-            'field_change_wagon': 'Правил',
+                'field_position': '№ позиции',
+                'field_num': '№ вагона',
+                'field_num_valid': 'Тип нумерации',
+                'field_note': 'Дислокация на АМКР',
+                'field_create_wagon': 'Добавил',
+                'field_change_wagon': 'Правил',
 
-            'title_button_export': 'Экспорт',
-            'title_button_buffer': 'Буфер',
-            'title_button_excel': 'Excel',
-            'title_button_clear_wagon': 'Убрать вагоны',
-        },
-        'en':  //default language: English
-        {
-            'field_way_park': 'Park',
-            'field_way_name': 'Path',
-            'field_way_count': 'Worth',
-            'field_way_capacity': 'Accommodates',
+                'title_button_export': 'Экспорт',
+                'title_button_buffer': 'Буфер',
+                'title_button_excel': 'Excel',
+                'title_button_clear_wagon': 'Убрать вагоны',
+            },
+            'en':  //default language: English
+            {
+                'field_way_park': 'Park',
+                'field_way_name': 'Path',
+                'field_way_count': 'Worth',
+                'field_way_capacity': 'Accommodates',
 
-            'field_position': 'Position No.',
-            'field_num': 'Wagon number',
-            'field_num_valid': 'Numbering type',
-            'field_note': 'Dislocation at AMKR',
-            'field_create_wagon': 'Added',
-            'field_change_wagon': 'Rules',
+                'field_position': 'Position No.',
+                'field_num': 'Wagon number',
+                'field_num_valid': 'Numbering type',
+                'field_note': 'Dislocation at AMKR',
+                'field_create_wagon': 'Added',
+                'field_change_wagon': 'Rules',
 
-            'title_button_export': 'Export',
-            'title_button_buffer': 'Buffer',
-            'title_button_excel': 'Excel',
-            'title_button_clear_wagon': 'Remove wagons',
-        }
-    };
+                'title_button_export': 'Export',
+                'title_button_buffer': 'Buffer',
+                'title_button_excel': 'Excel',
+                'title_button_clear_wagon': 'Remove wagons',
+            }
+        };
 
     //*************************************************************************************
     // ОБЪЯВЛЕНИЕ ОСНОВНЫХ ОБЪЕКТОВ ПРИЛОЖЕНИЯ
@@ -126,9 +126,46 @@
                                         pn_select.update_select_park_status(pn_select.id_station_select, 0, function () {
                                             pn_select.val_add_park_status.out_info_message("Операция 'Создать новое положение парка' - Выполнена");
                                             LockScreenOff();
+                                            // Перенос вагонов
+                                            dc.dialog_confirm('Open', 'Выполнить?', 'Перенести текщее положение парка на станции :' + (station ? station.text : '?'), function (result) {
+                                                if (result) {
+                                                    //LockScreen(langView('mess_save', langs));
+                                                    //// Подготовим список вагонов для отправки
+                                                    //// Определим пакет данных отправки на другую станцию
+                                                    //var operation_create_park_state = {
+                                                    //    id_station: pn_select.id_station_select,
+                                                    //    date_status_on: toISOStringTZ(get_datetime_value(pn_select.input_park_status_on_dt.val(), pn_select.lang)),
+                                                    //    user: user_name,
+                                                    //}
+                                                    //// Выполнить операцию создать парк
+                                                    //ids_inc.postOperationCreateParkStateOfStation(operation_create_park_state, function (result_create) {
+                                                    //    if (result_create && result_create.result >= 0) {
+                                                    //        // Обновим
+                                                    //        pn_select.update_select_park_status(pn_select.id_station_select, 0, function () {
+                                                    //            pn_select.val_add_park_status.out_info_message("Операция 'Создать новое положение парка' - Выполнена");
+                                                    //            LockScreenOff();
+                                                    //        });
+
+
+                                                    //    } else {
+                                                    //        pn_select.val_add_park_status.out_warning_message("При выполнении операции 'Создать новое положение парка' - произошла ошибка. Код ошибки =" + result_create.result);
+                                                    //        if (result_create && result_create.listResult && result_create.listResult.length > 0) {
+                                                    //            $.each(result_create.listResult, function (i, el) {
+                                                    //                if (el.result < 0) {
+                                                    //                    pn_select.val_add_park_status.out_error_message("Станция id :" + el.id + ". Код ошибки : " + el.result);
+                                                    //                }
+                                                    //            });
+                                                    //        }
+                                                    //        pn_select.bt_create_park_status.prop("disabled", false);
+                                                    //        LockScreenOff();
+                                                    //    }
+                                                    //});
+                                                } else {
+                                                    pn_select.bt_create_park_status.prop("disabled", false);
+                                                    pn_select.val_add_park_status.out_warning_message("Выполнение операции «Перенести текщее положение парка на станции» - отменено!");
+                                                }
+                                            });
                                         });
-
-
                                     } else {
                                         pn_select.val_add_park_status.out_warning_message("При выполнении операции 'Создать новое положение парка' - произошла ошибка. Код ошибки =" + result_create.result);
                                         if (result_create && result_create.listResult && result_create.listResult.length > 0) {
