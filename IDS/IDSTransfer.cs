@@ -637,7 +637,7 @@ namespace IDS
                 if (wagon == null) return (int)errors_base.not_wir_db;
                 // Определим станцию и путь приема
                 Directory_Ways way = context.Directory_Ways.Where(w => w.id == id_way).FirstOrDefault();
-                if (way == null) return (int)errors_base.not_dir_way_db;                        // Нет пути
+                if (way == null) return (int)errors_base.not_dir_way_of_db;                        // Нет пути
                 if (way.crossing_uz != true) return (int)errors_base.way_not_crossing_uz;       // Путь без выхода на уз
 
 
@@ -646,7 +646,7 @@ namespace IDS
                 if (wim == null) return (int)errors_base.not_wim_db;
                 // Определим станцию на которой стоит вагон
                 Directory_Ways way_wagon = context.Directory_Ways.Where(w => w.id == wim.id_way).FirstOrDefault();
-                if (way_wagon == null) return (int)errors_base.not_dir_way_db;                        // Нет пути
+                if (way_wagon == null) return (int)errors_base.not_dir_way_of_db;                        // Нет пути
                 if (way_wagon.crossing_uz != true) return (int)errors_base.way_not_crossing_uz;       // Путь без выхода на уз
 
                 WagonInternalOperation wio = wagon.GetLastOperation();

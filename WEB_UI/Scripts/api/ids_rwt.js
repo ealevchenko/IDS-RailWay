@@ -4231,6 +4231,31 @@ IDS_RWT.prototype.postOperationCreateParkStateOfStation = function (operation_va
         },
     });
 };
+// Операция перенести вагоны в указаный парк 
+IDS_RWT.prototype.postOperationTransferWagonsParkStateOfStation = function (operation_value, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/park_state/station/transfer/wagons',
+        type: 'POST',
+        data: JSON.stringify(operation_value),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postOperationTransferWagonsParkStateOfStation", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 //Операция удалить парк 
 IDS_RWT.prototype.postOperationDeleteParkStateOfStation = function (operation_value, callback) {
     $.ajax({

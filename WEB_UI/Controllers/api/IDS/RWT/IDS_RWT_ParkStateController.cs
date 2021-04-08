@@ -185,6 +185,13 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string user  { get; set; }
     }
 
+    public class OperationTransferWagonsParkStateOfStation
+    {
+        public int id_station  { get; set; }
+        public DateTime date_status_on  { get; set; }
+        public string user  { get; set; }
+    }
+
     public class OperationDeleteParkState
     {
         public int id_park_status { get; set; }
@@ -345,6 +352,29 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             {
                 IDS_RWT ids_rwt = new IDS_RWT(service.WebAPI_IDS);
                 OperationResultID result = ids_rwt.OperationCreateParkState(value.id_station, value.date_status_on, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST api/ids/rwt/park_state/station/transfer/wagons/
+        /// <summary>
+        /// Создать перенести существующее положение парка по указаной станции
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("station/transfer/wagons")]
+        [ResponseType(typeof(OperationResultID))]
+        public IHttpActionResult PostOperationTransferWagonsParkStateOfStation([FromBody] OperationTransferWagonsParkStateOfStation value)
+        {
+            try
+            {
+                IDS_RWT ids_rwt = new IDS_RWT(service.WebAPI_IDS);
+                OperationResultID result = ids_rwt.OperationTransferWagonsParkState(value.id_station, value.date_status_on, value.user);
                 return Ok(result);
             }
             catch (Exception e)

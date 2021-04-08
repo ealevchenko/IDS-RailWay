@@ -217,6 +217,31 @@ namespace IDS.Helper
             WagonInternalMovement wim = wir.GetLastMovement();
             return wim != null ? (int?)wim.id_station : null;
         }
+        /// <summary>
+        /// Получить список вагонов на пути 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_way"></param>
+        /// <returns></returns>
+        public static List<WagonInternalMovement> GetMovementWagonsOfWay(this EFDbContext context, int id_way) {
+           return context.WagonInternalMovement.Where(m => m.id_way == id_way & m.id_outer_way == null & m.way_end == null).OrderBy(p => p.position).ToList();
+        }
+        /// <summary>
+        /// Получить список вагонов на пути 
+        /// </summary>
+        /// <param name="wim"></param>
+        /// <param name="id_way"></param>
+        /// <returns></returns>
+        public static List<WagonInternalMovement> GetMovementWagonsOfWay(this List<WagonInternalMovement> wims, int id_way) {
+           return wims.Where(m => m.id_way == id_way & m.id_outer_way == null & m.way_end == null).OrderBy(p => p.position).ToList();
+        }
+
+        public static List<int> GetNumWagonsOfWay(this EFDbContext context, int id_way) {
+            return context.GetMovementWagonsOfWay(id_way).Select(w => w.WagonInternalRoutes.num).ToList();
+        }
+        public static List<int> GetNumWagonsOfWay(this List<WagonInternalMovement> wims, int id_way) {
+            return wims.GetMovementWagonsOfWay(id_way).Select(w => w.WagonInternalRoutes.num).ToList();
+        }
 
         #endregion
 

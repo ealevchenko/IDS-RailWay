@@ -126,45 +126,47 @@
                                         pn_select.update_select_park_status(pn_select.id_station_select, 0, function () {
                                             pn_select.val_add_park_status.out_info_message("Операция 'Создать новое положение парка' - Выполнена");
                                             LockScreenOff();
+                                            //--------------------------
                                             // Перенос вагонов
                                             dc.dialog_confirm('Open', 'Выполнить?', 'Перенести текщее положение парка на станции :' + (station ? station.text : '?'), function (result) {
                                                 if (result) {
-                                                    //LockScreen(langView('mess_save', langs));
-                                                    //// Подготовим список вагонов для отправки
-                                                    //// Определим пакет данных отправки на другую станцию
-                                                    //var operation_create_park_state = {
-                                                    //    id_station: pn_select.id_station_select,
-                                                    //    date_status_on: toISOStringTZ(get_datetime_value(pn_select.input_park_status_on_dt.val(), pn_select.lang)),
-                                                    //    user: user_name,
-                                                    //}
-                                                    //// Выполнить операцию создать парк
-                                                    //ids_inc.postOperationCreateParkStateOfStation(operation_create_park_state, function (result_create) {
-                                                    //    if (result_create && result_create.result >= 0) {
-                                                    //        // Обновим
-                                                    //        pn_select.update_select_park_status(pn_select.id_station_select, 0, function () {
-                                                    //            pn_select.val_add_park_status.out_info_message("Операция 'Создать новое положение парка' - Выполнена");
-                                                    //            LockScreenOff();
-                                                    //        });
+                                                    LockScreen(langView('mess_save', langs));
+                                                    // Подготовим список вагонов для отправки
+                                                    // Определим пакет данных отправки на другую станцию
+                                                    var operation_transfer_wagon_park_state = {
+                                                        id_station: operation_create_park_state.id_station,
+                                                        date_status_on: operation_create_park_state.date_status_on,//  toISOStringTZ(get_datetime_value(pn_select.input_park_status_on_dt.val(), pn_select.lang)),
+                                                        user: user_name,
+                                                    }
+                                                    // Выполнить операцию создать парк
+                                                    ids_inc.postOperationTransferWagonsParkStateOfStation(operation_transfer_wagon_park_state, function (result_transfer) {
+                                                        if (result_transfer && result_transfer.result >= 0) {
+                                                            // Обновим
+                                                            pn_select.update_select_park_status(pn_select.id_station_select, 0, function () {
+                                                                pn_select.val_add_park_status.out_info_message("Операция 'Перенести текщее положение парка' - Выполнена");
+                                                                LockScreenOff();
+                                                            });
 
 
-                                                    //    } else {
-                                                    //        pn_select.val_add_park_status.out_warning_message("При выполнении операции 'Создать новое положение парка' - произошла ошибка. Код ошибки =" + result_create.result);
-                                                    //        if (result_create && result_create.listResult && result_create.listResult.length > 0) {
-                                                    //            $.each(result_create.listResult, function (i, el) {
-                                                    //                if (el.result < 0) {
-                                                    //                    pn_select.val_add_park_status.out_error_message("Станция id :" + el.id + ". Код ошибки : " + el.result);
-                                                    //                }
-                                                    //            });
-                                                    //        }
-                                                    //        pn_select.bt_create_park_status.prop("disabled", false);
-                                                    //        LockScreenOff();
-                                                    //    }
-                                                    //});
+                                                        } else {
+                                                            pn_select.val_add_park_status.out_warning_message("При выполнении операции 'Перенести текщее положение парка' - произошла ошибка. Код ошибки =" + result_transfer.result);
+                                                            if (result_transfer && result_transfer.listResult && result_transfer.listResult.length > 0) {
+                                                                $.each(result_transfer.listResult, function (i, el) {
+                                                                    if (el.result < 0) {
+                                                                        pn_select.val_add_park_status.out_error_message("Станция id :" + el.id + ". Код ошибки : " + el.result);
+                                                                    }
+                                                                });
+                                                            }
+                                                            pn_select.bt_create_park_status.prop("disabled", false);
+                                                            LockScreenOff();
+                                                        }
+                                                    });
                                                 } else {
                                                     pn_select.bt_create_park_status.prop("disabled", false);
-                                                    pn_select.val_add_park_status.out_warning_message("Выполнение операции «Перенести текщее положение парка на станции» - отменено!");
+                                                    pn_select.val_add_park_status.out_warning_message("Выполнение операции «Перенести текщее положение парка» - отменено!");
                                                 }
                                             });
+                                            //--------------------------
                                         });
                                     } else {
                                         pn_select.val_add_park_status.out_warning_message("При выполнении операции 'Создать новое положение парка' - произошла ошибка. Код ошибки =" + result_create.result);
@@ -1139,9 +1141,12 @@
                                 var num = row.num;
                                 if (id === 21) {
                                     var s = '';
-                                } var result_dislocation = 'Поиск..';
+                                }
+                                var result_dislocation = 'Поиск..';
+                                //var result_lock = false;
 
                                 ids_inc.getViewDislocationAMKRWagonOfNum(num, function (result_position) {
+
                                     //if (id === 21) {
                                     //    var s = '';
                                     //}
@@ -1155,11 +1160,22 @@
 
                                         if (result_position[0].close_wir === null) {
                                             //$('table#wagon-park-state tbody tr#' + id).removeClass('not-exist-amkr').addClass('exist-amkr');
-                                            tr.removeClass('not-exist-amkr').addClass('exist-amkr');
+                                            tr.removeClass('not-exist-amkr exist-amkr-lock').addClass('exist-amkr');
                                             // Вагон на территории АМКР
                                             if (result_position[0].id_outer_way === null) {
                                                 // Вагон на станции
-                                                result_dislocation = 'Вагон находится на станции : ' + result_position[0]['station_name_' + lang] + '; <br/>Путь станции : ' + result_position[0]['way_num_' + lang] + ' - ' + result_position[0]['way_name_' + lang] + '; <br/>Позиция на пути : ' + result_position[0].position + ', прибыл на путь : ' + getReplaceTOfDT(result_position[0].way_start);
+                                                if (result_position[0].id_operation_wagon !== 9) {
+                                                    result_dislocation = 'Вагон находится на станции : ' + result_position[0]['station_name_' + lang] + '; <br/>Путь станции : ' + result_position[0]['way_num_' + lang] + ' - ' + result_position[0]['way_name_' + lang] + '; <br/>Позиция на пути : ' + result_position[0].position + ', прибыл на путь : ' + getReplaceTOfDT(result_position[0].way_start);
+                                                } else {
+                                                    tr.removeClass('exist-amkr').addClass('exist-amkr-lock');
+                                                    //result_lock = true;
+                                                    //table_wagon_park_state.pn_edit_nums.bt_num_wagon_park_state_add.prop("disabled", true);
+                                                    //table_wagon_park_state.pn_edit_nums.bt_num_wagon_park_state_replace.prop("disabled", true);
+                                                    table_wagon_park_state.pn_edit_nums.num_wagon_park_state.prop("disabled", true);
+                                                    result_dislocation = '!ВНМАНИЕ ВАГОН ПРЕДЪЯВЛЕН, находится на станции : ' + result_position[0]['station_name_' + lang] + '; <br/>Путь станции : ' + result_position[0]['way_num_' + lang] + ' - ' + result_position[0]['way_name_' + lang] + '; <br/>Позиция на пути : ' + result_position[0].position + ', прибыл на путь : ' + getReplaceTOfDT(result_position[0].way_start);
+                                                }
+
+
                                             } else {
                                                 // Вагон движется по территории.
                                                 result_dislocation = 'Вагон находится на перегоне : ' + result_position[0]['name_outer_way_' + lang] + '; <br/>Отправлен : ' + getReplaceTOfDT(result_position[0].outer_way_start);
@@ -1167,18 +1183,21 @@
                                         } else {
                                             // Вагон вышел
                                             //$('table#wagon-park-state tbody tr#' + id).removeClass('exist-amkr').addClass('not-exist-amkr');
-                                            tr.removeClass('exist-amkr').addClass('not-exist-amkr');
+                                            tr.removeClass('exist-amkr exist-amkr-lock').addClass('not-exist-amkr');
                                             result_dislocation = 'Вагон сдан на УЗ ' + getReplaceTOfDT(result_position[0].way_end) + ' со станции ' + result_position[0]['station_name_' + lang];
                                         }
                                     } else {
                                         // Вагона небыло на территории
                                         //$('table#wagon-park-state tbody tr#' + id).removeClass('exist-amkr').addClass('not-exist-amkr');
-                                        tr.removeClass('exist-amkr').addClass('not-exist-amkr');
+                                        tr.removeClass('exist-amkr exist-amkr-lock').addClass('not-exist-amkr');
                                         result_dislocation = 'Вагон не заходил на территорию АМКР.';
                                     }
                                     $(td).empty().append(result_dislocation);
                                 });
+                                //table_wagon_park_state.pn_edit_nums.bt_num_wagon_park_state_add.prop("disabled", result_lock);
+                                //table_wagon_park_state.pn_edit_nums.bt_num_wagon_park_state_replace.prop("disabled", result_lock);
                                 return result_dislocation;
+
                             },
                             title: langView('field_note', langs), width: "400px", orderable: false, searchable: false
                         },

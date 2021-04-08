@@ -193,7 +193,8 @@ namespace IDS
                 {
                     context = new EFDbContext();
                 }
-                List<WagonInternalMovement> list_wim = context.WagonInternalMovement.Where(m => m.id_way == id_way & m.id_outer_way == null & m.way_end == null).OrderBy(p => p.position).ToList();
+                //List<WagonInternalMovement> list_wim = context.WagonInternalMovement.Where(m => m.id_way == id_way & m.id_outer_way == null & m.way_end == null).OrderBy(p => p.position).ToList();
+                List<WagonInternalMovement> list_wim = context.GetMovementWagonsOfWay(id_way);
                 if (list_wim != null)
                 {
                     count = list_wim.Count();
@@ -1195,7 +1196,7 @@ namespace IDS
                 }
                 else
                 {
-                    res.SetResult((int)errors_base.not_dir_way_db); // Указаного пути нет!
+                    res.SetResult((int)errors_base.not_dir_way_of_db); // Указаного пути нет!
                 }
                 // Выведем результат
                 string mess = String.Format("Операция переноса вагонов на путь {0} для предъявления на УЗ. Код выполнения = {1}. Результат переноса [определено = {2}, перенесено = {3}, пропущено = {4}, ошибок = {5}].",
@@ -1256,7 +1257,7 @@ namespace IDS
                 }
                 else
                 {
-                    res.SetResult((int)errors_base.not_dir_way_db); // Указаного пути нет!
+                    res.SetResult((int)errors_base.not_dir_way_of_db); // Указаного пути нет!
                 }
                 string mess = String.Format("Операция формирования состава для предъявления на УЗ. Код выполнения = {0}. Станция отправки = {1}, путь отправки = {2}, время операции = {3}. Результат [определено вагонов = {4}, сформировано = {5}, ошибок формирования = {6}].",
                     res.result, (way != null ? (int?)way.id_station : null), id_way, lead_time, res.count, res.moved, res.error);
