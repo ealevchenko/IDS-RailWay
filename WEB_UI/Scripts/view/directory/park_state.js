@@ -1170,8 +1170,8 @@
                                                     tr.removeClass('exist-amkr').addClass('exist-amkr-lock');
                                                     //result_lock = true;
                                                     //table_wagon_park_state.pn_edit_nums.bt_num_wagon_park_state_add.prop("disabled", true);
-                                                    //table_wagon_park_state.pn_edit_nums.bt_num_wagon_park_state_replace.prop("disabled", true);
-                                                    table_wagon_park_state.pn_edit_nums.num_wagon_park_state.prop("disabled", true);
+                                                    table_wagon_park_state.pn_edit_nums.bt_num_wagon_park_state_replace.prop("disabled", true);
+                                                    //table_wagon_park_state.pn_edit_nums.num_wagon_park_state.prop("disabled", true);
                                                     result_dislocation = '!ВНМАНИЕ ВАГОН ПРЕДЪЯВЛЕН, находится на станции : ' + result_position[0]['station_name_' + lang] + '; <br/>Путь станции : ' + result_position[0]['way_num_' + lang] + ' - ' + result_position[0]['way_name_' + lang] + '; <br/>Позиция на пути : ' + result_position[0].position + ', прибыл на путь : ' + getReplaceTOfDT(result_position[0].way_start);
                                                 }
 
