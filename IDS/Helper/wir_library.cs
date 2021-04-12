@@ -149,6 +149,43 @@ namespace IDS.Helper
             }
             return wio;
         }
+        /// <summary>
+        /// Вагон на территории АМКР с операцией предявлен?
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public static bool? isLockPresentOperation(this EFDbContext context, int num)
+        {
+            WagonInternalRoutes wir = context.GetLastWagon(num);
+            if (wir == null) return null;
+            if (wir.close == null)
+            {
+                WagonInternalOperation wio = wir.GetLastOperation();
+                if (wio == null) return null;
+
+                return wio.id_operation == 9 ? true : false;
+            }
+            else {
+                return false;
+            }
+        }
+        /// <summary>
+        /// Вернуть список вагонов по которым стоит опреация предъявить.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="nums"></param>
+        /// <returns></returns>
+        public static List<int> GetWagonsLockPresentOperation(this EFDbContext context, List<int> nums)
+        {
+            List<int> list_result = new List<int>();
+            foreach (int num in nums) {
+                if (context.isLockPresentOperation(num) == true) {
+                    list_result.Add(num);
+                }
+            }
+            return list_result;
+        }
         #endregion
 
 
@@ -195,7 +232,8 @@ namespace IDS.Helper
                     //wim.station_end = wim.station_end == null ? date_end : wim.station_end;
 
                 }
-                else {
+                else
+                {
                     // Закроем внешний путь
                     wim.outer_way_end = wim.outer_way_end == null ? date_end : wim.outer_way_end;
                 }
@@ -223,8 +261,9 @@ namespace IDS.Helper
         /// <param name="context"></param>
         /// <param name="id_way"></param>
         /// <returns></returns>
-        public static List<WagonInternalMovement> GetMovementWagonsOfWay(this EFDbContext context, int id_way) {
-           return context.WagonInternalMovement.Where(m => m.id_way == id_way & m.id_outer_way == null & m.way_end == null).OrderBy(p => p.position).ToList();
+        public static List<WagonInternalMovement> GetMovementWagonsOfWay(this EFDbContext context, int id_way)
+        {
+            return context.WagonInternalMovement.Where(m => m.id_way == id_way & m.id_outer_way == null & m.way_end == null).OrderBy(p => p.position).ToList();
         }
         /// <summary>
         /// Получить список вагонов на пути 
@@ -232,14 +271,17 @@ namespace IDS.Helper
         /// <param name="wim"></param>
         /// <param name="id_way"></param>
         /// <returns></returns>
-        public static List<WagonInternalMovement> GetMovementWagonsOfWay(this List<WagonInternalMovement> wims, int id_way) {
-           return wims.Where(m => m.id_way == id_way & m.id_outer_way == null & m.way_end == null).OrderBy(p => p.position).ToList();
+        public static List<WagonInternalMovement> GetMovementWagonsOfWay(this List<WagonInternalMovement> wims, int id_way)
+        {
+            return wims.Where(m => m.id_way == id_way & m.id_outer_way == null & m.way_end == null).OrderBy(p => p.position).ToList();
         }
 
-        public static List<int> GetNumWagonsOfWay(this EFDbContext context, int id_way) {
+        public static List<int> GetNumWagonsOfWay(this EFDbContext context, int id_way)
+        {
             return context.GetMovementWagonsOfWay(id_way).Select(w => w.WagonInternalRoutes.num).ToList();
         }
-        public static List<int> GetNumWagonsOfWay(this List<WagonInternalMovement> wims, int id_way) {
+        public static List<int> GetNumWagonsOfWay(this List<WagonInternalMovement> wims, int id_way)
+        {
             return wims.GetMovementWagonsOfWay(id_way).Select(w => w.WagonInternalRoutes.num).ToList();
         }
 

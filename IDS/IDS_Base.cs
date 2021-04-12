@@ -48,11 +48,12 @@ namespace IDS
         // документы на отправку
         exist_out_uz_vag = -651,                    // Запрет операции, строка по вагону уже создана.    
         // Таблицы Положение парка -700..
-        not_park_station_station_of_db = -701,      // Ошибка, в базе данных нет строки положения парка по станции
-        not_way_park_station_station_of_db = -702,  // Ошибка, в базе данных нет строки пути положения парка по станции
-        not_list_way_park_station_station_of_db = -703,  // Ошибка, в базе данных нет списка путей положения парка по станции
-        error_date_park_station_station = -704,     // Ошибка дваты, попытка создать положение парака с неправильной датой
-        error_delete_park_station_apply = -705,     // Отмена удаления, состояние парка уже применили
+        not_park_station_station_of_db = -701,              // Ошибка, в базе данных нет строки положения парка по станции
+        not_way_park_station_station_of_db = -702,          // Ошибка, в базе данных нет строки пути положения парка по станции
+        not_list_way_park_station_station_of_db = -703,     // Ошибка, в базе данных нет списка путей положения парка по станции
+        error_date_park_station_station = -704,             // Ошибка дваты, попытка создать положение парака с неправильной датой
+        error_delete_park_station_apply = -705,             // Отмена удаления, состояние парка уже применили
+        error_change_park_station_lock_wagon = -706,        // Отмена изменения положения парка, вагоны имеют отметку заблокирован (операция предъявления)
 
 
         // Справочники -1000.....
@@ -384,7 +385,9 @@ namespace IDS
         public void SetResultOperation(int result, int num)
         {
             this.listResultWagon.Add(new ResultWagon() { num = num, result = result });
-            if (result < 0) { AddError(); }
+            if (result < 0) {
+                AddError();
+            }
         }
     }
 

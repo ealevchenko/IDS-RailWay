@@ -62,9 +62,9 @@ namespace IDS
         /// <param name="id_park_state_way"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public OperationResultID DeleteWagonsOfWay(int id_park_state_way, string user)
+        public OperationResultWagon DeleteWagonsOfWay(int id_park_state_way, string user)
         {
-            OperationResultID result = new OperationResultID();
+            OperationResultWagon result = new OperationResultWagon();
             try
             {
                 EFDbContext context = new EFDbContext();
@@ -73,26 +73,37 @@ namespace IDS
                 {
                     user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
                 }
-                result.SetResultOperation(DeleteWagonsOfWay(ref context, id_park_state_way), id_park_state_way);
+
+                // Проверим вагоны на блокировку (предъявлен)
+                EFParkState_Wagon ef_pswag = new EFParkState_Wagon(context);
+                List<ParkState_Wagon> wagons = ef_pswag.Context.Where(w => w.id_park_state_way == id_park_state_way).ToList();
+                List<int> nums_lock = context.GetWagonsLockPresentOperation(wagons.Select(w => w.num).ToList());
+                foreach (int num in nums_lock)
+                {
+                    // отобразим предъявленные вагоны
+                    result.SetResultOperation((int)errors_base.error_change_park_station_lock_wagon, num);
+                }
                 // Если нет ошибок тогда обновим базу
                 if (result.error == 0)
                 {
 
-
-                    // Обновим время обновления 
-                    ParkState_Way psw = context.ParkState_Way.Where(w => w.id == id_park_state_way).FirstOrDefault();
-                    if (psw != null)
+                    int res_del = DeleteWagonsOfWay(ref context, id_park_state_way);
+                    if (res_del > 0)
                     {
-                        psw.change = DateTime.Now;
-                        psw.change_user = user;
-                        ParkState_Station pss = context.ParkState_Station.Where(p => p.id == psw.id_park_state_station).FirstOrDefault();
-                        if (pss != null)
+                        ParkState_Way psw = context.ParkState_Way.Where(w => w.id == id_park_state_way).FirstOrDefault();
+                        if (psw != null)
                         {
-                            pss.change = DateTime.Now;
-                            pss.change_user = user;
+                            psw.change = DateTime.Now;
+                            psw.change_user = user;
+                            ParkState_Station pss = context.ParkState_Station.Where(p => p.id == psw.id_park_state_station).FirstOrDefault();
+                            if (pss != null)
+                            {
+                                pss.change = DateTime.Now;
+                                pss.change_user = user;
+                            }
                         }
+                        result.SetResult(context.SaveChanges());
                     }
-                    result.SetResult(context.SaveChanges());
                 }
                 else
                 {
@@ -124,9 +135,13 @@ namespace IDS
                 }
                 EFParkState_Wagon ef_pswag = new EFParkState_Wagon(context);
                 List<ParkState_Wagon> wagons = ef_pswag.Context.Where(w => w.id_park_state_way == id_park_state_way).ToList();
+
+                //List<int> nums_lock = context.GetWagonsLockPresentOperation(wagons.Select(w => w.num).ToList());
+                //if (nums_lock != null && nums_lock.Count() > 0) return (int)errors_base.error_change_park_station_lock_wagon; // Заблокирован вагон, отмена изменения
+
                 if (wagons != null && wagons.Count() > 0)
                 {
-                    ef_pswag.Delete(wagons.Select(w => w.id));
+                    ef_pswag.Delete(wagons.Select(w => w.id).ToList());
                     return wagons.Count();
                 }
                 return 0;
@@ -135,7 +150,7 @@ namespace IDS
             {
                 e.ExceptionMethodLog(String.Format("DeletWagonsOfWay(context={0}, id_park_state_way={1})",
                     context, id_park_state_way), servece_owner, this.eventID);
-                return -1;
+                return (int)errors_base.global;
             }
         }
         /// <summary>
@@ -353,6 +368,7 @@ namespace IDS
             try
             {
                 EFDbContext context = new EFDbContext();
+                EFParkState_Wagon ef_pswag = new EFParkState_Wagon(context);
                 // Проверим и скорректируем пользователя
                 if (String.IsNullOrWhiteSpace(user))
                 {
@@ -360,46 +376,77 @@ namespace IDS
                 }
                 if (wagons != null)
                 {
-
-                    int position = 1;
-                    // Получим последнюю позицию по пути в зависимости от типа операции
-                    if (type > 0)
+                    // Проверим вагоны добавляемые или замещаемые
+                    List<int> nums_lock_update = context.GetWagonsLockPresentOperation(wagons);
+                    foreach (int num in nums_lock_update)
                     {
-                        // Определена операция замещения вагонов
-                        int res_del = DeleteWagonsOfWay(ref context, id_park_state_way);
+                        // отобразим предъявленные вагоны
+                        result.SetResultOperation((int)errors_base.error_change_park_station_lock_wagon, num);
                     }
-                    else
-                    {
-                        // Добавить
-                        position = GetLastPositionOfWay(ref context, id_park_state_way) + 1;
-                    }
-
-                    // Пройдемся по списку вагонов
-                    foreach (int num in wagons)
-                    {
-                        // Выполним операцию
-                        result.SetResultOperation(OperationUpdateWagonParkState(ref context, id_park_state_way, num, position, user), num);
-                        position++;
-                    }
-
-                    // Если нет ошибок тогда обновим базу
                     if (result.error == 0)
                     {
-                        // Обновим время обновления 
-                        ParkState_Way psw = context.ParkState_Way.Where(w => w.id == id_park_state_way).FirstOrDefault();
-                        if (psw != null)
+                        int position = 1;
+                        // Получим последнюю позицию по пути в зависимости от типа операции
+                        if (type > 0)
                         {
-                            psw.change = DateTime.Now;
-                            psw.change_user = user;
-                            ParkState_Station pss = context.ParkState_Station.Where(p => p.id == psw.id_park_state_station).FirstOrDefault();
-                            if (pss != null)
+                            // Определена операция замещения вагонов
+                            // Проверим вагоны стоящие на пути 
+                            List<ParkState_Wagon> psw = ef_pswag.Context.Where(w => w.id_park_state_way == id_park_state_way).ToList();
+                            List<int> nums_lock = context.GetWagonsLockPresentOperation(psw.Select(w => w.num).ToList());
+                            foreach (int num in nums_lock)
                             {
-                                pss.change = DateTime.Now;
-                                pss.change_user = user;
+                                // отобразим предъявленные вагоны
+                                result.SetResultOperation((int)errors_base.error_change_park_station_lock_wagon, num);
+                            }
+                            int res_del = DeleteWagonsOfWay(ref context, id_park_state_way);
+                        }
+                        else
+                        {
+                            // Добавить
+                            position = GetLastPositionOfWay(ref context, id_park_state_way) + 1;
+                        }
+
+                        // проверка
+                        if (result.error == 0)
+                        {
+                            // Пройдемся по списку вагонов
+                            foreach (int num in wagons)
+                            {
+                                // Выполним операцию
+                                result.SetResultOperation(OperationUpdateWagonParkState(ref context, id_park_state_way, num, position, user), num);
+                                position++;
+                            }
+
+                            // Если нет ошибок тогда обновим базу
+                            if (result.error == 0)
+                            {
+                                // Обновим время обновления 
+                                ParkState_Way psw = context.ParkState_Way.Where(w => w.id == id_park_state_way).FirstOrDefault();
+                                if (psw != null)
+                                {
+                                    psw.change = DateTime.Now;
+                                    psw.change_user = user;
+                                    ParkState_Station pss = context.ParkState_Station.Where(p => p.id == psw.id_park_state_station).FirstOrDefault();
+                                    if (pss != null)
+                                    {
+                                        pss.change = DateTime.Now;
+                                        pss.change_user = user;
+                                    }
+                                }
+                                // Сохранить время 
+                                result.SetResult(context.SaveChanges());
+                            }
+                            else
+                            {
+                                result.SetResult((int)errors_base.cancel_save_changes); // Ошибка изменение было отменено
                             }
                         }
-                        // Сохранить время 
-                        result.SetResult(context.SaveChanges());
+                        else
+                        {
+                            result.SetResult((int)errors_base.cancel_save_changes); // Ошибка изменение было отменено
+                        }
+
+
                     }
                     else
                     {

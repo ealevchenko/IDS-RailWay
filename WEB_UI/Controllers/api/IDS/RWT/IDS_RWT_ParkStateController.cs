@@ -437,13 +437,13 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         /// <returns></returns>
         [HttpPost]
         [Route("way/wagon/delete/")]
-        [ResponseType(typeof(OperationResultID))]
+        [ResponseType(typeof(OperationResultWagon))]
         public IHttpActionResult PostOperationDeleteWagonsParkStateOfWay([FromBody] OperationDeleteWagonsParkState value)
         {
             try
             {
                 IDS_RWT ids_rwt = new IDS_RWT(service.WebAPI_IDS);
-                OperationResultID result = ids_rwt.DeleteWagonsOfWay(value.id_park_state_way, value.user);
+                OperationResultWagon result = ids_rwt.DeleteWagonsOfWay(value.id_park_state_way, value.user);
                 return Ok(result);
             }
             catch (Exception e)
