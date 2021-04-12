@@ -1143,15 +1143,9 @@
                                     var s = '';
                                 }
                                 var result_dislocation = 'Поиск..';
-                                //var result_lock = false;
-
+                                //
                                 ids_inc.getViewDislocationAMKRWagonOfNum(num, function (result_position) {
-
-                                    //if (id === 21) {
-                                    //    var s = '';
-                                    //}
                                     var tb = $('table#wagon-park-state');
-                                    //var tr = $('table#wagon-park-state tbody tr#' + id);
                                     var tr = tb.find('tbody tr#' + id);
                                     var td = tr.find('td:eq(' + c + ')');
                                     //var result_dislocation = 'Вагона нет на территории АМКР';
@@ -1168,13 +1162,8 @@
                                                     result_dislocation = 'Вагон находится на станции : ' + result_position[0]['station_name_' + lang] + '; <br/>Путь станции : ' + result_position[0]['way_num_' + lang] + ' - ' + result_position[0]['way_name_' + lang] + '; <br/>Позиция на пути : ' + result_position[0].position + ', прибыл на путь : ' + getReplaceTOfDT(result_position[0].way_start);
                                                 } else {
                                                     tr.removeClass('exist-amkr').addClass('exist-amkr-lock');
-                                                    //result_lock = true;
-                                                    //table_wagon_park_state.pn_edit_nums.bt_num_wagon_park_state_add.prop("disabled", true);
-                                                    //table_wagon_park_state.pn_edit_nums.bt_num_wagon_park_state_replace.prop("disabled", true);
-                                                    //table_wagon_park_state.pn_edit_nums.num_wagon_park_state.prop("disabled", true);
                                                     result_dislocation = '!ВНМАНИЕ ВАГОН ПРЕДЪЯВЛЕН, находится на станции : ' + result_position[0]['station_name_' + lang] + '; <br/>Путь станции : ' + result_position[0]['way_num_' + lang] + ' - ' + result_position[0]['way_name_' + lang] + '; <br/>Позиция на пути : ' + result_position[0].position + ', прибыл на путь : ' + getReplaceTOfDT(result_position[0].way_start);
                                                 }
-
 
                                             } else {
                                                 // Вагон движется по территории.
@@ -1182,20 +1171,16 @@
                                             }
                                         } else {
                                             // Вагон вышел
-                                            //$('table#wagon-park-state tbody tr#' + id).removeClass('exist-amkr').addClass('not-exist-amkr');
                                             tr.removeClass('exist-amkr exist-amkr-lock').addClass('not-exist-amkr');
                                             result_dislocation = 'Вагон сдан на УЗ ' + getReplaceTOfDT(result_position[0].way_end) + ' со станции ' + result_position[0]['station_name_' + lang];
                                         }
                                     } else {
                                         // Вагона небыло на территории
-                                        //$('table#wagon-park-state tbody tr#' + id).removeClass('exist-amkr').addClass('not-exist-amkr');
                                         tr.removeClass('exist-amkr exist-amkr-lock').addClass('not-exist-amkr');
                                         result_dislocation = 'Вагон не заходил на территорию АМКР.';
                                     }
                                     $(td).empty().append(result_dislocation);
                                 });
-                                //table_wagon_park_state.pn_edit_nums.bt_num_wagon_park_state_add.prop("disabled", result_lock);
-                                //table_wagon_park_state.pn_edit_nums.bt_num_wagon_park_state_replace.prop("disabled", result_lock);
                                 return result_dislocation;
 
                             },
