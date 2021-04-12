@@ -194,7 +194,7 @@ namespace WEB_UI.Controllers.api
             try
             {
                 System.Data.SqlClient.SqlParameter p_status = new System.Data.SqlClient.SqlParameter("@status", status);
-                string sql = "select top(10) * from [IDS].[get_outgoing_sostav_of_status](@status) order by date_outgoing desc";
+                string sql = "select top(30) * from [IDS].[get_outgoing_sostav_of_status](@status) order by date_outgoing desc";
                 List<ViewOutgoingSostav> list = this.ef_ids.Database.SqlQuery<ViewOutgoingSostav>(sql, p_status).ToList();
                 return Ok(list);
             }
