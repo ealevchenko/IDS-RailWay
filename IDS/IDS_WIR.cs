@@ -1101,6 +1101,9 @@ namespace IDS
                 if (wim == null) return (int)errors_base.not_wim_db;    // В базе данных нет записи по WagonInternalMovement (Внутреняя дислокация вагонов)
                 // Проверим вагон уже стоит ?
                 if (wim.id_way == id_way_on && wim.position == position) return 0; // Вагон стоит на станции на пути и в позиции, пропустить операцию
+                WagonInternalOperation wio = wagon.GetLastOperation();
+                if (wio == null) return (int)errors_base.not_wio_db;
+                if (wio.id_operation == 9) return (int)errors_base.wagon_lock_operation; // Операция предявлен (заблокирована)
                 string note = "Перенесен для предъявления";
                 wagon.SetStationWagon(id_station, id_way_on, lead_time, position, note, user);
                 // Установим и закроем операцию ручная расстановка -3              

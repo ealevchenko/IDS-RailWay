@@ -309,29 +309,44 @@ fieldset {
     text-decoration: line-through;
 }
 
-
-.exist-amkr {
-    background-color:#deebbc !important;
-}
-.not-exist-amkr {
-    background-color:#f5cdb0 !important;
+/*exist-amkr - вагон на АМКР*/
+table.dataTable tbody tr:not(.selected).exist-amkr.odd, table.dataTable tbody tr:not(.selected).exist-amkr.even {
+    background-color: #ceffce;
 }
 
-/*.arrival-wagon {
-    background-color:lightpink !important;
-}*/
-/*.prisent-wagon {
-    background-color:wheat !important;
-}*/
-/*.handed-wagon {
-    background-color:darkseagreen !important;
-}*/
+table.dataTable.display tbody tr:not(.selected).odd.exist-amkr > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.exist-amkr > .sorting_1 {
+    background-color: #a7ffa7;
+}
 
+table.dataTable.display tbody tr:not(.selected).even.exist-amkr > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.exist-amkr > .sorting_1 {
+    background-color: #a7ffa7;
+}
 
-/*.look-wagon {
-    background-color:#e8da92 !important;
-}*/
+/*exist-amkr-lock - вагон на АМКР и предъявлен*/
+table.dataTable tbody tr:not(.selected).exist-amkr-lock.odd, table.dataTable tbody tr:not(.selected).exist-amkr-lock.even {
+    background-color: #e8e8b5;
+}
 
+table.dataTable.display tbody tr:not(.selected).odd.exist-amkr-lock > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.exist-amkr-lock > .sorting_1 {
+    background-color: #dfdf97;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.exist-amkr-lock > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.exist-amkr-lock > .sorting_1 {
+    background-color: #dfdf97;
+}
+
+/*not-exist-amkr - вагон вышел за территорию АМКР*/
+table.dataTable tbody tr:not(.selected).not-exist-amkr.odd, table.dataTable tbody tr:not(.selected).not-exist-amkr.even {
+    background-color: #f5cdb0;
+}
+
+table.dataTable.display tbody tr:not(.selected).odd.not-exist-amkr > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.not-exist-amkr > .sorting_1 {
+    background-color: #f1b78d;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.not-exist-amkr > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.not-exist-amkr > .sorting_1 {
+    background-color: #f1b78d;
+}
 
 .select-wagon {
     background-color:#9cdd81 !important;

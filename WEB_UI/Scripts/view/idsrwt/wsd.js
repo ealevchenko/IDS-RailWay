@@ -4414,30 +4414,39 @@
                                             if (wag) { wag.exist = true; }; // По умолчанию вагона нет
                                             if (result_position && result_position.length > 0) {
                                                 if (result_position[0].close_wir === null) {
-                                                    tr.removeClass('not-exist-amkr').addClass('exist-amkr');
+                                                    tr.removeClass('not-exist-amkr exist-amkr-lock').addClass('exist-amkr');
                                                     if (wag) { wag.exist = true; }; // Устанавливаем бит вагон есть
                                                     // Вагон на территории АМКР
                                                     if (result_position[0].id_outer_way === null) {
                                                         // Вагон на станции
-                                                        result_dislocation = 'Вагон находится на станции : ' + result_position[0]['station_name_' + lang] + '; <br/>Путь станции : ' + result_position[0]['way_num_' + lang] + ' - ' + result_position[0]['way_name_' + lang] + '; <br/>Позиция на пути : ' + result_position[0].position + ', прибыл на путь : ' + getReplaceTOfDT(result_position[0].way_start);
+                                                        if (result_position[0].id_operation_wagon !== 9) {
+                                                            result_dislocation = 'Вагон находится на станции : ' + result_position[0]['station_name_' + lang] + '; <br/>Путь станции : ' + result_position[0]['way_num_' + lang] + ' - ' + result_position[0]['way_name_' + lang] + '; <br/>Позиция на пути : ' + result_position[0].position + ', прибыл на путь : ' + getReplaceTOfDT(result_position[0].way_start);
+                                                        } else {
+                                                            tr.removeClass('exist-amkr').addClass('exist-amkr-lock');
+                                                            result_dislocation = '!ВНМАНИЕ ВАГОН ПРЕДЪЯВЛЕН, находится на станции : ' + result_position[0]['station_name_' + lang] + '; <br/>Путь станции : ' + result_position[0]['way_num_' + lang] + ' - ' + result_position[0]['way_name_' + lang] + '; <br/>Позиция на пути : ' + result_position[0].position + ', прибыл на путь : ' + getReplaceTOfDT(result_position[0].way_start);
+                                                        }
+                                                        //result_dislocation = 'Вагон находится на станции : ' + result_position[0]['station_name_' + lang] + '; <br/>Путь станции : ' + result_position[0]['way_num_' + lang] + ' - ' + result_position[0]['way_name_' + lang] + '; <br/>Позиция на пути : ' + result_position[0].position + ', прибыл на путь : ' + getReplaceTOfDT(result_position[0].way_start);
+
+
                                                     } else {
                                                         // Вагон движется по территории.
                                                         result_dislocation = 'Вагон находится на перегоне : ' + result_position[0]['name_outer_way_' + lang] + '; <br/>Отправлен : ' + getReplaceTOfDT(result_position[0].outer_way_start);
                                                     }
                                                 } else {
                                                     // Вагон вышел
-                                                    tr.removeClass('exist-amkr').addClass('not-exist-amkr');
+                                                    tr.removeClass('exist-amkr exist-amkr-lock').addClass('not-exist-amkr');
                                                     result_dislocation = 'Вагон сдан на УЗ ' + getReplaceTOfDT(result_position[0].way_end) + ' со станции ' + result_position[0]['station_name_' + lang];
                                                 }
                                             } else {
                                                 // Вагона небыло на территории
-                                                tr.removeClass('exist-amkr').addClass('not-exist-amkr');
+                                                tr.removeClass('exist-amkr exist-amkr-lock').addClass('not-exist-amkr');
                                                 result_dislocation = 'Вагон не заходил на территорию АМКР.';
                                             }
                                             $(td).empty().append(result_dislocation);
                                         });
                                         return result_dislocation;
                                     },
+                                    className: 'dt-body-left',
                                     title: langView('field_note', langs), width: "400px", orderable: false, searchable: false
                                 }
                             ],
