@@ -1143,13 +1143,12 @@
                                     var s = '';
                                 }
                                 var result_dislocation = 'Поиск..';
-                                ////
+                                //
                                 ids_inc.getViewDislocationAMKRWagonOfNum(num, function (result_position) {
                                     var tb = $('table#wagon-park-state');
                                     var tr = tb.find('tbody tr#' + id);
                                     var td = tr.find('td:eq(' + c + ')');
                                     //var result_dislocation = 'Вагона нет на территории АМКР';
-                                    ////
                                     if (result_position && result_position.length > 0) {
 
                                         if (result_position[0].close_wir === null) {
