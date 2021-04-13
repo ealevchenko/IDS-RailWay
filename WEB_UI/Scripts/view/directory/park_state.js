@@ -1143,7 +1143,7 @@
                                     var s = '';
                                 }
                                 var result_dislocation = 'Поиск..';
-                                //
+                                ////
                                 ids_inc.getViewDislocationAMKRWagonOfNum(num, function (result_position) {
                                     var tb = $('table#wagon-park-state');
                                     var tr = tb.find('tbody tr#' + id);
