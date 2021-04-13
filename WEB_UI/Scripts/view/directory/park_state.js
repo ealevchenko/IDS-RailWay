@@ -1149,7 +1149,7 @@
                                     var tr = tb.find('tbody tr#' + id);
                                     var td = tr.find('td:eq(' + c + ')');
                                     //var result_dislocation = 'Вагона нет на территории АМКР';
-
+                                    ////
                                     if (result_position && result_position.length > 0) {
 
                                         if (result_position[0].close_wir === null) {
