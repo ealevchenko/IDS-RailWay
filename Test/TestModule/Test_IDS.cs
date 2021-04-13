@@ -283,6 +283,12 @@ namespace Test.TestModule
             ResultUpdateWagon res = ids.OperationReturnProvideWagons(62606, "TEST");
         }
 
+        // Тест операции обновления ЭПД 
+        public void IDS_WIR_OperationUpdateEPDSendingSostav()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            OperationResultWagon res = ids.OperationUpdateEPDSendingSostav(64018, "TEST");
+        }
 
         /// <summary>
         /// Тест административной функции закрыть внутренее перемещение

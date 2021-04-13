@@ -69,13 +69,21 @@ namespace Test.TestModule
         public void UZ_SMS_GetDocumentOfDB_Num()
         {
             UZ_SMS sms = new UZ_SMS();
-            UZ_DOC doc = sms.GetDocumentOfDB_Num(59978890);
+            UZ_DOC doc = sms.GetDocumentOfDB_Num(55120554);
         }
 
         public void UZ_SMS_GetArrivalDocumentOfDB_Num()
         {
             UZ_SMS sms = new UZ_SMS();
             UZ_DOC doc = sms.GetDocumentOfDB_NumConsigneesStations(63360465, new int[] { 7932, 6302, 659 }, new int[] { 457905, 466904, 466923, 467004, 467108, 467201 }, DateTime.Now);
+        }
+        /// <summary>
+        ///  Получить ЭПД из промежуточной базы на вагон который отправили
+        /// </summary>
+        public void UZ_SMS_GetOutgoingDocumentOfDB_NumShipper()
+        {
+            UZ_SMS sms = new UZ_SMS();
+            UZ_DOC doc = sms.GetDocumentOfDB_NumShipper(55120554, new int[] { 7932}, new DateTime(2021,04,13,2,15,00));
         }
 
         public void UZ_SMS_GetDocumentOfDB_NumConsignees()

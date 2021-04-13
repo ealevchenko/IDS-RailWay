@@ -471,6 +471,143 @@ namespace IDS
         }
         #endregion
 
+        #region UZ_DOC_OUT
+
+        /// <summary>
+        /// Добавить новый ЭПД по отправлению , найденый по номеру документа начиная с указаной даты (список грузоотправителей { 7932 })
+        /// </summary>
+        /// <param name="num"></param>
+        /// <param name="start_date"></param>
+        /// <returns></returns>
+        public string AddUZ_DOC_OUT_To_DB_IDS(int num, DateTime? start_date)
+        {
+            try
+            {
+                UZ.UZ_SMS uz_sms = new UZ.UZ_SMS(this.servece_owner);
+                UZ.UZ_DOC uz_doc = uz_sms.GetDocumentOfDB_NumShipper(num, new int[] { 7932 }, start_date);
+                if (uz_doc != null)
+                {
+                    return AddUpdateUZ_DOC_OUT_To_DB_IDS(uz_doc);
+
+                }
+                return null;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("AddUZ_DOC_OUT_To_DB_IDS(num={0}, start_date={1})", num, start_date), servece_owner, eventID);
+                return null;// Ошибка
+            }
+        }
+        /// <summary>
+        /// обновить ЭПД по отправлению по id_doc
+        /// </summary>
+        /// <param name="num_doc"></param>
+        /// <returns></returns>
+        public string UpdateUZ_DOC_OUT_To_DB_IDS(string num_doc)
+        {
+            try
+            {
+                UZ.UZ_SMS uz_sms = new UZ.UZ_SMS(this.servece_owner);
+                UZ.UZ_DOC uz_doc = uz_sms.GetDocumentOfDB_NumDoc(num_doc);
+                if (uz_doc != null)
+                {
+                    return AddUpdateUZ_DOC_OUT_To_DB_IDS(uz_doc);
+
+                }
+                return null;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateUZ_DOC_OUT_To_DB_IDS(num_doc={0})", num_doc), servece_owner, eventID);
+                return null;// Ошибка
+            }
+        }
+
+        /// <summary>
+        /// Добавить или обновить ЭПД по отправлению
+        /// </summary>
+        /// <param name="uz_doc"></param>
+        /// <returns></returns>
+        public string AddUpdateUZ_DOC_OUT_To_DB_IDS(UZ.UZ_DOC uz_doc)
+        {
+            try
+            {
+                EFUZ_DOC_OUT ef_uzdoc = new EFUZ_DOC_OUT(new EFDbContext());
+
+                if (uz_doc != null)
+                {
+                    int result = 0;
+                    UZ_DOC_OUT doc = ef_uzdoc.Get(uz_doc.id_doc);
+                    if (doc == null)
+                    {
+
+                        string code_from = uz_doc.sender_code != null ? uz_doc.sender_code : "0";
+
+                        doc = new UZ_DOC_OUT()
+                        {
+                            num_doc = uz_doc.id_doc,
+                            revision = uz_doc.revision,
+                            num_uz = uz_doc.otpr != null ? uz_doc.otpr.nom_doc : null,
+                            status = (int)uz_doc.status,
+                            code_from = code_from,
+                            code_on = uz_doc.recipient_code,
+                            dt = uz_doc.dt,
+                            xml_doc = uz_doc.xml,
+                        };
+                        ef_uzdoc.Add(doc);
+                        result = ef_uzdoc.Save();
+                        // Сформируем сообщение и сохраним в логе
+                        if (result > 0)
+                        {
+                            String.Format("Добавление перевозочного документа в БД IDS.Outgoing - ВЫПОЛНЕНО. (IDS.UZ_DOC.num_doc={0}).", doc.num_doc).InformationLog(servece_owner, this.eventID);
+                        }
+                        else
+                        {
+                            String.Format("Добавление перевозочного документа в БД IDS.Outgoing - НЕ ВЫПОЛНЕНО. (Номер документа={0}, Код выполнения:{1}).", uz_doc.id_doc, result).ErrorLog(servece_owner, this.eventID);
+                        }
+                    }
+                    else
+                    {
+                        // Ревизия документа выше чем ревизия сохраненного документа
+                        if (doc.revision < uz_doc.revision)
+                        {
+                            string code_from = uz_doc.sender_code != null ? uz_doc.sender_code : "0";
+
+                            doc.num_doc = uz_doc.id_doc;
+                            doc.revision = uz_doc.revision;
+                            doc.num_uz = uz_doc.otpr != null ? uz_doc.otpr.nom_doc : null;
+                            doc.status = (int)uz_doc.status;
+                            doc.code_from = code_from;
+                            doc.code_on = uz_doc.recipient_code;
+                            doc.dt = uz_doc.dt;
+                            doc.xml_doc = uz_doc.xml;
+                            ef_uzdoc.Update(doc);
+                            result = ef_uzdoc.Save();
+                            // Сформируем сообщение и сохраним в логе
+                            if (result > 0)
+                            {
+                                String.Format("Обновление перевозочного документа в БД IDS.Outgoing - ВЫПОЛНЕНО. (IDS.UZ_DOC.num_doc={0}).", doc.num_doc).InformationLog(servece_owner, this.eventID);
+                            }
+                            else
+                            {
+                                String.Format("Обновление перевозочного документа в БД IDS.Outgoing - НЕ ВЫПОЛНЕНО. (IDS.UZ_DOC.num_doc={0}, Код выполнения:{1}).", uz_doc.id_doc, result).ErrorLog(servece_owner, this.eventID);
+                            }
+                        }
+                        else return doc.num_doc;
+                    }
+
+                    return result > 0 ? doc.num_doc : null;
+                }
+                return null;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("AddUpdateUZ_DOC_OUT_To_DB_IDS(uz_doc={0})", uz_doc), servece_owner, eventID);
+                return null;// Ошибка
+            }
+        }
+        #endregion
+
         #region OutgoingSostav
 
         /// <summary>
@@ -694,7 +831,7 @@ namespace IDS
                         //TODO: Добавить позже
                         //if (wir.id_outgoing_car == null)
                         //{
-                            result = InsertOutgoingCars(ref context, new_sostav, id_way_from, position, wir, lead_time, user); // Получим результат выполнения операции
+                        result = InsertOutgoingCars(ref context, new_sostav, id_way_from, position, wir, lead_time, user); // Получим результат выполнения операции
                         //}
                         //else
                         //{

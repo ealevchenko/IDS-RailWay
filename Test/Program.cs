@@ -211,6 +211,7 @@ namespace Test
             //tids.IDS_WIR_ArrivalWagonsOfStation();                // Операция роспуск
             //tids.IDS_WIR_OperationReturnProvideWagons();            // Тест операции вернуть пръедявленый состав
 
+            tids.IDS_WIR_OperationUpdateEPDSendingSostav();             // Тест операции обновления ЭПД состава который отправили
 
             #endregion
 
@@ -247,13 +248,14 @@ namespace Test
             //tuz.UZ_SMS_GetOTPROfXML();
             //tuz.UZ_SMS_GetDocumentOfDB_Num();
             //tuz.UZ_SMS_GetArrivalDocumentOfDB_Num();
+            //tuz.UZ_SMS_GetOutgoingDocumentOfDB_NumShipper(); //Получить ЭПД из промежуточной базы на вагон который отправили
             //tuz.UZ_SMS_GetDocumentOfDB_NumConsignees();
             //tuz.UZ_SMS_GetLastDTOfUZ_Data(); // тест получить время последней записи промежуточной базы
             #endregion
 
             #region Администрирование
             //tids.IDS_WIR_CloseWir();                            // Административной функции закрыть внутренее перемещение
-            tids.IDS_WIR_DeleteDoubleWir();                        // Административной функции закрыть задвоение операций и дислокаций внутренего перемещения
+            //tids.IDS_WIR_DeleteDoubleWir();                        // Административной функции закрыть задвоение операций и дислокаций внутренего перемещения
             //tids.IDS_WIR_ReturnWagons();    // Административной функции вернуть вагон из отправки
             #endregion
 
