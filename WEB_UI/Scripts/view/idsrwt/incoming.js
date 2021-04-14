@@ -2812,15 +2812,15 @@
             view_cars_not_arrival: function (list) {
                 $('div#list-cars-not-arrival').empty();
                 $.each(list, function (i, el) {
-                    var icon_arrival = 'fa-train';
+                    var icon_arrival = 'fas fa-train';
                     if (el.id_transfer) {
-                        icon_arrival = 'fa-share';
+                        icon_arrival = 'far fa-share';
                     } else {
                         if (el.note) {
-                            icon_arrival = 'fa-hand-paper-o';
+                            icon_arrival = 'far fa-hand-paper';
                         }
                     }
-                    var link = $('<a class="list-group-item list-group-item-action" id="' + el.id + '" data-toggle="list" href="#" role="tab" aria-controls="">' + el.num + ' <i class="fa ' + icon_arrival + '" aria-hidden="true"></i> ' + (el.num_doc ? '<i class="fa fa-file-text-o" aria-hidden="true" title="Документ найден"></i>' : '') + '</a>');
+                    var link = $('<a class="list-group-item list-group-item-action" id="' + el.id + '" data-toggle="list" href="#" role="tab" aria-controls="">' + el.num + ' <i class="' + icon_arrival + '" aria-hidden="true"></i> ' + (el.num_doc ? '<i class="far fa-file-alt" aria-hidden="true" title="Документ найден"></i>' : '') + '</a>');
                     if (el.consignee === 7932) {
                         link.addClass('list-group-item-success');
                     }
