@@ -287,7 +287,7 @@ namespace Test.TestModule
         public void IDS_WIR_OperationUpdateEPDSendingSostav()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            OperationResultWagon res = ids.OperationUpdateEPDSendingSostav(64018, "TEST");
+            OperationResultWagon res = ids.OperationUpdateEPDSendingSostav(64045, "TEST");
         }
 
         /// <summary>
