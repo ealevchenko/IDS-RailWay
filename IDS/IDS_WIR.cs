@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UZ;
 
 namespace IDS
 {
@@ -2641,6 +2642,237 @@ namespace IDS
         //}
 
 
+        public ResultUpdateDB UpdateOutgoing_UZ_Vagon(ref EFDbContext context, Outgoing_UZ_Document document, EPDOutgoingCar epd_car, string user)
+        {
+            ResultUpdateDB result = new ResultUpdateDB();
+            try
+            {
+                EFOutgoingCars ef_out_car = new EFOutgoingCars(context);
+                EFOutgoing_UZ_Vagon ef_out_uz_vag = new EFOutgoing_UZ_Vagon(context);
+                IDSDirectory ids_dir = new IDSDirectory(this.servece_owner, context);
+
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                if (epd_car != null && epd_car.epd != null)
+                {
+                    OutgoingCars out_car = ef_out_car.Context.Where(c => c.id == epd_car.id_outgoing_car).FirstOrDefault();
+                    if (out_car != null)
+                    {
+                        Outgoing_UZ_Vagon out_uz_vag = ef_out_uz_vag.Context.Where(v => v.id_car == epd_car.id_outgoing_car).FirstOrDefault();
+                        if (out_uz_vag != null)
+                        {
+                            // получим ЭПД на вагон
+                            UZ.VAGON vagon = epd_car.epd.otpr.vagon.ToList().Find(v => v.nomer == out_car.num.ToString());
+                            if (vagon != null)
+                            {
+                                List<UZ.COLLECT_V> collect = vagon.collect_v.ToList();
+                                // Если неопределен код гнг, добавить
+                                if (out_uz_vag.id_cargo_gng != null)
+                                {
+                                    if (collect != null && collect.Count() > 0)
+                                    {
+                                        int? code = collect[0].kod_gng != null ? (int?)int.Parse(collect[0].kod_gng) : null;
+                                        string name = collect[0].name_gng;
+                                        Directory_CargoGNG cargo_gng = code != null ? ids_dir.GetDirectory_CargoGNG((int)code, name, true, user) : null;
+                                        out_uz_vag.Directory_CargoGNG = cargo_gng;
+                                    }
+                                }
+                                // 
+                                out_uz_vag.id_document = document.id > 0 ? (long?)document.id : null;
+                                out_uz_vag.gruzp = vagon.gruzp;
+                                out_uz_vag.u_tara = vagon.u_tara;
+                                out_uz_vag.ves_tary_arc = vagon.ves_tary_arc;
+                                out_uz_vag.vesg = collect != null && collect.Count() > 0 ? collect[0].vesg : null;
+                                out_uz_vag.change = DateTime.Now;
+                                out_uz_vag.change_user = user;
+
+
+                                ef_out_uz_vag.Update(out_uz_vag);
+                            }
+                            else
+                            {
+                                result.SetResult((int)errors_base.not_vagon_epd_document); // ошибка указанного вагона нет в документе
+                            }
+                        }
+                        else
+                        {
+                            result.SetResult((int)errors_base.not_out_uz_vag_db); // документ на ваго не найден
+                        }
+                    }
+                    else
+                    {
+                        result.SetResult((int)errors_base.not_outgoing_cars_db); // в базе нет данного вагона на отправку
+                    }
+                }
+                else
+                {
+                    result.SetResult((int)errors_base.not_epd_document); // нет ЭПД на вагон
+                }
+
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateOutgoing_UZ_Vagon(context={0})",
+                    context), servece_owner, eventID);
+                result.SetResult((int)errors_base.global);
+
+            }
+            return result;
+        }
+
+        public ResultUpdateDB UpdateOutgoing_UZ_Vagons(ref EFDbContext context, Outgoing_UZ_Document document, List<EPDOutgoingCar> list_cars, string user)
+        {
+            ResultUpdateDB result = new ResultUpdateDB();
+            try
+            {
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+
+                foreach (EPDOutgoingCar epd_vagon in list_cars)
+                {
+                    ResultUpdateDB res_vagon = UpdateOutgoing_UZ_Vagons(ref context, document, epd_vagon, user);
+                }
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateOutgoing_UZ_Document_Pay(context={0})",
+                    context), servece_owner, eventID);
+                result.SetResult((int)errors_base.global);
+
+            }
+            return result;
+        }
+        /// <summary>
+        /// Создать список Outgoing_UZ_Document_Pay
+        /// </summary>
+        /// <param name="pls"></param>
+        /// <returns></returns>
+        public List<Outgoing_UZ_Document_Pay> CreateOutgoing_UZ_Document_Pay(List<UZ.PL> pls)
+        {
+            try
+            {
+                List<Outgoing_UZ_Document_Pay> list_doc_pays = new List<Outgoing_UZ_Document_Pay>();
+
+                foreach (UZ.PL pl in pls)
+                {
+                    // Пройдемся по платежкам
+                    foreach (UZ.PAY pay in pl.pay.ToList())
+                    {
+                        Outgoing_UZ_Document_Pay new_pay = new Outgoing_UZ_Document_Pay()
+                        {
+                            id = 0,
+                            id_document = 0,
+                            code_payer = int.Parse(pl.kod_plat),
+                            kod = pay.kod,
+                            summa = (int)pay.summa,
+                            type_payer = int.Parse(pl.type),
+                        };
+                        list_doc_pays.Add(new_pay);
+                    }
+                }
+                return list_doc_pays;
+
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("CreateOutgoing_UZ_Document_Pay(pls={0})",
+                    pls), servece_owner, eventID);
+                return null;
+            }
+        }
+        /// <summary>
+        /// Добавить или обновить платежки по документу
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="document"></param>
+        /// <param name="pls"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public ResultUpdateDB UpdateOutgoing_UZ_Document_Pay(ref EFDbContext context, Outgoing_UZ_Document document, List<UZ.PL> pls, string user)
+        {
+            ResultUpdateDB result = new ResultUpdateDB();
+            try
+            {
+                EFOutgoing_UZ_Document_Pay ef_out_doc_pay = new EFOutgoing_UZ_Document_Pay(context);
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                // Получим Outgoing_UZ_Document_Pay по данным документа
+                List<Outgoing_UZ_Document_Pay> list_doc_pays = CreateOutgoing_UZ_Document_Pay(pls);
+                result.count = list_doc_pays.Count();
+
+                if (document.id == 0)
+                {
+                    // Документ только создали, добавим pay
+                    foreach (Outgoing_UZ_Document_Pay doc_pay in list_doc_pays)
+                    {
+                        document.Outgoing_UZ_Document_Pay.Add(doc_pay);
+                        result.AddInsert();
+                    }
+                }
+                else
+                {
+                    // Список существующих платежек
+                    List<Outgoing_UZ_Document_Pay> old_list_doc_pay = document.Outgoing_UZ_Document_Pay.ToList();
+                    // Сравнить
+                    foreach (Outgoing_UZ_Document_Pay doc_pay in list_doc_pays)
+                    {
+                        Outgoing_UZ_Document_Pay exist_doc_pay = ef_out_doc_pay.Context.Where(d => d.code_payer == doc_pay.code_payer && d.type_payer == doc_pay.type_payer && d.kod == doc_pay.kod).FirstOrDefault();
+                        if (exist_doc_pay != null)
+                        {
+                            // есть - обновить
+                            exist_doc_pay.summa = doc_pay.summa;
+                            ef_out_doc_pay.Update(exist_doc_pay);
+                            old_list_doc_pay.Remove(exist_doc_pay);
+                            result.AddUpdate();
+                        }
+                        else
+                        {
+                            // нет - добавить
+                            document.Outgoing_UZ_Document_Pay.Add(doc_pay);
+                            result.AddInsert();
+                        }
+                    }
+                    // Удалим исключенные платежки
+                    ef_out_doc_pay.Delete(old_list_doc_pay.Select(p => p.id));
+                    result.delete = old_list_doc_pay.Select(p => p.id).Count();
+                }
+                return result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateOutgoing_UZ_Document_Pay(context={0})",
+                    context), servece_owner, eventID);
+                result.SetResult((int)errors_base.global);
+                return result;
+            }
+        }
+        /// <summary>
+        /// получить текущий документ на сданный на УЗ вагон
+        /// </summary>
+        /// <param name="car"></param>
+        /// <param name="start_date"></param>
+        /// <returns></returns>
         public UZ.UZ_DOC GetSendingEPD(OutgoingCars car, DateTime? start_date)
         {
             try
@@ -2674,6 +2906,142 @@ namespace IDS
             {
                 e.ExceptionMethodLog(String.Format("GetSendingEPD(car={0}, start_date={1})",
                     car, start_date), servece_owner, eventID);
+                return null;
+            }
+        }
+
+        public Outgoing_UZ_Document UpdateOutgoing_UZ_Document(ref EFDbContext context, string id_doc_uz, List<EPDOutgoingCar> list_cars, string user)
+        {
+            try
+            {
+
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+
+                EFOutgoing_UZ_Document ef_out_uz_doc = new EFOutgoing_UZ_Document(context);
+                EFOutgoing_UZ_Document_Pay ef_out_uz_doc_pay = new EFOutgoing_UZ_Document_Pay(context);
+
+                if (list_cars == null || list_cars.Count() == 0) return null;
+                // Документы
+                UZ.UZ_DOC epd = list_cars[0].epd;
+                UZ.OTPR otpr = epd.otpr;
+
+                // грузооотправители и грузополучатели
+                List<UZ.CLIENT> clients = epd.otpr.client.ToList();
+                UZ.CLIENT client_from = clients != null && clients.Count() > 0 ? clients[0] : null;
+                UZ.CLIENT client_on = clients != null && clients.Count() > 1 ? clients[1] : null;
+                // маршруты
+                List<UZ.ROUTE> route = epd.otpr.route.ToList();
+                List<UZ.JOINT> joints = route != null && route.Count() > 0 ? route[0].joint.ToList() : null;
+                UZ.JOINT joint = joints.Find(j => j.admin == 22);
+                // Платники
+                List<UZ.PL> pls = epd.otpr.pl.ToList();
+                UZ.PL pl_from = pls != null && pls.Count() > 0 ? pls.Find(p => p.type == "0") : null;
+                if (pl_from != null)
+                {
+                    List<UZ.PAY> pays_from = pl_from.pay.ToList();
+
+                }
+                //
+                List<UZ.SHTEMPEL> shtempels = epd.otpr.shtempel.ToList();
+                //
+                UZ.TEXT text = epd.otpr.text;
+                // Вагоны
+                List<UZ.VAGON> vagons = epd.otpr.vagon.ToList();
+                //                foreach (EPDOutgoingCar epd_vagon in list_cars)
+                //                {
+                //vagons.Find(v=>v.nomer == epd_vagon.)
+                //                }
+
+
+                Outgoing_UZ_Document uz_doc = ef_out_uz_doc.Context.Where(d => d.id_doc_uz == id_doc_uz).FirstOrDefault();
+                if (uz_doc == null)
+                {
+                    // Создать документ
+                    uz_doc = new Outgoing_UZ_Document()
+                    {
+                        id = 0,
+                        id_doc_uz = id_doc_uz,
+                        nom_doc = otpr.nom_doc,
+                        code_stn_from = route != null && route.Count() > 0 && route[0].stn_from != null ? (int?)int.Parse(route[0].stn_from) : null,
+                        code_stn_to = route != null && route.Count() > 0 && route[0].stn_to != null ? (int?)int.Parse(route[0].stn_to) : null,
+                        country_nazn = otpr != null ? otpr.country_nazn : null,
+                        code_border_checkpoint = joint != null && joint.stn != null ? (int?)int.Parse(joint.stn) : null,
+                        cross_date = joint != null && joint.cross_time != null ? (DateTime?)joint.cross_time : null,
+                        code_shipper = client_from != null && client_from.kod != null ? (int?)int.Parse(client_from.kod) : null,
+                        code_consignee = client_on != null && client_on.kod != null ? (int?)int.Parse(client_on.kod) : null,
+                        vid = otpr != null ? otpr.vid : null,
+                        code_payer = pl_from != null ? pl_from.kod_plat : null,
+                        distance_way = otpr != null ? otpr.distance_way : null,
+                        osum = otpr != null ? otpr.osum : null,
+                        date_sozdan = otpr != null ? otpr.date_sozdan : null,
+                        date_otpr = otpr != null ? otpr.date_otpr : null,
+                        date_pr = otpr != null ? otpr.date_pr : null,
+                        date_grpol = otpr != null ? otpr.date_grpol : null,
+                        date_vid = otpr != null ? otpr.date_vid : null,
+                        info_sht = null,
+                        name_gr = text != null ? text.name_gr : null,
+                        note = null,
+                        create = DateTime.Now,
+                        create_user = user,
+                    };
+                }
+                else
+                {
+                    // Документ найден
+                    uz_doc.code_stn_from = route != null && route.Count() > 0 && route[0].stn_from != null ? (int?)int.Parse(route[0].stn_from) : null;
+                    uz_doc.code_stn_to = route != null && route.Count() > 0 && route[0].stn_to != null ? (int?)int.Parse(route[0].stn_to) : null;
+                    uz_doc.country_nazn = otpr != null ? otpr.country_nazn : null;
+                    uz_doc.code_border_checkpoint = joint != null && joint.stn != null ? (int?)int.Parse(joint.stn) : null;
+                    uz_doc.cross_date = joint != null && joint.cross_time != null ? (DateTime?)joint.cross_time : null;
+                    uz_doc.code_shipper = client_from != null && client_from.kod != null ? (int?)int.Parse(client_from.kod) : null;
+                    uz_doc.code_consignee = client_on != null && client_on.kod != null ? (int?)int.Parse(client_on.kod) : null;
+                    uz_doc.vid = otpr != null ? otpr.vid : null;
+                    uz_doc.code_payer = pl_from != null ? pl_from.kod_plat : null;
+                    uz_doc.distance_way = otpr != null ? otpr.distance_way : null;
+                    uz_doc.osum = otpr != null ? otpr.osum : null;
+                    uz_doc.date_sozdan = otpr != null ? otpr.date_sozdan : null;
+                    uz_doc.date_otpr = otpr != null ? otpr.date_otpr : null;
+                    uz_doc.date_pr = otpr != null ? otpr.date_pr : null;
+                    uz_doc.date_grpol = otpr != null ? otpr.date_grpol : null;
+                    uz_doc.date_vid = otpr != null ? otpr.date_vid : null;
+                    uz_doc.info_sht = null;
+                    uz_doc.name_gr = text != null ? text.name_gr : null;
+                    uz_doc.note = null;
+                    uz_doc.change = DateTime.Now;
+                    uz_doc.change_user = user;
+                }
+                // добавить к документу платежки
+                ResultUpdateDB res_doc_pay = UpdateOutgoing_UZ_Document_Pay(ref context, uz_doc, pls, user);
+                if (res_doc_pay.result >= 0)
+                {
+                    // Без ошибок, добавим вагоны
+
+
+
+
+
+                    ef_out_uz_doc.AddOrUpdate(uz_doc);
+
+                }
+                else
+                {
+
+                }
+
+                return uz_doc;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateOutgoing_UZ_Document(context={0})",
+                    context), servece_owner, eventID);
                 return null;
             }
         }
@@ -2716,15 +3084,39 @@ namespace IDS
                                     };
                                     list_update_epd.Add(new_update_epd); // добавим  в список обновления
                                 }
-                                else {
+                                else
+                                {
                                     list_num.Add(car.num);
                                 }
 
                             }
+                            // Сгруппируем документы по id_doc уз
+                            List<IGrouping<string, EPDOutgoingCar>> group_outgoing_car = list_update_epd.ToList().GroupBy(d => d.epd.id_doc).ToList();
+                            // Пройдемся по документам
+                            foreach (IGrouping<string, EPDOutgoingCar> out_cars in group_outgoing_car)
+                            {
+                                List<EPDOutgoingCar> list_cars = out_cars.ToList();
 
-                            //List<IGrouping<string, EPDOutgoingCar>> group_outgoing_car = list_wim.ToList()
+                                Outgoing_UZ_Document doc_uz = UpdateOutgoing_UZ_Document(ref context, out_cars.Key, list_cars, user);
+                                // Найдем задвоение
+                                //if (out_car.Count() > 1)
+                                //{
+                                //    //// Нет закрытой записи, оставить одну с макс id
+                                //    //WagonInternalOperation wio_max = gr_wio.OrderByDescending(m => m.id).FirstOrDefault();
+                                //    //if (wio_max != null)
+                                //    //{
+                                //    //    long id_max = wio_max.id;
+                                //    //    foreach (WagonInternalOperation del_wio in gr_wio)
+                                //    //    {
+                                //    //        if (del_wio.id != id_max)
+                                //    //        {
+                                //    //            ef_wio.Delete(del_wio.id);
+                                //    //        }
 
-
+                                //    //    }
+                                //    //}
+                                //}
+                            }
 
 
                             //// Вагоны для отправки определены

@@ -150,6 +150,15 @@ namespace UZ
             Directory_Cargo cargo = GetCargoOfCodeETSNG(code_etsng);
             return cargo != null ? cargo.code_etsng : code_etsng;
         }
+        /// <summary>
+        /// Вернуть строку спраочника груза по коду ГНГ
+        /// </summary>
+        /// <param name="code_gng"></param>
+        /// <returns></returns>
+        public Directory_Cargo GetCargoOfCodeGNG(int code_gng)
+        {
+            return ef_cargo.Context.Where(c => c.code_gng == code_gng).FirstOrDefault();
+        }
         #endregion
 
         #region Directory_Stations

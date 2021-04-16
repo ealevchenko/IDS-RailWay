@@ -15,6 +15,7 @@ namespace UZ
 
     public class OTPR
     {
+        public DateTime? date_sozdan { get; set; }
         public DateTime? date_finish { get; set; }
         public DateTime? date_plan { get; set; }
         public DateTime? date_strah_dog_recipient { get; set; }
@@ -778,6 +779,7 @@ namespace UZ
             {
                 if (node.Attributes.Count > 0)
                 {
+                    tag.date_sozdan = getAttributes<DateTime?>(node, "date_sozdan");
                     tag.date_finish = getAttributes<DateTime?>(node, "date_finish");
                     tag.date_plan = getAttributes<DateTime?>(node, "date_plan");
                     tag.date_strah_dog_recipient = getAttributes<DateTime?>(node, "date_strah_dog_recipient");

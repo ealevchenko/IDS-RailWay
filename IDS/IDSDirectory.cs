@@ -13,7 +13,7 @@ using UZ;
 
 namespace IDS
 {
-
+    // TODO! убрать в общий справочник
     public enum errors_ids_dir : int
     {
         global = -1,
@@ -43,17 +43,43 @@ namespace IDS
         EFDirectory_OwnersWagons ef_owner = new EFDirectory_OwnersWagons(new EFDbContext());
         EFDirectory_OperatorsWagons ef_operator = new EFDirectory_OperatorsWagons(new EFDbContext());
         EFDirectory_Railway ef_rw = new EFDirectory_Railway(new EFDbContext());
+        EFDirectory_CargoGNG ef_cargo_gng = new EFDirectory_CargoGNG(new EFDbContext());
+
 
         public IDSDirectory()
             : base()
         {
-
+            CreateContex(new EFDbContext());
         }
 
         public IDSDirectory(service servece_owner)
             : base(servece_owner)
         {
+            CreateContex(new EFDbContext());
+        }
 
+        public IDSDirectory(EFDbContext context)
+            : base()
+        {
+            CreateContex(context);
+        }
+        public IDSDirectory(service servece_owner, EFDbContext context)
+            : base(servece_owner)
+        {
+            CreateContex(context);
+        }
+
+        private void CreateContex(EFDbContext context) {
+            EFDirectory_Station ef_station = new EFDirectory_Station(context);
+            EFDirectory_Consignee ef_сonsignee = new EFDirectory_Consignee(context);
+            EFDirectory_Wagons ef_wag = new EFDirectory_Wagons(context);
+            EFDirectory_WagonsRent ef_wag_rent = new EFDirectory_WagonsRent(context);
+            EFDirectory_Countrys ef_countrys = new EFDirectory_Countrys(context);
+            EFDirectory_GenusWagons ef_genus = new EFDirectory_GenusWagons(context);
+            EFDirectory_OwnersWagons ef_owner = new EFDirectory_OwnersWagons(context);
+            EFDirectory_OperatorsWagons ef_operator = new EFDirectory_OperatorsWagons(context);
+            EFDirectory_Railway ef_rw = new EFDirectory_Railway(context);
+            EFDirectory_CargoGNG ef_cargo_gng = new EFDirectory_CargoGNG(context);
         }
 
         #region СПРАВОЧНИК ВНУТРЕННИХ СТАНЦИЙ ПРЕДПРИЯТИЯ (IDS.Directory_Station )
@@ -628,10 +654,10 @@ namespace IDS
                     bit_warning = true;
                 }
                 // Вагона есть обновим
-                wagon.id_countrys = ((wagon.id_countrys == 0 && id_countrys > 0) || (wagon.id_countrys > 0 && id_countrys > 0 && wagon.id_countrys!=id_countrys) ? id_countrys : wagon.id_countrys);
+                wagon.id_countrys = ((wagon.id_countrys == 0 && id_countrys > 0) || (wagon.id_countrys > 0 && id_countrys > 0 && wagon.id_countrys != id_countrys) ? id_countrys : wagon.id_countrys);
                 wagon.id_genus = (((wagon.id_genus == 0 && id_genus > 0) || (wagon.id_genus > 0 && id_genus > 0 && wagon.id_genus != id_genus)) ? id_genus : wagon.id_genus);
                 //wagon.bit_warning = bit_warning;
-                wagon.kol_os = ((wagon.kol_os == 0 && kol_os > 0) || (wagon.kol_os > 0 && kol_os > 0 && wagon.kol_os!=kol_os) ? kol_os : wagon.kol_os);
+                wagon.kol_os = ((wagon.kol_os == 0 && kol_os > 0) || (wagon.kol_os > 0 && kol_os > 0 && wagon.kol_os != kol_os) ? kol_os : wagon.kol_os);
                 wagon.usl_tip = (wagon.usl_tip == null && usl_tip != null ? usl_tip : wagon.usl_tip);
                 wagon.date_rem_vag = date_rem_vag;
                 wagon.id_type_ownership = id_type_ownership;
@@ -927,6 +953,49 @@ namespace IDS
             catch (Exception e)
             {
                 e.ExceptionMethodLog(String.Format("GetCode_Directory_RailwayOfNameAdm(adm={0})", adm), servece_owner, eventID);
+                return null;
+            }
+        }
+
+        #endregion
+
+        #region СПРАВОЧНИК ГРУЗОВ ГНГ (Directory_CargoGNG)
+
+        public Directory_CargoGNG GetDirectory_CargoGNG(int code, string name, bool add, string user)
+        {
+            try
+            {
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                //EFDirectory_CargoGNG ef_cargo_gng = new EFDirectory_CargoGNG(context);
+                Directory_CargoGNG cargo = ef_cargo_gng.Context.Where(c => c.code == code).FirstOrDefault();
+                if (cargo == null && add)
+                {
+                    if (String.IsNullOrWhiteSpace(name))
+                    {
+                        UZDirectory uz_directory = new UZDirectory(this.servece_owner);// Подключим библиотеку УЗ 
+                        EFUZ.Entities.Directory_Cargo cargo_uz = uz_directory.GetCargoOfCodeGNG(code);
+                        name = cargo_uz != null ? cargo_uz.name_gng : "Название груза ГНГ не определено!";
+                    }
+                    cargo = new Directory_CargoGNG()
+                    {
+                        id = 0,
+                        code = code,
+                        cargo_gng_name_ru = name,
+                        cargo_gng_name_en = name,
+                        create = DateTime.Now,
+                        create_user = user
+                    };
+                    ef_cargo_gng.Add(cargo);
+                }
+                return cargo;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetDirectory_CargoGNG(code={0}, name={1}, add={2}, user={3})", code, name, add, user), servece_owner, eventID);
                 return null;
             }
         }

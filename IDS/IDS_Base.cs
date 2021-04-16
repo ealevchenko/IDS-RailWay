@@ -66,7 +66,8 @@ namespace IDS
         error_change_park_station_lock_wagon = -706,        // Отмена изменения положения парка, вагоны имеют отметку заблокирован (операция предъявления)
 
         error_convert_epd =- 900,                           // Ошибка контвертации данных ЭПД
-
+        not_epd_document =- 901,                            // Нет ЭПД
+        not_vagon_epd_document =- 902,                      // Указаного вагона нет в ЭПД
         // Справочники -1000.....
 
         // Directory_Ways -1100..
@@ -430,7 +431,178 @@ namespace IDS
             if (result < 0) { AddError(); }
         }
     }
+    /// <summary>
+    /// Класс данных результата обновления базы данных
+    /// </summary>
+    public class ResultUpdateDB
+    {
+        public int result { get; set; } // Глобальный ресурс выполнения всего переноса
+        public int count { get; set; }
+        public int insert { get; set; }
+        public int update { get; set; }
+        public int delete { get; set; }
+        public int skip { get; set; }
+        public int error { get; set; }
+        public int close { get; set; }
+        public List<ResultID> listResult = new List<ResultID>();
 
+        public ResultUpdateDB()
+        {
+            this.count = 0;
+            this.result = 0;
+            this.insert = 0;
+            this.update = 0;
+            this.delete = 0;
+            this.skip = 0;
+            this.error = 0;
+            this.close = 0;
+            this.listResult.Clear();
+        }
+
+        public ResultUpdateDB(int count)
+        {
+            this.count = count;
+            this.result = 0;
+            this.insert = 0;
+            this.update = 0;
+            this.delete = 0;
+            this.skip = 0;
+            this.error = 0;
+            this.close = 0;
+            this.listResult.Clear();
+        }
+
+        public void SetInsertResult(int result)
+        {
+            if (result < 0)
+            {
+                AddError(result); return;
+            }
+            if (result > 0)
+            {
+                AddInsert(); return;
+            }
+            AddSkip(); return;
+        }
+        public void SetInsertResult(int result, long id)
+        {
+            listResult.Add(new ResultID() { id = id, result = result });
+
+            if (result < 0)
+            {
+                AddError(result); return;
+            }
+            if (result > 0)
+            {
+                AddInsert(); return;
+            }
+            AddSkip(); return;
+        }
+
+        public void SetUpdateResult(int result)
+        {
+            if (result < 0)
+            {
+                AddError(result); return;
+            }
+            if (result > 0)
+            {
+                AddUpdate(); return;
+            }
+            AddSkip();
+            return;
+        }
+        public void SetUpdateResult(int result, long id)
+        {
+            listResult.Add(new ResultID() { id = id, result = result });
+
+            if (result < 0)
+            {
+                AddError(result); return;
+            }
+            if (result > 0)
+            {
+                AddUpdate(); return;
+            }
+            AddSkip(); return;
+        }
+
+        public void SetDeleteResult(int result)
+        {
+            if (result < 0)
+            {
+                AddError(result); return;
+            }
+            if (result > 0)
+            {
+                AddDelete(); return;
+            }
+            AddSkip();
+            return;
+        }
+        public void SetDeleteResult(int result, long id)
+        {
+            listResult.Add(new ResultID() { id = id, result = result });
+
+            if (result < 0)
+            {
+                AddError(result); return;
+            }
+            if (result > 0)
+            {
+                AddDelete(); return;
+            }
+            AddSkip(); return;
+        }
+
+        public void SetCloseResult(int result, long id)
+        {
+            listResult.Add(new ResultID() { id = id, result = result });
+
+            if (result < 0)
+            {
+                AddError(result); return;
+            }
+            if (result > 0)
+            {
+                AddClose(); return;
+            }
+            AddSkip(); return;
+        }
+
+        public void SetResult(int code)
+        {
+            this.result = code;
+        }
+        public void AddInsert()
+        {
+            this.insert++;
+        }
+        public void AddUpdate()
+        {
+            this.update++;
+        }
+        public void AddDelete()
+        {
+            this.delete++;
+        }
+        public void AddSkip()
+        {
+            this.skip++;
+        }
+        public void AddError(int err_code)
+        {
+            this.error++;
+        }
+        public void AddError()
+        {
+            this.error++;
+        }
+        public void AddClose()
+        {
+            this.close++;
+        }
+    }
 
     public class IDS_Base
     {
