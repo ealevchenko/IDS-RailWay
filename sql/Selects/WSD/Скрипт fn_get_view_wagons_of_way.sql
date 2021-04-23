@@ -1,4 +1,4 @@
-	declare @id_way int = 115
+	declare @id_way int = 778
 	
 	SELECT
 		-- id основных таблиц

@@ -34,16 +34,18 @@ namespace IDS
         private bool transfer_new_car_of_kis = false; // TODO: Удалить 
         public bool Transfer_new_car_of_kis { get { return this.transfer_new_car_of_kis; } set { this.transfer_new_car_of_kis = value; } }// TODO: Удалить 
 
-        EFDirectory_Station ef_station = new EFDirectory_Station(new EFDbContext());
-        EFDirectory_Consignee ef_сonsignee = new EFDirectory_Consignee(new EFDbContext());
-        EFDirectory_Wagons ef_wag = new EFDirectory_Wagons(new EFDbContext());
-        EFDirectory_WagonsRent ef_wag_rent = new EFDirectory_WagonsRent(new EFDbContext());
-        EFDirectory_Countrys ef_countrys = new EFDirectory_Countrys(new EFDbContext());
-        EFDirectory_GenusWagons ef_genus = new EFDirectory_GenusWagons(new EFDbContext());
-        EFDirectory_OwnersWagons ef_owner = new EFDirectory_OwnersWagons(new EFDbContext());
-        EFDirectory_OperatorsWagons ef_operator = new EFDirectory_OperatorsWagons(new EFDbContext());
-        EFDirectory_Railway ef_rw = new EFDirectory_Railway(new EFDbContext());
-        EFDirectory_CargoGNG ef_cargo_gng = new EFDirectory_CargoGNG(new EFDbContext());
+        EFDirectory_Station ef_station = null;
+        EFDirectory_Consignee ef_сonsignee = null;
+        EFDirectory_Wagons ef_wag = null;
+        EFDirectory_WagonsRent ef_wag_rent = null;
+        EFDirectory_Countrys ef_countrys = null;
+        EFDirectory_GenusWagons ef_genus = null;
+        EFDirectory_OwnersWagons ef_owner = null;
+        EFDirectory_OperatorsWagons ef_operator = null;
+        EFDirectory_Railway ef_rw = null;
+        EFDirectory_CargoGNG ef_cargo_gng = null;
+        EFDirectory_CargoETSNG ef_cargo_etsng = null;
+        EFDirectory_Cargo ef_cargo = null;
 
 
         public IDSDirectory()
@@ -69,17 +71,20 @@ namespace IDS
             CreateContex(context);
         }
 
-        private void CreateContex(EFDbContext context) {
-            EFDirectory_Station ef_station = new EFDirectory_Station(context);
-            EFDirectory_Consignee ef_сonsignee = new EFDirectory_Consignee(context);
-            EFDirectory_Wagons ef_wag = new EFDirectory_Wagons(context);
-            EFDirectory_WagonsRent ef_wag_rent = new EFDirectory_WagonsRent(context);
-            EFDirectory_Countrys ef_countrys = new EFDirectory_Countrys(context);
-            EFDirectory_GenusWagons ef_genus = new EFDirectory_GenusWagons(context);
-            EFDirectory_OwnersWagons ef_owner = new EFDirectory_OwnersWagons(context);
-            EFDirectory_OperatorsWagons ef_operator = new EFDirectory_OperatorsWagons(context);
-            EFDirectory_Railway ef_rw = new EFDirectory_Railway(context);
-            EFDirectory_CargoGNG ef_cargo_gng = new EFDirectory_CargoGNG(context);
+        private void CreateContex(EFDbContext context)
+        {
+            this.ef_station = new EFDirectory_Station(context);
+            this.ef_сonsignee = new EFDirectory_Consignee(context);
+            this.ef_wag = new EFDirectory_Wagons(context);
+            this.ef_wag_rent = new EFDirectory_WagonsRent(context);
+            this.ef_countrys = new EFDirectory_Countrys(context);
+            this.ef_genus = new EFDirectory_GenusWagons(context);
+            this.ef_owner = new EFDirectory_OwnersWagons(context);
+            this.ef_operator = new EFDirectory_OperatorsWagons(context);
+            this.ef_rw = new EFDirectory_Railway(context);
+            this.ef_cargo_gng = new EFDirectory_CargoGNG(context);
+            this.ef_cargo_etsng = new EFDirectory_CargoETSNG(context);
+            this.ef_cargo = new EFDirectory_Cargo(context);
         }
 
         #region СПРАВОЧНИК ВНУТРЕННИХ СТАНЦИЙ ПРЕДПРИЯТИЯ (IDS.Directory_Station )
@@ -996,6 +1001,88 @@ namespace IDS
             catch (Exception e)
             {
                 e.ExceptionMethodLog(String.Format("GetDirectory_CargoGNG(code={0}, name={1}, add={2}, user={3})", code, name, add, user), servece_owner, eventID);
+                return null;
+            }
+        }
+
+        #endregion
+
+        #region СПРАВОЧНИК ГРУЗОВ ЕТСНГ (Directory_CargoETSNG)
+
+        public Directory_CargoETSNG GetDirectory_CargoETSNG(int code, string name, bool add, string user)
+        {
+            try
+            {
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                Directory_CargoETSNG cargo = ef_cargo_etsng.Context.Where(c => c.code == code).FirstOrDefault();
+                if (cargo == null && add)
+                {
+                    if (String.IsNullOrWhiteSpace(name))
+                    {
+                        UZDirectory uz_directory = new UZDirectory(this.servece_owner);// Подключим библиотеку УЗ 
+                        EFUZ.Entities.Directory_Cargo cargo_uz = uz_directory.GetCorrectCargo(code);
+                        name = cargo_uz != null ? cargo_uz.name_etsng : "Название груза ЕТСНГ не определено!";
+                    }
+                    cargo = new Directory_CargoETSNG()
+                    {
+                        id = 0,
+                        code = code,
+                        cargo_etsng_name_ru = name,
+                        cargo_etsng_name_en = name,
+                        create = DateTime.Now,
+                        create_user = user
+                    };
+                    ef_cargo_etsng.Add(cargo);
+                }
+                return cargo;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetDirectory_CargoETSNG(code={0}, name={1}, add={2}, user={3})", code, name, add, user), servece_owner, eventID);
+                return null;
+            }
+        }
+
+        #endregion
+
+        #region СПРАВОЧНИК ГРУЗОВ  (Directory_Cargo)
+
+        public Directory_Cargo GetDirectory_Cargo(Directory_CargoETSNG cargo_etsng, bool add, string user)
+        {
+            try
+            {
+                if (cargo_etsng == null) return null;
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                Directory_Cargo cargo = ef_cargo.Context.Where(c => c.id_cargo_etsng == cargo_etsng.id).FirstOrDefault();
+                if (cargo == null && add)
+                {
+                    cargo = new Directory_Cargo()
+                    {
+                        id = 0,
+                        id_group = 0, // до выяснения
+                        cargo_name_ru = cargo_etsng.cargo_etsng_name_ru.Substring(0,50),
+                        cargo_name_en = cargo_etsng.cargo_etsng_name_en.Substring(0,50),
+                        code_sap = null,
+                        sending = null,
+                        create = DateTime.Now,
+                        create_user = user
+                    };
+                    cargo.Directory_CargoETSNG = cargo_etsng;
+                    ef_cargo.Add(cargo);
+                }
+                return cargo;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetDirectory_Cargo(cargo_etsng={0}, add={1}, user={2})", cargo_etsng, add, user), servece_owner, eventID);
                 return null;
             }
         }
