@@ -46,6 +46,8 @@ namespace IDS
         EFDirectory_CargoGNG ef_cargo_gng = null;
         EFDirectory_CargoETSNG ef_cargo_etsng = null;
         EFDirectory_Cargo ef_cargo = null;
+        EFDirectory_Shipper ef_shipper = null;
+        EFDirectory_PayerSender ef_paysender = null;
 
 
         public IDSDirectory()
@@ -85,6 +87,8 @@ namespace IDS
             this.ef_cargo_gng = new EFDirectory_CargoGNG(context);
             this.ef_cargo_etsng = new EFDirectory_CargoETSNG(context);
             this.ef_cargo = new EFDirectory_Cargo(context);
+            this.ef_shipper = new EFDirectory_Shipper(context);
+            this.ef_paysender = new EFDirectory_PayerSender(context);
         }
 
         #region СПРАВОЧНИК ВНУТРЕННИХ СТАНЦИЙ ПРЕДПРИЯТИЯ (IDS.Directory_Station )
@@ -1068,8 +1072,8 @@ namespace IDS
                     {
                         id = 0,
                         id_group = 0, // до выяснения
-                        cargo_name_ru = cargo_etsng.cargo_etsng_name_ru.Substring(0,50),
-                        cargo_name_en = cargo_etsng.cargo_etsng_name_en.Substring(0,50),
+                        cargo_name_ru = cargo_etsng.cargo_etsng_name_ru.Substring(0, 50),
+                        cargo_name_en = cargo_etsng.cargo_etsng_name_en.Substring(0, 50),
                         code_sap = null,
                         sending = null,
                         create = DateTime.Now,
@@ -1088,6 +1092,77 @@ namespace IDS
         }
 
         #endregion
+
+        #region СПРАВОЧНИК ГРУЗООТПРАВИТЕЛЕЙ (в нашу сторону) и ГРУЗОПОЛУЧАТЕЛЕЙ от нас  (Directory_Shipper)
+
+        public Directory_Shipper GetDirectory_Shipper(int code, string name, bool add, string user)
+        {
+            try
+            {
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                Directory_Shipper shipper = ef_shipper.Context.Where(s => s.code == code).FirstOrDefault();
+                if (shipper == null && add)
+                {
+                    shipper = new Directory_Shipper()
+                    {
+                        code = code,
+                        shipper_name_ru = name,
+                        shipper_name_en = name,
+                        create = DateTime.Now,
+                        create_user = user
+                    };
+                    ef_shipper.Add(shipper);
+                    ef_shipper.Save();
+                }
+                return shipper;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetDirectory_Shipper(code={0}, name={1}, add={2}, user={3})", code, name, add, user), servece_owner, eventID);
+                return null;
+            }
+        }
+        #endregion
+
+        #region СПРАВОЧНИК   (Directory_PayerSender)
+
+        public Directory_PayerSender GetDirectory_PayerSender(string code, string name, bool add, string user)
+        {
+            try
+            {
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                Directory_PayerSender payer = ef_paysender.Context.Where(s => s.code == code).FirstOrDefault();
+                if (payer == null && add)
+                {
+                    payer = new Directory_PayerSender()
+                    {
+                        code = code, 
+                        payer_name_ru = name,
+                        payer_name_en = name,
+                        create = DateTime.Now,
+                        create_user = user
+                    };
+                    ef_paysender.Add(payer);
+                    ef_paysender.Save();
+                }
+                return payer;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetDirectory_PayerSender(code={0}, name={1}, add={2}, user={3})", code, name, add, user), servece_owner, eventID);
+                return null;
+            }
+        }
+        #endregion
+
 
     }
 }

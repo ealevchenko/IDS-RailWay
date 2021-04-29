@@ -451,7 +451,7 @@ namespace UZ
                 DateTime new_dt = ((DateTime)start_date).AddHours(0);
 
                 string sql = "SELECT *  FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data] " +
-                    "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = " + num.ToString() + ") and [depart_code] in (0," + IntsToString(shipper, ',') + ",'none') and [doc_Status] in (N'Accepted', N'Delivered', N'Recieved', N'Uncredited') and update_dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120) order by[dt]";
+                    "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = " + num.ToString() + ") and [depart_code] in (0," + IntsToString(shipper, ',') + ",'none') and [doc_Status] in (N'Accepted', N'Delivered', N'Recieved', N'Uncredited') and update_dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120) order by [dt] desc";
                 UZ_Data uzd = ef_data.Database.SqlQuery<UZ_Data>(sql).FirstOrDefault();
 
                 if (uzd != null) {

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UZ;
+using System.Runtime.InteropServices;
 
 namespace IDS
 {
@@ -2773,8 +2774,6 @@ namespace IDS
                 // Получим Outgoing_UZ_Document_Pay по данным документа
                 List<Outgoing_UZ_Vagon_Cont> list_out_vag_cont = CreateOutgoing_UZ_Vagon_Cont(ref context, conts, user);
                 result.count = list_out_vag_cont.Count();
-
-
                 // вагон существует или создан вновь
                 if (out_uz_vag.id == 0)
                 {
@@ -2949,6 +2948,18 @@ namespace IDS
                                         if (res_vag_pay.result >= 0)
                                         {
                                             ef_out_uz_vag.Update(out_uz_vag);
+                                            if (document.Outgoing_UZ_Vagon != null && document.Outgoing_UZ_Vagon.Count() > 0)
+                                            {
+                                                Outgoing_UZ_Vagon vag_exist = document.Outgoing_UZ_Vagon.ToList().Find(v => v.num == out_uz_vag.num);
+                                                if (vag_exist != null)
+                                                {
+                                                    // Удалить
+                                                    document.Outgoing_UZ_Vagon.Remove(vag_exist);
+                                                }
+
+                                            }
+                                            document.Outgoing_UZ_Vagon.Add(out_uz_vag);
+                                            //document.Outgoing_UZ_Vagon   out_uz_vag.
                                             result.SetResult(res_vag_cont.result + res_vag_acts.result + res_vag_pay.result);
                                         }
                                         else
@@ -3025,7 +3036,8 @@ namespace IDS
                     {
                         result.SetUpdateResult(res_vagon.result, epd_vagon.id_outgoing_car);
                     }
-                    else {
+                    else
+                    {
                         result.SetResult((int)errors_base.error_update_out_vag); // Ошибка обновления документов (на вагон)
                     }
                 }
@@ -3156,7 +3168,15 @@ namespace IDS
         #endregion
 
         #region ДОКУМЕНТ Outgoing_UZ_Document
-        public Outgoing_UZ_Document UpdateOutgoing_UZ_Document(ref EFDbContext context, string id_doc_uz, List<EPDOutgoingCar> list_cars, string user)
+        /// <summary>
+        /// Обновить документ на группу вагонов + обновить вагоны...
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_doc_uz"></param>
+        /// <param name="list_cars"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int UpdateOutgoing_UZ_Document(ref EFDbContext context, string id_doc_uz, List<EPDOutgoingCar> list_cars, string user)
         {
             try
             {
@@ -3170,19 +3190,23 @@ namespace IDS
                 {
                     user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
                 }
-
+                IDSDirectory ids_dir = new IDSDirectory(this.servece_owner);
                 EFOutgoing_UZ_Document ef_out_uz_doc = new EFOutgoing_UZ_Document(context);
-                //EFOutgoing_UZ_Document_Pay ef_out_uz_doc_pay = new EFOutgoing_UZ_Document_Pay(context);
 
-                if (list_cars == null || list_cars.Count() == 0) return null;
-                // Документы
+                if (list_cars == null || list_cars.Count() == 0) return (int)errors_base.not_input_list_wagons;
+                // Получим и обрботаем документы
                 UZ.UZ_DOC epd = list_cars[0].epd;
                 UZ.OTPR otpr = epd.otpr;
-
                 // грузооотправители и грузополучатели
                 List<UZ.CLIENT> clients = epd.otpr.client.ToList();
                 UZ.CLIENT client_from = clients != null && clients.Count() > 0 ? clients[0] : null;
                 UZ.CLIENT client_on = clients != null && clients.Count() > 1 ? clients[1] : null;
+
+                // Directory_Shipper shipper = null;
+                if (client_on != null && client_on.kod != null)
+                {
+                    Directory_Shipper shipper = ids_dir.GetDirectory_Shipper(int.Parse(client_on.kod), client_on.name, true, user);
+                }
                 // маршруты
                 List<UZ.ROUTE> route = epd.otpr.route.ToList();
                 List<UZ.JOINT> joints = route != null && route.Count() > 0 ? route[0].joint.ToList() : null;
@@ -3192,19 +3216,21 @@ namespace IDS
                 UZ.PL pl_from = pls != null && pls.Count() > 0 ? pls.Find(p => p.type == "0") : null;
                 if (pl_from != null)
                 {
+                    // Проверим и создадим в базе платника по отправлению
+                    Directory_PayerSender payer = ids_dir.GetDirectory_PayerSender(pl_from.kod_plat, pl_from.name_plat, true, user);
                     List<UZ.PAY> pays_from = pl_from.pay.ToList();
                 }
-                //
+                // Штемпель
                 List<UZ.SHTEMPEL> shtempels = epd.otpr.shtempel.ToList();
-                //
+                // 
                 UZ.TEXT text = epd.otpr.text;
                 // Вагоны
                 List<UZ.VAGON> vagons = epd.otpr.vagon.ToList();
-
+                // Проверим документ создан
                 Outgoing_UZ_Document uz_doc = ef_out_uz_doc.Context.Where(d => d.id_doc_uz == id_doc_uz).FirstOrDefault();
                 if (uz_doc == null)
                 {
-                    // Создать документ
+                    // Документ не создан. Создать документ
                     uz_doc = new Outgoing_UZ_Document()
                     {
                         id = 0,
@@ -3235,7 +3261,7 @@ namespace IDS
                 }
                 else
                 {
-                    // Документ найден
+                    // Документ найден, обновить
                     uz_doc.code_stn_from = route != null && route.Count() > 0 && route[0].stn_from != null ? (int?)int.Parse(route[0].stn_from) : null;
                     uz_doc.code_stn_to = route != null && route.Count() > 0 && route[0].stn_to != null ? (int?)int.Parse(route[0].stn_to) : null;
                     uz_doc.country_nazn = otpr != null ? otpr.country_nazn : null;
@@ -3258,7 +3284,9 @@ namespace IDS
                     uz_doc.change = DateTime.Now;
                     uz_doc.change_user = user;
                 }
-                // добавить к документу платежки
+                // Добаим грузополучателя
+                //uz_doc.Directory_Shipper = shipper;
+                // добавить или обновить к документу платежки
                 ResultUpdateDB res_doc_pay = UpdateOutgoing_UZ_Document_Pay(ref context, uz_doc, pls, user);
                 if (res_doc_pay.result >= 0)
                 {
@@ -3266,26 +3294,86 @@ namespace IDS
                     if (res_doc_vagons.result >= 0)
                     {
                         // Без ошибок, добавим вагоны
-                        ef_out_uz_doc.AddOrUpdate(uz_doc);
-                        // Добавить документ ЭПД
+
+                        if (uz_doc.id > 0)
+                        {
+                            ef_out_uz_doc.Update(uz_doc);
+                        }
+                        else
+                        {
+                            ef_out_uz_doc.Add(uz_doc);
+                        }
+                        // Добавить документ ЭПД в базу данных
+                        EFUZ_DOC_OUT ef_uzdoc = new EFUZ_DOC_OUT(context);
+                        UZ_DOC_OUT doc = ef_uzdoc.Get(epd.id_doc);
+                        if (doc == null)
+                        {
+                            string code_from = epd.sender_code != null ? epd.sender_code : "0";
+                            doc = new UZ_DOC_OUT()
+                            {
+                                num_doc = epd.id_doc,
+                                revision = epd.revision,
+                                num_uz = epd.otpr != null ? epd.otpr.nom_doc : null,
+                                status = (int)epd.status,
+                                code_from = code_from,
+                                code_on = epd.recipient_code,
+                                dt = epd.dt,
+                                xml_doc = epd.xml,
+                            };
+                            ef_uzdoc.Add(doc);
+                        }
+                        else
+                        {
+                            // Ревизия документа выше чем ревизия сохраненного документа
+                            if (doc.revision < epd.revision)
+                            {
+                                string code_from = epd.sender_code != null ? epd.sender_code : "0";
+                                doc.num_doc = epd.id_doc;
+                                doc.revision = epd.revision;
+                                doc.num_uz = epd.otpr != null ? epd.otpr.nom_doc : null;
+                                doc.status = (int)epd.status;
+                                doc.code_from = code_from;
+                                doc.code_on = epd.recipient_code;
+                                doc.dt = epd.dt;
+                                doc.xml_doc = epd.xml;
+                                ef_uzdoc.Update(doc);
+                            }
+                        }
+                        // Обновим документ отправки
+                        EFOutgoingCars ef_out_car = new EFOutgoingCars(context);
+                        foreach (EPDOutgoingCar epd_car in list_cars)
+                        {
+                            // Получим вагон в отправлении
+                            OutgoingCars out_car = ef_out_car.Context.Where(c => c.id == epd_car.id_outgoing_car).FirstOrDefault();
+                            if (out_car != null)
+                            {
+                                out_car.num_doc = doc.num_doc;
+                                out_car.UZ_DOC_OUT = doc;
+                                ef_out_car.Update(out_car);
+                            }
+                            else
+                            {
+                                return (int)errors_base.not_outgoing_cars_db; // Ошибка обновления вагона по отправке
+                            }
+                        }
+                        return 1;
                     }
                     else
                     {
                         // Ошибка добавления вагонов
+                        return (int)errors_base.error_update_out_vag; // Ошибка обновления документов (вагоны к документу)
                     }
                 }
                 else
                 {
-                    // Ошибка добавления документа
+                    return (int)errors_base.error_update_out_doc_pay; // Ошибка обновления документов (платежка на вагон)
                 }
-
-                return uz_doc;
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("UpdateOutgoing_UZ_Document(context={0})",
-                    context), servece_owner, eventID);
-                return null;
+                e.ExceptionMethodLog(String.Format("UpdateOutgoing_UZ_Document(context={0}, id_doc_uz={1}, list_cars={2}, user={3})",
+                    context, id_doc_uz, list_cars, user), servece_owner, eventID);
+                return (int)errors_base.global;
             }
         }
         #endregion
@@ -3296,9 +3384,9 @@ namespace IDS
         /// <param name="id_outgoing_sostav"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public OperationResultWagon OperationUpdateEPDSendingSostav(long id_outgoing_sostav, string user)
+        public OperationResultID OperationUpdateEPDSendingSostav(long id_outgoing_sostav, string user)
         {
-            OperationResultWagon rt = new OperationResultWagon();
+            OperationResultID rt = new OperationResultID();
             try
             {
                 EFDbContext context = new EFDbContext();
@@ -3340,49 +3428,29 @@ namespace IDS
                             foreach (IGrouping<string, EPDOutgoingCar> out_cars in group_outgoing_car)
                             {
                                 List<EPDOutgoingCar> list_cars = out_cars.ToList();
-
-                                Outgoing_UZ_Document doc_uz = UpdateOutgoing_UZ_Document(ref context, out_cars.Key, list_cars, user);
-                                // Найдем задвоение
-                                //if (out_car.Count() > 1)
-                                //{
-                                //    //// Нет закрытой записи, оставить одну с макс id
-                                //    //WagonInternalOperation wio_max = gr_wio.OrderByDescending(m => m.id).FirstOrDefault();
-                                //    //if (wio_max != null)
-                                //    //{
-                                //    //    long id_max = wio_max.id;
-                                //    //    foreach (WagonInternalOperation del_wio in gr_wio)
-                                //    //    {
-                                //    //        if (del_wio.id != id_max)
-                                //    //        {
-                                //    //            ef_wio.Delete(del_wio.id);
-                                //    //        }
-
-                                //    //    }
-                                //    //}
-                                //}
+                                // Выполним обновление всего пула документов
+                                int result = UpdateOutgoing_UZ_Document(ref context, out_cars.Key, list_cars, user);
+                                // Запомним результат
+                                foreach (EPDOutgoingCar car in list_cars)
+                                {
+                                    rt.SetResultOperation(result, car.id_outgoing_car);
+                                }
                             }
-
-
-                            //// Вагоны для отправки определены
-                            ////rt.count = list_out_car.Count();
-                            //// Пройдемся по вагонам
-                            //foreach (OutgoingCars car in list_out_car)
-                            //{
-                            //    int result = OperationUpdateEPDSendingWagon(ref context, car.id, sostav.date_readiness_amkr, user);
-                            //    rt.SetResultOperation(result, car.num);
-                            //}
-                            //// Проверка на ошибку
-                            //if (rt.error == 0)
-                            //{
-                            //    //sostav.change = DateTime.Now;
-                            //    //sostav.change_user = user;
-                            //    //ef_out_sostav.Update(sostav);
-                            //    rt.SetResult(context.SaveChanges());
-                            //}
-                            //else
-                            //{
-                            //    rt.SetResult((int)errors_base.error_save_changes); // Были ошибки по ходу выполнения всей операций
-                            //}
+                            // Проверка на ошибку
+                            if (rt.error == 0)
+                            {
+                                //sostav.change = DateTime.Now;
+                                //sostav.change_user = user;
+                                //ef_out_sostav.Update(sostav);
+                                if (rt.listResult.Count() > 0)
+                                {
+                                    rt.SetResult(context.SaveChanges());
+                                }
+                            }
+                            else
+                            {
+                                rt.SetResult((int)errors_base.error_save_changes); // Были ошибки по ходу выполнения всей операций
+                            }
                         }
                         else
                         {
@@ -3398,7 +3466,6 @@ namespace IDS
                 {
                     rt.SetResult((int)errors_base.not_outgoing_sostav_db); //В базе данных нет записи состава для оправки
                 }
-
                 return rt;
             }
             catch (Exception e)
