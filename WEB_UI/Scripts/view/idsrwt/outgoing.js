@@ -1633,6 +1633,19 @@
             limiting_loading_uz: $('textarea#limiting_loading_uz'), // Ограничения по УЗ
             limiting_loading_amkr: $('input#limiting_loading_amkr'), // Ограничения по УЗ
 
+            uz_doc_num: $('input#uz_doc_num'), // № накладной
+            vesg_uz_doc: $('input#vesg_uz_doc'), //вес груза накладной
+            ves_tary_uz_doc: $('input#ves_tary_uz_doc'), //вес тары накладной
+            brigadier_loading_uz_doc: $('input#brigadier_loading_uz_doc'), //Бригадир накладной
+            kod_etsng: $('input#kod_etsng'), //код етснг
+            name_etsng: $('input#name_etsng'), //етснг
+            station_code_on: $('input#station_code_on'), // код станции отправки
+            station_name_on: $('input#station_name_on'), // название станции отправки
+            railway_name_on: $('input#railway_name_on'), // дорога станции отправки
+
+            client_kod_on: $('input#client_kod_on'), // код грузополучателя
+            client_name_on: $('input#client_name_on'), // название грузополучателя
+
             cargo_arrival: $('input#cargo_arrival'), // Груз по прибытию
             cargo_sap: $('input#cargo_sap'), // Материал по прибытию
             date_arrival: $('input#date_arrival'), // Дата прибытия
@@ -2222,6 +2235,34 @@
                     }
                     cars_detali.limiting_loading_uz.val(note_uz);// Ограничения (по УЗ)
                     //ЭПД (после принятия УЗ)------------------------------------------------
+
+                    var vag_doc_uz = car.Outgoing_UZ_Vagon;
+                    var doc_uz = vag_doc_uz ? vag_doc_uz.Outgoing_UZ_Document : null;
+                    var doc_epd = car ? car.UZ_DOC_OUT : null;
+                    var cargo = vag_doc_uz ? vag_doc_uz.Directory_Cargo : null;
+                    var cargo_etsng = cargo ? cargo.Directory_CargoETSNG : null;
+                    var station_from = doc_uz ? doc_uz.Directory_ExternalStation : null;
+                    var station_on = doc_uz ? doc_uz.Directory_ExternalStation1 : null;
+                    var irw_on = station_on ? station_on.Directory_InlandRailway: null;
+                    var consignee = doc_uz ? doc_uz.Directory_Shipper : null;
+
+                    cars_detali.uz_doc_num.val(doc_epd ? doc_epd.num_uz : null);
+                    cars_detali.vesg_uz_doc.val(vag_doc_uz && vag_doc_uz.vesg ? Number(Number(vag_doc_uz.vesg)/1000).toFixed(2) : null);
+                    cars_detali.ves_tary_uz_doc.val(vag_doc_uz && vag_doc_uz.ves_tary_arc ? Number(Number(vag_doc_uz.ves_tary_arc)/1000).toFixed(2) : null);
+                    if (cargo_etsng) {
+                        cars_detali.kod_etsng.val(cargo_etsng.code);
+                        cars_detali.name_etsng.text(cargo_etsng['cargo_etsng_name_' + cars_detali.lang]);
+                    }
+                    if (station_on) {
+                        cars_detali.station_code_on.val(station_on.code);
+                        cars_detali.station_name_on.val(station_on['station_name_' + cars_detali.lang]);
+                        cars_detali.railway_name_on.val(irw_on ? irw_on['inlandrailway_name_' + cars_detali.lang] : null);
+                    }
+                    if (consignee) {
+                        cars_detali.client_kod_on.val(consignee.code);
+                        cars_detali.client_name_on.val(consignee['shipper_name_' + cars_detali.lang]);
+                    }
+
 
                     //SAP (Входящая поставка)------------------------------------------------
 
