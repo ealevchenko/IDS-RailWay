@@ -810,7 +810,17 @@ namespace IDS
                 return (int)errors_base.global;
             }
         }
-
+        /// <summary>
+        /// Создать состав и перенести вагоны в окно для здачи на УЗ
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_station_from"></param>
+        /// <param name="id_way_from"></param>
+        /// <param name="position"></param>
+        /// <param name="lead_time"></param>
+        /// <param name="list"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public ResultTransfer InsertOutgoingSostav(ref EFDbContext context, int id_station_from, int id_way_from, int position, DateTime lead_time, List<long> list, string user)
         {
             ResultTransfer res = new ResultTransfer(list.Count());
@@ -828,15 +838,14 @@ namespace IDS
                     int result = 0;
                     if (wir != null)
                     {
-                        //TODO: Добавить позже
-                        //if (wir.id_outgoing_car == null)
-                        //{
-                        result = InsertOutgoingCars(ref context, new_sostav, id_way_from, position, wir, lead_time, user); // Получим результат выполнения операции
-                        //}
-                        //else
-                        //{
-                        //    result = (int)errors_base.outgoing_cars_wir; // Записи по WagonInternalRoutes - уже имеет ссылку на отправку
-                        //}
+                        if (wir.id_outgoing_car == null)
+                        {
+                            result = InsertOutgoingCars(ref context, new_sostav, id_way_from, position, wir, lead_time, user); // Получим результат выполнения операции
+                        }
+                        else
+                        {
+                            result = (int)errors_base.outgoing_cars_wir; // Записи по WagonInternalRoutes - уже имеет ссылку на отправку
+                        }
                     }
                     else
                     {
@@ -855,12 +864,11 @@ namespace IDS
                 {
                     res.SetResult((int)errors_base.cancel_save_changes);
                 }
-
             }
             catch (Exception e)
             {
-                //e.ExceptionMethodLog(String.Format("InsertOutgoingSostav(id_way={0}, list_provide={1}, lead_time={2}, user={3})",
-                //    id_way, list_provide, lead_time, user), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("InsertOutgoingSostav(context={0}, id_station_from={1}, id_way_from={2}, position={3}, lead_time={4}, list={5}, user={6})",
+                    context, id_station_from, id_way_from, position, lead_time, list, user), servece_owner, eventID);
                 res.SetResult((int)errors_base.global); // Глобальная ошибка
             }
             return res;
