@@ -3201,14 +3201,16 @@ namespace IDS
                 List<UZ.CLIENT> clients = epd.otpr.client.ToList();
                 UZ.CLIENT client_from = clients != null && clients.Count() > 0 ? clients[0] : null;
                 UZ.CLIENT client_on = clients != null && clients.Count() > 1 ? clients[1] : null;
-
-                // Directory_Shipper shipper = null;
                 if (client_on != null && client_on.kod != null)
                 {
                     Directory_Shipper shipper = ids_dir.GetDirectory_Shipper(int.Parse(client_on.kod), client_on.name, true, user);
                 }
                 // маршруты
                 List<UZ.ROUTE> route = epd.otpr.route.ToList();
+                // Определим внешнюю станцию
+                if (route != null && route.Count() > 0 && route[0].stn_to != null) {
+                     Directory_ExternalStation station = ids_dir.GetDirectory_ExternalStation(int.Parse(route[0].stn_to), route[0].name_to, true, user);                
+                }
                 List<UZ.JOINT> joints = route != null && route.Count() > 0 ? route[0].joint.ToList() : null;
                 UZ.JOINT joint = joints.Find(j => j.admin == 22);
                 // Платники

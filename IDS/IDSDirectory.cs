@@ -31,8 +31,6 @@ namespace IDS
     {
         private eventID eventID = eventID.IDS_Directory;
         //protected service servece_owner = service.Null;
-        private bool transfer_new_car_of_kis = false; // TODO: Удалить 
-        public bool Transfer_new_car_of_kis { get { return this.transfer_new_car_of_kis; } set { this.transfer_new_car_of_kis = value; } }// TODO: Удалить 
 
         EFDirectory_Station ef_station = null;
         EFDirectory_Consignee ef_сonsignee = null;
@@ -48,7 +46,7 @@ namespace IDS
         EFDirectory_Cargo ef_cargo = null;
         EFDirectory_Shipper ef_shipper = null;
         EFDirectory_PayerSender ef_paysender = null;
-
+        EFDirectory_ExternalStation ef_ext_station = null;
 
         public IDSDirectory()
             : base()
@@ -89,6 +87,7 @@ namespace IDS
             this.ef_cargo = new EFDirectory_Cargo(context);
             this.ef_shipper = new EFDirectory_Shipper(context);
             this.ef_paysender = new EFDirectory_PayerSender(context);
+            this.ef_ext_station = new EFDirectory_ExternalStation(context);
         }
 
         #region СПРАВОЧНИК ВНУТРЕННИХ СТАНЦИЙ ПРЕДПРИЯТИЯ (IDS.Directory_Station )
@@ -1144,7 +1143,7 @@ namespace IDS
                 {
                     payer = new Directory_PayerSender()
                     {
-                        code = code, 
+                        code = code,
                         payer_name_ru = name,
                         payer_name_en = name,
                         create = DateTime.Now,
@@ -1154,6 +1153,58 @@ namespace IDS
                     ef_paysender.Save();
                 }
                 return payer;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetDirectory_PayerSender(code={0}, name={1}, add={2}, user={3})", code, name, add, user), servece_owner, eventID);
+                return null;
+            }
+        }
+        #endregion
+
+        #region СПРАВОЧНИК ВНЕШНИХ СТАНЦИЙ (Directory_ExternalStation)
+        /// <summary>
+        /// Получить или добавить новую внешнюю станцию 
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="name"></param>
+        /// <param name="add"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public Directory_ExternalStation GetDirectory_ExternalStation(int code, string name, bool add, string user)
+        {
+            try
+            {
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                Directory_ExternalStation station = ef_ext_station.Context.Where(s => s.code == code).FirstOrDefault();
+                if (station == null && add)
+                {
+                    UZDirectory uz_directory = new UZDirectory(this.servece_owner);// Подключим библиотеку УЗ
+                    int id_irw = 0; // По умолчанию "До выяснения"
+
+                    EFUZ.Entities.Directory_InternalRailroad uz_irw = uz_directory.GetDirectory_InternalRailroadOfStationCode_CS(code);
+                    if (uz_irw != null)
+                    {
+                        id_irw = uz_irw.code;
+                    }
+
+                    station = new Directory_ExternalStation()
+                    {
+                        code = code,
+                        station_name_ru = name,
+                        station_name_en = name,
+                        code_inlandrailway = id_irw, 
+                        create = DateTime.Now,
+                        create_user = user
+                    };
+                    ef_ext_station.Add(station);
+                    ef_ext_station.Save();
+                }
+                return station;
             }
             catch (Exception e)
             {

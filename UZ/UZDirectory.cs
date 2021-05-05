@@ -17,6 +17,7 @@ namespace UZ
 
         EFDirectory_Cargo ef_cargo = new EFDirectory_Cargo(new EFDbContext());
         EFDirectory_Stations ef_station = new EFDirectory_Stations(new EFDbContext());
+        EFDirectory_InternalRailroad ef_irw = new EFDirectory_InternalRailroad(new EFDbContext());
 
 
         public UZDirectory()
@@ -300,6 +301,63 @@ namespace UZ
 
         #endregion
 
+        #region Directory_InternalRailroad
+        /// <summary>
+        /// Получить внутренюю дорогу по id дороги
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Directory_InternalRailroad GetDirectory_InternalRailroad(int id)
+        {
+            try
+            {
+                return ef_irw.Context.Where(i=>i.id == id).FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                e.ExceptionLog(String.Format("GetDirectory_InternalRailroad(id={0})", id), this.servece_owner, this.eventID);
+                return null;
+            }
+        }
+        /// <summary>
+        /// Получить внутренюю дорогу по внешней станции
+        /// </summary>
+        /// <param name="station"></param>
+        /// <returns></returns>
+        public Directory_InternalRailroad GetDirectory_InternalRailroadOfStation(Directory_Stations station)
+        {
+            try
+            {
+                if (station == null) return null;
+                return ef_irw.Context.Where(i=>i.id == station.id_ir).FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                e.ExceptionLog(String.Format("GetDirectory_InternalRailroadOfStation(station={0})", station), this.servece_owner, this.eventID);
+                return null;
+            }
+        }
+        /// <summary>
+        /// Получить внутренюю дорогу по коду (cs) внешней станции
+        /// </summary>
+        /// <param name="code_cs"></param>
+        /// <returns></returns>
+        public Directory_InternalRailroad GetDirectory_InternalRailroadOfStationCode_CS(int code_cs)
+        {
+            try
+            {
+                Directory_Stations station = GetStationsOfCodeCS(code_cs);
+                if (station == null) return null;
+                return ef_irw.Context.Where(i=>i.id == station.id_ir).FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                e.ExceptionLog(String.Format("GetDirectory_InternalRailroadOfStationCode_CS(code_cs={0})", code_cs), this.servece_owner, this.eventID);
+                return null;
+            }
+        }
+
+        #endregion
 
     }
 }
