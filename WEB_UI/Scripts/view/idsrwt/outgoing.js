@@ -1705,7 +1705,16 @@
                 cars_detali.limiting_loading_uz.val('');
                 cars_detali.limiting_loading_amkr.val('');
                 // ЭПД
-
+                cars_detali.uz_doc_num.val('');
+                cars_detali.vesg_uz_doc.val('');
+                cars_detali.ves_tary_uz_doc.val('');
+                cars_detali.kod_etsng.val('');
+                cars_detali.name_etsng.val('');
+                cars_detali.station_code_on.val('');
+                cars_detali.station_name_on.val('');
+                cars_detali.railway_name_on.val('');
+                cars_detali.client_kod_on.val('');
+                cars_detali.client_name_on.val('');
                 // Прибытие
                 cars_detali.cargo_arrival.val('');
                 cars_detali.cargo_sap.val('');
