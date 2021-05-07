@@ -672,7 +672,7 @@
                                                 lead_time: pn_select.park_status_select.state_on,
                                                 user: user_name
                                             }
-                                            // Выполним операуию
+                                            // Выполним операцию
                                             ids_inc.postOperationApplyWagonsParkState(operation_apply_park_status, function (result_operation) {
                                                 if (result_operation && result_operation.result > 0) {
                                                     // Сделаем отметку о применении

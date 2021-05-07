@@ -4360,7 +4360,7 @@ IDS_RWT.prototype.postOperationDeleteWagonsParkStateOfWay = function (operation_
         },
     });
 };
-//Операция удалить  вагоны на пути парка 
+//Операция обновить  вагоны на пути парка 
 IDS_RWT.prototype.postOperationApplyWagonsParkState = function (operation_value, callback) {
     $.ajax({
         url: '../../api/ids/rwt/park_state/way/wagon/apply/',
