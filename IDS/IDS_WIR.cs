@@ -2218,10 +2218,10 @@ namespace IDS
                             // Пройдемся по вагонам
                             foreach (OutgoingCars car in list_out_car)
                             {
-                                if (car.num == 51231488)
-                                {
-                                    string s = "";
-                                }
+                                //if (car.num == 51231488)
+                                //{
+                                //    string s = "";
+                                //}
                                 int result = SendingWagonOnUZ(ref context, car, sostav.id_way_from, lead_time, user);
                                 rt.SetResultOperation(result, car.num);
                             }
@@ -3212,7 +3212,11 @@ namespace IDS
                      Directory_ExternalStation station = ids_dir.GetDirectory_ExternalStation(int.Parse(route[0].stn_to), route[0].name_to, true, user);                
                 }
                 List<UZ.JOINT> joints = route != null && route.Count() > 0 ? route[0].joint.ToList() : null;
+                // Получим погран переход
                 UZ.JOINT joint = joints.Find(j => j.admin == 22);
+                if (joint != null && joint.stn!=null) {
+                    Directory_BorderCheckpoint border_checkpoint = ids_dir.GetDirectory_BorderCheckpoint(int.Parse(joint.stn), joint.stn_name, true, user);                
+                }
                 // Платники
                 List<UZ.PL> pls = epd.otpr.pl.ToList();
                 UZ.PL pl_from = pls != null && pls.Count() > 0 ? pls.Find(p => p.type == "0") : null;

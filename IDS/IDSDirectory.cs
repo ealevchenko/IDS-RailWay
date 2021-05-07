@@ -47,6 +47,7 @@ namespace IDS
         EFDirectory_Shipper ef_shipper = null;
         EFDirectory_PayerSender ef_paysender = null;
         EFDirectory_ExternalStation ef_ext_station = null;
+        EFDirectory_BorderCheckpoint ef_bord_chek = null;
 
         public IDSDirectory()
             : base()
@@ -88,6 +89,7 @@ namespace IDS
             this.ef_shipper = new EFDirectory_Shipper(context);
             this.ef_paysender = new EFDirectory_PayerSender(context);
             this.ef_ext_station = new EFDirectory_ExternalStation(context);
+            this.ef_bord_chek = new EFDirectory_BorderCheckpoint(context);
         }
 
         #region СПРАВОЧНИК ВНУТРЕННИХ СТАНЦИЙ ПРЕДПРИЯТИЯ (IDS.Directory_Station )
@@ -1109,8 +1111,8 @@ namespace IDS
                     shipper = new Directory_Shipper()
                     {
                         code = code,
-                        shipper_name_ru = name,
-                        shipper_name_en = name,
+                        shipper_name_ru = name.Substring(0, 100), // обрежим до 100
+                        shipper_name_en = name.Substring(0, 100), 
                         create = DateTime.Now,
                         create_user = user
                     };
@@ -1208,13 +1210,63 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("GetDirectory_PayerSender(code={0}, name={1}, add={2}, user={3})", code, name, add, user), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("GetDirectory_ExternalStation(code={0}, name={1}, add={2}, user={3})", code, name, add, user), servece_owner, eventID);
                 return null;
             }
         }
         #endregion
 
+        #region СПРАВОЧНИК ПОГРАН ПЕРЕХОДОВ (Directory_BorderCheckpoint)
+        /// <summary>
+        /// Получить или добавить новый погран переход
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="name"></param>
+        /// <param name="add"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public Directory_BorderCheckpoint GetDirectory_BorderCheckpoint(int code, string name, bool add, string user)
+        {
+            try
+            {
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                Directory_BorderCheckpoint bc = ef_bord_chek.Context.Where(s => s.code == code).FirstOrDefault();
+                if (bc == null && add)
+                {
+                    UZDirectory uz_directory = new UZDirectory(this.servece_owner);// Подключим библиотеку УЗ
+                    int id_irw = 0; // По умолчанию "До выяснения"
 
+                    EFUZ.Entities.Directory_InternalRailroad uz_irw = uz_directory.GetDirectory_InternalRailroadOfStationCode_CS(code);
+                    if (uz_irw != null)
+                    {
+                        id_irw = uz_irw.code;
+                    }
+
+                    bc = new Directory_BorderCheckpoint()
+                    {
+                        code = code,
+                        station_name_ru = name,
+                        station_name_en = name,
+                        code_inlandrailway = id_irw,
+                        create = DateTime.Now,
+                        create_user = user
+                    };
+                    ef_bord_chek.Add(bc);
+                    ef_bord_chek.Save();
+                }
+                return bc;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetDirectory_BorderCheckpoint(code={0}, name={1}, add={2}, user={3})", code, name, add, user), servece_owner, eventID);
+                return null;
+            }
+        }
+        #endregion
     }
 }
 

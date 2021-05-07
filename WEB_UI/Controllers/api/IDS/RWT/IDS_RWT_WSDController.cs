@@ -475,6 +475,12 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string user { get; set; }
     }
 
+    public class OperationUpdateEPDSendingSostav
+    {
+        public long id_outgoing_sostav { get; set; }
+        public string user { get; set; }
+    }
+
     public class view_wagon_dislocation
     {
         public long id_wir { get; set; }
@@ -1072,6 +1078,31 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 return BadRequest(e.Message);
             }
         }
+
+        #region ОБНОВЛЕНИЕ ДОКУМЕНТОВ ЭПД 
+        // POST api/ids/rwt/wsd/operation/update/epd/sending/sostav
+        /// <summary>
+        /// Обновить документы по составу предъявленному и сданному на дорогу 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("operation/update/epd/sending/sostav")]
+        [ResponseType(typeof(OperationResultID))]
+        public IHttpActionResult PostOperationUpdateEPDSendingSostav([FromBody] OperationUpdateEPDSendingSostav value)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                OperationResultID result = ids_wir.OperationUpdateEPDSendingSostav(value.id_outgoing_sostav, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        #endregion
 
         #region ПОИСК ВАГОНОВ
         // GET: api/ids/rwt/wsd/view/dislocation/amkr/wagon/num/54781596

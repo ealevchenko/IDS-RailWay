@@ -647,6 +647,35 @@ IDS_RWT.prototype.deleteInstructionalLettersWagon = function (id, callback) {
         },
     });
 };
+
+//======================================================================================================
+//                                  РАЗДЕЛ ДОКУМЕНТЫ ОТПРАВЛЕННЫХ ВАГОНОВ
+//======================================================================================================
+//Операция обновить документы на предяъвленный и сданный состав
+IDS_RWT.prototype.postOperationUpdateEPDSendingSostav = function (operation_update_epd, callback) {
+    $.ajax({
+        url: '../../api/ids/rwt/wsd/operation/update/epd/sending/sostav/',
+        type: 'POST',
+        data: JSON.stringify(operation_update_epd),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postOperationUpdateEPDSendingSostav", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 //======================================================================================================
 //                                  РАЗДЕЛ ДОКУМЕНТЫ ПРИНЯТЫХ ВАГОНОВ
 //======= Arrival_UZ_Document (ЭПД УЗ по прибытию) ======================================

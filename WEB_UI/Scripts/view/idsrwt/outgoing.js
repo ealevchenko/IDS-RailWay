@@ -1638,7 +1638,7 @@
             ves_tary_uz_doc: $('input#ves_tary_uz_doc'), //вес тары накладной
             brigadier_loading_uz_doc: $('input#brigadier_loading_uz_doc'), //Бригадир накладной
             kod_etsng: $('input#kod_etsng'), //код етснг
-            name_etsng: $('input#name_etsng'), //етснг
+            name_etsng: $('textarea#name_etsng'), //етснг
             station_code_on: $('input#station_code_on'), // код станции отправки
             station_name_on: $('input#station_name_on'), // название станции отправки
             railway_name_on: $('input#railway_name_on'), // дорога станции отправки
@@ -2243,15 +2243,15 @@
                     var cargo_etsng = cargo ? cargo.Directory_CargoETSNG : null;
                     var station_from = doc_uz ? doc_uz.Directory_ExternalStation : null;
                     var station_on = doc_uz ? doc_uz.Directory_ExternalStation1 : null;
-                    var irw_on = station_on ? station_on.Directory_InlandRailway: null;
+                    var irw_on = station_on ? station_on.Directory_InlandRailway : null;
                     var consignee = doc_uz ? doc_uz.Directory_Shipper : null;
 
                     cars_detali.uz_doc_num.val(doc_epd ? doc_epd.num_uz : null);
-                    cars_detali.vesg_uz_doc.val(vag_doc_uz && vag_doc_uz.vesg ? Number(Number(vag_doc_uz.vesg)/1000).toFixed(2) : null);
-                    cars_detali.ves_tary_uz_doc.val(vag_doc_uz && vag_doc_uz.ves_tary_arc ? Number(Number(vag_doc_uz.ves_tary_arc)/1000).toFixed(2) : null);
+                    cars_detali.vesg_uz_doc.val(vag_doc_uz && vag_doc_uz.vesg ? Number(Number(vag_doc_uz.vesg) / 1000).toFixed(2) : null);
+                    cars_detali.ves_tary_uz_doc.val(vag_doc_uz && vag_doc_uz.ves_tary_arc ? Number(Number(vag_doc_uz.ves_tary_arc) / 1000).toFixed(2) : null);
                     if (cargo_etsng) {
                         cars_detali.kod_etsng.val(cargo_etsng.code);
-                        cars_detali.name_etsng.text(cargo_etsng['cargo_etsng_name_' + cars_detali.lang]);
+                        cars_detali.name_etsng.val(cargo_etsng['cargo_etsng_name_' + cars_detali.lang]);
                     }
                     if (station_on) {
                         cars_detali.station_code_on.val(station_on.code);
@@ -2937,7 +2937,7 @@
                         if (result) {
                             LockScreen(langView('mess_operation', langs));
                             pn_outgoing_sostav.val.clear_all();
-                            // Подготовим операцию
+                            // Подготовим операцию сдачи
                             var operation_outgoing_sostav = {
                                 id_outgoing_sostav: pn_outgoing_sostav.sostav.id,
                                 date_end_inspection_acceptance_delivery: toISOStringTZ(get_datetime_value(pn_outgoing_sostav.sostav_date_end_inspection_acceptance_delivery.val(), pn_outgoing_sostav.lang)),
@@ -2951,15 +2951,40 @@
                                 composition_index: get_input_string_value(pn_outgoing_sostav.sostav_composition_index),
                                 user: cars_detali.user
                             };
+                            // Подготовим операцию обновления документов ЭПД
+                            var operation_update_epd = {
+                                id_outgoing_sostav: pn_outgoing_sostav.sostav.id,
+                                user: cars_detali.user
+                            };
                             // Выполним операцию
                             cars_detali.ids_inc.postOperationPresentSostav(operation_outgoing_sostav, function (result_operation) {
                                 if (result_operation > 0) {
-                                    cars_detali.val_outgoing_car.out_info_message("Операция «СДАТЬ СОСТАВ НА УЗ» – выполнена!");
-                                    if (typeof callback_ok === 'function') {
-                                        pn_outgoing_sostav.obj.dialog("close");
-                                        LockScreenOff();
-                                        callback_ok(result_operation);
-                                    }
+                                    cars_detali.val_outgoing_car.out_info_message("Операция «СДАТЬ СОСТАВ НА УЗ» – Выполнена!");
+                                    cars_detali.val_outgoing_car.out_info_message("Производится поиск ЭПД на вагоны сданного состава.");
+                                    // Обновим документы ЭПД
+                                    cars_detali.ids_inc.postOperationUpdateEPDSendingSostav(operation_update_epd, function (result_update_epd) {
+                                        if (result_update_epd && result_update_epd.result > 0) {
+                                            cars_detali.val_outgoing_car.out_info_message("Операция «ОБНОВИТЬ ЭПД НА ВАГОНЫ» – Выполнена!, обновлено ЭПД по " + result_update_epd.listResult.length + " вагонам");
+                                        } else {
+                                            if (result_update_epd.result === 0) {
+                                                cars_detali.val_outgoing_car.out_info_message("Операция «ОБНОВИТЬ ЭПД НА ВАГОНЫ» – по вагонам не найдены ЭПД");
+                                            } else {
+                                                // Обработка ошибок
+                                                cars_detali.val_outgoing_car.out_info_message("Операция «ОБНОВИТЬ ЭПД НА ВАГОНЫ» – Ошибка, код ошибки :" + result_update_epd.result);
+                                                $.each(result_update_epd.listResult, function (i, el) {
+                                                    if (el.result < 0) {
+                                                        cars_detali.val_outgoing_car.out_info_message("№ вагона :" + el.num + ", код ошибки -" + el.result);
+                                                    }
+                                                });
+                                            }
+                                        }
+                                        // обновить информацию в окне
+                                        if (typeof callback_ok === 'function') {
+                                            pn_outgoing_sostav.obj.dialog("close");
+                                            LockScreenOff();
+                                            callback_ok(result_operation);
+                                        }
+                                    });
                                 } else {
                                     // Ошибка выполнения
                                     cars_detali.val_outgoing_car.out_error_message("Ошибка выполнения операции «СДАТЬ СОСТАВ НА УЗ», код ошибки = " + result_operation);
