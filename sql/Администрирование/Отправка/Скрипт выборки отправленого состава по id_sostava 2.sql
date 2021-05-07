@@ -1,5 +1,5 @@
 /****** Скрипт для команды SelectTopNRows из среды SSMS  ******/
-declare @id_sostav int =  64148;
+declare @id_sostav int =  64321;
 
 SELECT [id]
       ,[num_doc]
