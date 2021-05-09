@@ -5110,7 +5110,15 @@
                                     composition_index: get_input_string_value(operation_detali.operation_detali_sending_uz_composition_index),
                                     user: operation_detali.user,
                                 }
+                                // Подготовим операцию обновления документов ЭПД
+                                var operation_update_epd = {
+                                    id_outgoing_sostav: operation_detali.select_sending_uz_id_sostav,
+                                    user: operation_detali.user,
+                                };
                                 // Выполнить операцию отправки postOperationSendingSostavOnUZ
+                                ids_inc.postOperationUpdateEPDSendingSostav(operation_update_epd, function (result_update_epd) {
+
+                                });
                                 ids_inc.postOperationSendingSostavOnUZ(operation_sending, function (result_sending) {
                                     if (result_sending && result_sending.result > 0) {
                                         // Обновить путь отправки и станцию отправки
@@ -5121,6 +5129,26 @@
                                         operation_detali.bit_update = true;
                                         operation_detali.refresh_sending_uz();
                                         operation_detali.val_sending_uz.out_info_message("Операция 'ОТПРАВИТЬ СОСТАВ НА УЗ' - Выполнена");
+                                        // Обновим документы ЭПД
+                                        //ids_inc.postOperationUpdateEPDSendingSostav(operation_update_epd, function (result_update_epd) {
+                                        //    //if (result_update_epd && result_update_epd.result > 0) {
+                                        //    //    operation_detali.val_sending_uz.out_info_message("Обновлено ЭПД по " + result_update_epd.listResult.length + " вагонам.");
+                                        //    //} else {
+                                        //    //    if (result_update_epd.result === 0) {
+                                        //    //        operation_detali.val_sending_uz.out_info_message("По вагонам не найдены ЭПД");
+                                        //    //    } else {
+                                        //    //        // Обработка ошибок
+                                        //    //        operation_detali.val_sending_uz.out_warning_message("При обновлении ЭПД по вагонам произошла ошибка, код ошибки :" + result_update_epd.result);
+                                        //    //        $.each(result_update_epd.listResult, function (i, el) {
+                                        //    //            if (el.result < 0) {
+                                        //    //                operation_detali.val_sending_uz.out_warning_message("№ вагона :" + el.num + ", код ошибки -" + el.result);
+                                        //    //            }
+                                        //    //        });
+                                        //    //    }
+                                        //    //}
+                                        //    operation_detali.bt_operation_sending_uz_run.prop("disabled", false);
+                                        //});
+                                        operation_detali.val_sending_uz.out_info_message("Операция 'ОТПРАВИТЬ СОСТАВ НА УЗ' - Выполнена");
                                     } else {
                                         operation_detali.val_sending_uz.out_error_message("Ошибка выполнения операции «ОТПРАВИТЬ СОСТАВ НА УЗ», код ошибки = " + (result_sending ? result_sending.result : null));
                                         if (result_sending && result_sending.listResultWagon && result_sending.listResultWagon.length > 0) {
@@ -5130,11 +5158,10 @@
                                                 }
                                             });
                                         }
+                                        operation_detali.bt_operation_sending_uz_run.prop("disabled", false);
                                         LockScreenOff();
                                     }
-                                    operation_detali.bt_operation_sending_uz_run.prop("disabled", false);
                                 });
-
                             } else {
                                 operation_detali.bt_operation_sending_uz_run.prop("disabled", false);
                                 operation_detali.val_sending_uz.out_warning_message("Выполнение операции «ОТПРАВИТЬ СОСТАВ НА УЗ» - отменено!");
