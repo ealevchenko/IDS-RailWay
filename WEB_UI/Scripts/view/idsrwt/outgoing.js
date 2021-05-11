@@ -2968,21 +2968,19 @@
                             // Выполним операцию
                             cars_detali.ids_inc.postOperationPresentSostav(operation_outgoing_sostav, function (result_operation) {
                                 if (result_operation > 0) {
-                                    cars_detali.val_outgoing_car.out_info_message("Операция «СДАТЬ СОСТАВ НА УЗ» – Выполнена!");
-                                    cars_detali.val_outgoing_car.out_info_message("Производится поиск ЭПД на вагоны сданного состава.");
                                     // Обновим документы ЭПД
                                     cars_detali.ids_inc.postOperationUpdateEPDSendingSostav(operation_update_epd, function (result_update_epd) {
                                         if (result_update_epd && result_update_epd.result > 0) {
-                                            cars_detali.val_outgoing_car.out_info_message("Операция «ОБНОВИТЬ ЭПД НА ВАГОНЫ» – Выполнена!, обновлено ЭПД по " + result_update_epd.listResult.length + " вагонам");
+                                            cars_detali.val_outgoing_car.out_info_message("Операция «СДАТЬ СОСТАВ НА УЗ» - ВЫПОЛНЕНА (обновлено ЭПД по " + result_update_epd.listResult.length + " вагонам)");
                                         } else {
                                             if (result_update_epd.result === 0) {
-                                                cars_detali.val_outgoing_car.out_info_message("Операция «ОБНОВИТЬ ЭПД НА ВАГОНЫ» – по вагонам не найдены ЭПД");
+                                                cars_detali.val_outgoing_car.out_info_message("Операция «СДАТЬ СОСТАВ НА УЗ» - ВЫПОЛНЕНА (по вагонам состава не найдены ЭПД)");
                                             } else {
                                                 // Обработка ошибок
-                                                cars_detali.val_outgoing_car.out_info_message("Операция «ОБНОВИТЬ ЭПД НА ВАГОНЫ» – Ошибка, код ошибки :" + result_update_epd.result);
+                                                cars_detali.val_outgoing_car.out_warning_message("Операция «СДАТЬ СОСТАВ НА УЗ» - ВЫПОЛНЕНА (при попытки обновить ЭПД по вагонам состава произошла ошибка, код ошибки:" + result_update_epd.result+").");
                                                 $.each(result_update_epd.listResult, function (i, el) {
                                                     if (el.result < 0) {
-                                                        cars_detali.val_outgoing_car.out_info_message("№ вагона :" + el.num + ", код ошибки -" + el.result);
+                                                        cars_detali.val_outgoing_car.out_warning_message("№ вагона :" + el.num + ", код ошибки -" + el.result);
                                                     }
                                                 });
                                             }
@@ -3002,7 +3000,6 @@
                             });
                         }
                     });
-
                 }
             },
         };
