@@ -6008,7 +6008,7 @@
                                     var row_cars = cars_detali.table_arrival_cars.obj.rows(index[0]).data();
                                     if (row_cars && row_cars.length > 0) {
 
-                                        dialog_confirm.open('Вернуть вагон', 'Вы уверены что хотите вернуть вагон №' + row_cars[0].num + ' в состав на подходах', function (result) {
+                                        dc.dialog_confirm('Open', 'Вернуть вагон', 'Вы уверены что хотите вернуть вагон №' + row_cars[0].num + ' в состав на подходах', function (result) {
                                             if (result) {
                                                 LockScreen(langView('mess_clear_vagon', langs));
                                                 var id = row_cars[0].id;
