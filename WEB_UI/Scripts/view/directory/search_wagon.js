@@ -2,58 +2,60 @@
 
     // Массив текстовых сообщений 
     $.Text_View =
+    {
+        'default':  //default language: ru
         {
-            'default':  //default language: ru
-            {
-                'field_num': '№ вагона',
-                'field_train': '№ поезда',
-                'field_composition_index': 'Индекс поезда',
-                'field_date_arrival': 'Время прибытия',
-                'field_date_adoption': 'Время приема',
-                'field_date_adoption_act': 'Время приема по акту',
-                'field_station_from': 'Отправлено со станции',
-                'field_station_on': 'Принят на станцию',
-                'field_way': 'Принят на путь',
-                'field_doc_uz': '№ накладной УЗ',
-                'field_status': 'Статус',
-                'field_note': 'Примечание',
-                'field_create': 'Строка создана',
-                'field_create_user': 'Создал строку',
-                'field_change': 'Строку правили',
-                'field_change_user': 'Правил',
-                'field_create_sostav': 'Добавил',
-                'field_change_sostav': 'Правил',
+            'field_num': '№ вагона',
+            'field_train': '№ поезда',
+            'field_composition_index': 'Индекс поезда',
+            'field_date_arrival': 'Прибил в составе',
+            'field_date_adoption': 'Принят в составе',
+            'field_date_adoption_act': 'Принят в составе по акту',
+            'field_date_adoption_act_wagon': 'Вагон принят по акту',
+            'field_date_arrival_wagon': 'Вагон принял',
+            'field_station_from': 'Отправлено со станции',
+            'field_station_on': 'Принят на станцию',
+            'field_way': 'Принят на путь',
+            'field_doc_uz': '№ накладной УЗ',
+            'field_status': 'Статус состава',
+            'field_note': 'Примечание',
+            'field_create': 'Строка создана',
+            'field_create_user': 'Создал строку',
+            'field_change': 'Строку правили',
+            'field_change_user': 'Правил',
+            'field_create_sostav': 'Добавил',
+            'field_change_sostav': 'Правил',
 
-                'title_button_export': 'Экспорт',
-                'title_button_buffer': 'Буфер',
-                'title_button_excel': 'Excel',
-            },
-            'en':  //default language: English
-            {
-                'field_num': 'Wagon number',
-                'field_train': 'Train no.',
-                'field_composition_index': 'Train index',
-                'field_date_arrival': 'Arrival time',
-                'field_date_adoption': 'Admission time',
-                'field_date_adoption_act': 'Acceptance time by act',
-                'field_station_from': 'Sent from station',
-                'field_station_on': 'Received at station',
-                'field_way': 'Accepted on path',
-                'field_doc_uz': 'UZ waybill No.',
-                'field_status': 'Status',
-                'field_note': 'Note',
-                'field_create': 'String created',
-                'field_create_user': 'Created a string',
-                'field_change': 'The line was edited',
-                'field_change_user': 'Rules',
-                'field_create_sostav': 'Added',
-                'field_change_sostav': 'Rules',
+            'title_button_export': 'Экспорт',
+            'title_button_buffer': 'Буфер',
+            'title_button_excel': 'Excel',
+        },
+        'en':  //default language: English
+        {
+            'field_num': 'Wagon number',
+            'field_train': 'Train no.',
+            'field_composition_index': 'Train index',
+            'field_date_arrival': 'Arrival time',
+            'field_date_adoption': 'Admission time',
+            'field_date_adoption_act': 'Acceptance time by act',
+            'field_station_from': 'Sent from station',
+            'field_station_on': 'Received at station',
+            'field_way': 'Accepted on path',
+            'field_doc_uz': 'UZ waybill No.',
+            'field_status': 'Status',
+            'field_note': 'Note',
+            'field_create': 'String created',
+            'field_create_user': 'Created a string',
+            'field_change': 'The line was edited',
+            'field_change_user': 'Rules',
+            'field_create_sostav': 'Added',
+            'field_change_sostav': 'Rules',
 
-                'title_button_export': 'Export',
-                'title_button_buffer': 'Buffer',
-                'title_button_excel': 'Excel',
-            }
-        };
+            'title_button_export': 'Export',
+            'title_button_buffer': 'Buffer',
+            'title_button_excel': 'Excel',
+        }
+    };
 
     //*************************************************************************************
     // ОБЪЯВЛЕНИЕ ОСНОВНЫХ ОБЪЕКТОВ ПРИЛОЖЕНИЯ
@@ -132,12 +134,12 @@
                         var countrys = wagon.Directory_Countrys ? wagon.Directory_Countrys : null;
                         if (countrys) {
                             code_sng.val(countrys.code_sng);
-                            countrys_name.val(countrys['countrys_name_'+lang]);
+                            countrys_name.val(countrys['countrys_name_' + lang]);
                         }
                         var genus = wagon.Directory_GenusWagons ? wagon.Directory_GenusWagons : null;
                         if (genus) {
-                            genus_abbr.val(genus['abbr_'+lang]);
-                            genus_name.val(genus['genus_'+lang]);
+                            genus_abbr.val(genus['abbr_' + lang]);
+                            genus_name.val(genus['genus_' + lang]);
                         }
                         usl_tip.val(wagon.usl_tip);
                         kol_os.val(wagon.kol_os);
@@ -160,7 +162,7 @@
                     bt_search_wagon.prop("disabled", false);
                     LockScreenOff();
                 });
-                
+
             }
 
         },
@@ -199,32 +201,144 @@
                             //className: 'select-checkbox',
                             width: "20px"
                         },
-                        { data: "num", title: langView('field_num', langs), width: "50px", orderable: false, searchable: true },
-                        { data: "train", title: langView('field_train', langs), width: "50px", orderable: false, searchable: true },
-                        { data: "composition_index", title: langView('field_composition_index', langs), width: "150px", orderable: false, searchable: true },
-                        { data: "date_arrival", title: langView('field_date_arrival', langs), width: "150px", orderable: true, searchable: false },
-                        { data: "date_adoption", title: langView('field_date_adoption', langs), width: "150px", orderable: false, searchable: false },
-                        { data: "date_adoption_act", title: langView('field_date_adoption_act', langs), width: "150px", orderable: false, searchable: false },
-                        { data: "station_from", title: langView('field_station_from', langs), width: "150px", orderable: false, searchable: true },
-                        { data: "station_on", title: langView('field_station_on', langs), width: "150px", orderable: false, searchable: true },
-                        { data: "id_way", title: langView('field_way', langs), width: "150px", orderable: false, searchable: false },
-                        { data: "status_name", title: langView('field_status', langs), width: "100px", orderable: false, searchable: true },
-                        { data: "doc_uz", title: langView('field_doc_uz', langs), width: "50px", orderable: false, searchable: true },
-                        { data: "note", title: langView('field_note', langs), width: "300px", orderable: false, searchable: false },
-                        //{
-                        //    data: "create", title: langView('field_create', langs), width: "100px", orderable: false, searchable: false
-                        //},
-                        //{
-                        //    data: "create_user", title: langView('field_create_user', langs), width: "100px", orderable: false, searchable: false
-                        //},
-                        //{
-                        //    data: "change", title: langView('field_change', langs), width: "100px", orderable: false, searchable: false
-                        //},
-                        //{
-                        //    data: "change_user", title: langView('field_change_user', langs), width: "100px", orderable: false, searchable: false
-                        //},
-                        { data: "create_sostav", title: langView('field_create_sostav', langs), width: "150px", orderable: false, searchable: false },
-                        { data: "change_sostav", title: langView('field_change_sostav', langs), width: "150px", orderable: false, searchable: false }
+                        {
+                            data: function (row, type, val, meta) {
+                                return row.num;
+                            },
+                            className: 'dt-body-center',
+                            title: langView('field_num', langs), width: "50px", orderable: false, searchable: true
+                        },
+                        {
+                            //data: "train",
+                            data: function (row, type, val, meta) {
+                                var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
+                                return sostav ? sostav.train : null;
+                            },
+                            className: 'dt-body-center',
+                            title: langView('field_train', langs), width: "50px", orderable: false, searchable: true
+                        },
+                        {
+                            //data: "composition_index",
+                            data: function (row, type, val, meta) {
+                                var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
+                                return sostav ? sostav.composition_index : null;
+                            },
+                            className: 'dt-body-center',
+                            title: langView('field_composition_index', langs), width: "100px", orderable: false, searchable: true
+                        },
+                        {
+                            data: function (row, type, val, meta) {
+                                var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
+                                return getReplaceTOfDT(sostav.date_arrival);
+                            },
+                            className: 'dt-body-center',
+                            title: langView('field_date_arrival', langs), width: "100px", orderable: true, searchable: false
+                        },
+                        {
+                            data: function (row, type, val, meta) {
+                                var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
+                                if (row.arrival !== null) {
+                                    return getReplaceTOfDT(sostav.date_adoption);
+                                } else {
+                                    return sostav.date_adoption ? 'Нет' : null ;
+                                }
+                            },
+                            className: 'dt-body-center',
+                            title: langView('field_date_adoption', langs), width: "100px", orderable: false, searchable: false
+                        },
+                        {
+                            //data: "date_adoption_act",
+                            data: function (row, type, val, meta) {
+                                if (row.arrival !== null) {
+                                    var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
+                                    return getReplaceTOfDT(sostav.date_adoption_act);
+                                } else {
+                                    return null;
+                                }
+                            },
+                            className: 'dt-body-center',
+                            title: langView('field_date_adoption_act', langs), width: "100px", orderable: false, searchable: false
+                        },
+                        {
+                            data: function (row, type, val, meta) {
+                                return getReplaceTOfDT(row.date_adoption_act);
+                            },
+                            className: 'dt-body-center',
+                            title: langView('field_date_adoption_act_wagon', langs), width: "100px", orderable: false, searchable: false
+                        },
+                        {
+                            data: function (row, type, val, meta) {
+                                return row.arrival ? (row.arrival_user + '<br />[' + getReplaceTOfDT(row.arrival) + ']') : null;
+                            },
+                            className: 'dt-body-center',
+                            title: langView('field_date_arrival_wagon', langs), width: "100px", orderable: false, searchable: false
+                        },
+                        {
+                            data: function (row, type, val, meta) {
+                                var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
+                                var station = sostav ? sostav.Directory_Station : null;
+                                return station ? station['station_name_' + lang] : null;
+                            },
+                            className: 'dt-body-center',
+                            title: langView('field_station_from', langs), width: "100px", orderable: false, searchable: true
+                        },
+                        {
+                            data: function (row, type, val, meta) {
+                                var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
+                                var station = sostav ? sostav.Directory_Station1 : null;
+                                return station ? station['station_name_' + lang] : null;
+                            },
+                            className: 'dt-body-center',
+                            title: langView('field_station_on', langs), width: "100px", orderable: false, searchable: true
+                        },
+                        {
+                            //data: "id_way",
+                            data: function (row, type, val, meta) {
+                                var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
+                                var way = sostav ? sostav.Directory_Ways : null;
+                                return way ? way['way_num_' + lang] : null;
+                            },
+                            className: 'dt-body-center',
+                            title: langView('field_way', langs), width: "100px", orderable: false, searchable: false
+                        },
+                        {
+                            //data: "status_name",
+                            data: function (row, type, val, meta) {
+                                var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
+                                return sostav ? outStatusArrivalSostav(sostav.status) : null;
+                            },
+                            className: 'dt-body-center',
+                            title: langView('field_status', langs), width: "100px", orderable: false, searchable: true
+                        },
+                        {
+                            data: function (row, type, val, meta) {
+                                var doc = row.UZ_DOC ? row.UZ_DOC : null;
+                                return doc ? doc.num_uz : null;
+                            },
+                            className: 'dt-body-center',
+                            title: langView('field_doc_uz', langs), width: "50px", orderable: false, searchable: true
+                        },
+                        {
+                            data: function (row, type, val, meta) {
+                                return row.note;
+                            },
+                            className: 'dt-body-left',
+                            title: langView('field_note', langs), width: "300px", orderable: false, searchable: false
+                        },
+                        ////{
+                        ////    data: "create", title: langView('field_create', langs), width: "100px", orderable: false, searchable: false
+                        ////},
+                        ////{
+                        ////    data: "create_user", title: langView('field_create_user', langs), width: "100px", orderable: false, searchable: false
+                        ////},
+                        ////{
+                        ////    data: "change", title: langView('field_change', langs), width: "100px", orderable: false, searchable: false
+                        ////},
+                        ////{
+                        ////    data: "change_user", title: langView('field_change_user', langs), width: "100px", orderable: false, searchable: false
+                        ////},
+                        //{ data: "create_sostav", title: langView('field_create_sostav', langs), width: "150px", orderable: false, searchable: false },
+                        //{ data: "change_sostav", title: langView('field_change_sostav', langs), width: "150px", orderable: false, searchable: false }
                     ],
                     dom: 'Bfrtip',
                     stateSave: false,
@@ -258,7 +372,7 @@
                     var data = table_arrival_wagon.obj.row($(this).parents('tr')).data();
                     var date = moment(data.date_arrival)
                     date = date.format('YYYY-MM-DD[T]HH:mm:ss');
-                        //date = date.toISOString(false);
+                    //date = date.toISOString(false);
                     window.open(url_incoming + '?id_arrival=' + data.id_arrival + '&arrival=' + date, '', '');
 
                 });
@@ -274,13 +388,14 @@
                 var id_select = table_arrival_wagon.select_string ? table_arrival_wagon.select_string.id : 0;
                 table_arrival_wagon.obj.clear();
                 // Сбросить выделенный состав
-                table_arrival_wagon.deselect();
-                $.each(data, function (i, el) {
-                    table_arrival_wagon.obj.row.add(table_arrival_wagon.get_string(el));
-                });
-                if (table_arrival_wagon.count_string === 1) {
-                    table_arrival_wagon.obj.row('#' + id_select).select();
-                }
+                //table_arrival_wagon.deselect();
+                table_arrival_wagon.obj.rows.add(data);
+                //$.each(data, function (i, el) {
+                //    table_arrival_wagon.obj.row.add(table_arrival_wagon.get_string(el));
+                //});
+                //if (table_arrival_wagon.count_string === 1) {
+                //    table_arrival_wagon.obj.row('#' + id_select).select();
+                //}
                 table_arrival_wagon.obj.order([4, 'desc']);
                 table_arrival_wagon.obj.draw();
                 LockScreenOff();
@@ -296,7 +411,7 @@
                     "train": sostav ? sostav.train : null,
                     "composition_index": sostav ? sostav.composition_index : null,
                     "date_arrival": sostav ? sostav.date_arrival.replace(/T/g, ' ') : null,
-                    "date_adoption": sostav && sostav.date_adoption !== null? sostav.date_adoption.replace(/T/g, ' ') : null,
+                    "date_adoption": sostav && sostav.date_adoption !== null ? sostav.date_adoption.replace(/T/g, ' ') : null,
                     "date_adoption_act": sostav && sostav.date_adoption_act !== null ? sostav.date_adoption_act.replace(/T/g, ' ') : null,
                     "id_station_from": sostav ? sostav.id_station_from : null,
                     "station_from": sostav && sostav.id_station_from !== null && ids_inc !== null ? ids_inc.ids_dir.getValue_Station_Of_ID(sostav.id_station_from, 'station_name', lang) : '',
@@ -312,7 +427,7 @@
                     "id_transfer": data.id_transfer,
                     "note": data.note,
                     "date_adoption_act": data.date_adoption_act !== null ? data.date_adoption_act.replace(/T/g, ' ') : null,
-                    "doc_uz" : doc ? doc.num_uz : null,
+                    "doc_uz": doc ? doc.num_uz : null,
                     "id_arrival_uz_vagon": data.id_arrival_uz_vagon,
                     "arrival": data.arrival !== null ? data.arrival.replace(/T/g, ' ') : null,
                     "arrival_user": data.arrival_user,
@@ -325,9 +440,9 @@
                 };
             },
             // Deselect
-            deselect: function () {
-                table_arrival_wagon.select_string = null;
-            }
+            //deselect: function () {
+            //    table_arrival_wagon.select_string = null;
+            //}
         };
     //================================================================
     // Основной вход
