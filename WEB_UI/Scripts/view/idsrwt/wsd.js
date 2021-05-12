@@ -5112,11 +5112,11 @@
                                 };
                                 // Подготовим операцию обновления документов ЭПД
                                 var operation_update_epd = {
-                                    id_outgoing_sostav: pn_outgoing_sostav.sostav.id,
-                                    user: cars_detali.user
+                                    id_outgoing_sostav: operation_detali.select_sending_uz_id_sostav,
+                                    user: operation_detali.user
                                 };
                                 // Обновим документы ЭПД
-                                cars_detali.ids_inc.postOperationUpdateEPDSendingSostav(operation_update_epd, function (result_update_epd) {
+                                ids_inc.postOperationUpdateEPDSendingSostav(operation_update_epd, function (result_update_epd) {
 
                                 });
                                 // Выполнить операцию отправки postOperationSendingSostavOnUZ
