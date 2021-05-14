@@ -2059,6 +2059,7 @@
     <Content Include="Scripts\jquery.doubleScroll.js" />
     <Content Include="Scripts\jszip.js" />
     <Content Include="Scripts\jszip.min.js" />
+    <Content Include="Scripts\module\table_arrival.js" />
     <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
@@ -2652,6 +2653,7 @@
     <Content Include="Scripts\view\directory\cargo_group.js" />
     <Content Include="Scripts\view\directory\cars.js" />
     <Content Include="Scripts\view\directory\countrys.js" />
+    <Content Include="Scripts\view\directory\main_search_wagon.js" />
     <Content Include="Scripts\view\directory\shipper.js" />
     <Content Include="Scripts\view\directory\railway.js" />
     <Content Include="Scripts\view\directory\inland_railway.js" />

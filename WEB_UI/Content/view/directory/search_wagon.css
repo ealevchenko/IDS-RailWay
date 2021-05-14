@@ -1,7 +1,29 @@
 ﻿body {
 }
 
+table.dataTable tbody tr:not(.selected).arrival_wagon.odd, table.dataTable tbody tr:not(.selected).arrival_wagon.even {
+    background-color: #c7ffc7;
+}
 
+table.dataTable.display tbody tr:not(.selected).odd.arrival_wagon > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.arrival_wagon > .sorting_1 {
+    background-color: #a0ffa0;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.arrival_wagon > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.arrival_wagon > .sorting_1 {
+    background-color: #a0ffa0;
+}
+
+table.dataTable tbody tr:not(.selected).skip_wagon.odd, table.dataTable tbody tr:not(.selected).skip_wagon.even {
+    background-color: #fef9e0;
+}
+
+table.dataTable.display tbody tr:not(.selected).odd.skip_wagon > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.skip_wagon > .sorting_1 {
+    background-color: #fdf2ba;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.skip_wagon > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.skip_wagon > .sorting_1 {
+    background-color: #fdf2ba;
+}
 /*#code_sng {
     width:5%;
 }
