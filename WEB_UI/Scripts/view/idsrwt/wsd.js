@@ -5109,12 +5109,16 @@
                                     lead_time: toISOStringTZ(get_datetime_value(operation_detali.operation_detali_sending_uz_lead_time.val(), operation_detali.lang)),
                                     composition_index: get_input_string_value(operation_detali.operation_detali_sending_uz_composition_index),
                                     user: operation_detali.user,
-                                }
+                                };
                                 // Подготовим операцию обновления документов ЭПД
                                 var operation_update_epd = {
                                     id_outgoing_sostav: operation_detali.select_sending_uz_id_sostav,
-                                    user: operation_detali.user,
+                                    user: operation_detali.user
                                 };
+                                // Обновим документы ЭПД
+                                ids_inc.postOperationUpdateEPDSendingSostav(operation_update_epd, function (result_update_epd) {
+
+                                });
                                 // Выполнить операцию отправки postOperationSendingSostavOnUZ
                                 ids_inc.postOperationUpdateEPDSendingSostav(operation_update_epd, function (result_update_epd) {
 

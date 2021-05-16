@@ -1345,7 +1345,7 @@ namespace IDS
                 if (wim.way_end != null || wim.id_way != id_way) return (int)errors_base.wagon_not_way; // Вагон не стоит на пути
                 WagonInternalOperation wio = wir.GetLastOperation();
                 if (wio == null) return (int)errors_base.not_wio_db;
-                if (wio.id_operation != 9) return (int)errors_base.wagon_not_operation; // Операция не предъявить
+                if (wio.id_operation < 8 || wio.id_operation > 9) return (int)errors_base.wagon_not_operation; // Операция не предъявить
                 EFWagonInternalOperation ef_wio = new EFWagonInternalOperation(context);
                 // Проверки прошло убераем отметки операция предявдения и ссылку на отправленый вагон
                 ef_wio.Delete(wio.id);

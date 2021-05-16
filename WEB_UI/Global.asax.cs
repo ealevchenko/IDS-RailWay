@@ -151,7 +151,7 @@ namespace WEB_UI
             }
             catch (Exception)
             {
-                throw;
+                //throw;
             }
             finally
             {

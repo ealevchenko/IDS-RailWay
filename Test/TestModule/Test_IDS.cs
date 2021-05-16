@@ -290,7 +290,7 @@ namespace Test.TestModule
             //OperationResultID res = ids.OperationUpdateEPDSendingSostav(64117, "TEST");
             //OperationResultID res = ids.OperationUpdateEPDSendingSostav(64339, "TEST");
             //OperationResultID res = ids.OperationUpdateEPDSendingSostav(64208, "TEST");
-            OperationResultID res = ids.OperationUpdateEPDSendingSostav(64208, "TEST");
+            OperationResultID res = ids.OperationUpdateEPDSendingSostav(64487, "TEST");
         }
 
         /// <summary>

@@ -325,6 +325,8 @@
         email_krr_services = 'KRR.IT.Service@arcelormittal.com',
         email_error_epd = 'vasiliy.litvin@arcelormittal.com',
         email_error_mt = 'eduard.levchenko@arcelormittal.com',
+        interval_min_epd = 90;
+        duration_min_epd = 0;
         langs = $.extend(true, $.extend(true, getLanguages($.Text_View, lang), getLanguages($.Text_Common, lang)), getLanguages($.Text_Table, lang)),
         user_name = $('input#username').val(),
         dc = $('div#dialog-confirm').dialog_confirm({}),
@@ -1668,7 +1670,7 @@
                             text: langView('title_button_send_db_us_doc', langs),
                             className: 'buttons-error',
                             action: function (e, dt, node, config) {
-                                window.open('mailto:' + email_krr_services + ';' + email_error_epd + '?subject=Не заполняется промежуточная база ЭПД&body=Инцидент направить на группу: KRR-ДАТП - DDICS / Литвин Василий Николаевич (vnlitvin)', '_self');
+                                window.open('mailto:' + email_krr_services + ';' + email_error_epd + '?subject=Не заполняется промежуточная база ЭПД&body=Инцидент направить на группу: KRR-ДАТП - DDICS / Литвин Василий Николаевич (vnlitvin) (интервал :' + duration_min_epd.toFixed(0) + ' минут)', '_self');
                             },
                             enabled: false
                         },
@@ -6006,7 +6008,7 @@
                                     var row_cars = cars_detali.table_arrival_cars.obj.rows(index[0]).data();
                                     if (row_cars && row_cars.length > 0) {
 
-                                        dialog_confirm.open('Вернуть вагон', 'Вы уверены что хотите вернуть вагон №' + row_cars[0].num + ' в состав на подходах', function (result) {
+                                        dc.dialog_confirm('Open', 'Вернуть вагон', 'Вы уверены что хотите вернуть вагон №' + row_cars[0].num + ' в состав на подходах', function (result) {
                                             if (result) {
                                                 LockScreen(langView('mess_clear_vagon', langs));
                                                 var id = row_cars[0].id;
@@ -8309,9 +8311,10 @@
                 var last_db = moment(last_date);
                 var duration = moment.duration(curent.diff(last_db))
                 var duration_min = duration.as('minutes');
+                duration_min_epd = duration_min;
                 //table_sostav.obj.button(7).enable(false);
                 table_sostav.obj.button(7).text(langView('title_button_send_db_us_doc', langs) + '-' + duration_min.toFixed(1));
-                if (duration_min > 90) {
+                if (duration_min > interval_min_epd) {
                     table_sostav.obj.button(7).enable(true);
                 } else {
                     table_sostav.obj.button(7).enable(false);
@@ -8339,9 +8342,10 @@
                     var last_db = moment(last_date);
                     var duration = moment.duration(curent.diff(last_db))
                     var duration_min = duration.as('minutes');
+                    duration_min_epd = duration_min;
                     //table_sostav.obj.button(7).enable(false);
                     table_sostav.obj.button(7).text(langView('title_button_send_db_us_doc', langs) + '-' + duration_min.toFixed(1));
-                    if (duration_min > 90) {
+                    if (duration_min > interval_min_epd) {
                         table_sostav.obj.button(7).enable(true);
                     } else {
                         table_sostav.obj.button(7).enable(false);

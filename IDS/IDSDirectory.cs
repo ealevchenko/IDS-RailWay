@@ -1111,8 +1111,8 @@ namespace IDS
                     shipper = new Directory_Shipper()
                     {
                         code = code,
-                        shipper_name_ru = name.Substring(0, 100), // обрежим до 100
-                        shipper_name_en = name.Substring(0, 100), 
+                        shipper_name_ru = name.Length>100 ? name.Substring(0, 100) : name, // обрежим до 100
+                        shipper_name_en = name.Length>100 ? name.Substring(0, 100) : name, 
                         create = DateTime.Now,
                         create_user = user
                     };

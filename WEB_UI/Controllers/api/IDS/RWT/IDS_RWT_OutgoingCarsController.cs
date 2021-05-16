@@ -84,26 +84,26 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        //// GET: api/ids/rwt/outgoing_cars/num/63303077
-        //[Route("num/{num:int}")]
-        //[ResponseType(typeof(OutgoingCars))]
-        //public IHttpActionResult GetOutgoingCarsOfNum(int num)
-        //{
-        //    try
-        //    {
-        //        List<OutgoingCars> list = this.ef_ids
-        //            .Context
-        //            .Where(s => s.num == num)
-        //            .ToList()
-        //            .OrderBy(s=>s.id_outgoing)
-        //            .Select(c => c.GetOutgoingCars_OutgoingSostav()).ToList();
-        //        return Ok(list);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return BadRequest(e.Message);
-        //    }
-        //}
+        // GET: api/ids/rwt/outgoing_cars/num/63303077
+        [Route("num/{num:int}")]
+        [ResponseType(typeof(OutgoingCars))]
+        public IHttpActionResult GetOutgoingCarsOfNum(int num)
+        {
+            try
+            {
+                List<OutgoingCars> list = this.ef_ids
+                    .Context
+                    .Where(s => s.num == num)
+                    .ToList()
+                    .OrderBy(s => s.id_outgoing)
+                    .Select(c => c.GetOutgoingCars_OutgoingSostav()).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
         //// GET: api/ids/rwt/outgoing_cars/start/2020-03-13T00:00:00/stop/2020-03-13T23:59:59/nums/56681562,52740883
         //[Route("start/{start:datetime}/stop/{stop:datetime}/nums/{nums}")]

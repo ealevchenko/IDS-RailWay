@@ -8,6 +8,9 @@
     @*@Styles.Render("~/DateTime/css")*@
     <link rel="stylesheet" type="text/css" href="~/Content/view/directory/home.css">
     <link rel="stylesheet" type="text/css" href="~/Content/view/directory/search_wagon.css">
+    @*<link href="~/Content/fontawesome-free/css/fontawesome.css" rel="stylesheet" />
+    <link href="~/Content/fontawesome-free/css/brands.css" rel="stylesheet" />
+    <link href="~/Content/fontawesome-free/css/solid.css" rel="stylesheet" />*@
 }
 
 @section scripts {
@@ -24,7 +27,10 @@
     <script src="~/Scripts/api/ids_transfer.js"></script> <!-- Class API ИДС Переносы -->
     <script src="~/Scripts/api/ids_rwt.js"></script> <!-- Class API ИДС Прием вагонов -->
 
-    <script src="~/Scripts/view/directory/search_wagon.js"></script> <!--  -->
+    <script src="~/Scripts/module/table_arrival.js"></script> <!-- модуль таблиц по прибытию -->
+    <!--<script src="~/Scripts/view/directory/search_wagon.js"></script>--> <!--  -->
+    <script src="~/Scripts/view/directory/main_search_wagon.js"></script>
+
     <script>
         var url_incoming = '@Url.Action("Incoming", "Home", new { area = "IDSRWT" })';
     </script>
@@ -32,7 +38,6 @@
 }
 
 <input id="username" type="hidden" value="@User.Identity.Name" />
-
 <div class="container-fluid">
     <div class="alert" id="main-alert"></div>
     <div class="row">
@@ -155,7 +160,7 @@
                                 <div class="card-body collapse show" id="arrival_wagon">
                                     <div class="row">
                                         <div class="col-xl-12 operator-detali-tables">
-                                            <table class="display compact hover row-border" id="table_arrival_wagon" style="width:100%;"></table>
+                                            <table class="display compact cell-border row-border hover" id="table_arrival_wagon" style="width:100%;"></table>
                                         </div>
                                     </div>
                                 </div>
@@ -171,10 +176,11 @@
                                 </div>
                                 <!-- Текстовый контент -->
                                 <div class="card-body collapse show" id="internal_wagon">
-                                    @*<fieldset class="border-primary">
-
-                                        </fieldset>*@<fieldset class="border-primary"></fieldset>
-                                    <table class="display compact hover row-border" id="table_internal_wagon" style="width:100%;"></table>
+                                    <div class="row">
+                                        <div class="col-xl-12 operator-detali-tables">
+                                            <table class="display compact cell-border row-border hover" id="table_wir" style="width:100%;"></table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div><!-- Конец карточки -->
                         </div>
@@ -188,10 +194,11 @@
                                 </div>
                                 <!-- Текстовый контент -->
                                 <div class="card-body collapse show" id="outgoing_wagon">
-                                    @*<fieldset class="border-primary">
-
-                                        </fieldset>*@<fieldset class="border-primary"></fieldset>
-                                    <table class="display compact hover row-border" id="table_outgoing_wagon" style="width:100%;"></table>
+                                    <div class="row">
+                                        <div class="col-xl-12 operator-detali-tables">
+                                            <table class="display compact cell-border row-border hover" id="table_outgoing_wagon" style="width:100%;"></table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div><!-- Конец карточки -->
                         </div>
