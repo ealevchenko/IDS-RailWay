@@ -15,5 +15,11 @@ namespace WEB_UI.Areas.Admin.Controllers
         {
             return View();
         }
+
+        [AccessOfDB(LogVisit = true)]
+        public ActionResult ErrorLog()
+        {
+            return View();
+        }
     }
 }

@@ -77,7 +77,7 @@
                      data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Системные логи:</h6>
-                        <a class="collapse-item" href="#">Ошибки</a>
+                        <a class="collapse-item" href='@Url.Action("ErrorLog", "Home", new { Area = "Admin" })'>Ошибки</a>
                         <a class="collapse-item" href="#">Сообщения</a>
                         <a class="collapse-item" href="#">События</a>
                     </div>
@@ -118,14 +118,14 @@
             <li class="nav-item">
                 <a class="nav-link" href="#">
                     <i class="fas fa-fw fa-chart-pie"></i>
-                    <span>График выполнения</span>
+                    <span>График</span>
                 </a>
             </li>
             <!-- Nav Item - Tables -->
             <li class="nav-item">
                 <a class="nav-link" href="#">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Наполнение таблиц</span>
+                    <span>Таблицы</span>
                 </a>
             </li>
             <!-- Divider -->
