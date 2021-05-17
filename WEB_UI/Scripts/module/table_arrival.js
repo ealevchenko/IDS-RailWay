@@ -138,7 +138,7 @@
             field: 'arr_car_date_arrival',
             data: function (row, type, val, meta) {
                 var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
-                return getReplaceTOfDT(sostav.date_arrival);
+                return getReplaceTOfDT(sostav ? sostav.date_arrival : null);
             },
             className: 'dt-body-center',
             title: langView('field_date_arrival', App.Langs), width: "100px", orderable: true, searchable: false
@@ -148,9 +148,9 @@
             data: function (row, type, val, meta) {
                 var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
                 if (row.arrival !== null) {
-                    return getReplaceTOfDT(sostav.date_adoption);
+                    return getReplaceTOfDT(sostav ? sostav.date_adoption : null);
                 } else {
-                    return sostav.date_adoption ? 'Нет' : null;
+                    return getReplaceTOfDT(sostav ? sostav.date_adoption : null) ? 'Нет' : null;
                 }
             },
             className: 'dt-body-center',
@@ -162,7 +162,7 @@
             data: function (row, type, val, meta) {
                 if (row.arrival !== null) {
                     var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
-                    return getReplaceTOfDT(sostav.date_adoption_act);
+                    return getReplaceTOfDT(sostav ? sostav.date_adoption_act : null);
                 } else {
                     return null;
                 }
@@ -577,7 +577,9 @@
             'arr_car_note']);
     };
     // инициализация таблицы истрия прибытия вагона
-    table_arrival_wagons.prototype.init = function () {
+    table_arrival_wagons.prototype.init = function (tab_detali) {
+        //this.fn_vew_detali = fn;
+        this.tab_detali = tab_detali
         this.obj_arr_wag = this.$t_arr_wag.DataTable({
             "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "All"]],
             "paging": true,
@@ -637,7 +639,20 @@
                     extend: 'pageLength',
                 }
             ]
-        });
+        }).on('select', function (e, dt, type, indexes) {
+            var rowData = this.obj_arr_wag.rows(indexes).data();
+            if (rowData && rowData.length > 0) {
+                this.id_car = rowData[0].id;
+                this.tab_detali.load_of_num(53576047);
+                var t = typeof this.tab_detali;
+                //if (typeof this.fn_vew_detali === 'function') {
+                //    //fn(this.id_car);
+                //    //this.fn_vew_detali(53576047);
+                //    this.tab_detali.load_of_num(53576047);
+                //};
+
+            }
+        }.bind(this));
     };
     // Показать данные 
     table_arrival_wagons.prototype.view = function (data) {

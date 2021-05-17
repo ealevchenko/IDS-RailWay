@@ -46,6 +46,8 @@
     // Определим экземпляр таблица вагоны прибытие
     var TWIR = App.table_wir;
     var twir = new TWIR('table#table_wir'); // Создадим экземпляр таблицы
+    var td_wir = new TWIR('table#table_detali_wir'); // Создадим экземпляр таблицы
+
     // Определим экземпляр таблица вагоны прибытие
     var TOW = App.table_outgoing_wagon;
     var tow = new TOW('table#table_outgoing_wagon'); // Создадим экземпляр таблицы
@@ -76,10 +78,12 @@
 
     // После загрузки документа
     $(document).ready(function ($) {
-        taw.init();
+        td_wir.init();
+        //taw.init(td_wir.load_of_num);
+        taw.init(td_wir);
         twir.init();
         tow.init();
-        
+
         //search_wagon();
     });
 
