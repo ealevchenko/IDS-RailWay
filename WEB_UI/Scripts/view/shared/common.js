@@ -55,6 +55,9 @@ var getLanguages = function (languages, lang) {
 var langView = function (t, langs) {
     var _t = t.toLowerCase();
     var re = (t in langs) ? langs[t] : (_t in langs) ? langs[_t] : null;
+    if (re===null) {
+        throw new Error('Неопределённ параметр : '+t);
+    }
     return re;
 };
 //==============================================================================================
@@ -1173,7 +1176,19 @@ var outStatusArrivalSostav = function (i) {
         case 0: return "Не обработан";
         case 1: return "В работе";
         case 2: return "Принят";
-        case 2: return "Отклонен";
+        case 3: return "Отклонен";
+        default: return i;
+    }
+};
+// Вернуть режим
+var outStatusOutgoingSostav = function (i) {
+    if (i === null) return null;
+    switch (Number(i)) {
+        case 0: return "Предъявлен";
+        case 1: return "Обрабатывается";
+        case 2: return "Сдан на УЗ";
+        case 3: return "Отправлен на УЗ";
+        case 4: return "Отменен";
         default: return i;
     }
 };

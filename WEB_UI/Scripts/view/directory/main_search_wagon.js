@@ -19,6 +19,27 @@
 
     var ids_rwt = new IDS_RWT(App.Lang);                // Создадим класс IDS_RWT
 
+    $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
+        switch (e.target.id) {
+            case 'pills-directory-tab': break;
+            case 'pills-history-tab': break;
+            case 'pills-arrival-tab': {
+                taw.load_of_num($num_wagon.val());
+                break;
+            };
+            case 'pills-wir-tab': {
+                twir.load_of_num($num_wagon.val());
+                break;
+            };
+            case 'pills-outgoing-tab': {
+                tow.load_of_num($num_wagon.val());
+                break;
+            };
+        }
+        // newly activated tab
+        e.relatedTarget // previous active tab
+    })
+
     // Определим экземпляр таблица вагоны прибытие
     var TAW = App.table_arrival_wagons;
     var taw = new TAW('table#table_arrival_wagon'); // Создадим экземпляр таблицы
@@ -56,11 +77,9 @@
     // После загрузки документа
     $(document).ready(function ($) {
         taw.init();
-        taw.load_of_num($num_wagon.val());
         twir.init();
-        twir.load_of_num($num_wagon.val());
         tow.init();
-        tow.load_of_num($num_wagon.val());
+        
         //search_wagon();
     });
 

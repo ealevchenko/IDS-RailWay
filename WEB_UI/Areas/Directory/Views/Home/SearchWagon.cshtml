@@ -57,15 +57,27 @@
                     </div>
                 </div>
                 <div class="card-body text-dark pl-3 pr-3">
-                    <div class="row mb-3">
+                    <div class="row">
                         <div class="col-xl-12">
-                            <div class="card border-success mt-3">
-                                <!-- Шапка -->
-                                <div class="card-header text-success">
-                                    <button class="btn btn-link text-success text-uppercase" data-toggle="collapse" data-target="#info_wagon" style="font-size:1.3rem">Карточка вагона</button>
-                                </div>
-                                <!-- Текстовый контент -->
-                                <div class="card-body collapse show" id="info_wagon">
+                            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="pills-directory-tab" data-toggle="pill" href="#pills-directory" role="tab" aria-controls="pills-directory" aria-selected="true">Справочные данные</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-history-tab" data-toggle="pill" href="#pills-history" role="tab" aria-controls="pills-history" aria-selected="false">История</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-arrival-tab" data-toggle="pill" href="#pills-arrival" role="tab" aria-controls="pills-arrival" aria-selected="false">Прибытие</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-wir-tab" data-toggle="pill" href="#pills-wir" role="tab" aria-controls="pills-wir" aria-selected="false">Перемещение на АМКР</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-outgoing-tab" data-toggle="pill" href="#pills-outgoing" role="tab" aria-controls="pills-outgoing" aria-selected="false">Отправка</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="pills-tabContent">
+                                <div class="tab-pane fade show active" id="pills-directory" role="tabpanel" aria-labelledby="pills-directory-tab">
                                     <div class="row">
                                         <div class="col-xl-6 operator-detali-tables">
                                             <fieldset class="border-primary">
@@ -109,7 +121,7 @@
                                                         <label for="owner" class="col-form-label text-right w-15">Собственник (УЗ):</label>
                                                         <input type="text" readonly class="form-control info-wagon-form-control ml-2 w-50" id="owner" name="owner" disabled>
                                                         @*<label for="factory_number" class="col-form-label text-right ml-2 w-10">Заводской №:</label>
-                                                            <input type="text" readonly class="form-control info-wagon-form-control ml-2 w-15" id="factory_number" name="factory_number" disabled>*@
+                                    <input type="text" readonly class="form-control info-wagon-form-control ml-2 w-15" id="factory_number" name="factory_number" disabled>*@
                                                     </div>
                                                 </div>
                                                 <div class="row mb-2">
@@ -126,83 +138,111 @@
                                             <table class="display compact hover row-border" id="table_info_wagon_rent" style="width:100%;"></table>
                                         </div>
                                     </div>
-                                    @*<fieldset class="border-primary"></fieldset>*@
                                 </div>
-                            </div><!-- Конец карточки -->
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-xl-12">
-                            <div class="card border-secondary mt-3">
-                                <!-- Шапка -->
-                                <div class="card-header text-secondary">
-                                    <button class="btn btn-link text-secondary text-uppercase" data-toggle="collapse" data-target="#approaches_wagon" style="font-size:1.3rem">Истроия</button><span id="type-search" class="badge badge-primary"></span>
-                                </div>
-                                <!-- Текстовый контент -->
-                                <div class="card-body collapse show" id="approaches_wagon">
+                                <div class="tab-pane fade" id="pills-history" role="tabpanel" aria-labelledby="pills-history-tab">
                                     <div class="row">
                                         <div class="col-xl-12 operator-detali-tables">
                                             <table class="display compact hover row-border" id="table_approaches_wagon" style="width:100%;"></table>
                                         </div>
                                     </div>
                                 </div>
-                            </div><!-- Конец карточки -->
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-xl-12">
-                            <div class="card border-primary mt-3">
-                                <!-- Шапка -->
-                                <div class="card-header text-primary">
-                                    <button class="btn btn-link text-primary text-uppercase" data-toggle="collapse" data-target="#arrival_wagon" style="font-size:1.3rem">Прибытие на АМКР</button><span id="type-search" class="badge badge-primary"></span>
-                                </div>
-                                <!-- Текстовый контент -->
-                                <div class="card-body collapse show" id="arrival_wagon">
+                                <div class="tab-pane fade" id="pills-arrival" role="tabpanel" aria-labelledby="pills-arrival-tab">
                                     <div class="row">
                                         <div class="col-xl-12 operator-detali-tables">
                                             <table class="display compact cell-border row-border hover" id="table_arrival_wagon" style="width:100%;"></table>
                                         </div>
                                     </div>
                                 </div>
-                            </div><!-- Конец карточки -->
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-xl-12">
-                            <div class="card border-info mt-3">
-                                <!-- Шапка -->
-                                <div class="card-header text-info">
-                                    <button class="btn btn-link text-info text-uppercase" data-toggle="collapse" data-target="#internal_wagon" style="font-size:1.3rem">На АМКР</button><span id="type-search" class="badge badge-primary"></span>
-                                </div>
-                                <!-- Текстовый контент -->
-                                <div class="card-body collapse show" id="internal_wagon">
+                                <div class="tab-pane fade" id="pills-wir" role="tabpanel" aria-labelledby="pills-wir-tab">
                                     <div class="row">
                                         <div class="col-xl-12 operator-detali-tables">
                                             <table class="display compact cell-border row-border hover" id="table_wir" style="width:100%;"></table>
                                         </div>
                                     </div>
                                 </div>
-                            </div><!-- Конец карточки -->
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xl-12">
-                            <div class="card border-primary mt-3">
-                                <!-- Шапка -->
-                                <div class="card-header text-primary">
-                                    <button class="btn btn-link text-primary text-uppercase" data-toggle="collapse" data-target="#outgoing_wagon" style="font-size:1.3rem">Отправление на УЗ</button><span id="type-search" class="badge badge-primary"></span>
-                                </div>
-                                <!-- Текстовый контент -->
-                                <div class="card-body collapse show" id="outgoing_wagon">
+                                <div class="tab-pane fade" id="pills-outgoing" role="tabpanel" aria-labelledby="pills-outgoing-tab">
                                     <div class="row">
                                         <div class="col-xl-12 operator-detali-tables">
                                             <table class="display compact cell-border row-border hover" id="table_outgoing_wagon" style="width:100%;"></table>
                                         </div>
                                     </div>
                                 </div>
-                            </div><!-- Конец карточки -->
+                            </div>
                         </div>
                     </div>
+
+
+
+                    <!--<div class="row mb-3">
+                        <div class="col-xl-12">
+                            <div class="card border-success mt-3">-->
+                                <!-- Шапка -->
+                                <!--<div class="card-header text-success">
+                                    <button class="btn btn-link text-success text-uppercase" data-toggle="collapse" data-target="#info_wagon" style="font-size:1.3rem">Карточка вагона</button>
+                                </div>-->
+                                <!-- Текстовый контент -->
+                                <!--<div class="card-body collapse show" id="info_wagon">
+
+                                </div>
+                            </div>--><!-- Конец карточки -->
+                        <!--</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-xl-12">
+                            <div class="card border-secondary mt-3">-->
+                                <!-- Шапка -->
+                                <!--<div class="card-header text-secondary">
+                                    <button class="btn btn-link text-secondary text-uppercase" data-toggle="collapse" data-target="#approaches_wagon" style="font-size:1.3rem">Истроия</button><span id="type-search" class="badge badge-primary"></span>
+                                </div>-->
+                                <!-- Текстовый контент -->
+                                <!--<div class="card-body collapse show" id="approaches_wagon">
+
+                                </div>
+                            </div>--><!-- Конец карточки -->
+                        <!--</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-xl-12">
+                            <div class="card border-primary mt-3">-->
+                                <!-- Шапка -->
+                                <!--<div class="card-header text-primary">
+                                    <button class="btn btn-link text-primary text-uppercase" data-toggle="collapse" data-target="#arrival_wagon" style="font-size:1.3rem">Прибытие на АМКР</button><span id="type-search" class="badge badge-primary"></span>
+                                </div>-->
+                                <!-- Текстовый контент -->
+                                <!--<div class="card-body collapse show" id="arrival_wagon">
+
+                                </div>
+                            </div>--><!-- Конец карточки -->
+                        <!--</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-xl-12">
+                            <div class="card border-info mt-3">-->
+                                <!-- Шапка -->
+                                <!--<div class="card-header text-info">
+                                    <button class="btn btn-link text-info text-uppercase" data-toggle="collapse" data-target="#internal_wagon" style="font-size:1.3rem">На АМКР</button><span id="type-search" class="badge badge-primary"></span>
+                                </div>-->
+                                <!-- Текстовый контент -->
+                                <!--<div class="card-body collapse show" id="internal_wagon">
+
+                                </div>
+                            </div>--><!-- Конец карточки -->
+                        <!--</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="card border-primary mt-3">-->
+                                <!-- Шапка -->
+                                <!--<div class="card-header text-primary">
+                                    <button class="btn btn-link text-primary text-uppercase" data-toggle="collapse" data-target="#outgoing_wagon" style="font-size:1.3rem">Отправление на УЗ</button><span id="type-search" class="badge badge-primary"></span>
+                                </div>-->
+                                <!-- Текстовый контент -->
+                                <!--<div class="card-body collapse show" id="outgoing_wagon">
+
+                                </div>
+                            </div>--><!-- Конец карточки -->
+                        <!--</div>
+                    </div>-->
                 </div>
                 <div class="card-footer bg-transparent border-dark">&copy; @DateTime.Now.Year ДАТП & ТД</div>
             </div>

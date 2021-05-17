@@ -1,7 +1,7 @@
 ﻿body {
 }
 
-table.dataTable tbody tr:not(.selected).arrival_wagon.odd, table.dataTable tbody tr:not(.selected).arrival_wagon.even {
+/*table.dataTable tbody tr:not(.selected).arrival_wagon.odd, table.dataTable tbody tr:not(.selected).arrival_wagon.even {
     background-color: #c7ffc7;
 }
 
@@ -23,6 +23,54 @@ table.dataTable.display tbody tr:not(.selected).odd.skip_wagon > .sorting_1, tab
 
 table.dataTable.display tbody tr:not(.selected).even.skip_wagon > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.skip_wagon > .sorting_1 {
     background-color: #fdf2ba;
+}*/
+/*Отправка*/
+table.dataTable tbody tr:not(.selected).yellow.odd, table.dataTable tbody tr:not(.selected).yellow.even {
+    background-color: #fef9e0;
+}
+
+table.dataTable.display tbody tr:not(.selected).odd.yellow > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.yellow > .sorting_1 {
+    background-color: #fdf2ba;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.yellow > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.yellow > .sorting_1 {
+    background-color: #fdf2ba;
+}
+
+table.dataTable tbody tr:not(.selected).green.odd, table.dataTable tbody tr:not(.selected).green.even {
+    background-color: #c7ffc7;
+}
+
+table.dataTable.display tbody tr:not(.selected).odd.green > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.green > .sorting_1 {
+    background-color: #a0ffa0;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.green > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.green > .sorting_1 {
+    background-color: #a0ffa0;
+}
+
+table.dataTable tbody tr:not(.selected).blue.odd, table.dataTable tbody tr:not(.selected).blue.even {
+    background-color: #d8d8ff;
+}
+
+table.dataTable.display tbody tr:not(.selected).odd.blue > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.blue > .sorting_1 {
+    background-color: #b1b1ff;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.blue > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.blue > .sorting_1 {
+    background-color: #b1b1ff;
+}
+
+table.dataTable tbody tr:not(.selected).red.odd, table.dataTable tbody tr:not(.selected).red.even {
+    background-color: #ffebeb;
+}
+
+table.dataTable.display tbody tr:not(.selected).odd.red > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.red > .sorting_1 {
+    background-color: #ffc4c4;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.red > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.red > .sorting_1 {
+    background-color: #ffc4c4;
 }
 /*#code_sng {
     width:5%;
