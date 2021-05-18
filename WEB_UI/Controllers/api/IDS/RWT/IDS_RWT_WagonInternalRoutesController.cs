@@ -104,6 +104,31 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // GET: api/ids/rwt/wir/wagon/outgoing/id/132183
+        /// <summary>
+        /// Найти внутренее перемещение вагона по id строки отправления вагона таблица OutgoingCars
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Route("wagon/arrival/id/{id:long}")]
+        [ResponseType(typeof(WagonInternalRoutes))]
+        public IHttpActionResult GetWagonInternalRoutesOfArrivalCarsID(long id)
+        {
+            try
+            {
+                WagonInternalRoutes cars = this.ef_ids
+                    .Context
+                    .Where(s => s.id_arrival_car == id)
+                    .ToList()
+                    .Select(c => c.GetWagonInternalRoutes()).FirstOrDefault();
+                return Ok(cars);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         //// POST api/ids/rwt/wir/
         //[HttpPost]
         //[Route("")]

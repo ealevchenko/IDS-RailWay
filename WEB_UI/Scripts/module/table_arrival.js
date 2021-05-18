@@ -61,6 +61,7 @@
 
             'mess_load_arr_wagons': 'Загружаю список принятых вагонов...',
             'mess_load_wir_wagons': 'Загружаю список внутренних перемещений вагонов...',
+            'mess_load_wim_wagons': 'Загружаю список истории дислокации вагонова...',
             'mess_load_out_wagons': 'Загружаю список отправленных вагонов...',
         },
         'en':  //default language: English
@@ -97,6 +98,15 @@
     // Перечень полей
     var list_collums = [
         // Arrival
+        {
+            field: 'arr_car_details_control',
+            className: 'details-control',
+            orderable: false,
+            data: null,
+            defaultContent: '',
+            width: "30px",
+            searchable: false
+        },
         {
             field: 'arr_car_button_view',
             targets: 0,
@@ -334,6 +344,24 @@
             className: 'dt-body-left',
             title: langView('field_parent_id', App.Langs), width: "100px", orderable: true, searchable: true
         },
+        // WIM
+        {
+            field: 'wim_button_view',
+            targets: 0,
+            data: null,
+            defaultContent: '<button class="btn"><i class="far fa-eye"></i></button>',
+            orderable: false,
+            className: 'dt-body-center',
+            width: "20px"
+        },
+        {
+            field: 'wim_id',
+            data: function (row, type, val, meta) {
+                return row.id;
+            },
+            className: 'dt-body-center',
+            title: langView('field_id', App.Langs), width: "50px", orderable: true, searchable: true
+        },
         // Outgoing
         {
             field: 'out_car_button_view',
@@ -559,27 +587,29 @@
     }
     // инициализация полей таблицы вагоны на начальном пути
     table_arrival_wagons.prototype.init_columns = function () {
-        return init_columns([
-            'arr_car_button_view',
-            'arr_car_num',
-            'arr_car_train',
-            'arr_car_composition_index',
-            'arr_car_date_arrival',
-            'arr_car_date_adoption',
-            'arr_car_date_adoption_act',
-            'arr_car_date_adoption_act_wagon',
-            'arr_car_date_arrival_wagon',
-            'arr_car_station_from',
-            'arr_car_station_on',
-            'arr_car_way',
-            'arr_car_status',
-            'arr_car_doc_uz',
-            'arr_car_note']);
+        var list_colums = [];
+        if (this.b_detali_wir) list_colums.push('arr_car_details_control');
+        list_colums.push('arr_car_button_view');
+        list_colums.push('arr_car_num');
+        list_colums.push('arr_car_train');
+        list_colums.push('arr_car_composition_index');
+        list_colums.push('arr_car_date_arrival');
+        list_colums.push('arr_car_date_adoption');
+        list_colums.push('arr_car_date_adoption_act');
+        list_colums.push('arr_car_date_adoption_act_wagon');
+        list_colums.push('arr_car_date_arrival_wagon');
+        list_colums.push('arr_car_station_from');
+        list_colums.push('arr_car_station_on');
+        list_colums.push('arr_car_way');
+        list_colums.push('arr_car_status');
+        list_colums.push('arr_car_doc_uz');
+        list_colums.push('arr_car_note');
+        return init_columns(list_colums);
     };
     // инициализация таблицы истрия прибытия вагона
-    table_arrival_wagons.prototype.init = function (tab_detali) {
-        //this.fn_vew_detali = fn;
-        this.tab_detali = tab_detali
+    table_arrival_wagons.prototype.init = function (detali_wir) {
+        this.b_detali_wir = detali_wir;     // Бит отображать детально
+        this.d_wir = [];                    // Массив таблиц детально
         this.obj_arr_wag = this.$t_arr_wag.DataTable({
             "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "All"]],
             "paging": true,
@@ -587,7 +617,7 @@
             "ordering": true,
             "info": true,
             "keys": true,
-            select: true,
+            select: false,
             "autoWidth": true,
             //"filter": true,
             //"scrollY": "600px",
@@ -640,25 +670,25 @@
                 }
             ]
         }).on('select', function (e, dt, type, indexes) {
-            var rowData = this.obj_arr_wag.rows(indexes).data();
-            if (rowData && rowData.length > 0) {
-                this.id_car = rowData[0].id;
-                this.tab_detali.load_of_num(53576047);
-                var t = typeof this.tab_detali;
-                //if (typeof this.fn_vew_detali === 'function') {
-                //    //fn(this.id_car);
-                //    //this.fn_vew_detali(53576047);
-                //    this.tab_detali.load_of_num(53576047);
-                //};
-
-            }
+            //var rowData = this.obj_arr_wag.rows(indexes).data();
+            //if (rowData && rowData.length > 0) {
+            //    this.id_car = rowData[0].id;
+            //    this.tab_detali.load_of_num(53576047);
+            //    var t = typeof this.tab_detali;
+            //    //if (typeof this.fn_vew_detali === 'function') {
+            //    //    //fn(this.id_car);
+            //    //    //this.fn_vew_detali(53576047);
+            //    //    this.tab_detali.load_of_num(53576047);
+            //    //};
+            //}
         }.bind(this));
+        if (this.b_detali_wir) this.init_detali();
     };
     // Показать данные 
     table_arrival_wagons.prototype.view = function (data) {
         this.obj_arr_wag.clear();
         this.obj_arr_wag.rows.add(data);
-        this.obj_arr_wag.order([4, 'desc']);
+        this.obj_arr_wag.order([(this.b_detali_wir ? 5: 4) , 'desc']);
         this.obj_arr_wag.draw();
     };
     // загрузить данные 
@@ -670,6 +700,54 @@
                 LockScreenOff();
             }.bind(this));
         }
+    };
+    // Инициализация таблицы детально
+    table_arrival_wagons.prototype.init_detali = function () {
+        var base = this;
+        this.$t_arr_wag.find('tbody')
+            .on('click', 'td.details-control', function () {
+                var tr = $(this).closest('tr');
+                var row = base.obj_arr_wag.row(tr);
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                }
+                else {
+                    //row.child('<div class="detali-operation"><div class="row"><div class="col-xl-12 operator-detali-tables"><table class="display compact cell-border row-border hover" id="wir-detali-' + row.data().id + '" style="width:100%;"></table></div></div></div>').show();
+                    row.child('<div class="detali-operation">' +
+                        //'<div class="row">' +
+                        //'<div class="col-xl-12">' +
+                        '<div class="card border-primary mb-3">' +
+                        '<div class="card-header">Движение на АМКР</div>' +
+                        '<div class="card-body">' +
+                        '<div class="row">' +
+                        '<div class="col-xl-12 operator-detali-tables">' +
+                        '<table class="display compact cell-border row-border hover" id="wir-detali-' + row.data().id + '" style="width:100%"></table>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        //'</div>' +
+                        //'</div>' +
+                        '</div>').show();
+
+                    // Инициализируем
+                    base.view_detali(row.data());
+                    tr.addClass('shown');
+                }
+            });
+    };
+    //
+    table_arrival_wagons.prototype.view_detali = function (data) {
+        var DWIR = App.table_wir;
+        var sl = 'table#wir-detali-' + data.id;
+        //if (!this.d_wir[data.id]) {
+        this.d_wir[data.id] = new DWIR(sl); // Создадим экземпляр таблицы
+        this.d_wir[data.id].init();
+        //}
+        this.d_wir[data.id].load_of_id_arr_car(data.id);
     };
     // 
     App.table_arrival_wagons = table_arrival_wagons;
@@ -771,11 +849,13 @@
     // Показать данные 
     table_wir.prototype.view = function (data) {
         this.obj_wir.clear();
+        //if (data && data.length > 0) {
         this.obj_wir.rows.add(data);
         this.obj_wir.order([1, 'desc']);
+        //}
         this.obj_wir.draw();
     };
-    // загрузить данные 
+    // загрузить данные по num
     table_wir.prototype.load_of_num = function (num) {
         if (num) {
             LockScreen(langView('mess_load_wir_wagons', App.Langs));
@@ -785,8 +865,151 @@
             }.bind(this));
         };
     };
+    // загрузить данные по id
+    table_wir.prototype.load_of_id = function (id) {
+        if (id) {
+            LockScreen(langView('mess_load_wir_wagons', App.Langs));
+            ids_rwt.getWagonInternalRoutesOfID(id, function (list_wir_wagon) {
+                this.view(list_wir_wagon);
+                LockScreenOff();
+            }.bind(this));
+        };
+    };
+
+    table_wir.prototype.load_of_id_out_car = function (id) {
+        if (id) {
+            LockScreen(langView('mess_load_wir_wagons', App.Langs));
+            ids_rwt.getWagonInternalRoutesOfOutgoingCarsID(id, function (list_wir_wagon) {
+                this.view(list_wir_wagon);
+                LockScreenOff();
+            }.bind(this));
+        };
+    };
+
+    table_wir.prototype.load_of_id_arr_car = function (id) {
+        if (id) {
+            LockScreen(langView('mess_load_wir_wagons', App.Langs));
+            ids_rwt.getWagonInternalRoutesOfArrivalCarsID(id, function (list_wir_wagon) {
+                var list = [];
+                if (list_wir_wagon) {
+                    list.push(list_wir_wagon);
+                };
+                this.view(list);
+                LockScreenOff();
+            }.bind(this));
+        };
+    };
+
     // 
     App.table_wir = table_wir;
+
+    //===========================================================================
+    //-----------------------------------------------------------------------
+    // таблица истрия внутренего передвижения вагона
+    //-----------------------------------------------------------------------
+    // Конструктор модуля таблицы внутреней дислокации вагона
+    function table_wim(selector) {
+        if (!selector) {
+            throw new Error('No selector provided');
+        }
+        this.$t_wim = $(selector);
+        if (this.$t_wim.length === 0) {
+            throw new Error('Could not find element with selector: ' + selector);
+        }
+    }
+
+    // инициализация полей таблицы вагоны на начальном пути
+    table_wim.prototype.init_columns = function () {
+        var list_colums = [];
+        //if (this.b_detali_wir) list_colums.push('arr_car_details_control');
+        list_colums.push('wim_button_view');
+        list_colums.push('wim_id');
+        return init_columns(list_colums);
+    };
+    //
+    table_wim.prototype.init = function () {
+        this.obj_wim = this.$t_wim.DataTable({
+            "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "All"]],
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "keys": true,
+            select: true,
+            "autoWidth": true,
+            //"filter": true,
+            //"scrollY": "600px",
+            sScrollX: "100%",
+            scrollX: true,
+            //"responsive": true,
+            //"bAutoWidth": false,
+            language: language_table(App.Langs),
+            jQueryUI: false,
+            "createdRow": function (row, data, index) {
+                $(row).attr('id', data.id);
+                if (data.close !== null) {
+                    // приняли
+                    if (data.id_outgoing_car) {
+                        $(row).removeClass('yellow red').addClass('green');
+                    } else {
+                        $(row).removeClass('green yellow').addClass('red');
+                    }
+                } else {
+                    if (data.id_outgoing_car) {
+                        $(row).removeClass('green red').addClass('yellow');
+                    } else {
+                        $(row).removeClass('green yellow').addClass('red');
+                    }
+                }
+            },
+            columns: this.init_columns(),
+            dom: 'Bfrtip',
+            stateSave: false,
+            buttons: [
+                {
+                    extend: 'collection',
+                    text: langView('title_button_export', App.Langs),
+                    buttons: [
+                        {
+                            text: langView('title_button_buffer', App.Langs),
+                            extend: 'copyHtml5',
+                        },
+                        {
+                            text: langView('title_button_excel', App.Langs),
+                            extend: 'excelHtml5',
+                            sheetName: 'Вагоны на пути',
+                            messageTop: function () {
+                                return '';
+                            }
+                        },
+                    ],
+                    autoClose: true
+                },
+                {
+                    extend: 'pageLength',
+                }
+            ]
+        });
+    };
+    // Показать данные 
+    table_wim.prototype.view = function (data) {
+        this.obj_wim.clear();
+        this.obj_wim.rows.add(data);
+        this.obj_wim.order([1, 'desc']);
+        this.obj_wim.draw();
+    };
+    // загрузить данные по id
+    table_wim.prototype.load_of_id_wim = function (id) {
+        if (id) {
+            LockScreen(langView('mess_load_wim_wagons', App.Langs));
+            ids_rwt.getWagonInternalRoutesOfID(id, function (list_wim_wagon) {
+                this.view(list_wim_wagon);
+                LockScreenOff();
+            }.bind(this));
+        };
+    };
+
+    App.table_wim = table_wim;
     //===========================================================================
     //-----------------------------------------------------------------------
     // таблица истрия отправлений вагона

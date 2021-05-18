@@ -4075,6 +4075,29 @@ IDS_RWT.prototype.postOperationSendingSostavOnUZ = function (operation_sending, 
 //======================================================================================================
 //                                  РАЗДЕЛ ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ ВАГОНОВ
 //======= WagonInternalRoutes (Состояние парка) =========================================================================
+// Вернуть внутренее перемещение по id таблицы ArrivalCars
+IDS_RWT.prototype.getWagonInternalRoutesOfArrivalCarsID = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/wir/wagon/arrival/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getWagonInternalRoutesOfArrivalCarsID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 // Вернуть внутренее перемещение по id таблицы OutgoingCars
 IDS_RWT.prototype.getWagonInternalRoutesOfOutgoingCarsID = function (id, callback) {
     $.ajax({
@@ -4098,7 +4121,30 @@ IDS_RWT.prototype.getWagonInternalRoutesOfOutgoingCarsID = function (id, callbac
         },
     });
 };
-// Вернуть внутренее перемещение по id таблицы OutgoingCars
+// Вернуть внутренее перемещение по id
+IDS_RWT.prototype.getWagonInternalRoutesOfID = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/wir/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getWagonInternalRoutesOfID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Вернуть внутренее перемещение по num номену вагона
 IDS_RWT.prototype.getWagonInternalRoutesOfWagonNum = function (num, callback) {
     $.ajax({
         type: 'GET',
@@ -4121,7 +4167,6 @@ IDS_RWT.prototype.getWagonInternalRoutesOfWagonNum = function (num, callback) {
         },
     });
 };
-
 
 // Вернуть песледнюю запись операций из внутренего перемещения вагонов
 IDS_RWT.prototype.getLastWagonInternalOperationOfWIR = function (wir) {

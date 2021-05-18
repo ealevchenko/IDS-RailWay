@@ -46,7 +46,7 @@
     // Определим экземпляр таблица вагоны прибытие
     var TWIR = App.table_wir;
     var twir = new TWIR('table#table_wir'); // Создадим экземпляр таблицы
-    var td_wir = new TWIR('table#table_detali_wir'); // Создадим экземпляр таблицы
+    //var td_wir = new TWIR('table#table_detali_wir'); // Создадим экземпляр таблицы
 
     // Определим экземпляр таблица вагоны прибытие
     var TOW = App.table_outgoing_wagon;
@@ -66,7 +66,6 @@
             LockScreenOff();
         } else {
             // Ок, начинаем поиск
-
             ids_rwt.getArrivalCarsOfNum(num, function (list_arrival_cars) {
                 //table_arrival_wagon.view(list_arrival_cars);
                 taw.view(list_arrival_cars);
@@ -78,9 +77,10 @@
 
     // После загрузки документа
     $(document).ready(function ($) {
-        td_wir.init();
+        //td_wir.init();
         //taw.init(td_wir.load_of_num);
-        taw.init(td_wir);
+        //taw.init(td_wir);
+        taw.init(true);
         twir.init();
         tow.init();
 
