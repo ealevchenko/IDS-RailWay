@@ -2059,6 +2059,9 @@
     <Content Include="Scripts\jquery.doubleScroll.js" />
     <Content Include="Scripts\jszip.js" />
     <Content Include="Scripts\jszip.min.js" />
+    <Content Include="Scripts\module\table_outgoing.js" />
+    <Content Include="Scripts\module\table_wim.js" />
+    <Content Include="Scripts\module\table_wir.js" />
     <Content Include="Scripts\module\table_arrival.js" />
     <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />

@@ -276,6 +276,29 @@ var language_table = function (langs) {
         "aria": langView('dt_aria', langs),
     };
 };
+
+var init_columns = function (collums_name, list_collums) {
+    var collums = [];
+    if (collums_name && collums_name.length > 0) {
+        $.each(collums_name, function (i, el) {
+            var field = list_collums.find(function (o) {
+                return o.field === el;
+            });
+            // Если поле не найдено, создадим по умолчанию (чтобы небыло ошибки)
+            if (!field) {
+                field = {
+                    field: el,
+                    data: function (row, type, val, meta) {
+                        return "Field_error";
+                    },
+                    title: el, width: "100px", orderable: false, searchable: false
+                };
+            }
+            collums.push(field);
+        });
+    }
+    return collums;
+};
 //==============================================================================================
 /* ----------------------------------------------------------
     Компоненты UI

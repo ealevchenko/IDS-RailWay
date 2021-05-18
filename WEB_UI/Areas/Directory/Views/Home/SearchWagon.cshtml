@@ -9,8 +9,8 @@
     <link rel="stylesheet" type="text/css" href="~/Content/view/directory/home.css">
     <link rel="stylesheet" type="text/css" href="~/Content/view/directory/search_wagon.css">
     @*<link href="~/Content/fontawesome-free/css/fontawesome.css" rel="stylesheet" />
-    <link href="~/Content/fontawesome-free/css/brands.css" rel="stylesheet" />
-    <link href="~/Content/fontawesome-free/css/solid.css" rel="stylesheet" />*@
+        <link href="~/Content/fontawesome-free/css/brands.css" rel="stylesheet" />
+        <link href="~/Content/fontawesome-free/css/solid.css" rel="stylesheet" />*@
 }
 
 @section scripts {
@@ -26,8 +26,11 @@
     <script src="~/Scripts/api/metrans.js"></script> <!-- Class API МЕТРАНС -->
     <script src="~/Scripts/api/ids_transfer.js"></script> <!-- Class API ИДС Переносы -->
     <script src="~/Scripts/api/ids_rwt.js"></script> <!-- Class API ИДС Прием вагонов -->
-
+    <script src="~/Scripts/module/table_wim.js"></script>
     <script src="~/Scripts/module/table_arrival.js"></script> <!-- модуль таблиц по прибытию -->
+    <script src="~/Scripts/module/table_wir.js"></script> <!-- модуль таблиц по прибытию -->
+
+    <script src="~/Scripts/module/table_outgoing.js"></script>
     <!--<script src="~/Scripts/view/directory/search_wagon.js"></script>--> <!--  -->
     <script src="~/Scripts/view/directory/main_search_wagon.js"></script>
 
@@ -121,7 +124,7 @@
                                                         <label for="owner" class="col-form-label text-right w-15">Собственник (УЗ):</label>
                                                         <input type="text" readonly class="form-control info-wagon-form-control ml-2 w-50" id="owner" name="owner" disabled>
                                                         @*<label for="factory_number" class="col-form-label text-right ml-2 w-10">Заводской №:</label>
-                                    <input type="text" readonly class="form-control info-wagon-form-control ml-2 w-15" id="factory_number" name="factory_number" disabled>*@
+                                                            <input type="text" readonly class="form-control info-wagon-form-control ml-2 w-15" id="factory_number" name="factory_number" disabled>*@
                                                     </div>
                                                 </div>
                                                 <div class="row mb-2">
@@ -152,8 +155,8 @@
                                             <table class="display compact cell-border row-border hover" id="table_arrival_wagon" style="width:100%;"></table>
                                         </div>
                                         @*<div class="col-xl-12 operator-detali-tables">
-                                            <table class="display compact cell-border row-border hover" id="table_detali_wir" style="width:100%;"></table>
-                                        </div>*@
+                                                <table class="display compact cell-border row-border hover" id="table_detali_wir" style="width:100%;"></table>
+                                            </div>*@
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="pills-wir" role="tabpanel" aria-labelledby="pills-wir-tab">
@@ -179,72 +182,77 @@
                     <!--<div class="row mb-3">
                         <div class="col-xl-12">
                             <div class="card border-success mt-3">-->
-                                <!-- Шапка -->
-                                <!--<div class="card-header text-success">
-                                    <button class="btn btn-link text-success text-uppercase" data-toggle="collapse" data-target="#info_wagon" style="font-size:1.3rem">Карточка вагона</button>
-                                </div>-->
-                                <!-- Текстовый контент -->
-                                <!--<div class="card-body collapse show" id="info_wagon">
+                    <!-- Шапка -->
+                    <!--<div class="card-header text-success">
+                        <button class="btn btn-link text-success text-uppercase" data-toggle="collapse" data-target="#info_wagon" style="font-size:1.3rem">Карточка вагона</button>
+                    </div>-->
+                    <!-- Текстовый контент -->
+                    <!--<div class="card-body collapse show" id="info_wagon">
 
-                                </div>
-                            </div>--><!-- Конец карточки -->
-                        <!--</div>
+                        </div>
+                    </div>-->
+                    <!-- Конец карточки -->
+                    <!--</div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-xl-12">
                             <div class="card border-secondary mt-3">-->
-                                <!-- Шапка -->
-                                <!--<div class="card-header text-secondary">
-                                    <button class="btn btn-link text-secondary text-uppercase" data-toggle="collapse" data-target="#approaches_wagon" style="font-size:1.3rem">Истроия</button><span id="type-search" class="badge badge-primary"></span>
-                                </div>-->
-                                <!-- Текстовый контент -->
-                                <!--<div class="card-body collapse show" id="approaches_wagon">
+                    <!-- Шапка -->
+                    <!--<div class="card-header text-secondary">
+                        <button class="btn btn-link text-secondary text-uppercase" data-toggle="collapse" data-target="#approaches_wagon" style="font-size:1.3rem">Истроия</button><span id="type-search" class="badge badge-primary"></span>
+                    </div>-->
+                    <!-- Текстовый контент -->
+                    <!--<div class="card-body collapse show" id="approaches_wagon">
 
-                                </div>
-                            </div>--><!-- Конец карточки -->
-                        <!--</div>
+                        </div>
+                    </div>-->
+                    <!-- Конец карточки -->
+                    <!--</div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-xl-12">
                             <div class="card border-primary mt-3">-->
-                                <!-- Шапка -->
-                                <!--<div class="card-header text-primary">
-                                    <button class="btn btn-link text-primary text-uppercase" data-toggle="collapse" data-target="#arrival_wagon" style="font-size:1.3rem">Прибытие на АМКР</button><span id="type-search" class="badge badge-primary"></span>
-                                </div>-->
-                                <!-- Текстовый контент -->
-                                <!--<div class="card-body collapse show" id="arrival_wagon">
+                    <!-- Шапка -->
+                    <!--<div class="card-header text-primary">
+                        <button class="btn btn-link text-primary text-uppercase" data-toggle="collapse" data-target="#arrival_wagon" style="font-size:1.3rem">Прибытие на АМКР</button><span id="type-search" class="badge badge-primary"></span>
+                    </div>-->
+                    <!-- Текстовый контент -->
+                    <!--<div class="card-body collapse show" id="arrival_wagon">
 
-                                </div>
-                            </div>--><!-- Конец карточки -->
-                        <!--</div>
+                        </div>
+                    </div>-->
+                    <!-- Конец карточки -->
+                    <!--</div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-xl-12">
                             <div class="card border-info mt-3">-->
-                                <!-- Шапка -->
-                                <!--<div class="card-header text-info">
-                                    <button class="btn btn-link text-info text-uppercase" data-toggle="collapse" data-target="#internal_wagon" style="font-size:1.3rem">На АМКР</button><span id="type-search" class="badge badge-primary"></span>
-                                </div>-->
-                                <!-- Текстовый контент -->
-                                <!--<div class="card-body collapse show" id="internal_wagon">
+                    <!-- Шапка -->
+                    <!--<div class="card-header text-info">
+                        <button class="btn btn-link text-info text-uppercase" data-toggle="collapse" data-target="#internal_wagon" style="font-size:1.3rem">На АМКР</button><span id="type-search" class="badge badge-primary"></span>
+                    </div>-->
+                    <!-- Текстовый контент -->
+                    <!--<div class="card-body collapse show" id="internal_wagon">
 
-                                </div>
-                            </div>--><!-- Конец карточки -->
-                        <!--</div>
+                        </div>
+                    </div>-->
+                    <!-- Конец карточки -->
+                    <!--</div>
                     </div>
                     <div class="row">
                         <div class="col-xl-12">
                             <div class="card border-primary mt-3">-->
-                                <!-- Шапка -->
-                                <!--<div class="card-header text-primary">
-                                    <button class="btn btn-link text-primary text-uppercase" data-toggle="collapse" data-target="#outgoing_wagon" style="font-size:1.3rem">Отправление на УЗ</button><span id="type-search" class="badge badge-primary"></span>
-                                </div>-->
-                                <!-- Текстовый контент -->
-                                <!--<div class="card-body collapse show" id="outgoing_wagon">
+                    <!-- Шапка -->
+                    <!--<div class="card-header text-primary">
+                        <button class="btn btn-link text-primary text-uppercase" data-toggle="collapse" data-target="#outgoing_wagon" style="font-size:1.3rem">Отправление на УЗ</button><span id="type-search" class="badge badge-primary"></span>
+                    </div>-->
+                    <!-- Текстовый контент -->
+                    <!--<div class="card-body collapse show" id="outgoing_wagon">
 
-                                </div>
-                            </div>--><!-- Конец карточки -->
-                        <!--</div>
+                        </div>
+                    </div>-->
+                    <!-- Конец карточки -->
+                    <!--</div>
                     </div>-->
                 </div>
                 <div class="card-footer bg-transparent border-dark">&copy; @DateTime.Now.Year ДАТП & ТД</div>
