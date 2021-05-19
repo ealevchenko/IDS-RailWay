@@ -633,7 +633,6 @@ namespace EFIDS.Helper
                 Directory_Divisions2 = null
             };
         }
-
         // Справочник статусов локомотивов
         public static Directory_LocomotiveStatus GetDirectory_LocomotiveStatus(this Directory_LocomotiveStatus s)
         {
@@ -856,6 +855,37 @@ namespace EFIDS.Helper
                 create_user = d.create_user,
                 change = d.change,
                 change_user = d.change_user,
+            };
+        }
+        // Справочник типов загрузки вагона
+        public static Directory_WagonLoadingStatus GetDirectory_WagonLoadingStatus(this Directory_WagonLoadingStatus l)
+        {
+            if (l == null) return null;
+            return new Directory_WagonLoadingStatus()
+            {
+                id = l.id,
+                loading_status_ru = l.loading_status_ru,
+                loading_status_en = l.loading_status_en,
+                create = l.create,
+                create_user = l.create_user,
+                change = l.change,
+                change_user = l.change_user,
+            };
+        }
+        // Справочник операций над вагоном
+        public static Directory_WagonOperations GetDirectory_WagonOperations(this Directory_WagonOperations o)
+        {
+            if (o == null) return null;
+            return new Directory_WagonOperations()
+            {
+                id = o.id,
+                operation_name_ru = o.operation_name_ru,
+                operation_name_en = o.operation_name_en,
+                busy = o.busy,
+                create = o.create,
+                create_user = o.create_user,
+                change = o.change,
+                change_user = o.change_user,
             };
         }
 
@@ -1843,7 +1873,7 @@ namespace EFIDS.Helper
                     date_readiness_uz = s.date_readiness_uz,
                     date_outgoing = s.date_outgoing,
                     date_outgoing_act = s.date_outgoing_act,
-                    date_departure_amkr = s.date_departure_amkr, 
+                    date_departure_amkr = s.date_departure_amkr,
                     composition_index = s.composition_index,
                     status = s.status,
                     note = s.note,
@@ -1892,8 +1922,8 @@ namespace EFIDS.Helper
                     id_outgoing_return_start = c.id_outgoing_return_start,
                     id_outgoing_return_stop = c.id_outgoing_return_stop,
                     parent_wir_id = c.parent_wir_id,
-                    note_vagonnik = c.note_vagonnik, 
-                    vagonnik = c.vagonnik, 
+                    note_vagonnik = c.note_vagonnik,
+                    vagonnik = c.vagonnik,
                     vagonnik_user = c.vagonnik_user,
                     //id_outgoing_detention_return = c.id_outgoing_detention_return,
                     OutgoingDetentionReturn = c.OutgoingDetentionReturn.GetOutgoingDetentionReturn(),
@@ -2069,7 +2099,11 @@ namespace EFIDS.Helper
         }
 
         #region Внутренее перемещение
-
+        /// <summary>
+        /// Вернуть внутренее перемещение вагона
+        /// </summary>
+        /// <param name="r"></param>
+        /// <returns></returns>
         public static WagonInternalRoutes GetWagonInternalRoutes(this WagonInternalRoutes r)
         {
             if (r == null) return null;
@@ -2092,11 +2126,15 @@ namespace EFIDS.Helper
                 Directory_Wagons = r.Directory_Wagons.GetDirectory_Wagons_Directory_WagonsRent(),
                 OutgoingCars = r.OutgoingCars.GetOutgoingCars_OutgoingSostav(),
                 SAPIncomingSupply = r.SAPIncomingSupply.GetSAPIncomingSupply(),
-                WagonInternalOperation = r.WagonInternalOperation.ToList().Select(w => w.GetWagonInternalOperation()).ToList(),
-
+                WagonInternalMovement = r.WagonInternalMovement.ToList().Select(w => w.GetWagonInternalMovement()).ToList(),
+                WagonInternalOperation = r.WagonInternalOperation.ToList().Select(w => w.GetWagonInternalOperation()).ToList(), 
             };
         }
-
+        /// <summary>
+        /// Вернуть операции по внутреннему перемещению вагона
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
         public static WagonInternalOperation GetWagonInternalOperation(this WagonInternalOperation o)
         {
             if (o == null) return null;
@@ -2118,12 +2156,41 @@ namespace EFIDS.Helper
                 close_user = o.close_user,
                 parent_id = o.parent_id,
                 Directory_ConditionArrival = o.Directory_ConditionArrival.GetDirectory_ConditionArrival(),
-                //Directory_Locomotive 
-                //Directory_Locomotive1
-                //Directory_WagonLoadingStatus
-                //Directory_WagonOperations  
-
-
+                Directory_WagonLoadingStatus = o.Directory_WagonLoadingStatus.GetDirectory_WagonLoadingStatus(),
+                Directory_WagonOperations = o.Directory_WagonOperations.GetDirectory_WagonOperations(), 
+                Directory_Locomotive = o.Directory_Locomotive.GetDirectory_Locomotive(), 
+                Directory_Locomotive1 = o.Directory_Locomotive1.GetDirectory_Locomotive(), 
+            };
+        }
+        /// <summary>
+        /// Вернуть дислокайии по внутренему перемещению вагона
+        /// </summary>
+        /// <param name="m"></param>
+        /// <returns></returns>
+        public static WagonInternalMovement GetWagonInternalMovement(this WagonInternalMovement m)
+        {
+            if (m == null) return null;
+            return new WagonInternalMovement()
+            {
+                id = m.id,
+                id_wagon_internal_routes = m.id_wagon_internal_routes,
+                id_station = m.id_station,
+                id_way = m.id_way,
+                way_start = m.way_start,
+                way_end = m.way_end,
+                id_outer_way = m.id_outer_way,
+                outer_way_start = m.outer_way_start,
+                outer_way_end = m.outer_way_end,
+                position = m.position,
+                note = m.note,
+                create = m.create,
+                create_user = m.create_user,
+                close = m.close,
+                close_user = m.close_user,
+                parent_id = m.parent_id,
+                Directory_Station = m.Directory_Station.GetDirectory_Station(),
+                Directory_Ways = m.Directory_Ways.GetDirectory_Ways(), 
+                Directory_OuterWays = m.Directory_OuterWays.GetDirectory_OuterWays(),
             };
         }
 
