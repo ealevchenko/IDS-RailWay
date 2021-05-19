@@ -9,6 +9,12 @@ namespace EFIDS.Entities
     [Table("IDS.Directory_OuterWays")]
     public partial class Directory_OuterWays
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Directory_OuterWays()
+        {
+            WagonInternalMovement = new HashSet<WagonInternalMovement>();
+        }
+
         public int id { get; set; }
 
         [Required]
@@ -66,5 +72,8 @@ namespace EFIDS.Entities
         public virtual Directory_Ways Directory_Ways { get; set; }
 
         public virtual Directory_Ways Directory_Ways1 { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<WagonInternalMovement> WagonInternalMovement { get; set; }
     }
 }

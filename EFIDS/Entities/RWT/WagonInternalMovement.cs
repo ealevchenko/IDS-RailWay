@@ -59,6 +59,8 @@ namespace EFIDS.Entities
 
         public virtual Directory_Ways Directory_Ways { get; set; }
 
+        public virtual Directory_OuterWays Directory_OuterWays { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WagonInternalMovement> WagonInternalMovement1 { get; set; }
 

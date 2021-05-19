@@ -680,7 +680,10 @@ namespace EFIDS.Concrete
             #endregion
 
             #region Directory_OuterWays
-
+            modelBuilder.Entity<Directory_OuterWays>()
+                .HasMany(e => e.WagonInternalMovement)
+                .WithOptional(e => e.Directory_OuterWays)
+                .HasForeignKey(e => e.id_outer_way);
             #endregion
 
             #region Directory_OwnersWagons
