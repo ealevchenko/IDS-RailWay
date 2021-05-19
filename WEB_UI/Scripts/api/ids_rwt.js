@@ -4074,7 +4074,7 @@ IDS_RWT.prototype.postOperationSendingSostavOnUZ = function (operation_sending, 
 };
 //======================================================================================================
 //                                  РАЗДЕЛ ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ ВАГОНОВ
-//======= WagonInternalRoutes (Состояние парка) =========================================================================
+//======= WagonInternalRoutes (Внутреннее перемещение вагона на АМКР) =========================================================================
 // Вернуть внутренее перемещение по id таблицы ArrivalCars
 IDS_RWT.prototype.getWagonInternalRoutesOfArrivalCarsID = function (id, callback) {
     $.ajax({
@@ -4167,7 +4167,100 @@ IDS_RWT.prototype.getWagonInternalRoutesOfWagonNum = function (num, callback) {
         },
     });
 };
-
+//======= WagonInternalMovement (Внутреннее перемещение вагона на АМКР, позиционирование вагона на путях) =====================================
+// Вернуть строку позиции по id
+IDS_RWT.prototype.getWagonInternalMovementOfID = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/wim/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getWagonInternalMovementOfID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Вернуть список позиции по id wir
+IDS_RWT.prototype.getWagonInternalMovementOfWIRID = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/wim/wir/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getWagonInternalMovementOfWIRID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//======= WagonInternalOperation (Внутреннее перемещение вагона на АМКР, операции над вагонами) =====================================
+// Вернуть строку операций по id
+IDS_RWT.prototype.getWagonInternalOperationOfID = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/wio/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getWagonInternalOperationOfID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Вернуть список операций по id wir
+IDS_RWT.prototype.getWagonInternalOperationOfWIRID = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/wio/wir/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getWagonInternalOperationOfWIRID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 // Вернуть песледнюю запись операций из внутренего перемещения вагонов
 IDS_RWT.prototype.getLastWagonInternalOperationOfWIR = function (wir) {
     var last_wio = null;
