@@ -29,6 +29,9 @@
             };
             case 'pills-wir-tab': {
                 twir.load_of_num($num_wagon.val());
+                //twim.load_of_id_wir(257314);
+                //twim.load_of_id(40671);
+                //twio.load_of_id_wir(257314);
                 break;
             };
             case 'pills-outgoing-tab': {
@@ -51,6 +54,15 @@
     // Определим экземпляр таблица вагоны прибытие
     var TOW = App.table_outgoing_wagon;
     var tow = new TOW('table#table_outgoing_wagon'); // Создадим экземпляр таблицы
+
+    //var TWIM = App.table_wim;
+    //var twim = new TWIM('table#table_detali_wim'); // Создадим экземпляр таблицы
+    //var TWIO = App.table_wio;
+    //var twio = new TWIO('table#table_detali_wio'); // Создадим экземпляр таблицы
+
+    var TWIRD = App.table_wir_detali;
+    var twird = new TWIRD('div#table_detali_wio'); // Создадим экземпляр таблицы
+
 
     // Найти вагон
     var search_wagon = function () {
@@ -82,7 +94,19 @@
         //taw.init(td_wir);
         taw.init(true);
         twir.init();
+        //twim.init();
+        //twio.init();
         tow.init();
+
+        //$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        //    e.target // newly activated tab
+        //    e.relatedTarget // previous active tab
+        //})
+
+        $('#pills-tab a').on('click', function (e) {
+            e.preventDefault()
+            $(this).tab('show')
+        })
 
         //search_wagon();
     });

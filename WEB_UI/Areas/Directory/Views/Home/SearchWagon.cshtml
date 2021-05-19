@@ -26,11 +26,15 @@
     <script src="~/Scripts/api/metrans.js"></script> <!-- Class API МЕТРАНС -->
     <script src="~/Scripts/api/ids_transfer.js"></script> <!-- Class API ИДС Переносы -->
     <script src="~/Scripts/api/ids_rwt.js"></script> <!-- Class API ИДС Прием вагонов -->
-    <script src="~/Scripts/module/table_wim.js"></script>
-    <script src="~/Scripts/module/table_arrival.js"></script> <!-- модуль таблиц по прибытию -->
-    <script src="~/Scripts/module/table_wir.js"></script> <!-- модуль таблиц по прибытию -->
 
-    <script src="~/Scripts/module/table_outgoing.js"></script>
+
+    <script src="~/Scripts/module/table_arrival.js"></script> <!-- модуль таблиц по прибытию -->
+    <script src="~/Scripts/module/table_wim.js"></script> <!-- модуль таблиц внутрен. дислокация -->
+    <script src="~/Scripts/module/table_wio.js"></script> <!-- модуль таблиц внутрен. операции -->
+    <script src="~/Scripts/module/table_wir_detali.js"></script>
+    <script src="~/Scripts/module/table_wir.js"></script> <!-- модуль таблиц внутрен. перемещение -->
+
+    <script src="~/Scripts/module/table_outgoing.js"></script><!-- модуль таблиц по отправке -->
     <!--<script src="~/Scripts/view/directory/search_wagon.js"></script>--> <!--  -->
     <script src="~/Scripts/view/directory/main_search_wagon.js"></script>
 
@@ -154,9 +158,7 @@
                                         <div class="col-xl-12 operator-detali-tables">
                                             <table class="display compact cell-border row-border hover" id="table_arrival_wagon" style="width:100%;"></table>
                                         </div>
-                                        @*<div class="col-xl-12 operator-detali-tables">
-                                                <table class="display compact cell-border row-border hover" id="table_detali_wir" style="width:100%;"></table>
-                                            </div>*@
+
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="pills-wir" role="tabpanel" aria-labelledby="pills-wir-tab">
@@ -165,6 +167,36 @@
                                             <table class="display compact cell-border row-border hover" id="table_wir" style="width:100%;"></table>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-xl-12">
+                                            <div id="table_detali_wio">
+                                                <nav>
+                                                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                                        <a class="nav-item nav-link active" id="nav-arrival-tab" data-toggle="tab" href="#nav-arrival" role="tab" aria-controls="nav-arrival" aria-selected="true">Прибытие</a>
+                                                        <a class="nav-item nav-link" id="nav-wim-tab" data-toggle="tab" href="#nav-wim" role="tab" aria-controls="nav-wim" aria-selected="false">Дислокация</a>
+                                                        <a class="nav-item nav-link" id="nav-wio-tab" data-toggle="tab" href="#nav-wio" role="tab" aria-controls="nav-wio" aria-selected="false">Операции</a>
+                                                        <a class="nav-item nav-link" id="nav-outgoing-tab" data-toggle="tab" href="#nav-outgoing" role="tab" aria-controls="nav-outgoing" aria-selected="true">Отправление</a>
+                                                    </div>
+                                                </nav>
+                                                <div class="tab-content" id="nav-tabContent">
+                                                    <div class="tab-pane fade show active" id="nav-arrival" role="tabpanel" aria-labelledby="nav-arrival-tab">...</div>
+                                                    <div class="tab-pane fade" id="nav-wim" role="tabpanel" aria-labelledby="nav-wim-tab">...</div>
+                                                    <div class="tab-pane fade" id="nav-wio" role="tabpanel" aria-labelledby="nav-wio-tab">...</div>
+                                                    <div class="tab-pane fade" id="nav-outgoing" role="tabpanel" aria-labelledby="nav-outgoing-tab">...</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*<div class="row">
+                                            <div class="col-xl-12 operator-detali-tables">
+                                                <table class="display compact cell-border row-border hover" id="table_detali_wio" style="width:100%;"></table>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xl-12 operator-detali-tables">
+                                                <table class="display compact cell-border row-border hover" id="table_detali_wim" style="width:100%;"></table>
+                                            </div>
+                                        </div>*@
                                 </div>
                                 <div class="tab-pane fade" id="pills-outgoing" role="tabpanel" aria-labelledby="pills-outgoing-tab">
                                     <div class="row">

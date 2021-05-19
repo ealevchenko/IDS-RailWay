@@ -275,6 +275,8 @@
     <Compile Include="Controllers\api\Directoty\IDS_Directory_TypesRepairsWagonsController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_WagonManufacturersController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_OutgoingDetentionReturnController.cs" />
+    <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_WagonInternalMovementController - Копировать.cs" />
+    <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_WagonInternalMovementController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_WagonInternalRoutesController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_OutgoingCarsController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_ParkStateController.cs" />
@@ -2060,7 +2062,9 @@
     <Content Include="Scripts\jszip.js" />
     <Content Include="Scripts\jszip.min.js" />
     <Content Include="Scripts\module\table_outgoing.js" />
+    <Content Include="Scripts\module\table_wio.js" />
     <Content Include="Scripts\module\table_wim.js" />
+    <Content Include="Scripts\module\table_wir_detali.js" />
     <Content Include="Scripts\module\table_wir.js" />
     <Content Include="Scripts\module\table_arrival.js" />
     <Content Include="Scripts\moment-with-locales.js" />
