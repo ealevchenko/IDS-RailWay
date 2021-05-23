@@ -56,6 +56,16 @@
     // Перечень полей
     var list_collums = [
         {
+            field: 'wir_car_details_control',
+            className: 'details-control details-control-wir',
+/*            id:'wir_car_details_control',*/
+            orderable: false,
+            data: null,
+            defaultContent: '',
+            width: "30px",
+            searchable: false
+        },
+        {
             field: 'wir_button_view',
             targets: 0,
             data: null,
@@ -163,21 +173,25 @@
 
     // инициализация полей таблицы вагоны на начальном пути
     table_wir.prototype.init_columns = function () {
-        return init_columns([
-            'wir_button_view',
-            'wir_id',
-            'wir_num',
-            'wir_id_arrival_car',
-            'wir_id_outgoing_car',
-            'wir_id_sap_incoming_supply',
-            'wir_id_sap_outbound_supply',
-            'wir_note',
-            'wir_create',
-            'wir_close',
-            'wir_parent_id'], list_collums);
+        var collums = [];
+        if (this.b_detali) collums.push('wir_car_details_control');
+        collums.push('wir_button_view');
+        collums.push('wir_id');
+        collums.push('wir_num');
+        collums.push('wir_id_arrival_car');
+        collums.push('wir_id_outgoing_car');
+        collums.push('wir_id_sap_incoming_supply');
+        collums.push('wir_id_sap_outbound_supply');
+        collums.push('wir_note');
+        collums.push('wir_create');
+        collums.push('wir_close');
+        collums.push('wir_parent_id');
+        return init_columns(collums, list_collums);
     };
     //
-    table_wir.prototype.init = function () {
+    table_wir.prototype.init = function (detali) {
+        this.b_detali = detali;     // Бит отображать детально
+        this.d_twird = [];                    // Массив таблиц детально
         this.obj_wir = this.$t_wir.DataTable({
             "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "All"]],
             "paging": true,
@@ -239,7 +253,9 @@
                     extend: 'pageLength',
                 }
             ]
-        });
+        }).on('select', function (e, dt, type, indexes) {
+        }.bind(this));
+        if (this.b_detali) this.init_detali();
     };
     // Показать данные 
     table_wir.prototype.view = function (data) {
@@ -275,7 +291,7 @@
         if (id) {
             LockScreen(langView('mess_load_wir_wagons', App.Langs));
             ids_rwt.getWagonInternalRoutesOfOutgoingCarsID(id, function (list_wir_wagon) {
-                this.view(list_wir_wagon);
+                this.view($(list_wir_wagon));
                 LockScreenOff();
             }.bind(this));
         };
@@ -285,14 +301,61 @@
         if (id) {
             LockScreen(langView('mess_load_wir_wagons', App.Langs));
             ids_rwt.getWagonInternalRoutesOfArrivalCarsID(id, function (list_wir_wagon) {
-                var list = [];
-                if (list_wir_wagon) {
-                    list.push(list_wir_wagon);
-                };
-                this.view(list);
+                //var list = [];
+                //if (list_wir_wagon) {
+                //    list.push(list_wir_wagon);
+                //};
+                this.view($(list_wir_wagon));
                 LockScreenOff();
             }.bind(this));
         };
+    };
+    // Инициализация таблицы детально
+    table_wir.prototype.init_detali = function () {
+        var base = this;
+        this.$t_wir.find('tbody')
+            .on('click', 'td.details-control-wir', function (e) {
+                e.preventDefault();
+                var tr = $(this).closest('tr');
+                var row = base.obj_wir.row(tr);
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                }
+                else {
+                    row.child('<div class="detali-operation">' +
+                        '<div class="row">' +
+                        '<div class="col-xl-12">' +
+                        '<div id="wir-detali-' + row.data().id + '">' +
+
+                        //'<div class="card border-primary mb-3">' +
+                        //'<div class="card-header">Движение на АМКР</div>' +
+                        //'<div class="card-body">' +
+                        //'<div class="row">' +
+                        //'<div class="col-xl-12">' +
+
+                        //'</div>' +
+                        //'</div>' +
+                        //'</div>' +
+                        //'</div>' +
+                        //'</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                    '</div>').show();
+
+                    // Инициализируем
+                    base.view_detali(row.data());
+                    tr.addClass('shown');
+                }
+            });
+    };
+    // 
+    table_wir.prototype.view_detali = function (data) {
+        var TWIRD = App.table_wir_detali;
+        this.d_twird[data.id] = new TWIRD('div#wir-detali-' + data.id); // Создадим экземпляр
+        this.d_twird[data.id].init(data.id_arrival_car, data.id, data.id_outgoing_car);
     };
     // 
     App.table_wir = table_wir;

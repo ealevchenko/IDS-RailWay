@@ -76,6 +76,15 @@
     // Перечень полей
     var list_collums = [
         {
+            field: 'out_car_details_control',
+            className: 'details-control  details-control-outgoing',
+            orderable: false,
+            data: null,
+            defaultContent: '',
+            width: "30px",
+            searchable: false
+        },
+        {
             field: 'out_car_button_view',
             targets: 0,
             data: null,
@@ -276,32 +285,35 @@
     }
     // инициализация полей таблицы вагоны на начальном пути
     table_outgoing_wagon.prototype.init_columns = function () {
-        return init_columns([
-            'out_car_button_view',
-            'out_car_id',
-            'out_car_num',
-            'out_car_position_outgoing',
-            'out_car_date_readiness_amkr',
-            'out_car_num_doc_sostav',
-            'out_car_station_from',
-            'out_car_way',
-            'out_car_station_on',
-            'out_car_date_outgoing',
-            'out_car_date_outgoing_act',
-            'out_car_date_departure_amkr',
-            'out_car_status',
-            'out_car_outgoing',
-            'out_car_date_outgoing_wagon_act',
-            'out_car_id_doc_uz',
-            'out_car_doc_uz',
-            'out_car_uz_vagon',
-            'out_car_note',
-            'out_car_return_start',
-            'out_car_return_stop',
-        ], list_collums);
+        var collums = [];
+        if (this.b_detali_wir) collums.push('out_car_details_control');
+        collums.push('out_car_button_view');
+        collums.push('out_car_id');
+        collums.push('out_car_num');
+        collums.push('out_car_position_outgoing');
+        collums.push('out_car_date_readiness_amkr');
+        collums.push('out_car_num_doc_sostav');
+        collums.push('out_car_station_from');
+        collums.push('out_car_way');
+        collums.push('out_car_station_on');
+        collums.push('out_car_date_outgoing');
+        collums.push('out_car_date_outgoing_act');
+        collums.push('out_car_date_departure_amkr');
+        collums.push('out_car_status');
+        collums.push('out_car_outgoing');
+        collums.push('out_car_date_outgoing_wagon_act');
+        collums.push('out_car_id_doc_uz');
+        collums.push('out_car_doc_uz');
+        collums.push('out_car_uz_vagon');
+        collums.push('out_car_note');
+        collums.push('out_car_return_start');
+        collums.push('out_car_return_stop');
+        return init_columns(collums, list_collums);
     };
     //
-    table_outgoing_wagon.prototype.init = function () {
+    table_outgoing_wagon.prototype.init = function (detali_wir) {
+        this.b_detali_wir = detali_wir;     // Бит отображать детально
+        this.d_wir = [];                    // Массив таблиц детально
         this.obj_out_wag = this.$t_out_wag.DataTable({
             "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "All"]],
             "paging": true,
@@ -364,7 +376,9 @@
                     extend: 'pageLength',
                 }
             ]
-        });
+        }).on('select', function (e, dt, type, indexes) {
+        }.bind(this));
+        if (this.b_detali_wir) this.init_detali();
     };
     // Показать данные 
     table_outgoing_wagon.prototype.view = function (data) {
@@ -382,6 +396,64 @@
                 LockScreenOff();
             }.bind(this));
         }
+    };
+
+    table_outgoing_wagon.prototype.load_of_id = function (id) {
+        if (id) {
+            LockScreen(langView('mess_load_out_wagons', App.Langs));
+            ids_rwt.getOutgoingCarsOfID(id, function (list_out_wagon) {
+                this.view($(list_out_wagon));
+                LockScreenOff();
+            }.bind(this));
+        }
+    };
+    // Инициализация таблицы детально
+    table_outgoing_wagon.prototype.init_detali = function () {
+        var base = this;
+        this.$t_out_wag.find('tbody')
+            .on('click', 'td.details-control-outgoing', function () {
+                var tr = $(this).closest('tr');
+                var row = base.obj_out_wag.row(tr);
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                }
+                else {
+                    //row.child('<div class="detali-operation"><div class="row"><div class="col-xl-12 operator-detali-tables"><table class="display compact cell-border row-border hover" id="wir-detali-' + row.data().id + '" style="width:100%;"></table></div></div></div>').show();
+                    row.child('<div class="detali-operation">' +
+                        //'<div class="row">' +
+                        //'<div class="col-xl-12">' +
+                        '<div class="card border-primary mb-3">' +
+                        '<div class="card-header">Движение на АМКР</div>' +
+                        '<div class="card-body">' +
+                        '<div class="row">' +
+                        '<div class="col-xl-12 operator-detali-tables">' +
+                        '<table class="display compact cell-border row-border hover" id="wir-detali-' + row.data().id + '" style="width:100%"></table>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        //'</div>' +
+                        //'</div>' +
+                        '</div>').show();
+
+                    // Инициализируем
+                    base.view_detali(row.data());
+                    tr.addClass('shown');
+                }
+            });
+    };
+    //
+    table_outgoing_wagon.prototype.view_detali = function (data) {
+        var DWIR = App.table_wir;
+        var sl = 'table#wir-detali-' + data.id;
+        //if (!this.d_wir[data.id]) {
+        this.d_wir[data.id] = new DWIR(sl); // Создадим экземпляр таблицы
+        this.d_wir[data.id].init(true);
+        //}
+        this.d_wir[data.id].load_of_id_out_car(data.id);
     };
     // 
     App.table_outgoing_wagon = table_outgoing_wagon;

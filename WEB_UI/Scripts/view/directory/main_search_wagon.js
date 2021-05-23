@@ -60,8 +60,8 @@
     //var TWIO = App.table_wio;
     //var twio = new TWIO('table#table_detali_wio'); // Создадим экземпляр таблицы
 
-    var TWIRD = App.table_wir_detali;
-    var twird = new TWIRD('div#table_detali_wio'); // Создадим экземпляр таблицы
+    //var TWIRD = App.table_wir_detali;
+    //var twird = new TWIRD('div#table_detali_wio'); // Создадим экземпляр таблицы
 
 
     // Найти вагон
@@ -89,25 +89,9 @@
 
     // После загрузки документа
     $(document).ready(function ($) {
-        //td_wir.init();
-        //taw.init(td_wir.load_of_num);
-        //taw.init(td_wir);
         taw.init(true);
-        twir.init();
-        //twim.init();
-        //twio.init();
-        tow.init();
-
-        //$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        //    e.target // newly activated tab
-        //    e.relatedTarget // previous active tab
-        //})
-
-        $('#pills-tab a').on('click', function (e) {
-            e.preventDefault()
-            $(this).tab('show')
-        })
-
+        twir.init(true);
+        tow.init(true);
         //search_wagon();
     });
 

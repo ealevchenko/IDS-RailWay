@@ -65,10 +65,9 @@
 
     // Перечень полей
     var list_collums = [
-        // Arrival
         {
             field: 'arr_car_details_control',
-            className: 'details-control',
+            className: 'details-control  details-control-arrival',
             orderable: false,
             data: null,
             defaultContent: '',
@@ -223,7 +222,7 @@
             title: langView('field_note', App.Langs), width: "300px", orderable: false, searchable: false
         },
     ];
-
+    //
     function table_arrival_wagons(selector) {
         if (!selector) {
             throw new Error('No selector provided');
@@ -282,7 +281,7 @@
                     // приняли
                     $(row).removeClass('red').addClass('green');
                 } else {
-                    if (sostav.date_adoption) {
+                    if (sostav && sostav.date_adoption) {
                         // неприняли
                         $(row).removeClass('green').addClass('red');
                     } else {
@@ -349,11 +348,21 @@
             }.bind(this));
         }
     };
+    // загрузить данные 
+    table_arrival_wagons.prototype.load_of_id = function (id) {
+        if (id) {
+            LockScreen(langView('mess_load_arr_wagons', App.Langs));
+            ids_rwt.getArrivalCarsOfID(id, function (list_arrival_cars) {
+                this.view($(list_arrival_cars));
+                LockScreenOff();
+            }.bind(this));
+        }
+    };
     // Инициализация таблицы детально
     table_arrival_wagons.prototype.init_detali = function () {
         var base = this;
         this.$t_arr_wag.find('tbody')
-            .on('click', 'td.details-control', function () {
+            .on('click', 'td.details-control-arrival', function () {
                 var tr = $(this).closest('tr');
                 var row = base.obj_arr_wag.row(tr);
                 if (row.child.isShown()) {
@@ -393,7 +402,7 @@
         var sl = 'table#wir-detali-' + data.id;
         //if (!this.d_wir[data.id]) {
         this.d_wir[data.id] = new DWIR(sl); // Создадим экземпляр таблицы
-        this.d_wir[data.id].init();
+        this.d_wir[data.id].init(true);
         //}
         this.d_wir[data.id].load_of_id_arr_car(data.id);
     };

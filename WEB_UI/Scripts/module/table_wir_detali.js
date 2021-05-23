@@ -147,6 +147,106 @@
     ];
 
     //===========================================================================
+    // Конструктор модуля таблицы внутренего движения вагона
+    function tabs_detali(id_arr, id_wir, id_out) {
+        var $nav = $('<nav></nav>');
+        var $div = $('<div></div>');
+        var $div_tablist = $('<div></div>', {
+            'id': 'nav-tab-' + id_wir,
+            'role': 'tablist',
+            'class': 'nav nav-tabs'
+        });
+        var $div_tabcontent = $('<div></div>', {
+            'id': 'nav-tabContent',
+            'class': 'tab-content'
+        });
+
+        var $a_arrival = $('<a></a>', {
+            'id': 'nav-arrival-' + id_wir + '-tab',
+            'data-toggle': 'tab',
+            'text': 'Прибытие',
+            'href': '#nav-arrival-' + id_wir,
+            'role': 'tab',
+            'aria-controls': 'nav-arrival-' + id_wir,
+            'aria-selected': 'true',
+            'class': 'nav-item nav-link active'
+        });
+        var $div_arrival = $('<div></div>', {
+            'id': 'nav-arrival-' + id_wir,
+            'role': 'tabpanel',
+            'aria-labelledby': 'nav-arrival-' + id_wir + '-tab',
+            /*            'text': 'arrival...',*/
+            'class': 'tab-pane fade show active'
+        });
+        var $t_arrival = $('<div class="row"><div class="col-xl-12 operator-detali-tables"><table class="display compact cell-border row-border hover" id="arrival-detali-' + id_wir + '" style="width:100%"></table></div></div>');
+
+        var $a_wim = $('<a></a>', {
+            'id': 'nav-wim-' + id_wir + '-tab',
+            'data-toggle': 'tab',
+            'text': 'Дислокация',
+            'href': '#nav-wim-' + id_wir,
+            'role': 'tab',
+            'aria-controls': 'nav-wim-' + id_wir,
+            'aria-selected': 'false',
+            'class': 'nav-item nav-link'
+        });
+        var $div_wim = $('<div></div>', {
+            'id': 'nav-wim-' + id_wir,
+            'role': 'tabpanel',
+            'aria-labelledby': 'nav-wim-' + id_wir + '-tab',
+            /*            'text': 'wim...',*/
+            'class': 'tab-pane fade'
+        });
+        var $t_wim = $('<div class="row"><div class="col-xl-12 operator-detali-tables"><table class="display compact cell-border row-border hover" id="wim-detali-' + id_wir + '" style="width:100%"></table></div></div>');
+
+        var $a_wio = $('<a></a>', {
+            'id': 'nav-wio-' + id_wir + '-tab',
+            'data-toggle': 'tab',
+            'text': 'Операции',
+            'href': '#nav-wio-' + id_wir,
+            'role': 'tab',
+            'aria-controls': 'nav-wio-' + id_wir,
+            'aria-selected': 'false',
+            'class': 'nav-item nav-link'
+        });
+        var $div_wio = $('<div></div>', {
+            'id': 'nav-wio-' + id_wir,
+            'role': 'tabpanel',
+            'aria-labelledby': 'nav-wio-' + id_wir + '-tab',
+            /*            'text': 'wio...',*/
+            'class': 'tab-pane fade'
+        });
+        var $t_wio = $('<div class="row"><div class="col-xl-12 operator-detali-tables"><table class="display compact cell-border row-border hover" id="wio-detali-' + id_wir + '" style="width:100%"></table></div></div>');
+
+        var $a_outgoing = $('<a></a>', {
+            'id': 'nav-outgoing-' + id_wir + '-tab',
+            'data-toggle': 'tab',
+            'text': 'Отправление',
+            'href': '#nav-outgoing-' + id_wir,
+            'role': 'tab',
+            'aria-controls': 'nav-outgoing-' + id_wir,
+            'aria-selected': 'false',
+            'class': 'nav-item nav-link'
+        });
+        var $div_outgoing = $('<div></div>', {
+            'id': 'nav-outgoing-' + id_wir,
+            'role': 'tabpanel',
+            'aria-labelledby': 'nav-outgoing-1' + id_wir + '-tab',
+            /*            'text': 'outgoing...',*/
+            'class': 'tab-pane fade'
+        });
+        var $t_outgoing = $('<div class="row"><div class="col-xl-12 operator-detali-tables"><table class="display compact cell-border row-border hover" id="outgoing-detali-' + id_wir + '" style="width:100%"></table></div></div>');
+
+        $div_tablist.append($a_arrival).append($a_wim).append($a_wio).append($a_outgoing);
+        $div_tabcontent.append($div_arrival.append($t_arrival)).append($div_wim.append($t_wim)).append($div_wio.append($t_wio)).append($div_outgoing.append($t_outgoing));
+        $nav.append($div_tablist);
+        $div.append($nav)
+        $div.append($div_tabcontent)
+        this.$element = $div;
+
+    }
+
+    //===========================================================================
     //-----------------------------------------------------------------------
     // таблица истрия внутренего движения вагона
     //-----------------------------------------------------------------------
@@ -160,141 +260,70 @@
             throw new Error('Could not find element with selector: ' + selector);
         }
     }
+    // Инициализация панели с таблицами
+    table_wir_detali.prototype.init = function (id_arr, id_wir, id_out) {
+        this.id_arr = id_arr;
+        this.id_wir = id_wir;
+        this.id_out = id_out;
+        var tabElement = new tabs_detali(id_arr, id_wir, id_out);
+        this.$t_wir.empty();
+        this.$t_wir.append(tabElement.$element);
 
-    // инициализация полей таблицы вагоны на начальном пути
-    table_wir_detali.prototype.init_columns = function () {
-        return init_columns([
-            'wir_button_view',
-            'wir_id',
-            'wir_num',
-            'wir_id_arrival_car',
-            'wir_id_outgoing_car',
-            'wir_id_sap_incoming_supply',
-            'wir_id_sap_outbound_supply',
-            'wir_note',
-            'wir_create',
-            'wir_close',
-            'wir_parent_id'], list_collums);
+        var TAW = App.table_arrival_wagons;
+        this.taw = new TAW('table#arrival-detali-' + this.id_wir); // Создадим экземпляр таблицы
+        this.taw.init();
+
+        var TWIM = App.table_wim;
+        this.twim = new TWIM('table#wim-detali-' + this.id_wir); // Создадим экземпляр таблицы
+        this.twim.init();
+
+        var TWIO = App.table_wio;
+        this.twio = new TWIO('table#wio-detali-' + this.id_wir); // Создадим экземпляр таблицы
+        this.twio.init();
+
+        var TOW = App.table_outgoing_wagons;
+        this.tow = new TAW('table#outgoing-detali-' + this.id_wir); // Создадим экземпляр таблицы
+        this.tow.init();
+
+        // Определим событие выбора элемента
+        $('#nav-tab-' + this.id_wir + ' a').on('click', function (e) {
+            e.preventDefault();
+            var tab = e.target;
+            $(tab).tab('show');
+            // Отобразим данные
+            var id = $(tab).attr('id');
+            switch (id) {
+                case 'nav-arrival-' + this.id_wir + '-tab': this.view_arrival_detali(this.id_arr); break;
+                case 'nav-wim-' + this.id_wir + '-tab': this.view_wim_detali(this.id_wir); break;
+                case 'nav-wio-' + this.id_wir + '-tab': this.view_wio_detali(this.id_wir); break;
+                case 'nav-outgoing-' + this.id_wir + '-tab': this.view_outgoing_detali(this.id_out); break;
+            };
+        }.bind(this));
+        // Покажем первую панель
+        this.view_arrival_detali(this.id_arr);
     };
-    //
-    table_wir_detali.prototype.init = function () {
-        this.obj_wir = this.$t_wir.DataTable({
-            "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "All"]],
-            "paging": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "keys": true,
-            select: true,
-            "autoWidth": true,
-            //"filter": true,
-            //"scrollY": "600px",
-            sScrollX: "100%",
-            scrollX: true,
-            //"responsive": true,
-            //"bAutoWidth": false,
-            language: language_table(App.Langs),
-            jQueryUI: false,
-            "createdRow": function (row, data, index) {
-                $(row).attr('id', data.id);
-                if (data.close !== null) {
-                    // приняли
-                    if (data.id_outgoing_car) {
-                        $(row).removeClass('yellow red').addClass('green');
-                    } else {
-                        $(row).removeClass('green yellow').addClass('red');
-                    }
-                } else {
-                    if (data.id_outgoing_car) {
-                        $(row).removeClass('green red').addClass('yellow');
-                    } else {
-                        $(row).removeClass('green yellow').addClass('red');
-                    }
-                }
-            },
-            columns: this.init_columns(),
-            dom: 'Bfrtip',
-            stateSave: false,
-            buttons: [
-                {
-                    extend: 'collection',
-                    text: langView('title_button_export', App.Langs),
-                    buttons: [
-                        {
-                            text: langView('title_button_buffer', App.Langs),
-                            extend: 'copyHtml5',
-                        },
-                        {
-                            text: langView('title_button_excel', App.Langs),
-                            extend: 'excelHtml5',
-                            sheetName: 'Вагоны на пути',
-                            messageTop: function () {
-                                return '';
-                            }
-                        },
-                    ],
-                    autoClose: true
-                },
-                {
-                    extend: 'pageLength',
-                }
-            ]
-        });
+    // Показать детально прибытие
+    table_wir_detali.prototype.view_arrival_detali = function (id_arr) {
+        this.taw.load_of_id(id_arr);
+        $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
     };
-    // Показать данные 
-    table_wir_detali.prototype.view = function (data) {
-        this.obj_wir.clear();
-        //if (data && data.length > 0) {
-        this.obj_wir.rows.add(data);
-        this.obj_wir.order([1, 'desc']);
-        //}
-        this.obj_wir.draw();
+    // Показать детально дислокацию
+    table_wir_detali.prototype.view_wim_detali = function (id_wir) {
+        this.twim.load_of_id_wir(id_wir);
+        $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+
     };
-    // загрузить данные по num
-    table_wir_detali.prototype.load_of_num = function (num) {
-        if (num) {
-            LockScreen(langView('mess_load_wir_wagons', App.Langs));
-            ids_rwt.getWagonInternalRoutesOfWagonNum(num, function (list_wir_wagon) {
-                this.view(list_wir_wagon);
-                LockScreenOff();
-            }.bind(this));
-        };
+    // Показать детально операции
+    table_wir_detali.prototype.view_wio_detali = function (id_wir) {
+        this.twio.load_of_id_wir(id_wir);
+        $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
     };
-    // загрузить данные по id
-    table_wir_detali.prototype.load_of_id = function (id) {
-        if (id) {
-            LockScreen(langView('mess_load_wir_wagons', App.Langs));
-            ids_rwt.getWagonInternalRoutesOfID(id, function (list_wir_wagon) {
-                this.view(list_wir_wagon);
-                LockScreenOff();
-            }.bind(this));
-        };
+    // Показать детально отправку
+    table_wir_detali.prototype.view_outgoing_detali = function (id_out) {
+        this.tow.load_of_id(id_out);
+        $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
     };
 
-    table_wir_detali.prototype.load_of_id_out_car = function (id) {
-        if (id) {
-            LockScreen(langView('mess_load_wir_wagons', App.Langs));
-            ids_rwt.getWagonInternalRoutesOfOutgoingCarsID(id, function (list_wir_wagon) {
-                this.view(list_wir_wagon);
-                LockScreenOff();
-            }.bind(this));
-        };
-    };
-
-    table_wir_detali.prototype.load_of_id_arr_car = function (id) {
-        if (id) {
-            LockScreen(langView('mess_load_wir_wagons', App.Langs));
-            ids_rwt.getWagonInternalRoutesOfArrivalCarsID(id, function (list_wir_wagon) {
-                var list = [];
-                if (list_wir_wagon) {
-                    list.push(list_wir_wagon);
-                };
-                this.view(list);
-                LockScreenOff();
-            }.bind(this));
-        };
-    };
-    // 
     App.table_wir_detali = table_wir_detali;
 
     window.App = App;
