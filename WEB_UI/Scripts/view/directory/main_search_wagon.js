@@ -14,77 +14,102 @@
 
     var $bt_search_wagon = $('button#bt_search_wagon').on('click', function (event) {
         event.preventDefault();
-        search_wagon();
+        search_num($num_wagon.val());
     });
 
     var ids_rwt = new IDS_RWT(App.Lang);                // Создадим класс IDS_RWT
-
-    $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
-        switch (e.target.id) {
-            case 'pills-directory-tab': break;
-            case 'pills-history-tab': break;
-            case 'pills-arrival-tab': {
-                taw.load_of_num($num_wagon.val());
-                break;
-            };
-            case 'pills-wir-tab': {
-                twir.load_of_num($num_wagon.val());
-                //twim.load_of_id_wir(257314);
-                //twim.load_of_id(40671);
-                //twio.load_of_id_wir(257314);
-                break;
-            };
-            case 'pills-outgoing-tab': {
-                tow.load_of_num($num_wagon.val());
-                break;
-            };
-        }
-        // newly activated tab
-        e.relatedTarget // previous active tab
-    })
-
     // Определим экземпляр таблица вагоны прибытие
     var TAW = App.table_arrival_wagons;
     var taw = new TAW('table#table_arrival_wagon'); // Создадим экземпляр таблицы
     // Определим экземпляр таблица вагоны прибытие
     var TWIR = App.table_wir;
     var twir = new TWIR('table#table_wir'); // Создадим экземпляр таблицы
-    //var td_wir = new TWIR('table#table_detali_wir'); // Создадим экземпляр таблицы
-
     // Определим экземпляр таблица вагоны прибытие
     var TOW = App.table_outgoing_wagon;
     var tow = new TOW('table#table_outgoing_wagon'); // Создадим экземпляр таблицы
 
-    //var TWIM = App.table_wim;
-    //var twim = new TWIM('table#table_detali_wim'); // Создадим экземпляр таблицы
-    //var TWIO = App.table_wio;
-    //var twio = new TWIO('table#table_detali_wio'); // Создадим экземпляр таблицы
+    var active_tab = 0;
 
-    //var TWIRD = App.table_wir_detali;
-    //var twird = new TWIRD('div#table_detali_wio'); // Создадим экземпляр таблицы
-
-
-    // Найти вагон
-    var search_wagon = function () {
+    $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
+        switch (e.target.id) {
+            case 'pills-directory-tab': {
+                active_tab = 0; break;
+            }
+            case 'pills-history-tab': {
+                active_tab = 1; break;
+            }
+            case 'pills-arrival-tab': {
+                active_tab = 2;
+                view_arrival_wagon();
+                break;
+            };
+            case 'pills-wir-tab': {
+                active_tab = 3;
+                view_wir_wagon();
+                break;
+            };
+            case 'pills-outgoing-tab': {
+                active_tab = 4;
+                view_outgoing_wagon();
+                break;
+            };
+        }
+        //// newly activated tab
+        //e.relatedTarget // previous active tab
+    })
+    // Показать вагоны в прибытиии
+    var view_arrival_wagon = function () {
+        taw.load_of_num($num_wagon.val());
+    };
+    // Показать вагоны на АМКР
+    var view_wir_wagon = function () {
+        twir.load_of_num($num_wagon.val());
+    };
+    // Показать вагоны в отправках
+    var view_outgoing_wagon = function () {
+        tow.load_of_num($num_wagon.val());
+    };
+    // Проверка номера вагона
+    var search_num = function (num) {
         alert.clear_message();
         //clear(); // Очистим экран от старой информации
         LockScreen(langView('mess_delay', App.Langs));
         $bt_search_wagon.prop("disabled", true);
-        var num = $num_wagon.val();
         if (!isNumeric(num) || !is_valid_num_wagon(num)) {
             // Ошибка ввода
             alert.out_error_message('Ошибка, введен неправильный номер :' + num);
             $bt_search_wagon.prop("disabled", false);
             LockScreenOff();
         } else {
-            // Ок, начинаем поиск
-            ids_rwt.getArrivalCarsOfNum(num, function (list_arrival_cars) {
-                //table_arrival_wagon.view(list_arrival_cars);
-                taw.view(list_arrival_cars);
-                $bt_search_wagon.prop("disabled", false);
-                LockScreenOff();
-            });
+            switch (active_tab) {
+                case 0: {
+                    $bt_search_wagon.prop("disabled", false);
+                    LockScreenOff();
+                    break;
+
+                };
+                case 1: {
+                    $bt_search_wagon.prop("disabled", false);
+                    LockScreenOff();
+                    break;
+                };
+                case 2: {
+                    view_arrival_wagon();
+                    $bt_search_wagon.prop("disabled", false);
+                    break;
+                };
+                case 3: {
+                    view_wir_wagon();
+                    $bt_search_wagon.prop("disabled", false);
+                    break;
+                };
+                case 4: {
+                    view_outgoing_wagon();
+                    break;
+                };
+            }
         }
+
     };
 
     // После загрузки документа
@@ -92,7 +117,7 @@
         taw.init(true);
         twir.init(true);
         tow.init(true);
-        //search_wagon();
+        search_num($num_wagon.val());
     });
 
 })(jQuery); // End of use strict
