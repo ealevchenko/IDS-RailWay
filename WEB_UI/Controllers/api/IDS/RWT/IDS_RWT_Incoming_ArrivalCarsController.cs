@@ -75,7 +75,8 @@ namespace WEB_UI.Controllers.api
                     .Context
                     .Where(s => s.id == id)
                     .ToList()
-                    .Select(c => c.GetArrivalCars()).FirstOrDefault();
+                    //.Select(c => c.GetArrivalCars()).FirstOrDefault();
+                    .Select(c => c.GetArrivalCars_ArrivalSostav()).FirstOrDefault();
                 return Ok(cars);
             }
             catch (Exception e)
