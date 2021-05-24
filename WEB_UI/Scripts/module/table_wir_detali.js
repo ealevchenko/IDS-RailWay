@@ -148,11 +148,11 @@
 
     //===========================================================================
     // Конструктор модуля таблицы внутренего движения вагона
-    function tabs_detali(id_arr, id_wir, id_out) {
+    function tabs_detali(selector, id_arr, id_wir, id_out) {
         var $nav = $('<nav></nav>');
         var $div = $('<div></div>');
         var $div_tablist = $('<div></div>', {
-            'id': 'nav-tab-' + id_wir,
+            'id': selector + '-nav-tab-' + id_wir,
             'role': 'tablist',
             'class': 'nav nav-tabs'
         });
@@ -162,12 +162,12 @@
         });
 
         var $a_arrival = $('<a></a>', {
-            'id': 'nav-arrival-' + id_wir + '-tab',
+            'id': selector + '-nav-arrival-' + id_wir + '-tab',
             'data-toggle': 'tab',
             'text': 'Прибытие',
-            'href': '#nav-arrival-' + id_wir,
+            'href': '#' + selector + '-nav-arrival-' + id_wir,
             'role': 'tab',
-            'aria-controls': 'nav-arrival-' + id_wir,
+            'aria-controls': selector + '-nav-arrival-' + id_wir,
             'aria-selected': 'true',
             'class': 'nav-item nav-link active'
         });
@@ -178,64 +178,64 @@
             /*            'text': 'arrival...',*/
             'class': 'tab-pane fade show active'
         });
-        var $t_arrival = $('<div class="row"><div class="col-xl-12 operator-detali-tables"><table class="display compact cell-border row-border hover" id="arrival-detali-' + id_wir + '" style="width:100%"></table></div></div>');
+        var $t_arrival = $('<div class="row"><div class="col-xl-12 operator-detali-tables"><table class="display compact cell-border row-border hover" id="' + selector + '-arrd-' + id_wir + '" style="width:100%"></table></div></div>');
 
         var $a_wim = $('<a></a>', {
-            'id': 'nav-wim-' + id_wir + '-tab',
+            'id': selector + '-nav-wim-' + id_wir + '-tab',
             'data-toggle': 'tab',
             'text': 'Дислокация',
-            'href': '#nav-wim-' + id_wir,
+            'href': '#' + selector + '-nav-wim-' + id_wir,
             'role': 'tab',
-            'aria-controls': 'nav-wim-' + id_wir,
+            'aria-controls': selector + '-nav-wim-' + id_wir,
             'aria-selected': 'false',
             'class': 'nav-item nav-link'
         });
         var $div_wim = $('<div></div>', {
-            'id': 'nav-wim-' + id_wir,
+            'id': selector + '-nav-wim-' + id_wir,
             'role': 'tabpanel',
             'aria-labelledby': 'nav-wim-' + id_wir + '-tab',
             /*            'text': 'wim...',*/
             'class': 'tab-pane fade'
         });
-        var $t_wim = $('<div class="row"><div class="col-xl-12 operator-detali-tables"><table class="display compact cell-border row-border hover" id="wim-detali-' + id_wir + '" style="width:100%"></table></div></div>');
+        var $t_wim = $('<div class="row"><div class="col-xl-12 operator-detali-tables"><table class="display compact cell-border row-border hover" id="' + selector + '-wimd-' + id_wir + '" style="width:100%"></table></div></div>');
 
         var $a_wio = $('<a></a>', {
-            'id': 'nav-wio-' + id_wir + '-tab',
+            'id': selector + '-nav-wio-' + id_wir + '-tab',
             'data-toggle': 'tab',
             'text': 'Операции',
-            'href': '#nav-wio-' + id_wir,
+            'href': '#' + selector + '-nav-wio-' + id_wir,
             'role': 'tab',
-            'aria-controls': 'nav-wio-' + id_wir,
+            'aria-controls': selector + '-nav-wio-' + id_wir,
             'aria-selected': 'false',
             'class': 'nav-item nav-link'
         });
         var $div_wio = $('<div></div>', {
-            'id': 'nav-wio-' + id_wir,
+            'id': selector + '-nav-wio-' + id_wir,
             'role': 'tabpanel',
             'aria-labelledby': 'nav-wio-' + id_wir + '-tab',
             /*            'text': 'wio...',*/
             'class': 'tab-pane fade'
         });
-        var $t_wio = $('<div class="row"><div class="col-xl-12 operator-detali-tables"><table class="display compact cell-border row-border hover" id="wio-detali-' + id_wir + '" style="width:100%"></table></div></div>');
+        var $t_wio = $('<div class="row"><div class="col-xl-12 operator-detali-tables"><table class="display compact cell-border row-border hover" id="' + selector + '-wiod-' + id_wir + '" style="width:100%"></table></div></div>');
 
         var $a_outgoing = $('<a></a>', {
-            'id': 'nav-outgoing-' + id_wir + '-tab',
+            'id': selector + '-nav-outgoing-' + id_wir + '-tab',
             'data-toggle': 'tab',
             'text': 'Отправление',
-            'href': '#nav-outgoing-' + id_wir,
+            'href': '#' + selector + '-nav-outgoing-' + id_wir,
             'role': 'tab',
-            'aria-controls': 'nav-outgoing-' + id_wir,
+            'aria-controls': selector + '-nav-outgoing-' + id_wir,
             'aria-selected': 'false',
             'class': 'nav-item nav-link'
         });
         var $div_outgoing = $('<div></div>', {
-            'id': 'nav-outgoing-' + id_wir,
+            'id': selector + '-nav-outgoing-' + id_wir,
             'role': 'tabpanel',
             'aria-labelledby': 'nav-outgoing-1' + id_wir + '-tab',
             /*            'text': 'outgoing...',*/
             'class': 'tab-pane fade'
         });
-        var $t_outgoing = $('<div class="row"><div class="col-xl-12 operator-detali-tables"><table class="display compact cell-border row-border hover" id="outgoing-detali-' + id_wir + '" style="width:100%"></table></div></div>');
+        var $t_outgoing = $('<div class="row"><div class="col-xl-12 operator-detali-tables"><table class="display compact cell-border row-border hover" id="' + selector + '-outd-' + id_wir + '" style="width:100%"></table></div></div>');
 
         $div_tablist.append($a_arrival).append($a_wim).append($a_wio).append($a_outgoing);
         $div_tabcontent.append($div_arrival.append($t_arrival)).append($div_wim.append($t_wim)).append($div_wio.append($t_wio)).append($div_outgoing.append($t_outgoing));
@@ -255,48 +255,49 @@
         if (!selector) {
             throw new Error('No selector provided');
         }
-        this.$t_wir = $(selector);
-        if (this.$t_wir.length === 0) {
+        this.$t_wir_d = $(selector);
+        if (this.$t_wir_d.length === 0) {
             throw new Error('Could not find element with selector: ' + selector);
         }
+        this.selector = this.$t_wir_d.attr('id');
     }
     // Инициализация панели с таблицами
     table_wir_detali.prototype.init = function (id_arr, id_wir, id_out) {
         this.id_arr = id_arr;
         this.id_wir = id_wir;
         this.id_out = id_out;
-        var tabElement = new tabs_detali(id_arr, id_wir, id_out);
-        this.$t_wir.empty();
-        this.$t_wir.append(tabElement.$element);
+        var tabElement = new tabs_detali(this.selector, id_arr, id_wir, id_out);
+        this.$t_wir_d.empty();
+        this.$t_wir_d.append(tabElement.$element);
 
         var TAW = App.table_arrival_wagons;
-        this.taw = new TAW('table#arrival-detali-' + this.id_wir); // Создадим экземпляр таблицы
+        this.taw = new TAW('table#' + this.selector + '-arrd-' + this.id_wir); // Создадим экземпляр таблицы
         this.taw.init();
 
         var TWIM = App.table_wim;
-        this.twim = new TWIM('table#wim-detali-' + this.id_wir); // Создадим экземпляр таблицы
+        this.twim = new TWIM('table#' + this.selector + '-wimd-' + this.id_wir); // Создадим экземпляр таблицы
         this.twim.init();
 
         var TWIO = App.table_wio;
-        this.twio = new TWIO('table#wio-detali-' + this.id_wir); // Создадим экземпляр таблицы
+        this.twio = new TWIO('table#' + this.selector + '-wiod-' + this.id_wir); // Создадим экземпляр таблицы
         this.twio.init();
 
-        var TOW = App.table_outgoing_wagons;
-        this.tow = new TAW('table#outgoing-detali-' + this.id_wir); // Создадим экземпляр таблицы
+        var TOW = App.table_outgoing_wagon;
+        this.tow = new TOW('table#' + this.selector + '-outd-' + this.id_wir); // Создадим экземпляр таблицы
         this.tow.init();
 
         // Определим событие выбора элемента
-        $('#nav-tab-' + this.id_wir + ' a').on('click', function (e) {
+        $('#' + this.selector + '-nav-tab-' + this.id_wir + ' a').on('click', function (e) {
             e.preventDefault();
             var tab = e.target;
             $(tab).tab('show');
             // Отобразим данные
             var id = $(tab).attr('id');
             switch (id) {
-                case 'nav-arrival-' + this.id_wir + '-tab': this.view_arrival_detali(this.id_arr); break;
-                case 'nav-wim-' + this.id_wir + '-tab': this.view_wim_detali(this.id_wir); break;
-                case 'nav-wio-' + this.id_wir + '-tab': this.view_wio_detali(this.id_wir); break;
-                case 'nav-outgoing-' + this.id_wir + '-tab': this.view_outgoing_detali(this.id_out); break;
+                case this.selector + '-nav-arrival-' + this.id_wir + '-tab': this.view_arrival_detali(this.id_arr); break;
+                case this.selector + '-nav-wim-' + this.id_wir + '-tab': this.view_wim_detali(this.id_wir); break;
+                case this.selector + '-nav-wio-' + this.id_wir + '-tab': this.view_wio_detali(this.id_wir); break;
+                case this.selector + '-nav-outgoing-' + this.id_wir + '-tab': this.view_outgoing_detali(this.id_out); break;
             };
         }.bind(this));
         // Покажем первую панель

@@ -169,6 +169,7 @@
         if (this.$t_wir.length === 0) {
             throw new Error('Could not find element with selector: ' + selector);
         }
+        this.selector = this.$t_wir.attr('id');
     }
 
     // инициализация полей таблицы вагоны на начальном пути
@@ -316,7 +317,7 @@
         this.$t_wir.find('tbody')
             .on('click', 'td.details-control-wir', function (e) {
                 e.preventDefault();
-                var tr = $(this).closest('tr');
+                var tr = $(e.target).closest('tr');
                 var row = base.obj_wir.row(tr);
                 if (row.child.isShown()) {
                     // This row is already open - close it
@@ -327,7 +328,7 @@
                     row.child('<div class="detali-operation">' +
                         '<div class="row">' +
                         '<div class="col-xl-12">' +
-                        '<div id="wir-detali-' + row.data().id + '">' +
+                        '<div id="' + this.selector +'-wird-' + row.data().id + '">' +
 
                         //'<div class="card border-primary mb-3">' +
                         //'<div class="card-header">Движение на АМКР</div>' +
@@ -349,12 +350,12 @@
                     base.view_detali(row.data());
                     tr.addClass('shown');
                 }
-            });
+            }.bind(this));
     };
     // 
     table_wir.prototype.view_detali = function (data) {
         var TWIRD = App.table_wir_detali;
-        this.d_twird[data.id] = new TWIRD('div#wir-detali-' + data.id); // Создадим экземпляр
+        this.d_twird[data.id] = new TWIRD('div#' + this.selector + '-wird-' + data.id); // Создадим экземпляр
         this.d_twird[data.id].init(data.id_arrival_car, data.id, data.id_outgoing_car);
     };
     // 

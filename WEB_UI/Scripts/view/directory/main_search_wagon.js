@@ -20,13 +20,13 @@
     var ids_rwt = new IDS_RWT(App.Lang);                // Создадим класс IDS_RWT
     // Определим экземпляр таблица вагоны прибытие
     var TAW = App.table_arrival_wagons;
-    var taw = new TAW('table#table_arrival_wagon'); // Создадим экземпляр таблицы
+    var taw = new TAW('table#tab_arr'); // Создадим экземпляр таблицы
     // Определим экземпляр таблица вагоны прибытие
     var TWIR = App.table_wir;
-    var twir = new TWIR('table#table_wir'); // Создадим экземпляр таблицы
+    var twir = new TWIR('table#tab_wir'); // Создадим экземпляр таблицы
     // Определим экземпляр таблица вагоны прибытие
     var TOW = App.table_outgoing_wagon;
-    var tow = new TOW('table#table_outgoing_wagon'); // Создадим экземпляр таблицы
+    var tow = new TOW('table#tab_out'); // Создадим экземпляр таблицы
 
     var active_tab = 0;
 
@@ -78,6 +78,9 @@
         if (!isNumeric(num) || !is_valid_num_wagon(num)) {
             // Ошибка ввода
             alert.out_error_message('Ошибка, введен неправильный номер :' + num);
+            taw.view([]);
+            twir.view([]);
+            tow.view([]);
             $bt_search_wagon.prop("disabled", false);
             LockScreenOff();
         } else {

@@ -231,6 +231,7 @@
         if (this.$t_arr_wag.length === 0) {
             throw new Error('Could not find element with selector: ' + selector);
         }
+        this.selector = this.$t_arr_wag.attr('id');
     }
     // инициализация полей таблицы вагоны на начальном пути
     table_arrival_wagons.prototype.init_columns = function () {
@@ -362,8 +363,8 @@
     table_arrival_wagons.prototype.init_detali = function () {
         var base = this;
         this.$t_arr_wag.find('tbody')
-            .on('click', 'td.details-control-arrival', function () {
-                var tr = $(this).closest('tr');
+            .on('click', 'td.details-control-arrival', function (e) {
+                var tr = $(e.target).closest('tr');
                 var row = base.obj_arr_wag.row(tr);
                 if (row.child.isShown()) {
                     // This row is already open - close it
@@ -380,7 +381,7 @@
                         '<div class="card-body">' +
                         '<div class="row">' +
                         '<div class="col-xl-12 operator-detali-tables">' +
-                        '<table class="display compact cell-border row-border hover" id="wir-detali-' + row.data().id + '" style="width:100%"></table>' +
+                        '<table class="display compact cell-border row-border hover" id="' + this.selector +'-wird-' + row.data().id + '" style="width:100%"></table>' +
                         '</div>' +
                         '</div>' +
                         '</div>' +
@@ -394,12 +395,12 @@
                     base.view_detali(row.data());
                     tr.addClass('shown');
                 }
-            });
+            }.bind(this));
     };
     //
     table_arrival_wagons.prototype.view_detali = function (data) {
         var DWIR = App.table_wir;
-        var sl = 'table#wir-detali-' + data.id;
+        var sl = 'table#' + this.selector + '-wird-' + data.id;
         //if (!this.d_wir[data.id]) {
         this.d_wir[data.id] = new DWIR(sl); // Создадим экземпляр таблицы
         this.d_wir[data.id].init(true);
