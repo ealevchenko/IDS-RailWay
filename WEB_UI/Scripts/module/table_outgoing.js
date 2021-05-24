@@ -384,7 +384,7 @@
     table_outgoing_wagon.prototype.view = function (data) {
         this.obj_out_wag.clear();
         this.obj_out_wag.rows.add(data);
-        this.obj_out_wag.order([4, 'desc']);
+        this.obj_out_wag.order([(this.b_detali_wir ? 5 : 4), 'desc']);
         this.obj_out_wag.draw();
     };
     // загрузить данные 

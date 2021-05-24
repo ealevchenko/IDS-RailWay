@@ -262,7 +262,7 @@
         this.obj_wir.clear();
         //if (data && data.length > 0) {
         this.obj_wir.rows.add(data);
-        this.obj_wir.order([1, 'desc']);
+        this.obj_wir.order([(this.b_detali ? 2 : 1), 'desc']);
         //}
         this.obj_wir.draw();
     };
