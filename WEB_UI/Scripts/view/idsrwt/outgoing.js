@@ -331,6 +331,7 @@
         list_sostav = null,
         data_start = null,
         data_stop = null,
+        start_id_sostav = null, // Выбираемый состав по умолчанию
         // Загрузка основных справочников приложения
         loadReference = function (callback) {
             LockScreen(langView('mess_load', langs));
