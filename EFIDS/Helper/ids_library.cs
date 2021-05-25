@@ -1492,9 +1492,10 @@ namespace EFIDS.Helper
                 create_user = c.create_user,
                 change = c.change,
                 change_user = c.change_user,
+                id_arrival_uz_vagon = c.id_arrival_uz_vagon,
                 UZ_DOC = c.UZ_DOC.GetUZ_DOC(),
                 ArrivalSostav = c.ArrivalSostav.GetArrivalSostav(),
-                Arrival_UZ_Vagon = c.Arrival_UZ_Vagon.GetArrival_UZ_Vagon_Arrival_UZ_Document()
+                Arrival_UZ_Vagon = c.Arrival_UZ_Vagon.GetArrival_UZ_Vagon_Arrival_UZ_Document(), 
             };
         }
 

@@ -326,8 +326,8 @@
         email_error_epd = 'vasiliy.litvin@arcelormittal.com',
         email_error_mt = 'eduard.levchenko@arcelormittal.com',
         interval_min_epd = 90;
-        duration_min_epd = 0;
-        langs = $.extend(true, $.extend(true, getLanguages($.Text_View, lang), getLanguages($.Text_Common, lang)), getLanguages($.Text_Table, lang)),
+    duration_min_epd = 0;
+    langs = $.extend(true, $.extend(true, getLanguages($.Text_View, lang), getLanguages($.Text_Common, lang)), getLanguages($.Text_Table, lang)),
         user_name = $('input#username').val(),
         dc = $('div#dialog-confirm').dialog_confirm({}),
         incoming_alert = new ALERT($('div#incoming-alert')),// Создадим класс ALERTG
@@ -4984,44 +4984,52 @@
                 });
             },
             // Создадим или определим ранее созданый документ УЗ (в ручном режиме)
-            add_doc_uz: function (callback) {
-                // Определим название документа
-                var manual_num = 'MNL' + cars_detali.id_sostav + '_' + cars_detali.uz_doc_num_doc.val();
-                var result_manual_num_doc = null;
-                cars_detali.ids_inc.getUZ_DOCOfNum(manual_num, function (result_manual_num_doc) {
-                    if (!result_manual_num_doc) {
-                        // Документа нет, создадим документ
-                        result_manual_num_doc = {
-                            num_doc: manual_num,
-                            revision: 0,
-                            num_uz: get_input_number_value(cars_detali.uz_doc_num_doc),
-                            status: 6,
-                            code_from: cars_detali.uz_cargo_client_kod_from.val(),
-                            code_on: cars_detali.uz_cargo_client_kod_on.val(),
-                            dt: toISOStringTZ(new Date()),
-                            xml_doc: null
-                        };
-                        cars_detali.ids_inc.postUZ_DOC(result_manual_num_doc, function (result_add_manual_num_doc) {
-                            if (result_add_manual_num_doc > 0) {
-                                // документ добавлен
-                                if (typeof callback === 'function') {
-                                    callback(manual_num);
-                                }
-                            } else {
-                                // Документ не добавлен
-                                cars_detali.alert.out_error_message("Ошибка добавления ЭПД созданного вручном режиме");
-                                if (typeof callback === 'function') {
-                                    callback(null);
-                                }
-                            }
-                        });
-                    } else {
-                        // Документ есть
-                        if (typeof callback === 'function') {
-                            callback(manual_num);
-                        }
+            add_doc_uz: function (num_doc_uz, callback) {
+                if (num_doc_uz && num_doc_uz !== '') {
+                    // Документ есть
+                    if (typeof callback === 'function') {
+                        callback(num_doc_uz);
                     }
-                });
+                } else {
+                    // Определим название документа
+                    var manual_num = 'MNL' + cars_detali.id_sostav + '_' + cars_detali.uz_doc_num_doc.val();
+                    var result_manual_num_doc = null;
+                    cars_detali.ids_inc.getUZ_DOCOfNum(manual_num, function (result_manual_num_doc) {
+                        if (!result_manual_num_doc) {
+                            // Документа нет, создадим документ
+                            result_manual_num_doc = {
+                                num_doc: manual_num,
+                                revision: 0,
+                                num_uz: get_input_number_value(cars_detali.uz_doc_num_doc),
+                                status: 6,
+                                code_from: cars_detali.uz_cargo_client_kod_from.val(),
+                                code_on: cars_detali.uz_cargo_client_kod_on.val(),
+                                dt: toISOStringTZ(new Date()),
+                                xml_doc: null
+                            };
+                            cars_detali.ids_inc.postUZ_DOC(result_manual_num_doc, function (result_add_manual_num_doc) {
+                                if (result_add_manual_num_doc > 0) {
+                                    // документ добавлен
+                                    if (typeof callback === 'function') {
+                                        callback(manual_num);
+                                    }
+                                } else {
+                                    // Документ не добавлен
+                                    cars_detali.alert.out_error_message("Ошибка добавления ЭПД созданного вручном режиме");
+                                    if (typeof callback === 'function') {
+                                        callback(null);
+                                    }
+                                }
+                            });
+                        } else {
+                            // Документ есть
+                            if (typeof callback === 'function') {
+                                callback(manual_num);
+                            }
+                        }
+                    });
+                }
+
             },
             // Добавить платежки
             add_document_pays: function (otpr, id_document_uz, callback) {
@@ -5383,7 +5391,7 @@
                                             if (cars_detali.car_status === 2) {
                                                 // РУЧНОЙ РЕЖИМ ----------------------------------
                                                 // Проверим наличие УЗ Документа (созданного вручную)
-                                                cars_detali.add_doc_uz(function (manual_num) {
+                                                cars_detali.add_doc_uz(result_car.num_doc, function (manual_num) {
                                                     if (manual_num) {
                                                         cars_detali.ids_inc.getArrival_UZ_DocumentOfID_DOC_UZ(manual_num, function (result_document_uz) {
                                                             if (!result_document_uz) {
