@@ -200,7 +200,7 @@
             "ordering": true,
             "info": true,
             "keys": true,
-            select: true,
+            select: false,
             "autoWidth": true,
             //"filter": true,
             //"scrollY": "600px",

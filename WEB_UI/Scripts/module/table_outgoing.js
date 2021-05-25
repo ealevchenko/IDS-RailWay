@@ -88,7 +88,7 @@
             field: 'out_car_button_view',
             targets: 0,
             data: null,
-            defaultContent: '<button class="btn"><i class="far fa-eye"></i></button>',
+            defaultContent: '<button class="btn outgoing-button"><i class="far fa-eye"></i></button>',
             orderable: false,
             className: 'dt-body-center',
             width: "20px"
@@ -322,7 +322,7 @@
             "ordering": true,
             "info": true,
             "keys": true,
-            select: true,
+            select: false,
             "autoWidth": true,
             //"filter": true,
             //"scrollY": "600px",
@@ -378,6 +378,19 @@
                 }
             ]
         }).on('select', function (e, dt, type, indexes) {
+        }.bind(this));
+        var base = this;
+        this.$t_out_wag.find('tbody').on('tbody click', 'button.outgoing-button', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var data = base.obj_out_wag.row($(e.target).parents('tr')).data();
+            var sostav = data ? data.OutgoingSostav : null;
+            if (sostav) {
+                var date = moment(sostav.date_readiness_amkr)
+                date = date.format('YYYY-MM-DD[T]HH:mm:ss');
+                window.open(url_outgoing + '?id=' + data.id_outgoing + '&readiness=' + date, '', '');
+            }
+
         }.bind(this));
         if (this.b_detali_wir) this.init_detali();
     };

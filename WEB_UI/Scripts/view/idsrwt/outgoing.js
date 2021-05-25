@@ -346,7 +346,7 @@
             });
         },
         // Показать составы
-        view_sostav = function (refresh, start, stop, filter) {
+        view_sostav = function (refresh, start, stop, filter, id_sostav) {
             outgoing_alert.clear_message();
             LockScreen(langView('mess_delay', langs));
             if (refresh || data_start === null || data_stop === null || data_start !== start || data_stop !== stop) {
@@ -355,10 +355,10 @@
                     list_sostav = data;
                     data_start = start;
                     data_stop = stop;
-                    table_sostav.view(typeof filter === 'function' ? list_sostav.filter(filter) : list_sostav);
+                    table_sostav.view(typeof filter === 'function' ? list_sostav.filter(filter) : list_sostav, id_sostav);
                 });
             } else {
-                table_sostav.view(typeof filter === 'function' ? list_sostav.filter(filter) : list_sostav);
+                table_sostav.view(typeof filter === 'function' ? list_sostav.filter(filter) : list_sostav, id_sostav);
             }
         },
 
@@ -698,15 +698,13 @@
                 });
             },
             // Показать таблицу с данными
-            view: function (data) {
-                var id_select = table_sostav.select_sostav ? table_sostav.select_sostav.id : 0;
+            view: function (data, id_sostav) {
+                //var id_select = table_sostav.select_sostav ? table_sostav.select_sostav.id : 0;
+                var id_select = id_sostav ? id_sostav : table_sostav.select_sostav ? table_sostav.select_sostav.id : 0;
                 table_sostav.obj.clear();
                 // Сбросить выделенный состав
                 table_sostav.deselect();
                 table_sostav.obj.rows.add(data);
-                //$.each(data, function (i, el) {
-                //    table_sostav.obj.row.add(table_sostav.get_sostav(el));
-                //});
                 table_sostav.obj.order([1, 'asc']);
                 table_sostav.obj.row('#' + id_select).select();
                 table_sostav.obj.draw();
@@ -793,8 +791,8 @@
                     }
                 });
             },
-            view: function (refresh) {
-                view_sostav(refresh, pn_sel.start_dt, pn_sel.stop_dt, Number(pn_sel.select_station.val()) !== -1 ? function (i) { return i.id_station_from === Number(pn_sel.select_station.val()) ? true : false; } : null);
+            view: function (refresh, id_sostav) {
+                view_sostav(refresh, pn_sel.start_dt, pn_sel.stop_dt, Number(pn_sel.select_station.val()) !== -1 ? function (i) { return i.id_station_from === Number(pn_sel.select_station.val()) ? true : false; } : null, id_sostav);
             }
         },
 
@@ -3012,13 +3010,22 @@
         // Инициализация
         if (lang === 'ru') $.datepicker.setDefaults($.datepicker.regional.ru);
         var list_station = ids_inc.ids_dir.getListStation('id', 'station_name', lang, function (i) { return i.station_uz === false && i.exit_uz === true ? true : false; });
+        // Считаем строку с дополнительными параметрами
+        var id_outgoing = getUrlVar('id');
+        var readiness = getUrlVar('readiness');
+        if (id_outgoing && readiness) {
+            pn_sel.cur_dt = moment(readiness).set({
+                'hour': 0, 'minute': 0, 'second': 0, 'millisecond': 0
+            });
+            start_id_sostav = Number(id_outgoing);
+        }
         pn_sel.init(list_station);
         //pn_edit_sostav.init(lang, list_station, user_name, function (result) {
         // pn_sel.view(true);
         //});
         cars_detali.init(lang, user_name);
         table_sostav.init();
-        pn_sel.view(true);
+        pn_sel.view(true, start_id_sostav);
         //LockScreenOff();
     });
 });

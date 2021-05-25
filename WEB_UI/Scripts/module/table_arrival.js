@@ -78,7 +78,7 @@
             field: 'arr_car_button_view',
             targets: 0,
             data: null,
-            defaultContent: '<button class="btn"><i class="far fa-eye"></i></button>',
+            defaultContent: '<button class="btn arrival-button"><i class="far fa-eye"></i></button>',
             orderable: false,
             //className: 'select-checkbox',
             width: "20px"
@@ -330,13 +330,26 @@
             //    //};
             //}
         }.bind(this));
+        var base = this;
+        this.$t_arr_wag.find('tbody').on('tbody click', 'button.arrival-button', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var data = base.obj_arr_wag.row($(e.target).parents('tr')).data();
+            var sostav = data ? data.ArrivalSostav : null;
+            if (sostav) {
+                var date = moment(sostav.date_arrival)
+                date = date.format('YYYY-MM-DD[T]HH:mm:ss');
+                window.open(url_incoming + '?id_arrival=' + data.id_arrival + '&arrival=' + date, '', '');
+            }
+
+        }.bind(this));
         if (this.b_detali_wir) this.init_detali();
     };
     // Показать данные 
     table_arrival_wagons.prototype.view = function (data) {
         this.obj_arr_wag.clear();
         this.obj_arr_wag.rows.add(data);
-        this.obj_arr_wag.order([(this.b_detali_wir ? 5: 4) , 'desc']);
+        this.obj_arr_wag.order([(this.b_detali_wir ? 5 : 4), 'desc']);
         this.obj_arr_wag.draw();
     };
     // загрузить данные 
@@ -364,6 +377,8 @@
         var base = this;
         this.$t_arr_wag.find('tbody')
             .on('click', 'td.details-control-arrival', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
                 var tr = $(e.target).closest('tr');
                 var row = base.obj_arr_wag.row(tr);
                 if (row.child.isShown()) {
@@ -381,7 +396,7 @@
                         '<div class="card-body">' +
                         '<div class="row">' +
                         '<div class="col-xl-12 operator-detali-tables">' +
-                        '<table class="display compact cell-border row-border hover" id="' + this.selector +'-wird-' + row.data().id + '" style="width:100%"></table>' +
+                        '<table class="display compact cell-border row-border hover" id="' + this.selector + '-wird-' + row.data().id + '" style="width:100%"></table>' +
                         '</div>' +
                         '</div>' +
                         '</div>' +

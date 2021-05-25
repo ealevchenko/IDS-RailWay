@@ -172,7 +172,7 @@
             'class': 'nav-item nav-link active'
         });
         var $div_arrival = $('<div></div>', {
-            'id': 'nav-arrival-' + id_wir,
+            'id': selector + '-nav-arrival-' + id_wir,
             'role': 'tabpanel',
             'aria-labelledby': 'nav-arrival-' + id_wir + '-tab',
             /*            'text': 'arrival...',*/
