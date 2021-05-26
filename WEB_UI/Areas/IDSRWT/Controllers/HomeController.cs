@@ -46,6 +46,12 @@ namespace WEB_UI.Areas.IDSRWT.Controllers
             return View();
         }
 
+        [AccessOfDB(LogVisit = true)]
+        public ActionResult TEST()
+        {
+            return View();
+        }
+
 
     }
 }

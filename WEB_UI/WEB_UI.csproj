@@ -2061,6 +2061,7 @@
     <Content Include="Scripts\jquery.doubleScroll.js" />
     <Content Include="Scripts\jszip.js" />
     <Content Include="Scripts\jszip.min.js" />
+    <Content Include="Scripts\module\table_tree_way.js" />
     <Content Include="Scripts\module\table_outgoing.js" />
     <Content Include="Scripts\module\table_wio.js" />
     <Content Include="Scripts\module\table_wim.js" />
@@ -2139,6 +2140,7 @@
     <Content Include="Content\fontawesome-free\webfonts\fa-solid-900.woff" />
     <Content Include="Content\fontawesome-free\webfonts\fa-solid-900.woff2" />
     <Content Include="Areas\Admin\Views\Home\ErrorLog.cshtml" />
+    <Content Include="Areas\IDSRWT\Views\Home\TEST.cshtml" />
     <None Include="_app_offline.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -2677,6 +2679,7 @@
     <Content Include="Scripts\view\idsrwt\outgoing.js" />
     <Content Include="Scripts\view\idsrwt\incoming.js" />
     <Content Include="Scripts\view\idsrwt\arrival.js" />
+    <Content Include="Scripts\view\idsrwt\test.js" />
     <Content Include="Scripts\view\idsrwt\wsd.js" />
     <Content Include="Scripts\view\shared\common.js" />
     <Content Include="Scripts\view\shared\_ids.js" />
