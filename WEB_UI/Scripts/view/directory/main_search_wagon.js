@@ -1,6 +1,6 @@
 ﻿(function ($) {
     "use strict"; // Start of use strict
-    var App = window.App;
+    var App = window.App || {};
     var $ = window.jQuery;
 
     // Определим глобальные переменные
