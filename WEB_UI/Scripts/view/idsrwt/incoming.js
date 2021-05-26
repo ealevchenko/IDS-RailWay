@@ -325,9 +325,9 @@
         email_krr_services = 'KRR.IT.Service@arcelormittal.com',
         email_error_epd = 'vasiliy.litvin@arcelormittal.com',
         email_error_mt = 'eduard.levchenko@arcelormittal.com',
-        interval_min_epd = 90;
-    duration_min_epd = 0;
-    langs = $.extend(true, $.extend(true, getLanguages($.Text_View, lang), getLanguages($.Text_Common, lang)), getLanguages($.Text_Table, lang)),
+        interval_min_epd = 90,
+        duration_min_epd = 0,
+        langs = $.extend(true, $.extend(true, getLanguages($.Text_View, lang), getLanguages($.Text_Common, lang)), getLanguages($.Text_Table, lang)),
         user_name = $('input#username').val(),
         dc = $('div#dialog-confirm').dialog_confirm({}),
         incoming_alert = new ALERT($('div#incoming-alert')),// Создадим класс ALERTG
@@ -7903,6 +7903,7 @@
                         result_car.change = toISOStringTZ(new Date());
                         result_car.change_user = pn_manual_car.user_name;
                         result_car.UZ_DOC = null; // уберем докмент для корректного обновления
+                        result_car.ArrivalSostav = null;
                         pn_manual_car.ids_inc.putArrivalCars(result_car, function (result_upd) {
                             if (typeof callback_ok === 'function') {
                                 callback_ok({ num: result_car.num, result: result_upd >= 0 ? (car.operation === 0 ? 1 : 3) : -1, doc: (num_doc && num_doc !== "" ? 1 : (result_car.num_doc && result_car.num_doc !== "" ? 2 : 0)) });
