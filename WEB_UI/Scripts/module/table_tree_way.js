@@ -268,12 +268,17 @@
     };
 
     function table_tr_station(selector, el) {
-        var $tr = $('<tr></tr>');
+        var $tr = $('<tr></tr>', {
+            'data-tree-area': 'station',
+            'data-station': el.id
+        });
         var $td_control = $('<td></td>', {
-            'class': 'station-control'
+            'class': 'station-control',
+            'width': '18px',
         });
         var $img_station = $('<img>', {
-            'class': 'icon-station'
+            'class': 'icon-station',
+            'width': '18px',
         }); //<img class="icon-station">
         var $td_img_station = $('<td></td>', {
             'class': ''
@@ -283,16 +288,81 @@
             'class': '',
             'colspan': '3'
         });
+        var $a_arrive = $('<a></a>',
+            {
+                'text': el.count_arrive,
+                'href': '#',
+                'class': 'badge badge-warning'
+            })
+        var $a_send = $('<a></a>',
+            {
+                'text': el.count_sent,
+                'href': '#',
+                'class': 'badge badge-success'
+            })
         var $td_pb = $('<td></td>', {
-
+            'class': 'text-centr'
         });
         var $td_count = $('<td></td>', {
-
+            'text': el.count_wagon,
+            'class': 'text-right'
         });
         var $td_capacity = $('<td></td>', {
-
+            'text': el.count_capacity,
+            'class': 'text-right'
         });
         $td_img_station.append($img_station);
+        $td_pb.append(el.count_arrive > 0 ? $a_arrive : '0').append('-').append(el.count_sent > 0 ? $a_send : '0');
+        $tr.append($td_control).append($td_img_station).append($td_name).append($td_pb).append($td_count).append($td_capacity);
+        this.$element = $tr;
+    };
+
+    function table_tr_park(selector, el) {
+        var $tr = $('<tr></tr>', {
+            'data-tree-area': 'station',
+            'data-station': el.id
+        });
+        var $td_control = $('<td></td>', {
+            'class': 'station-control',
+            'width': '18px',
+        });
+        var $img_station = $('<img>', {
+            'class': 'icon-station',
+            'width': '18px',
+        }); //<img class="icon-station">
+        var $td_img_station = $('<td></td>', {
+            'class': ''
+        });
+        var $td_name = $('<td></td>', {
+            'text': el["station_name_" + App.Lang],
+            'class': '',
+            'colspan': '3'
+        });
+        var $a_arrive = $('<a></a>',
+            {
+                'text': el.count_arrive,
+                'href': '#',
+                'class': 'badge badge-warning'
+            })
+        var $a_send = $('<a></a>',
+            {
+                'text': el.count_sent,
+                'href': '#',
+                'class': 'badge badge-success'
+            })
+        var $td_pb = $('<td></td>', {
+            'class': 'text-centr'
+        });
+        var $td_count = $('<td></td>', {
+            'text': el.count_wagon,
+            'class': 'text-right'
+        });
+        var $td_capacity = $('<td></td>', {
+            'text': el.count_capacity,
+            'class': 'text-right'
+        });
+        $td_img_station.append($img_station);
+        $td_pb.append(el.count_arrive > 0 ? $a_arrive : '0').append('-').append(el.count_sent > 0 ? $a_send : '0');
         $tr.append($td_control).append($td_img_station).append($td_name).append($td_pb).append($td_count).append($td_capacity);
         this.$element = $tr;
     };
@@ -330,9 +400,40 @@
         var base = this;
         $.each(stations, function (i, el) {
             var trbodyElement = new table_tr_station(base.selector, el);
+            trbodyElement.$element.on('click', 'td.station-control', function (e) {
+                var tr = $(e.target).closest('tr');
+                var id_station = tr.attr('data-station');
+
+                this.view_park(id_station);
+
+                //var el = $(this.body).find('tr[data-tree-area="park"][data-station="' + id_station + '"]');
+                //if (el && el.length > 0) {
+                //    el.remove();
+                //} else {
+
+                //}
+            }.bind(base));
             base.body.append(trbodyElement.$element);
         });
     };
+
+    //table_tree_way.prototype.view_park = function (tr_station, park) {
+    //    var base = this;
+    //    $.each(park, function (i, el) {
+    //        var trbodyElement = new table_tr_park(base.selector, el);
+    //        //trbodyElement.$element.on('click', 'td.station-control', function (e) {
+    //        //    var tr = $(e.target).closest('tr');
+    //        //    var id_station = tr.attr('data-station');
+    //        //    var el = $(this.body).find('tr[data-tree-area="park"][data-station="' + id_station +'"]');
+    //        //    if (el && el.length > 0) {
+    //        //        el.remove();
+    //        //    } else {
+
+    //        //    }
+    //        //}.bind(base));
+    //        tr_station.after(trbodyElement.$element);
+    //    });
+    //};
 
     // Загрузить станции
     table_tree_way.prototype.load_station = function () {
@@ -342,196 +443,35 @@
         }.bind(this));
     };
 
-    //// инициализация полей таблицы вагоны на начальном пути
-    //table_arrival_wagons.prototype.init_columns = function () {
-    //    var collums = [];
-    //    if (this.b_detali_wir) collums.push('arr_car_details_control');
-    //    collums.push('arr_car_button_view');
-    //    collums.push('arr_car_num');
-    //    collums.push('arr_car_train');
-    //    collums.push('arr_car_composition_index');
-    //    collums.push('arr_car_date_arrival');
-    //    collums.push('arr_car_date_adoption');
-    //    collums.push('arr_car_date_adoption_act');
-    //    collums.push('arr_car_date_adoption_act_wagon');
-    //    collums.push('arr_car_date_arrival_wagon');
-    //    collums.push('arr_car_station_from');
-    //    collums.push('arr_car_station_on');
-    //    collums.push('arr_car_way');
-    //    collums.push('arr_car_status');
-    //    collums.push('arr_car_doc_uz');
-    //    collums.push('arr_car_note');
-    //    return init_columns(collums, list_collums);
-    //};
-    //// инициализация таблицы истрия прибытия вагона
-    //table_arrival_wagons.prototype.init = function (detali_wir) {
-    //    this.b_detali_wir = detali_wir;     // Бит отображать детально
-    //    this.d_wir = [];                    // Массив таблиц детально
-    //    this.obj_arr_wag = this.$t_arr_wag.DataTable({
-    //        "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "All"]],
-    //        "paging": true,
-    //        "searching": true,
-    //        "ordering": true,
-    //        "info": true,
-    //        "keys": true,
-    //        select: false,
-    //        "autoWidth": true,
-    //        //"filter": true,
-    //        //"scrollY": "600px",
-    //        sScrollX: "100%",
-    //        scrollX: true,
-    //        //"responsive": true,
-    //        //"bAutoWidth": false,
-    //        language: language_table(App.Langs),
-    //        jQueryUI: false,
-    //        "createdRow": function (row, data, index) {
-    //            $(row).attr('id', data.id);
-    //            var sostav = data.ArrivalSostav ? data.ArrivalSostav : null;
-    //            if (data.arrival !== null) {
-    //                // приняли
-    //                $(row).removeClass('red').addClass('green');
-    //            } else {
-    //                if (sostav && sostav.date_adoption) {
-    //                    // неприняли
-    //                    $(row).removeClass('green').addClass('red');
-    //                } else {
-    //                    $(row).removeClass('green red');
-    //                }
-    //            }
-    //        },
-    //        columns: this.init_columns(),
-    //        dom: 'Bfrtip',
-    //        stateSave: false,
-    //        buttons: [
-    //            {
-    //                extend: 'collection',
-    //                text: langView('title_button_export', App.Langs),
-    //                buttons: [
-    //                    {
-    //                        text: langView('title_button_buffer', App.Langs),
-    //                        extend: 'copyHtml5',
-    //                    },
-    //                    {
-    //                        text: langView('title_button_excel', App.Langs),
-    //                        extend: 'excelHtml5',
-    //                        sheetName: 'Вагоны на пути',
-    //                        messageTop: function () {
-    //                            return '';
-    //                        }
-    //                    },
-    //                ],
-    //                autoClose: true
-    //            },
-    //            {
-    //                extend: 'pageLength',
-    //            }
-    //        ]
-    //    }).on('select', function (e, dt, type, indexes) {
-    //        //var rowData = this.obj_arr_wag.rows(indexes).data();
-    //        //if (rowData && rowData.length > 0) {
-    //        //    this.id_car = rowData[0].id;
-    //        //    this.tab_detali.load_of_num(53576047);
-    //        //    var t = typeof this.tab_detali;
-    //        //    //if (typeof this.fn_vew_detali === 'function') {
-    //        //    //    //fn(this.id_car);
-    //        //    //    //this.fn_vew_detali(53576047);
-    //        //    //    this.tab_detali.load_of_num(53576047);
-    //        //    //};
-    //        //}
-    //    }.bind(this));
-    //    var base = this;
-    //    this.$t_arr_wag.find('tbody').on('tbody click', 'button.arrival-button', function (e) {
-    //        e.preventDefault();
-    //        e.stopPropagation();
-    //        var data = base.obj_arr_wag.row($(e.target).parents('tr')).data();
-    //        var sostav = data ? data.ArrivalSostav : null;
-    //        if (sostav) {
-    //            var date = moment(sostav.date_arrival)
-    //            date = date.format('YYYY-MM-DD[T]HH:mm:ss');
-    //            window.open(url_incoming + '?id_arrival=' + data.id_arrival + '&arrival=' + date, '', '');
-    //        }
+    // Загрузить парки станции
+    table_tree_way.prototype.load_park = function (id_station, callback) {
+        /*        LockScreen(langView('title_mess_load_station', langs));*/
+        ids_rwt.getViewParkWaysOfStation(id_station, function (park) {
+            if (typeof callback === 'function') {
+                callback(park);
+            }
+        }.bind(this));
+    };
+    // показать парки станции
+    table_tree_way.prototype.view_park = function (id_station) {
+        this.load_park(id_station, function (park) {
+            var base = this;
+            var station = $(this.body).find('tr[data-tree-area="station"][data-station="' + id_station + '"]');
+            if (station && station.length > 0) {
+                var parks = $(this.body).find('tr[data-tree-area="park"][data-station="' + id_station + '"]');
+                if (parks && parks.length > 0) {
+                    parks.remove();
+                } else {
+                    $.each(park, function (i, el) {
+                        var trbodyElement = new table_tr_park(base.selector, el);
+                        station.after(trbodyElement.$element);
+                    });
+                }
+            }
+        }.bind(this));
+    };
 
-    //    }.bind(this));
-    //    if (this.b_detali_wir) this.init_detali();
-    //};
-    //// Показать данные 
-    //table_arrival_wagons.prototype.view = function (data) {
-    //    this.obj_arr_wag.clear();
-    //    this.obj_arr_wag.rows.add(data);
-    //    this.obj_arr_wag.order([(this.b_detali_wir ? 5 : 4), 'desc']);
-    //    this.obj_arr_wag.draw();
-    //};
-    //// загрузить данные 
-    //table_arrival_wagons.prototype.load_of_num = function (num) {
-    //    if (num) {
-    //        LockScreen(langView('mess_load_arr_wagons', App.Langs));
-    //        ids_rwt.getArrivalCarsOfNum(num, function (list_arrival_cars) {
-    //            this.view(list_arrival_cars);
-    //            LockScreenOff();
-    //        }.bind(this));
-    //    }
-    //};
-    //// загрузить данные 
-    //table_arrival_wagons.prototype.load_of_id = function (id) {
-    //    if (id) {
-    //        LockScreen(langView('mess_load_arr_wagons', App.Langs));
-    //        ids_rwt.getArrivalCarsOfID(id, function (list_arrival_cars) {
-    //            this.view($(list_arrival_cars));
-    //            LockScreenOff();
-    //        }.bind(this));
-    //    }
-    //};
-    //// Инициализация таблицы детально
-    //table_arrival_wagons.prototype.init_detali = function () {
-    //    var base = this;
-    //    this.$t_arr_wag.find('tbody')
-    //        .on('click', 'td.details-control-arrival', function (e) {
-    //            e.preventDefault();
-    //            e.stopPropagation();
-    //            var tr = $(e.target).closest('tr');
-    //            var row = base.obj_arr_wag.row(tr);
-    //            if (row.child.isShown()) {
-    //                // This row is already open - close it
-    //                row.child.hide();
-    //                tr.removeClass('shown');
-    //            }
-    //            else {
-    //                //row.child('<div class="detali-operation"><div class="row"><div class="col-xl-12 operator-detali-tables"><table class="display compact cell-border row-border hover" id="wir-detali-' + row.data().id + '" style="width:100%;"></table></div></div></div>').show();
-    //                row.child('<div class="detali-operation">' +
-    //                    //'<div class="row">' +
-    //                    //'<div class="col-xl-12">' +
-    //                    '<div class="card border-primary mb-3">' +
-    //                    '<div class="card-header">Движение на АМКР</div>' +
-    //                    '<div class="card-body">' +
-    //                    '<div class="row">' +
-    //                    '<div class="col-xl-12 operator-detali-tables">' +
-    //                    '<table class="display compact cell-border row-border hover" id="' + this.selector + '-wird-' + row.data().id + '" style="width:100%"></table>' +
-    //                    '</div>' +
-    //                    '</div>' +
-    //                    '</div>' +
-    //                    '</div>' +
-    //                    '</div>' +
-    //                    //'</div>' +
-    //                    //'</div>' +
-    //                    '</div>').show();
 
-    //                // Инициализируем
-    //                base.view_detali(row.data());
-    //                tr.addClass('shown');
-    //            }
-    //        }.bind(this));
-    //};
-    ////
-    //table_arrival_wagons.prototype.view_detali = function (data) {
-    //    var DWIR = App.table_wir;
-    //    var sl = 'table#' + this.selector + '-wird-' + data.id;
-    //    //if (!this.d_wir[data.id]) {
-    //    this.d_wir[data.id] = new DWIR(sl); // Создадим экземпляр таблицы
-    //    this.d_wir[data.id].init(true);
-    //    //}
-    //    this.d_wir[data.id].load_of_id_arr_car(data.id);
-    //};
-    // 
     App.table_tree_way = table_tree_way;
 
     window.App = App;
