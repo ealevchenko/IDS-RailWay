@@ -62,6 +62,10 @@ body {
     padding:.15rem;
 }
 
+.table th {
+    padding:.15rem;
+}
+
 tr.select {
     background-color: #c4c4ff
 }

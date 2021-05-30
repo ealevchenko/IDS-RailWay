@@ -116,8 +116,8 @@
     //};
 
     // Определим экземпляр таблица вагоны прибытие
-    var TTWay = App.table_tree_way;
-    var trWay = new TTWay('table#tree-way'); // Создадим экземпляр таблицы
+    var TTWay = App.ids_tree_way;
+    var trWay = new TTWay('div#tree-way'); // Создадим экземпляр таблицы
 
 
     // После загрузки документа

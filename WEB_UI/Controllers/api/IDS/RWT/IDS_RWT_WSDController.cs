@@ -554,8 +554,10 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         {
             try
             {
+                db.Database.CommandTimeout = 300;
                 string sql = "select * from [IDS].[get_view_station_status]()";
                 List<view_station_status> list = db.Database.SqlQuery<view_station_status>(sql).ToList();
+                db.Database.CommandTimeout = null;               
                 return Ok(list);
             }
             catch (Exception e)
