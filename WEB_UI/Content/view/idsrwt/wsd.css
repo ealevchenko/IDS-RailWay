@@ -62,6 +62,10 @@ body {
     padding:.15rem;
 }
 
+tr.select {
+    background-color: #c4c4ff
+}
+
 td.station-control {
     background: url('../../../Content/DataTables/media/images/details_open.png') no-repeat center center;
     width: 20px;

@@ -122,9 +122,13 @@
 
     // После загрузки документа
     $(document).ready(function ($) {
-        trWay.init();
+        trWay.init(function (id_station, id_park, id_way) {
+            // Обраблтка выбраного пути
+        }, function (name, id) {
+            // Обработка события детально
+        });
         trWay.view();
-        LockScreenOff();
+        //LockScreenOff();
         //taw.init(true);
         //twir.init(true);
         //tow.init(true);

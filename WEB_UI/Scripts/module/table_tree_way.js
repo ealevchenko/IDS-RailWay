@@ -11,51 +11,17 @@
     {
         'default':  //default language: ru
         {
-            'field_id': 'id строки',
-            'field_num': '№ вагона',
-            'field_train': '№ поезда',
-            'field_composition_index': 'Индекс поезда',
-            'field_date_arrival': 'Прибил в составе',
-            'field_date_adoption': 'Принят в составе',
-            'field_date_adoption_act': 'Принят в составе по акту',
-            'field_date_adoption_act_wagon': 'Вагон принят по акту',
-            'field_processed': 'Обработан',
-            'field_station_from': 'Отправлен со станции',
-            'field_station_on': 'Принят на станцию',
-            'field_way': 'Принят на путь',
-            'field_doc_uz': '№ накладной УЗ',
-            'field_status': 'Статус состава',
-            'field_note': 'Примечание',
+            'title_card_header': 'Дерево путей',
 
-            'title_button_export': 'Экспорт',
-            'title_button_buffer': 'Буфер',
-            'title_button_excel': 'Excel',
-
-            'mess_load_arr_wagons': 'Загружаю список принятых вагонов...',
+            'mess_load_station': 'Загружаю список станций...',
+            'mess_load_park': 'Загружаю список парков...',
+            'mess_load_way': 'Загружаю список путей...',
         },
         'en':  //default language: English
         {
-            'field_id': 'row id',
-            'field_num': 'Wagon number',
-            'field_train': 'Train no.',
-            'field_composition_index': 'Train index',
-            'field_date_arrival': 'Arrived in lineup',
-            'field_date_adoption': 'Adopted with',
-            'field_date_adoption_act': 'Adopted as part of the act',
-            'field_date_adoption_act_wagon': 'The car was accepted according to the act',
-            'field_processed': 'Processed',
-            'field_station_from': 'Sent from station',
-            'field_station_on': 'Received at station',
-            'field_way': 'Accepted on path',
-            'field_doc_uz': 'UZ waybill no.',
-            'field_status': 'Squad status',
-            'field_note': 'Note',
-
-            'title_button_export': 'Export',
-            'title_button_buffer': 'Buffer',
-            'title_button_excel': 'Excel',
-
-            'mess_load_arr_wagons': 'Loading the list of accepted wagons ...',
+            'mess_load_station': 'Загружаю список станций...',
+            'mess_load_park': 'Загружаю список парков...',
+            'mess_load_way': 'Загружаю список путей...',
         }
     };
     // Определлим список текста для этого модуля
@@ -63,165 +29,43 @@
 
     var ids_rwt = new IDS_RWT(App.Lang);                // Создадим класс IDS_RWT
 
-    // Перечень полей
-    var list_collums = [
-        {
-            field: 'arr_car_details_control',
-            className: 'details-control  details-control-arrival',
-            orderable: false,
-            data: null,
-            defaultContent: '',
-            width: "30px",
-            searchable: false
-        },
-        {
-            field: 'arr_car_button_view',
-            targets: 0,
-            data: null,
-            defaultContent: '<button class="btn arrival-button"><i class="far fa-eye"></i></button>',
-            orderable: false,
-            //className: 'select-checkbox',
-            width: "20px"
-        },
-        {
-            field: 'arr_car_num',
-            data: function (row, type, val, meta) {
-                return row.num;
-            },
-            className: 'dt-body-center',
-            title: langView('field_num', App.Langs), width: "50px", orderable: false, searchable: true
-        },
-        {
-            //data: "train",
-            field: 'arr_car_train',
-            data: function (row, type, val, meta) {
-                var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
-                return sostav ? sostav.train : null;
-            },
-            className: 'dt-body-center',
-            title: langView('field_train', App.Langs), width: "50px", orderable: false, searchable: true
-        },
-        {
-            //data: "composition_index",
-            field: 'arr_car_composition_index',
-            data: function (row, type, val, meta) {
-                var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
-                return sostav ? sostav.composition_index : null;
-            },
-            className: 'dt-body-center',
-            title: langView('field_composition_index', App.Langs), width: "100px", orderable: false, searchable: true
-        },
-        {
-            field: 'arr_car_date_arrival',
-            data: function (row, type, val, meta) {
-                var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
-                return getReplaceTOfDT(sostav ? sostav.date_arrival : null);
-            },
-            className: 'dt-body-center',
-            title: langView('field_date_arrival', App.Langs), width: "100px", orderable: true, searchable: false
-        },
-        {
-            field: 'arr_car_date_adoption',
-            data: function (row, type, val, meta) {
-                var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
-                if (row.arrival !== null) {
-                    return getReplaceTOfDT(sostav ? sostav.date_adoption : null);
-                } else {
-                    return getReplaceTOfDT(sostav ? sostav.date_adoption : null) ? 'Нет' : null;
-                }
-            },
-            className: 'dt-body-center',
-            title: langView('field_date_adoption', App.Langs), width: "100px", orderable: false, searchable: false
-        },
-        {
-            //data: "date_adoption_act",
-            field: 'arr_car_date_adoption_act',
-            data: function (row, type, val, meta) {
-                if (row.arrival !== null) {
-                    var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
-                    return getReplaceTOfDT(sostav ? sostav.date_adoption_act : null);
-                } else {
-                    return null;
-                }
-            },
-            className: 'dt-body-center',
-            title: langView('field_date_adoption_act', App.Langs), width: "100px", orderable: false, searchable: false
-        },
-        {
-            field: 'arr_car_date_adoption_act_wagon',
-            data: function (row, type, val, meta) {
-                return getReplaceTOfDT(row.date_adoption_act);
-            },
-            className: 'dt-body-center',
-            title: langView('field_date_adoption_act_wagon', App.Langs), width: "100px", orderable: false, searchable: false
-        },
-        {
-            field: 'arr_car_date_arrival_wagon',
-            data: function (row, type, val, meta) {
-                return row.arrival ? (row.arrival_user + '<br />[' + getReplaceTOfDT(row.arrival) + ']') : null;
-            },
-            className: 'dt-body-center',
-            title: langView('field_processed', App.Langs), width: "100px", orderable: false, searchable: false
-        },
-        {
-            field: 'arr_car_station_from',
-            data: function (row, type, val, meta) {
-                var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
-                var station = sostav ? sostav.Directory_Station : null;
-                return station ? station['station_name_' + App.Lang] : null;
-            },
-            className: 'dt-body-center',
-            title: langView('field_station_from', App.Langs), width: "100px", orderable: false, searchable: true
-        },
-        {
-            field: 'arr_car_station_on',
-            data: function (row, type, val, meta) {
-                var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
-                var station = sostav ? sostav.Directory_Station1 : null;
-                return station ? station['station_name_' + App.Lang] : null;
-            },
-            className: 'dt-body-center',
-            title: langView('field_station_on', App.Langs), width: "100px", orderable: false, searchable: true
-        },
-        {
-            //data: "id_way",
-            field: 'arr_car_way',
-            data: function (row, type, val, meta) {
-                var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
-                var way = sostav ? sostav.Directory_Ways : null;
-                return way ? way['way_num_' + App.Lang] : null;
-            },
-            className: 'dt-body-center',
-            title: langView('field_way', App.Langs), width: "100px", orderable: false, searchable: false
-        },
-        {
-            //data: "status_name",
-            field: 'arr_car_status',
-            data: function (row, type, val, meta) {
-                var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
-                return sostav ? outStatusArrivalSostav(sostav.status) : null;
-            },
-            className: 'dt-body-center',
-            title: langView('field_status', App.Langs), width: "100px", orderable: false, searchable: true
-        },
-        {
-            field: 'arr_car_doc_uz',
-            data: function (row, type, val, meta) {
-                var doc = row.UZ_DOC ? row.UZ_DOC : null;
-                return doc ? doc.num_uz : null;
-            },
-            className: 'dt-body-center',
-            title: langView('field_doc_uz', App.Langs), width: "50px", orderable: false, searchable: true
-        },
-        {
-            field: 'arr_car_note',
-            data: function (row, type, val, meta) {
-                return row.note;
-            },
-            className: 'dt-body-left',
-            title: langView('field_note', App.Langs), width: "300px", orderable: false, searchable: false
-        },
-    ];
+    function table_button(selector) {
+        var $thead = $('<div></div>', {
+            'class': ''
+        });
+
+        $tr.append($th_name).append($th_pb).append($th_count).append($th_capacity);
+        $thead.append($tr);
+        this.$element = $thead;
+
+    };
+
+    function card(selector) {
+        var $div= $('<div></div>', {
+            'class': 'card border-primary'
+        });
+        var $div_header= $('<div></div>', {
+            'class': 'card-header',
+            'text': langView('title_card_header', App.Langs)
+        });
+        var $div_body= $('<div></div>', {
+            'class': 'card-body',
+        });
+        var $div_row= $('<div></div>', {
+            'class': 'row',
+        });
+        var $div_row_xl= $('<div></div>', {
+            'class': 'col-xl-12 text-left',
+        });
+        var $div_table = $('<table></table>', {
+            'class': 'table table-hover',
+        });
+        
+        this.$element_table = $div_table;
+        $div_body.append($div_row.append($div_row_xl.append(this.$element_table)))
+        $div.append($div_header).append($div_body);
+        this.$element = $div;
+    };
 
     function table_heading(selector) {
         var $thead = $('<thead></thead>', {
@@ -266,7 +110,7 @@
         this.$element = $tbody;
 
     };
-
+    // Станции
     function table_tr_station(selector, el) {
         var $tr = $('<tr></tr>', {
             'data-tree-area': 'station',
@@ -293,13 +137,13 @@
                 'text': el.count_arrive,
                 'href': '#',
                 'class': 'badge badge-warning'
-            })
+            });
         var $a_send = $('<a></a>',
             {
                 'text': el.count_sent,
                 'href': '#',
                 'class': 'badge badge-success'
-            })
+            });
         var $td_pb = $('<td></td>', {
             'class': 'text-centr'
         });
@@ -316,12 +160,13 @@
         $tr.append($td_control).append($td_img_station).append($td_name).append($td_pb).append($td_count).append($td_capacity);
         this.$element = $tr;
     };
-
+    // Парк
     function table_tr_park(selector, id_station, el, index) {
         var $tr = $('<tr></tr>', {
             'data-tree-area': 'park',
             'data-station': id_station,
-            'data-park': el.id
+            'data-park': el.id,
+            'data-tree-end': index === 0 ? '1' : '0',
         });
         var $img_true_open = $('<img>', {
             'class': 'icon-tree-open',
@@ -352,18 +197,18 @@
             'class': '',
             'colspan': '2'
         });
-        var $a_arrive = $('<a></a>',
-            {
-                'text': el.count_arrive,
-                'href': '#',
-                'class': 'badge badge-warning'
-            })
-        var $a_send = $('<a></a>',
-            {
-                'text': el.count_sent,
-                'href': '#',
-                'class': 'badge badge-success'
-            })
+        //var $a_arrive = $('<a></a>',
+        //    {
+        //        'text': el.count_arrive,
+        //        'href': '#',
+        //        'class': 'badge badge-warning'
+        //    });
+        //var $a_send = $('<a></a>',
+        //    {
+        //        'text': el.count_sent,
+        //        'href': '#',
+        //        'class': 'badge badge-success'
+        //    });
         var $td_pb = $('<td></td>', {
             'class': 'text-centr'
         });
@@ -378,11 +223,117 @@
 
         $td_img_true_open.append(index === 0 ? $img_true_open_end : $img_true_open);
         $td_img_park.append($img_park);
-        $td_pb.append(el.count_arrive > 0 ? $a_arrive : '0').append('-').append(el.count_sent > 0 ? $a_send : '0');
+        //$td_pb.append(el.count_arrive > 0 ? $a_arrive : '0').append('-').append(el.count_sent > 0 ? $a_send : '0');
         $tr.append($td_img_true_open).append($td_control).append($td_img_park).append($td_name).append($td_pb).append($td_count).append($td_capacity);
         this.$element = $tr;
     };
+    // Пути
+    function table_tr_way(selector, id_station, id_park, el, index, end_tree) {
+        var $tr = $('<tr></tr>', {
+            'data-tree-area': 'way',
+            'data-station': id_station,
+            'data-park': id_park,
+            'data-way': el.id
+        });
+        var $img_tree_open_skeep = $('<img>', {
+            'class': 'icon-tree-open-skeep',
+            'width': '18px',
+        });
+        var $td_img_tree_open_skeep = $('<td></td>', {
+            'class': '',
+            'width': '18px',
+            'style': 'border-top-color:#fff'
+        });
+        var $td_not = $('<td></td>', {
+            'class': '',
+            'width': '18px',
+            'style': 'border-top-color:#fff'
+        });
+        var $img_true_open = $('<img>', {
+            'class': 'icon-tree-open',
+            'width': '18px',
+        });
+        var $img_true_open_end = $('<img>', {
+            'class': 'icon-tree-open-end',
+            'width': '18px',
+        });
+        var $td_img_true_open = $('<td></td>', {
+            'class': '',
+            'width': '18px',
+            'style': 'border-top-color:#fff'
+        });
+        var $img_way = $('<img>', {
+            'class': 'icon-way',
+            'width': '18px',
+        });
+        var $td_img_way = $('<td></td>', {
+            'class': ''
+        });
+        var $td_name = $('<td></td>', {
+            'text': el["way_abbr_" + App.Lang],
+            'class': '',
+            'colspan': '1'
+        });
+        var $td_pb = $('<td></td>', {
+            'class': 'text-centr'
+        });
+        var pbElement = new progress_bar(selector, 'way', el.id, el.capacity, el.count_wagon);
+        var $td_count = $('<td></td>', {
+            'text': el.count_wagon,
+            'class': 'text-right'
+        });
+        var $td_capacity = $('<td></td>', {
+            'text': el.capacity,
+            'class': 'text-right'
+        });
 
+        $td_pb.append(pbElement.$element); // добавим прогрес бар
+        $td_img_tree_open_skeep.append(end_tree === 0 ? $img_tree_open_skeep : '');
+        $td_img_true_open.append(index === 0 ? $img_true_open_end : $img_true_open);
+        $td_img_way.append($img_way);
+        $tr.append($td_img_tree_open_skeep).append($td_not).append($td_img_true_open).append($td_img_way).append($td_name).append($td_pb).append($td_count).append($td_capacity);
+        this.$element = $tr;
+    };
+    // Элемент прогресс бар
+    function progress_bar(selector, name, id, max, count) {
+        // Определим компонент прогресс бар
+        var max_capacity = max ? Number(max) : 0
+        var count_wagon = count ? Number(count) : 0
+        var progress = Number(count_wagon > max_capacity ? 100.0 : max_capacity === 0 ? 0.0 : (count_wagon * 100.0) / max_capacity);
+        var progress_collor = "";
+        if (progress <= 25) {
+            progress_collor = 'bg-success';
+        } else {
+            if (progress <= 50) {
+                progress_collor = 'bg-info';
+            } else {
+                if (progress <= 75) {
+                    progress_collor = 'bg-warning';
+                } else {
+                    progress_collor = 'bg-danger';
+                }
+            }
+        };
+        var $div = $('<div></div>', {
+            'data-tree-pb-name': name,
+            'data-tree-pb-id': id,
+            'class': 'progress',
+            'title': 'Информация детально'
+        });
+        var $div_pb = $('<div></div>', {
+            'class': 'progress-bar ' + progress_collor,
+            'role': 'progressbar',
+            'style': 'width: ' + progress + '%',
+            'aria-valuenow': progress,
+            'aria-valuemin': '0',
+            'aria-valuemax': '100',
+            'text': progress.toFixed(0) + '%'
+
+        });
+        //<div class="progress-bar bg-success" ="" ="" ="" ="" =""></div>
+        $div.append($div_pb);
+        this.$element = $div;
+    };
     // Таблица дерева путей
     function table_tree_way(selector) {
         if (!selector) {
@@ -394,70 +345,58 @@
         }
         this.selector = this.$t_tree_way.attr('id');
     }
-
     // инициализация таблицы
-    table_tree_way.prototype.init = function () {
+    table_tree_way.prototype.init = function (fn_select_way, fn_detali) {
+        this.fn_select_way = fn_select_way;
+        this.fn_detali = fn_detali;
+
+        var cardElement = new card(this.selector);
+
+
+
         var headElement = new table_heading(this.selector);
         this.$t_tree_way.empty();
+
         this.$t_tree_way.append(headElement.$element);
         var bodyElement = new table_body(this.selector);
         this.body = bodyElement.$element;
         this.$t_tree_way.append(this.body);
     };
-
     // инициализация таблицы
     table_tree_way.prototype.view = function () {
-        this.load_station();
+        //this.load_station();
+        this.view_station()
     };
-    //
-    table_tree_way.prototype.view_station = function (stations) {
-        var base = this;
-        $.each(stations, function (i, el) {
-            var trbodyElement = new table_tr_station(base.selector, el);
-            trbodyElement.$element.on('click', 'td.station-control', function (e) {
-                var tr = $(e.target).closest('tr');
-                var id_station = tr.attr('data-station');
-
-                this.view_park(id_station);
-
-                //var el = $(this.body).find('tr[data-tree-area="park"][data-station="' + id_station + '"]');
-                //if (el && el.length > 0) {
-                //    el.remove();
-                //} else {
-
-                //}
-            }.bind(base));
-            base.body.append(trbodyElement.$element);
-        });
-    };
-    //table_tree_way.prototype.view_park = function (tr_station, park) {
-    //    var base = this;
-    //    $.each(park, function (i, el) {
-    //        var trbodyElement = new table_tr_park(base.selector, el);
-    //        //trbodyElement.$element.on('click', 'td.station-control', function (e) {
-    //        //    var tr = $(e.target).closest('tr');
-    //        //    var id_station = tr.attr('data-station');
-    //        //    var el = $(this.body).find('tr[data-tree-area="park"][data-station="' + id_station +'"]');
-    //        //    if (el && el.length > 0) {
-    //        //        el.remove();
-    //        //    } else {
-
-    //        //    }
-    //        //}.bind(base));
-    //        tr_station.after(trbodyElement.$element);
-    //    });
-    //};
-
-    // Загрузить станции
-    table_tree_way.prototype.load_station = function () {
-        /*        LockScreen(langView('title_mess_load_station', langs));*/
+    // Загрузить станции из базы
+    table_tree_way.prototype.load_station = function (callback) {
+        LockScreen(langView('mess_load_station', App.Langs));
         ids_rwt.getViewStationStatus(function (station) {
-            this.view_station(station.filter(function (i) { return !i.station_uz; }));
+            if (typeof callback === 'function') {
+                callback(station.filter(function (i) { return !i.station_uz; }));
+            }
         }.bind(this));
     };
-    // Загрузить парки станции
+    // Показать станции
+    table_tree_way.prototype.view_station = function () {
+        var base = this;
+        this.load_station(function (stations) {
+            $.each(stations, function (i, el) {
+                var trbodyElement = new table_tr_station(base.selector, el); // Получим парк
+                // Настроим событие нажатия на "открыть"\"закрыть" парк
+                trbodyElement.$element.on('click', 'td.station-control', function (e) {
+                    var tr = $(e.target).closest('tr');
+                    var id_station = tr.attr('data-station');
+                    this.view_park(id_station); // Показать парки
+                }.bind(base));
+                // Добавим элемент
+                base.body.append(trbodyElement.$element);
+            }.bind(this));
+            LockScreenOff();
+        })
+    };
+    // Загрузить парки станции из базы
     table_tree_way.prototype.load_park = function (id_station, callback) {
-        /*        LockScreen(langView('title_mess_load_station', langs));*/
+        LockScreen(langView('mess_load_park', App.Langs));
         ids_rwt.getViewParkWaysOfStation(id_station, function (park) {
             if (typeof callback === 'function') {
                 callback(park);
@@ -466,25 +405,114 @@
     };
     // показать парки станции
     table_tree_way.prototype.view_park = function (id_station) {
-        this.load_park(id_station, function (park) {
-            var base = this;
-            var station = $(this.body).find('tr[data-tree-area="station"][data-station="' + id_station + '"]');
-            if (station && station.length > 0) {
-                var parks = $(this.body).find('tr[data-tree-area="park"][data-station="' + id_station + '"]');
-                if (parks && parks.length > 0) {
-                    parks.remove();
-                } else {
+        var station = $(this.body).find('tr[data-tree-area="station"][data-station="' + id_station + '"]');
+        if (station && station.length > 0) {
+            // Проверим парк открыт
+            var parks = $(this.body).find('tr[data-tree-area="park"][data-station="' + id_station + '"]');
+            if (parks && parks.length > 0) {
+                /*parks.remove();*/
+                this.close_way_of_station(id_station); // Удалить (закрыть) - пути
+                this.close_park_of_station(id_station); // Удалить (закрыть) - парки
+                $(station).removeClass('shown');
+                LockScreenOff();
+            } else {
+                $(station).addClass('shown');
+                this.load_park(id_station, function (park) {
+                    var base = this;
                     // Отобразим парки
                     $.each(park, function (i, el) {
-                        /*var count =  park.length - i;*/
                         var trbodyElement = new table_tr_park(base.selector, id_station, el, i);
+                        // Привязать событие выбора
+                        trbodyElement.$element.on('click', 'td.park-control', function (e) {
+                            var tr = $(e.target).closest('tr');
+                            var id_station = tr.attr('data-station');
+                            var id_park = tr.attr('data-park');
+                            this.view_way(id_station, id_park); // Показать пути
+                        }.bind(base));
                         station.after(trbodyElement.$element);
                     });
-                }
+                    LockScreenOff();
+                }.bind(this));
+            }
+        }
+    };
+    // Загрузить пути из базы
+    table_tree_way.prototype.load_way = function (id_station, id_park, callback) {
+        LockScreen(langView('mess_load_way', App.Langs));
+        ids_rwt.getViewWaysOfStationPark(id_station, id_park, function (ways) {
+            if (typeof callback === 'function') {
+                callback(ways);
             }
         }.bind(this));
     };
+    // показать парки станции
+    table_tree_way.prototype.view_way = function (id_station, id_park) {
+        var park = $(this.body).find('tr[data-tree-area="park"][data-park="' + id_park + '"]');
+        var end_park = park.attr('data-tree-end');
+        if (park && park.length > 0) {
+            var ways = $(this.body).find('tr[data-tree-area="way"][data-park="' + id_park + '"]');
+            if (ways && ways.length > 0) {
+                ways.remove();
+                $(park).removeClass('shown');
+                LockScreenOff();
+            } else {
+                $(park).addClass('shown');
+                this.load_way(id_station, id_park, function (ways) {
+                    var base = this;
+                    // Отобразим парки
+                    $.each(ways, function (i, el) {
+                        var trbodyElement = new table_tr_way(base.selector, id_station, id_park, el, i, Number(end_park));
+                        // Обработать события выбора пути
+                        trbodyElement.$element.on('click', 'div.progress', function (e) {
+                            // Обработка события информация детально
+                            e.preventDefault();
+                            e.stopPropagation(); // отменим событие дальше
+                            var name = $(e.target).attr('data-tree-pb-name');
+                            var id = Number($(e.target).attr('data-tree-pb-id'));
+                            if (typeof this.fn_detali === 'function') {
+                                this.fn_detali(name, id);
+                            }
+                        }.bind(base)).on('click', function (e) {
+                            this.deselect_way();
+                            var tr = $(e.target).closest('tr');
+                            tr.addClass('select');
+                            var id_station = Number(tr.attr('data-station'));
+                            var id_park = Number(tr.attr('data-park'));
+                            var id_way = Number(tr.attr('data-way'));
+                            if (typeof this.fn_select_way === 'function') {
+                                this.fn_select_way(id_station, id_park, id_way);
+                            }
 
+                        }.bind(base));
+                        park.after(trbodyElement.$element);
+                    });
+                    LockScreenOff();
+                }.bind(this));
+            }
+        }
+    };
+
+    // Закрыть все парки по станции
+    table_tree_way.prototype.close_park_of_station = function (id_station) {
+        var ways = $(this.body).find('tr[data-tree-area="park"][data-station="' + id_station + '"]');
+        ways.remove();
+    };
+    // Закрыть все пути по станции
+    table_tree_way.prototype.close_way_of_station = function (id_station) {
+        var ways = $(this.body).find('tr[data-tree-area="way"][data-station="' + id_station + '"]');
+        ways.remove();
+    };
+    // Закрыть все пути парка
+    table_tree_way.prototype.close_way_of_park = function (id_park) {
+        var ways = $(this.body).find('tr[data-tree-area="way"][data-park="' + id_park + '"]');
+        ways.remove();
+    };
+
+    // Убрать все выбранные пути
+    table_tree_way.prototype.deselect_way = function () {
+        var ways = $(this.body).find('tr[data-tree-area="way"].select');
+        ways.removeClass('select');
+    };
 
     App.table_tree_way = table_tree_way;
 
