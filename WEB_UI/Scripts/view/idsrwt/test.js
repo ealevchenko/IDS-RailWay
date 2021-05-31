@@ -119,6 +119,9 @@
     var TTWay = App.ids_tree_way;
     var trWay = new TTWay('div#tree-way'); // Создадим экземпляр таблицы
 
+    $('button#arrival').on('click', function (e) {
+        trWay.update_station_of_id(8);
+    });
 
     // После загрузки документа
     $(document).ready(function ($) {
@@ -128,7 +131,8 @@
             // Обработка события детально
         });
         trWay.view();
-        //trWay.view(8,75,244);
+        //trWay.view(8, 75, 244);
+
         //LockScreenOff();
         //taw.init(true);
         //twir.init(true);

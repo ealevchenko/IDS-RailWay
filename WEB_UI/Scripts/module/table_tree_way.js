@@ -120,7 +120,7 @@
     // Создать таблицу
     function table_tree_way(selector) {
         var $div = $('<div></div>', {
-            'style':'overflow-x:auto'
+            'style': 'overflow-x:auto'
         });
         var $div_table = $('<table></table>', {
             'id': selector + '-table',
@@ -205,18 +205,20 @@
             'class': 'text-left',
             'colspan': '3'
         });
-        var $a_arrive = $('<a></a>',
-            {
-                'text': el.count_arrive,
-                'href': '#',
-                'class': 'badge badge-warning'
-            });
-        var $a_send = $('<a></a>',
-            {
-                'text': el.count_sent,
-                'href': '#',
-                'class': 'badge badge-success'
-            });
+        //var $a_arrive = $('<a></a>',
+        //    {
+        //        'text': el.count_arrive,
+        //        'href': '#',
+        //        'class': 'badge badge-warning'
+        //    });
+        //var $a_send = $('<a></a>',
+        //    {
+        //        'text': el.count_sent,
+        //        'href': '#',
+        //        'class': 'badge badge-success'
+        //    });
+        var as_Element = new arr_send(selector, el.id, el.count_arrive, el.count_sent);
+
         var $td_pb = $('<td></td>', {
             'class': 'text-centr'
         });
@@ -229,7 +231,8 @@
             'class': 'text-right'
         });
         $td_img_station.append($img_station);
-        $td_pb.append(el.count_arrive > 0 ? $a_arrive : '0').append('-').append(el.count_sent > 0 ? $a_send : '0');
+        //$td_pb.append(el.count_arrive > 0 ? $a_arrive : '0').append('-').append(el.count_sent > 0 ? $a_send : '0');
+        $td_pb.append(as_Element.$element);
         $tr.append($td_control).append($td_img_station).append($td_name).append($td_pb).append($td_count).append($td_capacity);
         this.$element = $tr;
     };
@@ -407,6 +410,28 @@
         $div.append($div_pb);
         this.$element = $div;
     };
+    // Элемент прибыло\отправлено
+    function arr_send(selector, id, arrival, send) {
+        var $div = $('<div></div>', {
+            'data-as-id': id,
+            'class': '',
+        });
+        var $a_arrive = $('<a></a>',
+            {
+                'text': arrival,
+                'href': '#',
+                'class': 'badge badge-warning'
+            });
+        var $a_send = $('<a></a>',
+            {
+                'text': send,
+                'href': '#',
+                'class': 'badge badge-success'
+            });
+        $div.append(arrival > 0 ? $a_arrive : '0').append('-').append(send > 0 ? $a_send : '0');
+        this.$element = $div;
+    };
+
     // Таблица дерева путей
     function ids_tree_way(selector) {
         if (!selector) {
@@ -460,6 +485,15 @@
             }
         }.bind(this));
     };
+    // Загрузить станцию по id из базы
+    ids_tree_way.prototype.load_station_of_id = function (id, callback) {
+        LockScreen(langView('mess_load_station', App.Langs));
+        ids_rwt.getViewStationStatusOfIDStation(id, function (station) {
+            if (typeof callback === 'function') {
+                callback(station);
+            }
+        }.bind(this));
+    };
     // Показать станции
     ids_tree_way.prototype.view_station = function (id_station, id_park, id_way) {
         var base = this;
@@ -481,10 +515,41 @@
             LockScreenOff();
         })
     };
+    // Обновить станциию по id
+    ids_tree_way.prototype.update_station_of_id = function (id_station) {
+        // Получим строку 
+        var tr = this.body.find('tr[data-tree-area="station"][data-station="' + id_station + '"]');
+        if (tr && tr.length > 0) {
+            var $div_pb = $(tr[0].cells[3]);
+            var $td_count = $(tr[0].cells[4]);
+            var $td_capacity = $(tr[0].cells[5]);
+            // Получаем данные
+            this.load_station_of_id(id_station, function (station) {
+                if (station) {
+                    var as_Element = new arr_send(this.selector, station.id, station.count_arrive, station.count_sent);
+                    $div_pb.empty().append(as_Element.$element);
+                    $td_count.empty().text(station.count_wagon);
+                    $td_capacity.empty().text(station.count_capacity);
+                    LockScreenOff();
+                } else {
+                    LockScreenOff();
+                }
+            }.bind(this));
+        }
+    };
     // Загрузить парки станции из базы
     ids_tree_way.prototype.load_park = function (id_station, callback) {
         LockScreen(langView('mess_load_park', App.Langs));
         ids_rwt.getViewParkWaysOfStation(id_station, function (park) {
+            if (typeof callback === 'function') {
+                callback(park);
+            }
+        }.bind(this));
+    };
+    // Загрузить парк по id станции из базы
+    ids_tree_way.prototype.load_park_of_id = function (id_park, callback) {
+        LockScreen(langView('mess_load_park', App.Langs));
+        ids_rwt.getViewParkWaysOfStation(id_park, function (park) {
             if (typeof callback === 'function') {
                 callback(park);
             }
@@ -589,7 +654,7 @@
 
     // Выбрать путь
     ids_tree_way.prototype.select_way = function (id_way) {
-        var way = this.body.find('tr[data-way="'+id_way+'"]');
+        var way = this.body.find('tr[data-way="' + id_way + '"]');
         if (way && way.length > 0) {
             this.deselect_way();
             way.addClass('select');
