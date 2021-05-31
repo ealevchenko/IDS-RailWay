@@ -128,6 +128,7 @@
             // Обработка события детально
         });
         trWay.view();
+        //trWay.view(8,75,244);
         //LockScreenOff();
         //taw.init(true);
         //twir.init(true);

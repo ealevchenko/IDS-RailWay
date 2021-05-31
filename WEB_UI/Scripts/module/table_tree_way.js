@@ -46,7 +46,7 @@
     App.Langs = $.extend(true, App.Langs, getLanguages($.Text_View, App.Lang));
 
     var ids_rwt = new IDS_RWT(App.Lang);                // Создадим класс IDS_RWT
-
+    // Создать раздел кнопки
     function table_button(selector) {
         var $div_bt = $('<div></div>', {
             'class': 'text-left'
@@ -87,38 +87,51 @@
         $div_bt.append($bt_station.append($bt_icon_station)).append($bt_open.append($bt_icon_open)).append($bt_close.append($bt_icon_close)).append($bt_refresh.append($bt_icon_refresh));
         this.$element = $div_bt;
     };
+    //function card(selector) {
+    //    var $div = $('<div></div>', {
+    //        'class': 'card border-primary'
+    //    });
+    //    var $div_header = $('<div></div>', {
+    //        'class': 'card-header',
+    //        'text': langView('title_card_header', App.Langs)
+    //    });
+    //    var $div_body = $('<div></div>', {
+    //        'class': 'card-body',
+    //    });
+    //    var $div_row = $('<div></div>', {
+    //        'class': 'row',
+    //    });
+    //    var $div_row_xl = $('<div></div>', {
+    //        //'class': 'col-xl-12',
+    //        'style':'overflow-x:auto'
+    //    });
+    //    var $div_table = $('<table></table>', {
+    //        'id': selector + '-table',
+    //        'class': 'table table-hover',
+    //    });
 
-    function card(selector) {
+    //    /*        var btElement = new table_button(selector);*/
+    //    this.$element_table = $div_table;
+    //    /*        $div_body.append(btElement.$element);*/
+    //    $div_body.append($div_row.append($div_row_xl.append(this.$element_table)));
+    //    $div.append($div_header).append($div_body);
+    //    this.$element = $div;
+    //};
+    // Создать таблицу
+    function table_tree_way(selector) {
         var $div = $('<div></div>', {
-            'class': 'card border-primary'
-        });
-        var $div_header = $('<div></div>', {
-            'class': 'card-header',
-            'text': langView('title_card_header', App.Langs)
-        });
-        var $div_body = $('<div></div>', {
-            'class': 'card-body',
-        });
-        var $div_row = $('<div></div>', {
-            'class': 'row',
-        });
-        var $div_row_xl = $('<div></div>', {
-            //'class': 'col-xl-12',
-            'style':'overflow-x:auto;font-size:0.8rem'
+            'style':'overflow-x:auto'
         });
         var $div_table = $('<table></table>', {
             'id': selector + '-table',
             'class': 'table table-hover',
         });
 
-        /*        var btElement = new table_button(selector);*/
         this.$element_table = $div_table;
-        /*        $div_body.append(btElement.$element);*/
-        $div_body.append($div_row.append($div_row_xl.append(this.$element_table)));
-        $div.append($div_header).append($div_body);
+        $div.append(this.$element_table);
         this.$element = $div;
     };
-
+    // Создать заголовок таблицы
     function table_heading(selector) {
         var $thead = $('<thead></thead>', {
             'class': 'thead-light'
@@ -161,7 +174,7 @@
         this.$element = $thead;
 
     };
-
+    // Создать раздел данных таблицы
     function table_body(selector) {
         var $tbody = $('<tbody></tbody>', {
             'class': ''
@@ -169,7 +182,7 @@
         this.$element = $tbody;
 
     };
-    // Станции
+    // Создать раздел tr станции
     function table_tr_station(selector, el) {
         var $tr = $('<tr></tr>', {
             'data-tree-area': 'station',
@@ -220,7 +233,7 @@
         $tr.append($td_control).append($td_img_station).append($td_name).append($td_pb).append($td_count).append($td_capacity);
         this.$element = $tr;
     };
-    // Парк
+    // Создать раздел tr парк
     function table_tr_park(selector, id_station, el, index) {
         var $tr = $('<tr></tr>', {
             'data-tree-area': 'park',
@@ -287,7 +300,7 @@
         $tr.append($td_img_true_open).append($td_control).append($td_img_park).append($td_name).append($td_pb).append($td_count).append($td_capacity);
         this.$element = $tr;
     };
-    // Пути
+    // Создать раздел tr пути
     function table_tr_way(selector, id_station, id_park, el, index, end_tree) {
         var $tr = $('<tr></tr>', {
             'data-tree-area': 'way',
@@ -410,18 +423,21 @@
         this.fn_select_way = fn_select_way;
         this.fn_detali = fn_detali;
 
-        var cardElement = new card(this.selector);
+        var cardElement = new table_tree_way(this.selector);
         this.$div_tree_way.empty();
         this.$div_tree_way.append(cardElement.$element);
         this.$t_tree_way = cardElement.$element_table;
 
         var headElement = new table_heading(this.selector);
+        // Привяжим событие обработки кнопок
         headElement.$element.on('click', 'button', function (e) {
             e.preventDefault();
             e.stopPropagation(); // отменим событие дальше
             var id = $(e.target).attr('id');
-
-        });
+            switch (id) {
+                case 'button-close': this.close_tree(); break;
+            };
+        }.bind(this));
 
         this.$t_tree_way.empty();
 
@@ -431,9 +447,9 @@
         this.$t_tree_way.append(this.body);
     };
     // инициализация таблицы
-    ids_tree_way.prototype.view = function () {
+    ids_tree_way.prototype.view = function (id_station, id_park, id_way) {
         //this.load_station();
-        this.view_station()
+        this.view_station(id_station, id_park, id_way)
     };
     // Загрузить станции из базы
     ids_tree_way.prototype.load_station = function (callback) {
@@ -445,7 +461,7 @@
         }.bind(this));
     };
     // Показать станции
-    ids_tree_way.prototype.view_station = function () {
+    ids_tree_way.prototype.view_station = function (id_station, id_park, id_way) {
         var base = this;
         this.load_station(function (stations) {
             $.each(stations, function (i, el) {
@@ -458,6 +474,9 @@
                 }.bind(base));
                 // Добавим элемент
                 base.body.append(trbodyElement.$element);
+                if (id_station && el.id === id_station) {
+                    base.view_park(id_station, id_park, id_way); // Показать парки
+                }
             }.bind(this));
             LockScreenOff();
         })
@@ -472,7 +491,7 @@
         }.bind(this));
     };
     // показать парки станции
-    ids_tree_way.prototype.view_park = function (id_station) {
+    ids_tree_way.prototype.view_park = function (id_station, id_park, id_way) {
         var station = $(this.body).find('tr[data-tree-area="station"][data-station="' + id_station + '"]');
         if (station && station.length > 0) {
             // Проверим парк открыт
@@ -498,6 +517,9 @@
                             this.view_way(id_station, id_park); // Показать пути
                         }.bind(base));
                         station.after(trbodyElement.$element);
+                        if (id_park && el.id === id_park) {
+                            base.view_way(id_station, id_park, id_way); // Показать парки
+                        }
                     });
                     LockScreenOff();
                 }.bind(this));
@@ -514,7 +536,7 @@
         }.bind(this));
     };
     // показать парки станции
-    ids_tree_way.prototype.view_way = function (id_station, id_park) {
+    ids_tree_way.prototype.view_way = function (id_station, id_park, id_way) {
         var park = $(this.body).find('tr[data-tree-area="park"][data-park="' + id_park + '"]');
         var end_park = park.attr('data-tree-end');
         if (park && park.length > 0) {
@@ -541,22 +563,52 @@
                                 this.fn_detali(name, id);
                             }
                         }.bind(base)).on('click', function (e) {
-                            this.deselect_way();
                             var tr = $(e.target).closest('tr');
-                            tr.addClass('select');
-                            var id_station = Number(tr.attr('data-station'));
-                            var id_park = Number(tr.attr('data-park'));
-                            var id_way = Number(tr.attr('data-way'));
-                            if (typeof this.fn_select_way === 'function') {
-                                this.fn_select_way(id_station, id_park, id_way);
+                            if (tr && tr.length > 0) {
+                                this.select_way(Number(tr.attr('data-way')));
                             }
-
+                            //this.deselect_way();
+                            //tr.addClass('select');
+                            //var id_station = Number(tr.attr('data-station'));
+                            //var id_park = Number(tr.attr('data-park'));
+                            //var id_way = Number(tr.attr('data-way'));
+                            //if (typeof this.fn_select_way === 'function') {
+                            //    this.fn_select_way(id_station, id_park, id_way);
+                            //}
                         }.bind(base));
                         park.after(trbodyElement.$element);
                     });
+                    if (id_way) {
+                        base.select_way(id_way);
+                    }
                     LockScreenOff();
                 }.bind(this));
             }
+        }
+    };
+
+    // Выбрать путь
+    ids_tree_way.prototype.select_way = function (id_way) {
+        var way = this.body.find('tr[data-way="'+id_way+'"]');
+        if (way && way.length > 0) {
+            this.deselect_way();
+            way.addClass('select');
+            var id_station = Number(way.attr('data-station'));
+            var id_park = Number(way.attr('data-park'));
+            var id_way = Number(way.attr('data-way'));
+            if (typeof this.fn_select_way === 'function') {
+                this.fn_select_way(id_station, id_park, id_way);
+            }
+        }
+    };
+
+    // Закрыть все дерево
+    ids_tree_way.prototype.close_tree = function () {
+        $(this.body).find('tr[data-tree-area="station"]').removeClass('shown'); // Сбросить признак раскрыт
+        this.close_way();
+        this.close_park();
+        if (typeof this.fn_select_way === 'function') {
+            this.fn_select_way(null, null, null);
         }
     };
 
@@ -565,11 +617,22 @@
         var ways = $(this.body).find('tr[data-tree-area="park"][data-station="' + id_station + '"]');
         ways.remove();
     };
+    // Закрыть все парки
+    ids_tree_way.prototype.close_park = function () {
+        var ways = $(this.body).find('tr[data-tree-area="park"]');
+        ways.remove();
+    };
     // Закрыть все пути по станции
     ids_tree_way.prototype.close_way_of_station = function (id_station) {
         var ways = $(this.body).find('tr[data-tree-area="way"][data-station="' + id_station + '"]');
         ways.remove();
     };
+    // Закрыть все пути
+    ids_tree_way.prototype.close_way = function () {
+        var ways = $(this.body).find('tr[data-tree-area="way"]');
+        ways.remove();
+    };
+
     // Закрыть все пути парка
     ids_tree_way.prototype.close_way_of_park = function (id_park) {
         var ways = $(this.body).find('tr[data-tree-area="way"][data-park="' + id_park + '"]');
