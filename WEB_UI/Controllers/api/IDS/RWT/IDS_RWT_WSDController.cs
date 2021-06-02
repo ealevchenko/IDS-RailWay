@@ -11,7 +11,72 @@ using System.Web.Http.Description;
 
 namespace WEB_UI.Controllers.api.IDS.RWT
 {
+    #region TREE WAY (Для дерева путей)
 
+    public class view_status_station
+    {
+        public int id { get; set; }
+        public string station_name_ru { get; set; }
+        public string station_name_en { get; set; }
+        public string station_abbr_ru { get; set; }
+        public string station_abbr_en { get; set; }
+        public bool exit_uz { get; set; }
+        public bool station_uz { get; set; }
+        public bool? default_side { get; set; }
+        public int? code { get; set; }
+        public int? idle_time { get; set; }
+        public int? count_arrives_wagons { get; set; }
+        public int? count_sent_wagons { get; set; }
+        public int? count_all_wagons { get; set; }
+        public int? count_amkr_wagons { get; set; }
+        public int? capacity_wagons { get; set; }
+    }
+
+    public partial class view_status_park
+    {
+        public int id { get; set; }
+        public int position { get; set; }
+        public string park_name_ru { get; set; }
+        public string park_name_en { get; set; }
+        public string park_abbr_ru { get; set; }
+        public string park_abbr_en { get; set; }
+        public int? count_all_wagons { get; set; }
+        public int? count_amkr_wagons { get; set; }
+        public int? capacity_wagons { get; set; }
+    }
+
+    public class view_status_way
+    {
+        public int id { get; set; }
+        public int id_station { get; set; }
+        public int id_park { get; set; }
+        public int position_park { get; set; }
+        public int position_way { get; set; }
+        public string park_name_ru { get; set; }
+        public string park_name_en { get; set; }
+        public string park_abbr_ru { get; set; }
+        public string park_abbr_en { get; set; }
+        public string way_num_ru { get; set; }
+        public string way_num_en { get; set; }
+        public string way_name_ru { get; set; }
+        public string way_name_en { get; set; }
+        public string way_abbr_ru { get; set; }
+        public string way_abbr_en { get; set; }
+        //public int? capacity { get; set; }
+        public bool? deadlock { get; set; }
+        public bool? crossing_uz { get; set; }
+        public bool? crossing_amkr { get; set; }
+        public int? id_devision { get; set; }
+        public bool? dissolution { get; set; }
+        public bool? output_dissolution { get; set; }
+        public DateTime? way_close { get; set; }
+        public DateTime? way_delete { get; set; }
+        public int? count_all_wagons { get; set; }
+        public int? count_amkr_wagons { get; set; }
+        public int? capacity_wagons { get; set; }
+    }
+
+    #endregion
 
     public class view_wagons
     {
@@ -228,7 +293,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public TimeSpan? sap_is_create_time { get; set; }
         public bool? sap_os_doc_outgoing_car { get; set; }
     }
-
+    ///TODO: УДАЛИТЬ СТАРОЕ ДЕРЕВО ПУТЕЙ
     public class view_station_status
     {
         public int id { get; set; }
@@ -246,7 +311,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public int? count_wagon { get; set; }
         public int? count_capacity { get; set; }
     }
-
+    ///TODO: УДАЛИТЬ СТАРОЕ ДЕРЕВО ПУТЕЙ
     public partial class view_park_way_status
     {
         public int id { get; set; }
@@ -261,7 +326,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public int? count_wagon { get; set; }
         public int? count_capacity { get; set; }
     }
-
+    ///TODO: УДАЛИТЬ СТАРОЕ ДЕРЕВО ПУТЕЙ
     public class view_way_status
     {
         public int id { get; set; }
@@ -541,8 +606,156 @@ namespace WEB_UI.Controllers.api.IDS.RWT
     {
         private EFDbContext db = new EFDbContext();
 
-        #region ДЕРЕВО ПУТЕЙ
+        #region TREE WAY (Дерево путей)
+        // GET: api/ids/rwt/wsd/view/status/station/all
+        /// <summary>
+        /// Получить состояние по всем станциям (дерево станций)
+        /// </summary>
+        /// <returns></returns>
+        [Route("view/status/station/all")]
+        [ResponseType(typeof(view_status_station))]
+        public IHttpActionResult GetViewStatusAllStation()
+        {
+            try
+            {
+                db.Database.CommandTimeout = 100;
+                string sql = "select * from [IDS].[get_view_status_all_station]()";
+                List<view_status_station> list = db.Database.SqlQuery<view_status_station>(sql).ToList();
+                db.Database.CommandTimeout = null;               
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
+        // GET: api/ids/rwt/wsd/view/status/station/id/8
+        /// <summary>
+        /// Получить состояние по указаной станции (дерево станций)
+        /// </summary>
+        /// <returns></returns>
+        [Route("view/status/station/id/{id:int}")]
+        [ResponseType(typeof(view_status_station))]
+        public IHttpActionResult GetViewStatusStationOfID(int id)
+        {
+            try
+            {
+                //db.Database.CommandTimeout = 100;
+                System.Data.SqlClient.SqlParameter id_station = new System.Data.SqlClient.SqlParameter("@id_station", id);
+                string sql = "select * from [IDS].[get_view_status_station_of_id](@id_station) order by id";
+                List<view_status_station> list = db.Database.SqlQuery<view_status_station>(sql, id_station).ToList();
+                //db.Database.CommandTimeout = null;               
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // GET: api/ids/rwt/wsd/view/status/park/all/station/id/8
+        /// <summary>
+        /// Получить состояние парков по указаной станции (дерево станция\парки)
+        /// </summary>
+        /// <returns></returns>
+        [Route("view/status/park/all/station/id/{id:int}")]
+        [ResponseType(typeof(view_status_park))]
+        public IHttpActionResult GetViewStatusAllParkOfStationID(int id)
+        {
+            try
+            {
+                //db.Database.CommandTimeout = 100;
+                System.Data.SqlClient.SqlParameter id_station = new System.Data.SqlClient.SqlParameter("@id_station", id);
+                string sql = "select * from [IDS].[get_view_status_all_park_of_station_id](@id_station) order by position";
+                List<view_status_park> list = db.Database.SqlQuery<view_status_park>(sql, id_station).ToList();
+                //db.Database.CommandTimeout = null;               
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // GET: api/ids/rwt/wsd/view/status/park/id/3/station/id/8
+        /// <summary>
+        /// Получить состояние парка по указаному id и станции (дерево станция\парк)
+        /// </summary>
+        /// <returns></returns>
+        [Route("view/status/park/id/{id_park:int}/station/id/{id_station:int}")]
+        [ResponseType(typeof(view_status_park))]
+        public IHttpActionResult GetViewStatusParkOfID(int id_station, int id_park)
+        {
+            try
+            {
+                //db.Database.CommandTimeout = 100;
+                System.Data.SqlClient.SqlParameter id_st= new System.Data.SqlClient.SqlParameter("@id_station", id_station);
+                System.Data.SqlClient.SqlParameter id_pk= new System.Data.SqlClient.SqlParameter("@id_park", id_park);
+                string sql = "select * from [IDS].[get_view_status_park_of_id](@id_station, @id_park)";
+                List<view_status_park> list = db.Database.SqlQuery<view_status_park>(sql, id_st, id_pk).ToList();
+                //db.Database.CommandTimeout = null;               
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // GET: api/ids/rwt/wsd/view/status/way/park/id/3/station/id/8
+        /// <summary>
+        /// Получить состояние путей по указаному парку станции (дерево станция\парк\пути)
+        /// </summary>
+        /// <returns></returns>
+        [Route("view/status/way/park/id/{id_park:int}/station/id/{id_station:int}")]
+        [ResponseType(typeof(view_status_way))]
+        public IHttpActionResult GetViewStatusWayOfStationParkID(int id_station, int id_park)
+        {
+            try
+            {
+                //db.Database.CommandTimeout = 100;
+                System.Data.SqlClient.SqlParameter id_st = new System.Data.SqlClient.SqlParameter("@id_station", id_station);
+                System.Data.SqlClient.SqlParameter id_pk = new System.Data.SqlClient.SqlParameter("@id_park", id_park);
+                string sql = "select * from [IDS].[get_view_status_all_way_of_station_park_id](@id_station, @id_park) order by position_way";
+                List<view_status_way> list = db.Database.SqlQuery<view_status_way>(sql, id_st,id_pk).ToList();
+                //db.Database.CommandTimeout = null;               
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // GET: api/ids/rwt/wsd/view/status/way/id/3
+        /// <summary>
+        /// Получить состояние парков по указаной станции (дерево станция\парки)
+        /// </summary>
+        /// <returns></returns>
+        [Route("view/status/way/id/{id_way:int}")]
+        [ResponseType(typeof(view_status_way))]
+        public IHttpActionResult GetViewStatusWayOfID(int id_way)
+        {
+            try
+            {
+                //db.Database.CommandTimeout = 100;
+                System.Data.SqlClient.SqlParameter id_w = new System.Data.SqlClient.SqlParameter("@id_way", id_way);
+                string sql = "select * from [IDS].[get_view_status_way_of_id](@id_way) order by position_way";
+                List<view_status_way> list = db.Database.SqlQuery<view_status_way>(sql, id_w).ToList();
+                //db.Database.CommandTimeout = null;               
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        #endregion
+
+        #region ДЕРЕВО ПУТЕЙ старое
+        ///TODO: УДАЛИТЬ СТАРОЕ ДЕРЕВО ПУТЕЙ
         // GET: api/ids/rwt/wsd/view/station/status/all
         /// <summary>
         /// Получить состояние по всем станциям (дерево станций)
