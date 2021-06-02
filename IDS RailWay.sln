@@ -64,6 +64,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Document", "Document", "{C1
 	ProjectSection(SolutionItems) = preProject
 		Documents\Plan\Выполнить.txt = Documents\Plan\Выполнить.txt
 		Documents\Plan\Поправить.txt = Documents\Plan\Поправить.txt
+		Documents\Описание ПО\Функции и ХП.xlsx = Documents\Описание ПО\Функции и ХП.xlsx
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEB_UI", "WEB_UI\WEB_UI.csproj", "{4A22634D-7E12-48F4-9096-A475C2347C06}"
