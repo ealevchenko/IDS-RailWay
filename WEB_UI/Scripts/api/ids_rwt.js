@@ -3640,6 +3640,101 @@ IDS_RWT.prototype.postOperationUpdateWagonMarking = function (update_data, callb
 //======================================================================================================
 //                                  РАЗДЕЛ АРМ ДИСПЕТЧЕРА
 //======= WSD (АРМ диспетчера) =========================================================================
+//======= TREE WAY (Дерево путей) =========================================================================
+// Получить состояние всех станций
+IDS_RWT.prototype.getViewStatusAllStation = function (callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/wsd/view/status/station/all',
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getViewStatusAllStation", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить состояние станции по id
+IDS_RWT.prototype.getViewStatusStationOfID = function (id_station, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/wsd/view/status/station/id/' + id_station,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getViewStatusStationOfID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить состояние парка путей по указаной станции
+IDS_RWT.prototype.getViewStatusAllParkOfStationID = function (id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/wsd/view/status/park/all/station/id/' + id,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getViewStatusAllParkOfStationID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить состояние парка путей по указаной станции
+IDS_RWT.prototype.getViewStatusWayOfStationParkID = function (id_station, id_park, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/rwt/wsd/view/status/way/park/id/' + id_park + '/station/id/' + id_station,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_RWT.getViewStatusWayOfStationParkID", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+//=========================================================================================================
+
 // Получить список вагонов на пути
 IDS_RWT.prototype.getViewWagonsOfWay = function (id, callback) {
     $.ajax({
@@ -3686,7 +3781,7 @@ IDS_RWT.prototype.getViewWagonsOfOuterWay = function (id, callback) {
         },
     });
 };
-// Получить состояние всех станций
+///TODO:УДАЛИТЬ СТАРОЕ ДЕРЕВО ПУТЕЙ// Получить состояние всех станций
 IDS_RWT.prototype.getViewStationStatus = function (callback) {
     $.ajax({
         type: 'GET',
@@ -3709,7 +3804,7 @@ IDS_RWT.prototype.getViewStationStatus = function (callback) {
         },
     });
 };
-// Получить состояние станции по id
+///TODO:УДАЛИТЬ СТАРОЕ ДЕРЕВО ПУТЕЙ// Получить состояние станции по id
 IDS_RWT.prototype.getViewStationStatusOfIDStation = function (id_station, callback) {
     $.ajax({
         type: 'GET',
@@ -3732,7 +3827,7 @@ IDS_RWT.prototype.getViewStationStatusOfIDStation = function (id_station, callba
         },
     });
 };
-// Получить состояние парка путей по указаной станции
+///TODO:УДАЛИТЬ СТАРОЕ ДЕРЕВО ПУТЕЙ// Получить состояние парка путей по указаной станции
 IDS_RWT.prototype.getViewParkWaysOfStation = function (id, callback) {
     $.ajax({
         type: 'GET',
@@ -3755,7 +3850,7 @@ IDS_RWT.prototype.getViewParkWaysOfStation = function (id, callback) {
         },
     });
 };
-// Получить состояние парка путей по указаной станции
+///TODO:УДАЛИТЬ СТАРОЕ ДЕРЕВО ПУТЕЙ// Получить состояние парка путей по указаной станции
 IDS_RWT.prototype.getViewWaysOfStationPark = function (id_station, id_park, callback) {
     $.ajax({
         type: 'GET',
