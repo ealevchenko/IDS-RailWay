@@ -25,6 +25,7 @@
             'mess_load_station': 'Загружаю список станций...',
             'mess_load_park': 'Загружаю список парков...',
             'mess_load_way': 'Загружаю список путей...',
+            'mess_update_status': 'Обновляю информацию по состоянию дерева путей...',
         },
         'en':  //default language: English
         {
@@ -42,12 +43,15 @@
             'mess_load_station': 'Загружаю список станций...',
             'mess_load_park': 'Загружаю список парков...',
             'mess_load_way': 'Загружаю список путей...',
+            'mess_update_status': 'Обновляю информацию по состоянию дерева путей...',
         }
     };
     // Определлим список текста для этого модуля
     App.Langs = $.extend(true, App.Langs, getLanguages($.Text_View, App.Lang));
 
     var ids_rwt = new IDS_RWT(App.Lang);                // Создадим класс IDS_RWT
+
+    //---------------------------Формирование элементов дерева---------------
     // Создать раздел кнопки
     function table_button(selector) {
         var $div_bt = $('<div></div>', {
@@ -428,7 +432,7 @@
         $div.append(arrival > 0 ? $a_arrive : '0').append('-').append(send > 0 ? $a_send : '0');
         this.$element = $div;
     };
-
+    //--------------------------------Конструктор и инициализация---------------
     // Таблица дерева путей
     function ids_tree_way(selector) {
         if (!selector) {
@@ -458,6 +462,8 @@
             var id = $(e.target).attr('id');
             switch (id) {
                 case 'button-close': this.close_tree(); break;
+
+                case 'button-refresh': this.update(); break;
             };
         }.bind(this));
 
@@ -473,6 +479,51 @@
         //this.load_station();
         this.view_station(id_station, id_park, id_way)
     };
+    // обновление дерева путей
+    ids_tree_way.prototype.update = function () {
+        var tr = this.body.find('tr');
+        this.count_update = tr.length;
+        if (tr && tr.length>0) LockScreen(langView('mess_update_status', App.Langs)); // выведем сообщение
+        $.each(tr, function (i, el) {
+             
+            var area = $(el).attr('data-tree-area');
+            var id_station = $(el).attr('data-station');
+            var id_park = $(el).attr('data-park');
+            var id_way = $(el).attr('data-way');
+            switch (area) {
+                case 'station': {
+                    this.update_station_of_id(Number(id_station), function () {
+                        this.count_update--;
+                        if (this.count_update <= 0) {
+                            LockScreenOff();
+                        }
+                    }.bind(this));
+                    break
+                };
+                case 'park': {
+                    this.update_park_of_id(Number(id_station), Number(id_park), function () {
+                        this.count_update--;
+                        if (this.count_update <= 0) {
+                            LockScreenOff();
+                        }
+                    }.bind(this));
+                    break
+                };
+                case 'way': {
+                    this.update_way_of_id(Number(id_way), function () {
+                        this.count_update--;
+                        if (this.count_update <= 0) {
+                            LockScreenOff();
+                        }
+                    }.bind(this));
+                    break
+                };
+
+            };
+
+        }.bind(this));
+    };
+    //--------------------------------Станции-----------------------------------
     // Загрузить станции из базы
     ids_tree_way.prototype.load_station = function (callback) {
         LockScreen(langView('mess_load_station', App.Langs));
@@ -484,7 +535,7 @@
     };
     // Загрузить станцию по id из базы
     ids_tree_way.prototype.load_station_of_id = function (id, callback) {
-        LockScreen(langView('mess_load_station', App.Langs));
+        /*LockScreen(langView('mess_load_station', App.Langs));*/
         ids_rwt.getViewStatusStationOfID(id, function (station) {
             if (typeof callback === 'function') {
                 callback(station);
@@ -513,7 +564,7 @@
         })
     };
     // Обновить станциию по id
-    ids_tree_way.prototype.update_station_of_id = function (id_station) {
+    ids_tree_way.prototype.update_station_of_id = function (id_station, callback) {
         // Получим строку 
         var tr = this.body.find('tr[data-tree-area="station"][data-station="' + id_station + '"]');
         if (tr && tr.length > 0) {
@@ -523,19 +574,40 @@
             var $td_capacity = $(tr[0].cells[6]);
             // Получаем данные
             this.load_station_of_id(id_station, function (station) {
-                if (station && station.length>0) {
+                if (station && station.length > 0) {
                     var as_Element = new arr_send(this.selector, station[0].id, station[0].count_arrives_wagons, station[0].count_sent_wagons);
                     $div_pb.empty().append(as_Element.$element);
                     $td_count.empty().text(station[0].count_all_wagons);
                     $td_amkr.empty().text(station[0].count_amkr_wagons);
                     $td_capacity.empty().text(station[0].capacity_wagons);
-                    LockScreenOff();
+                    //LockScreenOff();
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
                 } else {
-                    LockScreenOff();
+                    //LockScreenOff();
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
                 }
             }.bind(this));
+        } else {
+            if (typeof callback === 'function') {
+                callback();
+            }
         }
     };
+    // Обновить станциию по id c выводом сообщения
+    ids_tree_way.prototype.message_update_station_of_id = function (id_station, callback) {
+        LockScreen(langView('mess_load_station', App.Langs));
+        this.update_station_of_id(id_station, function () {
+            LockScreenOff();
+            if (typeof callback === 'function') {
+                callback();
+            }
+        });
+    };
+    //--------------------------------ПАРКИ-----------------------------------
     // Загрузить парки станции из базы
     ids_tree_way.prototype.load_park = function (id_station, callback) {
         LockScreen(langView('mess_load_park', App.Langs));
@@ -546,9 +618,9 @@
         }.bind(this));
     };
     // Загрузить парк по id станции из базы
-    ids_tree_way.prototype.load_park_of_id = function (id_park, callback) {
-        LockScreen(langView('mess_load_park', App.Langs));
-        ids_rwt.getViewParkWaysOfStation(id_park, function (park) {
+    ids_tree_way.prototype.load_park_of_id = function (id_station, id_park, callback) {
+        //LockScreen(langView('mess_load_park', App.Langs));
+        ids_rwt.getViewStatusParkOfID(id_station, id_park, function (park) {
             if (typeof callback === 'function') {
                 callback(park);
             }
@@ -590,12 +662,66 @@
             }
         }
     };
+    // Обновить положение парка по id
+    ids_tree_way.prototype.update_park_of_id = function (id_station, id_park, callback) {
+        // Получим строку 
+        var tr = this.body.find('tr[data-tree-area="park"][data-station="' + id_station + '"][data-park="' + id_park + '"]');
+        if (tr && tr.length > 0) {
+            var $div_pb = $(tr[0].cells[4]);
+            var $td_count = $(tr[0].cells[5]);
+            var $td_amkr = $(tr[0].cells[6]);
+            var $td_capacity = $(tr[0].cells[7]);
+            // Получаем данные
+            this.load_park_of_id(id_station, id_park, function (park) {
+                if (park && park.length > 0) {
+                    //var pbElement = new progress_bar(this.selector, 'park', park[0].id, park[0].capacity_wagons, park[0].count_all_wagons);
+                    //$div_pb.empty().append(pbElement.$element);
+                    $td_count.empty().text(park[0].count_all_wagons);
+                    $td_amkr.empty().text(park[0].count_amkr_wagons);
+                    $td_capacity.empty().text(park[0].capacity_wagons);
+                    //LockScreenOff();
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                } else {
+                    //LockScreenOff();
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                }
+            }.bind(this));
+        } else {
+            if (typeof callback === 'function') {
+                callback();
+            }
+        }
+    };
+    // Обновить положение парка по id с выводом сообщения
+    ids_tree_way.prototype.message_update_park_of_id = function (id_station, id_park, callback) {
+        LockScreen(langView('mess_load_park', App.Langs));
+        this.update_park_of_id(id_station, id_park, function () {
+            LockScreenOff();
+            if (typeof callback === 'function') {
+                callback();
+            }
+        });
+    };
+    //--------------------------------Пути-----------------------------------
     // Загрузить пути из базы
     ids_tree_way.prototype.load_way = function (id_station, id_park, callback) {
         LockScreen(langView('mess_load_way', App.Langs));
         ids_rwt.getViewStatusWayOfStationParkID(id_station, id_park, function (ways) {
             if (typeof callback === 'function') {
                 callback(ways);
+            }
+        }.bind(this));
+    };
+    // Загрузить парк по id станции из базы
+    ids_tree_way.prototype.load_way_of_id = function (id_way, callback) {
+        //LockScreen(langView('mess_load_park', App.Langs));
+        ids_rwt.getViewStatusWayOfID(id_way, function (way) {
+            if (typeof callback === 'function') {
+                callback(way);
             }
         }.bind(this));
     };
@@ -650,6 +776,50 @@
             }
         }
     };
+    // Обновить путь по id
+    ids_tree_way.prototype.update_way_of_id = function (id_way, callback) {
+        // Получим строку 
+        var tr = this.body.find('tr[data-tree-area="way"][data-way="' + id_way + '"]');
+        if (tr && tr.length > 0) {
+            var $div_pb = $(tr[0].cells[5]);
+            var $td_count = $(tr[0].cells[6]);
+            var $td_amkr = $(tr[0].cells[7]);
+            var $td_capacity = $(tr[0].cells[8]);
+            // Получаем данные
+            this.load_way_of_id(id_way, function (park) {
+                if (park && park.length > 0) {
+                    var pbElement = new progress_bar(this.selector, 'park', park[0].id, park[0].capacity_wagons, park[0].count_all_wagons);
+                    $div_pb.empty().append(pbElement.$element);
+                    $td_count.empty().text(park[0].count_all_wagons);
+                    $td_amkr.empty().text(park[0].count_amkr_wagons);
+                    $td_capacity.empty().text(park[0].capacity_wagons);
+                    //LockScreenOff();
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                } else {
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                    //LockScreenOff();
+                }
+            }.bind(this));
+        } else {
+            if (typeof callback === 'function') {
+                callback();
+            }
+        }
+    };
+    // Обновить путь по id с выводом сообщения
+    ids_tree_way.prototype.message_update_way_of_id = function (id_way, callback) {
+        LockScreen(langView('mess_load_park', App.Langs));
+        this.update_way_of_id(id_way, function () {
+            LockScreenOff();
+            if (typeof callback === 'function') {
+                callback();
+            }
+        });
+    };
 
     // Выбрать путь
     ids_tree_way.prototype.select_way = function (id_way) {
@@ -665,7 +835,7 @@
             }
         }
     };
-
+    //-----------------------------Управление ветками дерева-----------------
     // Закрыть все дерево
     ids_tree_way.prototype.close_tree = function () {
         $(this.body).find('tr[data-tree-area="station"]').removeClass('shown'); // Сбросить признак раскрыт
@@ -675,7 +845,6 @@
             this.fn_select_way(null, null, null);
         }
     };
-
     // Закрыть все парки по станции
     ids_tree_way.prototype.close_park_of_station = function (id_station) {
         var ways = $(this.body).find('tr[data-tree-area="park"][data-station="' + id_station + '"]');
@@ -696,13 +865,11 @@
         var ways = $(this.body).find('tr[data-tree-area="way"]');
         ways.remove();
     };
-
     // Закрыть все пути парка
     ids_tree_way.prototype.close_way_of_park = function (id_park) {
         var ways = $(this.body).find('tr[data-tree-area="way"][data-park="' + id_park + '"]');
         ways.remove();
     };
-
     // Убрать все выбранные пути
     ids_tree_way.prototype.deselect_way = function () {
         var ways = $(this.body).find('tr[data-tree-area="way"].select');
