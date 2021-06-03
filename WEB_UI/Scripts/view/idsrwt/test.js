@@ -120,7 +120,10 @@
     var trWay = new TTWay('div#tree-way'); // Создадим экземпляр таблицы
 
     $('button#arrival').on('click', function (e) {
-        trWay.update_station_of_id(8);
+        //trWay.update_station_of_id(8);
+        //trWay.update_park_of_id(8, 3);
+        //trWay.update_way_of_id(227);
+        trWay.update();
     });
 
     // После загрузки документа
@@ -130,8 +133,8 @@
         }, function (name, id) {
             // Обработка события детально
         });
-        trWay.view();
-        //trWay.view(8, 75, 244);
+        //trWay.view();
+        trWay.view(8, 75, 244);
 
         //LockScreenOff();
         //taw.init(true);
