@@ -26,7 +26,6 @@
     <script src="~/Scripts/api/ids_rwt.js"></script> <!-- Class API ИДС Прием вагонов -->
     <script src="~/Scripts/api/ids_transfer.js"></script> <!-- Class API ИДС Переносы -->
     <script src="~/Scripts/api/uz_sms.js"></script> <!-- Class API Работа с модулем согласования -->
-
     <script src="~/Scripts/module/table_tree_way.js"></script>
 
     <script src="~/Scripts/plugins/pl_dialog_confirm.js"></script> <!-- Плагин -->
@@ -117,12 +116,46 @@
                 <div class="card-body text-dark pl-3 pr-3">
                     <div class="row">
                         <div class="col-xl-4">
+
+
+
                             <div class="card border-primary">
-                                <div class="card-header">Дерево путей</div>
+                                <div class="card-header">
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button"
+                                                id="sel_station" data-toggle="dropdown"
+                                                aria-haspopup="true" aria-expanded="true">
+                                            <i class="far fa-calendar-check"></i>
+                                        </button>
+                                        <ul class="dropdown-menu checkbox-menu allow-focus" aria-labelledby="sel_station">
+
+                                            <li>
+                                                <label>
+                                                    <input type="checkbox"> Cheese
+                                                </label>
+                                            </li>
+
+                                            <li>
+                                                <label>
+                                                    <input type="checkbox"> Pepperoni
+                                                </label>
+                                            </li>
+
+                                            <li>
+                                                <label>
+                                                    <input type="checkbox"> Peppers
+                                                </label>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                    Дерево путей
+                                </div>
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-xl-12">
-                                            <div id="tree-way"></div>
+                                            <div id="tree-way">
+                                            </div>
                                             @*<table id="tree-way" class="table table-hover"></table>*@
                                         </div>
                                     </div>

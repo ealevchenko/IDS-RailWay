@@ -52,19 +52,72 @@
     var ids_rwt = new IDS_RWT(App.Lang);                // Создадим класс IDS_RWT
 
     //---------------------------Формирование элементов дерева---------------
-    // Создать раздел кнопки
-    function table_button(selector) {
+
+    function dd_select_station(selector, base) {
         var $div_bt = $('<div></div>', {
-            'class': 'text-left'
+            'class': 'dropdown show',
+            'style': 'float:left;'
         });
         var $bt_icon_station = $('<i></i>', {
             'class': 'far fa-calendar-check'
         });
         var $bt_station = $('<button></button>', {
-            'id': 'button-station',
-            'class': 'btn btn-sm',
+            'id': 'sel_station',
+            'type': 'button',
+            'class': 'btn btn-default dropdown-toggle',
+            'data-toggle': 'dropdown',
+            'aria-haspopup': 'true',
+            'aria-expanded': 'true',
             'title': langView('title_select_station', App.Langs),
         });
+        var $ul_station = $('<ul></ul>', {
+            'class': 'dropdown-menu checkbox-menu allow-focus',
+            'aria-labelledby': 'sel_station'
+        });
+
+        $.each(base.list_enable_station, function (i, el) {
+            var $input = $('<input></input>', {
+                'type': 'checkbox',
+                'text': el.text
+            });
+
+            var $label = $('<label></label>');
+
+            var $div_li = $('<li></li>', {
+                'id': el.value,
+                'class': (el.enable ? "active" : ""),
+            });
+
+            $div_li.append($label.append($input));
+            $ul_station.append($div_li);
+        });
+
+        this.$element_ul = $ul_station;
+        $bt_station.append($bt_icon_station);
+        $div_bt.append($bt_station).append($ul_station)
+        this.$element = $div_bt;
+    }
+
+
+    // Создать раздел кнопки
+    function table_button(selector, base) {
+        var $div_bt = $('<div></div>', {
+            'class': 'text-left'
+        });
+
+
+
+        var bt_Element = new dd_select_station(selector, base);
+
+        //var $bt_icon_station = $('<i></i>', {
+        //    'class': 'far fa-calendar-check'
+        //});
+        //var $bt_station = $('<button></button>', {
+        //    'id': 'button-station',
+        //    'class': 'btn btn-sm',
+        //    'title': langView('title_select_station', App.Langs),
+        //});
+
         var $bt_icon_open = $('<i></i>', {
             'class': 'far fa-folder-open'
         });
@@ -90,7 +143,8 @@
             'title': langView('title_refresh_tree', App.Langs),
         });
 
-        $div_bt.append($bt_station.append($bt_icon_station)).append($bt_open.append($bt_icon_open)).append($bt_close.append($bt_icon_close)).append($bt_refresh.append($bt_icon_refresh));
+        //$div_bt.append($bt_station.append($bt_icon_station)).append($bt_open.append($bt_icon_open)).append($bt_close.append($bt_icon_close)).append($bt_refresh.append($bt_icon_refresh));
+        $div_bt.append(bt_Element.$element).append($bt_open.append($bt_icon_open)).append($bt_close.append($bt_icon_close)).append($bt_refresh.append($bt_icon_refresh));
         this.$element = $div_bt;
     };
     //function card(selector) {
@@ -138,7 +192,7 @@
         this.$element = $div;
     };
     // Создать заголовок таблицы
-    function table_heading(selector) {
+    function table_heading(selector, base) {
         var $thead = $('<thead></thead>', {
             'class': 'thead-light'
         });
@@ -179,7 +233,7 @@
             'colspan': '1'
         });
 
-        var btElement = new table_button(selector);
+        var btElement = new table_button(selector, base);
 
         $th_name.append(btElement.$element);
         $tr.append($th_name).append($th_pb).append($th_count).append($th_amkr).append($th_capacity);
@@ -445,34 +499,55 @@
         this.selector = this.$div_tree_way.attr('id');
     }
     // инициализация таблицы
+    ids_tree_way.prototype.load_init = function (callback) {
+        this.list_enable_station = [];
+        ids_rwt.ids_dir.getStation(function (stations) {
+            $.each(stations, function (i, el) {
+                this.list_enable_station.push({ value: el.id, text: el['station_name_' + App.Lang], enable: true });
+            }.bind(this));
+
+            if (typeof callback === 'function') {
+                callback();
+            }
+        }.bind(this))
+    };
+
     ids_tree_way.prototype.init = function (fn_select_way, fn_detali) {
         this.fn_select_way = fn_select_way;
         this.fn_detali = fn_detali;
+        // Загрузим нужные данные
+        this.load_init(function () {
+            // теперь выполним инициализацию
+            var cardElement = new table_tree_way(this.selector);
+            this.$div_tree_way.empty();
+            this.$div_tree_way.append(cardElement.$element);
+            this.$t_tree_way = cardElement.$element_table;
 
-        var cardElement = new table_tree_way(this.selector);
-        this.$div_tree_way.empty();
-        this.$div_tree_way.append(cardElement.$element);
-        this.$t_tree_way = cardElement.$element_table;
 
-        var headElement = new table_heading(this.selector);
-        // Привяжим событие обработки кнопок
-        headElement.$element.on('click', 'button', function (e) {
-            e.preventDefault();
-            e.stopPropagation(); // отменим событие дальше
-            var id = $(e.target).attr('id');
-            switch (id) {
-                case 'button-close': this.close_tree(); break;
 
-                case 'button-refresh': this.update(); break;
-            };
+            var headElement = new table_heading(this.selector, this);
+            // Привяжим событие обработки кнопок
+            headElement.$element.on('click', 'button', function (e) {
+                e.preventDefault();
+                e.stopPropagation(); // отменим событие дальше
+                var id = $(e.target).attr('id');
+                switch (id) {
+                    case 'button-close': this.close_tree(); break;
+
+                    case 'button-refresh': this.update(); break;
+                };
+            }.bind(this));
+
+            this.$t_tree_way.empty();
+
+            this.$t_tree_way.append(headElement.$element);
+            var bodyElement = new table_body(this.selector);
+            this.body = bodyElement.$element;
+            this.$t_tree_way.append(this.body);
+
         }.bind(this));
 
-        this.$t_tree_way.empty();
 
-        this.$t_tree_way.append(headElement.$element);
-        var bodyElement = new table_body(this.selector);
-        this.body = bodyElement.$element;
-        this.$t_tree_way.append(this.body);
     };
     // инициализация таблицы
     ids_tree_way.prototype.view = function (id_station, id_park, id_way) {

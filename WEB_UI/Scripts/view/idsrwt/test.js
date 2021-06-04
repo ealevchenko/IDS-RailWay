@@ -133,8 +133,16 @@
         }, function (name, id) {
             // Обработка события детально
         });
-        //trWay.view();
-        trWay.view(8, 75, 244);
+        trWay.view();
+        //trWay.view(8, 75, 244);
+
+        $(".checkbox-menu").on("change", "input[type='checkbox']", function () {
+            $(this).closest("li").toggleClass("active", this.checked);
+        });
+
+        $(document).on('click', '.allow-focus', function (e) {
+            e.stopPropagation();
+        });
 
         //LockScreenOff();
         //taw.init(true);
