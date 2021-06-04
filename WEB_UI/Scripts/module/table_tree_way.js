@@ -483,9 +483,9 @@
     ids_tree_way.prototype.update = function () {
         var tr = this.body.find('tr');
         this.count_update = tr.length;
-        if (tr && tr.length>0) LockScreen(langView('mess_update_status', App.Langs)); // выведем сообщение
+        if (tr && tr.length > 0) LockScreen(langView('mess_update_status', App.Langs)); // выведем сообщение
         $.each(tr, function (i, el) {
-             
+
             var area = $(el).attr('data-tree-area');
             var id_station = $(el).attr('data-station');
             var id_park = $(el).attr('data-park');
@@ -525,11 +525,22 @@
     };
     //--------------------------------Станции-----------------------------------
     // Загрузить станции из базы
-    ids_tree_way.prototype.load_station = function (callback) {
+    ids_tree_way.prototype.load_station = function (list_station, callback) {
         LockScreen(langView('mess_load_station', App.Langs));
         ids_rwt.getViewStatusAllStation(function (station) {
             if (typeof callback === 'function') {
-                callback(station.filter(function (i) { return !i.station_uz; }));
+                //callback(station.filter(function (i) { return !i.station_uz; }));
+                var current_station = station.filter(function (i) {
+                    return !i.station_uz;
+                });
+                if (list_station && list_station.length > 0) {
+                    current_station = current_station.filter(function (i) {
+                        return list_station.find(function (o) {
+                            return o === i.id
+                        });
+                    });
+                }
+                callback(current_station);
             }
         }.bind(this));
     };
@@ -545,7 +556,9 @@
     // Показать станции
     ids_tree_way.prototype.view_station = function (id_station, id_park, id_way) {
         var base = this;
-        this.load_station(function (stations) {
+        this.list_station = [1, 6, 8];
+        this.load_station(this.list_station, function (stations) {
+            /*        this.load_station(function (stations) {*/
             $.each(stations, function (i, el) {
                 var trbodyElement = new table_tr_station(base.selector, el); // Получим парк
                 // Настроим событие нажатия на "открыть"\"закрыть" парк
@@ -727,10 +740,12 @@
     };
     // показать парки станции
     ids_tree_way.prototype.view_way = function (id_station, id_park, id_way) {
-        var park = $(this.body).find('tr[data-tree-area="park"][data-park="' + id_park + '"]');
+        //var park = $(this.body).find('tr[data-tree-area="park"][data-park="' + id_park + '"]');
+        var park = $(this.body).find('tr[data-tree-area="park"][data-station="' + id_station + '"][data-park="' + id_park + '"]');
         var end_park = park.attr('data-tree-end');
         if (park && park.length > 0) {
-            var ways = $(this.body).find('tr[data-tree-area="way"][data-park="' + id_park + '"]');
+            //var ways = $(this.body).find('tr[data-tree-area="way"][data-park="' + id_park + '"]');
+            var ways = $(this.body).find('tr[data-tree-area="way"][data-station="' + id_station + '"][data-park="' + id_park + '"]');
             if (ways && ways.length > 0) {
                 ways.remove();
                 $(park).removeClass('shown');
@@ -866,8 +881,9 @@
         ways.remove();
     };
     // Закрыть все пути парка
-    ids_tree_way.prototype.close_way_of_park = function (id_park) {
-        var ways = $(this.body).find('tr[data-tree-area="way"][data-park="' + id_park + '"]');
+    ids_tree_way.prototype.close_way_of_park = function (id_station, id_park) {
+        //var ways = $(this.body).find('tr[data-tree-area="way"][data-park="' + id_park + '"]');
+        var ways = $(this.body).find('tr[data-tree-area="way"][data-station="' + id_station + '"][data-park="' + id_park + '"]');
         ways.remove();
     };
     // Убрать все выбранные пути
