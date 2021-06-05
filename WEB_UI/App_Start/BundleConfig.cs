@@ -29,10 +29,11 @@ namespace WEB_UI
 
             //bootstrap --------------------------------------------------------------------------
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
+                       //"~/Scripts/jquery-3.5.1.slim.js",
+                       "~/Scripts/umd/popper.js",
                         "~/Scripts/bootstrap.js",
-                        //"~/Scripts/bootstrap-select.min.js",
+                        "~/Scripts/respond.js",
                         "~/Scripts/bootstrap-input-spinner.js"
-                       //,"~/Scripts/popper.js"
                        ));
 
             bundles.Add(new StyleBundle("~/bootstrap/css").Include(
