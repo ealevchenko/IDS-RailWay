@@ -6,8 +6,9 @@
 @section styles {
     @Styles.Render("~/DataTables/css")
     @Styles.Render("~/DateTime/css")
-    <link rel="stylesheet" type="text/css" href="~/Content/view/idsrwt/wsd.css">
-
+    @*<link rel="stylesheet" type="text/css" href="~/Content/view/idsrwt/wsd.css">*@
+    <link href="~/Content/module/cblist_station.css" rel="stylesheet" />
+    <link href="~/Content/module/table_tree_way.css" rel="stylesheet" />
 
 }
 
@@ -26,6 +27,9 @@
     <script src="~/Scripts/api/ids_rwt.js"></script> <!-- Class API ИДС Прием вагонов -->
     <script src="~/Scripts/api/ids_transfer.js"></script> <!-- Class API ИДС Переносы -->
     <script src="~/Scripts/api/uz_sms.js"></script> <!-- Class API Работа с модулем согласования -->
+
+
+    <script src="~/Scripts/module/cblist_station.js"></script>
     <script src="~/Scripts/module/table_tree_way.js"></script>
 
     <script src="~/Scripts/plugins/pl_dialog_confirm.js"></script> <!-- Плагин -->
@@ -116,39 +120,39 @@
                 <div class="card-body text-dark pl-3 pr-3">
                     <div class="row">
                         <div class="col-xl-4">
-
-
-
                             <div class="card border-primary">
                                 <div class="card-header">
-                                    <div class="dropdown">
-                                        <button class="btn btn-default dropdown-toggle" type="button"
-                                                id="sel_station" data-toggle="dropdown"
-                                                aria-haspopup="true" aria-expanded="true">
-                                            <i class="far fa-calendar-check"></i>
-                                        </button>
-                                        <ul class="dropdown-menu checkbox-menu allow-focus" aria-labelledby="sel_station">
+                                    <div id="dds-station">
 
-                                            <li>
-                                                <label>
-                                                    <input type="checkbox"> Cheese
-                                                </label>
-                                            </li>
-
-                                            <li>
-                                                <label>
-                                                    <input type="checkbox"> Pepperoni
-                                                </label>
-                                            </li>
-
-                                            <li>
-                                                <label>
-                                                    <input type="checkbox"> Peppers
-                                                </label>
-                                            </li>
-
-                                        </ul>
                                     </div>
+                                    @*<div class="dropdown">
+                                            <button class="btn btn-default dropdown-toggle" type="button"
+                                                    id="sel_station" data-toggle="dropdown"
+                                                    aria-haspopup="true" aria-expanded="true">
+                                                <i class="far fa-calendar-check"></i>
+                                            </button>
+                                            <ul class="dropdown-menu checkbox-menu allow-focus" aria-labelledby="sel_station">
+
+                                                <li>
+                                                    <label>
+                                                        <input type="checkbox"> Cheese
+                                                    </label>
+                                                </li>
+
+                                                <li>
+                                                    <label>
+                                                        <input type="checkbox"> Pepperoni
+                                                    </label>
+                                                </li>
+
+                                                <li>
+                                                    <label>
+                                                        <input type="checkbox"> Peppers
+                                                    </label>
+                                                </li>
+
+                                            </ul>
+                                        </div>*@
                                     Дерево путей
                                 </div>
                                 <div class="card-body">

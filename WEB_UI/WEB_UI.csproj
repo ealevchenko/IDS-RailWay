@@ -2008,6 +2008,8 @@
     <Content Include="Content\fontawesome-free\webfonts\fa-brands-400.svg" />
     <Content Include="Content\fontawesome-free\webfonts\fa-regular-400.svg" />
     <Content Include="Content\fontawesome-free\webfonts\fa-solid-900.svg" />
+    <Content Include="Content\module\cblist_station.css" />
+    <Content Include="Content\module\table_tree_way.css" />
     <Content Include="Content\view\admin\_layout.css" />
     <Content Include="Content\view\directory\search_wagon.css" />
     <Content Include="Content\view\shared\print_way.css" />
@@ -2061,6 +2063,7 @@
     <Content Include="Scripts\jquery.doubleScroll.js" />
     <Content Include="Scripts\jszip.js" />
     <Content Include="Scripts\jszip.min.js" />
+    <Content Include="Scripts\module\cblist_station.js" />
     <Content Include="Scripts\module\table_tree_way.js" />
     <Content Include="Scripts\module\table_outgoing.js" />
     <Content Include="Scripts\module\table_wio.js" />

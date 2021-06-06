@@ -116,8 +116,13 @@
     //};
 
     // Определим экземпляр таблица вагоны прибытие
+    var Tcbs = App.cblist_station;
+    var cb_st = new Tcbs('div#dds-station'); // Создадим экземпляр таблицы
+
     var TTWay = App.ids_tree_way;
     var trWay = new TTWay('div#tree-way'); // Создадим экземпляр таблицы
+
+
 
     $('button#arrival').on('click', function (e) {
         //trWay.update_station_of_id(8);
@@ -128,21 +133,34 @@
 
     // После загрузки документа
     $(document).ready(function ($) {
+        // Прочтем данные из куков
+        var list_station = null;
+        var select_station_tree = $.cookie("select_station_tree");
+        if (select_station_tree) list_station = $.parseJSON(select_station_tree);
+        // Инициализируем компонент выбора станций
+        cb_st.init(list_station, function (list_station) {
+            // выбраны станции и команда применить
+            // сохраним сокет
+            $.cookie("select_station_tree", JSON.stringify(list_station), { expires: 365 });
+            // Отразим станции
+            trWay.view(list_station);
+        });
+        // Инициализируем компонент дерево путей
         trWay.init(function (id_station, id_park, id_way) {
             // Обраблтка выбраного пути
         }, function (name, id) {
             // Обработка события детально
         });
-        trWay.view();
-        //trWay.view(8, 75, 244);
+        trWay.view(list_station);
+        //trWay.view(list_station, 8, 75, 244);
 
-        $(".checkbox-menu").on("change", "input[type='checkbox']", function () {
-            $(this).closest("li").toggleClass("active", this.checked);
-        });
+        //$(".checkbox-menu").on("change", "input[type='checkbox']", function () {
+        //    $(this).closest("li").toggleClass("active", this.checked);
+        //});
 
-        $(document).on('click', '.allow-focus', function (e) {
-            e.stopPropagation();
-        });
+        //$(document).on('click', '.allow-focus', function (e) {
+        //    e.stopPropagation();
+        //});
 
         //LockScreenOff();
         //taw.init(true);
