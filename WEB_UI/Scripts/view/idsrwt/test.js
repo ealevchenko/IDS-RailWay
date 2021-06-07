@@ -128,7 +128,7 @@
         //trWay.update_station_of_id(8);
         //trWay.update_park_of_id(8, 3);
         //trWay.update_way_of_id(227);
-        trWay.update();
+        trWay.open_tree();
     });
 
     // После загрузки документа

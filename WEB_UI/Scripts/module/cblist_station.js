@@ -11,11 +11,11 @@
     {
         'default':  //default language: ru
         {
-            'title_card_header': 'Дерево путей',
+            'title_select_station': 'Выбрать активные станции...',
         },
         'en':  //default language: English
         {
-            'title_card_header': 'Дерево путей',
+            'title_select_station': 'Выбрать активные станции...',
         }
     };
     // Определлим список текста для этого модуля
