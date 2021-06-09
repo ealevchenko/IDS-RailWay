@@ -50,30 +50,49 @@
         });
 
         var $div_bt_st = $('<div></div>', {
-            'class':'text-center'
+            'class':'text-left mb-1'
+        });
+        var $bt_icon_select = $('<i></i>', {
+            'class': 'far fa-check-circle'
+        });
+        var $bt_icon_deselect = $('<i></i>', {
+            'class': 'far fa-circle'
+        });
+        var $bt_icon_ok = $('<i></i>', {
+            'class': 'far fa-save'
         });
         var $bt_select = $('<button></button>', {
             'id': base.selector + '-select',
-            'class': 'btn btn-primary btn-sm mr-3',
+            'class': 'btn btn-outline-primary btn-sm ml-2',
             //'title': langView('title_open_tree_way', App.Langs),
-            'text': 'Выбрать все',
+            'title': 'Выбрать все станции',
         });
         var $bt_deselect = $('<button></button>', {
             'id': base.selector + '-deselect',
-            'class': 'btn btn-primary btn-sm',
+            'class': 'btn btn-outline-primary btn-sm ml-1',
             //'title': langView('title_open_tree_way', App.Langs),
-            'text': 'Убрать все',
+            'title': 'Убрать все станции',
         });
-
-        $div_bt_st.append($bt_select).append($bt_deselect);
-
-        // height:400px;
-        var $bt_aplly = $('<button></button>', {
+        var $bt_save = $('<button></button>', {
             'id': base.selector + '-apply',
-            'class': 'btn btn-default ',
-            'type': 'button',
-            'text': 'Применить'
+            'class': 'btn btn-outline-danger btn-sm ml-1',
+            //'title': langView('title_open_tree_way', App.Langs),
+            'title': 'Сохранить и показать..',
         });
+
+        $bt_select.append($bt_icon_select);
+        $bt_deselect.append($bt_icon_deselect);
+        $bt_save.append($bt_icon_ok);
+
+        $div_bt_st.append($bt_select).append($bt_deselect).append($bt_save);
+        
+        // height:400px;
+        //var $bt_aplly = $('<button></button>', {
+        //    'id': base.selector + '-apply',
+        //    'class': 'btn btn-default ',
+        //    'type': 'button',
+        //    'text': 'Применить'
+        //});
         $ul_station.append($div_bt_st);
         //$ul_station.append($bt_aplly);
         $.each(base.list_enable_station, function (i, el) {
@@ -95,7 +114,8 @@
 
         this.$element_ul = $ul_station;
         $bt_station.append($bt_icon_station);
-        $div_bt.append($bt_station).append($bt_aplly).append($ul_station);
+        //$div_bt.append($bt_station).append($bt_aplly).append($ul_station);
+        $div_bt.append($bt_station).append($ul_station);
         this.$element = $div_bt;
     }
     //--------------------------------Конструктор и инициализация---------------
@@ -145,8 +165,8 @@
                 var id = $(e.currentTarget).attr('id');
                 switch (id) {
                     case this.selector + '-apply': this.apply(); break;
-                    case this.selector + '-select': this.select(); break;
-                    case this.selector + '-deselect': this.deselect(); break;
+                    case this.selector + '-select': this.station_select(true); break;
+                    case this.selector + '-deselect': this.station_select(false); break;
                 };
             }.bind(this));
             this.$cblist.empty();
@@ -178,16 +198,16 @@
             this.fn_apply(this.select_station);
         }
     };
-
-    cblist_station.prototype.select = function () {
+    // Выбрать или убрать станции
+    cblist_station.prototype.station_select = function (set) {
+        var cb_list = this.$cblist.find('.allow-focus li label input[type="checkbox"]' + (set ? ':not(:checked)' : ':checked'));
+        $.each(cb_list, function (i, el) {
+            $(el).prop("checked", set);
+            $(el).closest("li").toggleClass("active", set);
+        });
     };
 
-    cblist_station.prototype.deselect = function () {
-        var li = this.$cblist.find('.allow-focus li.active');
-        $(li).removeClass('active');
 
-        var cb = this.$cblist.find('input[type="checkbox"]:checked');
-    };
 
     App.cblist_station = cblist_station;
 

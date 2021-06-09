@@ -60,7 +60,7 @@
             'class': 'text-left'
         });
         var $bt_icon_open_park = $('<i></i>', {
-            'class': 'fas fa-bars'
+            'class': 'far fa-folder-open'
         });
         var $bt_open_park = $('<button></button>', {
             'id': 'button-open-park',
@@ -68,7 +68,7 @@
             'title': langView('title_open_tree_park', App.Langs),
         });
         var $bt_icon_open_all = $('<i></i>', {
-            'class': 'fas fa-list-ol'
+            'class': 'fas fa-folder-open'
         });
         var $bt_open_all = $('<button></button>', {
             'id': 'button-open-all',
@@ -1106,12 +1106,27 @@
                 }.bind(this));
             } else {
                 // Парки станции открыты, раскроем пути парков
-                this.open_way_of_park_station(id_station, function () {
+                //this.open_way_of_park_station(id_station, function () {
+                //    this.count_tr_st--;
+                //    if (this.count_tr_st <= 0) {
+                //        LockScreenOff();
+                //    }
+                //}.bind(this));
+                if (b_way) {
+                    // раскрыть путь
+                    this.open_way_of_park_station(id_station, function () {
+                        this.count_tr_st--;
+                        if (this.count_tr_st <= 0) {
+                            LockScreenOff();
+                        }
+                    }.bind(this));
+                } else {
+                    // путь не раскрывать
                     this.count_tr_st--;
                     if (this.count_tr_st <= 0) {
                         LockScreenOff();
                     }
-                }.bind(this));
+                }
             }
         }.bind(this));
     };
