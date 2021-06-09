@@ -11,8 +11,16 @@
 
 
 tr.select {
-    background-color: #c4c4ff
+    background-color: #ffedda
 }
+
+    tr.select td.row-select {
+        background: url("../../../Images/idsrwt/wsd/eye-solid.svg") no-repeat center center;
+        width: 16px;
+    }
+    tr.select:hover {
+        background-color: #ffdab3
+    }
 
 td.station-control {
     background: url('../../../Content/DataTables/media/images/details_open.png') no-repeat center center;
@@ -31,51 +39,66 @@ td.park-control {
     cursor: pointer;
 }
 
+tr[data-tree-area='station'].shown {
+    background-color: #dadaff;
+}
+
+    tr[data-tree-area='station'].shown:hover {
+        background-color: #b3b3ff;
+    }
+
+tr[data-tree-area='park'].shown {
+    background-color: #daffda;
+}
+
+    tr[data-tree-area='park'].shown:hover {
+        background-color: #b3ffb3;
+    }
+
 tr.shown td.park-control {
     background: url('../../../Content/DataTables/media/images/details_close.png') no-repeat center center;
     width: 20px;
 }
 
 
-.icon-station {
-    background-image: url("../../../Images/idsrwt/wsd/station.svg");
+td.icon-station {
+    background: url("../../../Images/idsrwt/wsd/station.svg") no-repeat center center;
     width: 16px;
-    height: 16px;
-    margin-right: 5px;
+    /*    height: 16px;
+    margin-right: 5px;*/
 }
 
 .icon-park {
-    background-image: url("../../../Images/idsrwt/wsd/park.svg");
+    background: url("../../../Images/idsrwt/wsd/park.svg") no-repeat center center;
     width: 16px;
-    height: 16px;
-    margin-right: 5px;
+/*    height: 16px;
+    margin-right: 5px;*/
 }
 
 .icon-way {
-    background-image: url("../../../Images/idsrwt/wsd/way.png");
-    width: 16px;
-    height: 16px;
-    margin-right: 5px;
+    background: url("../../../Images/idsrwt/wsd/way.png") no-repeat center center;
+    height: 16px !important;
+    /*    margin-right: 5px;*/
 }
 
 .icon-tree-open {
-    background-image: url("../../../Images/idsrwt/wsd/tree_detali.png");
+    background: url("../../../Images/idsrwt/wsd/tree_detali.png") no-repeat center center;
     width: 16px;
-    height: 16px;
+/*    height: 16px;*/
     /*    margin-right: 5px;*/
 }
 
 .icon-tree-open-end {
-    background-image: url("../../../Images/idsrwt/wsd/tree_end.png");
+    background: url("../../../Images/idsrwt/wsd/tree_end.png") no-repeat center center;
     width: 16px;
-    height: 16px;
+    /*height: 16px;*/
     /*    margin-right: 5px;*/
 }
 
 .icon-tree-open-skeep {
-    background-image: url("../../../Images/idsrwt/wsd/tree_skeep.png");
+    background: url("../../../Images/idsrwt/wsd/tree_skeep.png") no-repeat center center;
     width: 16px;
-    height: 16px;
+/*    height: 16px;*/
     /*    margin-right: 5px;*/
 }
 

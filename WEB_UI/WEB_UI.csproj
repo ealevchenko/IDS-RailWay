@@ -2016,6 +2016,7 @@
     <Content Include="Content\view\shared\print_gfa.css" />
     <Content Include="Images\8m.png" />
     <Content Include="Images\directory\line-icon-3_.svg" />
+    <Content Include="Images\idsrwt\wsd\eye-solid.svg" />
     <Content Include="Scripts\api\ids_global.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />

@@ -32,7 +32,7 @@
             'style': 'float:left;'
         });
         var $bt_icon_station = $('<i></i>', {
-            'class': 'far fa-calendar-check'
+            'class': 'fas fa-tasks'
         });
         var $bt_station = $('<button></button>', {
             'id': 'sel_st',
@@ -48,6 +48,25 @@
             'aria-labelledby': 'sel_st',
             'style': 'overflow-x:auto;'
         });
+
+        var $div_bt_st = $('<div></div>', {
+            'class':'text-center'
+        });
+        var $bt_select = $('<button></button>', {
+            'id': base.selector + '-select',
+            'class': 'btn btn-primary btn-sm mr-3',
+            //'title': langView('title_open_tree_way', App.Langs),
+            'text': 'Выбрать все',
+        });
+        var $bt_deselect = $('<button></button>', {
+            'id': base.selector + '-deselect',
+            'class': 'btn btn-primary btn-sm',
+            //'title': langView('title_open_tree_way', App.Langs),
+            'text': 'Убрать все',
+        });
+
+        $div_bt_st.append($bt_select).append($bt_deselect);
+
         // height:400px;
         var $bt_aplly = $('<button></button>', {
             'id': base.selector + '-apply',
@@ -55,6 +74,7 @@
             'type': 'button',
             'text': 'Применить'
         });
+        $ul_station.append($div_bt_st);
         //$ul_station.append($bt_aplly);
         $.each(base.list_enable_station, function (i, el) {
             //var $input = $('<input type="checkbox" />');
@@ -70,6 +90,8 @@
             //$div_li.toggleClass("active", el.enable);
             $ul_station.append($div_li);
         });
+
+
 
         this.$element_ul = $ul_station;
         $bt_station.append($bt_icon_station);
@@ -120,9 +142,11 @@
             ddsElement.$element.on('click', 'button', function (e) {
                 e.preventDefault();
                 //e.stopPropagation(); // отменим событие дальше
-                var id = $(e.target).attr('id');
+                var id = $(e.currentTarget).attr('id');
                 switch (id) {
                     case this.selector + '-apply': this.apply(); break;
+                    case this.selector + '-select': this.select(); break;
+                    case this.selector + '-deselect': this.deselect(); break;
                 };
             }.bind(this));
             this.$cblist.empty();
@@ -153,6 +177,16 @@
         if (typeof this.fn_apply === 'function') {
             this.fn_apply(this.select_station);
         }
+    };
+
+    cblist_station.prototype.select = function () {
+    };
+
+    cblist_station.prototype.deselect = function () {
+        var li = this.$cblist.find('.allow-focus li.active');
+        $(li).removeClass('active');
+
+        var cb = this.$cblist.find('input[type="checkbox"]:checked');
     };
 
     App.cblist_station = cblist_station;
