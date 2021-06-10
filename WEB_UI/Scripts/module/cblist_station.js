@@ -12,10 +12,17 @@
         'default':  //default language: ru
         {
             'title_select_station': 'Выбрать активные станции...',
+            'title_select_all': 'Выбрать все станции',
+            'title_deselect_all': 'Убрать все станции',
+            'title_save_station': 'Сохранить и показать..',
+
         },
         'en':  //default language: English
         {
-            'title_select_station': 'Выбрать активные станции...',
+            'title_select_station': 'Select active stations ...',
+            'title_select_all': 'Select all stations',
+            'title_deselect_all': 'Remove all stations',
+            'title_save_station': 'Save and show ...',
         }
     };
     // Определлим список текста для этого модуля
@@ -64,20 +71,17 @@
         var $bt_select = $('<button></button>', {
             'id': base.selector + '-select',
             'class': 'btn btn-outline-primary btn-sm ml-2',
-            //'title': langView('title_open_tree_way', App.Langs),
-            'title': 'Выбрать все станции',
+            'title': langView('title_select_all', App.Langs),
         });
         var $bt_deselect = $('<button></button>', {
             'id': base.selector + '-deselect',
             'class': 'btn btn-outline-primary btn-sm ml-1',
-            //'title': langView('title_open_tree_way', App.Langs),
-            'title': 'Убрать все станции',
+            'title': langView('title_deselect_all', App.Langs),
         });
         var $bt_save = $('<button></button>', {
             'id': base.selector + '-apply',
             'class': 'btn btn-outline-danger btn-sm ml-1',
-            //'title': langView('title_open_tree_way', App.Langs),
-            'title': 'Сохранить и показать..',
+            'title': langView('title_save_station', App.Langs),
         });
 
         $bt_select.append($bt_icon_select);
@@ -85,36 +89,21 @@
         $bt_save.append($bt_icon_ok);
 
         $div_bt_st.append($bt_select).append($bt_deselect).append($bt_save);
-        
-        // height:400px;
-        //var $bt_aplly = $('<button></button>', {
-        //    'id': base.selector + '-apply',
-        //    'class': 'btn btn-default ',
-        //    'type': 'button',
-        //    'text': 'Применить'
-        //});
+
         $ul_station.append($div_bt_st);
-        //$ul_station.append($bt_aplly);
+        // добавим станции
         $.each(base.list_enable_station, function (i, el) {
-            //var $input = $('<input type="checkbox" />');
-            //$input.text(el.text);
             var $label = $('<label></label>');
             var $div_li = $('<li></li>', {
-                //'dds': '',
                 'id': el.value,
                 'class': (el.enable ? "active" : ""),
             });
-            //$div_li.append($label.append($input));
             $div_li.append($label.append('<input type="checkbox" ' + (el.enable ? 'checked' : '') + ' />' + el.text));
-            //$div_li.toggleClass("active", el.enable);
             $ul_station.append($div_li);
         });
 
-
-
         this.$element_ul = $ul_station;
         $bt_station.append($bt_icon_station);
-        //$div_bt.append($bt_station).append($bt_aplly).append($ul_station);
         $div_bt.append($bt_station).append($ul_station);
         this.$element = $div_bt;
     }
@@ -152,7 +141,7 @@
             }
         }.bind(this))
     };
-    // инициализация
+    // Инициализация
     cblist_station.prototype.init = function (list_enable, fn_apply) {
         this.fn_apply = fn_apply;
         // Загрузим нужные данные
@@ -179,8 +168,6 @@
                 e.stopPropagation();
             });
         }.bind(this));
-
-
     };
     // Применить 
     cblist_station.prototype.apply = function () {
@@ -206,8 +193,6 @@
             $(el).closest("li").toggleClass("active", set);
         });
     };
-
-
 
     App.cblist_station = cblist_station;
 
