@@ -147,7 +147,7 @@
             trWay.view(list_station);
         });
         // Инициализируем компонент дерево путей
-        trWay.init(function (id_station, id_park, id_way) {
+        trWay.init(function (id_station, id_park, id_way, option) {
             // Обраблтка выбраного пути
         }, function (name, id) {
             // Обработка события детально

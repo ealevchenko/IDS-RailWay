@@ -591,6 +591,7 @@
                     }); // Показать парки
                 }
             }.bind(this));
+            base.select_way(id_way);
             base.update_foot();
             if (typeof callback === 'function') {
                 callback();
@@ -868,9 +869,23 @@
             var id_station = Number(way.attr('data-station'));
             var id_park = Number(way.attr('data-park'));
             var id_way = Number(way.attr('data-way'));
+            // получим опции
+            var crossing_uz = Number(way.attr('crossing-uz'));
+            var crossing_amkr = Number(way.attr('crossing-amkr'));
+            var dissolution = Number(way.attr('dissolution'));
+            var output_dissolution = Number(way.attr('output-dissolution'));
+            var option = new Object;
+            option['crossing-uz'] = crossing_uz;
+            option['crossing-amkr'] = crossing_amkr;
+            option['dissolution'] = dissolution;
+            option['output-dissolution'] = output_dissolution;
+            // Получим опции
+
             if (typeof this.fn_select_way === 'function') {
-                this.fn_select_way(id_station, id_park, id_way);
+                this.fn_select_way(id_station, id_park, id_way, option);
             }
+        } else {
+            this.fn_select_way(null, null, null, null);
         }
     };
     //-----------------------------Управление ветками дерева-----------------
