@@ -722,7 +722,7 @@
             // Загрузить информацию
             load: function (id_way, num) {
                 LockScreen(langView('mess_delay', langs));
-                if (id_way) {
+                if (id_way!==null) {
                     ids_inc.getViewWagonsOfWay(id_way, function (wagons) {
                         table_wagons.view(wagons, num);
                     });
