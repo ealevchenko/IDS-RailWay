@@ -535,7 +535,7 @@
         if (tr_foot && tr_foot.length > 0) {
             $(tr_foot[0].cells[2]).text(count_all);
             $(tr_foot[0].cells[3]).text(amkr_all);
-            $(tr_foot[0].cells[4]).text(capacity_all);
+            //$(tr_foot[0].cells[4]).text(capacity_all);
         };
     };
     //--------------------------------Станции-----------------------------------
