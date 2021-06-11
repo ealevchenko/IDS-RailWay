@@ -43,8 +43,8 @@ namespace Test.TestModule
             //EFMetallurgTrans efmt = new EFMetallurgTrans();
             Console.WriteLine("Запрос....");
             //List<WagonsTrackingMT> list1 =  clientMT.GetWagonsTracking();
-            List<WagonsTrackingMT> list2 = clientMT.GetWagonsTracking(63532220);
-            WagonsTrackingMT last = list2.OrderByDescending(d => d.dt).FirstOrDefault();
+            //List<WagonsTrackingMT> list2 = clientMT.GetWagonsTracking(63532220);
+            //WagonsTrackingMT last = list2.OrderByDescending(d => d.dt).FirstOrDefault();
             ////List<WagonsTrackingMT> list3 = clientMT.GetWagonsTracking(56858111, DateTime.Now.AddMonths(-1));
             ////List<WagonsTrackingMT> list4 = clientMT.GetWagonsTracking(56858111, DateTime.Now.AddDays(-15), DateTime.Now.AddDays(-5));
             //foreach (WagonsTrackingMT wt in list1)
@@ -52,6 +52,9 @@ namespace Test.TestModule
             //    Console.WriteLine(wt.nvagon);
             //    //efmt.SaveWagonsTracking(wt);
             //}
+
+            List<WagonsTrackingMT> list1 = clientMT.GetArrival();
+
         }
         /// <summary>
         /// Перенести состав в систему IDS

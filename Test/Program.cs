@@ -211,7 +211,7 @@ namespace Test
             //tids.IDS_WIR_ArrivalWagonsOfStation();                // Операция роспуск
             //tids.IDS_WIR_OperationReturnProvideWagons();            // Тест операции вернуть пръедявленый состав
 
-            tids.IDS_WIR_OperationUpdateEPDSendingSostav();             // Тест операции обновления ЭПД состава который отправили
+            //tids.IDS_WIR_OperationUpdateEPDSendingSostav();             // Тест операции обновления ЭПД состава который отправили
 
             #endregion
 
@@ -229,7 +229,7 @@ namespace Test
             //tmt.MTTransfer_TransferApproaches();
             //tmt.MTTransfer_TransferArrival();
             //tmt.MTThread_SFTPTransfer();
-            //tmt.MTTransfer_WebApiClientMT();
+            tmt.MTTransfer_WebApiClientMT();
             //tmt.MTThread_Start_TransferWT();
             //tmt.MTTransfer_InsertIDSArrivalSostav();
             //tmt.MTTransfer_TransferWagonsMotionSignals();

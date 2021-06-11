@@ -91,6 +91,7 @@ namespace MT
         private string user;
         private string psw;
         private string api;
+        private string api_arrival;
 
         public WebApiClientMT(service servece_owner)
         {
@@ -101,6 +102,8 @@ namespace MT
                 this.user = ConfigurationManager.AppSettings["WebApiMTUser"].ToString();
                 this.psw = ConfigurationManager.AppSettings["WebApiMTPSW"].ToString();
                 this.api = ConfigurationManager.AppSettings["WebApiMTApi"].ToString();
+                this.api_arrival = ConfigurationManager.AppSettings["WebApiMTArrivalApi"].ToString();
+
                 wapi = new WebApiToken(url, user, psw);
             }
             catch (Exception e)
@@ -125,6 +128,8 @@ namespace MT
                 e.ExceptionMethodLog(String.Format("WebApiClientMetallurgTrans(url={0},user={1},psw={2},api={3})", url, user, psw, api), this.servece_owner, eventID);
             }
         }
+
+
         /// <summary>
         /// Получить все вагоны
         /// </summary>
@@ -197,5 +202,20 @@ namespace MT
             }
 
         }
+
+        #region API ARRIVAL
+        public List<WagonsTrackingMT> GetArrival()
+        {
+            try
+            {
+                return wapi.GetJSONSelect<List<WagonsTrackingMT>>(this.api_arrival);
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetArrival()"), this.servece_owner, eventID);                
+                return null;
+            }
+        }
+        #endregion
     }
 }
