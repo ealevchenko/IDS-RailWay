@@ -11,6 +11,8 @@ using System.IO;
 using System.Runtime.Serialization;
 using EFMT.Entities;
 using WebApiClient;
+using Newtonsoft.Json.Linq;
+using System.Xml.Linq;
 
 namespace MT
 {
@@ -82,6 +84,62 @@ namespace MT
         }
     }
 
+    [Serializable]
+    public class WagonsArrivalMT : ISerializable
+    {
+        public int id { get; set; }
+        public int position { get; set; }
+        public int num { get; set; }
+        public int country_code { get; set; }
+        public decimal? wight { get; set; }
+        public int cargo_code { get; set; }
+        public string cargo { get; set; }
+        public int station_code { get; set; }
+        public string station { get; set; }
+        public int consignee { get; set; }
+        public string operation { get; set; }
+        public string composition_index { get; set; }
+        public DateTime date_operation { get; set; }
+        public int train { get; set; }
+
+        public WagonsArrivalMT()
+        {
+
+        }
+
+        public WagonsArrivalMT(SerializationInfo info, StreamingContext context)
+        {
+            this.id = (int)info.GetValue("Id", typeof(int));
+            this.position = (int)info.GetValue("Position", typeof(int));
+            this.num = (int)info.GetValue("CarriageNumber", typeof(int));
+            this.country_code = (int)info.GetValue("CountryCode", typeof(int));
+            this.wight = (decimal?)info.GetValue("Weight", typeof(decimal?));
+            this.cargo_code = (int)info.GetValue("IDCargo", typeof(int));
+            this.cargo = (string)info.GetValue("Cargo", typeof(string));
+            this.station_code = (int)info.GetValue("IDStation", typeof(int));
+            this.station = (string)info.GetValue("Station", typeof(string));
+            this.consignee = (int)info.GetValue("Consignee", typeof(int));
+            this.operation = (string)info.GetValue("Operation", typeof(string));
+            this.composition_index = (string)info.GetValue("CompositionIndex", typeof(string));
+            this.date_operation = (DateTime)info.GetValue("DateOperation", typeof(DateTime));
+            this.train = (int)info.GetValue("TrainNumber", typeof(int));
+            //this.dt = ((string)info.GetValue("dt", typeof(string))).DateNullConversion();//
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
+    public class RequestArrivalMT
+    {
+        public string id { get; set; }
+        public List<WagonsArrivalMT> wagons { get; set; }
+    }
+
+
     public class WebApiClientMT
     {
         private eventID eventID = eventID.MT_WebApiClient;
@@ -142,7 +200,7 @@ namespace MT
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("GetWagonsTracking()"), this.servece_owner, eventID);                
+                e.ExceptionMethodLog(String.Format("GetWagonsTracking()"), this.servece_owner, eventID);
                 return null;
             }
         }
@@ -155,7 +213,7 @@ namespace MT
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("GetWagonsTracking(num_vag={0})", num_vag), this.servece_owner, eventID);                
+                e.ExceptionMethodLog(String.Format("GetWagonsTracking(num_vag={0})", num_vag), this.servece_owner, eventID);
                 return null;
             }
         }
@@ -169,7 +227,7 @@ namespace MT
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("GetWagonsTracking(num_vag={0}, date_start={1})", num_vag, date_start), this.servece_owner, eventID);                
+                e.ExceptionMethodLog(String.Format("GetWagonsTracking(num_vag={0}, date_start={1})", num_vag, date_start), this.servece_owner, eventID);
                 return null;
             }
 
@@ -184,7 +242,7 @@ namespace MT
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("GetWagonsTracking(num_vag={0}, date_start={1}, date_stop={2})", num_vag, date_start, date_stop), this.servece_owner, eventID);                
+                e.ExceptionMethodLog(String.Format("GetWagonsTracking(num_vag={0}, date_start={1}, date_stop={2})", num_vag, date_start, date_stop), this.servece_owner, eventID);
                 return null;
             }
         }
@@ -197,22 +255,49 @@ namespace MT
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("GetJSONWagonsTracking()"), this.servece_owner, eventID);                
+                e.ExceptionMethodLog(String.Format("GetJSONWagonsTracking()"), this.servece_owner, eventID);
                 return null;
             }
 
         }
 
         #region API ARRIVAL
-        public List<WagonsTrackingMT> GetArrival()
+
+
+        public RequestArrivalMT GetArrival()
         {
             try
             {
-                return wapi.GetJSONSelect<List<WagonsTrackingMT>>(this.api_arrival);
+                string resp = wapi.GetApiValues(this.api);
+                JObject o = JObject.Parse(resp);
+                string RequestId = (string)o["RequestId"];
+                IList<WagonsArrivalMT> wagon_arr = o["Wagons"].Select(p => new WagonsArrivalMT
+                {
+                    id = (int)p["Id"],
+                    position = (int)p["Position"],
+                    num = (int)p["CarriageNumber"],
+                    country_code = (int)p["CountryCode"],
+                    wight = (decimal?)p["Weight"],
+                    cargo_code = (int)p["IDCargo"],
+                    cargo = (string)p["Cargo"],
+                    station_code = (int)p["IDStation"],
+                    station = (string)p["Station"],
+                    consignee = (int)p["Consignee"],
+                    operation = (string)p["Operation"],
+                    composition_index = (string)p["CompositionIndex"],
+                    date_operation = (DateTime)p["DateOperation"],
+                    train = (int)p["TrainNumber"]
+                }).ToList();
+                RequestArrivalMT reguest_mt = new RequestArrivalMT()
+                {
+                    id = RequestId,
+                    wagons = wagon_arr.ToList(),
+                };
+                return reguest_mt;
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("GetArrival()"), this.servece_owner, eventID);                
+                e.ExceptionMethodLog(String.Format("GetArrival()"), this.servece_owner, eventID);
                 return null;
             }
         }

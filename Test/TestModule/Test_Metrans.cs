@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Test.TestModule
 {
+
     public class Test_Metrans
     {
         public Test_Metrans()
@@ -36,6 +37,16 @@ namespace Test.TestModule
             int res_transfer = mtt.TransferArrival();
         }
 
+        public void MTTransfer_TransferArrivalAPI()
+        {
+            MTTransfer mtt = new MTTransfer(service.Test);
+            //mtt.DayRangeArrivalCars = 10;
+            //mtt.ArrivalToRailWay = false;
+            //mtt.FromPath = @"D:\xlm_new";
+            //mtt.DeleteFile = true;
+            int res_transfer = mtt.TransferArrivalAPI("https://inform.umtrans.com.ua", "Arcelor1","12345678-","/api/TrainNaturList/Get");
+        }
+
         public void MTTransfer_WebApiClientMT()
         {
             WebApiClientMT clientMT = new WebApiClientMT(service.Null);
@@ -53,7 +64,55 @@ namespace Test.TestModule
             //    //efmt.SaveWagonsTracking(wt);
             //}
 
-            List<WagonsTrackingMT> list1 = clientMT.GetArrival();
+            RequestArrivalMT reg_mt = clientMT.GetArrival();
+
+            //List<SostavArrivalMT> list_reg_mt = new List<SostavArrivalMT>();
+
+            //// Сгруппируем по индексу поезда
+            //List<IGrouping<string, WagonsArrivalMT>> reg_mt_gr = reg_mt.wagons
+            //                .ToList()
+            //                .GroupBy(w => w.composition_index)
+            //                .ToList();
+
+            //// Пройдемся по путям роспуска
+            //foreach (IGrouping<string, WagonsArrivalMT> gr_sostav in reg_mt_gr.ToList())
+            //{
+            //    string composition_index = gr_sostav.Key;
+
+            //    // Группируем по времени
+            //    List<IGrouping<DateTime, WagonsArrivalMT>> sostav_operation_data = gr_sostav
+            //        .OrderByDescending(w => w.date_operation)
+            //    .ToList()
+            //    .GroupBy(w => w.date_operation)
+            //    .ToList();
+
+            //    foreach (IGrouping<DateTime, WagonsArrivalMT> operation_data in sostav_operation_data.ToList())
+            //    {
+            //        DateTime date_operation = operation_data.Key;
+            //        // Группируем по операциям
+            //        List<IGrouping<string, WagonsArrivalMT>> sostav_operation = operation_data
+            //        .ToList()
+            //        .GroupBy(w => w.operation)
+            //        .ToList();
+            //        foreach (IGrouping<string, WagonsArrivalMT> operation in sostav_operation.ToList())
+            //        {
+            //            string oper = operation.Key;
+            //            List<WagonsArrivalMT> list = operation.ToList();
+
+            //            list_reg_mt.Add(new SostavArrivalMT()
+            //            {
+            //                composition_index = composition_index,
+            //                date_operation = date_operation,
+            //                operation = oper,
+            //                wagons = list.OrderBy(w => w.position).ToList()
+            //            });
+
+            //        }
+            //    }
+
+            //    //List<WagonsArrivalMT> list_dw = gr_sostav.OrderByDescending(w => w.date_operation).ToList();
+            //}
+
 
         }
         /// <summary>

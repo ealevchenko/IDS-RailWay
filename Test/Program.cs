@@ -228,8 +228,9 @@ namespace Test
             Test_Metrans tmt = new Test_Metrans();
             //tmt.MTTransfer_TransferApproaches();
             //tmt.MTTransfer_TransferArrival();
+            tmt.MTTransfer_TransferArrivalAPI();
             //tmt.MTThread_SFTPTransfer();
-            tmt.MTTransfer_WebApiClientMT();
+            //tmt.MTTransfer_WebApiClientMT();
             //tmt.MTThread_Start_TransferWT();
             //tmt.MTTransfer_InsertIDSArrivalSostav();
             //tmt.MTTransfer_TransferWagonsMotionSignals();

@@ -88,6 +88,17 @@ namespace MT
 
     }
 
+    #region Перенос вагонов из api mt
+    public class SostavArrivalMT
+    {
+        public string composition_index { get; set; }
+        public DateTime date_operation { get; set; }
+        public string operation { get; set; }
+        public List<WagonsArrivalMT> wagons { get; set; }
+    }
+    #endregion
+
+
     public class MTTransfer
     {
         private eventID eventID = eventID.MT_MTTransfer;
@@ -118,6 +129,8 @@ namespace MT
         public string PSWWagonsTracking { get { return this.psw_wagons_tracking; } set { this.psw_wagons_tracking = value; } }
         private string api_wagons_tracking;
         public string APIWagonsTracking { get { return this.api_wagons_tracking; } set { this.api_wagons_tracking = value; } }
+        private string api_wagons_arrival;
+        public string APIWagonsArrival { get { return this.api_wagons_arrival; } set { this.api_wagons_arrival = value; } }
 
         public MTTransfer()
         {
@@ -997,6 +1010,97 @@ namespace MT
         }
         #endregion
 
+        #region TransferArrivalAPI Перенос вагонов из api mt
+        /// <summary>
+        /// Вурнуть отсортированый резульат по составам и операциям
+        /// </summary>
+        /// <param name="list_wagon"></param>
+        /// <returns></returns>
+        public List<SostavArrivalMT> SortSostavRequest(List<WagonsArrivalMT> list_wagon)
+        {
+            try
+            {
+                List<SostavArrivalMT> list_result = new List<SostavArrivalMT>();
+
+                // Сгруппируем по индексу поезда
+                List<IGrouping<string, WagonsArrivalMT>> reg_mt_gr = list_wagon
+                                .ToList()
+                                .GroupBy(w => w.composition_index)
+                                .ToList();
+
+                // Пройдемся по индексу поезда
+                foreach (IGrouping<string, WagonsArrivalMT> gr_sostav in reg_mt_gr.ToList())
+                {
+                    string composition_index = gr_sostav.Key;
+
+                    // Группируем по времени
+                    List<IGrouping<DateTime, WagonsArrivalMT>> sostav_operation_data = gr_sostav
+                        .OrderByDescending(w => w.date_operation)
+                    .ToList()
+                    .GroupBy(w => w.date_operation)
+                    .ToList();
+                    // Пройдемся по времени
+                    foreach (IGrouping<DateTime, WagonsArrivalMT> operation_data in sostav_operation_data.ToList())
+                    {
+                        DateTime date_operation = operation_data.Key;
+                        // Группируем по операциям
+                        List<IGrouping<string, WagonsArrivalMT>> sostav_operation = operation_data
+                        .ToList()
+                        .GroupBy(w => w.operation)
+                        .ToList();
+                        // Пройдемся по операциям
+                        foreach (IGrouping<string, WagonsArrivalMT> operation in sostav_operation.ToList())
+                        {
+                            string oper = operation.Key;
+                            List<WagonsArrivalMT> list = operation.ToList();
+                            // Добавим результат
+                            list_result.Add(new SostavArrivalMT()
+                            {
+                                composition_index = composition_index,
+                                date_operation = date_operation,
+                                operation = oper,
+                                wagons = list.OrderBy(w => w.position).ToList()
+                            });
+                        }
+                    }
+                }
+                return list_result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("SortSostavRequest(list_wagon={0})", list_wagon), servece_owner, eventID);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Перенести натурные листы по прибытию
+        /// </summary>
+        /// <returns></returns>
+        public int TransferArrivalAPI(string url, string user, string psw, string api)
+        {
+            try
+            {
+                List<SostavArrivalMT> sostav_result = null;
+                WebApiClientMT client_arr = new WebApiClientMT(url, user, psw, api, this.servece_owner);
+                RequestArrivalMT request = client_arr.GetArrival();
+                if (request != null && request.wagons != null && request.wagons.Count > 0)
+                {
+                    sostav_result = SortSostavRequest(request.wagons.ToList());
+                }
+
+                return sostav_result != null ? sostav_result.Count() : 0;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("TransferArrivalAPI()"), servece_owner, eventID);
+                return -1;
+            }
+        }
+
+        #endregion
+
+
         #region TransferWagonsTracking Перенос вагонов из Web.Api МетТранса
         /// <summary>
         /// Добавить список изменений по вагону
@@ -1196,7 +1300,7 @@ namespace MT
                     // Сформируем сообщение и сохраним в логе
                     string mess = String.Format("Построение сигналов и перенос сотояния движения вагонов из БД METRANS.WagonsTracking -> БД IDS.MORS - ВЫПОЛНЕН (Общее количество вагонов={0}, перенесено={1}, пропущено={2}, ошибок переноса={3}).", nums.Count(), add, skip, error);
                     mess.InformationLog(servece_owner, this.eventID);
-                    mess.EventLog(error >0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
+                    mess.EventLog(error > 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
                     return error > 0 ? error : nums.Count();
                 }
                 return 0;
@@ -1215,7 +1319,7 @@ namespace MT
         /// <param name="route"></param>
         /// <param name="station_end"></param>
         /// <param name="station_from"></param>
-        public void ArrivalAMKR(WTMotionSignals car, ref ids_route route, ref  int station_end, ref int station_from, ref DateTime? start_flight, ref DateTime? start_turnover, ref ids_type_flight_wagon type_flight)
+        public void ArrivalAMKR(WTMotionSignals car, ref ids_route route, ref int station_end, ref int station_from, ref DateTime? start_flight, ref DateTime? start_turnover, ref ids_type_flight_wagon type_flight)
         {
             // Прибыл на АМКР (считаем время прибытия)
             if (route == ids_route.ret | route == ids_route.not)
@@ -1262,7 +1366,7 @@ namespace MT
         /// <param name="route"></param>
         /// <param name="station_end"></param>
         /// <param name="station_from"></param>
-        public void ReturnAMKR(WTMotionSignals car, ref ids_route route, ref  int station_end, ref int station_from, ref DateTime? start_flight, ref ids_type_flight_wagon type_flight)
+        public void ReturnAMKR(WTMotionSignals car, ref ids_route route, ref int station_end, ref int station_from, ref DateTime? start_flight, ref ids_type_flight_wagon type_flight)
         {
             // Отправлен на АМКР (считаем время отправки)
             if (route == ids_route.client || route == ids_route.not)
@@ -1297,7 +1401,7 @@ namespace MT
         /// <param name="route"></param>
         /// <param name="station_end"></param>
         /// <param name="station_from"></param>
-        public void ArrivalClient(WTMotionSignals car, ref ids_route route, ref  int station_end, ref int station_from, ref DateTime? start_flight, ref ids_type_flight_wagon type_flight)
+        public void ArrivalClient(WTMotionSignals car, ref ids_route route, ref int station_end, ref int station_from, ref DateTime? start_flight, ref ids_type_flight_wagon type_flight)
         {
             // Вагон прибыл к клиенту
             if (route == ids_route.send || route == ids_route.not)
@@ -1331,7 +1435,7 @@ namespace MT
         /// <param name="route"></param>
         /// <param name="station_end"></param>
         /// <param name="station_from"></param>
-        public void SendClient(WTMotionSignals car, ref ids_route route, ref  int station_end, ref int station_from, ref DateTime? start_flight, ref ids_type_flight_wagon type_flight)
+        public void SendClient(WTMotionSignals car, ref ids_route route, ref int station_end, ref int station_from, ref DateTime? start_flight, ref ids_type_flight_wagon type_flight)
         {
             // Вагон движется к клиенту
             // Откуда движется вагон от АМКР или Клиента
@@ -1426,33 +1530,33 @@ namespace MT
                         .Context
                         .Where(w => w.nvagon == num)
                         .OrderBy(c => c.dt).Select(w => new WTMotionSignals
-                    {
-                        id_wt = w.id,
-                        nvagon = w.nvagon,
-                        st_disl = w.st_disl,
-                        nst_disl = w.nst_disl,
-                        kodop = w.kodop,
-                        nameop = w.nameop,
-                        full_nameop = w.full_nameop,
-                        dt = w.dt,
-                        st_form = w.st_form,
-                        nst_form = w.nst_form,
-                        idsost = w.idsost,
-                        nsost = w.nsost,
-                        st_nazn = w.st_nazn,
-                        nst_nazn = w.nst_nazn,
-                        ntrain = w.ntrain,
-                        st_end = w.st_end,
-                        nst_end = w.nst_end,
-                        kgr = w.kgr,
-                        nkgr = w.nkgr,
-                        id_cargo = w.id_cargo,
-                        kgrp = w.kgrp,
-                        ves = w.ves,
-                        updated = w.updated,
-                        kgro = w.kgro,
-                        km = w.km,
-                    }).ToList();
+                        {
+                            id_wt = w.id,
+                            nvagon = w.nvagon,
+                            st_disl = w.st_disl,
+                            nst_disl = w.nst_disl,
+                            kodop = w.kodop,
+                            nameop = w.nameop,
+                            full_nameop = w.full_nameop,
+                            dt = w.dt,
+                            st_form = w.st_form,
+                            nst_form = w.nst_form,
+                            idsost = w.idsost,
+                            nsost = w.nsost,
+                            st_nazn = w.st_nazn,
+                            nst_nazn = w.nst_nazn,
+                            ntrain = w.ntrain,
+                            st_end = w.st_end,
+                            nst_end = w.nst_end,
+                            kgr = w.kgr,
+                            nkgr = w.nkgr,
+                            id_cargo = w.id_cargo,
+                            kgrp = w.kgrp,
+                            ves = w.ves,
+                            updated = w.updated,
+                            kgro = w.kgro,
+                            km = w.km,
+                        }).ToList();
                 }
                 else
                 {
@@ -1527,7 +1631,8 @@ namespace MT
                                     case "ПГР2": ReturnAMKR(wtms, ref route, ref station_end, ref station_from, ref start_flight, ref type_flight); break;
                                     case "ПОГРН": ReturnAMKR(wtms, ref route, ref station_end, ref station_from, ref start_flight, ref type_flight); break;
                                     // Проверим на смену маршрута
-                                    default: if (wtms.st_end != station_end)
+                                    default:
+                                        if (wtms.st_end != station_end)
                                             // Маршрут поменялся вагон движется назад
                                             ReturnAMKR(wtms, ref route, ref station_end, ref station_from, ref start_flight, ref type_flight);
                                         break;
@@ -1546,7 +1651,8 @@ namespace MT
                                     case "ПГР2": SendClient(wtms, ref route, ref station_end, ref station_from, ref start_flight, ref type_flight); break;
                                     case "ПОГРН": SendClient(wtms, ref route, ref station_end, ref station_from, ref start_flight, ref type_flight); break;
                                     // Проверим на смену маршрута
-                                    default: if (wtms.st_end != station_end)
+                                    default:
+                                        if (wtms.st_end != station_end)
                                             // Маршрут поменялся вагон движется к клиенту
                                             SendClient(wtms, ref route, ref station_end, ref station_from, ref start_flight, ref type_flight);
                                         break;
