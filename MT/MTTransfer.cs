@@ -1081,6 +1081,8 @@ namespace MT
         {
             try
             {
+
+
                 List<SostavArrivalMT> sostav_result = null;
                 WebApiClientMT client_arr = new WebApiClientMT(url, user, psw, api, this.servece_owner);
                 RequestArrivalMT request = client_arr.GetArrival();
@@ -1088,6 +1090,101 @@ namespace MT
                 {
                     sostav_result = SortSostavRequest(request.wagons.ToList());
                 }
+                // Отсортируем по индексу
+                List<IGrouping<string, SostavArrivalMT>> sostav_ci = sostav_result
+                    .ToList()
+                    .GroupBy(w => w.composition_index)
+                    .ToList();
+                String.Format("Определенно {0} составов для копирования", sostav_ci.Count()).InformationLog(servece_owner, this.eventID);
+                EFArrivalSostav ef_arr_sostav = new EFArrivalSostav(new EFDbContext());
+                int countCopy = 0;
+                int countExist = 0;
+                int countError = 0;
+                int countDelete = 0;
+                // Пройдемся по сгруппированным составам
+                foreach (IGrouping<string, SostavArrivalMT> ci in sostav_ci)
+                {
+                    //List<SostavArrivalMT> list = ci.OrderBy(w => w.date_operation).ThenBy(c => c.operation).ToList();
+                    // Пройдемся по составам
+                    foreach (SostavArrivalMT st_ci in ci.OrderBy(w => w.date_operation).ThenBy(c => c.operation).ToList())
+                    {
+                        Console.WriteLine("Переносим состав с индексом {0}, дата операции {1}", st_ci.composition_index, st_ci.date_operation);
+                        DateTime start = DateTime.Now;
+                        ArrivalSostav exs_sostav = ef_arr_sostav.Context.Where(s => s.composition_index == st_ci.composition_index).OrderByDescending(c => c.date_time).FirstOrDefault();
+                        if (exs_sostav == null)
+                        {
+                           // Нет информации по саставу
+                            long? ParentIDSostav = null;
+                            long? id_arrived = ef_arr_sostav.Database.SqlQuery<long?>("SELECT max([id_arrived]) FROM [METRANS].[ArrivalSostav]").FirstOrDefault();//    .GetNextIDArrival();//SELECT max([id_arrived]) FROM [METRANS].[ArrivalSostav]
+                            id_arrived = id_arrived != null ? id_arrived + 1 : 0; // Проверка и инкримент
+                                                                                  // получить не закрытый состав
+                            ArrivalSostav no_close_sostav = ef_arr_sostav.GetNoCloseArrivalSostav(st_ci.composition_index, st_ci.date_operation, this.day_range_arrival_cars);
+
+                            if (no_close_sostav != null)
+                            {
+                                ParentIDSostav = no_close_sostav.id;
+                                id_arrived = no_close_sostav.id_arrived;
+                                // Закрыть состав
+                                no_close_sostav.close = DateTime.Now;
+                                ef_arr_sostav.Update(no_close_sostav);
+                                ef_arr_sostav.Save();
+                            }
+                            ArrivalSostav new_sostav = new ArrivalSostav()
+                            {
+                                id = 0,
+                                id_arrived = (int)id_arrived,
+                                file_name = "api",
+                                composition_index = st_ci.composition_index,
+                                date_time = st_ci.date_operation,
+                                create = DateTime.Now,
+                                close = null,
+                                arrived = null,
+                                Parent_id = ParentIDSostav,
+                                operation = st_ci.operation == "ПРИБ" ? 1 : 2,
+
+                            };
+                            ef_arr_sostav.Add(new_sostav);
+                            ef_arr_sostav.Save();
+                            new_sostav = ef_arr_sostav.Refresh(new_sostav);
+                            long new_id = new_sostav.id;
+                        }
+                        else
+                        {
+                            //// Состав есть
+                            //// Проверка сравниваем количество если совподает удаляем файл, иначе добавляем новые вагоны и удаляем файл
+                            //List<ArrivalCars> list = TransferXMLToListArrivalCars(fs.File, exs_sostav.id);
+                            //List<ArrivalCars> listdb = ef_arr_cars.Context.Where(c => c.id_sostav == exs_sostav.id).ToList();
+                            //if (list != null && listdb != null)
+                            //{
+                            //    if (list.Count() != listdb.Count())
+                            //    {
+                            //        SqlParameter IDSostav = new SqlParameter("@IDSostav", exs_sostav.id);
+                            //        ef_arr_sostav.Database.ExecuteSqlCommand("DELETE FROM [METRANS].[ArrivalCars] WHERE [id_sostav] = @IDSostav", IDSostav);
+                            //        if (delete_file & SaveArrivalWagons(exs_sostav.id, fs.File, ref countCopy, ref countError))
+                            //        {
+                            //            File.Delete(fs.File);
+                            //            countDelete++;
+                            //        }
+                            //    }
+                            //    else
+                            //    {
+                            //        // Файл перенесен ранеее, удалим его если это требуется
+                            //        if (delete_file)
+                            //        {
+                            //            File.Delete(fs.File);
+                            //            countDelete++;
+                            //        }
+                            //    }
+                            //    countExist++;
+                            //}
+                        }
+                        DateTime stop = DateTime.Now;
+                        servece_owner.ServicesToLog(eventID, String.Format("Состав {0} - перенесен.", st_ci.composition_index), start, stop, countCopy);
+
+                    };
+
+                }
+
 
                 return sostav_result != null ? sostav_result.Count() : 0;
             }
