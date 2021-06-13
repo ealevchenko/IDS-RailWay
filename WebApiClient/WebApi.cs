@@ -197,7 +197,8 @@ namespace WebApiClient
         {
             try
             {
-                return JSONStringToClass<T>(GetApiValues(api_comand));
+                string resp = GetApiValues(api_comand);
+                return JSONStringToClass<T>(resp);
             }
             catch (Exception e)
             {
