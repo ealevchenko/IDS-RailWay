@@ -262,13 +262,11 @@ namespace MT
         }
 
         #region API ARRIVAL
-
-
         public RequestArrivalMT GetArrival()
         {
             try
             {
-                string resp = wapi.GetApiValues(this.api);
+                string resp = wapi.GetApiValues(this.api+ "/Get");
                 JObject o = JObject.Parse(resp);
                 string RequestId = (string)o["RequestId"];
                 IList<WagonsArrivalMT> wagon_arr = o["Wagons"].Select(p => new WagonsArrivalMT
@@ -294,6 +292,20 @@ namespace MT
                     wagons = wagon_arr.ToList(),
                 };
                 return reguest_mt;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetArrival()"), this.servece_owner, eventID);
+                return null;
+            }
+        }
+
+        public string PostArrival(string id)
+        {
+            try
+            {
+                string resp = wapi.PostApiValues(this.api+ "/ConfirmDelivery?id=" + id);
+                return resp;
             }
             catch (Exception e)
             {
