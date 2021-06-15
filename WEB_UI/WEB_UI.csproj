@@ -2065,6 +2065,7 @@
     <Content Include="Scripts\jszip.js" />
     <Content Include="Scripts\jszip.min.js" />
     <Content Include="Scripts\module\cblist_station.js" />
+    <Content Include="Scripts\module\table_dir_way.js" />
     <Content Include="Scripts\module\table_tree_way.js" />
     <Content Include="Scripts\module\table_outgoing.js" />
     <Content Include="Scripts\module\table_wio.js" />

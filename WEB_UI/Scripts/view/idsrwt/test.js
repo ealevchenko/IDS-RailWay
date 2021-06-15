@@ -115,14 +115,15 @@
 
     //};
 
-    // Определим экземпляр таблица вагоны прибытие
-    var Tcbs = App.cblist_station;
-    var cb_st = new Tcbs('div#dds-station'); // Создадим экземпляр таблицы
+    ////// Определим экземпляр таблица вагоны прибытие
+    ////var Tcbs = App.cblist_station;
+    ////var cb_st = new Tcbs('div#dds-station'); // Создадим экземпляр таблицы
 
-    var TTWay = App.ids_tree_way;
-    var trWay = new TTWay('div#tree-way'); // Создадим экземпляр таблицы
+    ////var TTWay = App.ids_tree_way;
+    ////var trWay = new TTWay('div#tree-way'); // Создадим экземпляр таблицы
 
-
+    var TDWAY = App.table_dir_way;
+    var tdways = new TDWAY('div#ways'); // Создадим экземпляр таблицы
 
     $('button#arrival').on('click', function (e) {
         //trWay.update_station_of_id(8);
@@ -134,25 +135,29 @@
 
     // После загрузки документа
     $(document).ready(function ($) {
-        // Прочтем данные из куков
-        var list_station = null;
-        var select_station_tree = $.cookie("select_station_tree");
-        if (select_station_tree) list_station = $.parseJSON(select_station_tree);
-        // Инициализируем компонент выбора станций
-        cb_st.init(list_station, function (list_station) {
-            // выбраны станции и команда применить
-            // сохраним сокет
-            $.cookie("select_station_tree", JSON.stringify(list_station), { expires: 365 });
-            // Отразим станции
-            trWay.view(list_station);
-        });
-        // Инициализируем компонент дерево путей
-        trWay.init(function (id_station, id_park, id_way, option) {
-            // Обраблтка выбраного пути
-        }, function (name, id) {
-            // Обработка события детально
-        });
-        trWay.view(list_station);
+
+        tdways.init();
+        ////// Прочтем данные из куков
+        ////var list_station = null;
+        ////var select_station_tree = $.cookie("select_station_tree");
+        ////if (select_station_tree) list_station = $.parseJSON(select_station_tree);
+        ////// Инициализируем компонент выбора станций
+        ////cb_st.init(list_station, function (list_station) {
+        ////    // выбраны станции и команда применить
+        ////    // сохраним сокет
+        ////    $.cookie("select_station_tree", JSON.stringify(list_station), { expires: 365 });
+        ////    // Отразим станции
+        ////    trWay.view(list_station);
+        ////});
+        ////// Инициализируем компонент дерево путей
+        ////trWay.init(function (id_station, id_park, id_way, option) {
+        ////    // Обраблтка выбраного пути
+        ////}, function (name, id) {
+        ////    // Обработка события детально
+        ////});
+        ////trWay.view(list_station);
+
+
         //trWay.view(list_station, 8, 75, 244);
 
         //$(".checkbox-menu").on("change", "input[type='checkbox']", function () {
@@ -163,7 +168,7 @@
         //    e.stopPropagation();
         //});
 
-        //LockScreenOff();
+        LockScreenOff();
         //taw.init(true);
         //twir.init(true);
         //tow.init(true);
