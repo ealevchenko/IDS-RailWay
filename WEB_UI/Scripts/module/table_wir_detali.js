@@ -289,7 +289,7 @@
         // Определим событие выбора элемента
         $('#' + this.selector + '-nav-tab-' + this.id_wir + ' a').on('click', function (e) {
             e.preventDefault();
-            var tab = e.target;
+            var tab = e.currentTarget;
             $(tab).tab('show');
             // Отобразим данные
             var id = $(tab).attr('id');

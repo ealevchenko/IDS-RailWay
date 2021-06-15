@@ -334,7 +334,7 @@
         this.$t_arr_wag.find('tbody').on('tbody click', 'button.arrival-button', function (e) {
             e.preventDefault();
             e.stopPropagation();
-            var data = base.obj_arr_wag.row($(e.target).parents('tr')).data();
+            var data = base.obj_arr_wag.row($(e.currentTarget).parents('tr')).data();
             var sostav = data ? data.ArrivalSostav : null;
             if (sostav) {
                 var date = moment(sostav.date_arrival)
@@ -379,7 +379,7 @@
             .on('click', 'td.details-control-arrival', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
-                var tr = $(e.target).closest('tr');
+                var tr = $(e.currentTarget).closest('tr');
                 var row = base.obj_arr_wag.row(tr);
                 if (row.child.isShown()) {
                     // This row is already open - close it

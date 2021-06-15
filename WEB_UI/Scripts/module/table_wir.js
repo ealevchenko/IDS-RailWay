@@ -331,7 +331,7 @@
         this.$t_wir.find('tbody')
             .on('click', 'td.details-control-wir', function (e) {
                 e.preventDefault();
-                var tr = $(e.target).closest('tr');
+                var tr = $(e.currentTarget).closest('tr');
                 var row = base.obj_wir.row(tr);
                 if (row.child.isShown()) {
                     // This row is already open - close it
