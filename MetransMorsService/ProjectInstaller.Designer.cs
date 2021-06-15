@@ -34,7 +34,7 @@ namespace MetransService
             // 
             // serviceProcessInstaller1
             // 
-            this.serviceProcessInstaller1.Password = "B8T2OMoUyB4jZ62F49WT";
+            this.serviceProcessInstaller1.Password = "";
             this.serviceProcessInstaller1.Username = @"EUROPE\krr-svc-RailWay";
             // 
             // serviceInstaller1

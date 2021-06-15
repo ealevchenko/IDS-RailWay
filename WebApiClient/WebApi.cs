@@ -175,6 +175,31 @@ namespace WebApiClient
             }
         }
 
+        public string PostApiValues(string api_comand)
+        {
+            try
+            {
+                if (String.IsNullOrWhiteSpace(APP_PATH)) return null;
+                using (var client = CreateClient(token))
+                {
+                    if (client == null) return null;
+                    var response = client.PostAsync(APP_PATH + api_comand, null).Result;
+                    String.Format("Web API METRANS GetAsync [requestUri :{0}, status:{1}", APP_PATH + api_comand, response.StatusCode).WarningLog(eventID);
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        string err = response.ToString();
+                        err.ErrorLog(eventID);
+                    }
+                    return response.Content.ReadAsStringAsync().Result;
+                }
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetApiValues(api_comand={0})", api_comand), eventID);
+                return null;
+            }
+        }
+
         public T JSONStringToClass<T>(string JSONString)
         {
             try
@@ -197,7 +222,8 @@ namespace WebApiClient
         {
             try
             {
-                return JSONStringToClass<T>(GetApiValues(api_comand));
+                string resp = GetApiValues(api_comand);
+                return JSONStringToClass<T>(resp);
             }
             catch (Exception e)
             {

@@ -88,6 +88,16 @@ namespace MT
 
     }
 
+    #region Перенос вагонов из api mt
+    public class SostavArrivalMT
+    {
+        public string composition_index { get; set; }
+        public DateTime date_operation { get; set; }
+        public string operation { get; set; }
+        public List<WagonsArrivalMT> wagons { get; set; }
+    }
+    #endregion
+
     public class MTTransfer
     {
         private eventID eventID = eventID.MT_MTTransfer;
@@ -118,6 +128,8 @@ namespace MT
         public string PSWWagonsTracking { get { return this.psw_wagons_tracking; } set { this.psw_wagons_tracking = value; } }
         private string api_wagons_tracking;
         public string APIWagonsTracking { get { return this.api_wagons_tracking; } set { this.api_wagons_tracking = value; } }
+        private string api_wagons_arrival;
+        public string APIWagonsArrival { get { return this.api_wagons_arrival; } set { this.api_wagons_arrival = value; } }
 
         public MTTransfer()
         {
@@ -997,6 +1009,351 @@ namespace MT
         }
         #endregion
 
+        #region TransferArrivalAPI Перенос вагонов из api mt
+        /// <summary>
+        /// Вурнуть отсортированый резульат по составам и операциям
+        /// </summary>
+        /// <param name="list_wagon"></param>
+        /// <returns></returns>
+        public List<SostavArrivalMT> SortSostavRequest(List<WagonsArrivalMT> list_wagon)
+        {
+            try
+            {
+                List<SostavArrivalMT> list_result = new List<SostavArrivalMT>();
+
+                // Сгруппируем по индексу поезда
+                List<IGrouping<string, WagonsArrivalMT>> reg_mt_gr = list_wagon
+                                .ToList()
+                                .GroupBy(w => w.composition_index)
+                                .ToList();
+
+                // Пройдемся по индексу поезда
+                foreach (IGrouping<string, WagonsArrivalMT> gr_sostav in reg_mt_gr.ToList())
+                {
+                    string composition_index = gr_sostav.Key;
+
+                    // Группируем по времени
+                    List<IGrouping<DateTime, WagonsArrivalMT>> sostav_operation_data = gr_sostav
+                        .OrderByDescending(w => w.date_operation)
+                    .ToList()
+                    .GroupBy(w => w.date_operation)
+                    .ToList();
+                    // Пройдемся по времени
+                    foreach (IGrouping<DateTime, WagonsArrivalMT> operation_data in sostav_operation_data.ToList())
+                    {
+                        DateTime date_operation = operation_data.Key;
+                        // Группируем по операциям
+                        List<IGrouping<string, WagonsArrivalMT>> sostav_operation = operation_data
+                        .ToList()
+                        .GroupBy(w => w.operation)
+                        .ToList();
+                        // Пройдемся по операциям
+                        foreach (IGrouping<string, WagonsArrivalMT> operation in sostav_operation.ToList())
+                        {
+                            string oper = operation.Key;
+                            List<WagonsArrivalMT> list = operation.ToList();
+                            // Добавим результат
+                            list_result.Add(new SostavArrivalMT()
+                            {
+                                composition_index = composition_index,
+                                date_operation = date_operation,
+                                operation = oper,
+                                wagons = list.OrderBy(w => w.position).ToList()
+                            });
+                        }
+                    }
+                }
+                return list_result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("SortSostavRequest(list_wagon={0})", list_wagon), servece_owner, eventID);
+                return null;
+            }
+        }
+        /// <summary>
+        /// Получить ссылку на старую запись вагона (с коррекцией истории)
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="car"></param>
+        /// <param name="day_range"></param>
+        /// <returns></returns>
+        public long? GetParentID(ref EFDbContext context, ArrivalCars car, int day_range)
+        {
+            try
+            {
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+
+                long? parentid = null;
+                EFArrivalCars ef_arr_cars = new EFArrivalCars(context);
+                EFConsignee ef_consignee = new EFConsignee(context);
+                ArrivalCars old_car = ef_arr_cars.Context.Where(c => c.num == car.num).OrderByDescending(c => c.id).FirstOrDefault();
+                if (old_car == null) return null; // нет историии движения, первая операция над вагоном
+                if (old_car.arrived != null) return null; // история закрыта, первая операция над вагоном 
+
+                if (old_car.cargo_code == car.cargo_code)
+                {
+                    if (old_car.date_operation.Date.AddDays(day_range) > car.date_operation)
+                    {
+
+                        if (old_car.composition_index == car.composition_index |
+                                (old_car.composition_index != car.composition_index &
+                                ef_consignee.IsConsigneeSend(false, old_car.consignee, mtConsignee.AMKR) &
+                                ef_consignee.IsConsigneeSend(true, car.consignee, mtConsignee.AMKR)))
+                        { // Продолжаем цепочку вагонов если равны CompositionIndex или (CompositionIndex не равны но следующий код досылки и входит в диапазон времени)
+                            parentid = old_car.id;
+                            old_car.num_doc_arrived = (int)mtt_err_arrival.close_car;
+                            old_car.arrived = car.date_operation;
+                        }
+                        else
+                        {
+                            // вагон начал движение по новому маршруту
+                            old_car.num_doc_arrived = (int)mtt_err_arrival.close_new_route;
+                            old_car.arrived = car.date_operation;
+                        }
+                    }
+                    else
+                    {
+                        // больше допустимого интервала
+                        old_car.num_doc_arrived = (int)mtt_err_arrival.close_timeout;
+                        old_car.arrived = DateTime.Now;
+                    }
+                }
+                else
+                {
+                    // грузы в вагонах разные
+                    old_car.num_doc_arrived = (int)mtt_err_arrival.close_different_cargo;
+                    old_car.arrived = car.date_operation;
+                }
+                // закрываем старый вагон
+                old_car.arrived = car.date_operation;
+                ef_arr_cars.Update(old_car);
+                //ef_arr_cars.Save(); // сохранить изменение
+                return parentid;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetParentID(context={0}, car={1}, day_range={2})", context, car, day_range), servece_owner, eventID);
+                return -1;
+            }
+        }
+        /// <summary>
+        /// Добавить список вагонов
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="wagons"></param>
+        /// <returns></returns>
+        public List<ArrivalCars> AddWagon(ref EFDbContext context, List<WagonsArrivalMT> wagons)
+        {
+            try
+            {
+                // Добавим вагоны
+                List<ArrivalCars> result_wagons = new List<ArrivalCars>();
+                foreach (WagonsArrivalMT wag_mt in wagons.OrderBy(w => w.position).ToList())
+                {
+                    string cargo = "?";
+                    if (!String.IsNullOrWhiteSpace(wag_mt.cargo)) {
+                        cargo = wag_mt.cargo.Length > 50 ? wag_mt.cargo.Substring(0, 49) : wag_mt.cargo;
+                    }
+
+                    // Получим вагон
+                    ArrivalCars wag = new ArrivalCars()
+                    {
+                        id = 0,
+                        id_sostav = 0,
+                        position = wag_mt.position,
+                        num = wag_mt.num,
+                        country_code = wag_mt.country_code >= 100 ? int.Parse(wag_mt.country_code.ToString().Substring(0, 2)) : 0,
+                        wight = (float)wag_mt.wight,
+                        cargo_code = wag_mt.cargo_code,
+                        cargo = cargo,
+                        station_code = wag_mt.station_code,
+                        station = wag_mt.station,
+                        consignee = wag_mt.consignee,
+                        operation = wag_mt.operation,
+                        composition_index = wag_mt.composition_index,
+                        date_operation = wag_mt.date_operation,
+                        train = wag_mt.train,
+                        num_doc_arrived = null,
+                        arrived = null,
+                        parent_id = null,
+                        user_name = null,
+                    };
+                    wag.parent_id = GetParentID(ref context, wag, this.day_range_arrival_cars);
+                    result_wagons.Add(wag);
+                }
+                return result_wagons;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("AddWagon(context={0}, wagons={1})", context, wagons), servece_owner, eventID);
+                return null;
+            }
+        }
+        /// <summary>
+        /// Перенести натурные листы по прибытию
+        /// </summary>
+        /// <returns></returns>
+        public int TransferArrivalAPI(string url, string user, string psw, string api)
+        {
+            try
+            {
+                EFDbContext context = new EFDbContext();
+                List<SostavArrivalMT> sostav_result = null;
+                WebApiClientMT client_arr = new WebApiClientMT(url, user, psw, api, this.servece_owner);
+                RequestArrivalMT request = client_arr.GetArrival();
+                String.Format("Получен ответ на запрос id = {0}, получено вагонов {1}", request.id, request.wagons.Count()).InformationLog(servece_owner, this.eventID);
+                if (request != null && request.wagons != null && request.wagons.Count > 0)
+                {
+                    // Есть ответ с вагонами
+                    sostav_result = SortSostavRequest(request.wagons.ToList());
+                    // Отсортируем по индексу
+                    List<IGrouping<string, SostavArrivalMT>> sostav_ci = sostav_result
+                        .ToList()
+                        .GroupBy(w => w.composition_index)
+                        .ToList();
+                    String.Format("Определенно {0} составов для копирования", sostav_result.Count()).InformationLog(servece_owner, this.eventID);
+                    EFArrivalSostav ef_arr_sostav = new EFArrivalSostav(context);
+                    int add = 0;
+                    int error_add = 0;
+                    int update = 0;
+                    int error_update = 0;
+                    int skip = 0;
+                    // Пройдемся по сгруппированным составам
+                    foreach (IGrouping<string, SostavArrivalMT> ci in sostav_ci)
+                    {
+                        // Пройдемся по составам
+                        foreach (SostavArrivalMT st_ci in ci.OrderBy(w => w.date_operation).ThenBy(c => c.operation).ToList())
+                        {
+                            int count_wagon = 0;
+                            // Обработаем текущий состав
+                            Console.WriteLine("Переносим состав с индексом {0}, дата операции {1}", st_ci.composition_index, st_ci.date_operation);
+                            string message = String.Format("Cостав [Индекс : {0}, операция : {1}, дата : {2}]", st_ci.composition_index, st_ci.operation, st_ci.date_operation);
+                            DateTime start = DateTime.Now;
+                            ArrivalSostav exs_sostav = ef_arr_sostav.Context.Where(s => s.composition_index == st_ci.composition_index).OrderByDescending(c => c.date_time).FirstOrDefault();
+                            if (exs_sostav == null || (exs_sostav != null && exs_sostav.date_time < st_ci.date_operation))
+                            {
+                                // Нет информации по саставу
+                                long? ParentIDSostav = null;
+                                long? id_arrived = ef_arr_sostav.Database.SqlQuery<long?>("SELECT max([id_arrived]) FROM [METRANS].[ArrivalSostav]").FirstOrDefault();//    .GetNextIDArrival();//SELECT max([id_arrived]) FROM [METRANS].[ArrivalSostav]
+                                id_arrived = id_arrived != null ? id_arrived + 1 : 0; // Проверка и инкримент
+                                                                                      // получить не закрытый состав
+                                if (exs_sostav != null)
+                                {
+                                    System.TimeSpan diff_operation = st_ci.date_operation.Subtract(exs_sostav.date_time);
+                                    if (diff_operation.TotalDays < this.day_range_arrival_cars)
+                                    {
+                                        ParentIDSostav = exs_sostav.id;
+                                        id_arrived = exs_sostav.id_arrived;
+                                        // Закрыть состав
+                                        exs_sostav.close = DateTime.Now;
+                                        ef_arr_sostav.Update(exs_sostav); // Обновление
+                                    }
+                                }
+                                ArrivalSostav new_sostav = new ArrivalSostav()
+                                {
+                                    id = 0,
+                                    id_arrived = (int)id_arrived,
+                                    file_name = "api:" + st_ci.composition_index + "_" + st_ci.date_operation.ToString() + "_" + st_ci.operation,
+                                    composition_index = st_ci.composition_index,
+                                    date_time = st_ci.date_operation,
+                                    create = DateTime.Now,
+                                    close = null,
+                                    arrived = null,
+                                    Parent_id = ParentIDSostav,
+                                    operation = st_ci.operation == "ПРИБ" ? 1 : 2,
+
+                                };
+                                // Получим и добавим вагоны
+                                foreach (ArrivalCars car in AddWagon(ref context, st_ci.wagons))
+                                {
+                                    new_sostav.ArrivalCars.Add(car);
+                                };
+                                count_wagon = new_sostav.ArrivalCars.Count();
+                                // Добавим новый состав
+                                ef_arr_sostav.Add(new_sostav);
+                                // Добавим
+                                int result_add = context.SaveChanges();
+                                if (result_add > 0)
+                                {
+                                    add++;
+                                    if (arrival_to_railway)
+                                    {
+                                        // Перенесем вагоны в прибытие
+                                        //int res = InsertIDSArrivalSostav(new_sostav.id);
+                                    }
+                                }
+                                else
+                                {
+                                    error_add++;
+                                }
+                                message += " - добавлен, код вып. = " + result_add.ToString();
+                            }
+                            else
+                            {
+                                if (exs_sostav.date_time == st_ci.date_operation && exs_sostav.ArrivalCars.Count() != st_ci.wagons.Count())
+                                {
+                                    // Совпадают даты но не совпадает количество вагонов, обновим вагоны
+                                    exs_sostav.ArrivalCars.Clear();
+                                    foreach (ArrivalCars car in AddWagon(ref context, st_ci.wagons))
+                                    {
+                                        exs_sostav.ArrivalCars.Add(car);
+                                    };
+                                    count_wagon = exs_sostav.ArrivalCars.Count();
+                                    ef_arr_sostav.Update(exs_sostav);
+                                    // Обновим
+                                    int result_upd = context.SaveChanges();
+                                    if (result_upd > 0)
+                                    {
+                                        update++;
+                                        if (arrival_to_railway)
+                                        {
+                                            // Перенесем вагоны в прибытие
+                                            //int res = InsertIDSArrivalSostav(new_sostav.id);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        error_update++;
+                                    }
+                                    message += " - обновлен, код вып. = " + result_upd.ToString();
+                                }
+                                else
+                                {
+                                    skip++;
+                                    message += " - пропущен.";
+                                }
+                            }
+                            DateTime stop = DateTime.Now;
+                            servece_owner.ServicesToLog(eventID, message, start, stop, count_wagon);
+                        };
+                    }
+
+                    if (error_update == 0 && error_add == 0 && sostav_result.Count() == add + update + skip)
+                    {
+                        string post_res = client_arr.PostArrival(request.id);
+                    }
+                    string mess = String.Format("Перенос натурных листов вагонов по прибытию в БД METRANS.Arrival выполнен id запроса [{0}], определено для переноса {1} составов, обнавлено {2}, добавлено {3}, пропущено {4}, ошибок обновления {5}, ошибок добавления {6}.",
+                        request.id, sostav_result.Count(), update, add, skip, error_update, error_add);
+                    mess.InformationLog(servece_owner, this.eventID);
+                    if (sostav_result != null && sostav_result.Count() > 0) { mess.EventLog(error_update > 0 || error_add > 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID); }
+
+                    return error_update > 0 || error_add > 0 ? error_update + error_add : add + update + skip;
+                }
+                else return 0;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("TransferArrivalAPI(url={0}, user={1}, psw={2}, api={3})", url,  user,  psw,  api), servece_owner, eventID);
+                return -1;
+            }
+        }
+        #endregion
+
+
         #region TransferWagonsTracking Перенос вагонов из Web.Api МетТранса
         /// <summary>
         /// Добавить список изменений по вагону
@@ -1196,7 +1553,7 @@ namespace MT
                     // Сформируем сообщение и сохраним в логе
                     string mess = String.Format("Построение сигналов и перенос сотояния движения вагонов из БД METRANS.WagonsTracking -> БД IDS.MORS - ВЫПОЛНЕН (Общее количество вагонов={0}, перенесено={1}, пропущено={2}, ошибок переноса={3}).", nums.Count(), add, skip, error);
                     mess.InformationLog(servece_owner, this.eventID);
-                    mess.EventLog(error >0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
+                    mess.EventLog(error > 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
                     return error > 0 ? error : nums.Count();
                 }
                 return 0;
@@ -1215,7 +1572,7 @@ namespace MT
         /// <param name="route"></param>
         /// <param name="station_end"></param>
         /// <param name="station_from"></param>
-        public void ArrivalAMKR(WTMotionSignals car, ref ids_route route, ref  int station_end, ref int station_from, ref DateTime? start_flight, ref DateTime? start_turnover, ref ids_type_flight_wagon type_flight)
+        public void ArrivalAMKR(WTMotionSignals car, ref ids_route route, ref int station_end, ref int station_from, ref DateTime? start_flight, ref DateTime? start_turnover, ref ids_type_flight_wagon type_flight)
         {
             // Прибыл на АМКР (считаем время прибытия)
             if (route == ids_route.ret | route == ids_route.not)
@@ -1262,7 +1619,7 @@ namespace MT
         /// <param name="route"></param>
         /// <param name="station_end"></param>
         /// <param name="station_from"></param>
-        public void ReturnAMKR(WTMotionSignals car, ref ids_route route, ref  int station_end, ref int station_from, ref DateTime? start_flight, ref ids_type_flight_wagon type_flight)
+        public void ReturnAMKR(WTMotionSignals car, ref ids_route route, ref int station_end, ref int station_from, ref DateTime? start_flight, ref ids_type_flight_wagon type_flight)
         {
             // Отправлен на АМКР (считаем время отправки)
             if (route == ids_route.client || route == ids_route.not)
@@ -1297,7 +1654,7 @@ namespace MT
         /// <param name="route"></param>
         /// <param name="station_end"></param>
         /// <param name="station_from"></param>
-        public void ArrivalClient(WTMotionSignals car, ref ids_route route, ref  int station_end, ref int station_from, ref DateTime? start_flight, ref ids_type_flight_wagon type_flight)
+        public void ArrivalClient(WTMotionSignals car, ref ids_route route, ref int station_end, ref int station_from, ref DateTime? start_flight, ref ids_type_flight_wagon type_flight)
         {
             // Вагон прибыл к клиенту
             if (route == ids_route.send || route == ids_route.not)
@@ -1331,7 +1688,7 @@ namespace MT
         /// <param name="route"></param>
         /// <param name="station_end"></param>
         /// <param name="station_from"></param>
-        public void SendClient(WTMotionSignals car, ref ids_route route, ref  int station_end, ref int station_from, ref DateTime? start_flight, ref ids_type_flight_wagon type_flight)
+        public void SendClient(WTMotionSignals car, ref ids_route route, ref int station_end, ref int station_from, ref DateTime? start_flight, ref ids_type_flight_wagon type_flight)
         {
             // Вагон движется к клиенту
             // Откуда движется вагон от АМКР или Клиента
@@ -1426,33 +1783,33 @@ namespace MT
                         .Context
                         .Where(w => w.nvagon == num)
                         .OrderBy(c => c.dt).Select(w => new WTMotionSignals
-                    {
-                        id_wt = w.id,
-                        nvagon = w.nvagon,
-                        st_disl = w.st_disl,
-                        nst_disl = w.nst_disl,
-                        kodop = w.kodop,
-                        nameop = w.nameop,
-                        full_nameop = w.full_nameop,
-                        dt = w.dt,
-                        st_form = w.st_form,
-                        nst_form = w.nst_form,
-                        idsost = w.idsost,
-                        nsost = w.nsost,
-                        st_nazn = w.st_nazn,
-                        nst_nazn = w.nst_nazn,
-                        ntrain = w.ntrain,
-                        st_end = w.st_end,
-                        nst_end = w.nst_end,
-                        kgr = w.kgr,
-                        nkgr = w.nkgr,
-                        id_cargo = w.id_cargo,
-                        kgrp = w.kgrp,
-                        ves = w.ves,
-                        updated = w.updated,
-                        kgro = w.kgro,
-                        km = w.km,
-                    }).ToList();
+                        {
+                            id_wt = w.id,
+                            nvagon = w.nvagon,
+                            st_disl = w.st_disl,
+                            nst_disl = w.nst_disl,
+                            kodop = w.kodop,
+                            nameop = w.nameop,
+                            full_nameop = w.full_nameop,
+                            dt = w.dt,
+                            st_form = w.st_form,
+                            nst_form = w.nst_form,
+                            idsost = w.idsost,
+                            nsost = w.nsost,
+                            st_nazn = w.st_nazn,
+                            nst_nazn = w.nst_nazn,
+                            ntrain = w.ntrain,
+                            st_end = w.st_end,
+                            nst_end = w.nst_end,
+                            kgr = w.kgr,
+                            nkgr = w.nkgr,
+                            id_cargo = w.id_cargo,
+                            kgrp = w.kgrp,
+                            ves = w.ves,
+                            updated = w.updated,
+                            kgro = w.kgro,
+                            km = w.km,
+                        }).ToList();
                 }
                 else
                 {
@@ -1527,7 +1884,8 @@ namespace MT
                                     case "ПГР2": ReturnAMKR(wtms, ref route, ref station_end, ref station_from, ref start_flight, ref type_flight); break;
                                     case "ПОГРН": ReturnAMKR(wtms, ref route, ref station_end, ref station_from, ref start_flight, ref type_flight); break;
                                     // Проверим на смену маршрута
-                                    default: if (wtms.st_end != station_end)
+                                    default:
+                                        if (wtms.st_end != station_end)
                                             // Маршрут поменялся вагон движется назад
                                             ReturnAMKR(wtms, ref route, ref station_end, ref station_from, ref start_flight, ref type_flight);
                                         break;
@@ -1546,7 +1904,8 @@ namespace MT
                                     case "ПГР2": SendClient(wtms, ref route, ref station_end, ref station_from, ref start_flight, ref type_flight); break;
                                     case "ПОГРН": SendClient(wtms, ref route, ref station_end, ref station_from, ref start_flight, ref type_flight); break;
                                     // Проверим на смену маршрута
-                                    default: if (wtms.st_end != station_end)
+                                    default:
+                                        if (wtms.st_end != station_end)
                                             // Маршрут поменялся вагон движется к клиенту
                                             SendClient(wtms, ref route, ref station_end, ref station_from, ref start_flight, ref type_flight);
                                         break;

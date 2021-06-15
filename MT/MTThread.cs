@@ -30,6 +30,9 @@ namespace MT
         protected Thread thTransferWT = null;
         public bool statusTransferWT { get { return thTransferWT.IsAlive; } }
 
+        protected Thread thAPITransferArrival = null;
+        public bool statusAPITransferArrival { get { return thAPITransferArrival.IsAlive; } }
+
         public MTThread()
         {
 
@@ -379,6 +382,91 @@ namespace MT
                 res_transfer_motion_signals = mtt.TransferWagonsMotionSignals();     // TODO: Добавить Формироание циклограмм
                 TimeSpan ts = DateTime.Now - dt_start;
                 string mes_service_exec = String.Format("Поток {0} сервиса {1} - время выполнения: {2}:{3}:{4}({5}), код выполнения: res_transfer:{6}, res_transfer_motion_signals:{7}.", service.ToString(), servece_owner, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds, res_transfer, res_transfer_motion_signals);
+                mes_service_exec.InformationLog(servece_owner, eventID);
+                service.ServicesToLog(service.ToString() + " - выполнен.", dt_start, DateTime.Now, res_transfer);
+            }
+            catch (ThreadAbortException exc)
+            {
+                String.Format("Поток {0} сервиса {1} - прерван по событию ThreadAbortException={2}", service.ToString(), servece_owner, exc).WarningLog(servece_owner, eventID);
+            }
+            catch (Exception ex)
+            {
+                ex.ExceptionLog(String.Format("Ошибка выполнения цикла переноса, потока {0} сервис {1}", service.ToString(), servece_owner), servece_owner, eventID);
+                service.ServicesToLog(service.ToString() + " - завершен с ошибкой.", dt_start, DateTime.Now, -1);
+            }
+        }
+        #endregion
+
+        #region Metrans_APITransferArrival
+        /// <summary>
+        /// Запустить поток переноса вагонов по прибытию
+        /// </summary>
+        /// <param name="delay"></param>
+        /// <returns></returns>
+        public bool Start_APITransferArrival()
+        {
+            service service = service.Metrans_APITransferArrival;
+            string mes_service_start = String.Format("Поток : {0} сервиса : {1}", service.ToString(), servece_owner);
+            try
+            {
+                if ((thAPITransferArrival == null) || (!thAPITransferArrival.IsAlive && thAPITransferArrival.ThreadState == ThreadState.Stopped))
+                {
+                    thAPITransferArrival = new Thread(APITransferArrival);
+                    thAPITransferArrival.Name = service.ToString();
+                    thAPITransferArrival.Start();
+                }
+                return thAPITransferArrival.IsAlive;
+            }
+            catch (Exception ex)
+            {
+                mes_service_start += " - ошибка запуска.";
+                ex.ExceptionLog(mes_service_start, servece_owner, eventID);
+                return false;
+            }
+        }
+        /// <summary>
+        /// Поток переноса вагонов по прибытию
+        /// </summary>
+        private static void APITransferArrival()
+        {
+            service service = service.Metrans_APITransferArrival;
+            DateTime dt_start = DateTime.Now;
+            try
+            {
+
+                string url_wagons_tracking = @"https://inform.umtrans.com.ua";
+                string user_wagons_tracking = "Arcelor1";
+                string psw_wagons_tracking = "12345678-";
+                string api_wagons_tracking = @"/api/TrainNaturList";
+                bool arrivalToRailWay = true;
+                int dayrangeArrivalCars = 10;
+                // считать настройки
+                try
+                {
+                    // Прочтем подключение
+                    url_wagons_tracking = ConfigurationManager.AppSettings["WebApiMTURL"].ToString();
+                    user_wagons_tracking = ConfigurationManager.AppSettings["WebApiMTUser"].ToString();
+                    psw_wagons_tracking = ConfigurationManager.AppSettings["WebApiMTPSW"].ToString();
+                    api_wagons_tracking = ConfigurationManager.AppSettings["WebApiMTArrivalApi"].ToString();
+                    // перенос данных в прибытие
+                    arrivalToRailWay = bool.Parse(ConfigurationManager.AppSettings["ArrivalToRailWay"].ToString());
+                    // Период для определения незакрытого состава и вагона 
+                    dayrangeArrivalCars = int.Parse(ConfigurationManager.AppSettings["DayRangeArrivalCars"].ToString());
+                }
+                catch (Exception ex)
+                {
+                    ex.ExceptionLog(String.Format("Ошибка выполнения считывания настроек потока {0}, сервиса {1}", service.ToString(), servece_owner), servece_owner, eventID);
+                }
+                int res_transfer = 0;
+                //lock (locker_xml_file)
+                //{
+                    MTTransfer mtt = new MTTransfer(service);
+                    mtt.DayRangeArrivalCars = dayrangeArrivalCars;
+                    mtt.ArrivalToRailWay = arrivalToRailWay;
+                    res_transfer = mtt.TransferArrivalAPI(url_wagons_tracking,user_wagons_tracking,psw_wagons_tracking, api_wagons_tracking);
+                //}
+                TimeSpan ts = DateTime.Now - dt_start;
+                string mes_service_exec = String.Format("Поток {0} сервиса {1} - время выполнения: {2}:{3}:{4}({5}), код выполнения: res_transfer:{6}.", service.ToString(), servece_owner, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds, res_transfer);
                 mes_service_exec.InformationLog(servece_owner, eventID);
                 service.ServicesToLog(service.ToString() + " - выполнен.", dt_start, DateTime.Now, res_transfer);
             }
