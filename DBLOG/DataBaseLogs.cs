@@ -333,6 +333,11 @@ namespace IDSLogs
                 EFServices ef_services = new EFServices(new EFDbContext());
                 TimeSpan ts = stop - start;
                 int cur_ms = (int)ts.TotalMilliseconds;
+                // Коррекция на размер 100
+                if (!String.IsNullOrWhiteSpace(description))
+                {
+                    description = description.Length > 100 ? description.Substring(0, 99) : description;
+                }
 
                 Services new_services = new Services()
                 {

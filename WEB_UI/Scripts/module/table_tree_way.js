@@ -60,7 +60,7 @@
             'class': 'text-left'
         });
         var $bt_icon_open_park = $('<i></i>', {
-            'class': 'fas fa-bars'
+            'class': 'far fa-folder-open'
         });
         var $bt_open_park = $('<button></button>', {
             'id': 'button-open-park',
@@ -68,7 +68,7 @@
             'title': langView('title_open_tree_park', App.Langs),
         });
         var $bt_icon_open_all = $('<i></i>', {
-            'class': 'fas fa-list-ol'
+            'class': 'fas fa-folder-open'
         });
         var $bt_open_all = $('<button></button>', {
             'id': 'button-open-all',
@@ -96,37 +96,7 @@
         $div_bt.append($bt_open_park.append($bt_icon_open_park)).append($bt_open_all.append($bt_icon_open_all)).append($bt_close.append($bt_icon_close)).append($bt_refresh.append($bt_icon_refresh));
         this.$element = $div_bt;
     };
-    //function card(selector) {
-    //    var $div = $('<div></div>', {
-    //        'class': 'card border-primary'
-    //    });
-    //    var $div_header = $('<div></div>', {
-    //        'class': 'card-header',
-    //        'text': langView('title_card_header', App.Langs)
-    //    });
-    //    var $div_body = $('<div></div>', {
-    //        'class': 'card-body',
-    //    });
-    //    var $div_row = $('<div></div>', {
-    //        'class': 'row',
-    //    });
-    //    var $div_row_xl = $('<div></div>', {
-    //        //'class': 'col-xl-12',
-    //        'style':'overflow-x:auto'
-    //    });
-    //    var $div_table = $('<table></table>', {
-    //        'id': selector + '-table',
-    //        'class': 'table table-hover',
-    //    });
-
-    //    /*        var btElement = new table_button(selector);*/
-    //    this.$element_table = $div_table;
-    //    /*        $div_body.append(btElement.$element);*/
-    //    $div_body.append($div_row.append($div_row_xl.append(this.$element_table)));
-    //    $div.append($div_header).append($div_body);
-    //    this.$element = $div;
-    //};
-    // Создать таблицу
+    // Создать основу TREE-WAY
     function table_tree_way(selector) {
         var $div = $('<div></div>', {
             'style': 'overflow-x:auto'
@@ -149,45 +119,34 @@
         var $th_name = $('<th></th>', {
             'width': '60%',
             'scope': 'col',
-            //'text': 'Дерево путей',
             'colspan': '5',
-            //'class': 'text-left'
         });
         var $th_pb = $('<th></th>', {
             'width': '20%',
             'scope': 'col',
             'text': langView('title_inp_out', App.Langs),
-            //'class': 'text-center',
             'colspan': '1',
-            //'style':'text-align:justify;'
         });
         var $th_count = $('<th></th>', {
             'width': '5%',
             'scope': 'col',
             'text': langView('title_count', App.Langs),
-            //'class': 'text-center',
             'colspan': '1',
-            //'style': 'text-align:justify;'
         });
         var $th_amkr = $('<th></th>', {
             'width': '5%',
             'scope': 'col',
             'text': langView('title_count_amkr', App.Langs),
-            //'class': 'text-center',
             'colspan': '1',
-            //'style': 'text-align:justify;'
         });
         var $th_capacity = $('<th></th>', {
             'width': '10%',
             'scope': 'col',
             'text': langView('title_max', App.Langs),
-            //'class': 'text-center',
             'colspan': '1',
-            //'style': 'text-align:justify;'
         });
 
         var btElement = new table_button(selector, base);
-
         $th_name.append(btElement.$element);
         $tr.append($th_name).append($th_pb).append($th_count).append($th_amkr).append($th_capacity);
         $thead.append($tr);
@@ -233,16 +192,10 @@
             'class': 'text-right font-weight-bold',
             'colspan': '1'
         });
-
-        //var btElement = new table_button(selector, base);
-
-        //$th_name.append(btElement.$element);
         $tr.append($th_name).append($th_pb).append($th_count).append($th_amkr).append($th_capacity);
         $tfoot.append($tr);
         this.$element = $tfoot;
-
     };
-
     // Создать раздел данных таблицы
     function table_body(selector) {
         var $tbody = $('<tbody></tbody>', {
@@ -262,10 +215,6 @@
             'class': 'station-control',
             'width': '18px',
         });
-        //var $img_station = $('<img>', {
-        //    'class': 'icon-station',
-        //    'width': '18px',
-        //}); //<img class="icon-station">
         var $td_img_station = $('<td></td>', {
             'class': 'icon-station',
             'width': '18px',
@@ -293,7 +242,7 @@
             'text': el.capacity_wagons,
             'class': 'text-right'
         });
-        //$td_img_station.append($img_station);
+
         $td_pb.append(as_Element.$element);
         $tr.append($td_control).append($td_img_station).append($td_name).append($td_pb).append($td_count).append($td_amkr).append($td_capacity);
         this.$element = $tr;
@@ -306,14 +255,6 @@
             'data-park': el.id,
             'data-tree-end': index === 0 ? '1' : '0',
         });
-        //var $img_true_open = $('<img>', {
-        //    'class': 'icon-tree-open',
-        //    'width': '18px',
-        //});
-        //var $img_true_open_end = $('<img>', {
-        //    'class': 'icon-tree-open-end',
-        //    'width': '18px',
-        //});
         var $td_img_true_open = $('<td></td>', {
             'class': '',
             'width': '18px',
@@ -323,10 +264,6 @@
             'class': 'park-control',
             'width': '18px',
         });
-        //var $img_park = $('<img>', {
-        //    'class': 'icon-park',
-        //    'width': '18px',
-        //});
         var $td_img_park = $('<td></td>', {
             'class': 'icon-park',
             'width': '18px',
@@ -351,12 +288,7 @@
             'text': el.capacity_wagons,
             'class': 'text-right'
         });
-
-        //$td_img_true_open.append(index === 0 ? $img_true_open_end : $img_true_open);
         $td_img_true_open.addClass(index === 0 ? 'icon-tree-open-end' : 'icon-tree-open');
-
-        //$td_img_park.append($img_park);
-        //$td_pb.append(el.count_arrive > 0 ? $a_arrive : '0').append('-').append(el.count_sent > 0 ? $a_send : '0');
         $tr.append($td_img_true_open).append($td_control).append($td_img_park).append($td_name).append($td_pb).append($td_count).append($td_amkr).append($td_capacity);
         this.$element = $tr;
     };
@@ -373,10 +305,6 @@
             'dissolution': el.dissolution ? '1' : '0',
             'output-dissolution': el.output_dissolution ? '1' : '0',
         });
-        //var $img_tree_open_skeep = $('<img>', {
-        //    'class': 'icon-tree-open-skeep',
-        //    'width': '18px',
-        //});
         var $td_img_tree_open_skeep = $('<td></td>', {
             'class': '',
             'width': '18px',
@@ -387,23 +315,11 @@
             'width': '18px',
             'style': 'border-top-color:#fff'
         });
-        //var $img_true_open = $('<img>', {
-        //    'class': 'icon-tree-open',
-        //    'width': '18px',
-        //});
-        //var $img_true_open_end = $('<img>', {
-        //    'class': 'icon-tree-open-end',
-        //    'width': '18px',
-        //});
         var $td_img_true_open = $('<td></td>', {
             'class': '',
             'width': '18px',
             'style': 'border-top-color:#fff'
         });
-        //var $img_way = $('<img>', {
-        //    'class': 'icon-way',
-        //    'width': '18px',
-        //});
         var $td_img_way = $('<td></td>', {
             'class': 'icon-way',
             'width': '18px',
@@ -431,11 +347,8 @@
         });
 
         $td_pb.append(pbElement.$element); // добавим прогрес бар
-        //$td_img_tree_open_skeep.append(end_tree === 0 ? $img_tree_open_skeep : '');
         $td_img_tree_open_skeep.addClass(end_tree === 0 ? 'icon-tree-open-skeep' : '');
-        //$td_img_true_open.append(index === 0 ? $img_true_open_end : $img_true_open);
         $td_img_true_open.addClass(index === 0 ? 'icon-tree-open-end' : 'icon-tree-open');
-        //$td_img_way.append($img_way);
         $tr.append($td_img_tree_open_skeep).append($td_not).append($td_img_true_open).append($td_img_way).append($td_name).append($td_pb).append($td_count).append($td_amkr).append($td_capacity);
         this.$element = $tr;
     };
@@ -475,7 +388,6 @@
             'text': progress.toFixed(0) + '%'
 
         });
-        //<div class="progress-bar bg-success" ="" ="" ="" ="" =""></div>
         $div.append($div_pb);
         this.$element = $div;
     };
@@ -550,7 +462,6 @@
     };
     // инициализация таблицы
     ids_tree_way.prototype.view = function (list_station, id_station, id_park, id_way) {
-        //this.load_station();
         this.view_station(list_station, id_station, id_park, id_way, function () {
             LockScreenOff();
         })
@@ -618,18 +529,13 @@
             count_all += count ? Number(count) : 0;
             amkr_all += amkr ? Number(amkr) : 0;
             capacity_all += capacity ? Number(capacity) : 0;
-
-            //var area = $(el).attr('data-tree-area');
-            //if (area === 'station') {
-
-            //}
         }.bind(this));
         // вывести итого
         var tr_foot = this.foot.find('tr');
         if (tr_foot && tr_foot.length > 0) {
             $(tr_foot[0].cells[2]).text(count_all);
             $(tr_foot[0].cells[3]).text(amkr_all);
-            $(tr_foot[0].cells[4]).text(capacity_all);
+            //$(tr_foot[0].cells[4]).text(capacity_all);
         };
     };
     //--------------------------------Станции-----------------------------------
@@ -655,7 +561,6 @@
     };
     // Загрузить станцию по id из базы
     ids_tree_way.prototype.load_station_of_id = function (id, callback) {
-        /*LockScreen(langView('mess_load_station', App.Langs));*/
         ids_rwt.getViewStatusStationOfID(id, function (station) {
             if (typeof callback === 'function') {
                 callback(station);
@@ -686,8 +591,8 @@
                     }); // Показать парки
                 }
             }.bind(this));
+            base.select_way(id_way);
             base.update_foot();
-            //LockScreenOff();
             if (typeof callback === 'function') {
                 callback();
             }
@@ -710,12 +615,10 @@
                     $td_count.empty().text(station[0].count_all_wagons);
                     $td_amkr.empty().text(station[0].count_amkr_wagons);
                     $td_capacity.empty().text(station[0].capacity_wagons);
-                    //LockScreenOff();
                     if (typeof callback === 'function') {
                         callback();
                     }
                 } else {
-                    //LockScreenOff();
                     if (typeof callback === 'function') {
                         callback();
                     }
@@ -761,15 +664,11 @@
         var station = $(this.body).find('tr[data-tree-area="station"][data-station="' + id_station + '"]');
         if (station && station.length > 0) {
             // Проверим парк открыт
-            //var parks = $(this.body).find('tr[data-tree-area="park"][data-station="' + id_station + '"]');
-            //if (parks && parks.length > 0) {
             var show = $(station).hasClass('shown');
             if (show) {
-                /*parks.remove();*/
                 this.close_way_of_station(id_station); // Удалить (закрыть) - пути
                 this.close_park_of_station(id_station); // Удалить (закрыть) - парки
                 $(station).removeClass('shown');
-                //LockScreenOff();
                 if (typeof callback === 'function') {
                     callback(id_station);
                 }
@@ -796,7 +695,6 @@
                             }); // Показать парки
                         }
                     });
-                    //LockScreenOff();
                     if (typeof callback === 'function') {
                         callback(id_station);
                     }
@@ -820,17 +718,13 @@
             // Получаем данные
             this.load_park_of_id(id_station, id_park, function (park) {
                 if (park && park.length > 0) {
-                    //var pbElement = new progress_bar(this.selector, 'park', park[0].id, park[0].capacity_wagons, park[0].count_all_wagons);
-                    //$div_pb.empty().append(pbElement.$element);
                     $td_count.empty().text(park[0].count_all_wagons);
                     $td_amkr.empty().text(park[0].count_amkr_wagons);
                     $td_capacity.empty().text(park[0].capacity_wagons);
-                    //LockScreenOff();
                     if (typeof callback === 'function') {
                         callback();
                     }
                 } else {
-                    //LockScreenOff();
                     if (typeof callback === 'function') {
                         callback();
                     }
@@ -873,19 +767,13 @@
     };
     // показать парки станции
     ids_tree_way.prototype.view_way = function (id_station, id_park, id_way, callback) {
-        //var park = $(this.body).find('tr[data-tree-area="park"][data-park="' + id_park + '"]');
         var park = $(this.body).find('tr[data-tree-area="park"][data-station="' + id_station + '"][data-park="' + id_park + '"]');
         var end_park = park.attr('data-tree-end');
         if (park && park.length > 0) {
-            //var ways = $(this.body).find('tr[data-tree-area="way"][data-park="' + id_park + '"]');
-            //var ways = $(this.body).find('tr[data-tree-area="way"][data-station="' + id_station + '"][data-park="' + id_park + '"]');
             var show = $(park).hasClass('shown');
-            //if (ways && ways.length > 0) {
             if (show) {
-                //ways.remove();
                 this.close_way_of_park(id_station, id_park);
                 $(park).removeClass('shown');
-                //LockScreenOff();
                 if (typeof callback === 'function') {
                     callback([]);
                 }
@@ -911,21 +799,12 @@
                             if (tr && tr.length > 0) {
                                 this.select_way(Number(tr.attr('data-way')));
                             }
-                            //this.deselect_way();
-                            //tr.addClass('select');
-                            //var id_station = Number(tr.attr('data-station'));
-                            //var id_park = Number(tr.attr('data-park'));
-                            //var id_way = Number(tr.attr('data-way'));
-                            //if (typeof this.fn_select_way === 'function') {
-                            //    this.fn_select_way(id_station, id_park, id_way);
-                            //}
                         }.bind(base));
                         park.after(trbodyElement.$element);
                     });
                     if (id_way) {
                         base.select_way(id_way);
                     }
-                    //LockScreenOff();
                     if (typeof callback === 'function') {
                         callback(ways);
                     }
@@ -962,7 +841,6 @@
                     if (typeof callback === 'function') {
                         callback();
                     }
-                    //LockScreenOff();
                 }
             }.bind(this));
         } else {
@@ -991,9 +869,23 @@
             var id_station = Number(way.attr('data-station'));
             var id_park = Number(way.attr('data-park'));
             var id_way = Number(way.attr('data-way'));
+            // получим опции
+            var crossing_uz = Number(way.attr('crossing-uz'));
+            var crossing_amkr = Number(way.attr('crossing-amkr'));
+            var dissolution = Number(way.attr('dissolution'));
+            var output_dissolution = Number(way.attr('output-dissolution'));
+            var option = new Object;
+            option['crossing-uz'] = crossing_uz;
+            option['crossing-amkr'] = crossing_amkr;
+            option['dissolution'] = dissolution;
+            option['output-dissolution'] = output_dissolution;
+            // Получим опции
+
             if (typeof this.fn_select_way === 'function') {
-                this.fn_select_way(id_station, id_park, id_way);
+                this.fn_select_way(id_station, id_park, id_way, option);
             }
+        } else {
+            this.fn_select_way(null, null, null, null);
         }
     };
     //-----------------------------Управление ветками дерева-----------------
@@ -1028,7 +920,6 @@
     };
     // Закрыть все пути парка
     ids_tree_way.prototype.close_way_of_park = function (id_station, id_park) {
-        //var ways = $(this.body).find('tr[data-tree-area="way"][data-park="' + id_park + '"]');
         var ways = $(this.body).find('tr[data-tree-area="way"][data-station="' + id_station + '"][data-park="' + id_park + '"]');
         ways.remove();
     };
@@ -1105,13 +996,21 @@
 
                 }.bind(this));
             } else {
-                // Парки станции открыты, раскроем пути парков
-                this.open_way_of_park_station(id_station, function () {
+                if (b_way) {
+                    // раскрыть путь
+                    this.open_way_of_park_station(id_station, function () {
+                        this.count_tr_st--;
+                        if (this.count_tr_st <= 0) {
+                            LockScreenOff();
+                        }
+                    }.bind(this));
+                } else {
+                    // путь не раскрывать
                     this.count_tr_st--;
                     if (this.count_tr_st <= 0) {
                         LockScreenOff();
                     }
-                }.bind(this));
+                }
             }
         }.bind(this));
     };
@@ -1125,7 +1024,6 @@
             var show_tr_park = $(el_park).hasClass('shown');
             if (!show_tr_park) {
                 this.view_way(id_station, id_park, null, function () {
-                    //this.count_tr_prk[id_station]--;
                     count_tr_prk--;
                     if (count_tr_prk <= 0) {
                         if (typeof callback === 'function') {

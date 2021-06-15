@@ -24,6 +24,7 @@ namespace IDSLogs.Enum
         Metrans_TransferApproaches = 202,
         Metrans_TransferArrival = 203,
         Metrans_TransferWT = 204,
+        Metrans_APITransferArrival = 205,
 
         // сервисы ИДС
         IDS = 300,

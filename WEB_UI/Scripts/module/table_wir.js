@@ -58,7 +58,7 @@
         {
             field: 'wir_car_details_control',
             className: 'details-control details-control-wir',
-/*            id:'wir_car_details_control',*/
+            /*            id:'wir_car_details_control',*/
             orderable: false,
             data: null,
             defaultContent: '',
@@ -69,7 +69,7 @@
             field: 'wir_button_view',
             targets: 0,
             data: null,
-            defaultContent: '<button class="btn"><i class="far fa-eye"></i></button>',
+            defaultContent: '<button class="btn wir-button"><i class="far fa-eye"></i></button>',
             orderable: false,
             className: 'dt-body-center',
             width: "20px"
@@ -256,6 +256,20 @@
             ]
         }).on('select', function (e, dt, type, indexes) {
         }.bind(this));
+        var base = this;
+        this.$t_wir.find('tbody').on('tbody click', 'button.wir-button', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var data = base.obj_wir.row($(e.currentTarget).parents('tr')).data();
+            if (data && data.close === null) {
+                var wims = data ? data.WagonInternalMovement : null;
+                var way = wims && wims.length > 0 ? wims[wims.length - 1].Directory_Ways : null;
+                if (way) {
+                    window.open(url_wsd + '?station=' + way.id_station + '&park=' + way.id_park + '&way=' + way.id + '&num=' + data.num, '', '');
+                }
+            }
+        }.bind(this));
+
         if (this.b_detali) this.init_detali();
     };
     // Показать данные 
@@ -328,7 +342,7 @@
                     row.child('<div class="detali-operation">' +
                         '<div class="row">' +
                         '<div class="col-xl-12">' +
-                        '<div id="' + this.selector +'-wird-' + row.data().id + '">' +
+                        '<div id="' + this.selector + '-wird-' + row.data().id + '">' +
 
                         //'<div class="card border-primary mb-3">' +
                         //'<div class="card-header">Движение на АМКР</div>' +
@@ -344,7 +358,7 @@
                         '</div>' +
                         '</div>' +
                         '</div>' +
-                    '</div>').show();
+                        '</div>').show();
 
                     // Инициализируем
                     base.view_detali(row.data());
