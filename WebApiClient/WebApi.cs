@@ -22,14 +22,25 @@ namespace WebApiClient
         private string userName;
         private string password;
         private static string token;
+        public bool error;
 
         public WebApiToken(string url, string userName, string password)
         {
-            this.APP_PATH = url;
-            this.userName = userName;
-            this.password = password;
-            Dictionary<string, string> tokenDictionary = GetTokenDictionary(userName, password);
-            token = tokenDictionary["access_token"];
+            try
+            {
+                this.error = false;
+                this.APP_PATH = url;
+                this.userName = userName;
+                this.password = password;
+                Dictionary<string, string> tokenDictionary = GetTokenDictionary(userName, password);
+                bool keyExistance = tokenDictionary.ContainsKey("access_token");
+                if (keyExistance) token = tokenDictionary["access_token"];
+            }
+            catch (Exception e)
+            {
+                this.error = true;
+                e.ExceptionMethodLog(String.Format("WebApiToken(url={0}, userName={1}, password={2})", url, userName, password), eventID);
+            }
         }
 
         // получение токена
@@ -40,8 +51,8 @@ namespace WebApiClient
                 if (String.IsNullOrWhiteSpace(APP_PATH)) return null;
                 var pairs = new List<KeyValuePair<string, string>>
                 {
-                    new KeyValuePair<string, string>( "grant_type", "password" ), 
-                    new KeyValuePair<string, string>( "username", userName ), 
+                    new KeyValuePair<string, string>( "grant_type", "password" ),
+                    new KeyValuePair<string, string>( "username", userName ),
                     new KeyValuePair<string, string> ( "Password", password )
                 };
                 var content = new FormUrlEncodedContent(pairs);
@@ -146,7 +157,7 @@ namespace WebApiClient
             catch (Exception e)
             {
                 e.ExceptionMethodLog(String.Format("GetValues(token={0})", token), eventID);
-                return null; 
+                return null;
             }
         }
 
@@ -164,6 +175,7 @@ namespace WebApiClient
                     {
                         string err = response.ToString();
                         err.ErrorLog(eventID);
+
                     }
                     return response.Content.ReadAsStringAsync().Result;
                 }

@@ -1205,6 +1205,7 @@ namespace MT
                 List<SostavArrivalMT> sostav_result = null;
                 WebApiClientMT client_arr = new WebApiClientMT(url, user, psw, api, this.servece_owner);
                 RequestArrivalMT request = client_arr.GetArrival();
+                if (request == null) return -1;
                 String.Format("Получен ответ на запрос id = {0}, получено вагонов {1}", request.id, request.wagons.Count()).InformationLog(servece_owner, this.eventID);
                 if (request != null && request.wagons != null && request.wagons.Count > 0)
                 {
