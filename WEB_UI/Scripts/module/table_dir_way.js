@@ -12,26 +12,39 @@
         'default':  //default language: ru
         {
             'field_id': 'id строки',
-            //'field_num': '№ вагона',
-            //'field_train': '№ поезда',
-            //'field_composition_index': 'Индекс поезда',
-            //'field_date_arrival': 'Прибил в составе',
-            //'field_date_adoption': 'Принят в составе',
-            //'field_date_adoption_act': 'Принят в составе по акту',
-            //'field_date_adoption_act_wagon': 'Вагон принят по акту',
-            //'field_processed': 'Обработан',
-            //'field_station_from': 'Отправлен со станции',
-            //'field_station_on': 'Принят на станцию',
-            //'field_way': 'Принят на путь',
-            //'field_doc_uz': '№ накладной УЗ',
-            //'field_status': 'Статус состава',
-            //'field_note': 'Примечание',
+            'field_station': 'Станция',
+            'field_park': 'Парк',
+            'field_way_position': '№ поз.',
+            'field_way_num': '№ пути',
+            'field_way_name': 'Название пути',
+            'field_way_abbr': 'Краткое название',
+            'field_capacity': 'Вместимость',
+            'field_deadlock': 'Тупик',
+            'field_crossing_uz': 'Выход на УЗ',
+            'field_crossing_amkr': 'Выход на АМКР',
+            'field_devision': 'Подразделение',
+            'field_dissolution': 'Путь роспуска',
+            'field_output_dissolution': 'Выход на путь роспуска',
+            'field_way_close': 'Путь закрыт',
+            'field_way_delete': 'Путь удален',
+            'field_note': 'Примечание',
+            'field_create': 'Строка создана',
+            'field_change': 'Строка обновлена',
+
+            'tytle_yes': 'Да',
+            'tytle_no': 'Нет',
 
             'title_button_export': 'Экспорт',
             'title_button_buffer': 'Буфер',
             'title_button_excel': 'Excel',
 
-            'mess_load_arr_wagons': 'Загружаю список принятых вагонов...',
+            'title_button_up': 'Вверх',
+            'title_button_dn': 'Вниз',
+            'title_button_add': 'Добавить',
+            'title_button_edit': 'Править',
+            'title_button_del': 'Удалить',
+
+            'mess_load_dir_way': 'Загружаю список путей...',
         },
         'en':  //default language: English
         {
@@ -41,175 +54,279 @@
     // Определлим список текста для этого модуля
     App.Langs = $.extend(true, App.Langs, getLanguages($.Text_View, App.Lang));
 
-    var ids_rwt = new IDS_RWT(App.Lang);                // Создадим класс IDS_RWT
+    var ids_dir = new IDS_DIRECTORY(App.Lang);                // Создадим класс IDS_RWT
 
     // Создать основу
     function table_way(base) {
         var $div_table = $('<table></table>', {
             'id': base.selector + '-table',
-            'class': 'table table-hover',
+            'class': 'display compact cell-border row-border hover',
+            'style': 'width:100%;'
         });
         this.$element = $div_table;
     };
+    //
+    function modal_edit(base) {
+        var $div_modal = $('<div></div>', {
+            'id': 'em-' + base.selector,
+            'class': 'modal fade',
+            'tabindex': '1',
+            'aria-labelledby': 'ml-' + base.selector,
+            'aria-hidden': 'true',
+        });
+        var $div_md = $('<div></div>', {
+            'class': 'modal-dialog',
+
+        });
+        var $div_mc = $('<div></div>', {
+            'class': 'modal-content',
+
+        });
+        var $div_mh = $('<div></div>', {
+            'class': 'modal-header',
+        });
+        var $div_mb = $('<div></div>', {
+            'class': 'modal-body',
+        });
+        var $div_mf = $('<div></div>', {
+            'class': 'modal-footer',
+        });
+        var $h5 = $('<h5></h5>', {
+            'id': 'ml-' + base.selector,
+            'class': 'modal-title',
+            'text':'Титле',
+        });
+        var $button_modal_close = $('<button></button>', {
+            'type': 'button',
+            'data-dismiss': 'modal',
+            'aria-label': 'Close',
+            'class': 'close',
+        });
+        //var $span = $('<span></span>', {
+        //    'aria-hidden': 'true',
+        //    'text': '&times',
+        //});
+        var $span = $('<span aria-hidden="true">&times;</span>');
+        //<span aria-hidden="true">&times;</span>
+        var $button_modal_cancel = $('<button></button>', {
+            'type': 'button',
+            'data-dismiss': 'modal',
+            'text':'Отмена',
+            'class': 'btn btn-secondary',
+        });
+        var $button_modal_ok = $('<button></button>', {
+            'type': 'button',
+            'text':'Ок',
+            'class': 'btn btn-primary',
+        });
+        var $form = $('<form></form>', {
+            'id': 'fm-' + base.selector,
+            'novalidate':'',
+            'class': 'needs-validation',
+        });
+        //<form class="needs-validation" novalidate>
+        //<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+
+        $button_modal_close.append($span);
+        $div_mh.append($h5).append($button_modal_close);
+        $div_mf.append($button_modal_cancel).append($button_modal_ok);
+        this.$form = $form;
+        $div_mb.append(this.$form);
+        this.$body = $div_mb;
+        $div_mc.append($div_mh).append(this.$body).append($div_mf);
+        $div_md.append($div_mc);
+        $div_modal.append($div_md);
+        this.$element = $div_modal;
+    };
+    // Добавить элемент
+    function form_element(base, text, name, type) {
+        var $div_row = $('<div></div>', {
+            'class': 'form-row',
+        });
+        var $div_col = $('<div></div>', {
+            'class': 'col-xl-12 mb-1',
+        });
+        var $lab = $('<label></label>', {
+            'class': 'col-form-label',
+            'for': 'el-' + name,
+            'text':text,
+        });
+        var $select = $('<select></select>', {
+            'class': 'form-control',
+            'id': 'el-' + name,
+            'name': 'el-' + name,
+            'for': 'el-' + name,
+            'text':text,
+        });
+        var $div_invalid = $('<div></div>', {
+            'class': 'invalid-feedback',
+        });
+        this.$el = $select;
+        $div_col.append($lab).append(this.$el).append($div_invalid);
+        $div_row.append($div_col);
+        this.$element = $div_row;
+    };
+
 
     // Перечень полей
     var list_collums = [
+
         {
-            field: 'arr_car_details_control',
-            className: 'details-control  details-control-arrival',
-            orderable: false,
-            data: null,
-            defaultContent: '',
-            width: "30px",
-            searchable: false
+            field: 'dir_way_id',
+            data: function (row, type, val, meta) {
+                return row.id;
+            },
+            className: 'dt-body-center',
+            title: langView('field_id', App.Langs), width: "30px", orderable: true, searchable: true
         },
         {
-            field: 'arr_car_button_view',
-            targets: 0,
-            data: null,
-            defaultContent: '<button class="btn arrival-button"><i class="far fa-eye"></i></button>',
-            orderable: false,
-            //className: 'select-checkbox',
-            width: "20px"
+            field: 'dir_way_station',
+            data: function (row, type, val, meta) {
+                var obj = row.Directory_Station ? row.Directory_Station : null;
+                return obj ? obj['station_name_' + App.Lang] : null;
+            },
+            className: 'dt-body-center',
+            title: langView('field_station', App.Langs), width: "50px", orderable: false, searchable: true
         },
-        //{
-        //    field: 'arr_car_num',
-        //    data: function (row, type, val, meta) {
-        //        return row.num;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_num', App.Langs), width: "50px", orderable: false, searchable: true
-        //},
-        //{
-        //    //data: "train",
-        //    field: 'arr_car_train',
-        //    data: function (row, type, val, meta) {
-        //        var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
-        //        return sostav ? sostav.train : null;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_train', App.Langs), width: "50px", orderable: false, searchable: true
-        //},
-        //{
-        //    //data: "composition_index",
-        //    field: 'arr_car_composition_index',
-        //    data: function (row, type, val, meta) {
-        //        var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
-        //        return sostav ? sostav.composition_index : null;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_composition_index', App.Langs), width: "100px", orderable: false, searchable: true
-        //},
-        //{
-        //    field: 'arr_car_date_arrival',
-        //    data: function (row, type, val, meta) {
-        //        var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
-        //        return getReplaceTOfDT(sostav ? sostav.date_arrival : null);
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_date_arrival', App.Langs), width: "100px", orderable: true, searchable: false
-        //},
-        //{
-        //    field: 'arr_car_date_adoption',
-        //    data: function (row, type, val, meta) {
-        //        var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
-        //        if (row.arrival !== null) {
-        //            return getReplaceTOfDT(sostav ? sostav.date_adoption : null);
-        //        } else {
-        //            return getReplaceTOfDT(sostav ? sostav.date_adoption : null) ? 'Нет' : null;
-        //        }
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_date_adoption', App.Langs), width: "100px", orderable: false, searchable: false
-        //},
-        //{
-        //    //data: "date_adoption_act",
-        //    field: 'arr_car_date_adoption_act',
-        //    data: function (row, type, val, meta) {
-        //        if (row.arrival !== null) {
-        //            var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
-        //            return getReplaceTOfDT(sostav ? sostav.date_adoption_act : null);
-        //        } else {
-        //            return null;
-        //        }
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_date_adoption_act', App.Langs), width: "100px", orderable: false, searchable: false
-        //},
-        //{
-        //    field: 'arr_car_date_adoption_act_wagon',
-        //    data: function (row, type, val, meta) {
-        //        return getReplaceTOfDT(row.date_adoption_act);
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_date_adoption_act_wagon', App.Langs), width: "100px", orderable: false, searchable: false
-        //},
-        //{
-        //    field: 'arr_car_date_arrival_wagon',
-        //    data: function (row, type, val, meta) {
-        //        return row.arrival ? (row.arrival_user + '<br />[' + getReplaceTOfDT(row.arrival) + ']') : null;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_processed', App.Langs), width: "100px", orderable: false, searchable: false
-        //},
-        //{
-        //    field: 'arr_car_station_from',
-        //    data: function (row, type, val, meta) {
-        //        var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
-        //        var station = sostav ? sostav.Directory_Station : null;
-        //        return station ? station['station_name_' + App.Lang] : null;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_station_from', App.Langs), width: "100px", orderable: false, searchable: true
-        //},
-        //{
-        //    field: 'arr_car_station_on',
-        //    data: function (row, type, val, meta) {
-        //        var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
-        //        var station = sostav ? sostav.Directory_Station1 : null;
-        //        return station ? station['station_name_' + App.Lang] : null;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_station_on', App.Langs), width: "100px", orderable: false, searchable: true
-        //},
-        //{
-        //    //data: "id_way",
-        //    field: 'arr_car_way',
-        //    data: function (row, type, val, meta) {
-        //        var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
-        //        var way = sostav ? sostav.Directory_Ways : null;
-        //        return way ? way['way_num_' + App.Lang] : null;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_way', App.Langs), width: "100px", orderable: false, searchable: false
-        //},
-        //{
-        //    //data: "status_name",
-        //    field: 'arr_car_status',
-        //    data: function (row, type, val, meta) {
-        //        var sostav = row.ArrivalSostav ? row.ArrivalSostav : null;
-        //        return sostav ? outStatusArrivalSostav(sostav.status) : null;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_status', App.Langs), width: "100px", orderable: false, searchable: true
-        //},
-        //{
-        //    field: 'arr_car_doc_uz',
-        //    data: function (row, type, val, meta) {
-        //        var doc = row.UZ_DOC ? row.UZ_DOC : null;
-        //        return doc ? doc.num_uz : null;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_doc_uz', App.Langs), width: "50px", orderable: false, searchable: true
-        //},
-        //{
-        //    field: 'arr_car_note',
-        //    data: function (row, type, val, meta) {
-        //        return row.note;
-        //    },
-        //    className: 'dt-body-left',
-        //    title: langView('field_note', App.Langs), width: "300px", orderable: false, searchable: false
-        //},
+        {
+            field: 'dir_way_park',
+            data: function (row, type, val, meta) {
+                var obj = row.Directory_ParkWays ? row.Directory_ParkWays : null;
+                return obj ? obj['park_abbr_' + App.Lang] : null;
+            },
+            className: 'dt-body-center',
+            title: langView('field_park', App.Langs), width: "50px", orderable: false, searchable: true
+        },
+        {
+            field: 'dir_way_position',
+            data: function (row, type, val, meta) {
+                return row.position_way;
+            },
+            className: 'dt-body-center',
+            title: langView('field_way_position', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'dir_way_num',
+            data: function (row, type, val, meta) {
+                return row ? row['way_num_' + App.Lang] : null;
+            },
+            className: 'dt-body-center',
+            title: langView('field_way_num', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'dir_way_name',
+            data: function (row, type, val, meta) {
+                return row ? row['way_name_' + App.Lang] : null;
+            },
+            className: 'dt-body-left',
+            title: langView('field_way_name', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'dir_way_abbr',
+            data: function (row, type, val, meta) {
+                return row ? row['way_abbr_' + App.Lang] : null;
+            },
+            className: 'dt-body-left',
+            title: langView('field_way_abbr', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'dir_way_capacity',
+            data: function (row, type, val, meta) {
+                return row.capacity;
+            },
+            className: 'dt-body-center',
+            title: langView('field_capacity', App.Langs), width: "50px", orderable: false, searchable: false
+        },
+        {
+            field: 'dir_way_deadlock',
+            data: function (row, type, val, meta) {
+                return row.deadlock ? langView('tytle_yes', App.Langs) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('field_deadlock', App.Langs), width: "50px", orderable: false, searchable: false
+        },
+        {
+            field: 'dir_way_crossing_uz',
+            data: function (row, type, val, meta) {
+                return row.crossing_uz ? langView('tytle_yes', App.Langs) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('field_crossing_uz', App.Langs), width: "50px", orderable: false, searchable: false
+        },
+        {
+            field: 'dir_way_crossing_amkr',
+            data: function (row, type, val, meta) {
+                return row.crossing_amkr ? langView('tytle_yes', App.Langs) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('field_crossing_amkr', App.Langs), width: "50px", orderable: false, searchable: false
+        },
+        {
+            field: 'dir_way_devision',
+            data: function (row, type, val, meta) {
+                var obj = row.Directory_Divisions ? row.Directory_Divisions : null;
+                return obj ? obj['division_abbr_' + App.Lang] : null;
+            },
+            className: 'dt-body-center',
+            title: langView('field_devision', App.Langs), width: "50px", orderable: false, searchable: false
+        },
+        {
+            field: 'dir_way_dissolution',
+            data: function (row, type, val, meta) {
+                return row.dissolution ? langView('tytle_yes', App.Langs) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('field_dissolution', App.Langs), width: "50px", orderable: false, searchable: false
+        },
+        {
+            field: 'dir_way_output_dissolution',
+            data: function (row, type, val, meta) {
+                return row.output_dissolution ? langView('tytle_yes', App.Langs) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('field_output_dissolution', App.Langs), width: "50px", orderable: false, searchable: false
+        },
+        {
+            field: 'dir_way_close',
+            data: function (row, type, val, meta) {
+                return getReplaceTOfDT(row.way_close);
+            },
+            className: 'dt-body-center',
+            title: langView('field_way_close', App.Langs), width: "50px", orderable: false, searchable: false
+        },
+        {
+            field: 'dir_way_delete',
+            data: function (row, type, val, meta) {
+                return getReplaceTOfDT(row.way_delete);
+            },
+            className: 'dt-body-center',
+            title: langView('field_way_delete', App.Langs), width: "50px", orderable: false, searchable: false
+        },
+        {
+            field: 'dir_way_note',
+            data: function (row, type, val, meta) {
+                return row.note;
+            },
+            className: 'dt-body-left',
+            title: langView('field_note', App.Langs), width: "300px", orderable: false, searchable: false
+        },
+        {
+            field: 'dir_way_create',
+            data: function (row, type, val, meta) {
+                return row.create ? (row.create_user + '<br />[' + getReplaceTOfDT(row.create) + ']') : null;
+            },
+            className: 'dt-body-center',
+            title: langView('field_create', App.Langs), width: "100px", orderable: false, searchable: false
+        },
+        {
+            field: 'dir_way_change',
+            data: function (row, type, val, meta) {
+                return row.change ? (row.change_user + '<br />[' + getReplaceTOfDT(row.change) + ']') : null;
+            },
+            className: 'dt-body-center',
+            title: langView('field_change', App.Langs), width: "100px", orderable: false, searchable: false
+        },
+
     ];
     //
     function table_dir_way(selector) {
@@ -225,27 +342,45 @@
     // инициализация полей таблицы вагоны на начальном пути
     table_dir_way.prototype.init_columns = function () {
         var collums = [];
-        if (this.b_detali_wir) collums.push('arr_car_details_control');
-        collums.push('arr_car_button_view');
-        //collums.push('arr_car_num');
-        //collums.push('arr_car_train');
-        //collums.push('arr_car_composition_index');
-        //collums.push('arr_car_date_arrival');
-        //collums.push('arr_car_date_adoption');
-        //collums.push('arr_car_date_adoption_act');
-        //collums.push('arr_car_date_adoption_act_wagon');
-        //collums.push('arr_car_date_arrival_wagon');
-        //collums.push('arr_car_station_from');
-        //collums.push('arr_car_station_on');
-        //collums.push('arr_car_way');
-        //collums.push('arr_car_status');
-        //collums.push('arr_car_doc_uz');
-        //collums.push('arr_car_note');
+
+        collums.push('dir_way_id');
+        collums.push('dir_way_station');
+        collums.push('dir_way_park');
+        collums.push('dir_way_position');
+        collums.push('dir_way_num');
+        collums.push('dir_way_name');
+        collums.push('dir_way_abbr');
+        collums.push('dir_way_capacity');
+        collums.push('dir_way_deadlock');
+        collums.push('dir_way_crossing_uz');
+        collums.push('dir_way_crossing_amkr');
+        collums.push('dir_way_devision');
+        collums.push('dir_way_dissolution');
+        collums.push('dir_way_output_dissolution');
+        collums.push('dir_way_close');
+        collums.push('dir_way_delete');
+        collums.push('dir_way_note');
+        collums.push('dir_way_create');
+        collums.push('dir_way_change');
+
+
         return init_columns(collums, list_collums);
     };
     // инициализация таблицы истрия прибытия вагона
     table_dir_way.prototype.init = function (detali_wir) {
         // теперь выполним инициализацию
+        //Форма для редактирования
+        var modalElement = new modal_edit(this);
+        this.$body_modal = modalElement.$body;
+        this.$form_modal = modalElement.$form;
+        $('body').append(modalElement.$element);
+        //
+        var stationElement = new form_element(this, "Станция", "station", "select");
+
+        this.$form_modal.append(stationElement.$element);
+        //
+
+
         var tableElement = new table_way(this);
         this.$dir_way.empty();
         this.$t_way = tableElement.$element;
@@ -258,7 +393,7 @@
             "ordering": true,
             "info": true,
             "keys": true,
-            select: false,
+            select: true,
             "autoWidth": true,
             //"filter": true,
             //"scrollY": "600px",
@@ -270,17 +405,12 @@
             jQueryUI: false,
             "createdRow": function (row, data, index) {
                 $(row).attr('id', data.id);
-                var sostav = data.ArrivalSostav ? data.ArrivalSostav : null;
-                if (data.arrival !== null) {
-                    // приняли
-                    $(row).removeClass('red').addClass('green');
-                } else {
-                    if (sostav && sostav.date_adoption) {
-                        // неприняли
-                        $(row).removeClass('green').addClass('red');
-                    } else {
-                        $(row).removeClass('green red');
-                    }
+                // Удалили
+                if (data.way_close) {
+                    $(row).addClass('yellow');
+                }
+                if (data.way_delete) {
+                    $(row).addClass('red');
                 }
             },
             columns: this.init_columns(),
@@ -307,88 +437,81 @@
                     autoClose: true
                 },
                 {
+                    text: langView('title_button_add', App.Langs),
+                    action: function (e, dt, node, config) {
+                        $modal_edit.modal('show');
+                    },
+                    enabled: true
+                },
+                {
+                    text: langView('title_button_edit', App.Langs),
+                    action: function (e, dt, node, config) {
+                    },
+                    enabled: false
+                },
+                {
+                    text: langView('title_button_del', App.Langs),
+                    action: function (e, dt, node, config) {
+                    },
+                    enabled: false
+                },
+                {
+                    text: langView('title_button_up', App.Langs),
+                    action: function (e, dt, node, config) {
+                    },
+                    enabled: false
+                },
+                {
+                    text: langView('title_button_dn', App.Langs),
+                    action: function (e, dt, node, config) {
+                    },
+                    enabled: false
+                },
+                {
                     extend: 'pageLength',
                 }
+
             ]
-        }).on('select', function (e, dt, type, indexes) {
+        }).on('select deselect', function (e, dt, type, indexes) {
+            //var index = this.obj_t_way.rows({ selected: true });
+            var selected = this.obj_t_way.rows({ selected: true })[0].length > 0 ? true : false;
+            var row = this.obj_t_way.rows(indexes).data().toArray()[0];
+            if (selected) {
+                this.obj_t_way.button(2).enable(true);
+                this.obj_t_way.button(3).enable(true);
+                this.obj_t_way.button(4).enable(true);
+                this.obj_t_way.button(5).enable(true);
+            } else {
+                this.obj_t_way.button(2).enable(false);
+                this.obj_t_way.button(3).enable(false);
+                this.obj_t_way.button(4).enable(false);
+                this.obj_t_way.button(5).enable(false);
+            }
+
         }.bind(this));
+        //
+        var $modal_edit = $('div#em-' + this.selector).modal({
+            keyboard: false,
+            show: false
+        }).on('show.bs.modal', function (event) {
+            // do something...
+        });
     };
     // Показать данные 
     table_dir_way.prototype.view = function (data) {
-        this.obj_arr_wag.clear();
-        this.obj_arr_wag.rows.add(data);
-        this.obj_arr_wag.order([(this.b_detali_wir ? 5 : 4), 'desc']);
-        this.obj_arr_wag.draw();
+        this.obj_t_way.clear();
+        this.obj_t_way.rows.add(data);
+        this.obj_t_way.order([3, 'asc']);
+        this.obj_t_way.draw();
     };
     // загрузить данные 
-    table_dir_way.prototype.load_of_num = function (num) {
-        if (num) {
-            LockScreen(langView('mess_load_arr_wagons', App.Langs));
-            ids_rwt.getArrivalCarsOfNum(num, function (list_arrival_cars) {
-                this.view(list_arrival_cars);
-                LockScreenOff();
-            }.bind(this));
-        }
-    };
-    // загрузить данные 
-    table_dir_way.prototype.load_of_id = function (id) {
-        if (id) {
-            LockScreen(langView('mess_load_arr_wagons', App.Langs));
-            ids_rwt.getArrivalCarsOfID(id, function (list_arrival_cars) {
-                this.view($(list_arrival_cars));
-                LockScreenOff();
-            }.bind(this));
-        }
-    };
-    // Инициализация таблицы детально
-    table_dir_way.prototype.init_detali = function () {
-        var base = this;
-        this.$dir_way.find('tbody')
-            .on('click', 'td.details-control-arrival', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var tr = $(e.currentTarget).closest('tr');
-                var row = base.obj_arr_wag.row(tr);
-                if (row.child.isShown()) {
-                    // This row is already open - close it
-                    row.child.hide();
-                    tr.removeClass('shown');
-                }
-                else {
-                    //row.child('<div class="detali-operation"><div class="row"><div class="col-xl-12 operator-detali-tables"><table class="display compact cell-border row-border hover" id="wir-detali-' + row.data().id + '" style="width:100%;"></table></div></div></div>').show();
-                    row.child('<div class="detali-operation">' +
-                        //'<div class="row">' +
-                        //'<div class="col-xl-12">' +
-                        '<div class="card border-primary mb-3">' +
-                        '<div class="card-header">Движение на АМКР</div>' +
-                        '<div class="card-body">' +
-                        '<div class="row">' +
-                        '<div class="col-xl-12 operator-detali-tables">' +
-                        '<table class="display compact cell-border row-border hover" id="' + this.selector + '-wird-' + row.data().id + '" style="width:100%"></table>' +
-                        '</div>' +
-                        '</div>' +
-                        '</div>' +
-                        '</div>' +
-                        '</div>' +
-                        //'</div>' +
-                        //'</div>' +
-                        '</div>').show();
+    table_dir_way.prototype.load_of_station_park = function (id_station, id_park) {
+        LockScreen(langView('mess_load_dir_way', App.Langs));
+        ids_dir.getWaysOfStationIDParkID(id_station, id_park, function (ways) {
+            this.view(ways);
+            LockScreenOff();
+        }.bind(this));
 
-                    // Инициализируем
-                    base.view_detali(row.data());
-                    tr.addClass('shown');
-                }
-            }.bind(this));
-    };
-    //
-    table_dir_way.prototype.view_detali = function (data) {
-        var DWIR = App.table_wir;
-        var sl = 'table#' + this.selector + '-wird-' + data.id;
-        //if (!this.d_wir[data.id]) {
-        this.d_wir[data.id] = new DWIR(sl); // Создадим экземпляр таблицы
-        this.d_wir[data.id].init(true);
-        //}
-        this.d_wir[data.id].load_of_id_arr_car(data.id);
     };
     // 
     App.table_dir_way = table_dir_way;

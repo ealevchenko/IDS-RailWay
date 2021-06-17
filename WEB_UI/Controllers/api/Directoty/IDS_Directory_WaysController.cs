@@ -90,6 +90,32 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // GET: api/ids/directory/ways/station/id/8/park/id/27
+        /// <summary>
+        /// Получить список путей по станции и парку
+        /// </summary>
+        /// <param name="id_station"></param>
+        /// <param name="id_park"></param>
+        /// <returns></returns>
+        [Route("station/id/{id_station:int}/park/id/{id_park:int}")]
+        [ResponseType(typeof(Directory_Ways))]
+        public IHttpActionResult GetWaysOfStationPark(int id_station, int id_park)
+        {
+            try
+            {
+                List<Directory_Ways> list = this.ef_dir
+                    .Context
+                    .Where(w => w.id_station == id_station && w.id_park == id_park)
+                    .OrderBy(c=>c.position_way)
+                    .ToList()
+                    .Select(m => m.GetDirectory_Ways()).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
         //// GET: api/ids/directory/ways/view/station/id/1/park/id/69
         //[Route("view/station/id/{id_station:int}/park/id/{id_park:int}")]
         //[ResponseType(typeof(Way_View))]

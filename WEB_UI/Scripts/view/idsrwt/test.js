@@ -137,6 +137,8 @@
     $(document).ready(function ($) {
 
         tdways.init();
+        tdways.load_of_station_park(23, 161);
+
         ////// Прочтем данные из куков
         ////var list_station = null;
         ////var select_station_tree = $.cookie("select_station_tree");

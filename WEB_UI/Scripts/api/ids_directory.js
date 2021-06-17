@@ -3930,7 +3930,7 @@ IDS_DIRECTORY.prototype.getWays = function (callback) {
 IDS_DIRECTORY.prototype.getWaysOfStationIDParkID = function (id_station, id_park, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/directory/ways/view/station/id/' + id_station + '/park/id/' + id_park,
+        url: '../../api/ids/directory/ways/station/id/' + id_station + '/park/id/' + id_park,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -6438,9 +6438,6 @@ IDS_DIRECTORY.prototype.getReason_Discrepancy_Of_CultureName = function (name, l
     }
     return null;
 };
-
-
-
 //*======= IDS_DIRECTORY.list_detention_return  (Справочник возвратов и задержаний) ======================================
 // Вернуть по id
 IDS_DIRECTORY.prototype.getDetention_Return_Of_ID = function (id) {
