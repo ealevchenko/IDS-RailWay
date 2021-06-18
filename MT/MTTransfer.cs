@@ -1284,7 +1284,7 @@ namespace MT
                                     if (arrival_to_railway)
                                     {
                                         // Перенесем вагоны в прибытие
-                                        //int res = InsertIDSArrivalSostav(new_sostav.id);
+                                        int res = InsertIDSArrivalSostav(new_sostav.id);
                                     }
                                 }
                                 else
@@ -1312,8 +1312,8 @@ namespace MT
                                         update++;
                                         if (arrival_to_railway)
                                         {
-                                            // Перенесем вагоны в прибытие
-                                            //int res = InsertIDSArrivalSostav(new_sostav.id);
+                                            //Перенесем вагоны в прибытие
+                                            int res = InsertIDSArrivalSostav(exs_sostav.id);
                                         }
                                     }
                                     else
