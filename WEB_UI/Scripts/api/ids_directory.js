@@ -5259,32 +5259,9 @@ IDS_DIRECTORY.prototype.getValueCulture_Stations_Of_ID = function (id_station, n
 //
 IDS_DIRECTORY.prototype.getListStation = function (fvalue, ftext, lang, filter) {
     return this.getListObj(this.list_station, fvalue, ftext, lang, filter);
-    //var list = [];
-    //var list_filtr = null;
-    //if (this.list_station) {
-    //    if (typeof filter === 'function') {
-    //        list_filtr = this.list_station.filter(filter);
-    //    } else { list_filtr = this.list_station; }
-    //    for (i = 0, j = list_filtr.length; i < j; i++) {
-    //        var l = list_filtr[i];
-    //        if (lang) {
-    //            list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
-    //        } else {
-    //            list.push({ value: l[fvalue], text: l[ftext] });
-    //        }
-    //    }
-    //}
-    //return list;
 };
 //*======= IDS_DIRECTORY.list_ways  (Справочник путей) ======================================
 IDS_DIRECTORY.prototype.getWays_Of_ID = function (id) {
-    //var way = null;
-    //if (this.list_ways) {
-    //    //var obj = getObjects(this.list_ways, 'id', id_way);
-    //    //return obj && obj.length > 0 ? obj[0] : null;
-    //    way = this.list_ways.find(function (o) { return o.id === id });
-    //}
-    //return way;
     return this.getObj_Of_ID(this.list_ways, id);
 };
 //
@@ -5299,29 +5276,12 @@ IDS_DIRECTORY.prototype.getValueCulture_Wayss_Of_ID = function (id_way, name) {
 };
 //
 IDS_DIRECTORY.prototype.getListWays = function (fvalue, ftext, lang, filter) {
-    //var list = [];
-    //var list_filtr = null;
-    //if (this.list_ways) {
-    //    if (typeof filter === 'function') {
-    //        list_filtr = this.list_ways.filter(filter);
-    //    } else { list_filtr = this.list_ways; }
-    //    for (i = 0, j = list_filtr.length; i < j; i++) {
-    //        var l = list_filtr[i];
-    //        if (lang) {
-    //            list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
-    //        } else {
-    //            list.push({ value: l[fvalue], text: l[ftext] });
-    //        }
-    //    }
-    //}
-    //return list;
     return this.getListObj(this.list_ways, fvalue, ftext, lang, filter);
 };
 //
 IDS_DIRECTORY.prototype.getListWays2 = function (fvalue, ftext1, ftext2, lang, filter) {
     return this.getListObj2(this.list_ways, fvalue, ftext1, ftext2, lang, filter);
 };
-
 //
 IDS_DIRECTORY.prototype.getListWaysOfAray = function (aray, fvalue, ftext, lang, filter) {
     var list = [];

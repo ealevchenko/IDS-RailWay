@@ -65,109 +65,6 @@
         });
         this.$element = $div_table;
     };
-    //
-    function modal_edit(base) {
-        var $div_modal = $('<div></div>', {
-            'id': 'em-' + base.selector,
-            'class': 'modal fade',
-            'tabindex': '1',
-            'aria-labelledby': 'ml-' + base.selector,
-            'aria-hidden': 'true',
-        });
-        var $div_md = $('<div></div>', {
-            'class': 'modal-dialog',
-
-        });
-        var $div_mc = $('<div></div>', {
-            'class': 'modal-content',
-
-        });
-        var $div_mh = $('<div></div>', {
-            'class': 'modal-header',
-        });
-        var $div_mb = $('<div></div>', {
-            'class': 'modal-body',
-        });
-        var $div_mf = $('<div></div>', {
-            'class': 'modal-footer',
-        });
-        var $h5 = $('<h5></h5>', {
-            'id': 'ml-' + base.selector,
-            'class': 'modal-title',
-            'text':'Титле',
-        });
-        var $button_modal_close = $('<button></button>', {
-            'type': 'button',
-            'data-dismiss': 'modal',
-            'aria-label': 'Close',
-            'class': 'close',
-        });
-        //var $span = $('<span></span>', {
-        //    'aria-hidden': 'true',
-        //    'text': '&times',
-        //});
-        var $span = $('<span aria-hidden="true">&times;</span>');
-        //<span aria-hidden="true">&times;</span>
-        var $button_modal_cancel = $('<button></button>', {
-            'type': 'button',
-            'data-dismiss': 'modal',
-            'text':'Отмена',
-            'class': 'btn btn-secondary',
-        });
-        var $button_modal_ok = $('<button></button>', {
-            'type': 'button',
-            'text':'Ок',
-            'class': 'btn btn-primary',
-        });
-        var $form = $('<form></form>', {
-            'id': 'fm-' + base.selector,
-            'novalidate':'',
-            'class': 'needs-validation',
-        });
-        //<form class="needs-validation" novalidate>
-        //<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-
-        $button_modal_close.append($span);
-        $div_mh.append($h5).append($button_modal_close);
-        $div_mf.append($button_modal_cancel).append($button_modal_ok);
-        this.$form = $form;
-        $div_mb.append(this.$form);
-        this.$body = $div_mb;
-        $div_mc.append($div_mh).append(this.$body).append($div_mf);
-        $div_md.append($div_mc);
-        $div_modal.append($div_md);
-        this.$element = $div_modal;
-    };
-    // Добавить элемент
-    function form_element(base, text, name, type) {
-        var $div_row = $('<div></div>', {
-            'class': 'form-row',
-        });
-        var $div_col = $('<div></div>', {
-            'class': 'col-xl-12 mb-1',
-        });
-        var $lab = $('<label></label>', {
-            'class': 'col-form-label',
-            'for': 'el-' + name,
-            'text':text,
-        });
-        var $select = $('<select></select>', {
-            'class': 'form-control',
-            'id': 'el-' + name,
-            'name': 'el-' + name,
-            'for': 'el-' + name,
-            'text':text,
-        });
-        var $div_invalid = $('<div></div>', {
-            'class': 'invalid-feedback',
-        });
-        this.$el = $select;
-        $div_col.append($lab).append(this.$el).append($div_invalid);
-        $div_row.append($div_col);
-        this.$element = $div_row;
-    };
-
-
     // Перечень полей
     var list_collums = [
 
@@ -366,21 +263,94 @@
 
         return init_columns(collums, list_collums);
     };
+    // Загрузка основных справочников приложения
+    table_dir_way.prototype.load_reference = function (callback) {
+        LockScreen(langView('mess_load_reference', App.Langs));
+        var count = 1;
+        ids_dir.load(['station', 'ways'], false, function () {
+            count -= 1;
+            if (count === 0) {
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            }
+        });
+    };
     // инициализация таблицы истрия прибытия вагона
-    table_dir_way.prototype.init = function (detali_wir) {
+    table_dir_way.prototype.init = function () {
         // теперь выполним инициализацию
-        //Форма для редактирования
-        var modalElement = new modal_edit(this);
-        this.$body_modal = modalElement.$body;
-        this.$form_modal = modalElement.$form;
-        $('body').append(modalElement.$element);
-        //
-        var stationElement = new form_element(this, "Станция", "station", "select");
+        // Инициализация формы
+        var FDWAY = App.form_dir_way;
+        var $form = $('<div></div>', {
+            'id': 'fm-' + this.selector
+        });
+        $('body').append($form)
+        // Инициализация формы
+        var form_edit = new FDWAY('div#fm-' + this.selector); // Создадим экземпляр таблицы
+        // Загрузим данные
+        this.load_reference(function () {
 
-        this.$form_modal.append(stationElement.$element);
-        //
+            var rows_form = [];
+            // Первый уровень станции
+            var row_station = [];
+            var list_station = ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false ? true : false; });
+            var row_element_station = {
+                col: 12,
+                field: 'id_station',
+                type: 'select',
+                name: 'station',
+                label: 'Станция',
+                list: list_station,
+                select: function (event, ui) {
+                    event.preventDefault();
+                    // Обработать выбор
+                    var id = Number($(this).val());
+                    var list_park = get_list_park(id);
+                },
+/*                update: null,*/
+            };
+            row_station.push(row_element_station);
+            // Первый уровень парки
+            var row_park = [];
+            var get_list_park = function (id_statation) {
+                var list_way = ids_dir.list_ways.filter(function (i) {
+                    return i.id_station == id_statation;
+                })
+                var list_park = [];
+                $.each(list_way, function (i, el) {
+                    var pw = el.Directory_ParkWays
+                    var park = list_park.find(function (o) {
+                        return o.value === pw.id;
+                    });
+                    if (!park) {
+                        list_park.push({ value: pw.id, text: pw['park_name_' + App.Lang] });
+                    }
+                });
+                return list_park;
+            };
+            var row_element_park = {
+                col: 12,
+                field: 'id_park',
+                type: 'select',
+                name: 'park',
+                label: 'Парки станции',
+                list: get_list_park(-1),
+                select: function (event, ui) {
+                    event.preventDefault();
+                    // Обработать выбор
+                    var id = Number($(this).val());
+                },
+/*                update: get_list_park(-1)*/
+            };
+            row_park.push(row_element_park);
 
+            rows_form.push(row_station);
+            rows_form.push(row_park);
 
+            form_edit.init(rows_form, ids_dir);
+            //----------------------------------
+        }.bind(this));
+        // Инициализация таблицы
         var tableElement = new table_way(this);
         this.$dir_way.empty();
         this.$t_way = tableElement.$element;
@@ -439,7 +409,13 @@
                 {
                     text: langView('title_button_add', App.Langs),
                     action: function (e, dt, node, config) {
-                        $modal_edit.modal('show');
+                        //var index = this.obj_t_way.rows({ selected: true });
+                        //var selected = this.obj_t_way.rows({ selected: true })[0].length > 0 ? true : false;
+                        //var row = this.obj_t_way.rows(indexes).data().toArray()[0];
+
+
+                        form_edit.view(App.Select_Row_ways);
+                        //$modal_edit.modal('show');
                     },
                     enabled: true
                 },
@@ -481,21 +457,16 @@
                 this.obj_t_way.button(3).enable(true);
                 this.obj_t_way.button(4).enable(true);
                 this.obj_t_way.button(5).enable(true);
+                App.Select_Row_ways = row;
             } else {
                 this.obj_t_way.button(2).enable(false);
                 this.obj_t_way.button(3).enable(false);
                 this.obj_t_way.button(4).enable(false);
                 this.obj_t_way.button(5).enable(false);
+                App.Select_Row_ways = null;
             }
 
         }.bind(this));
-        //
-        var $modal_edit = $('div#em-' + this.selector).modal({
-            keyboard: false,
-            show: false
-        }).on('show.bs.modal', function (event) {
-            // do something...
-        });
     };
     // Показать данные 
     table_dir_way.prototype.view = function (data) {
