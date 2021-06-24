@@ -267,7 +267,7 @@
     table_dir_way.prototype.load_reference = function (callback) {
         LockScreen(langView('mess_load_reference', App.Langs));
         var count = 1;
-        ids_dir.load(['station', 'ways'], false, function () {
+        ids_dir.load(['station', 'ways', 'divisions'], false, function () {
             count -= 1;
             if (count === 0) {
                 if (typeof callback === 'function') {
@@ -294,6 +294,7 @@
             // Уровень 1 станции
             var row_station = [];
             var list_station = ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false ? true : false; });
+
             var row_element_station = {
                 col: 5,
                 field: 'id_station',
@@ -349,14 +350,33 @@
                 control:null,
             };
             row_station.push(row_element_park);
+
+            var list_divisions = ids_dir.getListDivisions('id', 'division_abbr', App.Lang, null);
+            var row_element_divisions = {
+                col: 6,
+                field: 'id_devision',
+                type: 'select',
+                name: 'devision',
+                label: 'Подразделение',
+                list: list_divisions,
+                select: function (e, ui) {
+                    event.preventDefault();
+                    // Обработать выбор
+                    var id = Number($(e.currentTarget).val());
+                },
+                control: null,
+                /*                update: null,*/
+            };
+
             // Уровень 3 (Позиция номер и название пути)
             var row_way = [];
             var row_way_ru = [];
             var row_way_en = [];
+            var row_way_type = [];
             var row_element_position = {
-                col: 3,
+                col: 2,
                 field: 'position_way',
-                type: 'input-number',
+                type: 'number',
                 name: 'position',
                 label: 'Поз.',
                 //list: null,
@@ -364,9 +384,9 @@
                 //control: null,
             };
             var row_element_capacity = {
-                col: 3,
+                col: 2,
                 field: 'capacity',
-                type: 'input-number',
+                type: 'number',
                 name: 'capacity',
                 label: 'Вмес.',
                 //list: null,
@@ -375,9 +395,9 @@
             };
 
             var row_element_num_ru = {
-                col: 2,
+                col: 1,
                 field: 'way_num_ru',
-                type: 'input-text',
+                type: 'text',
                 name: 'way_num_ru',
                 label: '№ пути',
                 //list: null,
@@ -385,19 +405,29 @@
                 //control: null,
             };
             var row_element_name_ru = {
-                col: 10,
+                col: 7,
                 field: 'way_name_ru',
-                type: 'input-text',
+                type: 'text',
                 name: 'way_name_ru',
-                label: 'Название пути (рус)',
+                label: 'Название пути (рус.)',
+                //list: null,
+                //select: null,
+                //control: null,
+            };
+            var row_element_abbr_ru = {
+                col: 4,
+                field: 'way_abbr_ru',
+                type: 'text',
+                name: 'way_abbr_ru',
+                label: 'Крат. назв. пути (рус.)',
                 //list: null,
                 //select: null,
                 //control: null,
             };
             var row_element_num_en = {
-                col: 2,
+                col: 1,
                 field: 'way_num_en',
-                type: 'input-text',
+                type: 'text',
                 name: 'way_num_ru',
                 label: '№ пути',
                 //list: null,
@@ -405,30 +435,100 @@
                 //control: null,
             };
             var row_element_name_en = {
-                col: 10,
+                col: 7,
                 field: 'way_name_en',
-                type: 'input-text',
+                type: 'text',
                 name: 'way_name_ru',
                 label: 'Название пути (анг.)',
                 //list: null,
                 //select: null,
                 //control: null,
             };
+            var row_element_abbr_en = {
+                col: 4,
+                field: 'way_abbr_en',
+                type: 'text',
+                name: 'way_abbr_en',
+                label: 'Крат. назв. пути (анг.)',
+                //list: null,
+                //select: null,
+                //control: null,
+            };
 
-            row_way.push(row_element_position)
-            row_way.push(row_element_capacity)
+            var row_element_deadlock = {
+                col: 2,
+                field: 'deadlock',
+                type: 'checkbox',
+                name: 'deadlock',
+                label: 'Тупик',
+                //list: null,
+                //select: null,
+                //control: null,
+            };
+            var row_element_crossing_uz = {
+                col: 2,
+                field: 'crossing_uz',
+                type: 'checkbox',
+                name: 'crossing_uz',
+                label: 'Выход УЗ',
+                //list: null,
+                //select: null,
+                //control: null,
+            };
+            var row_element_crossing_amkr = {
+                col: 2,
+                field: 'crossing_amkr',
+                type: 'checkbox',
+                name: 'crossing_amkr',
+                label: 'Выход АМКР',
+                //list: null,
+                //select: null,
+                //control: null,
+            };
+            var row_element_dissolution = {
+                col: 3,
+                field: 'dissolution',
+                type: 'checkbox',
+                name: 'dissolution',
+                label: 'Путь роспуска',
+                //list: null,
+                //select: null,
+                //control: null,
+            };
+            var row_element_output_dissolution = {
+                col: 3,
+                field: 'output_dissolution',
+                type: 'checkbox',
+                name: 'output_dissolution',
+                label: 'Вых. на путь роспуска',
+                //list: null,
+                //select: null,
+                //control: null,
+            };
+
+            row_way.push(row_element_position);
+            row_way.push(row_element_capacity);
+            row_way.push(row_element_divisions);
 
             row_way_ru.push(row_element_num_ru)
             row_way_ru.push(row_element_name_ru);
+            row_way_ru.push(row_element_abbr_ru);
             row_way_en.push(row_element_num_en)
             row_way_en.push(row_element_name_en);
+            row_way_en.push(row_element_abbr_en);
+
+            row_way_type.push(row_element_deadlock);
+            row_way_type.push(row_element_crossing_uz);
+            row_way_type.push(row_element_crossing_amkr);
+            row_way_type.push(row_element_dissolution);
+            row_way_type.push(row_element_output_dissolution);
 
             rows_form.push(row_station);
             //rows_form.push(row_park);
             rows_form.push(row_way);
             rows_form.push(row_way_ru);
             rows_form.push(row_way_en);
-
+            rows_form.push(row_way_type);
 
 
             form_edit.init(rows_form, ids_dir);

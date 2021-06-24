@@ -6222,22 +6222,6 @@ IDS_DIRECTORY.prototype.getID_Divisions_Of_Name = function (text, ftext, lang) {
 //
 IDS_DIRECTORY.prototype.getListDivisions = function (fvalue, ftext, lang, filter) {
     return this.getListObj(this.list_divisions, fvalue, ftext, lang, filter);
-    //var list = [];
-    //var list_filtr = null;
-    //if (this.list_divisions) {
-    //    if (typeof filter === 'function') {
-    //        list_filtr = this.list_divisions.filter(filter);
-    //    } else { list_filtr = this.list_divisions; }
-    //    for (i = 0, j = list_filtr.length; i < j; i++) {
-    //        var l = list_filtr[i];
-    //        if (lang) {
-    //            list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
-    //        } else {
-    //            list.push({ value: l[fvalue], text: l[ftext] });
-    //        }
-    //    }
-    //}
-    //return list;
 };
 //
 // Получим список с выборкой по полю

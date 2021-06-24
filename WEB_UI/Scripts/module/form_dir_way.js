@@ -150,7 +150,32 @@
         this.$element = $input;
         col.append($lab).append(this.$element).append($div_invalid);
     };
+    // Добавить элемент checkbox
+    function checkbox_element(col, base, name, text) {
+        var div_fm_check = $('<div></div>', {
+            'class':'form-check',
+            //<div class="form-check">
+        });
+        var $lab = $('<label></label>', {
+            'class': 'form-check-label',
+            'for': 'el-' + name,
+            'text': text,
+        });
+        var $input = $('<input>', {
+            'class': 'form-check-input',
+            'id': 'el-' + name,
+            'name': 'el-' + name,
+            'type': 'checkbox',
+            //'text': text,
+        });
 
+        var $div_invalid = $('<div></div>', {
+            'class': 'invalid-feedback',
+        });
+        this.$element = $input;
+        div_fm_check.append(this.$element).append($lab).append($div_invalid);
+        col.append(div_fm_check);
+    };
     // Добавить элемент
     function form_element(base, text, name, type) {
         var $div_row = $('<div></div>', {
@@ -261,6 +286,28 @@
         };
         this.init();
     };
+
+    function init_checkbox(element, default_value, fn_change) {
+        this.$element = element;
+        this.init = function () {
+            this.update(default_value);
+            if (typeof fn_change === 'function') {
+                this.$element.on("change", fn_change.bind(this));
+            }
+        };
+        this.val = function (value) {
+            if (value !== undefined) {
+                this.$element.prop('checked',Boolean(value));
+                //this.$element.change();
+            } else {
+                return this.$element.prop('checked');
+            };
+        };
+        this.update = function (default_value) {
+            this.$element.val(default_value);
+        };
+        this.init();
+    };
     //
     form_dir_way.prototype.init = function (rows_form, source) {
         this.source = source
@@ -287,15 +334,21 @@
                     var element = new init_select(colElement.$element, el.list, -1, null, el.select);
                     this.element.push({ field: el.field, name: el.name, type: 'select', element: element, control: el.control });
                 }
-                if (el.type === 'input-number') {
+                if (el.type === 'number') {
                     var colElement = new input_element($col, this, el.name, el.label, 'number');
                     var element = new init_input(colElement.$element, null, el.select);
-                    this.element.push({ field: el.field, name: el.name, type: 'input-number', element: element, control: null });
+                    this.element.push({ field: el.field, name: el.name, type: 'number', element: element, control: null });
                 }
-                if (el.type === 'input-text') {
+                if (el.type === 'text') {
                     var colElement = new input_element($col, this, el.name, el.label, 'text');
                     var element = new init_input(colElement.$element, null, el.select);
-                    this.element.push({ field: el.field, name: el.name, type: 'input-text', element: element, control: null });
+                    this.element.push({ field: el.field, name: el.name, type: 'text', element: element, control: null });
+                }
+                if (el.type === 'checkbox') {
+                    $col.attr('style', 'display:flex;align-items:center');
+                    var colElement = new checkbox_element($col, this, el.name, el.label);
+                    var element = new init_checkbox(colElement.$element, null, el.select);
+                    this.element.push({ field: el.field, name: el.name, type: 'checkbox', element: element, control: null });
                 }
 
                 $row.append($col);
