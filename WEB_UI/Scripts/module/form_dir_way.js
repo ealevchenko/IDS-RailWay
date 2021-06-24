@@ -33,7 +33,7 @@
             'aria-hidden': 'true',
         });
         var $div_md = $('<div></div>', {
-            'class': 'modal-dialog',
+            'class': 'modal-dialog modal-lg',
 
         });
         var $div_mc = $('<div></div>', {
@@ -110,7 +110,7 @@
         });
         this.$element = $div_col;
     };
-    // Добавить элемент
+    // Добавить элемент select
     function select_element(col, base, name, text) {
         var $lab = $('<label></label>', {
             'class': 'col-form-label',
@@ -121,8 +121,8 @@
             'class': 'form-control',
             'id': 'el-' + name,
             'name': 'el-' + name,
-            'for': 'el-' + name,
-            'text': text,
+            /*            'for': 'el-' + name,*/
+            //'text': text,
         });
         var $div_invalid = $('<div></div>', {
             'class': 'invalid-feedback',
@@ -130,6 +130,27 @@
         this.$element = $select;
         col.append($lab).append(this.$element).append($div_invalid);
     };
+    // Добавить элемент input
+    function input_element(col, base, name, text, type) {
+        var $lab = $('<label></label>', {
+            'class': 'col-form-label',
+            'for': 'el-' + name,
+            'text': text,
+        });
+        var $input = $('<input>', {
+            'class': 'form-control',
+            'id': 'el-' + name,
+            'name': 'el-' + name,
+            'type': type,
+            //'text': text,
+        });
+        var $div_invalid = $('<div></div>', {
+            'class': 'invalid-feedback',
+        });
+        this.$element = $input;
+        col.append($lab).append(this.$element).append($div_invalid);
+    };
+
     // Добавить элемент
     function form_element(base, text, name, type) {
         var $div_row = $('<div></div>', {
@@ -179,32 +200,15 @@
         });
         this.init = function () {
             this.update(data, default_value, fn_option);
-            //this.$element.empty();
-            //if (default_value === -1) {
-            //    element.append($default_option);
-            //}
-            //if (data) {
-            //    $.each(data, function (i, el) {
-            //        // Преобразовать формат
-            //        if (typeof fn_option === 'function') {
-            //            el = fn_option(el);
-            //        }
-            //        if (el) {
-            //            var $option = $('<option></option>', {
-            //                'value': el.value,
-            //                'text': el.text,
-            //                'disabled': el.disabled,
-            //            });
-            //            this.$element.append($option);
-            //        }
-            //    }.bind(this));
-            //};
-            //this.$element.val(default_value);
-            this.$element.on("change", fn_change);
+            if (typeof fn_change === 'function') {
+                this.$element.on("change", fn_change.bind(this));
+            }
+
         };
         this.val = function (value) {
             if (value !== undefined) {
                 this.$element.val(value);
+                //this.$element.change();
             } else {
                 return this.$element.val();
             };
@@ -234,6 +238,29 @@
         };
         this.init();
     };
+
+    function init_input(element, default_value, fn_change) {
+        /*        this.options = [];*/
+        this.$element = element;
+        this.init = function () {
+            this.update(default_value);
+            if (typeof fn_change === 'function') {
+                this.$element.on("change", fn_change.bind(this));
+            }
+        };
+        this.val = function (value) {
+            if (value !== undefined) {
+                this.$element.val(value);
+                //this.$element.change();
+            } else {
+                return this.$element.val();
+            };
+        };
+        this.update = function (default_value) {
+            this.$element.val(default_value);
+        };
+        this.init();
+    };
     //
     form_dir_way.prototype.init = function (rows_form, source) {
         this.source = source
@@ -246,7 +273,7 @@
         this.$body_modal = modalElement.$body;
         this.$form_modal = modalElement.$form;
         this.$form.append(modalElement.$element);
-        //
+        // Создаем элементы и отрисовываем их на форме
         $.each(this.rows_form, function (i, el_row) {
             var count = el_row.length;
             var rowElement = new row_element();
@@ -254,16 +281,39 @@
             $.each(el_row, function (i, el) {
                 var colElement = new col_element(el.col);
                 var $col = colElement.$element;
-                var colElement = new select_element($col, this, el.name, el.label);
 
-                var element = new init_select(colElement.$element, el.list, -1, null, el.select);
-                this.element.push({ field: el.field, name: el.name, type: 'select', element: element });
-                //$row.append(colElement)
+                if (el.type === 'select') {
+                    var colElement = new select_element($col, this, el.name, el.label);
+                    var element = new init_select(colElement.$element, el.list, -1, null, el.select);
+                    this.element.push({ field: el.field, name: el.name, type: 'select', element: element, control: el.control });
+                }
+                if (el.type === 'input-number') {
+                    var colElement = new input_element($col, this, el.name, el.label, 'number');
+                    var element = new init_input(colElement.$element, null, el.select);
+                    this.element.push({ field: el.field, name: el.name, type: 'input-number', element: element, control: null });
+                }
+                if (el.type === 'input-text') {
+                    var colElement = new input_element($col, this, el.name, el.label, 'text');
+                    var element = new init_input(colElement.$element, null, el.select);
+                    this.element.push({ field: el.field, name: el.name, type: 'input-text', element: element, control: null });
+                }
+
                 $row.append($col);
             }.bind(this));
             this.$form_modal.append($row);
         }.bind(this));
-        //
+        // Пройдемся по зависимостям
+        $.each(this.element.filter(function (i) { return i.control !== null }), function (i, el_control) {
+            var n_control = el_control.control;
+            var element_control = this.element.find(function (o) {
+                return o.name === n_control;
+            });
+            if (element_control && element_control.element) {
+                el_control.element['element_control'] = element_control.element;
+            } else {
+                throw new Error('Неопределен контролируемый элемент : ' + n_control);
+            }
+        }.bind(this))
         this.$modal_edit = $('div#em-' + this.selector).modal({
             keyboard: false,
             show: false
@@ -278,6 +328,11 @@
                 var value = data[el.field];
                 if (value !== undefined) {
                     el.element.val(value);
+                    // Проверим наличие элемента контроля
+                    if (el.element.element_control) {
+                        // если есть элемент контроля обновим инфу по нему
+                        el.element.$element.change();
+                    }
                 }
             });
         };
