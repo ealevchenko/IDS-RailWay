@@ -373,6 +373,8 @@
             var row_way_ru = [];
             var row_way_en = [];
             var row_way_type = [];
+            var row_way_date = [];
+
             var row_element_position = {
                 col: 2,
                 field: 'position_way',
@@ -506,6 +508,20 @@
                 //control: null,
             };
 
+            var row_element_way_delete = {
+                col: 4,
+                field: 'way_delete',
+                type: 'datetime',
+                name: 'way_delete',
+                label: 'Пкть удален',
+                //list: null,
+                //select: null,
+                //control: null,
+                close: function (datetime) {
+
+                },
+            };
+
             row_way.push(row_element_position);
             row_way.push(row_element_capacity);
             row_way.push(row_element_divisions);
@@ -523,12 +539,15 @@
             row_way_type.push(row_element_dissolution);
             row_way_type.push(row_element_output_dissolution);
 
+            row_way_date.push(row_element_way_delete);
+
             rows_form.push(row_station);
             //rows_form.push(row_park);
             rows_form.push(row_way);
             rows_form.push(row_way_ru);
             rows_form.push(row_way_en);
             rows_form.push(row_way_type);
+            rows_form.push(row_way_date);
 
 
             form_edit.init(rows_form, ids_dir);
