@@ -184,5 +184,16 @@ namespace EFMT.Concrete
             return this.db.Database.SqlQuery<ApproachesCars>(sql).ToList();   
         }
 
+        public void Delete(IEnumerable<long> list_id)
+        {
+            try
+            {
+                db.Delete<ApproachesCars>(list_id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
     }
 }

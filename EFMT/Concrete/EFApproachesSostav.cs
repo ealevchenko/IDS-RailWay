@@ -179,5 +179,9 @@ namespace EFMT.Concrete
             return this.db.Database.SqlQuery<ApproachesSostav>(sql).FirstOrDefault();   
         }
 
+        public void Delete(IEnumerable<long> list_id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

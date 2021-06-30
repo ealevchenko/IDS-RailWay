@@ -174,5 +174,17 @@ namespace EFMT.Concrete
                 return null;
             }
         }
+
+        public void Delete(IEnumerable<long> list_id)
+        {
+            try
+            {
+                db.Delete<ArrivalSostav>(list_id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
     }
 }
