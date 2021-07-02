@@ -177,5 +177,5 @@ use [KRR-PA-CNT-Railway]
 			IDS.OutgoingCars as out_car ON wir.id_outgoing_car = out_car.id Left JOIN													--> Вагон отправка
 			IDS.OutgoingSostav as out_sostav ON out_car.id_outgoing = out_sostav.id									--> Станция УЗ по письму
 
-		WHERE (wim.way_end IS NULL) and wim.id_way = 0  and out_sostav.status =2 --and wir.num = 65297459
+		WHERE (wim.way_end IS NULL) and wim.id_way = 0  --and out_sostav.status =2 --and wir.num = 65297459
 		order by wim.position
