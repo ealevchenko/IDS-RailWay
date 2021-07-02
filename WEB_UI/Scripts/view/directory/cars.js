@@ -1504,12 +1504,12 @@
             },
             // Валидация поля  "Грузоподъемность"
             validation_vag_gruzp: function (valid, off_message) {
-                valid = valid & pn_add_edit.val.checkInputOfRange(pn_add_edit.add_edit_gruzp, 0.0, 80.0, "Грузоподъемность должна быть в диапазоне от 0.0 до 80.0 тон.", "", off_message);
+                valid = valid & pn_add_edit.val.checkInputOfRange(pn_add_edit.add_edit_gruzp, 0.0, 105.0, "Грузоподъемность должна быть в диапазоне от 0.0 до 105.0 тон.", "", off_message);
                 return valid;
             },
             // Валидация поля  "Тара"
             validation_vag_tara: function (valid, off_message) {
-                valid = valid & pn_add_edit.val.checkInputOfRange(pn_add_edit.add_edit_tara, 0.0, 30.0, "Тара должна быть в диапазоне от 0.0 до 30.0 тон.", "", off_message);
+                valid = valid & pn_add_edit.val.checkInputOfRange(pn_add_edit.add_edit_tara, 0.0, 51.0, "Тара должна быть в диапазоне от 0.0 до 51.0 тон.", "", off_message);
                 return valid;
             },
             // Валидация оператора
