@@ -228,7 +228,7 @@ namespace Test
             Test_Metrans tmt = new Test_Metrans();
             //tmt.MTTransfer_TransferApproaches();
             //tmt.MTTransfer_TransferArrival();
-            tmt.MTTransfer_TransferArrivalAPI();
+            //tmt.MTTransfer_TransferArrivalAPI();
             //tmt.MTThread_SFTPTransfer();
             //tmt.MTTransfer_WebApiClientMT();
             //tmt.MTThread_Start_TransferWT();
@@ -255,7 +255,7 @@ namespace Test
             #endregion
 
             #region Администрирование
-            //tids.IDS_WIR_CloseWir();          // Административной функции закрыть внутренее перемещение
+            tids.IDS_WIR_CloseWir();          // Административной функции закрыть внутренее перемещение
             //tids.IDS_WIR_DeleteDoubleWir();   // Административной функции закрыть задвоение операций и дислокаций внутренего перемещения
             //tids.IDS_WIR_ReturnWagons();      // Административной функции вернуть вагон из отправки
             //tids.IDS_WIR_Update_EPD();          // Административной Обновить ЭПД по составам (список id составов [KRR-PA-CNT-Railway].[IDS].[OutgoingSostav])
