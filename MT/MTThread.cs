@@ -104,15 +104,15 @@ namespace MT
                         receiverDelete = bool.Parse(ConfigurationManager.AppSettings["DeleteFileHostTransferApproaches"].ToString()),
                         receiverRewrite = bool.Parse(ConfigurationManager.AppSettings["RewriteFileTransferApproaches"].ToString())
                     });
-                    listProperty.Add(new TransferProperty()
-                    {
-                        pathHost = ConfigurationManager.AppSettings["fromPathHostTransferArrival"].ToString(),
-                        filtrHost = ConfigurationManager.AppSettings["FileFiltrHostTransferArrival"].ToString(),
-                        pathReceiver = ConfigurationManager.AppSettings["toDirPathTransferArrival"].ToString(),
-                        pathTempReceiver = ConfigurationManager.AppSettings["toTMPDirPathTransferArrival"].ToString(),
-                        receiverDelete = bool.Parse(ConfigurationManager.AppSettings["DeleteFileHostTransferArrival"].ToString()),
-                        receiverRewrite = bool.Parse(ConfigurationManager.AppSettings["RewriteFileTransferArrival"].ToString())
-                    });
+                    //listProperty.Add(new TransferProperty()
+                    //{
+                    //    pathHost = ConfigurationManager.AppSettings["fromPathHostTransferArrival"].ToString(),
+                    //    filtrHost = ConfigurationManager.AppSettings["FileFiltrHostTransferArrival"].ToString(),
+                    //    pathReceiver = ConfigurationManager.AppSettings["toDirPathTransferArrival"].ToString(),
+                    //    pathTempReceiver = ConfigurationManager.AppSettings["toTMPDirPathTransferArrival"].ToString(),
+                    //    receiverDelete = bool.Parse(ConfigurationManager.AppSettings["DeleteFileHostTransferArrival"].ToString()),
+                    //    receiverRewrite = bool.Parse(ConfigurationManager.AppSettings["RewriteFileTransferArrival"].ToString())
+                    //});
                 }
                 catch (Exception ex)
                 {
