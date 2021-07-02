@@ -356,7 +356,7 @@ namespace IDS
             try
             {
                 UZ.UZ_SMS uz_sms = new UZ.UZ_SMS(this.servece_owner);
-                UZ.UZ_DOC uz_doc = uz_sms.GetDocumentOfDB_NumConsigneesStations(num_car, new int[] { 7932, 6302, 659 }, new int[] { 457905, 466904, 466923, 467004, 467108, 467201, 466603 }, dt_arrival);
+                UZ.UZ_DOC uz_doc = uz_sms.GetDocumentOfDB_NumConsigneesStations(num_car, new int[] { 7932, 6302, 659 }, new int[] { 457905, 466904, 466923, 467004, 467108, 467201, 466603, 457708 }, dt_arrival);
                 return uz_doc;
             }
             catch (Exception e)
