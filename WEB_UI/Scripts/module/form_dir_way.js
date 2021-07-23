@@ -73,15 +73,18 @@
             'class': 'btn btn-secondary',
         });
         var $button_modal_ok = $('<button></button>', {
+            //'form': 'fm-' + base.selector,
             'type': 'button',
             'text': 'Ок',
             'class': 'btn btn-primary',
         });
+        //$button_modal_ok.attr('form', 'fm-' + base.selector);
         var $form = $('<form></form>', {
             'id': 'fm-' + base.selector,
-            'novalidate': '',
+            'novalidate': null,
             'class': 'needs-validation',
         });
+        //$form.attr('novalidate', '');
         //<form class="needs-validation" novalidate>
         //<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 
@@ -465,31 +468,33 @@
         // Обработка события нажата кнопка Ок
         this.$bt_ok.on('click', function (e) {
             e.preventDefault();
-            this.val.clear_all();
-            var valid = true;
-            $.each(this.element, function (i, el) {
+            this.$form_modal.submit();
+            //var valid = this.form_val.valid();
+            //this.val.clear_all();
+            //var valid = true;
+            //$.each(this.element, function (i, el) {
 
-                var value = el.element.val();
-                var type = el.type;
-                var validation = el.validation;
-                // Необходима проверка
-                if (validation && validation.length > 0) {
-                    $.each(validation, function (i, el_valid) {
-                        if (el_valid.check_type === 'not_null') {
-                            if (type === 'select') {
-                                this.val.checkSelection(el.element.$element, el_valid.error, el_valid.ok)
-                            }
-                        }
-                        if (el_valid.check_type === 'range_number') {
-                            if (type === 'number') {
-                                this.val.checkInputOfRange(el.element.$element, el_valid.min, el_valid.max, el_valid.error, el_valid.ok)
-                            }
-                        }
-                    }.bind(this));
-                }
+            //    var value = el.element.val();
+            //    var type = el.type;
+            //    var validation = el.validation;
+            //    // Необходима проверка
+            //    if (validation && validation.length > 0) {
+            //        $.each(validation, function (i, el_valid) {
+            //            if (el_valid.check_type === 'not_null') {
+            //                if (type === 'select') {
+            //                    this.val.checkSelection(el.element.$element, el_valid.error, el_valid.ok)
+            //                }
+            //            }
+            //            if (el_valid.check_type === 'range_number') {
+            //                if (type === 'number') {
+            //                    this.val.checkInputOfRange(el.element.$element, el_valid.min, el_valid.max, el_valid.error, el_valid.ok)
+            //                }
+            //            }
+            //        }.bind(this));
+            //    }
 
 
-            }.bind(this));
+            //}.bind(this));
         }.bind(this));
         // Создать Alert
         this.$alert = null;
@@ -505,18 +510,20 @@
         });
 
         this.$form.append(modalElement.$element);
-        this.all_obj = $([]);
+
+        ///this.all_obj = $([]);
         // Создаем элементы и отрисовываем их на форме
         $.each(this.settings.rows_form, function (i, el_row) {
             //var count = el_row.length;
             var rowElement = new row_element();
             var $row = rowElement.$element;
             $.each(el_row, function (i, el) {
-                var colElement = new col_element(el.col);
-                var $col = colElement.$element;
+                var colElement1 = new col_element(el.col);
+                var $col = colElement1.$element;
 
                 if (el.type === 'select') {
                     var colElement = new select_element($col, this, el.name, el.label);
+
                     var element = new init_select(colElement.$element, el.list, -1, null, el.select);
                     this.element.push({ field: el.field, name: el.name, type: 'select', element: element, control: el.control, validation: el.validation });
                 }
@@ -551,7 +558,11 @@
                     var element = new textarea_input(colElement.$element, null, el.select);
                     this.element.push({ field: el.field, name: el.name, type: 'textarea', element: element, control: null, validation: el.validation });
                 }
-                this.all_obj.add(colElement.$element);
+                //var els = $(colElement.$element);
+                //var els1 = colElement.$element;
+
+                //this.all_obj.add(els);
+                //this.all_obj.add(els1);
                 $row.append($col);
             }.bind(this));
             this.$form_modal.append($row);
@@ -570,12 +581,18 @@
         }.bind(this))
 
         // Получим список элементов 
-/*        this.all_obj = $([]);*/
+        /*        this.all_obj = $([]);*/
         //$.each(this.element, function (i, el) {
         //    this.all_obj.add($(el.element.$element[0]));
         //}.bind(this));
         // Создать элемент Валидации
-        this.val = new VALIDATION(App.Lang, this.$alert, this.all_obj); // Создадим класс VALIDATION
+
+        // Валидация
+        var FVAL = App.form_validation;
+        this.form_val = new FVAL('#' + this.$form_modal.attr('id')); // Создадим экземпляр таблицы
+        this.form_val.init(this.$alert, this.element);
+
+        ///this.val = new VALIDATION(App.Lang, this.$alert, this.all_obj); // Создадим класс VALIDATION
 
         this.$modal_edit = $('div#em-' + this.selector).modal({
             keyboard: false,
@@ -586,7 +603,7 @@
     };
     // Показать данные 
     form_dir_way.prototype.view = function (data) {
-        this.val.clear_all();
+        this.form_val.clear();
         if (data) {
             $.each(this.element, function (i, el) {
                 var value = data[el.field];
