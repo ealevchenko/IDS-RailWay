@@ -280,7 +280,7 @@
     table_dir_way.prototype.init = function () {
         // теперь выполним инициализацию
         // Инициализация формы
-        var FDWAY = App.form_dir_way;
+        var FDWAY = App.form_edit;
         var $form = $('<div></div>', {
             'id': 'fm-' + this.selector
         });
@@ -445,7 +445,7 @@
             };
             //
             var row_element_num_ru = {
-                col: 1,
+                col: 2,
                 field: 'way_num_ru',
                 type: 'text',
                 name: 'way_num_ru',
@@ -455,9 +455,14 @@
                 control: null,
                 update: null,
                 close: null,
+                validation: [{
+                    check_type: 'not_null',
+                    error: 'Укажите номер пути (рус)',
+                    ok: null,
+                }],
             };
             var row_element_name_ru = {
-                col: 7,
+                col: 6,
                 field: 'way_name_ru',
                 type: 'text',
                 name: 'way_name_ru',
@@ -467,6 +472,11 @@
                 control: null,
                 update: null,
                 close: null,
+                validation: [{
+                    check_type: 'not_null',
+                    error: 'Укажите название пути (рус)',
+                    ok: null,
+                }],
             };
             var row_element_abbr_ru = {
                 col: 4,
@@ -479,9 +489,14 @@
                 control: null,
                 update: null,
                 close: null,
+                validation: [{
+                    check_type: 'not_null',
+                    error: 'Укажите абревиатуру пути (рус)',
+                    ok: null,
+                }],
             };
             var row_element_num_en = {
-                col: 1,
+                col: 2,
                 field: 'way_num_en',
                 type: 'text',
                 name: 'way_num_ru',
@@ -491,9 +506,14 @@
                 control: null,
                 update: null,
                 close: null,
+                validation: [{
+                    check_type: 'not_null',
+                    error: 'Укажите номер пути (анг)',
+                    ok: null,
+                }],
             };
             var row_element_name_en = {
-                col: 7,
+                col: 6,
                 field: 'way_name_en',
                 type: 'text',
                 name: 'way_name_ru',
@@ -503,6 +523,11 @@
                 control: null,
                 update: null,
                 close: null,
+                validation: [{
+                    check_type: 'not_null',
+                    error: 'Укажите название пути (анг)',
+                    ok: null,
+                }],
             };
             var row_element_abbr_en = {
                 col: 4,
@@ -515,6 +540,11 @@
                 control: null,
                 update: null,
                 close: null,
+                validation: [{
+                    check_type: 'not_null',
+                    error: 'Укажите абревиатуру пути (анг.)',
+                    ok: null,
+                }],
             };
             //
             var row_element_deadlock = {
@@ -528,6 +558,11 @@
                 control: null,
                 update: null,
                 close: null,
+                //validation: [{
+                //    check_type: 'not_null',
+                //    error: 'Укажите укажите тупик',
+                //    ok: null,
+                //}],
             };
             var row_element_crossing_uz = {
                 col: 2,
@@ -627,6 +662,10 @@
                 source: ids_dir,
                 alert: true,
                 title: "Править путь",
+                size: "xl",
+                fn_ok: function (data) {
+
+                },
             });
             //----------------------------------
         }.bind(this));
@@ -689,25 +728,21 @@
                 {
                     text: langView('title_button_add', App.Langs),
                     action: function (e, dt, node, config) {
-                        //var index = this.obj_t_way.rows({ selected: true });
-                        //var selected = this.obj_t_way.rows({ selected: true })[0].length > 0 ? true : false;
-                        //var row = this.obj_t_way.rows(indexes).data().toArray()[0];
-
-
-                        form_edit.view(App.Select_Row_ways);
-                        //$modal_edit.modal('show');
+                        form_edit.view(null);
                     },
                     enabled: true
                 },
                 {
                     text: langView('title_button_edit', App.Langs),
                     action: function (e, dt, node, config) {
+                        form_edit.view(App.Select_Row_ways);
                     },
                     enabled: false
                 },
                 {
                     text: langView('title_button_del', App.Langs),
                     action: function (e, dt, node, config) {
+
                     },
                     enabled: false
                 },

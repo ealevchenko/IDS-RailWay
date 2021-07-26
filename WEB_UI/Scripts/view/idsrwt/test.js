@@ -125,6 +125,8 @@
     var TDWAY = App.table_dir_way;
     var tdways = new TDWAY('div#ways'); // Создадим экземпляр таблицы
 
+
+
     $('button#arrival').on('click', function (e) {
         //trWay.update_station_of_id(8);
         //trWay.update_park_of_id(8, 3);
@@ -138,6 +140,16 @@
 
         tdways.init();
         tdways.load_of_station_park(23, 161);
+
+        //var alert = $('div#test-alert');
+        //var FVAL = App.form_validation;
+        //var form_val = new FVAL('#test'); // Создадим экземпляр таблицы
+        //form_val.init(alert, null, function (data) {
+
+        //});
+
+
+
 
         ////// Прочтем данные из куков
         ////var list_station = null;
