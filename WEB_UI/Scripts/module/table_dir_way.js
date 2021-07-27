@@ -276,17 +276,18 @@
             }
         });
     };
-    // инициализация таблицы истрия прибытия вагона
+    // инициализация таблицы справочника путей
     table_dir_way.prototype.init = function () {
         // теперь выполним инициализацию
         // Инициализация формы
         var FDWAY = App.form_edit;
+
         var $form = $('<div></div>', {
-            'id': 'fm-' + this.selector
+            'id': 'edit-' + this.selector
         });
         $('body').append($form)
         // Инициализация формы
-        var form_edit = new FDWAY('div#fm-' + this.selector); // Создадим экземпляр таблицы
+        var form_edit = new FDWAY('div#edit-' + this.selector); // Создадим экземпляр таблицы
         // Загрузим данные
         this.load_reference(function () {
             // Создадим поля формы
@@ -664,9 +665,9 @@
                 title: "Править путь",
                 size: "xl",
                 fn_ok: function (data) {
-
+                    var name_el = 'edit-' + this.selector;
                 },
-            });
+            }.bind(this));
             //----------------------------------
         }.bind(this));
         // Инициализация таблицы

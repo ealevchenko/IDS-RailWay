@@ -27,7 +27,7 @@
     function modal_edit(base) {
         var size = "";
         if (base.settings.size !== "") {
-            size = "modal-"+base.settings.size;
+            size = "modal-" + base.settings.size;
         }
         var $div_modal = $('<div></div>', {
             'id': 'em-' + base.selector,
@@ -143,8 +143,8 @@
         });
         var $select = $('<select></select>', {
             'class': 'form-control',
-            'id': 'el-' + name,
-            'name': 'el-' + name,
+            'id': base.selector + '-' + name,
+            'name': base.selector + '-' + name,
             /*            'for': 'el-' + name,*/
             //'text': text,
         });
@@ -163,8 +163,8 @@
         });
         var $input = $('<input>', {
             'class': 'form-control',
-            'id': 'el-' + name,
-            'name': 'el-' + name,
+            'id': base.selector + '-' + name,
+            'name': base.selector + '-' + name,
             'type': type,
             //'text': text,
         });
@@ -187,8 +187,8 @@
         });
         var $input = $('<input>', {
             'class': 'form-check-input',
-            'id': 'el-' + name,
-            'name': 'el-' + name,
+            'id': base.selector + '-' + name,
+            'name': base.selector + '-' + name,
             'type': 'checkbox',
             //'text': text,
         });
@@ -209,8 +209,8 @@
         });
         var $input = $('<input>', {
             'class': 'form-control',
-            'id': 'el-' + name,
-            'name': 'el-' + name,
+            'id': base.selector + '-' + name,
+            'name': base.selector + '-' + name,
             'type': type,
         });
         var $div_invalid = $('<div></div>', {
@@ -228,8 +228,8 @@
         });
         var $input = $('<textarea></textarea>', {
             'class': 'form-control',
-            'id': 'el-' + name,
-            'name': 'el-' + name,
+            'id': base.selector + '-' + name,
+            'name': base.selector + '-' + name,
             'rows': '2'
         });
         var $div_invalid = $('<div></div>', {
@@ -508,16 +508,16 @@
                 if (el.type === 'date') {
                     var colElement = new datetime_element($col, this, el.name, el.label, 'date');
                     var element = new datetime_input(colElement.$element, null, el.close, false);
-                    this.element.push({ field: el.field, name: el.name, type: 'date', element: element, control: null});
+                    this.element.push({ field: el.field, name: el.name, type: 'date', element: element, control: null });
                     this.rules_valid.push({ name: $(element.$element).attr('name'), type: 'date', validation: el.validation });
                 }
                 if (el.type === 'textarea') {
                     var colElement = new textarea_element($col, this, el.name, el.label);
                     var element = new textarea_input(colElement.$element, null, el.select);
-                    this.element.push({ field: el.field, name: el.name, type: 'textarea', element: element, control: null});
+                    this.element.push({ field: el.field, name: el.name, type: 'textarea', element: element, control: null });
                     this.rules_valid.push({ name: $(element.$element).attr('name'), type: 'textarea', validation: el.validation });
                 }
-                
+
                 $row.append($col);
             }.bind(this));
             this.$form_modal.append($row);
@@ -551,18 +551,18 @@
     form_edit.prototype.view = function (data) {
         this.form_val.clear();
         //if (data) {
-            $.each(this.element, function (i, el) {
-                var value = data ? data[el.field] : (el.type === "select" ? -1 : null);
-                //var type = typeof value;
-                if (value !== undefined) {
-                    el.element.val(value);
-                    // Проверим наличие элемента контроля
-                    if (el.element.element_control) {
-                        // если есть элемент контроля обновим инфу по нему
-                        el.element.$element.change();
-                    }
+        $.each(this.element, function (i, el) {
+            var value = data ? data[el.field] : (el.type === "select" ? -1 : null);
+            //var type = typeof value;
+            if (value !== undefined) {
+                el.element.val(value);
+                // Проверим наличие элемента контроля
+                if (el.element.element_control) {
+                    // если есть элемент контроля обновим инфу по нему
+                    el.element.$element.change();
                 }
-            });
+            }
+        });
         //};
         //
         this.$modal_edit.modal('show');
