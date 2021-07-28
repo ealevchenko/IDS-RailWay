@@ -70,7 +70,6 @@ namespace EFIDS.Entities
 
         public DateTime? way_delete { get; set; }
 
-        [Required]
         [StringLength(100)]
         public string note { get; set; }
 
