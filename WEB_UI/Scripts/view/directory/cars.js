@@ -1120,11 +1120,7 @@
                             {
                                 lang: pn_add_edit.lang
                             },
-                            [{
-                                value: 0, text: "0"
-                            }, { value: 4, text: "4" }, { value: 8, text: "8" }, { value: 12, text: "12" }, { value: 16, text: "16" }, {
-                                value: 32, text: "32"
-                            }],
+                            [{value: 0, text: "0"}, { value: 4, text: "4" },{ value: 6, text: "6" },{ value: 8, text: "8" }, { value: 12, text: "12" }, { value: 16, text: "16" }, {value: 32, text: "32"}],
                             null,
                             -1,
                             function (event) {
@@ -1499,7 +1495,7 @@
             },
             // Валидация поля  "Количество осей"
             validation_vag_kol_os: function (valid, off_message) {
-                valid = valid & pn_add_edit.val.checkSelection(pn_add_edit.add_edit_kol_os, "Укажите количество осей (0- по умолчанию, 4,8,12,16,32)", "", off_message);
+                valid = valid & pn_add_edit.val.checkSelection(pn_add_edit.add_edit_kol_os, "Укажите количество осей (0- по умолчанию, 4,6,8,12,16,32)", "", off_message);
                 return valid;
             },
             // Валидация поля  "Грузоподъемность"
