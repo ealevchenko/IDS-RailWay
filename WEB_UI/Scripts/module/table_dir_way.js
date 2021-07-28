@@ -666,8 +666,8 @@
                 size: "xl",
                 fn_ok: function (data) {
                     var name_el = 'edit-' + this.selector;
-                },
-            }.bind(this));
+                }.bind(this),
+            });
             //----------------------------------
         }.bind(this));
         // Инициализация таблицы
