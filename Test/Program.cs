@@ -184,8 +184,12 @@ namespace Test
             #region Test_IDS Тест ИДС
             Test_IDS tids = new Test_IDS();
             //tids.IDSTransfer_AddArrival();
+
             //tids.IDSDirectory_GetID_Directory_StationOfCodeCS();
             //tids.IDSDirectory_GetCurrentDirectory_CarsOfNum();
+            //tids.IDSDirectory_OperationAutoPositionWayOfPark();     // авто-коррекция положения пути в парке
+            tids.IDSDirectory_OperationSetPositionWayOfPark();      // установить новое положения пути в парке
+
             //tids.IDSTransfer_GetNumDoc();
             //tids.IDSDirectory_IsCorrectNumCar();
             //tids.GetActs();
@@ -256,7 +260,7 @@ namespace Test
 
             #region Администрирование
             //tids.IDS_WIR_CloseWir();          // Административной функции закрыть внутренее перемещение
-            tids.IDS_WIR_DeleteDoubleWir();   // Административной функции закрыть задвоение операций и дислокаций внутренего перемещения
+            //tids.IDS_WIR_DeleteDoubleWir();   // Административной функции закрыть задвоение операций и дислокаций внутренего перемещения
             //tids.IDS_WIR_ReturnWagons();      // Административной функции вернуть вагон из отправки
             //tids.IDS_WIR_Update_EPD();          // Административной Обновить ЭПД по составам (список id составов [KRR-PA-CNT-Railway].[IDS].[OutgoingSostav])
 
