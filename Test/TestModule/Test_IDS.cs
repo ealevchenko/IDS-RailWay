@@ -149,7 +149,7 @@ namespace Test.TestModule
 
             IDSDirectory ids = new IDSDirectory(service.Test);
             EFDbContext context = new EFDbContext();
-            int res = ids.OperationSetPositionWayOfPark(ref context, 596, 3, "test_user");
+            int res = ids.OperationSetPositionWayOfPark(ref context, 599, 1, "test_user");
         }
 
         #endregion

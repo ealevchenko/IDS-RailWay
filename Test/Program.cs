@@ -190,6 +190,7 @@ namespace Test
             //tids.IDSDirectory_OperationAutoPositionWayOfPark();     // авто-коррекция положения пути в парке
             tids.IDSDirectory_OperationSetPositionWayOfPark();      // установить новое положения пути в парке
 
+
             //tids.IDSTransfer_GetNumDoc();
             //tids.IDSDirectory_IsCorrectNumCar();
             //tids.GetActs();
