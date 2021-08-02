@@ -1,6 +1,8 @@
 ﻿using EFIDS.Abstract;
 using EFIDS.Entities;
 using EFIDS.Helper;
+using IDS;
+using IDSLogs.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,8 +40,13 @@ namespace WEB_UI.Controllers.api
         public DateTime? change { get; set; }
         public string change_user { get; set; }
     }
-    
-    
+
+    public class OperationMovePositionWayOfPark
+    {
+        public int id_way { get; set; }
+        public string user { get; set; }
+    }
+
     /// <summary>
     /// СПИСОК ПУТЕЙ
     /// </summary>
@@ -215,5 +222,50 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // POST api/ids/directory/ways/operation/down_position/1
+        /// <summary>
+        /// Операция положение пути ниже
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("operation/down_position/1")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostOperationDown1PositionWayOfPark([FromBody] OperationMovePositionWayOfPark value)
+        {
+            try
+            {
+                IDSDirectory ids_wir = new IDSDirectory(service.WebAPI_IDS);
+                int result = ids_wir.OperationDown1PositionWayOfPark(value.id_way, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST api/ids/directory/ways/operation/up_position/1
+        /// <summary>
+        /// Операция положение пути выше
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("operation/up_position/1")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostOperationUp1PositionWayOfPark([FromBody] OperationMovePositionWayOfPark value)
+        {
+            try
+            {
+                IDSDirectory ids_wir = new IDSDirectory(service.WebAPI_IDS);
+                int result = ids_wir.OperationUp1PositionWayOfPark(value.id_way, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

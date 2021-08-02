@@ -277,8 +277,14 @@
         });
     };
     // инициализация таблицы справочника путей
-    table_dir_way.prototype.init = function () {
+    table_dir_way.prototype.init = function (options) {
         // теперь выполним инициализацию
+        // Определим основные свойства
+        this.settings = $.extend({
+            alert: null,
+        }, options);
+
+
         // Инициализация формы
         var FDWAY = App.form_edit;
 
@@ -750,13 +756,59 @@
                 {
                     text: langView('title_button_up', App.Langs),
                     action: function (e, dt, node, config) {
-                    },
+                        var id = App.Select_Row_ways ? App.Select_Row_ways.id : null;
+                        var position = App.Select_Row_ways ? App.Select_Row_ways.position_way : null;
+                        if (id && position > 0) {
+                            var operation = {
+                                id_way: id,
+                                user: App.User_Name,
+                            };
+                            ids_dir.postOperationUp1PositionWayOfPark(operation, function (result) {
+                                if (result > 0) {
+                                    this.update();
+                                    this.out_clear();
+                                    this.out_info("Путь перенесен на позицию верх");
+                                }
+                            }.bind(this));
+                        } else {
+                            this.out_clear();
+                            if (id === null) {
+                                this.out_error("Ошибка, выполнения операции изменения позиции пути, путь не определен");
+                            }
+                            if (position === null || position === 0) {
+                                this.out_error("Ошибка, выполнения операции изменения позиции пути, позиция пути неопределена или равна 0");
+                            }
+                        }
+                    }.bind(this),
                     enabled: false
                 },
                 {
                     text: langView('title_button_dn', App.Langs),
                     action: function (e, dt, node, config) {
-                    },
+                        var id = App.Select_Row_ways ? App.Select_Row_ways.id : null;
+                        var position = App.Select_Row_ways ? App.Select_Row_ways.position_way : null;
+                        if (id && position > 0) {
+                            var operation = {
+                                id_way: id,
+                                user: App.User_Name,
+                            };
+                            ids_dir.postOperationDown1PositionWayOfPark(operation, function (result) {
+                                if (result > 0) {
+                                    this.update();
+                                    this.out_clear();
+                                    this.out_info("Путь перенесен на позицию вниз");
+                                }
+                            }.bind(this));
+                        } else {
+                            this.out_clear();
+                            if (id === null) {
+                                this.out_error("Ошибка, выполнения операции изменения позиции пути, путь не определен");
+                            }
+                            if (position === null || position === 0) {
+                                this.out_error("Ошибка, выполнения операции изменения позиции пути, позиция пути неопределена или равна 0");
+                            }
+                        }
+                    }.bind(this),
                     enabled: false
                 },
                 {
@@ -789,18 +841,59 @@
         this.obj_t_way.clear();
         this.obj_t_way.rows.add(data);
         this.obj_t_way.order([3, 'asc']);
+        if (App.Select_Row_ways !== null) {
+            this.obj_t_way.row('#' + App.Select_Row_ways.id).select();
+        }
         this.obj_t_way.draw();
     };
     // загрузить данные 
     table_dir_way.prototype.load_of_station_park = function (id_station, id_park) {
         LockScreen(langView('mess_load_dir_way', App.Langs));
         ids_dir.getWaysOfStationIDParkID(id_station, id_park, function (ways) {
+            this.id_station = id_station;
+            this.id_park = id_park;
+            App.Select_Row_ways = null;
             this.view(ways);
             LockScreenOff();
         }.bind(this));
+    };
+
+    table_dir_way.prototype.update = function () {
+        if (this.id_station && this.id_park) {
+            LockScreen(langView('mess_load_dir_way', App.Langs));
+            ids_dir.getWaysOfStationIDParkID(this.id_station, this.id_park, function (ways) {
+                this.view(ways);
+                LockScreenOff();
+            }.bind(this));
+        }
 
     };
-    // 
+
+    // Очистить сообщения
+    table_dir_way.prototype.out_clear = function () {
+        if (this.settings.alert) {
+            this.settings.alert.clear_message()
+        }
+    }
+    // Показать ошибки
+    table_dir_way.prototype.out_error = function (message) {
+        if (this.settings.alert) {
+            this.settings.alert.out_error_message(message)
+        }
+    }
+    // Показать предупреждения
+    table_dir_way.prototype.out_warning = function (message) {
+        if (this.settings.alert) {
+            this.settings.alert.out_warning_message(message)
+        }
+    }
+    // Показать сообщения о выполнении действий
+    table_dir_way.prototype.out_info = function (message) {
+        if (this.settings.alert) {
+            this.settings.alert.out_info_message(message)
+        }
+    }
+
     App.table_dir_way = table_dir_way;
 
     window.App = App;

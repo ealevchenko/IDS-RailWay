@@ -10,7 +10,7 @@
 
     //var $num_wagon = $('input#num_wagon').val(getUrlVar('num'));
 
-    //var alert = new ALERT($('div#main-alert')); // Создадим класс ALERTG
+    var alert = new ALERT($('div#main-alert')); // Создадим класс ALERTG
 
     //var $bt_search_wagon = $('button#bt_search_wagon').on('click', function (event) {
     //    event.preventDefault();
@@ -138,7 +138,9 @@
     // После загрузки документа
     $(document).ready(function ($) {
 
-        tdways.init();
+        tdways.init({
+            alert: alert
+        });
         tdways.load_of_station_park(23, 161);
 
         //var alert = $('div#test-alert');

@@ -3995,8 +3995,56 @@ IDS_DIRECTORY.prototype.getWaysOfDissolution = function (callback) {
         },
     });
 };
-
-
+// Операция свига на одни позицию вниз
+IDS_DIRECTORY.prototype.postOperationDown1PositionWayOfPark = function (operation, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/ways/operation/down_position/1/',
+        type: 'POST',
+        data: JSON.stringify(operation),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postOperationDown1PositionWayOfPark", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Операция свига на одни позицию вверх
+IDS_DIRECTORY.prototype.postOperationUp1PositionWayOfPark = function (operation, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/ways/operation/up_position/1/',
+        type: 'POST',
+        data: JSON.stringify(operation),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postOperationUp1PositionWayOfPark", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 //======= Directory_ParkWay (Справочник путей ИДС) ======================================
 // Получить все парки
 IDS_DIRECTORY.prototype.getParkWays = function (callback) {

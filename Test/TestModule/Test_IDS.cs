@@ -152,6 +152,20 @@ namespace Test.TestModule
             int res = ids.OperationSetPositionWayOfPark(ref context, 599, 1, "test_user");
         }
 
+        public void IDSDirectory_OperationDown1PositionWayOfPark()
+        {
+
+            IDSDirectory ids = new IDSDirectory(service.Test);
+            EFDbContext context = new EFDbContext();
+            int res = ids.OperationDown1PositionWayOfPark(ref context, 595, "test_user");
+        }
+        public void IDSDirectory_OperationUp1PositionWayOfPark()
+        {
+
+            IDSDirectory ids = new IDSDirectory(service.Test);
+            EFDbContext context = new EFDbContext();
+            int res = ids.OperationUp1PositionWayOfPark(ref context, 595, "test_user");
+        }
         #endregion
 
         #region IDSMORS
