@@ -289,7 +289,7 @@ namespace MT
                         operation = (string)p["Operation"],
                         composition_index = (string)p["CompositionIndex"],
                         date_operation = (DateTime)p["DateOperation"],
-                        train = (int)p["TrainNumber"]
+                        train = (int?)p["TrainNumber"] == null ? 0 :(int)p["TrainNumber"]  
                     }).ToList();
                     RequestArrivalMT reguest_mt = new RequestArrivalMT()
                     {

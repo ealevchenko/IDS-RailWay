@@ -188,7 +188,7 @@ namespace Test
             //tids.IDSDirectory_GetID_Directory_StationOfCodeCS();
             //tids.IDSDirectory_GetCurrentDirectory_CarsOfNum();
             //tids.IDSDirectory_OperationAutoPositionWayOfPark();     // авто-коррекция положения пути в парке
-            tids.IDSDirectory_OperationSetPositionWayOfPark();      // установить новое положения пути в парке
+            //tids.IDSDirectory_OperationSetPositionWayOfPark();      // установить новое положения пути в парке
 
 
             //tids.IDSTransfer_GetNumDoc();
@@ -233,7 +233,7 @@ namespace Test
             Test_Metrans tmt = new Test_Metrans();
             //tmt.MTTransfer_TransferApproaches();
             //tmt.MTTransfer_TransferArrival();
-            //tmt.MTTransfer_TransferArrivalAPI();
+            tmt.MTTransfer_TransferArrivalAPI(); // Тест переноса метранса через API
             //tmt.MTThread_SFTPTransfer();
             //tmt.MTTransfer_WebApiClientMT();
             //tmt.MTThread_Start_TransferWT();
