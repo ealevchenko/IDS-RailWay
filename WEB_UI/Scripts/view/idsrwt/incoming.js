@@ -6027,13 +6027,13 @@
                                                         // вагон получен
                                                         cars_detali.del_vagon(cars, function (result) {
                                                             if (result > 0) {
-
-
                                                                 cars_detali.alert.out_info_message('Вагон №' + row_cars[0].num + ' - возвращен в сотав на подходах!');
-                                                                cars_detali.update_sostav = true;
-                                                                // Показать 
-                                                                cars_detali.view(table_sostav.select_sostav.id, false);
+                                                            } else {
+                                                                cars_detali.alert.out_error_message('Вагон №' + row_cars[0].num + ' - при возврате произошла ошибка!');
                                                             }
+                                                            cars_detali.update_sostav = true;
+                                                            // Показать 
+                                                            cars_detali.view(table_sostav.select_sostav.id, false);
                                                             LockScreenOff();
                                                         });
 
