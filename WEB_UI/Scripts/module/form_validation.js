@@ -45,9 +45,11 @@
             event.preventDefault();
             this.val.clear_all();
             this.valid = true;
-            var data = $(event.currentTarget).serializeArray();
+            //var data = $(event.currentTarget).serializeArray();
+            var data = [];
             var fm_element = $(event.currentTarget).find('input, select, textarea');
             $.each(fm_element, function (i, el) {
+                data.push({ name: el.id, value: (el.type ==="checkbox" ?  el.checked : el.value), tag: el.tagName, type : el.type});
                 var valid = el.validity;
                 // Проверим внешние правила
                 if (this.rules_val === null) {

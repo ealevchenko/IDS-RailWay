@@ -504,7 +504,7 @@
                 col: 2,
                 field: 'way_num_en',
                 type: 'text',
-                name: 'way_num_ru',
+                name: 'way_num_en',
                 label: '№ пути',
                 list: null,
                 select: null,
@@ -521,7 +521,7 @@
                 col: 6,
                 field: 'way_name_en',
                 type: 'text',
-                name: 'way_name_ru',
+                name: 'way_name_en',
                 label: 'Название пути (анг.)',
                 list: null,
                 select: null,
@@ -669,6 +669,8 @@
                 title: "Править путь",
                 size: "xl",
                 fn_ok: function (data) {
+                    //if (data.new && data.new.length > 0) {
+                    //};
                     // Обработка данных после валидации.
                     var way = {
                         id: 0
@@ -696,7 +698,7 @@
                         //, create_user:
                         //, change:
                         //, change_user:
-                        }
+                    }
                 }.bind(this),
             });
             //----------------------------------

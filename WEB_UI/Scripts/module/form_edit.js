@@ -534,9 +534,47 @@
         var FVAL = App.form_validation;
         this.form_val = new FVAL('#' + this.$form_modal.attr('id')); // Создадим экземпляр таблицы
         this.form_val.init(this.$alert, this.rules_valid, function (data) {
+            var result = {
+                id: this.data ? this.data.id : 0,
+                create: this.data ? this.data.create : moment(),
+                create_user: this.data ? this.data.create_user : App.User_Name,
+            };
+            // Если вернуло данные, сформировать строку
+            if (data) {
 
+                $.each(this.element, function (i, el) {
+                    var name_el = this.selector + '-' + el.name;
+                    var field = data.find(function (o) {
+                        return o.name === name_el;
+                    });
+                    if (field) {
+                        switch (el.type) {
+                            case "select":
+                                result[el.field] = field.value !== null && field.value !== "-1" ? Number(field.value) : null;
+                                break;
+                            case "text":
+                                result[el.field] = field.value;
+                                break;
+                            case "textarea":
+                                result[el.field] = field.value;
+                                break;
+                            case "number":
+                                result[el.field] = field.value !== null && field.value !== "" ? Number(field.value) : null;
+                                break;
+                            case "checkbox":
+                                result[el.field] = field.value !== null && field.value !== "" ? Boolean(field.value) : null;
+                                break;
+                            case "datetime":
+                                result[el.field] = field.value !== null && field.value !== "" ? moment(field.value, 'DD.MM.YYYY HH:mm').toISOString() : null;
+                                break;
+                        }
+                         
+                    }
+
+                }.bind(this));
+            }
             if (typeof this.settings.fn_ok === 'function') {
-                this.settings.fn_ok({ old: this.data, new: data });
+                this.settings.fn_ok({ old: this.data, new: result });
             }
         }.bind(this));
         // Инициализация модальной формы
