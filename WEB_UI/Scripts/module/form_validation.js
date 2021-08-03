@@ -40,6 +40,7 @@
         this.rules_val = rules_val; // Элементы
         this.val = new VALIDATION(App.Lang, this.$alert, this.all_obj); // Создадим класс VALIDATION
         this.valid = true;
+        // Обработка отправки полей на сервер
         this.$form.on('submit', function (event) {
             event.preventDefault();
             this.val.clear_all();

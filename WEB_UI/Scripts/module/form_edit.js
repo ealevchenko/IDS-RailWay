@@ -423,7 +423,7 @@
     };
     //
     form_edit.prototype.init = function (options) {
-
+        // Настройки формы правки строк таблицы
         this.settings = $.extend({
             rows_form: [],
             source: null,
@@ -433,13 +433,12 @@
             fn_ok: null,
 
         }, options);
-
+        //
         this.element = [];
         this.rules_valid = [];
-        // теперь выполним инициализацию
-        //Форма для редактирования
+        this.data = null;
+        // Создадим модальную форму для редактирования
         var modalElement = new modal_edit(this);
-
         this.$body_modal = modalElement.$body;
         this.$form_modal = modalElement.$form;
         this.$bt_ok = modalElement.$bt_ok;
@@ -448,7 +447,6 @@
             e.preventDefault();
             this.$form_modal.submit();
         }.bind(this));
-
         // Создать Alert
         this.$alert = null;
         if (this.settings.alert) {
@@ -456,14 +454,11 @@
             this.$alert = alertElement.$alert;
             this.$form_modal.append(alertElement.$element);
         }
-
         //this.$form_modal.on("submit", function (event) {
         //    event.preventDefault();
 
         //});
-
         this.$form.append(modalElement.$element);
-
         // Создаем элементы и отрисовываем их на форме
         $.each(this.settings.rows_form, function (i, el_row) {
             //var count = el_row.length;
@@ -534,12 +529,17 @@
                 throw new Error('Неопределен контролируемый элемент : ' + n_control);
             }
         }.bind(this))
-
+        //-------------------------------------------------------------------------
         // Валидация
         var FVAL = App.form_validation;
         this.form_val = new FVAL('#' + this.$form_modal.attr('id')); // Создадим экземпляр таблицы
-        this.form_val.init(this.$alert, this.rules_valid, this.settings.fn_ok);
+        this.form_val.init(this.$alert, this.rules_valid, function (data) {
 
+            if (typeof this.settings.fn_ok === 'function') {
+                this.settings.fn_ok({ old: this.data, new: data });
+            }
+        }.bind(this));
+        // Инициализация модальной формы
         this.$modal_edit = $('div#em-' + this.selector).modal({
             keyboard: false,
             show: false
@@ -550,10 +550,9 @@
     // Показать данные 
     form_edit.prototype.view = function (data) {
         this.form_val.clear();
-        //if (data) {
+        this.data = data;
         $.each(this.element, function (i, el) {
             var value = data ? data[el.field] : (el.type === "select" ? -1 : null);
-            //var type = typeof value;
             if (value !== undefined) {
                 el.element.val(value);
                 // Проверим наличие элемента контроля
@@ -563,8 +562,6 @@
                 }
             }
         });
-        //};
-        //
         this.$modal_edit.modal('show');
     };
     // 

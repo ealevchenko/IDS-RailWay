@@ -283,17 +283,16 @@
         this.settings = $.extend({
             alert: null,
         }, options);
-
-
-        // Инициализация формы
-        var FDWAY = App.form_edit;
-
+        //--------------------------------------------------------
+        // Создадим контейнер для форм в разделе документа body
         var $form = $('<div></div>', {
             'id': 'edit-' + this.selector
         });
         $('body').append($form)
+        //-------------------------------------------------------
         // Инициализация формы
-        var form_edit = new FDWAY('div#edit-' + this.selector); // Создадим экземпляр таблицы
+        var FDWAY = App.form_edit;
+        var form_edit = new FDWAY('div#edit-' + this.selector); // Создадим экземпляр формы правки строк таблицы
         // Загрузим данные
         this.load_reference(function () {
             // Создадим поля формы
@@ -305,7 +304,6 @@
             var row_way_en = [];
             var row_way_type = [];
             var row_way_note = [];
-
             // станции
             var list_station = ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false ? true : false; });
             var get_list_park = function (id_statation) {
@@ -325,7 +323,7 @@
                 return list_park;
             };
             var list_divisions = ids_dir.getListDivisions('id', 'division_abbr', App.Lang, null);
-
+            //
             var row_element_station = {
                 col: 5,
                 field: 'id_station',
