@@ -669,7 +669,34 @@
                 title: "Править путь",
                 size: "xl",
                 fn_ok: function (data) {
-                    var name_el = 'edit-' + this.selector;
+                    // Обработка данных после валидации.
+                    var way = {
+                        id: 0
+                        //, id_station:
+                        //, id_park:
+                        //, position_park:
+                        //, position_way:
+                        //, way_num_ru:
+                        //, way_num_en:
+                        //, way_name_ru:
+                        //, way_name_en:
+                        //, way_abbr_ru:
+                        //, way_abbr_en:
+                        //, capacity:
+                        //, deadlock:
+                        //, crossing_uz:
+                        //, crossing_amkr:
+                        //, id_devision:
+                        //, dissolution:
+                        //, output_dissolution:
+                        //, way_close:
+                        //, way_delete:
+                        //, note:
+                        //, create:
+                        //, create_user:
+                        //, change:
+                        //, change_user:
+                        }
                 }.bind(this),
             });
             //----------------------------------
