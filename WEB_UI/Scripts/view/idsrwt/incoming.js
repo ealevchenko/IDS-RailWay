@@ -5545,9 +5545,9 @@
 
                 valid = valid & cars_detali.validation_vag_condition_arrival(valid, false);
 
-                valid = valid & cars_detali.val_arrival_car.checkInputOfRange(cars_detali.uz_vag_gruzp, 0.0, 80.0, "Грузоподъемность должна быть в диапазоне от 0.0 до 80.0 тон.");
-                valid = valid & cars_detali.val_arrival_car.checkInputOfRange(cars_detali.uz_vag_ves_tary_arc, 15.0, 35.0, "Тара должна быть в диапазоне от 15.0 до 35.0 тон.");
-                valid = valid & cars_detali.val_arrival_car.checkInputOfRange_IsNull(cars_detali.uz_vag_u_tara, 15.0, 35.0, "Тара должна быть в диапазоне от 15.0 до 35.0 тон.");
+                valid = valid & cars_detali.val_arrival_car.checkInputOfRange(cars_detali.uz_vag_gruzp, 0.0, 112.0, "Грузоподъемность должна быть в диапазоне от 0.0 до 112.0 тон.");
+                valid = valid & cars_detali.val_arrival_car.checkInputOfRange(cars_detali.uz_vag_ves_tary_arc, 15.0, 51.0, "Тара должна быть в диапазоне от 15.0 до 51.0 тон.");
+                valid = valid & cars_detali.val_arrival_car.checkInputOfRange_IsNull(cars_detali.uz_vag_u_tara, 15.0, 51.0, "Тара должна быть в диапазоне от 15.0 до 51.0 тон.");
 
                 valid = valid & cars_detali.val_arrival_car.checkInputOfDirectory(cars_detali.uz_cargo_kod_etsng, this, 'ids_inc.ids_dir.getCargoETSNG_Of_Code', "Указанного кода груза ЕТ СНГ нет в справочнике ИДС.");
                 valid = valid & cars_detali.val_arrival_car.checkInputOfDirectory_IsNull(cars_detali.uz_cargo_kod_gng, this, 'ids_inc.ids_dir.getCargoGNG_Of_Code', "Указанного кода груза ГНГ нет в справочнике ИДС.");
@@ -6199,12 +6199,12 @@
 
             // Валидация поля  "Количество осей"
             validation_vag_kol_os: function (valid, off_message) {
-                valid = valid & cars_detali.val_card_vag.checkSelection(cars_detali.card_vag_kol_os, "Укажите количество осей (0- по умолчанию, 4,8,12,16,32)", "", off_message);
+                valid = valid & cars_detali.val_card_vag.checkSelection(cars_detali.card_vag_kol_os, "Укажите количество осей (0- по умолчанию, 4,6,8,12,16,32)", "", off_message);
                 return valid;
             },
             // Валидация поля  "Грузоподъемность"
             validation_vag_gruzp: function (valid, off_message) {
-                valid = valid & cars_detali.val_card_vag.checkInputOfRange(cars_detali.card_vag_gruzp, 0.0, 80.0, "Грузоподъемность должна быть в диапазоне от 0.0 до 80.0 тон.", "", off_message);
+                valid = valid & cars_detali.val_card_vag.checkInputOfRange(cars_detali.card_vag_gruzp, 0.0, 112.0, "Грузоподъемность должна быть в диапазоне от 0.0 до 112.0 тон.", "", off_message);
                 return valid;
             },
             // Валидация поля  "Разметка по прибытию"
