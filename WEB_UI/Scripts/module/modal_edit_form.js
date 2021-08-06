@@ -124,17 +124,34 @@
         this.$element = $div_col;
     };
     // Создать макет SELECT
-    function select_element(base, name, mode) {
+    function select_element(col, base, name, text, mode) {
+        var $lab = $('<label></label>', {
+            'class': 'col-form-label',
+            'for': 'el-' + name + '-' + mode,
+            'text': text,
+            'data-mode': mode,
+        });
         var $select = $('<select></select>', {
             'class': 'form-control',
             'id': base.selector + '-' + name + '-' + mode,
             'name': base.selector + '-' + name + '-' + mode,
             'data-mode': mode,
         });
+        var $div_invalid = $('<div></div>', {
+            'class': 'invalid-feedback',
+            'data-mode': mode,
+        });
         this.$element = $select;
+        col.append($lab).append($select).append($div_invalid);
     };
     // Создать макет INPUT
-    function input_element(base, name, mode, type) {
+    function input_element(col, base, name, text, mode, type) {
+        var $lab = $('<label></label>', {
+            'class': 'col-form-label',
+            'for': 'el-' + name + '-' + mode,
+            'text': text,
+            'data-mode': mode,
+        });
         var $input = $('<input>', {
             'class': 'form-control',
             'id': base.selector + '-' + name + '-' + mode,
@@ -142,10 +159,48 @@
             'type': type,
             'data-mode': mode,
         });
+        var $div_invalid = $('<div></div>', {
+            'class': 'invalid-feedback',
+            'data-mode': mode,
+        });
         this.$element = $input;
+        col.append($lab).append($input).append($div_invalid);
+    };
+    // Создать макет checkbox
+    function checkbox_element(col, base, name, text, mode) {
+        var $div_fm_check = $('<div></div>', {
+            'class': 'form-check',
+            'data-mode': mode,
+        });
+        var $lab = $('<label></label>', {
+            'class': 'form-check-label',
+            'for': 'el-' + name + '-' + mode,
+            'text': text,
+            'data-mode': mode,
+        });
+        var $input = $('<input>', {
+            'class': 'form-check-input',
+            'id': base.selector + '-' + name + '-' + mode,
+            'name': base.selector + '-' + name + '-' + mode,
+            'type': 'form-check-input',
+            'data-mode': mode,
+        });
+        var $div_invalid = $('<div></div>', {
+            'class': 'invalid-feedback',
+            'data-mode': mode,
+        });
+        this.$element = $input;
+        $div_fm_check.append($input).append($lab).append($div_invalid);
+        col.append($div_fm_check);
     };
     // Создать макет TEXTAREA
-    function textarea_element(base, name, mode) {
+    function textarea_element(col, base, name, text, mode) {
+        var $lab = $('<label></label>', {
+            'class': 'col-form-label',
+            'for': 'el-' + name + '-' + mode,
+            'text': text,
+            'data-mode': mode,
+        });
         var $textarea = $('<textarea></textarea>', {
             'class': 'form-control',
             'id': base.selector + '-' + name + '-' + mode,
@@ -153,79 +208,52 @@
             'data-mode': mode,
             'rows': '2'
         });
+        var $div_invalid = $('<div></div>', {
+            'class': 'invalid-feedback',
+            'data-mode': mode,
+        });
         this.$element = $textarea;
+        col.append($lab).append($textarea).append($div_invalid);
+
     };
     // Получить макет элемента по типу 
-    function get_form_element(base, name, mode, type) {
+    function get_form_element(col, base, name, text, mode, type) {
         var element = null;
-        /*        this.$element = null;*/
+        //this.$element = null;
         if (type === 'select') {
-            element = new select_element(base, name, mode);
+            element = new select_element(col, base, name, text, mode);
             return element.$element;
         }
         if (type === 'number') {
-            element = new input_element(base, name, mode, 'number');
+            element = new input_element(col, base, name, text, mode, 'number');
             return element.$element;
         }
         if (type === 'text') {
-            element = new input_element(base, name, mode, 'text');
+            element = new input_element(col, base, name, text, mode, 'text');
             return element.$element;
         }
         if (type === 'datetime') {
-            element = new input_element(base, name, mode, 'datetime');
+            element = new input_element(col, base, name, text, mode, 'datetime');
             return element.$element;
         }
         if (type === 'date') {
-            element = new input_element(base, name, mode, 'date');
+            element = new input_element(col, base, name, text, mode, 'date');
             return element.$element;
         }
         if (type === 'textarea') {
-            element = new textarea_element(base, name, mode, 'textarea');
+            element = new textarea_element(col, base, name, text, mode, 'textarea');
+            return element.$element;
+        }
+        if (type === 'checkbox') {
+            element = new checkbox_element(col, base, name, text, mode);
             return element.$element;
         }
     };
     //
     function form_element(col, base, name, text, add, edit) {
-        var $lab = $('<label></label>', {
-            'class': 'col-form-label',
-            'for': 'el-' + name,
-            'text': text,
-        });
-        col.append($lab);
-        this.$element_add = get_form_element(base, name, 'add', add);
-        col.append(this.$element_add);
-        this.$element_edit = get_form_element(base, name, 'edit', edit);
-        col.append(this.$element_edit);
-        var $div_invalid = $('<div></div>', {
-            'class': 'invalid-feedback',
-        });
-        col.append($div_invalid);
+        this.$element_add = get_form_element(col, base, name, text, 'add', add);
+        this.$element_edit = get_form_element(col, base, name, text, 'edit', edit);
     };
-
-    function form_checkbox_element(col, base, name, text, add, edit) {
-        var div_fm_check = $('<div></div>', {
-            'class': 'form-check',
-        });
-        var $lab = $('<label></label>', {
-            'class': 'form-check-label',
-            'for': 'el-' + name,
-            'text': text,
-        });
-        var $input = $('<input>', {
-            'class': 'form-check-input',
-            'id': base.selector + '-' + name,
-            'name': base.selector + '-' + name,
-            'type': 'checkbox',
-        });
-
-        var $div_invalid = $('<div></div>', {
-            'class': 'invalid-feedback',
-        });
-        this.$element = $input;
-        div_fm_check.append(this.$element).append($lab).append($div_invalid);
-        col.append(div_fm_check);
-    };
-
     // Инициализация выпадающего списка "SELECT"
     function init_select(element, data, default_value, fn_option, fn_change) {
         /*        this.options = [];*/
@@ -498,6 +526,15 @@
                 var colElement = new form_element($col, this, el_field.name, el_field.label, el_field.add, el_field.edit);
                 var $element_add = init_form_element(colElement.$element_add, el_field, el_field.add);
                 var $element_edit = init_form_element(colElement.$element_edit, el_field, el_field.edit);
+                var field = this.settings.fields_form.find(function (o) { return o.field === el_field.field });
+                if (field) {
+                    if ($element_add) {
+                        field['element_add'] = $element_add.$element;
+                    };
+                    if ($element_edit) {
+                        field['element_edit'] = $element_edit.$element;
+                    };
+                };
                 col = el_field.col;
                 $row.append($col);
             }
