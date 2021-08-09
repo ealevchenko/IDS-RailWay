@@ -127,7 +127,7 @@
     function select_element(col, base, name, text, mode) {
         var $lab = $('<label></label>', {
             'class': 'col-form-label',
-            'for': 'el-' + name + '-' + mode,
+            'for': base.selector + '-' + name + '-' + mode,
             'text': text,
             'data-mode': mode,
         });
@@ -148,7 +148,7 @@
     function input_element(col, base, name, text, mode, type) {
         var $lab = $('<label></label>', {
             'class': 'col-form-label',
-            'for': 'el-' + name + '-' + mode,
+            'for': base.selector + '-' + name + '-' + mode,
             'text': text,
             'data-mode': mode,
         });
@@ -174,7 +174,7 @@
         });
         var $lab = $('<label></label>', {
             'class': 'form-check-label',
-            'for': 'el-' + name + '-' + mode,
+            'for': base.selector + '-' + name + '-' + mode,
             'text': text,
             'data-mode': mode,
         });
@@ -182,7 +182,7 @@
             'class': 'form-check-input',
             'id': base.selector + '-' + name + '-' + mode,
             'name': base.selector + '-' + name + '-' + mode,
-            'type': 'form-check-input',
+            'type': 'checkbox',
             'data-mode': mode,
         });
         var $div_invalid = $('<div></div>', {
@@ -197,7 +197,7 @@
     function textarea_element(col, base, name, text, mode) {
         var $lab = $('<label></label>', {
             'class': 'col-form-label',
-            'for': 'el-' + name + '-' + mode,
+            'for': base.selector + '-' + name + '-' + mode,
             'text': text,
             'data-mode': mode,
         });
@@ -245,6 +245,7 @@
             return element.$element;
         }
         if (type === 'checkbox') {
+            col.attr('style', 'display:flex;align-items:center');
             element = new checkbox_element(col, base, name, text, mode);
             return element.$element;
         }
@@ -474,7 +475,7 @@
 
         }, options);
         //
-        this.element = [];
+        //this.element = [];
         this.rules_valid = [];
         this.data = null;
         //---------------------------------------------------------
@@ -529,19 +530,39 @@
                 var field = this.settings.fields_form.find(function (o) { return o.field === el_field.field });
                 if (field) {
                     if ($element_add) {
-                        field['element_add'] = $element_add.$element;
+                        //field['element_add'] = $element_add.$element;
+                        field['element_add'] = $element_add;
+                        this.rules_valid.push({ name: $($element_add.$element).attr('name'), validation: el_field.add_validation });
                     };
                     if ($element_edit) {
-                        field['element_edit'] = $element_edit.$element;
+                        //field['element_edit'] = $element_edit.$element;
+                        field['element_edit'] = $element_edit;
+                        this.rules_valid.push({ name: $($element_edit.$element).attr('name'), validation: el_field.edit_validation });
                     };
                 };
                 col = el_field.col;
                 $row.append($col);
-            }
 
+            }
         }.bind(this));
         if ($row) this.$form_modal.append($row);
-
+        // Пройдемся по зависимостям
+        $.each(form_elements.filter(function (i) { return i.control !== null }), function (i, el_control) {
+            var n_control = el_control.control;
+            var element_control = form_elements.find(function (o) {
+                return o.name === n_control;
+            });
+            if (element_control) {
+                if (element_control.element_add && el_control.element_add) {
+                    el_control.element_add['element_control'] = element_control.element_add;
+                }
+                if (element_control.element_edit && el_control.element_edit) {
+                    el_control.element_edit['element_control'] = element_control.element_edit;
+                }
+            } else {
+                throw new Error('Неопределен контролируемый элемент : ' + n_control);
+            }
+        }.bind(this));
         //$.each(this.settings.rows_form, function (i, el_row) {
         //    //var count = el_row.length;
         //    var rowElement = new row_element();
@@ -599,65 +620,57 @@
         //    }.bind(this));
         //    this.$form_modal.append($row);
         //}.bind(this));
-        //// Пройдемся по зависимостям
-        //$.each(this.element.filter(function (i) { return i.control !== null }), function (i, el_control) {
-        //    var n_control = el_control.control;
-        //    var element_control = this.element.find(function (o) {
-        //        return o.name === n_control;
-        //    });
-        //    if (element_control && element_control.element) {
-        //        el_control.element['element_control'] = element_control.element;
-        //    } else {
-        //        throw new Error('Неопределен контролируемый элемент : ' + n_control);
-        //    }
-        //}.bind(this))
+
         //-------------------------------------------------------------------------
         // Валидация
         var FVAL = App.form_validation;
         this.form_val = new FVAL('#' + this.$form_modal.attr('id')); // Создадим экземпляр таблицы
-        this.form_val.init(this.$alert, this.rules_valid, function (data) {
-            var result = {
-                id: this.data ? this.data.id : 0,
-                create: this.data ? this.data.create : moment(),
-                create_user: this.data ? this.data.create_user : App.User_Name,
-            };
-            // Если вернуло данные, сформировать строку
-            if (data) {
+        this.form_val.init(this.$alert, this.rules_valid, function (valid) {
+            // Проверим валидация прошла
+            var result = {};
+            if (valid) {
+                $.each(this.settings.fields_form, function (i, el) {
+                    var element = this.data ? (el.element_edit ? el.element_edit.$element : null) : (el.element_add ? el.element_add.$element : null);
+                    var type = this.data ? el.edit : el.add;
+                    var value = element ? ($(element).attr('type') === "checkbox" ? $(element).prop('checked') : element.val()) : null;
+                    switch (type) {
+                        case null: {
+                            result[el.field] = this.data ? this.data[el.field] : el.default;
+                            break;
+                        };
+                        case "select": {
+                            result[el.field] = value !== null && value !== "-1" ? Number(value) : null;
+                            break;
+                        };
+                        case "text": {
+                            result[el.field] = value;
+                            break;
+                        };
+                        case "textarea": {
+                            result[el.field] = value;
+                            break;
+                        };
+                        case "number": {
+                            result[el.field] = value !== null && value !== "" ? Number(value) : null;
+                            break;
+                        };
+                        case "checkbox": {
+                            result[el.field] = value !== null && value !== "" ? Boolean(value) : null;
+                            break;
+                        };
+                        case "datetime": {
+                            result[el.field] = value !== null && value !== "" ? moment(value, 'DD.MM.YYYY HH:mm').toISOString() : null;
+                            break;
+                        };
 
-                $.each(this.element, function (i, el) {
-                    var name_el = this.selector + '-' + el.name;
-                    var field = data.find(function (o) {
-                        return o.name === name_el;
-                    });
-                    if (field) {
-                        switch (el.type) {
-                            case "select":
-                                result[el.field] = field.value !== null && field.value !== "-1" ? Number(field.value) : null;
-                                break;
-                            case "text":
-                                result[el.field] = field.value;
-                                break;
-                            case "textarea":
-                                result[el.field] = field.value;
-                                break;
-                            case "number":
-                                result[el.field] = field.value !== null && field.value !== "" ? Number(field.value) : null;
-                                break;
-                            case "checkbox":
-                                result[el.field] = field.value !== null && field.value !== "" ? Boolean(field.value) : null;
-                                break;
-                            case "datetime":
-                                result[el.field] = field.value !== null && field.value !== "" ? moment(field.value, 'DD.MM.YYYY HH:mm').toISOString() : null;
-                                break;
-                        }
 
                     }
-
                 }.bind(this));
+                if (typeof this.settings.fn_ok === 'function') {
+                    this.settings.fn_ok({ old: this.data, new: result });
+                }
             }
-            if (typeof this.settings.fn_ok === 'function') {
-                this.settings.fn_ok({ old: this.data, new: result });
-            }
+
         }.bind(this));
         // Инициализация модальной формы
         this.$modal_edit = $('div#em-' + this.selector).modal({
@@ -671,17 +684,47 @@
     modal_edit_form.prototype.view = function (data) {
         this.form_val.clear();
         this.data = data;
-        $.each(this.element, function (i, el) {
-            var value = data ? data[el.field] : (el.type === "select" ? -1 : null);
+        this.form_elements = null;
+        this.mode = null;
+        // Определим элементы для сокрытия в зависимости от режима добавить - править
+        var el_add = this.$form_modal.find('[data-mode="add"]');
+        var el_edit = this.$form_modal.find('[data-mode="edit"]');
+        if (this.data) {
+            // Править
+            this.form_elements = this.settings.fields_form.filter(function (i) {
+                return i.element_edit;
+            });
+            $(el_add).hide();
+            $(el_edit).show();
+            this.mode = 'edit';
+        } else {
+            // Добавить
+            this.form_elements = this.settings.fields_form.filter(function (i) {
+                return i.element_add;
+            });
+            $(el_add).show();
+            $(el_edit).hide();
+            this.mode = 'add';
+        }
+        // Заполним данными
+        $.each(this.form_elements, function (i, el) {
+            // Получим значение поля
+            var value = data ? data[el.field] : (el[this.mode] === "select" ? -1 : null);
             if (value !== undefined) {
-                el.element.val(value);
-                // Проверим наличие элемента контроля
-                if (el.element.element_control) {
-                    // если есть элемент контроля обновим инфу по нему
-                    el.element.$element.change();
+                // Значение поля определено, получим элемент
+                var element = el['element_' + this.mode];
+                // Покажем значение
+                element.val(value);
+                // Проверим наличие элемента который должен быть изменен если изменить текущий элемент
+                if (element.element_control) {
+                    // Обновим текщий элемент, для запуска цепочки обновлений
+                    element.$element.change();
                 }
-            }
-        });
+            } else {
+                throw new Error('Ошибка считывания значения поля [' + el.field + ']');
+            };
+        }.bind(this));
+
         this.$modal_edit.modal('show');
     };
     // 

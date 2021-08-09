@@ -333,7 +333,8 @@
                 select: null,
                 update: null,
                 close: null,
-                validation: null,
+                add_validation: null,
+                edit_validation: null,
                 default: 0,
                 row: null,
                 col: null,
@@ -360,10 +361,15 @@
                 },
                 update: null,
                 close: null,
-                validation: [{
+                add_validation: [{
                     check_type: 'not_null',
                     error: 'Укажите станцию',
-                    ok: null,
+                    ok: '',
+                }],
+                edit_validation: [{
+                    check_type: 'not_null',
+                    error: 'Укажите станцию',
+                    ok: '',
                 }],
                 default: -1,
                 row: 1,
@@ -386,7 +392,12 @@
                 },
                 update: null,
                 close: null,
-                validation: [{
+                add_validation: [{
+                    check_type: 'not_null',
+                    error: 'Укажите парк',
+                    ok: null,
+                }],
+                edit_validation: [{
                     check_type: 'not_null',
                     error: 'Укажите парк',
                     ok: null,
@@ -408,7 +419,8 @@
                 select: null,
                 update: null,
                 close: null,
-                validation: null,
+                add_validation: null,
+                edit_validation: null,
                 default: 0,
                 row: null,
                 col: null,
@@ -426,7 +438,14 @@
                 select: null,
                 update: null,
                 close: null,
-                validation: [{
+                add_validation: [{
+                    check_type: 'range_number',
+                    min: 1,
+                    max: 100,
+                    error: 'Позиция пути должна быть в диапазоне от 1 до 100',
+                    ok: null,
+                }],
+                edit_validation: [{
                     check_type: 'range_number',
                     min: 1,
                     max: 100,
@@ -450,7 +469,12 @@
                 select: null,
                 update: null,
                 close: null,
-                validation: [{
+                add_validation: [{
+                    check_type: 'not_null',
+                    error: 'Укажите номер пути (рус)',
+                    ok: null,
+                }],
+                edit_validation: [{
                     check_type: 'not_null',
                     error: 'Укажите номер пути (рус)',
                     ok: null,
@@ -472,7 +496,12 @@
                 select: null,
                 update: null,
                 close: null,
-                validation: [{
+                add_validation: [{
+                    check_type: 'not_null',
+                    error: 'Укажите номер пути (анг)',
+                    ok: null,
+                }],
+                edit_validation: [{
                     check_type: 'not_null',
                     error: 'Укажите номер пути (анг)',
                     ok: null,
@@ -494,7 +523,12 @@
                 select: null,
                 update: null,
                 close: null,
-                validation: [{
+                add_validation: [{
+                    check_type: 'not_null',
+                    error: 'Укажите название пути (рус)',
+                    ok: null,
+                }],
+                edit_validation: [{
                     check_type: 'not_null',
                     error: 'Укажите название пути (рус)',
                     ok: null,
@@ -516,7 +550,12 @@
                 select: null,
                 update: null,
                 close: null,
-                validation: [{
+                add_validation: [{
+                    check_type: 'not_null',
+                    error: 'Укажите название пути (анг)',
+                    ok: null,
+                }],
+                edit_validation: [{
                     check_type: 'not_null',
                     error: 'Укажите название пути (анг)',
                     ok: null,
@@ -538,7 +577,12 @@
                 select: null,
                 update: null,
                 close: null,
-                validation: [{
+                add_validation: [{
+                    check_type: 'not_null',
+                    error: 'Укажите абревиатуру пути (рус)',
+                    ok: null,
+                }],
+                edit_validation: [{
                     check_type: 'not_null',
                     error: 'Укажите абревиатуру пути (рус)',
                     ok: null,
@@ -560,7 +604,12 @@
                 select: null,
                 update: null,
                 close: null,
-                validation: [{
+                add_validation: [{
+                    check_type: 'not_null',
+                    error: 'Укажите абревиатуру пути (анг)',
+                    ok: null,
+                }],
+                edit_validation: [{
                     check_type: 'not_null',
                     error: 'Укажите абревиатуру пути (анг)',
                     ok: null,
@@ -582,7 +631,8 @@
                 select: null,
                 update: null,
                 close: null,
-                validation: null,
+                add_validation: null,
+                edit_validation: null,
                 default: null,
                 row: 4,
                 col: 2,
@@ -600,7 +650,8 @@
                 select: null,
                 update: null,
                 close: null,
-                validation: null,
+                add_validation: null,
+                edit_validation: null,
                 default: null,
                 row: 5,
                 col: 1,
@@ -618,7 +669,8 @@
                 select: null,
                 update: null,
                 close: null,
-                validation: null,
+                add_validation: null,
+                edit_validation: null,
                 default: null,
                 row: 5,
                 col: 2,
@@ -636,7 +688,8 @@
                 select: null,
                 update: null,
                 close: null,
-                validation: null,
+                add_validation: null,
+                edit_validation: null,
                 default: null,
                 row: 5,
                 col: 3,
@@ -658,7 +711,8 @@
                 },
                 update: null,
                 close: null,
-                validation: null,
+                add_validation: null,
+                edit_validation: null,
                 default: -1,
                 row: 4,
                 col: 3,
@@ -676,7 +730,8 @@
                 select: null,
                 update: null,
                 close: null,
-                validation: null,
+                add_validation: null,
+                edit_validation: null,
                 default: null,
                 row: 5,
                 col: 4,
@@ -694,7 +749,8 @@
                 select: null,
                 update: null,
                 close: null,
-                validation: null,
+                add_validation: null,
+                edit_validation: null,
                 default: null,
                 row: 5,
                 col: 5,
@@ -714,7 +770,8 @@
                 close: function (datetime) {
 
                 },
-                validation: null,
+                add_validation: null,
+                edit_validation: null,
                 default: null,
                 row: 4,
                 col: 4,
@@ -734,7 +791,8 @@
                 close: function (datetime) {
 
                 },
-                validation: null,
+                add_validation: null,
+                edit_validation: null,
                 default: null,
                 row: 4,
                 col: 5,
@@ -752,7 +810,8 @@
                 select: null,
                 update: null,
                 close: null,
-                validation: null,
+                add_validation: null,
+                edit_validation: null,
                 default: null,
                 row: 6,
                 col: 1,
@@ -770,7 +829,8 @@
                 select: null,
                 update: null,
                 close: null,
-                validation: null,
+                add_validation: null,
+                edit_validation: null,
                 default: moment().toISOString(),
                 row: null,
                 col: null,
@@ -788,7 +848,8 @@
                 select: null,
                 update: null,
                 close: null,
-                validation: null,
+                add_validation: null,
+                edit_validation: null,
                 default: App.User_Name,
                 row: null,
                 col: null,
@@ -806,7 +867,8 @@
                 select: null,
                 update: null,
                 close: null,
-                validation: null,
+                add_validation: null,
+                edit_validation: null,
                 default: null,
                 row: null,
                 col: null,
@@ -824,7 +886,8 @@
                 select: null,
                 update: null,
                 close: null,
-                validation: null,
+                add_validation: null,
+                edit_validation: null,
                 default: null,
                 row: null,
                 col: null,
@@ -1213,33 +1276,33 @@
                     //if (data.new && data.new.length > 0) {
                     //};
                     // Обработка данных после валидации.
-                    var way = {
-                        id: 0
-                        //, id_station:
-                        //, id_park:
-                        //, position_park:
-                        //, position_way:
-                        //, way_num_ru:
-                        //, way_num_en:
-                        //, way_name_ru:
-                        //, way_name_en:
-                        //, way_abbr_ru:
-                        //, way_abbr_en:
-                        //, capacity:
-                        //, deadlock:
-                        //, crossing_uz:
-                        //, crossing_amkr:
-                        //, id_devision:
-                        //, dissolution:
-                        //, output_dissolution:
-                        //, way_close:
-                        //, way_delete:
-                        //, note:
-                        //, create:
-                        //, create_user:
-                        //, change:
-                        //, change_user:
-                    }
+                    //var way = {
+                    //    id: 0
+                    //    //, id_station:
+                    //    //, id_park:
+                    //    //, position_park:
+                    //    //, position_way:
+                    //    //, way_num_ru:
+                    //    //, way_num_en:
+                    //    //, way_name_ru:
+                    //    //, way_name_en:
+                    //    //, way_abbr_ru:
+                    //    //, way_abbr_en:
+                    //    //, capacity:
+                    //    //, deadlock:
+                    //    //, crossing_uz:
+                    //    //, crossing_amkr:
+                    //    //, id_devision:
+                    //    //, dissolution:
+                    //    //, output_dissolution:
+                    //    //, way_close:
+                    //    //, way_delete:
+                    //    //, note:
+                    //    //, create:
+                    //    //, create_user:
+                    //    //, change:
+                    //    //, change_user:
+                    //}
                 }.bind(this),
             });
             //----------------------------------
@@ -1303,14 +1366,14 @@
                 {
                     text: langView('title_button_add', App.Langs),
                     action: function (e, dt, node, config) {
-                        form_edit.view(null);
+                        modal_edit_form.view(null);
                     },
                     enabled: true
                 },
                 {
                     text: langView('title_button_edit', App.Langs),
                     action: function (e, dt, node, config) {
-                        form_edit.view(App.Select_Row_ways);
+                        modal_edit_form.view(App.Select_Row_ways);
                     },
                     enabled: false
                 },
