@@ -250,7 +250,7 @@
             return element.$element;
         }
     };
-    //
+    // Получить элемент формы в зависисмости от типа
     function form_element(col, base, name, text, add, edit) {
         this.$element_add = get_form_element(col, base, name, text, 'add', add);
         this.$element_edit = get_form_element(col, base, name, text, 'edit', edit);
@@ -453,16 +453,15 @@
         }
         return init_element;
     };
-
     //-------------------------------------------------------------------------------
     // Конструктор формы 
     function modal_edit_form(selector) {
         if (!selector) {
-            throw new Error('No selector provided');
+            throw new Error('Не указан селектор!');
         }
         this.selector = selector;
     }
-    //
+    // Инициализация модальной формы
     modal_edit_form.prototype.init = function (options) {
         // Настройки формы правки строк таблицы
         this.settings = $.extend({
@@ -492,11 +491,14 @@
         }.bind(this));
         // Создать Alert, если указано в настройках
         this.$alert = null;
+        this.alert_form = null;
         if (this.settings.alert) {
             var alertElement = new alert_eliment(this);
             this.$alert = alertElement.$alert;
             this.$form_modal.append(alertElement.$element);
+            this.alert_form = new ALERT(this.$alert); // Создадим класс ALERTG
         }
+        
         $('body').append(modalElement.$element);
         //---------------------------------------------------------
         // Создаем элементы и отрисовываем их на форме
@@ -530,19 +532,16 @@
                 var field = this.settings.fields_form.find(function (o) { return o.field === el_field.field });
                 if (field) {
                     if ($element_add) {
-                        //field['element_add'] = $element_add.$element;
                         field['element_add'] = $element_add;
                         this.rules_valid.push({ name: $($element_add.$element).attr('name'), validation: el_field.add_validation });
                     };
                     if ($element_edit) {
-                        //field['element_edit'] = $element_edit.$element;
                         field['element_edit'] = $element_edit;
                         this.rules_valid.push({ name: $($element_edit.$element).attr('name'), validation: el_field.edit_validation });
                     };
                 };
                 col = el_field.col;
                 $row.append($col);
-
             }
         }.bind(this));
         if ($row) this.$form_modal.append($row);
@@ -563,72 +562,14 @@
                 throw new Error('Неопределен контролируемый элемент : ' + n_control);
             }
         }.bind(this));
-        //$.each(this.settings.rows_form, function (i, el_row) {
-        //    //var count = el_row.length;
-        //    var rowElement = new row_element();
-        //    var $row = rowElement.$element;
-        //    $.each(el_row, function (i, el) {
-        //        var colElement1 = new col_element(el.col);
-        //        var $col = colElement1.$element;
-
-        //        if (el.type === 'select') {
-        //            var colElement = new select_element($col, this, el.name, el.label);
-
-        //            var element = new init_select(colElement.$element, el.list, -1, null, el.select);
-        //            this.element.push({ field: el.field, name: el.name, type: 'select', element: element, control: el.control });
-        //            this.rules_valid.push({ name: $(element.$element).attr('name'), type: 'select', validation: el.validation });
-        //        }
-        //        if (el.type === 'number') {
-        //            var colElement = new input_element($col, this, el.name, el.label, 'number');
-        //            var element = new init_input(colElement.$element, null, el.select);
-        //            this.element.push({ field: el.field, name: el.name, type: 'number', element: element, control: null });
-        //            this.rules_valid.push({ name: $(element.$element).attr('name'), type: 'number', validation: el.validation });
-        //        }
-        //        if (el.type === 'text') {
-        //            var colElement = new input_element($col, this, el.name, el.label, 'text');
-        //            var element = new init_input(colElement.$element, null, el.select);
-        //            this.element.push({ field: el.field, name: el.name, type: 'text', element: element, control: null });
-        //            this.rules_valid.push({ name: $(element.$element).attr('name'), type: 'text', validation: el.validation });
-        //        }
-        //        if (el.type === 'checkbox') {
-        //            $col.attr('style', 'display:flex;align-items:center');
-        //            var colElement = new checkbox_element($col, this, el.name, el.label);
-        //            var element = new init_checkbox(colElement.$element, null, el.select);
-        //            this.element.push({ field: el.field, name: el.name, type: 'checkbox', element: element, control: null });
-        //            this.rules_valid.push({ name: $(element.$element).attr('name'), type: 'checkbox', validation: el.validation });
-        //        }
-        //        if (el.type === 'datetime') {
-        //            var colElement = new datetime_element($col, this, el.name, el.label, 'datetime');
-        //            var element = new datetime_input(colElement.$element, null, el.close, true);
-        //            this.element.push({ field: el.field, name: el.name, type: 'datetime', element: element, control: null });
-        //            this.rules_valid.push({ name: el.name, type: 'datetime', validation: el.validation });
-        //        }
-        //        if (el.type === 'date') {
-        //            var colElement = new datetime_element($col, this, el.name, el.label, 'date');
-        //            var element = new datetime_input(colElement.$element, null, el.close, false);
-        //            this.element.push({ field: el.field, name: el.name, type: 'date', element: element, control: null });
-        //            this.rules_valid.push({ name: $(element.$element).attr('name'), type: 'date', validation: el.validation });
-        //        }
-        //        if (el.type === 'textarea') {
-        //            var colElement = new textarea_element($col, this, el.name, el.label);
-        //            var element = new textarea_input(colElement.$element, null, el.select);
-        //            this.element.push({ field: el.field, name: el.name, type: 'textarea', element: element, control: null });
-        //            this.rules_valid.push({ name: $(element.$element).attr('name'), type: 'textarea', validation: el.validation });
-        //        }
-
-        //        $row.append($col);
-        //    }.bind(this));
-        //    this.$form_modal.append($row);
-        //}.bind(this));
-
-        //-------------------------------------------------------------------------
-        // Валидация
+        // Валидация, инициализация модуля 
         var FVAL = App.form_validation;
         this.form_val = new FVAL('#' + this.$form_modal.attr('id')); // Создадим экземпляр таблицы
         this.form_val.init(this.$alert, this.rules_valid, function (valid) {
-            // Проверим валидация прошла
             var result = {};
+            // Проверим валидация прошла
             if (valid) {
+                // Заполним result полями
                 $.each(this.settings.fields_form, function (i, el) {
                     var element = this.data ? (el.element_edit ? el.element_edit.$element : null) : (el.element_add ? el.element_add.$element : null);
                     var type = this.data ? el.edit : el.add;
@@ -662,15 +603,12 @@
                             result[el.field] = value !== null && value !== "" ? moment(value, 'DD.MM.YYYY HH:mm').toISOString() : null;
                             break;
                         };
-
-
                     }
                 }.bind(this));
                 if (typeof this.settings.fn_ok === 'function') {
                     this.settings.fn_ok({ old: this.data, new: result });
                 }
             }
-
         }.bind(this));
         // Инициализация модальной формы
         this.$modal_edit = $('div#em-' + this.selector).modal({
@@ -727,6 +665,17 @@
 
         this.$modal_edit.modal('show');
     };
+    // Закрыть форму 
+    modal_edit_form.prototype.close = function () {
+        this.$modal_edit.modal('hide');
+    };
+    // Вывести на форме сообщение об ошибке 
+    modal_edit_form.prototype.out_error = function (message) {
+        if (this.alert_form) {
+            this.alert_form.out_error_message(message)
+        }
+    };
+
     // 
     App.modal_edit_form = modal_edit_form;
 

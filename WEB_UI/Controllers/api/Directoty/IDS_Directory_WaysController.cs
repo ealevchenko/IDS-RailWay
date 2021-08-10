@@ -47,6 +47,12 @@ namespace WEB_UI.Controllers.api
         public string user { get; set; }
     }
 
+    public class OperationAutoPositionWayOfPark
+    {
+        public int id_station { get; set; }
+        public int id_park { get; set; }
+        public string user { get; set; }
+    }
     /// <summary>
     /// СПИСОК ПУТЕЙ
     /// </summary>
@@ -222,6 +228,29 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // POST api/ids/directory/ways/operation/auto_correct/
+        /// <summary>
+        /// Операция положение пути ниже
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("operation/auto_correct")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostOperationAutoPositionWayOfPark([FromBody] OperationAutoPositionWayOfPark value)
+        {
+            try
+            {
+                IDSDirectory ids_wir = new IDSDirectory(service.WebAPI_IDS);
+                int result = ids_wir.OperationAutoPositionWayOfPark(value.id_station, value.id_park, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         // POST api/ids/directory/ways/operation/down_position/1
         /// <summary>
         /// Операция положение пути ниже
@@ -260,6 +289,29 @@ namespace WEB_UI.Controllers.api
             {
                 IDSDirectory ids_wir = new IDSDirectory(service.WebAPI_IDS);
                 int result = ids_wir.OperationUp1PositionWayOfPark(value.id_way, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST api/ids/directory/ways/operation/add/
+        /// <summary>
+        /// Операция положение пути выше
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("operation/add")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostOperationInsertWayOfPark([FromBody] Directory_Ways value)
+        {
+            try
+            {
+                IDSDirectory ids_wir = new IDSDirectory(service.WebAPI_IDS);
+                int result = ids_wir.OperationInsertWayOfPark(value);
                 return Ok(result);
             }
             catch (Exception e)

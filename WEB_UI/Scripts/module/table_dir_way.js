@@ -43,8 +43,10 @@
             'title_button_add': 'Добавить',
             'title_button_edit': 'Править',
             'title_button_del': 'Удалить',
+            'title_button_auto': 'Авто-коррекция',
 
             'mess_load_dir_way': 'Загружаю список путей...',
+            'mess_operation_dir_way': 'Выполняю операцию...',
         },
         'en':  //default language: English
         {
@@ -283,22 +285,11 @@
         this.settings = $.extend({
             alert: null,
         }, options);
-        ////--------------------------------------------------------
-        //// Создадим контейнер для форм в разделе документа body
-        //var $form = $('<div></div>', {
-        //    'id': 'edit-' + this.selector
-        //});
-        //$('body').append($form)
-        ////-------------------------------------------------------
-        //// Инициализация формы
-        //var FDWAY = App.form_edit;
-        //var form_edit = new FDWAY('div#edit-' + this.selector); // Создадим экземпляр формы правки строк таблицы
-
         // Инициализация формы
         var MEF = App.modal_edit_form;
         var modal_edit_form = new MEF('mfe-' + this.selector); // Создадим экземпляр формы правки строк таблицы
 
-        // Загрузим данные
+        // Загрузим справочные данные, определим поля формы правки
         this.load_reference(function () {
 
             // Определим списки для полей
@@ -831,7 +822,7 @@
                 close: null,
                 add_validation: null,
                 edit_validation: null,
-                default: moment().toISOString(),
+                default: moment().format("YYYY-MM-DDThh:mm:ss"), //.utc().toISOString(),
                 row: null,
                 col: null,
                 size: null,
@@ -919,353 +910,6 @@
             fields.push(fl_create_user)
             fields.push(fl_change)
             fields.push(fl_change_user);
-            //// Создадим поля формы
-            //var rows_form = [];
-            //// Уровень 1 станции
-            //var row_station = [];
-            //var row_way = [];
-            //var row_way_ru = [];
-            //var row_way_en = [];
-            //var row_way_type = [];
-            //var row_way_note = [];
-            ////
-            //var row_element_station = {
-            //    col: 5,
-            //    field: 'id_station',
-            //    type: 'select',
-            //    name: 'station',
-            //    label: 'Станция',
-            //    list: list_station,
-            //    select: function (e, ui) {
-            //        event.preventDefault();
-            //        // Обработать выбор
-            //        var id = Number($(e.currentTarget).val());
-            //        var list_park = get_list_park(id);
-            //        var control = this.element_control;
-            //        if (control) {
-            //            control.update(list_park, -1, null);
-            //        }
-            //    },
-            //    control: 'park',
-            //    update: null,
-            //    close: null,
-            //    validation: [{
-            //        check_type: 'not_null',
-            //        error: 'Укажите станцию',
-            //        ok: null,
-            //    }],
-
-            //};
-            //var row_element_park = {
-            //    col: 7,
-            //    field: 'id_park',
-            //    type: 'select',
-            //    name: 'park',
-            //    label: 'Парки станции',
-            //    list: get_list_park(-1),
-            //    select: function (e, ui) {
-            //        event.preventDefault();
-            //        // Обработать выбор
-            //        var id = Number($(e.currentTarget).val());
-            //    },
-            //    control: null,
-            //    update: null,
-            //    close: null,
-            //    validation: [{
-            //        check_type: 'not_null',
-            //        error: 'Укажите парк',
-            //        ok: null,
-            //    }],
-            //};
-            ////
-            //var row_element_position = {
-            //    col: 2,
-            //    field: 'position_way',
-            //    type: 'number',
-            //    name: 'position',
-            //    label: 'Поз.',
-            //    list: null,
-            //    select: null,
-            //    control: null,
-            //    update: null,
-            //    close: null,
-            //    validation: [{
-            //        check_type: 'range_number',
-            //        min: 1,
-            //        max: 100,
-            //        error: 'Позиция пути должна быть в диапазоне от 1 до 100',
-            //        ok: null,
-            //    }],
-            //};
-            //var row_element_capacity = {
-            //    col: 2,
-            //    field: 'capacity',
-            //    type: 'number',
-            //    name: 'capacity',
-            //    label: 'Вмес.',
-            //    list: null,
-            //    select: null,
-            //    control: null,
-            //    update: null,
-            //    close: null,
-            //};
-            //var row_element_divisions = {
-            //    col: 2,
-            //    field: 'id_devision',
-            //    type: 'select',
-            //    name: 'devision',
-            //    label: 'Подразделение',
-            //    list: list_divisions,
-            //    select: function (e, ui) {
-            //        event.preventDefault();
-            //        // Обработать выбор
-            //        var id = Number($(e.currentTarget).val());
-            //    },
-            //    control: null,
-            //    update: null,
-            //    close: null,
-            //};
-            //var row_element_way_delete = {
-            //    col: 3,
-            //    field: 'way_delete',
-            //    type: 'datetime',
-            //    name: 'way_delete',
-            //    label: 'Путь удален',
-            //    list: null,
-            //    select: null,
-            //    control: null,
-            //    update: null,
-            //    close: function (datetime) {
-
-            //    },
-            //};
-            //var row_element_way_close = {
-            //    col: 3,
-            //    field: 'way_close',
-            //    type: 'datetime',
-            //    name: 'way_close',
-            //    label: 'Путь закрыт',
-            //    list: null,
-            //    select: null,
-            //    control: null,
-            //    update: null,
-            //    close: function (datetime) {
-
-            //    },
-            //};
-            ////
-            //var row_element_num_ru = {
-            //    col: 2,
-            //    field: 'way_num_ru',
-            //    type: 'text',
-            //    name: 'way_num_ru',
-            //    label: '№ пути',
-            //    list: null,
-            //    select: null,
-            //    control: null,
-            //    update: null,
-            //    close: null,
-            //    validation: [{
-            //        check_type: 'not_null',
-            //        error: 'Укажите номер пути (рус)',
-            //        ok: null,
-            //    }],
-            //};
-            //var row_element_name_ru = {
-            //    col: 6,
-            //    field: 'way_name_ru',
-            //    type: 'text',
-            //    name: 'way_name_ru',
-            //    label: 'Название пути (рус.)',
-            //    list: null,
-            //    select: null,
-            //    control: null,
-            //    update: null,
-            //    close: null,
-            //    validation: [{
-            //        check_type: 'not_null',
-            //        error: 'Укажите название пути (рус)',
-            //        ok: null,
-            //    }],
-            //};
-            //var row_element_abbr_ru = {
-            //    col: 4,
-            //    field: 'way_abbr_ru',
-            //    type: 'text',
-            //    name: 'way_abbr_ru',
-            //    label: 'Крат. назв. пути (рус.)',
-            //    list: null,
-            //    select: null,
-            //    control: null,
-            //    update: null,
-            //    close: null,
-            //    validation: [{
-            //        check_type: 'not_null',
-            //        error: 'Укажите абревиатуру пути (рус)',
-            //        ok: null,
-            //    }],
-            //};
-            //var row_element_num_en = {
-            //    col: 2,
-            //    field: 'way_num_en',
-            //    type: 'text',
-            //    name: 'way_num_en',
-            //    label: '№ пути',
-            //    list: null,
-            //    select: null,
-            //    control: null,
-            //    update: null,
-            //    close: null,
-            //    validation: [{
-            //        check_type: 'not_null',
-            //        error: 'Укажите номер пути (анг)',
-            //        ok: null,
-            //    }],
-            //};
-            //var row_element_name_en = {
-            //    col: 6,
-            //    field: 'way_name_en',
-            //    type: 'text',
-            //    name: 'way_name_en',
-            //    label: 'Название пути (анг.)',
-            //    list: null,
-            //    select: null,
-            //    control: null,
-            //    update: null,
-            //    close: null,
-            //    validation: [{
-            //        check_type: 'not_null',
-            //        error: 'Укажите название пути (анг)',
-            //        ok: null,
-            //    }],
-            //};
-            //var row_element_abbr_en = {
-            //    col: 4,
-            //    field: 'way_abbr_en',
-            //    type: 'text',
-            //    name: 'way_abbr_en',
-            //    label: 'Крат. назв. пути (анг.)',
-            //    list: null,
-            //    select: null,
-            //    control: null,
-            //    update: null,
-            //    close: null,
-            //    validation: [{
-            //        check_type: 'not_null',
-            //        error: 'Укажите абревиатуру пути (анг.)',
-            //        ok: null,
-            //    }],
-            //};
-            ////
-            //var row_element_deadlock = {
-            //    col: 2,
-            //    field: 'deadlock',
-            //    type: 'checkbox',
-            //    name: 'deadlock',
-            //    label: 'Тупик',
-            //    list: null,
-            //    select: null,
-            //    control: null,
-            //    update: null,
-            //    close: null,
-            //    //validation: [{
-            //    //    check_type: 'not_null',
-            //    //    error: 'Укажите укажите тупик',
-            //    //    ok: null,
-            //    //}],
-            //};
-            //var row_element_crossing_uz = {
-            //    col: 2,
-            //    field: 'crossing_uz',
-            //    type: 'checkbox',
-            //    name: 'crossing_uz',
-            //    label: 'Выход УЗ',
-            //    list: null,
-            //    select: null,
-            //    control: null,
-            //    update: null,
-            //    close: null,
-            //};
-            //var row_element_crossing_amkr = {
-            //    col: 2,
-            //    field: 'crossing_amkr',
-            //    type: 'checkbox',
-            //    name: 'crossing_amkr',
-            //    label: 'Выход АМКР',
-            //    list: null,
-            //    select: null,
-            //    control: null,
-            //    update: null,
-            //    close: null,
-            //};
-            //var row_element_dissolution = {
-            //    col: 3,
-            //    field: 'dissolution',
-            //    type: 'checkbox',
-            //    name: 'dissolution',
-            //    label: 'Путь роспуска',
-            //    list: null,
-            //    select: null,
-            //    control: null,
-            //    update: null,
-            //    close: null,
-            //};
-            //var row_element_output_dissolution = {
-            //    col: 3,
-            //    field: 'output_dissolution',
-            //    type: 'checkbox',
-            //    name: 'output_dissolution',
-            //    label: 'Вых. на путь роспуска',
-            //    list: null,
-            //    select: null,
-            //    control: null,
-            //    update: null,
-            //    close: null,
-            //};
-
-            //var row_element_note = {
-            //    col: 12,
-            //    field: 'note',
-            //    type: 'textarea',
-            //    name: 'note',
-            //    label: 'Примечание',
-            //    list: null,
-            //    select: null,
-            //    control: null,
-            //    update: null,
-            //    close: null,
-            //};
-
-            //row_station.push(row_element_station);
-            //row_station.push(row_element_park);
-
-            //row_way.push(row_element_position);
-            //row_way.push(row_element_capacity);
-            //row_way.push(row_element_divisions);
-            //row_way.push(row_element_way_close);
-            //row_way.push(row_element_way_delete);
-
-            //row_way_ru.push(row_element_num_ru)
-            //row_way_ru.push(row_element_name_ru);
-            //row_way_ru.push(row_element_abbr_ru);
-            //row_way_en.push(row_element_num_en)
-            //row_way_en.push(row_element_name_en);
-            //row_way_en.push(row_element_abbr_en);
-
-            //row_way_type.push(row_element_deadlock);
-            //row_way_type.push(row_element_crossing_uz);
-            //row_way_type.push(row_element_crossing_amkr);
-            //row_way_type.push(row_element_dissolution);
-            //row_way_type.push(row_element_output_dissolution);
-
-            //row_way_note.push(row_element_note);
-
-            //rows_form.push(row_station);
-            //rows_form.push(row_way_ru);
-            //rows_form.push(row_way_en);
-            //rows_form.push(row_way);
-            //rows_form.push(row_way_type);
-            //rows_form.push(row_way_note);
             // Инициализируем форму
             modal_edit_form.init({
                 fields_form: fields,
@@ -1273,36 +917,21 @@
                 title: "Править путь",
                 size: "xl",
                 fn_ok: function (data) {
-                    //if (data.new && data.new.length > 0) {
-                    //};
-                    // Обработка данных после валидации.
-                    //var way = {
-                    //    id: 0
-                    //    //, id_station:
-                    //    //, id_park:
-                    //    //, position_park:
-                    //    //, position_way:
-                    //    //, way_num_ru:
-                    //    //, way_num_en:
-                    //    //, way_name_ru:
-                    //    //, way_name_en:
-                    //    //, way_abbr_ru:
-                    //    //, way_abbr_en:
-                    //    //, capacity:
-                    //    //, deadlock:
-                    //    //, crossing_uz:
-                    //    //, crossing_amkr:
-                    //    //, id_devision:
-                    //    //, dissolution:
-                    //    //, output_dissolution:
-                    //    //, way_close:
-                    //    //, way_delete:
-                    //    //, note:
-                    //    //, create:
-                    //    //, create_user:
-                    //    //, change:
-                    //    //, change_user:
-                    //}
+                    if (data && !data.old) {
+                        // Добавить 
+                        ids_dir.postOperationInsertWayOfPark(data.new, function (result) {
+                            if (result > 0) {
+                                modal_edit_form.close(); // закроем форму
+                                this.update();
+                                this.out_clear();
+                                this.out_info("Новый путь - добавлен");
+                            } else {
+                                modal_edit_form.out_error('При добавлении пути произошла ошибка, код ошибки : ' + result);
+                            }
+                        }.bind(this));
+                    } else {
+                        // править
+                    }
                 }.bind(this),
             });
             //----------------------------------
@@ -1443,12 +1072,38 @@
                     enabled: false
                 },
                 {
+                    text: langView('title_button_auto', App.Langs),
+                    action: function (e, dt, node, config) {
+                        if (this.id_station && this.id_park) {
+                            var operation = {
+                                id_station: this.id_station,
+                                id_park: this.id_park,
+                                user: App.User_Name,
+                            };
+                            LockScreen(langView('mess_operation_dir_way', App.Langs));
+                            ids_dir.postOperationAutoPositionWayOfPark(operation, function (result) {
+                                if (result > 0) {
+                                    this.update();
+                                    this.out_clear();
+                                    this.out_info("Автоматическая коррекция путей – выполнена! Обновленно :" + result + " записей");
+                                } else {
+                                    this.out_error("Ошибка, выполнения операции автоматической коррекции путей, код ошибки : " + result);
+                                    LockScreenOff();
+                                }
+                            }.bind(this));
+                        } else {
+                            this.out_error("Автоматическая коррекция путей – отклонена не определена станция [" + this.id_station + "] или парк [" + this.id_park + "]");
+                            LockScreenOff();
+                        }
+                    }.bind(this),
+                    enabled: true
+                },
+                {
                     extend: 'pageLength',
                 }
 
             ]
         }).on('select deselect', function (e, dt, type, indexes) {
-            //var index = this.obj_t_way.rows({ selected: true });
             var selected = this.obj_t_way.rows({ selected: true })[0].length > 0 ? true : false;
             var row = this.obj_t_way.rows(indexes).data().toArray()[0];
             if (selected) {
@@ -1464,7 +1119,6 @@
                 this.obj_t_way.button(5).enable(false);
                 App.Select_Row_ways = null;
             }
-
         }.bind(this));
     };
     // Показать данные 
@@ -1488,7 +1142,7 @@
             LockScreenOff();
         }.bind(this));
     };
-
+    // Обновить данные
     table_dir_way.prototype.update = function () {
         if (this.id_station && this.id_park) {
             LockScreen(langView('mess_load_dir_way', App.Langs));
@@ -1499,7 +1153,6 @@
         }
 
     };
-
     // Очистить сообщения
     table_dir_way.prototype.out_clear = function () {
         if (this.settings.alert) {

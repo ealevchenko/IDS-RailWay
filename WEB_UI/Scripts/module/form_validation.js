@@ -20,7 +20,7 @@
     App.Langs = $.extend(true, App.Langs, getLanguages($.Text_View, App.Lang));
 
     //--------------------------------Конструктор и инициализация---------------
-    // Валидацтя форм
+    // создать класс валидации форм
     function form_validation(selector) {
         if (!selector) {
             throw new Error('No selector provided');
@@ -31,11 +31,10 @@
         }
         this.selector = this.$form.attr('id');
     }
-    // Инициализация
+    // Инициализация валидации
     form_validation.prototype.init = function (alert, rules_val, fn_ok) {
         // Найдем все элемены
         var element = this.$form.find('input, select, textarea');
-/*        var el_message = this.$form.find('div.invalid-feedback');*/
         this.all_obj = element;
         this.$alert = alert;    // Алерт
         this.rules_val = rules_val; // Элементы
@@ -47,11 +46,8 @@
             this.val.clear_all();
             $(this.$form.find('div.invalid-feedback')).text('');
             this.valid = true;
-            //var data = $(event.currentTarget).serializeArray();
-            //var data = [];
             var fm_element = $(event.currentTarget).find('input:visible, select:visible, textarea:visible');
             $.each(fm_element, function (i, el) {
-                //data.push({ name: el.id, value: (el.type ==="checkbox" ?  el.checked : el.value), tag: el.tagName, type : el.type});
                 var valid = el.validity;
                 // Проверим внешние правила
                 if (this.rules_val === null) {
@@ -127,7 +123,7 @@
             }
         }.bind(this));
     };
-
+    // Очистить форму от сообщений
     form_validation.prototype.clear = function () {
         this.val.clear_all();
         $(this.$form.find('div.invalid-feedback')).text('');

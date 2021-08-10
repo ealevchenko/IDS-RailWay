@@ -982,7 +982,7 @@ namespace IDS
                     way.note = null;
                     position++;
                 }
-                return context.SaveChanges();
+                return 1;
             }
             catch (Exception e)
             {
@@ -991,6 +991,39 @@ namespace IDS
                 return -1;
             }
         }
+        /// <summary>
+        /// Выполнить операцию автоматической корекции позиции пути в парке
+        /// </summary>
+        /// <param name="id_station"></param>
+        /// <param name="id_park"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationAutoPositionWayOfPark(int id_station, int id_park, string user)
+        {
+            try
+            {
+                EFDbContext context = new EFDbContext();
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                int result = OperationAutoPositionWayOfPark(ref context, id_station, id_park, user);
+                if (result > 0)
+                {
+                    return context.SaveChanges();
+                }
+                else return result;
+
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationAutoPositionWayOfPark(id_station={0}, id_park={1}, user={2})",
+                    id_station, id_park, user), servece_owner, eventID);
+                return -1;
+            }
+        }
+
         /// <summary>
         /// Выполнить операцию переноса указаного пути на любую позицию
         /// </summary>
@@ -1088,7 +1121,7 @@ namespace IDS
                 // если конечная позиция не указана тогда просто сдвинуть в низ с определенной позиции
                 if (stop == null)
                 {
-                    Directory_Ways last_ways = ways.OrderBy(w => w.position_way).FirstOrDefault();
+                    Directory_Ways last_ways = ways.OrderByDescending(w => w.position_way).FirstOrDefault();
                     stop = last_ways.position_way + 1;
                 }
 
@@ -1286,8 +1319,8 @@ namespace IDS
                 EFDbContext context = new EFDbContext();
                 EFDirectory_Ways ef_way = new EFDirectory_Ways(context);
                 // Получим все пути по даной станции и парку
-                List<Directory_Ways> ways = ef_way.Context.Where(w => w.id_station == way.id_station && w.id_park == way.id_park && w.way_delete == null).ToList();
-                Directory_Ways last_ways = ways.OrderBy(w => w.position_way).FirstOrDefault();
+                List<Directory_Ways> ways = ef_way.Context.Where(w => w.id_station == way.id_station && w.id_park == way.id_park && w.way_delete == null).OrderBy(p=>p.position_way).ToList();
+                Directory_Ways last_ways = ways.OrderByDescending(w => w.position_way).FirstOrDefault();
                 if (way.position_way > last_ways.position_way + 1) return (int)errors_base.input_position_error; // Ошибка, неправильно указана позиция 
                 if (way.position_way <= last_ways.position_way)
                 {

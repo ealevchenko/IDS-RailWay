@@ -3995,6 +3995,31 @@ IDS_DIRECTORY.prototype.getWaysOfDissolution = function (callback) {
         },
     });
 };
+// Операция автокоррекции
+IDS_DIRECTORY.prototype.postOperationAutoPositionWayOfPark = function (operation, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/ways/operation/auto_correct/',
+        type: 'POST',
+        data: JSON.stringify(operation),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postOperationAutoPositionWayOfPark", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 // Операция свига на одни позицию вниз
 IDS_DIRECTORY.prototype.postOperationDown1PositionWayOfPark = function (operation, callback) {
     $.ajax({
@@ -4045,6 +4070,32 @@ IDS_DIRECTORY.prototype.postOperationUp1PositionWayOfPark = function (operation,
         },
     });
 };
+// Операция добавить путь
+IDS_DIRECTORY.prototype.postOperationInsertWayOfPark = function (way, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/ways/operation/add/',
+        type: 'POST',
+        data: JSON.stringify(way),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postOperationInsertWayOfPark", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+
 //======= Directory_ParkWay (Справочник путей ИДС) ======================================
 // Получить все парки
 IDS_DIRECTORY.prototype.getParkWays = function (callback) {
