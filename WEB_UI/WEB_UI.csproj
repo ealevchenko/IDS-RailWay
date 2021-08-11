@@ -2066,6 +2066,7 @@
     <Content Include="Scripts\jquery.doubleScroll.js" />
     <Content Include="Scripts\jszip.js" />
     <Content Include="Scripts\jszip.min.js" />
+    <Content Include="Scripts\module\modal_confirm_form.js" />
     <Content Include="Scripts\module\modal_edit_form.js" />
     <Content Include="Scripts\module\form_validation.js" />
     <Content Include="Scripts\module\cblist_station.js" />

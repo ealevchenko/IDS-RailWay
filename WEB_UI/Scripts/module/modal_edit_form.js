@@ -647,7 +647,8 @@
         // Заполним данными
         $.each(this.form_elements, function (i, el) {
             // Получим значение поля
-            var value = data ? data[el.field] : (el[this.mode] === "select" ? -1 : null);
+            //var value = data ? data[el.field] : (el[this.mode] === "select" ? -1 : el.default);
+            var value = data ? data[el.field] :  el.default;
             if (value !== undefined) {
                 // Значение поля определено, получим элемент
                 var element = el['element_' + this.mode];
@@ -675,7 +676,17 @@
             this.alert_form.out_error_message(message)
         }
     };
-
+    // Обновить значение по умолчанию по указанному полю (Применяется если при добавлении нужно чтобы некоторые поля уже были заполнены значениями)
+    modal_edit_form.prototype.set_default_fields_form = function (field, value_default) {
+        if (this.settings.fields_form) {
+            var field = this.settings.fields_form.find(function (o) {
+                return o.field === field
+            });
+            if (field) {
+                field.default = value_default;
+            }
+        }
+    }
     // 
     App.modal_edit_form = modal_edit_form;
 

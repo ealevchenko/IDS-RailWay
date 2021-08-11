@@ -4070,7 +4070,7 @@ IDS_DIRECTORY.prototype.postOperationUp1PositionWayOfPark = function (operation,
         },
     });
 };
-// Операция добавить путь
+// Операция "Добавить путь"
 IDS_DIRECTORY.prototype.postOperationInsertWayOfPark = function (way, callback) {
     $.ajax({
         url: '../../api/ids/directory/ways/operation/add/',
@@ -4095,7 +4095,56 @@ IDS_DIRECTORY.prototype.postOperationInsertWayOfPark = function (way, callback) 
         },
     });
 };
-
+// Операция "Удалить путь"
+IDS_DIRECTORY.prototype.postOperationDeleteWayOfPark = function (operation, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/ways/operation/delete/',
+        type: 'POST',
+        data: JSON.stringify(operation),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postOperationDeleteWayOfPark", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Операция "Обновить путь"
+IDS_DIRECTORY.prototype.postOperationUpdateWayOfPark = function (operation, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/ways/operation/update/',
+        type: 'POST',
+        data: JSON.stringify(operation),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postOperationUpdateWayOfPark", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 //======= Directory_ParkWay (Справочник путей ИДС) ======================================
 // Получить все парки
 IDS_DIRECTORY.prototype.getParkWays = function (callback) {
