@@ -971,7 +971,7 @@ namespace IDS
                 foreach (Directory_Ways way in ways_delete.ToList())
                 {
                     way.position_way = 0;
-                    way.note = "Удален";
+                    way.note = "Удален, но остались архивные ссылки";
                     ef_way.Update(way);
                 }
                 int position = 1;
@@ -1184,8 +1184,11 @@ namespace IDS
 
                 EFDirectory_Ways ef_way = new EFDirectory_Ways(context);
                 // сдвинуть вниз
-                int current_position = start - 1;
-                int start_position = start;
+                //int current_position = start - 1;
+                //int start_position = start;
+                //int stop_position = (int)stop;
+                int current_position = start;
+                int start_position = start + 1;
                 int stop_position = (int)stop;
                 int count = 0;
                 // сместим промежуточные позиции вверх
@@ -1412,6 +1415,7 @@ namespace IDS
                     user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
                 }
                 EFDirectory_Ways ef_way = new EFDirectory_Ways(context);
+                EFWagonInternalMovement ef_wim = new EFWagonInternalMovement(context);
                 // Получим пути удаленные и активные по даной станции и парку
                 Directory_Ways way_del = ef_way.Context.Where(w => w.id == id_way).FirstOrDefault();
                 if (way_del == null) return (int)errors_base.not_dir_way_of_db; // Нет пути
@@ -1426,10 +1430,12 @@ namespace IDS
                 if (res_del_full < 0)
                 {
                     //TODO: ПОСТАВИТЬ ПРОВЕРКУ НАЛИЧИЕ ВАГОНОВ НА ПУТИ
+                    List<WagonInternalMovement> cars = ef_wim.Context.Where(w => w.id_way == way_del.id && w.way_end == null).ToList();
+                    if (cars != null && cars.Count() > 0) return (int)errors_base.way_is_not_null; // На пути стоят вагоны
                     // Ошибка удаления 
                     way_del.way_delete = DateTime.Now;
                     way_del.position_way = 0;
-                    way_del.note = "Удален";
+                    way_del.note = "Удален но остались архивные ссылки";
                     ef_way.Update(way_del);
                     res_del_full = ef_way.Save();
                 }
@@ -1438,7 +1444,8 @@ namespace IDS
                 if (position < last_ways.position_way)
                 {
                     // Требуется смещение
-                    int res_down = OperationUpPositionWayOfPark(ref context, ways, position + 1, null, user);
+                    //int res_down = OperationUpPositionWayOfPark(ref context, ways, position + 1, null, user);
+                    int res_down = OperationUpPositionWayOfPark(ref context, ways, position, null, user);
                 }
                 int res_move = context.SaveChanges();
                 return res_move == 0 ? res_del_full : res_move;
@@ -1469,17 +1476,56 @@ namespace IDS
                 List<Directory_Ways> ways = ef_way.Context.Where(w => w.id_station == way.id_station && w.id_park == way.id_park && w.way_delete == null).OrderBy(p => p.position_way).ToList();
                 Directory_Ways last_ways = ways.OrderByDescending(w => w.position_way).FirstOrDefault();
                 if (way.position_way > last_ways.position_way + 1) return (int)errors_base.input_position_error; // Ошибка, неправильно указана позиция 
-                if (way_old.position_way < way.position_way)
+                // Проверим если позиции не совпадают тогда двигаем, еслинет тогда только правим
+                if (way_old.position_way == 0)
                 {
-                    // Сдвинуть вверх
-                    OperationUpPositionWayOfPark(ref context, ways, way_old.position_way, way.position_way, user);
+                    // сдвинуть вниз с новой позиции и до конца
+                    int res_down = OperationDownPositionWayOfPark(ref context, ways, way.position_way, null, user);
                 }
                 else
                 {
-                    // сдвинуть вниз
-                    int res_down = OperationDownPositionWayOfPark(ref context, ways, way_old.position_way, way.position_way, user);
+                    // Позиция не равна 0, смещаем
+                    if (way_old.position_way != way.position_way)
+                    {
+                        if (way_old.position_way < way.position_way)
+                        {
+                            // Сдвинуть вверх
+                            int res_up = OperationUpPositionWayOfPark(ref context, ways, way_old.position_way, way.position_way, user);
+                        }
+                        else
+                        {
+                            // сдвинуть вниз
+                            int res_down = OperationDownPositionWayOfPark(ref context, ways, way.position_way, way_old.position_way, user);
+                        }
+                    }
                 }
-                ef_way.Update(way);
+
+                // Обновим данные по путь
+                way_old.id_station = way.id_station;
+                way_old.id_park = way.id_park;
+                way_old.position_park = way.position_park;
+                way_old.position_way = way.position_way;
+                way_old.way_num_ru = way.way_num_ru;
+                way_old.way_num_en = way.way_num_en;
+                way_old.way_name_ru = way.way_name_ru;
+                way_old.way_name_en = way.way_name_en;
+                way_old.way_abbr_ru = way.way_abbr_ru;
+                way_old.way_abbr_en = way.way_abbr_en;
+                way_old.capacity = way.capacity;
+                way_old.deadlock = way.deadlock;
+                way_old.crossing_uz = way.crossing_uz;
+                way_old.crossing_amkr = way.crossing_amkr;
+                way_old.id_devision = way.id_devision;
+                way_old.dissolution = way.dissolution;
+                way_old.output_dissolution = way.output_dissolution;
+                way_old.way_close = way.way_close;
+                way_old.way_delete = way.way_delete;
+                way_old.note = way.note;
+                way_old.create = way.create;
+                way_old.create_user = way.create_user;
+                way_old.change = DateTime.Now;
+                way_old.change_user = user;
+                ef_way.Update(way_old);
                 return context.SaveChanges();
             }
             catch (Exception e)
