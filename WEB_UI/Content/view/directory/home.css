@@ -1,11 +1,16 @@
 ﻿/*@import url("../../font-awesome/css/font-awesome.min.css");*/
 
-body {
-    /*font-size: 1.2rem;*/
+/*html {
+    font-size: 1.3rem;
 }
 
+body {
+    font-size: 1.3rem;
+}*/
+
+
 .btn {
-    font-size: 1.6rem;
+    /*font-size: 1.6rem;*/
     /*margin-left:2px;*/
 }
 
@@ -19,25 +24,32 @@ input {
     font: initial;
 }
 
-#table-directory {
-    font-size: 1.3rem;
+.table-directory {
+    font-size: 0.8rem;
 }
 
-#table-directory th, #table-directory thead {
+#table-directory {
     /*font-size: 1.3rem;*/
 }
 
+    #table-directory th, #table-directory thead {
+        /*font-size: 1.3rem;*/
+    }
+
 .w-5 {
-    width:5%;
+    width: 5%;
 }
+
 .w-10 {
-    width:10%;
+    width: 10%;
 }
+
 .w-15 {
-    width:15%;
+    width: 15%;
 }
+
 .w-20 {
-    width:20%;
+    width: 20%;
 }
 
 /* -------------------------------- 
@@ -46,12 +58,12 @@ input {
 
 -------------------------------- */
 
-.ui-autocomplete{
-	z-index: 200;
+.ui-autocomplete {
+    z-index: 200;
 }
 
-.ui-dialog{
-	z-index: 100;
+.ui-dialog {
+    z-index: 100;
 }
 
 
@@ -63,6 +75,7 @@ input {
 
 .date-picker {
     z-index: 302;
+
 }
 
 .date-picker-wrapper {
@@ -142,7 +155,7 @@ fieldset {
             text-transform: none;
         }
 
-        
+
 tr.group,
 tr.group:hover {
     background-color: #ddd !important;
@@ -204,6 +217,7 @@ table.dataTable.display tbody tr:not(.selected).even.not-exist-amkr > .sorting_1
 .operator-detali-tables {
     font-size: 12px;
 }
+
 .info-wagon-form-control {
     font-size: 1.2rem;
 }

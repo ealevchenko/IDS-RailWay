@@ -1,4 +1,7 @@
-﻿(function (window) {
+﻿/// <reference path="modal_confirm_form.js" />
+/// <reference path="modal_edit_form.js" />
+
+(function (window) {
     'use strict';
 
     var App = window.App || {};
@@ -443,13 +446,23 @@
                     error: 'Позиция пути должна быть в диапазоне от 1 до 100',
                     ok: null,
                 }],
-                edit_validation: [{
-                    check_type: 'range_number',
-                    min: 1,
-                    max: 100,
-                    error: 'Позиция пути должна быть в диапазоне от 1 до 100',
-                    ok: null,
-                }],
+                edit_validation: [
+                    {
+                        check_type: 'range_number',
+                        min: 1,
+                        max: 100,
+                        error: 'Позиция пути должна быть в диапазоне от 1 до 100',
+                        ok: null,
+                    },
+                    //{
+                    //    // Зависимость от поля
+                    //    check_type: 'depends',
+                    //    on_field: 'way_delete',
+                    //    addiction_type: 'is_null',
+                    //    error: 'Путь удален, позиция пути должна быть (0)',
+                    //    ok: null,
+                    //},
+                ],
                 default: 1,
                 row: 4,
                 col: 1,
@@ -940,23 +953,32 @@
                             }
                         }.bind(this));
                     } else {
-                        // править
-                        var operation = {
-                            way: data.new,
-                            user: App.User_Name,
-                        };
-                        LockScreen(langView('mess_operation_dir_way', App.Langs));
-                        ids_dir.postOperationUpdateWayOfPark(operation, function (result) {
-                            if (result > 0) {
-                                this.modal_edit_form.close(); // закроем форму
-                                this.update();
-                                this.out_clear();
-                                this.out_info("Путь - обновлен");
-                            } else {
-                                LockScreenOff();
-                                this.modal_edit_form.out_error('При обновлении пути произошла ошибка, код ошибки : ' + result);
-                            }
-                        }.bind(this));
+                        //
+                        if (data.new && data.new.way_delete !== null && data.new.position_way > 0) {
+                            // Ошибка
+                            //this.modal_edit_form.out_error('Если путь имеет признак – удален, тогда позиция пути должна быть (0)');
+                            this.modal_edit_form.set_object_error('way_delete', 'edit', 'Путь имеет признак – удален, позиция пути должна быть (0)');
+                            this.modal_edit_form.set_object_error('position_way', 'edit', 'Путь имеет признак – удален, позиция пути должна быть (0)');
+                        } else {
+                            // Выполнить
+                            // править
+                            var operation = {
+                                way: data.new,
+                                user: App.User_Name,
+                            };
+                            LockScreen(langView('mess_operation_dir_way', App.Langs));
+                            ids_dir.postOperationUpdateWayOfPark(operation, function (result) {
+                                if (result > 0) {
+                                    this.modal_edit_form.close(); // закроем форму
+                                    this.update();
+                                    this.out_clear();
+                                    this.out_info("Путь - обновлен");
+                                } else {
+                                    LockScreenOff();
+                                    this.modal_edit_form.out_error('При обновлении пути произошла ошибка, код ошибки : ' + result);
+                                }
+                            }.bind(this));
+                        }
                     }
                 }.bind(this),
             });
@@ -1178,9 +1200,14 @@
                 var row = this.obj_t_way.rows(indexes).data().toArray()[0];
                 if (selected) {
                     this.obj_t_way.button(2).enable(true);
-                    this.obj_t_way.button(3).enable(true);
-                    this.obj_t_way.button(4).enable(true);
-                    this.obj_t_way.button(5).enable(true);
+                    this.obj_t_way.button(3).enable(!(row && row.way_delete));
+                    this.obj_t_way.button(4).enable(!(row && row.way_delete));
+                    this.obj_t_way.button(5).enable(!(row && row.way_delete));
+                    //if (row && row.way_delete) {
+
+                    //} else {
+
+                    //}
                     App.Select_Row_ways = row;
                 } else {
                     this.obj_t_way.button(2).enable(false);

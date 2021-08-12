@@ -109,6 +109,9 @@
                                     this.valid = this.valid & this.val.checkInputOfRange($(el), el_valid.min, el_valid.max, el_valid.error, el_valid.ok)
                                 }
                             }
+                            //if (el_valid.check_type === 'depends') {
+
+                            //}
                         }.bind(this));
                     } else {
                         this.val.set_control_ok($(el), "");
@@ -128,6 +131,7 @@
         this.val.clear_all();
         $(this.$form.find('div.invalid-feedback')).text('');
     };
+
 
     App.form_validation = form_validation;
 
