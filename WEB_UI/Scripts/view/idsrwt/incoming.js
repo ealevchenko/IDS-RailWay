@@ -7642,15 +7642,42 @@
                     var car_out = [];
                     var cars = pn_manual_car.manual_num_car.val().split(';');
                     $.each(cars, function (i, el) {
-                        //pn_manual_car.alert.out_warning_message();
-                        if (!isNumeric(el) || !(Number(el) >= 10000000 && Number(el) <= 99999999)) {
-                            // Ошибка ввода
+                        //
+                        if (!isNumeric($.trim(el))) {
                             pn_manual_car.alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' введен неправильный номер :' + el);
                             valid = false;
                         } else {
-                            car_valid.push(el);
-                            car_out.push(el);
+                            if (Number($.trim(el)) <= 0) {
+                                pn_manual_car.alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' номер не может быть меньше или равен 0 :' + el);
+                                valid = false;
+                            } else {
+                                // Разрешена проверка системной нумерации
+                                var num_val = is_valid_num_wagon(Number($.trim(el)));
+                                // Если валидный добавим в список
+                                if (num_val) {
+                                    car_valid.push(el);
+                                    car_out.push(el);
+                                } else {
+                                    pn_manual_car.alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' не системная нумерация (ошибка контрольной суммы) :' + el);
+                                }
+                                valid = valid & num_val;
+
+                            }
                         }
+                        //
+
+
+
+
+                        //pn_manual_car.alert.out_warning_message();
+                        //if (!isNumeric(el) || !(Number(el) >= 10000000 && Number(el) <= 99999999)) {
+                        //    // Ошибка ввода
+                        //    pn_manual_car.alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' введен неправильный номер :' + el);
+                        //    valid = false;
+                        //} else {
+                        //    car_valid.push(el);
+                        //    car_out.push(el);
+                        //}
                     });
                     // Провкерка на повторяющиеся номера
                     arr_res = [];
