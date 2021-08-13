@@ -231,11 +231,10 @@
         },
 
     ];
-
     //
     function table_dir_way(selector) {
         if (!selector) {
-            throw new Error('No selector provided');
+            throw new Error('Не указан селектор');
         }
         this.$dir_way = $(selector);
         if (this.$dir_way.length === 0) {
@@ -270,18 +269,136 @@
 
         return init_columns(collums, list_collums);
     };
-    // Загрузка основных справочников приложения
-    table_dir_way.prototype.load_reference = function (callback) {
-        LockScreen(langView('mess_load_reference', App.Langs));
-        var count = 1;
-        ids_dir.load(['station', 'ways', 'divisions'], false, function () {
-            count -= 1;
-            if (count === 0) {
+    // Загрузка основных справочников если их не передали через this.settings
+    //table_dir_way.prototype.load_reference = function (callback) {
+    //    var process = 0;
+    //    var out_load = function (process) {
+    //        if (process === 0) {
+    //            LockScreenOff();
+    //            if (typeof callback === 'function') {
+    //                callback();
+    //            }
+    //        }
+    //    }
+    //    // грузим данные по station
+    //    if (this.settings.list_station === null) {
+    //        process++;
+    //        this.load_station(this.settings.list_station, function () {
+    //            process--;
+    //            out_load(process);
+    //        }.bind(this));
+    //    } else {
+    //        this.db_station = this.settings.list_station;
+    //    };
+    //    // грузим данные по ways
+    //    if (this.settings.list_ways === null) {
+    //        process++;
+    //        this.load_ways(this.settings.list_ways, function () {
+    //            process--;
+    //            out_load(process);
+    //        }.bind(this));
+    //    } else {
+    //        this.db_ways = this.settings.list_ways;
+    //    };
+    //    // грузим данные по divisions
+    //    if (this.settings.list_divisions === null) {
+    //        process++;
+    //        this.load_divisions(this.settings.list_divisions, function () {
+    //            process--;
+    //            out_load(process);
+    //        }.bind(this));
+    //    } else {
+    //        this.db_divisions = this.settings.list_divisions;
+    //    }
+    //    //LockScreen(langView('mess_load_reference', App.Langs));
+    //    //var count = 1;
+    //    //ids_dir.load(['station', 'ways', 'divisions'], false, function () {
+    //    //    count -= 1;
+    //    //    if (count === 0) {
+    //    //        if (typeof callback === 'function') {
+    //    //            callback();
+    //    //        }
+    //    //    }
+    //    //});
+    //};
+    // Обновить таблицы базы данных
+    table_dir_way.prototype.load_db = function (db_station, db_ways, db_divisions, list, callback) {
+        var process = 0;
+        var out_load = function (process) {
+            if (process === 0) {
+                LockScreenOff();
                 if (typeof callback === 'function') {
                     callback();
                 }
             }
-        });
+        };
+        if (list) {
+            $.each(list, function (i, table) {
+                if (table === 'station') {
+                    process++;
+                    this.load_station(db_station, function () {
+                        process--;
+                        out_load(process);
+                    }.bind(this));
+                };
+                if (table === 'ways') {
+                    process++;
+                    this.load_ways(db_ways, function () {
+                        process--;
+                        out_load(process);
+                    }.bind(this));
+                };
+                if (table === 'divisions') {
+                    process++;
+                    this.load_divisions(db_divisions, function () {
+                        process--;
+                        out_load(process);
+                    }.bind(this));
+                };
+            }.bind(this));
+        };
+    };
+    // Загрузка справочника станций
+    table_dir_way.prototype.load_station = function (db_station, callback) {
+        if (db_station) {
+            this.db_station = db_station;
+        } else {
+            LockScreen(langView('mess_load_reference', App.Langs));
+            ids_dir.getStation(function (data) {
+                this.db_station = data;
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            }.bind(this));
+        }
+    };
+    // Загрузка справочника путей
+    table_dir_way.prototype.load_ways = function (db_ways, callback) {
+        if (db_ways) {
+            this.db_ways = db_ways;
+        } else {
+            LockScreen(langView('mess_load_reference', App.Langs));
+            ids_dir.getWays(function (data) {
+                this.db_ways = data;
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            }.bind(this));
+        }
+    };
+    // Загрузка справочника подразделений
+    table_dir_way.prototype.load_divisions = function (db_divisions, callback) {
+        if (db_divisions) {
+            this.db_divisions = db_divisions;
+        } else {
+            LockScreen(langView('mess_load_reference', App.Langs));
+            ids_dir.getDivisions(function (data) {
+                this.db_divisions = data;
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            }.bind(this));
+        }
     };
     // инициализация таблицы справочника путей
     table_dir_way.prototype.init = function (options, fn_init_ok) {
@@ -289,7 +406,23 @@
         // Определим основные свойства
         this.settings = $.extend({
             alert: null,
+            fn_db_update: function (list) {
+                this.load_db(null, null, null, list, function () {
+
+                });
+            }.bind(this),
+            list_station: null,     //  из базы
+            list_ways: null,        // Список путей из базы
+            list_divisions: null,   // Список подразделений из базы
         }, options);
+        // Таблицы с данными
+        this.db_station = null;       // Список станций для отображения
+        this.db_ways = null;          // Список путей для отображения
+        this.db_divisions = null;     // Список подразделений для отображения
+        // Списки для отображения
+        this.list_station = null;       // Список станций для отображения
+        this.list_ways = null;          // Список путей для отображения
+        this.list_divisions = null;     // Список подразделений для отображения
         //
         LockScreen(langView('mess_init_dir_way', App.Langs));
         var MCF = App.modal_confirm_form;
@@ -301,26 +434,35 @@
         this.modal_edit_form = new MEF('mfe-' + this.selector); // Создадим экземпляр формы правки строк таблицы
 
         // Загрузим справочные данные, определим поля формы правки
-        this.load_reference(function () {
+        //this.load_reference(function () {
+        this.load_db(this.settings.list_station, this.settings.list_ways, this.settings.list_divisions, ['station', 'ways', 'divisions'] ,function () {
             // Определим списки для полей
-            var list_station = ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false ? true : false; });
-            var get_list_park = function (id_statation) {
-                var list_way = ids_dir.list_ways.filter(function (i) {
-                    return i.id_station == id_statation;
-                })
-                var list_park = [];
-                $.each(list_way, function (i, el) {
-                    var pw = el.Directory_ParkWays
-                    var park = list_park.find(function (o) {
-                        return o.value === pw.id;
-                    });
-                    if (!park) {
-                        list_park.push({ value: pw.id, text: pw['park_name_' + App.Lang] });
-                    }
-                });
-                return list_park;
+            // Получим список станций для отображения
+            if (this.db_station) {
+                this.list_station = ids_dir.getListObj(this.db_station, 'id', 'station_name', App.Lang, function (i) { return i.station_uz === false ? true : false; });
             };
-            var list_divisions = ids_dir.getListDivisions('id', 'division_abbr', App.Lang, null);
+            // Функция получения списка парков по указаной станции
+            var get_list_park = function (id_statation) {
+                this.list_park = [];
+                if (this.db_ways) {
+                    var list_way = this.db_ways.filter(function (i) {
+                        return i.id_station == id_statation;
+                    });
+                    $.each(list_way, function (i, el) {
+                        var pw = el.Directory_ParkWays
+                        var park = this.list_park.find(function (o) {
+                            return o.value === pw.id;
+                        });
+                        if (!park) {
+                            this.list_park.push({ value: pw.id, text: pw['park_name_' + App.Lang] });
+                        }
+                    }.bind(this));
+                }
+                return this.list_park;
+            }.bind(this);
+            if (this.db_divisions) {
+                this.list_divisions = ids_dir.getListObj(this.db_divisions, 'id', 'division_abbr', App.Lang, null);
+            }
             // Определим поля
             var fl_id = {
                 field: 'id',
@@ -349,7 +491,7 @@
                 name: 'station',
                 label: 'Станция',
                 control: 'park',
-                list: list_station,
+                list: this.list_station,
                 select: function (e, ui) {
                     event.preventDefault();
                     // Обработать выбор
@@ -714,7 +856,7 @@
                 name: 'devision',
                 label: 'Подразделение',
                 control: null,
-                list: list_divisions,
+                list: this.list_divisions,
                 select: function (e, ui) {
                     event.preventDefault();
                     // Обработать выбор
@@ -947,6 +1089,7 @@
                                 this.update();
                                 this.out_clear();
                                 this.out_info("Новый путь - добавлен");
+                                this.settings.fn_db_update(['ways']);
                             } else {
                                 LockScreenOff();
                                 this.modal_edit_form.out_error('При добавлении пути произошла ошибка, код ошибки : ' + result);
@@ -960,8 +1103,7 @@
                             this.modal_edit_form.set_object_error('way_delete', 'edit', 'Путь имеет признак – удален, позиция пути должна быть (0)');
                             this.modal_edit_form.set_object_error('position_way', 'edit', 'Путь имеет признак – удален, позиция пути должна быть (0)');
                         } else {
-                            // Выполнить
-                            // править
+                            // Выполнить править
                             var operation = {
                                 way: data.new,
                                 user: App.User_Name,
@@ -973,6 +1115,7 @@
                                     this.update();
                                     this.out_clear();
                                     this.out_info("Путь - обновлен");
+                                    this.settings.fn_db_update(['ways']);
                                 } else {
                                     LockScreenOff();
                                     this.modal_edit_form.out_error('При обновлении пути произошла ошибка, код ошибки : ' + result);
@@ -1071,6 +1214,7 @@
                                                 this.update();
                                                 this.out_clear();
                                                 this.out_info("Путь - удален!");
+                                                this.settings.fn_db_update(['ways']);
                                             } else {
                                                 this.out_error("Ошибка, выполнения операции 'Удалить путь', код ошибки : " + result);
                                                 LockScreenOff();
@@ -1203,11 +1347,6 @@
                     this.obj_t_way.button(3).enable(!(row && row.way_delete));
                     this.obj_t_way.button(4).enable(!(row && row.way_delete));
                     this.obj_t_way.button(5).enable(!(row && row.way_delete));
-                    //if (row && row.way_delete) {
-
-                    //} else {
-
-                    //}
                     App.Select_Row_ways = row;
                 } else {
                     this.obj_t_way.button(2).enable(false);
@@ -1223,7 +1362,6 @@
             }
             //----------------------------------
         }.bind(this));
-
     };
     // Показать данные 
     table_dir_way.prototype.view = function (data) {

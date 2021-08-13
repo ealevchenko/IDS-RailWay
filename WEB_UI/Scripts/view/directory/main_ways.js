@@ -66,14 +66,35 @@
 
     // После загрузки документа
     $(document).ready(function ($) {
-        // Инициализация модуля "Таблица справочника путей"
-        tdways.init({
-            alert: alert
-        }, function () {
-            /*            tdways.load_of_station_park(23, 161);*/
-        });
         // Загрузим справочники
         load_reference(function () {
+            // Инициализация модуля "Таблица справочника путей"
+            tdways.init({
+                alert: alert,
+                fn_db_update: function (list) {
+
+                    this.load_db(null, null, null, list, function () {
+
+                    });
+                    //if (list) {
+                    //    $.each(list, function (i, table) {
+                    //        if (table === 'station') {
+                    //            this.load_station(null, null);
+                    //        };
+                    //        if (table === 'ways') {
+                    //            this.load_ways(null, null);
+                    //        };
+                    //    }.bind(this));
+                    //};
+                    var d = this;
+                    //this.load_ways(ids_dir.list_ways);
+                }.bind(tdways),
+                //list_station: ids_dir.list_station,     //  из базы
+                //list_ways: ids_dir.list_ways,           // Список путей из базы
+                //list_divisions: null,                   // Список подразделений из базы
+            }, function () {
+                /*            tdways.load_of_station_park(23, 161);*/
+            });
             var list_station = ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false ? true : false; });
             var get_list_park = function (id_statation) {
                 var list_way = ids_dir.list_ways.filter(function (i) {

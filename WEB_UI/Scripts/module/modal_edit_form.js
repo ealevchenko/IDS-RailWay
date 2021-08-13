@@ -262,178 +262,6 @@
         this.$element_add = get_form_element(col, base, name, text, 'add', add);
         this.$element_edit = get_form_element(col, base, name, text, 'edit', edit);
     };
-    //// Инициализация выпадающего списка "SELECT"
-    //function init_select(element, data, default_value, fn_option, fn_change) {
-    //    /*        this.options = [];*/
-    //    this.$element = element;
-    //    var $default_option = $('<option></option>', {
-    //        'value': '-1',
-    //        'text': langView('title_select', App.Langs),
-    //    });
-    //    this.init = function () {
-    //        this.update(data, default_value, fn_option);
-    //        if (typeof fn_change === 'function') {
-    //            this.$element.on("change", fn_change.bind(this));
-    //        }
-
-    //    };
-    //    this.val = function (value) {
-    //        if (value !== undefined) {
-    //            this.$element.val(value);
-    //            //this.$element.change();
-    //        } else {
-    //            return this.$element.val();
-    //        };
-    //    };
-    //    this.update = function (data, default_value, fn_option) {
-    //        this.$element.empty();
-    //        if (default_value === -1) {
-    //            element.append($default_option);
-    //        }
-    //        if (data) {
-    //            $.each(data, function (i, el) {
-    //                // Преобразовать формат
-    //                if (typeof fn_option === 'function') {
-    //                    el = fn_option(el);
-    //                }
-    //                if (el) {
-    //                    var $option = $('<option></option>', {
-    //                        'value': el.value,
-    //                        'text': el.text,
-    //                        'disabled': el.disabled,
-    //                    });
-    //                    this.$element.append($option);
-    //                }
-    //            }.bind(this));
-    //        };
-    //        this.$element.val(default_value);
-    //    };
-    //    this.init();
-    //};
-    //// Инициализация текстового поля "INPUT"
-    //function init_input(element, default_value, fn_change) {
-    //    /*        this.options = [];*/
-    //    this.$element = element;
-    //    this.init = function () {
-    //        this.update(default_value);
-    //        if (typeof fn_change === 'function') {
-    //            this.$element.on("change", fn_change.bind(this));
-    //        }
-    //    };
-    //    this.val = function (value) {
-    //        if (value !== undefined) {
-    //            this.$element.val(value);
-    //            //this.$element.change();
-    //        } else {
-    //            return this.$element.val();
-    //        };
-    //    };
-    //    this.update = function (default_value) {
-    //        this.$element.val(default_value);
-    //    };
-    //    this.init();
-    //};
-    //// Инициализация флажка "CHECKBOX"
-    //function init_checkbox(element, default_value, fn_change) {
-    //    this.$element = element;
-    //    this.init = function () {
-    //        this.update(default_value);
-    //        if (typeof fn_change === 'function') {
-    //            this.$element.on("change", fn_change.bind(this));
-    //        }
-    //    };
-    //    this.val = function (value) {
-    //        if (value !== undefined) {
-    //            this.$element.prop('checked', Boolean(value));
-    //            //this.$element.change();
-    //        } else {
-    //            return this.$element.prop('checked');
-    //        };
-    //    };
-    //    this.update = function (default_value) {
-    //        this.$element.val(default_value);
-    //    };
-    //    this.init();
-    //};
-    //// Инициализация поля дата и время "INPUT"
-    //function init_datetime_input(element, default_datetime, fn_close, time) {
-    //    this.$element = element;
-    //    /*        this.select_date;*/
-    //    this.init = function () {
-    //        this.update(default_datetime);
-    //    };
-    //    this.val = function (value) {
-    //        if (value !== undefined) {
-    //            this.set(value);
-    //        } else {
-    //            return this.get();
-    //        };
-    //    };
-    //    this.update = function (default_datetime) {
-    //        this.$element = element.dateRangePicker(
-    //            {
-    //                language: App.Lang,
-    //                format: App.Lang === 'ru' ? 'DD.MM.YYYY' + (time ? ' HH:mm' : '') : 'DD\MM\YYYY' + (time ? ' HH:mm' : ''),
-    //                autoClose: false,
-    //                singleDate: true,
-    //                singleMonth: true,
-    //                showShortcuts: false,
-    //                time: {
-    //                    enabled: time
-    //                },
-    //            }).
-    //            bind('datepicker-change', function (evt, obj) {
-    //                this.select_date = obj.date1;
-    //            }.bind(this)).bind('datepicker-closed', function () {
-    //                // Преобразовать формат
-    //                if (typeof fn_close === 'function') {
-    //                    fn_close(this.get());
-    //                }
-    //            }.bind(this));
-    //        this.set(default_datetime);
-    //    };
-    //    this.set = function (datetime) {
-    //        if (datetime !== null) {
-    //            this.$element.data('dateRangePicker').setDateRange(moment(datetime).format('DD.MM.YYYY' + (time ? ' HH:mm' : '')), moment(datetime).format('DD.MM.YYYY' + (time ? ' HH:mm' : '')), true);
-    //        } else {
-    //            // Установить текущую дату и время
-    //            this.$element.data('dateRangePicker').setDateRange(moment().format('DD.MM.YYYY' + (time ? ' HH:mm' : '')), moment().format('DD.MM.YYYY' + (time ? ' HH:mm' : '')), true);
-    //            this.$element.data('dateRangePicker').clear();
-    //        }
-    //    };
-    //    this.get = function () {
-    //        var datetime = this.$element.val();
-    //        if (datetime !== null && datetime !== "") {
-    //            return moment(datetime, 'DD.MM.YYYY' + (time ? ' hh:mm' : ''));
-    //        } else {
-    //            return null;
-    //        }
-    //    };
-    //    this.init();
-    //};
-    //// Инициализация поля дата "INPUT"
-    //function init_textarea(element, default_value, fn_change) {
-    //    /*        this.options = [];*/
-    //    this.$element = element;
-    //    this.init = function () {
-    //        this.update(default_value);
-    //        if (typeof fn_change === 'function') {
-    //            this.$element.on("change", fn_change.bind(this));
-    //        }
-    //    };
-    //    this.val = function (value) {
-    //        if (value !== undefined) {
-    //            this.$element.val(value);
-    //            //this.$element.change();
-    //        } else {
-    //            return this.$element.val();
-    //        };
-    //    };
-    //    this.update = function (default_value) {
-    //        this.$element.val(default_value);
-    //    };
-    //    this.init();
-    //};
     // Инициализация полей формы   
     function init_form_element(element, field, type) {
         var init_element = null;
@@ -480,8 +308,6 @@
             fn_ok: null,
 
         }, options);
-        //
-        //this.element = [];
         this.rules_valid = [];
         this.data = null;
 
@@ -696,7 +522,7 @@
             }
         }
     }
-    // 
+    // Вывести на форме сообщение об ошибке под элементом
     modal_edit_form.prototype.set_object_error = function (field, mode, message) {
         if (this.settings.fields_form) {
             var field = this.settings.fields_form.find(function (o) {
@@ -708,6 +534,7 @@
             }
         }
     };
+
     App.modal_edit_form = modal_edit_form;
 
     window.App = App;
