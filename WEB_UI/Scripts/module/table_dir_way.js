@@ -48,7 +48,7 @@
             'title_button_del': 'Удалить',
             'title_button_auto': 'Авто-коррекция',
 
-            'mess_load_dir_way': 'Загружаю спраочник путей...',
+            'mess_load_dir_way': 'Загружаю справочник путей...',
             'mess_operation_dir_way': 'Выполняю операцию...',
             'mess_init_dir_way': 'Выполняю инициализацию модуля справочника путей...',
         },
@@ -60,7 +60,8 @@
     // Определлим список текста для этого модуля
     App.Langs = $.extend(true, App.Langs, getLanguages($.Text_View, App.Lang));
 
-    var ids_dir = new IDS_DIRECTORY(App.Lang);                // Создадим класс IDS_RWT
+    /*    var ids_dir = new IDS_DIRECTORY(App.Lang);                // Создадим класс IDS_RWT*/
+    var IDS_DIRECTORY = App.ids_directory;
 
     // Создать основу
     function table_way(base) {
@@ -322,61 +323,72 @@
     //    //});
     //};
     // Обновить таблицы базы данных
-    table_dir_way.prototype.load_db = function (db_station, db_ways, db_divisions, list, callback) {
-        var process = 0;
-        var out_load = function (process) {
-            if (process === 0) {
-                LockScreenOff();
+    //table_dir_way.prototype.load_db = function (db_station, db_ways, db_divisions, list, callback) {
+    //    var process = 0;
+    //    var out_load = function (process) {
+    //        if (process === 0) {
+    //            LockScreenOff();
+    //            if (typeof callback === 'function') {
+    //                callback();
+    //            }
+    //        }
+    //    };
+    //    if (list) {
+    //        $.each(list, function (i, table) {
+    //            if (table === 'station') {
+    //                if (db_station) {
+    //                    this.db_station = db_station;
+    //                } else {
+    //                    process++;
+    //                    this.load_station(function () {
+    //                        process--;
+    //                        out_load(process);
+    //                    }.bind(this));
+    //                }
+
+    //            };
+    //            if (table === 'ways') {
+    //                if (db_ways) {
+    //                    this.db_ways = db_ways;
+    //                } else {
+    //                    process++;
+    //                    this.load_ways(function () {
+    //                        process--;
+    //                        out_load(process);
+    //                    }.bind(this));
+    //                }
+
+    //            };
+    //            if (table === 'divisions') {
+    //                if (db_divisions) {
+    //                    this.db_divisions = db_divisions;
+    //                } else {
+    //                    process++;
+    //                    this.load_divisions(function () {
+    //                        process--;
+    //                        out_load(process);
+    //                    }.bind(this));
+    //                }
+
+    //            };
+    //        }.bind(this));
+    //    };
+    //};
+    // Загрузка справочника станций
+    //
+    table_dir_way.prototype.load_db = function (list, update, callback) {
+        if (list) {
+            this.ids_dir.load(list, false, update, function () {
                 if (typeof callback === 'function') {
                     callback();
                 }
-            }
-        };
-        if (list) {
-            $.each(list, function (i, table) {
-                if (table === 'station') {
-                    if (db_station) {
-                        this.db_station = db_station;
-                    } else {
-                        process++;
-                        this.load_station(function () {
-                            process--;
-                            out_load(process);
-                        }.bind(this));
-                    }
-
-                };
-                if (table === 'ways') {
-                    if (db_ways) {
-                        this.db_ways = db_ways;
-                    } else {
-                        process++;
-                        this.load_ways(function () {
-                            process--;
-                            out_load(process);
-                        }.bind(this));
-                    }
-
-                };
-                if (table === 'divisions') {
-                    if (db_divisions) {
-                        this.db_divisions = db_divisions;
-                    } else {
-                        process++;
-                        this.load_divisions(function () {
-                            process--;
-                            out_load(process);
-                        }.bind(this));
-                    }
-
-                };
-            }.bind(this));
+            });
         };
     };
-    // Загрузка справочника станций
+    //
     table_dir_way.prototype.load_station = function (callback) {
         LockScreen(langView('mess_load_reference', App.Langs));
-        ids_dir.getStation(function (data) {
+        this.ids_dir.getStation(function (data) {
             this.db_station = data;
             if (typeof callback === 'function') {
                 callback(data);
@@ -386,7 +398,7 @@
     // Загрузка справочника путей
     table_dir_way.prototype.load_ways = function (callback) {
         LockScreen(langView('mess_load_reference', App.Langs));
-        ids_dir.getWays(function (data) {
+        this.ids_dir.getWays(function (data) {
             this.db_ways = data;
             if (typeof callback === 'function') {
                 callback(data);
@@ -396,7 +408,7 @@
     // Загрузка справочника подразделений
     table_dir_way.prototype.load_divisions = function (callback) {
         LockScreen(langView('mess_load_reference', App.Langs));
-        ids_dir.getDivisions(function (data) {
+        this.ids_dir.getDivisions(function (data) {
             this.db_divisions = data;
             if (typeof callback === 'function') {
                 callback(data);
@@ -409,19 +421,23 @@
         // Определим основные свойства
         this.settings = $.extend({
             alert: null,
+            ids_dir: null,
             fn_db_update: function (list) {
-                this.load_db(null, null, null, list, function () {
+                this.load_db(list, true, function () {
 
                 });
             }.bind(this),
-            list_station: null,     //  из базы
-            list_ways: null,        // Список путей из базы
-            list_divisions: null,   // Список подразделений из базы
+            //list_station: null,     //  из базы
+            //list_ways: null,        // Список путей из базы
+            //list_divisions: null,   // Список подразделений из базы
         }, options);
-        // Таблицы с данными
-        this.db_station = null;       // Список станций для отображения
-        this.db_ways = null;          // Список путей для отображения
-        this.db_divisions = null;     // Список подразделений для отображения
+        // Создадим ссылку на модуль работы с базой данных
+        this.ids_dir = this.settings.ids_dir ? this.settings.ids_dir : new IDS_DIRECTORY();
+
+        //// Таблицы с данными
+        //this.db_station = null;       // Список станций для отображения
+        //this.db_ways = null;          // Список путей для отображения
+        //this.db_divisions = null;     // Список подразделений для отображения
         // Списки для отображения
         this.list_station = null;       // Список станций для отображения
         this.list_ways = null;          // Список путей для отображения
@@ -437,35 +453,29 @@
         this.modal_edit_form = new MEF('mfe-' + this.selector); // Создадим экземпляр формы правки строк таблицы
 
         // Загрузим справочные данные, определим поля формы правки
-        //this.load_reference(function () {
-        this.load_db(this.settings.list_station, this.settings.list_ways, this.settings.list_divisions, ['station', 'ways', 'divisions'], function () {
+        this.load_db(['station', 'ways', 'divisions'], false, function () {
             // Определим списки для полей
             // Получим список станций для отображения
-            if (this.db_station) {
-                this.list_station = ids_dir.getListObj(this.db_station, 'id', 'station_name', App.Lang, function (i) { return i.station_uz === false ? true : false; });
-            };
+            this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false ? true : false; });
             // Функция получения списка парков по указаной станции
             var get_list_park = function (id_statation) {
                 this.list_park = [];
-                if (this.db_ways) {
-                    var list_way = this.db_ways.filter(function (i) {
-                        return i.id_station == id_statation;
+                var list_way = this.ids_dir.list_ways.filter(function (i) {
+                    return i.id_station == id_statation;
+                });
+                $.each(list_way, function (i, el) {
+                    var pw = el.Directory_ParkWays
+                    var park = this.list_park.find(function (o) {
+                        return o.value === pw.id;
                     });
-                    $.each(list_way, function (i, el) {
-                        var pw = el.Directory_ParkWays
-                        var park = this.list_park.find(function (o) {
-                            return o.value === pw.id;
-                        });
-                        if (!park) {
-                            this.list_park.push({ value: pw.id, text: pw['park_name_' + App.Lang] });
-                        }
-                    }.bind(this));
-                }
+                    if (!park) {
+                        this.list_park.push({ value: pw.id, text: pw['park_name_' + App.Lang] });
+                    }
+                }.bind(this));
                 return this.list_park;
             }.bind(this);
-            if (this.db_divisions) {
-                this.list_divisions = ids_dir.getListObj(this.db_divisions, 'id', 'division_abbr', App.Lang, null);
-            }
+            this.list_divisions = this.ids_dir.getListDivisions('id', 'division_abbr', App.Lang, null);
+
             // Определим поля
             var fl_id = {
                 field: 'id',
@@ -1086,7 +1096,7 @@
                     if (data && !data.old) {
                         // Добавить 
                         LockScreen(langView('mess_operation_dir_way', App.Langs));
-                        ids_dir.postOperationInsertWayOfPark(data.new, function (result) {
+                        this.ids_dir.postOperationInsertWayOfPark(data.new, function (result) {
                             if (result > 0) {
                                 this.modal_edit_form.close(); // закроем форму
                                 this.update();
@@ -1112,7 +1122,7 @@
                                 user: App.User_Name,
                             };
                             LockScreen(langView('mess_operation_dir_way', App.Langs));
-                            ids_dir.postOperationUpdateWayOfPark(operation, function (result) {
+                            this.ids_dir.postOperationUpdateWayOfPark(operation, function (result) {
                                 if (result > 0) {
                                     this.modal_edit_form.close(); // закроем форму
                                     this.update();
@@ -1212,7 +1222,7 @@
                                             user: App.User_Name,
                                         };
                                         LockScreen(langView('mess_operation_dir_way', App.Langs));
-                                        ids_dir.postOperationDeleteWayOfPark(operation, function (result) {
+                                        this.ids_dir.postOperationDeleteWayOfPark(operation, function (result) {
                                             if (result > 0) {
                                                 this.update();
                                                 this.out_clear();
@@ -1248,7 +1258,7 @@
                                     user: App.User_Name,
                                 };
                                 LockScreen(langView('mess_operation_dir_way', App.Langs));
-                                ids_dir.postOperationUp1PositionWayOfPark(operation, function (result) {
+                                this.ids_dir.postOperationUp1PositionWayOfPark(operation, function (result) {
                                     if (result > 0) {
                                         this.update();
                                         this.out_info("Путь перенесен на позицию верх");
@@ -1281,7 +1291,7 @@
                                     user: App.User_Name,
                                 };
                                 LockScreen(langView('mess_operation_dir_way', App.Langs));
-                                ids_dir.postOperationDown1PositionWayOfPark(operation, function (result) {
+                                this.ids_dir.postOperationDown1PositionWayOfPark(operation, function (result) {
                                     if (result > 0) {
                                         this.update();
                                         this.out_info("Путь перенесен на позицию вниз");
@@ -1316,7 +1326,7 @@
                                             user: App.User_Name,
                                         };
                                         LockScreen(langView('mess_operation_dir_way', App.Langs));
-                                        ids_dir.postOperationAutoPositionWayOfPark(operation, function (result) {
+                                        this.ids_dir.postOperationAutoPositionWayOfPark(operation, function (result) {
                                             if (result > 0) {
                                                 this.update();
                                                 this.out_info("Автоматическая коррекция путей – выполнена! Обновленно :" + result + " записей");
@@ -1379,7 +1389,7 @@
     // загрузить данные 
     table_dir_way.prototype.load_of_station_park = function (id_station, id_park) {
         LockScreen(langView('mess_load_dir_way', App.Langs));
-        ids_dir.getWaysOfStationIDParkID(id_station, id_park, function (ways) {
+        this.ids_dir.getWaysOfStationIDParkID(id_station, id_park, function (ways) {
             this.id_station = id_station;
             this.id_park = id_park;
             this.modal_edit_form.set_default_fields_form('id_station', this.id_station);
@@ -1393,7 +1403,7 @@
     table_dir_way.prototype.update = function () {
         if (this.id_station && this.id_park) {
             LockScreen(langView('mess_load_dir_way', App.Langs));
-            ids_dir.getWaysOfStationIDParkID(this.id_station, this.id_park, function (ways) {
+            this.ids_dir.getWaysOfStationIDParkID(this.id_station, this.id_park, function (ways) {
                 this.view(ways);
                 LockScreenOff();
             }.bind(this));

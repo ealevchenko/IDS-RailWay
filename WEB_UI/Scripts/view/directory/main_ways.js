@@ -21,7 +21,9 @@
     App.Langs = $.extend(true, App.Langs, getLanguages($.Text_View, App.Lang), getLanguages($.Text_Common, App.Lang), getLanguages($.Text_Table, App.Lang));
     App.User_Name = $('input#username').val();
 
-    var ids_dir = new IDS_DIRECTORY(App.Lang);                // Создадим класс IDS_DIRECTORY
+    /*    var ids_dir = new IDS_DIRECTORY(App.Lang);                // Создадим класс IDS_DIRECTORY*/
+    var IDS_DIRECTORY = App.ids_directory;
+    var ids_dir = new IDS_DIRECTORY();
     // Модуль инициализаии компонентов формы
     var FC = App.form_control;
     var fc_ui = new FC();
@@ -93,16 +95,12 @@
     //    }.bind(this));
     //};
 
-    var load_db = function (list, callback) {
+    var load_db = function (list, update, callback) {
         LockScreen(langView('mess_load_reference', App.Langs));
-        var count = 1;
         if (list) {
-            ids_dir.load(list, false, function () {
-                count -= 1;
-                if (count === 0) {
-                    if (typeof callback === 'function') {
-                        callback();
-                    }
+            ids_dir.load(list, false, update, function () {
+                if (typeof callback === 'function') {
+                    callback();
                 }
             });
         }
@@ -123,22 +121,23 @@
     // После загрузки документа
     $(document).ready(function ($) {
         // Загрузим справочники
-        load_db(['station', 'ways'], function () {
+        load_db(['station', 'ways'], true, function () {
             // Инициализация модуля "Таблица справочника путей"
             tdways.init({
                 alert: alert,
+                ids_dir: ids_dir,
                 fn_db_update: function (list) {
                     // Обновить после изменения, обновим таблицы
-                    load_db(list, function () {
+                    load_db(list, true, function () {
                         // Обновим таболицы в модуле
-                        this.load_db(ids_dir.list_station, ids_dir.list_ways, null, list, function () {
+                        this.load_db(list, false, function () {
 
                         });
                     }.bind(this));
                 }.bind(tdways),
-                list_station: ids_dir.list_station,     //  из базы
-                list_ways: ids_dir.list_ways,           // Список путей из базы
-                list_divisions: null,         // Список подразделений из базы
+                //list_station: ids_dir.list_station,     //  из базы
+                //list_ways: ids_dir.list_ways,           // Список путей из базы
+                //list_divisions: null,         // Список подразделений из базы
             }, function () {
                 /*            tdways.load_of_station_park(23, 161);*/
             });
