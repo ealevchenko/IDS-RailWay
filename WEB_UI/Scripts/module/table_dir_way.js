@@ -335,70 +335,73 @@
         if (list) {
             $.each(list, function (i, table) {
                 if (table === 'station') {
-                    process++;
-                    this.load_station(db_station, function () {
-                        process--;
-                        out_load(process);
-                    }.bind(this));
+                    if (db_station) {
+                        this.db_station = db_station;
+                    } else {
+                        process++;
+                        this.load_station(function () {
+                            process--;
+                            out_load(process);
+                        }.bind(this));
+                    }
+
                 };
                 if (table === 'ways') {
-                    process++;
-                    this.load_ways(db_ways, function () {
-                        process--;
-                        out_load(process);
-                    }.bind(this));
+                    if (db_ways) {
+                        this.db_ways = db_ways;
+                    } else {
+                        process++;
+                        this.load_ways(function () {
+                            process--;
+                            out_load(process);
+                        }.bind(this));
+                    }
+
                 };
                 if (table === 'divisions') {
-                    process++;
-                    this.load_divisions(db_divisions, function () {
-                        process--;
-                        out_load(process);
-                    }.bind(this));
+                    if (db_divisions) {
+                        this.db_divisions = db_divisions;
+                    } else {
+                        process++;
+                        this.load_divisions(function () {
+                            process--;
+                            out_load(process);
+                        }.bind(this));
+                    }
+
                 };
             }.bind(this));
         };
     };
     // Загрузка справочника станций
-    table_dir_way.prototype.load_station = function (db_station, callback) {
-        if (db_station) {
-            this.db_station = db_station;
-        } else {
-            LockScreen(langView('mess_load_reference', App.Langs));
-            ids_dir.getStation(function (data) {
-                this.db_station = data;
-                if (typeof callback === 'function') {
-                    callback(data);
-                }
-            }.bind(this));
-        }
+    table_dir_way.prototype.load_station = function (callback) {
+        LockScreen(langView('mess_load_reference', App.Langs));
+        ids_dir.getStation(function (data) {
+            this.db_station = data;
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        }.bind(this));
     };
     // Загрузка справочника путей
-    table_dir_way.prototype.load_ways = function (db_ways, callback) {
-        if (db_ways) {
-            this.db_ways = db_ways;
-        } else {
-            LockScreen(langView('mess_load_reference', App.Langs));
-            ids_dir.getWays(function (data) {
-                this.db_ways = data;
-                if (typeof callback === 'function') {
-                    callback(data);
-                }
-            }.bind(this));
-        }
+    table_dir_way.prototype.load_ways = function (callback) {
+        LockScreen(langView('mess_load_reference', App.Langs));
+        ids_dir.getWays(function (data) {
+            this.db_ways = data;
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        }.bind(this));
     };
     // Загрузка справочника подразделений
-    table_dir_way.prototype.load_divisions = function (db_divisions, callback) {
-        if (db_divisions) {
-            this.db_divisions = db_divisions;
-        } else {
-            LockScreen(langView('mess_load_reference', App.Langs));
-            ids_dir.getDivisions(function (data) {
-                this.db_divisions = data;
-                if (typeof callback === 'function') {
-                    callback(data);
-                }
-            }.bind(this));
-        }
+    table_dir_way.prototype.load_divisions = function (callback) {
+        LockScreen(langView('mess_load_reference', App.Langs));
+        ids_dir.getDivisions(function (data) {
+            this.db_divisions = data;
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        }.bind(this));
     };
     // инициализация таблицы справочника путей
     table_dir_way.prototype.init = function (options, fn_init_ok) {
@@ -435,7 +438,7 @@
 
         // Загрузим справочные данные, определим поля формы правки
         //this.load_reference(function () {
-        this.load_db(this.settings.list_station, this.settings.list_ways, this.settings.list_divisions, ['station', 'ways', 'divisions'] ,function () {
+        this.load_db(this.settings.list_station, this.settings.list_ways, this.settings.list_divisions, ['station', 'ways', 'divisions'], function () {
             // Определим списки для полей
             // Получим список станций для отображения
             if (this.db_station) {
