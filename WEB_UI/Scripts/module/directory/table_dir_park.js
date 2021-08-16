@@ -15,22 +15,9 @@
         'default':  //default language: ru
         {
             'field_id': 'id строки',
-            'field_station': 'Станция',
-            'field_park': 'Парк',
-            'field_way_position': '№ поз.',
-            'field_way_num': '№ пути',
-            'field_way_name': 'Название пути',
-            'field_way_abbr': 'Краткое название',
-            'field_capacity': 'Вместимость',
-            'field_deadlock': 'Тупик',
-            'field_crossing_uz': 'Выход на УЗ',
-            'field_crossing_amkr': 'Выход на АМКР',
-            'field_devision': 'Подразделение',
-            'field_dissolution': 'Путь роспуска',
-            'field_output_dissolution': 'Выход на путь роспуска',
-            'field_way_close': 'Путь закрыт',
-            'field_way_delete': 'Путь удален',
-            'field_note': 'Примечание',
+            'field_position_park': '№ поз.',
+            'field_park_name': 'Название парка',
+            'field_park_abbr': 'Краткое название',
             'field_create': 'Строка создана',
             'field_change': 'Строка обновлена',
 
@@ -54,43 +41,7 @@
         },
         'en':  //default language: English
         {
-            'field_id': 'row id',
-            'field_station': 'Station',
-            'field_park': 'Park',
-            'field_way_position': 'Pos. no.',
-            'field_way_num': 'Path #',
-            'field_way_name': 'Path name',
-            'field_way_abbr': 'Short name',
-            'field_capacity': 'Capacity',
-            'field_deadlock': 'Deadlock',
-            'field_crossing_uz': 'Exit to UZ',
-            'field_crossing_amkr': 'Exit to AMKR',
-            'field_devision': 'Department',
-            'field_dissolution': 'Dissolution path',
-            'field_output_dissolution': 'Exit on the path of dissolution',
-            'field_way_close': 'Path closed',
-            'field_way_delete': 'Path deleted',
-            'field_note': 'Note',
-            'field_create': 'String created',
-            'field_change': 'String updated',
 
-            'tytle_yes': 'Yes',
-            'tytle_no': 'No',
-
-            'title_button_export': 'Export',
-            'title_button_buffer': 'Buffer',
-            'title_button_excel': 'Excel',
-
-            'title_button_up': 'Up',
-            'title_button_dn': 'Down',
-            'title_button_add': 'Add',
-            'title_button_edit': 'Edit',
-            'title_button_del': 'Remove',
-            'title_button_auto': 'Auto-correction',
-
-            'mess_load_dir_park': 'Loading path directory ...',
-            'mess_operation_dir_way': 'Performing an operation ...',
-            'mess_init_dir_way': 'Initializing the path directory module ...',
         }
     };
     // Определлим список текста для этого модуля
@@ -111,160 +62,53 @@
     var list_collums = [
 
         {
-            field: 'dir_way_id',
+            field: 'dir_park_id',
             data: function (row, type, val, meta) {
                 return row.id;
             },
             className: 'dt-body-center',
             title: langView('field_id', App.Langs), width: "30px", orderable: true, searchable: true
         },
-        //{
-        //    field: 'dir_way_station',
-        //    data: function (row, type, val, meta) {
-        //        var obj = row.Directory_Station ? row.Directory_Station : null;
-        //        return obj ? obj['station_name_' + App.Lang] : null;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_station', App.Langs), width: "50px", orderable: false, searchable: true
-        //},
-        //{
-        //    field: 'dir_way_park',
-        //    data: function (row, type, val, meta) {
-        //        var obj = row.Directory_ParkWays ? row.Directory_ParkWays : null;
-        //        return obj ? obj['park_abbr_' + App.Lang] : null;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_park', App.Langs), width: "50px", orderable: false, searchable: true
-        //},
-        //{
-        //    field: 'dir_way_position',
-        //    data: function (row, type, val, meta) {
-        //        return row.position_way;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_way_position', App.Langs), width: "30px", orderable: true, searchable: true
-        //},
-        //{
-        //    field: 'dir_way_num',
-        //    data: function (row, type, val, meta) {
-        //        return row ? row['way_num_' + App.Lang] : null;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_way_num', App.Langs), width: "30px", orderable: true, searchable: true
-        //},
-        //{
-        //    field: 'dir_way_name',
-        //    data: function (row, type, val, meta) {
-        //        return row ? row['way_name_' + App.Lang] : null;
-        //    },
-        //    className: 'dt-body-left',
-        //    title: langView('field_way_name', App.Langs), width: "150px", orderable: true, searchable: true
-        //},
-        //{
-        //    field: 'dir_way_abbr',
-        //    data: function (row, type, val, meta) {
-        //        return row ? row['way_abbr_' + App.Lang] : null;
-        //    },
-        //    className: 'dt-body-left',
-        //    title: langView('field_way_abbr', App.Langs), width: "50px", orderable: true, searchable: true
-        //},
-        //{
-        //    field: 'dir_way_capacity',
-        //    data: function (row, type, val, meta) {
-        //        return row.capacity;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_capacity', App.Langs), width: "50px", orderable: false, searchable: false
-        //},
-        //{
-        //    field: 'dir_way_deadlock',
-        //    data: function (row, type, val, meta) {
-        //        return row.deadlock ? langView('tytle_yes', App.Langs) : null;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_deadlock', App.Langs), width: "50px", orderable: false, searchable: false
-        //},
-        //{
-        //    field: 'dir_way_crossing_uz',
-        //    data: function (row, type, val, meta) {
-        //        return row.crossing_uz ? langView('tytle_yes', App.Langs) : null;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_crossing_uz', App.Langs), width: "50px", orderable: false, searchable: false
-        //},
-        //{
-        //    field: 'dir_way_crossing_amkr',
-        //    data: function (row, type, val, meta) {
-        //        return row.crossing_amkr ? langView('tytle_yes', App.Langs) : null;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_crossing_amkr', App.Langs), width: "50px", orderable: false, searchable: false
-        //},
-        //{
-        //    field: 'dir_way_devision',
-        //    data: function (row, type, val, meta) {
-        //        var obj = row.Directory_Divisions ? row.Directory_Divisions : null;
-        //        return obj ? obj['division_abbr_' + App.Lang] : null;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_devision', App.Langs), width: "50px", orderable: false, searchable: false
-        //},
-        //{
-        //    field: 'dir_way_dissolution',
-        //    data: function (row, type, val, meta) {
-        //        return row.dissolution ? langView('tytle_yes', App.Langs) : null;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_dissolution', App.Langs), width: "50px", orderable: false, searchable: false
-        //},
-        //{
-        //    field: 'dir_way_output_dissolution',
-        //    data: function (row, type, val, meta) {
-        //        return row.output_dissolution ? langView('tytle_yes', App.Langs) : null;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_output_dissolution', App.Langs), width: "50px", orderable: false, searchable: false
-        //},
-        //{
-        //    field: 'dir_way_close',
-        //    data: function (row, type, val, meta) {
-        //        return getReplaceTOfDT(row.way_close);
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_way_close', App.Langs), width: "50px", orderable: false, searchable: false
-        //},
-        //{
-        //    field: 'dir_way_delete',
-        //    data: function (row, type, val, meta) {
-        //        return getReplaceTOfDT(row.way_delete);
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_way_delete', App.Langs), width: "50px", orderable: false, searchable: false
-        //},
-        //{
-        //    field: 'dir_way_note',
-        //    data: function (row, type, val, meta) {
-        //        return row.note;
-        //    },
-        //    className: 'dt-body-left',
-        //    title: langView('field_note', App.Langs), width: "300px", orderable: false, searchable: false
-        //},
-        //{
-        //    field: 'dir_way_create',
-        //    data: function (row, type, val, meta) {
-        //        return row.create ? (row.create_user + '<br />[' + getReplaceTOfDT(row.create) + ']') : null;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_create', App.Langs), width: "100px", orderable: false, searchable: false
-        //},
-        //{
-        //    field: 'dir_way_change',
-        //    data: function (row, type, val, meta) {
-        //        return row.change ? (row.change_user + '<br />[' + getReplaceTOfDT(row.change) + ']') : null;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_change', App.Langs), width: "100px", orderable: false, searchable: false
-        //},
+        {
+            field: 'dir_position_park',
+            data: function (row, type, val, meta) {
+                return row.position_park;
+            },
+            className: 'dt-body-center',
+            title: langView('field_position_park', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'dir_park_name',
+            data: function (row, type, val, meta) {
+                return row ? row['park_name_' + App.Lang] : null;
+            },
+            className: 'dt-body-center',
+            title: langView('field_park_name', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'dir_park_abbr',
+            data: function (row, type, val, meta) {
+                return row ? row['park_abbr_' + App.Lang] : null;
+            },
+            className: 'dt-body-center',
+            title: langView('field_park_abbr', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'dir_park_create',
+            data: function (row, type, val, meta) {
+                return row.create ? (row.create_user + '<br />[' + getReplaceTOfDT(row.create) + ']') : null;
+            },
+            className: 'dt-body-center',
+            title: langView('field_create', App.Langs), width: "100px", orderable: false, searchable: false
+        },
+        {
+            field: 'dir_park_change',
+            data: function (row, type, val, meta) {
+                return row.change ? (row.change_user + '<br />[' + getReplaceTOfDT(row.change) + ']') : null;
+            },
+            className: 'dt-body-center',
+            title: langView('field_change', App.Langs), width: "100px", orderable: false, searchable: false
+        },
 
     ];
     //
@@ -282,27 +126,12 @@
     table_dir_park.prototype.init_columns = function () {
         var collums = [];
 
-        collums.push('dir_way_id');
-        //collums.push('dir_way_station');
-        //collums.push('dir_way_park');
-        //collums.push('dir_way_position');
-        //collums.push('dir_way_num');
-        //collums.push('dir_way_name');
-        //collums.push('dir_way_abbr');
-        //collums.push('dir_way_capacity');
-        //collums.push('dir_way_deadlock');
-        //collums.push('dir_way_crossing_uz');
-        //collums.push('dir_way_crossing_amkr');
-        //collums.push('dir_way_devision');
-        //collums.push('dir_way_dissolution');
-        //collums.push('dir_way_output_dissolution');
-        //collums.push('dir_way_close');
-        //collums.push('dir_way_delete');
-        //collums.push('dir_way_note');
-        //collums.push('dir_way_create');
-        //collums.push('dir_way_change');
-
-
+        collums.push('dir_park_id');
+        collums.push('dir_position_park');
+        collums.push('dir_park_name');
+        collums.push('dir_park_abbr');
+        collums.push('dir_park_create');
+        collums.push('dir_park_change');
         return init_columns(collums, list_collums);
     };
     // Функция обновить данные из базы list-список таблиц, update-обновить принудительно, callback-возврат список обновленных таблиц
