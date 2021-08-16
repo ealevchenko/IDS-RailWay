@@ -11,6 +11,21 @@ using System.Web.Http.Description;
 
 namespace WEB_UI.Controllers.api
 {
+    public class park_station
+    {
+        public int id { get; set; }
+        public int position_park { get; set; }
+        public string park_name_ru { get; set; }
+        public string park_name_en { get; set; }
+        public string park_abbr_ru { get; set; }
+        public string park_abbr_en { get; set; }
+        public DateTime create { get; set; }
+        public string create_user { get; set; }
+        public DateTime? change { get; set; }
+        public string change_user { get; set; }
+    }
+
+
     /// <summary>
     /// СПИСОК ПАРКОВ
     /// </summary>
@@ -70,6 +85,23 @@ namespace WEB_UI.Controllers.api
             {
                 string sql = "SELECT [id] ,[park_name_ru] ,[park_name_en] ,[park_abbr_ru]  ,[park_abbr_en] ,[create] ,[create_user],[change] ,[change_user] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_ParkWays] where [id] in (SELECT distinct [id_park] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] where id_station = " + id.ToString()+")";
                 List<Directory_ParkWays> list = this.ef_dir.Database.SqlQuery<Directory_ParkWays>(sql).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // GET: api/ids/directory/park_ways/view/park_station/id/1
+        [Route("view/park_station/id/{id:int}")]
+        [ResponseType(typeof(park_station))]
+        public IHttpActionResult GetParkStationOfStation(int id)
+        {
+            try
+            {
+                string sql = "select * from [IDS].[get_view_park_station_of_station](" + id.ToString() + ") order by position_park";
+                List<park_station> list = this.ef_dir.Database.SqlQuery<park_station>(sql).ToList();
                 return Ok(list);
             }
             catch (Exception e)
