@@ -85,6 +85,7 @@ namespace IDS
         // Directory_Ways -1100..
         not_dir_way_of_db = -1101,                          // В базе данных нет записи указанной строки пути
         way_not_crossing_uz = -1102,                        // Путь неимеет выход на УЗ
+        way_is_not_null = -1103,                            // На пути стоят вагоны
 
         // Directory_Wagons -1200..
         not_dir_wagon_of_db = -1201,                // В базе данных нет записи указанной строки вагона

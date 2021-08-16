@@ -64,6 +64,13 @@ namespace WEB_UI.Areas.Directory.Controllers
         {
             return View();
         }
+        // GET: Directory/Ways
+        [AccessOfDB(LogVisit = true)]
+        public ActionResult Ways()
+        {
+            return View();
+        }
+
         //******************************************************
         // СЕРВИСЫ
         //******************************************************

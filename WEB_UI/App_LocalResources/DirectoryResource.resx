@@ -369,4 +369,7 @@
   <data name="title_close_condition_date" xml:space="preserve">
     <value>Время осмотра вагонником</value>
   </data>
+  <data name="ways_title" xml:space="preserve">
+    <value>Справочник "Путей"</value>
+  </data>
 </root>

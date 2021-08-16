@@ -1,4 +1,4 @@
-USE [KRR-PA-Test-Railway]
+USE [KRR-PA-CNT-Railway]
 GO
 
 ALTER TABLE [IDS].[WagonInternalMovement]  WITH CHECK ADD  CONSTRAINT [FK_WagonInternalMovement_Directory_Ways] FOREIGN KEY([id_way])

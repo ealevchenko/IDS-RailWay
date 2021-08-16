@@ -11,7 +11,7 @@
     <link href="~/Content/module/table_tree_way.css" rel="stylesheet" />
 
     <link href="~/Content/module/table_dir_way.css" rel="stylesheet" />
-    <link href="~/Content/module/form_edit_table.css" rel="stylesheet" />
+    <link href="~/Content/module/modal_edit_form.css" rel="stylesheet" />
 }
 
 @section scripts {
@@ -30,12 +30,15 @@
     <script src="~/Scripts/api/ids_transfer.js"></script> <!-- Class API ИДС Переносы -->
     <script src="~/Scripts/api/uz_sms.js"></script> <!-- Class API Работа с модулем согласования -->
 
+    <script src="~/Scripts/module/common.js"></script>
 
     <script src="~/Scripts/module/cblist_station.js"></script>
     <script src="~/Scripts/module/table_tree_way.js"></script>
 
+    <script src="~/Scripts/module/modal_confirm_form.js"></script> <!-- Форма сообщений подтверждения -->
     <script src="~/Scripts/module/form_validation.js"></script>
-    <script src="~/Scripts/module/form_edit.js"></script>
+    <script src="~/Scripts/module/modal_edit_form.js"></script> <!-- Форма для правки -->
+
     <script src="~/Scripts/module/table_dir_way.js"></script>
 
 
@@ -112,8 +115,8 @@
                     <label for="validationCustomUsername">Username</label>
                     <div class="input-group">
                         <div class="input-group-prepend">-->
-                            @*<span class="input-group-text" id="inputGroupPrepend">@</span>*@
-                        <!--</div>
+@*<span class="input-group-text" id="inputGroupPrepend">@</span>*@
+<!--</div>
                         <input type="text" class="form-control" id="validationCustomUsername" name="validationCustomUsername" placeholder="Username" aria-describedby="inputGroupPrepend" required>
                         <div class="invalid-feedback">
                             Please choose a username.
@@ -276,7 +279,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="ml-dir-way">VVV</h5>
+                <h5 class="modal-title font-weight-bold" id="ml-dir-way">VVV</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
