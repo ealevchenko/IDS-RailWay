@@ -177,26 +177,26 @@
         // Загрузим справочные данные, определим поля формы правки
         this.load_db(['station', 'ways', 'park_ways'], false, function (result) {
             // Определим списки для полей
-            // Получим список станций для отображения
-            this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false ? true : false; });
-            // Функция получения списка парков по указаной станции
-            var get_list_park = function (id_statation) {
-                this.list_park = [];
-                var list_way = this.ids_dir.list_ways.filter(function (i) {
-                    return i.id_station == id_statation;
-                });
-                $.each(list_way, function (i, el) {
-                    var pw = el.Directory_ParkWays
-                    var park = this.list_park.find(function (o) {
-                        return o.value === pw.id;
-                    });
-                    if (!park) {
-                        this.list_park.push({ value: pw.id, text: pw['park_name_' + App.Lang] });
-                    }
-                }.bind(this));
-                return this.list_park;
-            }.bind(this);
-            this.list_divisions = this.ids_dir.getListDivisions('id', 'division_abbr', App.Lang, null);
+            //// Получим список станций для отображения
+            //this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false ? true : false; });
+            //// Функция получения списка парков по указаной станции
+            //var get_list_park = function (id_statation) {
+            //    this.list_park = [];
+            //    var list_way = this.ids_dir.list_ways.filter(function (i) {
+            //        return i.id_station == id_statation;
+            //    });
+            //    $.each(list_way, function (i, el) {
+            //        var pw = el.Directory_ParkWays
+            //        var park = this.list_park.find(function (o) {
+            //            return o.value === pw.id;
+            //        });
+            //        if (!park) {
+            //            this.list_park.push({ value: pw.id, text: pw['park_name_' + App.Lang] });
+            //        }
+            //    }.bind(this));
+            //    return this.list_park;
+            //}.bind(this);
+            //this.list_divisions = this.ids_dir.getListDivisions('id', 'division_abbr', App.Lang, null);
 
             // Определим поля
             var fl_id = {
@@ -218,94 +218,8 @@
                 col: null,
                 size: null,
             };
-            var fl_id_station = {
-                field: 'id_station',
-                type: 'number',
-                add: 'select',
-                edit: 'select',
-                name: 'station',
-                label: 'Станция',
-                control: 'park',
-                list: this.list_station,
-                select: function (e, ui) {
-                    event.preventDefault();
-                    // Обработать выбор
-                    var id = Number($(e.currentTarget).val());
-                    var list_park = get_list_park(id);
-                    var control = this.element_control;
-                    if (control) {
-                        control.update(list_park, -1, null);
-                    }
-                },
-                update: null,
-                close: null,
-                add_validation: [{
-                    check_type: 'not_null',
-                    error: 'Укажите станцию',
-                    ok: '',
-                }],
-                edit_validation: [{
-                    check_type: 'not_null',
-                    error: 'Укажите станцию',
-                    ok: '',
-                }],
-                default: -1,
-                row: 1,
-                col: 1,
-                size: 5,
-            };
-            var fl_id_park = {
-                field: 'id_park',
-                type: 'number',
-                add: 'select',
-                edit: 'select',
-                name: 'park',
-                label: 'Парки станции',
-                control: null,
-                list: get_list_park(-1),
-                select: function (e, ui) {
-                    event.preventDefault();
-                    // Обработать выбор
-                    var id = Number($(e.currentTarget).val());
-                },
-                update: null,
-                close: null,
-                add_validation: [{
-                    check_type: 'not_null',
-                    error: 'Укажите парк',
-                    ok: null,
-                }],
-                edit_validation: [{
-                    check_type: 'not_null',
-                    error: 'Укажите парк',
-                    ok: null,
-                }],
-                default: -1,
-                row: 1,
-                col: 2,
-                size: 7,
-            };
             var fl_position_park = {
                 field: 'position_park',
-                type: 'number',
-                add: null,
-                edit: null,
-                name: null,
-                label: null,
-                control: null,
-                list: null,
-                select: null,
-                update: null,
-                close: null,
-                add_validation: null,
-                edit_validation: null,
-                default: 0,
-                row: null,
-                col: null,
-                size: null,
-            };
-            var fl_position_way = {
-                field: 'position_way',
                 type: 'number',
                 add: 'number',
                 edit: 'number',
@@ -337,13 +251,13 @@
                 col: 1,
                 size: 2,
             };
-            var fl_way_num_ru = {
-                field: 'way_num_ru',
+            var fl_park_name_ru = {
+                field: 'park_name_ru',
                 type: 'string',
                 add: 'text',
                 edit: 'text',
-                name: 'way_num_ru',
-                label: '№ пути',
+                name: 'park_name_ru',
+                label: 'Название парка (рус.)',
                 control: null,
                 list: null,
                 select: null,
@@ -351,66 +265,12 @@
                 close: null,
                 add_validation: [{
                     check_type: 'not_null',
-                    error: 'Укажите номер пути (рус)',
+                    error: 'Укажите название парка (рус)',
                     ok: null,
                 }],
                 edit_validation: [{
                     check_type: 'not_null',
-                    error: 'Укажите номер пути (рус)',
-                    ok: null,
-                }],
-                default: null,
-                row: 2,
-                col: 1,
-                size: 2,
-            };
-            var fl_way_num_en = {
-                field: 'way_num_en',
-                type: 'string',
-                add: 'text',
-                edit: 'text',
-                name: 'way_num_en',
-                label: '№ пути',
-                control: null,
-                list: null,
-                select: null,
-                update: null,
-                close: null,
-                add_validation: [{
-                    check_type: 'not_null',
-                    error: 'Укажите номер пути (анг)',
-                    ok: null,
-                }],
-                edit_validation: [{
-                    check_type: 'not_null',
-                    error: 'Укажите номер пути (анг)',
-                    ok: null,
-                }],
-                default: null,
-                row: 3,
-                col: 1,
-                size: 2,
-            };
-            var fl_way_name_ru = {
-                field: 'way_name_ru',
-                type: 'string',
-                add: 'text',
-                edit: 'text',
-                name: 'way_name_ru',
-                label: 'Название пути (рус.)',
-                control: null,
-                list: null,
-                select: null,
-                update: null,
-                close: null,
-                add_validation: [{
-                    check_type: 'not_null',
-                    error: 'Укажите название пути (рус)',
-                    ok: null,
-                }],
-                edit_validation: [{
-                    check_type: 'not_null',
-                    error: 'Укажите название пути (рус)',
+                    error: 'Укажите название парка (рус)',
                     ok: null,
                 }],
                 default: null,
@@ -418,13 +278,13 @@
                 col: 2,
                 size: 6,
             };
-            var fl_way_name_en = {
-                field: 'way_name_en',
+            var fl_park_name_en = {
+                field: 'park_name_en',
                 type: 'string',
                 add: 'text',
                 edit: 'text',
-                name: 'way_name_en',
-                label: 'Название пути (анг.)',
+                name: 'park_name_en',
+                label: 'Название парка (анг.)',
                 control: null,
                 list: null,
                 select: null,
@@ -432,16 +292,16 @@
                 close: null,
                 add_validation: [{
                     check_type: 'not_null',
-                    error: 'Укажите название пути (анг)',
+                    error: 'Укажите название парка (анг)',
                     ok: null,
                 }],
                 edit_validation: [{
                     check_type: 'not_null',
-                    error: 'Укажите название пути (анг)',
+                    error: 'Укажите название парка (анг)',
                     ok: null,
                 }],
                 default: null,
-                row: 3,
+                row: 2,
                 col: 2,
                 size: 6,
             };
@@ -499,204 +359,7 @@
                 col: 3,
                 size: 4,
             };
-            var fl_capacity = {
-                field: 'capacity',
-                type: 'number',
-                add: 'number',
-                edit: 'number',
-                name: 'capacity',
-                label: 'Вмес.',
-                control: null,
-                list: null,
-                select: null,
-                update: null,
-                close: null,
-                add_validation: null,
-                edit_validation: null,
-                default: null,
-                row: 4,
-                col: 2,
-                size: 2,
-            };
-            var fl_deadlock = {
-                field: 'deadlock',
-                type: 'boolean',
-                add: 'checkbox',
-                edit: 'checkbox',
-                name: 'deadlock',
-                label: 'Тупик',
-                control: null,
-                list: null,
-                select: null,
-                update: null,
-                close: null,
-                add_validation: null,
-                edit_validation: null,
-                default: null,
-                row: 5,
-                col: 1,
-                size: 2,
-            };
-            var fl_crossing_uz = {
-                field: 'crossing_uz',
-                type: 'boolean',
-                add: 'checkbox',
-                edit: 'checkbox',
-                name: 'crossing_uz',
-                label: 'Выход УЗ',
-                control: null,
-                list: null,
-                select: null,
-                update: null,
-                close: null,
-                add_validation: null,
-                edit_validation: null,
-                default: null,
-                row: 5,
-                col: 2,
-                size: 2,
-            };
-            var fl_crossing_amkr = {
-                field: 'crossing_amkr',
-                type: 'boolean',
-                add: 'checkbox',
-                edit: 'checkbox',
-                name: 'crossing_amkr',
-                label: 'Выход АМКР',
-                control: null,
-                list: null,
-                select: null,
-                update: null,
-                close: null,
-                add_validation: null,
-                edit_validation: null,
-                default: null,
-                row: 5,
-                col: 3,
-                size: 2,
-            };
-            var fl_id_devision = {
-                field: 'id_devision',
-                type: 'number',
-                add: 'select',
-                edit: 'select',
-                name: 'devision',
-                label: 'Подразделение',
-                control: null,
-                list: this.list_divisions,
-                select: function (e, ui) {
-                    event.preventDefault();
-                    // Обработать выбор
-                    var id = Number($(e.currentTarget).val());
-                },
-                update: null,
-                close: null,
-                add_validation: null,
-                edit_validation: null,
-                default: -1,
-                row: 4,
-                col: 3,
-                size: 2,
-            };
-            var fl_dissolution = {
-                field: 'dissolution',
-                type: 'boolean',
-                add: 'checkbox',
-                edit: 'checkbox',
-                name: 'dissolution',
-                label: 'Путь роспуска',
-                control: null,
-                list: null,
-                select: null,
-                update: null,
-                close: null,
-                add_validation: null,
-                edit_validation: null,
-                default: null,
-                row: 5,
-                col: 4,
-                size: 3,
-            };
-            var fl_output_dissolution = {
-                field: 'output_dissolution',
-                type: 'boolean',
-                add: 'checkbox',
-                edit: 'checkbox',
-                name: 'output_dissolution',
-                label: 'Вых. на путь роспуска',
-                control: null,
-                list: null,
-                select: null,
-                update: null,
-                close: null,
-                add_validation: null,
-                edit_validation: null,
-                default: null,
-                row: 5,
-                col: 5,
-                size: 3,
-            };
-            var fl_way_close = {
-                field: 'way_close',
-                type: 'datetime',
-                add: 'datetime',
-                edit: 'datetime',
-                name: 'way_close',
-                label: 'Путь закрыт',
-                control: null,
-                list: null,
-                select: null,
-                update: null,
-                close: function (datetime) {
 
-                },
-                add_validation: null,
-                edit_validation: null,
-                default: null,
-                row: 4,
-                col: 4,
-                size: 3,
-            };
-            var fl_way_delete = {
-                field: 'way_delete',
-                type: 'datetime',
-                add: null,
-                edit: 'datetime',
-                name: 'way_delete',
-                label: 'Путь удален',
-                control: null,
-                list: null,
-                select: null,
-                update: null,
-                close: function (datetime) {
-
-                },
-                add_validation: null,
-                edit_validation: null,
-                default: null,
-                row: 4,
-                col: 5,
-                size: 3,
-            };
-            var fl_note = {
-                field: 'note',
-                type: 'string',
-                add: 'textarea',
-                edit: 'textarea',
-                name: 'note',
-                label: 'Примечание',
-                control: null,
-                list: null,
-                select: null,
-                update: null,
-                close: null,
-                add_validation: null,
-                edit_validation: null,
-                default: null,
-                row: 6,
-                col: 1,
-                size: 12,
-            };
             var fl_create = {
                 field: 'create',
                 type: 'datetime',
