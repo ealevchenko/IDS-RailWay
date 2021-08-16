@@ -2068,6 +2068,7 @@
     <Content Include="Scripts\jquery.doubleScroll.js" />
     <Content Include="Scripts\jszip.js" />
     <Content Include="Scripts\jszip.min.js" />
+    <Content Include="Scripts\module\directory\table_dir_park.js" />
     <Content Include="Scripts\module\shared\modal_confirm_form.js" />
     <Content Include="Scripts\module\shared\modal_edit_form.js" />
     <Content Include="Scripts\module\shared\form_validation.js" />
