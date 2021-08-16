@@ -2009,8 +2009,8 @@
     <Content Include="Content\fontawesome-free\webfonts\fa-regular-400.svg" />
     <Content Include="Content\fontawesome-free\webfonts\fa-solid-900.svg" />
     <Content Include="Content\module\cblist_station.css" />
-    <Content Include="Content\module\modal_edit_form.css" />
-    <Content Include="Content\module\table_dir_way.css" />
+    <Content Include="Content\module\shared\modal_edit_form.css" />
+    <Content Include="Content\module\directory\table_dir_way.css" />
     <Content Include="Content\module\table_tree_way.css" />
     <Content Include="Content\view\admin\_layout.css" />
     <Content Include="Content\view\directory\ways.css" />
@@ -2068,11 +2068,11 @@
     <Content Include="Scripts\jquery.doubleScroll.js" />
     <Content Include="Scripts\jszip.js" />
     <Content Include="Scripts\jszip.min.js" />
-    <Content Include="Scripts\module\modal_confirm_form.js" />
-    <Content Include="Scripts\module\modal_edit_form.js" />
-    <Content Include="Scripts\module\form_validation.js" />
+    <Content Include="Scripts\module\shared\modal_confirm_form.js" />
+    <Content Include="Scripts\module\shared\modal_edit_form.js" />
+    <Content Include="Scripts\module\shared\form_validation.js" />
     <Content Include="Scripts\module\cblist_station.js" />
-    <Content Include="Scripts\module\table_dir_way.js" />
+    <Content Include="Scripts\module\directory\table_dir_way.js" />
     <Content Include="Scripts\module\table_tree_way.js" />
     <Content Include="Scripts\module\table_outgoing.js" />
     <Content Include="Scripts\module\table_wio.js" />
@@ -2700,7 +2700,7 @@
     <Content Include="Scripts\view\idsrwt\test.js" />
     <Content Include="Scripts\view\idsrwt\wsd.js" />
     <Content Include="Scripts\view\shared\common.js" />
-    <Content Include="Scripts\module\common.js" />
+    <Content Include="Scripts\module\shared\common.js" />
     <Content Include="Scripts\view\shared\_ids.js" />
     <Content Include="Scripts\view\shared\_idsdirectory.js" />
     <Content Include="Web.config">

@@ -54,7 +54,43 @@
         },
         'en':  //default language: English
         {
+            'field_id': 'row id',
+            'field_station': 'Station',
+            'field_park': 'Park',
+            'field_way_position': 'Pos. no.',
+            'field_way_num': 'Path #',
+            'field_way_name': 'Path name',
+            'field_way_abbr': 'Short name',
+            'field_capacity': 'Capacity',
+            'field_deadlock': 'Deadlock',
+            'field_crossing_uz': 'Exit to UZ',
+            'field_crossing_amkr': 'Exit to AMKR',
+            'field_devision': 'Department',
+            'field_dissolution': 'Dissolution path',
+            'field_output_dissolution': 'Exit on the path of dissolution',
+            'field_way_close': 'Path closed',
+            'field_way_delete': 'Path deleted',
+            'field_note': 'Note',
+            'field_create': 'String created',
+            'field_change': 'String updated',
 
+            'tytle_yes': 'Yes',
+            'tytle_no': 'No',
+
+            'title_button_export': 'Export',
+            'title_button_buffer': 'Buffer',
+            'title_button_excel': 'Excel',
+
+            'title_button_up': 'Up',
+            'title_button_dn': 'Down',
+            'title_button_add': 'Add',
+            'title_button_edit': 'Edit',
+            'title_button_del': 'Remove',
+            'title_button_auto': 'Auto-correction',
+
+            'mess_load_dir_way': 'Loading path directory ...',
+            'mess_operation_dir_way': 'Performing an operation ...',
+            'mess_init_dir_way': 'Initializing the path directory module ...',
         }
     };
     // Определлим список текста для этого модуля
@@ -270,150 +306,15 @@
 
         return init_columns(collums, list_collums);
     };
-    // Загрузка основных справочников если их не передали через this.settings
-    //table_dir_way.prototype.load_reference = function (callback) {
-    //    var process = 0;
-    //    var out_load = function (process) {
-    //        if (process === 0) {
-    //            LockScreenOff();
-    //            if (typeof callback === 'function') {
-    //                callback();
-    //            }
-    //        }
-    //    }
-    //    // грузим данные по station
-    //    if (this.settings.list_station === null) {
-    //        process++;
-    //        this.load_station(this.settings.list_station, function () {
-    //            process--;
-    //            out_load(process);
-    //        }.bind(this));
-    //    } else {
-    //        this.db_station = this.settings.list_station;
-    //    };
-    //    // грузим данные по ways
-    //    if (this.settings.list_ways === null) {
-    //        process++;
-    //        this.load_ways(this.settings.list_ways, function () {
-    //            process--;
-    //            out_load(process);
-    //        }.bind(this));
-    //    } else {
-    //        this.db_ways = this.settings.list_ways;
-    //    };
-    //    // грузим данные по divisions
-    //    if (this.settings.list_divisions === null) {
-    //        process++;
-    //        this.load_divisions(this.settings.list_divisions, function () {
-    //            process--;
-    //            out_load(process);
-    //        }.bind(this));
-    //    } else {
-    //        this.db_divisions = this.settings.list_divisions;
-    //    }
-    //    //LockScreen(langView('mess_load_reference', App.Langs));
-    //    //var count = 1;
-    //    //ids_dir.load(['station', 'ways', 'divisions'], false, function () {
-    //    //    count -= 1;
-    //    //    if (count === 0) {
-    //    //        if (typeof callback === 'function') {
-    //    //            callback();
-    //    //        }
-    //    //    }
-    //    //});
-    //};
-    // Обновить таблицы базы данных
-    //table_dir_way.prototype.load_db = function (db_station, db_ways, db_divisions, list, callback) {
-    //    var process = 0;
-    //    var out_load = function (process) {
-    //        if (process === 0) {
-    //            LockScreenOff();
-    //            if (typeof callback === 'function') {
-    //                callback();
-    //            }
-    //        }
-    //    };
-    //    if (list) {
-    //        $.each(list, function (i, table) {
-    //            if (table === 'station') {
-    //                if (db_station) {
-    //                    this.db_station = db_station;
-    //                } else {
-    //                    process++;
-    //                    this.load_station(function () {
-    //                        process--;
-    //                        out_load(process);
-    //                    }.bind(this));
-    //                }
-
-    //            };
-    //            if (table === 'ways') {
-    //                if (db_ways) {
-    //                    this.db_ways = db_ways;
-    //                } else {
-    //                    process++;
-    //                    this.load_ways(function () {
-    //                        process--;
-    //                        out_load(process);
-    //                    }.bind(this));
-    //                }
-
-    //            };
-    //            if (table === 'divisions') {
-    //                if (db_divisions) {
-    //                    this.db_divisions = db_divisions;
-    //                } else {
-    //                    process++;
-    //                    this.load_divisions(function () {
-    //                        process--;
-    //                        out_load(process);
-    //                    }.bind(this));
-    //                }
-
-    //            };
-    //        }.bind(this));
-    //    };
-    //};
-    // Загрузка справочника станций
-    //
+    // Функция обновить данные из базы list-список таблиц, update-обновить принудительно, callback-возврат список обновленных таблиц
     table_dir_way.prototype.load_db = function (list, update, callback) {
         if (list) {
-            this.ids_dir.load(list, false, update, function () {
+            this.ids_dir.load(list, false, update, function (result) {
                 if (typeof callback === 'function') {
-                    callback();
+                    callback(result);
                 }
             });
         };
-    };
-    //
-    table_dir_way.prototype.load_station = function (callback) {
-        LockScreen(langView('mess_load_reference', App.Langs));
-        this.ids_dir.getStation(function (data) {
-            this.db_station = data;
-            if (typeof callback === 'function') {
-                callback(data);
-            }
-        }.bind(this));
-    };
-    // Загрузка справочника путей
-    table_dir_way.prototype.load_ways = function (callback) {
-        LockScreen(langView('mess_load_reference', App.Langs));
-        this.ids_dir.getWays(function (data) {
-            this.db_ways = data;
-            if (typeof callback === 'function') {
-                callback(data);
-            }
-        }.bind(this));
-    };
-    // Загрузка справочника подразделений
-    table_dir_way.prototype.load_divisions = function (callback) {
-        LockScreen(langView('mess_load_reference', App.Langs));
-        this.ids_dir.getDivisions(function (data) {
-            this.db_divisions = data;
-            if (typeof callback === 'function') {
-                callback(data);
-            }
-        }.bind(this));
     };
     // инициализация таблицы справочника путей
     table_dir_way.prototype.init = function (options, fn_init_ok) {
@@ -423,21 +324,13 @@
             alert: null,
             ids_dir: null,
             fn_db_update: function (list) {
-                this.load_db(list, true, function () {
-
+                this.load_db(list, true, function (result) {
+                    this.update_element(result)
                 });
             }.bind(this),
-            //list_station: null,     //  из базы
-            //list_ways: null,        // Список путей из базы
-            //list_divisions: null,   // Список подразделений из базы
         }, options);
         // Создадим ссылку на модуль работы с базой данных
         this.ids_dir = this.settings.ids_dir ? this.settings.ids_dir : new IDS_DIRECTORY();
-
-        //// Таблицы с данными
-        //this.db_station = null;       // Список станций для отображения
-        //this.db_ways = null;          // Список путей для отображения
-        //this.db_divisions = null;     // Список подразделений для отображения
         // Списки для отображения
         this.list_station = null;       // Список станций для отображения
         this.list_ways = null;          // Список путей для отображения
@@ -453,7 +346,7 @@
         this.modal_edit_form = new MEF('mfe-' + this.selector); // Создадим экземпляр формы правки строк таблицы
 
         // Загрузим справочные данные, определим поля формы правки
-        this.load_db(['station', 'ways', 'divisions'], false, function () {
+        this.load_db(['station', 'ways', 'divisions'], false, function (result) {
             // Определим списки для полей
             // Получим список станций для отображения
             this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false ? true : false; });
@@ -609,14 +502,6 @@
                         error: 'Позиция пути должна быть в диапазоне от 1 до 100',
                         ok: null,
                     },
-                    //{
-                    //    // Зависимость от поля
-                    //    check_type: 'depends',
-                    //    on_field: 'way_delete',
-                    //    addiction_type: 'is_null',
-                    //    error: 'Путь удален, позиция пути должна быть (0)',
-                    //    ok: null,
-                    //},
                 ],
                 default: 1,
                 row: 4,
@@ -1409,6 +1294,25 @@
             }.bind(this));
         }
 
+    };
+    // Обновить компоненты если обновлена база
+    table_dir_way.prototype.update_element = function (list) {
+        if (list) {
+            if ($.inArray("station", list) >= 0) {
+                //Обновился
+                this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false ? true : false; });
+                this.modal_edit_form.update_list_fields_form('id_station', this.list_station);
+
+            };
+            if ($.inArray("ways", list) >= 0) {
+                //Обновился при выборе станции
+            };
+            if ($.inArray("divisions", list) >= 0) {
+                //Обновился
+                this.list_divisions = this.ids_dir.getListDivisions('id', 'division_abbr', App.Lang, null);
+                this.modal_edit_form.update_list_fields_form('id_devision', this.list_divisions);
+            };
+        };
     };
     // Очистить сообщения
     table_dir_way.prototype.out_clear = function () {

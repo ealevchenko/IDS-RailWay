@@ -19,7 +19,8 @@
         },
         'en':  //default language: English
         {
-            'title_select': 'Select...',
+            'title_select': 'Select ...',
+            'mess_load_reference': 'Loading references ...',
         }
     };
     // Определлим список текста для этого модуля
@@ -519,6 +520,22 @@
             });
             if (field) {
                 field.default = value_default;
+            }
+        }
+    }
+    // Обновить списочный компонент
+    modal_edit_form.prototype.update_list_fields_form = function (field, list) {
+        if (this.settings.fields_form) {
+            var field = this.settings.fields_form.find(function (o) {
+                return o.field === field
+            });
+            if (field) {
+                if (field.element_add) {
+                    field.element_add.update(list, field.element_add.val(), null);
+                }
+                if (field.element_edit) {
+                    field.element_edit.update(list, field.element_add.val(), null);
+                }
             }
         }
     }

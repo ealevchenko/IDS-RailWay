@@ -15,6 +15,7 @@
         },
         'en':  //default language: English
         {
+            'mess_load_reference': 'Loading references ...',
         }
     };
     // Определлим список текста для этого модуля
@@ -33,11 +34,12 @@
     // Загрузить таблицы базы данных 
     ids_directory.prototype.load = function (list, lock, update, callback) {
         var process = 0;
+        var result = [];
         var out_load = function (process) {
             if (process === 0) {
                 LockScreenOff();
                 if (typeof callback === 'function') {
-                    callback();
+                    callback(result);
                 }
             }
         };
@@ -51,6 +53,7 @@
                         this.getStation(function (data) {
                             this.list_station = data;
                             process--;
+                            result.push('station');
                             out_load(process);
                         }.bind(this));
                     };
@@ -63,6 +66,7 @@
                         this.getWays(function (data) {
                             this.list_ways = data;
                             process--;
+                            result.push('ways');
                             out_load(process);
                         }.bind(this));
                     };
@@ -75,12 +79,14 @@
                         this.getDivisions(function (data) {
                             this.list_divisions = data;
                             process--;
+                            result.push('divisions');
                             out_load(process);
                         }.bind(this));
                     };
                 };
             }.bind(this));
         };
+        out_load(process);
     };
     //======= Directory_Station (Справочник станций ИДС) ======================================
     ids_directory.prototype.getStation = function (callback) {
@@ -95,8 +101,11 @@
             success: function (data) {
                 if (typeof callback === 'function') {
                     callback(data);
-                }
-            },
+                };
+                //if (typeof this.settings.on_load_station === 'function') {
+                //    this.settings.on_load_station();
+                //};
+            }/*.bind(this)*/,
             error: function (x, y, z) {
                 OnAJAXError("IDS_DIRECTORY.getStation", x, y, z);
             },
@@ -106,7 +115,7 @@
         });
     };
     //======= Directory_Ways (Справочник путей ИДС) ======================================
-    //
+    // Получить все пути из базы
     ids_directory.prototype.getWays = function (callback) {
         $.ajax({
             type: 'GET',
@@ -120,7 +129,10 @@
                 if (typeof callback === 'function') {
                     callback(data);
                 }
-            },
+                //if (typeof this.settings.on_load_ways === 'function') {
+                //    this.settings.on_load_ways();
+                //}
+            }/*.bind(this)*/,
             error: function (x, y, z) {
                 OnAJAXError("IDS_DIRECTORY.getWays", x, y, z);
             },
