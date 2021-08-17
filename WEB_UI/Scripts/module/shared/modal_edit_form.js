@@ -363,17 +363,32 @@
                 var $col = colElement.$element;
                 // Получим и добавим элементы
                 var colElement = new form_element($col, this, el_field.name, el_field.label, el_field.add, el_field.edit);
+                // Добавить метку заполнитель
+                if (el_field.placeholder) {
+                    colElement.$element_add.attr('placeholder', el_field.placeholder);
+                    colElement.$element_edit.attr('placeholder', el_field.placeholder);
+                }
+                // Добавить макс длину
+                if (el_field.maxlength) {
+                    colElement.$element_add.attr('maxlength', el_field.maxlength);
+                    colElement.$element_edit.attr('maxlength', el_field.maxlength);
+                }
+                // Добавить признак обязательное поле
+                if (el_field.required) {
+                    colElement.$element_add.attr('required', '');
+                    colElement.$element_edit.attr('required', '');
+                }
                 var $element_add = init_form_element(colElement.$element_add, el_field, el_field.add);
                 var $element_edit = init_form_element(colElement.$element_edit, el_field, el_field.edit);
                 var field = this.settings.fields_form.find(function (o) { return o.field === el_field.field });
                 if (field) {
                     if ($element_add) {
                         field['element_add'] = $element_add;
-                        this.rules_valid.push({ name: $($element_add.$element).attr('name'), validation: el_field.add_validation });
+                        if (el_field.add_validation) this.rules_valid.push({ name: $($element_add.$element).attr('name'), validation: el_field.add_validation });
                     };
                     if ($element_edit) {
                         field['element_edit'] = $element_edit;
-                        this.rules_valid.push({ name: $($element_edit.$element).attr('name'), validation: el_field.edit_validation });
+                        if (el_field.edit_validation) this.rules_valid.push({ name: $($element_edit.$element).attr('name'), validation: el_field.edit_validation });
                     };
                 };
                 col = el_field.col;
