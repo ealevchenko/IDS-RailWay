@@ -422,6 +422,81 @@
             },
         });
     };
+    // Операция автокоррекции
+    ids_directory.prototype.posOperationAutoPositionParkOfStation= function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/directory/park_ways/operation/auto_correct/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_directory.posOperationAutoPositionParkOfStation", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Операция свига на одни позицию вверх
+    ids_directory.prototype.postOperationUp1PositionParkOfStation = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/directory/park_ways/operation/up_position/1/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_directory.postOperationUp1PositionParkOfStation", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Операция свига на одни позицию вниз
+    ids_directory.prototype.postOperationDown1PositionParkOfStation = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/directory/park_ways/operation/down_position/1/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_directory.postOperationDown1PositionParkOfStation", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     //======= Directory_Divisions (Справочник цехов) ======================================
     ids_directory.prototype.getDivisions = function (callback) {
         $.ajax({

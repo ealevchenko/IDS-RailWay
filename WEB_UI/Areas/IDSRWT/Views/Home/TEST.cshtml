@@ -12,6 +12,7 @@
 
     <link href="~/Content/module/directory/table_dir_way.css" rel="stylesheet" />
     <link href="~/Content/module/shared/modal_edit_form.css" rel="stylesheet" />
+    <link href="~/Content/module/directory/table_dir_park_ways.css" rel="stylesheet" />
 }
 
 @section scripts {
@@ -42,7 +43,8 @@
     <script src="~/Scripts/module/shared/modal_edit_form.js"></script> <!-- Форма для правки -->
 
     <script src="~/Scripts/module/directory/table_dir_way.js"></script>
-    <script src="~/Scripts/module/directory/table_dir_park.js"></script>
+    <script src="~/Scripts/module/directory/table_dir_park_ways.js"></script>
+    <script src="~/Scripts/module/directory/table_dir_park_station.js"></script>
 
     <script src="~/Scripts/plugins/pl_dialog_confirm.js"></script> <!-- Плагин -->
     <script src="~/Scripts/view/idsrwt/test.js"></script>
@@ -251,6 +253,11 @@
                             <div class="card border-info">
                                 <div class="card-header">Перечень вагонов</div>
                                 <div class="card-body" style="font-size:13px">
+                                    <div class="row">
+                                        <div class="col-xl-12">
+                                            <div id="park-ways"></div>
+                                        </div>
+                                    </div>
                                     <div class="row">
                                         <div class="col-xl-12">
                                             @*<div id="ways"></div>*@

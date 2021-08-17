@@ -125,8 +125,12 @@
     //var TDWAY = App.table_dir_way;
     //var tdways = new TDWAY('div#ways'); // Создадим экземпляр таблицы
 
-    var TDPARK = App.table_dir_park;
+    var TDPW = App.table_dir_park_ways;
+    var tdpw = new TDPW('div#park-ways'); // Создадим экземпляр таблицы
+
+    var TDPARK = App.table_dir_park_station;
     var tdpark = new TDPARK('div#park'); // Создадим экземпляр таблицы
+
 
     var MCF = App.modal_confirm_form;
     var mcf_test = new MCF('confirm-test'); // Создадим экземпляр окно сообщений
@@ -145,6 +149,12 @@
     // После загрузки документа
     $(document).ready(function ($) {
         //mcf_test.init();
+        tdpw.init({
+            alert: alert
+        }, function () {
+            tdpw.load();
+        });
+
         tdpark.init({
             alert: alert
         }, function () {

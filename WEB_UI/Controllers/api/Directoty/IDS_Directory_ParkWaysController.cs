@@ -1,6 +1,8 @@
 ﻿using EFIDS.Abstract;
 using EFIDS.Entities;
 using EFIDS.Helper;
+using IDS;
+using IDSLogs.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +27,18 @@ namespace WEB_UI.Controllers.api
         public string change_user { get; set; }
     }
 
+    public class OperationAutoPositionParkOfStation
+    {
+        public int id_station { get; set; }
+        public string user { get; set; }
+    }
+
+    public class OperationSelectParkOfStation
+    {
+        public int id_station { get; set; }        
+        public int id_park { get; set; }
+        public string user { get; set; }
+    }
 
     /// <summary>
     /// СПИСОК ПАРКОВ
@@ -93,23 +107,6 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // GET: api/ids/directory/park_ways/view/park_station/id/1
-        [Route("view/park_station/id/{id:int}")]
-        [ResponseType(typeof(park_station))]
-        public IHttpActionResult GetParkStationOfStation(int id)
-        {
-            try
-            {
-                string sql = "select * from [IDS].[get_view_park_station_of_station](" + id.ToString() + ") order by position_park";
-                List<park_station> list = this.ef_dir.Database.SqlQuery<park_station>(sql).ToList();
-                return Ok(list);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
         // POST api/ids/directory/park_ways/
         [HttpPost]
         [Route("")]
@@ -157,6 +154,93 @@ namespace WEB_UI.Controllers.api
                 return -1;
             }
         }
+
+        #region module ids_direct
+
+        // GET: api/ids/directory/park_ways/view/park_station/id/1
+        [Route("view/park_station/id/{id:int}")]
+        [ResponseType(typeof(park_station))]
+        public IHttpActionResult GetParkStationOfStation(int id)
+        {
+            try
+            {
+                string sql = "select * from [IDS].[get_view_park_station_of_station](" + id.ToString() + ") order by position_park";
+                List<park_station> list = this.ef_dir.Database.SqlQuery<park_station>(sql).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        // POST api/ids/directory/park_ways/operation/auto_correct/
+        /// <summary>
+        /// Операция положение пути ниже
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("operation/auto_correct")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostOperationAutoPositionParkOfStation([FromBody] OperationAutoPositionParkOfStation value)
+        {
+            try
+            {
+                IDSDirectory ids_wir = new IDSDirectory(service.WebAPI_IDS);
+                int result = ids_wir.OperationAutoPositionParkOfStation(value.id_station, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        // POST api/ids/directory/park_ways/operation/up_position/1
+        /// <summary>
+        /// Операция положение парка выше
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("operation/up_position/1")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostOperationUp1PositionParkOfStation([FromBody] OperationSelectParkOfStation value)
+        {
+            try
+            {
+                IDSDirectory ids_wir = new IDSDirectory(service.WebAPI_IDS);
+                int result = ids_wir.OperationUp1PositionParkOfStation(value.id_station, value.id_park, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        // POST api/ids/directory/park_ways/operation/up_position/1
+        /// <summary>
+        /// Операция положение парка ниже
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("operation/down_position/1")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostOperationDown1PositionParkOfStation([FromBody] OperationSelectParkOfStation value)
+        {
+            try
+            {
+                IDSDirectory ids_wir = new IDSDirectory(service.WebAPI_IDS);
+                int result = ids_wir.OperationDown1PositionParkOfStation(value.id_station, value.id_park, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        #endregion
 
     }
 }
