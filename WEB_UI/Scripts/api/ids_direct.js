@@ -399,6 +399,78 @@
             },
         });
     };
+    //Добавить 
+    ids_directory.prototype.postParkWays = function (obj, callback) {
+        $.ajax({
+            url: '../../api/ids/directory/park_ways/',
+            type: 'POST',
+            data: JSON.stringify(obj),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_directory.postParkWays", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //Обновить 
+    ids_directory.prototype.putParkWays = function (obj, callback) {
+        $.ajax({
+            type: 'PUT',
+            url: '../../api/ids/directory/park_ways/id/' + obj.id,
+            data: JSON.stringify(obj),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_directory.putParkWays", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Удалить 
+    ids_directory.prototype.deleteParkWays = function (id, callback) {
+        $.ajax({
+            url: '../../api/ids/directory/park_ways/id/' + id,
+            type: 'DELETE',
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_directory.deleteParkWays", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    }
     // Получить парки по указаной станции c позицией
     ids_directory.prototype.getParkStationOfStationID = function (id, callback) {
         $.ajax({
@@ -547,7 +619,7 @@
     ids_directory.prototype.putDivisions = function (division, callback) {
         $.ajax({
             type: 'PUT',
-            url: '../../api/ids/directory/division/id' + division.id,
+            url: '../../api/ids/directory/division/id/' + division.id,
             data: JSON.stringify(station),
             contentType: "application/json;charset=utf-8",
             async: true,
@@ -570,7 +642,7 @@
     // Удалить 
     ids_directory.prototype.deleteDivisions = function (id, callback) {
         $.ajax({
-            url: '../../api/ids/directory/division/id' + id,
+            url: '../../api/ids/directory/division/id/' + id,
             type: 'DELETE',
             contentType: "application/json;charset=utf-8",
             async: true,

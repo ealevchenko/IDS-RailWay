@@ -107,6 +107,8 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        #region module ids_direct
+
         // POST api/ids/directory/park_ways/
         [HttpPost]
         [Route("")]
@@ -154,8 +156,6 @@ namespace WEB_UI.Controllers.api
                 return -1;
             }
         }
-
-        #region module ids_direct
 
         // GET: api/ids/directory/park_ways/view/park_station/id/1
         [Route("view/park_station/id/{id:int}")]
