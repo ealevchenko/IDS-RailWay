@@ -257,6 +257,10 @@
             element = new checkbox_element(col, base, name, text, mode);
             return element.$element;
         }
+        if (type === 'autocomplete') {
+            element = new input_element(col, base, name, text, mode, 'text');
+            return element.$element;
+        }
     };
     // Получить элемент формы в зависисмости от типа
     function form_element(col, base, name, text, add, edit) {
@@ -286,6 +290,9 @@
         }
         if (type === 'textarea') {
             init_element = new fc_ui.init_textarea(element, null, field.select);
+        }
+        if (type === 'autocomplete') {
+            init_element = new fc_ui.init_autocomplete(element, { data: field.list, minLength:2});
         }
         return init_element;
     };
@@ -422,7 +429,9 @@
             if (valid) {
                 // Заполним result полями
                 $.each(this.settings.fields_form, function (i, el) {
+                    //TODO: Переключить val() на element_form
                     var element = this.data ? (el.element_edit ? el.element_edit.$element : null) : (el.element_add ? el.element_add.$element : null);
+                    var element_form = this.data ? (el.element_edit ? el.element_edit : null) : (el.element_add ? el.element_add : null);
                     var type = this.data ? el.edit : el.add;
                     var value = element ? ($(element).attr('type') === "checkbox" ? $(element).prop('checked') : element.val()) : null;
                     switch (type) {
@@ -452,6 +461,10 @@
                         };
                         case "datetime": {
                             result[el.field] = value !== null && value !== "" ? moment(value, 'DD.MM.YYYY HH:mm').toISOString() : null;
+                            break;
+                        };
+                        case "autocomplete": {
+                            result[el.field] = element_form.val();
                             break;
                         };
                     }

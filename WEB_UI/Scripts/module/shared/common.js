@@ -28,6 +28,7 @@
     };
     // Инициализация компонента "SELECT"
     form_control.prototype.init_select = function (element, data, default_value, fn_option, fn_change) {
+        //TODO: создать и настроить SELECT сделать надпись выберите через placeholder, чтобы работала required
         this.$element = element;
         var $default_option = $('<option></option>', {
             'value': '-1',
@@ -73,10 +74,8 @@
         };
         this.init();
     };
-
     // Инициализация текстового поля "INPUT"
     form_control.prototype.init_input = function (element, default_value, fn_change) {
-        /*        this.options = [];*/
         this.$element = element;
         this.init = function () {
             this.update(default_value);
@@ -198,6 +197,51 @@
         };
         this.init();
     };
+    // Инициализация поля дата "INPUT" типа Autocomplete
+    form_control.prototype.init_autocomplete = function (element, options) {
+        var get_alist = function (data) {
+            var alist = [];
+            $.each(data, function (i, el) {
+                alist.push({ value: el.text, label: el.text });
+            }.bind(this));
+            return alist;
+        };
+
+        this.$element = element;
+        // Настройки формы правки строк таблицы
+        this.settings = $.extend({
+            data: [],
+            minLength: 0,
+            out_value: false,
+        }, options);
+
+        this.init = function () {
+            this.alist = get_alist(this.settings.data);
+            this.$element = element.autocomplete({
+                minLength: this.settings.minLength,
+                source: this.alist,
+            });
+        };
+        this.update = function (data) {
+            this.settings.data = data;
+            this.alist = get_alist(this.settings.data);
+            this.$element.autocomplete("option", "source", this.alist);
+        };
+        this.val = function (value) {
+            if (value !== undefined) {
+                this.$element.val(value);
+            } else {
+                var select = this.settings.data.find(function (o) {
+                    return o.text === $.trim(this.$element.val());
+                }.bind(this));
+                return select ? select.value : null;
+            };
+        };
+        this.update = function (data) {
+
+        };
+        this.init();
+    }
 
     App.form_control = form_control;
 
