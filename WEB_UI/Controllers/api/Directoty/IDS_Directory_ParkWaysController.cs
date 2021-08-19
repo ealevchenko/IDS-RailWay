@@ -16,6 +16,7 @@ namespace WEB_UI.Controllers.api
     public class park_station
     {
         public int id { get; set; }
+        public int count_ways { get; set; }
         public int position_park { get; set; }
         public string park_name_ru { get; set; }
         public string park_name_en { get; set; }

@@ -15,6 +15,7 @@
         'default':  //default language: ru
         {
             'field_id': 'id строки',
+            'field_count_ways': 'Кол. путей',
             'field_position_park': '№ поз.',
             'field_park_name': 'Название парка',
             'field_park_abbr': 'Краткое название',
@@ -68,6 +69,14 @@
             },
             className: 'dt-body-center',
             title: langView('field_id', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'dir_count_ways',
+            data: function (row, type, val, meta) {
+                return row.count_ways;
+            },
+            className: 'dt-body-center',
+            title: langView('field_count_ways', App.Langs), width: "30px", orderable: true, searchable: true
         },
         {
             field: 'dir_position_park',
@@ -127,6 +136,7 @@
         var collums = [];
 
         collums.push('dir_park_id');
+        collums.push('dir_count_ways');
         collums.push('dir_position_park');
         collums.push('dir_park_name');
         collums.push('dir_park_abbr');
@@ -161,14 +171,14 @@
         this.ids_dir = this.settings.ids_dir ? this.settings.ids_dir : new IDS_DIRECTORY();
         // Списки для отображения
         this.list_station = null;       // Список станций для отображения
-        this.list_ways = null;          // Список путей для отображения
-        this.list_park = null;          // Список путей для отображения
+        //this.list_ways = null;          // Список путей для отображения
+        //this.list_park = null;          // Список путей для отображения
 
         //
         LockScreen(langView('mess_init_dir_park', App.Langs));
-        var MCF = App.modal_confirm_form;
-        var modal_confirm_form = new MCF(this.selector); // Создадим экземпляр окно сообщений
-        modal_confirm_form.init();
+        var MCF = App.modal_confirm_form
+        this.modal_confirm_form= new MCF(this.selector); // Создадим экземпляр окно сообщений
+        this.modal_confirm_form.init();
 
         // Инициализация формы для правки полей
         var MEF = App.modal_edit_form;
@@ -177,8 +187,8 @@
         // Загрузим справочные данные, определим поля формы правки
         this.load_db(['station', 'ways', 'park_ways'], false, function (result) {
             // Определим списки для полей
-            //// Получим список станций для отображения
-            //this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false ? true : false; });
+            // Получим список станций для отображения
+            this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false ? true : false; });
             //// Функция получения списка парков по указаной станции
             //var get_list_park = function (id_statation) {
             //    this.list_park = [];
@@ -525,12 +535,9 @@
                 jQueryUI: false,
                 "createdRow": function (row, data, index) {
                     $(row).attr('id', data.id);
-                    // Удалили
-                    if (data.way_close) {
+                    // Отобразим птей нет
+                    if (!data.count_ways || data.count_ways.length===0) {
                         $(row).addClass('yellow');
-                    }
-                    if (data.way_delete) {
-                        $(row).addClass('red');
                     }
                 },
                 columns: this.init_columns(),
@@ -575,7 +582,7 @@
                         action: function (e, dt, node, config) {
                             this.out_clear();
                             if (App.Select_Row_ways !== null) {
-                                modal_confirm_form.view('Удалить', 'Удалить выбранный путь [' + App.Select_Row_ways['way_num_' + App.Lang] + ' - ' + App.Select_Row_ways['way_name_' + App.Lang] + '] ?', function (result) {
+                                this.modal_confirm_form.view('Удалить', 'Удалить выбранный путь [' + App.Select_Row_ways['way_num_' + App.Lang] + ' - ' + App.Select_Row_ways['way_name_' + App.Lang] + '] ?', function (result) {
                                     if (result) {
                                         // Выполнить
                                         var operation = {
@@ -610,66 +617,14 @@
                     {
                         text: langView('title_button_up', App.Langs),
                         action: function (e, dt, node, config) {
-                            this.out_clear();
-                            var id_park = App.Select_Row_ways ? App.Select_Row_ways.id : null;
-                            if (this.id_station && id_park) {
-                                var operation = {
-                                    id_station: this.id_station,
-                                    id_park: id_park,
-                                    user: App.User_Name,
-                                };
-                                LockScreen(langView('mess_operation_dir_park', App.Langs));
-                                this.ids_dir.postOperationUp1PositionParkOfStation(operation, function (result) {
-                                    if (result > 0) {
-                                        this.update();
-                                        this.out_info("Парк перенесен на позицию верх");
-                                    } else {
-                                        this.out_error("Ошибка, выполнения операции 'перенос на позицию вверх', код ошибки : " + result);
-                                        LockScreenOff();
-                                    }
-                                }.bind(this));
-                            } else {
-                                this.out_clear();
-                                if (this.id_station === null) {
-                                    this.out_error("Ошибка, выполнения операции изменения позиции парка, станция не определена");
-                                }
-                                if (id_park === null) {
-                                    this.out_error("Ошибка, выполнения операции изменения позиции парка, парк не определен");
-                                }
-                            }
+                            this.up();
                         }.bind(this),
                         enabled: false
                     },
                     {
                         text: langView('title_button_dn', App.Langs),
                         action: function (e, dt, node, config) {
-                            this.out_clear();
-                            var id_park = App.Select_Row_ways ? App.Select_Row_ways.id : null;
-                            if (this.id_station && id_park) {
-                                var operation = {
-                                    id_station: this.id_station,
-                                    id_park: id_park,
-                                    user: App.User_Name,
-                                };
-                                LockScreen(langView('mess_operation_dir_park', App.Langs));
-                                this.ids_dir.postOperationDown1PositionParkOfStation(operation, function (result) {
-                                    if (result > 0) {
-                                        this.update();
-                                        this.out_info("Парк перенесен на позицию вниз");
-                                    } else {
-                                        this.out_error("Ошибка, выполнения операции 'Перенос на позицию вниз', код ошибки : " + result);
-                                        LockScreenOff();
-                                    }
-                                }.bind(this));
-                            } else {
-                                this.out_clear();
-                                if (this.id_station === null) {
-                                    this.out_error("Ошибка, выполнения операции изменения позиции парка, станция не определена");
-                                }
-                                if (id_park === null) {
-                                    this.out_error("Ошибка, выполнения операции изменения позиции парка, парк не определен");
-                                }
-                            }
+                            this.down();
                         }.bind(this),
                         enabled: false
                     },
@@ -677,7 +632,7 @@
                         text: langView('title_button_auto', App.Langs),
                         action: function (e, dt, node, config) {
                             this.out_clear();
-                            modal_confirm_form.view('Выполнить', 'Выполнить автоматическую коррекцию парков станции?', function (result) {
+                            this.modal_confirm_form.view('Выполнить', 'Выполнить автоматическую коррекцию парков станции?', function (result) {
                                 if (result) {
                                     // Выполнить 
                                     if (this.id_station) {
@@ -740,7 +695,7 @@
     table_dir_park_station.prototype.view = function (data) {
         this.obj_t_park.clear();
         this.obj_t_park.rows.add(data);
-        this.obj_t_park.order([1, 'asc']);
+        this.obj_t_park.order([2, 'asc']);
         if (App.Select_Row_ways !== null) {
             this.obj_t_park.row('#' + App.Select_Row_ways.id).select();
         }
@@ -811,6 +766,66 @@
             this.settings.alert.out_info_message(message)
         }
     }
+    // Up Объект
+    table_dir_park_station.prototype.up = function () {
+        this.out_clear();
+        var id_park = App.Select_Row_ways ? App.Select_Row_ways.id : null;
+        if (this.id_station && id_park) {
+            var operation = {
+                id_station: this.id_station,
+                id_park: id_park,
+                user: App.User_Name,
+            };
+            LockScreen(langView('mess_operation_dir_park', App.Langs));
+            this.ids_dir.postOperationUp1PositionParkOfStation(operation, function (result) {
+                if (result > 0) {
+                    this.update();
+                    this.out_info("Парк перенесен на позицию верх");
+                } else {
+                    this.out_error("Ошибка, выполнения операции 'перенос на позицию вверх', код ошибки : " + result);
+                    LockScreenOff();
+                };
+            }.bind(this));
+        } else {
+            this.out_clear();
+            if (this.id_station === null) {
+                this.out_error("Ошибка, выполнения операции изменения позиции парка, станция не определена");
+            }
+            if (id_park === null) {
+                this.out_error("Ошибка, выполнения операции изменения позиции парка, парк не определен");
+            };
+        };
+    };
+    // Down Объект
+    table_dir_park_station.prototype.down = function () {
+        this.out_clear();
+        var id_park = App.Select_Row_ways ? App.Select_Row_ways.id : null;
+        if (this.id_station && id_park) {
+            var operation = {
+                id_station: this.id_station,
+                id_park: id_park,
+                user: App.User_Name,
+            };
+            LockScreen(langView('mess_operation_dir_park', App.Langs));
+            this.ids_dir.postOperationDown1PositionParkOfStation(operation, function (result) {
+                if (result > 0) {
+                    this.update();
+                    this.out_info("Парк перенесен на позицию вниз");
+                } else {
+                    this.out_error("Ошибка, выполнения операции 'Перенос на позицию вниз', код ошибки : " + result);
+                    LockScreenOff();
+                };
+            }.bind(this));
+        } else {
+            this.out_clear();
+            if (this.id_station === null) {
+                this.out_error("Ошибка, выполнения операции изменения позиции парка, станция не определена");
+            }
+            if (id_park === null) {
+                this.out_error("Ошибка, выполнения операции изменения позиции парка, парк не определен");
+            };
+        };
+    };
 
     App.table_dir_park_station = table_dir_park_station;
 
