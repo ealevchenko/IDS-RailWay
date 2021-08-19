@@ -306,8 +306,12 @@
                     <div class="form-row">
                         <div class="col-xl-12 mb-1 text-left">
                             <label for="ref_unit" class="col-form-label">Ремонтируемый агрегат:</label>
-                            <select class="form-control" id="ref_unit" name="ref_unit" required></select>
-                            <input type="datetime" />
+                            <div class="input-group">
+                                <input class="form-control" id="ref_unit" name="ref_unit" required>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button">Button</button>
+                                </div>
+                            </div>
                             <div class="invalid-feedback">
                                 Укажите агрегат!
                             </div>
