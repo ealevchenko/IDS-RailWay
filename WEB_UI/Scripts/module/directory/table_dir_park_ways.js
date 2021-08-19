@@ -561,7 +561,7 @@
             this.out_warning("Операция 'Удалить парк' – отменена, выберите парк");
         };
     };
-    // Сохоанить объект
+    // Сохранить объект
     table_dir_park_ways.prototype.save = function (data) {
         this.out_clear();
         if (data && !data.old) {

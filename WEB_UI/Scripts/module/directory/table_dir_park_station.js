@@ -172,12 +172,12 @@
         // Списки для отображения
         this.list_station = null;       // Список станций для отображения
         //this.list_ways = null;          // Список путей для отображения
-        //this.list_park = null;          // Список путей для отображения
+        this.list_park = null;          // Список парков
 
         //
         LockScreen(langView('mess_init_dir_park', App.Langs));
         var MCF = App.modal_confirm_form
-        this.modal_confirm_form= new MCF(this.selector); // Создадим экземпляр окно сообщений
+        this.modal_confirm_form = new MCF(this.selector); // Создадим экземпляр окно сообщений
         this.modal_confirm_form.init();
 
         // Инициализация формы для правки полей
@@ -189,6 +189,7 @@
             // Определим списки для полей
             // Получим список станций для отображения
             this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false ? true : false; });
+            this.list_park = this.ids_dir.getListParkWays('id', 'park_name', App.Lang);
             // Определим поля
             var fl_id = {
                 field: 'id',
@@ -283,31 +284,22 @@
                 size: 4,
             };
             var fl_park = {
-                field: 'park',
-                type: 'string',
-                add: 'text',
-                edit: 'text',
+                field: 'park_name_' + App.Lang, // Сделал для того чтобы подтягивалось по полу имя с учетом региональной настройки
+                type: 'number',
+                add: 'autocomplete',
+                edit: 'autocomplete',
                 name: 'park',
                 label: 'Парк',
-                placeholder: 'Выберите парк из списка',
+                placeholder: 'Парк станции',
                 maxlength: 100,
                 required: true,
                 control: null,
-                list: null,
+                list: this.list_park,
                 select: null,
                 update: null,
                 close: null,
-                //add_validation: [{
-                //    check_type: 'not_null',
-                //    error: 'Укажите название парка (рус)',
-                //    ok: null,
-                //}],
-                //edit_validation: [{
-                //    check_type: 'not_null',
-                //    error: 'Укажите название парка (рус)',
-                //    ok: null,
-                //}],
                 default: null,
+                button: null,
                 row: 2,
                 col: 1,
                 size: 12,
@@ -404,50 +396,51 @@
                 title: "Править путь",
                 size: "lg",
                 fn_ok: function (data) {
-                    this.out_clear();
-                    if (data && !data.old) {
-                        // Добавить 
-                        LockScreen(langView('mess_operation_dir_park', App.Langs));
-                        this.ids_dir.postOperationInsertWayOfPark(data.new, function (result) {
-                            if (result > 0) {
-                                this.modal_edit_form.close(); // закроем форму
-                                this.update();
-                                this.out_clear();
-                                this.out_info("Новый путь - добавлен");
-                                this.settings.fn_db_update(['ways']);
-                            } else {
-                                LockScreenOff();
-                                this.modal_edit_form.out_error('При добавлении пути произошла ошибка, код ошибки : ' + result);
-                            }
-                        }.bind(this));
-                    } else {
-                        //
-                        if (data.new && data.new.way_delete !== null && data.new.position_way > 0) {
-                            // Ошибка
-                            //this.modal_edit_form.out_error('Если путь имеет признак – удален, тогда позиция пути должна быть (0)');
-                            this.modal_edit_form.set_object_error('way_delete', 'edit', 'Путь имеет признак – удален, позиция пути должна быть (0)');
-                            this.modal_edit_form.set_object_error('position_way', 'edit', 'Путь имеет признак – удален, позиция пути должна быть (0)');
-                        } else {
-                            // Выполнить править
-                            var operation = {
-                                way: data.new,
-                                user: App.User_Name,
-                            };
-                            LockScreen(langView('mess_operation_dir_park', App.Langs));
-                            this.ids_dir.postOperationUpdateWayOfPark(operation, function (result) {
-                                if (result > 0) {
-                                    this.modal_edit_form.close(); // закроем форму
-                                    this.update();
-                                    this.out_clear();
-                                    this.out_info("Путь - обновлен");
-                                    this.settings.fn_db_update(['ways']);
-                                } else {
-                                    LockScreenOff();
-                                    this.modal_edit_form.out_error('При обновлении пути произошла ошибка, код ошибки : ' + result);
-                                }
-                            }.bind(this));
-                        }
-                    }
+                    this.save(data);
+                    //this.out_clear();
+                    //if (data && !data.old) {
+                    //    // Добавить 
+                    //    LockScreen(langView('mess_operation_dir_park', App.Langs));
+                    //    this.ids_dir.postOperationInsertWayOfPark(data.new, function (result) {
+                    //        if (result > 0) {
+                    //            this.modal_edit_form.close(); // закроем форму
+                    //            this.update();
+                    //            this.out_clear();
+                    //            this.out_info("Новый путь - добавлен");
+                    //            this.settings.fn_db_update(['ways']);
+                    //        } else {
+                    //            LockScreenOff();
+                    //            this.modal_edit_form.out_error('При добавлении пути произошла ошибка, код ошибки : ' + result);
+                    //        }
+                    //    }.bind(this));
+                    //} else {
+                    //    //
+                    //    if (data.new && data.new.way_delete !== null && data.new.position_way > 0) {
+                    //        // Ошибка
+                    //        //this.modal_edit_form.out_error('Если путь имеет признак – удален, тогда позиция пути должна быть (0)');
+                    //        this.modal_edit_form.set_object_error('way_delete', 'edit', 'Путь имеет признак – удален, позиция пути должна быть (0)');
+                    //        this.modal_edit_form.set_object_error('position_way', 'edit', 'Путь имеет признак – удален, позиция пути должна быть (0)');
+                    //    } else {
+                    //        // Выполнить править
+                    //        var operation = {
+                    //            way: data.new,
+                    //            user: App.User_Name,
+                    //        };
+                    //        LockScreen(langView('mess_operation_dir_park', App.Langs));
+                    //        this.ids_dir.postOperationUpdateWayOfPark(operation, function (result) {
+                    //            if (result > 0) {
+                    //                this.modal_edit_form.close(); // закроем форму
+                    //                this.update();
+                    //                this.out_clear();
+                    //                this.out_info("Путь - обновлен");
+                    //                this.settings.fn_db_update(['ways']);
+                    //            } else {
+                    //                LockScreenOff();
+                    //                this.modal_edit_form.out_error('При обновлении пути произошла ошибка, код ошибки : ' + result);
+                    //            }
+                    //        }.bind(this));
+                    //    }
+                    //}
                 }.bind(this),
             });
             //----------------------------------
@@ -477,7 +470,7 @@
                 "createdRow": function (row, data, index) {
                     $(row).attr('id', data.id);
                     // Отобразим птей нет
-                    if (!data.count_ways || data.count_ways.length===0) {
+                    if (!data.count_ways || data.count_ways.length === 0) {
                         $(row).addClass('yellow');
                     }
                 },
@@ -766,6 +759,86 @@
                 this.out_error("Ошибка, выполнения операции изменения позиции парка, парк не определен");
             };
         };
+    };
+    // Сохранить объект
+    table_dir_park_station.prototype.save = function (data) {
+        this.out_clear();
+        if (data.new && !data.new['park_name_' + App.Lang]) {
+            if (data.old) {
+                this.modal_edit_form.set_object_error('park_name_' + App.Lang, 'edit', 'Указанного парка нет в справочнике ИДС ТД');
+            } else {
+                this.modal_edit_form.set_object_error('park_name_' + App.Lang, 'add', 'Указанного парка нет в справочнике ИДС ТД');
+            }
+        } else {
+            if (data && !data.old) {
+                // Добавить 
+                this.insert(data.new);
+            } else {
+                // Править
+                this.edit(data.new);
+            };
+        }
+
+
+    };
+    // Добавить объект
+    table_dir_park_station.prototype.insert = function (data) {
+        //// Проверим есть такой парк
+        //var park = this.ids_dir.list_park_ways.find(function (o) {
+        //    return o['park_name_' + App.Lang] === $.trim(data['park_name_' + App.Lang]);
+        //});
+        //if (park) {
+        //    this.modal_edit_form.set_object_error('park_name_' + App.Lang, 'add', 'Парк с таким названием уже существует, id строки =' + park.id);
+        //} else {
+        //    // Добавить
+        //    LockScreen(langView('mess_operation_dir_park', App.Langs));
+        //    this.ids_dir.postParkWays(data, function (result) {
+        //        if (result > 0) {
+        //            this.modal_edit_form.close(); // закроем форму
+        //            this.update();
+        //            this.out_clear();
+        //            this.out_info("Новый парк - добавлен");
+        //        } else {
+        //            LockScreenOff();
+        //            this.modal_edit_form.out_error('При добавлении парка произошла ошибка, код ошибки : ' + result);
+        //        }
+        //    }.bind(this));
+        //};
+    };
+    // Изменить объект
+    table_dir_park_station.prototype.edit = function (data) {
+        //// Выполнить править
+        //this.out_clear();
+        //if (data) {
+        //    // Проверим есть такой парк
+        //    var park = this.ids_dir.list_park_ways.find(function (o) {
+        //        return o['park_name_' + App.Lang] === $.trim(data['park_name_' + App.Lang]);
+        //    });
+        //    if (park) {
+        //        this.modal_edit_form.set_object_error('park_name_' + App.Lang, 'edit', 'Парк с таким названием уже существует, id строки =' + park.id);
+        //    } else {
+        //        this.modal_edit_form.close(); // закроем форму
+        //        this.modal_confirm_form.view('Править', 'Подтвердите правку парка, данная операция может затронуть несколько станций, править парк?', function (result) {
+        //            if (result) {
+        //                // Выполнить
+        //                LockScreen(langView('mess_operation_dir_park', App.Langs));
+        //                this.ids_dir.putParkWays(data, function (result) {
+        //                    if (result > 0) {
+
+        //                        this.update();
+        //                        this.out_info("Парк - обновлен");
+        //                    } else {
+        //                        LockScreenOff();
+        //                        this.modal_edit_form.out_error('При обновлении парка произошла ошибка, код ошибки : ' + result);
+        //                    }
+        //                }.bind(this));
+        //            } else {
+        //                // Отмена
+        //                this.out_warning("Операция 'Обновить парк' – отменена");
+        //            }
+        //        }.bind(this));
+        //    }
+        //};
     };
 
     App.table_dir_park_station = table_dir_park_station;
