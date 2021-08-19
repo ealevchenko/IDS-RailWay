@@ -189,25 +189,6 @@
             // Определим списки для полей
             // Получим список станций для отображения
             this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false ? true : false; });
-            //// Функция получения списка парков по указаной станции
-            //var get_list_park = function (id_statation) {
-            //    this.list_park = [];
-            //    var list_way = this.ids_dir.list_ways.filter(function (i) {
-            //        return i.id_station == id_statation;
-            //    });
-            //    $.each(list_way, function (i, el) {
-            //        var pw = el.Directory_ParkWays
-            //        var park = this.list_park.find(function (o) {
-            //            return o.value === pw.id;
-            //        });
-            //        if (!park) {
-            //            this.list_park.push({ value: pw.id, text: pw['park_name_' + App.Lang] });
-            //        }
-            //    }.bind(this));
-            //    return this.list_park;
-            //}.bind(this);
-            //this.list_divisions = this.ids_dir.getListDivisions('id', 'division_abbr', App.Lang, null);
-
             // Определим поля
             var fl_id = {
                 field: 'id',
@@ -228,6 +209,41 @@
                 col: null,
                 size: null,
             };
+            var fl_id_station = {
+                field: 'id_station',
+                type: 'number',
+                add: 'select',
+                edit: 'select',
+                name: 'station',
+                label: 'Станция',
+                placeholder: 'Укажите станцию',
+                maxlength: null,
+                required: true,
+                control: null,
+                list: this.list_station,
+                select: function (e, ui) {
+                    event.preventDefault();
+                    // Обработать выбор
+                    var id = Number($(e.currentTarget).val());
+
+                },
+                update: null,
+                close: null,
+                //add_validation: [{
+                //    check_type: 'not_null',
+                //    error: 'Укажите станцию',
+                //    ok: '',
+                //}],
+                //edit_validation: [{
+                //    check_type: 'not_null',
+                //    error: 'Укажите станцию',
+                //    ok: '',
+                //}],
+                default: -1,
+                row: 1,
+                col: 1,
+                size: 8,
+            };
             var fl_position_park = {
                 field: 'position_park',
                 type: 'number',
@@ -235,139 +251,66 @@
                 edit: 'number',
                 name: 'position',
                 label: 'Поз.',
+                placeholder: 'Позиция',
+                maxlength: null,
+                min: 1,
+                max: 100,
+                required: true,
                 control: null,
                 list: null,
                 select: null,
                 update: null,
                 close: null,
-                add_validation: [{
-                    check_type: 'range_number',
-                    min: 1,
-                    max: 100,
-                    error: 'Позиция пути должна быть в диапазоне от 1 до 100',
-                    ok: null,
-                }],
-                edit_validation: [
-                    {
-                        check_type: 'range_number',
-                        min: 1,
-                        max: 100,
-                        error: 'Позиция пути должна быть в диапазоне от 1 до 100',
-                        ok: null,
-                    },
-                ],
+                //add_validation: [{
+                //    check_type: 'range_number',
+                //    min: 1,
+                //    max: 100,
+                //    error: 'Позиция пути должна быть в диапазоне от 1 до 100',
+                //    ok: null,
+                //}],
+                //edit_validation: [
+                //    {
+                //        check_type: 'range_number',
+                //        min: 1,
+                //        max: 100,
+                //        error: 'Позиция пути должна быть в диапазоне от 1 до 100',
+                //        ok: null,
+                //    },
+                //],
                 default: 1,
-                row: 4,
+                row: 1,
+                col: 2,
+                size: 4,
+            };
+            var fl_park = {
+                field: 'park',
+                type: 'string',
+                add: 'text',
+                edit: 'text',
+                name: 'park',
+                label: 'Парк',
+                placeholder: 'Выберите парк из списка',
+                maxlength: 100,
+                required: true,
+                control: null,
+                list: null,
+                select: null,
+                update: null,
+                close: null,
+                //add_validation: [{
+                //    check_type: 'not_null',
+                //    error: 'Укажите название парка (рус)',
+                //    ok: null,
+                //}],
+                //edit_validation: [{
+                //    check_type: 'not_null',
+                //    error: 'Укажите название парка (рус)',
+                //    ok: null,
+                //}],
+                default: null,
+                row: 2,
                 col: 1,
-                size: 2,
-            };
-            var fl_park_name_ru = {
-                field: 'park_name_ru',
-                type: 'string',
-                add: 'text',
-                edit: 'text',
-                name: 'park_name_ru',
-                label: 'Название парка (рус.)',
-                control: null,
-                list: null,
-                select: null,
-                update: null,
-                close: null,
-                add_validation: [{
-                    check_type: 'not_null',
-                    error: 'Укажите название парка (рус)',
-                    ok: null,
-                }],
-                edit_validation: [{
-                    check_type: 'not_null',
-                    error: 'Укажите название парка (рус)',
-                    ok: null,
-                }],
-                default: null,
-                row: 2,
-                col: 2,
-                size: 6,
-            };
-            var fl_park_name_en = {
-                field: 'park_name_en',
-                type: 'string',
-                add: 'text',
-                edit: 'text',
-                name: 'park_name_en',
-                label: 'Название парка (анг.)',
-                control: null,
-                list: null,
-                select: null,
-                update: null,
-                close: null,
-                add_validation: [{
-                    check_type: 'not_null',
-                    error: 'Укажите название парка (анг)',
-                    ok: null,
-                }],
-                edit_validation: [{
-                    check_type: 'not_null',
-                    error: 'Укажите название парка (анг)',
-                    ok: null,
-                }],
-                default: null,
-                row: 2,
-                col: 2,
-                size: 6,
-            };
-            var fl_park_abbr_ru = {
-                field: 'park_abbr_ru',
-                type: 'string',
-                add: 'text',
-                edit: 'text',
-                name: 'park_abbr_ru',
-                label: 'Крат. назв. парка (рус.)',
-                control: null,
-                list: null,
-                select: null,
-                update: null,
-                close: null,
-                add_validation: [{
-                    check_type: 'not_null',
-                    error: 'Укажите абревиатуру парка (рус)',
-                    ok: null,
-                }],
-                edit_validation: [{
-                    check_type: 'not_null',
-                    error: 'Укажите абревиатуру парка (рус)',
-                    ok: null,
-                }],
-                default: null,
-                row: 2,
-                col: 3,
-                size: 4,
-            };
-            var fl_park_abbr_en = {
-                field: 'park_abbr_en',
-                type: 'string',
-                add: 'text',
-                edit: 'text',
-                name: 'park_abbr_en',
-                label: 'Крат. назв. парка (анг.)',
-                control: null,
-                list: null,
-                select: null,
-                update: null,
-                close: null,
-                add_validation: [{
-                    check_type: 'not_null',
-                    error: 'Укажите абревиатуру парка (анг)',
-                    ok: null,
-                }],
-                edit_validation: [{
-                    check_type: 'not_null',
-                    error: 'Укажите абревиатуру парка (анг)',
-                    ok: null,
-                }],
-                default: null,
-                row: 3,
-                col: 3,
-                size: 4,
+                size: 12,
             };
             var fl_create = {
                 field: 'create',
@@ -447,11 +390,9 @@
             };
             var fields = [];
             fields.push(fl_id)
+            fields.push(fl_id_station)
             fields.push(fl_position_park)
-            fields.push(fl_park_name_ru)
-            fields.push(fl_park_name_en)
-            fields.push(fl_park_abbr_ru)
-            fields.push(fl_park_abbr_en)
+            fields.push(fl_park)
             fields.push(fl_create)
             fields.push(fl_create_user)
             fields.push(fl_change)
@@ -461,7 +402,7 @@
                 fields_form: fields,
                 alert: true,
                 title: "Править путь",
-                size: "xl",
+                size: "lg",
                 fn_ok: function (data) {
                     this.out_clear();
                     if (data && !data.old) {
