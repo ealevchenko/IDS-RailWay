@@ -62,6 +62,7 @@ namespace UZ
             try
             {
                 string api_comand = "?func=print&site_nv=" + num.ToString();
+                //string api_comand = "?p_NV=" + num.ToString();
 
                 HtmlDocument htmlSnippet = new HtmlDocument();
 
