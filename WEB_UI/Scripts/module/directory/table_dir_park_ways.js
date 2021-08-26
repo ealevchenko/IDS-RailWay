@@ -569,7 +569,7 @@
             this.insert(data.new);
         } else {
             // Править
-            this.edit(data.new);
+            this.edit(data.new, data.old.id);
         };
     };
     // Добавить объект
@@ -597,7 +597,7 @@
         };
     };
     // Изменить объект
-    table_dir_park_ways.prototype.edit = function (data) {
+    table_dir_park_ways.prototype.edit = function (data, id_old) {
         // Выполнить править
         this.out_clear();
         if (data) {
@@ -605,7 +605,7 @@
             var park = this.ids_dir.list_park_ways.find(function (o) {
                 return o['park_name_' + App.Lang] === $.trim(data['park_name_' + App.Lang]);
             });
-            if (park) {
+            if (park && data.id !== park.id) {
                 this.modal_edit_form.set_object_error('park_name_' + App.Lang, 'edit', 'Парк с таким названием уже существует, id строки =' + park.id);
             } else {
                 this.modal_edit_form.close(); // закроем форму
