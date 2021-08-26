@@ -88,8 +88,17 @@ namespace IDS
         way_not_crossing_uz = -1103,                        // Путь неимеет выход на УЗ
         way_is_not_null = -1104,                            // На пути стоят вагоны
 
-        // Directory_Wagons -1200..
-        not_dir_wagon_of_db = -1201,                // В базе данных нет записи указанной строки вагона
+        // Directory_ParkWays -1200..
+        not_dir_park_of_db = -1201,                         // В базе данных нет указаного парка
+
+        // Directory_Station -1300..
+        not_dir_station_of_db = -1301,                      // В базе данных нет указаной станции
+
+        // Directory_Wagons -1400..
+        not_dir_wagon_of_db = -1401,                        // В базе данных нет записи указанной строки вагона
+
+
+
 
     }
 
@@ -411,7 +420,8 @@ namespace IDS
         public void SetResultOperation(int result, int num)
         {
             this.listResultWagon.Add(new ResultWagon() { num = num, result = result });
-            if (result < 0) {
+            if (result < 0)
+            {
                 AddError();
             }
         }

@@ -1107,6 +1107,7 @@ namespace IDS
         {
             try
             {
+                if (ways == null || ways.Count() == 0) return 0;
                 // Проверка контекста
                 if (context == null)
                 {
@@ -1134,10 +1135,13 @@ namespace IDS
                 do
                 {
                     Directory_Ways way_edit = ways.Where(w => w.position_way == start_position).FirstOrDefault();
-                    way_edit.position_way = current_position;
-                    way_edit.change_user = user;
-                    way_edit.change = DateTime.Now;
-                    ef_way.Update(way_edit);
+                    if (way_edit != null)
+                    {
+                        way_edit.position_way = current_position;
+                        way_edit.change_user = user;
+                        way_edit.change = DateTime.Now;
+                        ef_way.Update(way_edit);
+                    }
                     current_position--;
                     start_position--;
                     count++;
@@ -1195,10 +1199,13 @@ namespace IDS
                 do
                 {
                     Directory_Ways way_edit = ways.Where(w => w.position_way == start_position).FirstOrDefault();
-                    way_edit.position_way = current_position;
-                    way_edit.change_user = user;
-                    way_edit.change = DateTime.Now;
-                    ef_way.Update(way_edit);
+                    if (way_edit != null)
+                    {
+                        way_edit.position_way = current_position;
+                        way_edit.change_user = user;
+                        way_edit.change = DateTime.Now;
+                        ef_way.Update(way_edit);
+                    }
                     current_position++;
                     start_position++;
                     count++;
@@ -1246,10 +1253,13 @@ namespace IDS
                 way.change_user = user;
                 way.change = DateTime.Now;
                 ef_way.Update(way);
-                way_down.position_way--;
-                way_down.change_user = user;
-                way_down.change = DateTime.Now;
-                ef_way.Update(way_down);
+                if (way_down != null)
+                {
+                    way_down.position_way--;
+                    way_down.change_user = user;
+                    way_down.change = DateTime.Now;
+                    ef_way.Update(way_down);
+                }
                 return 2;
             }
             catch (Exception e)
@@ -1321,10 +1331,14 @@ namespace IDS
                 way.change_user = user;
                 way.change = DateTime.Now;
                 ef_way.Update(way);
-                way_up.position_way++;
-                way_up.change_user = user;
-                way_up.change = DateTime.Now;
-                ef_way.Update(way_up);
+                if (way_up != null)
+                {
+                    way_up.position_way++;
+                    way_up.change_user = user;
+                    way_up.change = DateTime.Now;
+                    ef_way.Update(way_up);
+                }
+
                 return 2;
             }
             catch (Exception e)
@@ -1380,8 +1394,13 @@ namespace IDS
                 // Получим все пути по даной станции и парку
                 List<Directory_Ways> ways = ef_way.Context.Where(w => w.id_station == way.id_station && w.id_park == way.id_park && w.way_delete == null).OrderBy(p => p.position_way).ToList();
                 Directory_Ways last_ways = ways.OrderByDescending(w => w.position_way).FirstOrDefault();
-                if (way.position_way > last_ways.position_way + 1) return (int)errors_base.input_position_error; // Ошибка, неправильно указана позиция 
-                if (way.position_way <= last_ways.position_way)
+                int last_position = 0;
+                if (last_ways != null)
+                {
+                    last_position = last_ways.position_way;
+                }
+                if (way.position_way > last_position + 1) return (int)errors_base.input_position_error; // Ошибка, неправильно указана позиция 
+                if (way.position_way <= last_position)
                 {
                     // Требуется смещение
                     int res_down = OperationDownPositionWayOfPark(ref context, ways, way.position_way, null, way.create_user);
@@ -1475,36 +1494,52 @@ namespace IDS
                 // Получим все пути по даной станции и парку
                 List<Directory_Ways> ways = ef_way.Context.Where(w => w.id_station == way.id_station && w.id_park == way.id_park && w.way_delete == null).OrderBy(p => p.position_way).ToList();
                 Directory_Ways last_ways = ways.OrderByDescending(w => w.position_way).FirstOrDefault();
-                if (way.position_way > last_ways.position_way + 1) return (int)errors_base.input_position_error; // Ошибка, неправильно указана позиция 
-                // Проверим если позиции не совпадают тогда двигаем, еслинет тогда только правим
-                if (way_old.position_way == 0)
+                int last_position = 0;
+                if (last_ways != null)
                 {
-                    // сдвинуть вниз с новой позиции и до конца
-                    int res_down = OperationDownPositionWayOfPark(ref context, ways, way.position_way, null, user);
+                    last_position = last_ways.position_way;
+                }
+                // Проверим если позиции не совпадают тогда двигаем, еслинет тогда только правим
+                if (way_old.id_park == way.id_park)
+                {
+                    if (way.position_way > last_position + 1) return (int)errors_base.input_position_error; // Ошибка, неправильно указана позиция                     
+                    // Парк не меняли
+                    if (way_old.position_way == 0)
+                    {
+                        // сдвинуть вниз с новой позиции и до конца
+                        int res_down = OperationDownPositionWayOfPark(ref context, ways, way.position_way, null, user);
+                    }
+                    else
+                    {
+                        // Позиция не равна 0, смещаем
+                        if (way_old.position_way != way.position_way)
+                        {
+                            if (way_old.position_way < way.position_way)
+                            {
+                                // Сдвинуть вверх
+                                int res_up = OperationUpPositionWayOfPark(ref context, ways, way_old.position_way, way.position_way, user);
+                            }
+                            else
+                            {
+                                // сдвинуть вниз
+                                int res_down = OperationDownPositionWayOfPark(ref context, ways, way.position_way, way_old.position_way, user);
+                            }
+                        }
+                    }
+                    // Позиция как задано
+                    way_old.position_way = way.position_way;
                 }
                 else
                 {
-                    // Позиция не равна 0, смещаем
-                    if (way_old.position_way != way.position_way)
-                    {
-                        if (way_old.position_way < way.position_way)
-                        {
-                            // Сдвинуть вверх
-                            int res_up = OperationUpPositionWayOfPark(ref context, ways, way_old.position_way, way.position_way, user);
-                        }
-                        else
-                        {
-                            // сдвинуть вниз
-                            int res_down = OperationDownPositionWayOfPark(ref context, ways, way.position_way, way_old.position_way, user);
-                        }
-                    }
-                }
+                    // Парк меняли, позицию по умолчанию 1
+                    int res_down = OperationDownPositionWayOfPark(ref context, ways, 1, null, user);
+                    way_old.position_way = 1;
 
+                }
                 // Обновим данные по путь
                 way_old.id_station = way.id_station;
                 way_old.id_park = way.id_park;
                 way_old.position_park = way.position_park;
-                way_old.position_way = way.position_way;
                 way_old.way_num_ru = way.way_num_ru;
                 way_old.way_num_en = way.way_num_en;
                 way_old.way_name_ru = way.way_name_ru;

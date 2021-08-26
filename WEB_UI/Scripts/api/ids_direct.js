@@ -710,9 +710,9 @@
             } else { list_filtr = list_obj; }
             $.each(list_filtr, function (i, el) {
                 if (lang) {
-                    list.push({ value: el[fvalue], text: el[ftext + '_' + lang] });
+                    list.push({ value: el[fvalue], text: el[ftext + '_' + lang], disabled: false });
                 } else {
-                    list.push({ value: el[fvalue], text: el[ftext] });
+                    list.push({ value: el[fvalue], text: el[ftext], disabled: false });
                 }
             }.bind(this));
         }

@@ -33,3 +33,13 @@
         .date-picker-wrapper .gap .gap-bottom-mask {
             z-index: 1103;
         }
+
+
+li.new {
+    color:red;
+    font-style:italic;
+}
+li.exist {
+    color: green;
+    font-weight:600;
+}

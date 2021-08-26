@@ -292,7 +292,7 @@
             init_element = new fc_ui.init_textarea(element, null, field.select);
         }
         if (type === 'autocomplete') {
-            init_element = new fc_ui.init_autocomplete(element, { data: field.list, minLength:2});
+            init_element = new fc_ui.init_autocomplete(element, { data: field.list, minLength: 2 });
         }
         return init_element;
     };
@@ -437,31 +437,42 @@
                     switch (type) {
                         case null: {
                             result[el.field] = this.data ? this.data[el.field] : el.default;
+
                             break;
                         };
                         case "select": {
+                            //result[el.field] = value !== null && value !== "-1" ? Number(value) : null;
+                            var value = element_form.val();
                             result[el.field] = value !== null && value !== "-1" ? Number(value) : null;
                             break;
                         };
                         case "text": {
-                            result[el.field] = value;
+                            //result[el.field] = value;
+                            result[el.field] = element_form.val();
                             break;
                         };
                         case "textarea": {
-                            result[el.field] = value;
+                            //result[el.field] = value;
+                            result[el.field] = element_form.val();
                             break;
                         };
                         case "number": {
+                            //result[el.field] = value !== null && value !== "" ? Number(value) : null;
+                            var value = element_form.val();
                             result[el.field] = value !== null && value !== "" ? Number(value) : null;
                             break;
                         };
                         case "checkbox": {
+                            var value = element_form.val();
                             result[el.field] = value !== null && value !== "" ? Boolean(value) : null;
                             break;
                         };
                         case "datetime": {
-                            result[el.field] = value !== null && value !== "" ? moment(value, 'DD.MM.YYYY HH:mm').toISOString() : null;
+                            //result[el.field] = value !== null && value !== "" ? moment(value, 'DD.MM.YYYY HH:mm').toISOString() : null;
+                            var value = element_form.val();
+                            result[el.field] = value;// !== null && value !== "" ? moment(value, 'DD.MM.YYYY HH:mm').toISOString() : null;;
                             break;
+
                         };
                         case "autocomplete": {
                             result[el.field] = element_form.val();

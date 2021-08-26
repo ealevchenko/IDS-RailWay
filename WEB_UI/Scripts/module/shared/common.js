@@ -51,6 +51,7 @@
         };
         this.update = function (data, default_value, fn_option) {
             this.$element.empty();
+
             if (default_value === -1) {
                 element.append($default_option);
             }
@@ -167,7 +168,9 @@
         this.get = function () {
             var datetime = this.$element.val();
             if (datetime !== null && datetime !== "") {
-                return moment(datetime, 'DD.MM.YYYY' + (time ? ' hh:mm' : ''));
+                //var dt = moment.utc(datetime, 'DD.MM.YYYY' + (time ? ' hh:mm' : '')).tz('Europe/Kiev');
+                //return moment(dt).toISOString();
+                return moment.utc(datetime, 'DD.MM.YYYY' + (time ? ' hh:mm' : '')).toISOString();
             } else {
                 return null;
             }
@@ -202,7 +205,7 @@
         var get_alist = function (data) {
             var alist = [];
             $.each(data, function (i, el) {
-                alist.push({ value: el.text, label: el.text });
+                alist.push({ value: el.text, label: el.text, disabled: el.disabled ? el.disabled : null });
             }.bind(this));
             return alist;
         };
@@ -213,23 +216,40 @@
             data: [],
             minLength: 0,
             out_value: false,
+            val_inp: 'value',
         }, options);
 
         this.init = function () {
             this.alist = get_alist(this.settings.data);
+            /*            this.$element = element.catcomplete({*/
             this.$element = element.autocomplete({
                 minLength: this.settings.minLength,
                 source: this.alist,
             });
+            var widgetInst = this.$element.autocomplete('instance');
+            widgetInst._renderItem = function (ul, item) {
+                return $("<li>")
+                    .append($("<div>").text(item.label))
+                    .addClass(item.disabled ? 'exist' : 'new')
+                    .appendTo(ul);
+            };
         };
-        this.update = function (data) {
+        this.update = function (data, value) {
             this.settings.data = data;
             this.alist = get_alist(this.settings.data);
             this.$element.autocomplete("option", "source", this.alist);
+            this.val(value);
         };
         this.val = function (value) {
             if (value !== undefined) {
-                this.$element.val(value);
+                var text_out = value;
+                if (this.settings.val_inp === 'value') {
+                    var select = this.settings.data.find(function (o) {
+                        return o.value == $.trim(value);
+                    }.bind(this));
+                    text_out = select ? select.text : null;
+                }
+                this.$element.val(text_out);
             } else {
                 var select = this.settings.data.find(function (o) {
                     return o.text === $.trim(this.$element.val());
@@ -237,9 +257,9 @@
                 return select ? select.value : null;
             };
         };
-        this.update = function (data) {
+        //this.update = function (data) {
 
-        };
+        //};
         this.init();
     }
 

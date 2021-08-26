@@ -123,7 +123,8 @@ namespace WEB_UI
 
             // Moment ---------------------------------------------------------------------------
             bundles.Add(new ScriptBundle("~/bundles/Moment").Include(
-                "~/Scripts/moment.min.js"
+                "~/Scripts/moment.min.js"//,
+                //"~/Scripts/moment-timezone.min.js"
                 ));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
