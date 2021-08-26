@@ -56,13 +56,23 @@
         alert.clear_message();
         var id_station = station.val();
         var id_park = park.val();
-        if (id_station!==null && id_park!=null && id_station >= 0 && id_park >= 0) {
+        if (id_station !== null && id_park != null && id_station >= 0 && id_park >= 0) {
             tdways.load_of_station_park(id_station, id_park);
         } else {
             alert.out_warning_message("Выберите станцию и парк");
             tdways.view([]);
         }
-    }
+    };
+    // Обновить список парков 
+    var update_park = function () {
+        var id_station = Number(station.val());
+        var id_park = Number(park.val());
+        var way = ids_dir.list_ways.find(function (o) {
+            return o.id_station === id_station && o.id_park === id_park;
+        });
+        park.update(get_list_park(id_station), way ? id_park : -1, null);
+        view_ways();
+    };
 
     // После загрузки документа
     $(document).ready(function ($) {
@@ -77,13 +87,7 @@
                     // Обновить таблицы согласно списка - принудительно, result- список фактически обновленных таблиц
                     load_db(list, true, function (result) {
                         var res_global = result;
-                        var id_station = Number(station.val());
-                        var id_park = Number(park.val());
-                        var way = ids_dir.list_ways.find(function (o) {
-                            return o.id_station === id_station && o.id_park === id_park;
-                        });
-                        park.update(get_list_park(id_station), way ? id_park: -1, null);
-                        view_ways();
+                        update_park();
                         // Обновим таблицы в модуле
                         this.load_db(list, false, function (result) {
                             var list = null;
