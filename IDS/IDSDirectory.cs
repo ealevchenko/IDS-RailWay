@@ -1802,6 +1802,126 @@ namespace IDS
                 return -1;
             }
         }
+        /// <summary>
+        /// Операция сдвига позиций вниз
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="ways"></param>
+        /// <param name="start"></param>
+        /// <param name="stop"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationDownPositionParkOfStation(ref EFDbContext context, List<Directory_Ways> ways, int start, int? stop, string user)
+        {
+            try
+            {
+                // Проверка контекста
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                // если конечная позиция не указана тогда просто сдвинуть в низ с определенной позиции
+                if (stop == null)
+                {
+                    int last_position = ways.Where(w => w.way_delete == null).GroupBy(p => p.id_park).Count();
+                    stop = last_position;
+                }
+
+                EFDirectory_Ways ef_way = new EFDirectory_Ways(context);
+                // сдвинуть вниз
+                int current_position = (int)stop + 1;
+                int start_position = (int)stop;
+                int stop_position = start;
+                int count = 0;
+                // сместим промежуточные позиции вверх
+                do
+                {
+                    Directory_Ways way_edit = ways.Where(w => w.position_way == start_position).FirstOrDefault();
+                    way_edit.position_way = current_position;
+                    way_edit.change_user = user;
+                    way_edit.change = DateTime.Now;
+                    ef_way.Update(way_edit);
+                    current_position--;
+                    start_position--;
+                    count++;
+                }
+                while (start_position >= stop_position);
+                return count;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationDownPositionWayOfPark(context={0}, ways={1}, start={2}, stop={2}, user={3})",
+                    context, ways, start, stop, user), servece_owner, eventID);
+                return -1;
+            }
+        }
+
+        /// <summary>
+        /// Добавить парк в станцию
+        /// </summary>
+        /// <param name="id_station"></param>
+        /// <param name="position"></param>
+        /// <param name="id_park"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationInsertParkOfStation(int id_station, int position, int id_park, string user)
+        {
+            try
+            {
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDbContext context = new EFDbContext();
+                EFDirectory_Ways ef_way = new EFDirectory_Ways(context);
+                EFDirectory_ParkWays ef_park_ways = new EFDirectory_ParkWays(context);
+                EFDirectory_Station ef_station = new EFDirectory_Station(context);
+                Directory_Station station = ef_station.Context.Where(s => s.id == id_station).FirstOrDefault();
+                if (station == null) return (int)errors_base.not_dir_station_of_db; // Нет указаной станции в базе данных
+                Directory_ParkWays park = ef_park_ways.Context.Where(p => p.id == id_park).FirstOrDefault();
+                if (park == null) return (int)errors_base.not_dir_park_of_db; // Нет указаного парка в базе данных
+                // определим последнюю позицию по паркам
+                int last_position = ef_way.Context.Where(w => w.id_station == id_station && w.way_delete == null).GroupBy(p => p.id_park).Count();
+                // если указаная позиция больше чем существует позиций, корректируем ее
+                if (position <= last_position)
+                {
+                    List<Directory_Ways> ways = ef_way.Context.Where(w => w.id_station == id_station && w.way_delete == null).OrderBy(p => p.position_park).ToList();
+                    // Требуется смещение
+                    int res_down = OperationDownPositionParkOfStation(ref context, ways, position, null, user);
+                }
+                else
+                {
+                    position = last_position + 1; // Корректируем следующая за последней.
+                }
+
+
+
+
+                //// Получим все пути по даной станции и парку
+                //List<Directory_Ways> ways = ef_way.Context.Where(w => w.id_station == way.id_station && w.id_park == way.id_park && w.way_delete == null).OrderBy(p => p.position_way).ToList();
+                //Directory_Ways last_ways = ways.OrderByDescending(w => w.position_way).FirstOrDefault();
+                //if (way.position_way > last_ways.position_way + 1) return (int)errors_base.input_position_error; // Ошибка, неправильно указана позиция 
+                //if (way.position_way <= last_ways.position_way)
+                //{
+                //    // Требуется смещение
+                //    int res_down = OperationDownPositionWayOfPark(ref context, ways, way.position_way, null, way.create_user);
+                //}
+                //ef_way.Add(way);
+                return context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationInsertParkOfStation(id_station={0}, position={1}, id_park={2}, user={2})",
+                    id_station, position, id_park, user), servece_owner, eventID);
+                return -1;
+            }
+        }
         #endregion
 
 

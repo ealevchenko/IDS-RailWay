@@ -38,8 +38,9 @@
     //var TDWAY = App.table_dir_way;
     //var tdways = new TDWAY('div#ways'); // Создадим экземпляр таблицы
 
-    var active_tab = 0;
 
+    var active_tab = 0;
+    // Инициализируем tabs
     $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
         switch (e.target.id) {
             case 'pills-park-station-tab': {
@@ -65,9 +66,9 @@
 
     var alert = new ALERT($('div#main-alert')); // Создадим класс ALERTG
     var $station = $('select#station');
-    var $park = $('select#park');
+/*    var $park = $('select#park');*/
     var station = null;
-    var park = null;
+/*    var park = null;*/
     // Функция обновить данные из базы list-список таблиц, update-обновить принудительно, callback-возврат список обновленных таблиц
     var load_db = function (list, update, callback) {
         LockScreen(langView('mess_load_reference', App.Langs));
