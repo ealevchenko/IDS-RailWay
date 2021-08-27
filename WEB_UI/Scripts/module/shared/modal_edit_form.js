@@ -430,10 +430,10 @@
                 // Заполним result полями
                 $.each(this.settings.fields_form, function (i, el) {
                     //TODO: Переключить val() на element_form
-                    var element = this.data ? (el.element_edit ? el.element_edit.$element : null) : (el.element_add ? el.element_add.$element : null);
+/*                    var element = this.data ? (el.element_edit ? el.element_edit.$element : null) : (el.element_add ? el.element_add.$element : null);*/
                     var element_form = this.data ? (el.element_edit ? el.element_edit : null) : (el.element_add ? el.element_add : null);
                     var type = this.data ? el.edit : el.add;
-                    var value = element ? ($(element).attr('type') === "checkbox" ? $(element).prop('checked') : element.val()) : null;
+/*                    var value = element ? ($(element).attr('type') === "checkbox" ? $(element).prop('checked') : element.val()) : null;*/
                     switch (type) {
                         case null: {
                             result[el.field] = this.data ? this.data[el.field] : el.default;
