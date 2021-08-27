@@ -1,5 +1,5 @@
-﻿/// <reference path="modal_confirm_form.js" />
-/// <reference path="modal_edit_form.js" />
+﻿/// <reference path="../shared/modal_confirm_form.js" />
+/// <reference path="../shared/modal_edit_form.js" />
 
 (function (window) {
     'use strict';
@@ -326,7 +326,7 @@
             fn_db_update: function (list) {
                 this.load_db(list, true, function (result) {
                     this.update_element(result)
-                });
+                }.bind(this));
             }.bind(this),
         }, options);
         // Создадим ссылку на модуль работы с базой данных
@@ -336,10 +336,12 @@
         this.list_ways = null;          // Список путей для отображения
         this.list_divisions = null;     // Список подразделений для отображения
         //
+        this.select_row_ways = null;
+
         LockScreen(langView('mess_init_dir_way', App.Langs));
         var MCF = App.modal_confirm_form;
-        var modal_confirm_form = new MCF(this.selector); // Создадим экземпляр окно сообщений
-        modal_confirm_form.init();
+        this.modal_confirm_form = new MCF(this.selector); // Создадим экземпляр окно сообщений
+        this.modal_confirm_form.init();
 
         // Инициализация формы для правки полей
         var MEF = App.modal_edit_form;
@@ -1082,145 +1084,35 @@
                     {
                         text: langView('title_button_edit', App.Langs),
                         action: function (e, dt, node, config) {
-                            this.modal_edit_form.view(App.Select_Row_ways);
+                            this.modal_edit_form.view(this.select_row_ways);
                         }.bind(this),
                         enabled: false
                     },
                     {
                         text: langView('title_button_del', App.Langs),
                         action: function (e, dt, node, config) {
-                            this.out_clear();
-                            if (App.Select_Row_ways !== null) {
-                                modal_confirm_form.view('Удалить', 'Удалить выбранный путь [' + App.Select_Row_ways['way_num_' + App.Lang] + ' - ' + App.Select_Row_ways['way_name_' + App.Lang] + '] ?', function (result) {
-                                    if (result) {
-                                        // Выполнить
-                                        var operation = {
-                                            id_way: App.Select_Row_ways.id,
-                                            user: App.User_Name,
-                                        };
-                                        LockScreen(langView('mess_operation_dir_way', App.Langs));
-                                        this.ids_dir.postOperationDeleteWayOfPark(operation, function (result) {
-                                            if (result > 0) {
-                                                this.update();
-                                                this.out_clear();
-                                                this.out_info("Путь - удален!");
-                                                this.settings.fn_db_update(['ways']);
-                                            } else {
-                                                this.out_error("Ошибка, выполнения операции 'Удалить путь', код ошибки : " + result);
-                                                LockScreenOff();
-                                            }
-                                        }.bind(this));
-
-                                    } else {
-                                        // Отмена
-                                        this.out_warning("Операция 'Удалить путь' – отменена");
-                                    }
-                                }.bind(this));
-                            } else {
-
-                            }
-
+                            this.delete();
                         }.bind(this),
                         enabled: false
                     },
                     {
                         text: langView('title_button_up', App.Langs),
                         action: function (e, dt, node, config) {
-                            this.out_clear();
-                            var id = App.Select_Row_ways ? App.Select_Row_ways.id : null;
-                            var position = App.Select_Row_ways ? App.Select_Row_ways.position_way : null;
-                            if (id && position > 0) {
-                                var operation = {
-                                    id_way: id,
-                                    user: App.User_Name,
-                                };
-                                LockScreen(langView('mess_operation_dir_way', App.Langs));
-                                this.ids_dir.postOperationUp1PositionWayOfPark(operation, function (result) {
-                                    if (result > 0) {
-                                        this.update();
-                                        this.out_info("Путь перенесен на позицию верх");
-                                    } else {
-                                        this.out_error("Ошибка, выполнения операции 'перенос на позицию вверх', код ошибки : " + result);
-                                        LockScreenOff();
-                                    }
-                                }.bind(this));
-                            } else {
-                                this.out_clear();
-                                if (id === null) {
-                                    this.out_error("Ошибка, выполнения операции изменения позиции пути, путь не определен");
-                                }
-                                if (position === null || position === 0) {
-                                    this.out_error("Ошибка, выполнения операции изменения позиции пути, позиция пути неопределена или равна 0");
-                                }
-                            }
+                            this.up();
                         }.bind(this),
                         enabled: false
                     },
                     {
                         text: langView('title_button_dn', App.Langs),
                         action: function (e, dt, node, config) {
-                            this.out_clear();
-                            var id = App.Select_Row_ways ? App.Select_Row_ways.id : null;
-                            var position = App.Select_Row_ways ? App.Select_Row_ways.position_way : null;
-                            if (id && position > 0) {
-                                var operation = {
-                                    id_way: id,
-                                    user: App.User_Name,
-                                };
-                                LockScreen(langView('mess_operation_dir_way', App.Langs));
-                                this.ids_dir.postOperationDown1PositionWayOfPark(operation, function (result) {
-                                    if (result > 0) {
-                                        this.update();
-                                        this.out_info("Путь перенесен на позицию вниз");
-                                    } else {
-                                        this.out_error("Ошибка, выполнения операции 'Перенос на позицию вниз', код ошибки : " + result);
-                                        LockScreenOff();
-                                    }
-                                }.bind(this));
-                            } else {
-                                this.out_clear();
-                                if (id === null) {
-                                    this.out_error("Ошибка, выполнения операции изменения позиции пути, путь не определен");
-                                }
-                                if (position === null || position === 0) {
-                                    this.out_error("Ошибка, выполнения операции изменения позиции пути, позиция пути неопределена или равна 0");
-                                }
-                            }
+                            this.down();
                         }.bind(this),
                         enabled: false
                     },
                     {
                         text: langView('title_button_auto', App.Langs),
                         action: function (e, dt, node, config) {
-                            this.out_clear();
-                            modal_confirm_form.view('Выполнить', 'Выполнить автоматическую коррекцию путей?', function (result) {
-                                if (result) {
-                                    // Выполнить 
-                                    if (this.id_station && this.id_park) {
-                                        var operation = {
-                                            id_station: this.id_station,
-                                            id_park: this.id_park,
-                                            user: App.User_Name,
-                                        };
-                                        LockScreen(langView('mess_operation_dir_way', App.Langs));
-                                        this.ids_dir.postOperationAutoPositionWayOfPark(operation, function (result) {
-                                            if (result > 0) {
-                                                this.update();
-                                                this.out_info("Автоматическая коррекция путей – выполнена! Обновленно :" + result + " записей");
-                                            } else {
-                                                this.out_error("Ошибка, выполнения операции автоматической коррекции путей, код ошибки : " + result);
-                                                LockScreenOff();
-                                            }
-                                        }.bind(this));
-                                    } else {
-                                        this.out_error("Автоматическая коррекция путей – отклонена не определена станция [" + this.id_station + "] или парк [" + this.id_park + "]");
-                                        LockScreenOff();
-                                    };
-                                } else {
-                                    // Отмена
-                                    this.out_warning("Автоматическая коррекция путей – отменена");
-                                }
-                            }.bind(this));
+                            this.auto();
                         }.bind(this),
                         enabled: true
                     },
@@ -1237,13 +1129,13 @@
                     this.obj_t_way.button(3).enable(!(row && row.way_delete));
                     this.obj_t_way.button(4).enable(!(row && row.way_delete));
                     this.obj_t_way.button(5).enable(!(row && row.way_delete));
-                    App.Select_Row_ways = row;
+                    this.select_row_ways = row;
                 } else {
                     this.obj_t_way.button(2).enable(false);
                     this.obj_t_way.button(3).enable(false);
                     this.obj_t_way.button(4).enable(false);
                     this.obj_t_way.button(5).enable(false);
-                    App.Select_Row_ways = null;
+                    this.select_row_ways = null;
                 }
             }.bind(this));
             //----------------------------------
@@ -1258,21 +1150,21 @@
         this.obj_t_way.clear();
         this.obj_t_way.rows.add(data);
         this.obj_t_way.order([3, 'asc']);
-        if (App.Select_Row_ways !== null) {
-            this.obj_t_way.row('#' + App.Select_Row_ways.id).select();
+        if (this.select_row_ways !== null) {
+            this.obj_t_way.row('#' + this.select_row_ways.id).select();
         }
         this.obj_t_way.draw();
     };
     // загрузить данные 
     table_dir_way.prototype.load_of_station_park = function (id_station, id_park) {
-        if (id_station && id_park) {
+        if (id_station >= 0 && id_park >= 0) {
             LockScreen(langView('mess_load_dir_way', App.Langs));
             this.ids_dir.getWaysOfStationIDParkID(id_station, id_park, function (ways) {
                 this.id_station = id_station;
                 this.id_park = id_park;
                 this.modal_edit_form.set_default_fields_form('id_station', this.id_station);
                 this.modal_edit_form.set_default_fields_form('id_park', this.id_park);
-                App.Select_Row_ways = null;
+                this.select_row_ways = null;
                 this.view(ways);
                 LockScreenOff();
             }.bind(this));
@@ -1335,6 +1227,98 @@
             this.settings.alert.out_info_message(message)
         }
     }
+    // вверх объект
+    table_dir_way.prototype.up = function () {
+        this.out_clear();
+        var id = this.select_row_ways ? this.select_row_ways.id : null;
+        var position = this.select_row_ways ? this.select_row_ways.position_way : null;
+        if (id && position > 0) {
+            var operation = {
+                id_way: id,
+                user: App.User_Name,
+            };
+            LockScreen(langView('mess_operation_dir_way', App.Langs));
+            this.ids_dir.postOperationUp1PositionWayOfPark(operation, function (result) {
+                if (result > 0) {
+                    this.update();
+                    this.out_info("Путь перенесен на позицию верх");
+                } else {
+                    this.out_error("Ошибка, выполнения операции 'перенос на позицию вверх', код ошибки : " + result);
+                    LockScreenOff();
+                }
+            }.bind(this));
+        } else {
+            this.out_clear();
+            if (id === null) {
+                this.out_error("Ошибка, выполнения операции изменения позиции пути, путь не определен");
+            }
+            if (position === null || position === 0) {
+                this.out_error("Ошибка, выполнения операции изменения позиции пути, позиция пути неопределена или равна 0");
+            }
+        };
+    };
+    // вниз объект
+    table_dir_way.prototype.down = function () {
+        this.out_clear();
+        var id = this.select_row_ways ? this.select_row_ways.id : null;
+        var position = this.select_row_ways ? this.select_row_ways.position_way : null;
+        if (id && position > 0) {
+            var operation = {
+                id_way: id,
+                user: App.User_Name,
+            };
+            LockScreen(langView('mess_operation_dir_way', App.Langs));
+            this.ids_dir.postOperationDown1PositionWayOfPark(operation, function (result) {
+                if (result > 0) {
+                    this.update();
+                    this.out_info("Путь перенесен на позицию вниз");
+                } else {
+                    this.out_error("Ошибка, выполнения операции 'Перенос на позицию вниз', код ошибки : " + result);
+                    LockScreenOff();
+                }
+            }.bind(this));
+        } else {
+            this.out_clear();
+            if (id === null) {
+                this.out_error("Ошибка, выполнения операции изменения позиции пути, путь не определен");
+            }
+            if (position === null || position === 0) {
+                this.out_error("Ошибка, выполнения операции изменения позиции пути, позиция пути неопределена или равна 0");
+            }
+        };
+    };
+    // Авто-коррекция
+    table_dir_way.prototype.auto = function () {
+        this.out_clear();
+        this.modal_confirm_form.view('Выполнить', 'Выполнить автоматическую коррекцию путей?', function (result) {
+            if (result) {
+                // Выполнить 
+                if (this.id_station && this.id_park) {
+                    var operation = {
+                        id_station: this.id_station,
+                        id_park: this.id_park,
+                        user: App.User_Name,
+                    };
+                    LockScreen(langView('mess_operation_dir_way', App.Langs));
+                    this.ids_dir.postOperationAutoPositionWayOfPark(operation, function (result) {
+                        if (result > 0) {
+                            this.update();
+                            this.out_info("Автоматическая коррекция путей – выполнена! Обновленно :" + result + " записей");
+                        } else {
+                            this.out_error("Ошибка, выполнения операции автоматической коррекции путей, код ошибки : " + result);
+                            LockScreenOff();
+                        }
+                    }.bind(this));
+                } else {
+                    this.out_error("Автоматическая коррекция путей – отклонена не определена станция [" + this.id_station + "] или парк [" + this.id_park + "]");
+                    LockScreenOff();
+                };
+            } else {
+                // Отмена
+                this.out_warning("Автоматическая коррекция путей – отменена");
+            }
+        }.bind(this));
+    };
     // Сохранить объект
     table_dir_way.prototype.save = function (data) {
         this.out_clear();
@@ -1400,6 +1384,46 @@
             }.bind(this));
         }
     };
+    // Удалить объект
+    table_dir_way.prototype.delete = function (data) {
+        this.out_clear();
+        if (this.select_row_ways !== null) {
+            this.modal_confirm_form.view('Удалить', 'Удалить выбранный путь [' + this.select_row_ways['way_num_' + App.Lang] + ' - ' + this.select_row_ways['way_name_' + App.Lang] + '] ?', function (result) {
+                if (result) {
+                    // Выполнить
+                    var operation = {
+                        id_way: this.select_row_ways.id,
+                        user: App.User_Name,
+                    };
+                    LockScreen(langView('mess_operation_dir_way', App.Langs));
+                    this.ids_dir.postOperationDeleteWayOfPark(operation, function (result) {
+                        if (result > 0) {
+                            this.update();
+                            this.out_clear();
+                            this.out_info("Путь - удален!");
+                            this.settings.fn_db_update(['ways']);
+                        } else {
+                            this.out_error("Ошибка, выполнения операции 'Удалить путь', код ошибки : " + result);
+                            LockScreenOff();
+                        }
+                    }.bind(this));
+
+                } else {
+                    // Отмена
+                    this.out_warning("Операция 'Удалить путь' – отменена");
+                }
+            }.bind(this));
+        } else {
+
+        }
+    };
+    // Очистить объект
+    table_dir_way.prototype.destroy = function () {
+        this.modal_confirm_form.destroy();
+        this.modal_edit_form.destroy();
+        this.obj_t_way.destroy();
+        this.$dir_way.empty(); // empty in case the columns change
+    }
 
     App.table_dir_way = table_dir_way;
 
