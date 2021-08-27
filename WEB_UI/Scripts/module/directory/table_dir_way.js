@@ -350,7 +350,6 @@
             // Определим списки для полей
             // Получим список станций для отображения
             this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false ? true : false; });
-            //this.list_park_ways = this.ids_dir.getListParkWays('id', 'park_name', App.Lang);
             // Функция получения списка парков по указаной станции
             var get_list_park = function (id_statation) {
                 this.list_park_ways = this.ids_dir.getListParkWays('id', 'park_name', App.Lang);
@@ -370,7 +369,8 @@
                 }.bind(this));
                 return this.list_park_ways;
             }.bind(this);
-
+            // Получим список подразделений
+            this.list_divisions = this.ids_dir.getListDivisions('id', 'division_abbr', App.Lang, null);
             // Определим поля
             var fl_id = {
                 field: 'id',
