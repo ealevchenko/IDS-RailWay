@@ -50,7 +50,7 @@
             $.each(fm_element, function (i, el) {
                 var valid = el.validity;
                 // Проверим внешние правила
-                if (this.rules_val === null) {
+                if (this.rules_val === null || this.rules_val.length===0) {
                     // Нет внешних правил
                     if (!valid.valid) {
                         this.valid = false;

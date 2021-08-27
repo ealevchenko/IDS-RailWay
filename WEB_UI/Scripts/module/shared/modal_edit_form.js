@@ -257,6 +257,10 @@
             element = new checkbox_element(col, base, name, text, mode);
             return element.$element;
         }
+        if (type === 'autocomplete') {
+            element = new input_element(col, base, name, text, mode, 'text');
+            return element.$element;
+        }
     };
     // Получить элемент формы в зависисмости от типа
     function form_element(col, base, name, text, add, edit) {
@@ -287,6 +291,9 @@
         if (type === 'textarea') {
             init_element = new fc_ui.init_textarea(element, null, field.select);
         }
+        if (type === 'autocomplete') {
+            init_element = new fc_ui.init_autocomplete(element, { data: field.list, minLength: 2 });
+        }
         return init_element;
     };
     //-------------------------------------------------------------------------------
@@ -311,8 +318,6 @@
         }, options);
         this.rules_valid = [];
         this.data = null;
-
-
         //---------------------------------------------------------
         // Создадим модальную форму для редактирования
         var modalElement = new modal_form(this);
@@ -363,17 +368,32 @@
                 var $col = colElement.$element;
                 // Получим и добавим элементы
                 var colElement = new form_element($col, this, el_field.name, el_field.label, el_field.add, el_field.edit);
+                // Добавить метку заполнитель
+                if (el_field.placeholder) {
+                    colElement.$element_add.attr('placeholder', el_field.placeholder);
+                    colElement.$element_edit.attr('placeholder', el_field.placeholder);
+                }
+                // Добавить макс длину
+                if (el_field.maxlength) {
+                    colElement.$element_add.attr('maxlength', el_field.maxlength);
+                    colElement.$element_edit.attr('maxlength', el_field.maxlength);
+                }
+                // Добавить признак обязательное поле
+                if (el_field.required) {
+                    colElement.$element_add.attr('required', '');
+                    colElement.$element_edit.attr('required', '');
+                }
                 var $element_add = init_form_element(colElement.$element_add, el_field, el_field.add);
                 var $element_edit = init_form_element(colElement.$element_edit, el_field, el_field.edit);
                 var field = this.settings.fields_form.find(function (o) { return o.field === el_field.field });
                 if (field) {
                     if ($element_add) {
                         field['element_add'] = $element_add;
-                        this.rules_valid.push({ name: $($element_add.$element).attr('name'), validation: el_field.add_validation });
+                        if (el_field.add_validation) this.rules_valid.push({ name: $($element_add.$element).attr('name'), validation: el_field.add_validation });
                     };
                     if ($element_edit) {
                         field['element_edit'] = $element_edit;
-                        this.rules_valid.push({ name: $($element_edit.$element).attr('name'), validation: el_field.edit_validation });
+                        if (el_field.edit_validation) this.rules_valid.push({ name: $($element_edit.$element).attr('name'), validation: el_field.edit_validation });
                     };
                 };
                 col = el_field.col;
@@ -407,36 +427,53 @@
             if (valid) {
                 // Заполним result полями
                 $.each(this.settings.fields_form, function (i, el) {
-                    var element = this.data ? (el.element_edit ? el.element_edit.$element : null) : (el.element_add ? el.element_add.$element : null);
+                    //TODO: Переключить val() на element_form
+                    /*                    var element = this.data ? (el.element_edit ? el.element_edit.$element : null) : (el.element_add ? el.element_add.$element : null);*/
+                    var element_form = this.data ? (el.element_edit ? el.element_edit : null) : (el.element_add ? el.element_add : null);
                     var type = this.data ? el.edit : el.add;
-                    var value = element ? ($(element).attr('type') === "checkbox" ? $(element).prop('checked') : element.val()) : null;
+                    /*                    var value = element ? ($(element).attr('type') === "checkbox" ? $(element).prop('checked') : element.val()) : null;*/
                     switch (type) {
                         case null: {
                             result[el.field] = this.data ? this.data[el.field] : el.default;
+
                             break;
                         };
                         case "select": {
+                            //result[el.field] = value !== null && value !== "-1" ? Number(value) : null;
+                            var value = element_form.val();
                             result[el.field] = value !== null && value !== "-1" ? Number(value) : null;
                             break;
                         };
                         case "text": {
-                            result[el.field] = value;
+                            //result[el.field] = value;
+                            result[el.field] = element_form.val();
                             break;
                         };
                         case "textarea": {
-                            result[el.field] = value;
+                            //result[el.field] = value;
+                            result[el.field] = element_form.val();
                             break;
                         };
                         case "number": {
+                            //result[el.field] = value !== null && value !== "" ? Number(value) : null;
+                            var value = element_form.val();
                             result[el.field] = value !== null && value !== "" ? Number(value) : null;
                             break;
                         };
                         case "checkbox": {
+                            var value = element_form.val();
                             result[el.field] = value !== null && value !== "" ? Boolean(value) : null;
                             break;
                         };
                         case "datetime": {
-                            result[el.field] = value !== null && value !== "" ? moment(value, 'DD.MM.YYYY HH:mm').toISOString() : null;
+                            //result[el.field] = value !== null && value !== "" ? moment(value, 'DD.MM.YYYY HH:mm').toISOString() : null;
+                            var value = element_form.val();
+                            result[el.field] = value;// !== null && value !== "" ? moment(value, 'DD.MM.YYYY HH:mm').toISOString() : null;;
+                            break;
+
+                        };
+                        case "autocomplete": {
+                            result[el.field] = element_form.val();
                             break;
                         };
                     }
@@ -514,7 +551,7 @@
     };
     // Обновить значение по умолчанию по указанному полю (Применяется если при добавлении нужно чтобы некоторые поля уже были заполнены значениями)
     modal_edit_form.prototype.set_default_fields_form = function (field, value_default) {
-        if (this.settings.fields_form) {
+        if (this.settings && this.settings.fields_form) {
             var field = this.settings.fields_form.find(function (o) {
                 return o.field === field
             });
@@ -551,6 +588,58 @@
             }
         }
     };
+    //
+    modal_edit_form.prototype.destroy = function () {
+        // Удалим элементы
+        $.each(this.settings.fields_form, function (i, el) {
+            if (el.element_add) {
+                this.element_destroy(el.add, el.element_add);
+            }
+            if (el.element_edit) {
+                this.element_destroy(el.edit, el.element_edit);
+            }
+        }.bind(this));
+        // Удалим форму
+        if (this.$modal_edit) {
+            this.$modal_edit = $('div#em-' + this.selector).modal('dispose');
+        }
+        // Очистить html от формы
+        var $mef = $('div#em-' + this.selector);
+        if ($mef.length > 0) {
+            $mef.remove();
+        }
+    };
+    //
+    modal_edit_form.prototype.element_destroy = function (type, element_form) {
+        switch (type) {
+            case null: {
+                return;
+            };
+            case "select": {
+                return;
+            };
+            case "text": {
+                return;
+            };
+            case "textarea": {
+                return;
+            };
+            case "number": {
+                return;
+            };
+            case "checkbox": {
+                return;
+            };
+            case "datetime": {
+                element_form.destroy();
+                return;
+            };
+            case "autocomplete": {
+                element_form.destroy();
+                return;
+            };
+        }
+    }
 
     App.modal_edit_form = modal_edit_form;
 

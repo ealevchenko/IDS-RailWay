@@ -28,6 +28,7 @@
     };
     // Инициализация компонента "SELECT"
     form_control.prototype.init_select = function (element, data, default_value, fn_option, fn_change) {
+        //TODO: создать и настроить SELECT сделать надпись выберите через placeholder, чтобы работала required
         this.$element = element;
         var $default_option = $('<option></option>', {
             'value': '-1',
@@ -50,6 +51,7 @@
         };
         this.update = function (data, default_value, fn_option) {
             this.$element.empty();
+
             if (default_value === -1) {
                 element.append($default_option);
             }
@@ -73,10 +75,8 @@
         };
         this.init();
     };
-
     // Инициализация текстового поля "INPUT"
     form_control.prototype.init_input = function (element, default_value, fn_change) {
-        /*        this.options = [];*/
         this.$element = element;
         this.init = function () {
             this.update(default_value);
@@ -122,7 +122,6 @@
     // Инициализация поля дата и время "INPUT"
     form_control.prototype.init_datetime_input = function (element, default_datetime, fn_close, time) {
         this.$element = element;
-        /*        this.select_date;*/
         this.init = function () {
             this.update(default_datetime);
         };
@@ -168,12 +167,17 @@
         this.get = function () {
             var datetime = this.$element.val();
             if (datetime !== null && datetime !== "") {
-                return moment(datetime, 'DD.MM.YYYY' + (time ? ' hh:mm' : ''));
+                //var dt = moment.utc(datetime, 'DD.MM.YYYY' + (time ? ' hh:mm' : '')).tz('Europe/Kiev');
+                //return moment(dt).toISOString();
+                return moment.utc(datetime, 'DD.MM.YYYY' + (time ? ' hh:mm' : '')).toISOString();
             } else {
                 return null;
             }
         };
         this.init();
+        this.destroy = function () {
+            this.$element.data('dateRangePicker').destroy();
+        };
     };
     // Инициализация поля дата "INPUT"
     form_control.prototype.init_textarea = function (element, default_value, fn_change) {
@@ -198,6 +202,68 @@
         };
         this.init();
     };
+    // Инициализация поля дата "INPUT" типа Autocomplete
+    form_control.prototype.init_autocomplete = function (element, options) {
+        var get_alist = function (data) {
+            var alist = [];
+            $.each(data, function (i, el) {
+                alist.push({ value: el.text, label: el.text, disabled: el.disabled ? el.disabled : null });
+            }.bind(this));
+            return alist;
+        };
+
+        this.$element = element;
+        // Настройки формы правки строк таблицы
+        this.settings = $.extend({
+            data: [],
+            minLength: 0,
+            out_value: false,
+            val_inp: 'value',
+        }, options);
+
+        this.init = function () {
+            this.alist = get_alist(this.settings.data);
+            /*            this.$element = element.catcomplete({*/
+            this.$element = element.autocomplete({
+                minLength: this.settings.minLength,
+                source: this.alist,
+            });
+            var widgetInst = this.$element.autocomplete('instance');
+            widgetInst._renderItem = function (ul, item) {
+                return $("<li>")
+                    .append($("<div>").text(item.label))
+                    .addClass(item.disabled ? 'exist' : 'new')
+                    .appendTo(ul);
+            };
+        };
+        this.update = function (data, value) {
+            this.settings.data = data;
+            this.alist = get_alist(this.settings.data);
+            this.$element.autocomplete("option", "source", this.alist);
+            this.val(value);
+        };
+        this.val = function (value) {
+            if (value !== undefined) {
+                var text_out = value;
+                if (this.settings.val_inp === 'value') {
+                    var select = this.settings.data.find(function (o) {
+                        return o.value == $.trim(value);
+                    }.bind(this));
+                    text_out = select ? select.text : null;
+                }
+                this.$element.val(text_out);
+            } else {
+                var select = this.settings.data.find(function (o) {
+                    return o.text === $.trim(this.$element.val());
+                }.bind(this));
+                return select ? select.value : null;
+            };
+        };
+        this.destroy = function (data) {
+            this.$element.autocomplete("destroy");
+        };
+        this.init();
+    }
 
     App.form_control = form_control;
 

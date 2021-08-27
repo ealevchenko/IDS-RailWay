@@ -164,7 +164,18 @@
     modal_confirm_form.prototype.close = function () {
         this.$modal_obj.modal('hide');
     };
-    // 
+    //
+    modal_confirm_form.prototype.destroy = function () {
+        if (this.$modal_obj) {
+            this.$modal_obj.modal('dispose');
+        }
+        // Удалить старый элемент
+        var $mcf = $('div#mcf-' + this.selector);
+        if ($mcf.length > 0) {
+            $mcf.remove();
+        }
+    };
+
     App.modal_confirm_form = modal_confirm_form;
 
     window.App = App;

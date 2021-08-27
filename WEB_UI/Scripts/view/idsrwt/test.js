@@ -122,8 +122,15 @@
     ////var TTWay = App.ids_tree_way;
     ////var trWay = new TTWay('div#tree-way'); // Создадим экземпляр таблицы
 
-    var TDWAY = App.table_dir_way;
-    var tdways = new TDWAY('div#ways'); // Создадим экземпляр таблицы
+    //var TDWAY = App.table_dir_way;
+    //var tdways = new TDWAY('div#ways'); // Создадим экземпляр таблицы
+
+    var TDPW = App.table_dir_park_ways;
+    var tdpw = new TDPW('div#park-ways'); // Создадим экземпляр таблицы
+
+    var TDPARK = App.table_dir_park_station;
+    var tdpark = new TDPARK('div#park'); // Создадим экземпляр таблицы
+
 
     var MCF = App.modal_confirm_form;
     var mcf_test = new MCF('confirm-test'); // Создадим экземпляр окно сообщений
@@ -133,21 +140,31 @@
         //trWay.update_park_of_id(8, 3);
         //trWay.update_way_of_id(227);
         /*        trWay.open_way(8, 75, 244);*/
-        mcf_test.view('Подпись', 'Текст сообщения', function (result) {
+        //mcf_test.view('Подпись', 'Текст сообщения', function (result) {
 
-        })
+        //})
 
     });
 
     // После загрузки документа
     $(document).ready(function ($) {
-        mcf_test.init();
-
-        tdways.init({
+        //mcf_test.init();
+        tdpw.init({
             alert: alert
         }, function () {
-            tdways.load_of_station_park(23, 161);
+            tdpw.load();
         });
+
+        tdpark.init({
+            alert: alert
+        }, function () {
+            tdpark.load_of_station(8);
+        });
+        //tdways.init({
+        //    alert: alert
+        //}, function () {
+        //    tdways.load_of_station_park(23, 161);
+        //});
 
 
         //var alert = $('div#test-alert');

@@ -2009,6 +2009,8 @@
     <Content Include="Content\fontawesome-free\webfonts\fa-regular-400.svg" />
     <Content Include="Content\fontawesome-free\webfonts\fa-solid-900.svg" />
     <Content Include="Content\module\cblist_station.css" />
+    <Content Include="Content\module\directory\table_dir_park_station.css" />
+    <Content Include="Content\module\directory\table_dir_park_ways.css" />
     <Content Include="Content\module\shared\modal_edit_form.css" />
     <Content Include="Content\module\directory\table_dir_way.css" />
     <Content Include="Content\module\table_tree_way.css" />
@@ -2068,6 +2070,8 @@
     <Content Include="Scripts\jquery.doubleScroll.js" />
     <Content Include="Scripts\jszip.js" />
     <Content Include="Scripts\jszip.min.js" />
+    <Content Include="Scripts\module\directory\table_dir_park_ways.js" />
+    <Content Include="Scripts\module\directory\table_dir_park_station.js" />
     <Content Include="Scripts\module\shared\modal_confirm_form.js" />
     <Content Include="Scripts\module\shared\modal_edit_form.js" />
     <Content Include="Scripts\module\shared\form_validation.js" />
@@ -2154,6 +2158,7 @@
     <Content Include="Areas\Admin\Views\Home\ErrorLog.cshtml" />
     <Content Include="Areas\IDSRWT\Views\Home\TEST.cshtml" />
     <Content Include="Areas\Directory\Views\Home\Ways.cshtml" />
+    <Content Include="Areas\Directory\Views\Home\Park.cshtml" />
     <None Include="_app_offline.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -2680,6 +2685,7 @@
     <Content Include="Scripts\view\directory\cargo_group.js" />
     <Content Include="Scripts\view\directory\cars.js" />
     <Content Include="Scripts\view\directory\countrys.js" />
+    <Content Include="Scripts\view\directory\main_park.js" />
     <Content Include="Scripts\view\directory\main_ways.js" />
     <Content Include="Scripts\view\directory\main_search_wagon.js" />
     <Content Include="Scripts\view\directory\shipper.js" />
