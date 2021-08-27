@@ -318,8 +318,6 @@
         }, options);
         this.rules_valid = [];
         this.data = null;
-
-
         //---------------------------------------------------------
         // Создадим модальную форму для редактирования
         var modalElement = new modal_form(this);
@@ -430,10 +428,10 @@
                 // Заполним result полями
                 $.each(this.settings.fields_form, function (i, el) {
                     //TODO: Переключить val() на element_form
-/*                    var element = this.data ? (el.element_edit ? el.element_edit.$element : null) : (el.element_add ? el.element_add.$element : null);*/
+                    /*                    var element = this.data ? (el.element_edit ? el.element_edit.$element : null) : (el.element_add ? el.element_add.$element : null);*/
                     var element_form = this.data ? (el.element_edit ? el.element_edit : null) : (el.element_add ? el.element_add : null);
                     var type = this.data ? el.edit : el.add;
-/*                    var value = element ? ($(element).attr('type') === "checkbox" ? $(element).prop('checked') : element.val()) : null;*/
+                    /*                    var value = element ? ($(element).attr('type') === "checkbox" ? $(element).prop('checked') : element.val()) : null;*/
                     switch (type) {
                         case null: {
                             result[el.field] = this.data ? this.data[el.field] : el.default;
@@ -553,7 +551,7 @@
     };
     // Обновить значение по умолчанию по указанному полю (Применяется если при добавлении нужно чтобы некоторые поля уже были заполнены значениями)
     modal_edit_form.prototype.set_default_fields_form = function (field, value_default) {
-        if (this.settings.fields_form) {
+        if (this.settings && this.settings.fields_form) {
             var field = this.settings.fields_form.find(function (o) {
                 return o.field === field
             });
@@ -590,6 +588,58 @@
             }
         }
     };
+    //
+    modal_edit_form.prototype.destroy = function () {
+        // Удалим элементы
+        $.each(this.settings.fields_form, function (i, el) {
+            if (el.element_add) {
+                this.element_destroy(el.add, el.element_add);
+            }
+            if (el.element_edit) {
+                this.element_destroy(el.edit, el.element_edit);
+            }
+        }.bind(this));
+        // Удалим форму
+        if (this.$modal_edit) {
+            this.$modal_edit = $('div#em-' + this.selector).modal('dispose');
+        }
+        // Очистить html от формы
+        var $mef = $('div#em-' + this.selector);
+        if ($mef.length > 0) {
+            $mef.remove();
+        }
+    };
+    //
+    modal_edit_form.prototype.element_destroy = function (type, element_form) {
+        switch (type) {
+            case null: {
+                return;
+            };
+            case "select": {
+                return;
+            };
+            case "text": {
+                return;
+            };
+            case "textarea": {
+                return;
+            };
+            case "number": {
+                return;
+            };
+            case "checkbox": {
+                return;
+            };
+            case "datetime": {
+                element_form.destroy();
+                return;
+            };
+            case "autocomplete": {
+                element_form.destroy();
+                return;
+            };
+        }
+    }
 
     App.modal_edit_form = modal_edit_form;
 
