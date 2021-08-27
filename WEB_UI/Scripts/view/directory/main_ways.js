@@ -63,6 +63,23 @@
             tdways.view([]);
         }
     };
+    // Получить список парков по станции
+    var get_list_park = function (id_station) {
+        var list_way = ids_dir.list_ways.filter(function (i) {
+            return i.id_station == id_station;
+        })
+        var list_park = [];
+        $.each(list_way, function (i, el) {
+            var pw = el.Directory_ParkWays
+            var park = list_park.find(function (o) {
+                return o.value === pw.id;
+            });
+            if (!park) {
+                list_park.push({ value: pw.id, text: pw['park_name_' + App.Lang] });
+            }
+        });
+        return list_park;
+    };
     // Обновить список парков 
     var update_park = function () {
         var id_station = Number(station.val());
@@ -107,29 +124,14 @@
             });
             // Обновим списки
             var list_station = ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false ? true : false; });
-            var get_list_park = function (id_station) {
-                var list_way = ids_dir.list_ways.filter(function (i) {
-                    return i.id_station == id_station;
-                })
-                var list_park = [];
-                $.each(list_way, function (i, el) {
-                    var pw = el.Directory_ParkWays
-                    var park = list_park.find(function (o) {
-                        return o.value === pw.id;
-                    });
-                    if (!park) {
-                        list_park.push({ value: pw.id, text: pw['park_name_' + App.Lang] });
-                    }
-                });
-                return list_park;
-            };
-
+            // Инициализируем компонент список станций
             station = new fc_ui.init_select($station, list_station, -1, null, function (e, ui) {
                 event.preventDefault();
                 // Обработать выбор
                 var id = Number($(e.currentTarget).val());
                 park.update(get_list_park(id), -1, null);
             });
+            // Инициализируем компонент список парков
             park = new fc_ui.init_select($park, get_list_park(-1), -1, null, function (e, ui) {
                 event.preventDefault();
                 // Обработать выбор
