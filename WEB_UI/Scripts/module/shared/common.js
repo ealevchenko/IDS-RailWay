@@ -122,7 +122,6 @@
     // Инициализация поля дата и время "INPUT"
     form_control.prototype.init_datetime_input = function (element, default_datetime, fn_close, time) {
         this.$element = element;
-        /*        this.select_date;*/
         this.init = function () {
             this.update(default_datetime);
         };
@@ -176,6 +175,9 @@
             }
         };
         this.init();
+        this.destroy = function () {
+            this.$element.data('dateRangePicker').destroy();
+        };
     };
     // Инициализация поля дата "INPUT"
     form_control.prototype.init_textarea = function (element, default_value, fn_change) {
@@ -257,9 +259,9 @@
                 return select ? select.value : null;
             };
         };
-        //this.update = function (data) {
-
-        //};
+        this.destroy = function (data) {
+            this.$element.autocomplete("destroy");
+        };
         this.init();
     }
 
