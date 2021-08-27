@@ -1,0 +1,131 @@
+﻿@using WEB_UI.App_LocalResources;
+@{
+    ViewBag.Title = @DirectoryResource.ways_title;
+}
+
+@section styles {
+    @Styles.Render("~/DataTables/css")
+    @Styles.Render("~/DateTime/css")
+    <link rel="stylesheet" type="text/css" href="~/Content/view/directory/home.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/view/directory/ways.css">
+    <!-- модули -->
+    <link href="~/Content/module/directory/table_dir_way.css" rel="stylesheet" />
+    <link href="~/Content/module/shared/modal_edit_form.css" rel="stylesheet" />
+
+    <link href="~/Content/module/directory/table_dir_park_ways.css" rel="stylesheet" />
+    <link href="~/Content/module/directory/table_dir_park_station.css" rel="stylesheet" />
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/Moment")
+    @Scripts.Render("~/bundles/DataTables")
+    @Scripts.Render("~/bundles/DateTime")
+
+    <script src="~/Scripts/view/shared/common.js"></script> <!-- Общая библиотека методов программы -->
+    <script src="~/Scripts/api/shared.js"></script> <!-- Общая библиотека методов API -->
+    <script src="~/Scripts/api/ids_directory.js"></script> <!-- Class API ИДС Справочники -->
+    <script src="~/Scripts/api/ids_direct.js"></script> <!-- Class API ИДС Справочники -->
+    <!-- модули -->
+    <script src="~/Scripts/module/shared/common.js"></script>
+    <script src="~/Scripts/module/shared/form_validation.js"></script>
+    <script src="~/Scripts/module/shared/modal_confirm_form.js"></script>
+    <script src="~/Scripts/module/shared/modal_edit_form.js"></script>
+    <script src="~/Scripts/module/directory/table_dir_way.js"></script>
+    <script src="~/Scripts/module/directory/table_dir_park_ways.js"></script>
+    <script src="~/Scripts/module/directory/table_dir_park_station.js"></script>
+
+    <script src="~/Scripts/view/directory/main_park.js"></script>
+
+    <script>
+        @*var url_incoming = '@Url.Action("Incoming", "Home", new { area = "IDSRWT" })';
+        var url_outgoing = '@Url.Action("Outgoing", "Home", new { area = "IDSRWT" })';
+        var url_wsd = '@Url.Action("WSD", "Home", new { area = "IDSRWT" })';*@
+    </script>
+
+}
+
+<input id="username" type="hidden" value="@User.Identity.Name" />
+<div class="container-fluid">
+    <div class="alert" id="main-alert"></div>
+    <div class="card">
+        <div class="card-header">
+            <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" id="pills-park-station-tab" data-toggle="pill" href="#pills-park-station" role="tab" aria-controls="pills-park-station" aria-selected="true">Парки по станциям</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="pills-parks-tab" data-toggle="pill" href="#pills-parks" role="tab" aria-controls="pills-parks" aria-selected="false">Список парков</a>
+                </li>
+                @*<li class="nav-item" role="presentation">
+                        <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Contact</a>
+                    </li>*@
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-park-station" role="tabpanel" aria-labelledby="pills-park-station-tab">
+                    <div class="card mb-2">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-xl-12 text-center">
+                                    <div class="container-fluid">
+                                        <form class="form-inline">
+                                            <div class="form-group">
+                                                <label class="col-form-label-sm mr-2" for="station">Станция :</label>
+                                                <div class="input-group">
+                                                    <select class="form-control-sm" id="station" name="station" required></select>
+                                                    <div class="input-group-append">
+                                                        <button type="submit" class="btn btn-sm  btn-primary mb-2" id="view_ways" name="view_ways">
+                                                            <i class="fas fa-retweet" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body text-dark pl-3 pr-3 table-directory">
+                            <div class="row">
+                                <div class="col-xl-12 mb-3 mt-2">
+                                    <div class="container-fluid mt-3">
+                                        <div id="park-station"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="pills-parks" role="tabpanel" aria-labelledby="pills-parks-tab">
+                    <div class="card">
+                        <h5 class="card-header">Справочник парков</h5>
+                        <div class="card-body text-dark pl-3 pr-3 table-directory">
+                            <div class="row">
+                                <div class="col-xl-12 mb-3 mt-2">
+                                    <div class="container-fluid mt-3">
+                                        <div id="park-ways"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="card border-dark mb-3">
+            <div class="card-header bg-secondary text-white">
+                <div class="row">
+                    <div class="col-xl-12 text-center">
+                    </div>
+                </div>
+            </div>
+
+        </div>*@
+                </div>
+                @*<div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">...</div>*@
+            </div>
+        </div>
+        <div class="card-footer bg-transparent border-dark">&copy; @DateTime.Now.Year ДАТП & ТД</div>
+    </div>
+</div>
+
+
+

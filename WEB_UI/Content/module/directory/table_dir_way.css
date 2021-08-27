@@ -1,0 +1,27 @@
+﻿body {
+}
+
+
+table.dataTable tbody tr:not(.selected).yellow.odd, table.dataTable tbody tr:not(.selected).yellow.even {
+    background-color: #fef9e0;
+}
+
+table.dataTable.display tbody tr:not(.selected).odd.yellow > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.yellow > .sorting_1 {
+    background-color: #fdf2ba;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.yellow > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.yellow > .sorting_1 {
+    background-color: #fdf2ba;
+}
+
+table.dataTable tbody tr:not(.selected).red.odd, table.dataTable tbody tr:not(.selected).red.even {
+    background-color: #ffebeb;
+}
+
+table.dataTable.display tbody tr:not(.selected).odd.red > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.red > .sorting_1 {
+    background-color: #ffc4c4;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.red > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.red > .sorting_1 {
+    background-color: #ffc4c4;
+}

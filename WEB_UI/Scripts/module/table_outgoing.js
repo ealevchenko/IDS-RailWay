@@ -383,7 +383,7 @@
         this.$t_out_wag.find('tbody').on('tbody click', 'button.outgoing-button', function (e) {
             e.preventDefault();
             e.stopPropagation();
-            var data = base.obj_out_wag.row($(e.target).parents('tr')).data();
+            var data = base.obj_out_wag.row($(e.currentTarget).parents('tr')).data();
             var sostav = data ? data.OutgoingSostav : null;
             if (sostav) {
                 var date = moment(sostav.date_readiness_amkr)
@@ -426,7 +426,7 @@
         var base = this;
         this.$t_out_wag.find('tbody')
             .on('click', 'td.details-control-outgoing', function (e) {
-                var tr = $(e.target).closest('tr');
+                var tr = $(e.currentTarget).closest('tr');
                 var row = base.obj_out_wag.row(tr);
                 if (row.child.isShown()) {
                     // This row is already open - close it

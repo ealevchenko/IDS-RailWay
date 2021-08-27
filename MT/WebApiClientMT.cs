@@ -266,32 +266,42 @@ namespace MT
         {
             try
             {
-                string resp = wapi.GetApiValues(this.api+ "/Get");
+                if (wapi == null) return null;
+                if (wapi.error) return null;
+                string resp = wapi.GetApiValues(this.api + "/Get");
                 JObject o = JObject.Parse(resp);
-                string RequestId = (string)o["RequestId"];
-                IList<WagonsArrivalMT> wagon_arr = o["Wagons"].Select(p => new WagonsArrivalMT
+                string mess = (string)o["Message"];
+                if (String.IsNullOrWhiteSpace(mess))
                 {
-                    id = (int)p["Id"],
-                    position = (int)p["Position"],
-                    num = (int)p["CarriageNumber"],
-                    country_code = (int)p["CountryCode"],
-                    wight = (decimal?)p["Weight"],
-                    cargo_code = (int)p["IDCargo"],
-                    cargo = (string)p["Cargo"],
-                    station_code = (int)p["IDStation"],
-                    station = (string)p["Station"],
-                    consignee = (int)p["Consignee"],
-                    operation = (string)p["Operation"],
-                    composition_index = (string)p["CompositionIndex"],
-                    date_operation = (DateTime)p["DateOperation"],
-                    train = (int)p["TrainNumber"]
-                }).ToList();
-                RequestArrivalMT reguest_mt = new RequestArrivalMT()
-                {
-                    id = RequestId,
-                    wagons = wagon_arr.ToList(),
-                };
-                return reguest_mt;
+                    string RequestId = (string)o["RequestId"];
+                    IList<WagonsArrivalMT> wagon_arr = o["Wagons"].Select(p => new WagonsArrivalMT
+                    {
+                        id = (int)p["Id"],
+                        position = (int)p["Position"],
+                        num = (int)p["CarriageNumber"],
+                        country_code = (int)p["CountryCode"],
+                        wight = (decimal?)p["Weight"],
+                        cargo_code = (int)p["IDCargo"],
+                        cargo = (string)p["Cargo"],
+                        station_code = (int)p["IDStation"],
+                        station = (string)p["Station"],
+                        consignee = (int)p["Consignee"],
+                        operation = (string)p["Operation"],
+                        composition_index = (string)p["CompositionIndex"],
+                        date_operation = (DateTime)p["DateOperation"],
+                        train = (int?)p["TrainNumber"] == null ? 0 :(int)p["TrainNumber"]  
+                    }).ToList();
+                    RequestArrivalMT reguest_mt = new RequestArrivalMT()
+                    {
+                        id = RequestId,
+                        wagons = wagon_arr.ToList(),
+                    };
+                    return reguest_mt;
+                }
+                else {
+                    return null;
+                }
+
             }
             catch (Exception e)
             {
@@ -304,7 +314,7 @@ namespace MT
         {
             try
             {
-                string resp = wapi.PostApiValues(this.api+ "/ConfirmDelivery?id=" + id);
+                string resp = wapi.PostApiValues(this.api + "/ConfirmDelivery?id=" + id);
                 return resp;
             }
             catch (Exception e)

@@ -167,5 +167,17 @@ namespace EFMT.Concrete
             Consignee consignee = db.Consignee.Where(c => c.auxiliary == auxiliary & c.code == code & c.id_consignee == (int)Consignee).FirstOrDefault();
             return consignee != null ? true : false;
         }
+
+        public void Delete(IEnumerable<long> list_id)
+        {
+            try
+            {
+                db.Delete<Consignee>(list_id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
     }
 }

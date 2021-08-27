@@ -5545,9 +5545,9 @@
 
                 valid = valid & cars_detali.validation_vag_condition_arrival(valid, false);
 
-                valid = valid & cars_detali.val_arrival_car.checkInputOfRange(cars_detali.uz_vag_gruzp, 0.0, 80.0, "Грузоподъемность должна быть в диапазоне от 0.0 до 80.0 тон.");
-                valid = valid & cars_detali.val_arrival_car.checkInputOfRange(cars_detali.uz_vag_ves_tary_arc, 15.0, 35.0, "Тара должна быть в диапазоне от 15.0 до 35.0 тон.");
-                valid = valid & cars_detali.val_arrival_car.checkInputOfRange_IsNull(cars_detali.uz_vag_u_tara, 15.0, 35.0, "Тара должна быть в диапазоне от 15.0 до 35.0 тон.");
+                valid = valid & cars_detali.val_arrival_car.checkInputOfRange(cars_detali.uz_vag_gruzp, 0.0, 112.0, "Грузоподъемность должна быть в диапазоне от 0.0 до 112.0 тон.");
+                valid = valid & cars_detali.val_arrival_car.checkInputOfRange(cars_detali.uz_vag_ves_tary_arc, 15.0, 51.0, "Тара должна быть в диапазоне от 15.0 до 51.0 тон.");
+                valid = valid & cars_detali.val_arrival_car.checkInputOfRange_IsNull(cars_detali.uz_vag_u_tara, 15.0, 51.0, "Тара должна быть в диапазоне от 15.0 до 51.0 тон.");
 
                 valid = valid & cars_detali.val_arrival_car.checkInputOfDirectory(cars_detali.uz_cargo_kod_etsng, this, 'ids_inc.ids_dir.getCargoETSNG_Of_Code', "Указанного кода груза ЕТ СНГ нет в справочнике ИДС.");
                 valid = valid & cars_detali.val_arrival_car.checkInputOfDirectory_IsNull(cars_detali.uz_cargo_kod_gng, this, 'ids_inc.ids_dir.getCargoGNG_Of_Code', "Указанного кода груза ГНГ нет в справочнике ИДС.");
@@ -6027,13 +6027,13 @@
                                                         // вагон получен
                                                         cars_detali.del_vagon(cars, function (result) {
                                                             if (result > 0) {
-
-
                                                                 cars_detali.alert.out_info_message('Вагон №' + row_cars[0].num + ' - возвращен в сотав на подходах!');
-                                                                cars_detali.update_sostav = true;
-                                                                // Показать 
-                                                                cars_detali.view(table_sostav.select_sostav.id, false);
+                                                            } else {
+                                                                cars_detali.alert.out_error_message('Вагон №' + row_cars[0].num + ' - при возврате произошла ошибка!');
                                                             }
+                                                            cars_detali.update_sostav = true;
+                                                            // Показать 
+                                                            cars_detali.view(table_sostav.select_sostav.id, false);
                                                             LockScreenOff();
                                                         });
 
@@ -6199,12 +6199,12 @@
 
             // Валидация поля  "Количество осей"
             validation_vag_kol_os: function (valid, off_message) {
-                valid = valid & cars_detali.val_card_vag.checkSelection(cars_detali.card_vag_kol_os, "Укажите количество осей (0- по умолчанию, 4,8,12,16,32)", "", off_message);
+                valid = valid & cars_detali.val_card_vag.checkSelection(cars_detali.card_vag_kol_os, "Укажите количество осей (0- по умолчанию, 4,6,8,12,16,32)", "", off_message);
                 return valid;
             },
             // Валидация поля  "Грузоподъемность"
             validation_vag_gruzp: function (valid, off_message) {
-                valid = valid & cars_detali.val_card_vag.checkInputOfRange(cars_detali.card_vag_gruzp, 0.0, 80.0, "Грузоподъемность должна быть в диапазоне от 0.0 до 80.0 тон.", "", off_message);
+                valid = valid & cars_detali.val_card_vag.checkInputOfRange(cars_detali.card_vag_gruzp, 0.0, 112.0, "Грузоподъемность должна быть в диапазоне от 0.0 до 112.0 тон.", "", off_message);
                 return valid;
             },
             // Валидация поля  "Разметка по прибытию"
@@ -7642,15 +7642,42 @@
                     var car_out = [];
                     var cars = pn_manual_car.manual_num_car.val().split(';');
                     $.each(cars, function (i, el) {
-                        //pn_manual_car.alert.out_warning_message();
-                        if (!isNumeric(el) || !(Number(el) >= 10000000 && Number(el) <= 99999999)) {
-                            // Ошибка ввода
+                        //
+                        if (!isNumeric($.trim(el))) {
                             pn_manual_car.alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' введен неправильный номер :' + el);
                             valid = false;
                         } else {
-                            car_valid.push(el);
-                            car_out.push(el);
+                            if (Number($.trim(el)) <= 0) {
+                                pn_manual_car.alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' номер не может быть меньше или равен 0 :' + el);
+                                valid = false;
+                            } else {
+                                // Разрешена проверка системной нумерации
+                                var num_val = is_valid_num_wagon(Number($.trim(el)));
+                                // Если валидный добавим в список
+                                if (num_val) {
+                                    car_valid.push(el);
+                                    car_out.push(el);
+                                } else {
+                                    pn_manual_car.alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' не системная нумерация (ошибка контрольной суммы) :' + el);
+                                }
+                                valid = valid & num_val;
+
+                            }
                         }
+                        //
+
+
+
+
+                        //pn_manual_car.alert.out_warning_message();
+                        //if (!isNumeric(el) || !(Number(el) >= 10000000 && Number(el) <= 99999999)) {
+                        //    // Ошибка ввода
+                        //    pn_manual_car.alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' введен неправильный номер :' + el);
+                        //    valid = false;
+                        //} else {
+                        //    car_valid.push(el);
+                        //    car_out.push(el);
+                        //}
                     });
                     // Провкерка на повторяющиеся номера
                     arr_res = [];

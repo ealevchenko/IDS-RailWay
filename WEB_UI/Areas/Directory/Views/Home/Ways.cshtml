@@ -1,0 +1,80 @@
+﻿@using WEB_UI.App_LocalResources;
+@{
+    ViewBag.Title = @DirectoryResource.ways_title;
+}
+
+@section styles {
+    @Styles.Render("~/DataTables/css")
+    @Styles.Render("~/DateTime/css")
+    <link rel="stylesheet" type="text/css" href="~/Content/view/directory/home.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/view/directory/ways.css">
+    <!-- модули -->
+    <link href="~/Content/module/directory/table_dir_way.css" rel="stylesheet" />
+    <link href="~/Content/module/shared/modal_edit_form.css" rel="stylesheet" />
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/Moment")
+    @Scripts.Render("~/bundles/DataTables")
+    @Scripts.Render("~/bundles/DateTime")
+
+    <script src="~/Scripts/view/shared/common.js"></script> <!-- Общая библиотека методов программы -->
+    <script src="~/Scripts/api/shared.js"></script> <!-- Общая библиотека методов API -->
+    <script src="~/Scripts/api/ids_directory.js"></script> <!-- Class API ИДС Справочники -->
+    <script src="~/Scripts/api/ids_direct.js"></script> <!-- Class API ИДС Справочники -->
+    <!-- модули -->
+    <script src="~/Scripts/module/shared/common.js"></script>
+    <script src="~/Scripts/module/shared/form_validation.js"></script>
+    <script src="~/Scripts/module/shared/modal_confirm_form.js"></script>
+    <script src="~/Scripts/module/shared/modal_edit_form.js"></script>
+    <script src="~/Scripts/module/directory/table_dir_way.js"></script>
+
+    <script src="~/Scripts/view/directory/main_ways.js"></script>
+
+    <script>
+        @*var url_incoming = '@Url.Action("Incoming", "Home", new { area = "IDSRWT" })';
+        var url_outgoing = '@Url.Action("Outgoing", "Home", new { area = "IDSRWT" })';
+        var url_wsd = '@Url.Action("WSD", "Home", new { area = "IDSRWT" })';*@
+    </script>
+
+}
+
+<input id="username" type="hidden" value="@User.Identity.Name" />
+<div class="container-fluid">
+    <div class="alert" id="main-alert"></div>
+    <div class="row">
+        <div class="col-xl-12 mb-3 mt-2">
+            <div class="card border-dark mb-3">
+                <div class="card-header bg-secondary text-white">
+                    <div class="row">
+                        <div class="col-xl-12 text-center">
+                            <div class="container-fluid">
+                                <form class="form-inline">
+                                    <div class="form-group mb-2">
+                                        <label class="col-form-label text-white mr-2" for="station">Станция :</label>
+                                        <select class="form-control" id="station" name="station" placeholder="Выберите..." required></select>
+                                    </div>
+                                    <div class="form-group mx-sm-3 mb-2">
+                                        <label class="col-form-label text-white mr-2" for="park">Парк :</label>
+                                        <select class="form-control" id="park" name="park" placeholder="Выберите..." required></select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mb-2" id="view_ways" name="view_ways">Показать</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body text-dark pl-3 pr-3 table-directory">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div id="ways"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-dark">&copy; @DateTime.Now.Year ДАТП & ТД</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

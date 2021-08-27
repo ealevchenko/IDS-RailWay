@@ -3930,7 +3930,7 @@ IDS_DIRECTORY.prototype.getWays = function (callback) {
 IDS_DIRECTORY.prototype.getWaysOfStationIDParkID = function (id_station, id_park, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/directory/ways/view/station/id/' + id_station + '/park/id/' + id_park,
+        url: '../../api/ids/directory/ways/station/id/' + id_station + '/park/id/' + id_park,
         async: true,
         dataType: 'json',
         beforeSend: function () {
@@ -3995,8 +3995,156 @@ IDS_DIRECTORY.prototype.getWaysOfDissolution = function (callback) {
         },
     });
 };
-
-
+// Операция автокоррекции
+IDS_DIRECTORY.prototype.postOperationAutoPositionWayOfPark = function (operation, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/ways/operation/auto_correct/',
+        type: 'POST',
+        data: JSON.stringify(operation),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postOperationAutoPositionWayOfPark", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Операция свига на одни позицию вниз
+IDS_DIRECTORY.prototype.postOperationDown1PositionWayOfPark = function (operation, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/ways/operation/down_position/1/',
+        type: 'POST',
+        data: JSON.stringify(operation),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postOperationDown1PositionWayOfPark", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Операция свига на одни позицию вверх
+IDS_DIRECTORY.prototype.postOperationUp1PositionWayOfPark = function (operation, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/ways/operation/up_position/1/',
+        type: 'POST',
+        data: JSON.stringify(operation),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postOperationUp1PositionWayOfPark", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Операция "Добавить путь"
+IDS_DIRECTORY.prototype.postOperationInsertWayOfPark = function (way, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/ways/operation/add/',
+        type: 'POST',
+        data: JSON.stringify(way),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postOperationInsertWayOfPark", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Операция "Удалить путь"
+IDS_DIRECTORY.prototype.postOperationDeleteWayOfPark = function (operation, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/ways/operation/delete/',
+        type: 'POST',
+        data: JSON.stringify(operation),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postOperationDeleteWayOfPark", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Операция "Обновить путь"
+IDS_DIRECTORY.prototype.postOperationUpdateWayOfPark = function (operation, callback) {
+    $.ajax({
+        url: '../../api/ids/directory/ways/operation/update/',
+        type: 'POST',
+        data: JSON.stringify(operation),
+        contentType: "application/json;charset=utf-8",
+        async: true,
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            LockScreenOff();
+            OnAJAXError("IDS_RWT.postOperationUpdateWayOfPark", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
 //======= Directory_ParkWay (Справочник путей ИДС) ======================================
 // Получить все парки
 IDS_DIRECTORY.prototype.getParkWays = function (callback) {
@@ -5259,32 +5407,9 @@ IDS_DIRECTORY.prototype.getValueCulture_Stations_Of_ID = function (id_station, n
 //
 IDS_DIRECTORY.prototype.getListStation = function (fvalue, ftext, lang, filter) {
     return this.getListObj(this.list_station, fvalue, ftext, lang, filter);
-    //var list = [];
-    //var list_filtr = null;
-    //if (this.list_station) {
-    //    if (typeof filter === 'function') {
-    //        list_filtr = this.list_station.filter(filter);
-    //    } else { list_filtr = this.list_station; }
-    //    for (i = 0, j = list_filtr.length; i < j; i++) {
-    //        var l = list_filtr[i];
-    //        if (lang) {
-    //            list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
-    //        } else {
-    //            list.push({ value: l[fvalue], text: l[ftext] });
-    //        }
-    //    }
-    //}
-    //return list;
 };
 //*======= IDS_DIRECTORY.list_ways  (Справочник путей) ======================================
 IDS_DIRECTORY.prototype.getWays_Of_ID = function (id) {
-    //var way = null;
-    //if (this.list_ways) {
-    //    //var obj = getObjects(this.list_ways, 'id', id_way);
-    //    //return obj && obj.length > 0 ? obj[0] : null;
-    //    way = this.list_ways.find(function (o) { return o.id === id });
-    //}
-    //return way;
     return this.getObj_Of_ID(this.list_ways, id);
 };
 //
@@ -5299,29 +5424,12 @@ IDS_DIRECTORY.prototype.getValueCulture_Wayss_Of_ID = function (id_way, name) {
 };
 //
 IDS_DIRECTORY.prototype.getListWays = function (fvalue, ftext, lang, filter) {
-    //var list = [];
-    //var list_filtr = null;
-    //if (this.list_ways) {
-    //    if (typeof filter === 'function') {
-    //        list_filtr = this.list_ways.filter(filter);
-    //    } else { list_filtr = this.list_ways; }
-    //    for (i = 0, j = list_filtr.length; i < j; i++) {
-    //        var l = list_filtr[i];
-    //        if (lang) {
-    //            list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
-    //        } else {
-    //            list.push({ value: l[fvalue], text: l[ftext] });
-    //        }
-    //    }
-    //}
-    //return list;
     return this.getListObj(this.list_ways, fvalue, ftext, lang, filter);
 };
 //
 IDS_DIRECTORY.prototype.getListWays2 = function (fvalue, ftext1, ftext2, lang, filter) {
     return this.getListObj2(this.list_ways, fvalue, ftext1, ftext2, lang, filter);
 };
-
 //
 IDS_DIRECTORY.prototype.getListWaysOfAray = function (aray, fvalue, ftext, lang, filter) {
     var list = [];
@@ -6262,22 +6370,6 @@ IDS_DIRECTORY.prototype.getID_Divisions_Of_Name = function (text, ftext, lang) {
 //
 IDS_DIRECTORY.prototype.getListDivisions = function (fvalue, ftext, lang, filter) {
     return this.getListObj(this.list_divisions, fvalue, ftext, lang, filter);
-    //var list = [];
-    //var list_filtr = null;
-    //if (this.list_divisions) {
-    //    if (typeof filter === 'function') {
-    //        list_filtr = this.list_divisions.filter(filter);
-    //    } else { list_filtr = this.list_divisions; }
-    //    for (i = 0, j = list_filtr.length; i < j; i++) {
-    //        var l = list_filtr[i];
-    //        if (lang) {
-    //            list.push({ value: l[fvalue], text: l[ftext + '_' + lang] });
-    //        } else {
-    //            list.push({ value: l[fvalue], text: l[ftext] });
-    //        }
-    //    }
-    //}
-    //return list;
 };
 //
 // Получим список с выборкой по полю
@@ -6438,9 +6530,6 @@ IDS_DIRECTORY.prototype.getReason_Discrepancy_Of_CultureName = function (name, l
     }
     return null;
 };
-
-
-
 //*======= IDS_DIRECTORY.list_detention_return  (Справочник возвратов и задержаний) ======================================
 // Вернуть по id
 IDS_DIRECTORY.prototype.getDetention_Return_Of_ID = function (id) {

@@ -13,10 +13,13 @@ namespace IDS
         cancel_save_changes = -2,                   // Отмена сохранений изменений в базе данных (были ошибки по ходу выполнения всей операции)
         error_save_changes = -3,                    // Были ошибки по ходу выполнения всей операций
 
+
         // Обшие входные переменые -100...
         not_input_value = -100,
         not_input_list_wagons = -101,               // Ошибка, нет списка вагонов
         error_date = -102,                          // Ошибка, дата не прошла валидацию
+        input_position_error = -103,                // Ошибка, позиция указана не правильно
+
 
         // таблица wir -200...
         not_wir_db = -201,                          // В базе данных нет записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
@@ -80,10 +83,22 @@ namespace IDS
         // Справочники -1000.....
 
         // Directory_Ways -1100..
-        not_dir_way_of_db = -1101,                     // В базе данных нет записи указанной строки пути
-        way_not_crossing_uz = -1102,                // Путь немеет выход на УЗ
-        // Directory_Wagons -1200..
-        not_dir_wagon_of_db = -1201,                // В базе данных нет записи указанной строки вагона
+        not_dir_way_of_db = -1101,                          // В базе данных нет записи указанной строки пути
+        not_dir_park_station_of_db = -1102,                 // В базе данных нет записи указанного парка по указаной станции
+        way_not_crossing_uz = -1103,                        // Путь неимеет выход на УЗ
+        way_is_not_null = -1104,                            // На пути стоят вагоны
+
+        // Directory_ParkWays -1200..
+        not_dir_park_of_db = -1201,                         // В базе данных нет указаного парка
+
+        // Directory_Station -1300..
+        not_dir_station_of_db = -1301,                      // В базе данных нет указаной станции
+
+        // Directory_Wagons -1400..
+        not_dir_wagon_of_db = -1401,                        // В базе данных нет записи указанной строки вагона
+
+
+
 
     }
 
@@ -405,7 +420,8 @@ namespace IDS
         public void SetResultOperation(int result, int num)
         {
             this.listResultWagon.Add(new ResultWagon() { num = num, result = result });
-            if (result < 0) {
+            if (result < 0)
+            {
                 AddError();
             }
         }

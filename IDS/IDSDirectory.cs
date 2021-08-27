@@ -941,6 +941,1026 @@ namespace IDS
         }
         #endregion
 
+        #region СПРАВОЧНИК ПУТЕЙ (IDS.Directory_Ways)
+        /// <summary>
+        /// Выполнить операцию автоматической корекции позиции пути в парке
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_station"></param>
+        /// <param name="id_park"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationAutoPositionWayOfPark(ref EFDbContext context, int id_station, int id_park, string user)
+        {
+            try
+            {
+                // Проверка контекста
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDirectory_Ways ef_way = new EFDirectory_Ways(context);
+                // Получим пути удаленные и активные по даной станции и парку
+                List<Directory_Ways> ways_delete = ef_way.Context.Where(w => w.id_station == id_station && w.id_park == id_park && w.way_delete != null).ToList();
+                List<Directory_Ways> ways_active = ef_way.Context.Where(w => w.id_station == id_station && w.id_park == id_park && w.way_delete == null).ToList();
+                foreach (Directory_Ways way in ways_delete.ToList())
+                {
+                    way.position_way = 0;
+                    way.note = "Удален, но остались архивные ссылки";
+                    ef_way.Update(way);
+                }
+                int position = 1;
+                foreach (Directory_Ways way in ways_active.OrderBy(w => w.position_way).ToList())
+                {
+                    way.position_way = position;
+                    ef_way.Update(way);
+                    way.note = null;
+                    position++;
+                }
+                return 1;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationAutoPositionWayOfPark(context={0}, id_station={1}, id_park={2}, user={3})",
+                    context, id_station, id_park, user), servece_owner, eventID);
+                return -1;
+            }
+        }
+        /// <summary>
+        /// Выполнить операцию автоматической корекции позиции пути в парке
+        /// </summary>
+        /// <param name="id_station"></param>
+        /// <param name="id_park"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationAutoPositionWayOfPark(int id_station, int id_park, string user)
+        {
+            try
+            {
+                EFDbContext context = new EFDbContext();
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                int result = OperationAutoPositionWayOfPark(ref context, id_station, id_park, user);
+                if (result > 0)
+                {
+                    return context.SaveChanges();
+                }
+                else return result;
+
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationAutoPositionWayOfPark(id_station={0}, id_park={1}, user={2})",
+                    id_station, id_park, user), servece_owner, eventID);
+                return -1;
+            }
+        }
+        /// <summary>
+        /// Выполнить операцию переноса указаного пути на любую позицию
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id"></param>
+        /// <param name="position"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationSetPositionWayOfPark(ref EFDbContext context, int id, int position, string user)
+        {
+            try
+            {
+
+                // Проверка контекста
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+
+                EFDirectory_Ways ef_way = new EFDirectory_Ways(context);
+                Directory_Ways way = ef_way.Context.Where(w => w.id == id).FirstOrDefault();
+                if (way == null) return (int)errors_base.not_dir_way_of_db; // Нет пути
+                if (way.position_way == position) return 0;                 // Пропустить новая позиция соответсвует старой
+                // Получим все пути по даной станции и парку
+                List<Directory_Ways> ways = ef_way.Context.Where(w => w.id_station == way.id_station && w.id_park == way.id_park && w.way_delete == null).ToList();
+                if (position <= 0 || ways.Count() < position) return (int)errors_base.input_position_error; // Ошибка, неправильно указана позиция
+                if (way.position_way < position)
+                {
+                    // Сдвинуть вверх
+                    int current_position = way.position_way;
+                    int start_position = way.position_way + 1;
+                    int stop_position = position;
+                    // сместим промежуточные позиции вверх
+                    do
+                    {
+                        Directory_Ways way_edit = ways.Where(w => w.position_way == start_position).FirstOrDefault();
+                        way_edit.position_way = current_position;
+                        ef_way.Update(way_edit);
+                        current_position++;
+                        start_position++;
+                    }
+                    while (current_position < stop_position);
+                    way.position_way = position;
+                    way.change_user = user;
+                    way.change = DateTime.Now;
+                    ef_way.Update(way);
+                }
+                else
+                {
+                    // сдвинуть вниз
+                    int res_down = OperationDownPositionWayOfPark(ref context, ways, way.position_way, position, user);
+                    way.position_way = position;
+                    way.change_user = user;
+                    way.change = DateTime.Now;
+                    ef_way.Update(way);
+                }
+
+                return context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationSetPositionWayOfPark(context={0}, id={1}, position={2}, user={3})",
+                    context, id, position, user), servece_owner, eventID);
+                return -1;
+            }
+        }
+        /// <summary>
+        /// Операция сдвига позиций вниз
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="ways"></param>
+        /// <param name="start"></param>
+        /// <param name="stop"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationDownPositionWayOfPark(ref EFDbContext context, List<Directory_Ways> ways, int start, int? stop, string user)
+        {
+            try
+            {
+                if (ways == null || ways.Count() == 0) return 0;
+                // Проверка контекста
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                // если конечная позиция не указана тогда просто сдвинуть в низ с определенной позиции
+                if (stop == null)
+                {
+                    Directory_Ways last_ways = ways.OrderByDescending(w => w.position_way).FirstOrDefault();
+                    stop = last_ways.position_way;
+                }
+
+                EFDirectory_Ways ef_way = new EFDirectory_Ways(context);
+                // сдвинуть вниз
+                int current_position = (int)stop + 1;
+                int start_position = (int)stop;
+                int stop_position = start;
+                int count = 0;
+                // сместим промежуточные позиции вверх
+                do
+                {
+                    Directory_Ways way_edit = ways.Where(w => w.position_way == start_position).FirstOrDefault();
+                    if (way_edit != null)
+                    {
+                        way_edit.position_way = current_position;
+                        way_edit.change_user = user;
+                        way_edit.change = DateTime.Now;
+                        ef_way.Update(way_edit);
+                    }
+                    current_position--;
+                    start_position--;
+                    count++;
+                }
+                while (start_position >= stop_position);
+                return count;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationDownPositionWayOfPark(context={0}, ways={1}, start={2}, stop={2}, user={3})",
+                    context, ways, start, stop, user), servece_owner, eventID);
+                return -1;
+            }
+        }
+        /// <summary>
+        /// Операция сдвига позиций вверх
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="ways"></param>
+        /// <param name="start"></param>
+        /// <param name="stop"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationUpPositionWayOfPark(ref EFDbContext context, List<Directory_Ways> ways, int start, int? stop, string user)
+        {
+            try
+            {
+                // Проверка контекста
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                // если конечная позиция не указана тогда просто сдвинуть вверх с определенной позиции
+                if (stop == null)
+                {
+                    Directory_Ways last_ways = ways.OrderByDescending(w => w.position_way).FirstOrDefault();
+                    stop = last_ways.position_way;
+                }
+
+                EFDirectory_Ways ef_way = new EFDirectory_Ways(context);
+                // сдвинуть вниз
+                //int current_position = start - 1;
+                //int start_position = start;
+                //int stop_position = (int)stop;
+                int current_position = start;
+                int start_position = start + 1;
+                int stop_position = (int)stop;
+                int count = 0;
+                // сместим промежуточные позиции вверх
+                do
+                {
+                    Directory_Ways way_edit = ways.Where(w => w.position_way == start_position).FirstOrDefault();
+                    if (way_edit != null)
+                    {
+                        way_edit.position_way = current_position;
+                        way_edit.change_user = user;
+                        way_edit.change = DateTime.Now;
+                        ef_way.Update(way_edit);
+                    }
+                    current_position++;
+                    start_position++;
+                    count++;
+                }
+                while (start_position <= stop_position);
+                return count;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationUpPositionWayOfPark(context={0}, ways={1}, start={2}, stop={2}, user={3})",
+                    context, ways, start, stop, user), servece_owner, eventID);
+                return -1;
+            }
+        }
+        /// <summary>
+        /// Операция свига на одни позицию вниз
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationDown1PositionWayOfPark(ref EFDbContext context, int id, string user)
+        {
+            try
+            {
+                // Проверка контекста
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+
+                EFDirectory_Ways ef_way = new EFDirectory_Ways(context);
+                Directory_Ways way = ef_way.Context.Where(w => w.id == id).FirstOrDefault();
+                if (way == null) return (int)errors_base.not_dir_way_of_db; // Нет пути
+                // Получим все пути по даной станции и парку
+                Directory_Ways way_last = ef_way.Context.Where(w => w.id_station == way.id_station && w.id_park == way.id_park && w.way_delete == null).OrderByDescending(p => p.position_way).FirstOrDefault();
+                if (way_last.position_way == way.position_way) return 0; // Отмена, дошли до нижнего придела.
+                Directory_Ways way_down = ef_way.Context.Where(w => w.id_station == way.id_station && w.id_park == way.id_park && w.way_delete == null && w.position_way == way.position_way + 1).FirstOrDefault();
+                way.position_way++;
+                way.change_user = user;
+                way.change = DateTime.Now;
+                ef_way.Update(way);
+                if (way_down != null)
+                {
+                    way_down.position_way--;
+                    way_down.change_user = user;
+                    way_down.change = DateTime.Now;
+                    ef_way.Update(way_down);
+                }
+                return 2;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationDown1PositionWayOfPark(context={0}, id={1}, user={2})",
+                    context, id, user), servece_owner, eventID);
+                return -1;
+            }
+        }
+        /// <summary>
+        /// Операция свига на одни позицию вниз
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationDown1PositionWayOfPark(int id, string user)
+        {
+            try
+            {
+                EFDbContext context = new EFDbContext();
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                int result = OperationDown1PositionWayOfPark(ref context, id, user);
+                if (result > 0)
+                {
+                    return context.SaveChanges();
+                }
+                else return result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationDown1PositionWayOfPark(id={0}, user={1})",
+                    id, user), servece_owner, eventID);
+                return -1;
+            }
+        }
+        /// <summary>
+        /// Операция сдвига на одну позицию вверх
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationUp1PositionWayOfPark(ref EFDbContext context, int id, string user)
+        {
+            try
+            {
+                // Проверка контекста
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+
+                EFDirectory_Ways ef_way = new EFDirectory_Ways(context);
+                Directory_Ways way = ef_way.Context.Where(w => w.id == id).FirstOrDefault();
+                if (way == null) return (int)errors_base.not_dir_way_of_db; // Нет пути
+                // Получим все пути по даной станции и парку
+                if (way.position_way == 1) return 0; // Отмена, дошли до верхнего придела.
+                Directory_Ways way_up = ef_way.Context.Where(w => w.id_station == way.id_station && w.id_park == way.id_park && w.way_delete == null && w.position_way == way.position_way - 1).FirstOrDefault();
+                way.position_way--;
+                way.change_user = user;
+                way.change = DateTime.Now;
+                ef_way.Update(way);
+                if (way_up != null)
+                {
+                    way_up.position_way++;
+                    way_up.change_user = user;
+                    way_up.change = DateTime.Now;
+                    ef_way.Update(way_up);
+                }
+
+                return 2;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationUp1PositionWayOfPark(context={0}, id={1}, user={2})",
+                    context, id, user), servece_owner, eventID);
+                return -1;
+            }
+        }
+        /// <summary>
+        /// Операция сдвига на одну позицию вверх
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationUp1PositionWayOfPark(int id, string user)
+        {
+            try
+            {
+                EFDbContext context = new EFDbContext();
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                int result = OperationUp1PositionWayOfPark(ref context, id, user);
+                if (result > 0)
+                {
+                    return context.SaveChanges();
+                }
+                else return result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationUp1PositionWayOfPark(id={0}, user={1})",
+                    id, user), servece_owner, eventID);
+                return -1;
+            }
+        }
+        /// <summary>
+        /// Операция добавить путь
+        /// </summary>
+        /// <param name="way"></param>
+        /// <returns></returns>
+        public int OperationInsertWayOfPark(Directory_Ways way)
+        {
+            try
+            {
+                if (way == null) return (int)errors_base.not_input_value;
+
+                EFDbContext context = new EFDbContext();
+                EFDirectory_Ways ef_way = new EFDirectory_Ways(context);
+                // Получим все пути по даной станции и парку
+                List<Directory_Ways> ways = ef_way.Context.Where(w => w.id_station == way.id_station && w.id_park == way.id_park && w.way_delete == null).OrderBy(p => p.position_way).ToList();
+                Directory_Ways last_ways = ways.OrderByDescending(w => w.position_way).FirstOrDefault();
+                int last_position = 0;
+                if (last_ways != null)
+                {
+                    last_position = last_ways.position_way;
+                }
+                if (way.position_way > last_position + 1) return (int)errors_base.input_position_error; // Ошибка, неправильно указана позиция 
+                if (way.position_way <= last_position)
+                {
+                    // Требуется смещение
+                    int res_down = OperationDownPositionWayOfPark(ref context, ways, way.position_way, null, way.create_user);
+                }
+                ef_way.Add(way);
+                return context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationInsertWayOfPark(way={0})",
+                    way), servece_owner, eventID);
+                return -1;
+            }
+        }
+        /// <summary>
+        /// Операция удалить путь из парка (путь будет полностью удален- если ошибка, тогда в поле "delete"- будет установлена дата удаления и путь в системе будет невидем
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_way"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationDeleteWayOfPark(int id_way, string user)
+        {
+            try
+            {
+                // Проверка контекста
+                EFDbContext context = new EFDbContext();
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDirectory_Ways ef_way = new EFDirectory_Ways(context);
+                EFWagonInternalMovement ef_wim = new EFWagonInternalMovement(context);
+                // Получим пути удаленные и активные по даной станции и парку
+                Directory_Ways way_del = ef_way.Context.Where(w => w.id == id_way).FirstOrDefault();
+                if (way_del == null) return (int)errors_base.not_dir_way_of_db; // Нет пути
+                int position = way_del.position_way;
+                ef_way.Delete(way_del.id);
+                //
+                List<Directory_Ways> ways = ef_way.Context.Where(w => w.id_station == way_del.id_station && w.id_park == way_del.id_park && w.way_delete == null).OrderBy(p => p.position_way).ToList();
+                Directory_Ways last_ways = ways.OrderByDescending(w => w.position_way).FirstOrDefault();
+                // Попытка удалить полностью
+                //int res_del_full = context.SaveChanges();
+                int res_del_full = ef_way.Save();
+                if (res_del_full < 0)
+                {
+                    //TODO: ПОСТАВИТЬ ПРОВЕРКУ НАЛИЧИЕ ВАГОНОВ НА ПУТИ
+                    List<WagonInternalMovement> cars = ef_wim.Context.Where(w => w.id_way == way_del.id && w.way_end == null).ToList();
+                    if (cars != null && cars.Count() > 0) return (int)errors_base.way_is_not_null; // На пути стоят вагоны
+                    // Ошибка удаления 
+                    way_del.way_delete = DateTime.Now;
+                    way_del.position_way = 0;
+                    way_del.note = "Удален но остались архивные ссылки";
+                    ef_way.Update(way_del);
+                    res_del_full = ef_way.Save();
+                }
+                // Сдвиг
+                // Получим все пути по даной станции и парку
+                if (position < last_ways.position_way)
+                {
+                    // Требуется смещение
+                    //int res_down = OperationUpPositionWayOfPark(ref context, ways, position + 1, null, user);
+                    int res_down = OperationUpPositionWayOfPark(ref context, ways, position, null, user);
+                }
+                int res_move = context.SaveChanges();
+                return res_move == 0 ? res_del_full : res_move;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationDeleteWayOfPark(id_way={0}, user={1})",
+                    id_way, user), servece_owner, eventID);
+                return -1;
+            }
+        }
+        // Операция обновить путь 
+        public int OperationUpdateWayOfPark(Directory_Ways way, string user)
+        {
+            try
+            {
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                if (way == null) return (int)errors_base.not_input_value;
+                EFDbContext context = new EFDbContext();
+                EFDirectory_Ways ef_way = new EFDirectory_Ways(context);
+                Directory_Ways way_old = ef_way.Context.Where(w => w.id == way.id).FirstOrDefault();
+                if (way_old == null) return (int)errors_base.not_input_value;
+                // Получим все пути по даной станции и парку
+                List<Directory_Ways> ways = ef_way.Context.Where(w => w.id_station == way.id_station && w.id_park == way.id_park && w.way_delete == null).OrderBy(p => p.position_way).ToList();
+                Directory_Ways last_ways = ways.OrderByDescending(w => w.position_way).FirstOrDefault();
+                int last_position = 0;
+                if (last_ways != null)
+                {
+                    last_position = last_ways.position_way;
+                }
+                // Проверим если позиции не совпадают тогда двигаем, еслинет тогда только правим
+                if (way_old.id_park == way.id_park)
+                {
+                    if (way.position_way > last_position + 1) return (int)errors_base.input_position_error; // Ошибка, неправильно указана позиция                     
+                    // Парк не меняли
+                    if (way_old.position_way == 0)
+                    {
+                        // сдвинуть вниз с новой позиции и до конца
+                        int res_down = OperationDownPositionWayOfPark(ref context, ways, way.position_way, null, user);
+                    }
+                    else
+                    {
+                        // Позиция не равна 0, смещаем
+                        if (way_old.position_way != way.position_way)
+                        {
+                            if (way_old.position_way < way.position_way)
+                            {
+                                // Сдвинуть вверх
+                                int res_up = OperationUpPositionWayOfPark(ref context, ways, way_old.position_way, way.position_way, user);
+                            }
+                            else
+                            {
+                                // сдвинуть вниз
+                                int res_down = OperationDownPositionWayOfPark(ref context, ways, way.position_way, way_old.position_way, user);
+                            }
+                        }
+                    }
+                    // Позиция как задано
+                    way_old.position_way = way.position_way;
+                }
+                else
+                {
+                    // Парк меняли, позицию по умолчанию 1
+                    int res_down = OperationDownPositionWayOfPark(ref context, ways, 1, null, user);
+                    way_old.position_way = 1;
+
+                }
+                // Обновим данные по путь
+                way_old.id_station = way.id_station;
+                way_old.id_park = way.id_park;
+                way_old.position_park = way.position_park;
+                way_old.way_num_ru = way.way_num_ru;
+                way_old.way_num_en = way.way_num_en;
+                way_old.way_name_ru = way.way_name_ru;
+                way_old.way_name_en = way.way_name_en;
+                way_old.way_abbr_ru = way.way_abbr_ru;
+                way_old.way_abbr_en = way.way_abbr_en;
+                way_old.capacity = way.capacity;
+                way_old.deadlock = way.deadlock;
+                way_old.crossing_uz = way.crossing_uz;
+                way_old.crossing_amkr = way.crossing_amkr;
+                way_old.id_devision = way.id_devision;
+                way_old.dissolution = way.dissolution;
+                way_old.output_dissolution = way.output_dissolution;
+                way_old.way_close = way.way_close;
+                way_old.way_delete = way.way_delete;
+                way_old.note = way.note;
+                way_old.create = way.create;
+                way_old.create_user = way.create_user;
+                way_old.change = DateTime.Now;
+                way_old.change_user = user;
+                ef_way.Update(way_old);
+                return context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationUpdateWayOfPark(way={0}, user={1})",
+                    way, user), servece_owner, eventID);
+                return -1;
+            }
+        }
+        #endregion
+
+
+        #region СПРАВОЧНИК ПАРКОВ (IDS.Directory_ParkWays)
+        /// <summary>
+        /// Выполнить операцию автоматической корекции позиции парков по станции
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_station"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationAutoPositionParkOfStation(ref EFDbContext context, int id_station, string user)
+        {
+            try
+            {
+                // Проверка контекста
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDirectory_Ways ef_way = new EFDirectory_Ways(context);
+                // Получим пути удаленные и активные по даной станции и парку
+                List<Directory_Ways> ways_delete = ef_way.Context.Where(w => w.id_station == id_station && w.way_delete != null).ToList();
+                List<Directory_Ways> ways_active = ef_way.Context.Where(w => w.id_station == id_station && w.way_delete == null).ToList();
+                foreach (Directory_Ways way in ways_delete.ToList())
+                {
+                    way.position_park = 0;
+                    way.position_way = 0;
+                    way.note = "Удален, но остались архивные ссылки";
+                    way.change_user = user;
+                    way.change = DateTime.Now;
+                    ef_way.Update(way);
+                }
+                int position = 0;
+                int id_park = 0;
+                foreach (Directory_Ways way in ways_active.OrderBy(w => w.id_park).ToList())
+                {
+                    if (id_park != way.id_park)
+                    {
+                        position++;
+                        id_park = way.id_park;
+                    }
+                    way.position_park = position;
+                    way.change_user = user;
+                    way.change = DateTime.Now;
+                    ef_way.Update(way);
+                    way.note = null;
+                }
+                return 1;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationAutoPositionParkOfStation(context={0}, id_station={1}, user={2})",
+                    context, id_station, user), servece_owner, eventID);
+                return -1;
+            }
+        }
+        /// <summary>
+        /// Выполнить операцию автоматической корекции позиции парков по станции
+        /// </summary>
+        /// <param name="id_station"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationAutoPositionParkOfStation(int id_station, string user)
+        {
+            try
+            {
+                EFDbContext context = new EFDbContext();
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                int result = OperationAutoPositionParkOfStation(ref context, id_station, user);
+                if (result > 0)
+                {
+                    return context.SaveChanges();
+                }
+                else return result;
+
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationAutoPositionParkOfStation(id_station={0}, user={1})",
+                    id_station, user), servece_owner, eventID);
+                return -1;
+            }
+        }
+        /// <summary>
+        /// Операция сдвига парка на одну позицию вверх
+        /// </summary>
+        /// <param name="id_station"></param>
+        /// <param name="id_park"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationUp1PositionParkOfStation(int id_station, int id_park, string user)
+        {
+            try
+            {
+                EFDbContext context = new EFDbContext();
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                int result = OperationUp1PositionParkOfStation(ref context, id_station, id_park, user);
+                if (result > 0)
+                {
+                    return context.SaveChanges();
+                }
+                else return result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationUp1PositionParkOfStation(id_station={0}, id_park={1}, user={2})",
+                    id_park, user), servece_owner, eventID);
+                return -1;
+            }
+        }
+        /// <summary>
+        /// Операция сдвига парка на одну позицию вверх
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_station"></param>
+        /// <param name="id_park"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationUp1PositionParkOfStation(ref EFDbContext context, int id_station, int id_park, string user)
+        {
+            try
+            {
+                // Проверка контекста
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                int count = 0;
+                EFDirectory_Ways ef_way = new EFDirectory_Ways(context);
+                List<Directory_Ways> ways = ef_way.Context.Where(w => w.id_station == id_station && w.id_park == id_park).ToList();
+                if (ways == null || ways.Count() == 0) return (int)errors_base.not_dir_park_station_of_db; // Нет пути
+                // Получим все пути по даной станции и парку
+                if (ways[0].position_park == 1) return 0; // Отмена, дошли до верхнего придела.
+                int position = ways[0].position_park;
+                List<Directory_Ways> ways_up = ef_way.Context.Where(w => w.id_station == id_station && w.way_delete == null && w.position_park == position - 1).ToList();
+                foreach (Directory_Ways way in ways_up)
+                {
+                    way.position_park = position;
+                    way.change_user = user;
+                    way.change = DateTime.Now;
+                    ef_way.Update(way);
+                    count++;
+                }
+                foreach (Directory_Ways way in ways)
+                {
+                    way.position_park = position - 1;
+                    way.change_user = user;
+                    way.change = DateTime.Now;
+                    ef_way.Update(way);
+                    count++;
+                }
+                return count;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationUp1PositionParkOfStation(context={0}, id_station={1}, id_park={2}, user={3})",
+                    context, id_station, id_park, user), servece_owner, eventID);
+                return -1;
+            }
+        }
+        /// <summary>
+        /// Операция сдвига парка на одну позицию вниз
+        /// </summary>
+        /// <param name="id_station"></param>
+        /// <param name="id_park"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationDown1PositionParkOfStation(int id_station, int id_park, string user)
+        {
+            try
+            {
+                EFDbContext context = new EFDbContext();
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                int result = OperationDown1PositionParkOfStation(ref context, id_station, id_park, user);
+                if (result > 0)
+                {
+                    return context.SaveChanges();
+                }
+                else return result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationDown1PositionParkOfStation(id_station={0}, id_park={1}, user={2})",
+                    id_park, user), servece_owner, eventID);
+                return -1;
+            }
+        }
+        /// <summary>
+        /// Операция сдвига парка на одну позицию вниз
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_station"></param>
+        /// <param name="id_park"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationDown1PositionParkOfStation(ref EFDbContext context, int id_station, int id_park, string user)
+        {
+            try
+            {
+                // Проверка контекста
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                int count = 0;
+                EFDirectory_Ways ef_way = new EFDirectory_Ways(context);
+                List<Directory_Ways> ways = ef_way.Context.Where(w => w.id_station == id_station && w.id_park == id_park).ToList();
+                if (ways == null || ways.Count() == 0) return (int)errors_base.not_dir_park_station_of_db; // Нет пути
+                // Определим последнюю позицию по количеству парков на станции
+                int last_position = ef_way.Context.Where(w => w.id_station == id_station && w.way_delete == null).GroupBy(p => p.id_park).Count();
+                // Получим все пути по даной станции и парку
+                if (ways[0].position_park >= last_position) return 0; // Отмена, дошли до верхнего придела.
+                int position = ways[0].position_park;
+                List<Directory_Ways> ways_up = ef_way.Context.Where(w => w.id_station == id_station && w.way_delete == null && w.position_park == position + 1).ToList();
+                foreach (Directory_Ways way in ways_up)
+                {
+                    way.position_park = position;
+                    way.change_user = user;
+                    way.change = DateTime.Now;
+                    ef_way.Update(way);
+                    count++;
+                }
+                foreach (Directory_Ways way in ways)
+                {
+                    way.position_park = position + 1;
+                    way.change_user = user;
+                    way.change = DateTime.Now;
+                    ef_way.Update(way);
+                    count++;
+                }
+                return count;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationDown1PositionParkOfStation(context={0}, id_station={1}, id_park={2}, user={3})",
+                    context, id_station, id_park, user), servece_owner, eventID);
+                return -1;
+            }
+        }
+        /// <summary>
+        /// Операция сдвига позиций вниз
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="ways"></param>
+        /// <param name="start"></param>
+        /// <param name="stop"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationDownPositionParkOfStation(ref EFDbContext context, List<Directory_Ways> ways, int start, int? stop, string user)
+        {
+            try
+            {
+                // Проверка контекста
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                // если конечная позиция не указана тогда просто сдвинуть в низ с определенной позиции
+                if (stop == null)
+                {
+                    int last_position = ways.Where(w => w.way_delete == null).GroupBy(p => p.id_park).Count();
+                    stop = last_position;
+                }
+
+                EFDirectory_Ways ef_way = new EFDirectory_Ways(context);
+                // сдвинуть вниз
+                int current_position = (int)stop + 1;
+                int start_position = (int)stop;
+                int stop_position = start;
+                int count = 0;
+                // сместим промежуточные позиции вверх
+                do
+                {
+                    Directory_Ways way_edit = ways.Where(w => w.position_way == start_position).FirstOrDefault();
+                    way_edit.position_way = current_position;
+                    way_edit.change_user = user;
+                    way_edit.change = DateTime.Now;
+                    ef_way.Update(way_edit);
+                    current_position--;
+                    start_position--;
+                    count++;
+                }
+                while (start_position >= stop_position);
+                return count;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationDownPositionWayOfPark(context={0}, ways={1}, start={2}, stop={2}, user={3})",
+                    context, ways, start, stop, user), servece_owner, eventID);
+                return -1;
+            }
+        }
+
+        /// <summary>
+        /// Добавить парк в станцию
+        /// </summary>
+        /// <param name="id_station"></param>
+        /// <param name="position"></param>
+        /// <param name="id_park"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int OperationInsertParkOfStation(int id_station, int position, int id_park, string user)
+        {
+            try
+            {
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDbContext context = new EFDbContext();
+                EFDirectory_Ways ef_way = new EFDirectory_Ways(context);
+                EFDirectory_ParkWays ef_park_ways = new EFDirectory_ParkWays(context);
+                EFDirectory_Station ef_station = new EFDirectory_Station(context);
+                Directory_Station station = ef_station.Context.Where(s => s.id == id_station).FirstOrDefault();
+                if (station == null) return (int)errors_base.not_dir_station_of_db; // Нет указаной станции в базе данных
+                Directory_ParkWays park = ef_park_ways.Context.Where(p => p.id == id_park).FirstOrDefault();
+                if (park == null) return (int)errors_base.not_dir_park_of_db; // Нет указаного парка в базе данных
+                // определим последнюю позицию по паркам
+                int last_position = ef_way.Context.Where(w => w.id_station == id_station && w.way_delete == null).GroupBy(p => p.id_park).Count();
+                // если указаная позиция больше чем существует позиций, корректируем ее
+                if (position <= last_position)
+                {
+                    List<Directory_Ways> ways = ef_way.Context.Where(w => w.id_station == id_station && w.way_delete == null).OrderBy(p => p.position_park).ToList();
+                    // Требуется смещение
+                    int res_down = OperationDownPositionParkOfStation(ref context, ways, position, null, user);
+                }
+                else
+                {
+                    position = last_position + 1; // Корректируем следующая за последней.
+                }
+
+
+
+
+                //// Получим все пути по даной станции и парку
+                //List<Directory_Ways> ways = ef_way.Context.Where(w => w.id_station == way.id_station && w.id_park == way.id_park && w.way_delete == null).OrderBy(p => p.position_way).ToList();
+                //Directory_Ways last_ways = ways.OrderByDescending(w => w.position_way).FirstOrDefault();
+                //if (way.position_way > last_ways.position_way + 1) return (int)errors_base.input_position_error; // Ошибка, неправильно указана позиция 
+                //if (way.position_way <= last_ways.position_way)
+                //{
+                //    // Требуется смещение
+                //    int res_down = OperationDownPositionWayOfPark(ref context, ways, way.position_way, null, way.create_user);
+                //}
+                //ef_way.Add(way);
+                return context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationInsertParkOfStation(id_station={0}, position={1}, id_park={2}, user={2})",
+                    id_station, position, id_park, user), servece_owner, eventID);
+                return -1;
+            }
+        }
+        #endregion
+
+
+
         #region СПРАВОЧНИК ЖЕЛЕЗНЫХ ДОРОГ (IDS.Directory_Railway)
         /// <summary>
         /// Получить строку справочника железных дорог по имени администрации
@@ -1111,8 +2131,8 @@ namespace IDS
                     shipper = new Directory_Shipper()
                     {
                         code = code,
-                        shipper_name_ru = name.Length>100 ? name.Substring(0, 100) : name, // обрежим до 100
-                        shipper_name_en = name.Length>100 ? name.Substring(0, 100) : name, 
+                        shipper_name_ru = name.Length > 100 ? name.Substring(0, 100) : name, // обрежим до 100
+                        shipper_name_en = name.Length > 100 ? name.Substring(0, 100) : name,
                         create = DateTime.Now,
                         create_user = user
                     };
@@ -1199,7 +2219,7 @@ namespace IDS
                         code = code,
                         station_name_ru = name,
                         station_name_en = name,
-                        code_inlandrailway = id_irw, 
+                        code_inlandrailway = id_irw,
                         create = DateTime.Now,
                         create_user = user
                     };

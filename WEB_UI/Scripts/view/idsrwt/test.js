@@ -10,7 +10,7 @@
 
     //var $num_wagon = $('input#num_wagon').val(getUrlVar('num'));
 
-    //var alert = new ALERT($('div#main-alert')); // Создадим класс ALERTG
+    var alert = new ALERT($('div#main-alert')); // Создадим класс ALERTG
 
     //var $bt_search_wagon = $('button#bt_search_wagon').on('click', function (event) {
     //    event.preventDefault();
@@ -115,44 +115,89 @@
 
     //};
 
-    // Определим экземпляр таблица вагоны прибытие
-    var Tcbs = App.cblist_station;
-    var cb_st = new Tcbs('div#dds-station'); // Создадим экземпляр таблицы
+    ////// Определим экземпляр таблица вагоны прибытие
+    ////var Tcbs = App.cblist_station;
+    ////var cb_st = new Tcbs('div#dds-station'); // Создадим экземпляр таблицы
 
-    var TTWay = App.ids_tree_way;
-    var trWay = new TTWay('div#tree-way'); // Создадим экземпляр таблицы
+    ////var TTWay = App.ids_tree_way;
+    ////var trWay = new TTWay('div#tree-way'); // Создадим экземпляр таблицы
+
+    //var TDWAY = App.table_dir_way;
+    //var tdways = new TDWAY('div#ways'); // Создадим экземпляр таблицы
+
+    var TDPW = App.table_dir_park_ways;
+    var tdpw = new TDPW('div#park-ways'); // Создадим экземпляр таблицы
+
+    var TDPARK = App.table_dir_park_station;
+    var tdpark = new TDPARK('div#park'); // Создадим экземпляр таблицы
 
 
+    var MCF = App.modal_confirm_form;
+    var mcf_test = new MCF('confirm-test'); // Создадим экземпляр окно сообщений
 
     $('button#arrival').on('click', function (e) {
         //trWay.update_station_of_id(8);
         //trWay.update_park_of_id(8, 3);
         //trWay.update_way_of_id(227);
-        trWay.open_way(8, 75, 244);
+        /*        trWay.open_way(8, 75, 244);*/
+        //mcf_test.view('Подпись', 'Текст сообщения', function (result) {
+
+        //})
 
     });
 
     // После загрузки документа
     $(document).ready(function ($) {
-        // Прочтем данные из куков
-        var list_station = null;
-        var select_station_tree = $.cookie("select_station_tree");
-        if (select_station_tree) list_station = $.parseJSON(select_station_tree);
-        // Инициализируем компонент выбора станций
-        cb_st.init(list_station, function (list_station) {
-            // выбраны станции и команда применить
-            // сохраним сокет
-            $.cookie("select_station_tree", JSON.stringify(list_station), { expires: 365 });
-            // Отразим станции
-            trWay.view(list_station);
+        //mcf_test.init();
+        tdpw.init({
+            alert: alert
+        }, function () {
+            tdpw.load();
         });
-        // Инициализируем компонент дерево путей
-        trWay.init(function (id_station, id_park, id_way, option) {
-            // Обраблтка выбраного пути
-        }, function (name, id) {
-            // Обработка события детально
+
+        tdpark.init({
+            alert: alert
+        }, function () {
+            tdpark.load_of_station(8);
         });
-        trWay.view(list_station);
+        //tdways.init({
+        //    alert: alert
+        //}, function () {
+        //    tdways.load_of_station_park(23, 161);
+        //});
+
+
+        //var alert = $('div#test-alert');
+        //var FVAL = App.form_validation;
+        //var form_val = new FVAL('#test'); // Создадим экземпляр таблицы
+        //form_val.init(alert, null, function (data) {
+
+        //});
+
+
+
+
+        ////// Прочтем данные из куков
+        ////var list_station = null;
+        ////var select_station_tree = $.cookie("select_station_tree");
+        ////if (select_station_tree) list_station = $.parseJSON(select_station_tree);
+        ////// Инициализируем компонент выбора станций
+        ////cb_st.init(list_station, function (list_station) {
+        ////    // выбраны станции и команда применить
+        ////    // сохраним сокет
+        ////    $.cookie("select_station_tree", JSON.stringify(list_station), { expires: 365 });
+        ////    // Отразим станции
+        ////    trWay.view(list_station);
+        ////});
+        ////// Инициализируем компонент дерево путей
+        ////trWay.init(function (id_station, id_park, id_way, option) {
+        ////    // Обраблтка выбраного пути
+        ////}, function (name, id) {
+        ////    // Обработка события детально
+        ////});
+        ////trWay.view(list_station);
+
+
         //trWay.view(list_station, 8, 75, 244);
 
         //$(".checkbox-menu").on("change", "input[type='checkbox']", function () {
@@ -163,7 +208,7 @@
         //    e.stopPropagation();
         //});
 
-        //LockScreenOff();
+        LockScreenOff();
         //taw.init(true);
         //twir.init(true);
         //tow.init(true);

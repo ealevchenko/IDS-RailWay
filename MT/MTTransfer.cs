@@ -1051,7 +1051,17 @@ namespace MT
                         foreach (IGrouping<string, WagonsArrivalMT> operation in sostav_operation.ToList())
                         {
                             string oper = operation.Key;
-                            List<WagonsArrivalMT> list = operation.ToList();
+                            List<WagonsArrivalMT> list = new List<WagonsArrivalMT>();
+                            // Коррекция - убираю повторы
+                            int position = 0;
+                            foreach (WagonsArrivalMT wamt in operation.OrderBy(c => c.position).ToList())
+                            {
+                                if (position != wamt.position)
+                                {
+                                    list.Add(wamt);
+                                    position = wamt.position;
+                                }
+                            }
                             // Добавим результат
                             list_result.Add(new SostavArrivalMT()
                             {
@@ -1152,38 +1162,51 @@ namespace MT
             {
                 // Добавим вагоны
                 List<ArrivalCars> result_wagons = new List<ArrivalCars>();
+                int position = 0;
                 foreach (WagonsArrivalMT wag_mt in wagons.OrderBy(w => w.position).ToList())
                 {
-                    string cargo = "?";
-                    if (!String.IsNullOrWhiteSpace(wag_mt.cargo)) {
-                        cargo = wag_mt.cargo.Length > 50 ? wag_mt.cargo.Substring(0, 49) : wag_mt.cargo;
-                    }
-
-                    // Получим вагон
-                    ArrivalCars wag = new ArrivalCars()
+                    // Проверка на повторяющиеся вагоны
+                    if (wag_mt.position != position)
                     {
-                        id = 0,
-                        id_sostav = 0,
-                        position = wag_mt.position,
-                        num = wag_mt.num,
-                        country_code = wag_mt.country_code >= 100 ? int.Parse(wag_mt.country_code.ToString().Substring(0, 2)) : 0,
-                        wight = (float)wag_mt.wight,
-                        cargo_code = wag_mt.cargo_code,
-                        cargo = cargo,
-                        station_code = wag_mt.station_code,
-                        station = wag_mt.station,
-                        consignee = wag_mt.consignee,
-                        operation = wag_mt.operation,
-                        composition_index = wag_mt.composition_index,
-                        date_operation = wag_mt.date_operation,
-                        train = wag_mt.train,
-                        num_doc_arrived = null,
-                        arrived = null,
-                        parent_id = null,
-                        user_name = null,
-                    };
-                    wag.parent_id = GetParentID(ref context, wag, this.day_range_arrival_cars);
-                    result_wagons.Add(wag);
+                        string cargo = "?";
+                        if (!String.IsNullOrWhiteSpace(wag_mt.cargo))
+                        {
+                            cargo = wag_mt.cargo.Length > 50 ? wag_mt.cargo.Substring(0, 49) : wag_mt.cargo;
+                        }
+
+                        // Получим вагон
+                        ArrivalCars wag = new ArrivalCars()
+                        {
+                            id = 0,
+                            id_sostav = 0,
+                            position = wag_mt.position,
+                            num = wag_mt.num,
+                            country_code = wag_mt.country_code >= 100 ? int.Parse(wag_mt.country_code.ToString().Substring(0, 2)) : 0,
+                            wight = (float)wag_mt.wight,
+                            cargo_code = wag_mt.cargo_code,
+                            cargo = cargo,
+                            station_code = wag_mt.station_code,
+                            station = wag_mt.station,
+                            consignee = wag_mt.consignee,
+                            operation = wag_mt.operation,
+                            composition_index = wag_mt.composition_index,
+                            date_operation = wag_mt.date_operation,
+                            train = wag_mt.train,
+                            num_doc_arrived = null,
+                            arrived = null,
+                            parent_id = null,
+                            user_name = null,
+                        };
+                        wag.parent_id = GetParentID(ref context, wag, this.day_range_arrival_cars);
+                        result_wagons.Add(wag);
+                        // запомним позицию
+                        position = wag_mt.position;
+                    }
+                    else
+                    {
+                        // Позиция повторяется
+                        Console.WriteLine("Вагон {0}, с позицией {1} был добавлен в состав {2}", wag_mt.num, wag_mt.position, wag_mt.composition_index);
+                    }
                 }
                 return result_wagons;
             }
@@ -1205,6 +1228,7 @@ namespace MT
                 List<SostavArrivalMT> sostav_result = null;
                 WebApiClientMT client_arr = new WebApiClientMT(url, user, psw, api, this.servece_owner);
                 RequestArrivalMT request = client_arr.GetArrival();
+                if (request == null) return -1;
                 String.Format("Получен ответ на запрос id = {0}, получено вагонов {1}", request.id, request.wagons.Count()).InformationLog(servece_owner, this.eventID);
                 if (request != null && request.wagons != null && request.wagons.Count > 0)
                 {
@@ -1217,6 +1241,7 @@ namespace MT
                         .ToList();
                     String.Format("Определенно {0} составов для копирования", sostav_result.Count()).InformationLog(servece_owner, this.eventID);
                     EFArrivalSostav ef_arr_sostav = new EFArrivalSostav(context);
+                    EFArrivalCars ef_arr_cars = new EFArrivalCars(context);
                     int add = 0;
                     int error_add = 0;
                     int update = 0;
@@ -1233,99 +1258,139 @@ namespace MT
                             Console.WriteLine("Переносим состав с индексом {0}, дата операции {1}", st_ci.composition_index, st_ci.date_operation);
                             string message = String.Format("Cостав [Индекс : {0}, операция : {1}, дата : {2}]", st_ci.composition_index, st_ci.operation, st_ci.date_operation);
                             DateTime start = DateTime.Now;
-                            ArrivalSostav exs_sostav = ef_arr_sostav.Context.Where(s => s.composition_index == st_ci.composition_index).OrderByDescending(c => c.date_time).FirstOrDefault();
-                            if (exs_sostav == null || (exs_sostav != null && exs_sostav.date_time < st_ci.date_operation))
+                            // Поиск состава в системе по имени (индекс + дата и ремя + операция).
+                            string file_name_en = "api:" + st_ci.composition_index + "_" + st_ci.date_operation.ToString(CultureInfo.CreateSpecificCulture("en-US")) + "_" + st_ci.operation;
+                            string file_name_ru = "api:" + st_ci.composition_index + "_" + st_ci.date_operation.ToString() + "_" + st_ci.operation;
+                            ArrivalSostav old_sostav = ef_arr_sostav.Context.Where(s => s.file_name == file_name_en).OrderByDescending(c => c.date_time).FirstOrDefault();
+                            if (old_sostav == null)
                             {
+                                old_sostav = ef_arr_sostav.Context.Where(s => s.file_name == file_name_ru).OrderByDescending(c => c.date_time).FirstOrDefault();
+                            }
+                            if (old_sostav == null)
+                            {
+                                // Сотава в системе нет
+                                ArrivalSostav exs_sostav = ef_arr_sostav.Context.Where(s => s.composition_index == st_ci.composition_index).OrderByDescending(c => c.date_time).FirstOrDefault();
                                 // Нет информации по саставу
                                 long? ParentIDSostav = null;
                                 long? id_arrived = ef_arr_sostav.Database.SqlQuery<long?>("SELECT max([id_arrived]) FROM [METRANS].[ArrivalSostav]").FirstOrDefault();//    .GetNextIDArrival();//SELECT max([id_arrived]) FROM [METRANS].[ArrivalSostav]
                                 id_arrived = id_arrived != null ? id_arrived + 1 : 0; // Проверка и инкримент
-                                                                                      // получить не закрытый состав
-                                if (exs_sostav != null)
-                                {
-                                    System.TimeSpan diff_operation = st_ci.date_operation.Subtract(exs_sostav.date_time);
-                                    if (diff_operation.TotalDays < this.day_range_arrival_cars)
-                                    {
-                                        ParentIDSostav = exs_sostav.id;
-                                        id_arrived = exs_sostav.id_arrived;
-                                        // Закрыть состав
-                                        exs_sostav.close = DateTime.Now;
-                                        ef_arr_sostav.Update(exs_sostav); // Обновление
-                                    }
-                                }
-                                ArrivalSostav new_sostav = new ArrivalSostav()
-                                {
-                                    id = 0,
-                                    id_arrived = (int)id_arrived,
-                                    file_name = "api:" + st_ci.composition_index + "_" + st_ci.date_operation.ToString() + "_" + st_ci.operation,
-                                    composition_index = st_ci.composition_index,
-                                    date_time = st_ci.date_operation,
-                                    create = DateTime.Now,
-                                    close = null,
-                                    arrived = null,
-                                    Parent_id = ParentIDSostav,
-                                    operation = st_ci.operation == "ПРИБ" ? 1 : 2,
 
-                                };
-                                // Получим и добавим вагоны
-                                foreach (ArrivalCars car in AddWagon(ref context, st_ci.wagons))
+                                // получить не закрытый состав
+                                if ((exs_sostav==null) || (exs_sostav != null && exs_sostav.date_time < st_ci.date_operation))
                                 {
-                                    new_sostav.ArrivalCars.Add(car);
-                                };
-                                count_wagon = new_sostav.ArrivalCars.Count();
-                                // Добавим новый состав
-                                ef_arr_sostav.Add(new_sostav);
-                                // Добавим
-                                int result_add = context.SaveChanges();
-                                if (result_add > 0)
-                                {
-                                    add++;
-                                    if (arrival_to_railway)
+                                    // Время актуальное
+                                    if (exs_sostav != null)
                                     {
-                                        // Перенесем вагоны в прибытие
-                                        //int res = InsertIDSArrivalSostav(new_sostav.id);
+                                        System.TimeSpan diff_operation = st_ci.date_operation.Subtract(exs_sostav.date_time);
+                                        if (diff_operation.TotalDays < this.day_range_arrival_cars)
+                                        {
+                                            ParentIDSostav = exs_sostav.id;
+                                            id_arrived = exs_sostav.id_arrived;
+                                            // Закрыть состав
+                                            exs_sostav.close = DateTime.Now;
+                                            ef_arr_sostav.Update(exs_sostav); // Обновление
+                                        }
                                     }
-                                }
-                                else
-                                {
-                                    error_add++;
-                                }
-                                message += " - добавлен, код вып. = " + result_add.ToString();
-                            }
-                            else
-                            {
-                                if (exs_sostav.date_time == st_ci.date_operation && exs_sostav.ArrivalCars.Count() != st_ci.wagons.Count())
-                                {
-                                    // Совпадают даты но не совпадает количество вагонов, обновим вагоны
-                                    exs_sostav.ArrivalCars.Clear();
+                                    ArrivalSostav new_sostav = new ArrivalSostav()
+                                    {
+                                        id = 0,
+                                        id_arrived = (int)id_arrived,
+                                        file_name = "api:" + st_ci.composition_index + "_" + st_ci.date_operation.ToString(CultureInfo.CreateSpecificCulture("en-US")) + "_" + st_ci.operation,
+                                        composition_index = st_ci.composition_index,
+                                        date_time = st_ci.date_operation,
+                                        create = DateTime.Now,
+                                        close = null,
+                                        arrived = null,
+                                        Parent_id = ParentIDSostav,
+                                        operation = st_ci.operation == "ПРИБ" ? 1 : 2,
+
+                                    };
+                                    // Получим и добавим вагоны
                                     foreach (ArrivalCars car in AddWagon(ref context, st_ci.wagons))
                                     {
-                                        exs_sostav.ArrivalCars.Add(car);
+                                        new_sostav.ArrivalCars.Add(car);
                                     };
-                                    count_wagon = exs_sostav.ArrivalCars.Count();
-                                    ef_arr_sostav.Update(exs_sostav);
-                                    // Обновим
-                                    int result_upd = context.SaveChanges();
-                                    if (result_upd > 0)
+                                    count_wagon = new_sostav.ArrivalCars.Count();
+                                    // Добавим новый состав
+                                    ef_arr_sostav.Add(new_sostav);
+                                    // Добавим
+                                    int result_add = context.SaveChanges();
+                                    if (result_add > 0)
                                     {
-                                        update++;
+                                        add++;
                                         if (arrival_to_railway)
                                         {
                                             // Перенесем вагоны в прибытие
-                                            //int res = InsertIDSArrivalSostav(new_sostav.id);
+                                            int res = InsertIDSArrivalSostav(new_sostav.id);
                                         }
                                     }
                                     else
                                     {
-                                        error_update++;
+                                        error_add++;
                                     }
-                                    message += " - обновлен, код вып. = " + result_upd.ToString();
+                                    message += " - добавлен, код вып. = " + result_add.ToString();
+                                }
+                                else
+                                {
+                                    // Время старое, 
+                                    if (exs_sostav != null)
+                                    {
+                                        Console.WriteLine("Состав {0} пропущен по времени, время текущее {1} < времени в базе {2}.", st_ci.composition_index, st_ci.date_operation, exs_sostav.date_time);
+                                    }
+                                    else { 
+                                    
+                                    }
+
+                                    skip++;
+                                    message += " - пропущен.";
+                                }
+
+                            }
+                            else
+                            {
+                                // Состав уже есть, и количество вагонов разное
+                                if (old_sostav.ArrivalCars.Count() != st_ci.wagons.Count())
+                                {
+                                    //// Удалим вагоны
+                                    //List<long> ids = old_sostav.ArrivalCars.Where(w=>w.parent_id==null).Select(c => c.id).ToList();
+                                    //ef_arr_cars.Delete(ids);
+                                    //int del = ef_arr_cars.Save();
+                                    //ids = old_sostav.ArrivalCars.Where(w=>w.parent_id!=null).Select(c => c.id).ToList();
+                                    //ef_arr_cars.Delete(ids);
+                                    //del = ef_arr_cars.Save();
+                                    ////old_sostav.ArrivalCars.Clear();
+                                    //// Добавим новые
+                                    //foreach (ArrivalCars car in AddWagon(ref context, st_ci.wagons))
+                                    //{
+                                    //    old_sostav.ArrivalCars.Add(car);
+                                    //};
+                                    //count_wagon = old_sostav.ArrivalCars.Count();
+                                    //ef_arr_sostav.Update(old_sostav);
+                                    //int result_upd = context.SaveChanges();
+                                    //if (result_upd > 0)
+                                    //{
+                                    //    update++;
+                                    //    if (arrival_to_railway)
+                                    //    {
+                                    //        //Перенесем вагоны в прибытие
+                                    //        int res = InsertIDSArrivalSostav(old_sostav.id);
+                                    //    }
+                                    //}
+                                    //else
+                                    //{
+                                    //    error_update++;
+                                    //}
+                                    //message += " - обновлен, код вып. = " + result_upd.ToString();
+                                    Console.WriteLine("Состав {0}, но есть разница в кол. вагонов, текущее {1} < в базе {2}.", st_ci.composition_index, st_ci.wagons.Count(), old_sostav.ArrivalCars.Count());
+                                    skip++;
+                                    message += " - пропущен.";
                                 }
                                 else
                                 {
                                     skip++;
                                     message += " - пропущен.";
                                 }
+
                             }
                             DateTime stop = DateTime.Now;
                             servece_owner.ServicesToLog(eventID, message, start, stop, count_wagon);
@@ -1347,7 +1412,7 @@ namespace MT
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("TransferArrivalAPI(url={0}, user={1}, psw={2}, api={3})", url,  user,  psw,  api), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("TransferArrivalAPI(url={0}, user={1}, psw={2}, api={3})", url, user, psw, api), servece_owner, eventID);
                 return -1;
             }
         }

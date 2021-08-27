@@ -1,6 +1,8 @@
 ﻿using EFIDS.Abstract;
 using EFIDS.Entities;
 using EFIDS.Helper;
+using IDS;
+using IDSLogs.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,8 +40,25 @@ namespace WEB_UI.Controllers.api
         public DateTime? change { get; set; }
         public string change_user { get; set; }
     }
-    
-    
+
+    public class OperationSelectWayOfPark
+    {
+        public int id_way { get; set; }
+        public string user { get; set; }
+    }
+
+    public class OperationAutoPositionWayOfPark
+    {
+        public int id_station { get; set; }
+        public int id_park { get; set; }
+        public string user { get; set; }
+    }
+
+    public class OperationUpdateWayOfPark
+    {
+        public Directory_Ways way { get; set; }
+        public string user { get; set; }
+    }
     /// <summary>
     /// СПИСОК ПУТЕЙ
     /// </summary>
@@ -90,6 +109,32 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // GET: api/ids/directory/ways/station/id/8/park/id/27
+        /// <summary>
+        /// Получить список путей по станции и парку
+        /// </summary>
+        /// <param name="id_station"></param>
+        /// <param name="id_park"></param>
+        /// <returns></returns>
+        [Route("station/id/{id_station:int}/park/id/{id_park:int}")]
+        [ResponseType(typeof(Directory_Ways))]
+        public IHttpActionResult GetWaysOfStationPark(int id_station, int id_park)
+        {
+            try
+            {
+                List<Directory_Ways> list = this.ef_dir
+                    .Context
+                    .Where(w => w.id_station == id_station && w.id_park == id_park)
+                    .OrderBy(c=>c.position_way)
+                    .ToList()
+                    .Select(m => m.GetDirectory_Ways()).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
         //// GET: api/ids/directory/ways/view/station/id/1/park/id/69
         //[Route("view/station/id/{id_station:int}/park/id/{id_park:int}")]
         //[ResponseType(typeof(Way_View))]
@@ -189,5 +234,142 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // POST api/ids/directory/ways/operation/auto_correct/
+        /// <summary>
+        /// Операция положение пути ниже
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("operation/auto_correct")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostOperationAutoPositionWayOfPark([FromBody] OperationAutoPositionWayOfPark value)
+        {
+            try
+            {
+                IDSDirectory ids_wir = new IDSDirectory(service.WebAPI_IDS);
+                int result = ids_wir.OperationAutoPositionWayOfPark(value.id_station, value.id_park, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST api/ids/directory/ways/operation/down_position/1
+        /// <summary>
+        /// Операция положение пути ниже
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("operation/down_position/1")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostOperationDown1PositionWayOfPark([FromBody] OperationSelectWayOfPark value)
+        {
+            try
+            {
+                IDSDirectory ids_wir = new IDSDirectory(service.WebAPI_IDS);
+                int result = ids_wir.OperationDown1PositionWayOfPark(value.id_way, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST api/ids/directory/ways/operation/up_position/1
+        /// <summary>
+        /// Операция положение пути выше
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("operation/up_position/1")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostOperationUp1PositionWayOfPark([FromBody] OperationSelectWayOfPark value)
+        {
+            try
+            {
+                IDSDirectory ids_wir = new IDSDirectory(service.WebAPI_IDS);
+                int result = ids_wir.OperationUp1PositionWayOfPark(value.id_way, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST api/ids/directory/ways/operation/add/
+        /// <summary>
+        /// Операция положение пути выше
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("operation/add")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostOperationInsertWayOfPark([FromBody] Directory_Ways value)
+        {
+            try
+            {
+                IDSDirectory ids_wir = new IDSDirectory(service.WebAPI_IDS);
+                int result = ids_wir.OperationInsertWayOfPark(value);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST api/ids/directory/ways/operation/delete/
+        /// <summary>
+        /// Операция положение пути выше
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("operation/delete")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostOperationDeleteWayOfPark([FromBody] OperationSelectWayOfPark value)
+        {
+            try
+            {
+                IDSDirectory ids_wir = new IDSDirectory(service.WebAPI_IDS);
+                int result = ids_wir.OperationDeleteWayOfPark(value.id_way, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST api/ids/directory/ways/operation/update/
+        /// <summary>
+        /// Операция положение пути выше
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("operation/update")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostOperationUpdateWayOfPark([FromBody] OperationUpdateWayOfPark value)
+        {
+            try
+            {
+                IDSDirectory ids_wir = new IDSDirectory(service.WebAPI_IDS);
+                int result = ids_wir.OperationUpdateWayOfPark(value.way, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

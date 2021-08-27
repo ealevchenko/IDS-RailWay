@@ -752,14 +752,14 @@ VALIDATION.prototype.set_control_error = function (o, message) {
     o.removeClass('is-valid').addClass('is-invalid');
     if (message) {
         o.next(".invalid-feedback").text(message);
-    }
+    } else { o.next(".invalid-feedback").text('') };
 };
 // Установить признак Ok
 VALIDATION.prototype.set_control_ok = function (o, message) {
     o.removeClass('is-invalid').addClass('is-valid');
     if (message) {
         o.next(".valid-feedback").text(message);
-    }
+    } else { o.next(".invalid-feedback").text('') };
 };
 // Установить признак ошибка
 VALIDATION.prototype.set_object_error = function (o, mes_error) {

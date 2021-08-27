@@ -160,5 +160,19 @@ namespace EFMT.Concrete
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        public void Delete(IEnumerable<long> list_id)
+        {
+
+            try
+            {
+                db.Delete<WagonsTracking>(list_id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+        }
     }
 }
