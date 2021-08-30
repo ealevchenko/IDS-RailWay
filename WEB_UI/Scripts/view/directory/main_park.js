@@ -95,7 +95,8 @@
         load_db(['station', 'ways'], true, function (result) {
             // Инициализация модуля "Таблица справочника парков"
             tdpw.init({
-                alert: alert
+                alert: alert,
+                ids_dir: ids_dir,
             }, function () {
                 tdpw.load();
             });
