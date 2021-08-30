@@ -816,40 +816,43 @@
     // --------  Детально пути
     table_dir_park_station.prototype.detali_select_row = function (tr) {
         var row = this.obj_t_park.row(tr);
-        if (row.child.isShown()) {
-            // This row is already open - close it
-            row.child.hide();
-            this.destroy_detali(row.data());
-            tr.removeClass('shown');
-        }
-        else {
-            //row.child('<div class="detali-operation"><div class="row"><div class="col-xl-12 operator-detali-tables"><table class="display compact cell-border row-border hover" id="wir-detali-' + row.data().id + '" style="width:100%;"></table></div></div></div>').show();
-            row.child('<div class="detali-operation">' +
-                //'<div class="row">' +
-                //'<div class="col-xl-12">' +
-                '<div class="card border-primary ">' +
-                '<div class="card-header">Пути парка</div>' +
-                '<div class="card-body table-directory">' +
-                '<div class="row">' +
-                '<div class="col-xl-12 ">' +
+        // Проверим, строка определена
+        if (row && row.length > 0) {
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                this.destroy_detali(row.data());
+                tr.removeClass('shown');
+            }
+            else {
+                //row.child('<div class="detali-operation"><div class="row"><div class="col-xl-12 operator-detali-tables"><table class="display compact cell-border row-border hover" id="wir-detali-' + row.data().id + '" style="width:100%;"></table></div></div></div>').show();
+                row.child('<div class="detali-operation">' +
+                    //'<div class="row">' +
+                    //'<div class="col-xl-12">' +
+                    '<div class="card border-primary ">' +
+                    '<div class="card-header">Пути парка</div>' +
+                    '<div class="card-body table-directory">' +
+                    '<div class="row">' +
+                    '<div class="col-xl-12 ">' +
 
-                '<div class="container-fluid">' +
-                '<div id="' + this.selector + '-wd-' + row.data().id + '"></div>' +
-                '</div>' +
+                    '<div class="container-fluid">' +
+                    '<div id="' + this.selector + '-wd-' + row.data().id + '"></div>' +
+                    '</div>' +
 
-                //'<table class="display compact cell-border row-border hover" id="' + this.selector + '-wd-' + row.data().id + '" style="width:100%"></table>' +
-                '</div>' +
-                '</div>' +
-                '</div>' +
-                '</div>' +
-                '</div>' +
-                //'</div>' +
-                //'</div>' +
-                '</div>').show();
+                    //'<table class="display compact cell-border row-border hover" id="' + this.selector + '-wd-' + row.data().id + '" style="width:100%"></table>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    //'</div>' +
+                    //'</div>' +
+                    '</div>').show();
 
-            // Инициализируем
-            this.view_detali(row.data());
-            tr.addClass('shown');
+                // Инициализируем
+                this.view_detali(row.data());
+                tr.addClass('shown');
+            }
         }
     };
 
