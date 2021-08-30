@@ -1398,6 +1398,22 @@ namespace IDS
                 if (last_ways != null)
                 {
                     last_position = last_ways.position_way;
+                    // Позиция парка как у последней позиции
+                    way.position_park = last_ways.position_park;
+                }
+                else
+                {
+                    // Путей по станции и парку нет - новый парк
+                    Directory_Ways last_position_park = ef_way.Context.Where(w => w.id_station == way.id_station && w.way_delete == null).OrderByDescending(w => w.position_park).FirstOrDefault();
+                    // Парк создается заново
+                    if (last_position_park != null)
+                    {
+                        way.position_park = last_position_park.position_park + 1;
+                    }
+                    else
+                    {
+                        way.position_park = 1;
+                    }
                 }
                 if (way.position_way > last_position + 1) return (int)errors_base.input_position_error; // Ошибка, неправильно указана позиция 
                 if (way.position_way <= last_position)
@@ -1527,19 +1543,41 @@ namespace IDS
                         }
                     }
                     // Позиция как задано
+                    way_old.position_park = way.position_park;
                     way_old.position_way = way.position_way;
                 }
                 else
                 {
-                    // Парк меняли, позицию по умолчанию 1
-                    int res_down = OperationDownPositionWayOfPark(ref context, ways, 1, null, user);
-                    way_old.position_way = 1;
-
+                    // Парк меняли, позиция по умолчанию 1
+                    //int res_down = OperationDownPositionWayOfPark(ref context, ways, 1, null, user);
+                    // Определим последнюю позицию пути в новом парке
+                    Directory_Ways last_position_ways = ef_way.Context.Where(w => w.id_station == way.id_station && w.id_park == way.id_park && w.way_delete == null).OrderByDescending(w => w.position_way).FirstOrDefault();
+                    // Определим последнюю позицию парка на станции                  
+                    Directory_Ways last_position_park = ef_way.Context.Where(w => w.id_station == way.id_station && w.way_delete == null).OrderByDescending(w => w.position_park).FirstOrDefault();
+                    // Определим новые позиции парка и пути
+                    if (last_position_ways != null)
+                    {
+                        way_old.position_park = last_position_ways.position_park;
+                        way_old.position_way = last_position_ways.position_way + 1; // Поставим в конец, парк уже есть
+                    }
+                    else
+                    {
+                        // Парк создается заново
+                        if (last_position_park != null)
+                        {
+                            way_old.position_park = last_position_park.position_park + 1;
+                        }
+                        else
+                        {
+                            way_old.position_park = 1;
+                        }
+                        way_old.position_way = 1; // Поставим в начало
+                    }
                 }
                 // Обновим данные по путь
                 way_old.id_station = way.id_station;
                 way_old.id_park = way.id_park;
-                way_old.position_park = way.position_park;
+
                 way_old.way_num_ru = way.way_num_ru;
                 way_old.way_num_en = way.way_num_en;
                 way_old.way_name_ru = way.way_name_ru;
@@ -1895,7 +1933,6 @@ namespace IDS
                 return -1;
             }
         }
-
         /// <summary>
         /// Добавить парк в станцию
         /// </summary>
