@@ -190,7 +190,7 @@ namespace Test
             //tids.IDSDirectory_OperationAutoPositionWayOfPark();     // авто-коррекция положения пути в парке
             //tids.IDSDirectory_OperationSetPositionWayOfPark();      // установить новое положения пути в парке
             //tids.IDSDirectory_OperationDown1PositionWayOfPark();        // установить положения пути ниже на 1 позицию
-            tids.IDSDirectory_OperationUp1PositionWayOfPark();        // установить положения пути выше на 1 позицию
+            //tids.IDSDirectory_OperationUp1PositionWayOfPark();        // установить положения пути выше на 1 позицию
 
 
             //tids.IDSTransfer_GetNumDoc();
@@ -266,7 +266,7 @@ namespace Test
             //tids.IDS_WIR_DeleteDoubleWir();   // Административной функции закрыть задвоение операций и дислокаций внутренего перемещения
             //tids.IDS_WIR_ReturnWagons();      // Административной функции вернуть вагон из отправки
             //tids.IDS_WIR_Update_EPD();          // Административной Обновить ЭПД по составам (список id составов [KRR-PA-CNT-Railway].[IDS].[OutgoingSostav])
-
+            tids.IDS_WIR_IncomingWagon();          // Административной функции поставить вагон на путь ИДС (если была ошибка вставки)
             #endregion
 
             Console.WriteLine("Press any key to exit...");
