@@ -7,14 +7,20 @@
     @Styles.Render("~/DataTables/css")
     @Styles.Render("~/DateTime/css")
     @*<link rel="stylesheet" type="text/css" href="~/Content/view/idsrwt/wsd.css">*@
-    <link href="~/Content/module/cblist_station.css" rel="stylesheet" />
-    <link href="~/Content/module/table_tree_way.css" rel="stylesheet" />
+    @*<link href="~/Content/module/cblist_station.css" rel="stylesheet" />
+        <link href="~/Content/module/table_tree_way.css" rel="stylesheet" />
 
-    <link href="~/Content/module/directory/table_dir_way.css" rel="stylesheet" />
-    <link href="~/Content/module/shared/modal_edit_form.css" rel="stylesheet" />
-    <link href="~/Content/module/directory/table_dir_park_ways.css" rel="stylesheet" />
-    <link href="~/Content/module/directory/table_dir_park_station.css" rel="stylesheet" />
+        <link href="~/Content/module/directory/table_dir_way.css" rel="stylesheet" />
+        <link href="~/Content/module/shared/modal_edit_form.css" rel="stylesheet" />
+        <link href="~/Content/module/directory/table_dir_park_ways.css" rel="stylesheet" />
+        <link href="~/Content/module/directory/table_dir_park_station.css" rel="stylesheet" />*@
+    <link href="~/Content/module/wsd/operation_send.css" rel="stylesheet" />
 
+    <style>
+        .table-directory {
+            font-size: 0.8rem;
+        }
+    </style>
 }
 
 @section scripts {
@@ -23,32 +29,36 @@
     @Scripts.Render("~/bundles/DateTime")
 
     <script src="~/Scripts/view/shared/common.js"></script> <!-- Общая библиотека методов программы -->
-    <script src="~/Scripts/api/shared.js"></script> <!-- Общая библиотека методов API -->
-    <script src="~/Scripts/api/ids_global.js"></script> <!-- Общая библиотека методов API -->
-    <script src="~/Scripts/api/ids_sap.js"></script> <!-- Class API SAP функции для работы с САП -->
-    <script src="~/Scripts/api/uz_directory.js"></script> <!-- Class API УЗ Справочники -->
-    <script src="~/Scripts/api/ids_directory.js"></script> <!-- Class API ИДС Справочники -->
-    <script src="~/Scripts/api/metrans.js"></script> <!-- Class API МЕТРАНС -->
-    <script src="~/Scripts/api/ids_rwt.js"></script> <!-- Class API ИДС Прием вагонов -->
-    <script src="~/Scripts/api/ids_transfer.js"></script> <!-- Class API ИДС Переносы -->
-    <script src="~/Scripts/api/uz_sms.js"></script> <!-- Class API Работа с модулем согласования -->
+    <!--<script src="~/Scripts/api/ids_global.js"></script>--> <!-- Общая библиотека методов API -->
+    <!--<script src="~/Scripts/api/ids_sap.js"></script>--> <!-- Class API SAP функции для работы с САП -->
+    <!--<script src="~/Scripts/api/uz_directory.js"></script>--> <!-- Class API УЗ Справочники -->
+    <!--<script src="~/Scripts/api/ids_directory.js"></script>--> <!-- Class API ИДС Справочники -->
+    <!--<script src="~/Scripts/api/metrans.js"></script>--> <!-- Class API МЕТРАНС -->
+    <!--<script src="~/Scripts/api/ids_rwt.js"></script>--> <!-- Class API ИДС Прием вагонов -->
+    <!--<script src="~/Scripts/api/ids_transfer.js"></script>--> <!-- Class API ИДС Переносы -->
+    <!--<script src="~/Scripts/api/uz_sms.js"></script>--> <!-- Class API Работа с модулем согласования -->
+    @*
+
+        <script src="~/Scripts/api/ids_direct.js"></script>
+
+        <script src="~/Scripts/module/cblist_station.js"></script>
+        <script src="~/Scripts/module/table_tree_way.js"></script>*@
 
     <script src="~/Scripts/module/shared/common.js"></script>
-
-    <script src="~/Scripts/api/ids_direct.js"></script>
-
-    <script src="~/Scripts/module/cblist_station.js"></script>
-    <script src="~/Scripts/module/table_tree_way.js"></script>
-
     <script src="~/Scripts/module/shared/modal_confirm_form.js"></script> <!-- Форма сообщений подтверждения -->
-    <script src="~/Scripts/module/shared/form_validation.js"></script>
-    <script src="~/Scripts/module/shared/modal_edit_form.js"></script> <!-- Форма для правки -->
-
-    <script src="~/Scripts/module/directory/table_dir_way.js"></script>
+    <!--<script src="~/Scripts/module/shared/form_validation.js"></script>
+    <script src="~/Scripts/module/shared/modal_edit_form.js"></script>-->
+    <!-- Форма для правки -->
+    <!--<script src="~/Scripts/module/directory/table_dir_way.js"></script>
     <script src="~/Scripts/module/directory/table_dir_park_ways.js"></script>
-    <script src="~/Scripts/module/directory/table_dir_park_station.js"></script>
+    <script src="~/Scripts/module/directory/table_dir_park_station.js"></script>-->
+    <!--<script src="~/Scripts/plugins/pl_dialog_confirm.js"></script>--> <!-- Плагин -->
 
-    <script src="~/Scripts/plugins/pl_dialog_confirm.js"></script> <!-- Плагин -->
+    <script src="~/Scripts/api/shared.js"></script> <!-- Общая библиотека методов API -->
+    <script src="~/Scripts/api/ids_direct.js"></script>
+    <script src="~/Scripts/api/ids_wsd.js"></script>
+
+    <script src="~/Scripts/module/wsd/operation_send.js"></script>
     <script src="~/Scripts/view/idsrwt/test.js"></script>
 
 }
@@ -171,178 +181,153 @@
 
 <div class="container-fluid">
     <div class="alert" id="main-alert"></div>
-    <div class="row">
-        <div class="col-xl-12 mb-3 mt-2">
-            <div class="card border-secondary mb-3">
-                <div class="card-header">
-                    <div class="row">
-                        <div class="col-xl-12 text-center">
-                            <div class="container-fluid">
-                                <form class="form-inline">
-                                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                                        <div class="btn-group mr-2" role="group" aria-label="First group">
-                                            <button type="button" class="btn btn-outline-secondary" title="Принять состав на станцию" id="arrival">Приб.</button>
-                                            <button type="button" class="btn btn-outline-secondary" title="Отправить состав со станции" id="sending">Отпр.</button>
-                                            <button type="button" class="btn btn-outline-secondary" title="Дислокация вагонов по станции" id="dislocation">Дисл.</button>
-                                            <button type="button" class="btn btn-outline-secondary" title="Роспуск вагонов" id="dissolution">Росп.</button>
-                                            <button type="button" class="btn btn-outline-secondary" title="">Выгр.</button>
-                                            <button type="button" class="btn btn-outline-secondary" title="">Погр.</button>
-                                            <button type="button" class="btn btn-outline-secondary" title="">Весы.</button>
-                                            <button type="button" class="btn btn-outline-secondary" title="Предоставить состав для сдачи на дорогу" id="provide">Пред.</button>
-                                            <button type="button" class="btn btn-outline-secondary" title="Отправить состав на станцию УЗ" id="sending_uz">Отпр УЗ.</button>
-                                        </div>
-                                        <div class="btn-group mr-2" role="group" aria-label="Second group">
-                                            <button type="button" class="btn btn-outline-secondary" title="">Авто</button>
-                                            <button type="button" class="btn btn-outline-secondary" title="">Ручная</button>
-                                            <button type="button" class="btn btn-outline-secondary" title="">Реверс</button>
-                                        </div>
-                                        @*<div class="btn-group" role="group" aria-label="Third group">
 
-                                            </div>*@
+    <div class="card border-secondary mb-3">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-xl-12 text-center">
+                    <div class="container-fluid">
+                        <form class="form-inline">
+                            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                                <div class="btn-group mr-2" role="group" aria-label="First group">
+                                    <button type="button" class="btn btn-outline-secondary" title="Принять состав на станцию" id="arrival">Приб.</button>
+                                    <button type="button" class="btn btn-outline-secondary" title="Отправить состав со станции" id="sending">Отпр.</button>
+                                    <button type="button" class="btn btn-outline-secondary" title="Дислокация вагонов по станции" id="dislocation">Дисл.</button>
+                                    <button type="button" class="btn btn-outline-secondary" title="Роспуск вагонов" id="dissolution">Росп.</button>
+                                    <button type="button" class="btn btn-outline-secondary" title="">Выгр.</button>
+                                    <button type="button" class="btn btn-outline-secondary" title="">Погр.</button>
+                                    <button type="button" class="btn btn-outline-secondary" title="">Весы.</button>
+                                    <button type="button" class="btn btn-outline-secondary" title="Предоставить состав для сдачи на дорогу" id="provide">Пред.</button>
+                                    <button type="button" class="btn btn-outline-secondary" title="Отправить состав на станцию УЗ" id="sending_uz">Отпр УЗ.</button>
+                                </div>
+                                <div class="btn-group mr-2" role="group" aria-label="Second group">
+                                    <button type="button" class="btn btn-outline-secondary" title="">Авто</button>
+                                    <button type="button" class="btn btn-outline-secondary" title="">Ручная</button>
+                                    <button type="button" class="btn btn-outline-secondary" title="">Реверс</button>
+                                </div>
+                                @*<div class="btn-group" role="group" aria-label="Third group">
+
+                                    </div>*@
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body text-dark pl-3 pr-3">
+            <div id="operation-send">
+                <div class="row">
+                    <div class="col-xl-12 mb-1 mt-1">
+                        <div class="card border-secondary mb-1">
+                            <div class="card-header">
+                                ИСТОРИЯ ОПЕРАЦИЙ "ОТПРАВЛЕНИЕ"
+                            </div>
+                            <div class="card-body">
+                                <div class="card border-primary">
+                                    <div class="card-header">
+                                        <form class="form-inline">
+                                            <div class="form-group">
+                                                <label class="col-form-label-sm mr-2" for="select-date">ПЕРИОД:</label>
+                                                <span id="select-date" class="mr-2">
+                                                    <input type="datetime" class="form-control-sm" id="date-start" name="date-start">
+                                                    <input type="datetime" class="form-control-sm" id="date-stop" name="date-stop">
+                                                </span>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-form-label-sm mr-2" for="station">СТАНЦИЯ ОТПРАВЛЕНИЯ:</label>
+                                                <div class="input-group">
+                                                    <select class="form-control-sm" id="station" name="station" required></select>
+                                                    <div class="input-group-append">
+                                                        <button type="submit" class="btn btn-sm  btn-primary mb-2" id="view_ways" name="view_ways">
+                                                            <i class="fas fa-retweet" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
-                                </form>
+                                    <div class="card-body text-dark pl-3 pr-3 table-directory">
+                                        <div class="row">
+                                            <div class="col-xl-12 mb-3 mt-2">
+                                                <div class="container-fluid mt-3">
+                                                    <div id="park-station"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card-body text-dark pl-3 pr-3">
-                    <div class="row">
-                        <div class="col-xl-4">
-                            <div class="card border-primary">
-                                <div class="card-header">
-                                    <div id="dds-station"></div>
-                                    @*<div class="dropdown">
-                                            <button class="btn btn-default dropdown-toggle" type="button"
-                                                    id="sel_station" data-toggle="dropdown"
-                                                    aria-haspopup="true" aria-expanded="true">
-                                                <i class="far fa-calendar-check"></i>
-                                            </button>
-                                            <ul class="dropdown-menu checkbox-menu allow-focus" aria-labelledby="sel_station">
 
-                                                <li>
-                                                    <label>
-                                                        <input type="checkbox"> Cheese
-                                                    </label>
-                                                </li>
+            </div>
+            <div class="card-footer bg-transparent border-dark"></div>
+        </div>
+    </div>
 
-                                                <li>
-                                                    <label>
-                                                        <input type="checkbox"> Pepperoni
-                                                    </label>
-                                                </li>
 
-                                                <li>
-                                                    <label>
-                                                        <input type="checkbox"> Peppers
-                                                    </label>
-                                                </li>
 
-                                            </ul>
-                                        </div>*@
-                                    Дерево путей
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-xl-12">
-                                            <div id="tree-way"></div>
-                                            @*<table id="tree-way" class="table table-hover"></table>*@
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-8">
-                            <div class="card border-info">
-                                <div class="card-header">Перечень вагонов</div>
-                                <div class="card-body" style="font-size:13px">
-                                    <div class="row">
-                                        <div class="col-xl-12">
-                                            <div id="park-ways"></div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xl-12">
-                                            @*<div id="ways"></div>*@
-                                            <div id="park"></div>
-                                            @*<table id="wagons-way" class="display compact table-striped table-hover" style="width:100%;table-layout: fixed"></table>*@
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
+    @*Button trigger modal*@
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#em-dir-way">
+        Launch demo modal
+    </button>
+
+
+    @*Modal*@
+    <div class="modal fade" id="em-dir-way" tabindex="-1" aria-labelledby="ml-dir-way" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold" id="ml-dir-way">VVV</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="card-footer bg-transparent border-dark"></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-@*Button trigger modal*@
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#em-dir-way">
-    Launch demo modal
-</button>
-
-
-@*Modal*@
-<div class="modal fade" id="em-dir-way" tabindex="-1" aria-labelledby="ml-dir-way" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title font-weight-bold" id="ml-dir-way">VVV</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form class="needs-validation" novalidate>
-                    <div class="form-row">
-                        <div class="col-xl-12 mb-1">
-                            <div class="alert" id="modal-alert"></div>
+                <div class="modal-body">
+                    <form class="needs-validation" novalidate>
+                        <div class="form-row">
+                            <div class="col-xl-12 mb-1">
+                                <div class="alert" id="modal-alert"></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-xl-12 mb-1 text-left">
-                            <label for="ref_unit" class="col-form-label">Ремонтируемый агрегат:</label>
-                            <div class="input-group">
-                                <input class="form-control" id="ref_unit" name="ref_unit" required>
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" type="button">Button</button>
+                        <div class="form-row">
+                            <div class="col-xl-12 mb-1 text-left">
+                                <label for="ref_unit" class="col-form-label">Ремонтируемый агрегат:</label>
+                                <div class="input-group">
+                                    <input class="form-control" id="ref_unit" name="ref_unit" required>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="button">Button</button>
+                                    </div>
+                                </div>
+                                <div class="invalid-feedback">
+                                    Укажите агрегат!
                                 </div>
                             </div>
-                            <div class="invalid-feedback">
-                                Укажите агрегат!
+                        </div>
+                        <div class="form-row">
+                            <div class="col-xl-6 mb-1">
+                                @*<div class="form-group">*@
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="invalidCheck2" required>
+                                    <label class="form-check-label" for="invalidCheck2">
+                                        Agree to terms and conditions
+                                    </label>
+                                </div>
+                                @*</div>*@
                             </div>
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-xl-6 mb-1">
-                            @*<div class="form-group">*@
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="invalidCheck2" required>
-                                <label class="form-check-label" for="invalidCheck2">
-                                    Agree to terms and conditions
-                                </label>
-                            </div>
-                            @*</div>*@
-                        </div>
-                    </div>
 
 
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-
-
-
-
-
