@@ -1342,5 +1342,25 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             }
         }
         #endregion
+
+        #region ИСТОРИЯ ОПЕРАЦИЙ
+        // GET: api/ids/rwt/wsd/report/operation/send/start/2021-08-01T00:00:00/stop/2021-08-31T23:59:59
+        [Route("report/operation/send/start/{start:datetime}/stop/{stop:datetime}")]
+        [ResponseType(typeof(sostav_operation_send))]
+        public IHttpActionResult GetSostavWagonsOperationOfSend(DateTime start, DateTime stop)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                List<sostav_operation_send> result = ids_wir.GetSostavWagonsOperationOfSend(start,stop);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        #endregion
     }
 }
