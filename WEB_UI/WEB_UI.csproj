@@ -2014,6 +2014,7 @@
     <Content Include="Content\module\shared\modal_edit_form.css" />
     <Content Include="Content\module\directory\table_dir_way.css" />
     <Content Include="Content\module\table_tree_way.css" />
+    <Content Include="Content\module\wsd\operation_send.css" />
     <Content Include="Content\view\admin\_layout.css" />
     <Content Include="Content\view\directory\ways.css" />
     <Content Include="Content\view\directory\search_wagon.css" />
@@ -2022,6 +2023,7 @@
     <Content Include="Images\8m.png" />
     <Content Include="Images\directory\line-icon-3_.svg" />
     <Content Include="Images\idsrwt\wsd\eye-solid.svg" />
+    <Content Include="Scripts\api\ids_wsd.js" />
     <Content Include="Scripts\api\ids_direct.js" />
     <Content Include="Scripts\api\ids_global.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
@@ -2084,6 +2086,7 @@
     <Content Include="Scripts\module\table_wir_detali.js" />
     <Content Include="Scripts\module\table_wir.js" />
     <Content Include="Scripts\module\table_arrival.js" />
+    <Content Include="Scripts\module\wsd\operation_send.js" />
     <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
