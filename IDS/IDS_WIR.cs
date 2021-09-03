@@ -56,6 +56,159 @@ namespace IDS
         public UZ.UZ_DOC epd { get; set; }
     }
 
+    public class wagon_operation_send
+    {
+        public long id_wir { get; set; }
+        public long? id_wim { get; set; }
+        public long id_wio { get; set; }
+        public int? num { get; set; }
+        public int? wagon_adm { get; set; }
+        public string wagon_adm_name_ru { get; set; }
+        public string wagon_adm_name_en { get; set; }
+        public string wagon_adm_abbr_ru { get; set; }
+        public string wagon_adm_abbr_en { get; set; }
+        public int? wagon_rod { get; set; }
+        public string wagon_rod_name_ru { get; set; }
+        public string wagon_rod_name_en { get; set; }
+        public string wagon_rod_abbr_ru { get; set; }
+        public string wagon_rod_abbr_en { get; set; }
+        public string wagon_operators_name_ru { get; set; }
+        public string wagon_operators_name_en { get; set; }
+        public string wagon_operators_abbr_ru { get; set; }
+        public string wagon_operators_abbr_en { get; set; }
+        public bool? wagon_operators_paid { get; set; }
+        public string wagon_operators_color { get; set; }
+        public DateTime? wagon_operators_rent_start { get; set; }
+        public string wagon_limiting_name_ru { get; set; }
+        public string wagon_limiting_name_en { get; set; }
+        public string wagon_limiting_abbr_ru { get; set; }
+        public string wagon_limiting_abbr_en { get; set; }
+        public string arrival_condition_name_ru { get; set; }
+        public string arrival_condition_name_en { get; set; }
+        public string arrival_condition_abbr_ru { get; set; }
+        public string arrival_condition_abbr_en { get; set; }
+        public bool? arrival_condition_red { get; set; }
+        public string arrival_cargo_group_name_ru { get; set; }
+        public string arrival_cargo_group_name_en { get; set; }
+        public string arrival_cargo_name_ru { get; set; }
+        public string arrival_cargo_name_en { get; set; }
+        public long? id_arrival_car { get; set; }
+        public long? id_sap_incoming_supply { get; set; }
+        public bool? doc_outgoing_car { get; set; }
+        public long? id_outgoing_car { get; set; }
+        public long? id_sap_outbound_supply { get; set; }
+        public string wir_note { get; set; }
+        public DateTime? wir_create { get; set; }
+        public string wir_create_user { get; set; }
+        public DateTime? wir_close { get; set; }
+        public string wir_close_user { get; set; }
+        public long? wir_parent_id { get; set; }
+        public int id_operation { get; set; }
+        public string operation_name_ru { get; set; }
+        public string operation_name_en { get; set; }
+        public bool busy { get; set; }
+        public DateTime operation_start { get; set; }
+        public DateTime? operation_end { get; set; }
+        public int operation_id_condition { get; set; }
+        public string operation_condition_name_ru { get; set; }
+        public string operation_condition_name_en { get; set; }
+        public string operation_condition_abbr_ru { get; set; }
+        public string operation_condition_abbr_en { get; set; }
+        public bool? operation_red { get; set; }
+        public int operation_id_loading_status { get; set; }
+        public string operation_loading_status_ru { get; set; }
+        public string operation_loading_status_en { get; set; }
+        public string operation_locomotive1 { get; set; }
+        public string operation_locomotive2 { get; set; }
+        public string operation_note { get; set; }
+        public DateTime operation_create { get; set; }
+        public string operation_create_user { get; set; }
+        public DateTime? operation_close { get; set; }
+        public string operation_close_user { get; set; }
+        public long? operation_parent_id { get; set; }
+        public int? from_id_station { get; set; }
+        public string from_station_name_ru { get; set; }
+        public string from_station_name_en { get; set; }
+        public string from_station_abbr_ru { get; set; }
+        public string from_station_abbr_en { get; set; }
+        public int? from_id_way { get; set; }
+        public int? from_id_park { get; set; }
+        public string from_way_num_ru { get; set; }
+        public string from_way_num_en { get; set; }
+        public string from_way_name_ru { get; set; }
+        public string from_way_name_en { get; set; }
+        public string from_way_abbr_ru { get; set; }
+        public string from_way_abbr_en { get; set; }
+        public int? from_capacity { get; set; }
+        public DateTime? from_way_close { get; set; }
+        public DateTime? from_way_delete { get; set; }
+        public string from_way_note { get; set; }
+        public DateTime? from_way_start { get; set; }
+        public DateTime? from_way_end { get; set; }
+        public int? id_outer_way { get; set; }
+        public string name_outer_way_ru { get; set; }
+        public string name_outer_way_en { get; set; }
+        public DateTime? outer_way_close { get; set; }
+        public DateTime? outer_way_delete { get; set; }
+        public string outer_way_note { get; set; }
+        public DateTime? outer_way_start { get; set; }
+        public DateTime? outer_way_end { get; set; }
+        public int? wim_position { get; set; }
+        public string wim_note { get; set; }
+        public DateTime? wim_create { get; set; }
+        public string wim_create_user { get; set; }
+        public DateTime? wim_close { get; set; }
+        public string wim_close_user { get; set; }
+        public long? wim_parent_id { get; set; }
+        public int? id_station_on { get; set; }
+        public string on_station_name_ru { get; set; }
+        public string on_station_name_en { get; set; }
+        public string on_station_abbr_ru { get; set; }
+        public string on_station_abbr_en { get; set; }
+    }
+
+    public class sostav_operation_send
+    {
+        public int id { get; set; }
+        public int id_operation { get; set; }
+        public string operation_name_ru { get; set; }
+        public string operation_name_en { get; set; }
+        public DateTime operation_start { get; set; }
+        public DateTime? operation_end { get; set; }
+        public DateTime operation_create { get; set; }
+        public string operation_create_user { get; set; }
+        public string operation_locomotive1 { get; set; }
+        public string operation_locomotive2 { get; set; }
+        public int? from_id_station { get; set; }
+        public string from_station_name_ru { get; set; }
+        public string from_station_name_en { get; set; }
+        public string from_station_abbr_ru { get; set; }
+        public string from_station_abbr_en { get; set; }
+        public int? from_id_way { get; set; }
+        public int? from_id_park { get; set; }
+        public string from_way_num_ru { get; set; }
+        public string from_way_num_en { get; set; }
+        public string from_way_name_ru { get; set; }
+        public string from_way_name_en { get; set; }
+        public string from_way_abbr_ru { get; set; }
+        public string from_way_abbr_en { get; set; }
+        public int? id_outer_way { get; set; }
+        public string name_outer_way_ru { get; set; }
+        public string name_outer_way_en { get; set; }
+        public DateTime? outer_way_close { get; set; }
+        public DateTime? outer_way_delete { get; set; }
+        public string outer_way_note { get; set; }
+        public int? id_station_on { get; set; }
+        public string on_station_name_ru { get; set; }
+        public string on_station_name_en { get; set; }
+        public string on_station_abbr_ru { get; set; }
+        public string on_station_abbr_en { get; set; }
+        public int count_wagon_send { get; set; }
+        public int count_wagon_arrival { get; set; }
+        public List<wagon_operation_send> wagons { get; set; }
+    }
+
+
     /// <summary>
     /// TODO: Убрать перенести в базовые ошибки
     /// </summary>
@@ -3208,14 +3361,16 @@ namespace IDS
                 // маршруты
                 List<UZ.ROUTE> route = epd.otpr.route.ToList();
                 // Определим внешнюю станцию
-                if (route != null && route.Count() > 0 && route[0].stn_to != null) {
-                     Directory_ExternalStation station = ids_dir.GetDirectory_ExternalStation(int.Parse(route[0].stn_to), route[0].name_to, true, user);                
+                if (route != null && route.Count() > 0 && route[0].stn_to != null)
+                {
+                    Directory_ExternalStation station = ids_dir.GetDirectory_ExternalStation(int.Parse(route[0].stn_to), route[0].name_to, true, user);
                 }
                 List<UZ.JOINT> joints = route != null && route.Count() > 0 ? route[0].joint.ToList() : null;
                 // Получим погран переход
                 UZ.JOINT joint = joints.Find(j => j.admin == 22);
-                if (joint != null && joint.stn!=null) {
-                    Directory_BorderCheckpoint border_checkpoint = ids_dir.GetDirectory_BorderCheckpoint(int.Parse(joint.stn), joint.stn_name, true, user);                
+                if (joint != null && joint.stn != null)
+                {
+                    Directory_BorderCheckpoint border_checkpoint = ids_dir.GetDirectory_BorderCheckpoint(int.Parse(joint.stn), joint.stn_name, true, user);
                 }
                 // Платники
                 List<UZ.PL> pls = epd.otpr.pl.ToList();
@@ -3769,6 +3924,131 @@ namespace IDS
                 res.SetResult((int)errors_base.global); // Ошибка
             }
             return res.result;
+        }
+
+        #endregion
+
+        #region Отчеты "Операции"
+        /// <summary>
+        /// Получить список вагонов с опрецией отправка за указаный период времени
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="stop"></param>
+        /// <returns></returns>
+        public List<wagon_operation_send> GetWagonsOperationOfSend(DateTime start, DateTime stop)
+        {
+            try
+            {
+                EFDbContext context = new EFDbContext();
+                context.Database.CommandTimeout = 300;
+                System.Data.SqlClient.SqlParameter dstart = new System.Data.SqlClient.SqlParameter("@start", start);
+                System.Data.SqlClient.SqlParameter dstop = new System.Data.SqlClient.SqlParameter("@stop", stop);
+                System.Data.SqlClient.SqlParameter id_operation = new System.Data.SqlClient.SqlParameter("@id_operation", 5);
+                string sql = "select * from [IDS].[get_view_wagons_of_operation](@start,@stop,@id_operation)";
+                List<wagon_operation_send> list = context.Database.SqlQuery<wagon_operation_send>(sql, dstart, dstop, id_operation).ToList();
+                context.Database.CommandTimeout = null;
+                return list;
+            }
+
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetWagonsOperationOfSend(start={0}, stop={1})",
+                    start, stop), servece_owner, eventID);
+                return null; // Глобальная ошибка
+            }
+        }
+        /// <summary>
+        /// Получить составы с вагонами с оперецией отправка за указанный период времени
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="stop"></param>
+        public List<sostav_operation_send> GetSostavWagonsOperationOfSend(DateTime start, DateTime stop)
+        {
+            try
+            {
+                int id = 1;
+                List<sostav_operation_send> list_sostav = new List<sostav_operation_send>();
+                List<wagon_operation_send> list = GetWagonsOperationOfSend(start, stop);
+                if (list != null && list.Count() > 0)
+                {
+                    // Сгруппируем по времени операции
+                    List<IGrouping<DateTime, wagon_operation_send>> wagons_date = list.OrderBy(c => c.operation_start).ToList()
+                                    .ToList()
+                                    .GroupBy(w => w.operation_start)
+                                    .ToList();
+                    // Пройдемся по индексу поезда
+                    foreach (IGrouping<DateTime, wagon_operation_send> gr_outer_way in wagons_date.ToList())
+                    {
+                        DateTime operation_start = gr_outer_way.Key;
+                        // Сгруппируем по перегону
+                        List<IGrouping<int?, wagon_operation_send>> wagons_outer = gr_outer_way
+                            .ToList()
+                            .GroupBy(w => w.id_outer_way)
+                            .ToList();
+
+                        foreach (IGrouping<int?, wagon_operation_send> wagons_sostav in wagons_outer.ToList())
+                        {
+                            // Получим вагоны состава
+                            List<wagon_operation_send> wagons = wagons_sostav.OrderBy(w => w.wim_position).ToList();
+                            // Проверим есть вагоны
+                            if (wagons != null && wagons.Count() > 0)
+                            {
+                                // Вагоны есть, создадим строку состав
+                                sostav_operation_send sostav = new sostav_operation_send()
+                                {
+                                    id = id,
+                                    id_operation = wagons[0].id_operation,
+                                    operation_name_ru = wagons[0].operation_name_ru,
+                                    operation_name_en = wagons[0].operation_name_en,
+                                    operation_start = wagons[0].operation_start,
+                                    operation_end = wagons[0].operation_end,
+                                    operation_create = wagons.OrderByDescending(w => w.operation_create).FirstOrDefault().operation_create,
+                                    operation_create_user = wagons[0].operation_create_user,
+                                    operation_locomotive1 = wagons[0].operation_locomotive1,
+                                    operation_locomotive2 = wagons[0].operation_locomotive2,
+                                    from_id_station = wagons[0].from_id_station,
+                                    from_station_name_ru = wagons[0].from_station_name_ru,
+                                    from_station_name_en = wagons[0].from_station_name_en,
+                                    from_station_abbr_ru = wagons[0].from_station_abbr_ru,
+                                    from_station_abbr_en = wagons[0].from_station_abbr_en,
+                                    from_id_way = wagons[0].from_id_way,
+                                    from_id_park = wagons[0].from_id_park,
+                                    from_way_num_ru = wagons[0].from_way_num_ru,
+                                    from_way_num_en = wagons[0].from_way_num_en,
+                                    from_way_name_ru = wagons[0].from_way_name_ru,
+                                    from_way_name_en = wagons[0].from_way_name_en,
+                                    from_way_abbr_ru = wagons[0].from_way_abbr_ru,
+                                    from_way_abbr_en = wagons[0].from_way_abbr_en,
+                                    id_outer_way = wagons[0].id_outer_way,
+                                    name_outer_way_ru = wagons[0].name_outer_way_ru,
+                                    name_outer_way_en = wagons[0].name_outer_way_en,
+                                    outer_way_close = wagons[0].outer_way_close,
+                                    outer_way_delete = wagons[0].outer_way_delete,
+                                    outer_way_note = wagons[0].outer_way_note,
+                                    id_station_on = wagons[0].id_station_on,
+                                    on_station_name_ru = wagons[0].on_station_name_ru,
+                                    on_station_name_en = wagons[0].on_station_name_en,
+                                    on_station_abbr_ru = wagons[0].on_station_abbr_ru,
+                                    on_station_abbr_en = wagons[0].on_station_abbr_en,
+                                    count_wagon_send = wagons.Count(),
+                                    count_wagon_arrival = wagons.Where(w => w.outer_way_end != null).Count(), 
+                                    wagons = wagons.ToList(),
+                                };
+                                id++;
+                                list_sostav.Add(sostav);
+                            }
+                        }
+
+                    }
+                }
+                return list_sostav;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetSostavWagonsOperationOfSend(start={0}, stop={1})",
+                    start, stop), servece_owner, eventID);
+                return null; // Глобальная ошибка
+            }
         }
 
         #endregion

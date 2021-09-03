@@ -190,7 +190,7 @@ namespace Test
             //tids.IDSDirectory_OperationAutoPositionWayOfPark();     // авто-коррекция положения пути в парке
             //tids.IDSDirectory_OperationSetPositionWayOfPark();      // установить новое положения пути в парке
             //tids.IDSDirectory_OperationDown1PositionWayOfPark();        // установить положения пути ниже на 1 позицию
-            tids.IDSDirectory_OperationUp1PositionWayOfPark();        // установить положения пути выше на 1 позицию
+            //tids.IDSDirectory_OperationUp1PositionWayOfPark();        // установить положения пути выше на 1 позицию
 
 
             //tids.IDSTransfer_GetNumDoc();
@@ -219,6 +219,9 @@ namespace Test
             //tids.IDS_WIR_OperationReturnProvideWagons();            // Тест операции вернуть пръедявленый состав
 
             //tids.IDS_WIR_OperationUpdateEPDSendingSostav();             // Тест операции обновления ЭПД состава который отправили
+
+            //tids.IDS_WIR_GetWagonsOperationOfSend();                // Тест формирования отчета операции отправки (вагоны)
+            tids.IDS_WIR_GetSostavWagonsOperationOfSend();          // Тест формирования отчета операции отправки (состав-вагоны)
 
             #endregion
 
