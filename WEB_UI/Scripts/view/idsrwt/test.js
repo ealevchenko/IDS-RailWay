@@ -32,8 +32,13 @@
     var OP_SEND = App.operation_send;
     var oper_send = new OP_SEND('div#operation-send'); // Создадим экземпляр
 
+    var TCOPER = App.table_cars_operation;
+    var tab_car_oper = new TCOPER('div#cars-oper'); // Создадим экземпляр
+
 
     $('button#arrival').on('click', function (e) {
+        var data = oper_send.operation;
+        tab_car_oper.view(data);
         //trWay.update_station_of_id(8);
         //trWay.update_park_of_id(8, 3);
         //trWay.update_way_of_id(227);
@@ -53,6 +58,7 @@
         },
             function () {
                 // Инициализация закончилась
+                tab_car_oper.init({ alert: alert });
             });
         LockScreenOff();
 

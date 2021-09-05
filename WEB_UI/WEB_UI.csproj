@@ -2015,6 +2015,7 @@
     <Content Include="Content\module\directory\table_dir_way.css" />
     <Content Include="Content\module\table_tree_way.css" />
     <Content Include="Content\module\wsd\operation_send.css" />
+    <Content Include="Content\module\wsd\table_cars_operation.css" />
     <Content Include="Content\view\admin\_layout.css" />
     <Content Include="Content\view\directory\ways.css" />
     <Content Include="Content\view\directory\search_wagon.css" />
@@ -2087,6 +2088,7 @@
     <Content Include="Scripts\module\table_wir.js" />
     <Content Include="Scripts\module\table_arrival.js" />
     <Content Include="Scripts\module\wsd\operation_send.js" />
+    <Content Include="Scripts\module\wsd\table_cars_operation.js" />
     <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />

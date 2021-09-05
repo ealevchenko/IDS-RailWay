@@ -401,10 +401,10 @@
                 if (create && operat && create.isValid() && operat.isValid()) {
                     var hour = create.diff(operat, 'hours');
                     if (hour >= 1 || hour <= -1) {
-                        $('td', row).eq(10).addClass('error');
+                        $('td', row).eq(this.settings.detali_wagons ? 11 : 10).addClass('error');
                     }
                 }
-            },
+            }.bind(this),
             columns: this.init_columns(),
             dom: 'Bfrtip',
             stateSave: false,
@@ -431,7 +431,7 @@
                 {
                     text: langView('title_button_cancel', App.Langs),
                     action: function (e, dt, node, config) {
-                        
+
                     }.bind(this),
                     enabled: false,
                 },
@@ -475,18 +475,6 @@
                 start: this.start,
                 stop: this.stop,
                 select: function (interval) {
-                    //var data2 = new Date();
-                    //var data21 = moment(data2).toISOString();
-                    //var data3 = moment();
-                    //var data31 = moment(data2).toISOString();
-                    //var data32 = moment(data2).toISOString(true);
-                    //var data33 = moment(data2).toISOString(false);
-                    //var data34 = moment(data2).format();
-                    //var data35 = moment(data2).format('YYYY-MM-DDTHH:mm:ss.SSS');
-                    //var sd = interval.start.substring(0, 23)
-
-                    //var data = moment(interval.start);
-                    //var data1 = moment(sd);
                     if (interval && interval.start && interval.stop) {
                         this.load_operation(moment(interval.start)._d, moment(interval.stop)._d);
                     }
@@ -525,7 +513,11 @@
 
             }
 
-
+            //----------------------------------
+            if (typeof fn_init_ok === 'function') {
+                fn_init_ok();
+            }
+            //----------------------------------
         }.bind(this));
 
 
