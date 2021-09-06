@@ -711,4 +711,7 @@
   <data name="title_condition_present" xml:space="preserve">
     <value>Разметка по отправлению</value>
   </data>
+  <data name="title_operation_send" xml:space="preserve">
+    <value>Операции «Отправить состав на станции АМКР»</value>
+  </data>
 </root>
