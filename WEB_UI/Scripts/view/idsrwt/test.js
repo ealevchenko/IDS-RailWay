@@ -37,8 +37,8 @@
 
 
     $('button#arrival').on('click', function (e) {
-        var data = oper_send.operation;
-        tab_car_oper.view(data);
+        //var data = oper_send.operation;
+        //tab_car_oper.view(data);
         //trWay.update_station_of_id(8);
         //trWay.update_park_of_id(8, 3);
         //trWay.update_way_of_id(227);
@@ -46,6 +46,7 @@
         //mcf_test.view('Подпись', 'Текст сообщения', function (result) {
 
         //})
+        oper_send.update();
 
     });
 
