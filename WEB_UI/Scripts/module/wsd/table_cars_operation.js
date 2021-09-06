@@ -27,13 +27,38 @@
             'field_wagon_limiting_name': 'Онраничение.',
             'field_wagon_limiting_abbr': 'Ограничение абр.',
             'field_arrival_cargo_name': 'Груз по прибытию',
+            'field_operation_loading_status': 'Состояние погрузки',
+            'field_create': 'Строку создал(а)',
+            'field_close': 'Строку закрыл(а)',
 
             'mess_init_module': 'Инициализация модуля…',
+            'mess_view_wagons': 'загрузка информации о вагонах…',
 
         },
         'en':  //default language: English
         {
             'field_id': 'row id',
+            'field_num': 'Wagon number',
+            'field_position': 'Pos. no.',
+            'field_wagon_adm': 'Code. Adm. ',
+            'field_wagon_adm_name': 'Administration',
+            'field_operation_condition_name': 'Current markup',
+            'field_operation_condition_abbr': 'Size. tech. ',
+            'field_arrival_condition_name': 'Arrival layout',
+            'field_arrival_condition_abbr': 'Resize by arr. ',
+            'field_wagon_rod': 'Rod',
+            'field_wagon_rod_abbr': 'Wagon rod.',
+            'field_wagon_operators_name': 'Operator.',
+            'field_wagon_operators_abbr': 'Operator abbr.',
+            'field_wagon_limiting_name': 'Limiting.',
+            'field_wagon_limiting_abbr': 'Limiting abbr.',
+            'field_arrival_cargo_name': 'Cargo upon arrival',
+            'field_operation_loading_status': 'Loading status',
+            'field_create': 'Created string',
+            'field_close': 'Closed string',
+
+            'mess_init_module': 'Initializing a module ...',
+            'mess_view_wagons': 'loading wagons information ...',
 
         }
     };
@@ -174,6 +199,30 @@
             className: 'dt-body-left',
             title: langView('field_arrival_cargo_name', App.Langs), width: "150px", orderable: true, searchable: true
         },
+        {
+            field: 'operation_loading_status',
+            data: function (row, type, val, meta) {
+                return row['operation_loading_status_' + App.Lang];
+            },
+            className: 'dt-body-left',
+            title: langView('field_operation_loading_status', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'create',
+            data: function (row, type, val, meta) {
+                return row.wir_create ? (row.wir_create_user + '<br />[' + getReplaceTOfDT(row.wir_create) + ']') : null;
+            },
+            className: 'dt-body-center',
+            title: langView('field_create', App.Langs), width: "100px", orderable: false, searchable: false
+        },
+        {
+            field: 'close',
+            data: function (row, type, val, meta) {
+                return row.wim_close ? (row.wim_close_user + '<br />[' + getReplaceTOfDT(row.wim_close) + ']') : null;
+            },
+            className: 'dt-body-center',
+            title: langView('field_close', App.Langs), width: "100px", orderable: false, searchable: false
+        },
     ];
     //
     function table_cars_operation(selector) {
@@ -191,8 +240,9 @@
     table_cars_operation.prototype.init_columns = function () {
         var collums = [];
 
-        collums.push('id_wim');
+        //collums.push('id_wim');
         collums.push('num');
+        collums.push('position');
         collums.push('wagon_adm');
         collums.push('wagon_adm_name');
         collums.push('operation_condition_name');
@@ -206,7 +256,9 @@
         collums.push('wagon_limiting_name');
         collums.push('wagon_limiting_abbr');
         collums.push('arrival_cargo_name');
-
+        collums.push('operation_loading_status');
+        collums.push('create');
+        collums.push('close');
         return init_columns(collums, list_collums);
     };
     // инициализация таблицы справочника путей
@@ -220,9 +272,10 @@
         this.select_cars_operation = null;
 
         LockScreen(langView('mess_init_module', App.Langs));
-        var MCF = App.modal_confirm_form;
-        this.modal_confirm_form = new MCF(this.selector); // Создадим экземпляр окно сообщений
-        this.modal_confirm_form.init();
+        // Вклучу когда понадобится 
+        //var MCF = App.modal_confirm_form;
+        //this.modal_confirm_form = new MCF(this.selector); // Создадим экземпляр окно сообщений
+        //this.modal_confirm_form.init();
 
         // Загрузим справочные данные, определим поля формы правки
         /*        this.load_db([], false, function (result) {*/
@@ -232,8 +285,7 @@
         // Создадим и добавим макет таблицы
         var table_cars = new this.fc_ui.el_table('tab-cars-' + this.selector, 'display compact cell-border row-border hover');
         this.$table_cars = table_cars.$element;
-        this.$cars_oper.addClass('table-directory').append(this.$table_cars);
-
+        this.$cars_oper.addClass('table-report-operation').append(this.$table_cars);
         // Инициализируем таблицу
         this.obj_t_cars_oper = this.$table_cars.DataTable({
             "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "All"]],
@@ -255,7 +307,7 @@
             language: language_table(App.Langs),
             jQueryUI: false,
             "createdRow": function (row, data, index) {
-                //$(row).attr('id', data.id);
+                $(row).attr('id', data.id_wim); // id строки дислокации вагона
                 //// Удалили
                 //if (data.way_close) {
                 //    $(row).addClass('yellow');
@@ -318,13 +370,15 @@
     };
     // Показать данные 
     table_cars_operation.prototype.view = function (data) {
+        LockScreen(langView('mess_view_wagons', App.Langs));
         this.obj_t_cars_oper.clear();
-        this.obj_t_cars_oper.rows.add(data[0].wagons);
-        //this.obj_t_cars_oper.order([3, 'asc']);
+        this.obj_t_cars_oper.rows.add(data);
+        this.obj_t_cars_oper.order([1, 'asc']);
         if (this.select_cars_operation !== null) {
             this.obj_t_cars_oper.row('#' + this.select_cars_operation.id).select();
         }
         this.obj_t_cars_oper.draw();
+        LockScreenOff();
     };
     // Обновить данные
     table_cars_operation.prototype.update = function () {
@@ -356,10 +410,14 @@
     }
     // Очистить объект
     table_cars_operation.prototype.destroy = function () {
+        // Вклучу когда понадобится 
         //this.modal_confirm_form.destroy();
-        //this.modal_edit_form.destroy();
-        //this.obj_t_cars_oper.destroy();
-        //this.$cars_oper.empty(); // empty in case the columns change
+        if (this.obj_t_cars_oper) {
+            this.obj_t_cars_oper.destroy(true);
+            this.obj_t_cars_oper = null;
+        }
+
+        this.$cars_oper.empty(); // empty in case the columns change
     }
 
     App.table_cars_operation = table_cars_operation;
