@@ -358,10 +358,11 @@ namespace Test.TestModule
             IDS_WIR ids = new IDS_WIR(service.Test);
             List<long> list = new List<long>() { 64339, 64321, 64277, 64268, 64252, 64244, 64241, 64230, 64208, 64191, 64184, 64180, 64163, 64166, 64142, 64129, 64119, 64120, 64111, 64108, 64103, 64098, 64083, 64065, 64055, 64002, 63997, 63972, 63970, 63969, 63963, 63953, 63944, 63941, 63913, 63916, 63902, 63889, 63884, 63873, 63864, 63835, 63827, 63830 };
             int count = 0;
-            foreach (long id in list) {
+            foreach (long id in list)
+            {
                 OperationResultID rt = ids.OperationUpdateEPDSendingSostav(id, @"EUROPE\ealevchenko");
                 count++;
-                Console.WriteLine("Обновление документов по составу id = {0}, результат обновления = {1}, осталось {2}", id, rt.result, list.Count()-count);
+                Console.WriteLine("Обновление документов по составу id = {0}, результат обновления = {1}, осталось {2}", id, rt.result, list.Count() - count);
             }
         }
         /// <summary>
@@ -376,6 +377,25 @@ namespace Test.TestModule
             int result = ids.IncomingWagon(ref context, 6, 109, new DateTime(2021,08,30,15,50,00), 113, wagon, @"EUROPE\ealevchenko");
             int res_sava = context.SaveChanges();
             //Ошибка выполнения метода IncomingWagon(context=EFIDS.Concrete.EFDbContext, id_station=6, id_way=109, date_start=30.08.2021 15:50:00, position=113, wagon=System.Data.Entity.DynamicProxies.ArrivalCars_274B60BC2D59FA04CEDD4289498D58C1EE9453D9D01127990A0A0D4D3044D283, user=EUROPE\svnovikova)
+        }
+
+
+        // Тест формирования отчета операции отправки (вагоны)
+        public void IDS_WIR_GetWagonsOperationOfSend()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            DateTime start = new DateTime(2021, 8, 1, 0, 0, 0);
+            DateTime stop = new DateTime(2021, 8, 31, 23, 59, 59);
+            List<wagon_operation_send> list = ids.GetWagonsOperationOfSend(start, stop);
+        }
+
+        // Тест формирования отчета операции отправки (состав-вагоны)
+        public void IDS_WIR_GetSostavWagonsOperationOfSend()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            DateTime start = new DateTime(2021, 8, 1, 0, 0, 0);
+            DateTime stop = new DateTime(2021, 8, 31, 23, 59, 59);
+            List<sostav_operation_send> list = ids.GetSostavWagonsOperationOfSend(start, stop);
         }
 
 

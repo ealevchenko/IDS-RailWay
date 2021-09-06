@@ -220,6 +220,9 @@ namespace Test
 
             //tids.IDS_WIR_OperationUpdateEPDSendingSostav();             // Тест операции обновления ЭПД состава который отправили
 
+            //tids.IDS_WIR_GetWagonsOperationOfSend();                // Тест формирования отчета операции отправки (вагоны)
+            tids.IDS_WIR_GetSostavWagonsOperationOfSend();          // Тест формирования отчета операции отправки (состав-вагоны)
+
             #endregion
 
             #region Test_Logs тест логирования

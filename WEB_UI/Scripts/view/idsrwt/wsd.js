@@ -174,6 +174,25 @@
     //*************************************************************************************
     // ОБЪЯВЛЕНИЕ ОСНОВНЫХ ОБЪЕКТОВ ПРИЛОЖЕНИЯ
     //*************************************************************************************
+    "use strict"; // Start of use strict
+    var App = window.App || {};
+    var $ = window.jQuery;
+
+    // Определим глобальные переменные
+    App.Lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang'));
+    App.Langs = $.extend(true, App.Langs, getLanguages($.Text_Common, App.Lang), getLanguages($.Text_Table, App.Lang));
+    App.User_Name = $('input#username').val();
+
+    var wsd = App.ids_wsd;
+    var ids_wsd = new wsd();
+
+    var directory = App.ids_directory;
+    var ids_dir = new directory();
+
+    var OP_SEND = App.operation_send;
+    var oper_send = new OP_SEND('div#rep-operation-send'); // Создадим экземпляр
+
+
     var lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang')),
         langs = $.extend(true, $.extend(true, getLanguages($.Text_View, lang), getLanguages($.Text_Common, lang)), getLanguages($.Text_Table, lang)),
         user_name = $('input#username').val(),
@@ -199,7 +218,25 @@
         current_id_way = null,
         current_option_way = null,
         current_num_wagon = null,
+        // Отчеты
+        rep_operation_send = $('a#operation-send').on('click',
+            function (event) {
+                alert.clear_message();
+                event.preventDefault();
+                oper_send.init({
+                    alert: alert,
+                    ids_dir: ids_dir,
+                    ids_wsd: ids_wsd,
+                },
+                    function () {
+                        oper_send.show() // Инициализировать и спрятать
+                        operation_detali.content.addClass('is-visible');
+                        //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+                    });
+            }),
+
         // Основные кнопки управления
+
         // Изменить дислокацию
         bt_dislocation = $('button#dislocation').on('click',
             function (event) {
@@ -722,7 +759,7 @@
             // Загрузить информацию
             load: function (id_way, num) {
                 LockScreen(langView('mess_delay', langs));
-                if (id_way!==null) {
+                if (id_way !== null) {
                     ids_inc.getViewWagonsOfWay(id_way, function (wagons) {
                         table_wagons.view(wagons, num);
                     });
@@ -1337,6 +1374,12 @@
                     "sap_is_create_date",
                     "sap_is_create_time"])
             },
+            // -------------------------------------------------------------------------------------------------
+            // Отчеты операций
+
+
+
+
             // -------------------------------------------------------------------------------------------------
             // Операция дислокация
             all_obj_dislocation: $([]),
@@ -5651,6 +5694,18 @@
                 operation_detali.val_sending_uz = new VALIDATION(operation_detali.lang, operation_detali.alert, operation_detali.all_obj_sending_uz); // Создадим класс VALIDATION
                 //$("a.dt-button").removeClass('dt-button').addClass('btn btn-secondary');
 
+                //---------------------
+                //oper_send.init({
+                //    auto_load: false,    // Загружаю по открытию окна 
+                //    alert: alert,
+                //    ids_dir: ids_dir,
+                //    ids_wsd: ids_wsd,
+                //},
+                //    function () {
+                //        oper_send.hide(); // Инициализировать и спрятать
+                //    });
+
+                //-----------------------
                 // Sumbit form
                 operation_detali.content.find("form").on("submit", function (event) {
                     event.preventDefault();
@@ -5658,16 +5713,21 @@
                 // Настройка закрыть операции детально
                 operation_detali.content.on('click', '.close', function (event) {
                     event.preventDefault();
+                    LockScreen(langView('mess_delay', langs));
                     operation_detali.operation_dislocation.hide();
                     operation_detali.operation_dissolution.hide();
                     operation_detali.operation_sending.hide();
                     operation_detali.operation_arrival.hide();
                     operation_detali.operation_provide.hide();
                     operation_detali.operation_sending_uz.hide();
+                    // отчеты по операциям
+                    /*                    oper_send.hide();*/
+                    oper_send.destroy();
                     if (typeof operation_detali.callback_close === 'function') {
                         operation_detali.callback_close(operation_detali.bit_update, operation_detali.rows_update);
                     }
                     operation_detali.content.removeClass('is-visible');
+                    LockScreenOff();
                 });
             },
             // -------------------------------------------------------------------------------------------------
@@ -5690,7 +5750,7 @@
     // Загрузка основных библиотек
     loadReference(function (result) {
 
-/*        var id_station = getUrlVar('station');*/
+        /*        var id_station = getUrlVar('station');*/
 
         // Обновить
         setInterval(function () {
@@ -5729,7 +5789,7 @@
         });
 
         current_num_wagon = num ? Number(num) : null;
-        trWay.view(list_station, id_station ? Number(id_station) : null, id_park ? Number(id_park) : null, id_way ? Number(id_way): null);
+        trWay.view(list_station, id_station ? Number(id_station) : null, id_park ? Number(id_park) : null, id_way ? Number(id_way) : null);
 
 
 
@@ -5778,292 +5838,3 @@
         //$("a.dt-button").removeClass('dt-button').addClass('btn btn-secondary');
     });
 });
-
-        //*************************************************************************************
-        // ОСНОВНАЯ ТАБЛИЦА СОСТАВОВ
-        //*************************************************************************************
-        //table_tree_way = {
-        //    html_table: $('table#tree-way'),
-        //    obj: null,
-        //    select_string: null,
-        //    count_string: null,
-        //    init: function () {
-        //        this.obj = this.html_table.DataTable({
-        //            "paging": false,
-        //            "searching": false,
-        //            "ordering": false,
-        //            "info": false,
-        //            "keys": true,
-        //            "select": false,
-        //            "autoWidth": false,
-        //            //"sScrollX": "100%",
-        //            //"scrollX": true,
-        //            language: language_table(langs),
-        //            jQueryUI: false,
-        //            "createdRow": function (row, data, index) {
-        //                $(row).attr('id', data.id).addClass('station');
-        //                $('td:eq(1)', row).attr('colspan', 3);
-        //                $('td:eq(1)', row).prepend($('<img class="icon-station" />')).addClass("station-name");
-        //                $('td:eq(2)', row).append(data.count_arrive > 0 ? $('<a href="#" class="badge badge-warning">' + data.count_arrive + '</a>') : data.count_arrive).append('-').append(data.count_sent > 0 ? $('<a href="#" class="badge badge-success">' + data.count_sent + '</a>') : data.count_sent).addClass('text-center');
-        //                $('td:eq(3)', row).addClass('text-right');
-        //                $('td:eq(4)', row).addClass('text-right');
-        //            },
-        //            columns: [
-        //                {
-        //                    className: 'station-control',
-        //                    orderable: false,
-        //                    data: null,
-        //                    defaultContent: '',
-        //                    width: "20px",
-        //                    searchable: false
-        //                },
-        //                //{
-        //                //    orderable: false,
-        //                //    data: null,
-        //                //    //defaultContent: '',
-        //                //    //width: "20px",
-        //                //    //searchable: false
-        //                //},
-        //                //{
-        //                //    orderable: false,
-        //                //    data: null,
-        //                //    //defaultContent: '',
-        //                //    //width: "20px",
-        //                //    //searchable: false
-        //                //},
-        //                { data: "name", title: 'дерево путей', width: "50px", orderable: false, searchable: false },
-        //                { data: "operator", title: 'оператор', width: "50px", orderable: false, searchable: false },
-        //                { data: "count", title: 'кол.', width: "50px", orderable: false, searchable: false },
-        //                { data: "max", title: 'пр.\\от.', width: "50px", orderable: false, searchable: false },
-        //            ],
-        //            //dom: 'Bfrtip',
-        //            stateSave: false,
-        //        }).on('select', function (e, dt, type, indexes) {
-        //            //table_tree_way.view_button(indexes);
-        //        }).on('deselect', function (e, dt, type, indexes) {
-        //            //table_tree_way.view_button(indexes);
-        //        });
-        //        // Инициализация раскрытия станции
-        //        table_tree_way.initEventOpenStation();
-        //    },
-        //    // Загрузить станции
-        //    load_station: function () {
-        //        LockScreen(langView('title_mess_load_station', langs));
-        //        ids_inc.getViewStationStatus(function (station) {
-        //            table_tree_way.view_station(station.filter(function (i) { return !i.station_uz; }));
-        //        });
-        //    },
-        //    //
-        //    view_station: function (stations) {
-        //        table_tree_way.obj.clear();
-        //        $.each(stations, function (i, el) {
-        //            table_tree_way.obj.row.add(table_tree_way.get_station(el));
-        //        });
-        //        table_tree_way.obj.draw();
-        //        LockScreenOff();
-        //    },
-        //    //
-        //    get_station: function (station) {
-        //        return {
-        //            id: station.id,
-        //            name: station["station_name_" + lang],
-        //            operator: null,
-        //            count_arrive: station.count_arrive,
-        //            count_sent: station.count_sent,
-        //            count: station.count_wagon,
-        //            max: station.count_capacity,
-        //        }
-        //    },
-        //    // Инициализация события выборки детально
-        //    initEventOpenStation: function () {
-        //        table_tree_way.html_table.find('tbody')
-        //            .on('click', 'td.station-control', function () {
-        //                // Обработка выбора станции, показать - спрятать парки
-        //                var tr = $(this).closest('tr');
-        //                var row = table_tree_way.obj.row(tr);
-        //                var el = table_tree_way.html_table.find('tr#station-' + row.data().id);
-        //                if (el && el.length > 0) {
-        //                    //el.unbind(); // удалим все обработчики установленные на элементе
-        //                    $(tr).removeClass('shown');
-        //                    el.remove();
-        //                } else {
-        //                    // Выбрать парки
-        //                    table_tree_way.load_park(row, function (park) {
-        //                        if (park && park.length > 0) {
-        //                            // Отрисовать парки
-        //                            $(tr).addClass('shown');
-        //                            $.each(park.sort(function (a, b) { return b.id - a.id; }), function (i, el) {
-        //                                $(tr).after("<tr class='park' id='station-" + row.data().id + "'><td><img class='" + (i !== 0 ? "icon-tree-open" : "icon-tree-open-end") + "'/></td><td class='park-control' park='" + el.id + "' station='" + row.data().id + "' end='" + (i === 0 ? 1 : 0) + "'></td><td colspan='2' class='park-name'><img class='icon-park'/>" + el.park_abbr_ru + "</td><td></td><td class='text-right'>" + el.count_wagon + "</td><td class='text-right'>" + el.count_capacity + "</td></tr>");
-        //                                // Прикрепим событие выбора парка
-        //                                var el_ev = table_tree_way.html_table.find('tbody td[station="' + row.data().id + '"][park="' + el.id + '"]');
-        //                                //table_tree_way.html_table.find('tbody').on('click', 'td[park="' + el.id + '"]', function () {
-        //                                el_ev.on('click', function () {
-        //                                    var id_park = Number($(this).attr("park"));
-        //                                    var id_station = Number($(this).attr("station"));
-        //                                    var end = Number($(this).attr("end"));
-        //                                    var tr_park = $(this).closest('tr');
-        //                                    // Обработка выбора парка, показать - спрятать пути
-        //                                    var el_park = table_tree_way.html_table.find('tr[station=' + id_station + '][park=' + id_park + ']');
-        //                                    if (el_park && el_park.length > 0) {
-        //                                        // Убрать tr c путями
-        //                                        //$(tr_park).unbind(); // удалим все обработчики установленные на элементе
-        //                                        $(tr_park).removeClass('shown');
-        //                                        el_park.remove();
-        //                                    } else {
-        //                                        // Показать tr c путями
-        //                                        // Получим  данные по путям
-        //                                        table_tree_way.load_way(id_station, id_park, function (ways) {
-        //                                            if (ways && ways.length > 0) {
-        //                                                $(tr_park).addClass('shown');
-        //                                                $.each(ways.sort(function (a, b) { return b.position_way - a.position_way; }), function (i, el) {
-        //                                                    // Получим компонент pb
-        //                                                    var pb_way = table_tree_way.get_pb(el.id, el.capacity, el.count_wagon);
-        //                                                    // определим строку путь
-        //                                                    var tr_way = $("<tr id='station-" + id_station + "' station='" + id_station + "' park='" + id_park + "' way='" + el.id + "' output-dissolution='" + (el.output_dissolution ? el.output_dissolution : false) + "'><td><img class='" + (end === 0 ? "icon-tree-open-skeep" : "icon-tree-open-not") + "'/></td><td></td><td><img class='" + (i !== 0 ? "icon-tree-open" : "icon-tree-open-end") + "'/></td><td class='way-name'><img class='icon-way'/>" + el.way_num_ru + " - " + el.way_abbr_ru + "</td><td class='text-center'></td><td class='text-right'>" + el.count_wagon + "</td><td class='text-right'>" + el.capacity + "</td></tr>");
-        //                                                    var td = tr_way.find('td:eq(4)');
-        //                                                    td.append(pb_way);
-        //                                                    // Событие выбора пути
-        //                                                    tr_way.on('click', function () {
-        //                                                        // Проверим наличие запрета выбора пути
-        //                                                        if (!not_event_select_way) {
-        //                                                            event.preventDefault();
-        //                                                            alert.clear_message();
-        //                                                            $('tr[way]').removeClass('selected'); // Убрать выбор
-        //                                                            $(this).addClass('selected'); // Применитьт выбор
-
-        //                                                            //var id = Number($(this).attr("id"));
-        //                                                            current_id_station = Number($(this).attr("station"));
-        //                                                            current_id_park = Number($(this).attr("park"));
-        //                                                            current_id_way = Number($(this).attr("way"));
-        //                                                            table_wagons.load(current_id_way);
-        //                                                        }
-        //                                                        not_event_select_way = false;
-        //                                                    });
-        //                                                    $(tr_park).after(tr_way);
-        //                                                });
-        //                                            }
-        //                                            LockScreenOff();
-        //                                        });
-
-        //                                    }
-        //                                });
-
-        //                            });
-        //                        }
-        //                        LockScreenOff();
-        //                    });
-        //                }
-        //            });
-        //    },
-        //    // Загрузить парки
-        //    load_park: function (row, callback) {
-        //        LockScreen(langView('mess_delay', langs));
-        //        ids_inc.getViewParkWaysOfStation(row.data().id, function (park) {
-        //            if (typeof callback === 'function') {
-        //                callback(park);
-        //            }
-        //        });
-        //        //ids_inc.ids_dir.getParkWaysOfStationID(row.data().id, function (park) {
-        //        //    if (typeof callback === 'function') {
-        //        //        callback(park);
-        //        //    }
-        //        //});
-
-        //    },
-        //    // Загрузить пути
-        //    load_way: function (station, park, callback) {
-        //        LockScreen(langView('mess_delay', langs));
-        //        ids_inc.getViewWaysOfStationPark(station, park, function (ways) {
-        //            if (typeof callback === 'function') {
-        //                callback(ways);
-        //            }
-        //        });
-        //        //ids_inc.ids_dir.getWaysOfStationIDParkID(station, park, function (ways) {
-        //        //    if (typeof callback === 'function') {
-        //        //        callback(ways);
-        //        //    }
-        //        //});
-        //    },
-        //    // Обновление информации по станции
-        //    update_station: function (id_station, callback) {
-        //        LockScreen(langView('mess_delay', langs));
-        //        ids_inc.getViewStationStatusOfIDStation(id_station, function (station) {
-        //            if (station) {
-        //                var tr_station = table_tree_way.html_table.find('tbody tr#' + id_station);
-        //                var td_status = tr_station.find('td:eq(2)');
-        //                var td_count = tr_station.find('td:eq(3)');
-        //                var td_max = tr_station.find('td:eq(4)');
-        //                td_status.empty().append(station.count_arrive > 0 ? $('<a href="#" class="badge badge-warning">' + station.count_arrive + '</a>') : station.count_arrive).append('-').append(station.count_sent > 0 ? $('<a href="#" class="badge badge-success">' + station.count_sent + '</a>') : station.count_sent);
-        //                td_count.empty().append(station.count_wagon);
-        //                td_max.empty().append(station.count_capacity);
-        //                if (typeof callback === 'function') {
-        //                    callback();
-        //                }
-        //            }
-
-        //        });
-        //    },
-        //    // Обновить информацию по парку
-        //    update_park: function (id_park) {
-
-        //    },
-        //    // Обновление информации по пути
-        //    update_way: function (id_station, id_park, id_way, callback) {
-        //        if (id_way) {
-        //            LockScreen(langView('mess_delay', langs));
-        //            ids_inc.getViewWaysOfID(id_way, function (way) {
-        //                if (way) {
-        //                    var pb_way = table_tree_way.get_pb(way.id, way.capacity, way.count_wagon);
-        //                    var tr_way = table_tree_way.html_table.find('tbody tr[station="' + id_station + '"][park="' + id_park + '"][way="' + id_way + '"]');
-        //                    var td_pb = tr_way.find('td:eq(4)');
-        //                    var td_count = tr_way.find('td:eq(5)');
-        //                    var td_max = tr_way.find('td:eq(6)');
-        //                    td_pb.empty().append(pb_way);
-        //                    td_count.empty().append(way.count_wagon);
-        //                    td_max.empty().append(way.capacity);
-        //                    if (typeof callback === 'function') {
-        //                        callback();
-        //                    }
-        //                }
-        //            });
-        //        }
-        //    },
-        //    // Получить прогрес бар
-        //    get_pb: function (id, max, count) {
-        //        // Определим компонент прогресс бар
-        //        var max_capacity = max ? Number(max) : 0
-        //        var count_wagon = count ? Number(count) : 0
-        //        var progress = Number(count_wagon > max_capacity ? 100.0 : max_capacity === 0 ? 0.0 : (count_wagon * 100.0) / max_capacity);
-        //        var progress_collor = "";
-        //        if (progress <= 25) {
-        //            progress_collor = 'bg-success';
-        //        } else {
-        //            if (progress <= 50) {
-        //                progress_collor = 'bg-info';
-        //            } else {
-        //                if (progress <= 75) {
-        //                    progress_collor = 'bg-warning';
-        //                } else {
-        //                    progress_collor = 'bg-danger';
-        //                }
-        //            }
-        //        }
-        //        var pb_way = $("<div class='progress' title='Информация детально' way='" + id + "'><div class='progress-bar " + progress_collor + "' role='progressbar' style='width: " + progress.toFixed(0) + "%;' aria-valuenow='" + count + "' aria-valuemin='0' aria-valuemax='" + max + "'>" + progress.toFixed(1) + "%</div></div>")
-        //        // событие нажатия на прогресс бар
-        //        pb_way.on('click', function () {
-        //            event.preventDefault();
-        //            not_event_select_way = true; // запрет выбора пути
-        //            var id_way = Number($(this).attr("way"));
-        //            pn_loading_way_detail.Open(id_way);
-        //        });
-
-        //        return pb_way;
-        //    },
-        //    // Событие
-        //    event_click_way: function () {
-        //        alert('Rkbr');
-        //    }
-        //},
-        //*************************************************************************************
-        // ТАБЛИЦА ВАГОНЫ ДЕТАЛЬНО
-        //*************************************************************************************
