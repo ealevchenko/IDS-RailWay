@@ -342,7 +342,15 @@
             this.$element.autocomplete("destroy");
         };
         this.init();
-    }
+    };
+    // Инициализация "BUTTON"
+    form_control.prototype.init_button = function (element, fn_click) {
+        this.$element = element;
+        if (typeof fn_click === 'function') {
+            this.$element.on("click", fn_click.bind(this));
+        }
+    };
+
     //-----------------------------------------------------------------------------------------------------
     // Элемент <div class="row">
     form_control.prototype.el_row = function () {
@@ -374,6 +382,26 @@
         });
         if (required)
             this.$select.attr('required', true);
+    };
+    // Элемент 
+    //<button type="submit" class="btn btn-sm  btn-primary mb-2" id="view_ways" name="view_ways">
+    //    <i class="fas fa-retweet" aria-hidden="true"></i>
+    //</button>
+    form_control.prototype.el_button = function (prefix, cl_bt, id, title, icon) {
+
+        this.$button = $('<button></button>', {
+            'class': 'btn btn' + (prefix ? '-' + prefix + ' ' : ' ') + cl_bt,
+            'id': id,
+            'name': id,
+            'text': title,
+        });
+        if (icon && icon !== '') {
+            var icon = $('<i></i>', {
+                'class': icon,
+                'aria-hidden': 'true'
+            });
+            this.$button.append(icon);
+        }
     };
     // Элемент <div class="form-group">
     form_control.prototype.el_div_form_group = function () {
@@ -450,6 +478,7 @@
         this.$select = select.$select;
         this.$element = div.$div.append($label).append(this.$select);
     };
+
     //--------------------------------------------------------------------
     // Элемент CARD
     form_control.prototype.el_card = function (cl_card, cl_header, cl_body, title) {
@@ -494,6 +523,7 @@
         }, options);
         var form = new this.fc.el_form_inline(this.settings.id, this.settings.cl_form);
         this.$form = form.$form;
+        this.el_destroy = []; // Элементы которые нужно удалить
         // создадим поля
         $.each(this.settings.fields, function (i, el) {
             if (el.type === 'interval_date') {
@@ -501,18 +531,27 @@
                 if (element && element.$element && element.$element.length > 0) {
                     this.$form.append(element.$element);
                     el['element'] = new this.fc.init_datetime_range(element.$span, el.start, el.stop, el.select);
+                    this.el_destroy.push(el['element']); // Этот эемент нужно удалить из HTML формы
                 }
-            }
+            };
             if (el.type === 'select') {
                 var element = new this.fc.el_form_inline_select(el.id, el.prefix, el.title);
                 if (element && element.$element && element.$element.length > 0) {
                     this.$form.append(element.$element);
                     el['element'] = new this.fc.init_select(element.$select, el.list, -1, null, el.select);
                 }
-            }
+            };
+            if (el.type === 'button') {
+                //var element = function (prefix, cl_bt, id, title, icon)
+                var element = new this.fc.el_button(el.prefix, 'btn-primary ml-2', el.id, el.title, el.icon);
+                if (element && element.$button && element.$button.length > 0) {
+                    this.$form.append(element.$button);
+                    el['element'] = new this.fc.init_button(element.$button, el.select);
+                }
+            };
         }.bind(this));
     };
-
+    // Получить значения выбоа
     form_inline.prototype.get_value = function () {
         var result = {};
         $.each(this.settings.fields, function (i, el) {
@@ -524,6 +563,16 @@
             }
         }.bind(this));
         return result;
+    };
+    // Удаление формы
+    form_inline.prototype.destroy = function () {
+        $.each(this.el_destroy, function (i, el) {
+            el.destroy();
+        }.bind(this));
+        if (this.$form && this.$form.length > 0) {
+            this.$form.remove();
+            this.$form = null;
+        }
     };
 
     App.form_inline = form_inline;
