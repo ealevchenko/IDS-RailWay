@@ -16,7 +16,7 @@
     {
         'default':  //default language: ru
         {
-            'card_header_panel': 'ИСТОРИЯ ОПЕРАЦИЙ "ОТПРАВЛЕНИЕ"',
+            'card_header_panel': 'ИСТОРИЯ ОПЕРАЦИЙ "ОТПРАВЛЕНИЕ СОСТАВОВ НА СТАНЦИИ АМКР"',
             'title_label_date': 'ПЕРИОД :',
             'title_label_station': 'СТАНЦИЯ ОТПРАВЛЕНИЯ:',
 
@@ -36,9 +36,7 @@
             'tytle_status_arr': 'Принят',
             'tytle_status_work': 'В работе',
             'tytle_status_send': 'Отправлен',
-
-            //'tytle_yes': 'Да',
-            //'tytle_no': 'Нет',
+            'tytle_detali_wagon': 'Вагоны в составе',
 
             'title_button_export': 'Экспорт',
             'title_button_buffer': 'Буфер',
@@ -47,11 +45,44 @@
             'title_button_return': 'Вернуть',
 
             'mess_load_operation': 'Загружаю операции...',
+            'mess_update_operation': 'Обновляю операции...',
             'mess_init_panel': 'Выполняю инициализацию модуля ...',
+            'mess_destroy_operation': 'Закрываю форму...',
         },
         'en':  //default language: English
         {
+            'card_header_panel': 'HISTORY OF OPERATIONS "SENDING CONVENTIONS TO AMKR STATION" ',
+            'title_label_date': 'PERIOD:',
+            'title_label_station': 'STATION OF DEPARTURE:',
 
+            'field_id': 'row id',
+            'field_operation_end': 'Sent',
+            'field_name_outer_way': 'Ferry',
+            'field_from_station_name': 'Sent station',
+            'field_from_way_name': 'Sent path',
+            'field_on_station_name': 'Station arr.',
+            'field_count_wagon_send': 'Sent',
+            'field_count_wagon_arrival': 'Received',
+            'field_operation_locomotive1': 'Locomotive1',
+            'field_operation_locomotive2': 'Locomotive2',
+            'operation_create_user': 'The operation was performed',
+            'field_status': 'Status',
+
+            'tytle_status_arr': 'Accepted',
+            'tytle_status_work': 'In progress',
+            'tytle_status_send': 'Sent',
+            'tytle_detali_wagon': 'Wagons included',
+
+            'title_button_export': 'Export',
+            'title_button_buffer': 'Buffer',
+            'title_button_excel': 'Excel',
+            'title_button_cancel': 'Cancel',
+            'title_button_return': 'Return',
+
+            'mess_load_operation': 'Loading operations ...',
+            'mess_update_operation': 'Updating operations ...',
+            'mess_init_panel': 'Initializing the module ...',
+            'mess_destroy_operation': 'Closing the form ...',
         }
     };
     // Определлим список текста для этого модуля
@@ -74,102 +105,6 @@
         this.$operation_body = card_operation.$body;
         card_panel.$body.append(card_operation.$card);
         this.$element = row.$row.append(col.$col.append(card_panel.$card));
-    };
-    // создадим основу формы
-    function div_panel1(base) {
-        var $div_row = $('<div></div>', {
-            'class': 'row',
-        });
-        var $div_col = $('<div></div>', {
-            'class': 'col-xl-12 mb-1 mt-1',
-        });
-        var $div_card_panel = $('<div></div>', {
-            'class': 'card border-secondary mb-1',
-        });
-        var $div_card_header_panel = $('<div></div>', {
-            'class': 'card-header',
-            'text': langView('card_header_panel', App.Langs)
-        });
-        var $div_card_body_panel = $('<div></div>', {
-            'class': 'card-body text-dark pl-3 pr-3',
-        });
-        //--------------
-        var $div_card = $('<div></div>', {
-            'class': 'card border-primary',
-        });
-        var $div_card_header = $('<div></div>', {
-            'class': 'card-header',
-        });
-        var $div_card_body = $('<div></div>', {
-            'class': 'card-body text-dark',
-        });
-        //--------------
-        var $form = $('<form></form>', {
-            'class': 'form-inline',
-        });
-        var $div_form_gr = $('<div></div>', {
-            'class': 'form-group',
-        });
-        var $div_form_gr1 = $('<div></div>', {
-            'class': 'form-group',
-        });
-        var $div_input_gr = $('<div></div>', {
-            'class': 'input-group',
-        });
-        var $div_input_gr_append = $('<div></div>', {
-            'class': 'input-group-append',
-        });
-        var $lab_date = $('<label></label>', {
-            'class': 'col-form-label-sm mr-2',
-            'for': base.selector + '-select-date',
-            'text': langView('title_label_date', App.Langs)
-        });
-        var $span_date = $('<span></span>', {
-            'class': 'mr-2',
-            'id': base.selector + '-select-date'
-        });
-        var $input_date_start = $('<input></input>', {
-            'class': 'form-control-sm mr-1',
-            'id': base.selector + '-date-start',
-            'name': base.selector + '-date-start',
-            'data-type': 'start'
-        });
-        var $input_date_stop = $('<input></input>', {
-            'class': 'form-control-sm',
-            'id': base.selector + '-date-stop',
-            'name': base.selector + '-date-stop',
-            'data-type': 'stop'
-        });
-        var $lab_station = $('<label></label>', {
-            'class': 'col-form-label-sm mr-2',
-            'for': base.selector + '-station',
-            'text': langView('title_label_station', App.Langs)
-        });
-        var $select_station = $('<select></select>', {
-            'class': 'form-control-sm',
-            'id': base.selector + '-station',
-            'name': base.selector + '-station',
-        });
-        var $icon_refresh = $('<i></i>', {
-            'class': 'fas fa-retweet',
-            'aria-hidden': 'true',
-        });
-        var $bt_refresh = $('<button></button>', {
-            'class': 'btn btn-sm  btn-primary mb-2',
-            'type': 'submit',
-            'id': base.selector + '-refresh',
-            'name': base.selector + '-refresh',
-        });
-
-        this.$form = $form;
-        this.$date_select = $span_date;
-        this.$station = $select_station;
-        this.$bt_refresh = $bt_refresh;
-
-        this.$form
-            .append($div_form_gr.append($lab_date).append(this.$date_select.append($input_date_start).append($input_date_stop)))
-            .append($div_form_gr1.append($lab_station).append($div_input_gr.append(this.$station).append($div_input_gr_append.append(this.$bt_refresh.append($icon_refresh)))));
-        this.$element = $div_row.append($div_col.append($div_card_panel.append($div_card_header_panel).append($div_card_body_panel.append($div_card.append($div_card_header.append(this.$form)).append($div_card_body)))));
     };
     // Перечень полей
     var list_collums = [
@@ -333,7 +268,7 @@
         // теперь выполним инициализацию, определим основные свойства
         this.settings = $.extend({
             detali_wagons: true,
-            auto_view: true,
+            auto_load: true,
             alert: null,
             ids_dir: null,
             ids_wsd: null,
@@ -349,11 +284,13 @@
         // Диапазон времени
         this.start = moment().set({ 'hour': 0, 'minute': 0, 'second': 0 })._d;
         this.stop = moment().set({ 'hour': 23, 'minute': 59, 'second': 59 })._d;
-        this.id_station - 1; // По умолчанию не выбрана
+        this.id_station = -1; // По умолчанию не выбрана
         // список операций
         this.operation = null;
         // Выбраная строка
         this.select_row_sostav = null;
+        // Детальные таблицы
+        this.td_wagons = {};
         // Сообщение
         LockScreen(langView('mess_init_panel', App.Langs));
         //----------------------------------
@@ -367,7 +304,7 @@
         // Создадим и добавим макет таблицы
         var table_sostav = new this.fc_ui.el_table('tab-sostav-' + this.selector, 'display compact cell-border row-border hover');
         this.$table_sostav = table_sostav.$element;
-        this.$operation_body.addClass('table-directory').append(this.$table_sostav);
+        this.$operation_body.addClass('table-report-operation').append(this.$table_sostav);
         // Инициализируем таблицу
         this.obj_t_sostav = this.$table_sostav.DataTable({
             "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "All"]],
@@ -438,7 +375,7 @@
                 {
                     text: langView('title_button_return', App.Langs),
                     action: function (e, dt, node, config) {
-                        this.modal_edit_form.view(this.select_row_sostav);
+
                     }.bind(this),
                     enabled: false
                 },
@@ -460,6 +397,7 @@
                 this.select_row_sostav = null;
             }
         }.bind(this));
+        if (this.settings.detali_wagons) this.init_detali();
 
         // Загрузим справочные данные, определим поля формы правки
         this.load_db(['station'], false, function (result) {
@@ -494,9 +432,21 @@
                     this.view(this.operation);
                 }.bind(this),
             };
+            var fl_refresh = {
+                type: 'button',
+                id: 'refresh',
+                prefix: 'sm',
+                title: null,
+                icon: 'fas fa-retweet',
+                select: function (e, ui) {
+                    event.preventDefault();
+                    this.update();
+                }.bind(this),
+            };
             var fields = [];
             fields.push(fl_interval_date);
             fields.push(fl_station);
+            fields.push(fl_refresh);
             // Инициализация формы
             this.form_panel.init({
                 fields: fields
@@ -504,13 +454,9 @@
             // Отображение формы
             this.$operation_header.append(this.form_panel.$form);
 
-            // Вывести информацию
-            if (this.settings.auto_view) {
-                var res = this.form_panel.get_value();
-                if (res && res.select_date) {
-                    this.load_operation(moment(res.select_date.start)._d, moment(res.select_date.stop)._d);
-                }
-
+            // Загрузить и вывести информацию если стоит признак
+            if (this.settings.auto_load) {
+                this.load_default();
             }
 
             //----------------------------------
@@ -519,30 +465,6 @@
             }
             //----------------------------------
         }.bind(this));
-
-
-
-        //// Инициализация формы для правки полей
-        //var MEF = App.modal_edit_form;
-        //this.modal_edit_form = new MEF('mfe-' + this.selector); // Создадим экземпляр формы правки строк таблицы
-
-        //// Загрузим справочные данные, определим поля формы правки
-        //this.load_db(['station', 'ways', 'park_ways', 'divisions'], false, function (result) {
-
-        //    //----------------------------------
-        //    // Создать макет таблицы
-        //    var tableElement = new table_way(this);
-        //    this.$panel.empty();
-        //    this.$t_way = tableElement.$element;
-        //    this.$panel.append(this.$t_way);
-        //    // Инициализируем таблицу
-
-        //    //----------------------------------
-        //    if (typeof fn_init_ok === 'function') {
-        //        fn_init_ok();
-        //    }
-        //    //----------------------------------
-        //}.bind(this));
     };
     // Показать данные 
     operation_send.prototype.view = function (operation) {
@@ -555,12 +477,22 @@
         }
         this.obj_t_sostav.clear();
         this.obj_t_sostav.rows.add(operation ? operation : []);
-        //this.obj_t_sostav.order([3, 'asc']);
+        this.obj_t_sostav.order([this.settings.detali_wagons ? 1 : 0, 'asc']);
         if (this.select_row_sostav !== null) {
             this.obj_t_sostav.row('#' + this.select_row_sostav.id).select();
         }
         this.obj_t_sostav.draw();
+        if (this.settings.detali_wagons) {
+            this.destroy_all_detali()
+        }
         LockScreenOff();
+    };
+    // загрузить данные 
+    operation_send.prototype.load_default = function () {
+        var res = this.form_panel.get_value();
+        if (res && res.select_date) {
+            this.load_operation(moment(res.select_date.start)._d, moment(res.select_date.stop)._d);
+        }
     };
     // загрузить данные 
     operation_send.prototype.load_operation = function (start, stop) {
@@ -581,34 +513,37 @@
     };
     // Обновить данные
     operation_send.prototype.update = function () {
-        if (this.id_station && this.id_park) {
-            LockScreen(langView('mess_load_dir_way', App.Langs));
-            this.ids_dir.getWaysOfStationIDParkID(this.id_station, this.id_park, function (ways) {
-                this.view(ways);
-                LockScreenOff();
+        this.out_clear();
+        if (this.start && this.stop) {
+            var td_wagons = this.td_wagons;
+            LockScreen(langView('mess_update_operation', App.Langs));
+            this.ids_wsd.getSostavWagonsOperationOfSend(this.start, this.stop, function (operation) {
+                this.operation = operation;
+                this.view(operation);
+                // Открыть детали если есть
+                if (this.settings.detali_wagons) {
+                    $.each(td_wagons, function (i, el) {
+                        if (el) {
+                            var tr = this.$table_sostav.find('tbody tr#' + i);
+                            if (tr && tr.length > 0) {
+                                this.detali_select_row(tr);
+                            }
+                        }
+                    }.bind(this));
+                };
             }.bind(this));
+        } else {
+
         }
-
     };
-    // Обновить компоненты если обновлена база
-    operation_send.prototype.update_element = function (list) {
-        if (list) {
-            if ($.inArray("station", list) >= 0) {
-                //Обновился
-                this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false ? true : false; });
-                this.modal_edit_form.update_list_fields_form('id_station', this.list_station);
-
-            };
-            if ($.inArray("ways", list) >= 0) {
-                //Обновился при выборе станции
-            };
-            if ($.inArray("divisions", list) >= 0) {
-                //Обновился
-                this.list_divisions = this.ids_dir.getListDivisions('id', 'division_abbr', App.Lang, null);
-                this.modal_edit_form.update_list_fields_form('id_devision', this.list_divisions);
-            };
-        };
-    };
+    // Показать
+    operation_send.prototype.show = function () {
+        this.$panel.show();
+    }
+    // Скрыть
+    operation_send.prototype.hide = function () {
+        this.$panel.hide();
+    }
     // Очистить сообщения
     operation_send.prototype.out_clear = function () {
         if (this.settings.alert) {
@@ -633,203 +568,112 @@
             this.settings.alert.out_info_message(message)
         }
     }
-    // вверх объект
-    operation_send.prototype.up = function () {
-        this.out_clear();
-        var id = this.select_row_sostav ? this.select_row_sostav.id : null;
-        var position = this.select_row_sostav ? this.select_row_sostav.position_way : null;
-        if (id && position > 0) {
-            var operation = {
-                id_way: id,
-                user: App.User_Name,
-            };
-            LockScreen(langView('mess_operation_dir_way', App.Langs));
-            this.ids_dir.postOperationUp1PositionWayOfPark(operation, function (result) {
-                if (result > 0) {
-                    this.update();
-                    this.out_info("Путь перенесен на позицию верх");
-                } else {
-                    this.out_error("Ошибка, выполнения операции 'перенос на позицию вверх', код ошибки : " + result);
-                    LockScreenOff();
-                }
-            }.bind(this));
-        } else {
-            this.out_clear();
-            if (id === null) {
-                this.out_error("Ошибка, выполнения операции изменения позиции пути, путь не определен");
+    //------------------------------------------------------------------------
+    // Выбрать строку детально
+    operation_send.prototype.detali_select_row = function (tr) {
+        var row = this.obj_t_sostav.row(tr);
+        // Проверим, строка определена
+        if (row && row.length > 0) {
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                this.destroy_detali(row.data());
+                tr.removeClass('shown');
             }
-            if (position === null || position === 0) {
-                this.out_error("Ошибка, выполнения операции изменения позиции пути, позиция пути неопределена или равна 0");
+            else {
+                row.child('<div class="detali-operation">' +
+                    '<div class="card border-primary ">' +
+                    '<div class="card-header">' + langView('tytle_detali_wagon', App.Langs) + '</div>' +
+                    '<div class="card-body table-directory">' +
+                    '<div class="row">' +
+                    '<div class="col-xl-12 ">' +
+                    '<div class="container-fluid">' +
+                    '<div id="' + this.selector + '-wd-' + row.data().id + '"></div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>').show();
+                // Инициализируем
+                this.view_detali(row.data());
+                tr.addClass('shown');
             }
-        };
+        }
     };
-    // вниз объект
-    operation_send.prototype.down = function () {
-        this.out_clear();
-        var id = this.select_row_sostav ? this.select_row_sostav.id : null;
-        var position = this.select_row_sostav ? this.select_row_sostav.position_way : null;
-        if (id && position > 0) {
-            var operation = {
-                id_way: id,
-                user: App.User_Name,
-            };
-            LockScreen(langView('mess_operation_dir_way', App.Langs));
-            this.ids_dir.postOperationDown1PositionWayOfPark(operation, function (result) {
-                if (result > 0) {
-                    this.update();
-                    this.out_info("Путь перенесен на позицию вниз");
-                } else {
-                    this.out_error("Ошибка, выполнения операции 'Перенос на позицию вниз', код ошибки : " + result);
-                    LockScreenOff();
-                }
+    // Инициализация таблицы детально
+    operation_send.prototype.init_detali = function () {
+        this.$table_sostav.find('tbody')
+            .on('click', 'td.details-control-operation-send', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var tr = $(e.currentTarget).closest('tr');
+                this.detali_select_row(tr);
             }.bind(this));
-        } else {
-            this.out_clear();
-            if (id === null) {
-                this.out_error("Ошибка, выполнения операции изменения позиции пути, путь не определен");
-            }
-            if (position === null || position === 0) {
-                this.out_error("Ошибка, выполнения операции изменения позиции пути, позиция пути неопределена или равна 0");
-            }
-        };
     };
-    // Авто-коррекция
-    operation_send.prototype.auto = function () {
-        this.out_clear();
-        this.modal_confirm_form.view('Выполнить', 'Выполнить автоматическую коррекцию путей?', function (result) {
-            if (result) {
-                // Выполнить 
-                if (this.id_station && this.id_park) {
-                    var operation = {
-                        id_station: this.id_station,
-                        id_park: this.id_park,
-                        user: App.User_Name,
-                    };
-                    LockScreen(langView('mess_operation_dir_way', App.Langs));
-                    this.ids_dir.postOperationAutoPositionWayOfPark(operation, function (result) {
-                        if (result > 0) {
-                            this.update();
-                            this.out_info("Автоматическая коррекция путей – выполнена! Обновленно :" + result + " записей");
-                        } else {
-                            this.out_error("Ошибка, выполнения операции автоматической коррекции путей, код ошибки : " + result);
-                            LockScreenOff();
-                        }
-                    }.bind(this));
-                } else {
-                    this.out_error("Автоматическая коррекция путей – отклонена не определена станция [" + this.id_station + "] или парк [" + this.id_park + "]");
-                    LockScreenOff();
-                };
-            } else {
-                // Отмена
-                this.out_warning("Автоматическая коррекция путей – отменена");
-            }
+    // Показать детали
+    operation_send.prototype.view_detali = function (data) {
+        var base = this;
+        var TCOPER = App.table_cars_operation;
+        var sl = 'div#' + this.selector + '-wd-' + data.id;
+        this.td_wagons[data.id] = new TCOPER(sl); // Создадим экземпляр таблицы
+        this.td_wagons[data.id].init({
+            alert: this.settings.alert,
+        }, function () {
+            this.td_wagons[data.id].view(data && data.wagons ? data.wagons : []);
         }.bind(this));
     };
-    // Сохранить объект
-    operation_send.prototype.save = function (data) {
-        this.out_clear();
-        if (data.new && data.new.id_park === null) {
-            if (data.old) {
-                this.modal_edit_form.set_object_error('id_park', 'edit', 'Указанного парка нет в справочнике ИДС ТД');
-            } else {
-                this.modal_edit_form.set_object_error('id_park', 'add', 'Указанного парка нет в справочнике ИДС ТД');
-            }
-        } else {
-            if (data && !data.old) {
-                // Добавить 
-                this.insert(data.new);
-            } else {
-                // Править
-                this.edit(data.new);
-            };
+    // Очистить детали по указаному составу
+    operation_send.prototype.destroy_detali = function (data) {
+        if (this.td_wagons[data.id]) {
+            this.td_wagons[data.id].destroy();
+            delete this.td_wagons[data.id];
         }
-
-
     };
-    // Добавить объект
-    operation_send.prototype.insert = function (data) {
-        // Добавить 
-        LockScreen(langView('mess_operation_dir_way', App.Langs));
-        this.ids_dir.postOperationInsertWayOfPark(data, function (result) {
-            if (result > 0) {
-                this.modal_edit_form.close(); // закроем форму
-                this.update();
-                this.out_clear();
-                this.out_info("Новый путь - добавлен");
-                this.settings.fn_db_update(['ways']);
-            } else {
-                LockScreenOff();
-                this.modal_edit_form.out_error('При добавлении пути произошла ошибка, код ошибки : ' + result);
+    // Очистить все детали
+    operation_send.prototype.destroy_all_detali = function () {
+        $.each(this.td_wagons, function (i, el) {
+            if (el) {
+                el.destroy();
             }
         }.bind(this));
-    };
-    // Изменить объект
-    operation_send.prototype.edit = function (data) {
-        if (data.way_delete !== null && data.position_way > 0) {
-            // Ошибка
-            this.modal_edit_form.set_object_error('way_delete', 'edit', 'Путь имеет признак – удален, позиция пути должна быть (0)');
-            this.modal_edit_form.set_object_error('position_way', 'edit', 'Путь имеет признак – удален, позиция пути должна быть (0)');
-        } else {
-            // Выполнить править
-            var operation = {
-                way: data,
-                user: App.User_Name,
-            };
-            LockScreen(langView('mess_operation_dir_way', App.Langs));
-            this.ids_dir.postOperationUpdateWayOfPark(operation, function (result) {
-                if (result > 0) {
-                    this.modal_edit_form.close(); // закроем форму
-                    this.update();
-                    this.out_clear();
-                    this.out_info("Путь - обновлен");
-                    this.settings.fn_db_update(['ways']);
-                } else {
-                    LockScreenOff();
-                    this.modal_edit_form.out_error('При обновлении пути произошла ошибка, код ошибки : ' + result);
-                }
-            }.bind(this));
-        }
-    };
-    // Удалить объект
-    operation_send.prototype.delete = function (data) {
-        this.out_clear();
-        if (this.select_row_sostav !== null) {
-            this.modal_confirm_form.view('Удалить', 'Удалить выбранный путь [' + this.select_row_sostav['way_num_' + App.Lang] + ' - ' + this.select_row_sostav['way_name_' + App.Lang] + '] ?', function (result) {
-                if (result) {
-                    // Выполнить
-                    var operation = {
-                        id_way: this.select_row_sostav.id,
-                        user: App.User_Name,
-                    };
-                    LockScreen(langView('mess_operation_dir_way', App.Langs));
-                    this.ids_dir.postOperationDeleteWayOfPark(operation, function (result) {
-                        if (result > 0) {
-                            this.update();
-                            this.out_clear();
-                            this.out_info("Путь - удален!");
-                            this.settings.fn_db_update(['ways']);
-                        } else {
-                            this.out_error("Ошибка, выполнения операции 'Удалить путь', код ошибки : " + result);
-                            LockScreenOff();
-                        }
-                    }.bind(this));
-
-                } else {
-                    // Отмена
-                    this.out_warning("Операция 'Удалить путь' – отменена");
-                }
-            }.bind(this));
-        } else {
-
-        }
+        this.td_wagons = {};
     };
     // Очистить объект
     operation_send.prototype.destroy = function () {
-        this.modal_confirm_form.destroy();
-        this.modal_edit_form.destroy();
-        this.obj_t_sostav.destroy();
+        //this.modal_confirm_form.destroy();
+        //this.modal_edit_form.destroy();
+        this.destroy_all_detali(); // Удалить все таблицы детально
+        // Очистить форму выбора
+        if (this.form_panel) {
+            this.form_panel.destroy();
+            this.form_panel = null;
+        }
+        LockScreen(langView('mess_destroy_operation', App.Langs));
+        // Очистить объект таблица
+        setTimeout(function () {
+            this.destroy_table();
+        }.bind(this),0);
+        //if (this.obj_t_sostav) {
+        //    LockScreen(langView('mess_destroy_operation', App.Langs));
+        //    this.obj_t_sostav.destroy(true);
+        //    this.obj_t_sostav = null;
+        //    LockScreenOff();
+        //}
         this.$panel.empty(); // empty in case the columns change
-    }
+    };
+
+    operation_send.prototype.destroy_table = function () {
+        // Очистить объект таблица
+        if (this.obj_t_sostav) {
+            //LockScreen(langView('mess_destroy_operation', App.Langs));
+            this.obj_t_sostav.destroy(true);
+            this.obj_t_sostav = null;
+
+        }
+        LockScreenOff();
+    };
 
     App.operation_send = operation_send;
 
