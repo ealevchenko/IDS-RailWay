@@ -1060,6 +1060,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Операции «Прибытия составов на станции АМКР».
+        /// </summary>
+        public static string title_operation_arrival {
+            get {
+                return ResourceManager.GetString("title_operation_arrival", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на ПРИНЯТЬ.
         /// </summary>
         public static string title_operation_arrival_run {

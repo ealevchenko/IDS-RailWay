@@ -192,6 +192,8 @@
     var OP_SEND = App.operation_send;
     var oper_send = new OP_SEND('div#rep-operation-send'); // Создадим экземпляр
 
+    var OP_ARRIVAL = App.operation_arrival;
+    var oper_arrival = new OP_ARRIVAL('div#rep-operation-arrival'); // Создадим экземпляр
 
     var lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang')),
         langs = $.extend(true, $.extend(true, getLanguages($.Text_View, lang), getLanguages($.Text_Common, lang)), getLanguages($.Text_Table, lang)),
@@ -218,7 +220,8 @@
         current_id_way = null,
         current_option_way = null,
         current_num_wagon = null,
-        // Отчеты
+        // ---------- ОТЧЕТЫ --------------------------------------
+        // Операции отправления
         rep_operation_send = $('a#operation-send').on('click',
             function (event) {
                 alert.clear_message();
@@ -234,7 +237,22 @@
                         //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
                     });
             }),
-
+        // Операции прибытия
+        rep_operation_arrival = $('a#operation-arrival').on('click',
+            function (event) {
+                alert.clear_message();
+                event.preventDefault();
+                oper_arrival.init({
+                    alert: alert,
+                    ids_dir: ids_dir,
+                    ids_wsd: ids_wsd,
+                },
+                    function () {
+                        oper_arrival.show() // Инициализировать и спрятать
+                        operation_detali.content.addClass('is-visible');
+                        //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+                    });
+            }),
         // Основные кнопки управления
 
         // Изменить дислокацию
@@ -5724,8 +5742,9 @@
                     operation_detali.operation_provide.hide();
                     operation_detali.operation_sending_uz.hide();
                     // отчеты по операциям
-                    /*                    oper_send.hide();*/
                     oper_send.destroy();
+                    oper_arrival.destroy();
+
                     if (typeof operation_detali.callback_close === 'function') {
                         operation_detali.callback_close(operation_detali.bit_update, operation_detali.rows_update);
                     }

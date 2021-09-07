@@ -714,4 +714,7 @@
   <data name="title_operation_send" xml:space="preserve">
     <value>Операции «Отправить состав на станции АМКР»</value>
   </data>
+  <data name="title_operation_arrival" xml:space="preserve">
+    <value>Операции «Прибытия составов на станции АМКР»</value>
+  </data>
 </root>

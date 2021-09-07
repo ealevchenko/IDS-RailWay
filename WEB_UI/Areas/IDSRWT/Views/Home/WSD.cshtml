@@ -41,6 +41,7 @@
     <script src="~/Scripts/module/table_tree_way.js"></script>
     <script src="~/Scripts/module/wsd/table_cars_operation.js"></script>    <!-- Модуль "Таблица вагонов по операциям детально" -->
     <script src="~/Scripts/module/wsd/operation_send.js"></script>          <!-- Модуль "Операции отправки вагонов на станции АМКР" -->
+    <script src="~/Scripts/module/wsd/operation_arrival.js"></script>        <!-- Модуль "Операции g вагонов на станции АМКР" -->
 
     <script src="~/Scripts/plugins/pl_dialog_confirm.js"></script> <!-- Плагин -->
 
@@ -64,8 +65,7 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" id="operation-send" href="#">@IDSRWTResource.title_operation_send</a>
-                        <a class="dropdown-item" href="#">Операция-2</a>
-                        <a class="dropdown-item" href="#">Операция-3</a>
+                        <a class="dropdown-item" id="operation-arrival" href="#">@IDSRWTResource.title_operation_arrival</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -468,10 +468,10 @@
                                                                 <div class="invalid-feedback"></div>
                                                             </div>
                                                             @*<div class="col-xl-6 mb-1 text-left">
-                                                                    <label for="operation_detali_sending_stop" class="col-form-label">@IDSRWTResource.title_operation_stop</label>
-                                                                    <input type="datetime" class="form-control" id="operation_detali_sending_stop" name="operation_detali_sending_stop" />
-                                                                    <div class="invalid-feedback"></div>
-                                                                </div>*@
+                                                            <label for="operation_detali_sending_stop" class="col-form-label">@IDSRWTResource.title_operation_stop</label>
+                                                            <input type="datetime" class="form-control" id="operation_detali_sending_stop" name="operation_detali_sending_stop" />
+                                                            <div class="invalid-feedback"></div>
+                                                        </div>*@
                                                         </div>
                                                     </fieldset>
                                                 </div>
@@ -858,6 +858,9 @@
             </div>
 
             <div id="rep-operation-send">
+
+            </div>
+            <div id="rep-operation-arrival">
 
             </div>
         </form>
