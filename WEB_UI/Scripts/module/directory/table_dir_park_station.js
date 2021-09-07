@@ -201,7 +201,7 @@
         this.load_db(['station', 'ways', 'park_ways'], false, function (result) {
             // Определим списки для полей
             // Получим список станций для отображения
-            this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false ? true : false; });
+            this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false && i.station_delete === null; });
             this.list_park = this.ids_dir.getListParkWays('id', 'park_name', App.Lang);
             //// Определим поля
             //var fl_id = {

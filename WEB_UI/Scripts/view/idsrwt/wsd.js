@@ -2094,7 +2094,7 @@
                 if (id_station !== null && id_station !== -1) {
                     operation_detali.operation_detali_dislocation_way.prop("disabled", false);
                     // уточним список путей отправки
-                    operation_detali.list_ways_station = ids_inc.ids_dir.getListWays2TextOfAray(ids_inc.ids_dir.list_ways.filter(function (i) { return i.id_station === id_station }), 'id', 'way_num', 'way_name', operation_detali.lang, null);
+                    operation_detali.list_ways_station = ids_inc.ids_dir.getListWays2TextOfAray(ids_inc.ids_dir.list_ways.filter(function (i) { return i.id_station === id_station && !i.way_delete }), 'id', 'way_num', 'way_name', operation_detali.lang, null);
                 } else {
                     //id_station = -1;
                     operation_detali.operation_detali_dislocation_way.prop("disabled", true);
@@ -2139,7 +2139,7 @@
                 operation_detali.operation_detali_dislocation_way_on = cd_initSelect(
                     operation_detali.operation_detali_dislocation_way_on,
                     { lang: operation_detali.lang },
-                    operation_detali.list_ways_station.filter(function (i) { return i.value !== operation_detali.id_way_dislocation_from ? true : false; }),
+                    operation_detali.list_ways_station.filter(function (i) { return i.value !== operation_detali.id_way_dislocation_from ? true : false && !i.way_delete; }),
                     null,
                     -1,
                     function (event) {
@@ -3215,7 +3215,7 @@
                     operation_detali.operation_detali_sending_way_from.val(operation_detali.way_from_sending ? (operation_detali.way_from_sending["way_num_" + operation_detali.lang] + ' - ' + operation_detali.way_from_sending["way_name_" + operation_detali.lang]) : "");
                     // Получить доступные пути отправки (без выхода на уз) для станции на которой стоят вагоны
                     operation_detali.outer_ways_sending = ids_inc.ids_dir.list_outer_ways.filter(function (i) {
-                        return i.id_station_from === operation_detali.way_from_sending.id_station && !i.exit_uz;
+                        return i.id_station_from === operation_detali.way_from_sending.id_station && !i.exit_uz && i.way_delete === null;
                     });
 
                     // Получим список станций, доступных для отправки
@@ -3279,7 +3279,10 @@
             // Обновим компонент внешних путей
             update_outer_ways: function (id_statstion_on) {
                 // уточним список путей отправки
-                var outer_ways_sending = getObjects(operation_detali.outer_ways_sending, 'id_station_on', id_statstion_on)
+/*                var outer_ways_sending = getObjects(operation_detali.outer_ways_sending, 'id_station_on', id_statstion_on);*/
+                var outer_ways_sending = operation_detali.outer_ways_sending.filter(function (i) {
+                    return i.way_delete === null && i.id_station_on === id_statstion_on;
+                });
                 var list_outer_ways = [];
                 // Пути определены?
                 if (outer_ways_sending && outer_ways_sending.length > 0) {
@@ -4009,7 +4012,7 @@
                 // Определим пути по выбранной станции
                 operation_detali.list_ways = [];
                 if (id_statstion_on !== null && id_statstion_on > 0) {
-                    operation_detali.list_ways = ids_inc.ids_dir.getListWays2TextOfAray(ids_inc.ids_dir.list_ways.filter(function (i) { return i.id_station === id_statstion_on }), 'id', 'way_num', 'way_name', operation_detali.lang, null);
+                    operation_detali.list_ways = ids_inc.ids_dir.getListWays2TextOfAray(ids_inc.ids_dir.list_ways.filter(function (i) { return i.id_station === id_statstion_on && !i.way_delete }), 'id', 'way_num', 'way_name', operation_detali.lang, null);
                     operation_detali.operation_detali_arrival_way.prop("disabled", false);
                 } else {
                     operation_detali.operation_detali_arrival_way.prop("disabled", true);
@@ -5421,7 +5424,7 @@
                     return i.id_locomotive_status === 1 ? true : false;
                 });
                 operation_detali.list_stations = ids_inc.ids_dir.getListStation('id', 'station_name', operation_detali.lang, function (i) {
-                    return !i.station_uz;
+                    return !i.station_uz && i.station_delete === null;
                 });
                 //operation_detali.list_ways = ids_inc.ids_dir.getListWays2TextOfAray(ids_inc.ids_dir.list_ways, 'id', 'way_num', 'way_name', operation_detali.lang, null);
 

@@ -124,7 +124,7 @@
         this.list_enable_station = [];
         ids_rwt.ids_dir.getStation(function (stations) {
             $.each(stations.filter(function (i) {
-                return !i.station_uz;
+                return !i.station_uz && !i.station_delete;
             }), function (i, el) {
                 // Определим станция уже выбрана
                 var st_enable = true;

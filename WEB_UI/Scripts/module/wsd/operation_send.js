@@ -402,7 +402,7 @@
         // Загрузим справочные данные, определим поля формы правки
         this.load_db(['station'], false, function (result) {
             // Подгрузили списки
-            this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false ? true : false; });
+            this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false && i.station_delete === null; });
             // Создадим форму выбора для отчета
             this.form_panel = new FIL();
             var fl_interval_date = {

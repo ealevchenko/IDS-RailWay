@@ -117,7 +117,7 @@
 
             });
             // Обновим списки
-            var list_station = ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false ? true : false; });
+            var list_station = ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false && i.station_delete === null; });
             station = new fc_ui.init_select($station, list_station, -1, null, function (e, ui) {
                 event.preventDefault();
                 // Обработать выбор

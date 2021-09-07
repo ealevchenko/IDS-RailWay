@@ -761,23 +761,23 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         /// Получить состояние по всем станциям (дерево станций)
         /// </summary>
         /// <returns></returns>
-        [Route("view/station/status/all")]
-        [ResponseType(typeof(view_station_status))]
-        public IHttpActionResult GetViewStationStatus()
-        {
-            try
-            {
-                db.Database.CommandTimeout = 300;
-                string sql = "select * from [IDS].[get_view_station_status]()";
-                List<view_station_status> list = db.Database.SqlQuery<view_station_status>(sql).ToList();
-                db.Database.CommandTimeout = null;               
-                return Ok(list);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
+        //[Route("view/station/status/all")]
+        //[ResponseType(typeof(view_station_status))]
+        //public IHttpActionResult GetViewStationStatus()
+        //{
+        //    try
+        //    {
+        //        db.Database.CommandTimeout = 300;
+        //        string sql = "select * from [IDS].[get_view_station_status]()";
+        //        List<view_station_status> list = db.Database.SqlQuery<view_station_status>(sql).ToList();
+        //        db.Database.CommandTimeout = null;               
+        //        return Ok(list);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest(e.Message);
+        //    }
+        //}
 
         // GET: api/ids/rwt/wsd/view/park_ways/status/station/id/6
         /// <summary>

@@ -3743,7 +3743,7 @@
                 cars_detali.uz_vag_station_on_amkr = cd_initSelect(
                     $('select#uz_vag_station_on_amkr'),
                     { lang: lang },
-                    [{ value: 0, text: 'Под погрузку' }].concat(cars_detali.ids_inc.ids_dir.getListStation('id', 'station_name', cars_detali.lang, function (i) { return !i.station_uz })),
+                    [{ value: 0, text: 'Под погрузку' }].concat(cars_detali.ids_inc.ids_dir.getListStation('id', 'station_name', cars_detali.lang, function (i) { return !i.station_uz && i.station_delete === null })),
                     null,
                     id ? Number(id) : -1,
                     function (event) {
@@ -8079,7 +8079,7 @@
                                         // укажем следующий номер
                                         pn_arrival_sostav.arrival_sostav_num_sheet.val(Number(current_num) + 1);
                                         // Определим список путей для станции
-                                        var list_ways = pn_arrival_sostav.ids_inc.ids_dir.getListWays2TextOfAray(station.Directory_Ways, 'id', 'way_num', 'way_name', pn_arrival_sostav.lang, null);
+                                        var list_ways = pn_arrival_sostav.ids_inc.ids_dir.getListWays2TextOfAray(station.Directory_Ways, 'id', 'way_num', 'way_name', pn_arrival_sostav.lang, function (i) { return !i.way_delete});
                                         // Пересоздадим компонент выбора путей
                                         pn_arrival_sostav.arrival_sostav_way_on = cd_initSelect(
                                             pn_arrival_sostav.arrival_sostav_way_on,

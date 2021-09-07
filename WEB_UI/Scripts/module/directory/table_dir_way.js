@@ -351,7 +351,7 @@
         this.load_db(['station', 'ways', 'park_ways', 'divisions'], false, function (result) {
             // Определим списки для полей
             // Получим список станций для отображения
-            this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false ? true : false; });
+            this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false && i.station_delete === null; });
             // Функция получения списка парков по указаной станции
             var get_list_park = function (id_statation) {
                 this.list_park_ways = this.ids_dir.getListParkWays('id', 'park_name', App.Lang);
@@ -1189,7 +1189,7 @@
         if (list) {
             if ($.inArray("station", list) >= 0) {
                 //Обновился
-                this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false ? true : false; });
+                this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false && i.station_delete === null; });
                 this.modal_edit_form.update_list_fields_form('id_station', this.list_station);
 
             };

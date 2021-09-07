@@ -1356,7 +1356,7 @@
 
         table_ways_park_state.init();
         table_wagon_park_state.init();
-        var list_station = ids_inc.ids_dir.getListStation('id', 'station_name', lang, function (i) { return i.station_uz === false && i.id !== 99 ? true : false; });
+        var list_station = ids_inc.ids_dir.getListStation('id', 'station_name', lang, function (i) { return i.station_uz === false && i.id !== 99 && i.station_delete === null; });
         pn_select.init(lang, list_station);
         // Инициализация окна править группу ограничений
         LockScreenOff();
