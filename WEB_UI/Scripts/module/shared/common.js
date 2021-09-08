@@ -478,7 +478,33 @@
         this.$select = select.$select;
         this.$element = div.$div.append($label).append(this.$select);
     };
+    // Элемент <form class="">
+    form_control.prototype.el_form = function (id, cl_form) {
+        this.$form = $('<form></form>', {
+            'class': cl_form,
+            'id': id
+        });
+    };
+    // Элемент список для формы <form class="form-inline">
+    //<div class="form-group">
+    //    <label class="col-form-label-.. mr-2" for="">...</label>
+    //    <select class="form-control-.." id="" name="" required></select>
+    //</div>
+    form_control.prototype.el_form_select = function (id, prefix, title) {
+        var FC = App.form_control;
+        var fc = new FC();
 
+        var div = new fc.el_div_form_group();
+        var $label = $('<label></label>', {
+            'class': (prefix ? '-' + prefix + ' ' : ' ') + 'mb-1',
+            'for': id,
+            'text': title
+        });
+        //
+        var select = new fc.el_select(prefix, id, true);
+        this.$select = select.$select;
+        this.$element = div.$div.append($label).append(this.$select);
+    };
     //--------------------------------------------------------------------
     // Элемент CARD
     form_control.prototype.el_card = function (cl_card, cl_header, cl_body, title) {
@@ -525,7 +551,7 @@
     //
     App.form_control = form_control;
 
-    // Конструктор формы 
+    // Конструктор формы с элементами по вертикали
     function form_inline() {
         this.fc = new form_control();
     }
@@ -593,6 +619,73 @@
 
     App.form_inline = form_inline;
 
+    // Конструктор формы с элементами по горизонтали
+    function form_infield() {
+        this.fc = new form_control();
+    }
+    // Инициализация формы
+    form_infield.prototype.init = function (options) {
+        // Настройки формы правки строк таблицы
+        this.settings = $.extend({
+            fields: [],
+            id: '',
+            cl_form: '',
+        }, options);
+        var form = new this.fc.el_form(this.settings.id, this.settings.cl_form + ' text-left');
+        this.$form = form.$form;
+        this.el_destroy = []; // Элементы которые нужно удалить
+        // создадим поля
+        $.each(this.settings.fields, function (i, el) {
+            if (el.type === 'interval_date') {
+                var element = new this.fc.el_form_inline_interval_date(el.id, el.prefix);
+                if (element && element.$element && element.$element.length > 0) {
+                    this.$form.append(element.$element);
+                    el['element'] = new this.fc.init_datetime_range(element.$span, el.start, el.stop, el.select);
+                    this.el_destroy.push(el['element']); // Этот эемент нужно удалить из HTML формы
+                }
+            };
+            if (el.type === 'select') {
+                var element = new this.fc.el_form_select(el.id, el.prefix, el.title);
+                if (element && element.$element && element.$element.length > 0) {
+                    this.$form.append(element.$element);
+                    el['element'] = new this.fc.init_select(element.$select, el.list, -1, null, el.select);
+                }
+            };
+            if (el.type === 'button') {
+                //var element = function (prefix, cl_bt, id, title, icon)
+                var element = new this.fc.el_button(el.prefix, 'btn-primary ml-2', el.id, el.title, el.icon);
+                if (element && element.$button && element.$button.length > 0) {
+                    this.$form.append(element.$button);
+                    el['element'] = new this.fc.init_button(element.$button, el.select);
+                }
+            };
+        }.bind(this));
+    };
+    // Получить значения выбоа
+    form_infield.prototype.get_value = function () {
+        var result = {};
+        $.each(this.settings.fields, function (i, el) {
+            if (el.type === 'interval_date' && el.element) {
+                result[el.id] = el.element.val();
+            }
+            if (el.type === 'select' && el.element) {
+                result[el.id] = el.element.val();
+            }
+        }.bind(this));
+        return result;
+    };
+    // Удаление формы
+    form_infield.prototype.destroy = function () {
+        $.each(this.el_destroy, function (i, el) {
+            el.destroy();
+        }.bind(this));
+        if (this.$form && this.$form.length > 0) {
+            this.$form.remove();
+            this.$form = null;
+        }
+    };
+
+    App.form_infield = form_infield;
 
     window.App = App;
 

@@ -15,10 +15,11 @@
             'card_header_on': 'ОТПРАВИТЬ НА СТАНЦИЮ',
             'card_header_from': 'ОТПРАВИТЬ СО СТАНЦИ',
             'fieldset_on_table_title': 'Сформированный состав',
-
+            'title_label_station': 'Станция отправления:',
+            'title_label_way': 'Путь отправления:',
 
             'title_label_date': 'ПЕРИОД :',
-            'title_label_station': 'СТАНЦИЯ ОТПРАВЛЕНИЯ:',
+
 
             'field_id': 'id строки',
             'field_operation_end': 'Отправлен',
@@ -61,7 +62,7 @@
     var directory = App.ids_directory;
     // Модуль инициализаии компонентов формы
     var FC = App.form_control;
-    var FIL = App.form_inline;
+    var FIF = App.form_infield;
 
 
     // создадим основу формы
@@ -69,26 +70,35 @@
         var row = new base.fc_ui.el_row();
         var col = new base.fc_ui.el_col('xl', 12);
         var card_panel = new base.fc_ui.el_card('border-secondary mb-1', '', '', langView('card_header_panel', App.Langs));
-        var row_on  = new base.fc_ui.el_row();
-        var col_on  = new base.fc_ui.el_col('xl', 12);
+        var row_on = new base.fc_ui.el_row();
+        var col_on = new base.fc_ui.el_col('xl', 12);
         var card_on = new base.fc_ui.el_card('border-primary', 'text-left', 'p-2', langView('card_header_on', App.Langs));
-        var row_from  = new base.fc_ui.el_row();
-        var col_from  = new base.fc_ui.el_col('xl', 12);
+        var row_from = new base.fc_ui.el_row();
+        var col_from = new base.fc_ui.el_col('xl', 12);
         var card_from = new base.fc_ui.el_card('border-primary', 'text-left', 'p-2', langView('card_header_from', App.Langs));
 
         var fieldset_on_setup = new base.fc_ui.el_fieldset('border-primary', 'border-primary', null);
-        this.setup_on = fieldset_on_setup.$fieldset;
-        var fieldset_on_table = new base.fc_ui.el_fieldset('border-primary', 'border-primary', langView('fieldset_on_table_title', App.Langs));
-        this.table_on = fieldset_on_table.$fieldset;
+        this.$setup_on = fieldset_on_setup.$fieldset;
+        var fieldset_on_table = new base.fc_ui.el_fieldset('border-primary', 'border-primary', null);//langView('fieldset_on_table_title', App.Langs)
+        this.$table_on = fieldset_on_table.$fieldset;
+
+        var fieldset_from_setup = new base.fc_ui.el_fieldset('border-primary', 'border-primary', null);
+        this.$setup_from = fieldset_from_setup.$fieldset;
+        var fieldset_from_table = new base.fc_ui.el_fieldset('border-primary', 'border-primary', null);//langView('fieldset_on_table_title', App.Langs)
+        this.$table_from = fieldset_from_table.$fieldset;
 
         var row_on_body = new base.fc_ui.el_row();
         var col_on_setup = new base.fc_ui.el_col('xl', 3);
         var col_on_table = new base.fc_ui.el_col('xl', 9);
-        row_on_body.$row.append(col_on_setup.$col.append(this.setup_on)).append(col_on_table.$col.append(this.table_on));
+        row_on_body.$row.append(col_on_setup.$col.append(this.$setup_on)).append(col_on_table.$col.append(this.$table_on));
 
+        var row_from_body = new base.fc_ui.el_row();
+        var col_from_setup = new base.fc_ui.el_col('xl', 3);
+        var col_from_table = new base.fc_ui.el_col('xl', 9);
+        row_from_body.$row.append(col_from_setup.$col.append(this.$setup_from)).append(col_from_table.$col.append(this.$table_from));
 
-
-        card_on.$body.append(row_on_body.$row);
+        card_on.$body.append(row_on_body.$row)
+        card_from.$body.append(row_from_body.$row);
 
         row_on.$row.append(col_on.$col.append(card_on.$card));
         row_from.$row.append(col_from.$col.append(card_from.$card));
@@ -99,6 +109,17 @@
 
         card_panel.$body.append(row_on.$row).append(row_from.$row);
         this.$element = row.$row.append(col.$col.append(card_panel.$card));
+    };
+    // Получить список парков по станции
+    var get_list_way = function (id_station) {
+        var ways = [];
+        var list_way = this.ids_dir.list_ways.filter(function (i) {
+            return i.id_station == id_station && !i.way_delete;
+        }.bind(this))
+        if (list_way) {
+            ways = this.ids_dir.getListObj2(list_way, 'id', 'way_num', 'way_name', App.Lang, null);
+        }
+        return ways
     };
     // Перечень полей
     var list_collums = [
@@ -284,6 +305,10 @@
         // Создать макет панели
         var panelElement = new div_panel(this);
         this.$panel.empty();
+        this.$setup_on = panelElement.$setup_on;
+        this.$setup_from = panelElement.$setup_from;
+        this.$table_on = panelElement.$table_on;
+        this.$table_from = panelElement.$table_from;
         //this.$operation_header = panelElement.$operation_header;
         //this.$operation_body = panelElement.$operation_body;
         this.$panel.append(panelElement.$element);
@@ -385,11 +410,12 @@
         //    }
         //}.bind(this));
         // Загрузим справочные данные, определим поля формы правки
-        this.load_db(['station'], false, function (result) {
+        this.load_db(['station', 'way'], false, function (result) {
             // Подгрузили списки
             this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false && i.station_delete === null; });
+
             // Создадим форму выбора для отчета
-            //this.form_panel = new FIL();
+            this.form_panel = new FIF();
             //var fl_interval_date = {
             //    type: 'interval_date',
             //    id: 'select_date',
@@ -403,24 +429,39 @@
             //        }
             //    }.bind(this),
             //};
-            //var fl_station = {
-            //    type: 'select',
-            //    id: 'station',
-            //    prefix: 'sm',
-            //    title: langView('title_label_station', App.Langs),
-            //    list: this.list_station,
-            //    select: function (e, ui) {
-            //        event.preventDefault();
-            //        // Обработать выбор
-            //        var id = Number($(e.currentTarget).val());
-            //        this.id_station = id;
-            //        this.view(this.operation);
-            //    }.bind(this),
-            //};
+            var fl_station = {
+                type: 'select',
+                id: 'station',
+                prefix: '',
+                title: langView('title_label_station', App.Langs),
+                list: this.list_station,
+                select: function (e, ui) {
+                    event.preventDefault();
+                    // Обработать выбор
+                    var id = Number($(e.currentTarget).val());
+                    var list = get_list_way(id)
+                    this.id_station = id;
+                    //this.view(this.operation);
+                }.bind(this),
+            };
+            var fl_way = {
+                type: 'select',
+                id: 'way',
+                prefix: '',
+                title: langView('title_label_way', App.Langs),
+                list: [],
+                select: function (e, ui) {
+                    event.preventDefault();
+                    // Обработать выбор
+                    //var id = Number($(e.currentTarget).val());
+                    //this.id_station = id;
+                    //this.view(this.operation);
+                }.bind(this),
+            };
             //var fl_refresh = {
             //    type: 'button',
             //    id: 'refresh',
-            //    prefix: 'sm',
+            //    prefix: '',
             //    title: null,
             //    icon: 'fas fa-retweet',
             //    select: function (e, ui) {
@@ -428,16 +469,16 @@
             //        this.update();
             //    }.bind(this),
             //};
-            //var fields = [];
+            var fields = [];
             //fields.push(fl_interval_date);
-            //fields.push(fl_station);
-            //fields.push(fl_refresh);
+            fields.push(fl_station);
+            fields.push(fl_way);
             //// Инициализация формы
-            //this.form_panel.init({
-            //    fields: fields
-            //});
+            this.form_panel.init({
+                fields: fields
+            });
             // Отображение формы
-            //this.$operation_header.append(this.form_panel.$form);
+            this.$setup_from.append(this.form_panel.$form);
 
             // Загрузить и вывести информацию если стоит признак
             if (this.settings.auto_load) {
