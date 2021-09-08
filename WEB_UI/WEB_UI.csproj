@@ -2087,6 +2087,7 @@
     <Content Include="Scripts\module\table_wir_detali.js" />
     <Content Include="Scripts\module\table_wir.js" />
     <Content Include="Scripts\module\table_arrival.js" />
+    <Content Include="Scripts\module\wsd\operation_arrival.js" />
     <Content Include="Scripts\module\wsd\operation_send.js" />
     <Content Include="Scripts\module\wsd\table_cars_operation.js" />
     <Content Include="Scripts\moment-with-locales.js" />
