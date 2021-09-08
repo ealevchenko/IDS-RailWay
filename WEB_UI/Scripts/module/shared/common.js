@@ -497,6 +497,22 @@
 
         this.$card = $card.append(this.$header).append(this.$body);
     };
+    //--------------------------------------------------------------------
+    // Элемент fieldset
+    form_control.prototype.el_fieldset = function (cl_fieldset, cl_legend, legend) {
+        var $fieldset = $('<fieldset></fieldset>', {
+            'class': cl_fieldset,
+        });
+        if (legend) {
+            this.$legend = $('<legend></legend>', {
+                'class': cl_legend,
+                'text': legend
+            });
+            $fieldset.append(this.$legend);
+        }
+
+        this.$fieldset = $fieldset;
+    };
     // Элемент TABLE
     form_control.prototype.el_table = function (id, cl_table) {
         var $table = $('<table></table>', {
