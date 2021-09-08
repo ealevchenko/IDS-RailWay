@@ -154,9 +154,6 @@ select * from [IDS].[get_view_wagons_of_operation](@start,@stop,@id_operation) o
       --,outer_ways.[id_way_on]
       --,outer_ways.[side_on]
       --,outer_ways.[exit_uz]
-
-
-	--INTO operation_send
 	FROM IDS.WagonInternalOperation as wio  INNER JOIN
 	[IDS].[Directory_WagonOperations] as dir_wag_oper ON wio.id_operation = dir_wag_oper.id Left JOIN			-- Справочни Операций над вагонами
 	[IDS].[Directory_ConditionArrival] as dir_cond_arr ON wio.[id_condition] = dir_cond_arr.id Left JOIN		-- Справочни Состояние 
@@ -182,7 +179,7 @@ select * from [IDS].[get_view_wagons_of_operation](@start,@stop,@id_operation) o
 	IDS.Directory_Cargo as arr_dir_cargo ON ar_doc_vag.id_cargo =  arr_dir_cargo.id Left JOIN				--> Груз по прибытию
 	IDS.Directory_CargoGroup as arr_dir_group_cargo ON arr_dir_cargo.id_group =  arr_dir_group_cargo.id --Left JOIN               --> Группа груза по прибытию
 
-	WHERE wio.id_operation = @id_operation and wio.operation_start >= @start and wio.operation_start <= @stop and wim.[outer_way_end] is null
+	WHERE wio.id_operation = @id_operation and wio.operation_start >= @start and wio.operation_start <= @stop 
 	order by wio.operation_start desc, wim.id_outer_way, wim.[position]
 
 	--select count(id) FROM IDS.WagonInternalOperation as wio
