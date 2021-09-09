@@ -794,7 +794,7 @@
     ids_directory.prototype.getListWays = function (fvalue, ftext, lang, filter) {
         return this.getListObj(this.list_ways, fvalue, ftext, lang, filter);
     };
-    IDS_DIRECTORY.prototype.getListWays2 = function (fvalue, ftext1, ftext2, lang, filter) {
+    ids_directory.prototype.getListWays2 = function (fvalue, ftext1, ftext2, lang, filter) {
         return this.getListObj2(this.list_ways, fvalue, ftext1, ftext2, lang, filter);
     };
 
