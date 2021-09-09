@@ -52,15 +52,15 @@
 
     // После загрузки документа
     $(document).ready(function ($) {
-        oper_send.init({
-            alert: alert,
-            ids_dir: ids_dir,
-            ids_wsd: ids_wsd,
-        },
-            function () {
-                // Инициализация закончилась
-                tab_car_oper.init({ alert: alert });
-            });
+        //oper_send.init({
+        //    alert: alert,
+        //    ids_dir: ids_dir,
+        //    ids_wsd: ids_wsd,
+        //},
+        //    function () {
+        //        // Инициализация закончилась
+        //        tab_car_oper.init({ alert: alert });
+        //    });
         LockScreenOff();
 
     });
