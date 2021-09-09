@@ -270,8 +270,9 @@
                     ids_wsd: ids_wsd,
                 },
                     function () {
-                        oper_send.show() // Инициализировать и спрятать
+                        view_send_cars.view(current_id_way) // Показать
                         operation_detali.content.addClass('is-visible');
+
                         //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
                     });
             }),

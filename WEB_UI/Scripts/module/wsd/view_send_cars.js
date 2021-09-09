@@ -16,7 +16,9 @@
             'card_header_from': 'ОТПРАВИТЬ СО СТАНЦИ',
             'fieldset_on_table_title': 'Сформированный состав',
             'title_label_station': 'Станция отправления:',
+            'title_placeholder_station': 'Станция отправления:',
             'title_label_way': 'Путь отправления:',
+            'title_placeholder_way': 'Выберите станцию',
 
             'title_label_date': 'ПЕРИОД :',
 
@@ -63,18 +65,19 @@
     // Модуль инициализаии компонентов формы
     var FC = App.form_control;
     var FIF = App.form_infield;
+    var TCWay = App.table_cars_way;
 
 
     // создадим основу формы
     function div_panel(base) {
         var row = new base.fc_ui.el_row();
-        var col = new base.fc_ui.el_col('xl', 12);
+        var col = new base.fc_ui.el_col('xl', 12, 'mb-1 mt-1');
         var card_panel = new base.fc_ui.el_card('border-secondary mb-1', '', '', langView('card_header_panel', App.Langs));
         var row_on = new base.fc_ui.el_row();
-        var col_on = new base.fc_ui.el_col('xl', 12);
+        var col_on = new base.fc_ui.el_col('xl', 12, 'mb-1 mt-1');
         var card_on = new base.fc_ui.el_card('border-primary', 'text-left', 'p-2', langView('card_header_on', App.Langs));
         var row_from = new base.fc_ui.el_row();
-        var col_from = new base.fc_ui.el_col('xl', 12);
+        var col_from = new base.fc_ui.el_col('xl', 12, 'mb-1 mt-1');
         var card_from = new base.fc_ui.el_card('border-primary', 'text-left', 'p-2', langView('card_header_from', App.Langs));
 
         var fieldset_on_setup = new base.fc_ui.el_fieldset('border-primary', 'border-primary', null);
@@ -88,13 +91,13 @@
         this.$table_from = fieldset_from_table.$fieldset;
 
         var row_on_body = new base.fc_ui.el_row();
-        var col_on_setup = new base.fc_ui.el_col('xl', 3);
-        var col_on_table = new base.fc_ui.el_col('xl', 9);
+        var col_on_setup = new base.fc_ui.el_col('xl', 3, 'mb-1 mt-1');
+        var col_on_table = new base.fc_ui.el_col('xl', 9, 'mb-1 mt-1');
         row_on_body.$row.append(col_on_setup.$col.append(this.$setup_on)).append(col_on_table.$col.append(this.$table_on));
 
         var row_from_body = new base.fc_ui.el_row();
-        var col_from_setup = new base.fc_ui.el_col('xl', 3);
-        var col_from_table = new base.fc_ui.el_col('xl', 9);
+        var col_from_setup = new base.fc_ui.el_col('xl', 3, 'mb-1 mt-1');
+        var col_from_table = new base.fc_ui.el_col('xl', 9, 'mb-1 mt-1');
         row_from_body.$row.append(col_from_setup.$col.append(this.$setup_from)).append(col_from_table.$col.append(this.$table_from));
 
         card_on.$body.append(row_on_body.$row)
@@ -102,10 +105,6 @@
 
         row_on.$row.append(col_on.$col.append(card_on.$card));
         row_from.$row.append(col_from.$col.append(card_from.$card));
-
-        //var card_operation = new base.fc_ui.el_card('border-primary', null, 'text-dark pl-3 pr-3 table-directory', null);
-        //this.$operation_header = card_operation.$header;
-        //this.$operation_body = card_operation.$body;
 
         card_panel.$body.append(row_on.$row).append(row_from.$row);
         this.$element = row.$row.append(col.$col.append(card_panel.$card));
@@ -294,11 +293,13 @@
         this.ids_dir = this.settings.ids_dir ? this.settings.ids_dir : new directory();
         this.ids_wsd = this.settings.ids_wsd ? this.settings.ids_wsd : new wsd();
 
-        this.id_station = -1; // По умолчанию не выбрана
-        // список операций
-        this.operation = null;
+        this.id_station = -1;   // По умолчанию не выбрана
+        this.id_way = -1;       // По умолчанию не выбрана
+        this.list_station = []; // По умолчанию пустой список
+        this.list_way = [];     // По умолчанию пустой список
+
         // Выбраная строка
-        this.select_row_sostav = null;
+        /*this.select_row_sostav = null;*/
         // Сообщение
         LockScreen(langView('mess_init_panel', App.Langs));
         //----------------------------------
@@ -314,177 +315,92 @@
         this.$panel.append(panelElement.$element);
 
         // Создадим и добавим макет таблицы
-        //var table_sostav = new this.fc_ui.el_table('tab-sostav-' + this.selector, 'display compact cell-border row-border hover');
-        //this.$table_sostav = table_sostav.$element;
-        //this.$operation_body.addClass('table-report-operation').append(this.$table_sostav);
-        //// Инициализируем таблицу
-        //this.obj_t_sostav = this.$table_sostav.DataTable({
-        //    "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "All"]],
-        //    "paging": true,
-        //    "searching": true,
-        //    "ordering": true,
-        //    "info": true,
-        //    "keys": true,
-        //    select: true,
-        //    "autoWidth": true,
-        //    //"filter": true,
-        //    //"scrollY": "600px",
-        //    sScrollX: "100%",
-        //    scrollX: true,
-        //    //"responsive": true,
-        //    //"bAutoWidth": false,
-        //    language: language_table(App.Langs),
-        //    jQueryUI: false,
-        //    "createdRow": function (row, data, index) {
-        //        $(row).attr('id', data.id);
-        //        // Приняли
-        //        if (data.count_wagon_send == data.count_wagon_arrival) {
-        //            $(row).addClass('green');
-        //        }
-        //        if (data.count_wagon_send != data.count_wagon_arrival && data.count_wagon_arrival > 0) {
-        //            $(row)
-        //        }
-        //        // Проверка на создание строки (ошибка если дата строки создания и выполнения операции больше часа )
-        //        var create = moment(data.operation_create);
-        //        var operat = moment(data.operation_end);
-        //        if (create && operat && create.isValid() && operat.isValid()) {
-        //            var hour = create.diff(operat, 'hours');
-        //            if (hour >= 1 || hour <= -1) {
-        //                $('td', row).eq(10).addClass('error');
-        //            }
-        //        }
-        //    }.bind(this),
-        //    columns: this.init_columns(),
-        //    dom: 'Bfrtip',
-        //    stateSave: false,
-        //    buttons: [
-        //        {
-        //            extend: 'collection',
-        //            text: langView('title_button_export', App.Langs),
-        //            buttons: [
-        //                {
-        //                    text: langView('title_button_buffer', App.Langs),
-        //                    extend: 'copyHtml5',
-        //                },
-        //                {
-        //                    text: langView('title_button_excel', App.Langs),
-        //                    extend: 'excelHtml5',
-        //                    sheetName: 'Вагоны на пути',
-        //                    messageTop: function () {
-        //                        return '';
-        //                    }
-        //                },
-        //            ],
-        //            autoClose: true
-        //        },
-        //        {
-        //            text: langView('title_button_cancel', App.Langs),
-        //            action: function (e, dt, node, config) {
 
-        //            }.bind(this),
-        //            enabled: false,
-        //        },
-        //        {
-        //            text: langView('title_button_return', App.Langs),
-        //            action: function (e, dt, node, config) {
-
-        //            }.bind(this),
-        //            enabled: false
-        //        },
-        //        {
-        //            extend: 'pageLength',
-        //        }
-
-        //    ]
-        //}).on('select deselect', function (e, dt, type, indexes) {
-        //    var selected = this.obj_t_sostav.rows({ selected: true })[0].length > 0 ? true : false;
-        //    var row = this.obj_t_sostav.rows(indexes).data().toArray()[0];
-        //    if (selected) {
-        //        this.obj_t_sostav.button(1).enable(!(row && row.count_wagon_send === row.count_wagon_arrival));
-        //        this.obj_t_sostav.button(2).enable(!(row && row.count_wagon_send === row.count_wagon_arrival));
-        //        this.select_row_sostav = row;
-        //    } else {
-        //        this.obj_t_sostav.button(1).enable(false);
-        //        this.obj_t_sostav.button(2).enable(false);
-        //        this.select_row_sostav = null;
-        //    }
-        //}.bind(this));
         // Загрузим справочные данные, определим поля формы правки
-        this.load_db(['station', 'way'], false, function (result) {
+        this.load_db(['station', 'ways'], false, function (result) {
             // Подгрузили списки
             this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false && i.station_delete === null; });
 
-            // Создадим форму выбора для отчета
+            // Создадим форму выбора пути отправки
             this.form_panel = new FIF();
-            //var fl_interval_date = {
-            //    type: 'interval_date',
-            //    id: 'select_date',
-            //    prefix: 'sm',
-            //    title: langView('title_label_date', App.Langs),
-            //    start: this.start,
-            //    stop: this.stop,
-            //    select: function (interval) {
-            //        if (interval && interval.start && interval.stop) {
-            //            this.load_operation(moment(interval.start)._d, moment(interval.stop)._d);
-            //        }
-            //    }.bind(this),
-            //};
             var fl_station = {
                 type: 'select',
-                id: 'station',
-                prefix: '',
-                title: langView('title_label_station', App.Langs),
+                name: 'station',
+                prefix: 'sm', //'sm','','lg'
+                label: langView('title_label_station', App.Langs),
+                placeholder: langView('title_placeholder_station', App.Langs),
+                maxlength: null,
+                required: true,
+                control: null,
                 list: this.list_station,
                 select: function (e, ui) {
                     event.preventDefault();
                     // Обработать выбор
                     var id = Number($(e.currentTarget).val());
-                    var list = get_list_way(id)
-                    this.id_station = id;
-                    //this.view(this.operation);
+                    this.list_way = get_list_way.call(this, id);
+                    // Обновим компонент
+                    this.form_panel.update_list_element('way', this.list_way, this.id_way);
                 }.bind(this),
+                update: null,
+                close: null,
+                default: -1,
+                row: 1,
+                col: 1,
+                col_prefix: 'md',
+                col_size: 12,
             };
             var fl_way = {
                 type: 'select',
-                id: 'way',
-                prefix: '',
-                title: langView('title_label_way', App.Langs),
-                list: [],
+                name: 'way',
+                prefix: 'sm',
+                label: langView('title_label_way', App.Langs),
+                placeholder: langView('title_placeholder_way', App.Langs),
+                maxlength: null,
+                required: true,
+                control: null,
+                list: this.list_way,
                 select: function (e, ui) {
                     event.preventDefault();
                     // Обработать выбор
-                    //var id = Number($(e.currentTarget).val());
+                    var id = Number($(e.currentTarget).val());
                     //this.id_station = id;
                     //this.view(this.operation);
                 }.bind(this),
+                update: null,
+                close: null,
+                default: -1,
+                row: 2,
+                col: 1,
+                col_prefix: 'md',
+                col_size: 12,
             };
-            //var fl_refresh = {
-            //    type: 'button',
-            //    id: 'refresh',
-            //    prefix: '',
-            //    title: null,
-            //    icon: 'fas fa-retweet',
-            //    select: function (e, ui) {
-            //        event.preventDefault();
-            //        this.update();
-            //    }.bind(this),
-            //};
             var fields = [];
             //fields.push(fl_interval_date);
             fields.push(fl_station);
             fields.push(fl_way);
             //// Инициализация формы
             this.form_panel.init({
-                fields: fields
+                fields: fields,
+                mb: 2,
+                id: null,
+                cl_form: '',
+                validation: true
             });
             // Отображение формы
             this.$setup_from.append(this.form_panel.$form);
+            // 
+            var $div_table_from = $('<div></div>', {
+                'id': 'table-from-' + this.selector,
+            });
+            if ($div_table_from && $div_table_from.length > 0) {
+                this.$table_from.append($div_table_from);
+                this.tab_cars_on = new TCWay('div#table-from-' + this.selector);
+                this.tab_cars_on.init({
+                    alert: this.settings.alert,
+                }, function () {
 
-            // Загрузить и вывести информацию если стоит признак
-            if (this.settings.auto_load) {
-                this.load_default();
-            }
-
+                });
+            };
             //----------------------------------
             if (typeof fn_init_ok === 'function') {
                 fn_init_ok();
@@ -493,21 +409,34 @@
         }.bind(this));
     };
     // Показать данные 
-    view_send_cars.prototype.view = function (operation) {
+    view_send_cars.prototype.view = function (id_way) {
         // Если указана станция выполним коррекцию по станции
         LockScreen(langView('mess_load_operation', App.Langs));
-        if (this.id_station && this.id_station >= 0) {
-            var operation = operation.filter(function (i) {
-                return i.from_id_station === this.id_station;
-            }.bind(this));
+        if (id_way) {
+            this.id_way = id_way;
+            var way = this.ids_dir.getWays_Of_ID(id_way);
+            if (way) {
+                this.id_station = way.id_station;
+                this.form_panel.val('station', this.id_station);
+                this.list_way = get_list_way.call(this, this.id_station);
+                // Обновим компонент
+                this.form_panel.update_list_element('way', this.list_way, this.id_way);
+            }
+
+
         }
-        this.obj_t_sostav.clear();
-        this.obj_t_sostav.rows.add(operation ? operation : []);
-        this.obj_t_sostav.order([0, 'asc']);
-        if (this.select_row_sostav !== null) {
-            this.obj_t_sostav.row('#' + this.select_row_sostav.id).select();
-        }
-        this.obj_t_sostav.draw();
+        //if (this.id_station && this.id_station >= 0) {
+        //    var operation = operation.filter(function (i) {
+        //        return i.from_id_station === this.id_station;
+        //    }.bind(this));
+        //}
+        //this.obj_t_sostav.clear();
+        //this.obj_t_sostav.rows.add(operation ? operation : []);
+        //this.obj_t_sostav.order([0, 'asc']);
+        //if (this.select_row_sostav !== null) {
+        //    this.obj_t_sostav.row('#' + this.select_row_sostav.id).select();
+        //}
+        //this.obj_t_sostav.draw();
         LockScreenOff();
     };
     // загрузить данные 
