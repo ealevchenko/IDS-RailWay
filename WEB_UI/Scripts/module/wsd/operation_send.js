@@ -98,7 +98,7 @@
     // создадим основу формы
     function div_panel(base) {
         var row = new base.fc_ui.el_row();
-        var col = new base.fc_ui.el_col('xl', 12);
+        var col = new base.fc_ui.el_col('xl', 12, 'mb-1 mt-1');
         var card_panel = new base.fc_ui.el_card('border-secondary mb-1', null, null, langView('card_header_panel', App.Langs));
         var card_operation = new base.fc_ui.el_card('border-primary', null, 'text-dark pl-3 pr-3 table-directory', null);
         this.$operation_header = card_operation.$header;
