@@ -1,6 +1,8 @@
 use [KRR-PA-CNT-Railway]
 
-declare @id_way int =214--112;
+declare @id_way int =107--214--112;
+
+select * from [IDS].[get_view_wagons_of_id_way](@id_way)
 
 select wir.id as wir_id
 	,wim.id as wim_id
@@ -61,10 +63,6 @@ select wir.id as wir_id
 	--> Грузоподъемность
 	,arr_doc_vag.gruzp as wagon_gruzp_doc
 	,dir_wagon.gruzp as wagon_gruzp_uz
-	--> Тара
-	,arr_doc_vag.u_tara as wagon_tara_doc
-	,arr_doc_vag.ves_tary_arc as wagon_tara_arc_doc
-	,dir_wagon.tara as wagon_tara_uz
 	--> груз по прибытию
 	,arr_dir_group_cargo.cargo_group_name_ru as arrival_cargo_group_name_ru
 	,arr_dir_group_cargo.cargo_group_name_en as arrival_cargo_group_name_en
@@ -138,20 +136,33 @@ select wir.id as wir_id
 	,let_station_uz.station as instructional_letters_station_name
 	,il.[note] as instructional_letters_note
 	--=============== ВХОДЯЩЕЕ ВЗВЕШИВАНИЕ ==================
-	--> ....
+	--> Брутто
+	,wagon_brutto_doc = (CASE WHEN arr_doc_vag.ves_tary_arc is not null AND arr_doc_vag.vesg is not null THEN arr_doc_vag.ves_tary_arc+arr_doc_vag.vesg ELSE null END)	--Брутто по ЭПД, тн
+	,wagon_brutto_amkr = 0
+	--> Тара
+	,arr_doc_vag.u_tara as wagon_tara_doc
+	,dir_wagon.tara as wagon_tara_uz
+	,arr_doc_vag.ves_tary_arc as wagon_tara_arc_doc		--Тара по ЭПД, тн.
+	--> Вес груза (Нетто)	
+	,arr_doc_vag.vesg as wagon_vesg_doc					--Нетто по ЭПД, тн
+	,wagon_vesg_amkr = 0
+	--> Вес груза (Разница)		
+	,diff_vesg = 0
 	--=============== ОСТАЛЬНОЕ ==================
-	,wir.doc_outgoing_car as doc_outgoing_car -- Наличие документа для сдачи
-	,arr_doc_uz.[nom_doc] as arrival_nom_main_doc -- Номер документа(досылки)
-	,arr_doc_uz.[nom_main_doc] as arrival_nom_main_doc -- Номер основного документа (если заполнен)
+	,wir.doc_outgoing_car as doc_outgoing_car				-- Наличие документа для сдачи
+	,arr_doc_uz.[nom_doc] as arrival_nom_doc			-- Номер документа(досылки)
+	,arr_doc_uz.[nom_main_doc] as arrival_nom_main_doc		-- Номер основного документа (если заполнен)
 	,arr_sost.composition_index as arrival_composition_index
-	,arr_sost.date_adoption as arrival_date_adoption -- дата приема
-	
-	,out_sost.date_outgoing as outgoing_date -- дата отправки
-	,out_sost.status as outgoing_sostav_status -- дата отправки
-	,dir_wagon.note as wagon_ban_uz
-	,dir_wagon.[closed_route] as wagon_closed_route
-	,wir.note as wir_note -- Примечание по ходу движения вагона
-
+	,arr_sost.date_adoption as arrival_date_adoption		-- дата приема
+	,out_car.[id_outgoing_return_start] as outgoing_id_return
+	,dir_return.[cause_ru] as outgoing_return_cause_ru
+    ,dir_return.[cause_en] as outgoing_return_cause_en
+	,out_sost.date_outgoing as outgoing_date				-- дата отправки
+	,out_sost.status as outgoing_sostav_status				-- статус состава для отправки
+	,dir_wagon.note as wagon_ban_uz							-- Запреты по УЗ 
+	,dir_wagon.[closed_route] as wagon_closed_route			--Замкнутый маршрут (кольцо)
+	,wir.note as wir_note									-- Примечание по ходу движения вагона
+	--into wagons
 FROM IDS.WagonInternalMovement as wim	--> Текущая дислокаци
 	--> Текущее внетренее перемещение
 	 INNER JOIN IDS.WagonInternalRoutes as wir ON wim.id_wagon_internal_routes = wir.id
@@ -215,7 +226,7 @@ FROM IDS.WagonInternalMovement as wim	--> Текущая дислокаци
 	--> Справочник Станции АМКР (станция назначения АМКР)
 	Left JOIN IDS.Directory_Station as arr_dir_station_amkr ON arr_doc_vag.id_station_on_amkr =  arr_dir_station_amkr.id
 	--> Справочник Станции АМКР (текущая станция АМКР)
-	Left JOIN IDS.Directory_Station as cur_dir_station_amkr ON wim.id_station =  arr_dir_station_amkr.id
+	Left JOIN IDS.Directory_Station as cur_dir_station_amkr ON wim.id_station =  cur_dir_station_amkr.id
 	--> Справочник Подразделения (цех получатель)
 	Left JOIN IDS.Directory_Divisions as arr_dir_division_amkr ON arr_doc_vag.id_division_on_amkr =  arr_dir_division_amkr.id
 	--> Справочник Операции над вагоном (текущая операция)
@@ -224,6 +235,7 @@ FROM IDS.WagonInternalMovement as wim	--> Текущая дислокаци
 	Left JOIN [IDS].[Directory_WagonLoadingStatus] as cur_load ON wio.id_loading_status = cur_load.id
 	--> Справочник Внешних станций УЗ
 	Left JOIN UZ.Directory_Stations as let_station_uz ON  il.destination_station = let_station_uz.code_cs
-
+	--> Справочник Возвратов
+	Left JOIN [IDS].[Directory_DetentionReturn] as dir_return ON out_car.id_outgoing_return_start = dir_return.id
 WHERE (wim.id_way = @id_way) AND (wim.way_end IS NULL)
 order by wim.position
