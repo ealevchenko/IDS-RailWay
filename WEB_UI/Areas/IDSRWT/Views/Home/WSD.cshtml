@@ -12,8 +12,8 @@
     <link href="~/Content/module/table_tree_way.css" rel="stylesheet" />
     <link href="~/Content/module/wsd/table_cars_operation.css" rel="stylesheet" /><!-- CSS стили модуля "Таблица вагонов по операциям детально" -->
     <link href="~/Content/module/wsd/operation_send.css" rel="stylesheet" /><!-- CSS стили модуля "Операции отправки вагонов на станции АМКР" -->
-
-
+    <link href="~/Content/module/wsd/table_cars_way.css" rel="stylesheet" /><!-- CSS стили модуля "Вагоны на выбранном пути" -->
+    <link href="~/Content/module/wsd/view_send_cars.css" rel="stylesheet" /><!-- CSS стили модуля "Окно выполнения операции отправки составов по АМКР" -->
 }
 
 @section scripts {
@@ -42,6 +42,9 @@
     <script src="~/Scripts/module/wsd/table_cars_operation.js"></script>    <!-- Модуль "Таблица вагонов по операциям детально" -->
     <script src="~/Scripts/module/wsd/operation_send.js"></script>          <!-- Модуль "Операции отправки вагонов на станции АМКР" -->
     <script src="~/Scripts/module/wsd/operation_arrival.js"></script>        <!-- Модуль "Операции g вагонов на станции АМКР" -->
+
+    <script src="~/Scripts/module/wsd/table_cars_way.js"></script>          <!-- Модуль "Вагоны на выбранном пути" -->
+    <script src="~/Scripts/module/wsd/view_send_cars.js"></script>          <!-- Модуль "Окно выполнения операции отправки составов по АМКР" -->
 
     <script src="~/Scripts/plugins/pl_dialog_confirm.js"></script> <!-- Плагин -->
 
@@ -105,6 +108,7 @@
                                         <div class="btn-group mr-2" role="group" aria-label="First group">
                                             <button type="button" class="btn btn-outline-secondary" title="Принять состав на станцию" id="arrival">Приб.</button>
                                             <button type="button" class="btn btn-outline-secondary" title="Отправить состав со станции" id="sending">Отпр.</button>
+                                            <button type="button" class="btn btn-outline-secondary" title="Отправить состав со станции" id="send-sars">Отпр1.</button>
                                             <button type="button" class="btn btn-outline-secondary" title="Дислокация вагонов по станции" id="dislocation">Дисл.</button>
                                             <button type="button" class="btn btn-outline-secondary" title="Роспуск вагонов" id="dissolution">Росп.</button>
                                             <button type="button" class="btn btn-outline-secondary" title="">Выгр.</button>
@@ -468,10 +472,10 @@
                                                                 <div class="invalid-feedback"></div>
                                                             </div>
                                                             @*<div class="col-xl-6 mb-1 text-left">
-                                                            <label for="operation_detali_sending_stop" class="col-form-label">@IDSRWTResource.title_operation_stop</label>
-                                                            <input type="datetime" class="form-control" id="operation_detali_sending_stop" name="operation_detali_sending_stop" />
-                                                            <div class="invalid-feedback"></div>
-                                                        </div>*@
+                                                                    <label for="operation_detali_sending_stop" class="col-form-label">@IDSRWTResource.title_operation_stop</label>
+                                                                    <input type="datetime" class="form-control" id="operation_detali_sending_stop" name="operation_detali_sending_stop" />
+                                                                    <div class="invalid-feedback"></div>
+                                                                </div>*@
                                                         </div>
                                                     </fieldset>
                                                 </div>
@@ -863,6 +867,10 @@
             <div id="rep-operation-arrival">
 
             </div>
+            <div id="operation-send-cars">
+
+            </div>
+
         </form>
         <a href="#0" class="close cd-img-replace">Close</a>
     </div>
