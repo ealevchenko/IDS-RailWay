@@ -1,4 +1,5 @@
-﻿(function (window) {
+﻿/*Модуль api-функций формы АРМ Диспетчера*/
+(function (window) {
     'use strict';
 
     var App = window.App || {};
@@ -34,6 +35,30 @@
     //****************************************************************************************
 
     //-------------------------------- Функции работы с БД через api ---------------
+    // Получить список вагонов на пути
+    ids_wsd.prototype.getViewWagonsOfWay = function (id, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wsd/view/vagons/way/id/' + id,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getViewWagonsOfWay", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //================= Операции =========================================================
     // Отчеты -> Операции "Отправка на станции АМКР"
     ids_wsd.prototype.getSostavWagonsOperationOfSend = function (start, stop, callback) {
         $.ajax({
