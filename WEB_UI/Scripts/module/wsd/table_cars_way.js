@@ -3,6 +3,10 @@
 
     var App = window.App || {};
     var $ = window.jQuery;
+
+    //var format_date = "DD.MM.YYYY HH:mm:ss";
+    var format_date = "YYYY-MM-DD";
+    var format_datetime = "YYYY-MM-DD HH:mm:ss";
     // Определим язык
     App.Lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang'));
 
@@ -24,9 +28,63 @@
             'field_operator_paid': 'Приз. платн.',
             'field_id_limiting_loading': 'id огран.',
             'field_limiting_name': 'Ограничение',
-            'field_limiting_abbr': 'Ограничение (аббр.)',
+            'field_limiting_abbr': 'Огран. (аббр.)',
+            'field_id_owner_wagon': 'id собст.',
+            'field_owner_wagon': 'Собственник по УЗ',
+            'field_owner_wagon_abbr': 'Собст. УЗ (аббр.)',
+            'field_wagon_rod': 'Род ваг.',
+            'field_wagon_rod_name': 'Род ваг.',
+            'field_wagon_rod_abbr': 'Род ваг.(аббр.)',
+            'field_wagon_type': 'Тип вагона',
+            'field_arrival_condition_name': 'Разметка (приб.)',
+            'field_arrival_condition_abbr': 'Разм.',
+            'field_arrival_condition_red': 'red',
+            'field_current_condition_name': 'Разметка (тек.)',
+            'field_current_condition_abbr': 'Разм. тек.',
+            'field_current_condition_red': 'red',
+            'field_wagon_date_rem_uz': 'Дата деповского ремонта по УЗ',
+            'field_wagon_gruzp_doc': 'Груз-ть, тн (док.)',
+            'field_wagon_gruzp_uz': 'Груз-ть, тн (УЗ.)',
+            'field_wagon_adm': 'Код адм.',
+            'field_wagon_adm_name': 'Администрация',
+            'field_wagon_adm_abbr': 'Админ.',
+            'field_arrival_cargo_group_name': 'Группа груза по прибытию',
+            'field_arrival_cargo_name': 'Груз по прибытию ',
+            'field_arrival_id_sertification_data': 'id сер. дан.',
+            'field_arrival_sertification_data': 'Сертиф. данные',
+            'field_arrival_id_commercial_condition': 'id ком. сост.',
+            'field_arrival_commercial_condition': 'Комм. сост.',
+            'field_arrival_station_from_code': 'Код. ст. отпр.',
+            'field_arrival_station_from_name': 'Стан. отправ.',
+            'field_arrival_shipper_code': 'Код отпр.',
+            'field_arrival_shipper_name': 'Отправитель',
+            'field_arrival_station_amkr_name': 'Стан. назн. АМКР',
+            'field_arrival_station_amkr_abbr': 'Стан. назн. АМКР',
+            'field_arrival_division_amkr_name': 'Цех получ.',
+            'field_arrival_division_amkr_abbr': 'Цех получ.',
+            'field_current_id_loading_status': 'id сост. погр.',
+            'field_current_loading_status': 'Груж/порож.',
+            'field_current_wagon_busy': 'Занят (операция)',
+            'field_current_id_operation': 'id опер',
+            'field_current_operation_name': 'Последняя операция над вагоном',
+            'field_current_operation_start': 'Дата начала выполнения операции',
+            'field_current_operation_end': 'Дата окончания выполнения операции',
+            'field_arrival_duration': 'Простой  УЗ, час',
+            'field_arrival_idle_time': 'Норма, час',
+            'field_arrival_usage_fee': 'Плата на текущий момент, грн',
+            'field_current_station_duration': 'Факт станция, ч',
+            'field_current_way_duration': 'Факт путь, ч',
+            'field_current_station_idle_time': 'Норма, ч',
+            'field_current_station_indicator': 'Индикатор факт станция',
+            //'': '',
+            //'': '',
+            //'': '',
+            //'': '',
+            //'': '',
+            //'': '',
 
             'title_yes': 'Да',
+            'title_busy': 'Занят',
             //
             //
             //'field_wagon_adm': 'Код. Адм.',
@@ -62,6 +120,15 @@
     var wsd = App.ids_wsd;
     // Модуль инициализаии компонентов формы
     var FC = App.form_control;
+
+    // Получить часы из менут
+    var getHoursFromMinuts = function (minutes) {
+        var hours = parseInt(minutes / 60);
+        hours = hours < 10 ? '0' + hours : hours;
+        var min = minutes % 60;
+        min = min < 10 ? '0' + min : min;
+        return hours + ':' + min;
+    }
 
     // Перечень полей
     var list_collums = [
@@ -114,38 +181,40 @@
                 return row.id_operator;
             },
             className: 'dt-body-center',
-            title: langView('field_id_operator', App.Langs), width: "50px", orderable: true, searchable: true
+            title: langView('field_id_operator', App.Langs), width: "30px", orderable: true, searchable: true
         },
         {
             field: 'operators',
             data: function (row, type, val, meta) {
-                return row['operators_'+App.Lang];
+                return row['operators_' + App.Lang];
             },
-            className: 'dt-body-left',
-            title: langView('field_operators', App.Langs), width: "100px", orderable: true, searchable: true
+            className: 'dt-body-left shorten mw-150',
+            title: langView('field_operators', App.Langs), width: "150px", orderable: true, searchable: true
         },
         {
             field: 'operator_abbr',
             data: function (row, type, val, meta) {
-                return row['operator_abbr_'+App.Lang];
+                return row['operator_abbr_' + App.Lang];
             },
-            className: 'dt-body-left',
-            title: langView('field_operator_abbr', App.Langs), width: "50px", orderable: true, searchable: true
+            className: 'dt-body-left shorten mw-100',
+            title: langView('field_operator_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
         {
             field: 'operator_rent_start',
             data: function (row, type, val, meta) {
-                return row.operator_rent_start ? getReplaceTOfDT(row.operator_rent_start) : null;
+                //return row.operator_rent_start ? getReplaceTOfDT(row.operator_rent_start) : null;
+                return row.operator_rent_start ? moment(row.operator_rent_start).format(format_datetime) : null;
             },
-            className: 'dt-body-centr',
+            className: 'dt-body-nowrap',
             title: langView('field_operator_rent_start', App.Langs), width: "100px", orderable: true, searchable: true
         },
         {
             field: 'operator_rent_end',
             data: function (row, type, val, meta) {
-                return row.operator_rent_end ? getReplaceTOfDT(row.operator_rent_end) : null;
+                //return row.operator_rent_end ? getReplaceTOfDT(row.operator_rent_end) : null;
+                return row.operator_rent_end ? moment(row.operator_rent_end).format(format_datetime) : null;
             },
-            className: 'dt-body-centr',
+            className: 'dt-body-nowrap',
             title: langView('field_operator_rent_end', App.Langs), width: "100px", orderable: true, searchable: true
         },
         {
@@ -154,7 +223,7 @@
                 return row.operator_paid ? langView('title_yes', App.Langs) : '';
             },
             className: 'dt-body-centr',
-            title: langView('field_operator_paid', App.Langs), width: "50px", orderable: true, searchable: true
+            title: langView('field_operator_paid', App.Langs), width: "30px", orderable: true, searchable: true
         },
         //Ограничение
         {
@@ -163,150 +232,432 @@
                 return row.id_limiting_loading;
             },
             className: 'dt-body-center',
-            title: langView('field_id_limiting_loading', App.Langs), width: "50px", orderable: true, searchable: true
+            title: langView('field_id_limiting_loading', App.Langs), width: "30px", orderable: true, searchable: true
         },
         {
             field: 'limiting_name',
             data: function (row, type, val, meta) {
                 return row['limiting_name_' + App.Lang];
             },
-            className: 'dt-body-left',
-            title: langView('field_limiting_name', App.Langs), width: "100px", orderable: true, searchable: true
+            className: 'dt-body-left shorten mw-150',
+            title: langView('field_limiting_name', App.Langs), width: "150px", orderable: true, searchable: true
         },
         {
             field: 'limiting_abbr',
             data: function (row, type, val, meta) {
                 return row['limiting_abbr_' + App.Lang];
             },
-            className: 'dt-body-left',
+            className: 'dt-body-left shorten mw-100',
             title: langView('field_limiting_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
         // Собственник по УЗ
-        //, dir_owner.[id] as id_owner_wagon
-        //, dir_owner.[owner_ru] as owner_wagon_ru
-        //, dir_owner.[owner_en] as owner_wagon_en
-        //, dir_owner.[abbr_ru] as owner_wagon_abbr_ru
-        //, dir_owner.[abbr_en] as owner_wagon_abbr_en
-        //{
-        //    field: 'wagon_adm',
-        //    data: function (row, type, val, meta) {
-        //        return row.wagon_adm;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_wagon_adm', App.Langs), width: "30px", orderable: true, searchable: true
-        //},
-        //{
-        //    field: 'wagon_adm_name',
-        //    data: function (row, type, val, meta) {
-        //        return row['wagon_adm_name_' + App.Lang];
-        //    },
-        //    className: 'dt-body-left',
-        //    title: langView('field_wagon_adm_name', App.Langs), width: "50px", orderable: true, searchable: true
-        //},
-        //{
-        //    field: 'arrival_condition_name',
-        //    data: function (row, type, val, meta) {
-        //        return row['arrival_condition_name_' + App.Lang];
-        //    },
-        //    className: 'dt-body-left',
-        //    title: langView('field_arrival_condition_name', App.Langs), width: "100px", orderable: true, searchable: true
-        //},
-        //{
-        //    field: 'arrival_condition_abbr',
-        //    data: function (row, type, val, meta) {
-        //        return row['arrival_condition_abbr_' + App.Lang];
-        //    },
-        //    className: 'dt-body-left',
-        //    title: langView('field_arrival_condition_abbr', App.Langs), width: "50px", orderable: true, searchable: true
-        //},
-        //{
-        //    field: 'operation_condition_name',
-        //    data: function (row, type, val, meta) {
-        //        return row['operation_condition_name_' + App.Lang];
-        //    },
-        //    className: 'dt-body-left',
-        //    title: langView('field_operation_condition_name', App.Langs), width: "100px", orderable: true, searchable: true
-        //},
-        //{
-        //    field: 'operation_condition_abbr',
-        //    data: function (row, type, val, meta) {
-        //        return row['operation_condition_abbr_' + App.Lang];
-        //    },
-        //    className: 'dt-body-left',
-        //    title: langView('field_operation_condition_abbr', App.Langs), width: "50px", orderable: true, searchable: true
-        //},
-        //{
-        //    field: 'wagon_rod',
-        //    data: function (row, type, val, meta) {
-        //        return row.wagon_rod;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_wagon_rod', App.Langs), width: "30px", orderable: true, searchable: true
-        //},
-        //{
-        //    field: 'wagon_rod_abbr',
-        //    data: function (row, type, val, meta) {
-        //        return row['wagon_rod_abbr_' + App.Lang];
-        //    },
-        //    className: 'dt-body-left',
-        //    title: langView('field_wagon_rod_abbr', App.Langs), width: "50px", orderable: true, searchable: true
-        //},
-        //{
-        //    field: 'wagon_operators_name',
-        //    data: function (row, type, val, meta) {
-        //        return row['wagon_operators_name_' + App.Lang];
-        //    },
-        //    className: 'dt-body-left',
-        //    title: langView('field_wagon_operators_name', App.Langs), width: "100px", orderable: true, searchable: true
-        //},
-        //{
-        //    field: 'wagon_operators_abbr',
-        //    data: function (row, type, val, meta) {
-        //        return row['wagon_operators_abbr_' + App.Lang];
-        //    },
-        //    className: 'dt-body-left',
-        //    title: langView('field_wagon_operators_abbr', App.Langs), width: "50px", orderable: true, searchable: true
-        //},
-        //{
-        //    field: 'wagon_limiting_name',
-        //    data: function (row, type, val, meta) {
-        //        return row['wagon_limiting_name_' + App.Lang];
-        //    },
-        //    className: 'dt-body-left',
-        //    title: langView('field_wagon_limiting_name', App.Langs), width: "100px", orderable: true, searchable: true
-        //},
-        //{
-        //    field: 'wagon_limiting_abbr',
-        //    data: function (row, type, val, meta) {
-        //        return row['wagon_limiting_abbr_' + App.Lang];
-        //    },
-        //    className: 'dt-body-left',
-        //    title: langView('field_wagon_limiting_abbr', App.Langs), width: "50px", orderable: true, searchable: true
-        //},
-        //{
-        //    field: 'arrival_cargo_name',
-        //    data: function (row, type, val, meta) {
-        //        return row['arrival_cargo_name_' + App.Lang];
-        //    },
-        //    className: 'dt-body-left',
-        //    title: langView('field_arrival_cargo_name', App.Langs), width: "150px", orderable: true, searchable: true
-        //},
-        //{
-        //    field: 'operation_loading_status',
-        //    data: function (row, type, val, meta) {
-        //        return row['operation_loading_status_' + App.Lang];
-        //    },
-        //    className: 'dt-body-left',
-        //    title: langView('field_operation_loading_status', App.Langs), width: "50px", orderable: true, searchable: true
-        //},
-        //{
-        //    field: 'create',
-        //    data: function (row, type, val, meta) {
-        //        return row.wir_create ? (row.wir_create_user + '<br />[' + getReplaceTOfDT(row.wir_create) + ']') : null;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('field_create', App.Langs), width: "100px", orderable: false, searchable: false
-        //},
+        {
+            field: 'id_owner_wagon',
+            data: function (row, type, val, meta) {
+                return row.id_owner_wagon;
+            },
+            className: 'dt-body-center',
+            title: langView('field_id_owner_wagon', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'owner_wagon',
+            data: function (row, type, val, meta) {
+                return row['owner_wagon_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('field_owner_wagon', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'owner_wagon_abbr',
+            data: function (row, type, val, meta) {
+                return row['owner_wagon_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('field_owner_wagon_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Род вагона
+        {
+            field: 'wagon_rod',
+            data: function (row, type, val, meta) {
+                return row.wagon_rod;
+            },
+            className: 'dt-body-center',
+            title: langView('field_wagon_rod', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'wagon_rod_name',
+            data: function (row, type, val, meta) {
+                return row['wagon_rod_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('field_wagon_rod_name', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'wagon_rod_abbr',
+            data: function (row, type, val, meta) {
+                return row['wagon_rod_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-50',
+            title: langView('field_wagon_rod_abbr', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Тип вагона
+        {
+            field: 'wagon_type',
+            data: function (row, type, val, meta) {
+                return row['wagon_type_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('field_wagon_type', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        // Разметка по прибытию
+        {
+            field: 'arrival_condition_name',
+            data: function (row, type, val, meta) {
+                return row['arrival_condition_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('field_arrival_condition_name', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'arrival_condition_abbr',
+            data: function (row, type, val, meta) {
+                return row['arrival_condition_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('field_arrival_condition_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'arrival_condition_red',
+            data: function (row, type, val, meta) {
+                return row.arrival_condition_red;
+            },
+            className: 'dt-body-centr',
+            title: langView('field_arrival_condition_red', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Разметка по текущей операции 
+        {
+            field: 'current_condition_name',
+            data: function (row, type, val, meta) {
+                return row['current_condition_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('field_current_condition_name', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'current_condition_abbr',
+            data: function (row, type, val, meta) {
+                return row['current_condition_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('field_current_condition_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'current_condition_red',
+            data: function (row, type, val, meta) {
+                return row.current_condition_red;
+            },
+            className: 'dt-body-centr',
+            title: langView('field_current_condition_red', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Дата деповского ремонта по УЗ'
+        {
+            field: 'wagon_date_rem_uz',
+            data: function (row, type, val, meta) {
+                //return row.wagon_date_rem_uz ? getReplaceTOfDT(row.wagon_date_rem_uz) : null;
+                return row.wagon_date_rem_uz ? moment(row.wagon_date_rem_uz).format(format_date) : null;
+            },
+            className: 'dt-body-centr',
+            title: langView('field_wagon_date_rem_uz', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Грузоподъемность
+        {
+            field: 'wagon_gruzp_doc',
+            data: function (row, type, val, meta) {
+                return row.wagon_gruzp_doc ? Number(row.wagon_gruzp_doc).toFixed(1) : null;
+            },
+            className: 'dt-body-centr',
+            title: langView('field_wagon_gruzp_doc', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'wagon_gruzp_uz',
+            data: function (row, type, val, meta) {
+                return row.wagon_gruzp_uz ? Number(row.wagon_gruzp_uz).toFixed(1) : null;
+            },
+            className: 'dt-body-centr',
+            title: langView('field_wagon_gruzp_uz', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Администрация
+        {
+            field: 'wagon_adm',
+            data: function (row, type, val, meta) {
+                return row.wagon_adm;
+            },
+            className: 'dt-body-centr',
+            title: langView('field_wagon_adm', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'wagon_adm_name',
+            data: function (row, type, val, meta) {
+                return row['wagon_adm_name_' + App.Lang];
+            },
+            className: 'dt-body-centr',
+            title: langView('field_wagon_adm_name', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'wagon_adm_abbr',
+            data: function (row, type, val, meta) {
+                return row['wagon_adm_abbr_' + App.Lang];
+            },
+            className: 'dt-body-centr',
+            title: langView('field_wagon_adm_abbr', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        // Груз по прибытию
+        {
+            field: 'arrival_cargo_group_name',
+            data: function (row, type, val, meta) {
+                return row['arrival_cargo_group_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('field_arrival_cargo_group_name', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'arrival_cargo_name',
+            data: function (row, type, val, meta) {
+                return row['arrival_cargo_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('field_arrival_cargo_name', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        // Сертификационные данные
+        {
+            field: 'arrival_id_sertification_data',
+            data: function (row, type, val, meta) {
+                return row.arrival_id_sertification_data;
+            },
+            className: 'dt-body-center',
+            title: langView('field_arrival_id_sertification_data', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'arrival_sertification_data',
+            data: function (row, type, val, meta) {
+                return row['arrival_sertification_data_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('field_arrival_sertification_data', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        // Коммерческое состояние
+        {
+            field: 'arrival_id_commercial_condition',
+            data: function (row, type, val, meta) {
+                return row.arrival_id_commercial_condition;
+            },
+            className: 'dt-body-center',
+            title: langView('field_arrival_id_commercial_condition', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'arrival_commercial_condition',
+            data: function (row, type, val, meta) {
+                return row['arrival_commercial_condition_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('field_arrival_commercial_condition', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        // Станция отправления
+        {
+            field: 'arrival_station_from_code',
+            data: function (row, type, val, meta) {
+                return row.arrival_station_from_code;
+            },
+            className: 'dt-body-center',
+            title: langView('field_arrival_station_from_code', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'arrival_station_from_name',
+            data: function (row, type, val, meta) {
+                return row['arrival_station_from_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('field_arrival_station_from_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Отправитель
+        {
+            field: 'arrival_shipper_code',
+            data: function (row, type, val, meta) {
+                return row.arrival_shipper_code;
+            },
+            className: 'dt-body-center',
+            title: langView('field_arrival_shipper_code', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'arrival_shipper_name',
+            data: function (row, type, val, meta) {
+                return row['arrival_shipper_name_' + App.Lang];
+            },
+            className: 'dt-body-nowrap text-left',
+            title: langView('field_arrival_shipper_name', App.Langs), width: "300px", orderable: true, searchable: true
+        },
+        // Станция назначения АМКР
+        {
+            field: 'arrival_station_amkr_name',
+            data: function (row, type, val, meta) {
+                return row['arrival_station_amkr_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('field_arrival_station_amkr_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'arrival_station_amkr_abbr',
+            data: function (row, type, val, meta) {
+                return row['arrival_station_amkr_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('field_arrival_station_amkr_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Цех-получатель
+        {
+            field: 'arrival_division_amkr_name',
+            data: function (row, type, val, meta) {
+                return row['arrival_division_amkr_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('field_arrival_division_amkr_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'arrival_division_amkr_abbr',
+            data: function (row, type, val, meta) {
+                return row['arrival_division_amkr_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('field_arrival_division_amkr_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Груж/пор
+        {
+            field: 'current_id_loading_status',
+            data: function (row, type, val, meta) {
+                return row.current_id_loading_status;
+            },
+            className: 'dt-body-center',
+            title: langView('field_current_id_loading_status', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'current_loading_status',
+            data: function (row, type, val, meta) {
+                return row['current_loading_status_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('field_current_loading_status', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Занят (операция)
+        {
+            field: 'current_wagon_busy',
+            data: function (row, type, val, meta) {
+                return row.current_wagon_busy ? langView('title_yes', App.Langs) : '';
+            },
+            className: 'dt-body-center',
+            title: langView('field_current_wagon_busy', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        // Последняя операция над вагоном
+        {
+            field: 'current_id_operation',
+            data: function (row, type, val, meta) {
+                return row.current_id_operation;
+            },
+            className: 'dt-body-center',
+            title: langView('field_current_id_operation', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'current_operation_name',
+            data: function (row, type, val, meta) {
+                return row['current_operation_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('field_current_operation_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Дата начала выполнения операции
+        {
+            field: 'current_operation_start',
+            data: function (row, type, val, meta) {
+                return row.current_operation_start ? moment(row.current_operation_start).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('field_current_operation_start', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Дата окончания выполнения операции
+        {
+            field: 'current_operation_end',
+            data: function (row, type, val, meta) {
+                return row.current_operation_end ? moment(row.current_operation_end).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('field_current_operation_end', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Простой  УЗ, час
+        {
+            field: 'arrival_duration',
+            data: function (row, type, val, meta) {
+                return row.arrival_duration !== null ? getHoursFromMinuts(Number(row.arrival_duration)) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('field_arrival_duration', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Норма, час
+        {
+            field: 'arrival_idle_time',
+            data: function (row, type, val, meta) {
+                return row.arrival_idle_time !== null ? Number(row.arrival_idle_time) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('field_arrival_idle_time', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Плата на текущий момент, грн
+        {
+            field: 'arrival_usage_fee',
+            data: function (row, type, val, meta) {
+                return row.arrival_usage_fee !== null ? Number(row.arrival_usage_fee).toFixed(2) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('field_arrival_usage_fee', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        //=============== ПРОСТОЙ НА Ж.Д.СТАНЦИИ ==================
+        // индикатор
+        {
+            field: 'current_station_indicator',
+            data: function (row, type, val, meta) {
+                var s = $('<div class="progress-bar bg-danger" role="progressbar" style="width: 84.84%" aria-valuenow="84.84" aria-valuemin="0" aria-valuemax="100">85%</div>');
+                return s[0].outerHTML;
+            }, 
+            className: 'dt-body-justify mw-100',
+            title: langView('field_current_station_indicator', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Норма, ч
+        {
+            field: 'current_station_idle_time',
+            data: function (row, type, val, meta) {
+                return row.current_station_idle_time !== null ? Number(row.current_station_idle_time) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('field_current_station_idle_time', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Факт станция, ч
+        {
+            field: 'current_station_duration',
+            data: function (row, type, val, meta) {
+                return row.current_station_duration !== null ? getHoursFromMinuts(Number(row.current_station_duration)) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('field_current_station_duration', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // факт путь, ч
+        {
+            field: 'current_way_duration',
+            data: function (row, type, val, meta) {
+                return row.current_way_duration !== null ? getHoursFromMinuts(Number(row.current_way_duration)) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('field_current_way_duration', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+
+
         //{
         //    field: 'close',
         //    data: function (row, type, val, meta) {
@@ -347,26 +698,83 @@
         collums.push('id_limiting_loading');
         collums.push('limiting_name');
         collums.push('limiting_abbr');
+        // Собственник по УЗ
+        collums.push('id_owner_wagon');
+        collums.push('owner_wagon');
+        collums.push('owner_wagon_abbr');
         // Признак платности
         collums.push('operator_paid');
-        //
-        //
-        //collums.push('wagon_adm');
-        //collums.push('wagon_adm_name');
-        //collums.push('operation_condition_name');
-        //collums.push('operation_condition_abbr');
-        //collums.push('arrival_condition_name');
-        //collums.push('arrival_condition_abbr');
-        //collums.push('wagon_rod');
-        //collums.push('wagon_rod_abbr');
-        //collums.push('wagon_operators_name');
-        //collums.push('wagon_operators_abbr');
-        //collums.push('wagon_limiting_name');
-        //collums.push('wagon_limiting_abbr');
-        //collums.push('arrival_cargo_name');
-        //collums.push('operation_loading_status');
-        //collums.push('create');
-        //collums.push('close');
+        // Род вагона
+        collums.push('wagon_rod');
+        collums.push('wagon_rod_name');
+        collums.push('wagon_rod_abbr');
+        // Тип вагона
+        collums.push('wagon_type');
+        // Разметка прибытие
+        collums.push('arrival_condition_name');
+        collums.push('arrival_condition_abbr');
+        collums.push('arrival_condition_red');
+        // разметка текущая
+        collums.push('current_condition_name');
+        collums.push('current_condition_abbr');
+        collums.push('current_condition_red');
+        // Дата деповского ремонта по УЗ
+        collums.push('wagon_date_rem_uz');
+        // Грузоподъемность
+        collums.push('wagon_gruzp_doc');
+        collums.push('wagon_gruzp_uz');
+        // Администрация
+        collums.push('wagon_adm');
+        collums.push('wagon_adm_name');
+        collums.push('wagon_adm_abbr');
+        // Груз по прибытию
+        collums.push('arrival_cargo_group_name');
+        collums.push('arrival_cargo_name');
+        // Сертификатные данные
+        collums.push('arrival_id_sertification_data');
+        collums.push('arrival_sertification_data');
+        // Коммерческое состояние
+        collums.push('arrival_id_commercial_condition');
+        collums.push('arrival_commercial_condition');
+        // Станция отправления
+        collums.push('arrival_station_from_code');
+        collums.push('arrival_station_from_name');
+        //Отправитель
+        collums.push('arrival_shipper_code');
+        collums.push('arrival_shipper_name');
+        // Станция назначения АМКР
+        collums.push('arrival_station_amkr_name');
+        collums.push('arrival_station_amkr_abbr');
+        // Цех-получатель
+        collums.push('arrival_division_amkr_name');
+        collums.push('arrival_division_amkr_abbr');
+        // Груж /порожний, состояние загрузки
+        collums.push('current_id_loading_status');
+        collums.push('current_loading_status');
+        // Занят (операция)
+        collums.push('current_wagon_busy');
+        // Последняя операция над вагоном
+        collums.push('current_id_operation');
+        collums.push('current_operation_name');
+        // Дата начала выполнения операции
+        collums.push('current_operation_start');
+        // Дата окончания выполнения операции
+        collums.push('current_operation_end');
+        // Простой УЗ
+        collums.push('arrival_duration');
+        // Норма, час
+        collums.push('arrival_idle_time');
+        // Плата на текущий момент, грн
+        collums.push('arrival_usage_fee');
+        // Индикатор (Станция)
+        collums.push('current_station_indicator');
+        // Норма, ч (Станция)
+        collums.push('current_station_idle_time');
+        // Факт, ч (Станция)
+        collums.push('current_station_duration');
+        // Факт, ч (Путь)
+        collums.push('current_way_duration');
+
         return init_columns(collums, list_collums);
     };
     // инициализация таблицы справочника путей
@@ -408,7 +816,7 @@
             select: {
                 style: 'multi'
             },
-            "autoWidth": true,
+            "autoWidth": false,
             //"filter": true,
             //"scrollY": "600px",
             sScrollX: "100%",
