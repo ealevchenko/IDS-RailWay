@@ -35,6 +35,8 @@
     var TCOPER = App.table_cars_operation;
     var tab_car_oper = new TCOPER('div#cars-oper'); // Создадим экземпляр
 
+    var TCWay = App.table_cars_way;
+    var t_wagons = new TCWay('div#wagons'); // Создадим экземпляр
 
     $('button#arrival').on('click', function (e) {
         //var data = oper_send.operation;
@@ -52,6 +54,13 @@
 
     // После загрузки документа
     $(document).ready(function ($) {
+        t_wagons.init({
+            alert: alert,
+            ids_wsd: ids_wsd,
+        }, function () {
+            t_wagons.load_of_way(112);
+        });
+
         //oper_send.init({
         //    alert: alert,
         //    ids_dir: ids_dir,

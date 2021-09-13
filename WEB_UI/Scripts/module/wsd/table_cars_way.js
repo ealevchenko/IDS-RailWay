@@ -182,11 +182,11 @@
             title: langView('field_limiting_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
         // Собственник по УЗ
-        , dir_owner.[id] as id_owner_wagon
-        , dir_owner.[owner_ru] as owner_wagon_ru
-        , dir_owner.[owner_en] as owner_wagon_en
-        , dir_owner.[abbr_ru] as owner_wagon_abbr_ru
-        , dir_owner.[abbr_en] as owner_wagon_abbr_en
+        //, dir_owner.[id] as id_owner_wagon
+        //, dir_owner.[owner_ru] as owner_wagon_ru
+        //, dir_owner.[owner_en] as owner_wagon_en
+        //, dir_owner.[abbr_ru] as owner_wagon_abbr_ru
+        //, dir_owner.[abbr_en] as owner_wagon_abbr_en
         //{
         //    field: 'wagon_adm',
         //    data: function (row, type, val, meta) {

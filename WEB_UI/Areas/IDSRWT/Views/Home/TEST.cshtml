@@ -17,6 +17,8 @@
     <link href="~/Content/module/wsd/table_cars_operation.css" rel="stylesheet" />
     <link href="~/Content/module/wsd/operation_send.css" rel="stylesheet" />
 
+    <link href="~/Content/module/wsd/table_cars_way.css" rel="stylesheet" /><!-- CSS стили модуля "Вагоны на выбранном пути" -->
+
     <style>
         .table-directory {
             font-size: 0.8rem;
@@ -61,6 +63,8 @@
 
     <script src="~/Scripts/module/wsd/table_cars_operation.js"></script>
     <script src="~/Scripts/module/wsd/operation_send.js"></script>
+
+    <script src="~/Scripts/module/wsd/table_cars_way.js"></script>          <!-- Модуль "Вагоны на выбранном пути" -->
     <script src="~/Scripts/view/idsrwt/test.js"></script>
 
 }
@@ -217,6 +221,9 @@
             </div>
         </div>
         <div class="card-body text-dark pl-3 pr-3">
+            <div id="wagons"></div>
+
+
             <div class="text-left">
                 <form>
                     <div class="form-row">
@@ -284,55 +291,52 @@
                     <button class="btn btn-primary" type="submit">Submit form</button>
                 </form>
             </div>
-
-
-
             <div id="operation-send">
                 @*<div class="row">
-                <div class="col-xl-12 mb-1 mt-1">
-                    <div class="card border-secondary mb-1">
-                        <div class="card-header">
-                            ИСТОРИЯ ОПЕРАЦИЙ "ОТПРАВЛЕНИЕ"
-                        </div>
-                        <div class="card-body">
-                            <div class="card border-primary">
+                        <div class="col-xl-12 mb-1 mt-1">
+                            <div class="card border-secondary mb-1">
                                 <div class="card-header">
-                                    <form class="form-inline">
-                                        <div class="form-group">
-                                            <label class="col-form-label-sm mr-2" for="select-date">ПЕРИОД:</label>
-                                            <span id="select-date" class="mr-2">
-                                                <input type="datetime" class="form-control-sm" id="date-start" name="date-start">
-                                                <input type="datetime" class="form-control-sm" id="date-stop" name="date-stop">
-                                            </span>
+                                    ИСТОРИЯ ОПЕРАЦИЙ "ОТПРАВЛЕНИЕ"
+                                </div>
+                                <div class="card-body">
+                                    <div class="card border-primary">
+                                        <div class="card-header">
+                                            <form class="form-inline">
+                                                <div class="form-group">
+                                                    <label class="col-form-label-sm mr-2" for="select-date">ПЕРИОД:</label>
+                                                    <span id="select-date" class="mr-2">
+                                                        <input type="datetime" class="form-control-sm" id="date-start" name="date-start">
+                                                        <input type="datetime" class="form-control-sm" id="date-stop" name="date-stop">
+                                                    </span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-form-label-sm mr-2" for="station">СТАНЦИЯ ОТПРАВЛЕНИЯ:</label>
+                                                    <div class="input-group">
+                                                        <select class="form-control-sm" id="station" name="station" required></select>
+                                                        <div class="input-group-append">
+                                                            <button type="submit" class="btn btn-sm  btn-primary mb-2" id="view_ways" name="view_ways">
+                                                                <i class="fas fa-retweet" aria-hidden="true"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="col-form-label-sm mr-2" for="station">СТАНЦИЯ ОТПРАВЛЕНИЯ:</label>
-                                            <div class="input-group">
-                                                <select class="form-control-sm" id="station" name="station" required></select>
-                                                <div class="input-group-append">
-                                                    <button type="submit" class="btn btn-sm  btn-primary mb-2" id="view_ways" name="view_ways">
-                                                        <i class="fas fa-retweet" aria-hidden="true"></i>
-                                                    </button>
+                                        <div class="card-body text-dark pl-3 pr-3 table-directory">
+                                            <div class="row">
+                                                <div class="col-xl-12 mb-3 mt-2">
+                                                    <div class="container-fluid mt-3">
+                                                        <div id="park-station"></div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </form>
-                                </div>
-                                <div class="card-body text-dark pl-3 pr-3 table-directory">
-                                    <div class="row">
-                                        <div class="col-xl-12 mb-3 mt-2">
-                                            <div class="container-fluid mt-3">
-                                                <div id="park-station"></div>
-                                            </div>
-                                        </div>
                                     </div>
+
                                 </div>
                             </div>
-
                         </div>
-                    </div>
-                </div>
-            </div>*@
+                    </div>*@
 
             </div>
             <div class="row">
