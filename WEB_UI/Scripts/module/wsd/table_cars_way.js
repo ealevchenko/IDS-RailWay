@@ -6,6 +6,7 @@
 
     //var format_date = "DD.MM.YYYY HH:mm:ss";
     var format_date = "YYYY-MM-DD";
+    var format_time = "HH:mm:ss";
     var format_datetime = "YYYY-MM-DD HH:mm:ss";
     // Определим язык
     App.Lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang'));
@@ -76,13 +77,27 @@
             'field_current_way_duration': 'Факт путь, ч',
             'field_current_station_idle_time': 'Норма, ч',
             'field_current_station_indicator': 'Индикатор факт станция',
+            'field_sap_incoming_supply_num': 'вх. поставка',
+            'field_sap_incoming_supply_pos': 'поз. вх. пост.',
+            'field_sap_incoming_supply_date': 'Дата создания',
+            'field_sap_incoming_supply_time': 'Время создания',
+            'field_sap_incoming_supply_cargo_code': 'Код материала',
+            'field_sap_incoming_supply_cargo_name': 'Материал (груз)',
+            'field_sap_incoming_supply_warehouse_code': 'Склад',
+            'field_sap_incoming_supply_warehouse_name': 'Наименование склада',
+            'field_instructional_letters_num': '№ письма',
+            'field_instructional_letters_datetime': 'Дата письма',
+            'field_instructional_letters_station_code': 'Код ст. наз.',
+            'field_instructional_letters_station_name': 'Станция назначения',
+            'field_instructional_letters_note': 'Текст',
+            'field_wagon_brutto_doc': 'Брутто по ЭПД, тн',
+            'field_wagon_brutto_amkr': 'Брутто АМКР, тн',
+            'field_wagon_tara_doc': 'Тара по ЭПД, тн.',
+            'field_wagon_tara_arc_doc': 'Тара по ЭПД уточ., тн.',
+            'field_wagon_tara_uz': 'Тара по УЗ, тн.',
             //'': '',
             //'': '',
             //'': '',
-            //'': '',
-            //'': '',
-            //'': '',
-
             'title_yes': 'Да',
             'title_busy': 'Занят',
             //
@@ -132,7 +147,6 @@
 
     // Перечень полей
     var list_collums = [
-
         {
             field: 'wir_id',
             data: function (row, type, val, meta) {
@@ -225,6 +239,7 @@
             className: 'dt-body-centr',
             title: langView('field_operator_paid', App.Langs), width: "30px", orderable: true, searchable: true
         },
+        // field: 'operator_color'
         //Ограничение
         {
             field: 'id_limiting_loading',
@@ -604,7 +619,7 @@
         {
             field: 'arrival_idle_time',
             data: function (row, type, val, meta) {
-                return row.arrival_idle_time !== null ? Number(row.arrival_idle_time) : null;
+                return row.arrival_idle_time !== null ? Number(row.arrival_idle_time / 60) : null;
             },
             className: 'dt-body-nowrap',
             title: langView('field_arrival_idle_time', App.Langs), width: "50px", orderable: true, searchable: true
@@ -623,9 +638,12 @@
         {
             field: 'current_station_indicator',
             data: function (row, type, val, meta) {
-                var s = $('<div class="progress-bar bg-danger" role="progressbar" style="width: 84.84%" aria-valuenow="84.84" aria-valuemin="0" aria-valuemax="100">85%</div>');
-                return s[0].outerHTML;
-            }, 
+                var fc_ui = new FC();
+                var $pb = new fc_ui.el_progress_bar(null, (row.current_station_idle_time !== null ? Number(row.current_station_idle_time) : 0), (row.current_station_duration !== null ? Number(row.current_station_duration) : 0))
+                if ($pb && $pb.$pb && $pb.$pb.length > 0) {
+                    return $pb.$pb[0].outerHTML;
+                }
+            },
             className: 'dt-body-justify mw-100',
             title: langView('field_current_station_indicator', App.Langs), width: "100px", orderable: true, searchable: true
         },
@@ -656,8 +674,172 @@
             className: 'dt-body-nowrap',
             title: langView('field_current_way_duration', App.Langs), width: "50px", orderable: true, searchable: true
         },
+        //=============== ВХОДЯЩАЯ ПОСТАВКА ==================
+        {
+            field: 'sap_incoming_supply_num',
+            data: function (row, type, val, meta) {
+                return row.sap_incoming_supply_num;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('field_sap_incoming_supply_num', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'sap_incoming_supply_pos',
+            data: function (row, type, val, meta) {
+                return row.sap_incoming_supply_pos;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('field_sap_incoming_supply_pos', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // дата создания
+        {
+            field: 'sap_incoming_supply_date',
+            data: function (row, type, val, meta) {
+                return row.sap_incoming_supply_date ? moment(row.sap_incoming_supply_date).format(format_date) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('field_sap_incoming_supply_date', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // время создания
+        {
+            field: 'sap_incoming_supply_time',
+            data: function (row, type, val, meta) {
+                //return row.sap_incoming_supply_time ? moment(row.sap_incoming_supply_time).format(format_time) : null;
+                return row.sap_incoming_supply_time;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('field_sap_incoming_supply_time', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Материал
+        {
+            field: 'sap_incoming_supply_cargo_code',
+            data: function (row, type, val, meta) {
+                return row.sap_incoming_supply_cargo_code;
+            },
+            className: 'dt-body-center',
+            title: langView('field_sap_incoming_supply_cargo_code', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'sap_incoming_supply_cargo_name',
+            data: function (row, type, val, meta) {
+                return row.sap_incoming_supply_cargo_name;
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('field_sap_incoming_supply_cargo_name', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        // Склад, Наименование склада
+        {
+            field: 'sap_incoming_supply_warehouse_code',
+            data: function (row, type, val, meta) {
+                return row.sap_incoming_supply_warehouse_code;
+            },
+            className: 'dt-body-center',
+            title: langView('field_sap_incoming_supply_warehouse_code', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'sap_incoming_supply_warehouse_name',
+            data: function (row, type, val, meta) {
+                return row.sap_incoming_supply_warehouse_name;
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('field_sap_incoming_supply_warehouse_name', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        //=============== ИНСТРУКТИВНЫЕ ПИСЬМА ==================
+        // № письма
+        {
+            field: 'instructional_letters_num',
+            data: function (row, type, val, meta) {
+                return row.instructional_letters_num;
+            },
+            className: 'dt-body-center',
+            title: langView('field_instructional_letters_num', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Дата письма
+        {
+            field: 'instructional_letters_datetime',
+            data: function (row, type, val, meta) {
+                return row.instructional_letters_datetime ? moment(row.instructional_letters_datetime).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('field_instructional_letters_datetime', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Станция назначения
+        {
+            field: 'instructional_letters_station_code',
+            data: function (row, type, val, meta) {
+                return row.instructional_letters_station_code;
+            },
+            className: 'dt-body-center',
+            title: langView('field_instructional_letters_station_code', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'instructional_letters_station_name',
+            data: function (row, type, val, meta) {
+                return row.instructional_letters_station_name;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('field_instructional_letters_station_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Текст
+        {
+            field: 'instructional_letters_note',
+            data: function (row, type, val, meta) {
+                return row.instructional_letters_note;
+            },
+            className: 'dt-body-nowrap text-left',
+            title: langView('field_instructional_letters_note', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        //=============== ВХОДНОЕ ВЗВЕШИВАНИЕ С УЗ ==================
+        // Брутто по ЭПД, тн
+        {
+            field: 'wagon_brutto_doc',
+            data: function (row, type, val, meta) {
+                return row.wagon_brutto_doc !== null ? (row.wagon_brutto_doc >0 ? Number(row.wagon_brutto_doc/1000).toFixed(2): Number(row.wagon_brutto_doc).toFixed(2)) : null;
+            },
+            className: 'dt-body-right',
+            title: langView('field_wagon_brutto_doc', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Брутто по ЭПД, тн
+        {
+            field: 'wagon_brutto_amkr',
+            data: function (row, type, val, meta) {
+                return row.wagon_brutto_amkr !== null ? (row.wagon_brutto_amkr > 0 ? Number(row.wagon_brutto_amkr / 1000).toFixed(2) : Number(row.wagon_brutto_amkr).toFixed(2)) : null;
+            },
+            className: 'dt-body-right',
+            title: langView('field_wagon_brutto_amkr', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Тара
+        {
+            field: 'wagon_tara_doc',
+            data: function (row, type, val, meta) {
+                return row.wagon_tara_doc !== null ? (row.wagon_tara_doc > 0 ? Number(row.wagon_tara_doc / 1000).toFixed(2) : Number(row.wagon_tara_doc).toFixed(2)) : null;
+            },
+            className: 'dt-body-right',
+            title: langView('field_wagon_tara_doc', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'wagon_tara_arc_doc',
+            data: function (row, type, val, meta) {
+                return row.wagon_tara_arc_doc !== null ? (row.wagon_tara_arc_doc > 0 ? Number(row.wagon_tara_arc_doc / 1000).toFixed(2) : Number(row.wagon_tara_arc_doc).toFixed(2)) : null;
+            },
+            className: 'dt-body-right',
+            title: langView('field_wagon_tara_arc_doc', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'wagon_tara_uz',
+            data: function (row, type, val, meta) {
+                return row.wagon_tara_uz !== null ? (row.wagon_tara_uz > 0 ? Number(row.wagon_tara_uz).toFixed(2) : 0.00) : null;
+            },
+            className: 'dt-body-right',
+            title: langView('field_wagon_tara_uz', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Нетто
 
-
+	//--> Вес груза(Нетто)
+ //       , arr_doc_vag.vesg as wagon_vesg_doc					--Нетто по ЭПД, тн
+ //       , wagon_vesg_amkr = 0
+	//--> Вес груза(Разница)
+        //, diff_vesg = 0
         //{
         //    field: 'close',
         //    data: function (row, type, val, meta) {
@@ -774,6 +956,28 @@
         collums.push('current_station_duration');
         // Факт, ч (Путь)
         collums.push('current_way_duration');
+        // Вх. поставка САП
+        collums.push('sap_incoming_supply_num');            // Номер вх. поставки
+        collums.push('sap_incoming_supply_pos');            // поз вх. поставки
+        collums.push('sap_incoming_supply_date');           // дата создания вх. поставки
+        collums.push('sap_incoming_supply_time');           // время создания вх. поставки
+        collums.push('sap_incoming_supply_cargo_code');     // склад вх. поставки
+        collums.push('sap_incoming_supply_cargo_name');     //
+        collums.push('sap_incoming_supply_warehouse_code'); // материал вх. поставки
+        collums.push('sap_incoming_supply_warehouse_name'); //
+        // Инструктивные письма
+        collums.push('instructional_letters_num');          // №
+        collums.push('instructional_letters_datetime');     // Дата и время
+        collums.push('instructional_letters_station_code'); // Станция назначения
+        collums.push('instructional_letters_station_name'); // 
+        collums.push('instructional_letters_note');         // Текст письма
+        // Брутто, тн
+        collums.push('wagon_brutto_doc');                   // 
+        collums.push('wagon_brutto_amkr');                  // 
+        // Тара, тн
+        collums.push('wagon_tara_doc');                     //
+        collums.push('wagon_tara_arc_doc');                 //
+        collums.push('wagon_tara_uz');                      //
 
         return init_columns(collums, list_collums);
     };
@@ -827,6 +1031,11 @@
             jQueryUI: false,
             "createdRow": function (row, data, index) {
                 $(row).attr('id', data.wim_id); // id строки дислокации вагона
+                // Проверим если по оператору контролировать норму времени, тогда проверить
+                if (data.operator_monitoring_idle_time && data.arrival_idle_time < data.arrival_duration) {
+                    // Превышена норма нахождения вагона на АМКР
+                    $('td', row).eq(1).addClass('idle-time-error');
+                }
                 //// Удалили
                 //if (data.way_close) {
                 //    $(row).addClass('yellow');

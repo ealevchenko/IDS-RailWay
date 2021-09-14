@@ -58,7 +58,7 @@
             alert: alert,
             ids_wsd: ids_wsd,
         }, function () {
-            t_wagons.load_of_way(112);
+            t_wagons.load_of_way(107);//112
         });
 
         //oper_send.init({

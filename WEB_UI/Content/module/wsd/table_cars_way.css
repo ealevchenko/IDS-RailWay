@@ -24,3 +24,9 @@ table.dataTable tbody td.shorten {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+/*Превышена норма нахождения вагона на АМКР*/
+table.dataTable.display tbody tr td.idle-time-error {
+    color: red;
+    /*font-weight: 600;*/
+}
