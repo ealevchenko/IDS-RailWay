@@ -4,6 +4,10 @@ declare @id_way int =107--214--112;
 
 select * from [IDS].[get_view_wagons_of_id_way](@id_way)
 
+
+--> Получим уставку норма простоя
+declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] where area=N'wsd' and name = N'arrival_idle_time') AS INT);
+
 select wir.id as wir_id
 	,wim.id as wim_id
 	,wio.id as wio_id
@@ -19,6 +23,8 @@ select wir.id as wir_id
 	,dir_rent.[rent_start] as operator_rent_start
 	,dir_rent.[rent_end] as operator_rent_end
 	,dir_operator.[paid] as operator_paid
+	,dir_operator.[color] as operator_color
+	,dir_operator.monitoring_idle_time as operator_monitoring_idle_time
 	--> Ограничение
 	,dir_limload.[id] as id_limiting_loading
 	,dir_limload.[limiting_name_ru]
@@ -107,7 +113,7 @@ select wir.id as wir_id
 	,wio.[operation_start] as current_operation_start
 	,wio.[operation_end] as current_operation_end
 	,[arrival_duration] = DATEDIFF (minute, arr_sost.date_adoption, getdate())
-	,[arrival_idle_time] = 0
+	,[arrival_idle_time] = @arrival_idle_time
 	,[arrival_usage_fee] = 0.00
 	--=============== ПРОСТОЙ НА ЖД. СТАНЦИИ ==================
 	,[current_station_duration] = DATEDIFF (minute, (select [IDS].[get_start_datetime_station_of_wim](wim.id)), getdate())
@@ -137,7 +143,7 @@ select wir.id as wir_id
 	,il.[note] as instructional_letters_note
 	--=============== ВХОДЯЩЕЕ ВЗВЕШИВАНИЕ ==================
 	--> Брутто
-	,wagon_brutto_doc = (CASE WHEN arr_doc_vag.ves_tary_arc is not null AND arr_doc_vag.vesg is not null THEN arr_doc_vag.ves_tary_arc+arr_doc_vag.vesg ELSE null END)	--Брутто по ЭПД, тн
+	,wagon_brutto_doc = (CASE WHEN arr_doc_vag.ves_tary_arc is not null AND arr_doc_vag.vesg is not null THEN arr_doc_vag.ves_tary_arc+arr_doc_vag.vesg ELSE (CASE WHEN arr_doc_vag.u_tara is not null AND arr_doc_vag.vesg is not null THEN arr_doc_vag.u_tara+arr_doc_vag.vesg ELSE null END) END)	--Брутто по ЭПД, тн
 	,wagon_brutto_amkr = 0
 	--> Тара
 	,arr_doc_vag.u_tara as wagon_tara_doc
