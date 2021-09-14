@@ -131,6 +131,7 @@ namespace EFIDS.Helper
                 rop = o.rop,
                 local_use = o.local_use,
                 color = o.color,
+                monitoring_idle_time = o.monitoring_idle_time, 
                 create = o.create,
                 create_user = o.create_user,
                 change = o.change,

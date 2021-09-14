@@ -44,6 +44,8 @@ namespace EFIDS.Entities
         [StringLength(10)]
         public string color { get; set; }
 
+        public bool? monitoring_idle_time { get; set; }
+
         public DateTime create { get; set; }
 
         [Required]
