@@ -93,6 +93,8 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public DateTime? operator_rent_start { get; set; }
         public DateTime? operator_rent_end { get; set; }
         public bool? operator_paid { get; set; }
+        public string operator_color { get; set; }
+        public bool? operator_monitoring_idle_time { get; set; }
         public int? id_limiting_loading { get; set; }
         public string limiting_name_ru { get; set; }
         public string limiting_name_en { get; set; }
