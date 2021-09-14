@@ -470,6 +470,40 @@
             this.$button.append(icon);
         }
     };
+    // Элемент 
+    //<div class="progress">
+    //  <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+    //</div >
+    form_control.prototype.el_progress_bar = function (cl_pb, max, duration) {
+        var progress = Number(Number(duration > max ? 100.0 : max === 0 ? 0.0 : (duration * 100.0) / max).toFixed(0));
+        var progress_collor = "";
+        if (progress <= 25) {
+            progress_collor = 'bg-success';
+        } else {
+            if (progress <= 50) {
+                progress_collor = 'bg-info';
+            } else {
+                if (progress <= 75) {
+                    progress_collor = 'bg-warning';
+                } else {
+                    progress_collor = 'bg-danger';
+                }
+            }
+        }
+        this.$pb = $('<div></div>', {
+            'class': 'progress',
+        });
+        var $pb = $('<div></div>', {
+            'class': 'progress-bar ' + progress_collor + ' ' + (cl_pb && cl_pb !== '' ? cl_pb + ' ' : ''),
+            'role': 'progressbar',
+            'style': 'width:' + progress + '%',
+            'aria-valuenow': progress,
+            'aria-valuemin': '0',
+            'aria-valuemax': '100',
+            'text': progress + '%'
+        });
+        this.$pb.append($pb);
+    }
     // Элемент <div class="form-row">
     form_control.prototype.el_div_form_row = function () {
         this.$div = $('<div></div>', {
