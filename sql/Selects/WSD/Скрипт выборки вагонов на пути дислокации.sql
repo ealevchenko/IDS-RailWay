@@ -1,4 +1,4 @@
-use [KRR-PA-CNT-Railway]
+use [KRR-PA-Test-Railway]--[KRR-PA-CNT-Railway]
 
 declare @id_way int =107--214--112;
 
