@@ -48,7 +48,8 @@
         //mcf_test.view('Подпись', 'Текст сообщения', function (result) {
 
         //})
-        oper_send.update();
+        //oper_send.update();
+        t_wagons.update(54152087);
 
     });
 
@@ -58,7 +59,8 @@
             alert: alert,
             ids_wsd: ids_wsd,
         }, function () {
-            t_wagons.load_of_way(107);//112
+            //t_wagons.load_of_way(218, 54152087);//112
+            t_wagons.load_of_way(218);//112
         });
 
         //oper_send.init({
