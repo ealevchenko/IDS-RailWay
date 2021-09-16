@@ -121,6 +121,8 @@
             'title_status_3': 'Отправлен',
             'title_status_4': 'Возврат',
 
+            'title_link_num': 'Показать историю по вагону...',
+
             'title_button_export': 'Экспорт',
             'title_button_buffer': 'Буфер',
             'title_button_excel': 'Excel',
@@ -194,6 +196,25 @@
             field: 'num',
             data: function (row, type, val, meta) {
                 return row.num;
+            },
+            className: 'dt-body-center fixed-column num-wagon',
+            title: langView('field_num', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'num_link',
+            data: function (row, type, val, meta) {
+                var fc_ui = new FC();
+                var $alink = new fc_ui.el_a(row.num, 'num-wagon', '#', row.num, '_blank', langView('title_link_num', App.Langs))
+                if ($alink && $alink.$alink && $alink.$alink.length > 0) {
+                    //$alink.$alink.on('click', function (e) {
+                    //    e.preventDefault();
+                    //    e.stopPropagation();
+                    //    window.open(url_search_wagon + '?num=' + row.num, '', '');
+                    //}.bind(this));
+                    return $alink.$alink[0].outerHTML;
+                } else {
+                    return row.num;
+                }
             },
             className: 'dt-body-center fixed-column num-wagon',
             title: langView('field_num', App.Langs), width: "50px", orderable: true, searchable: true
@@ -1005,7 +1026,7 @@
         this.fc_ui = new FC();
         this.selector = this.$cars_way.attr('id');
     }
-    // инициализация полей таблицы вагоны на начальном пути
+    // инициализация полей таблицы вагоны на пути (все поля)
     table_cars_way.prototype.init_columns_all = function () {
         var collums = [];
 
@@ -1014,7 +1035,11 @@
         //collums.push('wio_id');
         //=============== ОСНОВНОЕ ОКНО ==================
         collums.push('position');
-        collums.push('num');
+        if (this.settings.link_num) {
+            collums.push('num_link');
+        } else {
+            collums.push('num');
+        }
         // Оператор
         collums.push('id_operator');
         collums.push('operators');
@@ -1149,13 +1174,17 @@
         collums.push('wir_note');                    // Примечание Вагонник ГС
         return init_columns(collums, list_collums);
     };
-
+    // инициализация полей таблицы вагоны на пути (Отчет 0 - вагоны детально, дерево путей)
     table_cars_way.prototype.init_columns_detali = function () {
         var collums = [];
 
         //=============== ОСНОВНОЕ ОКНО ==================
         collums.push('position');
-        collums.push('num');
+        if (this.settings.link_num) {
+            collums.push('num_link');
+        } else {
+            collums.push('num');
+        }
         // Оператор
         //collums.push('id_operator');
         //collums.push('operators');
@@ -1315,7 +1344,8 @@
         // Определим основные свойства
         this.settings = $.extend({
             alert: null,
-            type_report: 0, // 0 - вагоны детально
+            type_report: 0,     // 0 - вагоны детально
+            link_num: false,    // Ссылка по номеру вагона
             ids_wsd: null,
         }, options);
         //
@@ -1376,7 +1406,13 @@
                 if (data.arrival_idle_time < data.arrival_duration) {
                     // Превышена норма нахождения вагона на АМКР
                     $('td.arrival-duration', row).addClass('idle-time-error');
-                    if (data.operator_monitoring_idle_time) $('td.num-wagon', row).addClass('idle-time-error');
+                    if (data.operator_monitoring_idle_time) {
+                        if (this.settings.link_num) {
+                            $('td.num-wagon a', row).addClass('idle-time-error')
+                        } else {
+                            $('td.num-wagon', row).addClass('idle-time-error')
+                        }
+                    };
                 }
 
                 // Прибыл
@@ -1396,7 +1432,7 @@
                     $('td.operator', row).attr('style', 'background-color:' + data.operator_color)
                 }
 
-            },
+            }.bind(this),
             columns: this.table_columns,
             dom: 'Bfrtip',
             stateSave: false,
@@ -1465,6 +1501,15 @@
                 this.select_row_wagons = null;
             }
         }.bind(this));
+        if (this.settings.link_num) {
+
+            this.$table_cars.on('click', 'a.num-wagon' , function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var num = $(e.currentTarget).attr('id')
+                window.open(url_search_wagon + '?num=' + num, '', '');
+            }.bind(this));
+        }
         //----------------------------------
         if (typeof fn_init_ok === 'function') {
             fn_init_ok();

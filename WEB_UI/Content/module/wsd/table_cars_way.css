@@ -34,8 +34,12 @@ table.dataTable tbody td.shorten {
 /*Превышена норма нахождения вагона на АМКР*/
 table.dataTable.display tbody tr td.idle-time-error {
     color: red;
-    /*font-weight: 600;*/
 }
+
+table.dataTable.display tbody tr td a.idle-time-error {
+    color: red;
+}
+
 /*IE сука не поддерживает*/
 /*:root {
     --idle-station-bg-color: #faf0f0;
