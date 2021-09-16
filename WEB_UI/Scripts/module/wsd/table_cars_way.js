@@ -138,6 +138,125 @@
         },
         'en':  //default language: English
         {
+            'field_wir_id': 'wp id',
+            'field_wim_id': 'dis id.',
+            'field_wio_id': 'opera id',
+            'field_position': 'Pos. no.',
+            'field_num': 'Wagon number',
+            'field_id_operator': 'opera id',
+            'field_operators': 'Operator',
+            'field_operator_abbr': 'Operator (abbr.)',
+            'field_operator_rent_start': 'Start. lease ',
+            'field_operator_rent_end': 'End. lease ',
+            'field_operator_paid': 'Prize. paid ',
+            'field_id_limiting_loading': 'limiting id',
+            'field_limiting_name': 'Limit',
+            'field_limiting_abbr': 'Limiting. (abbr.) ',
+            'field_id_owner_wagon': 'own id',
+            'field_owner_wagon': 'Owner by UZ',
+            'field_owner_wagon_abbr': 'Own. UZ (abbr.) ',
+            'field_wagon_rod': 'Wagon rod.',
+            'field_wagon_rod_name': 'Wagon rod.',
+            'field_wagon_rod_abbr': 'Wagon genus (abbr.)',
+            'field_wagon_type': 'Wagon type',
+            'field_arrival_condition_name': 'Arrival (arrivals)',
+            'field_arrival_condition_abbr': 'Size',
+            'field_arrival_condition_red': 'red',
+            'field_current_condition_name': 'Markup (current)',
+            'field_current_condition_abbr': 'Size tech. ',
+            'field_current_condition_red': 'red',
+            'field_wagon_date_rem_uz': 'Date of depot repair by UZ',
+            'field_wagon_gruzp_doc': 'Cargo, tons (doc.)',
+            'field_wagon_gruzp_uz': 'Cargo, tn (UZ.)',
+            'field_wagon_adm': 'Admin code',
+            'field_wagon_adm_name': 'Administration',
+            'field_wagon_adm_abbr': 'Admin.',
+            'field_arrival_cargo_group_name': 'Arrival Cargo Group',
+            'field_arrival_cargo_name': 'Cargo upon arrival',
+            'field_arrival_id_sertification_data': 'ser. id. Dan.',
+            'field_arrival_sertification_data': 'Cert. data',
+            'field_arrival_id_commercial_condition': 'com. id comp. ',
+            'field_arrival_commercial_condition': 'Comm. comp. ',
+            'field_arrival_station_from_code': 'Code. Art. send. ',
+            'field_arrival_station_from_name': 'Station. sending ',
+            'field_arrival_shipper_code': 'Shipper code',
+            'field_arrival_shipper_name': 'Shipper',
+            'field_arrival_station_amkr_name': 'Station. assignment AMKR ',
+            'field_arrival_station_amkr_abbr': 'Station. assignment AMKR ',
+            'field_arrival_division_amkr_name': 'Shop received',
+            'field_arrival_division_amkr_abbr': 'Shop received',
+            'field_current_id_loading_status': ' state id burial ',
+            'field_current_loading_status': 'Load / Load.',
+            'field_current_wagon_busy': 'Busy (operation)',
+            'field_current_id_operation': 'opera id',
+            'field_current_operation_name': 'Last operation on a wagon',
+            'field_current_operation_start': 'Operation start date',
+            'field_current_operation_end': 'End date of operation execution',
+
+            'field_arrival_duration': 'Simple ARP, hour',
+            'field_arrival_idle_time': 'Rate, hour',
+            'field_arrival_usage_fee': 'Current fee, UAH',
+            'field_current_station_duration': 'Fact st., h',
+            'field_current_way_duration': 'Actual path, h',
+            'field_current_station_idle_time': 'Station rate, h',
+            'field_current_station_indicator': 'Ind.',
+            'field_sap_incoming_supply_num': 'In. fast. No. ',
+            'field_sap_incoming_supply_pos': ' pos. ',
+            'field_sap_incoming_supply_date': 'Incoming. fast. creation date ',
+            'field_sap_incoming_supply_time': 'In. fast. creation time ',
+            'field_sap_incoming_supply_cargo_code': 'Input. fast. Math code. ',
+            'field_sap_incoming_supply_cargo_name': 'In. fast. material (cargo) ',
+            'field_sap_incoming_supply_warehouse_code': 'In. fast. warehouse',
+            'field_sap_incoming_supply_warehouse_name': 'In. fast. Warehouse name ',
+            'field_instructional_letters_num': 'Letter No.',
+            'field_instructional_letters_datetime': 'Letter date',
+            'field_instructional_letters_station_code': 'Code of art. called. ',
+            'field_instructional_letters_station_name': 'Destination station',
+            'field_instructional_letters_note': 'Text',
+            'field_wagon_brutto_doc': 'EPD gross, tn',
+            'field_wagon_brutto_amkr': 'Gross AMKR, tn',
+            'field_wagon_tara_doc': 'EPD packaging, tn.',
+            'field_wagon_tara_arc_doc': 'EPD tare ref., tn.',
+            'field_wagon_tara_uz': 'Tara by UZ, tn.',
+            'field_wagon_vesg_doc': 'Net EPD, tn',
+            'field_wagon_vesg_amkr': 'Net AMKR, tn',
+            'field_diff_vesg': 'Net difference, tn.',
+            'field_doc_outgoing_car': 'Availability of document for delivery to UZ',
+            'field_arrival_nom_main_doc': 'Arrival invoice no.',
+            'field_arrival_nom_doc': 'Arrival arrival number',
+            'field_arrival_composition_index': 'Train index',
+            'field_arrival_date_adoption': 'Date of admission to AMKR',
+            'field_outgoing_date': 'Date of delivery to UZ',
+            'field_outgoing_id_return': 'return id',
+            'field_outgoing_return_cause': 'Reason for return on departure',
+            'field_outgoing_sostav_status': ' Code stat. send comp. ',
+            'field_outgoing_sostav_status_name': 'Send status comp. ',
+            'field_wagon_ban_uz': 'UZ bans',
+            'field_wagon_closed_route': 'Closed route (ring)',
+            'field_wir_note': 'Note',
+
+            'title_yes': 'Yes',
+            'title_busy': 'Busy',
+            'title_all': 'Everyone',
+            'title_status_0': 'Submitted',
+            'title_status_1': 'In progress',
+            'title_status_2': 'Completed',
+            'title_status_3': 'Submitted',
+            'title_status_4': 'Return',
+
+            'title_link_num': 'Show wagon history ...',
+
+            'title_button_export': 'Export',
+            'title_button_buffer': 'Buffer',
+            'title_button_excel': 'Excel',
+            'title_button_field': 'Fields',
+            'title_button_field_select': 'Select',
+            'title_button_field_view_all': 'Show all',
+            'title_button_field_clear': 'Reset',
+
+            'mess_init_module': 'Initializing a module ...',
+            'mess_load_wagons': 'Loading wagons on the way ...',
+            'mess_view_wagons': 'loading wagons information ...',
 
         }
     };
@@ -206,11 +325,6 @@
                 var fc_ui = new FC();
                 var $alink = new fc_ui.el_a(row.num, 'num-wagon', '#', row.num, '_blank', langView('title_link_num', App.Langs))
                 if ($alink && $alink.$alink && $alink.$alink.length > 0) {
-                    //$alink.$alink.on('click', function (e) {
-                    //    e.preventDefault();
-                    //    e.stopPropagation();
-                    //    window.open(url_search_wagon + '?num=' + row.num, '', '');
-                    //}.bind(this));
                     return $alink.$alink[0].outerHTML;
                 } else {
                     return row.num;
@@ -667,10 +781,16 @@
         {
             field: 'current_station_indicator',
             data: function (row, type, val, meta) {
-                var fc_ui = new FC();
-                var $pb = new fc_ui.el_progress_bar(null, (row.current_station_idle_time !== null ? Number(row.current_station_idle_time) : 0), (row.current_station_duration !== null ? Number(row.current_station_duration) : 0))
-                if ($pb && $pb.$pb && $pb.$pb.length > 0) {
-                    return $pb.$pb[0].outerHTML;
+                if (row.current_station_idle_time !== null) {
+                    // Показать индикатор простоя
+                    var fc_ui = new FC();
+                    var $pb = new fc_ui.el_progress_bar(null, (row.current_station_idle_time !== null ? Number(row.current_station_idle_time) : 0), (row.current_station_duration !== null ? Number(row.current_station_duration) : 0))
+                    if ($pb && $pb.$pb && $pb.$pb.length > 0) {
+                        return $pb.$pb[0].outerHTML;
+                    }
+                } else {
+                    // Не задана норма, индикатор не показываеи
+                    return null;
                 }
             },
             className: 'dt-body-justify mw-100 idle-station',
@@ -680,7 +800,7 @@
         {
             field: 'current_station_idle_time',
             data: function (row, type, val, meta) {
-                return row.current_station_idle_time !== null ? Number(row.current_station_idle_time) : null;
+                return row.current_station_idle_time !== null ? Number(row.current_station_idle_time / 60) : null;
             },
             className: 'dt-body-nowrap idle-station',
             title: langView('field_current_station_idle_time', App.Langs), width: "50px", orderable: true, searchable: true
@@ -1202,7 +1322,7 @@
         // Признак платности
         collums.push('operator_paid');
         // Род вагона
-        collums.push('wagon_rod');
+        //collums.push('wagon_rod');
         //collums.push('wagon_rod_name');
         collums.push('wagon_rod_abbr');
         // Тип вагона
@@ -1503,7 +1623,7 @@
         }.bind(this));
         if (this.settings.link_num) {
 
-            this.$table_cars.on('click', 'a.num-wagon' , function (e) {
+            this.$table_cars.on('click', 'a.num-wagon', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 var num = $(e.currentTarget).attr('id')
