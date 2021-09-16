@@ -1,0 +1,8 @@
+﻿body {
+}
+table.dataTable tbody td.mw-50 {
+    max-width: 50px;
+}
+table.dataTable.display tbody tr.selected.odd , table.dataTable.display tbody tr.selected.even  {
+    background-color: #B0BED9 !important;
+}
