@@ -359,7 +359,7 @@
         }
         if (id && id !== '') { this.$div.attr('id', id) };
         if (!this.$div || this.$div.length === 0) {
-            throw new Error('Не удалось создать эемент <div class="..." id="..."></div>');
+            throw new Error('Не удалось создать элемент <div class="..." id="..."></div>');
         }
     };
     // Элемент <div class="row">
@@ -374,7 +374,7 @@
             'class': 'col-' + prefix + '-' + col + ' ' + (cl_col ? $.trim(cl_col) + ' ' : ''),
         });
         if (!this.$col || this.$col.length === 0) {
-            throw new Error('Не удалось создать эемент <div class="col-' + prefix + '-' + col + '"></div>');
+            throw new Error('Не удалось создать элемент <div class="col-' + prefix + '-' + col + '"></div>');
         }
     };
     // Элемент <label class=".." for="...">...</label>
@@ -389,7 +389,7 @@
             this.$label.attr('for', for_el);
         }
         if (!this.$label || this.$label.length === 0) {
-            throw new Error('Не удалось создать эемент <label class=".." for="...">...</label>');
+            throw new Error('Не удалось создать элемент <label class=".." for="...">...</label>');
         }
     };
     // Элемент <input class="..." type=".." value="" id=".." name=".." aria-describedby=".." required>
@@ -549,7 +549,7 @@
             'class': 'invalid-feedback',
         });
         if (!this.$div || this.$div.length === 0) {
-            throw new Error('Не удалось создать эемент <div id="..." class="invalid-feedback"></div >');
+            throw new Error('Не удалось создать элемент <div id="..." class="invalid-feedback"></div >');
         }
     };
     //--------------------------------------------------------------------
@@ -711,7 +711,7 @@
                 if (element && element.$element && element.$element.length > 0) {
                     this.$form.append(element.$element);
                     el['element'] = new this.fc.init_datetime_range(element.$span, el.start, el.stop, el.select);
-                    this.el_destroy.push(el['element']); // Этот эемент нужно удалить из HTML формы
+                    this.el_destroy.push(el['element']); // Этот элемент нужно удалить из HTML формы
                 }
             };
             if (el.type === 'select') {
@@ -797,7 +797,7 @@
                     row$ = form_row$.$div;
                     this.$form.append(row$); // добавим на форму
                 } else {
-                    throw new Error('Не удалось создать эемент <div class="form-row">');
+                    throw new Error('Не удалось создать элемент <div class="form-row">');
                 };
             };
             if (el_field.col !== col) {
@@ -813,7 +813,7 @@
                         if ($form_label && $form_label.$label && $form_label.$label.length > 0) {
                             $form_col.$col.append($form_label.$label);
                         } else {
-                            throw new Error('Не удалось создать эемент <label class=".." for="...">...</label>');
+                            throw new Error('Не удалось создать элемент <label class=".." for="...">...</label>');
                         };
                         // Создадим select
                         var cl_sel = 'custom-select' + (el_field.prefix && el_field.prefix !== '' ? ' custom-select-' + el_field.prefix + ' ' : ' ');
@@ -831,11 +831,11 @@
                             // Инициализировать элемент
                             el_field['element'] = new this.fc.init_select($form_select.$select, el_field.list, -1, null, el_field.select);
                         } else {
-                            throw new Error('Не удалось создать эемент <select class="..." id=".." name=".." aria-describedby=".." required>');
+                            throw new Error('Не удалось создать элемент <select class="..." id=".." name=".." aria-describedby=".." required>');
                         };
                     };
                 } else {
-                    throw new Error('Не удалось создать эемент <div class="col-..-..">');
+                    throw new Error('Не удалось создать элемент <div class="col-..-..">');
                 };
 
                 //var $col = colElement.$element;
@@ -884,7 +884,7 @@
         //        if (element && element.$element && element.$element.length > 0) {
         //            this.$form.append(element.$element);
         //            el['element'] = new this.fc.init_datetime_range(element.$span, el.start, el.stop, el.select);
-        //            this.el_destroy.push(el['element']); // Этот эемент нужно удалить из HTML формы
+        //            this.el_destroy.push(el['element']); // Этот элемент нужно удалить из HTML формы
         //        }
         //    };
         //    if (el.type === 'select') {
