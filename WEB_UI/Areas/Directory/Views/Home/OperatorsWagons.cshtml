@@ -1,0 +1,62 @@
+﻿@using WEB_UI.App_LocalResources;
+@{
+    ViewBag.Title = @DirectoryResource.operators_wagons_title;
+}
+
+@section styles {
+    @Styles.Render("~/DataTables/css")
+    @Styles.Render("~/DateTime/css")
+    <link rel="stylesheet" type="text/css" href="~/Content/view/directory/home.css">
+    @*<link rel="stylesheet" type="text/css" href="~/Content/view/directory/ways.css">*@
+    <!-- модули -->
+    <link href="~/Content/module/shared/modal_edit_form.css" rel="stylesheet" />
+    <link href="~/Content/module/directory/table_dir_operators_wagons.css" rel="stylesheet" />
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/Moment")
+    @Scripts.Render("~/bundles/DataTables")
+    @Scripts.Render("~/bundles/DateTime")
+
+    <script src="~/Scripts/view/shared/common.js"></script> <!-- Общая библиотека методов программы -->
+    <script src="~/Scripts/api/shared.js"></script> <!-- Общая библиотека методов API -->
+    @*<script src="~/Scripts/api/ids_directory.js"></script>*@ <!-- Class API ИДС Справочники -->
+    <script src="~/Scripts/api/ids_direct.js"></script> <!-- Class API ИДС Справочники -->
+    <!-- модули -->
+    <script src="~/Scripts/module/shared/common.js"></script>
+    <script src="~/Scripts/module/shared/form_validation.js"></script>
+    <script src="~/Scripts/module/shared/modal_confirm_form.js"></script>
+    <script src="~/Scripts/module/shared/modal_edit_form.js"></script>
+
+    <script src="~/Scripts/module/directory/table_dir_operators_wagons.js"></script>
+    <script src="~/Scripts/view/directory/main_operators_wagons.js"></script>
+
+    <script>
+        @*var url_incoming = '@Url.Action("Incoming", "Home", new { area = "IDSRWT" })';
+        var url_outgoing = '@Url.Action("Outgoing", "Home", new { area = "IDSRWT" })';
+        var url_wsd = '@Url.Action("WSD", "Home", new { area = "IDSRWT" })';*@
+    </script>
+
+}
+
+<input id="username" type="hidden" value="@User.Identity.Name" />
+<div class="container-fluid">
+    <div class="alert" id="main-alert"></div>
+    <div class="card">
+        <h5 class="card-header">@DirectoryResource.operators_wagons_title</h5>
+        <div class="card-body text-dark pl-3 pr-3 table-directory">
+            <div class="row">
+                <div class="col-xl-12 mb-3 mt-2">
+                    <div class="container-fluid mt-3">
+                        <div id="operators-wagons"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer bg-transparent border-dark">&copy; @DateTime.Now.Year ДАТП & ТД</div>
+    </div>
+</div>
+
+
+
+

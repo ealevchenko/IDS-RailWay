@@ -77,6 +77,12 @@ namespace WEB_UI.Areas.Directory.Controllers
             return View();
         }
 
+        // Справочник операторы вагонов
+        [AccessOfDB(LogVisit = true)]
+        public ActionResult OperatorsWagons()
+        {
+            return View();
+        }
         //******************************************************
         // СЕРВИСЫ
         //******************************************************
@@ -111,5 +117,7 @@ namespace WEB_UI.Areas.Directory.Controllers
         {
             return View();
         }
+
+
     }
 }

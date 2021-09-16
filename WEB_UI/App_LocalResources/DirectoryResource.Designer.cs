@@ -142,6 +142,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Справочник &quot;Операторы&quot;.
+        /// </summary>
+        public static string operators_wagons_title {
+            get {
+                return ResourceManager.GetString("operators_wagons_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Расставить текущее положение вагонов по путям станции.
         /// </summary>
         public static string park_state_description {

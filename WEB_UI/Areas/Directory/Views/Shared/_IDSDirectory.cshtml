@@ -52,7 +52,8 @@
                             <li><a href="#" class="disabled">Тип вагона</a></li>
                             <li><a href="#" class="disabled">Разметка по прибытию</a></li>
                             <li><a href="#" class="disabled">Собственики</a></li>
-                            <li><a href="#" class="disabled">Операторы</a></li>
+                            @*<li><a href="#" class="disabled">Операторы</a></li>*@
+                            <li><a href='@Url.Action("OperatorsWagons", "Home", new { Area = "Directory" })'>Операторы</a></li>
                             <li><a href="#" class="disabled">Признаки собственности</a></li>
                             <li><a href="#" class="disabled">Ограничения погрузки</a></li>
                         </ul>

@@ -372,4 +372,7 @@
   <data name="ways_title" xml:space="preserve">
     <value>Справочник "Путей"</value>
   </data>
+  <data name="operators_wagons_title" xml:space="preserve">
+    <value>Справочник "Операторы"</value>
+  </data>
 </root>
