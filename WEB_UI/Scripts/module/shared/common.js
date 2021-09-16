@@ -504,6 +504,27 @@
         });
         this.$pb.append($pb);
     }
+    //<a class="..." id="..." href='...' target="_blank">...</a>
+    form_control.prototype.el_a = function (id, cl_a, href, text, target, title) {
+        this.$alink = $('<a></a>', {
+            'text': text,
+        });
+        if (cl_a && cl_a !== '') {
+            this.$alink.attr('class', cl_a);
+        }
+        if (href && href !== '') {
+            this.$alink.attr('href', href);
+        }
+        if (id && id !== '') {
+            this.$alink.attr('id', id);
+        }
+        if (target && target !== '') {
+            this.$alink.attr('target', target);
+        }
+        if (title && title !== '') {
+            this.$alink.attr('title', title);
+        }
+    };
     // Элемент <div class="form-row">
     form_control.prototype.el_div_form_row = function () {
         this.$div = $('<div></div>', {
