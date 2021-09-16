@@ -131,6 +131,7 @@ namespace EFIDS.Helper
                 rop = o.rop,
                 local_use = o.local_use,
                 color = o.color,
+                monitoring_idle_time = o.monitoring_idle_time, 
                 create = o.create,
                 create_user = o.create_user,
                 change = o.change,
@@ -684,7 +685,7 @@ namespace EFIDS.Helper
                 station_uz = s.station_uz,
                 default_side = s.default_side,
                 code = s.code,
-                idle_time = s.idle_time, 
+                idle_time = s.idle_time,
                 station_delete = s.station_delete,
                 Directory_Ways = null,
                 //Directory_Ways = s.Directory_Ways.ToList().Select(w => w.GetDirectory_Ways()).ToList(),
@@ -1497,7 +1498,7 @@ namespace EFIDS.Helper
                 id_arrival_uz_vagon = c.id_arrival_uz_vagon,
                 UZ_DOC = c.UZ_DOC.GetUZ_DOC(),
                 ArrivalSostav = c.ArrivalSostav.GetArrivalSostav(),
-                Arrival_UZ_Vagon = c.Arrival_UZ_Vagon.GetArrival_UZ_Vagon_Arrival_UZ_Document(), 
+                Arrival_UZ_Vagon = c.Arrival_UZ_Vagon.GetArrival_UZ_Vagon_Arrival_UZ_Document(),
             };
         }
 
@@ -2130,7 +2131,7 @@ namespace EFIDS.Helper
                 OutgoingCars = r.OutgoingCars.GetOutgoingCars_OutgoingSostav(),
                 SAPIncomingSupply = r.SAPIncomingSupply.GetSAPIncomingSupply(),
                 WagonInternalMovement = r.WagonInternalMovement.ToList().Select(w => w.GetWagonInternalMovement()).ToList(),
-                WagonInternalOperation = r.WagonInternalOperation.ToList().Select(w => w.GetWagonInternalOperation()).ToList(), 
+                WagonInternalOperation = r.WagonInternalOperation.ToList().Select(w => w.GetWagonInternalOperation()).ToList(),
             };
         }
         /// <summary>
@@ -2158,11 +2159,12 @@ namespace EFIDS.Helper
                 close = o.close,
                 close_user = o.close_user,
                 parent_id = o.parent_id,
+                WagonInternalMovement = o.WagonInternalMovement.ToList().Select(w => w.GetWagonInternalMovement()).ToList(),
                 Directory_ConditionArrival = o.Directory_ConditionArrival.GetDirectory_ConditionArrival(),
                 Directory_WagonLoadingStatus = o.Directory_WagonLoadingStatus.GetDirectory_WagonLoadingStatus(),
-                Directory_WagonOperations = o.Directory_WagonOperations.GetDirectory_WagonOperations(), 
-                Directory_Locomotive = o.Directory_Locomotive.GetDirectory_Locomotive(), 
-                Directory_Locomotive1 = o.Directory_Locomotive1.GetDirectory_Locomotive(), 
+                Directory_WagonOperations = o.Directory_WagonOperations.GetDirectory_WagonOperations(),
+                Directory_Locomotive = o.Directory_Locomotive.GetDirectory_Locomotive(),
+                Directory_Locomotive1 = o.Directory_Locomotive1.GetDirectory_Locomotive(),
             };
         }
         /// <summary>
@@ -2191,12 +2193,52 @@ namespace EFIDS.Helper
                 close = m.close,
                 close_user = m.close_user,
                 parent_id = m.parent_id,
+                outer_position = m.outer_position,
+                outer = m.outer,
+                outer_user = m.outer_user,
+                id_wio = m.id_wio,
                 Directory_Station = m.Directory_Station.GetDirectory_Station(),
-                Directory_Ways = m.Directory_Ways.GetDirectory_Ways(), 
+                Directory_Ways = m.Directory_Ways.GetDirectory_Ways(),
                 Directory_OuterWays = m.Directory_OuterWays.GetDirectory_OuterWays(),
             };
         }
-
+        /// <summary>
+        /// Вернуть вагоны состава внутреннего перемещения
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
+        public static InternalMovementCars GetInternalMovementCars(this InternalMovementCars c)
+        {
+            if (c == null) return null;
+            return new InternalMovementCars()
+            {
+                id = c.id,
+                id_sostav = c.id_sostav,
+                id_wim = c.id_wim,
+                note = c.note,
+                create = c.create,
+                create_user = c.create_user,
+                WagonInternalMovement = c.WagonInternalMovement.GetWagonInternalMovement(),
+            };
+        }
+        /// <summary>
+        /// Вернуть составы внутреннего перемещени вагонов
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static InternalMovementSostav GetInternalMovementSostav(this InternalMovementSostav s)
+        {
+            if (s == null) return null;
+            return new InternalMovementSostav()
+            {
+                id = s.id,
+                num = s.num,
+                note = s.note,
+                create = s.create,
+                create_user = s.create_user,
+                InternalMovementCars = s.InternalMovementCars.ToList().Select(w => w.GetInternalMovementCars()).ToList(),
+            };
+        }
         #endregion
 
 

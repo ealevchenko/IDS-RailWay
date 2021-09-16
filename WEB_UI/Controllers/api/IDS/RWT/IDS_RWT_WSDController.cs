@@ -83,6 +83,134 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public long wir_id { get; set; }
         public long wim_id { get; set; }
         public long? wio_id { get; set; }
+        public int num { get; set; }
+        public int position { get; set; }
+        public int? id_operator { get; set; }
+        public string operators_ru { get; set; }
+        public string operators_en { get; set; }
+        public string operator_abbr_ru { get; set; }
+        public string operator_abbr_en { get; set; }
+        public DateTime? operator_rent_start { get; set; }
+        public DateTime? operator_rent_end { get; set; }
+        public bool? operator_paid { get; set; }
+        public string operator_color { get; set; }
+        public bool? operator_monitoring_idle_time { get; set; }
+        public int? id_limiting_loading { get; set; }
+        public string limiting_name_ru { get; set; }
+        public string limiting_name_en { get; set; }
+        public string limiting_abbr_ru { get; set; }
+        public string limiting_abbr_en { get; set; }
+        public int? id_owner_wagon { get; set; }
+        public string owner_wagon_ru { get; set; }
+        public string owner_wagon_en { get; set; }
+        public string owner_wagon_abbr_ru { get; set; }
+        public string owner_wagon_abbr_en { get; set; }
+        public int? wagon_adm { get; set; }
+        public string wagon_adm_name_ru { get; set; }
+        public string wagon_adm_name_en { get; set; }
+        public string wagon_adm_abbr_ru { get; set; }
+        public string wagon_adm_abbr_en { get; set; }
+        public int? wagon_rod { get; set; }
+        public string wagon_rod_name_ru { get; set; }
+        public string wagon_rod_name_en { get; set; }
+        public string wagon_rod_abbr_ru { get; set; }
+        public string wagon_rod_abbr_en { get; set; }
+        public string wagon_type_ru { get; set; }
+        public string wagon_type_en { get; set; }
+        public string arrival_condition_name_ru { get; set; }
+        public string arrival_condition_name_en { get; set; }
+        public string arrival_condition_abbr_ru { get; set; }
+        public string arrival_condition_abbr_en { get; set; }
+        public bool? arrival_condition_red { get; set; }
+        public string current_condition_name_ru { get; set; }
+        public string current_condition_name_en { get; set; }
+        public string current_condition_abbr_ru { get; set; }
+        public string current_condition_abbr_en { get; set; }
+        public bool? current_condition_red { get; set; }
+        public DateTime? wagon_date_rem_uz { get; set; }
+        public double? wagon_gruzp_doc { get; set; }
+        public double? wagon_gruzp_uz { get; set; }
+        public string arrival_cargo_group_name_ru { get; set; }
+        public string arrival_cargo_group_name_en { get; set; }
+        public string arrival_cargo_name_ru { get; set; }
+        public string arrival_cargo_name_en { get; set; }
+        public int? arrival_id_sertification_data { get; set; }
+        public string arrival_sertification_data_ru { get; set; }
+        public string arrival_sertification_data_en { get; set; }
+        public int? arrival_id_commercial_condition { get; set; }
+        public string arrival_commercial_condition_ru { get; set; }
+        public string arrival_commercial_condition_en { get; set; }
+        public int? arrival_station_from_code { get; set; }
+        public string arrival_station_from_name_ru { get; set; }
+        public string arrival_station_from_name_en { get; set; }
+        public int? arrival_shipper_code { get; set; }
+        public string arrival_shipper_name_ru { get; set; }
+        public string arrival_shipper_name_en { get; set; }
+        public string arrival_station_amkr_name_ru { get; set; }
+        public string arrival_station_amkr_name_en { get; set; }
+        public string arrival_station_amkr_abbr_ru { get; set; }
+        public string arrival_station_amkr_abbr_en { get; set; }
+        public string arrival_division_amkr_code { get; set; }
+        public string arrival_division_amkr_name_ru { get; set; }
+        public string arrival_division_amkr_name_en { get; set; }
+        public string arrival_division_amkr_abbr_ru { get; set; }
+        public string arrival_division_amkr_abbr_en { get; set; }
+        public int? current_id_loading_status { get; set; }
+        public string current_loading_status_ru { get; set; }
+        public string current_loading_status_en { get; set; }
+        public int? current_wagon_busy { get; set; }
+        public int? current_id_operation { get; set; }
+        public string current_operation_name_ru { get; set; }
+        public string current_operation_name_en { get; set; }
+        public DateTime? current_operation_start { get; set; }
+        public DateTime? current_operation_end { get; set; }
+        public int? arrival_duration { get; set; }
+        public int? arrival_idle_time { get; set; }
+        public decimal? arrival_usage_fee { get; set; }
+        public int? current_station_duration { get; set; }
+        public int? current_way_duration { get; set; }
+        public int? current_station_idle_time { get; set; }
+        public string sap_incoming_supply_num { get; set; }
+        public string sap_incoming_supply_pos { get; set; }
+        public DateTime? sap_incoming_supply_date { get; set; }
+        public TimeSpan? sap_incoming_supply_time { get; set; }
+        public string sap_incoming_supply_warehouse_code { get; set; }
+        public string sap_incoming_supply_warehouse_name { get; set; }
+        public string sap_incoming_supply_cargo_code { get; set; }
+        public string sap_incoming_supply_cargo_name { get; set; }
+        public string instructional_letters_num { get; set; }
+        public DateTime? instructional_letters_datetime { get; set; }
+        public int? instructional_letters_station_code { get; set; }
+        public string instructional_letters_station_name { get; set; }
+        public string instructional_letters_note { get; set; }
+        public int? wagon_brutto_doc { get; set; }
+        public int? wagon_brutto_amkr { get; set; }
+        public int? wagon_tara_doc { get; set; }
+        public double? wagon_tara_uz { get; set; }
+        public int? wagon_tara_arc_doc { get; set; }
+        public int? wagon_vesg_doc { get; set; }
+        public int? wagon_vesg_amkr { get; set; }
+        public int? diff_vesg { get; set; }
+        public bool? doc_outgoing_car { get; set; }
+        public int? arrival_nom_doc { get; set; }
+        public int? arrival_nom_main_doc { get; set; }
+        public string arrival_composition_index { get; set; }
+        public DateTime? arrival_date_adoption { get; set; }
+        public int? outgoing_id_return { get; set; }
+        public string outgoing_return_cause_ru { get; set; }
+        public string outgoing_return_cause_en { get; set; }
+        public DateTime? outgoing_date { get; set; }
+        public int? outgoing_sostav_status { get; set; }
+        public string wagon_ban_uz { get; set; }
+        public bool? wagon_closed_route { get; set; }
+        public string wir_note { get; set; }
+    }
+
+    public class view_wagons1
+    {
+        public long wir_id { get; set; }
+        public long wim_id { get; set; }
+        public long? wio_id { get; set; }
         public int position { get; set; }
         public int num { get; set; }
         public int? wagon_adm { get; set; }
@@ -867,8 +995,8 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             {
                 db.Database.CommandTimeout = 300;
                 System.Data.SqlClient.SqlParameter id = new System.Data.SqlClient.SqlParameter("@id_way", id_way);
-                string sql = "select * from [IDS].[get_view_wagons_of_way](@id_way) order by position";
-                //List<view_wagons> list = db.Database.SqlQuery<view_wagons>(sql, id).ToList();
+                //string sql = "select * from [IDS].[get_view_wagons_of_way](@id_way) order by position";
+                string sql = "select * from [IDS].[get_view_wagons_of_id_way](@id_way) order by position";
                 var list = db.Database.SqlQuery<view_wagons>(sql, id).ToList();
                 this.db.Database.CommandTimeout = null;
                 return Ok(list);

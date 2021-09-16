@@ -12,8 +12,10 @@ namespace EFIDS.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public WagonInternalOperation()
         {
+            WagonInternalMovement = new HashSet<WagonInternalMovement>();
             WagonInternalOperation1 = new HashSet<WagonInternalOperation>();
         }
+
 
         public long id { get; set; }
 
@@ -50,6 +52,9 @@ namespace EFIDS.Entities
         public string close_user { get; set; }
 
         public long? parent_id { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<WagonInternalMovement> WagonInternalMovement { get; set; }
 
         public virtual Directory_Locomotive Directory_Locomotive { get; set; }
 

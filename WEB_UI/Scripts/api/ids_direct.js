@@ -776,6 +776,28 @@
     ids_directory.prototype.getListStation = function (fvalue, ftext, lang, filter) {
         return this.getListObj(this.list_station, fvalue, ftext, lang, filter);
     };
+    //*======= ids_directory.list_ways  (Справочник станций) ======================================
+    ids_directory.prototype.getWays_Of_ID = function (id) {
+        return this.getObj_Of_ID(this.list_ways, id);
+    };
+    //
+    ids_directory.prototype.getValue_Ways_Of_ID = function (id, name, lang) {
+        var obj = this.getWays_Of_ID(id);
+        return this.getValueObj(obj, name, lang);
+    };
+    //
+    ids_directory.prototype.getValueCulture_Ways_Of_ID = function (id, name) {
+        var obj = this.getWays_Of_ID(id);
+        return obj ? obj[name + '_' + App.Lang] : null;
+    };
+    //
+    ids_directory.prototype.getListWays = function (fvalue, ftext, lang, filter) {
+        return this.getListObj(this.list_ways, fvalue, ftext, lang, filter);
+    };
+    ids_directory.prototype.getListWays2 = function (fvalue, ftext1, ftext2, lang, filter) {
+        return this.getListObj2(this.list_ways, fvalue, ftext1, ftext2, lang, filter);
+    };
+
     //*======= ids_directory.list_park_ways  (Справочник парков) ======================================
     ids_directory.prototype.getParkWays_Of_ID = function (id) {
         return this.getObj_Of_ID(this.list_park_ways, id);

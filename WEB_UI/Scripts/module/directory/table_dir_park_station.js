@@ -855,7 +855,6 @@
             }
         }
     };
-
     // Инициализация таблицы детально
     table_dir_park_station.prototype.init_detali = function () {
         var base = this;

@@ -35,6 +35,8 @@
     var TCOPER = App.table_cars_operation;
     var tab_car_oper = new TCOPER('div#cars-oper'); // Создадим экземпляр
 
+    var TCWay = App.table_cars_way;
+    var t_wagons = new TCWay('div#wagons'); // Создадим экземпляр
 
     $('button#arrival').on('click', function (e) {
         //var data = oper_send.operation;
@@ -46,21 +48,30 @@
         //mcf_test.view('Подпись', 'Текст сообщения', function (result) {
 
         //})
-        oper_send.update();
+        //oper_send.update();
+        t_wagons.update(54152087);
 
     });
 
     // После загрузки документа
     $(document).ready(function ($) {
-        oper_send.init({
+        t_wagons.init({
             alert: alert,
-            ids_dir: ids_dir,
             ids_wsd: ids_wsd,
-        },
-            function () {
-                // Инициализация закончилась
-                tab_car_oper.init({ alert: alert });
-            });
+        }, function () {
+            //t_wagons.load_of_way(218, 54152087);//112
+            t_wagons.load_of_way(218);//112
+        });
+
+        //oper_send.init({
+        //    alert: alert,
+        //    ids_dir: ids_dir,
+        //    ids_wsd: ids_wsd,
+        //},
+        //    function () {
+        //        // Инициализация закончилась
+        //        tab_car_oper.init({ alert: alert });
+        //    });
         LockScreenOff();
 
     });

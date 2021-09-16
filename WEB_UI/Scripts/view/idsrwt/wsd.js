@@ -195,6 +195,14 @@
     var OP_ARRIVAL = App.operation_arrival;
     var oper_arrival = new OP_ARRIVAL('div#rep-operation-arrival'); // Создадим экземпляр
 
+    var TCWay = App.table_cars_way;
+    var t_wagons = new TCWay('div#wagons'); // Создадим экземпляр
+
+    // Подключаем модуль выполнения опрераций отправки на АМКР
+    var VSCars = App.view_send_cars;
+    var view_send_cars = new VSCars('div#operation-send-cars'); // Создадим экземпляр
+
+
     var lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang')),
         langs = $.extend(true, $.extend(true, getLanguages($.Text_View, lang), getLanguages($.Text_Common, lang)), getLanguages($.Text_Table, lang)),
         user_name = $('input#username').val(),
@@ -254,6 +262,24 @@
                     });
             }),
         // Основные кнопки управления
+        // 
+        operation_send_cars = $('button#send-sars').on('click',
+            function (event) {
+                alert.clear_message();
+                event.preventDefault();
+                view_send_cars.init({
+                    alert: alert,
+                    ids_dir: ids_dir,
+                    ids_wsd: ids_wsd,
+                },
+                    function () {
+                        view_send_cars.view(current_id_way) // Показать
+                        operation_detali.content.addClass('is-visible');
+
+                        //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+                    });
+            }),
+
 
         // Изменить дислокацию
         bt_dislocation = $('button#dislocation').on('click',
@@ -3297,7 +3323,7 @@
             // Обновим компонент внешних путей
             update_outer_ways: function (id_statstion_on) {
                 // уточним список путей отправки
-/*                var outer_ways_sending = getObjects(operation_detali.outer_ways_sending, 'id_station_on', id_statstion_on);*/
+                /*                var outer_ways_sending = getObjects(operation_detali.outer_ways_sending, 'id_station_on', id_statstion_on);*/
                 var outer_ways_sending = operation_detali.outer_ways_sending.filter(function (i) {
                     return i.way_delete === null && i.id_station_on === id_statstion_on;
                 });
@@ -5745,6 +5771,8 @@
                     oper_send.destroy();
                     oper_arrival.destroy();
 
+                    view_send_cars.destroy();
+
                     if (typeof operation_detali.callback_close === 'function') {
                         operation_detali.callback_close(operation_detali.bit_update, operation_detali.rows_update);
                     }
@@ -5802,12 +5830,20 @@
             current_id_park = id_park;
             current_id_way = id_way;
             current_option_way = option;
-            table_wagons.load(current_id_way, current_num_wagon);
+            //table_wagons.load(current_id_way, current_num_wagon);
+            t_wagons.load_of_way(current_id_way);
         }, function (name, id) {
             // Обработка события детально
             if (name === 'way') {
                 pn_loading_way_detail.Open(id);
             }
+        });
+
+        t_wagons.init({
+            alert: alert,
+            ids_wsd: ids_wsd,
+        }, function () {
+
         });
 
         current_num_wagon = num ? Number(num) : null;
