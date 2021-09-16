@@ -981,6 +981,32 @@ namespace WEB_UI.Controllers.api.IDS.RWT
 
 
         #region ДЕТАЛЬНО ВАГОНЫ
+
+        // GET: api/ids/rwt/wsd/view_old/vagons/way/id/225
+        /// <summary>
+        /// Показать вагоны детально на указаном пути
+        /// </summary>
+        /// <param name="id_way"></param>
+        /// <returns></returns>
+        [Route("view_old/vagons/way/id/{id_way:int}")]
+        [ResponseType(typeof(view_wagons1))]
+        public IHttpActionResult GetOldViewWagonsOfWay(int id_way)
+        {
+            try
+            {
+                db.Database.CommandTimeout = 300;
+                System.Data.SqlClient.SqlParameter id = new System.Data.SqlClient.SqlParameter("@id_way", id_way);
+                string sql = "select * from [IDS].[get_view_wagons_of_way](@id_way) order by position";
+                var list = db.Database.SqlQuery<view_wagons1>(sql, id).ToList();
+                this.db.Database.CommandTimeout = null;
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         // GET: api/ids/rwt/wsd/view/vagons/way/id/225
         /// <summary>
         /// Показать вагоны детально на указаном пути

@@ -3785,7 +3785,7 @@ IDS_RWT.prototype.getViewStatusWayOfID = function (id, callback) {
 IDS_RWT.prototype.getViewWagonsOfWay = function (id, callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/rwt/wsd/view/vagons/way/id/' + id,
+        url: '../../api/ids/rwt/wsd/view_old/vagons/way/id/' + id,
         async: true,
         dataType: 'json',
         beforeSend: function () {
