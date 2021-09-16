@@ -106,11 +106,11 @@
             'field_wagon_type': 'Type',
             'field_wagon_gruzp_doc': 'W \ n t.',
             'field_wagon_adm': 'Adm.',
-            'field_current_condition_abbr': 'Layout.',
+            'field_current_condition_abbr': 'Markup.',
             'field_current_loading_status': 'Status',
             'field_arrival_cargo_name': 'Cargo upon arrival',
-            'field_arrival_certification_data': 'Cert. data',
-            'field_arrival_station_from_name': 'Departure station',
+            'field_arrival_certification_data': 'Certification. data',
+            'field_arrival_station_from_name': 'Station of departure',
             'field_arrival_station_amkr_name': 'Destination station',
             'field_current_operation_wagon_name': 'Last operation',
             'field_current_operation_wagon_end': 'Issue date opera. ',
@@ -119,13 +119,13 @@
             'field_pb_station_duration': 'Ind. pr. st ',
             'field_current_station_amkr_duration': 'Simple. st ',
             'field_current_station_amkr_idle_time': 'Simple. ok. ',
-            'field_out_sostav_status': 'Статус отправляемого состава',
+            'field_out_sostav_status': 'Sent train status',
             'field_sap_is_num': 'In delivery no.',
             'field_sap_is_create_num': 'Created date. in. fast.',
             'field_sap_is_create_date': 'Created date. in. fast.',
             'field_sap_is_create_time': 'Created time. in. fast.',
             'field_instructional_letters_num': 'Inst. letters',
-            'field_instructional_letters_datetime': 'Inst. letters',
+            'field_instructional_letters_datetime': 'Inst Date letters',
             'field_instructional_letters_station_name': 'Station Inst. letters',
             'field_wagon_date_rem_uz': 'DPO repair',
 
@@ -148,6 +148,18 @@
             'field_count_wagon': 'Count',
             'field_locomotives': 'Locomotive.',
 
+            'field_position': 'Position No.',
+            'field_num': 'Wagon number',
+            'field_num_valid': 'Numbering type',
+            'field_note': 'Dislocation at AMKR',
+            'field_create_wagon': 'Added',
+            'field_change_wagon': 'Rules',
+
+            'field_num_doc': 'Doc. no.',
+            'field_count_outgoing': 'count. vag. ',
+            'field_station_on': 'station. UZ. ',
+            'field_date_outgoing': 'passed by US',
+
             'title_button_export': 'Export',
             'title_button_buffer': 'Buffer',
             'title_button_excel': 'Excel',
@@ -159,15 +171,20 @@
             'title_button_select': 'Select wagons',
             'title_button_select_all': 'All wagons',
             'title_button_select_none': 'Remove selection',
+            'title_button_add_way_provide': 'Add to lineup',
+            'title_button_collect_wagon': 'Collect wagons',
+            'title_button_close_collect_wagon': 'Close Collect wagon',
 
             'title_button_add_way_dissolution': 'Add to dissolution path',
             'title_button_add_way_sending': 'Add to lineup',
             'title_button_add_way_dislocation': 'Select for location',
 
             'title_button_clear_wagon': 'Remove all wagons',
-            'title_button_clear_all': 'Reset All',
-            'title_button_move_wagon': 'Move the wagons to the track',
+            'title_button_clear_all': 'Reset all',
+            'title_button_move_wagon': 'Move wagons to track',
+
             'title_mess_load_station': 'Loading the state of tracks of AMKR stations ...',
+            'title_mess_find_wagon': 'Search for a wagon in the IDS system ...',
         }
     };
 
