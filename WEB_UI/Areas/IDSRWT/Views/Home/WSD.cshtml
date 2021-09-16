@@ -49,6 +49,10 @@
     <script src="~/Scripts/plugins/pl_dialog_confirm.js"></script> <!-- Плагин -->
 
     <script src="~/Scripts/view/idsrwt/wsd.js"></script> <!--  -->
+
+    <script>
+        var url_search_wagon = '@Url.Action("SearchWagon", "Home", new { area = "Directory" })';
+    </script>
 }
 <input id="username" type="hidden" value="@User.Identity.Name" />
 
@@ -68,7 +72,7 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" id="operation-send" href="#">@IDSRWTResource.title_operation_send</a>
-                        <a class="dropdown-item" id="operation-arrival" href="#">@IDSRWTResource.title_operation_arrival</a>
+                        @*<a class="dropdown-item" id="operation-arrival" href="#">@IDSRWTResource.title_operation_arrival</a>*@
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -108,7 +112,7 @@
                                         <div class="btn-group mr-2" role="group" aria-label="First group">
                                             <button type="button" class="btn btn-outline-secondary" title="Принять состав на станцию" id="arrival">Приб.</button>
                                             <button type="button" class="btn btn-outline-secondary" title="Отправить состав со станции" id="sending">Отпр.</button>
-                                            <button type="button" class="btn btn-outline-secondary" title="Отправить состав со станции" id="send-sars">Отпр1.</button>
+                                            @*<button type="button" class="btn btn-outline-secondary" title="Отправить состав со станции" id="send-sars">Отпр1.</button>*@
                                             <button type="button" class="btn btn-outline-secondary" title="Дислокация вагонов по станции" id="dislocation">Дисл.</button>
                                             <button type="button" class="btn btn-outline-secondary" title="Роспуск вагонов" id="dissolution">Росп.</button>
                                             <button type="button" class="btn btn-outline-secondary" title="">Выгр.</button>
@@ -160,7 +164,7 @@
                                     <div class="row">
                                         <div class="col-xl-12">
                                             <div id="wagons"></div>
-                                            <table id="wagons-way" class="display compact table-striped table-hover" style="width:100%;table-layout: fixed"></table>
+                                            @*<table id="wagons-way" class="display compact table-striped table-hover" style="width:100%;table-layout: fixed"></table>*@
                                         </div>
                                     </div>
                                 </div>
