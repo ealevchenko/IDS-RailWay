@@ -106,7 +106,8 @@
             'field_outgoing_date': 'Дата сдачи на УЗ',
             'field_outgoing_id_return': 'id возврат',
             'field_outgoing_return_cause': 'Причина возврата по отправлению',
-            'field_outgoing_sostav_status': 'Статус отпр. сост.',
+            'field_outgoing_sostav_status': 'Код стат. отпр. сост.',
+            'field_outgoing_sostav_status_name': 'Статус отпр. сост.',
             'field_wagon_ban_uz': 'Запреты по УЗ',
             'field_wagon_closed_route': 'Замкнутый маршрут (кольцо)',
             'field_wir_note': 'Примечание',
@@ -114,6 +115,11 @@
             'title_yes': 'Да',
             'title_busy': 'Занят',
             'title_all': 'Все',
+            'title_status_0': 'Предъявлен',
+            'title_status_1': 'В работе',
+            'title_status_2': 'Сдан',
+            'title_status_3': 'Отправлен',
+            'title_status_4': 'Возврат',
 
             'title_button_export': 'Экспорт',
             'title_button_buffer': 'Буфер',
@@ -189,7 +195,7 @@
             data: function (row, type, val, meta) {
                 return row.num;
             },
-            className: 'dt-body-center fixed-column',
+            className: 'dt-body-center fixed-column num-wagon',
             title: langView('field_num', App.Langs), width: "50px", orderable: true, searchable: true
         },
         // Оператор
@@ -614,7 +620,7 @@
             data: function (row, type, val, meta) {
                 return row.arrival_duration !== null ? getHoursFromMinuts(Number(row.arrival_duration)) : null;
             },
-            className: 'dt-body-nowrap',
+            className: 'dt-body-nowrap arrival-duration',
             title: langView('field_arrival_duration', App.Langs), width: "50px", orderable: true, searchable: true
         },
         // Норма, час
@@ -683,7 +689,7 @@
             data: function (row, type, val, meta) {
                 return row.instructional_letters_num;
             },
-            className: 'dt-body-center ins-let',
+            className: 'dt-body-nowrap ins-let',
             title: langView('field_instructional_letters_num', App.Langs), width: "50px", orderable: true, searchable: true
         },
         // Дата письма
@@ -943,6 +949,22 @@
             className: 'dt-body-center',
             title: langView('field_outgoing_sostav_status', App.Langs), width: "30px", orderable: true, searchable: true
         },
+        {
+            field: 'outgoing_sostav_status_name',
+            data: function (row, type, val, meta) {
+                switch (row.outgoing_sostav_status) {
+                    default: return row.outgoing_sostav_status;
+                    case 0: return langView('title_status_0', App.Langs);
+                    case 1: return langView('title_status_1', App.Langs);
+                    case 2: return langView('title_status_2', App.Langs);
+                    case 3: return langView('title_status_3', App.Langs);
+                    case 4: return langView('title_status_4', App.Langs);
+                }
+                //return row.outgoing_sostav_status;
+            },
+            className: 'dt-body-center',
+            title: langView('field_outgoing_sostav_status_name', App.Langs), width: "30px", orderable: true, searchable: true
+        },
         // Запреты по УЗ 
         {
             field: 'wagon_ban_uz',
@@ -1118,9 +1140,10 @@
         collums.push('arrival_composition_index');                    // Индекс поезда прибытие
         collums.push('arrival_date_adoption');                    // дата приема вагона
         collums.push('outgoing_date');                    // дата отправки вагона
-        collums.push('outgoing_id_return');                    // Возврат
-        collums.push('outgoing_return_cause');                    // Причина возврата
-        collums.push('outgoing_sostav_status');                    // Статус отправленного вагона
+        collums.push('outgoing_id_return');               // Возврат
+        collums.push('outgoing_return_cause');           // Причина возврата
+        collums.push('outgoing_sostav_status');          // Статус состава отправленного вагона
+        collums.push('outgoing_sostav_status_name');     // Статус состава отправленного вагона
         collums.push('wagon_ban_uz');                    // Запреты по УЗ
         collums.push('wagon_closed_route');                    //Замкнутый маршрут(кольцо)
         collums.push('wir_note');                    // Примечание Вагонник ГС
@@ -1130,15 +1153,15 @@
     table_cars_way.prototype.init_columns_detali = function () {
         var collums = [];
 
-           //=============== ОСНОВНОЕ ОКНО ==================
+        //=============== ОСНОВНОЕ ОКНО ==================
         collums.push('position');
         collums.push('num');
         // Оператор
-/*        collums.push('id_operator');*/
-/*        collums.push('operators');*/
+        //collums.push('id_operator');
+        //collums.push('operators');
         collums.push('operator_abbr');
-        collums.push('operator_rent_start');
-        collums.push('operator_rent_end');
+        //collums.push('operator_rent_start');
+        //collums.push('operator_rent_end');
         // Ограничение 
         //collums.push('id_limiting_loading');
         //collums.push('limiting_name');
@@ -1151,18 +1174,18 @@
         collums.push('operator_paid');
         // Род вагона
         collums.push('wagon_rod');
-/*        collums.push('wagon_rod_name');*/
+        //collums.push('wagon_rod_name');
         collums.push('wagon_rod_abbr');
         // Тип вагона
         collums.push('wagon_type');
         // Разметка прибытие
-/*        collums.push('arrival_condition_name');*/
+        //collums.push('arrival_condition_name');
         collums.push('arrival_condition_abbr');
-/*        collums.push('arrival_condition_red');*/
+        //collums.push('arrival_condition_red');
         // разметка текущая
-/*        collums.push('current_condition_name');*/
+        //collums.push('current_condition_name');
         collums.push('current_condition_abbr');
-/*        collums.push('current_condition_red');*/
+        //collums.push('current_condition_red');
         // Дата деповского ремонта по УЗ
         collums.push('wagon_date_rem_uz');
         // Грузоподъемность
@@ -1170,16 +1193,16 @@
         collums.push('wagon_gruzp_uz');
         // Администрация
         collums.push('wagon_adm');
-/*        collums.push('wagon_adm_name');*/
-        collums.push('wagon_adm_abbr');
+        //collums.push('wagon_adm_name');
+        //collums.push('wagon_adm_abbr');
         // Груз по прибытию
         collums.push('arrival_cargo_group_name');
         collums.push('arrival_cargo_name');
         // Сертификатные данные
-/*        collums.push('arrival_id_sertification_data');*/
+        //collums.push('arrival_id_sertification_data');
         collums.push('arrival_sertification_data');
         // Коммерческое состояние
-/*        collums.push('arrival_id_commercial_condition');*/
+        //collums.push('arrival_id_commercial_condition');
         collums.push('arrival_commercial_condition');
         // Станция отправления
         collums.push('arrival_station_from_code');
@@ -1191,15 +1214,15 @@
         collums.push('arrival_station_amkr_name');
         collums.push('arrival_station_amkr_abbr');
         // Цех-получатель
-/*        collums.push('arrival_division_amkr_name');*/
+        //collums.push('arrival_division_amkr_name');
         collums.push('arrival_division_amkr_abbr');
         // Груж /порожний, состояние загрузки
-/*        collums.push('current_id_loading_status');*/
+        //collums.push('current_id_loading_status');
         collums.push('current_loading_status');
         // Занят (операция)
         collums.push('current_wagon_busy');
         // Последняя операция над вагоном
-/*        collums.push('current_id_operation');*/
+        //collums.push('current_id_operation');
         collums.push('current_operation_name');
         // Дата начала выполнения операции
         collums.push('current_operation_start');
@@ -1258,9 +1281,10 @@
         collums.push('arrival_composition_index');                    // Индекс поезда прибытие
         collums.push('arrival_date_adoption');                    // дата приема вагона
         collums.push('outgoing_date');                    // дата отправки вагона
-/*        collums.push('outgoing_id_return');                    // Возврат*/
+        /*        collums.push('outgoing_id_return');                    // Возврат*/
         collums.push('outgoing_return_cause');                    // Причина возврата
-        collums.push('outgoing_sostav_status');                    // Статус отправленного вагона
+        //collums.push('outgoing_sostav_status');          // Статус состава отправленного вагона
+        collums.push('outgoing_sostav_status_name');     // Статус состава отправленного вагона
         collums.push('wagon_ban_uz');                    // Запреты по УЗ
         collums.push('wagon_closed_route');                    //Замкнутый маршрут(кольцо)
         collums.push('wir_note');                    // Примечание Вагонник ГС
@@ -1349,10 +1373,12 @@
                 $(row).attr('id', data.wim_id); // id строки дислокации вагона
                 $(row).attr('data-num', data.num); // data-num номер вагона
                 // Проверим если по оператору контролировать норму времени, тогда проверить
-                if (data.operator_monitoring_idle_time && data.arrival_idle_time < data.arrival_duration) {
+                if (data.arrival_idle_time < data.arrival_duration) {
                     // Превышена норма нахождения вагона на АМКР
-                    $('td', row).eq(1).addClass('idle-time-error');
+                    $('td.arrival-duration', row).addClass('idle-time-error');
+                    if (data.operator_monitoring_idle_time) $('td.num-wagon', row).addClass('idle-time-error');
                 }
+
                 // Прибыл
                 if (data.current_id_operation === 1) {
                     $('td.fixed-column', row).addClass('red'); // Отметим прибытие
