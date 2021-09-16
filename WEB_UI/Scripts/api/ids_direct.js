@@ -29,6 +29,7 @@
         this.list_ways = null;
         this.list_divisions = null;
         this.list_park_ways = null;
+        this.list_operators_wagons = null;
 
     }
     //****************************************************************************************
@@ -99,9 +100,45 @@
                         }.bind(this));
                     };
                 };
+                if (table === 'operators_wagons') {
+
+                    if (lock) LockScreen(langView('mess_load_reference', App.Langs));
+                    if (update || !this.list_operators_wagons) {
+                        process++;
+                        this.getOperatorsWagons(function (data) {
+                            this.list_operators_wagons = data;
+                            process--;
+                            result.push('operators_wagons');
+                            out_load(process);
+                        }.bind(this));
+                    };
+                };
             }.bind(this));
         };
         out_load(process);
+    };
+    //======= Directory_OperatorsWagons (Справочник операторов вагонов) ======================================
+    ids_directory.prototype.getOperatorsWagons = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/directory/operators_wagons/all',
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_directory.getOperatorsWagons", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
     };
     //======= Directory_Station (Справочник станций ИДС) ======================================
     ids_directory.prototype.getStation = function (callback) {
