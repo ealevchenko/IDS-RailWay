@@ -27,7 +27,9 @@
             'field_color': 'Цвет оператора (#RGB)',
             'field_monitoring_idle_time': 'Контр. простой',
             'field_create': 'Строка создана',
+            'field_create_user': 'Строку создал',
             'field_change': 'Строка обновлена',
+            'field_change_user': 'Строку обновил',
 
             'title_yes': 'Да',
 /*            'tytle_no': 'Нет',*/
@@ -72,7 +74,7 @@
             data: function (row, type, val, meta) {
                 return row['operators_' + App.Lang];
             },
-            className: 'dt-body-nowrap text-left',
+            className: 'dt-body-nowrap text-left color',
             title: langView('field_operators', App.Langs), width: "200px", orderable: true, searchable: true
         },
         {
@@ -107,14 +109,14 @@
             className: 'dt-body-centr',
             title: langView('field_local_use', App.Langs), width: "50px", orderable: true, searchable: true
         },
-        {
-            field: 'color_view',
-            data: function (row, type, val, meta) {
-                return '  ';
-            },
-            className: 'dt-body-nowrap mw-50 color',
-            title: langView('field_color', App.Langs), width: "30px", orderable: false, searchable: false
-        },
+        //{
+        //    field: 'color_view',
+        //    data: function (row, type, val, meta) {
+        //        return '  ';
+        //    },
+        //    className: 'dt-body-nowrap mw-50 color',
+        //    title: langView('field_color', App.Langs), width: "30px", orderable: false, searchable: false
+        //},
         {
             field: 'color',
             data: function (row, type, val, meta) {
@@ -134,18 +136,34 @@
         {
             field: 'create',
             data: function (row, type, val, meta) {
-                return row.create ? (row.create_user + '<br />[' + moment(row.create).format(format_datetime) + ']') : null;
+                return row.create ? moment(row.create).format(format_datetime) : null;
             },
-            className: 'dt-body-center',
-            title: langView('field_create', App.Langs), width: "100px", orderable: false, searchable: false
+            className: 'dt-body-nowrap',
+            title: langView('field_create', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'create_user',
+            data: function (row, type, val, meta) {
+                return row.create_user;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('field_create_user', App.Langs), width: "50px", orderable: true, searchable: true
         },
         {
             field: 'change',
             data: function (row, type, val, meta) {
-                return row.change ? (row.change_user + '<br />[' + moment(row.change).format(format_datetime) + ']') : null;
+                return row.change ? moment(row.change).format(format_datetime) : null;
             },
-            className: 'dt-body-center',
-            title: langView('field_change', App.Langs), width: "100px", orderable: false, searchable: false
+            className: 'dt-body-nowrap',
+            title: langView('field_change', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'change_user',
+            data: function (row, type, val, meta) {
+                return row.change_user;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('field_change_user', App.Langs), width: "50px", orderable: true, searchable: true
         },
 
     ];
@@ -166,7 +184,7 @@
         var collums = [];
         collums.push('id');
         collums.push('color');
-        collums.push('color_view');
+/*        collums.push('color_view');*/
         collums.push('operators');
         collums.push('abbr');
         collums.push('paid');
@@ -174,7 +192,9 @@
         collums.push('local_use');
         collums.push('monitoring_idle_time');
         collums.push('create');
+        collums.push('create_user');
         collums.push('change');
+        collums.push('change_user');
         return init_columns(collums, list_collums);
     };
     // Функция обновить данные из базы list-список таблиц, update-обновить принудительно, callback-возврат список обновленных таблиц
@@ -206,6 +226,370 @@
         this.modal_confirm_form = new MCF(this.selector); // Создадим экземпляр окно сообщений
         this.modal_confirm_form.init();
 
+        // Форма правки ===============================================================================
+
+        // Создадим форму выбора пути отправки
+        var FIF = App.form_infield;
+        this.form = new FIF();
+        // Определим поля
+        var fl_id = {
+            field: 'id',
+            type: 'number',
+            add: null,
+            edit: null,
+            name: null,
+            prefix:null,
+            label: null,
+            placeholder: null,
+            maxlength: null,
+            required: true,
+            control: null,
+            list: null,
+            select: null,
+            update: null,
+            close: null,
+            add_validation: null,
+            edit_validation: null,
+            default: 0,
+            row: null,
+            col: null,
+            col_prefix: null,
+            col_size: null,
+        };
+        var fl_operators_ru = {
+            field: 'operators_ru',
+            type: 'string',
+            add: 'text',
+            edit: 'text',
+            name: 'operators_ru',
+            label: 'Оператор (рус.)',
+            placeholder: 'Полное название оператора',
+            maxlength: 100,
+            required: true,
+            control: null,
+            list: null,
+            select: null,
+            update: null,
+            close: null,
+            change: null,
+            add_validation: null,
+            edit_validation: null,
+            default: null,
+            row: 1,
+            col: 1,
+            col_prefix: 'md',
+            col_size: 8,
+        };
+        var fl_operators_en = {
+            field: 'operators_en',
+            type: 'string',
+            add: 'text',
+            edit: 'text',
+            name: 'operators_en',
+            label: 'Оператор (анг.)',
+            placeholder: 'Full operator name',
+            maxlength: 100,
+            required: true,
+            control: null,
+            list: null,
+            select: null,
+            update: null,
+            close: null,
+            add_validation: null,
+            edit_validation: null,
+            default: null,
+            row: 2,
+            col: 1,
+            col_prefix: 'md',
+            col_size: 8,
+        };
+        var fl_abbr_ru = {
+            field: 'abbr_ru',
+            type: 'string',
+            add: 'text',
+            edit: 'text',
+            name: 'abbr_ru',
+            label: 'Крат. назв. оператора (рус.)',
+            placeholder: 'Аббревиатура оператора',
+            maxlength: 20,
+            required: true,
+            control: null,
+            list: null,
+            select: null,
+            update: null,
+            close: null,
+            add_validation: null,
+            edit_validation: null,
+            default: null,
+            row: 1,
+            col: 2,
+            col_prefix: 'md',
+            col_size: 4,
+        };
+        var fl_abbr_en = {
+            field: 'abbr_en',
+            type: 'string',
+            add: 'text',
+            edit: 'text',
+            name: 'abbr_en',
+            label: 'Крат. назв. оператора (анг.)',
+            placeholder: 'Operator abbreviation',
+            maxlength: 20,
+            required: true,
+            control: null,
+            list: null,
+            select: null,
+            update: null,
+            close: null,
+            add_validation: null,
+            edit_validation: null,
+            default: null,
+            row: 2,
+            col: 2,
+            col_prefix: 'md',
+            col_size: 4,
+        };
+        var fl_paid = {
+            field: 'paid',
+            type: 'boolean',
+            add: 'checkbox',
+            edit: 'checkbox',
+            name: 'paid',
+            label: 'Платный',
+            placeholder: null,
+            maxlength: null,
+            required: null,
+            control: null,
+            list: null,
+            select: null,
+            update: null,
+            close: null,
+            add_validation: null,
+            edit_validation: null,
+            default: null,
+            row: 3,
+            col: 1,
+            col_prefix: 'md',
+            col_size: 2,
+        };
+        var fl_rop = {
+            field: 'rop',
+            type: 'boolean',
+            add: 'checkbox',
+            edit: 'checkbox',
+            name: 'rop',
+            label: 'rop',
+            placeholder: null,
+            maxlength: null,
+            required: null,
+            control: null,
+            list: null,
+            select: null,
+            update: null,
+            close: null,
+            add_validation: null,
+            edit_validation: null,
+            default: null,
+            row: 3,
+            col: 2,
+            col_prefix: 'md',
+            col_size: 2,
+        };
+        var fl_local_use = {
+            field: 'local_use',
+            type: 'boolean',
+            add: 'checkbox',
+            edit: 'checkbox',
+            name: 'local_use',
+            label: 'Местный',
+            placeholder: null,
+            maxlength: null,
+            required: null,
+            control: null,
+            list: null,
+            select: null,
+            update: null,
+            close: null,
+            add_validation: null,
+            edit_validation: null,
+            default: null,
+            row: 3,
+            col: 3,
+            col_prefix: 'md',
+            col_size: 2,
+        };
+        var fl_monitoring_idle_time = {
+            field: 'monitoring_idle_time',
+            type: 'boolean',
+            add: 'checkbox',
+            edit: 'checkbox',
+            name: 'monitoring_idle_time',
+            label: 'Контр. врем.',
+            placeholder: null,
+            maxlength: null,
+            required: null,
+            control: null,
+            list: null,
+            select: null,
+            update: null,
+            close: null,
+            add_validation: null,
+            edit_validation: null,
+            default: null,
+            row: 3,
+            col: 4,
+            col_prefix: 'md',
+            col_size: 2,
+        };
+        var fl_color = {
+            field: 'color',
+            type: 'string',
+            add: 'text',
+            edit: 'text',
+            name: 'color',
+            label: 'Цвет',
+            placeholder: '#RGB',
+            maxlength: 10,
+            required: false,
+            control: null,
+            list: null,
+            select: null,
+            update: null,
+            close: null,
+            add_validation: null,
+            edit_validation: null,
+            default: null,
+            row: 3,
+            col: 5,
+            col_prefix: 'md',
+            col_size: 2,
+        };
+        var fl_create = {
+            field: 'create',
+            type: 'datetime',
+            add: null,
+            edit: null,
+            name: null,
+            label: null,
+            control: null,
+            list: null,
+            select: null,
+            update: null,
+            close: null,
+            add_validation: null,
+            edit_validation: null,
+            default: moment().format("YYYY-MM-DDThh:mm:ss"), //.utc().toISOString(),
+            row: null,
+            col: null,
+            col_prefix: null,
+            col_size: null,
+        };
+        var fl_create_user = {
+            field: 'create_user',
+            type: 'string',
+            add: null,
+            edit: null,
+            name: null,
+            label: null,
+            control: null,
+            list: null,
+            select: null,
+            update: null,
+            close: null,
+            add_validation: null,
+            edit_validation: null,
+            default: App.User_Name,
+            row: null,
+            col: null,
+            col_prefix: null,
+            col_size: null,
+        };
+        var fl_change = {
+            field: 'change',
+            type: 'datetime',
+            add: null,
+            edit: null,
+            name: null,
+            label: null,
+            control: null,
+            list: null,
+            select: null,
+            update: null,
+            close: null,
+            add_validation: null,
+            edit_validation: null,
+            default: null,
+            row: null,
+            col: null,
+            col_prefix: null,
+            col_size: null,
+        };
+        var fl_change_user = {
+            field: 'change_user',
+            type: 'string',
+            add: null,
+            edit: null,
+            name: null,
+            label: null,
+            control: null,
+            list: null,
+            select: null,
+            update: null,
+            close: null,
+            add_validation: null,
+            edit_validation: null,
+            default: null,
+            row: null,
+            col: null,
+            col_prefix: null,
+            col_size: null,
+        };
+        var fields = [];
+        fields.push(fl_id);
+        fields.push(fl_operators_ru);
+        fields.push(fl_operators_en);
+        fields.push(fl_abbr_ru);
+        fields.push(fl_abbr_en);
+        fields.push(fl_paid);
+        fields.push(fl_rop);
+        fields.push(fl_local_use);
+        fields.push(fl_monitoring_idle_time);
+        fields.push(fl_color);
+        fields.push(fl_create);
+        fields.push(fl_create_user);
+        fields.push(fl_change);
+        fields.push(fl_change_user);
+        // Инициализация формы
+        this.form.init({
+            fields: fields,
+            mb: 2,
+            id: null,
+            cl_form: '',
+            validation: true
+        });
+
+        // Создать модальную форму "Править"
+        var MF = App.modal_form
+        this.mf_edit = new MF();
+        this.mf_edit.init({
+            id: 'mfeow-' + this.selector,
+            prefix: 'xl',
+            cl_modal: null,
+            form: this.form,
+            label_ok: 'Править',
+            label_close: 'Отмена',
+            //ok_click: function () {
+
+            //},
+            //close_click: function () {
+
+            //},
+        });
+        //this.mf_edit.open();
+
+
+
+
         // Инициализация формы для правки полей
         var MEF = App.modal_edit_form;
         this.modal_edit_form = new MEF('mfe-' + this.selector); // Создадим экземпляр формы правки строк таблицы
@@ -230,14 +614,14 @@
             col: null,
             size: null,
         };
-        var fl_park_name_ru = {
-            field: 'park_name_ru',
+        var fl_operators_ru = {
+            field: 'operators_ru',
             type: 'string',
             add: 'text',
             edit: 'text',
-            name: 'park_name_ru',
-            label: 'Название парка (рус.)',
-            placeholder: 'Полное название парка',
+            name: 'operators_ru',
+            label: 'Оператор (рус.)',
+            placeholder: 'Полное название оператора',
             maxlength: 100,
             required: true,
             control: null,
@@ -252,14 +636,14 @@
             col: 1,
             size: 8,
         };
-        var fl_park_name_en = {
-            field: 'park_name_en',
+        var fl_operators_en = {
+            field: 'operators_en',
             type: 'string',
             add: 'text',
             edit: 'text',
-            name: 'park_name_en',
-            label: 'Название парка (анг.)',
-            placeholder: 'Full name of the park',
+            name: 'operators_en',
+            label: 'Оператор (анг.)',
+            placeholder: 'Full operator name',
             maxlength: 100,
             required: true,
             control: null,
@@ -274,15 +658,15 @@
             col: 1,
             size: 8,
         };
-        var fl_park_abbr_ru = {
-            field: 'park_abbr_ru',
+        var fl_abbr_ru = {
+            field: 'abbr_ru',
             type: 'string',
             add: 'text',
             edit: 'text',
-            name: 'park_abbr_ru',
-            label: 'Крат. назв. парка (рус.)',
-            placeholder: 'Аббревиатура парка',
-            maxlength: 50,
+            name: 'abbr_ru',
+            label: 'Крат. назв. оператора (рус.)',
+            placeholder: 'Аббревиатура оператора',
+            maxlength: 20,
             required: true,
             control: null,
             list: null,
@@ -296,15 +680,15 @@
             col: 2,
             size: 4,
         };
-        var fl_park_abbr_en = {
-            field: 'park_abbr_en',
+        var fl_abbr_en = {
+            field: 'abbr_en',
             type: 'string',
             add: 'text',
             edit: 'text',
-            name: 'park_abbr_en',
-            label: 'Крат. назв. парка (анг.)',
-            placeholder: 'Park abbreviation',
-            maxlength: 50,
+            name: 'abbr_en',
+            label: 'Крат. назв. оператора (анг.)',
+            placeholder: 'Operator abbreviation',
+            maxlength: 20,
             required: true,
             control: null,
             list: null,
@@ -317,6 +701,116 @@
             row: 2,
             col: 2,
             size: 4,
+        };
+        var fl_paid = {
+            field: 'paid',
+            type: 'boolean',
+            add: 'checkbox',
+            edit: 'checkbox',
+            name: 'paid',
+            label: 'Платный',
+            placeholder: null,
+            maxlength: null,
+            required: null,
+            control: null,
+            list: null,
+            select: null,
+            update: null,
+            close: null,
+            add_validation: null,
+            edit_validation: null,
+            default: null,
+            row: 3,
+            col: 1,
+            size: 2,
+        };
+        var fl_rop = {
+            field: 'rop',
+            type: 'boolean',
+            add: 'checkbox',
+            edit: 'checkbox',
+            name: 'rop',
+            label: 'rop',
+            placeholder: null,
+            maxlength: null,
+            required: null,
+            control: null,
+            list: null,
+            select: null,
+            update: null,
+            close: null,
+            add_validation: null,
+            edit_validation: null,
+            default: null,
+            row: 3,
+            col: 2,
+            size: 2,
+        };
+        var fl_local_use = {
+            field: 'local_use',
+            type: 'boolean',
+            add: 'checkbox',
+            edit: 'checkbox',
+            name: 'local_use',
+            label: 'Местный',
+            placeholder: null,
+            maxlength: null,
+            required: null,
+            control: null,
+            list: null,
+            select: null,
+            update: null,
+            close: null,
+            add_validation: null,
+            edit_validation: null,
+            default: null,
+            row: 3,
+            col: 3,
+            size: 2,
+        };
+        var fl_monitoring_idle_time = {
+            field: 'monitoring_idle_time',
+            type: 'boolean',
+            add: 'checkbox',
+            edit: 'checkbox',
+            name: 'monitoring_idle_time',
+            label: 'Контр. врем.',
+            placeholder: null,
+            maxlength: null,
+            required: null,
+            control: null,
+            list: null,
+            select: null,
+            update: null,
+            close: null,
+            add_validation: null,
+            edit_validation: null,
+            default: null,
+            row: 3,
+            col: 4,
+            size: 2,
+        };
+        var fl_color = {
+            field: 'color',
+            type: 'string',
+            add: 'text',
+            edit: 'text',
+            name: 'color',
+            label: 'Цвет',
+            placeholder: '#RGB',
+            maxlength: 10,
+            required: false,
+            control: null,
+            list: null,
+            select: null,
+            update: null,
+            close: null,
+            add_validation: null,
+            edit_validation: null,
+            default: null,
+            row: 3,
+            col: 5,
+            size: 2,
         };
         var fl_create = {
             field: 'create',
@@ -396,10 +890,15 @@
         };
         var fields = [];
         fields.push(fl_id)
-        fields.push(fl_park_name_ru)
-        fields.push(fl_park_name_en)
-        fields.push(fl_park_abbr_ru)
-        fields.push(fl_park_abbr_en)
+        fields.push(fl_operators_ru)
+        fields.push(fl_operators_en)
+        fields.push(fl_abbr_ru)
+        fields.push(fl_abbr_en)
+        fields.push(fl_paid)
+        fields.push(fl_rop)
+        fields.push(fl_local_use)
+        fields.push(fl_monitoring_idle_time)
+        fields.push(fl_color)
         fields.push(fl_create)
         fields.push(fl_create_user)
         fields.push(fl_change)
@@ -443,7 +942,7 @@
                     $(row).attr('id', data.id);
                     // Цвет оператора
                     if (data.color && data.color !== '') {
-                        $('td.color', row).attr('style', 'background-color:' + data.color)
+                        $('td.color', row).attr('style', 'background-color:' + data.color + ' !important;')
                     }
                 },
                 columns: this.init_columns(),
@@ -472,7 +971,8 @@
                     {
                         text: langView('title_button_add', App.Langs),
                         action: function (e, dt, node, config) {
-                            this.modal_edit_form.view(null);
+                            //this.modal_edit_form.view(null);
+                            this.mf_edit.open();
                         }.bind(this),
                         enabled: true
                     },
