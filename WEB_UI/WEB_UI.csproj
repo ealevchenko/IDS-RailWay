@@ -2009,6 +2009,7 @@
     <Content Include="Content\fontawesome-free\webfonts\fa-regular-400.svg" />
     <Content Include="Content\fontawesome-free\webfonts\fa-solid-900.svg" />
     <Content Include="Content\module\cblist_station.css" />
+    <Content Include="Content\module\directory\edit_dir_operators_wagons.css" />
     <Content Include="Content\module\directory\table_dir_operators_wagons.css" />
     <Content Include="Content\module\directory\table_dir_park_station.css" />
     <Content Include="Content\module\directory\table_dir_park_ways.css" />
@@ -2076,6 +2077,7 @@
     <Content Include="Scripts\jquery.doubleScroll.js" />
     <Content Include="Scripts\jszip.js" />
     <Content Include="Scripts\jszip.min.js" />
+    <Content Include="Scripts\module\directory\edit_dir_operators_wagons.js" />
     <Content Include="Scripts\module\directory\table_dir_operators_wagons.js" />
     <Content Include="Scripts\module\directory\table_dir_park_ways.js" />
     <Content Include="Scripts\module\directory\table_dir_park_station.js" />
