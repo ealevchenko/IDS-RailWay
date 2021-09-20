@@ -140,6 +140,101 @@
             },
         });
     };
+    // Получить парки по указаной станции c позицией
+    ids_directory.prototype.getOperatorsWagonsID = function (id, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/directory/operators_wagons/id/' + id,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_directory.getOperatorsWagonsID", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //Добавить
+    ids_directory.prototype.postOperatorsWagons = function (obj, callback) {
+        $.ajax({
+            url: '../../api/ids/directory/operators_wagons/',
+            type: 'POST',
+            data: JSON.stringify(obj),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_directory.postOperatorsWagons", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //Обновить 
+    ids_directory.prototype.putOperatorsWagons = function (obj, callback) {
+        $.ajax({
+            type: 'PUT',
+            url: '../../api/ids/directory/operators_wagons/id/' + obj.id,
+            data: JSON.stringify(obj),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_directory.putOperatorsWagons", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Удалить 
+    ids_directory.prototype.deleteOperatorsWagons = function (id, callback) {
+        $.ajax({
+            url: '../../api/ids/directory/operators_wagons/id/' + id,
+            type: 'DELETE',
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_directory.deleteOperatorsWagons", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    }
     //======= Directory_Station (Справочник станций ИДС) ======================================
     ids_directory.prototype.getStation = function (callback) {
         $.ajax({

@@ -1,5 +1,6 @@
 ﻿using EFIDS.Abstract;
 using EFIDS.Entities;
+using EFIDS.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,33 +32,88 @@ namespace WEB_UI.Controllers.api
         {
             try
             {
-                List<Directory_OperatorsWagons> list = this.ef_ow.Context.ToList()
-                    .Select(o => new Directory_OperatorsWagons
-                    {
-                        id = o.id,
-                        abbr_ru = o.abbr_ru,
-                        operators_ru = o.operators_ru,
-                        abbr_en = o.abbr_en,
-                        operators_en = o.operators_en,
-                        paid = o.paid,
-                        rop = o.rop,
-                        local_use = o.local_use,
-                        color = o.color,
-                        create = o.create,
-                        create_user = o.create_user,
-                        change = o.change,
-                        change_user = o.change_user
-                    }).ToList();
-                if (list == null || list.Count() == 0)
-                {
-                    return NotFound();
-                }
+                List<Directory_OperatorsWagons> list = this.ef_ow
+                    .Context
+                    .ToList()
+                    .Select(o => o.GetOperatorsWagons())
+                    .ToList();
                 return Ok(list);
+
             }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
         }
+
+
+        // GET: api/ids/directory/operators_wagons/id/
+        [Route("id/{id:int}")]
+        [ResponseType(typeof(Directory_OperatorsWagons))]
+        public IHttpActionResult GetOperatorsWagonsOfID(int id)
+        {
+            try
+            {
+                Directory_OperatorsWagons oper = this.ef_ow
+                    .Context
+                    .Where(o => o.id == id)
+                    .ToList()
+                    .Select(s => s.GetOperatorsWagons()).FirstOrDefault();
+                return Ok(oper);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST api/ids/directory/operators_wagons/
+        [HttpPost]
+        [Route("")]
+        public int PostOperatorsWagons([FromBody] Directory_OperatorsWagons value)
+        {
+            try
+            {
+                this.ef_ow.Add(value);
+                return ef_ow.Save();
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+        }
+
+        // PUT api/ids/directory/operators_wagons/id/
+        [HttpPut]
+        [Route("id/{id:int}")]
+        public int PutExternalStation(int id, [FromBody] Directory_OperatorsWagons value)
+        {
+            try
+            {
+                this.ef_ow.Update(value);
+                return this.ef_ow.Save();
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+        }
+
+        // DELETE api/ids/directory/operators_wagons/id/
+        [HttpDelete]
+        [Route("id/{id:int}")]
+        public int DeleteOperatorsWagons(int id)
+        {
+            try
+            {
+                this.ef_ow.Delete(id);
+                return this.ef_ow.Save();
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+        }
+
     }
 }
