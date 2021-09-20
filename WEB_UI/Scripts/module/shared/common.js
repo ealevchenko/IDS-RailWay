@@ -16,7 +16,8 @@
         },
         'en':  //default language: English
         {
-
+            'title_label_date': 'PERIOD:',
+            'title_select': 'Select ...',
         }
     };
     // Определлим список текста для этого модуля
@@ -999,16 +1000,22 @@
         this.$form_edit = form_edit.$form;
         // Алерт 
         if (!this.settings.alert) {
-            var $alert_add = this.fc.el_alert();
-            if ($alert_add && $alert_add.$alert && $alert_add.$alert.length > 0) {
-                this.$alert_add = $alert_add.$alert;
-                this.$form_add.append(this.$alert_add);
+            var $alert = new this.fc.el_alert();
+            if ($alert && $alert.$alert && $alert.$alert.length > 0) {
+                var $alert_add = $alert.$alert;
+                this.$form_add.append($alert_add);
+                this.alert_add = new alert_form($alert_add);
+                //TODO: решить вопрос привязки this.alert_add к общей валидации
             }
-            var $alert_edit = this.fc.el_alert();
-            if ($alert_edit && $alert_edit.$alert && $alert_edit.$alert.length > 0) {
-                this.$alert_edit = $alert_edit.$alert;
-                this.$form_edit.append(this.$alert_edit);
+            var $alert = new this.fc.el_alert();
+            if ($alert && $alert.$alert && $alert.$alert.length > 0) {
+                var $alert_edit = $alert.$alert;
+                this.$form_edit.append($alert_edit);
+                this.alert_edit = new alert_form($alert_edit);
+                //TODO: решить вопрос привязки this.alert_edit к общей валидации
             }
+
+
         };
         // Привяжем событие submit
         this.$form_add.on('submit', function (event) {
@@ -1022,7 +1029,8 @@
         // Создаем элементы и отрисовываем их на форме
         // Получим список элементов которые должны отображатся на форме
         this.el_destroy = []; // Элементы которые нужно удалить методом destroy()
-        this.el_validation = $([]); // Элементы для валидации
+        this.data = null;
+        /*        this.el_validation = $([]); // Элементы для валидации*/
         // Отсортируем элементы по row
         var form_elements = this.settings.fields.filter(function (i) {
             return i.row !== null;
@@ -1084,19 +1092,8 @@
             var elements_edit = this.$form_edit.find('input, select, textarea');
             var elements = [];
             elements = $.merge(elements_add, elements_edit);
-            //$.each(this.settings.fields, function (i, el_field) {
-            //    if (el_field['element_add']) {
-            //        var el = el_field['element_add'];
-            //        if (el && el.$element && el.$element.length > 0) {
-            //            $(elements).add(el.$element[0]);
-            //        }
-
-            //    }
-            //}.bind(this));
-
-
             this.validation.init({
-                alert: this.settings.alert,
+                alert: this.settings.alert, //TODO: решить вопрос привязки this.alert_add или this.alert_edit к общей валидации
                 elements: elements,
             });
         };
@@ -1107,7 +1104,7 @@
         this.$form_add.show();
         this.$form_edit.hide();
         this.mode = 'add';
-        this.view();
+        this.view(null);
     };
     // Показать форму править
     form_infield.prototype.view_edit = function (data) {
@@ -1118,6 +1115,7 @@
     };
     // Показать форму править
     form_infield.prototype.view = function (data) {
+        this.data = data; // Запомним объект до ридактирования
         this.validation.clear_all();
         $.each(this.settings.fields, function (i, el_field) {
             if (el_field['element_' + this.mode]) {
@@ -1139,6 +1137,7 @@
         this.validation.clear_all();
         event.preventDefault();
         this.valid = true;
+        var result = {};
         $.each(this.settings.fields, function (i, el_field) {
             if (el_field['element_' + this.mode]) {
                 var form_element = el_field['element_' + this.mode];
@@ -1182,12 +1181,56 @@
         }.bind(this));
         if (!this.valid) {
             event.stopPropagation();
+        } else {
+            // Заполним result полями
+            $.each(this.settings.fields, function (i, el) {
+                var element_form = this.data ? (el.element_edit ? el.element_edit : null) : (el.element_add ? el.element_add : null);
+                var type = this.data ? el.edit : el.add;
+                /*                    var value = element ? ($(element).attr('type') === "checkbox" ? $(element).prop('checked') : element.val()) : null;*/
+                switch (type) {
+                    case null: {
+                        result[el.field] = this.data ? this.data[el.field] : el.default;
+                        break;
+                    };
+                    case "select": {
+                        var value = element_form.val();
+                        result[el.field] = value !== null && value !== "-1" ? Number(value) : null;
+                        break;
+                    };
+                    case "text": {
+                        result[el.field] = element_form.val();
+                        break;
+                    };
+                    case "textarea": {
+                        result[el.field] = element_form.val();
+                        break;
+                    };
+                    case "number": {
+                        var value = element_form.val();
+                        result[el.field] = value !== null && value !== "" ? Number(value) : null;
+                        break;
+                    };
+                    case "checkbox": {
+                        var value = element_form.val();
+                        result[el.field] = value !== null && value !== "" ? Boolean(value) : null;
+                        break;
+                    };
+                    case "datetime": {
+                        var value = element_form.val();
+                        result[el.field] = value;
+                        break;
+                    };
+                    case "autocomplete": {
+                        result[el.field] = element_form.val();
+                        break;
+                    };
+                }
+            }.bind(this));
         }
         if (typeof this.settings.fn_validation === 'function') {
-            this.settings.fn_validation(Boolean(this.valid));
+            this.settings.fn_validation({ valid: Boolean(this.valid), old: this.data, new: result });
         }
     };
-
     // Обновить списочный компонент
     form_infield.prototype.update_list_element = function (name, list, value) {
         if (this.settings.fields) {
@@ -1274,7 +1317,7 @@
             title: 'Править операторов',
             prefix: null,
             cl_modal: null,
-            form: null,
+            //form: null,
             label_ok: 'Ok',
             label_close: 'Close',
             ok_click: function () {
@@ -1296,25 +1339,26 @@
         if (modal && modal.$modal && modal.$modal.length > 0) {
             // Алерт 
             if (!this.settings.alert) {
-                var $alert = this.fc.el_alert();
+                var $alert = new this.fc.el_alert();
                 if ($alert && $alert.$alert && $alert.$alert.length > 0) {
-                    this.$alert = $alert.$alert;
-                    modal.$modal_body = this.$alert;
+                    modal.$modal_body.append($alert.$alert);
+                    this.alert = new alert_form($alert.$alert);
                 }
             } else {
-                this.$alert = this.settings.alert;
+                this.alert = this.settings.alert;
             };
 
             // Привяжим события кнопок
             modal.$modal_bt_ok.on('click', this.settings.ok_click);
             modal.$modal_bt_close.on('click', this.settings.close_click);
-            if (this.settings.form) {
-                this.form_add = this.settings.form.$form_add;
-                this.form_edit = this.settings.form.$form_edit;
-                modal.$modal_body.append(this.form_add).append(this.form_edit);
-            }
+            //if (this.settings.form) {
+            //    this.form_add = this.settings.form.$form_add;
+            //    this.form_edit = this.settings.form.$form_edit;
+            //    modal.$modal_body.append(this.form_add).append(this.form_edit);
+            //}
             // Привяжим html модальной формы
             this.$modal = modal.$modal;
+            this.$body = modal.$modal_body;
             this.$title = modal.$title; // Надпись на форме
             this.$title.text(this.settings.title);
             $('body').append(modal.$modal);
@@ -1342,9 +1386,9 @@
     // Удалить форму
     modal_form.prototype.destroy = function () {
         // Если есть внутри форма FORM, тогда выполнить очистку формы
-        if (this.settings.form) {
-            this.settings.form.destroy();
-        }
+        //if (this.settings.form) {
+        //    this.settings.form.destroy();
+        //}
 
         // Удалим модальную форму
         if (this.modal) {
@@ -1355,7 +1399,30 @@
             this.$modal.remove();
         }
     };
-
+    // Очистить сообщения
+    modal_form.prototype.out_clear = function () {
+        if (this.alert) {
+            this.alert.clear_message()
+        }
+    }
+    // Вывести на форме сообщение об ошибке 
+    modal_form.prototype.out_error = function (message) {
+        if (this.alert) {
+            this.alert.out_error_message(message)
+        }
+    };
+    // Вывести на форме предупреждения
+    modal_form.prototype.out_warning = function (message) {
+        if (this.alert) {
+            this.alert.out_warning_message(message)
+        }
+    }
+    // Вывести на форме сообщение о выполнении действий
+    modal_form.prototype.out_info = function (message) {
+        if (this.alert) {
+            this.alert.out_info_message(message)
+        }
+    }
     App.modal_form = modal_form;
     //--------------------------------------------------------------------------
     // Класс валидации элементов формы
@@ -1369,6 +1436,10 @@
             elements: null,
         }, options);
         this.type_message = 0; // 0- ок 1-warning 2-error
+        this.$alert = null;
+        if (this.settings.alert && this.settings.alert.$alert) {
+            this.$alert = this.settings.alert.$alert;
+        }
     };
 
     validation_form.prototype.clear_all = function () {
@@ -1385,43 +1456,43 @@
     };
     // Очистить сообщения
     validation_form.prototype.clear_message = function () {
-        if (this.alert) {
-            this.alert.hide().text('').removeClass('alert-success alert-warning alert-danger');
+        if (this.$alert) {
+            this.$alert.hide().text('').removeClass('alert-success alert-warning alert-danger');
             this.type_message = 0;
         }
     };
     // Вывести сообщение об ошибке
     validation_form.prototype.out_error_message = function (message) {
-        if (this.alert) {
+        if (this.$alert) {
             if (this.type_message <= 1) {
-                this.alert.show().removeClass('alert-success alert-warning').addClass('alert-danger');
+                this.$alert.show().removeClass('alert-success alert-warning').addClass('alert-danger');
                 this.type_message = 2;
             }
             if (message) {
-                this.alert.append(message).append($('<br />'));
+                this.$alert.append(message).append($('<br />'));
             }
         }
     };
     // Вывести сообщение внимание
     validation_form.prototype.out_warning_message = function (message) {
-        if (this.alert) {
+        if (this.$alert) {
             if (this.type_message <= 0) {
-                this.alert.show().removeClass('alert-success alert-danger').addClass('alert-warning');
+                this.$alert.show().removeClass('alert-success alert-danger').addClass('alert-warning');
                 this.type_message = 1;
             }
             if (message) {
-                this.alert.append(message).append($('<br />'));
+                this.$alert.append(message).append($('<br />'));
             }
         }
     };
     // Вывести информационное сообщение
     validation_form.prototype.out_info_message = function (message) {
-        if (this.alert) {
+        if (this.$alert) {
             if (this.type_message === 0) {
-                this.alert.show().removeClass('alert-warning alert-danger').addClass('alert-success');
+                this.$alert.show().removeClass('alert-warning alert-danger').addClass('alert-success');
             }
             if (message) {
-                this.alert.text(message).append($('<br />'));
+                this.$alert.text(message).append($('<br />'));
             }
         }
     };
@@ -1454,6 +1525,45 @@
 
     App.validation_form = validation_form;
 
+    //--------------------------------------------------------------------------
+    // Класс вывода сообщений
+    var alert_form = function ($alert) {
+        if (!$alert) {
+            throw new Error('Не указан элемент $alert');
+        }
+        if ($alert.length === 0) {
+            throw new Error('Элемент $alert - неопределен');
+        }
+        this.$alert = $alert;
+        //this.selector = this.$alert.attr('id');
+    };
+    // Очистить сообщения
+    alert_form.prototype.clear_message = function () {
+        this.$alert.hide().text('').removeClass('alert-success alert-warning alert-danger');
+    };
+    // Вывести сообщение об ошибке
+    alert_form.prototype.out_error_message = function (message) {
+        this.$alert.show().removeClass('alert-success alert-warning').addClass('alert-danger');
+        if (message) {
+            this.$alert.append(message).append($('<br />'));
+        }
+    };
+    // Вывести сообщение об ошибке
+    alert_form.prototype.out_warning_message = function (message) {
+        this.$alert.show().removeClass('alert-success alert-danger').addClass('alert-warning');
+        if (message) {
+            this.$alert.append(message).append($('<br />'));
+        }
+    };
+    // Вывести информационное сообщение
+    alert_form.prototype.out_info_message = function (message) {
+        this.$alert.show().removeClass('alert-danger alert-warning').addClass('alert-success');
+        if (message) {
+            this.$alert.append(message).append($('<br />'));
+        }
+    };
+
+    App.alert_form = alert_form;
 
     window.App = App;
 
