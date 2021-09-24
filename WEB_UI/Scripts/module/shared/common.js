@@ -470,16 +470,19 @@
         this.$button = $('<button></button>', {
             'class': 'btn btn' + (prefix ? '-' + prefix + ' ' : ' ') + cl_bt,
             'id': id,
-            'name': id,
-            'text': title,
+            'name': id
         });
         if (icon && icon !== '') {
             var icon = $('<i></i>', {
                 'class': icon,
                 'aria-hidden': 'true'
             });
-            this.$button.append(icon);
-        }
+            this.$button.append(icon).append(' ');
+
+        };
+        if (title && title !== '') {
+            this.$button.append(title);
+        };
     };
     // Элемент 
     //<div class="progress">
@@ -875,6 +878,8 @@
             case 'select': { this.add_select_element_form(el_field, type, col); break; }
             case 'text': { this.add_text_element_form(el_field, type, col); break; }
             case 'checkbox': { this.add_checkbox_element_form(el_field, type, col); break; }
+            case 'autocomplete': { this.add_autocomplete_element_form(el_field, type, col); break; }
+            case 'datetime': { this.add_datetime_element_form(el_field, type, col); break; }
         }
     };
     // Добавить и иницилизировать элемент SELECT
@@ -935,7 +940,7 @@
             throw new Error('Не удалось создать элемент <select class="..." id=".." name=".." aria-describedby=".." required>');
         };
     };
-    // Добавить и иницилизировать элемент TEXT
+    // Добавить и иницилизировать элемент TEXT-checkbox
     form_infield.prototype.add_checkbox_element_form = function (el_field, type, col) {
         //<div class="form-check">
         //    <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
@@ -981,6 +986,74 @@
             throw new Error('Не удалось создать элемент <div class="form-check">');
         };
     };
+    // Добавить и иницилизировать элемент TEXT-autocomplete
+    form_infield.prototype.add_autocomplete_element_form = function (el_field, type, col) {
+        // Создадим label
+        var $form_label = new this.fc.el_label(el_field.name, null, el_field.label);
+        if ($form_label && $form_label.$label && $form_label.$label.length > 0) {
+            col.append($form_label.$label);
+        } else {
+            throw new Error('Не удалось создать элемент <label class=".." for="...">...</label>');
+        };
+        // Создадим input
+        var cl_inp = 'form-control' + (el_field.prefix && el_field.prefix !== '' ? ' form-control-' + el_field.prefix + ' ' : ' ');
+        var $form_input = new this.fc.el_input_text(el_field.name, cl_inp, el_field.placeholder, el_field.required, el_field.maxlength, el_field.pattern);
+        if ($form_input && $form_input.$input && $form_input.$input.length > 0) {
+            //this.el_validation.add($($form_input.$input));
+            col.append($form_input.$input); // Добавить элемент на форму
+            // Проверить задана проверка валидации формы
+            if (this.settings.validation) {
+                // добавим контейнер для вывода сообщений
+                var $form_div_if = new this.fc.el_div_invalid_feedback();
+                if ($form_div_if && $form_div_if.$div && $form_div_if.$div.length > 0) {
+                    col.append($form_div_if.$div);
+                }
+            }
+            // Инициализировать элемент
+            var obj_element = new this.fc.init_autocomplete($form_input.$input, {
+                data: el_field.list,
+                minLength: 1,
+                out_value: false,
+                val_inp: 'value',
+            });
+            el_field['element_' + type] = obj_element;
+            this.el_destroy.push(obj_element);
+
+        } else {
+            throw new Error('Не удалось создать элемент <select class="..." id=".." name=".." aria-describedby=".." required>');
+        };
+    };
+    // Добавить и иницилизировать элемент TEXT-datetime
+    form_infield.prototype.add_datetime_element_form = function (el_field, type, col) {
+        // Создадим label
+        var $form_label = new this.fc.el_label(el_field.name, null, el_field.label);
+        if ($form_label && $form_label.$label && $form_label.$label.length > 0) {
+            col.append($form_label.$label);
+        } else {
+            throw new Error('Не удалось создать элемент <label class=".." for="...">...</label>');
+        };
+        // Создадим input
+        var cl_inp = 'form-control' + (el_field.prefix && el_field.prefix !== '' ? ' form-control-' + el_field.prefix + ' ' : ' ');
+        var $form_input = new this.fc.el_input_text(el_field.name, cl_inp, el_field.placeholder, el_field.required, el_field.maxlength, el_field.pattern);
+        if ($form_input && $form_input.$input && $form_input.$input.length > 0) {
+            //this.el_validation.add($($form_input.$input));
+            col.append($form_input.$input); // Добавить элемент на форму
+            // Проверить задана проверка валидации формы
+            if (this.settings.validation) {
+                // добавим контейнер для вывода сообщений
+                var $form_div_if = new this.fc.el_div_invalid_feedback();
+                if ($form_div_if && $form_div_if.$div && $form_div_if.$div.length > 0) {
+                    col.append($form_div_if.$div);
+                }
+            }
+            // Инициализировать элемент
+            var obj_element = new this.fc.init_datetime_input($form_input.$input, null, el_field.close, true);
+            el_field['element_' + type] = obj_element;
+            this.el_destroy.push(obj_element);
+        } else {
+            throw new Error('Не удалось создать элемент <select class="..." id=".." name=".." aria-describedby=".." required>');
+        };
+    };
     //-----------------------------------------------------------------------------
     // Инициализация формы
     form_infield.prototype.init = function (options) {
@@ -993,9 +1066,25 @@
             cl_form: '',
             validation: true,
             fn_validation_ok: null,
+            button_add_ok: null,
         }, options);
         var form_add = new this.fc.el_form(this.settings.id, this.settings.cl_form + ' text-left');
         var form_edit = new this.fc.el_form(this.settings.id, this.settings.cl_form + ' text-left');
+
+
+        //var button_ok_edit = new this.fc.el_button('sm', 'btn-primary', null, 'Выполнить ', 'far fa-check-circle');
+
+        // Добавить кнопку выполнить
+        if (this.settings.button_add_ok) {
+            var button_ok_add = new this.fc.el_button('sm', 'btn-primary', null, this.settings.button_add_ok.title, 'far fa-check-circle');
+            button_ok_add.$button.on('click', function (e) {
+                if (typeof this.settings.button_add_ok.click === 'function') {
+                    this.settings.button_add_ok.click(e);
+                };
+            }.bind(this));
+            form_add.$form.append(button_ok_add.$button);
+        }
+
         this.$form_add = form_add.$form;
         this.$form_edit = form_edit.$form;
         // Алерт 
@@ -1085,6 +1174,25 @@
                 };
             }
         }.bind(this));
+        // Пройдемся по зависимостям
+        $.each(form_elements.filter(function (i) { return i.control !== null }), function (i, el_control) {
+            if (el_control.control) {
+                var n_control = el_control.control;
+                var element_control = form_elements.find(function (o) {
+                    return o.name === n_control;
+                });
+                if (element_control) {
+                    if (element_control.element_add && el_control.element_add) {
+                        el_control.element_add['element_control'] = element_control.element_add;
+                    }
+                    if (element_control.element_edit && el_control.element_edit) {
+                        el_control.element_edit['element_control'] = element_control.element_edit;
+                    }
+                } else {
+                    throw new Error('Неопределен контролируемый элемент : ' + n_control);
+                }
+            }
+        }.bind(this));
         // Валидация
         if (this.settings.validation) {
             this.validation = new validation_form();
@@ -1097,7 +1205,6 @@
                 elements: elements,
             });
         };
-
     };
     // Показать форму добавить
     form_infield.prototype.view_add = function () {
@@ -1124,6 +1231,11 @@
                 var value = data ? data[field] : el_field.default;
                 var type = el_field.type;
                 form_element.val(value);
+                // Проверим наличие элемента который должен быть изменен если изменить текущий элемент
+                if (form_element.element_control) {
+                    // Обновим текщий элемент, для запуска цепочки обновлений
+                    form_element.$element.change();
+                }
             }
         }.bind(this));
 
