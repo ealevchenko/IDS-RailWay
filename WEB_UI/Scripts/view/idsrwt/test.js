@@ -29,14 +29,17 @@
 
 
 
-    var OP_SEND = App.operation_send;
-    var oper_send = new OP_SEND('div#operation-send'); // Создадим экземпляр
+    //var OP_SEND = App.operation_send;
+    //var oper_send = new OP_SEND('div#operation-send'); // Создадим экземпляр
 
-    var TCOPER = App.table_cars_operation;
-    var tab_car_oper = new TCOPER('div#cars-oper'); // Создадим экземпляр
+    //var TCOPER = App.table_cars_operation;
+    //var tab_car_oper = new TCOPER('div#cars-oper'); // Создадим экземпляр
 
-    var TCWay = App.table_cars_way;
-    var t_wagons = new TCWay('div#wagons'); // Создадим экземпляр
+    //var TCWay = App.table_cars_way;
+    //var t_wagons = new TCWay('div#wagons'); // Создадим экземпляр
+
+    var VSC = App.view_send_cars;
+    var vsc = new VSC('div#wagons'); // Создадим экземпляр
 
     $('button#arrival').on('click', function (e) {
         //var data = oper_send.operation;
@@ -49,19 +52,31 @@
 
         //})
         //oper_send.update();
-        t_wagons.update(54152087);
+        //t_wagons.update(54152087);
 
     });
 
     // После загрузки документа
     $(document).ready(function ($) {
-        t_wagons.init({
-            alert: alert,
-            ids_wsd: ids_wsd,
-        }, function () {
-            //t_wagons.load_of_way(218, 54152087);//112
-            t_wagons.load_of_way(218);//112
+
+        vsc.init({
+            alert: null,
+            ids_dir: null,
+            ids_wsd: null,
+            fn_db_update: function (list) {
+            }.bind(this),
+        }, function (init) {
+            vsc.view(215)
+            //LockScreenOff();
         });
+
+        //t_wagons.init({
+        //    alert: alert,
+        //    ids_wsd: ids_wsd,
+        //}, function () {
+        //    //t_wagons.load_of_way(218, 54152087);//112
+        //    t_wagons.load_of_way(218);//112
+        //});
 
         //oper_send.init({
         //    alert: alert,

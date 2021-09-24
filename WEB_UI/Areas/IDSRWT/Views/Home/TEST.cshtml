@@ -17,6 +17,8 @@
     <link href="~/Content/module/wsd/table_cars_operation.css" rel="stylesheet" />
     <link href="~/Content/module/wsd/operation_send.css" rel="stylesheet" />
 
+
+    <link href="~/Content/module/wsd/view_send_cars.css" rel="stylesheet" /><!-- CSS стили модуля "Вагоны на выбранном пути" -->
     <link href="~/Content/module/wsd/table_cars_way.css" rel="stylesheet" /><!-- CSS стили модуля "Вагоны на выбранном пути" -->
 
     <style>
@@ -65,6 +67,8 @@
     <script src="~/Scripts/module/wsd/operation_send.js"></script>
 
     <script src="~/Scripts/module/wsd/table_cars_way.js"></script>          <!-- Модуль "Вагоны на выбранном пути" -->
+
+    <script src="~/Scripts/module/wsd/view_send_cars.js"></script> <!-- Модуль "Вагоны на выбранном пути" -->
     <script src="~/Scripts/view/idsrwt/test.js"></script>
 
 }
@@ -224,52 +228,84 @@
             <div id="wagons"></div>
 
 
-            <div class="text-left">
-                <form>
-                    <div class="form-row">
-                        <div class="col-md-6 mb-3">
-                            <label for="validationServer01">First name</label>
-                            <input type="text" class="form-control" id="validationServer01" value="Mark" required>
-                            <div class="valid-feedback">
-                                Looks good!
+            @*<div class="text-left">
+                    <form>
+                        <div class="form-row">
+                            <div class="col-md-6 mb-3">
+                                <label for="validationServer01">First name</label>
+                                <input type="text" class="form-control" id="validationServer01" value="Mark" required>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="validationServer02">Last name</label>
+                                <input type="text" class="form-control" id="validationServer02" value="Otto" required>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="validationServer02">Last name</label>
-                            <input type="text" class="form-control" id="validationServer02" value="Otto" required>
-                            <div class="valid-feedback">
-                                Looks good!
+                        <div class="form-row">
+                            <div class="col-md-6 mb-3">
+                                <label for="validationServer03">City</label>
+                                <input type="text" class="form-control" id="validationServer03" aria-describedby="validationServer03Feedback" required>
+                                <div id="validationServer03Feedback" class="invalid-feedback">
+                                    Please provide a valid city.
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="validationServer04">State</label>
+                                <select class="custom-select" id="validationServer04" aria-describedby="validationServer04Feedback" required>
+                                    <option selected disabled value="">Choose...</option>
+                                    <option>...</option>
+                                </select>
+                                <div id="validationServer04Feedback" class="invalid-feedback">
+                                    Please select a valid state.
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="validationServer05">Zip</label>
+                                <input type="text" class="form-control" id="validationServer05" aria-describedby="validationServer05Feedback" required>
+                                <div id="validationServer05Feedback" class="invalid-feedback">
+                                    Please provide a valid zip.
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-6 mb-3">
-                            <label for="validationServer03">City</label>
-                            <input type="text" class="form-control" id="validationServer03" aria-describedby="validationServer03Feedback" required>
-                            <div id="validationServer03Feedback" class="invalid-feedback">
-                                Please provide a valid city.
+                        <div class="form-row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+                                    <label class="form-check-label" for="invalidCheck">
+                                        Agree to terms and conditions
+                                    </label>
+                                    <div class="invalid-feedback">
+                                        You must agree before submitting.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+                                    <label class="form-check-label" for="invalidCheck">
+                                        Agree to terms and conditions
+                                    </label>
+                                    <div class="invalid-feedback">
+                                        You must agree before submitting.
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-3 mb-3">
-                            <label for="validationServer04">State</label>
-                            <select class="custom-select" id="validationServer04" aria-describedby="validationServer04Feedback" required>
-                                <option selected disabled value="">Choose...</option>
-                                <option>...</option>
-                            </select>
-                            <div id="validationServer04Feedback" class="invalid-feedback">
-                                Please select a valid state.
+                        <div class="form-row">
+                            <div class="col-md-12 mb-3">
+                                <label for="validationServer0111">First name</label>
+                                <input type="text" class="form-control" id="validationServer0111" value="Mark" required>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-3 mb-3">
-                            <label for="validationServer05">Zip</label>
-                            <input type="text" class="form-control" id="validationServer05" aria-describedby="validationServer05Feedback" required>
-                            <div id="validationServer05Feedback" class="invalid-feedback">
-                                Please provide a valid zip.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-6 mb-3">
+                        <div class="form-group">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
                                 <label class="form-check-label" for="invalidCheck">
@@ -280,41 +316,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
-                                <label class="form-check-label" for="invalidCheck">
-                                    Agree to terms and conditions
-                                </label>
-                                <div class="invalid-feedback">
-                                    You must agree before submitting.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="validationServer0111">First name</label>
-                            <input type="text" class="form-control" id="validationServer0111" value="Mark" required>
-                            <div class="valid-feedback">
-                                Looks good!
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
-                            <label class="form-check-label" for="invalidCheck">
-                                Agree to terms and conditions
-                            </label>
-                            <div class="invalid-feedback">
-                                You must agree before submitting.
-                            </div>
-                        </div>
-                    </div>
-                    <button class="btn btn-primary" type="submit">Submit form</button>
-                </form>
-            </div>
+                        <button class="btn btn-primary" type="submit">Submit form</button>
+                    </form>
+                </div>*@
             <div id="operation-send">
                 @*<div class="row">
                         <div class="col-xl-12 mb-1 mt-1">
