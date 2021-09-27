@@ -173,7 +173,9 @@
             if (datetime !== null && datetime !== "") {
                 //var dt = moment.utc(datetime, 'DD.MM.YYYY' + (time ? ' hh:mm' : '')).tz('Europe/Kiev');
                 //return moment(dt).toISOString();
-                return moment.utc(datetime, 'DD.MM.YYYY' + (time ? ' hh:mm' : '')).toISOString();
+                //return moment.utc(datetime, 'DD.MM.YYYY' + (time ? ' hh:mm' : '')).toISOString();
+                // Преобразуем в формат без указания зоны, сместим utc и формат 'YYYY-MM-DDTHH:mm:ss'
+                return moment.utc(datetime, 'DD.MM.YYYY' + (time ? ' hh:mm' : '')).format('YYYY-MM-DDTHH:mm:ss');
             } else {
                 return null;
             }
@@ -547,8 +549,10 @@
         this.$alert = $('<div></div>', {
             'class': 'alert',
             'role': 'alert',
-            'id': id,
         });
+        if (id && id !== '') {
+            this.$alert.attr('id', id);
+        }
     };
     // Элемент <div class="form-row">
     form_control.prototype.el_div_form_row = function () {
@@ -1256,36 +1260,54 @@
                 if (form_element) {
                     var element = form_element.$element;
                     if (element && element.length > 0) {
-                        var valid = element[0].validity;
+                        var valid_element = true;
+                        var $element = element[0];
+                        var valid = $element.validity;
+                        var tagName = $element.tagName; // Получим тим элемента для детальной проверки
+                        var required = $element.required;
+                        var value = element.val();
+                        var placeholder = element.attr('placeholder');
+                        var id = element.attr('id');
+
+                        if (tagName === "SELECT") {
+                            if (value !== null && Number(value) === -1 && required) {
+                                this.valid = false;
+                                valid_element = false;
+                                this.validation.set_object_error($($element), "Элемент [" + (placeholder && placeholder !== "" ? placeholder : id) + "] - не выбран.");
+                            }
+                        }
+
+
                         // Установилась ошибка
                         if (!valid.valid) {
                             this.valid = false;
+                            valid_element = false;
                             if (valid.valueMissing) {
-                                this.validation.set_object_error($(element[0]), "Элемент [" + (element[0].placeholder !== "" ? element[0].placeholder : element[0].id) + "] - не заполнен.");
+                                this.validation.set_object_error($($element), "Элемент [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не заполнен.");
                             }
                             if (valid.patternMismatch) {
-                                this.validation.set_object_error($(element[0]), "Значение элемента [" + (element[0].placeholder !== "" ? element[0].placeholder : element[0].id) + "] - не соответствует шаблону.");
+                                this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не соответствует шаблону.");
                             }
                             if (valid.patternMismatch) {
-                                this.validation.set_object_error($(element[0]), "Значение элемента [" + (element[0].placeholder !== "" ? element[0].placeholder : element[0].id) + "] - не соответствует шаблону.");
+                                this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не соответствует шаблону.");
                             }
                             if (valid.rangeOverflow) {
-                                this.validation.set_object_error($(element[0]), "Значение элемента [" + (element[0].placeholder !== "" ? element[0].placeholder : element[0].id) + "] - больше максимально допустимого (" + element[0].max + ").");
+                                this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - больше максимально допустимого (" + $element.max + ").");
                             }
                             if (valid.rangeUnderflow) {
-                                this.validation.set_object_error($(element[0]), "Значение элемента [" + (element[0].placeholder !== "" ? element[0].placeholder : element[0].id) + "] - меньше минимально допустимого (" + element[0].min + ").");
+                                this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - меньше минимально допустимого (" + $element.min + ").");
                             }
                             if (valid.tooLong) {
-                                this.validation.set_object_error($(element[0]), "Значение элемента [" + (element[0].placeholder !== "" ? element[0].placeholder : element[0].id) + "] - значение превышает лимит (" + element[0].maxlength + ").");
+                                this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - значение превышает лимит (" + $element.maxlength + ").");
                             }
                             if (valid.tooShort) {
-                                this.validation.set_object_error($(element[0]), "Значение элемента [" + (element[0].placeholder !== "" ? element[0].placeholder : element[0].id) + "] - не достигает минимума (" + element[0].minlength + ").");
+                                this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не достигает минимума (" + $element.minlength + ").");
                             }
                             if (valid.typeMismatch) {
-                                this.validation.set_object_error($(element[0]), "Значение элемента [" + (element[0].placeholder !== "" ? element[0].placeholder : element[0].id) + "] - не соответствует требуемому синтаксису (" + element[0].type + ").");
+                                this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не соответствует требуемому синтаксису (" + $element.type + ").");
                             }
                         } else {
-                            this.validation.set_control_ok($(element[0]), "");
+                            if (valid_element) this.validation.set_control_ok($($element), "");
                         }
                     };
                 };
@@ -1369,14 +1391,15 @@
     form_infield.prototype.get = function (name) {
         if (this.settings.fields) {
             var field = this.settings.fields.find(function (o) {
-                return o.name === name
+                return o.field === name
             });
-            if (field && field.element) {
-                return field.element.val();
+            if (field && field['element_' + this.mode]) {
+                return field['element_' + this.mode].val();
             }
         }
         return undefined;
     };
+
     // Установить или обновить значение компонента
     form_infield.prototype.val = function (name, value) {
         if (value !== undefined) {
@@ -1398,6 +1421,68 @@
         }.bind(this));
         return result;
     };
+    // Прочесть значение компонента
+    form_infield.prototype.get_element= function (name) {
+        if (this.settings.fields) {
+            var field = this.settings.fields.find(function (o) {
+                return o.field === name
+            });
+            if (field && field['element_' + this.mode] && field['element_' + this.mode].$element) {
+                return field['element_' + this.mode].$element.val();
+            }
+        }
+        return undefined;
+    };
+
+    // Вывести на форме сообщение об ошибке под элементом (указав тип формы)
+    form_infield.prototype.set_object_error_mode = function (name, mode, message) {
+        if (this.settings.fields) {
+            var field = this.settings.fields.find(function (o) {
+                return o.field === name
+            });
+            if (field) {
+                var el = field['element_' + mode].$element;
+                if (this.validation) this.validation.set_object_error($(el), message);
+            }
+        }
+    };
+    // Вывести на форме сообщение об ошибке под элементом (определение формы автоматически this.mode)
+    form_infield.prototype.set_object_error = function (name, message) {
+        if (this.settings.fields) {
+            var field = this.settings.fields.find(function (o) {
+                return o.field === name
+            });
+            if (field) {
+                var el = field['element_' + this.mode].$element;
+                if (this.validation) this.validation.set_object_error($(el), message);
+            }
+        }
+    };
+    // Очистить сообщения
+    form_infield.prototype.out_clear = function () {
+        if (this.settings.alert) {
+            this.settings.alert.clear_message()
+        }
+    }
+    // Показать ошибки
+    form_infield.prototype.out_error = function (message) {
+        if (this.settings.alert) {
+            this.settings.alert.out_error_message(message)
+        }
+    }
+    // Показать предупреждения
+    form_infield.prototype.out_warning = function (message) {
+        if (this.settings.alert) {
+            this.settings.alert.out_warning_message(message)
+        }
+    }
+    // Показать сообщения о выполнении действий
+    form_infield.prototype.out_info = function (message) {
+        if (this.settings.alert) {
+            this.settings.alert.out_info_message(message)
+        }
+    }
+
     // Удаление формы
     form_infield.prototype.destroy = function () {
         $.each(this.el_destroy, function (i, el) {
@@ -1648,6 +1733,7 @@
         }
         this.$alert = $alert;
         //this.selector = this.$alert.attr('id');
+        this.clear_message();
     };
     // Очистить сообщения
     alert_form.prototype.clear_message = function () {

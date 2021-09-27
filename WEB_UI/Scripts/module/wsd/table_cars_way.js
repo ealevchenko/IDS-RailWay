@@ -1602,7 +1602,7 @@
             name: 'select_all',
             action: function () {
                 this.obj_t_cars.rows(function (idx, data, node) {
-                    return data.position_new === null && (data.outgoing_sostav_status === 0 || data.outgoing_sostav_status === null) ;
+                    return data.position_new === null && (data.outgoing_sostav_status === 0 || data.outgoing_sostav_status === null);
                 }).select();
             }.bind(this)
         });
@@ -1808,10 +1808,12 @@
         // Обработка события выбора отчет отправка
         if (this.settings.type_report === 1) {
             this.obj_t_cars.on('user-select', function (e, dt, type, cell, originalEvent) {
+                this.out_clear();
                 var indexes = cell && cell.length > 0 ? cell[0][0].row : null;
                 var row = this.obj_t_cars.rows(indexes).data().toArray();
-                if (row && row.length > 0 && row[0].outgoing_sostav_status && row[0].outgoing_sostav_status >0) {
+                if (row && row.length > 0 && row[0].outgoing_sostav_status && row[0].outgoing_sostav_status > 0) {
                     e.preventDefault();
+                    this.out_warning('Вагон № ' + row[0].num + ' для операций заблокирован (вагон пренадлежит составу который имеет статус - ' + row[0].outgoing_sostav_status + ')');
                 }
             }.bind(this)).on('select deselect', function (e, dt, type, indexes) {
                 var index = this.obj_t_cars.rows({ selected: true });
@@ -1857,6 +1859,7 @@
 
     // Показать данные 
     table_cars_way.prototype.view = function (data, num) {
+        this.out_clear();
         LockScreen(langView('mess_view_wagons', App.Langs));
         this.obj_t_cars.clear();
         this.obj_t_cars.rows.add(data);

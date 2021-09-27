@@ -6,6 +6,9 @@
     // Определим язык
     App.Lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang'));
 
+    var min_dt_apply = -1 * (60 * 3); // TODO: Минимальная разница в минутах даты и времени выполнения операции от текущей даты (перенести в общие настройки)
+    var max_dt_apply = 60 * 3; // TODO: Максимальная разница в минутах даты и времени выполнения операции от текущей даты (перенести в общие настройки)
+
     // Массив текстовых сообщений 
     $.Text_View =
     {
@@ -23,12 +26,12 @@
             'title_label_station_on': 'Станция прибытия:',
             'title_placeholder_station_on': 'Станция прибытия:',
             'title_label_outer_way': 'Внешний путь:',
-            'title_placeholder_outer_way': 'Выберите внешний путь',
+            'title_placeholder_outer_way': 'Внешний путь',
             'title_label_locomotive1': 'Локомотив №1:',
             'title_label_locomotive2': 'Локомотив №2:',
-            'title_placeholder_locomotive': 'Укажите локомотив',
+            'title_placeholder_locomotive': ' № локомотива',
             'title_time_aplly': 'Время выполнения',
-            'title_placeholder_time_aplly': 'dd.mm.yyyy hh:mm',
+            'title_placeholder_time_aplly': 'Время выполнения',
 
             'title_label_date': 'ПЕРИОД :',
 
@@ -52,6 +55,7 @@
             'tytle_status_work': 'В работе',
             'tytle_status_send': 'Отправлен',
             'tytle_detali_wagon': 'Вагоны в составе',
+            'title_form_apply': 'Выполнить?',
 
             'title_button_export': 'Экспорт',
             'title_button_buffer': 'Буфер',
@@ -60,6 +64,14 @@
             'title_button_return': 'Вернуть',
 
             'title_add_ok': 'ВЫПОЛНИТЬ',
+
+
+            'mess_error_equal_locomotive': 'Локомотив №1 и №2 равны',
+            'mess_error_min_time_aplly': 'Дата выполнения операции не может быть меньше текущей даты, мин. отклонение (мин) =',
+            'mess_error_max_time_aplly': 'Дата выполнения операции не может быть больше текущей даты, мак. отклонение (мин) =',
+            'mess_error_not_wagons': 'Не выбраны вагоны для отправления (в окне «ОТПРАВИТЬ СО СТАНЦИ», на пути отправки выберите вагоны и сформируйте состав).',
+
+            'mess_cancel_operation': 'Операция "ОТПРАВИТЬ СОСТАВОВ НА СТАНЦИИ АМКР" – отменена',
 
             'mess_load_operation': 'Загружаю операции...',
             'mess_load_wagons': 'Загружаю вагоны на пути...',
@@ -78,10 +90,11 @@
     var wsd = App.ids_wsd;
     var directory = App.ids_directory;
     // Модуль инициализаии компонентов формы
+    var MCF = App.modal_confirm_form; // Создать модальную форму "Окно сообщений"
     var FC = App.form_control;
     var FIF = App.form_infield;
     var TCWay = App.table_cars_way;
-
+    var alert = App.alert_form;
 
     // создадим основу формы
     function div_panel(base) {
@@ -115,8 +128,14 @@
         var col_from_table = new base.fc_ui.el_col('xl', 9, 'mb-1 mt-1');
         row_from_body.$row.append(col_from_setup.$col.append(this.$setup_from)).append(col_from_table.$col.append(this.$table_from));
 
-        card_on.$body.append(row_on_body.$row)
-        card_from.$body.append(row_from_body.$row);
+        var alert_on = new base.fc_ui.el_alert('on');
+        var alert_from = new base.fc_ui.el_alert('from');
+
+        this.$alert_on = alert_on.$alert;
+        this.$alert_from = alert_from.$alert;
+
+        card_on.$body.append(this.$alert_on).append(row_on_body.$row)
+        card_from.$body.append(this.$alert_from).append(row_from_body.$row);
 
         row_on.$row.append(col_on.$col.append(card_on.$card));
         row_from.$row.append(col_from.$col.append(card_from.$card));
@@ -405,6 +424,11 @@
     view_send_cars.prototype.init = function (options, fn_init_ok) {
         this.init = true;
         // теперь выполним инициализацию, определим основные свойства
+
+        // Создать модальную форму "Окно сообщений"
+        this.modal_confirm_form = new MCF(this.selector); // Создадим экземпляр окно сообщений
+        this.modal_confirm_form.init();
+
         this.settings = $.extend({
             alert: null,
             ids_dir: null,
@@ -440,6 +464,10 @@
         this.$table_from = panelElement.$table_from;
         //this.$operation_header = panelElement.$operation_header;
         //this.$operation_body = panelElement.$operation_body;
+
+        this.alert_on = new alert(panelElement.$alert_on);
+        this.alert_from = new alert(panelElement.$alert_from);
+
         this.$panel.append(panelElement.$element);
 
         // Создадим и добавим макет таблицы
@@ -472,10 +500,26 @@
             }.bind(this);
             // Список локомотивов
             this.list_locomotive = this.ids_dir.getListLocomotive('locomotive', 'locomotive', function (i) { return i.id_locomotive_status === 1; });
-            //
+            // Получить список станций для отправки
+            var get_list_station_on = function (id_station, id_way) {
+                var station_on = [];
+                var list_outer_ways = this.ids_dir.list_outer_ways.filter(function (i) {
+                    return i.id_station_from == id_station && !i.way_delete;
+                }.bind(this))
+                if (list_outer_ways && list_outer_ways.length > 0) {
+                    // Отсортируем
+                    list_outer_ways = list_outer_ways.sort(function (a, b) {
+                        return a.id_station_from - b.id_station_from;
+                    });
+
+                }
+                return station_on;
+            }.bind(this);
+            // Показать вагоны на пути
             var view_wagons_from_way = function (id_way) {
                 this.id_way = id_way;
                 // Вывести данные вагоны на пути отправки
+                var list = get_list_station_on(this.id_station, this.id_way);
                 this.load_of_way(this.id_way, function (wagons) {
                     this.view_wagons(wagons);
                 }.bind(this));
@@ -553,6 +597,7 @@
             fields.push(fl_way);
             //// Инициализация формы
             this.form_setup_from.init({
+                alert: this.alert_from,
                 fields: fields,
                 mb: 2,
                 id: null,
@@ -566,6 +611,8 @@
             });
             // Отображение формы
             this.$setup_from.append(this.form_setup_from.$form_edit);
+            //this.$setup_from.append(this.form_setup_from);
+            //this.form_setup_from.view_edit({ id_station: -1, id_way: -1 });
             // Создадим таблицу вангонов на пути отправки
             var $div_table_from = $('<div></div>', {
                 'id': 'table-from-' + this.selector,
@@ -575,7 +622,7 @@
                 this.tab_cars_from = new TCWay('div#table-from-' + this.selector);
                 this.tab_cars_from.init({
                     type_report: 1,
-                    alert: this.settings.alert,
+                    alert: this.alert_from,
                     // инициализируем кнопки
                     buttons: [
                         {
@@ -614,7 +661,7 @@
                 maxlength: null,
                 required: true,
                 control: 'outer_way',
-                list: this.list_station,
+                list: get_list_station_on(-1, -1),
                 select: function (e, ui) {
                     event.preventDefault();
                     // Обработать выбор
@@ -667,7 +714,7 @@
                 col_size: 12,
             };
             var fl_locomotive1 = {
-                field: 'locomotive',
+                field: 'locomotive1',
                 type: 'string',
                 add: 'autocomplete',
                 edit: null,
@@ -679,7 +726,7 @@
                 required: true,
                 control: null,
                 list: this.list_locomotive,
-                select : null,
+                select: null,
                 //select: function (e, ui) {
                 //    event.preventDefault();
                 //    // Обработать выбор
@@ -698,7 +745,7 @@
                 col_size: 6,
             };
             var fl_locomotive2 = {
-                field: 'locomotive',
+                field: 'locomotive2',
                 type: 'string',
                 add: 'autocomplete',
                 edit: null,
@@ -710,7 +757,7 @@
                 required: false,
                 control: null,
                 list: this.list_locomotive,
-                select : null,
+                select: null,
                 update: null,
                 close: null,
                 change: null,
@@ -757,6 +804,7 @@
             fields_on.push(fl_time_aplly);
             //// Инициализация формы
             this.form_setup_on.init({
+                alert: this.alert_on,
                 fields: fields_on,
                 mb: 2,
                 id: null,
@@ -765,12 +813,34 @@
                 fn_validation: function (result) {
                     // Валидация успешна
                     if (result && result.valid) {
+                        // Дополнительная проверка
+                        var valid = this.validation(result);
+                        if (valid) {
+                            this.modal_confirm_form.view(langView('title_form_apply', App.Langs), 'Выполнить операцию отправки состава на станцию АМКР?', function (result) {
+                                if (result) {
+                                    // Операция подтверждена, формируем данные
+                                    var wagons = this.wagons.filter(function (i) { return i.position_new !== null; });
+                                    var operation = {
+                                        wagons: wagons
+                                    }
+                                    this.apply(operation);
+                                } else {
+                                    // Отмена
+                                    this.form_setup_on.out_warning(langView('mess_cancel_operation', App.Langs));
+                                }
+                            }.bind(this));
+
+
+
+
+                        }
                     }
                 }.bind(this),
                 button_add_ok: {
                     title: langView('title_add_ok', App.Langs),
                     click: function (e) {
-                        this.form_setup_on.$form_add.submit(e);
+                        this.form_setup_on.mode = 'add'; // Укажем тип формы
+                        this.form_setup_on.$form_add.submit();
                     }.bind(this),
                 },
             });
@@ -851,7 +921,6 @@
         this.tab_cars_from.view(wagons.filter(function (i) { return i.position_new === null; }), null);
         this.tab_cars_on.view(wagons.filter(function (i) { return i.position_new !== null; }), null);
     };
-
     // Загрузить вагоны на пути
     view_send_cars.prototype.load_of_way = function (id_way, fn_load_data) {
         if (id_way !== null && id_way >= 0) {
@@ -919,6 +988,55 @@
 
         }
     };
+    //--------------------------------------------------------------------------------
+    // Уточняющая валидация данных
+    view_send_cars.prototype.validation = function (result) {
+        var valid = true;
+        // Проверим локомотивы
+        var loc1 = this.form_setup_on.get_element('locomotive1');
+        var loc2 = this.form_setup_on.get_element('locomotive2');
+        if (loc1 === loc2) {
+            this.form_setup_on.set_object_error('locomotive1', langView('mess_error_equal_locomotive', App.Langs));
+            this.form_setup_on.set_object_error('locomotive2', langView('mess_error_equal_locomotive', App.Langs));
+            valid = false;
+        } else {
+            if (result.new && !result.new.locomotive1 && (loc1 !== null || loc1 !== '')) {
+                this.form_setup_on.set_object_error('locomotive1', langView('mess_error_not_locomotive', App.Langs) + loc1);
+                valid = false;
+            }
+            if ((loc2 !== null && loc2 !== '') && result.new && result.new.locomotive2 === null) {
+                this.form_setup_on.set_object_error('locomotive2', langView('mess_error_not_locomotive', App.Langs) + loc2);
+                valid = false;
+            }
+        }
+        // Проверим время
+        if (result.new && result.new.time_aplly) {
+            var curr = moment();
+            var aplly = moment(result.new.time_aplly);
+            var minutes = aplly.diff(curr, 'minutes');
+            if (minutes < min_dt_apply) {
+                this.form_setup_on.set_object_error('time_aplly', langView('mess_error_min_time_aplly', App.Langs) + (min_dt_apply * -1));
+                valid = false;
+            }
+            if (minutes > max_dt_apply) {
+                this.form_setup_on.set_object_error('time_aplly', langView('mess_error_max_time_aplly', App.Langs) + (max_dt_apply));
+                valid = false;
+            }
+        }
+        // Проверим состав
+        var wagons = this.wagons.filter(function (i) { return i.position_new !== null; });
+        if (wagons === null || wagons.length === 0) {
+            this.form_setup_on.out_error(langView('mess_error_not_wagons', App.Langs))
+            valid = false;
+        }
+        return valid;
+    }
+    // выполнить операцию
+    view_send_cars.prototype.apply = function (data) {
+
+    }
+
+    //--------------------------------------------------------------------------------
     // Показать
     view_send_cars.prototype.show = function () {
         this.$panel.show();
@@ -951,9 +1069,10 @@
             this.settings.alert.out_info_message(message)
         }
     }
+    //--------------------------------------------------------------------------------
     // Очистить объект
     view_send_cars.prototype.destroy = function () {
-        //this.modal_confirm_form.destroy();
+        this.modal_confirm_form.destroy();
         //this.modal_edit_form.destroy();
         // Очистить форму выбора
         if (this.form_setup_from) {
@@ -973,7 +1092,7 @@
         //}
         this.$panel.empty(); // empty in case the columns change
     };
-
+    //
     view_send_cars.prototype.destroy_table = function () {
         // Очистить объект таблица
         if (this.obj_t_sostav) {
