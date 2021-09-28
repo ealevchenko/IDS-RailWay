@@ -23,7 +23,7 @@
     // Определлим список текста для этого модуля
     App.Langs = $.extend(true, App.Langs, getLanguages($.Text_View, App.Lang));
 
-    //--------------------------------------------------------------------------
+    //================================================================================
     // Класс для создания объектов контроля для элементов HTML
     //--------------------------------Конструктор и инициализация---------------
     // создать класс
@@ -800,7 +800,8 @@
     };
 
     App.form_control = form_control;
-    //-----------------------------------------------------------------------------
+
+    //================================================================================
     // Конструктор формы с элементами по вертикали
     function form_inline() {
         this.fc = new form_control();
@@ -868,7 +869,8 @@
     };
 
     App.form_inline = form_inline;
-    //-----------------------------------------------------------------------------
+
+    //================================================================================
     // Конструктор формы с элементами по горизонтали
     function form_infield() {
         this.fc = new form_control();
@@ -1064,6 +1066,7 @@
         // Настройки формы правки строк таблицы
         this.settings = $.extend({
             alert: null,
+            mode: null,
             fields: [],
             mb: 2,
             id: '',
@@ -1075,7 +1078,8 @@
         var form_add = new this.fc.el_form(this.settings.id, this.settings.cl_form + ' text-left');
         var form_edit = new this.fc.el_form(this.settings.id, this.settings.cl_form + ' text-left');
 
-
+        // Установим режим form по умолчанию ('add' & 'edit')
+        this.mode = this.settings.mode !== null && this.settings.mode !== '' ? this.settings.mode : null;
         //var button_ok_edit = new this.fc.el_button('sm', 'btn-primary', null, 'Выполнить ', 'far fa-check-circle');
 
         // Добавить кнопку выполнить
@@ -1365,14 +1369,21 @@
             this.settings.fn_validation({ valid: Boolean(this.valid), old: this.data, new: result });
         }
     };
+
+    //-----------------------------------------------------------------------------
     // Обновить списочный компонент
     form_infield.prototype.update_list_element = function (name, list, value) {
         if (this.settings.fields) {
             var field = this.settings.fields.find(function (o) {
-                return o.name === name
+                return o.field === name
             });
-            if (field && field.element) {
-                field.element.update(list, value ? value : Number(field.element.val()), null);
+            if (field && field['element_' + this.mode]) {
+                field['element_' + this.mode].update(list, value ? value : Number(field.element.val()), null);
+                // Проверим наличие элемента который должен быть изменен если изменить текущий элемент
+                if (field['element_' + this.mode].element_control) {
+                    // Обновим текщий элемент, для запуска цепочки обновлений
+                    field['element_' + this.mode].$element.change();
+                }
             }
         }
     };
@@ -1399,7 +1410,6 @@
         }
         return undefined;
     };
-
     // Установить или обновить значение компонента
     form_infield.prototype.val = function (name, value) {
         if (value !== undefined) {
@@ -1433,7 +1443,7 @@
         }
         return undefined;
     };
-
+    //-----------------------------------------------------------------------------
     // Вывести на форме сообщение об ошибке под элементом (указав тип формы)
     form_infield.prototype.set_object_error_mode = function (name, mode, message) {
         if (this.settings.fields) {
@@ -1482,7 +1492,7 @@
             this.settings.alert.out_info_message(message)
         }
     }
-
+    //-----------------------------------------------------------------------------
     // Удаление формы
     form_infield.prototype.destroy = function () {
         $.each(this.el_destroy, function (i, el) {
@@ -1499,7 +1509,8 @@
     };
 
     App.form_infield = form_infield;
-    //--------------------------------------------------------------------------
+
+    //================================================================================
     // Класс для создания объектов модальные окна
     // Конструктор формы с элементами по горизонтали
     function modal_form() {
@@ -1621,7 +1632,7 @@
         }
     }
     App.modal_form = modal_form;
-    //--------------------------------------------------------------------------
+    //================================================================================
     // Класс валидации элементов формы
     function validation_form() {
 
@@ -1722,8 +1733,8 @@
 
     App.validation_form = validation_form;
 
-    //--------------------------------------------------------------------------
-    // Класс вывода сообщений
+    //================================================================================
+    // Класс вывода сообщений (Алерт)
     var alert_form = function ($alert) {
         if (!$alert) {
             throw new Error('Не указан элемент $alert');
