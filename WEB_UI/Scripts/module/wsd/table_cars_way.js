@@ -1856,7 +1856,6 @@
             this.obj_t_cars.button(4).enable(index && index.length > 0 && index[0].length > 0); // отображение кнопки добавить
         }
     };
-
     // Показать данные 
     table_cars_way.prototype.view = function (data, num) {
         this.out_clear();

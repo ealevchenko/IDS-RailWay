@@ -67,11 +67,14 @@
 
 
             'mess_error_equal_locomotive': 'Локомотив №1 и №2 равны',
+            'mess_error_not_locomotive': 'В справочнике ИДС отсутствует локомотив №',
             'mess_error_min_time_aplly': 'Дата выполнения операции не может быть меньше текущей даты, мин. отклонение (мин) =',
             'mess_error_max_time_aplly': 'Дата выполнения операции не может быть больше текущей даты, мак. отклонение (мин) =',
             'mess_error_not_wagons': 'Не выбраны вагоны для отправления (в окне «ОТПРАВИТЬ СО СТАНЦИ», на пути отправки выберите вагоны и сформируйте состав).',
+            'mess_error_operation_run': 'При выполнении операции «ОТПРАВИТЬ СО СТАНЦИ» произошла ошибка, код ошибки:',
 
             'mess_cancel_operation': 'Операция "ОТПРАВИТЬ СОСТАВОВ НА СТАНЦИИ АМКР" – отменена',
+            'mess_run_operation_send': 'Выполняю операцию отправки состава на станцию АМКР',
 
             'mess_load_operation': 'Загружаю операции...',
             'mess_load_wagons': 'Загружаю вагоны на пути...',
@@ -476,8 +479,9 @@
         this.load_db(['station', 'ways', 'outer_ways', 'locomotive'], false, function (result) {
             // Подгрузили списки
             this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false && i.station_delete === null; });
-            // Получим список путей
+            // Получим список путей b 
             var get_list_way = function (id_station) {
+                this.id_station = id_station;
                 var ways = [];
                 var list_way = this.ids_dir.list_ways.filter(function (i) {
                     return i.id_station == id_station && !i.way_delete;
@@ -488,10 +492,10 @@
                 return ways
             }.bind(this);
             // Получим список внешних путей
-            var get_list_outer_ways = function (id_station) {
+            var get_list_outer_ways = function (id_station_on) {
                 var outer_ways = [];
                 var list_outer_ways = this.ids_dir.list_outer_ways.filter(function (i) {
-                    return i.id_station_on == id_station && !i.way_delete;
+                    return i.id_station_on == id_station_on && i.id_station_from == this.id_station && !i.way_delete;
                 }.bind(this))
                 if (list_outer_ways) {
                     outer_ways = this.ids_dir.getListObj(list_outer_ways, 'id', 'name_outer_way', App.Lang, null);
@@ -503,23 +507,33 @@
             // Получить список станций для отправки
             var get_list_station_on = function (id_station, id_way) {
                 var station_on = [];
+                // получим внешние пути пренадлежащие выбранной станции
                 var list_outer_ways = this.ids_dir.list_outer_ways.filter(function (i) {
                     return i.id_station_from == id_station && !i.way_delete;
-                }.bind(this))
+                }.bind(this));
+                // Получим уникальные станции прибытия
                 if (list_outer_ways && list_outer_ways.length > 0) {
-                    // Отсортируем
-                    list_outer_ways = list_outer_ways.sort(function (a, b) {
-                        return a.id_station_from - b.id_station_from;
-                    });
-
+                    // Поиск уникальных станций
+                    $.each(list_outer_ways, function (i, el) {
+                        if (el.Directory_Station && !el.Directory_Station.station_uz) {
+                            var res = station_on.find(function (o) {
+                                return o.value === el.Directory_Station.id
+                            });
+                            if (!res) {
+                                station_on.push({ value: el.Directory_Station.id, text: el.Directory_Station["station_name_" + App.Lang], disabled: false });
+                            }
+                        }
+                    }.bind(this));
                 }
-                return station_on;
+                return station_on ? station_on.sort(function (a, b) { return a.value - b.value; }) : station_on;
             }.bind(this);
             // Показать вагоны на пути
             var view_wagons_from_way = function (id_way) {
                 this.id_way = id_way;
+                // Получить список станций для прибытия (из списка внешних путей)
+                var list_station_on = get_list_station_on(this.id_station, this.id_way);
+                this.form_setup_on.update_list_element('id_station', list_station_on, -1);
                 // Вывести данные вагоны на пути отправки
-                var list = get_list_station_on(this.id_station, this.id_way);
                 this.load_of_way(this.id_way, function (wagons) {
                     this.view_wagons(wagons);
                 }.bind(this));
@@ -598,6 +612,7 @@
             //// Инициализация формы
             this.form_setup_from.init({
                 alert: this.alert_from,
+                mode: 'edit', // Указали что будем использовать форму типа edit
                 fields: fields,
                 mb: 2,
                 id: null,
@@ -609,6 +624,7 @@
                     }
                 }.bind(this),
             });
+
             // Отображение формы
             this.$setup_from.append(this.form_setup_from.$form_edit);
             //this.$setup_from.append(this.form_setup_from);
@@ -805,6 +821,7 @@
             //// Инициализация формы
             this.form_setup_on.init({
                 alert: this.alert_on,
+                mode: 'add', // Указали что будем использовать форму типа add
                 fields: fields_on,
                 mb: 2,
                 id: null,
@@ -816,14 +833,29 @@
                         // Дополнительная проверка
                         var valid = this.validation(result);
                         if (valid) {
-                            this.modal_confirm_form.view(langView('title_form_apply', App.Langs), 'Выполнить операцию отправки состава на станцию АМКР?', function (result) {
-                                if (result) {
+                            this.modal_confirm_form.view(langView('title_form_apply', App.Langs), 'Выполнить операцию отправки состава на станцию АМКР?', function (res) {
+                                if (res) {
                                     // Операция подтверждена, формируем данные
                                     var wagons = this.wagons.filter(function (i) { return i.position_new !== null; });
-                                    var operation = {
-                                        wagons: wagons
+                                    // Проверим наличие вагонов 
+                                    var list_wagons = [];
+                                    if (wagons && wagons.length > 0) {
+                                        // Получим перечень вагонов и новую позицию
+                                        $.each(wagons.sort(function (a, b) { return a.position_new - b.position_new; }), function (i, el) {
+                                            list_wagons.push({ wir_id: el.wir_id, position: el.position_new })
+                                        }.bind(this));
+                                        // Сформируем операцию
+                                        var operation = {
+                                            id_way_from: this.id_way,
+                                            wagons: list_wagons,
+                                            id_outer_ways: result.new.id_outer_way,
+                                            lead_time: result.new.time_aplly,
+                                            locomotive1: result.new.locomotive1,
+                                            locomotive2: result.new.locomotive2,
+                                            user: App.User_Name
+                                        };
+                                        this.apply(operation);
                                     }
-                                    this.apply(operation);
                                 } else {
                                     // Отмена
                                     this.form_setup_on.out_warning(langView('mess_cancel_operation', App.Langs));
@@ -839,7 +871,7 @@
                 button_add_ok: {
                     title: langView('title_add_ok', App.Langs),
                     click: function (e) {
-                        this.form_setup_on.mode = 'add'; // Укажем тип формы
+                        //this.form_setup_on.mode = 'add'; // Укажем тип формы
                         this.form_setup_on.$form_add.submit();
                     }.bind(this),
                 },
@@ -1033,8 +1065,20 @@
     }
     // выполнить операцию
     view_send_cars.prototype.apply = function (data) {
-
-    }
+        LockScreen(langView('mess_run_operation_send', App.Langs));
+        this.ids_wsd.postSendWagonsOfStation(data, function (result) {
+            if (result > 0) {
+                //this.mf_edit.close(); // закроем форму
+                //if (typeof this.settings.fn_add === 'function') {
+                //    this.settings.fn_add({ data: data, result: result });
+                //}
+                LockScreenOff();
+            } else {
+                LockScreenOff();
+                this.form_setup_on.out_error(langView('mess_error_operation_run', App.Langs) + result);
+            }
+        }.bind(this));
+    };
 
     //--------------------------------------------------------------------------------
     // Показать
