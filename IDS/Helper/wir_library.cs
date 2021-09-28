@@ -72,6 +72,39 @@ namespace IDS.Helper
             }
             return wir;
         }
+
+        //public static WagonInternalRoutes SetSendingWagon(this WagonInternalRoutes wir, int id_outer_ways, DateTime date_start, int position, string note, string user)
+        //{
+        //    if (wir != null && wir.close == null)
+        //    {
+        //        // Получим последнее положение
+        //        WagonInternalMovement wim = wir.GetLastMovement();
+        //        // Исключим попытку поставить дублирования записи постановки на путь
+        //        if (wim != null && wim.id_outer_way != id_outer_ways)
+        //        {
+        //            WagonInternalMovement wim_new = new WagonInternalMovement()
+        //            {
+        //                id = 0,
+        //                id_station = wim.id_station,
+        //                id_way = wim.id_way,
+        //                way_start = wim.way_start,
+        //                way_end = wim.way_end == null ? date_start : wim.way_end,
+        //                id_outer_way = (int?)id_outer_ways,
+        //                outer_way_start = date_start,
+        //                outer_way_end = null,
+        //                position = position,
+        //                create = DateTime.Now,
+        //                create_user = user,
+        //                note = note,
+        //                parent_id = wim.CloseMovement(date_start, null, user),
+        //            };
+        //            wir.WagonInternalMovement.Add(wim_new);
+        //        }
+
+        //    }
+        //    return wir;
+        //}
+
         /// <summary>
         /// Установить вагон на путь отправки
         /// </summary>
@@ -82,7 +115,7 @@ namespace IDS.Helper
         /// <param name="note"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public static WagonInternalRoutes SetSendingWagon(this WagonInternalRoutes wir, int id_outer_ways, DateTime date_start, int position, string note, string user)
+        public static WagonInternalRoutes SetSendingWagon_old(this WagonInternalRoutes wir, int id_outer_ways, DateTime date_start, int position, string note, string user)
         {
             if (wir != null && wir.close == null)
             {
@@ -105,7 +138,7 @@ namespace IDS.Helper
                         create = DateTime.Now,
                         create_user = user,
                         note = note,
-                        parent_id = wim.CloseMovement(date_start, null, user)
+                        parent_id = wim.CloseMovement(date_start, null, user), 
                     };
                     wir.WagonInternalMovement.Add(wim_new);
                 }

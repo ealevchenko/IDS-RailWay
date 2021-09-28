@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UZ;
 using System.Runtime.InteropServices;
+using System.Globalization;
 
 namespace IDS
 {
@@ -953,7 +954,7 @@ namespace IDS
                 if (wim.id_outer_way == id_outer_ways && wim.position == position_on) return 0; // Вагон отправлен пропустить операцию
                 // Вагон не стоит, переставим.
                 string note_sostav = "Состав №" + num_sostav.ToString();
-                wagon.SetSendingWagon(id_outer_ways, lead_time, position_on, note_sostav, user);
+                wagon.SetSendingWagon_old(id_outer_ways, lead_time, position_on, note_sostav, user);
                 // Установим и закроем операцию отправления -5              
                 wagon.SetOpenOperation(5, lead_time.AddMinutes(-10), null, null, locomotive1, locomotive2, note_sostav, user).SetCloseOperation(lead_time, null, user);
                 //context.Update(wagon); // Обновим контекст
@@ -1089,6 +1090,203 @@ namespace IDS
             {
                 e.ExceptionMethodLog(String.Format("SendingWagonsOfStation(id_way_from={0}, list_sending={1}, id_outer_ways={2}, num_sostav={3}, lead_time={4}, locomotive1={5}, locomotive2={6}, user={7})",
                     id_way_from, list_sending, id_outer_ways, num_sostav, lead_time, locomotive1, locomotive2, user), servece_owner, eventID);
+                return -1;// Возвращаем id=-1 , Ошибка
+            }
+        }
+
+        /// <summary>
+        /// Выполнить операцию отправить вагон в составе на станцию АМКР
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_way_from"></param>
+        /// <param name="id_outer_ways"></param>
+        /// <param name="position_on"></param>
+        /// <param name="im_sostav"></param>
+        /// <param name="lead_time"></param>
+        /// <param name="wagon"></param>
+        /// <param name="locomotive1"></param>
+        /// <param name="locomotive2"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int SendWagon(ref EFDbContext context, int id_way_from, int id_outer_ways, int position_on, InternalMovementSostav im_sostav, DateTime lead_time, WagonInternalRoutes wagon, string locomotive1, string locomotive2, string user)
+        {
+            try
+            {
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                //Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                if (wagon == null) return (int)errors_wir.not_arrival_wir;
+                // Получим текущее положение вагона
+                WagonInternalMovement wim = wagon.GetLastMovement();
+                if (wim == null) return (int)errors_base.not_open_wir;                  // В базе данных нет открытой записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
+                if (wim.id_way != id_way_from) return (int)errors_base.wagon_not_way;   // Вагон не стоит на пути
+                // Проверим вагон уже стоит ?
+                if (wim.id_outer_way == id_outer_ways && wim.outer_position == position_on) return 0; // Вагон отправлен пропустить операцию
+                // Вагон не стоит, переставим.
+                EFInternalMovementCars ef_imc = new EFInternalMovementCars(context);
+                // Создадим запись вагон
+                InternalMovementCars imc = new InternalMovementCars()
+                {
+                    id = 0,
+                    id_sostav = 0,
+                    id_wim = wim.id,
+                    note = null,
+                    create = DateTime.Now,
+                    create_user = user,
+                };
+                // Добавим вагон в состав
+                im_sostav.InternalMovementCars.Add(imc);
+
+                // Установим и закроем операцию отправления -5              
+                WagonInternalOperation new_operation = wagon.SetOpenOperation(5, lead_time.AddMinutes(-10), null, null, locomotive1, locomotive2, "Состав:" + im_sostav.num, user).SetCloseOperation(lead_time, null, user);
+
+
+
+                wagon.SetSendingWagon_old(id_outer_ways, lead_time, position_on, "Состав:"+ im_sostav.num, user);
+                // Установим и закроем операцию отправления -5              
+                wagon.SetOpenOperation(5, lead_time.AddMinutes(-10), null, null, locomotive1, locomotive2, "Состав:" + im_sostav.num, user).SetCloseOperation(lead_time, null, user);
+                //context.Update(wagon); // Обновим контекст
+                return 1;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("SendWagon(context={0}, id_way_from={1}, id_outer_ways={2}, position_on={3}, im_sostav={4}, lead_time={5}, wagon={6}, locomotive1={7}, locomotive2={8}, user={9})",
+                    context, id_way_from, id_outer_ways, position_on, im_sostav, lead_time, wagon, locomotive1, locomotive2, user), servece_owner, eventID);
+                return -1;// Возвращаем id=-1 , Ошибка
+            }
+        }
+        /// <summary>
+        /// Выполнить операцию отправить вагоны на станцию АМКР
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_way_from"></param>
+        /// <param name="id_outer_ways"></param>
+        /// <param name="lead_time"></param>
+        /// <param name="List_wir"></param>
+        /// <param name="locomotive1"></param>
+        /// <param name="locomotive2"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public ResultTransfer SendWagonsOfStation(ref EFDbContext context, int id_way_from, int id_outer_ways, DateTime lead_time, List<WagonInternalRoutesPosition> List_wir, string locomotive1, string locomotive2, string user)
+        {
+            ResultTransfer rt = new ResultTransfer(List_wir.Count());
+            try
+            {
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                //Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+
+                if (List_wir != null && List_wir.Count() > 0)
+                {
+                    // Выполним сортировку позиций по возрастанию
+                    List<WagonInternalRoutes> wagon_position = List_wir.OrderBy(w => w.new_position).Select(w => w.wir).ToList();
+
+                    int position = 1;
+                    // Составы для внутреней отправки
+                    EFInternalMovementSostav ef_ims = new EFInternalMovementSostav(context);
+                    InternalMovementSostav new_ims = new InternalMovementSostav()
+                    {
+                        id = 0,
+                        num = id_outer_ways.ToString() + '-' + DateTime.Parse(lead_time.ToString(), CultureInfo.CreateSpecificCulture("ru-RU")),
+                        note = "",
+                        create = DateTime.Now,
+                        create_user = user,
+                    };
+
+                    foreach (WagonInternalRoutes wagon in wagon_position)
+                    {
+                        int result = SendWagon(ref context, id_way_from, id_outer_ways, position, new_ims, lead_time, wagon, locomotive1, locomotive2, user);
+                        rt.SetMovedResult(result, wagon.num);
+                        position++;
+                    }
+                }
+
+                if (rt.error == 0)
+                {
+                    rt.SetResult(context.SaveChanges());
+                }
+                else
+                {
+                    rt.SetResult((int)errors_wir.cancel_save_changes);
+                }
+                return rt;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("SendWagonsOfStation(context={0}, id_way_from={1}, id_outer_ways={2}, lead_time={3}, wagons={4}, locomotive1={5}, locomotive2={6}, user={7})",
+                    context, id_way_from, id_outer_ways, lead_time, List_wir, locomotive1, locomotive2, user), servece_owner, eventID);
+                rt.SetResult((int)errors_wir.global);
+                return rt;// Возвращаем id=-1 , Ошибка
+            }
+        }
+        /// <summary>
+        /// Выполнить операцию отправить вагоны на станцию АМКР
+        /// </summary>
+        /// <param name="id_way_from"></param>
+        /// <param name="wagons"></param>
+        /// <param name="id_outer_ways"></param>
+        /// <param name="lead_time"></param>
+        /// <param name="locomotive1"></param>
+        /// <param name="locomotive2"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int SendWagonsOfStation(int id_way_from, List<ListOperationWagon> wagons, int id_outer_ways, DateTime lead_time, string locomotive1, string locomotive2, string user)
+        {
+            try
+            {
+                DateTime start = DateTime.Now;
+                ResultTransfer res = new ResultTransfer(0);
+                //Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+
+                EFDbContext context = new EFDbContext();
+                List<WagonInternalRoutesPosition> List_wir = new List<WagonInternalRoutesPosition>();
+                // Пройдемся по вагонам отсортировав их по позиции
+                foreach (ListOperationWagon sw in wagons.OrderBy(w => w.position).ToList())
+                {
+                    List_wir.Add(new WagonInternalRoutesPosition() { wir = context.WagonInternalRoutes.Where(r => r.id == sw.wir_id).FirstOrDefault(), new_position = sw.position });
+                }
+                // Отправляем все вагоны
+                res = SendWagonsOfStation(ref context, id_way_from, id_outer_ways, lead_time, List_wir, locomotive1, locomotive2, user);
+                // Если операция успешна, перенумеруем позиции на пути с которого ушли вагоны
+                if (res.result > 0)
+                {
+                    int result_rnw = RenumberingWagons(ref context, id_way_from, 1);
+                    if (result_rnw > 0)
+                    {
+                        // Применим перенумерацию
+                        context.SaveChanges();
+                    }
+                }
+                string mess = String.Format("Операция отправки вагонов на станцию АМКР. Код выполнения = {0}. Путь отправки = {1}, внешний путь приема = {2}, номер состава = {3}, время выполнения операции = {4}, локомотив-1 = {5}, локомотив-2 = {6}. Результат переноса [выбрано для переноса = {7}, перенесено = {8}, пропущено = {9}, ошибок переноса = {10}].",
+                    res.result, id_way_from, id_outer_ways, lead_time, locomotive1, locomotive2,
+                    res.count, res.moved, res.skip, res.error);
+                mess.WarningLog(servece_owner, eventID);
+                mess.EventLog(res.result < 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
+                DateTime stop = DateTime.Now;
+                servece_owner.ServicesToLog(eventID, String.Format("Операция отправки вагонов на станцию АМКР."), start, stop, res.result);
+
+                return res.result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("SendWagonsOfStation(id_way_from={0}, list_sending={1}, id_outer_ways={2}, lead_time={3}, locomotive1={4}, locomotive2={5}, user={6})",
+                    id_way_from, wagons, id_outer_ways, lead_time, locomotive1, locomotive2, user), servece_owner, eventID);
                 return -1;// Возвращаем id=-1 , Ошибка
             }
         }
@@ -4245,7 +4443,7 @@ namespace IDS
                                     on_station_abbr_ru = wagons[0].on_station_abbr_ru,
                                     on_station_abbr_en = wagons[0].on_station_abbr_en,
                                     count_wagon_send = wagons.Count(),
-                                    count_wagon_arrival = wagons.Where(w => w.outer_way_end != null).Count(), 
+                                    count_wagon_arrival = wagons.Where(w => w.outer_way_end != null).Count(),
                                     wagons = wagons.ToList(),
                                 };
                                 id++;
