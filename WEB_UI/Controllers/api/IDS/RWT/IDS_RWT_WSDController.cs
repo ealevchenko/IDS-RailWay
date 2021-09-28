@@ -11,7 +11,7 @@ using System.Web.Http.Description;
 
 namespace WEB_UI.Controllers.api.IDS.RWT
 {
-    #region TREE WAY (Для дерева путей)
+    #region TREE WAY (Для дерева путей - Обновленный АРМ)
 
     public class view_status_station
     {
@@ -78,6 +78,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
 
     #endregion
 
+    #region ДЕТАЛЬНО ВАГОНЫ (Обновленный АРМ)
     public class view_wagons
     {
         public long wir_id { get; set; }
@@ -205,7 +206,128 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public bool? wagon_closed_route { get; set; }
         public string wir_note { get; set; }
     }
+    #endregion
 
+    #region ОПЕРАЦИЯ ОТПРАВИТЬ (Обновленный АРМ)
+    public class OperationSendWagons
+    {
+        public int id_way_from { get; set; }
+        public List<ListOperationWagon> wagons { get; set; }
+        public int id_outer_ways { get; set; }
+        public DateTime lead_time { get; set; }
+        public string locomotive1 { get; set; }
+        public string locomotive2 { get; set; }
+        public string user { get; set; }
+    }
+    #endregion
+
+    public class view_wagon_outer_way
+    {
+        public long wir_id { get; set; }
+        public long wim_id { get; set; }
+        public long? wio_id { get; set; }
+        public int position { get; set; }
+        public int num { get; set; }
+        public int? wagon_adm { get; set; }
+        public string wagon_adm_name_ru { get; set; }
+        public string wagon_adm_name_en { get; set; }
+        public string wagon_adm_abbr_ru { get; set; }
+        public string wagon_adm_abbr_en { get; set; }
+        public int? wagon_rod { get; set; }
+        public string wagon_rod_name_ru { get; set; }
+        public string wagon_rod_name_en { get; set; }
+        public string wagon_rod_abbr_ru { get; set; }
+        public string wagon_rod_abbr_en { get; set; }
+        public string wagon_type_ru { get; set; }
+        public string wagon_type_en { get; set; }
+        public string wagon_operators_name_ru { get; set; }
+        public string wagon_operators_name_en { get; set; }
+        public string wagon_operators_abbr_ru { get; set; }
+        public string wagon_operators_abbr_en { get; set; }
+        public bool? wagon_operators_paid { get; set; }
+        public string wagon_operators_color { get; set; }
+        public DateTime? wagon_operators_rent_start { get; set; }
+        public string wagon_limiting_name_ru { get; set; }
+        public string wagon_limiting_name_en { get; set; }
+        public string wagon_limiting_abbr_ru { get; set; }
+        public string wagon_limiting_abbr_en { get; set; }
+        public double? wagon_gruzp_doc { get; set; }
+        public double wagon_gruzp_uz { get; set; }
+        public int? wagon_tara_doc { get; set; }
+        public int? wagon_tara_arc_doc { get; set; }
+        public double? wagon_tara_uz { get; set; }
+        public DateTime? wagon_date_rem_uz { get; set; }
+        public DateTime arrival_datetime { get; set; }
+        public int? arrival_duration { get; set; }
+        public string arrival_condition_name_ru { get; set; }
+        public string arrival_condition_name_en { get; set; }
+        public string arrival_condition_abbr_ru { get; set; }
+        public string arrival_condition_abbr_en { get; set; }
+        public bool? arrival_condition_red { get; set; }
+        public string arrival_cargo_group_name_ru { get; set; }
+        public string arrival_cargo_group_name_en { get; set; }
+        public string arrival_cargo_name_ru { get; set; }
+        public string arrival_cargo_name_en { get; set; }
+        public string arrival_certification_data_ru { get; set; }
+        public string arrival_certification_data_en { get; set; }
+        public int? arrival_vesg_doc { get; set; }
+        public double? arrival_vesg_reweighing { get; set; }
+        public int arrival_station_from_code { get; set; }
+        public string arrival_station_from_name_ru { get; set; }
+        public string arrival_station_from_name_en { get; set; }
+        public string arrival_station_amkr_name_ru { get; set; }
+        public string arrival_station_amkr_name_en { get; set; }
+        public string arrival_station_amkr_abbr_ru { get; set; }
+        public string arrival_station_amkr_abbr_en { get; set; }
+        public string arrival_division_amkr_code { get; set; }
+        public string arrival_division_amkr_name_ru { get; set; }
+        public string arrival_division_amkr_name_en { get; set; }
+        public string arrival_division_amkr_abbr_ru { get; set; }
+        public string arrival_division_amkr_abbr_en { get; set; }
+        public string current_operation_wagon_name_ru { get; set; }
+        public string current_operation_wagon_name_en { get; set; }
+        public DateTime? current_operation_wagon_start { get; set; }
+        public DateTime? current_operation_wagon_end { get; set; }
+        public string current_operation_note { get; set; }
+        public bool? current_operation_wagon_busy { get; set; }
+        public DateTime? current_operation_wagon_create { get; set; }
+        public string current_operation_wagon_create_user { get; set; }
+        public DateTime? current_operation_wagon_close { get; set; }
+        public string current_operation_wagon_close_user { get; set; }
+        public string current_loading_status_ru { get; set; }
+        public string current_loading_status_en { get; set; }
+        public string current_condition_name_ru { get; set; }
+        public string current_condition_name_en { get; set; }
+        public string current_condition_abbr_ru { get; set; }
+        public string current_condition_abbr_en { get; set; }
+        public bool? current_condition_red { get; set; }
+        public string from_station_amkr_name_ru { get; set; }
+        public string from_station_amkr_name_en { get; set; }
+        public string from_station_amkr_abbr_ru { get; set; }
+        public string from_station_amkr_abbr_en { get; set; }
+        public string current_outer_way_name_ru { get; set; }
+        public string current_outer_way_name_en { get; set; }
+        public DateTime? current_outer_way_amkr_start { get; set; }
+        public string current_outer_way_note { get; set; }
+        public int? current_outer_way_amkr_duration { get; set; }
+        public string on_station_amkr_name_ru { get; set; }
+        public string on_station_amkr_name_en { get; set; }
+        public string on_station_amkr_abbr_ru { get; set; }
+        public string on_station_amkr_abbr_en { get; set; }
+        public DateTime current_wim_create { get; set; }
+        public string current_wim_create_user { get; set; }
+        public decimal usage_fee { get; set; }
+        public string instructional_letters_num { get; set; }
+        public DateTime? instructional_letters_datetime { get; set; }
+        public int? instructional_letters_station { get; set; }
+        public string instructional_letters_station_name { get; set; }
+        public string sap_is_num { get; set; }
+        public DateTime? sap_is_create_date { get; set; }
+        public TimeSpan? sap_is_create_time { get; set; }
+        public bool? sap_os_doc_outgoing_car { get; set; }
+    }
+
+    ///TODO: УДАЛИТЬ СТАРОЕ ДЕТАЛЬНО ВАГОНЫ
     public class view_wagons1
     {
         public long wir_id { get; set; }
@@ -315,112 +437,6 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public TimeSpan? sap_is_create_time { get; set; }
         public bool? sap_os_doc_outgoing_car { get; set; }
     }
-
-    public class view_wagon_outer_way
-    {
-        public long wir_id { get; set; }
-        public long wim_id { get; set; }
-        public long? wio_id { get; set; }
-        public int position { get; set; }
-        public int num { get; set; }
-        public int? wagon_adm { get; set; }
-        public string wagon_adm_name_ru { get; set; }
-        public string wagon_adm_name_en { get; set; }
-        public string wagon_adm_abbr_ru { get; set; }
-        public string wagon_adm_abbr_en { get; set; }
-        public int? wagon_rod { get; set; }
-        public string wagon_rod_name_ru { get; set; }
-        public string wagon_rod_name_en { get; set; }
-        public string wagon_rod_abbr_ru { get; set; }
-        public string wagon_rod_abbr_en { get; set; }
-        public string wagon_type_ru { get; set; }
-        public string wagon_type_en { get; set; }
-        public string wagon_operators_name_ru { get; set; }
-        public string wagon_operators_name_en { get; set; }
-        public string wagon_operators_abbr_ru { get; set; }
-        public string wagon_operators_abbr_en { get; set; }
-        public bool? wagon_operators_paid { get; set; }
-        public string wagon_operators_color { get; set; }
-        public DateTime? wagon_operators_rent_start { get; set; }
-        public string wagon_limiting_name_ru { get; set; }
-        public string wagon_limiting_name_en { get; set; }
-        public string wagon_limiting_abbr_ru { get; set; }
-        public string wagon_limiting_abbr_en { get; set; }
-        public double? wagon_gruzp_doc { get; set; }
-        public double wagon_gruzp_uz { get; set; }
-        public int? wagon_tara_doc { get; set; }
-        public int? wagon_tara_arc_doc { get; set; }
-        public double? wagon_tara_uz { get; set; }
-        public DateTime? wagon_date_rem_uz { get; set; }
-        public DateTime arrival_datetime { get; set; }
-        public int? arrival_duration { get; set; }
-        public string arrival_condition_name_ru { get; set; }
-        public string arrival_condition_name_en { get; set; }
-        public string arrival_condition_abbr_ru { get; set; }
-        public string arrival_condition_abbr_en { get; set; }
-        public bool? arrival_condition_red { get; set; }
-        public string arrival_cargo_group_name_ru { get; set; }
-        public string arrival_cargo_group_name_en { get; set; }
-        public string arrival_cargo_name_ru { get; set; }
-        public string arrival_cargo_name_en { get; set; }
-        public string arrival_certification_data_ru { get; set; }
-        public string arrival_certification_data_en { get; set; }
-        public int? arrival_vesg_doc { get; set; }
-        public double? arrival_vesg_reweighing { get; set; }
-        public int arrival_station_from_code { get; set; }
-        public string arrival_station_from_name_ru { get; set; }
-        public string arrival_station_from_name_en { get; set; }
-        public string arrival_station_amkr_name_ru { get; set; }
-        public string arrival_station_amkr_name_en { get; set; }
-        public string arrival_station_amkr_abbr_ru { get; set; }
-        public string arrival_station_amkr_abbr_en { get; set; }
-        public string arrival_division_amkr_code { get; set; }
-        public string arrival_division_amkr_name_ru { get; set; }
-        public string arrival_division_amkr_name_en { get; set; }
-        public string arrival_division_amkr_abbr_ru { get; set; }
-        public string arrival_division_amkr_abbr_en { get; set; }
-        public string current_operation_wagon_name_ru { get; set; }
-        public string current_operation_wagon_name_en { get; set; }
-        public DateTime? current_operation_wagon_start { get; set; }
-        public DateTime? current_operation_wagon_end { get; set; }
-        public string current_operation_note { get; set; }
-        public bool? current_operation_wagon_busy { get; set; }
-        public DateTime? current_operation_wagon_create { get; set; }
-        public string current_operation_wagon_create_user { get; set; }
-        public DateTime? current_operation_wagon_close { get; set; }
-        public string current_operation_wagon_close_user { get; set; }
-        public string current_loading_status_ru { get; set; }
-        public string current_loading_status_en { get; set; }
-        public string current_condition_name_ru { get; set; }
-        public string current_condition_name_en { get; set; }
-        public string current_condition_abbr_ru { get; set; }
-        public string current_condition_abbr_en { get; set; }
-        public bool? current_condition_red { get; set; }
-        public string from_station_amkr_name_ru { get; set; }
-        public string from_station_amkr_name_en { get; set; }
-        public string from_station_amkr_abbr_ru { get; set; }
-        public string from_station_amkr_abbr_en { get; set; }
-        public string current_outer_way_name_ru { get; set; }
-        public string current_outer_way_name_en { get; set; }
-        public DateTime? current_outer_way_amkr_start { get; set; }
-        public string current_outer_way_note { get; set; }
-        public int? current_outer_way_amkr_duration { get; set; }
-        public string on_station_amkr_name_ru { get; set; }
-        public string on_station_amkr_name_en { get; set; }
-        public string on_station_amkr_abbr_ru { get; set; }
-        public string on_station_amkr_abbr_en { get; set; }
-        public DateTime current_wim_create { get; set; }
-        public string current_wim_create_user { get; set; }
-        public decimal usage_fee { get; set; }
-        public string instructional_letters_num { get; set; }
-        public DateTime? instructional_letters_datetime { get; set; }
-        public int? instructional_letters_station { get; set; }
-        public string instructional_letters_station_name { get; set; }
-        public string sap_is_num { get; set; }
-        public DateTime? sap_is_create_date { get; set; }
-        public TimeSpan? sap_is_create_time { get; set; }
-        public bool? sap_os_doc_outgoing_car { get; set; }
-    }
     ///TODO: УДАЛИТЬ СТАРОЕ ДЕРЕВО ПУТЕЙ
     public class view_station_status
     {
@@ -487,6 +503,8 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string change_user { get; set; }
     }
 
+
+
     public class view_arrival_sostav
     {
         public string num_train { get; set; }
@@ -518,6 +536,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string user { get; set; }
     }
 
+    ///TODO: УДАЛИТЬ СТАРАЯ ОПЕРАЦИЯ ОТПРАВИТЬ
     public class OperationSendingWagons
     {
         public int id_way_from { get; set; }
@@ -525,8 +544,6 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public int id_outer_ways { get; set; }
         public int num_sostav { get; set; }
         public DateTime lead_time { get; set; }
-        //public DateTime date_start { get; set; }
-        //public DateTime date_stop { get; set; }
         public string locomotive1 { get; set; }
         public string locomotive2 { get; set; }
         public string user { get; set; }
@@ -734,7 +751,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
     {
         private EFDbContext db = new EFDbContext();
 
-        #region TREE WAY (Дерево путей)
+        #region TREE WAY (Дерево путей - Обновленный АРМ)
         // GET: api/ids/rwt/wsd/view/status/station/all
         /// <summary>
         /// Получить состояние по всем станциям (дерево станций)
@@ -979,10 +996,9 @@ namespace WEB_UI.Controllers.api.IDS.RWT
 
         #endregion
 
+        #region ДЕТАЛЬНО ВАГОНЫ (Обновленный АРМ)
 
-        #region ДЕТАЛЬНО ВАГОНЫ
-
-        // GET: api/ids/rwt/wsd/view_old/vagons/way/id/225
+        //TODO: Убрать старая выборка GET: api/ids/rwt/wsd/view_old/vagons/way/id/225
         /// <summary>
         /// Показать вагоны детально на указаном пути
         /// </summary>
@@ -1034,6 +1050,26 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         }
         #endregion
 
+
+        #region ОПЕРАЦИЯ ОТПРАВИТЬ (Обновленный АРМ)
+        // POST api/ids/rwt/wsd/operation/sending
+        [HttpPost]
+        [Route("operation/sending")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostSendWagonsOfStationAMKR([FromBody] OperationSendWagons value)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                int result = ids_wir.SendWagonsOfStation(value.id_way_from, value.wagons, value.id_outer_ways, value.lead_time, value.locomotive1, value.locomotive2, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        #endregion
 
         // GET: api/ids/rwt/wsd/view/vagons/outer_way/id/12
         [Route("view/vagons/outer_way/id/{id_outer_way:int}")]
@@ -1139,9 +1175,10 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             }
         }
 
-        // POST api/ids/rwt/wsd/operation/sending
+
+        //TODO: Убрать старая операция POST api/ids/rwt/wsd/operation/sending_old
         [HttpPost]
-        [Route("operation/sending")]
+        [Route("operation/sending_old")]
         [ResponseType(typeof(int))]
         public IHttpActionResult PostSendingWagonsOfStation([FromBody] OperationSendingWagons value)
         {

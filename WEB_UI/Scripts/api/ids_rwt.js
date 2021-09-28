@@ -4041,7 +4041,7 @@ IDS_RWT.prototype.postDissolutionWagonsOfStation = function (operation_dissoluti
 //Операция отправки 
 IDS_RWT.prototype.postSendingWagonsOfStation = function (operation_sending, callback) {
     $.ajax({
-        url: '../../api/ids/rwt/wsd/operation/sending/',
+        url: '../../api/ids/rwt/wsd/operation/sending_old/',
         type: 'POST',
         data: JSON.stringify(operation_sending),
         contentType: "application/json;charset=utf-8",
