@@ -1146,12 +1146,7 @@ namespace IDS
                 // Установим и закроем операцию отправления -5              
                 WagonInternalOperation new_operation = wagon.SetOpenOperation(5, lead_time.AddMinutes(-10), null, null, locomotive1, locomotive2, "Состав:" + im_sostav.num, user).SetCloseOperation(lead_time, null, user);
 
-
-
-                wagon.SetSendingWagon_old(id_outer_ways, lead_time, position_on, "Состав:"+ im_sostav.num, user);
-                // Установим и закроем операцию отправления -5              
-                wagon.SetOpenOperation(5, lead_time.AddMinutes(-10), null, null, locomotive1, locomotive2, "Состав:" + im_sostav.num, user).SetCloseOperation(lead_time, null, user);
-                //context.Update(wagon); // Обновим контекст
+                wagon.SetSendingWagon(id_outer_ways, lead_time, position_on, "Состав:"+ im_sostav.num, user);
                 return 1;
             }
             catch (Exception e)
