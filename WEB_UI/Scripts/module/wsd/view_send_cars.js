@@ -81,10 +81,82 @@
             'mess_update_operation': 'Обновляю операции...',
             'mess_init_panel': 'Выполняю инициализацию модуля ...',
             'mess_destroy_operation': 'Закрываю форму...',
+            'mess_create_sostav': 'Формирую состав, переношу вагоны...',
+            'mess_clear_sostav': 'Формирую состав, убираю выбранные вагоны...',
+            'mess_reverse_sostav': 'Формирую состав, реверс вагонов...',
         },
         'en':  //default language: English
         {
+            'card_header_panel': 'PERFORM THE OPERATION "SEND TRAINS TO AMKR STATION"',
+            'card_header_on': 'SEND TO STATION',
+            'card_header_from': 'SEND FROM STATION',
+            'fieldset_on_table_title': 'Team Formed',
+            'title_label_station_from': 'Departure station:',
+            'title_placeholder_station_from': 'Departure station:',
+            'title_label_way': 'Departure path:',
+            'title_placeholder_way': 'Select path',
 
+            'title_label_station_on': 'Arrival station:',
+            'title_placeholder_station_on': 'Arrival station:',
+            'title_label_outer_way': 'External path:',
+            'title_placeholder_outer_way': 'External path',
+            'title_label_locomotive1': 'Locomotive # 1:',
+            'title_label_locomotive2': 'Locomotive # 2:',
+            'title_placeholder_locomotive': 'Locomotive no.',
+            'title_time_aplly': 'Runtime',
+            'title_placeholder_time_aplly': 'Execution time',
+
+            'title_label_date': 'PERIOD:',
+
+
+            'field_id': 'row id',
+            'field_operation_end': 'Sent',
+            'field_name_outer_way': 'Ferry',
+            'field_from_station_name': 'Sent station',
+            'field_from_way_name': 'Sent path',
+            'field_on_station_name': 'Station arr.',
+            'field_count_wagon_send': 'Sent',
+            'field_count_wagon_arrival': 'Received',
+            'field_operation_locomotive1': 'Locomotive1',
+            'field_operation_locomotive2': 'Locomotive2',
+            'field_operation_create_user': 'Operation performed',
+            'field_status': 'Status',
+
+
+
+            'tytle_status_arr': 'Accepted',
+            'tytle_status_work': 'In progress',
+            'tytle_status_send': 'Sent',
+            'tytle_detali_wagon': 'Wagons included',
+            'title_form_apply': 'Run?',
+
+            'title_button_export': 'Export',
+            'title_button_buffer': 'Buffer',
+            'title_button_excel': 'Excel',
+            'title_button_cancel': 'Cancel',
+            'title_button_return': 'Return',
+
+            'title_add_ok': 'EXECUTE',
+
+
+            'mess_error_equal_locomotive': 'Locomotive # 1 and # 2 are equal',
+            'mess_error_not_locomotive': 'There is no locomotive # in the IDS directory',
+            'mess_error_min_time_aplly': 'The date of the operation cannot be less than the current date, min. deviation (min) = ',
+            'mess_error_max_time_aplly': 'The date of the operation cannot be greater than the current date, mac. deviation (min) = ',
+            'mess_error_not_wagons': 'No wagons have been selected for departure (in the "SEND FROM STATION" window, select wagons on the dispatch route and form a train).',
+            'mess_error_operation_run': 'An error occurred while performing the "SEND FROM STATION" operation, error code:',
+
+            'mess_cancel_operation': 'Operation "SEND TRAINS TO AMKR STATION" - canceled',
+            'mess_run_operation_send': 'I am performing the operation of sending the train to the AMKR station',
+
+            'mess_load_operation': 'Loading operations ...',
+            'mess_load_wagons': 'Loading wagons on the way ...',
+            'mess_update_operation': 'Updating operations ...',
+            'mess_init_panel': 'Initializing the module ...',
+            'mess_destroy_operation': 'Closing the form ...',
+            'mess_create_sostav': 'Forming a train, moving wagons ...',
+            'mess_clear_sostav': 'Forming the train, removing the selected wagons ...',
+            'mess_reverse_sostav': 'Forming the train, the reverse of the wagons ...',
         }
     };
     // Определлим список текста для этого модуля
@@ -383,6 +455,15 @@
         }
         AddWagonsAsync.call(this, 0);
     };
+    // вернуть название станции прибытия по id внешнего пути
+    var get_station_name = function (id_outer_way) {
+        var outer_way = this.ids_dir.list_outer_ways.find(function (o) { return o.id = id_outer_way; });
+        if (outer_way) {
+            var station = this.ids_dir.list_station.find(function (o) { return o.id = outer_way.id_station_on; });
+            return station ? station['station_name_' + App.Lang] : null;
+        }
+        return null
+    };
 
     function view_send_cars(selector) {
         if (!selector) {
@@ -425,7 +506,7 @@
     };
     // инициализация модуля
     view_send_cars.prototype.init = function (options, fn_init_ok) {
-        this.init = true;
+        this.result_init = true;
         // теперь выполним инициализацию, определим основные свойства
 
         // Создать модальную форму "Окно сообщений"
@@ -436,11 +517,7 @@
             alert: null,
             ids_dir: null,
             ids_wsd: null,
-            fn_db_update: function (list) {
-                //this.load_db(list, true, function (result) {
-                //    this.update_element(result)
-                //}.bind(this));
-            }.bind(this),
+            fn_db_update: null,
         }, options);
         // Создадим ссылку на модуль работы с базой данных
         this.ids_dir = this.settings.ids_dir ? this.settings.ids_dir : new directory();
@@ -479,7 +556,7 @@
         this.load_db(['station', 'ways', 'outer_ways', 'locomotive'], false, function (result) {
             // Подгрузили списки
             this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false && i.station_delete === null; });
-            // Получим список путей b 
+            // Получим список путей  
             var get_list_way = function (id_station) {
                 this.id_station = id_station;
                 var ways = [];
@@ -644,7 +721,7 @@
                         {
                             name: 'add_wagons_send',
                             action: function (e, dt, node, config) {
-
+                                LockScreen(langView('mess_create_sostav', App.Langs));
                                 // Выполнить операцию добавить вагоны
                                 var wagon_max_position = this.wagons.reduce(function (prev, current, index, array) { return prev.position_new > current.position_new ? prev : current });
                                 var position_start = wagon_max_position && wagon_max_position.position_new !== null ? wagon_max_position.position_new + 1 : 1;
@@ -833,10 +910,10 @@
                         // Дополнительная проверка
                         var valid = this.validation(result);
                         if (valid) {
-                            this.modal_confirm_form.view(langView('title_form_apply', App.Langs), 'Выполнить операцию отправки состава на станцию АМКР?', function (res) {
+                            var name_station = get_station_name.call(this, result.new.id_outer_way);// Получим название станции
+                            var wagons = this.wagons.filter(function (i) { return i.position_new !== null; });// получить вагоны
+                            this.modal_confirm_form.view(langView('title_form_apply', App.Langs), 'Выполнить операцию "ОТПРАВИТЬ СОСТАВОВ НА СТАНЦИИ АМКР" в количестве: ' + (wagons ? wagons.length : 0) + ' (ваг.), станция прибытия: ' + name_station + '?', function (res) {
                                 if (res) {
-                                    // Операция подтверждена, формируем данные
-                                    var wagons = this.wagons.filter(function (i) { return i.position_new !== null; });
                                     // Проверим наличие вагонов 
                                     var list_wagons = [];
                                     if (wagons && wagons.length > 0) {
@@ -861,17 +938,12 @@
                                     this.form_setup_on.out_warning(langView('mess_cancel_operation', App.Langs));
                                 }
                             }.bind(this));
-
-
-
-
                         }
                     }
                 }.bind(this),
                 button_add_ok: {
                     title: langView('title_add_ok', App.Langs),
                     click: function (e) {
-                        //this.form_setup_on.mode = 'add'; // Укажем тип формы
                         this.form_setup_on.$form_add.submit();
                     }.bind(this),
                 },
@@ -894,6 +966,7 @@
                         {
                             name: 'del_wagons_send',
                             action: function (e, dt, node, config) {
+                                LockScreen(langView('mess_clear_sostav', App.Langs));
                                 var base = this;
                                 // Убрать вагоны
                                 wagons_del_async.call(this, this.tab_cars_on.select_rows_wagons, function () {
@@ -908,6 +981,7 @@
                         {
                             name: 'reverse_num_wagon',
                             action: function (e, dt, node, config) {
+                                LockScreen(langView('mess_reverse_sostav', App.Langs));
                                 wagons_reverse_enumerate_async(this.wagons.filter(function (i) { return i.position_new !== null; }), 'position_new', function () {
                                     this.tab_cars_on.select_rows_wagons = null;
                                     this.view_wagons(this.wagons);
@@ -925,7 +999,7 @@
 
             //----------------------------------
             if (typeof fn_init_ok === 'function') {
-                fn_init_ok(this.init);
+                fn_init_ok(this.result_init);
             }
             //----------------------------------
         }.bind(this));
@@ -950,6 +1024,7 @@
     };
     // 
     view_send_cars.prototype.view_wagons = function (wagons) {
+        this.form_setup_on.clear_all();
         this.tab_cars_from.view(wagons.filter(function (i) { return i.position_new === null; }), null);
         this.tab_cars_on.view(wagons.filter(function (i) { return i.position_new !== null; }), null);
     };
@@ -979,46 +1054,6 @@
             }
         }
 
-    };
-    // загрузить данные 
-    view_send_cars.prototype.load_default = function () {
-        var res = this.form_setup_from.get_value();
-        if (res && res.select_date) {
-            this.load_operation(moment(res.select_date.start)._d, moment(res.select_date.stop)._d);
-        }
-    };
-    // загрузить данные 
-    view_send_cars.prototype.load_operation = function (start, stop) {
-        if (start >= 0 && stop >= 0) {
-            LockScreen(langView('mess_load_operation', App.Langs));
-            this.ids_wsd.getSostavWagonsOperationOfSend(start, stop, function (operation) {
-                this.start = start;
-                this.stop = stop;
-                this.operation = operation;
-                this.select_row_sostav = null;
-                this.view(operation);
-                //LockScreenOff();
-            }.bind(this));
-        } else {
-            //
-        }
-
-    };
-    // Обновить данные
-    view_send_cars.prototype.update = function () {
-        this.out_clear();
-        if (this.start && this.stop) {
-            var td_wagons = this.td_wagons;
-            LockScreen(langView('mess_update_operation', App.Langs));
-            this.ids_wsd.getSostavWagonsOperationOfSend(this.start, this.stop, function (operation) {
-                this.operation = operation;
-                this.view(operation);
-                // Открыть детали если есть
-
-            }.bind(this));
-        } else {
-
-        }
     };
     //--------------------------------------------------------------------------------
     // Уточняющая валидация данных
@@ -1067,15 +1102,31 @@
     view_send_cars.prototype.apply = function (data) {
         LockScreen(langView('mess_run_operation_send', App.Langs));
         this.ids_wsd.postSendWagonsOfStation(data, function (result) {
-            if (result > 0) {
-                //this.mf_edit.close(); // закроем форму
-                //if (typeof this.settings.fn_add === 'function') {
-                //    this.settings.fn_add({ data: data, result: result });
-                //}
+            if (result && result.result > 0) {
+                // Вывести данные вагоны на пути отправки
+                this.load_of_way(this.id_way, function (wagons) {
+                    this.view_wagons(wagons);
+                }.bind(this));
+                this.out_clear();
+
+                // Сбросим установки (время и локомотивы)
+                this.form_setup_on.set('time_aplly',null);
+                this.form_setup_on.set('locomotive1',null);
+                this.form_setup_on.set('locomotive2', null);
+                
+                this.form_setup_on.out_info('Состав отправлен, в количестве ' + result.moved + '(ваг.)');
+                if (typeof this.settings.fn_db_update === 'function') {
+                    //TODO: можно добавить возвращать перечень для обновления
+                    typeof this.settings.fn_db_update();
+                }
                 LockScreenOff();
             } else {
                 LockScreenOff();
-                this.form_setup_on.out_error(langView('mess_error_operation_run', App.Langs) + result);
+                this.form_setup_on.out_error(langView('mess_error_operation_run', App.Langs) + result.result);
+                // Выведем ошибки по вагонно.
+                $.each(result.listResult, function (i, el) {
+                    if (el.result <= 0) this.form_setup_on.out_error('Вагон №' + el.num + ', код ошибки : ' + el.result);
+                }.bind(this));
             }
         }.bind(this));
     };
@@ -1116,35 +1167,35 @@
     //--------------------------------------------------------------------------------
     // Очистить объект
     view_send_cars.prototype.destroy = function () {
-        this.modal_confirm_form.destroy();
-        //this.modal_edit_form.destroy();
-        // Очистить форму выбора
+        LockScreen(langView('mess_destroy_operation', App.Langs));
+        // Очистить модальную форму подтверждения
+        if (this.modal_confirm_form) {
+            this.modal_confirm_form.destroy();
+            this.modal_confirm_form = null;
+        }
+        // Очистить форму выбора пути отправки
         if (this.form_setup_from) {
             this.form_setup_from.destroy();
             this.form_setup_from = null;
         }
-        LockScreen(langView('mess_destroy_operation', App.Langs));
-        // Очистить объект таблица
-        setTimeout(function () {
-            this.destroy_table();
-        }.bind(this), 0);
-        //if (this.obj_t_sostav) {
-        //    LockScreen(langView('mess_destroy_operation', App.Langs));
-        //    this.obj_t_sostav.destroy(true);
-        //    this.obj_t_sostav = null;
-        //    LockScreenOff();
-        //}
-        this.$panel.empty(); // empty in case the columns change
-    };
-    //
-    view_send_cars.prototype.destroy_table = function () {
-        // Очистить объект таблица
-        if (this.obj_t_sostav) {
-            //LockScreen(langView('mess_destroy_operation', App.Langs));
-            this.obj_t_sostav.destroy(true);
-            this.obj_t_sostav = null;
+        // Очистить форму выбора куда отправить
+        if (this.form_setup_on) {
+            this.form_setup_on.destroy();
+            this.form_setup_on = null;
+        }
+
+        // Уберем модуль (Таблица собранный состав для отправки детально)
+        if (this.tab_cars_on) {
+            this.tab_cars_on.destroy();
+            this.tab_cars_on = null;
+        }
+        // Уберем модуль (Таблица вагоны на на пути отправки детально)
+        if (this.tab_cars_from) {
+            this.tab_cars_from.destroy();
+            this.tab_cars_from = null;
 
         }
+        this.$panel.empty(); // empty in case the columns change
         LockScreenOff();
     };
 

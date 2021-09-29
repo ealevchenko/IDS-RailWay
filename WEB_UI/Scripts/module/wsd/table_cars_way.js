@@ -1194,8 +1194,8 @@
                 {
                     text: langView('title_button_field_clear', App.Langs),
                     action: function (e, dt, node, conf) {
-                        this.obj_t_cars.colReorder.reset();
-                    }.bind(this)
+                        this.colReorder.reset();
+                    }
                 },
             ],
             autoClose: true
@@ -1726,7 +1726,7 @@
             "info": true,
             "keys": true,
             colReorder: true,               // вкл. перетаскивание полей
-            fixedHeader: false,             // вкл. фикс. заголовка
+            fixedHeader: true,             // вкл. фикс. заголовка
             fixedColumns: {
                 leftColumns: 2,
             },
