@@ -73,8 +73,9 @@ namespace IDS.Helper
             return wir;
         }
 
-        public static WagonInternalRoutes SetSendingWagon(this WagonInternalRoutes wir, int id_outer_ways, DateTime date_start, int position, string note, string user)
+        public static WagonInternalMovement SetSendingWagon(this WagonInternalRoutes wir, int id_outer_ways, DateTime date_start, int position, string num_sostav, string note, string user)
         {
+            WagonInternalMovement wim_new = null; 
             if (wir != null && wir.close == null)
             {
                 // Получим последнее положение
@@ -82,20 +83,20 @@ namespace IDS.Helper
                 // Исключим попытку поставить дублирования записи постановки на путь
                 if (wim != null && wim.id_outer_way != id_outer_ways)
                 {
-                    WagonInternalMovement wim_new = new WagonInternalMovement()
+                    wim_new = new WagonInternalMovement()
                     {
                         id = 0,
                         id_station = wim.id_station,
                         id_way = wim.id_way,
                         way_start = wim.way_start,
                         way_end = wim.way_end == null ? date_start : wim.way_end,
-                        position = wim.position,
+                        position = position,
                         id_outer_way = (int?)id_outer_ways,
                         outer_way_start = date_start,
                         outer_way_end = null,
-                        outer_position = position,
                         create = DateTime.Now,
                         create_user = user,
+                        num_sostav = num_sostav,
                         note = note,
                         parent_id = wim.CloseMovement(date_start, null, user),
                     };
@@ -103,7 +104,7 @@ namespace IDS.Helper
                 }
 
             }
-            return wir;
+            return wim_new;
         }
 
         /// <summary>

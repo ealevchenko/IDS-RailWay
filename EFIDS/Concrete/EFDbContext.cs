@@ -55,9 +55,6 @@ namespace EFIDS.Concrete
         public virtual DbSet<WagonInternalMovement> WagonInternalMovement { get; set; }
         public virtual DbSet<WagonInternalOperation> WagonInternalOperation { get; set; }
         public virtual DbSet<WagonInternalRoutes> WagonInternalRoutes { get; set; }
-        // составы внутреннего перемещения
-        public virtual DbSet<InternalMovementCars> InternalMovementCars { get; set; }
-        public virtual DbSet<InternalMovementSostav> InternalMovementSostav { get; set; }
 
         // MORS
         public virtual DbSet<CardsWagons> CardsWagons { get; set; }
@@ -158,11 +155,6 @@ namespace EFIDS.Concrete
                 .WithOptional(e => e.WagonInternalOperation)
                 .HasForeignKey(e => e.id_wio);
 
-            modelBuilder.Entity<WagonInternalMovement>()
-                .HasMany(e => e.InternalMovementCars)
-                .WithRequired(e => e.WagonInternalMovement)
-                .HasForeignKey(e => e.id_wim)
-                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<WagonInternalOperation>()
                 .HasMany(e => e.WagonInternalOperation1)
@@ -186,11 +178,6 @@ namespace EFIDS.Concrete
                 .WithOptional(e => e.WagonInternalRoutes2)
                 .HasForeignKey(e => e.parent_id);
 
-            modelBuilder.Entity<InternalMovementSostav>()
-                .HasMany(e => e.InternalMovementCars)
-                .WithRequired(e => e.InternalMovementSostav)
-                .HasForeignKey(e => e.id_sostav)
-                .WillCascadeOnDelete(false);
             #endregion
 
             #region ПРИБЫТИЕ
@@ -964,8 +951,6 @@ namespace EFIDS.Concrete
             #endregion
 
             #endregion
-
-
 
             #region СПРАВОЧНИКИ МОРС
 

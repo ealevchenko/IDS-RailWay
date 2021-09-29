@@ -108,8 +108,6 @@
     <Compile Include="Concrete\Directory\EFDirectory_WagonManufacturers.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_GenusWagons.cs" />
     <Compile Include="Concrete\EFRepository.cs" />
-    <Compile Include="Concrete\RWT\EFInternalMovementCars.cs" />
-    <Compile Include="Concrete\RWT\EFInternalMovementSostav.cs" />
     <Compile Include="Concrete\RWT\EFOutgoing_UZ_Document_Pay.cs" />
     <Compile Include="Concrete\RWT\EFOutgoing_UZ_Document.cs" />
     <Compile Include="Concrete\RWT\EFOutgoing_UZ_Vagon_Pay.cs" />
@@ -231,8 +229,6 @@
     <Compile Include="Entities\RWT\Outgoing_UZ_Vagon_Acts.cs" />
     <Compile Include="Entities\RWT\Outgoing_UZ_Vagon_Cont.cs" />
     <Compile Include="Entities\RWT\Outgoing_UZ_Vagon_Pay.cs" />
-    <Compile Include="Entities\RWT\InternalMovementCars.cs" />
-    <Compile Include="Entities\RWT\InternalMovementSostav.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

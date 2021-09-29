@@ -206,8 +206,7 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.WagonInternalRoutes>>().To<EFIDS.Concrete.EFWagonInternalRoutes>();
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.WagonInternalMovement>>().To<EFIDS.Concrete.EFWagonInternalMovement>();
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.WagonInternalOperation>>().To<EFIDS.Concrete.EFWagonInternalOperation>();
-            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.InternalMovementSostav>>().To<EFIDS.Concrete.EFInternalMovementSostav>();
-            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.InternalMovementCars>>().To<EFIDS.Concrete.EFInternalMovementCars>();
+
         }
     }
 }

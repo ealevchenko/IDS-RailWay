@@ -131,7 +131,7 @@ namespace EFIDS.Helper
                 rop = o.rop,
                 local_use = o.local_use,
                 color = o.color,
-                monitoring_idle_time = o.monitoring_idle_time, 
+                monitoring_idle_time = o.monitoring_idle_time,
                 create = o.create,
                 create_user = o.create_user,
                 change = o.change,
@@ -2193,52 +2193,14 @@ namespace EFIDS.Helper
                 close = m.close,
                 close_user = m.close_user,
                 parent_id = m.parent_id,
-                outer_position = m.outer_position,
-                outer = m.outer,
-                outer_user = m.outer_user,
+                num_sostav = m.num_sostav, 
                 id_wio = m.id_wio,
                 Directory_Station = m.Directory_Station.GetDirectory_Station(),
                 Directory_Ways = m.Directory_Ways.GetDirectory_Ways(),
                 Directory_OuterWays = m.Directory_OuterWays.GetDirectory_OuterWays(),
             };
         }
-        /// <summary>
-        /// Вернуть вагоны состава внутреннего перемещения
-        /// </summary>
-        /// <param name="c"></param>
-        /// <returns></returns>
-        public static InternalMovementCars GetInternalMovementCars(this InternalMovementCars c)
-        {
-            if (c == null) return null;
-            return new InternalMovementCars()
-            {
-                id = c.id,
-                id_sostav = c.id_sostav,
-                id_wim = c.id_wim,
-                note = c.note,
-                create = c.create,
-                create_user = c.create_user,
-                WagonInternalMovement = c.WagonInternalMovement.GetWagonInternalMovement(),
-            };
-        }
-        /// <summary>
-        /// Вернуть составы внутреннего перемещени вагонов
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        public static InternalMovementSostav GetInternalMovementSostav(this InternalMovementSostav s)
-        {
-            if (s == null) return null;
-            return new InternalMovementSostav()
-            {
-                id = s.id,
-                num = s.num,
-                note = s.note,
-                create = s.create,
-                create_user = s.create_user,
-                InternalMovementCars = s.InternalMovementCars.ToList().Select(w => w.GetInternalMovementCars()).ToList(),
-            };
-        }
+
         #endregion
 
 
