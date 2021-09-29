@@ -1055,13 +1055,13 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         // POST api/ids/rwt/wsd/operation/sending
         [HttpPost]
         [Route("operation/sending")]
-        [ResponseType(typeof(int))]
+        [ResponseType(typeof(ResultTransfer))]
         public IHttpActionResult PostSendWagonsOfStationAMKR([FromBody] OperationSendWagons value)
         {
             try
             {
                 IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
-                int result = ids_wir.SendWagonsOfStation(value.id_way_from, value.wagons, value.id_outer_ways, value.lead_time, value.locomotive1, value.locomotive2, value.user);
+                ResultTransfer result = ids_wir.SendWagonsOfStation(value.id_way_from, value.id_outer_ways, value.lead_time, value.wagons, null, value.locomotive1, value.locomotive2, value.user);
                 return Ok(result);
             }
             catch (Exception e)
