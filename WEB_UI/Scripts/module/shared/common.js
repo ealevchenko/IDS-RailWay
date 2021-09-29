@@ -1369,7 +1369,6 @@
             this.settings.fn_validation({ valid: Boolean(this.valid), old: this.data, new: result });
         }
     };
-
     //-----------------------------------------------------------------------------
     // Обновить списочный компонент
     form_infield.prototype.update_list_element = function (name, list, value) {
@@ -1393,8 +1392,8 @@
             var field = this.settings.fields.find(function (o) {
                 return o.name === name
             });
-            if (field && field.element) {
-                field.element.val(value);
+            if (field && field['element_' + this.mode]) {
+                field['element_' + this.mode].val(value);
             }
         }
     };
@@ -1432,7 +1431,7 @@
         return result;
     };
     // Прочесть значение компонента
-    form_infield.prototype.get_element= function (name) {
+    form_infield.prototype.get_element = function (name) {
         if (this.settings.fields) {
             var field = this.settings.fields.find(function (o) {
                 return o.field === name
@@ -1444,6 +1443,17 @@
         return undefined;
     };
     //-----------------------------------------------------------------------------
+    // Очистить все сообщения и ошибки на форме
+    form_infield.prototype.clear_all = function () {
+        if (this.settings.alert) {
+            this.settings.alert.clear_message()
+        }
+        if (this.validation) {
+            this.validation.clear_all();
+        }
+
+    }
+
     // Вывести на форме сообщение об ошибке под элементом (указав тип формы)
     form_infield.prototype.set_object_error_mode = function (name, mode, message) {
         if (this.settings.fields) {
