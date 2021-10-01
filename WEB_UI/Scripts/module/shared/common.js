@@ -472,7 +472,25 @@
         this.$button = $('<button></button>', {
             'class': 'btn btn' + (prefix ? '-' + prefix + ' ' : ' ') + cl_bt,
             'id': id,
-            'name': id
+        });
+        if (icon && icon !== '') {
+            var icon = $('<i></i>', {
+                'class': icon,
+                'aria-hidden': 'true'
+            });
+            this.$button.append(icon).append(' ');
+
+        };
+        if (title && title !== '') {
+            this.$button.append(title);
+        };
+    };
+    form_control.prototype.el_button_submit = function (prefix, cl_bt, id, title, icon) {
+
+        this.$button = $('<button></button>', {
+            'class': 'btn btn' + (prefix ? '-' + prefix + ' ' : ' ') + cl_bt,
+            'id': id,
+            'type':'submit'
         });
         if (icon && icon !== '') {
             var icon = $('<i></i>', {
@@ -652,11 +670,14 @@
     };
     //---------------------------------------------------------------------------------
     // Элемент <form class="">
-    form_control.prototype.el_form = function (id, cl_form) {
+    form_control.prototype.el_form = function (id, cl_form, valid_html5) {
         this.$form = $('<form></form>', {
             'class': cl_form,
             'id': id
         });
+        if (!valid_html5) {
+            this.$form.attr('novalidate', '');
+        }
     };
     // Элемент список для формы <form class="form-inline">
     //<div class="form-group">
