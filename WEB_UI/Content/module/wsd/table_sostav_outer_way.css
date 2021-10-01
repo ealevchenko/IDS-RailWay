@@ -1,0 +1,197 @@
+﻿body {
+}
+
+table.dataTable tbody td.mw-50 {
+    max-width: 50px;
+}
+
+table.dataTable tbody td.mw-100 {
+    max-width: 100px;
+}
+
+table.dataTable tbody td.mw-150 {
+    max-width: 150px;
+}
+
+table.dataTable tbody td.mw-200 {
+    max-width: 200px;
+}
+
+table.dataTable tbody td.mw-250 {
+    max-width: 250px;
+}
+
+table.dataTable tbody td.mw-300 {
+    max-width: 300px;
+}
+
+table.dataTable tbody td.shorten {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/*Превышена норма нахождения вагона на АМКР*/
+table.dataTable.display tbody tr td.idle-time-error {
+    color: red;
+}
+
+table.dataTable.display tbody tr td a.idle-time-error {
+    color: red;
+}
+
+/*IE сука не поддерживает*/
+/*:root {
+    --idle-station-bg-color: #faf0f0;
+    --idle-station-bg-color-select: #ffebeb;
+    --idle-station-bg-color-head: #ffebeb;
+}*/
+
+/*Отобразить типы полей*/
+/*Зафиксированные поля - не просвечиваемые*/
+table.dataTable.display thead tr th.fixed-column {
+    background-color: #ffffff; /*макс*/
+}
+
+/*Скорректируем вывод цвет оператора*/
+table.dataTable.display tbody tr.selected.odd > td.operator, table.dataTable.display tbody tr.selected.even > td.operator {
+    background-color: #B0BED9 !important;
+}
+
+/*Простой на ж.д.станции*/
+table.dataTable tbody tr:not(.selected).odd > td.idle-station, table.dataTable tbody tr:not(.selected).even > td.idle-station {
+    background-color: #f5e1e1; /*мин*/
+}
+
+table.dataTable.display tbody tr:not(.selected).odd > td.sorting_1.idle-station, table.dataTable.order-column.stripe tbody tr.odd > td.sorting_1.idle-station {
+    background-color: #f0d3d3; /*сред*/
+}
+
+table.dataTable.display tbody tr:not(.selected).even > td.sorting_1.idle-station, table.dataTable.order-column.stripe tbody tr.even > td.sorting_1.idle-station {
+    background-color: #f0d3d3; /*сред*/
+}
+
+table.dataTable.display thead tr th.idle-station {
+    background-color: #ebc4c4; /*макс*/
+}
+/*Инструктивные письма*/
+table.dataTable tbody tr:not(.selected).odd > td.ins-let, table.dataTable tbody tr:not(.selected).even > td.ins-let {
+    background-color: #f4ecf4; /*мин*/
+}
+
+table.dataTable.display tbody tr:not(.selected).odd > td.sorting_1.ins-let, table.dataTable.order-column.stripe tbody tr.odd > td.sorting_1.ins-let {
+    background-color: #ecdfec; /*сред*/
+}
+
+table.dataTable.display tbody tr:not(.selected).even > td.sorting_1.ins-let, table.dataTable.order-column.stripe tbody tr.even > td.sorting_1.ins-let {
+    background-color: #ecdfec; /*сред*/
+}
+
+table.dataTable.display thead tr th.ins-let {
+    background-color: #e5d3e5; /*макс*/
+}
+/*САП входящие поставки*/
+table.dataTable tbody tr:not(.selected).odd > td.sap-inc-supp, table.dataTable tbody tr:not(.selected).even > td.sap-inc-supp {
+    background-color: #fffbe9; /*мин*/
+}
+
+table.dataTable.display tbody tr:not(.selected).odd > td.sorting_1.sap-inc-supp, table.dataTable.order-column.stripe tbody tr.odd > td.sorting_1.sap-inc-supp {
+    background-color: #fff7d5; /*сред*/
+}
+
+table.dataTable.display tbody tr:not(.selected).even > td.sorting_1.sap-inc-supp, table.dataTable.order-column.stripe tbody tr.even > td.sorting_1.sap-inc-supp {
+    background-color: #fff7d5; /*сред*/
+}
+
+table.dataTable.display thead tr th.sap-inc-supp {
+    background-color: #fff4c2; /*макс*/
+}
+/*Входящее взвешивание*/
+table.dataTable tbody tr:not(.selected).odd > td.weighing, table.dataTable tbody tr:not(.selected).even > td.weighing {
+    background-color: #ececec; /*мин*/
+}
+
+table.dataTable.display tbody tr:not(.selected).odd > td.sorting_1.weighing, table.dataTable.order-column.stripe tbody tr.odd > td.sorting_1.weighing {
+    background-color: #e2e2e2; /*сред*/
+}
+
+table.dataTable.display tbody tr:not(.selected).even > td.sorting_1.weighing, table.dataTable.order-column.stripe tbody tr.even > td.sorting_1.weighing {
+    background-color: #e2e2e2; /*сред*/
+}
+
+table.dataTable.display thead tr th.weighing {
+    background-color: #d8d8d8; /*макс*/
+}
+/*Отобразить операции вагона*/
+/*Сдан*/
+table.dataTable tbody tr:not(.selected).odd > td.green, table.dataTable tbody tr:not(.selected).even > td.green {
+    background-color: #cdffcd; /*мин*/
+}
+
+table.dataTable.display tbody tr:not(.selected).odd > td.sorting_1.green, table.dataTable.order-column.stripe tbody tr.odd > td.sorting_1.green {
+    background-color: #a6ffa6; /*сред*/
+}
+
+table.dataTable.display tbody tr:not(.selected).even > td.sorting_1.green, table.dataTable.order-column.stripe tbody tr.even > td.sorting_1.green {
+    background-color: #a6ffa6; /*сред*/
+}
+/*Предъявлен*/
+table.dataTable tbody tr:not(.selected).odd > td.yellow, table.dataTable tbody tr:not(.selected).even > td.yellow {
+    background-color: #fef9e0; /*мин*/
+}
+
+table.dataTable.display tbody tr:not(.selected).odd > td.sorting_1.yellow, table.dataTable.order-column.stripe tbody tr.odd > td.sorting_1.yellow {
+    background-color: #fdf2ba; /*сред*/
+}
+
+table.dataTable.display tbody tr:not(.selected).even > td.sorting_1.yellow, table.dataTable.order-column.stripe tbody tr.even > td.sorting_1.yellow {
+    background-color: #fdf2ba; /*сред*/
+}
+/*Прибыл*/
+table.dataTable tbody tr:not(.selected).odd > td.red, table.dataTable tbody tr:not(.selected).even > td.red {
+    background-color: #ffebeb; /*мин*/
+}
+
+table.dataTable.display tbody tr:not(.selected).odd > td.sorting_1.red, table.dataTable.order-column.stripe tbody tr.odd > td.sorting_1.red {
+    background-color: #ffc4c4; /*сред*/
+}
+
+table.dataTable.display tbody tr:not(.selected).even > td.sorting_1.red, table.dataTable.order-column.stripe tbody tr.even > td.sorting_1.red {
+    background-color: #ffc4c4; /*сред*/
+}
+
+/*table.dataTable tbody tr:not(.selected).green.odd, table.dataTable tbody tr:not(.selected).green.even {
+    background-color: #cdffcd;
+}
+
+table.dataTable.display tbody tr:not(.selected).odd.green > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.green > .sorting_1 {
+    background-color: #a6ffa6;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.green > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.green > .sorting_1 {
+    background-color: #a6ffa6;
+}*/
+
+/*table.dataTable tbody tr:not(.selected).yellow.odd, table.dataTable tbody tr:not(.selected).yellow.even {
+    background-color: #fef9e0;
+}
+
+table.dataTable.display tbody tr:not(.selected).odd.yellow > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.yellow > .sorting_1 {
+    background-color: #fdf2ba;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.yellow > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.yellow > .sorting_1 {
+    background-color: #fdf2ba;
+}*/
+
+/*table.dataTable tbody tr:not(.selected).red.odd, table.dataTable tbody tr:not(.selected).red.even {
+    background-color: #ffebeb;
+}
+
+table.dataTable.display tbody tr:not(.selected).odd.red > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.red > .sorting_1 {
+    background-color: #ffc4c4;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.red > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.red > .sorting_1 {
+    background-color: #ffc4c4;
+}*/
