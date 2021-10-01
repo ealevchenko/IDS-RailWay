@@ -3036,6 +3036,7 @@
                         // Сбросим рабочий список вагонов
                         operation_detali.wagons_arrival_from = [];
                         operation_detali.wagons_arrival = [];
+                        //TODO: УДАЛИТЬ СТАРОЕ ВАГОНЫ на внешнем пути
                         ids_inc.getViewWagonsOfOuterWay(id_outer_ways, function (arrival_wagons) {
                             operation_detali.wagons_arrival_from = arrival_wagons;
                             operation_detali.wagons_arrival = arrival_wagons;
