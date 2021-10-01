@@ -206,6 +206,232 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public bool? wagon_closed_route { get; set; }
         public string wir_note { get; set; }
     }
+
+    public class view_outer_way_wagons
+    {
+        public long? id_wir { get; set; }
+        public long from_id_wim { get; set; }
+        public long? from_id_wio { get; set; }
+        public long? on_id_wim { get; set; }
+        public long? on_id_wio { get; set; }
+        public string outer_way_num_sostav { get; set; }
+        public int num { get; set; }
+        public int outer_way_position { get; set; }
+        public int? arrival_nom_doc { get; set; }
+        public int? arrival_nom_main_doc { get; set; }
+        public int? wagon_adm { get; set; }
+        public string wagon_adm_name_ru { get; set; }
+        public string wagon_adm_name_en { get; set; }
+        public string wagon_adm_abbr_ru { get; set; }
+        public string wagon_adm_abbr_en { get; set; }
+        public int? wagon_rod { get; set; }
+        public string wagon_rod_name_ru { get; set; }
+        public string wagon_rod_name_en { get; set; }
+        public string wagon_rod_abbr_ru { get; set; }
+        public string wagon_rod_abbr_en { get; set; }
+        public int? id_operator { get; set; }
+        public string operators_ru { get; set; }
+        public string operators_en { get; set; }
+        public string operator_abbr_ru { get; set; }
+        public string operator_abbr_en { get; set; }
+        public DateTime? operator_rent_start { get; set; }
+        public DateTime? operator_rent_end { get; set; }
+        public bool? operator_paid { get; set; }
+        public string operator_color { get; set; }
+        public bool? operator_monitoring_idle_time { get; set; }
+        public int? id_limiting_loading { get; set; }
+        public string limiting_name_ru { get; set; }
+        public string limiting_name_en { get; set; }
+        public string limiting_abbr_ru { get; set; }
+        public string limiting_abbr_en { get; set; }
+        public string arrival_condition_name_ru { get; set; }
+        public string arrival_condition_name_en { get; set; }
+        public string arrival_condition_abbr_ru { get; set; }
+        public string arrival_condition_abbr_en { get; set; }
+        public bool? arrival_condition_red { get; set; }
+        public string arrival_cargo_group_name_ru { get; set; }
+        public string arrival_cargo_group_name_en { get; set; }
+        public string arrival_cargo_name_ru { get; set; }
+        public string arrival_cargo_name_en { get; set; }
+        public int? arrival_id_sertification_data { get; set; }
+        public string arrival_sertification_data_ru { get; set; }
+        public string arrival_sertification_data_en { get; set; }
+        public string arrival_division_amkr_code { get; set; }
+        public string arrival_division_amkr_name_ru { get; set; }
+        public string arrival_division_amkr_name_en { get; set; }
+        public string arrival_division_amkr_abbr_ru { get; set; }
+        public string arrival_division_amkr_abbr_en { get; set; }
+        public long? id_arrival_car { get; set; }
+        public long? id_sap_incoming_supply { get; set; }
+        public bool? doc_outgoing_car { get; set; }
+        public long? id_outgoing_car { get; set; }
+        public long? id_sap_outbound_supply { get; set; }
+        public string wir_note { get; set; }
+        public DateTime wir_create { get; set; }
+        public string wir_create_user { get; set; }
+        public DateTime? wir_close { get; set; }
+        public string wir_close_user { get; set; }
+        public long? wir_parent_id { get; set; }
+        public int? from_id_operation { get; set; }
+        public string from_operation_name_ru { get; set; }
+        public string from_operation_name_en { get; set; }
+        public bool? from_busy { get; set; }
+        public DateTime? from_operation_start { get; set; }
+        public DateTime? from_operation_end { get; set; }
+        public int? from_operation_id_condition { get; set; }
+        public string from_operation_condition_name_ru { get; set; }
+        public string from_operation_condition_name_en { get; set; }
+        public string from_operation_condition_abbr_ru { get; set; }
+        public string from_operation_condition_abbr_en { get; set; }
+        public int? from_operation_id_loading_status { get; set; }
+        public string from_operation_loading_status_ru { get; set; }
+        public string from_operation_loading_status_en { get; set; }
+        public string from_operation_locomotive1 { get; set; }
+        public string from_operation_locomotive2 { get; set; }
+        public string from_operation_note { get; set; }
+        public DateTime? from_operation_create { get; set; }
+        public string from_operation_create_user { get; set; }
+        public DateTime? from_operation_close { get; set; }
+        public string from_operation_close_user { get; set; }
+        public long? from_operation_parent_id { get; set; }
+        public int from_id_station { get; set; }
+        public string from_station_name_ru { get; set; }
+        public string from_station_name_en { get; set; }
+        public string from_station_abbr_ru { get; set; }
+        public string from_station_abbr_en { get; set; }
+        public int from_id_way { get; set; }
+        public int? from_id_park { get; set; }
+        public string from_way_num_ru { get; set; }
+        public string from_way_num_en { get; set; }
+        public string from_way_name_ru { get; set; }
+        public string from_way_name_en { get; set; }
+        public string from_way_abbr_ru { get; set; }
+        public string from_way_abbr_en { get; set; }
+        public int? from_way_capacity { get; set; }
+        public DateTime? from_way_close { get; set; }
+        public DateTime? from_way_delete { get; set; }
+        public string from_way_note { get; set; }
+        public DateTime from_way_start { get; set; }
+        public DateTime? from_way_end { get; set; }
+        public int? id_outer_way { get; set; }
+        public string name_outer_way_ru { get; set; }
+        public string name_outer_way_en { get; set; }
+        public DateTime? outer_way_close { get; set; }
+        public DateTime? outer_way_delete { get; set; }
+        public string outer_way_note { get; set; }
+        public DateTime? outer_way_start { get; set; }
+        public DateTime? outer_way_end { get; set; }
+        public string from_wim_note { get; set; }
+        public DateTime from_wim_create { get; set; }
+        public string from_wim_create_user { get; set; }
+        public DateTime? from_wim_close { get; set; }
+        public string from_wim_close_user { get; set; }
+        public long? from_wim_parent_id { get; set; }
+        public int? on_id_station { get; set; }
+        public string on_station_name_ru { get; set; }
+        public string on_station_name_en { get; set; }
+        public string on_station_abbr_ru { get; set; }
+        public string on_station_abbr_en { get; set; }
+        public int? on_id_way { get; set; }
+        public int? on_id_park { get; set; }
+        public string on_way_num_ru { get; set; }
+        public string on_way_num_en { get; set; }
+        public string on_way_name_ru { get; set; }
+        public string on_way_name_en { get; set; }
+        public string on_way_abbr_ru { get; set; }
+        public string on_way_abbr_en { get; set; }
+        public int? on_way_capacity { get; set; }
+        public DateTime? on_way_close { get; set; }
+        public DateTime? on_way_delete { get; set; }
+        public string on_way_note { get; set; }
+        public DateTime? on_way_start { get; set; }
+        public DateTime? on_way_end { get; set; }
+        public int? on_way_position { get; set; }
+        public string on_wim_note { get; set; }
+        public DateTime? on_wim_create { get; set; }
+        public string on_wim_create_user { get; set; }
+        public DateTime? on_wim_close { get; set; }
+        public string on_wim_close_user { get; set; }
+        public long? on_wim_parent_id { get; set; }
+        public int? on_id_operation { get; set; }
+        public string on_operation_name_ru { get; set; }
+        public string on_operation_name_en { get; set; }
+        public bool? on_busy { get; set; }
+        public DateTime? on_operation_start { get; set; }
+        public DateTime? on_operation_end { get; set; }
+        public int? on_operation_id_condition { get; set; }
+        public string on_operation_condition_name_ru { get; set; }
+        public string on_operation_condition_name_en { get; set; }
+        public string on_operation_condition_abbr_ru { get; set; }
+        public string on_operation_condition_abbr_en { get; set; }
+        public int? on_operation_id_loading_status { get; set; }
+        public string on_operation_loading_status_ru { get; set; }
+        public string on_operation_loading_status_en { get; set; }
+        public string on_operation_locomotive1 { get; set; }
+        public string on_operation_locomotive2 { get; set; }
+        public string on_operation_note { get; set; }
+        public DateTime? on_operation_create { get; set; }
+        public string on_operation_create_user { get; set; }
+        public DateTime? on_operation_close { get; set; }
+        public string on_operation_close_user { get; set; }
+        public long? on_operation_parent_id { get; set; }
+    }
+
+    public class view_outer_way_sostav
+    {
+        public string outer_way_num_sostav { get; set; }
+        public int? id_outer_way { get; set; }
+        public string name_outer_way_ru { get; set; }
+        public string name_outer_way_en { get; set; }
+        public DateTime? outer_way_close { get; set; }
+        public DateTime? outer_way_delete { get; set; }
+        public string from_operation_locomotive1 { get; set; }
+        public string from_operation_locomotive2 { get; set; }
+        public DateTime? from_operation_start { get; set; }
+        public DateTime? from_operation_end { get; set; }
+        public DateTime? from_operation_create { get; set; }
+        public string from_operation_create_user { get; set; }
+        public int? from_id_station { get; set; }
+        public string from_station_name_ru { get; set; }
+        public string from_station_name_en { get; set; }
+        public string from_station_abbr_ru { get; set; }
+        public string from_station_abbr_en { get; set; }
+        public int? from_id_way { get; set; }
+        public int? from_id_park { get; set; }
+        public string from_way_num_ru { get; set; }
+        public string from_way_num_en { get; set; }
+        public string from_way_name_ru { get; set; }
+        public string from_way_name_en { get; set; }
+        public string from_way_abbr_ru { get; set; }
+        public string from_way_abbr_en { get; set; }
+        public int? from_way_capacity { get; set; }
+        public DateTime? from_way_close { get; set; }
+        public DateTime? from_way_delete { get; set; }
+        public int? count_wagons_send { get; set; }
+        public string on_operation_locomotive1 { get; set; }
+        public string on_operation_locomotive2 { get; set; }
+        public DateTime? on_operation_start { get; set; }
+        public DateTime? on_operation_end { get; set; }
+        public DateTime? on_operation_create { get; set; }
+        public string on_operation_create_user { get; set; }
+        public int? on_id_station { get; set; }
+        public string on_station_name_ru { get; set; }
+        public string on_station_name_en { get; set; }
+        public string on_station_abbr_ru { get; set; }
+        public string on_station_abbr_en { get; set; }
+        public int? on_id_way { get; set; }
+        public int? on_id_park { get; set; }
+        public string on_way_num_ru { get; set; }
+        public string on_way_num_en { get; set; }
+        public string on_way_name_ru { get; set; }
+        public string on_way_name_en { get; set; }
+        public string on_way_abbr_ru { get; set; }
+        public string on_way_abbr_en { get; set; }
+        public int? on_way_capacity { get; set; }
+        public DateTime? on_way_close { get; set; }
+        public DateTime? on_way_delete { get; set; }
+        public int? count_wagons_arrival { get; set; }
+    }
     #endregion
 
     #region ОПЕРАЦИЯ ОТПРАВИТЬ (Обновленный АРМ)
@@ -220,7 +446,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string user { get; set; }
     }
     #endregion
-
+    ///TODO: УДАЛИТЬ СТАРОЕ ДЕТАЛЬНО ВАГОНЫ
     public class view_wagon_outer_way
     {
         public long wir_id { get; set; }
@@ -1048,6 +1274,23 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 return BadRequest(e.Message);
             }
         }
+
+        // GET: api/ids/rwt/wsd/view/vagons/outer_way/sostav
+        [Route("view/vagons/outer_way/sostav")]
+        [ResponseType(typeof(view_outer_way_sostav))]
+        public IHttpActionResult GetViewSostavOfOuterWay()
+        {
+            try
+            {
+                string sql = "select * from [IDS].[get_view_sostav_of_all_outer_ways]() order by from_operation_end desc";
+                List<view_outer_way_sostav> list = db.Database.SqlQuery<view_outer_way_sostav>(sql).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
         #endregion
 
 
@@ -1070,7 +1313,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             }
         }
         #endregion
-
+        ///TODO: УДАЛИТЬ СТАРОЕ ВАГОНЫ на внешнем пути
         // GET: api/ids/rwt/wsd/view/vagons/outer_way/id/12
         [Route("view/vagons/outer_way/id/{id_outer_way:int}")]
         [ResponseType(typeof(view_wagon_outer_way))]

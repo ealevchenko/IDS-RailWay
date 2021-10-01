@@ -3804,6 +3804,7 @@ IDS_RWT.prototype.getViewWagonsOfWay = function (id, callback) {
         },
     });
 };
+///TODO: УДАЛИТЬ СТАРОЕ ВАГОНЫ на внешнем пути
 // Получить список вагонов на внешнем пути
 IDS_RWT.prototype.getViewWagonsOfOuterWay = function (id, callback) {
     $.ajax({
