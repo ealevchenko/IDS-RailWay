@@ -38,8 +38,17 @@
     //var TCWay = App.table_cars_way;
     //var t_wagons = new TCWay('div#wagons'); // Создадим экземпляр
 
-    var VSC = App.view_send_cars;
-    var vsc = new VSC('div#wagons'); // Создадим экземпляр
+    //var VSC = App.view_send_cars;
+    //var vsc = new VSC('div#wagons'); // Создадим экземпляр
+
+    var TSOW = App.table_sostav_outer_way;
+    var t_sow = new TSOW('div#sostav');             // Создадим экземпляр
+
+    var VAC = App.view_arrival_cars;
+    var vac = new VAC('div#arrival');             // Создадим экземпляр
+
+    //var TCOW = App.table_cars_outer_way;
+    //var t_cow = new TCOW('div#wagons');             // Создадим экземпляр
 
     $('button#arrival').on('click', function (e) {
         //var data = oper_send.operation;
@@ -59,16 +68,35 @@
     // После загрузки документа
     $(document).ready(function ($) {
 
-        vsc.init({
+        t_sow.init({
+            alert: alert,
+            type_report: 'arrival-outer-way',  // Прибвыающие составы на внешнем пути
+            ids_wsd: ids_wsd,
+        }, function () {
+            t_sow.load_ow_arr_sostav();
+            //t_wagons.load_of_way(218, 54152087);//112
+            //t_wagons.load_of_way(218);//112
+        });
+        vac.init({
             alert: null,
             ids_dir: null,
             ids_wsd: null,
             fn_db_update: function (list) {
             }.bind(this),
         }, function (init) {
-            vsc.view(215)
+            vac.view(215)
             //LockScreenOff();
         });
+        //vsc.init({
+        //    alert: null,
+        //    ids_dir: null,
+        //    ids_wsd: null,
+        //    fn_db_update: function (list) {
+        //    }.bind(this),
+        //}, function (init) {
+        //    vsc.view(215)
+        //    //LockScreenOff();
+        //});
 
         //t_wagons.init({
         //    alert: alert,
