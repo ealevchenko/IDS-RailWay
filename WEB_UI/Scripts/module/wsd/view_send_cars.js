@@ -33,28 +33,6 @@
             'title_time_aplly': 'Время выполнения',
             'title_placeholder_time_aplly': 'Время выполнения',
 
-            'title_label_date': 'ПЕРИОД :',
-
-
-            'field_id': 'id строки',
-            'field_operation_end': 'Отправлен',
-            'field_name_outer_way': 'Перегон',
-            'field_from_station_name': 'Станция отпр.',
-            'field_from_way_name': 'Путь отправл.',
-            'field_on_station_name': 'Станция приб.',
-            'field_count_wagon_send': 'Отправлено',
-            'field_count_wagon_arrival': 'Принято',
-            'field_operation_locomotive1': 'Локомотив1',
-            'field_operation_locomotive2': 'Локомотив2',
-            'field_operation_create_user': 'Операцию выполнил',
-            'field_status': 'Статус',
-
-
-
-            'tytle_status_arr': 'Принят',
-            'tytle_status_work': 'В работе',
-            'tytle_status_send': 'Отправлен',
-            'tytle_detali_wagon': 'Вагоны в составе',
             'title_form_apply': 'Выполнить?',
 
             'title_button_export': 'Экспорт',
@@ -106,28 +84,6 @@
             'title_time_aplly': 'Runtime',
             'title_placeholder_time_aplly': 'Execution time',
 
-            'title_label_date': 'PERIOD:',
-
-
-            'field_id': 'row id',
-            'field_operation_end': 'Sent',
-            'field_name_outer_way': 'Ferry',
-            'field_from_station_name': 'Sent station',
-            'field_from_way_name': 'Sent path',
-            'field_on_station_name': 'Station arr.',
-            'field_count_wagon_send': 'Sent',
-            'field_count_wagon_arrival': 'Received',
-            'field_operation_locomotive1': 'Locomotive1',
-            'field_operation_locomotive2': 'Locomotive2',
-            'field_operation_create_user': 'Operation performed',
-            'field_status': 'Status',
-
-
-
-            'tytle_status_arr': 'Accepted',
-            'tytle_status_work': 'In progress',
-            'tytle_status_send': 'Sent',
-            'tytle_detali_wagon': 'Wagons included',
             'title_form_apply': 'Run?',
 
             'title_button_export': 'Export',
@@ -143,8 +99,8 @@
             'mess_error_not_locomotive': 'There is no locomotive # in the IDS directory',
             'mess_error_min_time_aplly': 'The date of the operation cannot be less than the current date, min. deviation (min) = ',
             'mess_error_max_time_aplly': 'The date of the operation cannot be greater than the current date, mac. deviation (min) = ',
-            'mess_error_not_wagons': 'No wagons have been selected for departure (in the "SEND FROM STATION" window, select wagons on the dispatch route and form a train).',
-            'mess_error_operation_run': 'An error occurred while performing the "SEND FROM STATION" operation, error code:',
+            'mess_error_not_wagons': 'No wagons for departure have been selected (in the "SEND FROM STATION" window, select wagons on the dispatch route and form a train).',
+            'mess_error_operation_run': 'An error occurred while executing the "SEND FROM STATION" operation, error code:',
 
             'mess_cancel_operation': 'Operation "SEND TRAINS TO AMKR STATION" - canceled',
             'mess_run_operation_send': 'I am performing the operation of sending the train to the AMKR station',
@@ -154,7 +110,7 @@
             'mess_update_operation': 'Updating operations ...',
             'mess_init_panel': 'Initializing the module ...',
             'mess_destroy_operation': 'Closing the form ...',
-            'mess_create_sostav': 'Forming a train, moving wagons ...',
+            'mess_create_sostav': 'Forming the train, moving the wagons ...',
             'mess_clear_sostav': 'Forming the train, removing the selected wagons ...',
             'mess_reverse_sostav': 'Forming the train, the reverse of the wagons ...',
         }
@@ -218,135 +174,7 @@
         card_panel.$body.append(row_on.$row).append(row_from.$row);
         this.$element = row.$row.append(col.$col.append(card_panel.$card));
     };
-    // Получить список парков по станции
-    //var get_list_way = function (id_station) {
-    //    var ways = [];
-    //    var list_way = this.ids_dir.list_ways.filter(function (i) {
-    //        return i.id_station == id_station && !i.way_delete;
-    //    }.bind(this))
-    //    if (list_way) {
-    //        ways = this.ids_dir.getListObj2(list_way, 'id', 'way_num', 'way_name', App.Lang, null);
-    //    }
-    //    return ways
-    //};
-    // Перечень полей
-    var list_collums = [
-        {
-            field: 'details_control',
-            className: 'details-control  details-control-operation-send',
-            orderable: false,
-            data: null,
-            defaultContent: '',
-            width: "30px",
-            searchable: false
-        },
-        {
-            field: 'id',
-            data: function (row, type, val, meta) {
-                return row.id;
-            },
-            className: 'dt-body-center',
-            title: langView('field_id', App.Langs), width: "30px", orderable: true, searchable: true
-        },
-        {
-            field: 'operation_end',
-            data: function (row, type, val, meta) {
-                return getReplaceTOfDT(row.operation_end);
-            },
-            className: 'dt-body-center',
-            title: langView('field_operation_end', App.Langs), width: "100px", orderable: true, searchable: true
-        },
-        {
-            field: 'name_outer_way',
-            data: function (row, type, val, meta) {
-                return row.id_outer_way ? row['name_outer_way_' + App.Lang] : null;
-            },
-            className: 'dt-body-left',
-            title: langView('field_name_outer_way', App.Langs), width: "150px", orderable: true, searchable: true
-        },
-        {
-            field: 'from_station_name',
-            data: function (row, type, val, meta) {
-                return row.from_id_station ? row['from_station_name_' + App.Lang] : null;
-            },
-            className: 'dt-body-left',
-            title: langView('field_from_station_name', App.Langs), width: "50px", orderable: true, searchable: true
-        },
-        {
-            field: 'from_way_name',
-            data: function (row, type, val, meta) {
-                return row.from_id_way ? row['from_way_num_' + App.Lang] + '-' + row['from_way_name_' + App.Lang] : null;
-            },
-            className: 'dt-body-left',
-            title: langView('field_from_way_name', App.Langs), width: "100px", orderable: true, searchable: true
-        },
-        {
-            field: 'on_station_name',
-            data: function (row, type, val, meta) {
-                return row.id_station_on ? row['on_station_name_' + App.Lang] : null;
-            },
-            className: 'dt-body-left',
-            title: langView('field_on_station_name', App.Langs), width: "50px", orderable: true, searchable: true
-        },
-        {
-            field: 'count_wagon_send',
-            data: function (row, type, val, meta) {
-                return row.count_wagon_send;
-            },
-            className: 'dt-body-center',
-            title: langView('field_count_wagon_send', App.Langs), width: "50px", orderable: false, searchable: false
-        },
-        {
-            field: 'count_wagon_arrival',
-            data: function (row, type, val, meta) {
-                return row.count_wagon_arrival;
-            },
-            className: 'dt-body-center',
-            title: langView('field_count_wagon_arrival', App.Langs), width: "50px", orderable: false, searchable: false
-        },
-        {
-            field: 'status',
-            data: function (row, type, val, meta) {
-                if (row.count_wagon_send === row.count_wagon_arrival) {
-                    return langView('tytle_status_arr', App.Langs);
-                } else {
-                    if (row.count_wagon_send !== row.count_wagon_arrival && row.count_wagon_arrival > 0) {
-                        return langView('tytle_status_work', App.Langs);
-                    } else {
-                        return langView('tytle_status_send', App.Langs);
-                    };
-                };
-            },
-            className: 'dt-body-center',
-            title: langView('field_status', App.Langs), width: "50px", orderable: true, searchable: true
-        },
-        {
-            field: 'operation_locomotive1',
-            data: function (row, type, val, meta) {
-                return row.operation_locomotive1;
-            },
-            className: 'dt-body-center',
-            title: langView('field_operation_locomotive1', App.Langs), width: "50px", orderable: true, searchable: true
-        },
-        {
-            field: 'operation_locomotive2',
-            data: function (row, type, val, meta) {
-                return row.operation_locomotive2;
-            },
-            className: 'dt-body-center',
-            title: langView('field_operation_locomotive2', App.Langs), width: "50px", orderable: true, searchable: true
-        },
-        {
-            field: 'user_create',
-            data: function (row, type, val, meta) {
-                return row.operation_create ? (row.operation_create_user + '<br />[' + getReplaceTOfDT(row.operation_create) + ']') : null;
-            },
-            className: 'dt-body-center',
-            title: langView('field_operation_create_user', App.Langs), width: "100px", orderable: false, searchable: false
-        },
-    ];
-    //
-    // ассинхроная функция (Перенумеровать все позиции с указаной позиции)
+    // ассинхроная функция (нумерации вагонов)
     var wagons_enumerate_async = function (row, field, position, callback) {
         var len = row.length;
         if (len === 0) {
@@ -457,9 +285,9 @@
     };
     // вернуть название станции прибытия по id внешнего пути
     var get_station_name = function (id_outer_way) {
-        var outer_way = this.ids_dir.list_outer_ways.find(function (o) { return o.id = id_outer_way; });
+        var outer_way = this.ids_dir.list_outer_ways.find(function (o) { return o.id === id_outer_way; });
         if (outer_way) {
-            var station = this.ids_dir.list_station.find(function (o) { return o.id = outer_way.id_station_on; });
+            var station = this.ids_dir.list_station.find(function (o) { return o.id === outer_way.id_station_on; });
             return station ? station['station_name_' + App.Lang] : null;
         }
         return null
@@ -476,24 +304,6 @@
         this.selector = this.$panel.attr('id');
         this.fc_ui = new FC();
     }
-    // инициализация полей таблицы вагоны на начальном пути
-    view_send_cars.prototype.init_columns = function () {
-        var collums = [];
-
-        //collums.push('id');
-        collums.push('operation_end');
-        collums.push('status');
-        collums.push('name_outer_way');
-        collums.push('from_station_name');
-        collums.push('from_way_name');
-        collums.push('on_station_name');
-        collums.push('count_wagon_send');
-        collums.push('count_wagon_arrival');
-        collums.push('operation_locomotive1');
-        collums.push('operation_locomotive2');
-        collums.push('user_create');
-        return init_columns(collums, list_collums);
-    };
     // Функция обновить данные из базы list-список таблиц, update-обновить принудительно, callback-возврат список обновленных таблиц
     view_send_cars.prototype.load_db = function (list, update, callback) {
         if (list) {
@@ -529,9 +339,6 @@
         this.list_way = [];     // По умолчанию пустой список
 
         this.wagons = [];       // Список вагонов (рабочий)
-
-        // Выбраная строка
-        /*this.select_row_sostav = null;*/
         // Сообщение
         LockScreen(langView('mess_init_panel', App.Langs));
         //----------------------------------
@@ -542,8 +349,6 @@
         this.$setup_from = panelElement.$setup_from;
         this.$table_on = panelElement.$table_on;
         this.$table_from = panelElement.$table_from;
-        //this.$operation_header = panelElement.$operation_header;
-        //this.$operation_body = panelElement.$operation_body;
 
         this.alert_on = new alert(panelElement.$alert_on);
         this.alert_from = new alert(panelElement.$alert_from);
@@ -943,7 +748,8 @@
                 }.bind(this),
                 button_add_ok: {
                     title: langView('title_add_ok', App.Langs),
-                    click: function (e) {
+                    click: function (event) {
+                        event.preventDefault();
                         this.form_setup_on.$form_add.submit();
                     }.bind(this),
                 },
