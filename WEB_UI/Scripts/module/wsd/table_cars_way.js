@@ -1593,7 +1593,7 @@
         buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
-    // инициализация полей таблицы вагоны на пути отправки (Отчет 1- вагоны детально, дерево путей)
+    // инициализация кнопок таблицы вагоны на пути отправки (Отчет 1- вагоны детально, дерево путей)
     table_cars_way.prototype.init_button_sending = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
@@ -1615,7 +1615,7 @@
         buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
-    // инициализация полей таблицы вагоны на пути отправки (Отчет 2- вагоны детально, дерево путей)
+    // инициализация кнопок таблицы вагоны на пути отправки (Отчет 2- вагоны детально, дерево путей)
     table_cars_way.prototype.init_button_sending_select = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
@@ -1675,7 +1675,7 @@
             };
         }
     };
-    // инициализация таблицы справочника путей
+    // инициализация таблицы 
     table_cars_way.prototype.init = function (options, fn_init_ok) {
         // теперь выполним инициализацию
         // Определим основные свойства
@@ -1705,10 +1705,6 @@
         //var MCF = App.modal_confirm_form;
         //this.modal_confirm_form = new MCF(this.selector); // Создадим экземпляр окно сообщений
         //this.modal_confirm_form.init();
-
-        // Загрузим справочные данные, определим поля формы правки
-        /*        this.load_db([], false, function (result) {*/
-
         //----------------------------------
         // Создать макет таблицы
         // Создадим и добавим макет таблицы
@@ -1845,7 +1841,6 @@
             fn_init_ok();
         }
         //----------------------------------
-        /*        }.bind(this));*/
     };
 
     // Отображение кнопки добавить
