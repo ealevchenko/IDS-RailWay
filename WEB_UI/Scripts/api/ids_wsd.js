@@ -81,6 +81,30 @@
             },
         });
     };
+    // Получить составы прибывающие на станцию
+    ids_wsd.prototype.getViewArrivalSostavOfStationOuterWay = function (id, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wsd/view/vagons/outer_way/sostav/arrival/station/id/' + id,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getViewArrivalSostavOfStationOuterWay", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
     //АРМ, Операция отправки вагонов на внутрение станции АМКР 
     ids_wsd.prototype.postSendWagonsOfStation = function (operation, callback) {
         $.ajax({

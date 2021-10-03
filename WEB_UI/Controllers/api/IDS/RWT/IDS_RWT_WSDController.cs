@@ -1291,6 +1291,27 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 return BadRequest(e.Message);
             }
         }
+        /// <summary>
+        /// Составы на падходах по прибывающие на указаную станцию
+        /// </summary>
+        /// <returns></returns>
+        // GET: api/ids/rwt/wsd/view/vagons/outer_way/sostav/arrival/station/id/1
+        [Route("view/vagons/outer_way/sostav/arrival/station/id/{id_station:int}")]
+        [ResponseType(typeof(view_outer_way_sostav))]
+        public IHttpActionResult GetViewArrivalSostavOfStationOuterWay(int id_station)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter id = new System.Data.SqlClient.SqlParameter("@id_station", id_station);
+                string sql = "select * from [IDS].[get_view_arrival_sostav_of_outer_ways](@id_station) order by from_operation_end desc";
+                List<view_outer_way_sostav> list = db.Database.SqlQuery<view_outer_way_sostav>(sql,id).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
         #endregion
 
 
