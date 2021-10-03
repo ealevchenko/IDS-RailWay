@@ -41,8 +41,8 @@
     //var VSC = App.view_send_cars;
     //var vsc = new VSC('div#wagons'); // Создадим экземпляр
 
-    var TSOW = App.table_sostav_outer_way;
-    var t_sow = new TSOW('div#sostav');             // Создадим экземпляр
+    //var TSOW = App.table_sostav_outer_way;
+    //var t_sow = new TSOW('div#sostav');             // Создадим экземпляр
 
     var VAC = App.view_arrival_cars;
     var vac = new VAC('div#arrival');             // Создадим экземпляр
@@ -68,15 +68,15 @@
     // После загрузки документа
     $(document).ready(function ($) {
 
-        t_sow.init({
-            alert: alert,
-            type_report: 'arrival-outer-way',  // Прибвыающие составы на внешнем пути
-            ids_wsd: ids_wsd,
-        }, function () {
-            t_sow.load_ow_arr_sostav();
-            //t_wagons.load_of_way(218, 54152087);//112
-            //t_wagons.load_of_way(218);//112
-        });
+        //t_sow.init({
+        //    alert: alert,
+        //    type_report: 'arrival-outer-way',  // Прибвыающие составы на внешнем пути
+        //    ids_wsd: ids_wsd,
+        //}, function () {
+        //    t_sow.load_ow_arr_sostav();
+        //    //t_wagons.load_of_way(218, 54152087);//112
+        //    //t_wagons.load_of_way(218);//112
+        //});
         vac.init({
             alert: null,
             ids_dir: null,
@@ -84,7 +84,7 @@
             fn_db_update: function (list) {
             }.bind(this),
         }, function (init) {
-            vac.view(215)
+            vac.view(880)
             //LockScreenOff();
         });
         //vsc.init({
