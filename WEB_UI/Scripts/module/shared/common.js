@@ -55,10 +55,10 @@
         };
         this.update = function (data, default_value, fn_option) {
             this.$element.empty();
-
-            if (default_value === -1) {
-                element.append($default_option);
-            }
+            element.append($default_option);
+            //if (default_value === -1) {
+            //    element.append($default_option);
+            //}
             if (data) {
                 $.each(data, function (i, el) {
                     // Преобразовать формат
@@ -490,7 +490,7 @@
         this.$button = $('<button></button>', {
             'class': 'btn btn' + (prefix ? '-' + prefix + ' ' : ' ') + cl_bt,
             'id': id,
-            'type':'submit'
+            'type': 'submit'
         });
         if (icon && icon !== '') {
             var icon = $('<i></i>', {
@@ -1398,7 +1398,7 @@
                 return o.field === name
             });
             if (field && field['element_' + this.mode]) {
-                field['element_' + this.mode].update(list, value ? value : Number(field.element.val()), null);
+                field['element_' + this.mode].update(list, value ? value : Number(field['element_' + this.mode].val()), null);
                 // Проверим наличие элемента который должен быть изменен если изменить текущий элемент
                 if (field['element_' + this.mode].element_control) {
                     // Обновим текщий элемент, для запуска цепочки обновлений
