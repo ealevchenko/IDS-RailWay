@@ -677,6 +677,9 @@
         //
         this.sostav = [];               // Список составов
         this.wagons = [];               // Список вагонов
+
+        this.id_station_on = null;      // Станция на которую прибывает состав
+
         this.select_row_wagons = null;  // для одинарного выбора (выбранный вагон)
         this.select_rows_wagons = null;  // для многочисленного выбора (Отчеты от 1.... выбранные вагоны)
 
@@ -859,6 +862,22 @@
         //    this.select_rows_wagons = null;
         //    this.view(this.wagons, num);           //
         //}
+    };
+    // Загрузить составы по прибывающие на станцию 
+    table_sostav_outer_way.prototype.load_ow_arr_sostav_of_station_on = function (id_station) {
+        if (id_station !== null && id_station >= 0) {
+        LockScreen(langView('mess_load_sostav', App.Langs));
+        this.ids_wsd.getViewArrivalSostavOfStationOuterWay(id_station, function (sostav) {
+            this.sostav = sostav;
+            this.id_station_on = id_station;
+            this.view(this.sostav);
+            LockScreenOff();
+        }.bind(this));
+        } else {
+            this.sostav = [];
+            this.id_station_on = null;
+            this.view(this.sostav);           //
+        }
     };
     //-------------------------------------------------------------------------------------------
     // Очистить сообщения
