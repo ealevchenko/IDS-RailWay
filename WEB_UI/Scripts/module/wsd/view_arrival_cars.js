@@ -463,7 +463,7 @@
                     event.preventDefault();
                     // Обработать выбор
                     var id = Number($(e.currentTarget).val());
-                    //view_wagons_from_way(id);
+                    this.update_wagons_of_way(id);
                 }.bind(this),
                 update: null,
                 close: null,
@@ -629,8 +629,8 @@
                 this.$table_on.append($div_table_on);
                 this.tab_cars_on = new TCWay('div#table-on-' + this.selector);
                 this.tab_cars_on.init({
-                    type_report: 2,
-                    alert: this.settings.alert,
+                    type_report: 3,
+                    alert: this.alert_on,
                     // инициализируем кнопки
                     buttons: [
                         {
@@ -712,15 +712,26 @@
         this.id_station = id_station;
         this.id_way = id_way;
         // Обновить пути станции прибытия
-        this.form_setup_on.update_list_element('id_way', this.get_list_way(this.id_station), id_way)
+        this.form_setup_on.update_list_element('id_way', this.get_list_way(this.id_station), id_way);
         // Обновить составы на перегонах станции прибытия
         this.tab_sostav_from.load_ow_arr_sostav_of_station_on(this.id_station);
+        // Загрузим вагоны на пути приема
+        this.update_wagons_of_way(id_way);
+    };
+    // Обновить вагоны на пути приема
+    view_arrival_cars.prototype.update_wagons_of_way = function (id_way) {
+        this.id_way = id_way;
+        // Загрузим вагоны на пути приема
+        this.load_of_way(id_way, function (wagons) {
+            this.view_wagons(wagons);
+        }.bind(this))
+        // сбросить выбранный состав!
     };
     // 
     view_arrival_cars.prototype.view_wagons = function (wagons) {
         this.form_setup_on.clear_all();
         //this.tab_cars_from.view(wagons.filter(function (i) { return i.position_new === null; }), null);
-        this.tab_cars_on.view(wagons.filter(function (i) { return i.position_new !== null; }), null);
+        this.tab_cars_on.view(wagons, null); // Показать вагоны на пути приема
     };
     // Загрузить вагоны на пути
     view_arrival_cars.prototype.load_of_way = function (id_way, fn_load_data) {
@@ -730,7 +741,8 @@
                 // модифицировать данные взависимости от отчета
                 if (wagons) {
                     $.each(wagons, function (i, el) {
-                        el['position_new'] = null;
+                        el['position_new'] = el.position;
+                        el['id_wim_arrival'] = null;
                     });
                 }
                 this.wagons = wagons;

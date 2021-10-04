@@ -84,7 +84,7 @@
             fn_db_update: function (list) {
             }.bind(this),
         }, function (init) {
-            vac.view(880)
+            vac.view(228);//880
             //LockScreenOff();
         });
         //vsc.init({

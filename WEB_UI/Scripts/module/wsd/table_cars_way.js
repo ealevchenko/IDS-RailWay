@@ -1585,6 +1585,29 @@
         collums.push('arrival_division_amkr_abbr');
         return init_columns(collums, list_collums);
     };
+    // инициализация полей таблицы вагоны выбранные для отправки (Отчет 3- вагоны детально, дерево путей)
+    table_cars_way.prototype.init_columns_arrival_select = function () {
+        var collums = [];
+        collums.push('position_new');
+        if (this.settings.link_num) {
+            collums.push('num_link');
+        } else {
+            collums.push('num');
+        }
+        //collums.push('outgoing_sostav_status_name');     // Статус состава отправленного вагона
+        collums.push('wagon_rod_abbr');
+        collums.push('wagon_adm');
+        collums.push('arrival_condition_abbr');
+        collums.push('current_condition_abbr');
+        collums.push('operator_abbr');
+        collums.push('limiting_abbr');
+        collums.push('arrival_cargo_group_name');
+        collums.push('arrival_cargo_name');
+        collums.push('arrival_sertification_data');
+        collums.push('current_loading_status');
+        collums.push('arrival_division_amkr_abbr');
+        return init_columns(collums, list_collums);
+    };
     //------------------------------- КНОПКИ -------------------------------------------------------------
     table_cars_way.prototype.init_button_detali = function () {
         var buttons = [];
@@ -1641,10 +1664,46 @@
         });
         return init_buttons(buttons, list_buttons);
     };
+    // инициализация кнопок таблицы вагоны на пути отправки (Отчет 3- вагоны детально, дерево путей)
+    table_cars_way.prototype.init_button_arrival_select = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'select_all',
+            action: function () {
+                this.obj_t_cars.rows().select();
+            }.bind(this)
+        });
+        buttons.push({
+            name: 'select_none',
+            action: null
+        });
+        //if (this.settings.buttons && this.settings.buttons.length > 0) {
+        //    $.each(this.settings.buttons, function (i, el_button) {
+        //        buttons.push(el_button);
+        //    }.bind(this));
+        //};
+        buttons.push({
+            name: 'page_length',
+            action: null
+        });
+        return init_buttons(buttons, list_buttons);
+    };
     //------------------------------- КНОПКИ -------------------------------------------------------------
     // Инициализация тип отчета
     table_cars_way.prototype.init_type_report = function () {
         switch (this.settings.type_report) {
+            // Таблица вагоны на пути для приема
+            case 3: {
+                this.type_select_rows = 2; // Выбирать несколько
+                this.table_select = {
+                    style: 'multi'
+                };
+                this.table_columns = this.init_columns_arrival_select();
+                this.table_buttons = this.init_button_arrival_select();
+                break;
+            };
             // Таблица вагоны на пути для отправки
             case 2: {
                 this.type_select_rows = 2; // Выбирать несколько
@@ -1773,6 +1832,13 @@
                 if (this.settings.type_report === 1) {
                     if (data.position_new !== null) {
                         $('td.num-wagon', row).addClass('wagon-busy');// Отметим вагон предъявлен
+
+                    }
+                }
+                // Отчет по прибытию 
+                if (this.settings.type_report === 3) {
+                    if (data.id_wim_arrival === null) {
+                        $(row).addClass('wagon-ban');  // Отметим вагон заблокирован
                     }
                 }
             }.bind(this),
@@ -1827,6 +1893,24 @@
                 this.enable_button();
             }.bind(this));
         };
+        // Обработка события выбора отчет отправка
+        if (this.settings.type_report === 3) {
+            this.obj_t_cars.on('user-select', function (e, dt, type, cell, originalEvent) {
+                this.out_clear();
+                var indexes = cell && cell.length > 0 ? cell[0][0].row : null;
+                var row = this.obj_t_cars.rows(indexes).data().toArray();
+                if (row && row.length > 0 && row[0].id_wim_arrival === null) {
+                    e.preventDefault();
+                    this.out_warning('Вагон № ' + row[0].num + ' для операций заблокирован (вагон стоит на текущем пути!)');
+                }
+            }.bind(this)).on('select deselect', function (e, dt, type, indexes) {
+                var index = this.obj_t_cars.rows({ selected: true });
+                var rows = this.obj_t_cars.rows(index && index.length > 0 ? index[0] : null).data().toArray();
+                this.select_rows_wagons = rows;
+                this.enable_button();
+            }.bind(this));
+        };
+
         if (this.settings.link_num) {
 
             this.$table_cars.on('click', 'a.num-wagon', function (e) {

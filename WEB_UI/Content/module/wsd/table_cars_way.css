@@ -40,6 +40,9 @@ table.dataTable.display tbody tr td a.idle-time-error {
     color: red;
 }
 
+table.dataTable.display tbody tr.wagon-ban {
+    color: #808080;
+}
 /*IE сука не поддерживает*/
 /*:root {
     --idle-station-bg-color: #faf0f0;
