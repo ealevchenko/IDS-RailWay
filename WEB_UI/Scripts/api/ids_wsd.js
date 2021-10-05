@@ -104,6 +104,30 @@
             },
         });
     };
+    // Получить список всех вагонов на перегоне
+    ids_wsd.prototype.getViewWagonsOfOuterWay = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wsd/view/vagons/outer_way/',
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getViewWagonsOfOuterWay", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
 
     //АРМ, Операция отправки вагонов на внутрение станции АМКР 
     ids_wsd.prototype.postSendWagonsOfStation = function (operation, callback) {

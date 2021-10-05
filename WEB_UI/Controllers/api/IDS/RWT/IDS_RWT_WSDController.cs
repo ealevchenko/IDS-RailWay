@@ -209,8 +209,8 @@ namespace WEB_UI.Controllers.api.IDS.RWT
 
     public class view_outer_way_wagons
     {
+        public long from_id_wim { get; set; }      
         public long? id_wir { get; set; }
-        public long from_id_wim { get; set; }
         public long? from_id_wio { get; set; }
         public long? on_id_wim { get; set; }
         public long? on_id_wio { get; set; }
@@ -1274,7 +1274,10 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 return BadRequest(e.Message);
             }
         }
-
+        /// <summary>
+        /// ВСЕ Составы на падходах 
+        /// </summary>
+        /// <returns></returns>
         // GET: api/ids/rwt/wsd/view/vagons/outer_way/sostav
         [Route("view/vagons/outer_way/sostav")]
         [ResponseType(typeof(view_outer_way_sostav))]
@@ -1292,7 +1295,28 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             }
         }
         /// <summary>
-        /// Составы на падходах по прибывающие на указаную станцию
+        /// ВСЕ Вагоны на падходах 
+        /// </summary>
+        /// <returns></returns>
+        // GET: api/ids/rwt/wsd/view/vagons/outer_way
+        [Route("view/vagons/outer_way")]
+        [ResponseType(typeof(view_outer_way_wagons))]
+        public IHttpActionResult GetViewWagonsOfOuterWay()
+        {
+            try
+            {
+                string sql = "select * from [IDS].[get_view_wagons_of_all_outer_ways]() order by from_operation_end desc, id_outer_way, outer_way_num_sostav, outer_way_position";
+                List<view_outer_way_wagons> list = db.Database.SqlQuery<view_outer_way_wagons>(sql).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Составы на падходах прибывающие на указаную станцию
         /// </summary>
         /// <returns></returns>
         // GET: api/ids/rwt/wsd/view/vagons/outer_way/sostav/arrival/station/id/1
