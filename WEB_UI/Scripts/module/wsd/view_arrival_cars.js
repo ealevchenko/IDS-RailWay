@@ -79,6 +79,7 @@
     var FC = App.form_control;
     var FIF = App.form_infield;
     var TSOW = App.table_sostav_outer_way; // Модуль составы на подходах
+    var TCOW = App.table_cars_outer_way; // Модуль составы на подходах
     var TCWay = App.table_cars_way;         // Модуль вагоны на путях
     var alert = App.alert_form;
 
@@ -429,13 +430,19 @@
 
             // Отображение формы
             this.$setup_from.append(this.form_setup_from.$form_edit);
+            var sel_sostav_from = 'table-sfrom-' + this.selector;
+            var sel_wagon_from = 'table-wfrom-' + this.selector;
             // Создадим таблицу вангонов на пути отправки
-            var $div_table_from = $('<div></div>', {
-                'id': 'table-from-' + this.selector,
+            var $div_table_sfrom = $('<div></div>', {
+                'id': sel_sostav_from,
             });
-            if ($div_table_from && $div_table_from.length > 0) {
-                this.$table_from.append($div_table_from);
-                this.tab_sostav_from = new TSOW('div#table-from-' + this.selector); // Создадим экземпляр составы на подходах
+            // Создадим таблицу вангонов на пути отправки
+            var $div_table_wfrom = $('<div></div>', {
+                'id': sel_wagon_from,
+            });
+            if ($div_table_sfrom && $div_table_sfrom.length > 0) {
+                this.$table_from.append($div_table_sfrom);
+                this.tab_sostav_from = new TSOW('div#' + sel_sostav_from); // Создадим экземпляр составы на подходах
                 this.tab_sostav_from.init({
                     alert: this.alert_from,
                     type_report: 'arrival-outer-way',  // Прибвыающие составы на внешнем пути
@@ -444,6 +451,18 @@
 
                 });
             };
+            if ($div_table_wfrom && $div_table_wfrom.length > 0) {
+                this.$table_from.append($div_table_wfrom);
+                this.tab_wagon_from = new TCOW('div#' + sel_wagon_from); // Создадим экземпляр составы на подходах
+                this.tab_wagon_from.init({
+                    alert: this.alert_from,
+                    type_report: 'arrival-outer-way',  // Прибвыающие составы на внешнем пути
+                    ids_wsd: this.ids_wsd,
+                }, function () {
+
+                });
+            };
+            //
             // Создадим форму выбора пути прибытия (this.$setup_on)
             this.form_setup_on = new FIF();
             var fl_way_on = {
