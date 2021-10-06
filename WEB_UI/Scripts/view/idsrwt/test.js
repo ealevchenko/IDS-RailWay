@@ -92,10 +92,10 @@
         });
         t_cow.init({
             alert: alert,
-            type_report: null,//'arrival-outer-way',  // Прибвыающие вагоны на внешнем пути
+            type_report: 'arrival-wagons-outer-way',  // Прибвыающие вагоны на внешнем пути
             ids_wsd: ids_wsd,
         }, function () {
-            t_cow.load_ow_arr_wagons();
+            t_cow.load_ow_arr_wagons_of_sostav('51-29092021153500');
             //t_wagons.load_of_way(218, 54152087);//112
             //t_wagons.load_of_way(218);//112
         });
