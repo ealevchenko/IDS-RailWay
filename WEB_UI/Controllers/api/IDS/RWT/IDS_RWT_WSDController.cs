@@ -1336,6 +1336,28 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 return BadRequest(e.Message);
             }
         }
+
+        /// <summary>
+        /// Вернуть информацию по вагонам указаного состава на перегоне
+        /// </summary>
+        /// <returns></returns>
+        // GET: api/ids/rwt/wsd/view/vagons/outer_way/sostav/num/50-29092021105300
+        [Route("view/vagons/outer_way/sostav/num/{outer_way_num_sostav}")]
+        [ResponseType(typeof(view_outer_way_wagons))]
+        public IHttpActionResult GetViewWagonsOfSostavOuterWay(string outer_way_num_sostav)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter num_sostav = new System.Data.SqlClient.SqlParameter("@outer_way_num_sostav", outer_way_num_sostav);
+                string sql = "select * from [IDS].[get_view_wagons_of_sostav_outer_ways](@outer_way_num_sostav) order by from_operation_end desc";
+                List<view_outer_way_wagons> list = db.Database.SqlQuery<view_outer_way_wagons>(sql, num_sostav).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
         #endregion
 
 

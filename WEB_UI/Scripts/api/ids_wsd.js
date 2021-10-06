@@ -35,7 +35,8 @@
     //****************************************************************************************
 
     //-------------------------------- Функции работы с БД через api ---------------
-    // Получить список вагонов на пути
+    // -- ПУТИ И СТАНЦИИ АМКР
+    // Получить список вагонов на пути станции
     ids_wsd.prototype.getViewWagonsOfWay = function (id, callback) {
         $.ajax({
             type: 'GET',
@@ -58,6 +59,7 @@
             },
         });
     };
+    // -- ПЕРЕГОНЫ
     // Получить список составов на перегоне
     ids_wsd.prototype.getViewSostavOfOuterWay = function (callback) {
         $.ajax({
@@ -127,7 +129,29 @@
             },
         });
     };
-
+    // Получить список вагонов состава на перегоне
+    ids_wsd.prototype.getViewWagonsOfSostavOuterWay = function (num, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wsd/view/vagons/outer_way/sostav/num/' + num,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getViewWagonsOfSostavOuterWay", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
 
     //АРМ, Операция отправки вагонов на внутрение станции АМКР 
     ids_wsd.prototype.postSendWagonsOfStation = function (operation, callback) {
