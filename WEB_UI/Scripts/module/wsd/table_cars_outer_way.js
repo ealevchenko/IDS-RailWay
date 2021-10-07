@@ -169,7 +169,7 @@
 
             'tcow_title_button_select_all': 'Все вагоны',
             'tcow_title_button_select_none': 'Убрать выбор',
-            //'tcow_title_button_add_way_sending': 'Добавить в состав',
+            'tcow_title_button_add_way_sending': 'Добавить в состав',
             //'tcow_title_button_del_way_sending': 'Убрать из состава',
             //'tcow_title_button_reverse_num_wagon': 'Реверс',
 
@@ -1320,6 +1320,11 @@
             text: langView('tcow_title_button_select_none', App.Langs),
         },
         {
+            button: 'add_wagons_send',
+            text: langView('tcow_title_button_add_way_sending', App.Langs),
+            enabled: false
+        },
+        {
             button: 'page_length',
             extend: 'pageLength',
         }
@@ -1548,14 +1553,38 @@
         var buttons = [];
         buttons.push({ name: 'export', action: null });
         buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'select_all',
+            action: function () {
+                this.obj_t_cars.rows().select();
+            }.bind(this)
+        });
+        buttons.push({ name: 'select_none', action: null });
+        if (this.settings.buttons && this.settings.buttons.length > 0) {
+            $.each(this.settings.buttons, function (i, el_button) {
+                buttons.push(el_button);
+            }.bind(this));
+        };
         buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
-    // инициализация кнопок отчет ow_arr_sostav
+    // инициализация кнопок отчет arrival_wagons_outer_way
     table_cars_outer_way.prototype.init_button_arrival_wagons_outer_way = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
         buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'select_all',
+            action: function () {
+                this.obj_t_cars.rows().select();
+            }.bind(this)
+        });
+        buttons.push({ name: 'select_none', action: null });
+        if (this.settings.buttons && this.settings.buttons.length > 0) {
+            $.each(this.settings.buttons, function (i, el_button) {
+                buttons.push(el_button);
+            }.bind(this));
+        };
         buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
@@ -1680,7 +1709,7 @@
                     var index = this.obj_t_cars.rows({ selected: true });
                     var rows = this.obj_t_cars.rows(index && index.length > 0 ? index[0] : null).data().toArray();
                     this.select_rows_wagons = rows;
-                    //this.obj_t_cars.button(4).enable(index && index.length > 0 && index[0].length > 0); // отображение кнопки добавить
+                    this.obj_t_cars.button(4).enable(index && index.length > 0 && index[0].length > 0); // отображение кнопки добавить
                 }.bind(this));
                 break;
             };

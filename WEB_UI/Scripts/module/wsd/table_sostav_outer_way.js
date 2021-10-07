@@ -645,7 +645,7 @@
     table_sostav_outer_way.prototype.init_type_report = function () {
         switch (this.settings.type_report) {
             // Таблица вагоны на пути для отправки
-            case 'arrival-outer-way': {
+            case 'arrival-sostav-outer-way': {
                 this.type_select_rows = 1; // Выбирать одну
                 this.table_select = true;
                 this.table_columns = this.init_columns_arrival_outer_way();
@@ -672,7 +672,8 @@
             type_report: null,     // 
             link_num: false,
             ids_wsd: null,
-            fn_change_data: null, // Функция обратного вызова если изменили данные отображения (load... button:action...)
+            fn_change_data: null,   // Функция обратного вызова если изменили данные отображения (load... button:action...)
+            fn_select_sostav: null, // Функция обратного вызова возвращяет выбранный состав
         }, options);
         //
         this.sostav = [];               // Список составов
@@ -729,50 +730,36 @@
             language: language_table(App.Langs),
             jQueryUI: false,
             "createdRow": function (row, data, index) {
-                $(row).attr('id', data.outer_way_num_sostav = "63-30092021155600"); // id строки дислокации вагона
-                //$(row).attr('data-num', data.num); // data-num номер вагона
-                //////// Проверим если по оператору контролировать норму времени, тогда проверить
-                //////if (data.arrival_idle_time < data.arrival_duration) {
-                //////    // Превышена норма нахождения вагона на АМКР
-                //////    $('td.arrival-duration', row).addClass('idle-time-error');
-                //////    if (data.operator_monitoring_idle_time) {
-                //////        if (this.settings.link_num) {
-                //////            $('td.num-wagon a', row).addClass('idle-time-error')
-                //////        } else {
-                //////            $('td.num-wagon', row).addClass('idle-time-error')
-                //////        }
-                //////    };
-                //////}
-
-                //////// Прибыл
-                //////if (data.current_id_operation === 1) {
-                //////    $('td.fixed-column', row).addClass('red'); // Отметим прибытие
-                //////}
-                //////// Предъявлен или сдан
-                //////if (data.current_id_operation === 9 || data.current_id_operation === 8) {
-                //////    if (data.outgoing_sostav_status === 2) {
-                //////        $('td.fixed-column', row).addClass('green');// Отметим вагон сдан на УЗ
-                //////    }
-                //////    if (data.outgoing_sostav_status === 1) {
-                //////        $('td.fixed-column', row).addClass('yellow');// Отметим вагон предъявлен
-                //////    }
-                //////}
-                //////// Цвет оператора
-                //////if (data.operator_color && data.operator_color !== '') {
-                //////    $('td.operator', row).attr('style', 'background-color:' + data.operator_color)
-                //////}
-                //////// Отчет по отправке поменить вагоны которые уже отобраны
-                //////if (this.settings.type_report === 1) {
-                //    if (data.position_new !== null) {
-                //        $('td.num-wagon', row).addClass('wagon-busy');// Отметим вагон предъявлен
-                //    }
-                //}
+                $(row).attr('id', data.outer_way_num_sostav); // id строки дислокации вагона
             }.bind(this),
             columns: this.table_columns,
             dom: 'Bfrtip',
             stateSave: true,
             buttons: this.table_buttons,
         });
+        // Обработка события выбора
+        switch (this.settings.type_report) {
+            case 'arrival-sostav-outer-way': {
+                this.obj_t_cars.on('user-select', function (e, dt, type, cell, originalEvent) {
+                    this.out_clear();
+                    var indexes = cell && cell.length > 0 ? cell[0][0].row : null;
+                    var row = this.obj_t_cars.rows(indexes).data().toArray();
+                    //if (row && row.length > 0 && row[0].outgoing_sostav_status && row[0].outgoing_sostav_status > 0) {
+                    //    e.preventDefault();
+                    //    this.out_warning('Вагон № ' + row[0].num + ' для операций заблокирован (вагон пренадлежит составу который имеет статус - ' + row[0].outgoing_sostav_status + ')');
+                    //}
+                }.bind(this)).on('select deselect', function (e, dt, type, indexes) {
+                    var index = this.obj_t_cars.rows({ selected: true });
+                    var rows = this.obj_t_cars.rows(index && index.length > 0 ? index[0] : null).data().toArray();
+                    this.select_rows_wagons = rows;
+                    //this.obj_t_cars.button(4).enable(index && index.length > 0 && index[0].length > 0); // отображение кнопки добавить
+                    if (typeof this.settings.fn_select_sostav === 'function') {
+                        this.settings.fn_select_sostav(rows);
+                    }
+                }.bind(this));
+                break;
+            };
+        };
         ////// Обработка события выбора, отчет вагоны детально
         ////if (this.settings.type_report === 0) {
         ////    this.obj_t_cars.on('select deselect', function (e, dt, type, indexes) {
