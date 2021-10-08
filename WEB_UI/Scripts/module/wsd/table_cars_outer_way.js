@@ -1324,6 +1324,7 @@
             text: langView('tcow_title_button_add_way_sending', App.Langs),
             enabled: false
         },
+
         {
             button: 'page_length',
             extend: 'pageLength',
@@ -1709,7 +1710,7 @@
                     var index = this.obj_t_cars.rows({ selected: true });
                     var rows = this.obj_t_cars.rows(index && index.length > 0 ? index[0] : null).data().toArray();
                     this.select_rows_wagons = rows;
-                    this.obj_t_cars.button(4).enable(index && index.length > 0 && index[0].length > 0); // отображение кнопки добавить
+                    this.enable_button(); // отображение кнопки
                 }.bind(this));
                 break;
             };
@@ -1745,7 +1746,7 @@
         this.obj_t_cars.rows.add(data);
         //this.obj_t_cars.order([0, 'asc']);
         this.obj_t_cars.draw();
-        //this.enable_button(); // отображение кнопки добавить
+        this.enable_button(); // отображение кнопки
         LockScreenOff();
     };
     // Загрузить все вагоны которые были отправленны
@@ -1772,6 +1773,18 @@
             this.num_sostav = null;
             this.view(this.wagons);           //
         }
+    };
+    // Активировать кнопки формы
+    table_cars_outer_way.prototype.enable_button = function () {
+        var index = this.obj_t_cars.rows({ selected: true });
+
+        switch (this.settings.type_report) {
+            case 'arrival-wagons-outer-way': {
+                // активность кнопки добавить вагон состава
+                this.obj_t_cars.button(4).enable(index && index.length > 0 && index[0].length > 0); // отображение кнопки добавить
+                break;
+            }
+        };
     };
     //-------------------------------------------------------------------------------------------
     // Очистить сообщения

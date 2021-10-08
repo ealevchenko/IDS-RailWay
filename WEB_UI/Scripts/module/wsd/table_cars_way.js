@@ -136,6 +136,7 @@
             'title_button_add_way_sending': 'Добавить в состав',
             'title_button_del_way_sending': 'Убрать из состава',
             'title_button_reverse_num_wagon': 'Реверс',
+            'title_button_head_tail': 'Голова\Хвост',
 
             'mess_init_module': 'Инициализация модуля…',
             'mess_load_wagons': 'Загружаю вагоны на пути…',
@@ -1228,6 +1229,11 @@
             enabled: true
         },
         {
+            button: 'head_tail',
+            text: langView('title_button_head_tail', App.Langs),
+            enabled: true
+        },
+        {
             button: 'page_length',
             extend: 'pageLength',
         }
@@ -1672,18 +1678,20 @@
         buttons.push({
             name: 'select_all',
             action: function () {
-                this.obj_t_cars.rows().select();
+                this.obj_t_cars.rows(function (idx, data, node) {
+                    return data.id_wim_arrival !== null;
+                }).select();
             }.bind(this)
         });
         buttons.push({
             name: 'select_none',
             action: null
         });
-        //if (this.settings.buttons && this.settings.buttons.length > 0) {
-        //    $.each(this.settings.buttons, function (i, el_button) {
-        //        buttons.push(el_button);
-        //    }.bind(this));
-        //};
+        if (this.settings.buttons && this.settings.buttons.length > 0) {
+            $.each(this.settings.buttons, function (i, el_button) {
+                buttons.push(el_button);
+            }.bind(this));
+        };
         buttons.push({
             name: 'page_length',
             action: null
@@ -1926,12 +1934,11 @@
         }
         //----------------------------------
     };
-
     // Отображение кнопки добавить
     table_cars_way.prototype.enable_button = function () {
         var index = this.obj_t_cars.rows({ selected: true });
         // Кнопка добавить в состав отчет отправка состава
-        if (this.settings.type_report === 1 || this.settings.type_report === 2) {
+        if (this.settings.type_report === 1 || this.settings.type_report === 2 || this.settings.type_report === 3) {
             this.obj_t_cars.button(4).enable(index && index.length > 0 && index[0].length > 0); // отображение кнопки добавить
         }
     };

@@ -760,61 +760,6 @@
                 break;
             };
         };
-        ////// Обработка события выбора, отчет вагоны детально
-        ////if (this.settings.type_report === 0) {
-        ////    this.obj_t_cars.on('select deselect', function (e, dt, type, indexes) {
-        ////        var selected = this.obj_t_cars.rows({ selected: true })[0].length > 0 ? true : false;
-        ////        var row = this.obj_t_cars.rows(indexes).data().toArray()[0];
-        ////        if (selected) {
-        ////            //this.obj_t_cars.button(2).enable(true);
-        ////            //this.obj_t_cars.button(3).enable(!(row && row.way_delete));
-        ////            //this.obj_t_cars.button(4).enable(!(row && row.way_delete));
-        ////            //this.obj_t_cars.button(5).enable(!(row && row.way_delete));
-        ////            this.select_row_wagons = row;
-        ////        } else {
-        ////            //this.obj_t_cars.button(2).enable(false);
-        ////            //this.obj_t_cars.button(3).enable(false);
-        ////            //this.obj_t_cars.button(4).enable(false);
-        ////            //this.obj_t_cars.button(5).enable(false);
-        ////            this.select_row_wagons = null;
-        ////        }
-        ////    }.bind(this));
-        ////};
-        ////// Обработка события выбора отчет отправка
-        ////if (this.settings.type_report === 1) {
-        ////    this.obj_t_cars.on('user-select', function (e, dt, type, cell, originalEvent) {
-        ////        this.out_clear();
-        ////        var indexes = cell && cell.length > 0 ? cell[0][0].row : null;
-        ////        var row = this.obj_t_cars.rows(indexes).data().toArray();
-        ////        if (row && row.length > 0 && row[0].outgoing_sostav_status && row[0].outgoing_sostav_status > 0) {
-        ////            e.preventDefault();
-        ////            this.out_warning('Вагон № ' + row[0].num + ' для операций заблокирован (вагон пренадлежит составу который имеет статус - ' + row[0].outgoing_sostav_status + ')');
-        ////        }
-        ////    }.bind(this)).on('select deselect', function (e, dt, type, indexes) {
-        ////        var index = this.obj_t_cars.rows({ selected: true });
-        ////        var rows = this.obj_t_cars.rows(index && index.length > 0 ? index[0] : null).data().toArray();
-        ////        this.select_rows_wagons = rows;
-        ////        this.enable_button();
-        ////    }.bind(this));
-        ////};
-        ////// Обработка события выбора отчет отправка
-        ////if (this.settings.type_report === 2) {
-        ////    this.obj_t_cars.on('select deselect', function (e, dt, type, indexes) {
-        ////        var index = this.obj_t_cars.rows({ selected: true });
-        ////        var rows = this.obj_t_cars.rows(index && index.length > 0 ? index[0] : null).data().toArray();
-        ////        this.select_rows_wagons = rows;
-        ////        this.enable_button();
-        ////    }.bind(this));
-        ////};
-        ////if (this.settings.link_num) {
-
-        //    this.$table_cars.on('click', 'a.num-wagon', function (e) {
-        //        e.preventDefault();
-        //        e.stopPropagation();
-        //        var num = $(e.currentTarget).attr('id')
-        //        window.open(url_search_wagon + '?num=' + num, '', '');
-        //    }.bind(this));
-        //}
         //----------------------------------
         if (typeof fn_init_ok === 'function') {
             fn_init_ok(this.result_init);

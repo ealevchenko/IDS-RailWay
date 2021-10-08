@@ -180,7 +180,8 @@
         if (len === 0) {
             if (typeof callback === 'function') {
                 callback();
-            } else return 0;
+            };
+            return 0;
         }
         function EnumerateWagonsAsync(i) {
             if (i < len) {
@@ -205,7 +206,8 @@
         if (len === 0) {
             if (typeof callback === 'function') {
                 callback();
-            } else return 0;
+            };
+            return 0;
         }
         row = row.sort(function (a, b) { return a[field] - b[field]; });
         function ReverseEnumerateWagonsAsync(i) {
@@ -232,7 +234,8 @@
         if (len === 0) {
             if (typeof callback === 'function') {
                 callback();
-            } else return 0;
+            };
+            return 0;
         }
         function DelWagonsAsync(i) {
             if (i < len) {
@@ -260,7 +263,8 @@
         if (len === 0) {
             if (typeof callback === 'function') {
                 callback();
-            } else return 0;
+            };
+            return 0;
         }
         function AddWagonsAsync(i) {
             if (i < len) {

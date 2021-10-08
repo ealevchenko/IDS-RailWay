@@ -41,6 +41,8 @@
             'vac_title_button_excel': 'Excel',
             'vac_title_button_cancel': 'Отменить',
             'vac_title_button_return': 'Вернуть',
+            'vac_title_button_head': 'Голова',
+            'vac_title_button_tail': 'Хвост',
 
             'vac_title_add_ok': 'ВЫПОЛНИТЬ',
 
@@ -62,6 +64,7 @@
             'vac_mess_destroy_operation': 'Закрываю форму...',
             'vac_mess_create_sostav': 'Формирую состав, переношу вагоны...',
             'vac_mess_clear_sostav': 'Формирую состав, убираю выбранные вагоны...',
+            'vac_mess_reverse_head_sostav': 'Формирую состав, реверс голова-хвост',
             'vac_mess_reverse_sostav': 'Формирую состав, реверс вагонов...',
         },
         'en':  //default language: English
@@ -136,7 +139,8 @@
         if (len === 0) {
             if (typeof callback === 'function') {
                 callback(position);
-            } else return 0;
+            }
+            return 0;
         }
         function EnumerateWagonsAsync(i) {
             if (i < len) {
@@ -155,22 +159,31 @@
         }
         EnumerateWagonsAsync.call(this, 0);
     }.bind(this);
-
-
     // ассинхроная функция (Реверса нумерации вагонов)
-    var wagons_reverse_enumerate_async = function (row, field, callback) {
+    var wagons_reverse_enumerate_async = function (callback) {
+        var row = this.wagons.filter(function (i) {
+            return i.id_wim_arrival !== null;
+        })
+        if (row && row.length > 0) {
+            row = row.sort(function (a, b) {
+                return a.position_new - b.position_new;
+            });
+        };
         var len = row.length;
         if (len === 0) {
             if (typeof callback === 'function') {
                 callback();
             } else return 0;
-        }
-        row = row.sort(function (a, b) { return a[field] - b[field]; });
+        } else {
+            var position = row[row.length - 1].position_new;
+        };
+        //row = row.sort(function (a, b) { return a[field] - b[field]; });
         function ReverseEnumerateWagonsAsync(i) {
             if (len > 0) {
                 // Поместим следующий вызов функции в цикл событий.
                 setTimeout(function () {
-                    row[i][field] = len;
+                    row[i].position_new = position;
+                    position--;
                     len--;
                     ReverseEnumerateWagonsAsync.call(this, i + 1);
                 }.bind(this), 0);
@@ -182,7 +195,7 @@
             }
         }
         ReverseEnumerateWagonsAsync.call(this, 0);
-    }.bind(this);
+    };
 
     // ассинхроная функция (Убрать вагоны)
     var wagons_del_async = function (row, callback) {
@@ -190,16 +203,26 @@
         if (len === 0) {
             if (typeof callback === 'function') {
                 callback();
-            } else return 0;
+            };
+            return 0;
         }
         function DelWagonsAsync(i) {
             if (i < len) {
                 // Поместим следующий вызов функции в цикл событий.
                 setTimeout(function () {
+                    // Найти и удалить с пути приема
                     var wagon = this.wagons.find(
-                        function (o) { return o.wir_id === row[i].wir_id });
+                        function (o) { return o.wim_id === row[i].wim_id });
                     if (wagon !== null) {
-                        wagon.position_new = null;
+                        // Удалить
+                        var index = this.wagons.indexOf(wagon);
+                        this.wagons.splice(index, 1);
+                    };
+                    // Пометим вагон в составе перегона
+                    var wagon_sostav = this.wagons_sostav.find(
+                        function (o) { return o.from_id_wim === row[i].wim_id });
+                    if (wagon_sostav !== null) {
+                        wagon_sostav.id_way_arrival = null;
                     }
                     DelWagonsAsync.call(this, i + 1);
                 }.bind(this), 0);
@@ -212,165 +235,157 @@
         }
         DelWagonsAsync.call(this, 0);
     };
-    // ассинхроная функция (Добавить вагоны)
+    // ассинхроная функция (Добавить вагоны на путь прибытия)
     var wagons_add_async = function (row, position, callback) {
         var len = row.length;
         this.position = position;
-        if (len === 0) {
-            if (typeof callback === 'function') {
-                callback();
-            } else return 0;
-        };
+
         function AddWagonsAsync(i) {
             if (i < len) {
                 // Поместим следующий вызов функции в цикл событий.
                 setTimeout(function () {
-
-                    $.each(this.settings.fields_form, function (i, el) {
-
-                    }.bind(this));
-
-                    var new_car = {
-                        //"wir_id": 263125,
-                        //"wim_id": 1325987,
-                        //"wio_id": 1418405,
-                        //"num": 63624126,
-                        //"position": 1,
-                        //"position_new": 1,
-                        //"id_operator": 38,
-                        //"operators_ru": "ПРОЧИЕ",
-                        //"operators_en": "ПРОЧИЕ",
-                        //"operator_abbr_ru": "ПР",
-                        //"operator_abbr_en": "ПР",
-                        //"operator_rent_start": "2021-05-14T10:08:00",
-                        //"operator_rent_end": null,
-                        //"operator_paid": false,
-                        //"operator_color": "#ceffce",
-                        //"operator_monitoring_idle_time": false,
-                        //"id_limiting_loading": null,
-                        //"limiting_name_ru": null,
-                        //"limiting_name_en": null,
-                        //"limiting_abbr_ru": null,
-                        //"limiting_abbr_en": null,
-                        //"id_owner_wagon": 47,
-                        //"owner_wagon_ru": "ООО \"ФинансБизнесГрупп\"",
-                        //"owner_wagon_en": "ООО \"ФинансБизнесГрупп\"",
-                        //"owner_wagon_abbr_ru": "ООО \"ФинансБизнесГру",
-                        //"owner_wagon_abbr_en": "ООО \"ФинансБизнесГру",
-                        //"wagon_adm": 20,
-                        //"wagon_adm_name_ru": "Россия",
-                        //"wagon_adm_name_en": "Russia",
-                        //"wagon_adm_abbr_ru": "РОС",
-                        //"wagon_adm_abbr_en": "RUS",
-                        //"wagon_rod": 60,
-                        //"wagon_rod_name_ru": "Полувагон",
-                        //"wagon_rod_name_en": "Gondola car",
-                        //"wagon_rod_abbr_ru": "ПВ",
-                        //"wagon_rod_abbr_en": "ПВ",
-                        //"wagon_type_ru": null,
-                        //"wagon_type_en": null,
-                        //"arrival_condition_name_ru": "сталь-сыпучие",
-                        //"arrival_condition_name_en": "сталь-сыпучие",
-                        //"arrival_condition_abbr_ru": "сс.",
-                        //"arrival_condition_abbr_en": "сс.",
-                        //"arrival_condition_red": null,
-                        //"current_condition_name_ru": "сталь-сыпучие",
-                        //"current_condition_name_en": "сталь-сыпучие",
-                        //"current_condition_abbr_ru": "сс.",
-                        //"current_condition_abbr_en": "сс.",
-                        //"current_condition_red": null,
-                        //"wagon_date_rem_uz": "2022-05-29T00:00:00",
-                        //"wagon_gruzp_doc": 75.0,
-                        //"wagon_gruzp_uz": 75.0,
-                        //"arrival_cargo_group_name_ru": "ФЛЮСЫ",
-                        //"arrival_cargo_group_name_en": "FLUX",
-                        //"arrival_cargo_name_ru": "Известняк для флюсования",
-                        //"arrival_cargo_name_en": "Известняк для флюсования",
-                        //"arrival_id_sertification_data": null,
-                        //"arrival_sertification_data_ru": null,
-                        //"arrival_sertification_data_en": null,
-                        //"arrival_id_commercial_condition": null,
-                        //"arrival_commercial_condition_ru": null,
-                        //"arrival_commercial_condition_en": null,
-                        //"arrival_station_from_code": 212404,
-                        //"arrival_station_from_name_ru": "Берники",
-                        //"arrival_station_from_name_en": "Берники",
-                        //"arrival_shipper_code": 2774,
-                        //"arrival_shipper_name_ru": "ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ  ВОСТОЧНЫЕ БЕРНИКИ",
-                        //"arrival_shipper_name_en": "ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ  ВОСТОЧНЫЕ БЕРНИКИ",
-                        //"arrival_station_amkr_name_ru": "Восточная-Разгрузочная",
-                        //"arrival_station_amkr_name_en": "East Unloading",
-                        //"arrival_station_amkr_abbr_ru": "ВР",
-                        //"arrival_station_amkr_abbr_en": "East Unloading",
-                        //"arrival_division_amkr_code": "054",
-                        //"arrival_division_amkr_name_ru": "Огнеупорно-известковый цех",
-                        //"arrival_division_amkr_name_en": "Refractory & Lime Preparation Shop",
-                        //"arrival_division_amkr_abbr_ru": "ОИЦ",
-                        //"arrival_division_amkr_abbr_en": "R&LPS",
-                        //"current_id_loading_status": 0,
-                        //"current_loading_status_ru": "Порожний",
-                        //"current_loading_status_en": "Empty",
-                        //"current_wagon_busy": 0,
-                        //"current_id_operation": 8,
-                        //"current_operation_name_ru": "Ручная расстановка",
-                        //"current_operation_name_en": "Manual placement",
-                        //"current_operation_start": "2021-05-16T06:50:00",
-                        //"current_operation_end": "2021-05-16T07:00:00",
-                        //"arrival_duration": 210798,
-                        //"arrival_idle_time": 3960,
-                        //"arrival_usage_fee": 0.00,
-                        //"current_station_duration": 207868,
-                        //"current_way_duration": 207868,
-                        //"current_station_idle_time": null,
-                        //"sap_incoming_supply_num": "",
-                        //"sap_incoming_supply_pos": null,
-                        //"sap_incoming_supply_date": null,
-                        //"sap_incoming_supply_time": null,
-                        //"sap_incoming_supply_warehouse_code": "",
-                        //"sap_incoming_supply_warehouse_name": "",
-                        //"sap_incoming_supply_cargo_code": "",
-                        //"sap_incoming_supply_cargo_name": "",
-                        //"instructional_letters_num": null,
-                        //"instructional_letters_datetime": null,
-                        //"instructional_letters_station_code": null,
-                        //"instructional_letters_station_name": null,
-                        //"instructional_letters_note": null,
-                        //"wagon_brutto_doc": null,
-                        //"wagon_brutto_amkr": 0,
-                        //"wagon_tara_doc": null,
-                        //"wagon_tara_uz": 24.700000762939453,
-                        //"wagon_tara_arc_doc": 24700,
-                        //"wagon_vesg_doc": null,
-                        //"wagon_vesg_amkr": 0,
-                        //"diff_vesg": 0,
-                        //"doc_outgoing_car": null,
-                        //"arrival_nom_doc": 30374117,
-                        //"arrival_nom_main_doc": null,
-                        //"arrival_composition_index": "4671-299-4670",
-                        //"arrival_date_adoption": "2021-05-14T06:10:00",
-                        //"outgoing_id_return": null,
-                        //"outgoing_return_cause_ru": null,
-                        //"outgoing_return_cause_en": null,
-                        //"outgoing_date": null,
-                        //"outgoing_sostav_status": null,
-                        //"wagon_ban_uz": "Запрет выхода:нет; Другие запреты:",
-                        //"wagon_closed_route": false,
-                        //"wir_note": null
+                    // Создадим строку вагон на пути
+                    var new_car_way = {
+                        position_new: this.position,
+                        id_wim_arrival: row[i].from_id_wim,
+                        arrival_cargo_group_name_en: row[i].arrival_cargo_group_name_en,
+                        arrival_cargo_group_name_ru: row[i].arrival_cargo_group_name_ru,
+                        arrival_cargo_name_en: row[i].arrival_cargo_name_en,
+                        arrival_cargo_name_ru: row[i].arrival_cargo_name_ru,
+                        arrival_commercial_condition_en: null,
+                        arrival_commercial_condition_ru: null,
+                        arrival_composition_index: null,
+                        arrival_condition_abbr_en: row[i].arrival_condition_abbr_en,
+                        arrival_condition_abbr_ru: row[i].arrival_condition_abbr_ru,
+                        arrival_condition_name_en: row[i].arrival_condition_name_en,
+                        arrival_condition_name_ru: row[i].arrival_condition_name_ru,
+                        arrival_condition_red: row[i].arrival_condition_red,
+                        arrival_date_adoption: null,
+                        arrival_division_amkr_abbr_en: row[i].arrival_division_amkr_abbr_en,
+                        arrival_division_amkr_abbr_ru: row[i].arrival_division_amkr_abbr_ru,
+                        arrival_division_amkr_code: row[i].arrival_division_amkr_code,
+                        arrival_division_amkr_name_en: row[i].arrival_division_amkr_name_en,
+                        arrival_division_amkr_name_ru: row[i].arrival_division_amkr_name_ru,
+                        arrival_duration: null,
+                        arrival_id_commercial_condition: null,
+                        arrival_id_sertification_data: row[i].arrival_id_sertification_data,
+                        arrival_idle_time: null,
+                        arrival_nom_doc: row[i].arrival_nom_doc,
+                        arrival_nom_main_doc: row[i].arrival_nom_main_doc,
+                        arrival_sertification_data_en: row[i].arrival_sertification_data_en,
+                        arrival_sertification_data_ru: row[i].arrival_sertification_data_ru,
+                        arrival_shipper_code: null,
+                        arrival_shipper_name_en: null,
+                        arrival_shipper_name_ru: null,
+                        arrival_station_amkr_abbr_en: null,
+                        arrival_station_amkr_abbr_ru: null,
+                        arrival_station_amkr_name_en: null,
+                        arrival_station_amkr_name_ru: null,
+                        arrival_station_from_code: null,
+                        arrival_station_from_name_en: null,
+                        arrival_station_from_name_ru: null,
+                        arrival_usage_fee: null,
+                        current_condition_abbr_en: row[i].from_operation_condition_abbr_en,
+                        current_condition_abbr_ru: row[i].from_operation_condition_abbr_ru,
+                        current_condition_name_en: row[i].from_operation_condition_name_en,
+                        current_condition_name_ru: row[i].from_operation_condition_name_ru,
+                        current_condition_red: null,
+                        current_id_loading_status: row[i].from_operation_id_loading_status,
+                        current_id_operation: row[i].from_id_operation,
+                        current_loading_status_en: row[i].from_operation_loading_status_en,
+                        current_loading_status_ru: row[i].from_operation_loading_status_ru,
+                        current_operation_end: row[i].from_operation_end,
+                        current_operation_name_en: row[i].from_operation_name_en,
+                        current_operation_name_ru: row[i].from_operation_name_ru,
+                        current_operation_start: row[i].from_operation_start,
+                        current_station_duration: null,
+                        current_station_idle_time: null,
+                        current_wagon_busy: row[i].from_busy,
+                        current_way_duration: null,
+                        diff_vesg: null,
+                        doc_outgoing_car: row[i].doc_outgoing_car,
+                        id_limiting_loading: row[i].id_limiting_loading,
+                        id_operator: row[i].id_operator,
+                        id_owner_wagon: null,
+                        instructional_letters_datetime: null,
+                        instructional_letters_note: null,
+                        instructional_letters_num: null,
+                        instructional_letters_station_code: null,
+                        instructional_letters_station_name: null,
+                        limiting_abbr_en: row[i].limiting_abbr_en,
+                        limiting_abbr_ru: row[i].limiting_abbr_ru,
+                        limiting_name_en: row[i].limiting_name_en,
+                        limiting_name_ru: row[i].limiting_name_ru,
+                        num: row[i].num,
+                        operator_abbr_en: row[i].operator_abbr_en,
+                        operator_abbr_ru: row[i].operator_abbr_ru,
+                        operator_color: null,
+                        operator_monitoring_idle_time: null,
+                        operator_paid: null,
+                        operator_rent_end: null,
+                        operator_rent_start: null,
+                        operators_en: row[i].operators_en,
+                        operators_ru: row[i].operators_ru,
+                        outgoing_date: null,
+                        outgoing_id_return: null,
+                        outgoing_return_cause_en: null,
+                        outgoing_return_cause_ru: null,
+                        outgoing_sostav_status: null,
+                        owner_wagon_abbr_en: null,
+                        owner_wagon_abbr_ru: null,
+                        owner_wagon_en: null,
+                        owner_wagon_ru: null,
+                        position: null,
+                        sap_incoming_supply_cargo_code: null,
+                        sap_incoming_supply_cargo_name: null,
+                        sap_incoming_supply_date: null,
+                        sap_incoming_supply_num: null,
+                        sap_incoming_supply_pos: null,
+                        sap_incoming_supply_time: null,
+                        sap_incoming_supply_warehouse_code: null,
+                        sap_incoming_supply_warehouse_name: null,
+                        wagon_adm: row[i].wagon_adm,
+                        wagon_adm_abbr_en: row[i].wagon_adm_abbr_en,
+                        wagon_adm_abbr_ru: row[i].wagon_adm_abbr_ru,
+                        wagon_adm_name_en: row[i].wagon_adm_name_en,
+                        wagon_adm_name_ru: row[i].wagon_adm_name_ru,
+                        wagon_ban_uz: null,
+                        wagon_brutto_amkr: null,
+                        wagon_brutto_doc: null,
+                        wagon_closed_route: null,
+                        wagon_date_rem_uz: null,
+                        wagon_gruzp_doc: null,
+                        wagon_gruzp_uz: null,
+                        wagon_rod: row[i].wagon_rod,
+                        wagon_rod_abbr_en: row[i].wagon_rod_abbr_en,
+                        wagon_rod_abbr_ru: row[i].wagon_rod_abbr_ru,
+                        wagon_rod_name_en: row[i].wagon_rod_name_en,
+                        wagon_rod_name_ru: row[i].wagon_rod_name_ru,
+                        wagon_tara_arc_doc: null,
+                        wagon_tara_doc: null,
+                        wagon_tara_uz: null,
+                        wagon_type_en: null,
+                        wagon_type_ru: null,
+                        wagon_vesg_amkr: null,
+                        wagon_vesg_doc: null,
+                        wim_id: row[i].from_id_wim,
+                        wio_id: 0,
+                        wir_id: row[i].id_wir,
                     };
-
-                    this.wagons.push();
-                    //var wagon = this.wagons.find(
-                    //    function (o) { return o.wir_id === row[i].wir_id });
-                    //if (wagon !== null) {
-                    //    wagon.position_new = this.position;
-                    //    this.position++;
-                    //}
+                    this.wagons.push(new_car_way);
+                    this.position++;
+                    // Пометим вагон в составе перегона
+                    var wagon_sostav = this.wagons_sostav.find(
+                        function (o) { return o.from_id_wim === row[i].from_id_wim });
+                    if (wagon_sostav !== null) {
+                        wagon_sostav.id_way_arrival = this.id_way;
+                    }
                     AddWagonsAsync.call(this, i + 1);
                 }.bind(this), 0);
             } else {
                 // Так как достигнут конец массива, мы вызываем коллбэк
                 if (typeof callback === 'function') {
-                    callback();
+                    callback(this.position);
                 } else return 0;
             }
         };
@@ -388,26 +403,49 @@
         });
         // выполним добавление
         if (!this.head) {
+            // добавим в хвост
             wagons_enumerate_async.call(this, row_old, 'position_new', 1, function (position) {
                 this.position = position;
                 wagons_enumerate_async.call(this, row_new, 'position_new', position, function (position) {
-                    this.position = position;
-                    AddWagonsAsync.call(this, 0);
+                    // Если указан вагоны для добавления тогда добавить иначе пропустить
+                    if (len === 0) {
+                        if (typeof callback === 'function') {
+                            callback(this.position);
+                        };
+                        return 0;
+                    } else {
+                        this.position = position;
+                        AddWagonsAsync.call(this, 0);
+                    }
                 }.bind(this))
             }.bind(this))
+        } else {
+            // добавим в голову
+            wagons_enumerate_async.call(this, row_new, 'position_new', 1, function (position) {
+                this.position = position;
+                wagons_enumerate_async.call(this, row_old, 'position_new', position + len, function (position) {
+                    // Если указан вагоны для добавления тогда добавить иначе пропустить
+                    if (len === 0) {
+                        if (typeof callback === 'function') {
+                            callback(this.position);
+                        };
+                        return 0;
+                    } else {
+                        AddWagonsAsync.call(this, 0);
+                    }
+                }.bind(this));
+            }.bind(this));
         }
-
-
     };
-    // вернуть название станции прибытия по id внешнего пути
-    var get_station_name = function (id_outer_way) {
-        var outer_way = this.ids_dir.list_outer_ways.find(function (o) { return o.id === id_outer_way; });
-        if (outer_way) {
-            var station = this.ids_dir.list_station.find(function (o) { return o.id === outer_way.id_station_on; });
-            return station ? station['station_name_' + App.Lang] : null;
-        }
-        return null
-    };
+    //// вернуть название станции прибытия по id внешнего пути
+    //var get_station_name = function (id_outer_way) {
+    //    var outer_way = this.ids_dir.list_outer_ways.find(function (o) { return o.id === id_outer_way; });
+    //    if (outer_way) {
+    //        var station = this.ids_dir.list_station.find(function (o) { return o.id === outer_way.id_station_on; });
+    //        return station ? station['station_name_' + App.Lang] : null;
+    //    }
+    //    return null
+    //};
 
     function view_arrival_cars(selector) {
         if (!selector) {
@@ -577,14 +615,8 @@
                             name: 'add_wagons_send',
                             action: function (e, dt, node, config) {
                                 LockScreen(langView('vac_mess_create_sostav', App.Langs));
-                                //el['position_new'] = el.position;
-                                //el['id_wim_arrival'] = null;
-
-                                //el['id_way_arrival'] = null;
                                 // Выполнить операцию добавить вагоны
-                                //var wagon_max_position = this.wagons.reduce(function (prev, current, index, array) { return prev.position_new > current.position_new ? prev : current });
-                                //var position_start = wagon_max_position && wagon_max_position.position_new !== null ? wagon_max_position.position_new + 1 : 1;
-                                wagons_add_async.call(this, this.tab_wagon_from.select_rows_wagons, 1, function () {
+                                wagons_add_async.call(this, this.tab_wagon_from.select_rows_wagons, 1, function (position) {
                                     this.tab_wagon_from.select_rows_wagons = null;
                                     this.view_wagons();
                                 }.bind(this));
@@ -797,20 +829,34 @@
                                 // Убрать вагоны
                                 wagons_del_async.call(this, this.tab_cars_on.select_rows_wagons, function () {
                                     // Авто нумерация
-                                    wagons_enumerate_async(base.wagons.filter(function (i) { return i.position_new !== null; }), 'position_new', 1, function () {
+                                    // Выполнить операцию перенумеровать (добавить 0 - вагонов)
+                                    wagons_add_async.call(base, [], 1, function (position) {
                                         this.tab_cars_on.select_rows_wagons = null;
-                                        this.view_wagons(this.wagons);
+                                        this.view_wagons();
                                     }.bind(base));
                                 });
+                            }.bind(this),
+                        },
+                        {
+                            name: 'head_tail',
+                            action: function (e, dt, node, config) {
+                                LockScreen(langView('vac_mess_reverse_head_sostav', App.Langs));
+                                this.head = !this.head;
+                                // Выполнить операцию перенумеровать с учетом голова хвост (добавить 0 - вагонов)
+                                wagons_add_async.call(this, [], 1, function (position) {
+                                    this.view_wagons();
+                                }.bind(this));
                             }.bind(this),
                         },
                         {
                             name: 'reverse_num_wagon',
                             action: function (e, dt, node, config) {
                                 LockScreen(langView('vac_mess_reverse_sostav', App.Langs));
-                                wagons_reverse_enumerate_async(this.wagons.filter(function (i) { return i.position_new !== null; }), 'position_new', function () {
-                                    this.tab_cars_on.select_rows_wagons = null;
-                                    this.view_wagons(this.wagons);
+                                wagons_reverse_enumerate_async.call(this, function () {
+                                    // Выполнить операцию перенумеровать с учетом голова хвост (добавить 0 - вагонов)
+                                    wagons_add_async.call(this, [], 1, function (position) {
+                                        this.view_wagons();
+                                    }.bind(this));
                                 }.bind(this));
                             }.bind(this),
                         },
@@ -882,6 +928,11 @@
         this.form_setup_on.clear_all();
         // Показать вагоны на пути приема
         this.tab_cars_on.view(this.wagons, null);
+        if (this.head) {
+            this.tab_cars_on.obj_t_cars.button(5).text(langView('vac_title_button_head', App.Langs));
+        } else {
+            this.tab_cars_on.obj_t_cars.button(5).text(langView('vac_title_button_tail', App.Langs));
+        }
         // Показать вагоны выбранного состава без учета уже перенесенных в состав  
         this.tab_wagon_from.view(this.wagons_sostav.filter(function (i) { return i.id_way_arrival === null; }), null);
     };
