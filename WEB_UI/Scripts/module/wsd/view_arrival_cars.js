@@ -51,11 +51,11 @@
             'vac_mess_error_not_locomotive': 'В справочнике ИДС отсутствует локомотив №',
             'vac_mess_error_min_time_aplly': 'Дата выполнения операции не может быть меньше текущей даты, мин. отклонение (мин) =',
             'vac_mess_error_max_time_aplly': 'Дата выполнения операции не может быть больше текущей даты, мак. отклонение (мин) =',
-            'vac_mess_error_not_wagons': 'Не выбраны вагоны для отправления (в окне «ОТПРАВИТЬ СО СТАНЦИ», на пути отправки выберите вагоны и сформируйте состав).',
-            'vac_mess_error_operation_run': 'При выполнении операции «ОТПРАВИТЬ СО СТАНЦИ» произошла ошибка, код ошибки:',
+            'vac_mess_error_not_wagons': 'Не выбраны вагоны для приема (в окне «СОСТАВЫ НА ПОДХОДАХ», выберите станцию, прибывающий состав и сформируйте прибытие).',
+            'vac_mess_error_operation_run': 'При выполнении операции «ПРИНЯТЬ СОСТАВ НА СТАНЦИЮ» произошла ошибка, код ошибки:',
 
-            'vac_mess_cancel_operation': 'Операция "ОТПРАВИТЬ СОСТАВОВ НА СТАНЦИИ АМКР" – отменена',
-            'vac_mess_run_operation_send': 'Выполняю операцию отправки состава на станцию АМКР',
+            'vac_mess_cancel_operation': 'Операция "ПРИНЯТЬ НА СТАНЦИЮ АМКР" – отменена',
+            'vac_mess_run_operation_arrival': 'Выполняю операцию приема вагонов прибывающего состава на станцию АМКР',
 
             'vac_mess_load_operation': 'Загружаю операции...',
             'vac_mess_load_wagons': 'Загружаю вагоны на пути...',
@@ -437,7 +437,7 @@
             }.bind(this));
         }
     };
-    //// вернуть название станции прибытия по id внешнего пути
+    // вернуть название станции прибытия по id внешнего пути
     //var get_station_name = function (id_outer_way) {
     //    var outer_way = this.ids_dir.list_outer_ways.find(function (o) { return o.id === id_outer_way; });
     //    if (outer_way) {
@@ -492,9 +492,12 @@
         this.list_station = []; // По умолчанию пустой список
         this.list_way = [];     // По умолчанию пустой список
 
+        this.id_outer_way = -1;   // id перегона
+        this.station_from = null; // Станция отправления
+
         this.head = false;      // Признак голова(true)\хвост(false), по умолчанию хвост
         this.wagons = [];       // Список вагонов на пути (рабочий)
-        this.num_sosatv = null; // Номер выбранного состава
+        this.num_sostav = null; // Номер выбранного состава
         this.wagons_sostav = [];// Список вагонов выбранного состава (рабочий)
 
         // Сообщение
@@ -540,7 +543,7 @@
                     event.preventDefault();
                     // Обработать выбор
                     var id = Number($(e.currentTarget).val());
-                    this.update_sostav_outer_ways_and_way_of_station(id, -1); // Обновим составы в прибытии и пути по выбранной станции
+                    this.update_sostav_outer_ways_and_way_of_station(id, -1, null); // Обновим составы в прибытии и пути по выбранной станции
 
                 }.bind(this),
                 update: null,
@@ -592,11 +595,15 @@
                     type_report: 'arrival-sostav-outer-way',  // Прибвыающие составы на внешнем пути
                     ids_wsd: this.ids_wsd,
                     fn_select_sostav: function (row) {
+                        this.id_outer_way = null;   // id перегона
+                        this.station_from = null; // Станция отправления
                         // получим строку состава
                         if (row && row.length > 0) {
+                            this.id_outer_way = row[0].id_outer_way;   // id перегона
+                            this.station_from = row[0]['from_station_abbr_' + App.Lang]; // Станция отправления
                             // обновим вагоны по выбранному сотаву
                             this.load_wagons_of_sostav(row[0].outer_way_num_sostav);
-                        }
+                        };
                     }.bind(this),
                 }, function () {
 
@@ -767,9 +774,8 @@
                         // Дополнительная проверка
                         var valid = this.validation(result);
                         if (valid) {
-                            var name_station = get_station_name.call(this, result.new.id_outer_way);// Получим название станции
-                            var wagons = this.wagons.filter(function (i) { return i.position_new !== null; });// получить вагоны
-                            this.modal_confirm_form.view(langView('vac_title_form_apply', App.Langs), 'Выполнить операцию "ОТПРАВИТЬ СОСТАВОВ НА СТАНЦИИ АМКР" в количестве: ' + (wagons ? wagons.length : 0) + ' (ваг.), станция прибытия: ' + name_station + '?', function (res) {
+                            var wagons = this.wagons.filter(function (i) { return i.position_new !== null && i.id_wim_arrival !== null; });// получить вагоны
+                            this.modal_confirm_form.view(langView('vac_title_form_apply', App.Langs), 'Выполнить операцию "ПРИНЯТЬ СОСТАВОВ НА СТАНЦИЮ АМКР" в количестве: ' + (wagons ? wagons.length : 0) + ' (ваг.), станция отправки: ' + this.station_from + '?', function (res) {
                                 if (res) {
                                     // Проверим наличие вагонов 
                                     var list_wagons = [];
@@ -780,9 +786,10 @@
                                         }.bind(this));
                                         // Сформируем операцию
                                         var operation = {
-                                            id_way_from: this.id_way,
+                                            id_outer_way: this.id_outer_way,
                                             wagons: list_wagons,
-                                            id_outer_ways: result.new.id_outer_way,
+                                            id_way_on: result.new.id_way,
+                                            head: this.head,
                                             lead_time: result.new.time_aplly,
                                             locomotive1: result.new.locomotive1,
                                             locomotive2: result.new.locomotive2,
@@ -891,7 +898,7 @@
                 this.id_way = id_way;
             }
         }
-        this.update_sostav_outer_ways_and_way_of_station(this.id_station, this.id_way)
+        this.update_sostav_outer_ways_and_way_of_station(this.id_station, this.id_way, this.num_sostav);
         //// Вывести данные вагоны на пути отправки
         //this.load_of_way(this.id_way, function (wagons) {
         //    this.view_wagons(wagons);
@@ -910,19 +917,26 @@
         return ways
     };
     // Обновить составы на перегонах станции прибытия и пути станции прибытия
-    view_arrival_cars.prototype.update_sostav_outer_ways_and_way_of_station = function (id_station, id_way) {
+    view_arrival_cars.prototype.update_sostav_outer_ways_and_way_of_station = function (id_station, id_way, num_sostav) {
         this.id_station = id_station;
         this.id_way = id_way;
+        this.num_sostav = num_sostav;
+        // сбросим выбранные вагоны на пути и состав
+        this.head = false;      // Признак голова(true)\хвост(false), по умолчанию хвост
+        this.wagons = [];       // Список вагонов на пути (рабочий)
+        this.wagons_sostav = [];// Список вагонов выбранного состава (рабочий)
+        this.id_outer_way = null;   // id перегона
+        this.station_from = null; // Станция отправления
         // Обновить пути станции прибытия
         this.form_setup_on.update_list_element('id_way', this.get_list_way(this.id_station), id_way);
-        // Обновить составы на перегонах станции прибытия
-        this.tab_sostav_from.load_ow_arr_sostav_of_station_on(this.id_station);
         // Загрузим вагоны на пути приема
         this.load_wagons_of_way(id_way);
+        // Обновить составы на перегонах станции прибытия
+        this.tab_sostav_from.load_ow_arr_sostav_of_station_on(this.id_station);
+        //
+        this.tab_sostav_from.select_sostav(this.num_sostav)
+
     };
-
-
-
     // Показать текущую ситуацию по вагонам на пути приема и состава ()
     view_arrival_cars.prototype.view_wagons = function () {
         this.form_setup_on.clear_all();
@@ -936,14 +950,25 @@
         // Показать вагоны выбранного состава без учета уже перенесенных в состав  
         this.tab_wagon_from.view(this.wagons_sostav.filter(function (i) { return i.id_way_arrival === null; }), null);
     };
-
+    // Сбросить выбор вагонов состава 
+    view_arrival_cars.prototype.clear_wagons_of_sostav = function () {
+        if (this.wagons_sostav) {
+            $.each(this.wagons_sostav, function (i, el) {
+                el['id_way_arrival'] = null;
+            });
+        };
+    };
     // Загрузить вагоны по выбранному составу
     view_arrival_cars.prototype.load_wagons_of_sostav = function (num_sostav) {
-        this.num_sosatv = num_sostav;
-        this.load_of_sostav(num_sostav, function (wagons) {
-            this.view_wagons(wagons);
-        }.bind(this))
+        this.num_sostav = num_sostav;
+        //clear_wagons_of_way();
         // сбросить выбранный путь!
+        this.load_of_way(this.id_way, function () {
+            // Получим вагоны по составу
+            this.load_of_sostav(num_sostav, function (wagons) {
+                this.view_wagons(wagons);
+            }.bind(this))
+        }.bind(this));
     };
     // Загрузить вагоны выбранного состава на перегоне
     view_arrival_cars.prototype.load_of_sostav = function (num_sostav, fn_load_data) {
@@ -972,14 +997,38 @@
         }
 
     };
+    //// Сбросить (вернуть к текущему состоянию вагоны на пути приема)
+    //view_arrival_cars.prototype.clear_wagons_of_way = function () {
+    //    if (this.wagons) {
+    //        var del_wag = [];
+    //        $.each(this.wagons, function (i, el) {
+    //            if (el.id_wim_arrival !== null) {
+    //                // Построить перечень для удаления
+    //                var index = this.wagons.indexOf(el);
+    //                del_wag.push(index);
+    //            } else {
+    //                el.id_wim_arrival = null;
+    //                el.position_new = el.position;
+    //            }
+    //        }.bind(this));
+    //        // Удалить перечень
+    //        $.each(del_wag.sort(function (a, b) {
+    //            return a - b;
+    //        }), function (i, el) {
+    //            this.wagons.splice(el, 1);
+    //        }.bind(this));
+    //    };
+    //};
     // загрузим вагоны на пути приема и отобразим
     view_arrival_cars.prototype.load_wagons_of_way = function (id_way) {
         this.id_way = id_way;
+        // сбросить выбранный состав!
+        this.clear_wagons_of_sostav();
         // Загрузим вагоны на пути приема
         this.load_of_way(id_way, function (wagons) {
             this.view_wagons(wagons);
         }.bind(this))
-        // сбросить выбранный состав!
+
     };
     // Загрузить вагоны на пути в внутрений массив
     view_arrival_cars.prototype.load_of_way = function (id_way, fn_load_data) {
@@ -1045,7 +1094,7 @@
             }
         }
         // Проверим состав
-        var wagons = this.wagons.filter(function (i) { return i.position_new !== null; });
+        var wagons = this.wagons.filter(function (i) { return i.position_new !== null && i.id_wim_arrival !== null;  });
         if (wagons === null || wagons.length === 0) {
             this.form_setup_on.out_error(langView('vac_mess_error_not_wagons', App.Langs))
             valid = false;
@@ -1054,13 +1103,11 @@
     }
     // выполнить операцию
     view_arrival_cars.prototype.apply = function (data) {
-        LockScreen(langView('vac_mess_run_operation_send', App.Langs));
-        this.ids_wsd.postSendWagonsOfStation(data, function (result) {
+        LockScreen(langView('vac_mess_run_operation_arrival', App.Langs));
+        this.ids_wsd.postArrivalWagonsOfStation(data, function (result) {
             if (result && result.result > 0) {
                 // Вывести данные вагоны на пути отправки
-                this.load_of_way(this.id_way, function (wagons) {
-                    this.view_wagons(wagons);
-                }.bind(this));
+                this.update_sostav_outer_ways_and_way_of_station(this.id_station, this.id_way, this.num_sostav);
                 this.out_clear();
 
                 // Сбросим установки (время и локомотивы)
@@ -1068,7 +1115,7 @@
                 this.form_setup_on.set('locomotive1', null);
                 this.form_setup_on.set('locomotive2', null);
 
-                this.form_setup_on.out_info('Состав отправлен, в количестве ' + result.moved + '(ваг.)');
+                this.form_setup_on.out_info('Состав принят, в количестве ' + result.moved + '(ваг.)');
                 if (typeof this.settings.fn_db_update === 'function') {
                     //TODO: можно добавить возвращать перечень для обновления
                     typeof this.settings.fn_db_update();

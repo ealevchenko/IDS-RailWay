@@ -682,7 +682,7 @@
         this.id_station_on = null;      // Станция на которую прибывает состав
 
         this.select_row_wagons = null;  // для одинарного выбора (выбранный вагон)
-        this.select_rows_wagons = null;  // для многочисленного выбора (Отчеты от 1.... выбранные вагоны)
+        this.select_rows_sostav = null;  // для многочисленного выбора (Отчеты от 1.... выбранные вагоны)
 
         this.ids_wsd = this.settings.ids_wsd ? this.settings.ids_wsd : new wsd();
         // Настройки отчета
@@ -751,7 +751,7 @@
                 }.bind(this)).on('select deselect', function (e, dt, type, indexes) {
                     var index = this.obj_t_cars.rows({ selected: true });
                     var rows = this.obj_t_cars.rows(index && index.length > 0 ? index[0] : null).data().toArray();
-                    this.select_rows_wagons = rows;
+                    this.select_rows_sostav = rows;
                     //this.obj_t_cars.button(4).enable(index && index.length > 0 && index[0].length > 0); // отображение кнопки добавить
                     if (typeof this.settings.fn_select_sostav === 'function') {
                         this.settings.fn_select_sostav(rows);
@@ -778,6 +778,12 @@
         //this.enable_button(); // отображение кнопки добавить
         LockScreenOff();
     };
+    // Выбрать состав
+    table_sostav_outer_way.prototype.select_sostav = function (num) {
+        if (num !== null) {
+            this.obj_t_cars.row('#' + num).select();
+        }
+    }
     // Загрузить составы по прибытию
     table_sostav_outer_way.prototype.load_ow_arr_sostav = function () {
         //if (id_way !== null && id_way >= 0) {
@@ -791,7 +797,7 @@
         //    this.wagons = [];
         //    this.id_way = null;
         //    this.select_row_wagons = null;
-        //    this.select_rows_wagons = null;
+        //    this.select_rows_sostav = null;
         //    this.view(this.wagons, num);           //
         //}
     };

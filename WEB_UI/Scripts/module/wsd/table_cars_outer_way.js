@@ -1577,7 +1577,10 @@
         buttons.push({
             name: 'select_all',
             action: function () {
-                this.obj_t_cars.rows().select();
+                // Выбрать только не принятые вагоны
+                this.obj_t_cars.rows(function (idx, data, node) {
+                    return data.outer_way_end === null;
+                }).select();
             }.bind(this)
         });
         buttons.push({ name: 'select_none', action: null });
@@ -1685,7 +1688,10 @@
                 $(row).attr('id', data.from_id_wim); // id строки дислокации вагона в момент отправки
                 switch (this.settings.type_report) {
                     case 'arrival-wagons-outer-way': {
-
+                        // Отчет по прибытию 
+                        if (data.outer_way_end !== null) {
+                            $(row).addClass('wagon-ban');  // Отметим вагон заблокирован
+                        }
                         break;
                     };
                 };
@@ -1702,10 +1708,10 @@
                     this.out_clear();
                     var indexes = cell && cell.length > 0 ? cell[0][0].row : null;
                     var row = this.obj_t_cars.rows(indexes).data().toArray();
-                    //if (row && row.length > 0 && row[0].outgoing_sostav_status && row[0].outgoing_sostav_status > 0) {
-                    //    e.preventDefault();
-                    //    this.out_warning('Вагон № ' + row[0].num + ' для операций заблокирован (вагон пренадлежит составу который имеет статус - ' + row[0].outgoing_sostav_status + ')');
-                    //}
+                    if (row && row.length > 0 && row[0].outer_way_end !== null) {
+                        e.preventDefault();
+                        this.out_warning('Вагон № ' + row[0].num + ' для операций заблокирован (вагон уже принят на станцию : ' + row[0]['on_station_name_' + App.Lang] + ' )');
+                    }
                 }.bind(this)).on('select deselect', function (e, dt, type, indexes) {
                     var index = this.obj_t_cars.rows({ selected: true });
                     var rows = this.obj_t_cars.rows(index && index.length > 0 ? index[0] : null).data().toArray();
