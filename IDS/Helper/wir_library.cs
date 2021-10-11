@@ -30,6 +30,41 @@ namespace IDS.Helper
             }
             return wir.id;
         }
+
+        public static WagonInternalMovement SetStationWagon(this WagonInternalRoutes wir, int id_station, int id_way, DateTime date_start, int position, string note, string user)
+        {
+            WagonInternalMovement wim_new = null;
+            if (wir != null && wir.close == null)
+            {
+                // Получим последнее положение
+                WagonInternalMovement wim = wir.GetLastMovement();
+                // Исключим попытку поставить дублирования записи постановки на путь
+                if (wim == null || (wim != null && (wim.id_station != id_station || wim.id_way != id_way || wim.position != position)))
+                {
+                    wim_new = new WagonInternalMovement()
+                    {
+                        id = 0,
+                        id_station = id_station,
+                        id_way = id_way,
+                        way_start = date_start,
+                        way_end = null,
+                        position = position,
+                        id_outer_way = null,
+                        outer_way_start = null,
+                        outer_way_end = null,
+                        create = DateTime.Now,
+                        create_user = user,
+                        num_sostav = null,
+                        note = note,
+                        parent_id = wim.CloseMovement(date_start, null, user),
+                    };
+                    wir.WagonInternalMovement.Add(wim_new);
+                }
+
+            }
+            return wim_new;
+        }
+        //TODO: Удалить после удаления всех старых операций
         /// <summary>
         /// Установить вагон на станцию на путь
         /// </summary>
@@ -41,7 +76,7 @@ namespace IDS.Helper
         /// <param name="note"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public static WagonInternalRoutes SetStationWagon(this WagonInternalRoutes wir, int id_station, int id_way, DateTime date_start, int position, string note, string user)
+        public static WagonInternalRoutes SetStationWagon_old(this WagonInternalRoutes wir, int id_station, int id_way, DateTime date_start, int position, string note, string user)
         {
             if (wir != null && wir.close == null)
             {
@@ -72,7 +107,17 @@ namespace IDS.Helper
             }
             return wir;
         }
-
+        /// <summary>
+        /// Установить вагон на путь отправки
+        /// </summary>
+        /// <param name="wir"></param>
+        /// <param name="id_outer_ways"></param>
+        /// <param name="date_start"></param>
+        /// <param name="position"></param>
+        /// <param name="num_sostav"></param>
+        /// <param name="note"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public static WagonInternalMovement SetSendingWagon(this WagonInternalRoutes wir, int id_outer_ways, DateTime date_start, int position, string num_sostav, string note, string user)
         {
             WagonInternalMovement wim_new = null; 
@@ -106,7 +151,7 @@ namespace IDS.Helper
             }
             return wim_new;
         }
-
+        // TODO: Удалить 
         /// <summary>
         /// Установить вагон на путь отправки
         /// </summary>

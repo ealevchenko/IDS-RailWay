@@ -427,20 +427,18 @@ namespace IDS
     /// <summary>
     /// TODO: Убрать перенести в базовые ошибки
     /// </summary>
-    public enum errors_wir : int
-    {
-        global = -1,
-        cancel_save_changes = -2,       // Отмена сохранений изменений в базе данных (были ошибки по ходу выполнения всей операции)
-        not_input_value = -100,
-        not_sostav = -101, //...
-        not_wagon = -102,
-        not_arrival_wir = -103,         // Нет записи [WagonInternalRoutes] зашедшей на АМКР
-        not_open_wir = -104,            // Нет открытой записи положения вагона. (Если вагон защел тогда вагон всегда должен гдето стоять!)
-        not_set_way_wir = -105,         // Нет вагон стоит не натом пути по которому нужно провести операцию.
-        not_way_on = -106,              // Неуказан путь приема
-
-
-    }
+    //public enum errors_wir : int
+    //{
+    //    //global = -1,
+    //    //cancel_save_changes = -2,       // Отмена сохранений изменений в базе данных (были ошибки по ходу выполнения всей операции)
+    //    //not_input_value = -100,
+    //    //not_sostav = -101, //...
+    //    //not_wagon = -102,
+    //    //not_arrival_wir = -103,         // Нет записи [WagonInternalRoutes] зашедшей на АМКР
+    //    //not_open_wir = -104,            // Нет открытой записи положения вагона. (Если вагон защел тогда вагон всегда должен гдето стоять!)
+    //    //not_set_way_wir = -105,         // Нет вагон стоит не натом пути по которому нужно провести операцию.
+    //    //not_way_on = -106,              // Неуказан путь приема
+    //}
 
     public class IDS_WIR : IDS_Base
     {
@@ -501,7 +499,7 @@ namespace IDS
                     parent_id = parent_id
 
                 };
-                new_wir.SetStationWagon(id_station, id_way, date_start, position, null, user);
+                new_wir.SetStationWagon_old(id_station, id_way, date_start, position, null, user);
                 new_wir.SetOpenOperation(1, date_start, (int)vag_doc.id_condition, vag_doc.vesg > 0 ? 1 : 0, null, null, null, user).SetCloseOperation(date_start, null, user);
                 context.Insert(new_wir); // Обновим контекст
                 return 1;
@@ -611,13 +609,12 @@ namespace IDS
         {
             try
             {
-
-                if (wagon == null) return (int)errors_wir.not_arrival_wir;
+                if (wagon == null) return (int)errors_base.not_wir_db;
                 // Получим текущее положение вагона
                 WagonInternalMovement wim = wagon.GetLastMovement();
-                if (wim == null) return (int)errors_wir.not_open_wir;
-                if (wim.id_way != id_way_from) return (int)errors_wir.not_set_way_wir;
-                wagon.SetStationWagon(wim.id_station, id_way_on, lead_time, position_on, null, user);
+                if (wim == null) return (int)errors_base.not_wim_db;
+                if (wim.id_way != id_way_from) return (int)errors_base.wagon_not_way;
+                wagon.SetStationWagon_old(wim.id_station, id_way_on, lead_time, position_on, null, user);
                 // Установим и закроем операцию дислокация -3              
                 wagon.SetOpenOperation(3, lead_time.AddMinutes(-10), null, null, null, null, null, user).SetCloseOperation(lead_time, null, user);
                 //context.Update(wagon); // Обновим контекст
@@ -677,7 +674,7 @@ namespace IDS
                 }
                 else
                 {
-                    rt.SetResult((int)errors_wir.cancel_save_changes);
+                    rt.SetResult((int)errors_base.cancel_save_changes);
                 }
                 return rt;
 
@@ -768,15 +765,15 @@ namespace IDS
         {
             try
             {
-                if (wagon == null) return (int)errors_wir.not_arrival_wir;  // Нет перечня вагонов
+                if (wagon == null) return (int)errors_base.not_open_wir;  // Нет перечня вагонов
                 Directory_Ways way = context.Directory_Ways.Where(w => w.id == id_way_on).FirstOrDefault();
-                if (way == null) return (int)errors_wir.not_way_on;         // Неуказан путь приема
+                if (way == null) return (int)errors_base.not_dir_way_of_db;         // Неуказан путь приема
                 int id_station_on = way.id_station;
                 // Получим текущее положение вагона
                 WagonInternalMovement wim = wagon.GetLastMovement();
-                if (wim == null) return (int)errors_wir.not_open_wir;       //  Нет открытой записи положения вагона. (Если вагон защел тогда вагон всегда должен гдето стоять!)
-                if (wim.id_way != id_way_from) return (int)errors_wir.not_set_way_wir; // Нет вагон стоит не натом пути по которому нужно провести операцию.
-                wagon.SetStationWagon(id_station_on, id_way_on, date_stop, position_on, null, user);
+                if (wim == null) return (int)errors_base.not_open_wir;       //  Нет открытой записи положения вагона. (Если вагон защел тогда вагон всегда должен гдето стоять!)
+                if (wim.id_way != id_way_from) return (int)errors_base.wagon_not_way; // Нет вагон стоит не натом пути по которому нужно провести операцию.
+                wagon.SetStationWagon_old(id_station_on, id_way_on, date_stop, position_on, null, user);
                 // Установим и закроем операцию роспуск -4              
                 wagon.SetOpenOperation(4, date_start, null, null, null, null, null, user).SetCloseOperation(date_stop, null, user);
                 //context.Update(wagon); // Обновим контекст
@@ -900,7 +897,7 @@ namespace IDS
                     // Проверим на ошибки
                     if (lrt.result < 0)
                     {
-                        lrt.SetResult((int)errors_wir.cancel_save_changes);
+                        lrt.SetResult((int)errors_base.cancel_save_changes);
                         break;
                     }
                     // добавим результат
@@ -941,15 +938,30 @@ namespace IDS
         #endregion
 
         #region  Операция "Отправка"
+        //TODO: ! Удалить старая операция отправки
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_way_from"></param>
+        /// <param name="id_outer_ways"></param>
+        /// <param name="position_on"></param>
+        /// <param name="num_sostav"></param>
+        /// <param name="lead_time"></param>
+        /// <param name="wagon"></param>
+        /// <param name="locomotive1"></param>
+        /// <param name="locomotive2"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public int SendingWagon(ref EFDbContext context, int id_way_from, int id_outer_ways, int position_on, int num_sostav, DateTime lead_time, WagonInternalRoutes wagon, string locomotive1, string locomotive2, string user)
         {
             try
             {
-                if (wagon == null) return (int)errors_wir.not_arrival_wir;
+                if (wagon == null) return (int)errors_base.not_open_wir;
                 // Получим текущее положение вагона
                 WagonInternalMovement wim = wagon.GetLastMovement();
-                if (wim == null) return (int)errors_wir.not_open_wir;
-                if (wim.id_way != id_way_from) return (int)errors_wir.not_set_way_wir;
+                if (wim == null) return (int)errors_base.not_open_wir;
+                if (wim.id_way != id_way_from) return (int)errors_base.wagon_not_way;
                 // Проверим вагон уже стоит ?
                 if (wim.id_outer_way == id_outer_ways && wim.position == position_on) return 0; // Вагон отправлен пропустить операцию
                 // Вагон не стоит, переставим.
@@ -967,6 +979,7 @@ namespace IDS
                 return -1;// Возвращаем id=-1 , Ошибка
             }
         }
+        //TODO: ! Удалить старая операция отправки
         /// <summary>
         /// Отправка вагонов на станцию АМКР
         /// </summary>
@@ -1019,7 +1032,7 @@ namespace IDS
                 }
                 else
                 {
-                    rt.SetResult((int)errors_wir.cancel_save_changes);
+                    rt.SetResult((int)errors_base.cancel_save_changes);
                 }
                 return rt;
 
@@ -1028,10 +1041,11 @@ namespace IDS
             {
                 e.ExceptionMethodLog(String.Format("DislocationWagons(context={0}, id_way_from={1}, id_outer_ways={2}, num_sostav={3}, lead_time={4}, wagons={5}, locomotive1={6}, locomotive2={7}, user={8})",
                     context, id_way_from, id_outer_ways, num_sostav, lead_time, wagons, locomotive1, locomotive2, user), servece_owner, eventID);
-                rt.SetResult((int)errors_wir.global);
+                rt.SetResult((int)errors_base.global);
                 return rt;// Возвращаем id=-1 , Ошибка
             }
         }
+        //TODO: ! Удалить старая операция отправки
         /// <summary>
         /// Операция отправки вагонов на станцию АМКР
         /// </summary>
@@ -1121,7 +1135,7 @@ namespace IDS
                 {
                     user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
                 }
-                if (wagon == null) return (int)errors_wir.not_arrival_wir;
+                if (wagon == null) return (int)errors_base.not_wir_db; // В базе данных нет записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
                 // Получим текущее положение вагона
                 WagonInternalMovement wim = wagon.GetLastMovement();
                 if (wim == null) return (int)errors_base.not_open_wir;                  // В базе данных нет открытой записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
@@ -1223,7 +1237,7 @@ namespace IDS
                 }
                 else
                 {
-                    rt.SetResult((int)errors_wir.cancel_save_changes);
+                    rt.SetResult((int)errors_base.cancel_save_changes);
                 }
                 return rt;
             }
@@ -1231,7 +1245,7 @@ namespace IDS
             {
                 e.ExceptionMethodLog(String.Format("SendWagonsOfStation(id_way_from={0}, id_outer_ways={1}, lead_time={2}, List_wir={3}, num_sostav={4}, locomotive1={5}, locomotive2={6}, user={7})",
                     id_way_from, id_outer_ways, lead_time, wagons, num_sostav, locomotive1, locomotive2, user), servece_owner, eventID);
-                rt.SetResult((int)errors_wir.global);
+                rt.SetResult((int)errors_base.global);
                 return rt;// Возвращаем id=-1 , Ошибка
             }
         }
@@ -1293,6 +1307,7 @@ namespace IDS
         #endregion
 
         #region  Операция "Принять вагон"
+        //TODO: ! Удалить старая операция приема
         /// <summary>
         /// Принять вагон на станцию
         /// </summary>
@@ -1306,24 +1321,24 @@ namespace IDS
         /// <param name="locomotive2"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public int ArrivalWagon(ref EFDbContext context, int id_outer_way, int id_way_on, int position_on, DateTime lead_time, WagonInternalRoutes wagon, string locomotive1, string locomotive2, string user)
+        public int ArrivalWagon_old(ref EFDbContext context, int id_outer_way, int id_way_on, int position_on, DateTime lead_time, WagonInternalRoutes wagon, string locomotive1, string locomotive2, string user)
         {
             try
             {
-                if (wagon == null) return (int)errors_wir.not_arrival_wir;
+                if (wagon == null) return (int)errors_base.not_open_wir;
                 // Определим станцию и путь приема
                 Directory_Ways way = context.Directory_Ways.Where(w => w.id == id_way_on).FirstOrDefault();
-                if (way == null) return (int)errors_wir.not_way_on;         // Неуказан путь приема
+                if (way == null) return (int)errors_base.not_dir_way_of_db;         // Неуказан путь приема
                 int id_station_on = way.id_station;
                 // Получим текущее положение вагона
                 WagonInternalMovement wim = wagon.GetLastMovement();
-                if (wim == null) return (int)errors_wir.not_open_wir;
-                if (wim.id_outer_way != id_outer_way) return (int)errors_wir.not_set_way_wir;
+                if (wim == null) return (int)errors_base.not_open_wir;
+                if (wim.id_outer_way != id_outer_way) return (int)errors_base.wagon_not_outerway;
                 // Проверим вагон уже стоит ?
                 if (wim.id_way == id_way_on && wim.position == position_on) return 0; // Вагон принят пропустить операцию
                 // Вагон не принят, принять.
                 string note_sostav = wim.note + "- принят";
-                wagon.SetStationWagon(id_station_on, id_way_on, lead_time, position_on, note_sostav, user);
+                wagon.SetStationWagon_old(id_station_on, id_way_on, lead_time, position_on, note_sostav, user);
                 // Установим и закроем операцию отправления -5              
                 wagon.SetOpenOperation(6, lead_time.AddMinutes(-10), null, null, locomotive1, locomotive2, note_sostav, user).SetCloseOperation(lead_time, null, user);
                 //context.Update(wagon); // Обновим контекст
@@ -1336,6 +1351,7 @@ namespace IDS
                 return -1;// Возвращаем id=-1 , Ошибка
             }
         }
+        //TODO: ! Удалить старая операция приема        
         /// <summary>
         /// Приемка вагонов на АМКР
         /// </summary>
@@ -1373,7 +1389,7 @@ namespace IDS
 
                     foreach (WagonInternalRoutes wagon in wagon_position)
                     {
-                        int result = ArrivalWagon(ref context, id_outer_way, id_way_on, position, lead_time, wagon, locomotive1, locomotive2, user);
+                        int result = ArrivalWagon_old(ref context, id_outer_way, id_way_on, position, lead_time, wagon, locomotive1, locomotive2, user);
                         rt.SetMovedResult(result, wagon.num);
                         position++;
                     }
@@ -1384,7 +1400,7 @@ namespace IDS
                 }
                 else
                 {
-                    rt.SetResult((int)errors_wir.cancel_save_changes);
+                    rt.SetResult((int)errors_base.cancel_save_changes);
                 }
                 return rt;
 
@@ -1393,10 +1409,11 @@ namespace IDS
             {
                 e.ExceptionMethodLog(String.Format("ArrivalWagons(context={0},id_outer_ways ={1}, reverse={2}, id_way_on={3}, side_on={4}, lead_time={5}, wagons={6}, locomotive1={7}, locomotive2={8}, user={9})",
                     context, id_outer_way, reverse, id_way_on, side_on, lead_time, wagons, locomotive1, locomotive2, user), servece_owner, eventID);
-                rt.SetResult((int)errors_wir.global);
+                rt.SetResult((int)errors_base.global);
                 return rt;// Возвращаем id=-1 , Ошибка
             }
         }
+        //TODO: ! Удалить старая операция приема        
         /// <summary>
         /// Операция принять вагон на станцию АМКР
         /// </summary>
@@ -1457,6 +1474,138 @@ namespace IDS
                 return -1;// Возвращаем id=-1 , Ошибка
             }
         }
+
+        /// <summary>
+        /// Принять прибывающий вагон состава с внешнего пути
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_outer_way"></param>
+        /// <param name="id_way_on"></param>
+        /// <param name="position_on"></param>
+        /// <param name="lead_time"></param>
+        /// <param name="wagon"></param>
+        /// <param name="locomotive1"></param>
+        /// <param name="locomotive2"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int ArrivalWagon(ref EFDbContext context, int id_outer_way, int id_way_on, int position_on, DateTime lead_time, WagonInternalRoutes wagon, string locomotive1, string locomotive2, string user)
+        {
+            try
+            {
+                if (wagon == null) return (int)errors_base.not_wir_db; // В базе данных нет записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
+                // Определим станцию и путь приема
+                Directory_Ways way = context.Directory_Ways.Where(w => w.id == id_way_on).FirstOrDefault();
+                if (way == null) return (int)errors_base.not_dir_way_of_db;         // В базе данных нет записи указанной строки пути
+                if (way.way_delete != null) return (int)errors_base.way_is_delete;  // Путь удален
+                if (way.way_close != null) return (int)errors_base.way_is_close;    // Путь закрыт
+                int id_station_on = way.id_station;
+                // Получим текущее положение вагона
+                WagonInternalMovement wim = wagon.GetLastMovement();
+                if (wim == null) return (int)errors_base.not_open_wir;                  // В базе данных нет открытой записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
+                if (wim.id_outer_way != id_outer_way) return (int)errors_base.wagon_not_outerway; // вагон  не стоит на указаном перегоне
+                // Проверим вагон уже стоит ?
+                if (wim.id_way == id_way_on && wim.position == position_on) return 0; // Вагон уже принят пропустить операцию
+                // Вагон не принят, принять.
+                string note_sostav = "Состав:" + wim.num_sostav + "- принят";
+
+                // Установим и закроем операцию принять -6              
+                WagonInternalOperation new_operation = wagon.SetOpenOperation(6, lead_time.AddMinutes(-10), null, null, locomotive1, locomotive2, note_sostav, user).SetCloseOperation(lead_time, null, user);
+                if (new_operation == null) return (int)errors_base.err_create_wio_db;   // Ошибка создания новой операции над вагоном.
+
+                // Установим и вагон на путь станции
+                WagonInternalMovement new_movement = wagon.SetStationWagon(id_station_on, id_way_on, lead_time, position_on, null, user);
+
+                if (new_movement == null) return (int)errors_base.err_create_wim_db;   // Ошибка создания новой позиции вагона.
+                // Зададим сылку на операцию
+                new_movement.WagonInternalOperation = new_operation;
+                //context.Update(wagon); // Обновим контекст
+                return 1;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("ArrivalWagon(context={0}, id_outer_ways={1}, id_way_on={2}, position_on={3}, lead_time={4}, wagon={5}, locomotive1={6}, locomotive2={7}, user={8})",
+                    context, id_outer_way, id_way_on, position_on, lead_time, wagon, locomotive1, locomotive2, user), servece_owner, eventID);
+                return (int)errors_base.global;// Возвращаем id=-1 , Ошибка
+            }
+        }
+        /// <summary>
+        /// Принять прибывающий состав с внешнего пути
+        /// </summary>
+        /// <param name="id_outer_way"></param>
+        /// <param name="wagons"></param>
+        /// <param name="id_way_on"></param>
+        /// <param name="head"></param>
+        /// <param name="lead_time"></param>
+        /// <param name="locomotive1"></param>
+        /// <param name="locomotive2"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public ResultTransfer ArrivalWagonsOfStation(int id_outer_way, List<ListOperationWagon> wagons, int id_way_on, bool head, DateTime lead_time, string locomotive1, string locomotive2, string user)
+        {
+            DateTime start = DateTime.Now;
+            ResultTransfer rt = new ResultTransfer(wagons.Count());
+            try
+            {
+                EFDbContext context = new EFDbContext();
+                //Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                List<WagonInternalRoutesPosition> List_wir = new List<WagonInternalRoutesPosition>();
+                // Пройдемся по вагонам отсортировав их по позиции
+                foreach (ListOperationWagon sw in wagons.OrderBy(w => w.position).ToList())
+                {
+                    List_wir.Add(new WagonInternalRoutesPosition() { wir = context.WagonInternalRoutes.Where(r => r.id == sw.wir_id).FirstOrDefault(), new_position = sw.position });
+                }
+
+                if (List_wir != null && List_wir.Count() > 0)
+                {
+                    // Выполним сортировку позиций по возрастанию
+                    List<WagonInternalRoutes> wagon_position = List_wir.OrderBy(w => w.new_position).Select(w => w.wir).ToList();
+                    
+                    //Подготовим путь приема(перестроим позиции)
+                    int res_renum = RenumberingWagons(ref context, id_way_on, (head == true ? (wagons.Count() + 1) : 1));
+                    // Определим позицию переноса вагонов
+                    int position = head == true ? 1 : context.GetNextPosition(id_way_on);
+
+                    foreach (WagonInternalRoutes wagon in wagon_position)
+                    {
+                        int result = ArrivalWagon(ref context, id_outer_way, id_way_on, position, lead_time, wagon, locomotive1, locomotive2, user);
+                        rt.SetMovedResult(result, wagon.num);
+                        position++;
+                    }
+                }
+                // 
+                if (rt.error == 0)
+                {
+                    rt.SetResult(context.SaveChanges());
+                    // Если операция успешна, перенумеруем позиции на пути с которого ушли вагоны
+                    if (rt.result > 0)
+                    {
+                        string mess = String.Format("Операция принять состав на станцию АМКР. Код выполнения = {0}. внешний путь = {1}, путь приема = {2}, голова = {3}, время выполнения операции = {4}, локомотив-1 = {5}, локомотив-2 = {6}. Результат переноса [выбрано для переноса = {7}, перенесено = {8}, пропущено = {9}, ошибок переноса = {10}].",
+                            rt.result, id_outer_way, id_way_on, head, lead_time, locomotive1, locomotive2, rt.count, rt.moved, rt.skip, rt.error);
+                        mess.WarningLog(servece_owner, eventID);
+                        mess.EventLog(rt.result < 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
+                        DateTime stop = DateTime.Now;
+                        servece_owner.ServicesToLog(eventID, String.Format("Операция принять состав на станцию АМКР."), start, stop, rt.result);
+                    }
+                }
+                else
+                {
+                    rt.SetResult((int)errors_base.cancel_save_changes);
+                }
+                return rt;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("ArrivalWagonsOfStation(id_outer_way={0}, wagons={1}, id_way_on={2}, head={3}, lead_time={4}, locomotive1={5}, locomotive2={6}, user={7})",
+                    id_outer_way, wagons, id_way_on, head, lead_time, locomotive1, locomotive2, user), servece_owner, eventID);
+                rt.SetResult((int)errors_base.global);
+                return rt;// Возвращаем id=-1 , Ошибка
+            }
+        }
+
         #endregion
 
         #region Операция "Применить состояние парка"
@@ -1480,14 +1629,14 @@ namespace IDS
                 {
                     user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
                 }
-                if (wagon == null) return (int)errors_wir.not_arrival_wir;
+                if (wagon == null) return (int)errors_base.not_open_wir;
                 // Получим текущее положение вагона
                 WagonInternalMovement wim = wagon.GetLastMovement();
-                if (wim == null) return (int)errors_wir.not_open_wir;
+                if (wim == null) return (int)errors_base.not_open_wir;
                 // Проверим вагон уже стоит ?
                 if (wim.id_station == id_station && wim.id_way == id_way && wim.position == position) return 0; // Вагон стоит на станции на пути и в позиции, пропустить операцию
                 string note = "Перенесён по состоянию парка";
-                wagon.SetStationWagon(id_station, id_way, lead_time, position, note, user);
+                wagon.SetStationWagon_old(id_station, id_way, lead_time, position, note, user);
                 // Установим и закроем операцию ручная расстановка -3              
                 wagon.SetOpenOperation(8, lead_time.AddMinutes(-10), null, null, null, null, null, user).SetCloseOperation(lead_time, null, user);
                 //context.Update(wagon); // Обновим контекст
@@ -1497,7 +1646,7 @@ namespace IDS
             {
                 e.ExceptionMethodLog(String.Format("ApplyWagonParkState(context={0}, id_station={1}, id_way={2}, position={3}, lead_time={4}, wagon={5}, user={6})",
                     context, id_station, id_way, position, lead_time, wagon, user), servece_owner, eventID);
-                return (int)errors_wir.global;// Возвращаем id=-1 , Ошибка
+                return (int)errors_base.global;// Возвращаем id=-1 , Ошибка
             }
         }
         /// <summary>
@@ -1541,7 +1690,7 @@ namespace IDS
                         }
                         else
                         {
-                            rt.SetMovedResult((int)errors_wir.not_arrival_wir, wagon.num); // вагон не заходил на АМКР
+                            rt.SetMovedResult((int)errors_base.not_open_wir, wagon.num); // вагон не заходил на АМКР
                         }
                     }
                     // Расставить вагоны на путь до выяснения
@@ -1557,7 +1706,7 @@ namespace IDS
                 else
                 {
                     // 
-                    rt.SetResult((int)errors_wir.not_input_value);
+                    rt.SetResult((int)errors_base.not_input_value);
                 }
                 // Проверка на ошибки и сохранение результата
                 if (rt.error == 0)
@@ -1566,7 +1715,7 @@ namespace IDS
                 }
                 else
                 {
-                    rt.SetResult((int)errors_wir.cancel_save_changes);
+                    rt.SetResult((int)errors_base.cancel_save_changes);
                 }
                 return rt;
             }
@@ -1574,7 +1723,7 @@ namespace IDS
             {
                 e.ExceptionMethodLog(String.Format("ApplyWagonsParkState(context={0}, id_station={1}, wagons_ps={2}, lead_time={3}, user={4})",
                     context, id_station, wagons_ps, lead_time, user), servece_owner, eventID);
-                rt.SetResult((int)errors_wir.global);
+                rt.SetResult((int)errors_base.global);
                 return rt;// Возвращаем id=-1 , Ошибка
             }
         }
@@ -1646,7 +1795,7 @@ namespace IDS
             {
                 e.ExceptionMethodLog(String.Format("OperationApplyWagonsParkState(id_station={0}, wagons_ps={1}, lead_time={2}, user={3})",
                     id_station, wagons_ps, lead_time, user), servece_owner, eventID);
-                res.SetResult((int)errors_wir.global);
+                res.SetResult((int)errors_base.global);
                 return res;
             }
         }
@@ -1683,7 +1832,7 @@ namespace IDS
                 if (wio == null) return (int)errors_base.not_wio_db;
                 if (wio.id_operation == 9) return (int)errors_base.wagon_lock_operation; // Операция предявлен (заблокирована)
                 string note = "Перенесен для предъявления";
-                wagon.SetStationWagon(id_station, id_way_on, lead_time, position, note, user);
+                wagon.SetStationWagon_old(id_station, id_way_on, lead_time, position, note, user);
                 // Установим и закроем операцию ручная расстановка -3              
                 wagon.SetOpenOperation(8, lead_time.AddMinutes(-1), null, null, null, null, null, user).SetCloseOperation(lead_time, null, user);
                 //context.Update(wagon); // Обновим контекст
@@ -1693,7 +1842,7 @@ namespace IDS
             {
                 e.ExceptionMethodLog(String.Format("OperationTransferProvideWagon(context={0}, id_station={1}, id_way_on={2}, position={3}, lead_time={4}, wagon={5}, user={6})",
                     context, id_station, id_way_on, position, lead_time, wagon, user), servece_owner, eventID);
-                return (int)errors_wir.global;// Возвращаем id=-1 , Ошибка
+                return (int)errors_base.global;// Возвращаем id=-1 , Ошибка
             }
         }
         /// <summary>
@@ -1759,7 +1908,7 @@ namespace IDS
                             }
                             else
                             {
-                                res.SetResult((int)errors_wir.cancel_save_changes);
+                                res.SetResult((int)errors_base.cancel_save_changes);
                             }
 
                         }

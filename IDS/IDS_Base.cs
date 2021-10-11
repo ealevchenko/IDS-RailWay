@@ -30,7 +30,8 @@ namespace IDS
         // таблица wim -300...
         not_wim_db = -301,                          // В базе данных нет записи по WagonInternalMovement (Внутренняя дислокация вагонов)
         wagon_not_way = -302,                       // Вагон не стоит на пути
-        err_create_wim_db = -303,                   // Ошибка создания новой позиции вагона.
+        wagon_not_outerway = -303,                  // Вагон не стоит на перегоне
+        err_create_wim_db = -304,                   // Ошибка создания новой позиции вагона.
 
         // таблица wio -400...
         not_wio_db = -401,                          // В базе данных нет записи по WagonInternalOperation (Внутренняя операция по вагону)
@@ -90,6 +91,8 @@ namespace IDS
         not_dir_park_station_of_db = -1102,                 // В базе данных нет записи указанного парка по указаной станции
         way_not_crossing_uz = -1103,                        // Путь неимеет выход на УЗ
         way_is_not_null = -1104,                            // На пути стоят вагоны
+        way_is_close = -1105,                               // Путь закрыт
+        way_is_delete = -1106,                              // Путь удален и неиспользуется
 
         // Directory_ParkWays -1200..
         not_dir_park_of_db = -1201,                         // В базе данных нет указаного парка
@@ -100,7 +103,8 @@ namespace IDS
         // Directory_Wagons -1400..
         not_dir_wagon_of_db = -1401,                        // В базе данных нет записи указанной строки вагона
 
-
+        // Directory_OuterWays -1500..
+        not_dir_outerways_of_db = -1501,                    // В базе данных нет записи указаного перегона
 
 
     }

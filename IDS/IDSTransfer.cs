@@ -1112,12 +1112,12 @@ namespace IDS
                     }
                     else
                     {
-                        res.SetResult((int)errors_wir.not_wagon);
+                        res.SetResult((int)errors_base.not_arrival_cars_db);
                     }
                 }
                 else
                 {
-                    res.SetResult((int)errors_wir.not_sostav);
+                    res.SetResult((int)errors_base.not_arrival_sostav_db);
                 }
 
                 string mess = String.Format("Операция переноса прибывшего с УЗ состава на станцию АМКР. Код выполнения = {0}. Состав [id = {1}, Индекс поезда = {2}, прибыл = {3}, станция отправитель = {4}, станция прибытия = {5}, количество вагонов = {6}]. Результат переноса [выбрано для переноса = {7}, перенесено = {8}, пропущено = {9}, ошибок переноса = {10}].",
