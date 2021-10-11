@@ -446,6 +446,21 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string user { get; set; }
     }
     #endregion
+
+    #region ОПЕРАЦИЯ ПРИНЯТЬ (Обновленный АРМ)
+    public class OperationArrivalWagons
+    {
+        public int id_outer_way { get; set; }
+        public List<ListOperationWagon> wagons { get; set; }
+        public int id_way_on { get; set; }
+        public bool head { get; set; }
+        public DateTime lead_time { get; set; }
+        public string locomotive1 { get; set; }
+        public string locomotive2 { get; set; }
+        public string user { get; set; }
+    }
+    #endregion
+
     ///TODO: УДАЛИТЬ СТАРОЕ ДЕТАЛЬНО ВАГОНЫ
     public class view_wagon_outer_way
     {
@@ -774,8 +789,8 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string locomotive2 { get; set; }
         public string user { get; set; }
     }
-
-    public class OperationArrivalWagons
+    ///TODO: УДАЛИТЬ СТАРАЯ ОПЕРАЦИЯ ПРИНЯТЬ
+    public class OperationArrivalWagons_old
     {
         public int id_outer_way { get; set; }
         public bool reverse { get; set; }
@@ -1380,6 +1395,27 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             }
         }
         #endregion
+
+        #region ОПЕРАЦИЯ ПРИНЯТЬ (Обновленный АРМ)
+        // POST api/ids/rwt/wsd/operation/arrival
+        [HttpPost]
+        [Route("operation/arrival")]
+        [ResponseType(typeof(ResultTransfer))]
+        public IHttpActionResult PostArrivalWagonsOfStationAMKR([FromBody] OperationArrivalWagons value)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                ResultTransfer result = ids_wir.ArrivalWagonsOfStation(value.id_outer_way, value.wagons, value.id_way_on, value.head, value.lead_time, value.locomotive1, value.locomotive2, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        #endregion
+
         ///TODO: УДАЛИТЬ СТАРОЕ ВАГОНЫ на внешнем пути
         // GET: api/ids/rwt/wsd/view/vagons/outer_way/id/12
         [Route("view/vagons/outer_way/id/{id_outer_way:int}")]
@@ -1504,11 +1540,11 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             }
         }
 
-        // POST api/ids/rwt/wsd/operation/arrival
+        //TODO: Убрать старая операция // POST api/ids/rwt/wsd/operation/arrival_old
         [HttpPost]
-        [Route("operation/arrival")]
+        [Route("operation/arrival_old")]
         [ResponseType(typeof(int))]
-        public IHttpActionResult PostArrivalWagonsOfStation([FromBody] OperationArrivalWagons value)
+        public IHttpActionResult PostArrivalWagonsOfStation([FromBody] OperationArrivalWagons_old value)
         {
             try
             {

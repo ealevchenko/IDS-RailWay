@@ -4067,7 +4067,7 @@ IDS_RWT.prototype.postSendingWagonsOfStation = function (operation_sending, call
 //Операция прибытия 
 IDS_RWT.prototype.postArrivalWagonsOfStation = function (operation_arrival, callback) {
     $.ajax({
-        url: '../../api/ids/rwt/wsd/operation/arrival/',
+        url: '../../api/ids/rwt/wsd/operation/arrival_old/',
         type: 'POST',
         data: JSON.stringify(operation_arrival),
         contentType: "application/json;charset=utf-8",

@@ -178,6 +178,31 @@
             },
         });
     };
+     //АРМ, Операция принять вагоны на внутреную станцию АМКР 
+    ids_wsd.prototype.postArrivalWagonsOfStation = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/operation/arrival/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postArrivalWagonsOfStation", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     //================= Операции =========================================================
     // Отчеты -> Операции "Отправка на станции АМКР"
     ids_wsd.prototype.getSostavWagonsOperationOfSend = function (start, stop, callback) {
