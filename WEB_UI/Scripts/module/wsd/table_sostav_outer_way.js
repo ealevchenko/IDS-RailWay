@@ -88,6 +88,51 @@
         },
         'en':  //default language: English
         {
+            'field_outer_way_num_sostav': 'Train #',
+            'field_id_outer_way': 'field id',
+            'field_name_outer_way': 'Ferry',
+            'field_outer_way_close': 'Recur. closed ',
+            'field_outer_way_delete': 'Overwrite. deleted ',
+            'field_from_operation_locomotive1': 'Local # 1',
+            'field_from_operation_locomotive2': 'Local # 2',
+            'field_from_operation_start': 'Start. opera. send. ',
+            'field_from_operation_end': 'End. opera. send. ',
+            'field_from_operation_create': 'Opera. send created ',
+            'field_from_operation_create_user': 'Issue. opera. sent. ',
+            'field_from_id_station': 'id st. send. ',
+            'field_from_station_name': 'Station of departure',
+            'field_from_station_abbr': 'Art. send (abbr.) ',
+            'field_from_id_way': 'id send path',
+            'field_from_id_park': 'sent park id',
+            'field_from_way_name': 'Submission path',
+            'field_from_way_abbr': 'Send path (abbr.) ',
+            'field_from_way_capacity': 'Send path (together) ',
+            'field_from_way_close': 'Send path closed ',
+            'field_from_way_delete': 'Send path deleted ',
+            'field_count_wagons_send': 'Send wagons vag. ',
+            'field_on_operation_locomotive1': 'Local # 1',
+            'field_on_operation_locomotive2': 'Local # 2',
+            'field_on_operation_start': 'Start. opera. arr. ',
+            'field_on_operation_end': 'End. opera. arr. ',
+            'field_on_operation_create': 'Opera. approx. created ',
+            'field_on_operation_create_user': 'Issue. opera. arr. ',
+            'field_on_id_station': 'id st. arr. ',
+            'field_on_station_name': 'Arrival station',
+            'field_on_station_abbr': 'Art. approx. (abbr.) ',
+            'field_on_id_way': 'id arriv path',
+            'field_on_id_park': 'park id.',
+            'field_on_way_name': 'Arrival route',
+            'field_on_way_abbr': 'Arr. path (abbr.) ',
+            'field_on_way_capacity': 'Approach path. (together) ',
+            'field_on_way_close': 'Arrival path closed ',
+            'field_on_way_delete': 'Arrival path deleted ',
+            'field_count_wagons_arrival': 'Accepted. vag. ',
+
+            'mess_init_module': 'Initializing a module ...',
+            'mess_load_wagons': 'Loading wagons of the train ...',
+            'mess_load_sostav': 'Loading trains on the tracks ...',
+            'mess_view_wagons': 'loading information about wagons of the train ...',
+            'mess_view_sostav': 'loading information about trains on the stretch ...',
         }
     };
     // Определлим список текста для этого модуля
@@ -381,7 +426,7 @@
         {
             field: 'on_way_abbr',
             data: function (row, type, val, meta) {
-                return row['on_way_num_' + App.Lang] ?  row['on_way_num_' + App.Lang] + '-' + row['on_way_abbr_' + App.Lang] : null;
+                return row['on_way_num_' + App.Lang] ? row['on_way_num_' + App.Lang] + '-' + row['on_way_abbr_' + App.Lang] : null;
             },
             className: 'dt-body-left shorten mw-100',
             title: langView('field_on_way_abbr', App.Langs), width: "100px", orderable: true, searchable: true
@@ -731,6 +776,12 @@
             jQueryUI: false,
             "createdRow": function (row, data, index) {
                 $(row).attr('id', data.outer_way_num_sostav); // id строки дислокации вагона
+                if (data.count_wagons_arrival > 0 && data.count_wagons_send > data.count_wagons_arrival) {
+                    $(row).addClass('yellow');// Отметим состав частично принят
+                }
+                if (data.count_wagons_arrival > 0 && data.count_wagons_send === data.count_wagons_arrival) {
+                    $(row).addClass('green');// Отметим состав частично принят
+                }
             }.bind(this),
             columns: this.table_columns,
             dom: 'Bfrtip',
@@ -802,19 +853,26 @@
         //}
     };
     // Загрузить составы по прибывающие на станцию 
-    table_sostav_outer_way.prototype.load_ow_arr_sostav_of_station_on = function (id_station) {
+    table_sostav_outer_way.prototype.load_ow_arr_sostav_of_station_on = function (id_station, cb_load) {
         if (id_station !== null && id_station >= 0) {
-        LockScreen(langView('mess_load_sostav', App.Langs));
-        this.ids_wsd.getViewArrivalSostavOfStationOuterWay(id_station, function (sostav) {
-            this.sostav = sostav;
-            this.id_station_on = id_station;
-            this.view(this.sostav);
-            LockScreenOff();
-        }.bind(this));
+            LockScreen(langView('mess_load_sostav', App.Langs));
+            this.ids_wsd.getViewArrivalSostavOfStationOuterWay(id_station, function (sostav) {
+                this.sostav = sostav;
+                this.id_station_on = id_station;
+                this.view(this.sostav);
+                LockScreenOff();
+                if (typeof cb_load === 'function') {
+                    cb_load();
+                }
+            }.bind(this));
         } else {
             this.sostav = [];
             this.id_station_on = null;
-            this.view(this.sostav);           //
+            this.view(this.sostav);
+            if (typeof cb_load === 'function') {
+                cb_load();
+            }
+            //
         }
     };
     //-------------------------------------------------------------------------------------------
