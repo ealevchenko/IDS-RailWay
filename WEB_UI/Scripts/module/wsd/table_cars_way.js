@@ -1828,7 +1828,7 @@
                     if (data.outgoing_sostav_status === 2) {
                         $('td.fixed-column', row).addClass('green');// Отметим вагон сдан на УЗ
                     }
-                    if (data.outgoing_sostav_status === 1) {
+                    if (data.outgoing_sostav_status === 1 || data.outgoing_sostav_status === 0) {
                         $('td.fixed-column', row).addClass('yellow');// Отметим вагон предъявлен
                     }
                 }
