@@ -152,6 +152,31 @@
             },
         });
     };
+    // -- ОПЕРАЦИИ
+    // Пулучить список составаов отправленных за период
+    ids_wsd.prototype.getViewSostavOfPeriodOperationSend = function (start, stop, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wsd/view/vagons/operation/sostav/send/period/start/' + moment.utc(start).toISOString() + '/stop/' + moment.utc(stop).toISOString(),
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getViewSostavOfPeriodOperationSend", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
 
     //АРМ, Операция отправки вагонов на внутрение станции АМКР 
     ids_wsd.prototype.postSendWagonsOfStation = function (operation, callback) {

@@ -1289,6 +1289,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 return BadRequest(e.Message);
             }
         }
+
         /// <summary>
         /// ВСЕ Составы на падходах 
         /// </summary>
@@ -1302,26 +1303,6 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             {
                 string sql = "select * from [IDS].[get_view_sostav_of_all_outer_ways]() order by from_operation_end desc";
                 List<view_outer_way_sostav> list = db.Database.SqlQuery<view_outer_way_sostav>(sql).ToList();
-                return Ok(list);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-        /// <summary>
-        /// ВСЕ Вагоны на падходах 
-        /// </summary>
-        /// <returns></returns>
-        // GET: api/ids/rwt/wsd/view/vagons/outer_way
-        [Route("view/vagons/outer_way")]
-        [ResponseType(typeof(view_outer_way_wagons))]
-        public IHttpActionResult GetViewWagonsOfOuterWay()
-        {
-            try
-            {
-                string sql = "select * from [IDS].[get_view_wagons_of_all_outer_ways]() order by from_operation_end desc, id_outer_way, outer_way_num_sostav, outer_way_position";
-                List<view_outer_way_wagons> list = db.Database.SqlQuery<view_outer_way_wagons>(sql).ToList();
                 return Ok(list);
             }
             catch (Exception e)
@@ -1344,6 +1325,47 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 System.Data.SqlClient.SqlParameter id = new System.Data.SqlClient.SqlParameter("@id_station", id_station);
                 string sql = "select * from [IDS].[get_view_arrival_sostav_of_outer_ways](@id_station) order by from_operation_end desc";
                 List<view_outer_way_sostav> list = db.Database.SqlQuery<view_outer_way_sostav>(sql,id).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // GET: api/ids/rwt/wsd/view/vagons/operation/sostav/send/period/start/2021-09-01T00:00:00/stop/2021-10-31T23:59:59
+        [Route("view/vagons/operation/sostav/send/period/start/{start:datetime}/stop/{stop:datetime}")]
+        [ResponseType(typeof(view_outer_way_sostav))]
+        public IHttpActionResult GetViewSostavOfPeriodOperationSend(DateTime start, DateTime stop)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter d_start = new System.Data.SqlClient.SqlParameter("@start", start);
+                System.Data.SqlClient.SqlParameter d_stop = new System.Data.SqlClient.SqlParameter("@stop", stop);
+                string sql = "select * from [IDS].[get_view_sostav_of_period_operation_send](@start, @stop) order by from_operation_end desc";
+                List<view_outer_way_sostav> list = db.Database.SqlQuery<view_outer_way_sostav>(sql, d_start, d_stop).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+
+        /// <summary>
+        /// ВСЕ Вагоны на падходах 
+        /// </summary>
+        /// <returns></returns>
+        // GET: api/ids/rwt/wsd/view/vagons/outer_way
+        [Route("view/vagons/outer_way")]
+        [ResponseType(typeof(view_outer_way_wagons))]
+        public IHttpActionResult GetViewWagonsOfOuterWay()
+        {
+            try
+            {
+                string sql = "select * from [IDS].[get_view_wagons_of_all_outer_ways]() order by from_operation_end desc, id_outer_way, outer_way_num_sostav, outer_way_position";
+                List<view_outer_way_wagons> list = db.Database.SqlQuery<view_outer_way_wagons>(sql).ToList();
                 return Ok(list);
             }
             catch (Exception e)
