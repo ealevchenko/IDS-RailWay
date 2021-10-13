@@ -2016,6 +2016,7 @@
     <Content Include="Content\module\shared\modal_edit_form.css" />
     <Content Include="Content\module\directory\table_dir_way.css" />
     <Content Include="Content\module\table_tree_way.css" />
+    <Content Include="Content\module\wsd\view_history_operation_arrival.css" />
     <Content Include="Content\module\wsd\operation_send.css" />
     <Content Include="Content\module\wsd\table_cars_operation.css" />
     <Content Include="Content\module\wsd\table_sostav_outer_way.css" />
@@ -2096,7 +2097,7 @@
     <Content Include="Scripts\module\table_wir_detali.js" />
     <Content Include="Scripts\module\table_wir.js" />
     <Content Include="Scripts\module\table_arrival.js" />
-    <Content Include="Scripts\module\wsd\operation_arrival.js" />
+    <Content Include="Scripts\module\wsd\view_history_operation_arrival.js" />
     <Content Include="Scripts\module\wsd\operation_send.js" />
     <Content Include="Scripts\module\wsd\table_cars_operation.js" />
     <Content Include="Scripts\module\wsd\table_sostav_outer_way.js" />
