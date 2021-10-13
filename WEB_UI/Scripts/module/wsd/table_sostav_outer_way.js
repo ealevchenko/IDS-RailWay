@@ -82,7 +82,7 @@
 
             'mess_init_module': 'Инициализация модуля…',
             'mess_load_wagons': 'Загружаю вагоны состава…',
-            'mess_load_sostav': 'Загружаю составы на перегонах…',
+            'mess_load_sostav': 'Загружаю составы…',
             'mess_view_wagons': 'загрузка информации о вагонах состава…',
             'mess_view_sostav': 'загрузка информации о составах на перегоне…',
         },
@@ -144,6 +144,15 @@
 
     // Перечень полей
     var list_collums = [
+        {
+            field: 'details_control',
+            className: 'details-control  details-control-wagons-sostav',
+            orderable: false,
+            data: null,
+            defaultContent: '',
+            width: "30px",
+            searchable: false
+        },
         {
             field: 'outer_way_num_sostav',
             data: function (row, type, val, meta) {
@@ -668,6 +677,29 @@
 
         return init_columns(collums, list_collums);
     };
+    // инициализация полей отчета ow_arr_sosta
+    table_sostav_outer_way.prototype.init_columns_arrival_sostav_operation = function () {
+        var collums = [];
+        if (this.settings.detali_wagons) collums.push('details_control');
+        //collums.push('outer_way_num_sostav');
+        collums.push('name_outer_way');
+        collums.push('from_station_name');
+        collums.push('from_way_abbr');
+        collums.push('on_station_name');
+        // Отправл.
+        collums.push('count_wagons_send');
+        // Прибыл.
+        collums.push('count_wagons_arrival');
+        // Операция отправления
+        collums.push('from_operation_locomotive1');
+        collums.push('from_operation_locomotive2');
+        collums.push('from_operation_end');
+        collums.push('from_operation_create_user');
+        collums.push('on_operation_end');
+        collums.push('on_operation_create_user');
+        collums.push('on_operation_create');
+        return init_columns(collums, list_collums);
+    };
     //------------------------------- КНОПКИ ----------------------------------------------------
     // инициализация кнопок по умолчанию
     table_sostav_outer_way.prototype.init_button_detali = function () {
@@ -685,6 +717,14 @@
         buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
+    // инициализация кнопок отчет ow_arr_sostav
+    table_sostav_outer_way.prototype.init_button_arrival_sostav_operation = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
     //-------------------------------------------------------------------------------------------
     // Инициализация тип отчета
     table_sostav_outer_way.prototype.init_type_report = function () {
@@ -695,6 +735,14 @@
                 this.table_select = true;
                 this.table_columns = this.init_columns_arrival_outer_way();
                 this.table_buttons = this.init_button_arrival_outer_way();
+                break;
+            };
+            // Таблица вагоны на пути для отправки
+            case 'arrival-sostav-operation': {
+                this.type_select_rows = 1; // Выбирать одну
+                this.table_select = true;
+                this.table_columns = this.init_columns_arrival_sostav_operation();
+                this.table_buttons = this.init_button_arrival_sostav_operation();
                 break;
             };
             // Таблица вагоны на пути по умолчанию (если не выставят тип отчета)
@@ -714,6 +762,7 @@
         // Определим основные свойства
         this.settings = $.extend({
             alert: null,
+            detali_wagons: false,
             type_report: null,     // 
             link_num: false,
             ids_wsd: null,
@@ -721,6 +770,8 @@
             fn_select_sostav: null, // Функция обратного вызова возвращяет выбранный состав
         }, options);
         //
+        this.start = null;
+        this.stop = null;
         this.sostav = [];               // Список составов
         this.wagons = [];               // Список вагонов
 
@@ -750,7 +801,7 @@
         this.$table_cars = table_cars.$element;
         this.$cars_way.addClass('table-report-operation').append(this.$table_cars);
         // Инициализируем таблицу
-        this.obj_t_cars = this.$table_cars.DataTable({
+        this.obj_t_sostav = this.$table_cars.DataTable({
             "lengthMenu": [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('title_all', App.Langs)]],
             "pageLength": 10,
             "deferRender": true,
@@ -791,19 +842,19 @@
         // Обработка события выбора
         switch (this.settings.type_report) {
             case 'arrival-sostav-outer-way': {
-                this.obj_t_cars.on('user-select', function (e, dt, type, cell, originalEvent) {
+                this.obj_t_sostav.on('user-select', function (e, dt, type, cell, originalEvent) {
                     this.out_clear();
                     var indexes = cell && cell.length > 0 ? cell[0][0].row : null;
-                    var row = this.obj_t_cars.rows(indexes).data().toArray();
+                    var row = this.obj_t_sostav.rows(indexes).data().toArray();
                     //if (row && row.length > 0 && row[0].outgoing_sostav_status && row[0].outgoing_sostav_status > 0) {
                     //    e.preventDefault();
                     //    this.out_warning('Вагон № ' + row[0].num + ' для операций заблокирован (вагон пренадлежит составу который имеет статус - ' + row[0].outgoing_sostav_status + ')');
                     //}
                 }.bind(this)).on('select deselect', function (e, dt, type, indexes) {
-                    var index = this.obj_t_cars.rows({ selected: true });
-                    var rows = this.obj_t_cars.rows(index && index.length > 0 ? index[0] : null).data().toArray();
+                    var index = this.obj_t_sostav.rows({ selected: true });
+                    var rows = this.obj_t_sostav.rows(index && index.length > 0 ? index[0] : null).data().toArray();
                     this.select_rows_sostav = rows;
-                    //this.obj_t_cars.button(4).enable(index && index.length > 0 && index[0].length > 0); // отображение кнопки добавить
+                    //this.obj_t_sostav.button(4).enable(index && index.length > 0 && index[0].length > 0); // отображение кнопки добавить
                     if (typeof this.settings.fn_select_sostav === 'function') {
                         this.settings.fn_select_sostav(rows);
                     }
@@ -822,35 +873,27 @@
     table_sostav_outer_way.prototype.view = function (data) {
         this.out_clear();
         LockScreen(langView('mess_view_sostav', App.Langs));
-        this.obj_t_cars.clear();
-        this.obj_t_cars.rows.add(data);
-        //this.obj_t_cars.order([0, 'asc']);
-        this.obj_t_cars.draw();
+        this.obj_t_sostav.clear();
+        this.obj_t_sostav.rows.add(data);
+        this.obj_t_sostav.order([this.settings.detali_wagons ? 1 : 0, 'asc']);
+        this.obj_t_sostav.draw();
         //this.enable_button(); // отображение кнопки добавить
         LockScreenOff();
     };
     // Выбрать состав
     table_sostav_outer_way.prototype.select_sostav = function (num) {
         if (num !== null) {
-            this.obj_t_cars.row('#' + num).select();
+            this.obj_t_sostav.row('#' + num).select();
         }
     }
     // Загрузить составы по прибытию
     table_sostav_outer_way.prototype.load_ow_arr_sostav = function () {
-        //if (id_way !== null && id_way >= 0) {
         LockScreen(langView('mess_load_sostav', App.Langs));
         this.ids_wsd.getViewSostavOfOuterWay(function (sostav) {
             this.sostav = sostav;
             this.view(this.sostav);
             LockScreenOff();
         }.bind(this));
-        //} else {
-        //    this.wagons = [];
-        //    this.id_way = null;
-        //    this.select_row_wagons = null;
-        //    this.select_rows_sostav = null;
-        //    this.view(this.wagons, num);           //
-        //}
     };
     // Загрузить составы по прибывающие на станцию 
     table_sostav_outer_way.prototype.load_ow_arr_sostav_of_station_on = function (id_station, cb_load) {
@@ -875,6 +918,32 @@
             //
         }
     };
+    // Загрузить составы по прибывающие на станцию 
+    table_sostav_outer_way.prototype.load_operation_sostav_of_period = function (start, stop, cb_load) {
+        if (start >= 0 && stop >= 0) {
+            LockScreen(langView('mess_load_sostav', App.Langs));
+            this.ids_wsd.getViewSostavOfPeriodOperationSend(start, stop, function (sostav) {
+                this.sostav = sostav;
+                this.start = start;
+                this.stop = stop;
+                this.select_row_sostav = null;
+                //this.view(this.sostav);
+                LockScreenOff();
+                if (typeof cb_load === 'function') {
+                    cb_load(this.sostav);
+                }
+            }.bind(this));
+        } else {
+            this.sostav = [];
+            this.start = null;
+            this.stop = null;
+            //this.view(this.sostav);
+            if (typeof cb_load === 'function') {
+                cb_load(this.sostav);
+            }
+        }
+    };
+
     //-------------------------------------------------------------------------------------------
     // Очистить сообщения
     table_sostav_outer_way.prototype.out_clear = function () {
@@ -904,9 +973,9 @@
     table_sostav_outer_way.prototype.destroy = function () {
         // Вклучу когда понадобится 
         //this.modal_confirm_form.destroy();
-        if (this.obj_t_cars) {
-            this.obj_t_cars.destroy(true);
-            this.obj_t_cars = null;
+        if (this.obj_t_sostav) {
+            this.obj_t_sostav.destroy(true);
+            this.obj_t_sostav = null;
         }
 
         this.$table_cars.empty(); // empty in case the columns change
