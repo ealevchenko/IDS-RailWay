@@ -134,6 +134,7 @@
     var MCF = App.modal_confirm_form; // Создать модальную форму "Окно сообщений"
     var FC = App.form_control;
     var FIF = App.form_infield;
+
     var TSOW = App.table_sostav_outer_way; // Модуль составы на подходах
     var TCOW = App.table_cars_outer_way; // Модуль составы на подходах
     var TCWay = App.table_cars_way;         // Модуль вагоны на путях
@@ -490,15 +491,6 @@
             }.bind(this));
         }
     };
-    // вернуть название станции прибытия по id внешнего пути
-    //var get_station_name = function (id_outer_way) {
-    //    var outer_way = this.ids_dir.list_outer_ways.find(function (o) { return o.id === id_outer_way; });
-    //    if (outer_way) {
-    //        var station = this.ids_dir.list_station.find(function (o) { return o.id === outer_way.id_station_on; });
-    //        return station ? station['station_name_' + App.Lang] : null;
-    //    }
-    //    return null
-    //};
 
     function view_arrival_cars(selector) {
         if (!selector) {
