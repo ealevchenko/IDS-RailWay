@@ -209,7 +209,7 @@
     var OP_SEND = App.operation_send;
     var oper_send = new OP_SEND('div#rep-operation-send'); // Создадим экземпляр
 
-    var OP_ARRIVAL = App.operation_arrival;
+    var OP_ARRIVAL = App.view_history_operation_arrival;
     var oper_arrival = new OP_ARRIVAL('div#rep-operation-arrival'); // Создадим экземпляр
 
     var TCWay = App.table_cars_way;
