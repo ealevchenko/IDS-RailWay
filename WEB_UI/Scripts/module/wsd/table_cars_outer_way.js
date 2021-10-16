@@ -922,8 +922,8 @@
             data: function (row, type, val, meta) {
                 return row['from_station_abbr_' + App.Lang];
             },
-            className: 'dt-body-left shorten mw-50',
-            title: langView('tcow_field_from_station_abbr', App.Langs), width: "50px", orderable: true, searchable: true
+            className: 'dt-body-left shorten mw-100',
+            title: langView('tcow_field_from_station_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
         // Путь отправки
         {
@@ -1133,8 +1133,8 @@
             data: function (row, type, val, meta) {
                 return row['on_station_abbr_' + App.Lang];
             },
-            className: 'dt-body-left shorten mw-50',
-            title: langView('tcow_field_on_station_abbr', App.Langs), width: "50px", orderable: true, searchable: true
+            className: 'dt-body-left shorten mw-100',
+            title: langView('tcow_field_on_station_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
         // Путь прибытия
         {
@@ -1667,7 +1667,7 @@
 
         return init_columns(collums, list_collums);
     };
-    // инициализация полей отчета ow_arr_sosta
+    // инициализация полей отчета вагоны на пути отправки
     table_cars_outer_way.prototype.init_columns_arrival_wagons_outer_way = function () {
         var collums = [];
         // Внутренне перемещение
@@ -1708,6 +1708,51 @@
         collums.push('on_way_abbr');
         // Операция принять на станцию
         collums.push('on_operation_end');
+        return init_columns(collums, list_collums);
+    };
+    // инициализация полей отчета вагоны отправленных составов
+    table_cars_outer_way.prototype.init_columns_history_send_wagons = function () {
+        var collums = [];
+        // Внутренне перемещение
+        collums.push('outer_way_position');
+        collums.push('num');
+        // Номер накладной
+        collums.push('arrival_nom_main_doc');
+        collums.push('arrival_nom_doc');
+        // Род вагона
+        collums.push('wagon_rod_abbr')
+        // Администрация
+        collums.push('wagon_adm_abbr');
+        // Разметка по прибытию на АМКР
+        collums.push('arrival_condition_abbr');
+        // Разметка по операции отправки (текущая)
+        collums.push('from_operation_condition_abbr');
+        // Оператор
+        collums.push('operator_abbr');
+        // Ограничение
+        collums.push('limiting_abbr');
+        // груз по прибытию
+        collums.push('arrival_cargo_group_name');
+        collums.push('arrival_cargo_name');
+        // Сертификационные данные
+        collums.push('arrival_sertification_data');
+        // Состояние загрузки по отправке (текущее)
+        collums.push('from_operation_loading_status');
+        // Цех получатель
+        collums.push('arrival_division_amkr_abbr');
+        // Внешний путь\состав\позиция
+        collums.push('outer_way_start');
+        collums.push('outer_way_end');
+        collums.push('from_wim_close');
+        collums.push('from_wim_close_user');
+        // Станция прибытия
+        collums.push('on_station_abbr');
+        // Путь прибытия
+        collums.push('on_way_abbr');
+        // Операция принять на станцию
+        collums.push('on_operation_end');
+        collums.push('on_operation_create');
+        collums.push('on_operation_create_user');
         return init_columns(collums, list_collums);
     };
     //------------------------------- КНОПКИ ----------------------------------------------------
@@ -1754,6 +1799,29 @@
         buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
+    // инициализация кнопок отчет вагоны отправленных составов
+    table_cars_outer_way.prototype.init_button_history_send_wagons = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        //buttons.push({
+        //    name: 'select_all',
+        //    action: function () {
+        //        // Выбрать только не принятые вагоны
+        //        this.obj_t_cars.rows(function (idx, data, node) {
+        //            return data.outer_way_end === null;
+        //        }).select();
+        //    }.bind(this)
+        //});
+        //buttons.push({ name: 'select_none', action: null });
+        //if (this.settings.buttons && this.settings.buttons.length > 0) {
+        //    $.each(this.settings.buttons, function (i, el_button) {
+        //        buttons.push(el_button);
+        //    }.bind(this));
+        //};
+        buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    }
     //-------------------------------------------------------------------------------------------
     // Инициализация тип отчета
     table_cars_outer_way.prototype.init_type_report = function () {
@@ -1768,6 +1836,16 @@
                 this.fixedColumns = { leftColumns: 2, };
                 this.table_columns = this.init_columns_arrival_wagons_outer_way();
                 this.table_buttons = this.init_button_arrival_wagons_outer_way();
+                break;
+            };
+            // Таблица вагоны отправленного состава
+            case 'history-send-wagons': {
+                this.type_select_rows = 1; // Выбирать несколько
+                this.table_select = true;
+                this.fixedHeader = true; // вкл. фикс. заголовка
+                this.fixedColumns = { leftColumns: 2, };
+                this.table_columns = this.init_columns_history_send_wagons();
+                this.table_buttons = this.init_button_history_send_wagons();
                 break;
             };
             // Таблица вагоны на пути по умолчанию (если не выставят тип отчета)

@@ -30,7 +30,10 @@ table.dataTable tbody td.shorten {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-
+/*время создания операции привышено*/
+table.dataTable.display tbody tr td.error {
+    color: red;
+}
 /*Превышена норма нахождения вагона на АМКР*/
 /*table.dataTable.display tbody tr td.idle-time-error {
     color: red;

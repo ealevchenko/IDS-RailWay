@@ -125,8 +125,6 @@
         this.operation = null;
         // Выбраная строка
         this.select_row_sostav = null;
-        // Детальные таблицы
-        this.td_wagons = {};
         // Сообщение
         LockScreen(langView('vhoa_mess_init_panel', App.Langs));
         //----------------------------------
@@ -310,86 +308,11 @@
             this.settings.alert.out_info_message(message)
         }
     }
-
-    //------------------------------------------------------------------------
-    // Выбрать строку детально
-    view_history_operation_arrival.prototype.detali_select_row = function (tr) {
-        var row = this.obj_t_sostav.row(tr);
-        // Проверим, строка определена
-        if (row && row.length > 0) {
-            if (row.child.isShown()) {
-                // This row is already open - close it
-                row.child.hide();
-                this.destroy_detali(row.data());
-                tr.removeClass('shown');
-            }
-            else {
-                row.child('<div class="detali-operation">' +
-                    '<div class="card border-primary ">' +
-                    '<div class="card-header">' + langView('tytle_detali_wagon', App.Langs) + '</div>' +
-                    '<div class="card-body table-directory">' +
-                    '<div class="row">' +
-                    '<div class="col-xl-12 ">' +
-                    '<div class="container-fluid">' +
-                    '<div id="' + this.selector + '-wd-' + row.data().id + '"></div>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>').show();
-                // Инициализируем
-                this.view_detali(row.data());
-                tr.addClass('shown');
-            }
-        }
-    };
-    // Инициализация таблицы детально
-    view_history_operation_arrival.prototype.init_detali = function () {
-        this.$table_sostav.find('tbody')
-            .on('click', 'td.details-control-operation-send', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var tr = $(e.currentTarget).closest('tr');
-                this.detali_select_row(tr);
-            }.bind(this));
-    };
-    // Показать детали
-    view_history_operation_arrival.prototype.view_detali = function (data) {
-        var base = this;
-        var TCOPER = App.table_cars_operation;
-        var sl = 'div#' + this.selector + '-wd-' + data.id;
-        this.td_wagons[data.id] = new TCOPER(sl); // Создадим экземпляр таблицы
-        this.td_wagons[data.id].init({
-            alert: this.settings.alert,
-        }, function () {
-            this.td_wagons[data.id].view(data && data.wagons ? data.wagons : []);
-        }.bind(this));
-    };
-    // Очистить детали по указаному составу
-    view_history_operation_arrival.prototype.destroy_detali = function (data) {
-        if (this.td_wagons[data.id]) {
-            this.td_wagons[data.id].destroy();
-            delete this.td_wagons[data.id];
-        }
-    };
-    // Очистить все детали
-    view_history_operation_arrival.prototype.destroy_all_detali = function () {
-        $.each(this.td_wagons, function (i, el) {
-            if (el) {
-                el.destroy();
-            }
-        }.bind(this));
-        this.td_wagons = {};
-    };
-
     //------------------------------------------------------------------------
     // Очистить объект
     view_history_operation_arrival.prototype.destroy = function () {
         //this.modal_confirm_form.destroy();
         //this.modal_edit_form.destroy();
-        this.destroy_all_detali(); // Удалить все таблицы детально
         // Очистить форму выбора
         if (this.form_panel) {
             this.form_panel.destroy();

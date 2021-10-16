@@ -10,6 +10,9 @@
     // Определим язык
     App.Lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang'));
 
+    var min_err_create = -1; // TODO: Минимальная разница в часах создания строки и указаной даты выполнения
+    var max_err_create = 1; // TODO: Максимальная разница в часах создания строки и указаной даты выполнения
+
     // Массив текстовых сообщений 
     $.Text_View =
     {
@@ -54,6 +57,8 @@
             'field_on_way_close': 'Путь приб. закрыт',
             'field_on_way_delete': 'Путь приб. удален',
             'field_count_wagons_arrival': 'Прин. ваг.',
+
+            'tytle_detali_wagon': 'Вагоны в составе',
 
             //'title_yes': 'Да',
             //'title_busy': 'Занят',
@@ -232,7 +237,7 @@
             data: function (row, type, val, meta) {
                 return row.from_operation_create ? moment(row.from_operation_create).format(format_datetime) : null;
             },
-            className: 'dt-body-nowrap',
+            className: 'dt-body-nowrap from_create',
             title: langView('field_from_operation_create', App.Langs), width: "100px", orderable: true, searchable: true,
         },
         {
@@ -371,7 +376,7 @@
             data: function (row, type, val, meta) {
                 return row.on_operation_create ? moment(row.on_operation_create).format(format_datetime) : null;
             },
-            className: 'dt-body-nowrap',
+            className: 'dt-body-nowrap on_create',
             title: langView('field_on_operation_create', App.Langs), width: "100px", orderable: true, searchable: true,
         },
         {
@@ -694,6 +699,7 @@
         collums.push('from_operation_locomotive1');
         collums.push('from_operation_locomotive2');
         collums.push('from_operation_end');
+        collums.push('from_operation_create');
         collums.push('from_operation_create_user');
         collums.push('on_operation_end');
         collums.push('on_operation_create_user');
@@ -777,8 +783,10 @@
 
         this.id_station_on = null;      // Станция на которую прибывает состав
 
-        this.select_row_wagons = null;  // для одинарного выбора (выбранный вагон)
-        this.select_rows_sostav = null;  // для многочисленного выбора (Отчеты от 1.... выбранные вагоны)
+        this.select_row_sostav = null;  // для одинарного выбора (выбранный состав)
+        this.select_rows_sostav = null;  // для многочисленного выбора
+        // Детальные таблицы
+        this.td_wagons = {};
 
         this.ids_wsd = this.settings.ids_wsd ? this.settings.ids_wsd : new wsd();
         // Настройки отчета
@@ -798,10 +806,10 @@
         // Создать макет таблицы
         // Создадим и добавим макет таблицы
         var table_cars = new this.fc_ui.el_table('tab-ow-cars-' + this.selector, 'display compact cell-border row-border hover');
-        this.$table_cars = table_cars.$element;
-        this.$cars_way.addClass('table-report-operation').append(this.$table_cars);
+        this.$table_sostav = table_cars.$element;
+        this.$cars_way.addClass('table-report-operation').append(this.$table_sostav);
         // Инициализируем таблицу
-        this.obj_t_sostav = this.$table_cars.DataTable({
+        this.obj_t_sostav = this.$table_sostav.DataTable({
             "lengthMenu": [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('title_all', App.Langs)]],
             "pageLength": 10,
             "deferRender": true,
@@ -833,6 +841,25 @@
                 if (data.count_wagons_arrival > 0 && data.count_wagons_send === data.count_wagons_arrival) {
                     $(row).addClass('green');// Отметим состав частично принят
                 }
+                // Проверка на создание строки операции отправки (ошибка если дата строки создания и выполнения операции больше часа )
+                var from_create = moment(data.from_operation_create);
+                var from_operat = moment(data.from_operation_end);
+                if (from_create && from_operat && from_create.isValid() && from_operat.isValid()) {
+                    var hour = from_create.diff(from_operat, 'hours');
+                    if (hour >= max_err_create || hour <= min_err_create) {
+                        $('td.from_create', row).addClass('error');
+                    }
+                }
+                // Проверка на создание строки операции прибытия (ошибка если дата строки создания и выполнения операции больше часа )
+                var on_create = moment(data.on_operation_create);
+                var on_operat = moment(data.on_operation_end);
+                if (on_create && on_operat && on_create.isValid() && on_operat.isValid()) {
+                    var hour = on_create.diff(on_operat, 'hours');
+                    if (hour >= max_err_create || hour <= min_err_create) {
+                        $('td.on_create', row).addClass('error');
+                    }
+                }
+
             }.bind(this),
             columns: this.table_columns,
             dom: 'Bfrtip',
@@ -862,6 +889,8 @@
                 break;
             };
         };
+        // Определим показывать вагоны детально
+        if (this.settings.detali_wagons) this.init_detali();
         //----------------------------------
         if (typeof fn_init_ok === 'function') {
             fn_init_ok(this.result_init);
@@ -943,7 +972,82 @@
             }
         }
     };
-
+    //------------------------------------------------------------------------
+    // Выбрать строку детально
+    table_sostav_outer_way.prototype.detali_select_row = function (tr) {
+        var row = this.obj_t_sostav.row(tr);
+        // Проверим, строка определена
+        if (row && row.length > 0) {
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                this.destroy_detali(row.data());
+                tr.removeClass('shown');
+            }
+            else {
+                row.child('<div class="detali-operation">' +
+                    '<div class="card border-primary ">' +
+                    '<div class="card-header">' + langView('tytle_detali_wagon', App.Langs) + ' : ' + row.data().outer_way_num_sostav + '</div>' +
+                    '<div class="card-body table-directory">' +
+                    '<div class="row">' +
+                    '<div class="col-xl-12 ">' +
+                    '<div class="container-fluid">' +
+                    '<div id="' + this.selector + '-wd-' + row.data().outer_way_num_sostav + '"></div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>').show();
+                // Инициализируем
+                this.view_detali(row.data());
+                tr.addClass('shown');
+            }
+        }
+    };
+    // Инициализация таблицы детально
+    table_sostav_outer_way.prototype.init_detali = function () {
+        this.$table_sostav.find('tbody')
+            .on('click', 'td.details-control-wagons-sostav', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var tr = $(e.currentTarget).closest('tr');
+                this.detali_select_row(tr);
+            }.bind(this));
+    };
+    // Показать детали
+    table_sostav_outer_way.prototype.view_detali = function (data) {
+        var base = this;
+        var TCOW = App.table_cars_outer_way;
+        var sl = 'div#' + this.selector + '-wd-' + data.outer_way_num_sostav;
+        this.td_wagons[data.outer_way_num_sostav] = new TCOW(sl); // Создадим экземпляр вогонов на подходах
+        this.td_wagons[data.outer_way_num_sostav].init({
+            alert: this.alert_from,
+            type_report: 'history-send-wagons',  // вагоны отправленного состава
+            ids_wsd: this.ids_wsd,
+            fn_change_data: function (wagons) {
+            }.bind(this),
+        }, function () {
+            this.td_wagons[data.outer_way_num_sostav].load_ow_arr_wagons_of_sostav(data ? data.outer_way_num_sostav : null);
+        }.bind(this));
+    };
+    // Очистить детали по указаному составу
+    table_sostav_outer_way.prototype.destroy_detali = function (data) {
+        if (this.td_wagons[data.outer_way_num_sostav]) {
+            this.td_wagons[data.outer_way_num_sostav].destroy();
+            delete this.td_wagons[data.outer_way_num_sostav];
+        }
+    };
+    // Очистить все детали
+    table_sostav_outer_way.prototype.destroy_all_detali = function () {
+        $.each(this.td_wagons, function (i, el) {
+            if (el) {
+                el.destroy();
+            }
+        }.bind(this));
+        this.td_wagons = {};
+    };
     //-------------------------------------------------------------------------------------------
     // Очистить сообщения
     table_sostav_outer_way.prototype.out_clear = function () {
@@ -978,7 +1082,7 @@
             this.obj_t_sostav = null;
         }
 
-        this.$table_cars.empty(); // empty in case the columns change
+        this.$table_sostav.empty(); // empty in case the columns change
     }
 
     App.table_sostav_outer_way = table_sostav_outer_way;
