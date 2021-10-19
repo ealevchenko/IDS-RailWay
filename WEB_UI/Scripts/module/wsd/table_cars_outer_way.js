@@ -149,19 +149,14 @@
             'tcow_field_on_operation_loading_status': 'Состояние загрузки при приеме',
 
             'tcow_title_yes': 'Да',
-            //'title_busy': 'Занят',
-            //'title_all': 'Все',
-            //'title_status_0': 'Предъявлен',
-            //'title_status_1': 'В работе',
-            //'title_status_2': 'Сдан',
-            //'title_status_3': 'Отправлен',
-            //'title_status_4': 'Возврат',
+            'tcow_title_all': 'Все',
 
-            //'title_link_num': 'Показать историю по вагону...',
+            'tcow_title_link_num': 'Показать историю по вагону...',
 
             'tcow_title_button_export': 'Экспорт',
             'tcow_title_button_buffer': 'Буфер',
             'tcow_title_button_excel': 'Excel',
+            'tsow_title_excel_sheet_name': 'Вагоны состава на подходах',
             'tcow_title_button_field': 'Поля',
             'tcow_title_button_tcow_field_select': 'Выбрать',
             'tcow_title_button_tcow_field_view_all': 'Показать все',
@@ -170,8 +165,6 @@
             'tcow_title_button_select_all': 'Все вагоны',
             'tcow_title_button_select_none': 'Убрать выбор',
             'tcow_title_button_add_way_sending': 'Добавить в состав',
-            //'tcow_title_button_del_way_sending': 'Убрать из состава',
-            //'tcow_title_button_reverse_num_wagon': 'Реверс',
 
             'tcow_mess_init_module': 'Инициализация модуля…',
             'tcow_mess_load_wagons': 'Загружаю вагоны…',
@@ -314,19 +307,14 @@
             'tcow_field_on_operation_loading_status': 'Loading status while receiving',
 
             'tcow_title_yes': 'Yes',
-            // 'title_busy': 'Busy',
-            // 'title_all': 'Everyone',
-            // 'title_status_0': 'Submitted',
-            // 'title_status_1': 'In progress',
-            // 'title_status_2': 'Completed',
-            // 'title_status_3': 'Submitted',
-            // 'title_status_4': 'Return',
+            'tcow_title_all': 'Everyone',
 
-            // 'title_link_num': 'Show wagon history ...',
+            'tcow_title_link_num': 'Show wagon history ...',
 
             'tcow_title_button_export': 'Export',
             'tcow_title_button_buffer': 'Buffer',
             'tcow_title_button_excel': 'Excel',
+            'tsow_title_excel_sheet_name': 'Train cars on the way',
             'tcow_title_button_field': 'Fields',
             'tcow_title_button_tcow_field_select': 'Select',
             'tcow_title_button_tcow_field_view_all': 'Show all',
@@ -335,8 +323,6 @@
             'tcow_title_button_select_all': 'All wagons',
             'tcow_title_button_select_none': 'Remove selection',
             'tcow_title_button_add_way_sending': 'Add to lineup',
-            // 'tcow_title_button_del_way_sending': 'Remove from squad',
-            // 'tcow_title_button_reverse_num_wagon': 'Reverse',
 
             'tcow_mess_init_module': 'Initializing a module ...',
             'tcow_mess_load_wagons': 'Loading wagons ...',
@@ -416,7 +402,7 @@
             field: 'num_link',
             data: function (row, type, val, meta) {
                 var fc_ui = new FC();
-                var $alink = new fc_ui.el_a(row.num, 'num-wagon', '#', row.num, '_blank', langView('title_link_num', App.Langs))
+                var $alink = new fc_ui.el_a(row.num, 'num-wagon', '#', row.num, '_blank', langView('tcow_title_link_num', App.Langs))
                 if ($alink && $alink.$alink && $alink.$alink.length > 0) {
                     return $alink.$alink[0].outerHTML;
                 } else {
@@ -1439,7 +1425,7 @@
                 {
                     text: langView('tcow_title_button_excel', App.Langs),
                     extend: 'excelHtml5',
-                    sheetName: 'Вагоны на пути',
+                    sheetName: langView('tsow_title_excel_sheet_name', App.Langs),
                     messageTop: function () {
                         return '';
                     }
@@ -1903,7 +1889,7 @@
         this.$cars_way.addClass('table-report-operation').append(this.$table_cars);
         // Инициализируем таблицу
         this.obj_t_cars = this.$table_cars.DataTable({
-            "lengthMenu": [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('title_all', App.Langs)]],
+            "lengthMenu": [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('tcow_title_all', App.Langs)]],
             "pageLength": 10,
             "deferRender": true,
             "paging": true,
@@ -1931,6 +1917,13 @@
                         // Отчет по прибытию 
                         if (data.outer_way_end !== null) {
                             $(row).addClass('wagon-ban');  // Отметим вагон заблокирован
+                        }
+                        break;
+                    };
+                    case 'history-send-wagons': {
+                        // Отчет история отправленных вагонов
+                        if (data.outer_way_end !== null) {
+                            $(row).addClass('green');  // Отметим вагон заблокирован
                         }
                         break;
                     };

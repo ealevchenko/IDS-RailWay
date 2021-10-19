@@ -1,6 +1,11 @@
 ﻿body {
 }
 
+/*Уменьшить размер таблицы*/
+.table-report-operation {
+    font-size: 0.8rem;
+}
+
 table.dataTable tbody td.mw-50 {
     max-width: 50px;
 }
