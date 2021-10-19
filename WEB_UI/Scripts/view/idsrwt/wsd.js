@@ -206,11 +206,11 @@
     var directory = App.ids_directory;
     var ids_dir = new directory();
 
-    var OP_SEND = App.operation_send;
-    var oper_send = new OP_SEND('div#rep-operation-send'); // Создадим экземпляр
+    var VHOS = App.view_history_operation_send;
+    var history_operation_send = new VHOS('div#history-operation-send'); // Создадим экземпляр
 
-    var OP_ARRIVAL = App.view_history_operation_arrival;
-    var oper_arrival = new OP_ARRIVAL('div#rep-operation-arrival'); // Создадим экземпляр
+    var VHOA = App.view_history_operation_arrival;
+    var history_operation_arrival = new VHOA('div#history-operation-arrival'); // Создадим экземпляр
 
     var TCWay = App.table_cars_way;
     var t_wagons = new TCWay('div#wagons'); // Создадим экземпляр
@@ -250,33 +250,37 @@
         current_num_wagon = null,
         // ---------- ОТЧЕТЫ --------------------------------------
         // Операции отправления (Обновление wsd)
-        rep_operation_send = $('a#operation-send').on('click',
+        rep_operation_send = $('a#history-operation-send').on('click',
             function (event) {
                 alert.clear_message();
                 event.preventDefault();
-                oper_send.init({
+                history_operation_send.init({
+                    detali_wagons: true,
+                    auto_load: true,
                     alert: alert,
                     ids_dir: ids_dir,
                     ids_wsd: ids_wsd,
                 },
                     function () {
-                        oper_send.show() // Инициализировать и спрятать
+                        history_operation_send.show() // Инициализировать и спрятать
                         operation_detali.content.addClass('is-visible');
                         //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
                     });
             }),
         // Операции прибытия (Обновление wsd)
-        rep_operation_arrival = $('a#operation-arrival').on('click',
+        rep_operation_arrival = $('a#history-operation-arrival').on('click',
             function (event) {
                 alert.clear_message();
                 event.preventDefault();
-                oper_arrival.init({
+                history_operation_arrival.init({
+                    detali_wagons: true,
+                    auto_load: true,
                     alert: alert,
                     ids_dir: ids_dir,
                     ids_wsd: ids_wsd,
                 },
                     function () {
-                        oper_arrival.show() // Инициализировать и спрятать
+                        history_operation_arrival.show() // Инициализировать и спрятать
                         operation_detali.content.addClass('is-visible');
                         //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
                     });
@@ -4534,18 +4538,6 @@
                     ;
                 operation_detali.val_sending_uz = new VALIDATION(operation_detali.lang, operation_detali.alert, operation_detali.all_obj_sending_uz); // Создадим класс VALIDATION
                 //$("a.dt-button").removeClass('dt-button').addClass('btn btn-secondary');
-
-                //---------------------
-                //oper_send.init({
-                //    auto_load: false,    // Загружаю по открытию окна 
-                //    alert: alert,
-                //    ids_dir: ids_dir,
-                //    ids_wsd: ids_wsd,
-                //},
-                //    function () {
-                //        oper_send.hide(); // Инициализировать и спрятать
-                //    });
-
                 //-----------------------
                 // Sumbit form
                 operation_detali.content.find("form").on("submit", function (event) {
@@ -4562,8 +4554,8 @@
                     operation_detali.operation_provide.hide();
                     operation_detali.operation_sending_uz.hide();
                     // отчеты по операциям
-                    oper_send.destroy();
-                    oper_arrival.destroy();
+                    history_operation_send.destroy();
+                    history_operation_arrival.destroy();
 
                     view_send_cars.destroy();
                     view_arrival_cars.destroy();
