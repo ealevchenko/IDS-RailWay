@@ -15,38 +15,21 @@
             'vhoa_title_label_date': 'ПЕРИОД :',
             'vhoa_title_label_station': 'СТАНЦИЯ ПРИБЫТИЯ:',
 
-            //'field_id': 'id строки',
-            //'field_operation_end': 'Отправлен',
-            //'field_name_outer_way': 'Перегон',
-            //'field_from_station_name': 'Станция отпр.',
-            //'field_from_way_name': 'Путь отправл.',
-            //'field_on_station_name': 'Станция приб.',
-            //'field_count_wagon_send': 'Отправлено',
-            //'field_count_wagon_arrival': 'Принято',
-            //'field_operation_locomotive1': 'Локомотив1',
-            //'field_operation_locomotive2': 'Локомотив2',
-            //'operation_create_user': 'Операцию выполнил',
-            //'field_status': 'Статус',
-
-            //'tytle_status_arr': 'Принят',
-            //'tytle_status_work': 'В работе',
-            //'tytle_status_send': 'Отправлен',
-            //'tytle_detali_wagon': 'Вагоны в составе',
-
-            //'title_button_export': 'Экспорт',
-            //'title_button_buffer': 'Буфер',
-            //'title_button_excel': 'Excel',
-            //'title_button_cancel': 'Отменить',
-            //'title_button_return': 'Вернуть',
-
             'vhoa_mess_load_operation': 'Загружаю операции...',
-            //'mess_update_operation': 'Обновляю операции...',
+            'vhoa_mess_update_operation': 'Обновляю операции...',
             'vhoa_mess_init_panel': 'Выполняю инициализацию модуля история операций прибытия составов...',
-            //'mess_destroy_operation': 'Закрываю форму...',
+            'vhoa_mess_destroy_operation': 'Закрываю форму...',
         },
         'en':  //default language: English
         {
+            'vhoa_card_header_panel': 'HISTORY OF OPERATIONS "ARRIVAL OF TRAINS AT AMKR STATION"',
+            'vhoa_title_label_date': 'PERIOD:',
+            'vhoa_title_label_station': 'ARRIVAL STATION:',
 
+            'vhoa_mess_load_operation': 'Loading operations ...',
+            'vhoa_mess_update_operation': 'Updating operations ...',
+            'vhoa_mess_init_panel': 'I am initializing the module history of train arrival operations ...',
+            'vhoa_mess_destroy_operation': 'Closing the form ...',
         }
     };
     // Определлим список текста для этого модуля
@@ -94,6 +77,7 @@
             });
         };
     };
+    //----------------------------------------------------------------------------------------
     // инициализация модуля
     view_history_operation_arrival.prototype.init = function (options, fn_init_ok) {
         this.result_init = true; // Состояние инициализации 
@@ -200,7 +184,7 @@
                 this.tab_sostav_arrival = new TSOW('div#' + sel_sostav_arrival); // Создадим экземпляр составы на подходах
                 this.tab_sostav_arrival.init({
                     alert: this.settings.alert, // уточнить
-                    detali_wagons: true,
+                    detali_wagons: this.settings.detali_wagons,
                     type_report: 'arrival-sostav-operation',  // История по прибывающим составам по операции прибитие
                     ids_wsd: this.ids_wsd,
                     fn_select_sostav: function (row) {
@@ -224,6 +208,7 @@
             //----------------------------------------------------------
         }.bind(this));
     };
+    //----------------------------------------------------------------------------------------
     // Показать составы с учетом станции
     view_history_operation_arrival.prototype.view = function () {
         if (this.tab_sostav_arrival.sostav && this.tab_sostav_arrival.sostav.length > 0) {
@@ -253,28 +238,26 @@
     };
     // Обновить данные
     view_history_operation_arrival.prototype.update = function () {
-        //this.out_clear();
-        //if (this.start && this.stop) {
-        //    var td_wagons = this.td_wagons;
-        //    LockScreen(langView('mess_update_operation', App.Langs));
-        //    this.ids_wsd.getSostavWagonsOperationOfSend(this.start, this.stop, function (operation) {
-        //        this.operation = operation;
-        //        this.view(operation);
-        //        // Открыть детали если есть
-        //        if (this.settings.detali_wagons) {
-        //            $.each(td_wagons, function (i, el) {
-        //                if (el) {
-        //                    var tr = this.$table_sostav.find('tbody tr#' + i);
-        //                    if (tr && tr.length > 0) {
-        //                        this.detali_select_row(tr);
-        //                    }
-        //                }
-        //            }.bind(this));
-        //        };
-        //    }.bind(this));
-        //} else {
+        this.out_clear();
+        if (this.start && this.stop) {
+            var td_wagons = this.tab_sostav_arrival.td_wagons;
+            LockScreen(langView('vhoa_mess_update_operation', App.Langs));
+            this.tab_sostav_arrival.load_operation_sostav_of_period(this.start, this.stop, function () {
+                this.view();
+                $.each(td_wagons, function (i, el) {
+                    if (el) {
+                        var tr = this.tab_sostav_arrival.$table_sostav.find('tbody tr#' + i);
+                        if (tr && tr.length > 0) {
+                            LockScreen(langView('vhoa_mess_update_operation', App.Langs));
+                            this.tab_sostav_arrival.detali_select_row(tr);
+                        }
+                    }
+                }.bind(this));
 
-        //}
+            }.bind(this));
+        } else {
+
+        }
     };
     // Показать
     view_history_operation_arrival.prototype.show = function () {
@@ -284,6 +267,7 @@
     view_history_operation_arrival.prototype.hide = function () {
         this.$panel.hide();
     }
+    //-------------------------------------------------------------------------
     // Очистить сообщения
     view_history_operation_arrival.prototype.out_clear = function () {
         if (this.settings.alert) {
@@ -311,35 +295,20 @@
     //------------------------------------------------------------------------
     // Очистить объект
     view_history_operation_arrival.prototype.destroy = function () {
-        //this.modal_confirm_form.destroy();
-        //this.modal_edit_form.destroy();
+        LockScreen(langView('vhoa_mess_destroy_operation', App.Langs));
+        // очистим модальную форму
+        if (this.modal_confirm_form) this.modal_confirm_form.destroy();
+        // Очистить модуль вывода отправленных составов 
+        if (this.tab_sostav_arrival) {
+            this.tab_sostav_arrival.destroy();
+            this.tab_sostav_arrival = null;
+        }
         // Очистить форму выбора
         if (this.form_panel) {
             this.form_panel.destroy();
             this.form_panel = null;
         }
-        LockScreen(langView('mess_destroy_operation', App.Langs));
-        // Очистить объект таблица
-        setTimeout(function () {
-            this.destroy_table();
-        }.bind(this), 0);
-        //if (this.obj_t_sostav) {
-        //    LockScreen(langView('mess_destroy_operation', App.Langs));
-        //    this.obj_t_sostav.destroy(true);
-        //    this.obj_t_sostav = null;
-        //    LockScreenOff();
-        //}
         this.$panel.empty(); // empty in case the columns change
-    };
-
-    view_history_operation_arrival.prototype.destroy_table = function () {
-        // Очистить объект таблица
-        if (this.obj_t_sostav) {
-            //LockScreen(langView('mess_destroy_operation', App.Langs));
-            this.obj_t_sostav.destroy(true);
-            this.obj_t_sostav = null;
-
-        }
         LockScreenOff();
     };
 
