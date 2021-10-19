@@ -68,6 +68,7 @@
         //})
         //oper_send.update();
         //t_wagons.update(54152087);
+        vhoa.update();
 
     });
 
