@@ -1,0 +1,33 @@
+﻿body {
+}
+
+/*Уменьшить размер таблицы*/
+.table-report-operation {
+    font-size: 0.8rem;
+}
+
+td.details-control {
+    background: url('../../../Content/DataTables/media/images/details_open.png') no-repeat center center;
+    cursor: pointer;
+}
+
+tr.shown td.details-control {
+    background: url('../../../Content/DataTables/media/images/details_close.png') no-repeat center center;
+}
+
+/*.detali-operation {
+    border-left: 6px solid #8ae;
+    border-top: 1px solid #8ae;
+    padding: 10px;
+    font-size: 14px;
+    line-height: 1.4;
+    background-color: #eee;
+    border-radius: 4px;
+    text-align: left;
+}*/
+/*Уменьшить размер таблицы*/
+/*.table-report-operation {
+    font-size: 0.8rem;
+}*/
+
+
