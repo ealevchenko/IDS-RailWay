@@ -22,6 +22,7 @@
             'title_placeholder_station_from': 'Станция отправления:',
             'title_label_way': 'Путь отправления:',
             'title_placeholder_way': 'Выберите путь',
+            'fieldset_on_as_table_title': 'Прибывающие составы',
 
             'title_label_station_on': 'Станция прибытия:',
             'title_placeholder_station_on': 'Станция прибытия:',
@@ -73,6 +74,7 @@
             'title_placeholder_station_from': 'Departure station:',
             'title_label_way': 'Departure path:',
             'title_placeholder_way': 'Select path',
+            'fieldset_on_as_table_title': 'Incoming trains',
 
             'title_label_station_on': 'Arrival station:',
             'title_placeholder_station_on': 'Arrival station:',
@@ -125,6 +127,7 @@
     var FC = App.form_control;
     var FIF = App.form_infield;
     var TCWay = App.table_cars_way;
+    var TSOW = App.table_sostav_outer_way; // Модуль составы на подходах станции
     var alert = App.alert_form;
 
     // создадим основу формы
@@ -386,6 +389,13 @@
                 if (list_outer_ways) {
                     outer_ways = this.ids_dir.getListObj(list_outer_ways, 'id', 'name_outer_way', App.Lang, null);
                 }
+                // Показать составы прибывающие на станцию отправки
+                if (this.tab_sostav_arrival) {
+                    this.tab_sostav_arrival.load_ow_arr_sostav_of_station_on(id_station_on);
+                }
+
+
+
                 return outer_ways
             }.bind(this);
             // Список локомотивов
@@ -761,12 +771,39 @@
             // Отображение формы
             this.$setup_on.append(this.form_setup_on.$form_add);
 
+            // Создадим таблицу сотавов прибывающих на станцию
+            var sel_sostav_arrival = 'table-as-on-' + this.selector;
+            var fieldset_table_as_on = new this.fc_ui.el_fieldset('border-danger mb-1', 'text-danger', langView('fieldset_on_as_table_title', App.Langs));
+            var $div_table_as_on = $('<div></div>', {
+                'id': sel_sostav_arrival,
+            });
+            if ($div_table_as_on && $div_table_as_on.length > 0) {
+                this.$table_on.append(fieldset_table_as_on.$fieldset.append($div_table_as_on));
+                // Инициализировать модуль составы на подходах 
+                this.tab_sostav_arrival = new TSOW('div#' + sel_sostav_arrival); // Создадим экземпляр составы на подходах
+                this.tab_sostav_arrival.init({
+                    alert: this.settings.alert,
+                    detali_wagons: false,
+                    type_report: 'arrival-sostav-operation',  // История по прибывающим составам по операции прибитие
+                    ids_wsd: this.ids_wsd,
+                    fn_select_sostav: function (row) {
+                        // выбран состав
+                    }.bind(this),
+                }, function (init_result) {
+                    // Загрузить и вывести информацию если стоит признак
+                    //----------------------------------
+                    //load_ow_arr_sostav_of_station_on
+                }.bind(this));
+
+            };
+            var fieldset_table_on = new this.fc_ui.el_fieldset('border-secondary', 'text-secondary', langView('fieldset_on_table_title', App.Langs));
+
             // Создадим таблицу вангонов собранных для отправки
             var $div_table_on = $('<div></div>', {
                 'id': 'table-on-' + this.selector,
             });
             if ($div_table_on && $div_table_on.length > 0) {
-                this.$table_on.append($div_table_on);
+                this.$table_on.append(fieldset_table_on.$fieldset.append($div_table_on));
                 this.tab_cars_on = new TCWay('div#table-on-' + this.selector);
                 this.tab_cars_on.init({
                     type_report: 2,
@@ -920,10 +957,10 @@
                 this.out_clear();
 
                 // Сбросим установки (время и локомотивы)
-                this.form_setup_on.set('time_aplly',null);
-                this.form_setup_on.set('locomotive1',null);
+                this.form_setup_on.set('time_aplly', null);
+                this.form_setup_on.set('locomotive1', null);
                 this.form_setup_on.set('locomotive2', null);
-                
+
                 this.form_setup_on.out_info('Состав отправлен, в количестве ' + result.moved + '(ваг.)');
                 if (typeof this.settings.fn_db_update === 'function') {
                     //TODO: можно добавить возвращать перечень для обновления
