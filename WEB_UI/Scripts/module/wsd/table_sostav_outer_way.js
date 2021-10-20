@@ -69,7 +69,7 @@
             'tsow_title_button_export': 'Экспорт',
             'tsow_title_button_buffer': 'Буфер',
             'tsow_title_button_excel': 'Excel',
-            'tsow_title_excel_sheet_name': 'Составы на подходах', 
+            'tsow_title_excel_sheet_name': 'Составы на подходах',
             'tsow_title_button_field': 'Поля',
             'tsow_title_button_field_select': 'Выбрать',
             'tsow_title_button_field_view_all': 'Показать все',
@@ -942,7 +942,8 @@
     // Выбрать состав
     table_sostav_outer_way.prototype.select_sostav = function (num) {
         if (num !== null) {
-            this.obj_t_sostav.row('#' + num).select();
+            var row = this.obj_t_sostav.row('#' + num);
+            if (row && row.length > 0) row.select();
         }
     }
     // Загрузить составы по прибытию
@@ -954,11 +955,34 @@
             LockScreenOff();
         }.bind(this));
     };
-    // Загрузить составы по прибывающие на станцию 
+    // Загрузить составы прибывающие на станцию 
     table_sostav_outer_way.prototype.load_ow_arr_sostav_of_station_on = function (id_station, cb_load) {
         if (id_station !== null && id_station >= 0) {
             LockScreen(langView('tsow_mess_load_sostav', App.Langs));
             this.ids_wsd.getViewArrivalSostavOfStationOuterWay(id_station, function (sostav) {
+                this.sostav = sostav;
+                this.id_station_on = id_station;
+                this.view(this.sostav);
+                LockScreenOff();
+                if (typeof cb_load === 'function') {
+                    cb_load();
+                }
+            }.bind(this));
+        } else {
+            this.sostav = [];
+            this.id_station_on = null;
+            this.view(this.sostav);
+            if (typeof cb_load === 'function') {
+                cb_load();
+            }
+            //
+        }
+    };
+    // Загрузить составы отправленные со станции 
+    table_sostav_outer_way.prototype.load_ow_arr_sostav_of_station_from = function (id_station, cb_load) {
+        if (id_station !== null && id_station >= 0) {
+            LockScreen(langView('tsow_mess_load_sostav', App.Langs));
+            this.ids_wsd.getViewSendSostavOfStationOuterWay(id_station, function (sostav) {
                 this.sostav = sostav;
                 this.id_station_on = id_station;
                 this.view(this.sostav);
