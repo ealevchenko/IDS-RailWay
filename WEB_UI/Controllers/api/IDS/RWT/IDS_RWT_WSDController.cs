@@ -332,6 +332,11 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string on_station_name_en { get; set; }
         public string on_station_abbr_ru { get; set; }
         public string on_station_abbr_en { get; set; }
+        public int? arrival_id_station { get; set; }
+        public string arrival_station_name_ru { get; set; }
+        public string arrival_station_name_en { get; set; }
+        public string arrival_station_abbr_ru { get; set; }
+        public string arrival_station_abbr_en { get; set; }
         public int? on_id_way { get; set; }
         public int? on_id_park { get; set; }
         public string on_way_num_ru { get; set; }
@@ -457,6 +462,21 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public DateTime lead_time { get; set; }
         public string locomotive1 { get; set; }
         public string locomotive2 { get; set; }
+        public string user { get; set; }
+    }
+    #endregion
+
+    #region ОПЕРАЦИЯ ВЕРНУТЬ (Обновленный АРМ)
+    public class OperationReturnWagons
+    {
+        public int id_outer_way { get; set; }
+        public List<ListOperationWagon> wagons { get; set; }
+        public int id_way_on { get; set; }
+        public bool head { get; set; }
+        public DateTime? lead_time { get; set; }
+        public string locomotive1 { get; set; }
+        public string locomotive2 { get; set; }
+        public bool type_return { get; set; }
         public string user { get; set; }
     }
     #endregion
@@ -1004,7 +1024,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         {
             try
             {
-                db.Database.CommandTimeout = 100;
+                db.Database.CommandTimeout = 300;
                 string sql = "select * from [IDS].[get_view_status_all_station]()";
                 List<view_status_station> list = db.Database.SqlQuery<view_status_station>(sql).ToList();
                 db.Database.CommandTimeout = null;               
@@ -1332,6 +1352,29 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 return BadRequest(e.Message);
             }
         }
+        
+        /// <summary>
+        /// Составы на перегонах отправленные с указаной станции
+        /// </summary>
+        /// <param name="id_station"></param>
+        /// <returns></returns>
+        // GET: api/ids/rwt/wsd/view/vagons/outer_way/sostav/send/station/id/1
+        [Route("view/vagons/outer_way/sostav/send/station/id/{id_station:int}")]
+        [ResponseType(typeof(view_outer_way_sostav))]
+        public IHttpActionResult GetViewSendSostavOfStationOuterWay(int id_station)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter id = new System.Data.SqlClient.SqlParameter("@id_station", id_station);
+                string sql = "select * from [IDS].[get_view_send_sostav_of_outer_ways](@id_station) order by from_operation_end desc";
+                List<view_outer_way_sostav> list = db.Database.SqlQuery<view_outer_way_sostav>(sql,id).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
         // GET: api/ids/rwt/wsd/view/vagons/operation/sostav/send/period/start/2021-09-01T00:00:00/stop/2021-10-31T23:59:59
         [Route("view/vagons/operation/sostav/send/period/start/{start:datetime}/stop/{stop:datetime}")]
@@ -1429,6 +1472,26 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             {
                 IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
                 ResultTransfer result = ids_wir.ArrivalWagonsOfStation(value.id_outer_way, value.wagons, value.id_way_on, value.head, value.lead_time, value.locomotive1, value.locomotive2, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        #endregion
+
+        #region ОПЕРАЦИЯ ВЕРНУТЬ(ОТМЕНИТЬ) (Обновленный АРМ)
+        // POST api/ids/rwt/wsd/operation/return
+        [HttpPost]
+        [Route("operation/return")]
+        [ResponseType(typeof(ResultTransfer))]
+        public IHttpActionResult PostReturnWagonsOfStationAMKR([FromBody] OperationReturnWagons value)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                ResultTransfer result = ids_wir.ReturnWagonsOfStation(value.id_outer_way, value.wagons, value.id_way_on, value.head, value.lead_time, value.locomotive1, value.locomotive2, value.type_return, value.user);
                 return Ok(result);
             }
             catch (Exception e)

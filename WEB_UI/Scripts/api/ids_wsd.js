@@ -106,6 +106,29 @@
             },
         });
     };
+    // Получить составы отправленные со станции
+    ids_wsd.prototype.getViewSendSostavOfStationOuterWay = function (id, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wsd/view/vagons/outer_way/sostav/send/station/id/' + id,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getViewSendSostavOfStationOuterWay", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     // Получить список всех вагонов на перегоне
     ids_wsd.prototype.getViewWagonsOfOuterWay = function (callback) {
         $.ajax({
@@ -222,6 +245,31 @@
             error: function (x, y, z) {
                 LockScreenOff();
                 OnAJAXError("ids_wsd.postArrivalWagonsOfStation", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+     //АРМ, Операция вернуть-оменить вагоны на внутреную станцию АМКР 
+    ids_wsd.prototype.postReturnWagonsOfStation = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/operation/return/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postReturnWagonsOfStation", x, y, z);
             },
             complete: function () {
                 AJAXComplete();
