@@ -31,7 +31,7 @@ namespace IDS.Helper
             return wir.id;
         }
 
-        public static WagonInternalMovement SetStationWagon(this WagonInternalRoutes wir, int id_station, int id_way, DateTime date_start, int position, string note, string user)
+        public static WagonInternalMovement SetStationWagon(this WagonInternalRoutes wir, int id_station, int id_way, DateTime date_start, int position, string note, string user, bool check_replay)
         {
             WagonInternalMovement wim_new = null;
             if (wir != null && wir.close == null)
@@ -39,7 +39,7 @@ namespace IDS.Helper
                 // Получим последнее положение
                 WagonInternalMovement wim = wir.GetLastMovement();
                 // Исключим попытку поставить дублирования записи постановки на путь
-                if (wim == null || (wim != null && (wim.id_station != id_station || wim.id_way != id_way || wim.position != position)))
+                if (wim == null || (wim != null && (wim.id_station != id_station || wim.id_way != id_way || wim.position != position || wim.id_outer_way != null)))
                 {
                     wim_new = new WagonInternalMovement()
                     {
@@ -60,7 +60,6 @@ namespace IDS.Helper
                     };
                     wir.WagonInternalMovement.Add(wim_new);
                 }
-
             }
             return wim_new;
         }
