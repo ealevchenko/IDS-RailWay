@@ -110,6 +110,11 @@
             'tcow_field_on_id_station': 'id ст. приб.',
             'tcow_field_on_station_name': 'Станция прибытия',
             'tcow_field_on_station_abbr': 'Ст. приб. (аббр.)',
+
+            'tcow_field_arrival_id_station': 'id ст. прин.',
+            'tcow_field_arrival_station_name': 'Принят на станцию',
+            'tcow_field_arrival_station_abbr': 'Принят на ст.(аббр.)',
+
             'tcow_field_on_id_way': 'id путь приб.',
             'tcow_field_on_id_park': 'id парка приб.',
             'tcow_field_on_way_name': 'Путь прибытия',
@@ -268,6 +273,9 @@
             'tcow_field_on_id_station': 'id st. arr. ',
             'tcow_field_on_station_name': 'Arrival station',
             'tcow_field_on_station_abbr': 'Art. approx. (abbr.) ',
+            'tcow_field_arrival_id_station': 'id of art. pri. ',
+            'tcow_field_arrival_station_name': 'Received at station',
+            'tcow_field_arrival_station_abbr': 'Received at st. (abbr.)',
             'tcow_field_on_id_way': 'id path arriv.',
             'tcow_field_on_id_park': 'park id.',
             'tcow_field_on_way_name': 'Arrival path',
@@ -1097,7 +1105,7 @@
             className: 'dt-body-center',
             title: langView('tcow_field_from_wim_parent_id', App.Langs), width: "30px", orderable: true, searchable: true
         },
-        // Станция прибытия
+        // Станция прибытия план
         {
             field: 'on_id_station',
             data: function (row, type, val, meta) {
@@ -1122,6 +1130,32 @@
             className: 'dt-body-left shorten mw-100',
             title: langView('tcow_field_on_station_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
+        // Станция прибытия факт
+        {
+            field: 'arrival_id_station',
+            data: function (row, type, val, meta) {
+                return row.arrival_id_station;
+            },
+            className: 'dt-body-center',
+            title: langView('tcow_field_arrival_id_station', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'arrival_station_name',
+            data: function (row, type, val, meta) {
+                return row['arrival_station_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('tcow_field_arrival_station_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'arrival_station_abbr',
+            data: function (row, type, val, meta) {
+                return row['arrival_station_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('tcow_field_arrival_station_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+
         // Путь прибытия
         {
             field: 'on_id_way',
@@ -1606,10 +1640,14 @@
         collums.push('from_wim_close');
         collums.push('from_wim_close_user');
         collums.push('from_wim_parent_id');
-        // Станция прибытия
+        // Станция прибытия план
         collums.push('on_id_station');
         collums.push('on_station_name');
         collums.push('on_station_abbr');
+        // Станция прибытия факт
+        collums.push('arrival_id_station');
+        collums.push('arrival_station_name');
+        collums.push('arrival_station_abbr');
         // Путь прибытия
         collums.push('on_id_way');
         collums.push('on_id_park');
@@ -1688,8 +1726,10 @@
         collums.push('outer_way_end');
         collums.push('from_wim_close');
         collums.push('from_wim_close_user');
-        // Станция прибытия
-        collums.push('on_station_abbr');
+        // Станция прибытия план
+        //collums.push('on_station_abbr');
+        // Станция прибытия факт
+        collums.push('arrival_station_abbr');
         // Путь прибытия
         collums.push('on_way_abbr');
         // Операция принять на станцию
@@ -1732,7 +1772,9 @@
         collums.push('from_wim_close');
         collums.push('from_wim_close_user');
         // Станция прибытия
-        collums.push('on_station_abbr');
+        /*        collums.push('on_station_abbr');*/
+        // Станция прибытия факт
+        collums.push('arrival_station_abbr');
         // Путь прибытия
         collums.push('on_way_abbr');
         // Операция принять на станцию
@@ -1923,7 +1965,12 @@
                     case 'history-send-wagons': {
                         // Отчет история отправленных вагонов
                         if (data.outer_way_end !== null) {
-                            $(row).addClass('green');  // Отметим вагон заблокирован
+                            if (data.on_id_operation === 6) {
+                                $(row).addClass('green');  // Отметим вагон заблокирован
+                            }
+                            if (data.on_id_operation === 11 || data.on_id_operation === 12) {
+                                $(row).addClass('red');  // Отметим вагон заблокирован
+                            }
                         }
                         break;
                     };
@@ -1943,7 +1990,7 @@
                     var row = this.obj_t_cars.rows(indexes).data().toArray();
                     if (row && row.length > 0 && row[0].outer_way_end !== null) {
                         e.preventDefault();
-                        this.out_warning('Вагон № ' + row[0].num + ' для операций заблокирован (вагон уже принят на станцию : ' + row[0]['on_station_name_' + App.Lang] + ' )');
+                        this.out_warning('Вагон № ' + row[0].num + ' для операций заблокирован (вагон уже принят на станцию : ' + row[0]['arrival_station_name_' + App.Lang] + ' )');
                     }
                 }.bind(this)).on('select deselect', function (e, dt, type, indexes) {
                     var index = this.obj_t_cars.rows({ selected: true });

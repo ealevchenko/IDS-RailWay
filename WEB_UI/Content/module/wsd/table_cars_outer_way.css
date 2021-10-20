@@ -46,9 +46,30 @@ table.dataTable.display tbody tr td a.idle-time-error {
 }*/
 
 table.dataTable.display tbody tr.wagon-ban {
-    color: #808080;
+/*    color: white;
+    background-color: #808080;*/
+}
+/*Вагон принят*/
+table.dataTable tbody tr:not(.selected).wagon-ban.odd, table.dataTable tbody tr:not(.selected).wagon-ban.even {
+    /*    background-color: #cdffcd;*/
+    color: #a6a6a6;
+    font-style: italic;
+    /*background-color: #808080;*/
 }
 
+table.dataTable.display tbody tr:not(.selected).odd.wagon-ban > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.wagon-ban > .sorting_1 {
+    /*    background-color: #a6ffa6;*/
+    color: #a6a6a6;
+    font-style: italic;
+    /*background-color: #808080;*/
+}
+
+table.dataTable.display tbody tr:not(.selected).even.wagon-ban > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.wagon-ban > .sorting_1 {
+    /*background-color: #a6ffa6;*/
+    color: #a6a6a6;
+    font-style: italic;
+    /*background-color: #737373;*/
+}
 
 
 /*IE сука не поддерживает*/
@@ -63,6 +84,9 @@ table.dataTable.display tbody tr.wagon-ban {
 table.dataTable.display thead tr th.fixed-column {
     background-color: #ffffff; /*макс*/
 }
+
+
+
 
 /*Скорректируем вывод цвет оператора*/
 /*table.dataTable.display tbody tr.selected.odd > td.operator, table.dataTable.display tbody tr.selected.even > td.operator {
@@ -194,8 +218,8 @@ table.dataTable.display tbody tr:not(.selected).odd.yellow > .sorting_1, table.d
 table.dataTable.display tbody tr:not(.selected).even.yellow > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.yellow > .sorting_1 {
     background-color: #fdf2ba;
 }*/
-
-/*table.dataTable tbody tr:not(.selected).red.odd, table.dataTable tbody tr:not(.selected).red.even {
+/*Вагон вернули или отменили*/
+table.dataTable tbody tr:not(.selected).red.odd, table.dataTable tbody tr:not(.selected).red.even {
     background-color: #ffebeb;
 }
 
@@ -205,7 +229,7 @@ table.dataTable.display tbody tr:not(.selected).odd.red > .sorting_1, table.data
 
 table.dataTable.display tbody tr:not(.selected).even.red > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.red > .sorting_1 {
     background-color: #ffc4c4;
-}*/
+}
 /*Вагон принят*/
 table.dataTable tbody tr:not(.selected).green.odd, table.dataTable tbody tr:not(.selected).green.even {
     background-color: #cdffcd;
