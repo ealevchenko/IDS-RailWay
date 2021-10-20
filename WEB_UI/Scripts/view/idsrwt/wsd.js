@@ -223,6 +223,10 @@
     var VACars = App.view_arrival_cars;
     var view_arrival_cars = new VACars('div#operation-arrival-cars'); // Создадим экземпляр
 
+    // Подключаем модуль выполнения операций возврат-отмена отправки
+    var VRCars = App.view_return_cars;
+    var view_return_cars = new VRCars('div#operation-return-cars'); // Создадим экземпляр
+
     var lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang')),
         langs = $.extend(true, $.extend(true, getLanguages($.Text_View, lang), getLanguages($.Text_Common, lang)), getLanguages($.Text_Table, lang)),
         user_name = $('input#username').val(),
@@ -332,6 +336,30 @@
                         //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
                     });
             }),
+        // Выполнить операцию вернуть вагоны отправленного состава на АМКР (Обновление wsd)
+        operation_return_cars = $('button#return-cars').on('click',
+            function (event) {
+                alert.clear_message();
+                event.preventDefault();
+                operation_detali.bit_update = false;
+                operation_detali.rows_update = [];
+                view_return_cars.init({
+                    alert: alert,
+                    ids_dir: ids_dir,
+                    ids_wsd: ids_wsd,
+                    fn_db_update: function () {
+                        //TODO: можно добавить возвращать перечень для обновления
+                        operation_detali.bit_update = true;
+                        operation_detali.rows_update = []; // обновим все
+                    }.bind(this),
+                },
+                    function (result_init) {
+                        view_return_cars.view(current_id_way) // Показать
+                        operation_detali.content.addClass('is-visible');
+                        //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+                    });
+            }),
+
 
         // Изменить дислокацию
         bt_dislocation = $('button#dislocation').on('click',
@@ -4559,6 +4587,7 @@
 
                     view_send_cars.destroy();
                     view_arrival_cars.destroy();
+                    view_return_cars.destroy();
 
                     if (typeof operation_detali.callback_close === 'function') {
                         operation_detali.callback_close(operation_detali.bit_update, operation_detali.rows_update);
