@@ -6,7 +6,7 @@
 @section styles {
     @Styles.Render("~/DataTables/css")
     @Styles.Render("~/DateTime/css")
-    @*<link rel="stylesheet" type="text/css" href="~/Content/view/idsrwt/wsd.css">*@
+    <link rel="stylesheet" type="text/css" href="~/Content/view/idsrwt/wsd.css">
     @*<link href="~/Content/module/cblist_station.css" rel="stylesheet" />
         <link href="~/Content/module/table_tree_way.css" rel="stylesheet" />
 
@@ -24,6 +24,7 @@
     <link href="~/Content/module/wsd/table_cars_outer_way.css" rel="stylesheet" /><!-- CSS стили модуля "Вагоны на перегоне" -->
     <link href="~/Content/module/wsd/table_sostav_outer_way.css" rel="stylesheet" /><!-- CSS стили модуля "Составы на перегоне" -->
     <link href="~/Content/module/wsd/view_arrival_cars.css" rel="stylesheet" /><!-- CSS стили модуля "Операция принять" -->
+    <link href="~/Content/module/wsd/view_return_cars.css" rel="stylesheet" /><!-- CSS стили модуля "Операция отмена отправки или возврат" -->
 
     <link href="~/Content/module/wsd/view_history_operation_arrival.css" rel="stylesheet" /><!-- CSS стили модуля "История операций принять на станцию" -->
 
@@ -77,6 +78,7 @@
     <script src="~/Scripts/module/wsd/table_cars_outer_way.js"></script>    <!-- Модуль "Вагоны на выбранном перегоне" -->
     <script src="~/Scripts/module/wsd/view_arrival_cars.js"></script>       <!-- Модуль "Операция принять" -->
     <script src="~/Scripts/module/wsd/view_send_cars.js"></script>          <!-- Модуль "Операция отправить" -->
+    <script src="~/Scripts/module/wsd/view_return_cars.js"></script>        <!-- Модуль "Операция возврат отправить или отмена" -->
 
     <script src="~/Scripts/module/wsd/view_history_operation_arrival.js"></script>  <!-- Модуль "История операций принять" -->
 
@@ -241,6 +243,7 @@
             <div id="sostav"></div>
             <div id="wagons"></div>
             <div id="history_operation_arrival"></div>
+            <div id="return"></div>
 
 
             @*<div class="text-left">

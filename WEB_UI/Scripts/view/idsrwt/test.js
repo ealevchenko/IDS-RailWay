@@ -53,8 +53,11 @@
     //var TCOW = App.table_cars_outer_way;
     //var t_cow = new TCOW('div#wagons');             // Создадим экземпляр
 
-    var VHOA = App.view_history_operation_arrival;
-    var vhoa = new VHOA('div#history_operation_arrival');             // Создадим экземпляр
+    //var VHOA = App.view_history_operation_arrival;
+    //var vhoa = new VHOA('div#history_operation_arrival');             // Создадим экземпляр
+
+    var VRC = App.view_return_cars;
+    var vrc = new VRC('div#return');             // Создадим экземпляр
 
     $('button#arrival').on('click', function (e) {
         //var data = oper_send.operation;
@@ -68,22 +71,34 @@
         //})
         //oper_send.update();
         //t_wagons.update(54152087);
-        vhoa.update();
+        //vhoa.update();
 
     });
 
     // После загрузки документа
     $(document).ready(function ($) {
-        vhoa.init({
+
+        vrc.init({
             alert: null,
             ids_dir: null,
             ids_wsd: null,
             fn_db_update: function (list) {
             }.bind(this),
         }, function (init) {
-/*            vac.view(123);//880*/
+            vrc.view(107);//880
             LockScreenOff();
         });
+
+        //        vhoa.init({
+        //            alert: null,
+        //            ids_dir: null,
+        //            ids_wsd: null,
+        //            fn_db_update: function (list) {
+        //            }.bind(this),
+        //        }, function (init) {
+        ///*            vac.view(123);//880*/
+        //            LockScreenOff();
+        //        });
         //t_sow.init({
         //    alert: alert,
         //    type_report: 'arrival-outer-way',  // Прибвыающие составы на внешнем пути
