@@ -77,6 +77,19 @@
             };
             this.$element.val(default_value);
         };
+        this.show = function () {
+            this.$element.show();
+        };
+        this.hide = function () {
+            this.$element.hide();
+        };
+        this.enable = function () {
+            this.$element.prop("disabled", false);
+        };
+        this.disable = function () {
+            this.$element.val(-1);
+            this.$element.prop("disabled", true);
+        };
         this.init();
     };
     // Инициализация текстового поля "INPUT"
@@ -98,6 +111,19 @@
         };
         this.update = function (default_value) {
             this.$element.val(default_value);
+        };
+        this.show = function () {
+            this.$element.show();
+        };
+        this.hide = function () {
+            this.$element.hide();
+        };
+        this.enable = function () {
+            this.$element.prop("disabled", false);
+        };
+        this.disable = function () {
+            this.$element.val('');
+            this.$element.prop("disabled", true);
         };
         this.init();
     };
@@ -180,10 +206,24 @@
                 return null;
             }
         };
-        this.init();
+        this.show = function () {
+            this.$element.show();
+        };
+        this.hide = function () {
+            this.$element.hide();
+        };
+        this.enable = function () {
+            this.$element.prop("disabled", false);
+        };
+        this.disable = function () {
+            this.set(null);
+            this.$element.prop("disabled", true);
+        };
         this.destroy = function () {
             this.$element.data('dateRangePicker').destroy();
         };
+        this.init();
+
     };
     // Инициализация поля дата и время "SPAN"
     form_control.prototype.init_datetime_range = function (element, start, stop, fn_close) {
@@ -256,10 +296,11 @@
 
 
         };
-        this.init();
         this.destroy = function () {
             this.$element.data('dateRangePicker').destroy();
         };
+        this.init();
+
     };
     // Инициализация поля дата "INPUT"
     form_control.prototype.init_textarea = function (element, default_value, fn_change) {
@@ -343,6 +384,23 @@
         };
         this.destroy = function (data) {
             this.$element.autocomplete("destroy");
+        };
+        this.show = function () {
+            this.$element.autocomplete("enable");
+            this.$element.show();
+        };
+        this.hide = function () {
+            this.$element.autocomplete("disable");
+            this.$element.hide();
+        };
+        this.enable = function () {
+            this.$element.autocomplete("enable");
+            this.$element.prop("disabled", false);
+        };
+        this.disable = function () {
+            this.$element.autocomplete("disable");
+            this.$element.val('');
+            this.$element.prop("disabled", true);
         };
         this.init();
     };
@@ -1288,51 +1346,53 @@
                         var valid_element = true;
                         var $element = element[0];
                         var valid = $element.validity;
+
                         var tagName = $element.tagName; // Получим тим элемента для детальной проверки
                         var required = $element.required;
                         var value = element.val();
                         var placeholder = element.attr('placeholder');
                         var id = element.attr('id');
-
-                        if (tagName === "SELECT") {
-                            if (value !== null && Number(value) === -1 && required) {
+                        // Проверим элемент активный
+                        if (!$element.disabled) {
+                            // Да активный выполнить проверку
+                            if (tagName === "SELECT") {
+                                if (value !== null && Number(value) === -1 && required) {
+                                    this.valid = false;
+                                    valid_element = false;
+                                    this.validation.set_object_error($($element), "Элемент [" + (placeholder && placeholder !== "" ? placeholder : id) + "] - не выбран.");
+                                }
+                            }
+                            // Установилась ошибка
+                            if (!valid.valid) {
                                 this.valid = false;
                                 valid_element = false;
-                                this.validation.set_object_error($($element), "Элемент [" + (placeholder && placeholder !== "" ? placeholder : id) + "] - не выбран.");
+                                if (valid.valueMissing) {
+                                    this.validation.set_object_error($($element), "Элемент [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не заполнен.");
+                                }
+                                if (valid.patternMismatch) {
+                                    this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не соответствует шаблону.");
+                                }
+                                if (valid.patternMismatch) {
+                                    this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не соответствует шаблону.");
+                                }
+                                if (valid.rangeOverflow) {
+                                    this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - больше максимально допустимого (" + $element.max + ").");
+                                }
+                                if (valid.rangeUnderflow) {
+                                    this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - меньше минимально допустимого (" + $element.min + ").");
+                                }
+                                if (valid.tooLong) {
+                                    this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - значение превышает лимит (" + $element.maxlength + ").");
+                                }
+                                if (valid.tooShort) {
+                                    this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не достигает минимума (" + $element.minlength + ").");
+                                }
+                                if (valid.typeMismatch) {
+                                    this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не соответствует требуемому синтаксису (" + $element.type + ").");
+                                }
+                            } else {
+                                if (valid_element) this.validation.set_control_ok($($element), "");
                             }
-                        }
-
-
-                        // Установилась ошибка
-                        if (!valid.valid) {
-                            this.valid = false;
-                            valid_element = false;
-                            if (valid.valueMissing) {
-                                this.validation.set_object_error($($element), "Элемент [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не заполнен.");
-                            }
-                            if (valid.patternMismatch) {
-                                this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не соответствует шаблону.");
-                            }
-                            if (valid.patternMismatch) {
-                                this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не соответствует шаблону.");
-                            }
-                            if (valid.rangeOverflow) {
-                                this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - больше максимально допустимого (" + $element.max + ").");
-                            }
-                            if (valid.rangeUnderflow) {
-                                this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - меньше минимально допустимого (" + $element.min + ").");
-                            }
-                            if (valid.tooLong) {
-                                this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - значение превышает лимит (" + $element.maxlength + ").");
-                            }
-                            if (valid.tooShort) {
-                                this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не достигает минимума (" + $element.minlength + ").");
-                            }
-                            if (valid.typeMismatch) {
-                                this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не соответствует требуемому синтаксису (" + $element.type + ").");
-                            }
-                        } else {
-                            if (valid_element) this.validation.set_control_ok($($element), "");
                         }
                     };
                 };
@@ -1411,7 +1471,7 @@
     form_infield.prototype.set = function (name, value) {
         if (this.settings.fields) {
             var field = this.settings.fields.find(function (o) {
-                return o.name === name
+                return o.field === name
             });
             if (field && field['element_' + this.mode]) {
                 field['element_' + this.mode].val(value);
@@ -1463,6 +1523,22 @@
         }
         return undefined;
     };
+    // Показать спрятать элемент
+    form_infield.prototype.enable = function (name, value) {
+        if (this.settings.fields) {
+            var field = this.settings.fields.find(function (o) {
+                return o.field === name
+            });
+            if (field && field['element_' + this.mode]) {
+                if (value) {
+                    field['element_' + this.mode].enable();
+                } else {
+                    field['element_' + this.mode].disable();
+                }
+
+            }
+        }
+    };
     //-----------------------------------------------------------------------------
     // Очистить все сообщения и ошибки на форме
     form_infield.prototype.clear_all = function () {
@@ -1474,7 +1550,6 @@
         }
 
     }
-
     // Вывести на форме сообщение об ошибке под элементом (указав тип формы)
     form_infield.prototype.set_object_error_mode = function (name, mode, message) {
         if (this.settings.fields) {
