@@ -341,6 +341,7 @@
         this.ids_wsd = this.settings.ids_wsd ? this.settings.ids_wsd : new wsd();
 
         this.id_station = -1;   // По умолчанию не выбрана
+        this.id_station_on = -1;  // По умолчанию не выбрана
         this.id_way = -1;       // По умолчанию не выбрана
         this.list_station = []; // По умолчанию пустой список
         this.list_way = [];     // По умолчанию пустой список
@@ -382,6 +383,7 @@
             }.bind(this);
             // Получим список внешних путей
             var get_list_outer_ways = function (id_station_on) {
+                this.id_station_on = id_station_on;
                 var outer_ways = [];
                 var list_outer_ways = this.ids_dir.list_outer_ways.filter(function (i) {
                     return i.id_station_on == id_station_on && i.id_station_from == this.id_station && !i.way_delete;
@@ -952,6 +954,10 @@
             if (result && result.result > 0) {
                 // Вывести данные вагоны на пути отправки
                 this.load_of_way(this.id_way, function (wagons) {
+                    // Показать составы прибывающие на станцию отправки
+                    if (this.tab_sostav_arrival) {
+                        this.tab_sostav_arrival.load_ow_arr_sostav_of_station_on(this.id_station_on);
+                    }
                     this.view_wagons(wagons);
                 }.bind(this));
                 this.out_clear();
