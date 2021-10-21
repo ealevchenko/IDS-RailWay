@@ -1,4 +1,4 @@
-USE [KRR-PA-Test-Railway]
+USE [KRR-PA-CNT-Railway]
 GO
 
 --Показать составы на перегоне отправленые с указаной станции

@@ -1,4 +1,4 @@
-USE [KRR-PA-Test-Railway]
+USE [KRR-PA-CNT-Railway]
 GO
 
 /****** Object:  UserDefinedFunction [IDS].[get_view_sostav_of_period_operation_send]    Script Date: 13.10.2021 15:52:37 ******/

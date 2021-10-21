@@ -1,4 +1,4 @@
-USE [KRR-PA-Test-Railway]
+USE [KRR-PA-CNT-Railway]
 GO
 
 /****** Object:  UserDefinedFunction [IDS].[get_count_wagon_return_of_sostav_outer_ways]    Script Date: 21.10.2021 9:36:25 ******/
