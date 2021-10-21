@@ -22,7 +22,7 @@
             'title_placeholder_station_from': 'Станция отправления:',
             'title_label_way': 'Путь отправления:',
             'title_placeholder_way': 'Выберите путь',
-            'fieldset_on_as_table_title': 'Прибывающие составы',
+            'fieldset_on_as_table_title': 'Прибывающие составы на выбранную станцию',
 
             'title_label_station_on': 'Станция прибытия:',
             'title_placeholder_station_on': 'Станция прибытия:',
