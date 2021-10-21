@@ -266,6 +266,7 @@
             'title_button_add_way_sending': 'Add to lineup',
             'title_button_del_way_sending': 'Remove from composition',
             'title_button_reverse_num_wagon': 'Reverse',
+            'title_button_head_tail': 'Head \ Tail',
 
             'mess_init_module': 'Initializing a module ...',
             'mess_load_wagons': 'Loading wagons on the way ...',
