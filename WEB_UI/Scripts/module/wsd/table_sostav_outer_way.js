@@ -57,7 +57,8 @@
             'tsow_field_on_way_capacity': 'Путь приб. (вмест.)',
             'tsow_field_on_way_close': 'Путь приб. закрыт',
             'tsow_field_on_way_delete': 'Путь приб. удален',
-            'tsow_field_count_wagons_arrival': 'Прин. ваг.',
+            'tsow_field_count_wagons_arrival': 'Принято.',
+            'tsow_field_count_wagons_return': 'Возв(Отм.)',
 
             'tsow_title_detali_wagon': 'Вагоны в составе',
 
@@ -125,7 +126,8 @@
             'tsow_field_on_way_capacity': 'Path approx. (together) ',
             'tsow_field_on_way_close': 'Arrival path closed ',
             'tsow_field_on_way_delete': 'Arrival path deleted ',
-            'tsow_field_count_wagons_arrival': 'Accepted. vag. ',
+            'tsow_field_count_wagons_arrival': 'Received',
+            'tsow_field_count_wagons_return': 'Return(Cancel)',
 
             'tsow_title_detali_wagon': 'Wagons in the train',
 
@@ -514,6 +516,14 @@
             className: 'dt-body-center',
             title: langView('tsow_field_count_wagons_arrival', App.Langs), width: "30px", orderable: true, searchable: true
         },
+        {
+            field: 'count_wagons_return',
+            data: function (row, type, val, meta) {
+                return row.count_wagons_return;
+            },
+            className: 'dt-body-center',
+            title: langView('tsow_field_count_wagons_return', App.Langs), width: "30px", orderable: true, searchable: true
+        },
     ];
     // Перечень кнопок
     var list_buttons = [
@@ -640,8 +650,9 @@
         collums.push('on_way_capacity');
         collums.push('on_way_close');
         collums.push('on_way_delete');
-        // Прибыл.
+        // Прибыл/возврат
         collums.push('count_wagons_arrival');
+        collums.push('count_wagons_return');
         //collums.push('');
         //collums.push('');
         //collums.push('');
@@ -673,8 +684,9 @@
         //collums.push('from_way_delete');
         // Отправл.
         collums.push('count_wagons_send');
-        // Прибыл.
+        // Прибыл/возврат
         collums.push('count_wagons_arrival');
+        collums.push('count_wagons_return');
 
         // Операция отправления
         collums.push('from_operation_locomotive1');
@@ -724,8 +736,9 @@
         collums.push('on_station_name');
         // Отправл.
         collums.push('count_wagons_send');
-        // Прибыл.
+        // Прибыл/возврат
         collums.push('count_wagons_arrival');
+        collums.push('count_wagons_return');
         // Операция отправления
         collums.push('from_operation_locomotive1');
         collums.push('from_operation_locomotive2');
@@ -865,11 +878,14 @@
             jQueryUI: false,
             "createdRow": function (row, data, index) {
                 $(row).attr('id', data.outer_way_num_sostav); // id строки дислокации вагона
-                if (data.count_wagons_arrival > 0 && data.count_wagons_send > data.count_wagons_arrival) {
+                if (data.count_wagons_arrival > 0 && data.count_wagons_send > (data.count_wagons_arrival + data.count_wagons_return)) {
                     $(row).addClass('yellow');// Отметим состав частично принят
                 }
-                if (data.count_wagons_arrival > 0 && data.count_wagons_send === data.count_wagons_arrival) {
+                if ((data.count_wagons_arrival > 0 || data.count_wagons_return > 0) && data.count_wagons_send === (data.count_wagons_arrival + data.count_wagons_return)) {
                     $(row).addClass('green');// Отметим состав частично принят
+                }
+                if ((data.count_wagons_arrival === 0 && data.count_wagons_return > 0) && data.count_wagons_send === (data.count_wagons_arrival + data.count_wagons_return)) {
+                    $(row).addClass('red');// Отметим состав частично принят
                 }
                 // Проверка на создание строки операции отправки (ошибка если дата строки создания и выполнения операции больше часа )
                 var from_create = moment(data.from_operation_create);

@@ -436,6 +436,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public DateTime? on_way_close { get; set; }
         public DateTime? on_way_delete { get; set; }
         public int? count_wagons_arrival { get; set; }
+        public int? count_wagons_return { get; set; }
     }
     #endregion
 
