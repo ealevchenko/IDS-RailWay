@@ -17,25 +17,16 @@
             'vrc_card_header_panel': 'ВЫПОЛНИТЬ ОПЕРАЦИЮ "ВОЗВРАТ ИЛИ ОТМЕНА ОПЕРАЦИИ ОТПРАВКИ"',
             'vrc_card_header_on': 'ВЕРНУТЬ НА СТАНЦИЮ',
             'vrc_card_header_from': 'ОТПРАВЛЕННЫЕ СОСТАВЫ',
-            //'vrc_fieldset_on_table_title': 'Сформированный состав',
-
             'vrc_title_label_station_on': 'Станция отправления:',
             'vrc_title_placeholder_station_on': 'Станция отправления:',
-
             'vrc_title_label_way_on': 'Путь возврата:',
             'vrc_title_placeholder_way_on': 'Выберите путь',
-
-
-            /*            'vrc_title_label_outer_way': 'Внешний путь:',*/
-            /*            'vrc_title_placeholder_outer_way': 'Внешний путь',*/
             'vrc_title_label_locomotive1': 'Локомотив №1:',
             'vrc_title_label_locomotive2': 'Локомотив №2:',
             'vrc_title_placeholder_locomotive': ' № локомотива',
             'vrc_title_time_aplly': 'Время выполнения',
             'vrc_title_placeholder_time_aplly': 'Время выполнения',
             'vrc_title_type_return': 'Отмена операции',
-            /*            'vrc_title_placeholder_type_return': 'Отмена',*/
-
             'vrc_title_form_apply': 'Выполнить?',
 
             'vrc_title_button_export': 'Экспорт',
@@ -45,7 +36,6 @@
             'vrc_title_button_return': 'Вернуть',
             'vrc_title_button_head': 'Голова',
             'vrc_title_button_tail': 'Хвост',
-
             'vrc_title_add_ok': 'ВЫПОЛНИТЬ',
 
             'vrc_mess_error_not_way': 'Выберите путь',
@@ -55,14 +45,10 @@
             'vrc_mess_error_max_time_aplly': 'Дата выполнения операции не может быть больше текущей даты, мак. отклонение (мин) =',
             'vrc_mess_error_not_wagons': 'Не выбраны вагоны для операции возврата или отмены (в окне «ОТПРАВЛЕННЫЕ СОСТАВЫ», выберите станцию, отправленный состав и сформируйте возврат или отмену).',
             'vrc_mess_error_operation_run': 'При выполнении операции «ВОЗВРАТ ИЛИ ОТМЕНА ОПЕРАЦИИ ОТПРАВКИ» произошла ошибка, код ошибки:',
-
             'vrc_mess_cancel_operation_cancel': 'Операция "ОТМЕНА ОПЕРАЦИИ ОТПРАВКИ ВАГОНОВ СОСТАВА" – отменена',
             'vrc_mess_cancel_operation_return': 'Операция "ВОЗРАТ ОТПРАВЛЕННЫХ ВАГОНОВ ИЗ СОСТАВА" – отменена',
-
-
             'vrc_mess_run_operation_cancel': 'Выполняю операцию отмены отправки вагонов состава',
             'vrc_mess_run_operation_return': 'Выполняю операцию возврата вагонов из состава',
-
             'vrc_mess_not_select_way_on': 'Выберите путь для приема вагонов!',
 
             'vrc_mess_load_operation': 'Загружаю операции...',
@@ -77,7 +63,52 @@
         },
         'en':  //default language: English
         {
+            'vrc_card_header_panel': 'PERFORM THE OPERATION "RETURN OR CANCEL SEND OPERATION"',
+            'vrc_card_header_on': 'RETURN TO STATION',
+            'vrc_card_header_from': 'SHIPPED CONSTRUCTIONS',
+            'vrc_title_label_station_on': 'Departure station:',
+            'vrc_title_placeholder_station_on': 'Departure station:',
+            'vrc_title_label_way_on': 'Return path:',
+            'vrc_title_placeholder_way_on': 'Select path',
+            'vrc_title_label_locomotive1': 'Locomotive # 1:',
+            'vrc_title_label_locomotive2': 'Locomotive # 2:',
+            'vrc_title_placeholder_locomotive': 'Locomotive #',
+            'vrc_title_time_aplly': 'Runtime',
+            'vrc_title_placeholder_time_aplly': 'Execution time',
+            'vrc_title_type_return': 'Cancel operation',
+            'vrc_title_form_apply': 'Run?',
 
+            'vrc_title_button_export': 'Export',
+            'vrc_title_button_buffer': 'Buffer',
+            'vrc_title_button_excel': 'Excel',
+            'vrc_title_button_cancel': 'Cancel',
+            'vrc_title_button_return': 'Return',
+            'vrc_title_button_head': 'Head',
+            'vrc_title_button_tail': 'Tail',
+            'vrc_title_add_ok': 'EXECUTE',
+
+            'vrc_mess_error_not_way': 'Please select a path',
+            'vrc_mess_error_equal_locomotive': 'Locomotive # 1 and # 2 are equal',
+            'vrc_mess_error_not_locomotive': 'There is no locomotive # in the IDS directory',
+            'vrc_mess_error_min_time_aplly': 'The date of the operation cannot be less than the current date, min. deviation (min) = ',
+            'vrc_mess_error_max_time_aplly': 'The date of the operation cannot be greater than the current date, mac. deviation (min) = ',
+            'vrc_mess_error_not_wagons': 'No wagons selected for the return or cancellation operation (in the SENDED CONVERSIONS window, select the station, the sent train and form a return or cancellation).',
+            'vrc_mess_error_operation_run': 'An error occurred while performing the "RETURN OR CANCEL SEND OPERATION" operation, error code:',
+            'vrc_mess_cancel_operation_cancel': 'The operation "CANCELING OPERATION OF SENDING STRAIGHT CARS" - canceled',
+            'vrc_mess_cancel_operation_return': 'Operation "RETURN OF DEPARTED CARS FROM STAFF" - canceled',
+            'vrc_mess_run_operation_cancel': 'I am performing the operation of canceling the dispatch of wagons of the train',
+            'vrc_mess_run_operation_return': 'I am performing the operation of returning wagons from the train',
+            'vrc_mess_not_select_way_on': 'Select a track to receive wagons!',
+
+            'vrc_mess_load_operation': 'Loading operations ...',
+            'vrc_mess_load_wagons': 'Loading wagons on the way ...',
+            'vrc_mess_update_operation': 'Updating operations ...',
+            'vrc_mess_init_panel': 'Initializing a module ...',
+            'vrc_mess_destroy_operation': 'Closing the form ...',
+            'vrc_mess_create_sostav': 'Forming train, moving wagons ...',
+            'vrc_mess_clear_sostav': 'Forming a train, removing selected wagons ...',
+            'vrc_mess_reverse_head_sostav': 'Form composition, reverse head-tail',
+            'vrc_mess_reverse_sostav': 'Forming the train, the reverse of the wagons ...',
         }
     };
     // Определлим список текста для этого модуля
