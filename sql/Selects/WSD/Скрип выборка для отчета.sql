@@ -1,10 +1,10 @@
 use [KRR-PA-CNT-Railway]
 
-select count(wim.id)
-FROM IDS.WagonInternalMovement as wim	--> Текущая дислокаци
-where (wim.way_end IS NULL 
---and wim.id_way in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] where [way_delete] is null and id_station in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].Directory_Station where station_delete is null))
-) OR (wim.outer_way_start is not NULL and wim.outer_way_end is null)
+--select count(wim.id)
+--FROM IDS.WagonInternalMovement as wim	--> Текущая дислокаци
+--where (wim.way_end IS NULL 
+----and wim.id_way in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] where [way_delete] is null and id_station in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].Directory_Station where station_delete is null))
+--) OR (wim.outer_way_start is not NULL and wim.outer_way_end is null)
 
 --> Получим уставку норма простоя
 declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] where area=N'wsd' and name = N'arrival_idle_time') AS INT);
@@ -251,9 +251,8 @@ declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] wher
 		Left JOIN UZ.Directory_Stations as let_station_uz ON  il.destination_station = let_station_uz.code_cs
 		--> Справочник Возвратов
 		Left JOIN [IDS].[Directory_DetentionReturn] as dir_return ON out_car.id_outgoing_return_start = dir_return.id
-		where (wim.way_end IS NULL 
---and wim.id_way in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] where [way_delete] is null and id_station in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].Directory_Station where station_delete is null))
-) OR (wim.outer_way_start is not NULL and wim.outer_way_end is null)
+		where (wim.way_end IS NULL and wim.id_way in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] where [way_delete] is null and id_station in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].Directory_Station where station_delete is null))) 
+		OR (wim.outer_way_start is not NULL and wim.outer_way_end is null)
 
 
 ----select wim.*
