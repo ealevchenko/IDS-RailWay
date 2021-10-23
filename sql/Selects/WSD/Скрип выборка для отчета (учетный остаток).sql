@@ -1,4 +1,4 @@
-
+use [KRR-PA-CNT-Railway]
 --SELECT count([num]) count_wagon 
 --FROM [IDS].[Directory_WagonsRent] where rent_end is null and  [id_operator] in 
 --	(SELECT [id_operator] FROM [IDS].[Directory_OperatorsWagonsGroup] WHERE [group]=N'amkr') 
@@ -13,6 +13,7 @@
 
 select 
 	wim.id
+	,wim.id_wagon_internal_routes
 	,dir_rent.num
 	,dir_rent.id_operator
 	,out_sost.status
