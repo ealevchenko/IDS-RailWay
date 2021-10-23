@@ -59,6 +59,7 @@
             'tsow_field_on_way_delete': 'Путь приб. удален',
             'tsow_field_count_wagons_arrival': 'Принято.',
             'tsow_field_count_wagons_return': 'Возв(Отм.)',
+            'tsow_field_count_wagons_accepted': 'факт. прин.',
 
             'tsow_title_detali_wagon': 'Вагоны в составе',
 
@@ -128,6 +129,8 @@
             'tsow_field_on_way_delete': 'Arrival path deleted ',
             'tsow_field_count_wagons_arrival': 'Received',
             'tsow_field_count_wagons_return': 'Return(Cancel)',
+            'tsow_field_count_wagons_accepted': 'fact. pri. ',
+
 
             'tsow_title_detali_wagon': 'Wagons in the train',
 
@@ -524,6 +527,14 @@
             className: 'dt-body-center',
             title: langView('tsow_field_count_wagons_return', App.Langs), width: "30px", orderable: true, searchable: true
         },
+        {
+            field: 'count_wagons_accepted',
+            data: function (row, type, val, meta) {
+                return row.count_wagons_accepted;
+            },
+            className: 'dt-body-center',
+            title: langView('tsow_field_count_wagons_accepted', App.Langs), width: "30px", orderable: true, searchable: true
+        },
     ];
     // Перечень кнопок
     var list_buttons = [
@@ -653,6 +664,7 @@
         // Прибыл/возврат
         collums.push('count_wagons_arrival');
         collums.push('count_wagons_return');
+        collums.push('count_wagons_accepted');
         //collums.push('');
         //collums.push('');
         //collums.push('');
@@ -687,6 +699,7 @@
         // Прибыл/возврат
         collums.push('count_wagons_arrival');
         collums.push('count_wagons_return');
+        collums.push('count_wagons_accepted');
 
         // Операция отправления
         collums.push('from_operation_locomotive1');
@@ -736,9 +749,10 @@
         collums.push('on_station_name');
         // Отправл.
         collums.push('count_wagons_send');
-        // Прибыл/возврат
+        // Прибыл/возврат/факт
         collums.push('count_wagons_arrival');
         collums.push('count_wagons_return');
+        collums.push('count_wagons_accepted');
         // Операция отправления
         collums.push('from_operation_locomotive1');
         collums.push('from_operation_locomotive2');
