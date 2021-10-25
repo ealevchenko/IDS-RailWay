@@ -227,6 +227,10 @@
     var VRCars = App.view_return_cars;
     var view_return_cars = new VRCars('div#operation-return-cars'); // Создадим экземпляр
 
+    // Подключаем модуль расчета учетного остатка
+    var TTB = App.table_total_balance;
+    var table_total_balance = new TTB('div#total-balance');             // Создадим экземпляр
+
     var lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang')),
         langs = $.extend(true, $.extend(true, getLanguages($.Text_View, lang), getLanguages($.Text_Common, lang)), getLanguages($.Text_Table, lang)),
         user_name = $('input#username').val(),
@@ -4652,6 +4656,15 @@
             if (name === 'way') {
                 pn_loading_way_detail.Open(id);
             }
+        }, function () {
+            // Нажата кнопка обновить
+            table_total_balance.load();
+        });
+
+        table_total_balance.init({
+            ids_wsd: this.ids_wsd,
+        }, function (init) {
+            table_total_balance.load();
         });
 
         t_wagons.init({

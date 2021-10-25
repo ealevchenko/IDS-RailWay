@@ -425,9 +425,10 @@
         this.selector = this.$div_tree_way.attr('id');
     }
     //
-    ids_tree_way.prototype.init = function (fn_select_way, fn_detali) {
+    ids_tree_way.prototype.init = function (fn_select_way, fn_detali, fn_refresh) {
         this.fn_select_way = fn_select_way;
         this.fn_detali = fn_detali;
+        this.fn_refresh = fn_refresh;
         // Загрузим нужные данные
         // теперь выполним инициализацию
         var cardElement = new table_tree_way(this.selector);
@@ -445,7 +446,15 @@
                 case 'button-open-park': this.open_tree(false); break;
                 case 'button-open-all': this.open_tree(true); break;
                 case 'button-close': this.close_tree(); break;
-                case 'button-refresh': this.update(); break;
+                case 'button-refresh': {
+                    if (typeof this.fn_refresh === 'function') {
+                        this.fn_refresh();
+                    }
+                    this.update();
+                    break;
+
+
+                }
             };
         }.bind(this));
         this.$t_tree_way.empty();

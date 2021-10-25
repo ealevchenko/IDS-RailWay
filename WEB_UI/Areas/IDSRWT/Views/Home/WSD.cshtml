@@ -52,6 +52,7 @@
     <!--<script src="~/Scripts/module/wsd/table_cars_operation.js"></script>-->    <!-- Модуль "Таблица вагонов по операциям детально" -->
     <!--<script src="~/Scripts/module/wsd/operation_send.js"></script>-->          <!-- Модуль "Операции отправки вагонов на станции АМКР" -->
 
+    <script src="~/Scripts/module/wsd/table_total_balance.js"></script>     <!-- Модуль "Расчета учетного остатка" -->
 
     <script src="~/Scripts/module/wsd/table_cars_way.js"></script>          <!-- Модуль "Вагоны на выбранном пути" -->
     <script src="~/Scripts/module/wsd/table_sostav_outer_way.js"></script>  <!-- Модуль "Составы на выбранном перегоне" -->
@@ -63,6 +64,8 @@
 
     <script src="~/Scripts/module/wsd/view_history_operation_arrival.js"></script>  <!-- Модуль "История операция прием вагонов на станции АМКР" -->
     <script src="~/Scripts/module/wsd/view_history_operation_send.js"></script>     <!-- Модуль "История операция отправка вагонов на станции АМКР" -->
+
+
 
     <script src="~/Scripts/plugins/pl_dialog_confirm.js"></script> <!-- Плагин -->
 
@@ -174,6 +177,11 @@
                                     <div class="row">
                                         <div class="col-xl-12">
                                             <div id="tree-way"></div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-12">
+                                            <div id="total-balance"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -427,225 +435,226 @@
                 </div>
             </div>
             <!--<div class="row operation-sending">
-        <div class="col-xl-12 mb-1 mt-1">
-            <div class="card border-secondary mb-1">
-                <div class="card-header">
-                    <div class="row">
-                        <div class="col-xl-12 text-center">
-                            <div class="container-fluid">
-                                ОПЕРАЦИЯ "ОТПРАВЛЕНИЯ СОСТАВА НА СТАНЦИЮ АМКР"
+                <div class="col-xl-12 mb-1 mt-1">
+                    <div class="card border-secondary mb-1">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-xl-12 text-center">
+                                    <div class="container-fluid">
+                                        ОПЕРАЦИЯ "ОТПРАВЛЕНИЯ СОСТАВА НА СТАНЦИЮ АМКР"
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="card-body text-dark pl-3 pr-3">
-                    <div class="row mb-1">
-                        <div class="col-xl-12">
-                            <div class="card border-primary">
-                                <div class="card-header text-left">ОТПРАВИТЬ НА ДРУГУЮ СТАНЦИЮ</div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-xl-3">
-                                            <fieldset class="border-primary">
-                                                <div class="form-row text-center ">
-                                                    <div class="col-xl-12 mb-1 text-left">
-                                                        <button class="btn btn-primary" id="operation_sending_run" disabled="disabled">@IDSRWTResource.title_operation_run</button>
-                                                    </div>
+                        <div class="card-body text-dark pl-3 pr-3">
+                            <div class="row mb-1">
+                                <div class="col-xl-12">
+                                    <div class="card border-primary">
+                                        <div class="card-header text-left">ОТПРАВИТЬ НА ДРУГУЮ СТАНЦИЮ</div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-xl-3">
+                                                    <fieldset class="border-primary">
+                                                        <div class="form-row text-center ">
+                                                            <div class="col-xl-12 mb-1 text-left">
+                                                                <button class="btn btn-primary" id="operation_sending_run" disabled="disabled">@IDSRWTResource.title_operation_run</button>
+                                                            </div>
 
+                                                        </div>
+                                                        <div class="form-row">
+                                                            <div class="col-xl-12 mb-1 text-left">
+                                                                <label for="operation_detali_sending_way_from" class="col-form-label">@IDSRWTResource.title_operation_detali_way_from:</label>
+                                                                <input type="text" class="form-control" id="operation_detali_sending_way_from" name="operation_detali_sending_way_from" disabled="disabled" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-row">
+                                                            <div class="col-xl-12 mb-1 text-left">
+                                                                <label for="operation_detali_sending_station" class="col-form-label">@IDSRWTResource.title_operation_detali_sending_station:</label>
+                                                                <select class="form-control" id="operation_detali_sending_station" name="operation_detali_sending_station" required="required"></select>
+                                                                <div class="invalid-feedback"></div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-row">
+                                                            <div class="col-xl-12 mb-1 text-left">
+                                                                <label for="operation_detali_sending_outer_ways" class="col-form-label">@IDSRWTResource.title_operation_detali_sending_outer_ways:</label>
+                                                                <select class="form-control" id="operation_detali_sending_outer_ways" name="operation_detali_sending_outer_ways" required="required"></select>
+                                                                <div class="invalid-feedback"></div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-row">
+                                                            <div class="col-xl-12 mb-1 text-left">
+                                                                <label for="operation_detali_sending_num_train" class="col-form-label">@IDSRWTResource.title_operation_detali_sending_num_train:</label>
+                                                                <input type="number" class="form-control" id="operation_detali_sending_num_train" name="operation_detali_sending_num_train" />
+                                                                <div class="invalid-feedback"></div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-row">
+                                                            <div class="col-xl-6 mb-1 text-left">
+                                                                <label for="operation_detali_sending_locomotive1" class="col-form-label">@IDSRWTResource.title_operation_detali_locomotive №1:</label>
+                                                                <select class="form-control" id="operation_detali_sending_locomotive1" name="operation_detali_sending_locomotive1" required="required"></select>
+                                                                <div class="invalid-feedback"></div>
+                                                            </div>
+                                                            <div class="col-xl-6 mb-1 text-left">
+                                                                <label for="operation_detali_sending_locomotive2" class="col-form-label">@IDSRWTResource.title_operation_detali_locomotive №2:</label>
+                                                                <select class="form-control" id="operation_detali_sending_locomotive2" name="operation_detali_sending_locomotive2" required="required"></select>
+                                                                <div class="invalid-feedback"></div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-row">
+                                                            <div class="col-xl-6 mb-1 text-left">
+                                                                <label for="operation_detali_sending_lead_time" class="col-form-label">@IDSRWTResource.title_operation_detali_lead_time</label>
+                                                                <input type="datetime" class="form-control" id="operation_detali_sending_lead_time" name="operation_detali_sending_lead_time" />
+                                                                <div class="invalid-feedback"></div>
+                                                            </div>
+                </div>
+                                                    </fieldset>
                                                 </div>
-                                                <div class="form-row">
-                                                    <div class="col-xl-12 mb-1 text-left">
-                                                        <label for="operation_detali_sending_way_from" class="col-form-label">@IDSRWTResource.title_operation_detali_way_from:</label>
-                                                        <input type="text" class="form-control" id="operation_detali_sending_way_from" name="operation_detali_sending_way_from" disabled="disabled" />
-                                                    </div>
+                                                <div class="col-xl-9">
+                                                    <fieldset class="border-primary">
+                                                        <legend class="text-primary">Сформированный состав</legend>
+                                                        <div class="operator-detali-tables">
+                                                            <table id="wagons-sending" class="compact table table-striped table-hover" style="width:100%; table-layout: fixed"></table>
+                                                        </div>
+                                                    </fieldset>
                                                 </div>
-                                                <div class="form-row">
-                                                    <div class="col-xl-12 mb-1 text-left">
-                                                        <label for="operation_detali_sending_station" class="col-form-label">@IDSRWTResource.title_operation_detali_sending_station:</label>
-                                                        <select class="form-control" id="operation_detali_sending_station" name="operation_detali_sending_station" required="required"></select>
-                                                        <div class="invalid-feedback"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-row">
-                                                    <div class="col-xl-12 mb-1 text-left">
-                                                        <label for="operation_detali_sending_outer_ways" class="col-form-label">@IDSRWTResource.title_operation_detali_sending_outer_ways:</label>
-                                                        <select class="form-control" id="operation_detali_sending_outer_ways" name="operation_detali_sending_outer_ways" required="required"></select>
-                                                        <div class="invalid-feedback"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-row">
-                                                    <div class="col-xl-12 mb-1 text-left">
-                                                        <label for="operation_detali_sending_num_train" class="col-form-label">@IDSRWTResource.title_operation_detali_sending_num_train:</label>
-                                                        <input type="number" class="form-control" id="operation_detali_sending_num_train" name="operation_detali_sending_num_train" />
-                                                        <div class="invalid-feedback"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-row">
-                                                    <div class="col-xl-6 mb-1 text-left">
-                                                        <label for="operation_detali_sending_locomotive1" class="col-form-label">@IDSRWTResource.title_operation_detali_locomotive №1:</label>
-                                                        <select class="form-control" id="operation_detali_sending_locomotive1" name="operation_detali_sending_locomotive1" required="required"></select>
-                                                        <div class="invalid-feedback"></div>
-                                                    </div>
-                                                    <div class="col-xl-6 mb-1 text-left">
-                                                        <label for="operation_detali_sending_locomotive2" class="col-form-label">@IDSRWTResource.title_operation_detali_locomotive №2:</label>
-                                                        <select class="form-control" id="operation_detali_sending_locomotive2" name="operation_detali_sending_locomotive2" required="required"></select>
-                                                        <div class="invalid-feedback"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-row">
-                                                    <div class="col-xl-6 mb-1 text-left">
-                                                        <label for="operation_detali_sending_lead_time" class="col-form-label">@IDSRWTResource.title_operation_detali_lead_time</label>
-                                                        <input type="datetime" class="form-control" id="operation_detali_sending_lead_time" name="operation_detali_sending_lead_time" />
-                                                        <div class="invalid-feedback"></div>
-                                                    </div>
-        </div>
-                                            </fieldset>
+                                            </div>
                                         </div>
-                                        <div class="col-xl-9">
-                                            <fieldset class="border-primary">
-                                                <legend class="text-primary">Сформированный состав</legend>
-                                                <div class="operator-detali-tables">
-                                                    <table id="wagons-sending" class="compact table table-striped table-hover" style="width:100%; table-layout: fixed"></table>
-                                                </div>
-                                            </fieldset>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <div class="col-xl-12">
+                                    <div class="card border-info">
+                                        <div class="card-header text-left">ВАГОНЫ ДЛЯ ОТПРАВКИ</div>
+                                        <div class="card-body operator-detali-tables">
+                                            <table id="wagons-sending-way-from" class="compact table table-striped table-hover" style="width:100%; table-layout: fixed"></table>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-1">
-                        <div class="col-xl-12">
-                            <div class="card border-info">
-                                <div class="card-header text-left">ВАГОНЫ ДЛЯ ОТПРАВКИ</div>
-                                <div class="card-body operator-detali-tables">
-                                    <table id="wagons-sending-way-from" class="compact table table-striped table-hover" style="width:100%; table-layout: fixed"></table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
-            </div>
-        </div>
-    </div>-->
+            </div>-->
             <!--<div class="row operation-arrival">
-            <div class="col-xl-12 mb-1 mt-1">
-                <div class="card border-secondary mb-1">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col-xl-12 text-center">
-                                <div class="container-fluid">
-                                    ОПЕРАЦИЯ "ПРИБЫТИЯ СОСТАВА НА СТАНЦИЮ АМКР"
+                <div class="col-xl-12 mb-1 mt-1">
+                    <div class="card border-secondary mb-1">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-xl-12 text-center">
+                                    <div class="container-fluid">
+                                        ОПЕРАЦИЯ "ПРИБЫТИЯ СОСТАВА НА СТАНЦИЮ АМКР"
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="card-body text-dark pl-3 pr-3">
-                        <div class="row mb-1">
-                            <div class="col-xl-12">
-                                <div class="card border-primary">
-                                    <div class="card-header text-left">ПРИНЯТЬ НА СТАНЦИЮ</div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-xl-4">
-                                                <fieldset class="border-primary">
-                                                    <div class="form-row text-center ">
-                                                        <div class="col-xl-12 mb-1 text-left">
-                                                            <button class="btn btn-primary" id="operation_arrival_run" disabled="disabled">@IDSRWTResource.title_operation_arrival_run</button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-row">
-                                                        <div class="col-xl-12 mb-1 text-left">
-                                                            <label for="operation_detali_arrival_way" class="col-form-label">@IDSRWTResource.title_operation_detali_arrival_way:</label>
-                                                            <select class="form-control" id="operation_detali_arrival_way" name="operation_detali_arrival_way" required="required"></select>
-                                                            <div class="invalid-feedback"></div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-row">
-                                                        <div class="col-xl-6 mb-1 text-left">
-                                                            <div class="form-check" style="margin-top:20%">
-                                                                <input type="checkbox" class="form-check-input" id="operation_detali_arrival_reverse">
-                                                                <label class="form-check-label" for="operation_detali_arrival_reverse">@IDSRWTResource.title_operation_detali_reverse:</label>
+                        <div class="card-body text-dark pl-3 pr-3">
+                            <div class="row mb-1">
+                                <div class="col-xl-12">
+                                    <div class="card border-primary">
+                                        <div class="card-header text-left">ПРИНЯТЬ НА СТАНЦИЮ</div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-xl-4">
+                                                    <fieldset class="border-primary">
+                                                        <div class="form-row text-center ">
+                                                            <div class="col-xl-12 mb-1 text-left">
+                                                                <button class="btn btn-primary" id="operation_arrival_run" disabled="disabled">@IDSRWTResource.title_operation_arrival_run</button>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xl-6 mb-1 text-left">
-                                                            <label for="operation_detali_arrival_side" class="col-form-label">@IDSRWTResource.title_operation_detali_side:</label>
-                                                            <select class="form-control" id="operation_detali_arrival_side" name="operation_detali_arrival_side" required="required"></select>
-                                                            <div class="invalid-feedback"></div>
+                                                        <div class="form-row">
+                                                            <div class="col-xl-12 mb-1 text-left">
+                                                                <label for="operation_detali_arrival_way" class="col-form-label">@IDSRWTResource.title_operation_detali_arrival_way:</label>
+                                                                <select class="form-control" id="operation_detali_arrival_way" name="operation_detali_arrival_way" required="required"></select>
+                                                                <div class="invalid-feedback"></div>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="form-row">
-                                                        <div class="col-xl-6 mb-1 text-left">
-                                                            <label for="operation_detali_arrival_locomotive1" class="col-form-label">@IDSRWTResource.title_operation_detali_locomotive №1:</label>
-                                                            <select class="form-control" id="operation_detali_arrival_locomotive1" name="operation_detali_arrival_locomotive1" required="required"></select>
-                                                            <div class="invalid-feedback"></div>
+                                                        <div class="form-row">
+                                                            <div class="col-xl-6 mb-1 text-left">
+                                                                <div class="form-check" style="margin-top:20%">
+                                                                    <input type="checkbox" class="form-check-input" id="operation_detali_arrival_reverse">
+                                                                    <label class="form-check-label" for="operation_detali_arrival_reverse">@IDSRWTResource.title_operation_detali_reverse:</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-6 mb-1 text-left">
+                                                                <label for="operation_detali_arrival_side" class="col-form-label">@IDSRWTResource.title_operation_detali_side:</label>
+                                                                <select class="form-control" id="operation_detali_arrival_side" name="operation_detali_arrival_side" required="required"></select>
+                                                                <div class="invalid-feedback"></div>
+                                                            </div>
                                                         </div>
-                                                        <div class="col-xl-6 mb-1 text-left">
-                                                            <label for="operation_detali_arrival_locomotive2" class="col-form-label">@IDSRWTResource.title_operation_detali_locomotive №2:</label>
-                                                            <select class="form-control" id="operation_detali_arrival_locomotive2" name="operation_detali_arrival_locomotive2" required="required"></select>
-                                                            <div class="invalid-feedback"></div>
+                                                        <div class="form-row">
+                                                            <div class="col-xl-6 mb-1 text-left">
+                                                                <label for="operation_detali_arrival_locomotive1" class="col-form-label">@IDSRWTResource.title_operation_detali_locomotive №1:</label>
+                                                                <select class="form-control" id="operation_detali_arrival_locomotive1" name="operation_detali_arrival_locomotive1" required="required"></select>
+                                                                <div class="invalid-feedback"></div>
+                                                            </div>
+                                                            <div class="col-xl-6 mb-1 text-left">
+                                                                <label for="operation_detali_arrival_locomotive2" class="col-form-label">@IDSRWTResource.title_operation_detali_locomotive №2:</label>
+                                                                <select class="form-control" id="operation_detali_arrival_locomotive2" name="operation_detali_arrival_locomotive2" required="required"></select>
+                                                                <div class="invalid-feedback"></div>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="form-row">
-                                                        <div class="col-xl-6 mb-1 text-left">
-                                                            <label for="operation_detali_arrival_lead_time" class="col-form-label">@IDSRWTResource.title_operation_detali_lead_time</label>
-                                                            <input type="datetime" class="form-control" id="operation_detali_arrival_lead_time" name="operation_detali_arrival_lead_time" />
-                                                            <div class="invalid-feedback"></div>
+                                                        <div class="form-row">
+                                                            <div class="col-xl-6 mb-1 text-left">
+                                                                <label for="operation_detali_arrival_lead_time" class="col-form-label">@IDSRWTResource.title_operation_detali_lead_time</label>
+                                                                <input type="datetime" class="form-control" id="operation_detali_arrival_lead_time" name="operation_detali_arrival_lead_time" />
+                                                                <div class="invalid-feedback"></div>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </fieldset>
-                                            </div>
-                                            <div class="col-xl-8">
-                                                <fieldset class="border-primary">
-                                                    <legend class="text-primary">Прибывший состав</legend>
-                                                    <div class="operator-detali-tables">
-                                                        <table id="wagons-arrival-on" class="compact table table-striped table-hover" style="width:100%; table-layout: fixed"></table>
-                                                    </div>
-                                                </fieldset>
+                                                    </fieldset>
+                                                </div>
+                                                <div class="col-xl-8">
+                                                    <fieldset class="border-primary">
+                                                        <legend class="text-primary">Прибывший состав</legend>
+                                                        <div class="operator-detali-tables">
+                                                            <table id="wagons-arrival-on" class="compact table table-striped table-hover" style="width:100%; table-layout: fixed"></table>
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row mb-1">
-                            <div class="col-xl-12">
-                                <div class="card border-info">
-                                    <div class="card-header text-left">ПРИБЫВАЮЩИЕ СОСТАВЫ</div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-xl-4">
-                                                <fieldset class="border-primary">
-                                                    <div class="form-row text-center ">
-                                                        <div class="col-xl-12 mb-1 text-left">
-                                                            <div class="form-row">
-                                                                <div class="col-xl-12 mb-1 text-left">
-                                                                    <label for="operation_detali_arrival_station" class="col-form-label">@IDSRWTResource.title_operation_detali_arrival_station:</label>
-                                                                    <select class="form-control" id="operation_detali_arrival_station" name="operation_detali_arrival_station" required="required"></select>
+                            <div class="row mb-1">
+                                <div class="col-xl-12">
+                                    <div class="card border-info">
+                                        <div class="card-header text-left">ПРИБЫВАЮЩИЕ СОСТАВЫ</div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-xl-4">
+                                                    <fieldset class="border-primary">
+                                                        <div class="form-row text-center ">
+                                                            <div class="col-xl-12 mb-1 text-left">
+                                                                <div class="form-row">
+                                                                    <div class="col-xl-12 mb-1 text-left">
+                                                                        <label for="operation_detali_arrival_station" class="col-form-label">@IDSRWTResource.title_operation_detali_arrival_station:</label>
+                                                                        <select class="form-control" id="operation_detali_arrival_station" name="operation_detali_arrival_station" required="required"></select>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="form-row">
-                                                                <div class="col-xl-12 mb-1 text-left">
-                                                                    <label for="operation_detali_arrival_outer_ways" class="col-form-label">@IDSRWTResource.title_operation_detali_arrival_outer_ways:</label>
-                                                                    <select class="form-control" id="operation_detali_arrival_outer_ways" name="operation_detali_arrival_outer_ways" required="required"></select>
+                                                                <div class="form-row">
+                                                                    <div class="col-xl-12 mb-1 text-left">
+                                                                        <label for="operation_detali_arrival_outer_ways" class="col-form-label">@IDSRWTResource.title_operation_detali_arrival_outer_ways:</label>
+                                                                        <select class="form-control" id="operation_detali_arrival_outer_ways" name="operation_detali_arrival_outer_ways" required="required"></select>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="form-row">
-                                                                <div class="col-xl-12 operator-detali-tables">
-                                                                    <table id="arrival_sostav" class="compact table table-striped table-hover" style="width:100%; table-layout: fixed"></table>
+                                                                <div class="form-row">
+                                                                    <div class="col-xl-12 operator-detali-tables">
+                                                                        <table id="arrival_sostav" class="compact table table-striped table-hover" style="width:100%; table-layout: fixed"></table>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </fieldset>
-                                            </div>
-                                            <div class="col-xl-8">
-                                                <fieldset class="border-primary">
-                                                    <legend class="text-primary">Прибывающий состав</legend>
-                                                    <div class="operator-detali-tables">
-                                                        <table id="wagons-arrival-from" class="compact table table-striped table-hover" style="width:100%; table-layout: fixed"></table>
-                                                    </div>
-                                                </fieldset>
+                                                    </fieldset>
+                                                </div>
+                                                <div class="col-xl-8">
+                                                    <fieldset class="border-primary">
+                                                        <legend class="text-primary">Прибывающий состав</legend>
+                                                        <div class="operator-detali-tables">
+                                                            <table id="wagons-arrival-from" class="compact table table-striped table-hover" style="width:100%; table-layout: fixed"></table>
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -654,8 +663,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>-->
+            </div>-->
 
             <div class="row operation-provide">
                 <div class="col-xl-12 mb-1 mt-1">
