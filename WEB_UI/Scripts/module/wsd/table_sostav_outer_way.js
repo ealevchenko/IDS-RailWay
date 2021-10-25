@@ -57,9 +57,9 @@
             'tsow_field_on_way_capacity': 'Путь приб. (вмест.)',
             'tsow_field_on_way_close': 'Путь приб. закрыт',
             'tsow_field_on_way_delete': 'Путь приб. удален',
-            'tsow_field_count_wagons_arrival': 'Принято.',
+            'tsow_field_count_wagons_arrival': 'Прин. факт.',
             'tsow_field_count_wagons_return': 'Возв(Отм.)',
-            'tsow_field_count_wagons_accepted': 'факт. прин.',
+            'tsow_field_count_wagons_accepted': 'Принят ИДС.',
 
             'tsow_title_detali_wagon': 'Вагоны в составе',
 
@@ -127,9 +127,9 @@
             'tsow_field_on_way_capacity': 'Path approx. (together) ',
             'tsow_field_on_way_close': 'Arrival path closed ',
             'tsow_field_on_way_delete': 'Arrival path deleted ',
-            'tsow_field_count_wagons_arrival': 'Received',
-            'tsow_field_count_wagons_return': 'Return(Cancel)',
-            'tsow_field_count_wagons_accepted': 'fact. pri. ',
+            'tsow_field_count_wagons_arrival': 'Accepted. fact.',
+            'tsow_field_count_wagons_return': 'Return (Cancel)',
+            'tsow_field_count_wagons_accepted': 'IDS accepted.',
 
 
             'tsow_title_detali_wagon': 'Wagons in the train',
@@ -903,10 +903,10 @@
                         $(row).addClass('green');// Вагоны приняты, все
                     };
                     if (data.count_wagons_arrival === 0 && data.count_wagons_return > 0 && data.count_wagons_send === data.count_wagons_return) {
-                        $(row).addClass('red');// Вагоны возвращены или отменены, все
+                        $(row).addClass('blue');// Вагоны возвращены или отменены, все
                     };
                     if (data.count_wagons_send > (data.count_wagons_arrival + data.count_wagons_return)) {
-                        $(row).addClass('blue');// Вагоны приняты другой операцией
+                        $(row).addClass('red');// Вагоны приняты другой операцией
                     };
                 };
                 // Проверка на создание строки операции отправки (ошибка если дата строки создания и выполнения операции больше часа )
