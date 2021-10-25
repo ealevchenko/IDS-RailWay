@@ -32,7 +32,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public int? capacity_wagons { get; set; }
     }
 
-    public partial class view_status_park
+    public class view_status_park
     {
         public int id { get; set; }
         public int position { get; set; }
@@ -74,6 +74,13 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public int? count_all_wagons { get; set; }
         public int? count_amkr_wagons { get; set; }
         public int? capacity_wagons { get; set; }
+    }
+
+    public class view_total_balance
+    {
+        public int id { get; set; }
+        public int? all { get; set; }
+        public int? amkr { get; set; }
     }
 
     #endregion
@@ -1160,6 +1167,27 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             }
         }
 
+        // GET: api/ids/rwt/wsd/view/total_balance
+        /// <summary>
+        /// Получить расчет остатков по вагонам
+        /// </summary>
+        /// <returns></returns>
+        [Route("view/total_balance")]
+        [ResponseType(typeof(view_total_balance))]
+        public IHttpActionResult GetViewTotalBalance()
+        {
+            try
+            {
+
+                string sql = "select * from [IDS].[get_total_balance]()";
+                List<view_total_balance> list = db.Database.SqlQuery<view_total_balance>(sql).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
         #endregion
 
         #region ДЕРЕВО ПУТЕЙ старое

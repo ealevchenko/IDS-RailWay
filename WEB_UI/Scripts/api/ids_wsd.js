@@ -302,6 +302,31 @@
         });
     };
 
+    //================= Дерево путей =========================================================
+    // Получить расчет остатков по вагонам
+    ids_wsd.prototype.getViewTotalBalance = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wsd/view/total_balance/',
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getViewTotalBalance", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
     App.ids_wsd = ids_wsd;
 
     window.App = App;
