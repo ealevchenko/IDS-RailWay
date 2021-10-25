@@ -1,4 +1,4 @@
-use [KRR-PA-Test-Railway]--[KRR-PA-CNT-Railway]
+use [KRR-PA-CNT-Railway]
 go
 SELECT * 
 FROM sys.objects 
