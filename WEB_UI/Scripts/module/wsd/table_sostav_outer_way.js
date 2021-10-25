@@ -891,16 +891,24 @@
             language: language_table(App.Langs),
             jQueryUI: false,
             "createdRow": function (row, data, index) {
-                $(row).attr('id', data.outer_way_num_sostav); // id строки дислокации вагона
-                if (data.count_wagons_arrival > 0 && data.count_wagons_send > (data.count_wagons_arrival + data.count_wagons_return)) {
+                $(row).attr('id', data.outer_way_num_sostav); // id строки дислокации вагона (data.count_wagons_arrival + data.count_wagons_return)
+                if ((data.count_wagons_arrival > 0 || data.count_wagons_accepted > 0) && data.count_wagons_send > data.count_wagons_accepted) {
                     $(row).addClass('yellow');// Отметим состав частично принят
                 }
-                if ((data.count_wagons_arrival > 0 || data.count_wagons_return > 0) && data.count_wagons_send === (data.count_wagons_arrival + data.count_wagons_return)) {
-                    $(row).addClass('green');// Отметим состав частично принят
-                }
-                if ((data.count_wagons_arrival === 0 && data.count_wagons_return > 0) && data.count_wagons_send === (data.count_wagons_arrival + data.count_wagons_return)) {
-                    $(row).addClass('red');// Отметим состав частично принят
-                }
+
+                if (data.count_wagons_accepted > 0 && data.count_wagons_send === data.count_wagons_accepted) {
+                    // Вагоны приняты, проверим как
+
+                    if (data.count_wagons_send === data.count_wagons_arrival) {
+                        $(row).addClass('green');// Вагоны приняты, все
+                    };
+                    if (data.count_wagons_arrival === 0 && data.count_wagons_return > 0 && data.count_wagons_send === data.count_wagons_return) {
+                        $(row).addClass('red');// Вагоны возвращены или отменены, все
+                    };
+                    if (data.count_wagons_send > (data.count_wagons_arrival + data.count_wagons_return)) {
+                        $(row).addClass('blue');// Вагоны приняты другой операцией
+                    };
+                };
                 // Проверка на создание строки операции отправки (ошибка если дата строки создания и выполнения операции больше часа )
                 var from_create = moment(data.from_operation_create);
                 var from_operat = moment(data.from_operation_end);

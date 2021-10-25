@@ -1966,10 +1966,13 @@
                         // Отчет история отправленных вагонов
                         if (data.outer_way_end !== null) {
                             if (data.on_id_operation === 6) {
-                                $(row).addClass('green');  // Отметим вагон заблокирован
+                                $(row).addClass('green');  // Отметим вагон принят
                             }
                             if (data.on_id_operation === 11 || data.on_id_operation === 12) {
-                                $(row).addClass('red');  // Отметим вагон заблокирован
+                                $(row).addClass('red');  // Отметим вагон отменен\возвращен
+                            }
+                            if (data.on_way_end !== null && (data.on_id_operation === null || (data.on_id_operation !== 6 && data.on_id_operation !== 11 && data.on_id_operation !== 12 )) ) {
+                                $(row).addClass('blue');  // Отметим вагон принят другой операцией, например положение парка
                             }
                         }
                         break;

@@ -97,3 +97,15 @@ table.dataTable.display tbody tr:not(.selected).odd.red > .sorting_1, table.data
 table.dataTable.display tbody tr:not(.selected).even.red > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.red > .sorting_1 {
     background-color: #ffc4c4;
 }
+
+table.dataTable tbody tr:not(.selected).blue.odd, table.dataTable tbody tr:not(.selected).blue.even {
+    background-color: #dfe9fb;
+}
+
+table.dataTable.display tbody tr:not(.selected).odd.blue > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.blue > .sorting_1 {
+    background-color: #cdddf9;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.blue > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.blue > .sorting_1 {
+    background-color: #cdddf9;
+}
