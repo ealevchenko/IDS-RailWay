@@ -16,11 +16,11 @@
     //var TDPARK = App.table_dir_park_station;
     //var tdpark = new TDPARK('div#park'); // Создадим экземпляр таблицы
 
-    var wsd = App.ids_wsd;
-    var ids_wsd = new wsd();
+    //var wsd = App.ids_wsd;
+    //var ids_wsd = new wsd();
 
-    var directory = App.ids_directory;
-    var ids_dir = new directory();
+    //var directory = App.ids_directory;
+    //var ids_dir = new directory();
 
 
 
@@ -56,8 +56,10 @@
     //var VHOA = App.view_history_operation_arrival;
     //var vhoa = new VHOA('div#history_operation_arrival');             // Создадим экземпляр
 
-    var VRC = App.view_return_cars;
-    var vrc = new VRC('div#return');             // Создадим экземпляр
+    //var VRC = App.view_return_cars;
+    //var vrc = new VRC('div#return');             // Создадим экземпляр
+    var TTB = App.table_total_balance;
+    var table_total_balance = new TTB('div#total-balance');             // Создадим экземпляр
 
     $('button#arrival').on('click', function (e) {
         //var data = oper_send.operation;
@@ -78,16 +80,23 @@
     // После загрузки документа
     $(document).ready(function ($) {
 
-        vrc.init({
-            alert: null,
-            ids_dir: null,
+        table_total_balance.init({
             ids_wsd: null,
-            fn_db_update: function (list) {
-            }.bind(this),
         }, function (init) {
-            vrc.view(107);//880
-            LockScreenOff();
+            table_total_balance.load();
+            //LockScreenOff();
         });
+
+        //vrc.init({
+        //    alert: null,
+        //    ids_dir: null,
+        //    ids_wsd: null,
+        //    fn_db_update: function (list) {
+        //    }.bind(this),
+        //}, function (init) {
+        //    vrc.view(107);//880
+        //    LockScreenOff();
+        //});
 
         //        vhoa.init({
         //            alert: null,

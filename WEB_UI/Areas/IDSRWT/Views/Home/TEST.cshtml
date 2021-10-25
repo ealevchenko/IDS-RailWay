@@ -26,6 +26,7 @@
     <link href="~/Content/module/wsd/view_arrival_cars.css" rel="stylesheet" /><!-- CSS стили модуля "Операция принять" -->
     <link href="~/Content/module/wsd/view_return_cars.css" rel="stylesheet" /><!-- CSS стили модуля "Операция отмена отправки или возврат" -->
 
+
     <link href="~/Content/module/wsd/view_history_operation_arrival.css" rel="stylesheet" /><!-- CSS стили модуля "История операций принять на станцию" -->
 
     <style>
@@ -82,6 +83,7 @@
 
     <script src="~/Scripts/module/wsd/view_history_operation_arrival.js"></script>  <!-- Модуль "История операций принять" -->
 
+    <script src="~/Scripts/module/wsd/table_total_balance.js"></script>
 
     <script src="~/Scripts/view/idsrwt/test.js"></script>
 
@@ -132,328 +134,90 @@
     </div>
 </nav>
 
-<!--<div class="row">
-    <div class="col-xl-12">
-        <form id="test" class="needs-validation" novalidate>
-            <div class="alert" id="test-alert"></div>
-            <div class="form-row">
-                <div class="col-md-4 mb-3">
-                    <label for="validationCustom01">First name</label>
-                    <input type="text" class="form-control" id="validationCustom01" name="validationCustom01" placeholder="First name" value="Mark" required>
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label for="validationCustom02">Last name</label>
-                    <input type="text" class="form-control" id="validationCustom02" name="validationCustom02" placeholder="Last name" value="Otto" required>
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label for="validationCustomUsername">Username</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">-->
-@*<span class="input-group-text" id="inputGroupPrepend">@</span>*@
-<!--</div>
-                        <input type="text" class="form-control" id="validationCustomUsername" name="validationCustomUsername" placeholder="Username" aria-describedby="inputGroupPrepend" required>
-                        <div class="invalid-feedback">
-                            Please choose a username.
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="col-md-6 mb-3">
-                    <label for="validationCustom03">City</label>
-                    <input type="text" class="form-control" id="validationCustom03" name="validationCustom03" placeholder="City" required>
-                    <div class="invalid-feedback">
-                        Please provide a valid city.
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="validationCustom04">State</label>
-                    <input type="text" class="form-control" id="validationCustom04" name="validationCustom04" placeholder="State" required>
-                    <div class="invalid-feedback">
-                        Please provide a valid state.
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="validationCustom05">Zip</label>
-                    <input type="text" class="form-control" id="validationCustom05" name="validationCustom05" placeholder="Zip" required>
-                    <div class="invalid-feedback">
-                        Please provide a valid zip.
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" name="invalidCheck" id="invalidCheck" required>
-                    <label class="form-check-label" for="invalidCheck">
-                        Agree to terms and conditions
-                    </label>
-                    <div class="invalid-feedback">
-                        You must agree before submitting.
-                    </div>
-                </div>
-            </div>
-            <button class="btn btn-primary" type="submit">Submit form</button>
-        </form>
-    </div>
-</div>-->
-
 <div class="container-fluid">
     <div class="alert" id="main-alert"></div>
-
-    <div class="card border-secondary mb-3">
-        <div class="card-header">
-            <div class="row">
-                <div class="col-xl-12 text-center">
-                    <div class="container-fluid">
-                        <form class="form-inline">
-                            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                                <div class="btn-group mr-2" role="group" aria-label="First group">
-                                    <button type="button" class="btn btn-outline-secondary" title="Принять состав на станцию" id="arrival">Приб.</button>
-                                    <button type="button" class="btn btn-outline-secondary" title="Отправить состав со станции" id="sending">Отпр.</button>
-                                    <button type="button" class="btn btn-outline-secondary" title="Дислокация вагонов по станции" id="dislocation">Дисл.</button>
-                                    <button type="button" class="btn btn-outline-secondary" title="Роспуск вагонов" id="dissolution">Росп.</button>
-                                    <button type="button" class="btn btn-outline-secondary" title="">Выгр.</button>
-                                    <button type="button" class="btn btn-outline-secondary" title="">Погр.</button>
-                                    <button type="button" class="btn btn-outline-secondary" title="">Весы.</button>
-                                    <button type="button" class="btn btn-outline-secondary" title="Предоставить состав для сдачи на дорогу" id="provide">Пред.</button>
-                                    <button type="button" class="btn btn-outline-secondary" title="Отправить состав на станцию УЗ" id="sending_uz">Отпр УЗ.</button>
-                                </div>
-                                <div class="btn-group mr-2" role="group" aria-label="Second group">
-                                    <button type="button" class="btn btn-outline-secondary" title="">Авто</button>
-                                    <button type="button" class="btn btn-outline-secondary" title="">Ручная</button>
-                                    <button type="button" class="btn btn-outline-secondary" title="">Реверс</button>
-                                </div>
-                                @*<div class="btn-group" role="group" aria-label="Third group">
-
-                                    </div>*@
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card-body text-dark pl-3 pr-3">
-            <div id="arrival"></div>
-            <div id="sostav"></div>
-            <div id="wagons"></div>
-            <div id="history_operation_arrival"></div>
-            <div id="return"></div>
-
-
-            @*<div class="text-left">
-            <form>
-                <div class="form-row">
-                    <div class="col-md-6 mb-3">
-                        <label for="validationServer01">First name</label>
-                        <input type="text" class="form-control" id="validationServer01" value="Mark" required>
-                        <div class="valid-feedback">
-                            Looks good!
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="validationServer02">Last name</label>
-                        <input type="text" class="form-control" id="validationServer02" value="Otto" required>
-                        <div class="valid-feedback">
-                            Looks good!
-                        </div>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-md-6 mb-3">
-                        <label for="validationServer03">City</label>
-                        <input type="text" class="form-control" id="validationServer03" aria-describedby="validationServer03Feedback" required>
-                        <div id="validationServer03Feedback" class="invalid-feedback">
-                            Please provide a valid city.
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <label for="validationServer04">State</label>
-                        <select class="custom-select" id="validationServer04" aria-describedby="validationServer04Feedback" required>
-                            <option selected disabled value="">Choose...</option>
-                            <option>...</option>
-                        </select>
-                        <div id="validationServer04Feedback" class="invalid-feedback">
-                            Please select a valid state.
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <label for="validationServer05">Zip</label>
-                        <input type="text" class="form-control" id="validationServer05" aria-describedby="validationServer05Feedback" required>
-                        <div id="validationServer05Feedback" class="invalid-feedback">
-                            Please provide a valid zip.
-                        </div>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-md-6 mb-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
-                            <label class="form-check-label" for="invalidCheck">
-                                Agree to terms and conditions
-                            </label>
-                            <div class="invalid-feedback">
-                                You must agree before submitting.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
-                            <label class="form-check-label" for="invalidCheck">
-                                Agree to terms and conditions
-                            </label>
-                            <div class="invalid-feedback">
-                                You must agree before submitting.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-md-12 mb-3">
-                        <label for="validationServer0111">First name</label>
-                        <input type="text" class="form-control" id="validationServer0111" value="Mark" required>
-                        <div class="valid-feedback">
-                            Looks good!
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
-                        <label class="form-check-label" for="invalidCheck">
-                            Agree to terms and conditions
-                        </label>
-                        <div class="invalid-feedback">
-                            You must agree before submitting.
-                        </div>
-                    </div>
-                </div>
-                <button class="btn btn-primary" type="submit">Submit form</button>
-            </form>
-        </div>*@
-            <div id="operation-send">
-                @*<div class="row">
-                <div class="col-xl-12 mb-1 mt-1">
-                    <div class="card border-secondary mb-1">
-                        <div class="card-header">
-                            ИСТОРИЯ ОПЕРАЦИЙ "ОТПРАВЛЕНИЕ"
-                        </div>
-                        <div class="card-body">
-                            <div class="card border-primary">
-                                <div class="card-header">
-                                    <form class="form-inline">
-                                        <div class="form-group">
-                                            <label class="col-form-label-sm mr-2" for="select-date">ПЕРИОД:</label>
-                                            <span id="select-date" class="mr-2">
-                                                <input type="datetime" class="form-control-sm" id="date-start" name="date-start">
-                                                <input type="datetime" class="form-control-sm" id="date-stop" name="date-stop">
-                                            </span>
+    <div class="row">
+        <div class="col-xl-12 mb-3 mt-2">
+            <div class="card border-secondary mb-3">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-xl-12 text-center">
+                            <div class="container-fluid">
+                                <form class="form-inline">
+                                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                                        <div class="btn-group mr-2" role="group" aria-label="external operations group">
+                                            <button type="button" class="btn btn-outline-secondary" title="Отправить состав со станции АМКР" id="send-cars">Отпр.</button>
+                                            <button type="button" class="btn btn-outline-secondary" title="Принять состав на станцию АМКР" id="arrival-cars">Приб.</button>
+                                            <button type="button" class="btn btn-outline-secondary" title="Вернуть(отменить отправку) вагонов состава отправленного на станции АМКР" id="return-cars">Возв.</button>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="col-form-label-sm mr-2" for="station">СТАНЦИЯ ОТПРАВЛЕНИЯ:</label>
-                                            <div class="input-group">
-                                                <select class="form-control-sm" id="station" name="station" required></select>
+                                        <div class="btn-group mr-2" role="group" aria-label="internal operations  group">
+                                            <button type="button" class="btn btn-outline-secondary" title="Дислокация вагонов по станции" id="dislocation">Дисл.</button>
+                                            <button type="button" class="btn btn-outline-secondary" title="Роспуск вагонов" id="dissolution">Росп.</button>
+                                            <button type="button" class="btn btn-outline-secondary" title="">Выгр.</button>
+                                            <button type="button" class="btn btn-outline-secondary" title="">Погр.</button>
+                                            <button type="button" class="btn btn-outline-secondary" title="">Весы.</button>
+                                        </div>
+                                        <div class="btn-group mr-2" role="group" aria-label="uz operations group">
+                                            <button type="button" class="btn btn-outline-secondary" title="Предоставить состав для сдачи на дорогу" id="provide">Пред.</button>
+                                            <button type="button" class="btn btn-outline-secondary" title="Отправить состав на станцию УЗ" id="sending_uz">Отпр УЗ.</button>
+                                        </div>
+                                        <div class="btn-group mr-2" role="group" aria-label="Second group">
+                                            <button type="button" class="btn btn-outline-secondary" title="">Авто</button>
+                                            <button type="button" class="btn btn-outline-secondary" title="">Ручная</button>
+                                            <button type="button" class="btn btn-outline-secondary" title="">Реверс</button>
+                                        </div>
+                                        <div class="btn-group mr-2" role="group" aria-label="Third group">
+                                            <div class="input-group w-75">
+                                                <input type="text" id="find-num-wagon" class="form-control" placeholder="Номер вагона" aria-label="" aria-describedby="">
                                                 <div class="input-group-append">
-                                                    <button type="submit" class="btn btn-sm  btn-primary mb-2" id="view_ways" name="view_ways">
-                                                        <i class="fas fa-retweet" aria-hidden="true"></i>
-                                                    </button>
+                                                    <button class="btn btn-outline-secondary" type="button" id="find-wagon">Найти</button>
                                                 </div>
                                             </div>
                                         </div>
-                                    </form>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body text-dark pl-3 pr-3">
+                    <div class="row">
+                        <div class="col-xl-4">
+                            <div class="card border-primary">
+                                <div class="card-header">
+                                    <div id="dds-station"></div>
+                                    Дерево путей
                                 </div>
-                                <div class="card-body text-dark pl-3 pr-3 table-directory">
+                                <div class="card-body">
                                     <div class="row">
-                                        <div class="col-xl-12 mb-3 mt-2">
-                                            <div class="container-fluid mt-3">
-                                                <div id="park-station"></div>
-                                            </div>
+                                        <div class="col-xl-12">
+                                            <div id="tree-way"></div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-12">
+                                            <div id="total-balance"></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
+                        </div>
+                        <div class="col-xl-8">
+                            <div class="card border-info">
+                                <div class="card-header">Перечень вагонов</div>
+                                <div class="card-body" style="font-size:13px">
+                                    <div class="row">
+                                        <div class="col-xl-12">
+                                            <div id="wagons"></div>
+                                            @*<table id="wagons-way" class="display compact table-striped table-hover" style="width:100%;table-layout: fixed"></table>*@
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>*@
-
-            </div>
-            <div class="row">
-                <div class="col-xl-12 mb-1 mt-1">
-                    <div id="cars-oper"></div>
-                </div>
-            </div>
-            <div class="card-footer bg-transparent border-dark"></div>
-        </div>
-    </div>
-
-
-
-
-    @*Button trigger modal*@
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#em-dir-way">
-        Launch demo modal
-    </button>
-
-
-    @*Modal*@
-    <div class="modal fade" id="em-dir-way" tabindex="-1" aria-labelledby="ml-dir-way" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title font-weight-bold" id="ml-dir-way">VVV</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form class="needs-validation" novalidate>
-                        <div class="form-row">
-                            <div class="col-xl-12 mb-1">
-                                <div class="alert" id="modal-alert"></div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-xl-12 mb-1 text-left">
-                                <label for="ref_unit" class="col-form-label">Ремонтируемый агрегат:</label>
-                                <div class="input-group">
-                                    <input class="form-control" id="ref_unit" name="ref_unit" required>
-                                    <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary" type="button">Button</button>
-                                    </div>
-                                </div>
-                                <div class="invalid-feedback">
-                                    Укажите агрегат!
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-xl-6 mb-1">
-                                @*<div class="form-group">*@
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="invalidCheck2" required>
-                                    <label class="form-check-label" for="invalidCheck2">
-                                        Agree to terms and conditions
-                                    </label>
-                                </div>
-                                @*</div>*@
-                            </div>
-                        </div>
-
-
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
+                <div class="card-footer bg-transparent border-dark"></div>
             </div>
         </div>
     </div>
