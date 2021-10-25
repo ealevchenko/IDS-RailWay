@@ -29,10 +29,10 @@ select * from [IDS].[get_view_wagons_of_sostav_outer_ways]('15-21102021113800') 
 
 select [IDS].[get_count_wagon_accepted_of_sostav_outer_ways]('15-21102021113800')
 
-		SELECT count(wim_from.id) FROM IDS.WagonInternalMovement as wim_from --> Дислокация отправка на станцию
-		--> Дислокация прибыл на станцию	
-		Left JOIN IDS.WagonInternalMovement as wim_on ON wim_from.id = wim_on.parent_id
-		--> Операция прибыл на станцию
-		Left JOIN IDS.WagonInternalOperation as wio_on ON wim_on.[id_wio]=wio_on.id 
-		WHERE wim_from.[num_sostav] = '15-21102021113800' 
-		and wim_from.outer_way_end is not null and (wio_on.id_operation is null OR (wio_on.id_operation <> 11 and wio_on.id_operation <> 12 and wio_on.id_operation <> 6))
+		--SELECT count(wim_from.id) FROM IDS.WagonInternalMovement as wim_from --> Дислокация отправка на станцию
+		----> Дислокация прибыл на станцию	
+		--Left JOIN IDS.WagonInternalMovement as wim_on ON wim_from.id = wim_on.parent_id
+		----> Операция прибыл на станцию
+		--Left JOIN IDS.WagonInternalOperation as wio_on ON wim_on.[id_wio]=wio_on.id 
+		--WHERE wim_from.[num_sostav] = '15-21102021113800' 
+		--and wim_from.outer_way_end is not null and (wio_on.id_operation is null OR (wio_on.id_operation <> 11 and wio_on.id_operation <> 12 and wio_on.id_operation <> 6))
