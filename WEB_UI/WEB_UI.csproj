@@ -2097,6 +2097,7 @@
     <Content Include="Scripts\module\table_wir_detali.js" />
     <Content Include="Scripts\module\table_wir.js" />
     <Content Include="Scripts\module\table_arrival.js" />
+    <Content Include="Scripts\module\wsd\table_total_balance.js" />
     <Content Include="Scripts\module\wsd\view_return_cars.js" />
     <Content Include="Scripts\module\wsd\view_history_operation_send.js" />
     <Content Include="Scripts\module\wsd\view_history_operation_arrival.js" />
