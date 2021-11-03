@@ -1,14 +1,39 @@
-use [KRR-PA-CNT-Railway]
-	
---> Получим уставку норма простоя
-declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] where area=N'wsd' and name = N'arrival_idle_time') AS INT);
-	
+USE [KRR-PA-CNT-Railway]
+
+
+		--> Получим уставку норма простоя
+	declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] where area=N'wsd' and name = N'arrival_idle_time') AS INT);
+
 	select wir.id as wir_id
 		,wim.id as wim_id
 		,wio.id as wio_id
 		--=============== ОСНОВНОЕ ОКНО ==================
+		,selection_date = getdate()
 		,wir.num
 		,wim.position
+		--=============== ТЕКУЩАЯ СТАНЦИЯ ==================
+		,wim.id_station as current_id_station_amkr
+		,cur_dir_station_amkr.station_name_ru as current_station_amkr_name_ru
+		,cur_dir_station_amkr.station_name_en as current_station_amkr_name_en
+		,cur_dir_station_amkr.station_abbr_ru as current_station_amkr_abbr_ru
+		,cur_dir_station_amkr.station_abbr_en as current_station_amkr_abbr_en
+		--=============== ТЕКУЩИЙ ПУТЬ ==================
+		,wim.[id_way] as current_id_way
+		,cur_dir_way.[id_park] as current_id_park
+		,cur_dir_way.[way_num_ru] as current_way_num_ru
+		,cur_dir_way.[way_num_en] as current_way_num_en
+		,cur_dir_way.[way_name_ru] as current_way_name_ru
+		,cur_dir_way.[way_name_en] as current_way_name_en
+		,cur_dir_way.[way_abbr_ru] as current_way_abbr_ru
+		,cur_dir_way.[way_abbr_en] as current_way_abbr_en
+		,wim.[way_start] as from_way_start
+		,wim.[way_end] as from_way_end
+		--> Администрация
+		,dir_countrys.code_sng as wagon_adm
+		,dir_countrys.countrys_name_ru as wagon_adm_name_ru
+		,dir_countrys.countrys_name_en as wagon_adm_name_en
+		,dir_countrys.country_abbr_ru as wagon_adm_abbr_ru
+		,dir_countrys.country_abbr_en as wagon_adm_abbr_en
 		--> Оператор
 		,dir_operator.[id] as id_operator
 		,dir_operator.[operators_ru]
@@ -26,18 +51,6 @@ declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] wher
 		,dir_limload.[limiting_name_en]
 		,dir_limload.[limiting_abbr_ru]
 		,dir_limload.[limiting_abbr_en]
-		--> Собственник по УЗ
-		,dir_owner.[id] as id_owner_wagon
-		,dir_owner.[owner_ru] as owner_wagon_ru
-		,dir_owner.[owner_en] as owner_wagon_en
-		,dir_owner.[abbr_ru] as owner_wagon_abbr_ru
-		,dir_owner.[abbr_en] as owner_wagon_abbr_en
-		--> Администрация
-		,dir_countrys.code_sng as wagon_adm
-		,dir_countrys.countrys_name_ru as wagon_adm_name_ru
-		,dir_countrys.countrys_name_en as wagon_adm_name_en
-		,dir_countrys.country_abbr_ru as wagon_adm_abbr_ru
-		,dir_countrys.country_abbr_en as wagon_adm_abbr_en
 		--> Род вагона
 		,dir_rod.rod_uz as wagon_rod
 		,dir_rod.genus_ru as wagon_rod_name_ru
@@ -58,12 +71,8 @@ declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] wher
 		,cur_dir_cond.condition_name_en as current_condition_name_en
 		,cur_dir_cond.condition_abbr_ru as current_condition_abbr_ru
 		,cur_dir_cond.condition_abbr_en as current_condition_abbr_en
-		,cur_dir_cond.red as current_condition_red
 		--> Дата ремонта УЗ
 		,dir_wagon.date_rem_uz as wagon_date_rem_uz
-		--> Грузоподъемность
-		,arr_doc_vag.gruzp as wagon_gruzp_doc
-		,dir_wagon.gruzp as wagon_gruzp_uz
 		--> груз по прибытию
 		,arr_dir_group_cargo.cargo_group_name_ru as arrival_cargo_group_name_ru
 		,arr_dir_group_cargo.cargo_group_name_en as arrival_cargo_group_name_en
@@ -81,9 +90,6 @@ declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] wher
 		,arr_dir_ext_station.code as arrival_station_from_code
 		,arr_dir_ext_station.station_name_ru as arrival_station_from_name_ru
 		,arr_dir_ext_station.station_name_en as arrival_station_from_name_en
-		,shipper.[code] as arrival_shipper_code
-		,shipper.[shipper_name_ru] as arrival_shipper_name_ru
-		,shipper.[shipper_name_en] as arrival_shipper_name_en
 		--> Станция назначения
 		,arr_dir_station_amkr.station_name_ru as arrival_station_amkr_name_ru
 		,arr_dir_station_amkr.station_name_en as arrival_station_amkr_name_en
@@ -99,35 +105,36 @@ declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] wher
 		,cur_load.[id] as current_id_loading_status
 		,cur_load.[loading_status_ru] as current_loading_status_ru
 		,cur_load.[loading_status_en] as current_loading_status_en
-		--> Состояние занят
-		,current_wagon_busy = CASE WHEN wio.[operation_end] is null THEN 1  ELSE 0 END
 		--> Текущая операция
 		,cur_dir_operation.[id] as current_id_operation
 		,cur_dir_operation.[operation_name_ru] as current_operation_name_ru
 		,cur_dir_operation.[operation_name_en] as current_operation_name_en
 		,wio.[operation_start] as current_operation_start
 		,wio.[operation_end] as current_operation_end
+		--> Состояние занят
+		,current_wagon_busy = CASE WHEN wio.[operation_end] is null THEN 1  ELSE 0 END
+		--> Простой УЗ
 		,[arrival_duration] = DATEDIFF (minute, arr_sost.date_adoption, getdate())
 		,[arrival_idle_time] = @arrival_idle_time -- Норма простоя
 		,[arrival_usage_fee] = 0.00
-		--=============== ПРОСТОЙ НА ЖД. СТАНЦИИ ==================
+		--> Простой станция
 		,[current_station_duration] = DATEDIFF (minute, (select [IDS].[get_start_datetime_station_of_wim](wim.id)), getdate())
 		,[current_way_duration] = DATEDIFF (minute, wim.way_start, getdate())
 		,cur_dir_station_amkr.idle_time as current_station_idle_time
-		--=============== ВНУТРИЗАВОДСКОЕ ПЕРЕМЕЩЕНИЕ( В/З) ==================
-		--> ....
 		--=============== ВХОДЯЩАЯ ПОСТАВКА ==================
-		,sap_is.[VBELN] as sap_incoming_supply_num
-		,sap_is.[NUM_VBELN] as sap_incoming_supply_pos
-		,sap_is.[ERDAT] as sap_incoming_supply_date
-		,sap_is.[ETIME] as sap_incoming_supply_time
-		,sap_is.[LGORT_10] as sap_incoming_supply_warehouse_code 
-		,sap_is.[LGOBE_10] as sap_incoming_supply_warehouse_name
-		,sap_is.[MATNR] as sap_incoming_supply_cargo_code 
-		,sap_is.[MAKTX] as sap_incoming_supply_cargo_name
+		--,sap_is.[VBELN] as sap_incoming_supply_num
+		--,sap_is.[NUM_VBELN] as sap_incoming_supply_pos
+		--,sap_is.[ERDAT] as sap_incoming_supply_date
+		--,sap_is.[ETIME] as sap_incoming_supply_time
+		--,sap_is.[LGORT_10] as sap_incoming_supply_warehouse_code 
+		--,sap_is.[LGOBE_10] as sap_incoming_supply_warehouse_name
+		--,sap_is.[MATNR] as sap_incoming_supply_cargo_code 
+		--,sap_is.[MAKTX] as sap_incoming_supply_cargo_name
 		--=============== ИСХОДЯЩАЯ ПОСТАВКА ==================
 		--> ....
 		--=============== ГТД ===================================
+		--> ....
+		--=============== ВНУТРИЗАВОДСКОЕ ПЕРЕМЕЩЕНИЕ( В/З) ==================
 		--> ....
 		--=============== ИНСТРУКТИВНЫЕ ПИСЬМИ ==================
 		--> Инструктивные письма
@@ -136,40 +143,58 @@ declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] wher
 		,il.destination_station as instructional_letters_station_code
 		,let_station_uz.station as instructional_letters_station_name
 		,il.[note] as instructional_letters_note
+		--
+		,arr_doc_uz.[nom_doc] as arrival_nom_doc				-- Номер документа(досылки)
+		,arr_doc_uz.[nom_main_doc] as arrival_nom_main_doc		-- Номер основного документа (если заполнен)
+		,arr_sost.date_adoption as arrival_date_adoption		-- дата приема
+		,wir.note as wir_note									-- Примечание по ходу движения вагона
+
+
+		----> Собственник по УЗ
+		--,dir_owner.[id] as id_owner_wagon
+		--,dir_owner.[owner_ru] as owner_wagon_ru
+		--,dir_owner.[owner_en] as owner_wagon_en
+		--,dir_owner.[abbr_ru] as owner_wagon_abbr_ru
+		--,dir_owner.[abbr_en] as owner_wagon_abbr_en
+		--,cur_dir_cond.red as current_condition_red
+		--> Грузоподъемность
+		--,arr_doc_vag.gruzp as wagon_gruzp_doc
+		--,dir_wagon.gruzp as wagon_gruzp_uz
+		--,shipper.[code] as arrival_shipper_code
+		--,shipper.[shipper_name_ru] as arrival_shipper_name_ru
+		--,shipper.[shipper_name_en] as arrival_shipper_name_en
+
+
 		--=============== ВХОДЯЩЕЕ ВЗВЕШИВАНИЕ ==================
 		--> Брутто
 		--,wagon_brutto_doc = (CASE WHEN arr_doc_vag.ves_tary_arc is not null AND arr_doc_vag.vesg is not null THEN arr_doc_vag.ves_tary_arc+arr_doc_vag.vesg ELSE null END)	--Брутто по ЭПД, тн
-		,wagon_brutto_doc = (CASE WHEN arr_doc_vag.ves_tary_arc is not null AND arr_doc_vag.vesg is not null 
-									THEN arr_doc_vag.ves_tary_arc+arr_doc_vag.vesg 
-									ELSE (CASE WHEN arr_doc_vag.u_tara is not null AND arr_doc_vag.vesg is not null 
-												THEN arr_doc_vag.u_tara+arr_doc_vag.vesg 
-												ELSE null 
-												END) 
-								END)	--Брутто по ЭПД, тн
-		,wagon_brutto_amkr = 0
+		--,wagon_brutto_doc = (CASE WHEN arr_doc_vag.ves_tary_arc is not null AND arr_doc_vag.vesg is not null 
+		--							THEN arr_doc_vag.ves_tary_arc+arr_doc_vag.vesg 
+		--							ELSE (CASE WHEN arr_doc_vag.u_tara is not null AND arr_doc_vag.vesg is not null 
+		--										THEN arr_doc_vag.u_tara+arr_doc_vag.vesg 
+		--										ELSE null 
+		--										END) 
+		--						END)	--Брутто по ЭПД, тн
+		--,wagon_brutto_amkr = 0
 		--> Тара
-		,arr_doc_vag.u_tara as wagon_tara_doc
-		,dir_wagon.tara as wagon_tara_uz
-		,arr_doc_vag.ves_tary_arc as wagon_tara_arc_doc		--Тара по ЭПД, тн.
+		--,arr_doc_vag.u_tara as wagon_tara_doc
+		--,dir_wagon.tara as wagon_tara_uz
+		--,arr_doc_vag.ves_tary_arc as wagon_tara_arc_doc		--Тара по ЭПД, тн.
 		--> Вес груза (Нетто)	
-		,arr_doc_vag.vesg as wagon_vesg_doc					--Нетто по ЭПД, тн
-		,wagon_vesg_amkr = 0
-		--> Вес груза (Разница)		
-		,diff_vesg = 0
+		--,arr_doc_vag.vesg as wagon_vesg_doc					--Нетто по ЭПД, тн
+		--,wagon_vesg_amkr = 0
+		----> Вес груза (Разница)		
+		--,diff_vesg = 0
 		--=============== ОСТАЛЬНОЕ ==================
-		,wir.doc_outgoing_car as doc_outgoing_car				-- Наличие документа для сдачи
-		,arr_doc_uz.[nom_doc] as arrival_nom_doc			-- Номер документа(досылки)
-		,arr_doc_uz.[nom_main_doc] as arrival_nom_main_doc		-- Номер основного документа (если заполнен)
-		,arr_sost.composition_index as arrival_composition_index
-		,arr_sost.date_adoption as arrival_date_adoption		-- дата приема
-		,out_car.[id_outgoing_return_start] as outgoing_id_return
-		,dir_return.[cause_ru] as outgoing_return_cause_ru
-		,dir_return.[cause_en] as outgoing_return_cause_en
-		,out_sost.date_outgoing as outgoing_date				-- дата отправки
-		,out_sost.status as outgoing_sostav_status				-- статус состава для отправки
-		,dir_wagon.note as wagon_ban_uz							-- Запреты по УЗ 
-		,dir_wagon.[closed_route] as wagon_closed_route			--Замкнутый маршрут (кольцо)
-		,wir.note as wir_note									-- Примечание по ходу движения вагона
+		--,wir.doc_outgoing_car as doc_outgoing_car				-- Наличие документа для сдачи
+		--,arr_sost.composition_index as arrival_composition_index
+		--,out_car.[id_outgoing_return_start] as outgoing_id_return
+		--,dir_return.[cause_ru] as outgoing_return_cause_ru
+		--,dir_return.[cause_en] as outgoing_return_cause_en
+		--,out_sost.date_outgoing as outgoing_date				-- дата отправки
+		--,out_sost.status as outgoing_sostav_status				-- статус состава для отправки
+		--,dir_wagon.note as wagon_ban_uz							-- Запреты по УЗ 
+		--,dir_wagon.[closed_route] as wagon_closed_route			--Замкнутый маршрут (кольцо)
 
 	FROM IDS.WagonInternalMovement as wim	--> Текущая дислокаци
 		--> Текущее внетренее перемещение
@@ -185,13 +210,13 @@ declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] wher
 		Left JOIN IDS.Arrival_UZ_Vagon as arr_doc_vag ON arr_car.id_arrival_uz_vagon = arr_doc_vag.id
 		 --> Документы на группу вагонов (состав) по принятию вагона на АМКР
 		Left JOIN IDS.Arrival_UZ_Document as arr_doc_uz ON arr_doc_vag.id_document = arr_doc_uz.id
-		 --> Документы SAP Входящая поставка
-		Left JOIN [IDS].[SAPIncomingSupply] as sap_is ON wir.id_sap_incoming_supply = sap_is.id
+		-- --> Документы SAP Входящая поставка
+		--Left JOIN [IDS].[SAPIncomingSupply] as sap_is ON wir.id_sap_incoming_supply = sap_is.id
 		 --==== СДАЧА ВАГОНА И ЗАДЕРЖАНИЯ ================================================================
 		--> Отправка вагона
-		Left JOIN [IDS].[OutgoingCars] as out_car ON wir.id_outgoing_car = out_car.id
+		--Left JOIN [IDS].[OutgoingCars] as out_car ON wir.id_outgoing_car = out_car.id
 		--> Отправка состава
-		Left JOIN [IDS].[OutgoingSostav] as out_sost ON out_car.id_outgoing = out_sost.id
+		--Left JOIN [IDS].[OutgoingSostav] as out_sost ON out_car.id_outgoing = out_sost.id
 
 		 --==== ИНСТРУКТИВНЫЕ ПИСЬМА =====================================================================
 		--> Перечень вагонов по письма
@@ -207,8 +232,8 @@ declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] wher
 		Left JOIN IDS.Directory_OperatorsWagons as dir_operator ON dir_rent.id_operator =  dir_operator.id
 		--> Справочник Ограничение погрузки
 		Left JOIN IDS.Directory_LimitingLoading as dir_limload ON dir_rent.id_limiting =  dir_limload.id
-		--> Справочник Собственник вагона по УЗ
-		Left JOIN [IDS].[Directory_OwnersWagons] as dir_owner ON dir_wagon.id_owner = dir_owner.id
+		---> Справочник Собственник вагона по УЗ
+		--Left JOIN [IDS].[Directory_OwnersWagons] as dir_owner ON dir_wagon.id_owner = dir_owner.id
 		--> Справочник строна (Администрация вагона)
 		Left JOIN IDS.Directory_Countrys as dir_countrys ON dir_wagon.id_countrys = dir_countrys.id
 		--> Справочник Род вагона
@@ -220,7 +245,7 @@ declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] wher
 		--> Справочник Разметка по текущей операции
 		Left JOIN IDS.Directory_ConditionArrival as cur_dir_cond ON wio.id_condition =  cur_dir_cond.id
 		--> Справочник Грузоотправитель
-		Left JOIN [IDS].[Directory_Shipper] as shipper ON arr_doc_uz.[code_shipper] = shipper.[code]
+		--Left JOIN [IDS].[Directory_Shipper] as shipper ON arr_doc_uz.[code_shipper] = shipper.[code]
 		--> Справочник Грузов
 		Left JOIN IDS.Directory_Cargo as arr_dir_cargo ON arr_doc_vag.id_cargo =  arr_dir_cargo.id
 		--> Справочник Группы Грузов
@@ -235,6 +260,8 @@ declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] wher
 		Left JOIN IDS.Directory_Station as arr_dir_station_amkr ON arr_doc_vag.id_station_on_amkr =  arr_dir_station_amkr.id
 		--> Справочник Станции АМКР (текущая станция АМКР)
 		Left JOIN IDS.Directory_Station as cur_dir_station_amkr ON wim.id_station =  cur_dir_station_amkr.id
+		--> Справочник текущий путь
+	    Left JOIN [IDS].[Directory_Ways] as cur_dir_way ON wim.[id_way] = cur_dir_way.id 
 		--> Справочник Подразделения (цех получатель)
 		Left JOIN IDS.Directory_Divisions as arr_dir_division_amkr ON arr_doc_vag.id_division_on_amkr =  arr_dir_division_amkr.id
 		--> Справочник Операции над вагоном (текущая операция)
@@ -244,14 +271,16 @@ declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] wher
 		--> Справочник Внешних станций УЗ
 		Left JOIN UZ.Directory_Stations as let_station_uz ON  il.destination_station = let_station_uz.code_cs
 		--> Справочник Возвратов
-		Left JOIN [IDS].[Directory_DetentionReturn] as dir_return ON out_car.id_outgoing_return_start = dir_return.id
-where 
--- Исключим КИРОВА
-wim.id_station <> 10
-and wim.id_way in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] where [way_delete] is null and id_station in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].Directory_Station where station_delete is null))
--- Вагоны на станциях
-AND (wim.way_end IS NULL 
--- Добавить на перегонах
-OR (wim.outer_way_start is not NULL and wim.outer_way_end is null)
-)
---order by out_sost.status desc
+		--Left JOIN [IDS].[Directory_DetentionReturn] as dir_return ON out_car.id_outgoing_return_start = dir_return.id
+	WHERE 
+	
+	-- Исключим КИРОВА
+	wim.id_station <> 10
+	and wim.id_way in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] where [way_delete] is null and id_station in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].Directory_Station where station_delete is null))
+	-- Вагоны на станциях
+	AND (wim.way_end IS NULL 
+	-- Добавить на перегонах
+	OR (wim.outer_way_start is not NULL and wim.outer_way_end is null)
+	)
+
+	--and dir_operator.[id]=14 

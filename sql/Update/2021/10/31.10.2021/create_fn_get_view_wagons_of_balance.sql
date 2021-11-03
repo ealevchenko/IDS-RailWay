@@ -1,12 +1,181 @@
-use [KRR-PA-CNT-Railway]
-	
---> Получим уставку норма простоя
-declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] where area=N'wsd' and name = N'arrival_idle_time') AS INT);
-	
-	select wir.id as wir_id
+USE [KRR-PA-CNT-Railway]
+GO
+
+/****** Object:  UserDefinedFunction [IDS].[get_view_wagons_of_balance]    Script Date: 03.11.2021 21:37:09 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+CREATE FUNCTION [IDS].[get_view_wagons_of_balance]
+ (
+
+ )
+		RETURNS 
+		@view_wagons TABLE  (
+			[wir_id] [bigint] NOT NULL,
+			[wim_id] [bigint] NOT NULL,
+			[wio_id] [bigint] NULL,
+			[sample_datetime] [datetime] NOT NULL, 
+			[num] [int] NOT NULL,
+			[position] [int] NOT NULL,
+			[id_operator] [int] NULL,
+			[operators_ru] [nvarchar](100) NULL,
+			[operators_en] [nvarchar](100) NULL,
+			[operator_abbr_ru] [nvarchar](20) NULL,
+			[operator_abbr_en] [nvarchar](20) NULL,
+			[operator_rent_start] [datetime] NULL,
+			[operator_rent_end] [datetime] NULL,
+			[operator_paid] [bit] NULL,
+			[operator_color] [nvarchar](10) NULL,
+			[operator_monitoring_idle_time] [bit] NULL,
+			[id_limiting_loading] [int] NULL,
+			[limiting_name_ru] [nvarchar](100) NULL,
+			[limiting_name_en] [nvarchar](100) NULL,
+			[limiting_abbr_ru] [nvarchar](30) NULL,
+			[limiting_abbr_en] [nvarchar](30) NULL,
+			[id_owner_wagon] [int] NULL,
+			[owner_wagon_ru] [nvarchar](100) NULL,
+			[owner_wagon_en] [nvarchar](100) NULL,
+			[owner_wagon_abbr_ru] [nvarchar](20) NULL,
+			[owner_wagon_abbr_en] [nvarchar](20) NULL,
+			[wagon_adm] [int] NULL,
+			[wagon_adm_name_ru] [nvarchar](100) NULL,
+			[wagon_adm_name_en] [nvarchar](100) NULL,
+			[wagon_adm_abbr_ru] [nvarchar](10) NULL,
+			[wagon_adm_abbr_en] [nvarchar](10) NULL,
+			[wagon_rod] [int] NULL,
+			[wagon_rod_name_ru] [nvarchar](50) NULL,
+			[wagon_rod_name_en] [nvarchar](50) NULL,
+			[wagon_rod_abbr_ru] [nvarchar](5) NULL,
+			[wagon_rod_abbr_en] [nvarchar](5) NULL,
+			[wagon_type_ru] [nvarchar](50) NULL,
+			[wagon_type_en] [nvarchar](50) NULL,
+			[arrival_condition_name_ru] [nvarchar](100) NULL,
+			[arrival_condition_name_en] [nvarchar](100) NULL,
+			[arrival_condition_abbr_ru] [nvarchar](20) NULL,
+			[arrival_condition_abbr_en] [nvarchar](20) NULL,
+			[arrival_condition_red] [bit] NULL,
+			[current_condition_name_ru] [nvarchar](100) NULL,
+			[current_condition_name_en] [nvarchar](100) NULL,
+			[current_condition_abbr_ru] [nvarchar](20) NULL,
+			[current_condition_abbr_en] [nvarchar](20) NULL,
+			[current_condition_red] [bit] NULL,
+			[wagon_date_rem_uz] [datetime] NULL,
+			[wagon_gruzp_doc] [float] NULL,
+			[wagon_gruzp_uz] [float] NULL,
+			[arrival_cargo_group_name_ru] [nvarchar](50) NULL,
+			[arrival_cargo_group_name_en] [nvarchar](50) NULL,
+			[arrival_cargo_name_ru] [nvarchar](50) NULL,
+			[arrival_cargo_name_en] [nvarchar](50) NULL,
+			[arrival_id_sertification_data] [int] NULL,
+			[arrival_sertification_data_ru] [nvarchar](50) NULL,
+			[arrival_sertification_data_en] [nvarchar](50) NULL,
+			[arrival_id_commercial_condition] [int] NULL,
+			[arrival_commercial_condition_ru] [nvarchar](50) NULL,
+			[arrival_commercial_condition_en] [nvarchar](50) NULL,
+			[arrival_station_from_code] [int] NULL,
+			[arrival_station_from_name_ru] [nvarchar](50) NULL,
+			[arrival_station_from_name_en] [nvarchar](50) NULL,
+			[arrival_shipper_code] [int] NULL,
+			[arrival_shipper_name_ru] [nvarchar](100) NULL,
+			[arrival_shipper_name_en] [nvarchar](100) NULL,
+			[arrival_station_amkr_name_ru] [nvarchar](50) NULL,
+			[arrival_station_amkr_name_en] [nvarchar](50) NULL,
+			[arrival_station_amkr_abbr_ru] [nvarchar](50) NULL,
+			[arrival_station_amkr_abbr_en] [nvarchar](50) NULL,
+			[arrival_division_amkr_code] [nvarchar](5) NULL,
+			[arrival_division_amkr_name_ru] [nvarchar](250) NULL,
+			[arrival_division_amkr_name_en] [nvarchar](250) NULL,
+			[arrival_division_amkr_abbr_ru] [nvarchar](50) NULL,
+			[arrival_division_amkr_abbr_en] [nvarchar](50) NULL,
+			[current_id_loading_status] [int] NULL,
+			[current_loading_status_ru] [nvarchar](30) NULL,
+			[current_loading_status_en] [nvarchar](30) NULL,
+			[current_wagon_busy] [int] NOT NULL,
+			[current_id_operation] [int] NULL,
+			[current_operation_name_ru] [nvarchar](20) NULL,
+			[current_operation_name_en] [nvarchar](20) NULL,
+			[current_operation_start] [datetime] NULL,
+			[current_operation_end] [datetime] NULL,
+			[arrival_duration] [int] NULL,
+			[arrival_idle_time] [int] NULL,
+			[arrival_usage_fee] [numeric](2, 2) NOT NULL,
+			[current_id_station_amkr] [int] NOT NULL,
+			[current_station_amkr_name_ru] [nvarchar](50) NULL,
+			[current_station_amkr_name_en] [nvarchar](50) NULL,
+			[current_station_amkr_abbr_ru] [nvarchar](50) NULL,
+			[current_station_amkr_abbr_en] [nvarchar](50) NULL,
+			[current_station_duration] [int] NULL,
+			[current_way_duration] [int] NULL,
+			[current_station_idle_time] [int] NULL,
+			[current_id_way] [int] NOT NULL,
+			[current_id_park] [int] NULL,
+			[current_way_num_ru] [nvarchar](20) NULL,
+			[current_way_num_en] [nvarchar](20) NULL,
+			[current_way_name_ru] [nvarchar](100) NULL,
+			[current_way_name_en] [nvarchar](100) NULL,
+			[current_way_abbr_ru] [nvarchar](50) NULL,
+			[current_way_abbr_en] [nvarchar](50) NULL,
+			[current_way_start] [datetime] NOT NULL,
+			[current_way_end] [datetime] NULL,
+			[current_wim_note] [nvarchar](250) NULL,
+			[current_id_outer_way] [int] NULL,
+			[current_outer_way_name_ru] [nvarchar](150) NULL,
+			[current_outer_way_name_en] [nvarchar](150) NULL,
+			[current_outer_way_start] [datetime] NULL,
+			[current_outer_way_end] [datetime] NULL,
+			[sap_incoming_supply_num] [nvarchar](10) NULL,
+			[sap_incoming_supply_pos] [nvarchar](10) NULL,
+			[sap_incoming_supply_date] [date] NULL,
+			[sap_incoming_supply_time] [time](7) NULL,
+			[sap_incoming_supply_warehouse_code] [nvarchar](4) NULL,
+			[sap_incoming_supply_warehouse_name] [nvarchar](16) NULL,
+			[sap_incoming_supply_cargo_code] [nvarchar](18) NULL,
+			[sap_incoming_supply_cargo_name] [nvarchar](40) NULL,
+			[instructional_letters_num] [nvarchar](20) NULL,
+			[instructional_letters_datetime] [datetime] NULL,
+			[instructional_letters_station_code] [int] NULL,
+			[instructional_letters_station_name] [nvarchar](50) NULL,
+			[instructional_letters_note] [nvarchar](500) NULL,
+			[wagon_brutto_doc] [int] NULL,
+			[wagon_brutto_amkr] [int] NOT NULL,
+			[wagon_tara_doc] [int] NULL,
+			[wagon_tara_uz] [float] NULL,
+			[wagon_tara_arc_doc] [int] NULL,
+			[wagon_vesg_doc] [int] NULL,
+			[wagon_vesg_amkr] [int] NOT NULL,
+			[diff_vesg] [int] NOT NULL,
+			[doc_outgoing_car] [bit] NULL,
+			[arrival_nom_doc] [int] NULL,
+			[arrival_nom_main_doc] [int] NULL,
+			[arrival_composition_index] [nvarchar](50) NULL,
+			[arrival_date_adoption] [datetime] NULL,
+			[outgoing_id_return] [int] NULL,
+			[outgoing_return_cause_ru] [nvarchar](150) NULL,
+			[outgoing_return_cause_en] [nvarchar](150) NULL,
+			[outgoing_date] [datetime] NULL,
+			[outgoing_sostav_status] [int] NULL,
+			[wagon_ban_uz] [nvarchar](1000) NULL,
+			[wagon_closed_route] [bit] NULL,
+			[wir_note] [nvarchar](250) NULL
+		)
+		AS
+		BEGIN
+
+		--> Получим уставку норма простоя
+	declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] where area=N'wsd' and name = N'arrival_idle_time') AS INT);
+
+	insert @view_wagons
+	select 
+		wir.id as wir_id
 		,wim.id as wim_id
 		,wio.id as wio_id
 		--=============== ОСНОВНОЕ ОКНО ==================
+		,[sample_datetime] = getdate()
 		,wir.num
 		,wim.position
 		--> Оператор
@@ -107,13 +276,38 @@ declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] wher
 		,cur_dir_operation.[operation_name_en] as current_operation_name_en
 		,wio.[operation_start] as current_operation_start
 		,wio.[operation_end] as current_operation_end
+		--=============== ПРОСТОЙ ПО ПРИБЫТИЮ ==================
 		,[arrival_duration] = DATEDIFF (minute, arr_sost.date_adoption, getdate())
 		,[arrival_idle_time] = @arrival_idle_time -- Норма простоя
 		,[arrival_usage_fee] = 0.00
+		--=============== ТЕКУЩАЯ СТАНЦИЯ ==================
+		,wim.id_station as current_id_station_amkr
+		,cur_dir_station_amkr.station_name_ru as current_station_amkr_name_ru
+		,cur_dir_station_amkr.station_name_en as current_station_amkr_name_en
+		,cur_dir_station_amkr.station_abbr_ru as current_station_amkr_abbr_ru
+		,cur_dir_station_amkr.station_abbr_en as current_station_amkr_abbr_en
 		--=============== ПРОСТОЙ НА ЖД. СТАНЦИИ ==================
 		,[current_station_duration] = DATEDIFF (minute, (select [IDS].[get_start_datetime_station_of_wim](wim.id)), getdate())
 		,[current_way_duration] = DATEDIFF (minute, wim.way_start, getdate())
 		,cur_dir_station_amkr.idle_time as current_station_idle_time
+		--=============== ТЕКУЩИЙ ПУТЬ ==================
+		,wim.[id_way] as current_id_way
+		,cur_dir_way.[id_park] as current_id_park
+		,cur_dir_way.[way_num_ru] as current_way_num_ru
+		,cur_dir_way.[way_num_en] as current_way_num_en
+		,cur_dir_way.[way_name_ru] as current_way_name_ru
+		,cur_dir_way.[way_name_en] as current_way_name_en
+		,cur_dir_way.[way_abbr_ru] as current_way_abbr_ru
+		,cur_dir_way.[way_abbr_en] as current_way_abbr_en
+		,wim.[way_start] as current_way_start
+		,wim.[way_end] as current_way_end
+		,wim.note as current_wim_note
+		--=============== ПЕРЕГОН ==================
+		,wim.[id_outer_way] as current_id_outer_way
+		,outer_ways.[name_outer_way_ru] as current_outer_way_name_ru
+		,outer_ways.[name_outer_way_en] as current_outer_way_name_en
+		,wim.[outer_way_start] as current_outer_way_start
+		,wim.[outer_way_end] as current_outer_way_end
 		--=============== ВНУТРИЗАВОДСКОЕ ПЕРЕМЕЩЕНИЕ( В/З) ==================
 		--> ....
 		--=============== ВХОДЯЩАЯ ПОСТАВКА ==================
@@ -170,7 +364,6 @@ declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] wher
 		,dir_wagon.note as wagon_ban_uz							-- Запреты по УЗ 
 		,dir_wagon.[closed_route] as wagon_closed_route			--Замкнутый маршрут (кольцо)
 		,wir.note as wir_note									-- Примечание по ходу движения вагона
-
 	FROM IDS.WagonInternalMovement as wim	--> Текущая дислокаци
 		--> Текущее внетренее перемещение
 		 INNER JOIN IDS.WagonInternalRoutes as wir ON wim.id_wagon_internal_routes = wir.id
@@ -235,6 +428,10 @@ declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] wher
 		Left JOIN IDS.Directory_Station as arr_dir_station_amkr ON arr_doc_vag.id_station_on_amkr =  arr_dir_station_amkr.id
 		--> Справочник Станции АМКР (текущая станция АМКР)
 		Left JOIN IDS.Directory_Station as cur_dir_station_amkr ON wim.id_station =  cur_dir_station_amkr.id
+		--> Справочник текущий путь
+	    Left JOIN [IDS].[Directory_Ways] as cur_dir_way ON wim.[id_way] = cur_dir_way.id
+		--> Справочник Внешний путь отправки
+		Left JOIN IDS.Directory_OuterWays as outer_ways ON wim.id_outer_way = outer_ways.id 
 		--> Справочник Подразделения (цех получатель)
 		Left JOIN IDS.Directory_Divisions as arr_dir_division_amkr ON arr_doc_vag.id_division_on_amkr =  arr_dir_division_amkr.id
 		--> Справочник Операции над вагоном (текущая операция)
@@ -245,13 +442,18 @@ declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] wher
 		Left JOIN UZ.Directory_Stations as let_station_uz ON  il.destination_station = let_station_uz.code_cs
 		--> Справочник Возвратов
 		Left JOIN [IDS].[Directory_DetentionReturn] as dir_return ON out_car.id_outgoing_return_start = dir_return.id
-where 
--- Исключим КИРОВА
-wim.id_station <> 10
-and wim.id_way in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] where [way_delete] is null and id_station in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].Directory_Station where station_delete is null))
--- Вагоны на станциях
-AND (wim.way_end IS NULL 
--- Добавить на перегонах
-OR (wim.outer_way_start is not NULL and wim.outer_way_end is null)
-)
---order by out_sost.status desc
+	WHERE 
+	-- Исключим КИРОВА
+	wim.id_station <> 10
+	and wim.id_way in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] where [way_delete] is null and id_station in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].Directory_Station where station_delete is null))
+	-- Вагоны на станциях
+	AND (wim.way_end IS NULL 
+	-- Добавить на перегонах
+	OR (wim.outer_way_start is not NULL and wim.outer_way_end is null)
+	)
+	RETURN
+ END
+
+GO
+
+
