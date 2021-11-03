@@ -31,7 +31,9 @@
         this.list_divisions = null;
         this.list_park_ways = null;
         this.list_operators_wagons = null;
+        this.list_operators_wagons_group = null;
         this.list_locomotive = null;
+
 
     }
     //****************************************************************************************
@@ -124,6 +126,19 @@
                             this.list_operators_wagons = data;
                             process--;
                             result.push('operators_wagons');
+                            out_load(process);
+                        }.bind(this));
+                    };
+                };
+                if (table === 'operators_wagons_group') {
+
+                    if (lock) LockScreen(langView('mess_load_reference', App.Langs));
+                    if (update || !this.list_operators_wagons_group) {
+                        process++;
+                        this.getOperatorsWagonsGroup(function (data) {
+                            this.list_operators_wagons_group = data;
+                            process--;
+                            result.push('operators_wagons_group');
                             out_load(process);
                         }.bind(this));
                     };
@@ -262,6 +277,30 @@
             },
         });
     }
+    //======= Directory_OperatorsWagons (Справочник групп операторов вагонов) ======================================
+    ids_directory.prototype.getOperatorsWagonsGroup = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/directory/operators_wagons_group/all',
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_directory.getOperatorsWagonsGroup", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
     //======= Directory_Station (Справочник станций ИДС) ======================================
     ids_directory.prototype.getStation = function (callback) {
         $.ajax({

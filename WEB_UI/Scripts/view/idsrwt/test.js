@@ -58,8 +58,11 @@
 
     //var VRC = App.view_return_cars;
     //var vrc = new VRC('div#return');             // Создадим экземпляр
-    var TTB = App.table_total_balance;
-    var table_total_balance = new TTB('div#total-balance');             // Создадим экземпляр
+    //var TTB = App.table_total_balance;
+    //var table_total_balance = new TTB('div#total-balance');             // Создадим экземпляр
+
+    var VRRC = App.view_report_remainder_cars;
+    var report_remainder_cars = new VRRC('div#remainder-cars');             // Создадим экземпляр
 
     $('button#arrival').on('click', function (e) {
         //var data = oper_send.operation;
@@ -80,12 +83,21 @@
     // После загрузки документа
     $(document).ready(function ($) {
 
-        table_total_balance.init({
+        report_remainder_cars.init({
+            alert: null,
+            ids_dir: null,
             ids_wsd: null,
         }, function (init) {
-            table_total_balance.load();
+            report_remainder_cars.load();
             //LockScreenOff();
         });
+
+        //table_total_balance.init({
+        //    ids_wsd: null,
+        //}, function (init) {
+        //    table_total_balance.load();
+        //    //LockScreenOff();
+        //});
 
         //vrc.init({
         //    alert: null,

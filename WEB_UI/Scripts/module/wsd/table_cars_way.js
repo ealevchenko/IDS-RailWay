@@ -15,6 +15,8 @@
     {
         'default':  //default language: ru
         {
+            'field_number': '№п.п',
+            'field_sample_datetime': 'Дата остатка',
             'field_wir_id': 'id в.п.',
             'field_wim_id': 'id дис.',
             'field_wio_id': 'id опер.',
@@ -73,6 +75,25 @@
             'field_arrival_duration': 'Простой  УЗ, час',
             'field_arrival_idle_time': 'Норма, час',
             'field_arrival_usage_fee': 'Плата на текущий момент, грн',
+
+            'field_current_id_station_amkr': 'id тек. станц.',
+            'field_current_station_amkr_name': 'Текущая станция нахождения',
+            'field_current_station_amkr_abbr': 'Текущая станция (аббр.)',
+            'field_current_id_way': 'id тек. путь.',
+            'field_current_id_park': 'id тек. парк.',
+            'field_current_way_num': '№ тек. пути',
+            'field_current_way_name': 'Название тек. пути',
+            'field_current_way_abbr': 'Аббр. тек. пути',
+            'field_current_way_start': 'Время приб. на путь',
+            'field_current_way_end': 'Время ухода с пути',
+            'field_current_wim_note': 'Описание дислокации',
+            'field_current_id_outer_way': 'id перегона',
+            'field_current_outer_way_name': 'Название перегона',
+            'field_current_outer_way_start': 'Время начала перегона',
+            'field_current_outer_way_end': 'Время окончания перегона',
+            'field_current_way_type': 'Дислокация',
+            'field_current_way_full_name': 'Название пути(перегона)',
+
             'field_current_station_duration': 'Факт ст., ч',
             'field_current_way_duration': 'Факт путь, ч',
             'field_current_station_idle_time': 'Норма ст., ч',
@@ -120,8 +141,10 @@
             'title_status_2': 'Сдан',
             'title_status_3': 'Отправлен',
             'title_status_4': 'Возврат',
-
+            'title_type_way': 'Путь станции',
+            'title_type_outer_way': 'Перегон',
             'title_link_num': 'Показать историю по вагону...',
+
 
             'title_button_export': 'Экспорт',
             'title_button_buffer': 'Буфер',
@@ -292,6 +315,22 @@
 
     // Перечень полей
     var list_collums = [
+        {
+            field: 'number',
+            data: function (row, type, val, meta) {
+                return meta.row + 1;
+            },
+            className: 'dt-body-center',
+            title: langView('field_number', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'sample_datetime',
+            data: function (row, type, val, meta) {
+                return moment(row.sample_datetime).format(format_datetime);
+            },
+            className: 'dt-body-nowrap',
+            title: langView('field_sample_datetime', App.Langs), width: "30px", orderable: true, searchable: true
+        },
         {
             field: 'wir_id',
             data: function (row, type, val, meta) {
@@ -798,6 +837,31 @@
             className: 'dt-body-nowrap',
             title: langView('field_arrival_usage_fee', App.Langs), width: "50px", orderable: true, searchable: true
         },
+        //=============== ТЕКУЩАЯ Ж.Д.СТАНЦИЯ ==================
+        {
+            field: 'current_id_station_amkr',
+            data: function (row, type, val, meta) {
+                return row.current_id_station_amkr;
+            },
+            className: 'dt-body-center',
+            title: langView('field_current_id_station_amkr', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'current_station_amkr_name',
+            data: function (row, type, val, meta) {
+                return row['current_station_amkr_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('field_current_station_amkr_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'current_station_amkr_abbr',
+            data: function (row, type, val, meta) {
+                return row['current_station_amkr_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('field_current_station_amkr_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
         //=============== ПРОСТОЙ НА Ж.Д.СТАНЦИИ ==================
         // индикатор
         {
@@ -844,6 +908,129 @@
             },
             className: 'dt-body-nowrap idle-station',
             title: langView('field_current_way_duration', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        //=============== ТЕКУЩИЙ ПУТЬ ==================
+        {
+            field: 'current_id_way',
+            data: function (row, type, val, meta) {
+                return row.current_id_way;
+            },
+            className: 'dt-body-center',
+            title: langView('field_current_id_way', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'current_id_park',
+            data: function (row, type, val, meta) {
+                return row.current_id_park;
+            },
+            className: 'dt-body-center',
+            title: langView('field_current_id_park', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'current_way_num',
+            data: function (row, type, val, meta) {
+                return row['current_way_num_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-50',
+            title: langView('field_current_way_num', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'current_way_name',
+            data: function (row, type, val, meta) {
+                return row['current_way_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('field_current_way_name', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'current_way_abbr',
+            data: function (row, type, val, meta) {
+                return row['current_way_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('field_current_way_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'current_way_start',
+            data: function (row, type, val, meta) {
+                return row.current_way_start ? moment(row.current_way_start).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('field_current_way_start', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'current_way_end',
+            data: function (row, type, val, meta) {
+                return row.current_way_end ? moment(row.current_way_end).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('field_current_way_end', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'current_wim_note',
+            data: function (row, type, val, meta) {
+                return row.current_wim_note;
+            },
+            className: 'dt-body-nowrap text-left',
+            title: langView('field_current_wim_note', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        //=============== ПЕРЕГОН ==================
+        {
+            field: 'current_id_outer_way',
+            data: function (row, type, val, meta) {
+                return row.current_id_outer_way;
+            },
+            className: 'dt-body-center',
+            title: langView('field_current_id_outer_way', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'current_outer_way_name',
+            data: function (row, type, val, meta) {
+                return row['current_outer_way_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('field_current_outer_way_name', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'current_outer_way_start',
+            data: function (row, type, val, meta) {
+                return row.current_outer_way_start ? moment(row.current_outer_way_start).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('field_current_outer_way_start', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'current_outer_way_end',
+            data: function (row, type, val, meta) {
+                return row.current_outer_way_end ? moment(row.current_outer_way_end).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('field_current_outer_way_end', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        //=============== ТЕКУЩИЙ ПУТЬ ==================
+        {
+            field: 'current_way_type',
+            data: function (row, type, val, meta) {
+                if (row.current_way_end !== null && row.current_outer_way_start !== null && row.current_outer_way_end === null) {
+                    return langView('title_type_outer_way', App.Langs);
+                } else {
+                    return langView('title_type_way', App.Langs);
+                }
+            },
+            className: 'dt-body-left shorten mw-50',
+            title: langView('field_current_way_type', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'current_way_full_name',
+            data: function (row, type, val, meta) {
+                if (row.current_way_end !== null && row.current_outer_way_start !== null && row.current_outer_way_end === null) {
+                    return row['current_outer_way_name_' + App.Lang];
+                } else {
+                    return row['current_way_num_' + App.Lang] + '-' + row['current_way_name_' + App.Lang];
+                }
+            },
+            className: 'dt-body-left shorten mw-250',
+            title: langView('field_current_way_full_name', App.Langs), width: "250px", orderable: true, searchable: true
         },
         //=============== ИНСТРУКТИВНЫЕ ПИСЬМА ==================
         // № письма
@@ -1354,6 +1541,20 @@
         collums.push('current_station_duration');
         // Факт, ч (Путь)
         collums.push('current_way_duration');
+        // Текущий путь
+        collums.push('current_id_way');
+        collums.push('current_id_park');
+        collums.push('current_way_num');
+        collums.push('current_way_name');
+        collums.push('current_way_abbr');
+        collums.push('current_way_start');
+        collums.push('current_way_end');
+        collums.push('current_wim_note');
+        // Перегон
+        collums.push('current_id_outer_way');
+        collums.push('current_outer_way_name');
+        collums.push('current_outer_way_start');
+        collums.push('current_outer_way_end');
         //=============== ИНСТРУКТИВНЫЕ ПИСЬМА ==================
         // Инструктивные письма
         collums.push('instructional_letters_num');          // №
@@ -1615,6 +1816,150 @@
         collums.push('arrival_division_amkr_abbr');
         return init_columns(collums, list_collums);
     };
+    // инициализация полей таблицы вагоны учетный остаток (Отчет 4- вагоны детально, учетный остаток)
+    table_cars_way.prototype.init_columns_balance_select = function () {
+        var collums = [];
+
+        collums.push('number');
+        if (this.settings.link_num) {
+            collums.push('num_link');
+        } else {
+            collums.push('num');
+        }
+        collums.push('sample_datetime');
+        collums.push('current_station_amkr_name');
+        collums.push('current_way_type');
+        collums.push('current_way_full_name');
+        // Администрация
+        collums.push('wagon_adm');
+        //collums.push('wagon_adm_name');
+        collums.push('wagon_adm_abbr');
+        // Оператор
+        //collums.push('id_operator');
+        //collums.push('operators');
+        collums.push('operator_abbr');
+        //collums.push('operator_rent_start');
+        //collums.push('operator_rent_end');
+        // Ограничение 
+        //collums.push('id_limiting_loading');
+        //collums.push('limiting_name');
+        collums.push('limiting_abbr');
+        // Род вагона
+        //collums.push('wagon_rod');
+        //collums.push('wagon_rod_name');
+        collums.push('wagon_rod_abbr');
+        // Тип вагона
+        collums.push('wagon_type');
+        // Разметка прибытие
+        //collums.push('arrival_condition_name');
+        collums.push('arrival_condition_abbr');
+        //collums.push('arrival_condition_red');
+        // разметка текущая
+        //collums.push('current_condition_name');
+        collums.push('current_condition_abbr');
+        //collums.push('current_condition_red');
+        // Дата деповского ремонта по УЗ
+        collums.push('wagon_date_rem_uz');
+        // Груз по прибытию
+        collums.push('arrival_cargo_group_name');
+        collums.push('arrival_cargo_name');
+        // Сертификатные данные
+        //collums.push('arrival_id_sertification_data');
+        collums.push('arrival_sertification_data');
+        // Коммерческое состояние
+        //collums.push('arrival_id_commercial_condition');
+        collums.push('arrival_commercial_condition');
+        // Станция отправления
+        //collums.push('arrival_station_from_code');
+        collums.push('arrival_station_from_name');
+        // Цех-получатель
+        //collums.push('arrival_division_amkr_name');
+        collums.push('arrival_division_amkr_abbr');
+        // Груж /порожний, состояние загрузки
+        //collums.push('current_id_loading_status');
+        collums.push('current_loading_status');
+        // Занят (операция)
+        collums.push('current_wagon_busy');
+        // Простой УЗ
+        collums.push('arrival_duration');
+        // Норма, час
+        collums.push('arrival_idle_time');
+        // Плата на текущий момент, грн
+        collums.push('arrival_usage_fee');
+        //=============== ПРОСТОЙ НА Ж.Д.СТАНЦИИ ==================
+        // Индикатор (Станция)
+        collums.push('current_station_indicator');
+        // Норма, ч (Станция)
+        collums.push('current_station_idle_time');
+        // Факт, ч (Станция)
+        collums.push('current_station_duration');
+        // Факт, ч (Путь)
+        collums.push('current_way_duration');
+        //=============== ИНСТРУКТИВНЫЕ ПИСЬМА ==================
+        // Инструктивные письма
+        collums.push('instructional_letters_num');          // №
+        collums.push('instructional_letters_datetime');     // Дата и время
+        collums.push('instructional_letters_station_code'); // Станция назначения
+        collums.push('instructional_letters_station_name'); // 
+        //collums.push('instructional_letters_note');         // Текст письма
+        // Признак платности
+        //collums.push('operator_paid');
+        //// Грузоподъемность
+        //collums.push('wagon_gruzp_doc');
+        //collums.push('wagon_gruzp_uz');
+        ////Отправитель
+        //collums.push('arrival_shipper_code');
+        //collums.push('arrival_shipper_name');
+        // Станция назначения АМКР
+        //collums.push('arrival_station_amkr_name');
+        //collums.push('arrival_station_amkr_abbr');
+        //// Последняя операция над вагоном
+        //collums.push('current_id_operation');
+        //collums.push('current_operation_name');
+        //// Дата начала выполнения операции
+        //collums.push('current_operation_start');
+        //// Дата окончания выполнения операции
+        //collums.push('current_operation_end');
+        //=============== ВХОДЯЩАЯ ПОСТАВКА ==================
+        // Вх. поставка САП
+        //collums.push('sap_incoming_supply_num');            // Номер вх. поставки
+        //collums.push('sap_incoming_supply_pos');            // поз вх. поставки
+        //collums.push('sap_incoming_supply_date');           // дата создания вх. поставки
+        //collums.push('sap_incoming_supply_time');           // время создания вх. поставки
+        //collums.push('sap_incoming_supply_cargo_code');     // склад вх. поставки
+        //collums.push('sap_incoming_supply_cargo_name');     //
+        //collums.push('sap_incoming_supply_warehouse_code'); // материал вх. поставки
+        //collums.push('sap_incoming_supply_warehouse_name'); //
+        //=============== ВХОДНОЕ ВЗВЕШИВАНИЕ С УЗ ==================
+        // Брутто, тн
+        //collums.push('wagon_brutto_doc');                   // по ЭПД (нето ЭПД + тара ЭПД || тара ЭПД уточненная)
+        //collums.push('wagon_brutto_amkr');                  // по ЭПД 
+        //// Тара, тн
+        //collums.push('wagon_tara_doc');                     // по ЭПД 
+        //collums.push('wagon_tara_arc_doc');                 // по ЭПД уточненное
+        //collums.push('wagon_tara_uz');                      // по УЗ
+        //// Нетто, тн 
+        //collums.push('wagon_vesg_doc');                     // Вес груза ЭПД
+        //collums.push('wagon_vesg_amkr');                    // Вес груза АМКР
+        //// Разница нетто, тн.
+        //collums.push('diff_vesg');
+        //=============== ДОПОЛНИТЕЛЬНО ==================
+        //
+        //collums.push('doc_outgoing_car');                   // Наличие документа для сдачи
+        collums.push('arrival_nom_main_doc');               // Номер основного документа(если заполнен)
+        collums.push('arrival_nom_doc');                    // Номер документа(досылки)
+        //collums.push('arrival_composition_index');                    // Индекс поезда прибытие
+        collums.push('arrival_date_adoption');                    // дата приема вагона
+        //collums.push('outgoing_date');                    // дата отправки вагона
+        //collums.push('outgoing_id_return');               // Возврат
+        //collums.push('outgoing_return_cause');           // Причина возврата
+        //collums.push('outgoing_sostav_status');          // Статус состава отправленного вагона
+        //collums.push('outgoing_sostav_status_name');     // Статус состава отправленного вагона
+        //collums.push('wagon_ban_uz');                    // Запреты по УЗ
+        //collums.push('wagon_closed_route');                    //Замкнутый маршрут(кольцо)
+        collums.push('wir_note');                    // Примечание Вагонник ГС
+        return init_columns(collums, list_collums);
+    };
     //------------------------------- КНОПКИ -------------------------------------------------------------
     table_cars_way.prototype.init_button_detali = function () {
         var buttons = [];
@@ -1699,10 +2044,30 @@
         });
         return init_buttons(buttons, list_buttons);
     };
-    //------------------------------- КНОПКИ -------------------------------------------------------------
+    // инициализация кнопок таблицы вагоны учетный остаток (Отчет 4- вагоны детально, учетный остаток)
+    table_cars_way.prototype.init_button_balance_select = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'page_length',
+            action: null
+        });
+        return init_buttons(buttons, list_buttons);
+    };
+
+    //-------------------------------  -------------------------------------------------------------
     // Инициализация тип отчета
     table_cars_way.prototype.init_type_report = function () {
         switch (this.settings.type_report) {
+            // Таблица вагоны на АМКР (учетный остаток)
+            case 4: {
+                this.type_select_rows = 1; // Выбирать одну
+                this.table_select = false;
+                this.table_columns = this.init_columns_balance_select();
+                this.table_buttons = this.init_button_balance_select();
+                break;
+            };
             // Таблица вагоны на пути для приема
             case 3: {
                 this.type_select_rows = 2; // Выбирать несколько
@@ -1751,6 +2116,7 @@
             alert: null,
             type_report: 0,     // 0 - вагоны детально
             link_num: false,
+            complete: false,
             ids_wsd: null,
             fn_change_data: null, // Функция обратного вызова если изменили данные отображения (load... button:action...)
         }, options);
@@ -1951,6 +2317,7 @@
         this.obj_t_cars.rows.add(data);
         this.obj_t_cars.order([0, 'asc']);
         this.obj_t_cars.draw();
+        if (this.settings.complete) this.init_complete();
         // Если указан номер показать по номеру
         if (num) {
             //var tr = this.$table_cars.find('tbody tr[data-num="' + num + '"]');
@@ -1963,6 +2330,30 @@
         }
         this.enable_button(); // отображение кнопки добавить
         LockScreenOff();
+    };
+
+    table_cars_way.prototype.init_complete = function () {
+        this.obj_t_cars.columns().indexes().flatten().each(function (i) {
+            var column = this.obj_t_cars.column(i);
+            var name = column.header();//.firstChild.data;
+
+            var select = $('<select><option value=""></option></select>')
+                .appendTo($(column.header()).empty())
+                .on('change', function () {
+                    // Escape the expression so we can perform a regex match
+                    var val = $.fn.dataTable.util.escapeRegex(
+                        $(this).val()
+                    );
+
+                    column
+                        .search(val ? '^' + val + '$' : '', true, false)
+                        .draw();
+                });
+
+            column.data().unique().sort().each(function (d, j) {
+                select.append('<option value="' + d + '">' + d + '</option>')
+            });
+        }.bind(this));
     };
     // Обновить данные
     table_cars_way.prototype.update = function (num) {

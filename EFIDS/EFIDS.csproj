@@ -57,6 +57,7 @@
     <Compile Include="Abstract\IWebView.cs" />
     <Compile Include="Abstract\IWebAccess.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_BorderCheckpoint.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_OperatorsWagonsGroup.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Reason_Discrepancy.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_DetentionReturn.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Locomotive.cs" />
@@ -229,6 +230,7 @@
     <Compile Include="Entities\RWT\Outgoing_UZ_Vagon_Acts.cs" />
     <Compile Include="Entities\RWT\Outgoing_UZ_Vagon_Cont.cs" />
     <Compile Include="Entities\RWT\Outgoing_UZ_Vagon_Pay.cs" />
+    <Compile Include="Entities\Directory\Directory_OperatorsWagonsGroup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

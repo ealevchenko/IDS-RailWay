@@ -94,6 +94,8 @@ namespace EFIDS.Concrete
         public virtual DbSet<Directory_GenusWagons> Directory_GenusWagons { get; set; }
         public virtual DbSet<Directory_TypeWagons> Directory_TypeWagons { get; set; }
         public virtual DbSet<Directory_OperatorsWagons> Directory_OperatorsWagons { get; set; }
+        public virtual DbSet<Directory_OperatorsWagonsGroup> Directory_OperatorsWagonsGroup { get; set; }
+
         public virtual DbSet<Directory_OwnersWagons> Directory_OwnersWagons { get; set; }
         public virtual DbSet<Directory_LimitingLoading> Directory_LimitingLoading { get; set; }
         public virtual DbSet<Directory_WagonsCondition> Directory_WagonsCondition { get; set; }

@@ -1,0 +1,9 @@
+﻿body {
+
+}
+
+/*Уменьшить размер таблицы*/
+.table-report-operation {
+    font-size: 0.8rem;
+    color: rgba(51, 29, 53, 0.8);
+}

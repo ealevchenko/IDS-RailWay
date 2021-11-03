@@ -26,7 +26,7 @@
     <link href="~/Content/module/wsd/view_arrival_cars.css" rel="stylesheet" /><!-- CSS стили модуля "Операция принять" -->
     <link href="~/Content/module/wsd/view_return_cars.css" rel="stylesheet" /><!-- CSS стили модуля "Операция отмена отправки или возврат" -->
 
-
+    <link href="~/Content/module/wsd/view_report_remainder_cars.css" rel="stylesheet" /> <!-- CSS стили модуля "Отчет Остаток вагонов на АМКР" -->
     <link href="~/Content/module/wsd/view_history_operation_arrival.css" rel="stylesheet" /><!-- CSS стили модуля "История операций принять на станцию" -->
 
     <style>
@@ -82,6 +82,8 @@
     <script src="~/Scripts/module/wsd/view_return_cars.js"></script>        <!-- Модуль "Операция возврат отправить или отмена" -->
 
     <script src="~/Scripts/module/wsd/view_history_operation_arrival.js"></script>  <!-- Модуль "История операций принять" -->
+
+    <script src="~/Scripts/module/wsd/view_report_remainder_cars.js"></script>    <!-- Модуль "Отчет Остаток вагонов на АМКР" -->
 
     <script src="~/Scripts/module/wsd/table_total_balance.js"></script>
 
@@ -181,8 +183,14 @@
                     </div>
                 </div>
                 <div class="card-body text-dark pl-3 pr-3">
-                    <div class="row">
-                        <div class="col-xl-4">
+                    @*<div id="remainder">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>*@
+                    <div id="remainder-cars"></div>
+                    <!--<div class="row">
+                        <div class="col-xl-2">
                             <div class="card border-primary">
                                 <div class="card-header">
                                     <div id="dds-station"></div>
@@ -190,32 +198,109 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-xl-12">
-                                            <div id="tree-way"></div>
+                                        <div class="col-xl-12 text-left">
+                                            <form>
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" class="custom-control-input" id="outer_cars">
+                                                        <label class="custom-control-label" for="outer_cars">Внешние стороние вагоны</label>
+                                                    </div>
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" class="custom-control-input" id="amkr_outer_cars">
+                                                        <label class="custom-control-label" for="amkr_outer_cars">Внешние вагоны АМКР</label>
+                                                    </div>
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" class="custom-control-input" id="amkr_cars">
+                                                        <label class="custom-control-label" for="amkr_cars">Внутри-заводские вагоны</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="col-md-6 mb-1">
+                                                        <label for="select_day">Свыше суток:</label>
+                                                        <input type="number" min="1" max="1000" class="form-control form-control-sm" id="select_day" placeholder="0..1000">
+                                                    </div>
+                                                    <div class="col-md-6 mb-1">
+                                                        <label for="select_top">Топ:</label>
+                                                        <input type="number" min="1" max="1000" class="form-control form-control-sm" id="select_top" placeholder="0..100">
+                                                    </div>
+                                                </div>
+
+                                                <div id="select-width" class="p-1" style="background-color:antiquewhite;">
+                                                    <div class="form-group p-1" style="border:1px solid #808080">
+                                                        <button type="button" class="close" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                        <label for="operator">Оператор:</label>
+                                                        <select id="operator" class="custom-select custom-select-sm" required>
+                                                            <option value="">Open this select menu</option>
+                                                            <option value="1">One</option>
+                                                            <option value="2">Two</option>
+                                                            <option value="3">Three</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group p-1" style="border:1px solid #808080">
+                                                        <button type="button" class="close" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                        <label for="limit">Ограничение:</label>
+                                                        <select id="limit" class="custom-select custom-select-sm" required>
+                                                            <option value="">Open this select menu</option>
+                                                            <option value="1">One</option>
+                                                            <option value="2">Two</option>
+                                                            <option value="3">Three</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <br />
+                                                <div class="form-group p-1">
+                                                    <label for="where">ДОБАВИТЬ ВЫБОРКУ:</label>
+                                                    <div class="input-group">
+                                                        <select id="where" class="form-control form-control-sm" placeholder="добавить выборку" required>
+                                                            <option value="1">Оператор</option>
+                                                            <option value="2">Ограничение</option>
+                                                            <option value="3">Груз по прибытию</option>
+                                                        </select>
+                                                        <div class="input-group-append">
+                                                            <button class="btn btn-sm btn-outline-secondary" type="button">
+                                                                <i class="fas fa-plus-circle" aria-hidden="true"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                            </form>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xl-12">
-                                            <div id="total-balance"></div>
-                                        </div>
-                                    </div>
-                                </div>
+                                    </div>-->
+                                    <!--@*<div class="row">
+                                            <div class="col-xl-12">
+                                                <div id="tree-way"></div>
+                                            </div>
+                                        </div>*@
+                                    @*<div class="row">
+                                            <div class="col-xl-12">
+                                                <div id="total-balance"></div>
+                                            </div>
+                                        </div>*@-->
+
+
+                                <!--</div>
                             </div>
                         </div>
-                        <div class="col-xl-8">
+                        <div class="col-xl-10">
                             <div class="card border-info">
                                 <div class="card-header">Перечень вагонов</div>
                                 <div class="card-body" style="font-size:13px">
                                     <div class="row">
                                         <div class="col-xl-12">
                                             <div id="wagons"></div>
-                                            @*<table id="wagons-way" class="display compact table-striped table-hover" style="width:100%;table-layout: fixed"></table>*@
+                                            <table id="wagons-way" class="display compact table-striped table-hover" style="width:100%;table-layout: fixed"></table>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
                 <div class="card-footer bg-transparent border-dark"></div>
             </div>

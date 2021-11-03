@@ -303,6 +303,10 @@
     };
 
     //================= Дерево путей =========================================================
+
+
+
+    //================= Отчеты учетный остаток =========================================================
     // Получить расчет остатков по вагонам
     ids_wsd.prototype.getViewTotalBalance = function (callback) {
         $.ajax({
@@ -320,6 +324,54 @@
             },
             error: function (x, y, z) {
                 OnAJAXError("ids_wsd.getViewTotalBalance", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить все вагоны на АМКР (Отчет учетный остаток)
+    ids_wsd.prototype.getViewWagonsOfBalance = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wsd/view/vagons/balance/',
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getViewWagonsOfBalance", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить все вагоны на АМКР (Отчет учетный остаток по условию выбора)
+    ids_wsd.prototype.postViewWagonsOfBalance = function (option, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/view/vagons/balance/',
+            type: 'POST',
+            data: JSON.stringify(option),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postViewWagonsOfWhereBalance", x, y, z);
             },
             complete: function () {
                 AJAXComplete();

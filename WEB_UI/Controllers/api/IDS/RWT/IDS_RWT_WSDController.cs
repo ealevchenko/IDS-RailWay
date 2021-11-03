@@ -75,6 +75,9 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public int? count_amkr_wagons { get; set; }
         public int? capacity_wagons { get; set; }
     }
+    #endregion
+
+    #region ОТЧЕТ УЧЕТНЫЙ ОСТАТОК  (Обновленный АРМ)
 
     public class view_total_balance
     {
@@ -82,7 +85,35 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public int? all { get; set; }
         public int? amkr { get; set; }
     }
-
+    /// <summary>
+    /// Класс данных выборки для отчета учетный остаток
+    /// </summary>
+    public class where_option_balance
+    {
+        public bool outer_car { get; set; }                 //Внешние стороние вагоны
+        public bool amkr_outer_cars { get; set; }           //Внешние вагоны АМКР
+        public bool amkr_cars { get; set; }                 //Внутри-заводские вагоны
+        public int select_day { get; set; }                 //Сверх суток
+        public int select_top { get; set; }                 //Топ
+        public int id_operator { get; set; }                //Оператор
+        public int id_limiting { get; set; }                //Ограничение
+        public int id_cargo_arrival { get; set; }           //Груз по прибытию
+        public int id_cargo_group_arrival { get; set; }     //Группа по ПРИБ
+        public int id_certification_data { get; set; }      //Сертификационные данные
+        public int id_departure_station { get; set; }       //Станция отправления
+        public int id_division { get; set; }                //Грузополучатель
+        public int id_station_contiguity { get; set; }      //Внешнее прибытие
+        public int id_condition_arrival { get; set; }       //Разметка по прибытию
+        public bool condition_mr { get; set; }              //Вагоны МР         
+        public int id_genus { get; set; }                   //Род вагона
+        public int id_cargo_sending { get; set; }           //Груз по отправлению          
+        public int id_cargo_group_sending { get; set; }     //Группа по ОТПР
+        public int id_division_loading { get; set; }        //Цех-погрузки                  
+        public int id_destination_station { get; set; }     //Станция назначения
+        public bool paid { get; set; }                      //Признак платности                                                          //
+        public int id_station_amkr { get; set; }            //Станция нахождения вагона
+        public bool not_surrender_cars { get; set; }        //Без учета сданных вагонов               
+    }
     #endregion
 
     #region ДЕТАЛЬНО ВАГОНЫ (Обновленный АРМ)
@@ -91,6 +122,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public long wir_id { get; set; }
         public long wim_id { get; set; }
         public long? wio_id { get; set; }
+        public DateTime sample_datetime { get; set; }
         public int num { get; set; }
         public int position { get; set; }
         public int? id_operator { get; set; }
@@ -175,9 +207,30 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public int? arrival_duration { get; set; }
         public int? arrival_idle_time { get; set; }
         public decimal? arrival_usage_fee { get; set; }
+        public int current_id_station_amkr { get; set; }
+        public string current_station_amkr_name_ru { get; set; }
+        public string current_station_amkr_name_en { get; set; }
+        public string current_station_amkr_abbr_ru { get; set; }
+        public string current_station_amkr_abbr_en { get; set; }
         public int? current_station_duration { get; set; }
         public int? current_way_duration { get; set; }
         public int? current_station_idle_time { get; set; }
+        public int current_id_way { get; set; }
+        public int? current_id_park { get; set; }
+        public string current_way_num_ru { get; set; }
+        public string current_way_num_en { get; set; }
+        public string current_way_name_ru { get; set; }
+        public string current_way_name_en { get; set; }
+        public string current_way_abbr_ru { get; set; }
+        public string current_way_abbr_en { get; set; }
+        public DateTime current_way_start { get; set; }
+        public DateTime? current_way_end { get; set; }
+        public string current_wim_note { get; set; }
+        public int? current_id_outer_way { get; set; }
+        public string current_outer_way_name_ru { get; set; }
+        public string current_outer_way_name_en { get; set; }
+        public DateTime? current_outer_way_start { get; set; }
+        public DateTime? current_outer_way_end { get; set; }
         public string sap_incoming_supply_num { get; set; }
         public string sap_incoming_supply_pos { get; set; }
         public DateTime? sap_incoming_supply_date { get; set; }
@@ -216,7 +269,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
 
     public class view_outer_way_wagons
     {
-        public long from_id_wim { get; set; }      
+        public long from_id_wim { get; set; }
         public long? id_wir { get; set; }
         public long? from_id_wio { get; set; }
         public long? on_id_wim { get; set; }
@@ -773,8 +826,6 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string change_user { get; set; }
     }
 
-
-
     public class view_arrival_sostav
     {
         public string num_train { get; set; }
@@ -1036,7 +1087,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 db.Database.CommandTimeout = 300;
                 string sql = "select * from [IDS].[get_view_status_all_station]()";
                 List<view_status_station> list = db.Database.SqlQuery<view_status_station>(sql).ToList();
-                db.Database.CommandTimeout = null;               
+                db.Database.CommandTimeout = null;
                 return Ok(list);
             }
             catch (Exception e)
@@ -1105,8 +1156,8 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             try
             {
                 //db.Database.CommandTimeout = 100;
-                System.Data.SqlClient.SqlParameter id_st= new System.Data.SqlClient.SqlParameter("@id_station", id_station);
-                System.Data.SqlClient.SqlParameter id_pk= new System.Data.SqlClient.SqlParameter("@id_park", id_park);
+                System.Data.SqlClient.SqlParameter id_st = new System.Data.SqlClient.SqlParameter("@id_station", id_station);
+                System.Data.SqlClient.SqlParameter id_pk = new System.Data.SqlClient.SqlParameter("@id_park", id_park);
                 string sql = "select * from [IDS].[get_view_status_park_of_id](@id_station, @id_park)";
                 List<view_status_park> list = db.Database.SqlQuery<view_status_park>(sql, id_st, id_pk).ToList();
                 //db.Database.CommandTimeout = null;               
@@ -1133,7 +1184,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 System.Data.SqlClient.SqlParameter id_st = new System.Data.SqlClient.SqlParameter("@id_station", id_station);
                 System.Data.SqlClient.SqlParameter id_pk = new System.Data.SqlClient.SqlParameter("@id_park", id_park);
                 string sql = "select * from [IDS].[get_view_status_all_way_of_station_park_id](@id_station, @id_park) order by position_way";
-                List<view_status_way> list = db.Database.SqlQuery<view_status_way>(sql, id_st,id_pk).ToList();
+                List<view_status_way> list = db.Database.SqlQuery<view_status_way>(sql, id_st, id_pk).ToList();
                 //db.Database.CommandTimeout = null;               
                 return Ok(list);
             }
@@ -1159,28 +1210,6 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 string sql = "select * from [IDS].[get_view_status_way_of_id](@id_way) order by position_way";
                 List<view_status_way> list = db.Database.SqlQuery<view_status_way>(sql, id_w).ToList();
                 //db.Database.CommandTimeout = null;               
-                return Ok(list);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        // GET: api/ids/rwt/wsd/view/total_balance
-        /// <summary>
-        /// Получить расчет остатков по вагонам
-        /// </summary>
-        /// <returns></returns>
-        [Route("view/total_balance")]
-        [ResponseType(typeof(view_total_balance))]
-        public IHttpActionResult GetViewTotalBalance()
-        {
-            try
-            {
-
-                string sql = "select * from [IDS].[get_total_balance]()";
-                List<view_total_balance> list = db.Database.SqlQuery<view_total_balance>(sql).ToList();
                 return Ok(list);
             }
             catch (Exception e)
@@ -1374,7 +1403,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             {
                 System.Data.SqlClient.SqlParameter id = new System.Data.SqlClient.SqlParameter("@id_station", id_station);
                 string sql = "select * from [IDS].[get_view_arrival_sostav_of_outer_ways](@id_station) order by from_operation_end desc";
-                List<view_outer_way_sostav> list = db.Database.SqlQuery<view_outer_way_sostav>(sql,id).ToList();
+                List<view_outer_way_sostav> list = db.Database.SqlQuery<view_outer_way_sostav>(sql, id).ToList();
                 return Ok(list);
             }
             catch (Exception e)
@@ -1382,7 +1411,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 return BadRequest(e.Message);
             }
         }
-        
+
         /// <summary>
         /// Составы на перегонах отправленные с указаной станции
         /// </summary>
@@ -1397,7 +1426,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             {
                 System.Data.SqlClient.SqlParameter id = new System.Data.SqlClient.SqlParameter("@id_station", id_station);
                 string sql = "select * from [IDS].[get_view_send_sostav_of_outer_ways](@id_station) order by from_operation_end desc";
-                List<view_outer_way_sostav> list = db.Database.SqlQuery<view_outer_way_sostav>(sql,id).ToList();
+                List<view_outer_way_sostav> list = db.Database.SqlQuery<view_outer_way_sostav>(sql, id).ToList();
                 return Ok(list);
             }
             catch (Exception e)
@@ -1470,6 +1499,108 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         }
         #endregion
 
+        #region ОТЧЕТ УЧЕТНЫЙ ОСТАТОК  (Обновленный АРМ)
+        // GET: api/ids/rwt/wsd/view/total_balance
+        /// <summary>
+        /// Получить расчет остатков по вагонам
+        /// </summary>
+        /// <returns></returns>
+        [Route("view/total_balance")]
+        [ResponseType(typeof(view_total_balance))]
+        public IHttpActionResult GetViewTotalBalance()
+        {
+            try
+            {
+
+                string sql = "select * from [IDS].[get_total_balance]()";
+                List<view_total_balance> list = db.Database.SqlQuery<view_total_balance>(sql).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // GET: api/ids/rwt/wsd/view/vagons/balance
+        /// <summary>
+        /// Показать вагоны детально отчет учетный остаток на АМКР
+        /// </summary>
+        /// <returns></returns>
+        [Route("view/vagons/balance")]
+        [ResponseType(typeof(view_wagons))]
+        public IHttpActionResult GetViewWagonsOfBalance()
+        {
+            try
+            {
+                db.Database.CommandTimeout = 300;
+                string sql = "select * from [IDS].[get_view_wagons_of_balance]()";
+                var list = db.Database.SqlQuery<view_wagons>(sql).ToList();
+                this.db.Database.CommandTimeout = null;
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST api/ids/rwt/wsd/view/vagons/balance
+        [HttpPost]
+        [Route("view/vagons/balance")]
+        [ResponseType(typeof(view_wagons))]
+        public IHttpActionResult PostViewWagonsOfBalance([FromBody] where_option_balance value)
+        {
+            try
+            {
+                // формируем строку выборки
+                string where = "";
+                if (value.outer_car == false)
+                {
+                    if (value.amkr_outer_cars == false && value.amkr_cars == false)
+                    {
+                        return Ok(default(view_wagons));
+                    }
+                    if (value.amkr_outer_cars == true && value.amkr_cars == true)
+                    {
+                        //return Ok(default(view_wagons));
+                        where += (String.IsNullOrWhiteSpace(where) ? "" : " AND ") + "id_operator IN (SELECT [id_operator]  FROM [KRR-PA-CNT-Railway].[IDS].[Directory_OperatorsWagonsGroup] where [group] IN ('amkr', 'amkr_vz'))";
+                    }
+                    else
+                    {
+                        if (value.amkr_outer_cars == true)
+                        {
+                            where += (String.IsNullOrWhiteSpace(where) ? "" : " AND ") + "id_operator IN (SELECT [id_operator]  FROM [KRR-PA-CNT-Railway].[IDS].[Directory_OperatorsWagonsGroup] where [group] = N'amkr')";
+                        }
+                        if (value.amkr_cars == true)
+                        {
+                            where += (String.IsNullOrWhiteSpace(where) ? "" : " AND ") + "id_operator IN (SELECT [id_operator]  FROM [KRR-PA-CNT-Railway].[IDS].[Directory_OperatorsWagonsGroup] where [group] = N'amkr_vz')";
+                        }
+                    }
+                }
+                else
+                {
+                    if (value.amkr_outer_cars == false)
+                    {
+                        where += (String.IsNullOrWhiteSpace(where) ? "" : " AND ") + "id_operator NOT IN (SELECT [id_operator]  FROM [KRR-PA-CNT-Railway].[IDS].[Directory_OperatorsWagonsGroup] where [group] = N'amkr')";
+                    }
+                    if (value.amkr_cars == false)
+                    {
+                        where += (String.IsNullOrWhiteSpace(where) ? "" : " AND ") + "id_operator NOT IN (SELECT [id_operator]  FROM [KRR-PA-CNT-Railway].[IDS].[Directory_OperatorsWagonsGroup] where [group] = N'amkr_vz')";
+                    }
+                }
+                db.Database.CommandTimeout = 300;
+                string sql = "select * from [IDS].[get_view_wagons_of_balance]()" + (!String.IsNullOrWhiteSpace(where) ? " WHERE " + where : "");
+                var list = db.Database.SqlQuery<view_wagons>(sql).ToList();
+                this.db.Database.CommandTimeout = null;
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        #endregion
 
         #region ОПЕРАЦИЯ ОТПРАВИТЬ (Обновленный АРМ)
         // POST api/ids/rwt/wsd/operation/sending
@@ -1867,8 +1998,8 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             try
             {
                 IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
-                int result = ids_wir.OperationPresentSostav(value.id_outgoing_sostav, value.date_end_inspection_acceptance_delivery, value.date_end_inspection_loader, 
-                    value.date_end_inspection_vagonnik, value.date_readiness_uz,  value.date_outgoing, value.date_outgoing_act, value.station_on, value.route_sign, value.composition_index, value.user);
+                int result = ids_wir.OperationPresentSostav(value.id_outgoing_sostav, value.date_end_inspection_acceptance_delivery, value.date_end_inspection_loader,
+                    value.date_end_inspection_vagonnik, value.date_readiness_uz, value.date_outgoing, value.date_outgoing_act, value.station_on, value.route_sign, value.composition_index, value.user);
                 return Ok(result);
             }
             catch (Exception e)
@@ -2004,7 +2135,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             try
             {
                 IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
-                List<sostav_operation_send> result = ids_wir.GetSostavWagonsOperationOfSend(start,stop);
+                List<sostav_operation_send> result = ids_wir.GetSostavWagonsOperationOfSend(start, stop);
                 return Ok(result);
             }
             catch (Exception e)

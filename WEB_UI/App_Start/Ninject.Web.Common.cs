@@ -117,6 +117,7 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_OwnersWagons>>().To<EFIDS.Concrete.EFDirectory_OwnersWagons>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_LessorsWagons>>().To<EFIDS.Concrete.EFDirectory_LessorsWagons>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_OperatorsWagons>>().To<EFIDS.Concrete.EFDirectory_OperatorsWagons>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_OperatorsWagonsGroup>>().To<EFIDS.Concrete.EFDirectory_OperatorsWagonsGroup>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_PoligonTravelWagons>>().To<EFIDS.Concrete.EFDirectory_PoligonTravelWagons>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_SpecialConditions>>().To<EFIDS.Concrete.EFDirectory_SpecialConditions>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_DEPO>>().To<EFIDS.Concrete.EFDirectory_DEPO>();

@@ -142,6 +142,18 @@ namespace EFIDS.Helper
             };
         }
 
+        public static Directory_OperatorsWagonsGroup GetOperatorsWagonsGroup(this Directory_OperatorsWagonsGroup o)
+        {
+            if (o == null) return null;
+            return new Directory_OperatorsWagonsGroup()
+            {
+                id = o.id,
+                group = o.group,
+                id_operator = o.id_operator,
+                description = o.description,
+            };
+        }
+
         public static Directory_PoligonTravelWagons GetPoligonTravelWagons(this Directory_PoligonTravelWagons p)
         {
             if (p == null) return null;
@@ -2193,7 +2205,7 @@ namespace EFIDS.Helper
                 close = m.close,
                 close_user = m.close_user,
                 parent_id = m.parent_id,
-                num_sostav = m.num_sostav, 
+                num_sostav = m.num_sostav,
                 id_wio = m.id_wio,
                 Directory_Station = m.Directory_Station.GetDirectory_Station(),
                 Directory_Ways = m.Directory_Ways.GetDirectory_Ways(),

@@ -482,6 +482,20 @@
         if (maxlength !== null) { this.$input.attr('maxlength', maxlength) };
         if (pattern && pattern !== '') { this.$input.attr('pattern', pattern) };
     };
+    // Элемент <input type="..." min="..." max="..." class="..." id="..." placeholder="...">
+    form_control.prototype.el_input_number = function (id, cl_inp, placeholder, required, min, max, step) {
+        this.$input = $('<input></input>', {
+            'id': id,
+            'name': id,
+            'type': 'number'
+        });
+        if (cl_inp && cl_inp !== '') { this.$input.addClass(cl_inp) };
+        if (placeholder && placeholder !== '') { this.$input.attr('placeholder', placeholder) };
+        if (required) { this.$input.attr('required', true) };
+        if (min !== null) { this.$input.attr('min', min) };
+        if (max !== null) { this.$input.attr('max', max) };
+        if (step !== null) { this.$input.attr('step', step) };
+    };
     // Элемент <input class="..." type="checkbox" value="" id=".." name=".." required>
     form_control.prototype.el_input_checkbox = function (id, cl_inp, required) {
         this.$input = $('<input></input>', {
@@ -501,6 +515,27 @@
         if (cl_sel && cl_sel !== '') { this.$select.addClass(cl_sel) };
         if (placeholder && placeholder !== '') { this.$select.attr('placeholder', placeholder) };
         if (required) { this.$select.attr('required', true) };
+    };
+    //<div class="custom-control custom-switch">
+    //    <input type="checkbox" class="custom-control-input" id="outer_cars">
+    //    <label class="custom-control-label" for="outer_cars">Внешние стороние вагоны</label>
+    // </div>
+    form_control.prototype.el_switch = function (id, label) {
+        this.$switch = $('<div></div>', {
+            'class': 'custom-control custom-switch',
+        });
+        var $input = $('<input></input>', {
+            'id': id,
+            'name': id,
+            'class': 'custom-control-input',
+            'type': 'checkbox',
+        });
+        var $label = $('<label></label>', {
+            'for': id,
+            'class': 'custom-control-label',
+            'text': label,
+        });
+        this.$switch.append($input).append($label);
     };
     // Элемент <input type=".." class=".." id=".." name="..">
     form_control.prototype.el_input1 = function (prefix, id, type) {
@@ -962,9 +997,11 @@
         switch (el_field[type]) {
             case 'select': { this.add_select_element_form(el_field, type, col); break; }
             case 'text': { this.add_text_element_form(el_field, type, col); break; }
+            case 'number': { this.add_number_element_form(el_field, type, col); break; }
             case 'checkbox': { this.add_checkbox_element_form(el_field, type, col); break; }
             case 'autocomplete': { this.add_autocomplete_element_form(el_field, type, col); break; }
             case 'datetime': { this.add_datetime_element_form(el_field, type, col); break; }
+            case 'switch': { this.add_switch_element_form(el_field, type, col); break; }
         }
     };
     // Добавить и иницилизировать элемент SELECT
@@ -995,7 +1032,7 @@
             throw new Error('Не удалось создать элемент <select class="..." id=".." name=".." aria-describedby=".." required>');
         };
     };
-    // Добавить и иницилизировать элемент TEXT
+    // Добавить и иницилизировать элемент INPUT-TEXT
     form_infield.prototype.add_text_element_form = function (el_field, type, col) {
         // Создадим label
         var $form_label = new this.fc.el_label(el_field.name, null, el_field.label);
@@ -1025,7 +1062,37 @@
             throw new Error('Не удалось создать элемент <select class="..." id=".." name=".." aria-describedby=".." required>');
         };
     };
-    // Добавить и иницилизировать элемент TEXT-checkbox
+    // Добавить и иницилизировать элемент INPUT-number
+    form_infield.prototype.add_number_element_form = function (el_field, type, col) {
+        // Создадим label
+        var $form_label = new this.fc.el_label(el_field.name, null, el_field.label);
+        if ($form_label && $form_label.$label && $form_label.$label.length > 0) {
+            col.append($form_label.$label);
+        } else {
+            throw new Error('Не удалось создать элемент <label class=".." for="...">...</label>');
+        };
+        // Создадим input
+        var cl_inp = 'form-control' + (el_field.prefix && el_field.prefix !== '' ? ' form-control-' + el_field.prefix + ' ' : ' ');
+        var $form_input = new this.fc.el_input_number(el_field.name, cl_inp, el_field.placeholder, el_field.required, el_field.min, el_field.max, el_field.step);
+        if ($form_input && $form_input.$input && $form_input.$input.length > 0) {
+            col.append($form_input.$input); // Добавить элемент на форму
+            $form_input.$input.inputSpinner();
+            // Проверить задана проверка валидации формы
+            if (this.settings.validation) {
+                // добавим контейнер для вывода сообщений
+                var $form_div_if = new this.fc.el_div_invalid_feedback();
+                if ($form_div_if && $form_div_if.$div && $form_div_if.$div.length > 0) {
+                    col.append($form_div_if.$div);
+                    
+                }
+            }
+            // Инициализировать элемент
+            el_field['element_' + type] = new this.fc.init_input($form_input.$input, el_field.default, el_field.change);
+        } else {
+            throw new Error('Не удалось создать элемент <select class="..." id=".." name=".." aria-describedby=".." required>');
+        };
+    };
+    // Добавить и иницилизировать элемент INPUT-checkbox
     form_infield.prototype.add_checkbox_element_form = function (el_field, type, col) {
         //<div class="form-check">
         //    <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
@@ -1071,7 +1138,7 @@
             throw new Error('Не удалось создать элемент <div class="form-check">');
         };
     };
-    // Добавить и иницилизировать элемент TEXT-autocomplete
+    // Добавить и иницилизировать элемент INPUT-autocomplete
     form_infield.prototype.add_autocomplete_element_form = function (el_field, type, col) {
         // Создадим label
         var $form_label = new this.fc.el_label(el_field.name, null, el_field.label);
@@ -1108,7 +1175,7 @@
             throw new Error('Не удалось создать элемент <select class="..." id=".." name=".." aria-describedby=".." required>');
         };
     };
-    // Добавить и иницилизировать элемент TEXT-datetime
+    // Добавить и иницилизировать элемент INPUT-datetime
     form_infield.prototype.add_datetime_element_form = function (el_field, type, col) {
         // Создадим label
         var $form_label = new this.fc.el_label(el_field.name, null, el_field.label);
@@ -1136,7 +1203,52 @@
             el_field['element_' + type] = obj_element;
             this.el_destroy.push(obj_element);
         } else {
-            throw new Error('Не удалось создать элемент <select class="..." id=".." name=".." aria-describedby=".." required>');
+            throw new Error('Не удалось создать элемент <input class="..." type="checkbox" value="" id=".." name=".." required>');
+        };
+    };
+    // Добавить и иницилизировать элемент INPUT-switch
+    form_infield.prototype.add_switch_element_form = function (el_field, type, col) {
+        //<div class="form-group">
+        //  <div class="custom-control custom-switch">
+        //      <input type="checkbox" class="custom-control-input" id="outer_cars">
+        //      <label class="custom-control-label" for="outer_cars">Внешние стороние вагоны</label>
+        //  </div>
+        //</div>
+        // Создадим <div class="custom-control custom-switch"></div>
+        var $div_switch = $('<div></div>', {
+            'class': 'custom-control custom-switch',
+        });
+        //col.append($div_switch);
+        if ($div_switch && $div_switch.length > 0) {
+            col.append($div_switch); // Добавить элемент на форму
+
+            var cl_inp = 'custom-control-input';
+            var $form_input = new this.fc.el_input_checkbox(el_field.name, cl_inp, el_field.required);
+            if ($form_input && $form_input.$input && $form_input.$input.length > 0) {
+                $div_switch.append($form_input.$input); // Добавить элемент на форму
+                // Создаем label
+                var $form_label = new this.fc.el_label(el_field.name, 'custom-control-label', el_field.label);
+                if ($form_label && $form_label.$label && $form_label.$label.length > 0) {
+                    $div_switch.append($form_label.$label);
+                    // Проверить задана проверка валидации формы
+                    if (this.settings.validation) {
+                        // добавим контейнер для вывода сообщений
+                        var $form_div_if = new this.fc.el_div_invalid_feedback();
+                        if ($form_div_if && $form_div_if.$div && $form_div_if.$div.length > 0) {
+                            $div_switch.append($form_div_if.$div);
+                        }
+                    }
+                } else {
+                    throw new Error('Не удалось создать элемент <label class=".." for="...">...</label>');
+                };
+                // Инициализировать элемент
+                el_field['element_' + type] = new this.fc.init_checkbox($form_input.$input, el_field.default, el_field.change);
+            } else {
+                throw new Error('Не удалось создать элемент <input class="..." type="checkbox" value="" id=".." name=".." required>');
+            };
+        }
+        else {
+            throw new Error('Не удалось создать элемент <div class="custom-control custom-switch"></div>');
         };
     };
     //-----------------------------------------------------------------------------
