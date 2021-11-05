@@ -294,6 +294,7 @@ var init_columns = function (collums_name, list_collums) {
                     title: el, width: "100px", orderable: false, searchable: false
                 };
             }
+            field.className += ' fl-' + el;
             collums.push(field);
         });
     }

@@ -144,7 +144,7 @@
             'title_type_way': 'Путь станции',
             'title_type_outer_way': 'Перегон',
             'title_link_num': 'Показать историю по вагону...',
-
+            'title_select': 'Выбирите...',
 
             'title_button_export': 'Экспорт',
             'title_button_buffer': 'Буфер',
@@ -320,8 +320,12 @@
             data: function (row, type, val, meta) {
                 return meta.row + 1;
             },
+            ariaTitle: 'number',
             className: 'dt-body-center',
-            title: langView('field_number', App.Langs), width: "30px", orderable: true, searchable: true
+            title: langView('field_number', App.Langs), width: "30px", orderable: true, searchable: true,
+            //createdCell: function (td, cellData, rowData, row, col) {
+            //    $(th).attr('id', 'number');
+            //},
         },
         {
             field: 'sample_datetime',
@@ -2116,7 +2120,7 @@
             alert: null,
             type_report: 0,     // 0 - вагоны детально
             link_num: false,
-            complete: false,
+            complete: null,
             ids_wsd: null,
             fn_change_data: null, // Функция обратного вызова если изменили данные отображения (load... button:action...)
         }, options);
@@ -2317,7 +2321,7 @@
         this.obj_t_cars.rows.add(data);
         this.obj_t_cars.order([0, 'asc']);
         this.obj_t_cars.draw();
-        if (this.settings.complete) this.init_complete();
+        if (this.settings.complete !== null) this.init_complete();
         // Если указан номер показать по номеру
         if (num) {
             //var tr = this.$table_cars.find('tbody tr[data-num="' + num + '"]');
@@ -2333,27 +2337,70 @@
     };
 
     table_cars_way.prototype.init_complete = function () {
+
         this.obj_t_cars.columns().indexes().flatten().each(function (i) {
             var column = this.obj_t_cars.column(i);
-            var name = column.header();//.firstChild.data;
-
-            var select = $('<select><option value=""></option></select>')
-                .appendTo($(column.header()).empty())
-                .on('change', function () {
-                    // Escape the expression so we can perform a regex match
-                    var val = $.fn.dataTable.util.escapeRegex(
-                        $(this).val()
-                    );
-
-                    column
-                        .search(val ? '^' + val + '$' : '', true, false)
-                        .draw();
-                });
-
-            column.data().unique().sort().each(function (d, j) {
-                select.append('<option value="' + d + '">' + d + '</option>')
+            var res = this.settings.complete.find(function (o) {
+                var is_class = $(column.header()).hasClass('fl-' + o.field);
+                return is_class;
             });
+            if (res) {
+                // Сбросим сохраненый выбор
+                column
+                    .search('', true, false)
+                    .draw();
+                var $element = res.element;
+                $element.empty().append('<option value="">' + langView('title_select', App.Langs) + '</option>')
+                    .off('change')
+                    .on('change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+                        switch (val) {
+                            case "": break;
+                            case "null": val = '^\s*$'; break;
+                            default: val = '^' + val + '$'; break;
+                        }
+                       // var val = val && val !== "null" ? '^' + val + '$' : ;
+                        column
+                            .search(val, true, false)
+                            .draw();
+                    });
+                column.data().unique().sort().each(function (d, j) {
+                    if (d === null) {
+                        $element.append('<option value=null>[Пусто]</option>')
+                    } else {
+                        $element.append('<option value="' + d + '">' + d + '</option>')
+                    };
+
+                });
+            };
         }.bind(this));
+
+        //this.obj_t_cars.columns().indexes().flatten().each(function (i) {
+        //    var column = this.obj_t_cars.column(i);
+        //    var sel = $(column.header()).hasClass('fl-operator_abbr');
+        //    if (sel) {
+        //        //var name = column.header();//.firstChild.data;
+        //        //var hed = $(name).hasClass('fl-operator_abbr')
+        //        var select = $('<select><option value=""></option></select>')
+        //            .appendTo($(column.header()).empty())
+        //            .on('change', function () {
+        //                // Escape the expression so we can perform a regex match
+        //                var val = $.fn.dataTable.util.escapeRegex(
+        //                    $(this).val()
+        //                );
+
+        //                column
+        //                    .search(val ? '^' + val + '$' : '', true, false)
+        //                    .draw();
+        //            });
+
+        //        column.data().unique().sort().each(function (d, j) {
+        //            select.append('<option value="' + d + '">' + d + '</option>')
+        //        });
+        //    }
+        //}.bind(this));
     };
     // Обновить данные
     table_cars_way.prototype.update = function (num) {

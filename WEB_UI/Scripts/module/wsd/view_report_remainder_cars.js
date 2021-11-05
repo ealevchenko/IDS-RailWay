@@ -398,36 +398,36 @@
                 col_prefix: 'md',
                 col_size: 12,
             };
-            var fl_operators = {
-                field: 'id_operator',
-                type: 'int',
-                add: null,
-                edit: 'select',
-                name: 'operators',
-                prefix: 'sm',
-                label: langView('vrrc_title_operators', App.Langs),
-                placeholder: null,
-                maxlength: null,
-                required: true,
-                control: null,
-                list: this.list_operators,
-                select: function (e, ui) {
-                    event.preventDefault();
-                    // Обработать выбор
-                    var id = Number($(e.currentTarget).val());
-                    //view_wagons_from_way(id);
-                }.bind(this),
-                update: null,
-                close: null,
-                change: null,
-                add_validation: null,
-                edit_validation: null,
-                default: -1,
-                row: 7,
-                col: 1,
-                col_prefix: 'md',
-                col_size: 12,
-            };
+            //var fl_operators = {
+            //    field: 'id_operator',
+            //    type: 'int',
+            //    add: null,
+            //    edit: 'select',
+            //    name: 'operators',
+            //    prefix: 'sm',
+            //    label: langView('vrrc_title_operators', App.Langs),
+            //    placeholder: null,
+            //    maxlength: null,
+            //    required: true,
+            //    control: null,
+            //    list: this.list_operators,
+            //    select: function (e, ui) {
+            //        event.preventDefault();
+            //        // Обработать выбор
+            //        var id = Number($(e.currentTarget).val());
+            //        //view_wagons_from_way(id);
+            //    }.bind(this),
+            //    update: null,
+            //    close: null,
+            //    change: null,
+            //    add_validation: null,
+            //    edit_validation: null,
+            //    default: -1,
+            //    row: 7,
+            //    col: 1,
+            //    col_prefix: 'md',
+            //    col_size: 12,
+            //};
             var fl_limiting = {
                 field: 'id_limiting',
                 type: 'int',
@@ -938,7 +938,7 @@
             fields.push(fl_amkr_cars);
             fields.push(fl_select_day);
             fields.push(fl_select_top);
-            fields.push(fl_operators);
+/*            fields.push(fl_operators);*/
             fields.push(fl_limiting);
             fields.push(fl_cargo_arrival);
             fields.push(fl_cargo_group_arrival);
@@ -979,8 +979,17 @@
                     }.bind(this),
                 },
             });
+            this.$setup_select_form = this.form_setup.$form_edit;
             // Отображение формы
             this.$setup_select.append(this.form_setup.$form_edit);
+
+           // Добавим 
+            var div_operator_form_row = new this.fc_ui.el_div_form_row();
+            var col_operator = new this.fc_ui.el_col('md', 12, 'mb-1');
+            var lab_operator = new this.fc_ui.el_label('operators', null, langView('vrrc_title_operators', App.Langs));
+            var sel_operator = new this.fc_ui.el_select('operators', 'custom-select custom-select-sm', null, false);
+            div_operator_form_row.$div.append(col_operator.$col.append(lab_operator.$label).append(sel_operator.$select));
+            this.$setup_select_form.append(div_operator_form_row.$div);
 
             // Создадим таблицу вангонов собранных для отправки
             var $div_table = $('<div></div>', {
@@ -990,7 +999,7 @@
                 this.$table_select.append($div_table);
                 this.tab_cars = new TCWay('div#table-' + this.selector);
                 this.tab_cars.init({
-                    complete : true,
+                    complete: [{ field: 'operator_abbr', element: sel_operator.$select}],
                     type_report: 4,
                     alert: this.alert_select,
                 }, function () {
