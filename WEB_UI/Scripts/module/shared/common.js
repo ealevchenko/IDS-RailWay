@@ -524,7 +524,7 @@
         this.$switch = $('<div></div>', {
             'class': 'custom-control custom-switch',
         });
-        var $input = $('<input></input>', {
+        this.$input = $('<input></input>', {
             'id': id,
             'name': id,
             'class': 'custom-control-input',
@@ -535,7 +535,7 @@
             'class': 'custom-control-label',
             'text': label,
         });
-        this.$switch.append($input).append($label);
+        this.$switch.append(this.$input).append($label);
     };
     // Элемент <input type=".." class=".." id=".." name="..">
     form_control.prototype.el_input1 = function (prefix, id, type) {
