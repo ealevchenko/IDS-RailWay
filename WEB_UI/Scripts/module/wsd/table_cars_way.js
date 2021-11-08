@@ -2321,7 +2321,7 @@
         this.obj_t_cars.rows.add(data);
         this.obj_t_cars.order([0, 'asc']);
         this.obj_t_cars.draw();
-        if (this.settings.complete !== null) this.init_complete();
+        //if (this.settings.complete !== null) this.init_complete();
         // Если указан номер показать по номеру
         if (num) {
             //var tr = this.$table_cars.find('tbody tr[data-num="' + num + '"]');
@@ -2335,9 +2335,8 @@
         this.enable_button(); // отображение кнопки добавить
         LockScreenOff();
     };
-
-    table_cars_way.prototype.init_complete = function () {
-
+    // инициализация фильтров выборки
+    table_cars_way.prototype.init_complete = function (skip_field) {
         this.obj_t_cars.columns().indexes().flatten().each(function (i) {
             var column = this.obj_t_cars.column(i);
             var res = this.settings.complete.find(function (o) {
@@ -2345,34 +2344,40 @@
                 return is_class;
             });
             if (res) {
-                // Сбросим сохраненый выбор
-                column
-                    .search('', true, false)
-                    .draw();
+                //// Сбросим сохраненый выбор если это поле не указано как пропущеное
+                //column
+                //    .search('', true, false)
+                //    .draw();
+                //if (res.field !== skip_field) {
+
+                //}
                 var $element = res.element;
                 $element.empty().append('<option value="">' + langView('title_select', App.Langs) + '</option>')
-                    .off('change')
-                    .on('change', function () {
-                        var val = $.fn.dataTable.util.escapeRegex(
-                            $(this).val()
-                        );
-                        switch (val) {
-                            case "": break;
-                            case "null": val = '^\s*$'; break;
-                            default: val = '^' + val + '$'; break;
-                        }
-                       // var val = val && val !== "null" ? '^' + val + '$' : ;
-                        column
-                            .search(val, true, false)
-                            .draw();
-                    });
+                    //.off('change')
+                    //.on('change', function (event) {
+                    //    //////event.preventDefault();
+                    //    //////var val = $.fn.dataTable.util.escapeRegex(
+                    //    //////    $(event.currentTarget).val()
+                    //    //////    //$(this).val()
+                    //    //////);
+                    //    //////switch (val) {
+                    //    //////    case "": break;
+                    //    //////    case "null": val = '^\s*$'; break;
+                    //    //////    default: val = '^' + val + '$'; break;
+                    //    //////}
+                    //    //////// var val = val && val !== "null" ? '^' + val + '$' : ;
+                    //    //////column
+                    //    //////    .search(val, true, false)
+                    //    //////    .draw();
+                    //    ////////this.init_complete(res.field);
+                    //    ////////this.init_complete();
+                    //}.bind(this));
                 column.data().unique().sort().each(function (d, j) {
                     if (d === null) {
                         $element.append('<option value=null>[Пусто]</option>')
                     } else {
                         $element.append('<option value="' + d + '">' + d + '</option>')
                     };
-
                 });
             };
         }.bind(this));

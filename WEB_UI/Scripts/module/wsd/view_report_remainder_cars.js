@@ -58,6 +58,9 @@
             //'vrrc_title_button_head': 'Голова',
             //'vrrc_title_button_tail': 'Хвост',
             'vrrc_title_add_ok': 'ОБНОВИТЬ',
+            'vrrc_title_where_clear': 'СБРОСИТЬ',
+            'vrrc_title_select': 'Все...',
+            'vrrc_title_null': '-',
 
             //'vrrc_mess_error_not_way': 'Выберите путь',
             //'vrrc_mess_error_equal_locomotive': 'Локомотив №1 и №2 равны',
@@ -76,6 +79,7 @@
             'vrrc_mess_load_wagons': 'Загружаю вагоны...',
             'vrrc_mess_where_wagons': 'Применяю фильтр выборки...',
             'vrrc_mess_view_wagons': 'Показываю выборку...',
+            'vrrc_mess_clear_wagons': 'Сбросить выборку...',
             'vrrc_mess_update_list': 'Обновляю списки...',
             //'vrrc_mess_update_operation': 'Обновляю операции...',
             'vrrc_mess_init_panel': 'Выполняю инициализацию модуля остаток вагонов на АМКР',
@@ -278,19 +282,22 @@
         this.alert_select = new alert(panelElement.$alert);
 
         this.$panel.append(panelElement.$element);
-
         // Создадим и добавим макет таблицы
 
         // Загрузим справочные данные, определим поля формы правки
         this.load_db(['operators_wagons_group'], false, function (result) {
             // Подгрузили списки
-            //this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === false && i.station_delete === null; });
-            //// Список локомотивов
-            //this.list_locomotive = this.ids_dir.getListLocomotive('locomotive', 'locomotive', function (i) { return i.id_locomotive_status === 1; });
             //--------------------ФОРМА  ---------------------------
             // Создадим форму выбора отчета (this.$setup_select)
             var form_select = new this.fc_ui.el_form(null, 'text-left');
             this.form_select = form_select.$form;
+            // Добавим кнопки
+            var div_button_form_row = new this.fc_ui.el_div_form_row();
+            var col_button = new this.fc_ui.el_col('md', 12, 'mb-1');
+            var bt_clear = new this.fc_ui.el_button('md', 'btn-primary ml-2', 'where-clear', langView('vrrc_title_where_clear', App.Langs), null);
+            div_button_form_row.$div.append(col_button.$col.append(bt_clear.$button));
+            this.form_select.append(div_button_form_row.$div);
+
             // добавим выбор вагонов
             var div_fg_cars = new this.fc_ui.el_div_form_group();
             var sw_outer_cars = new this.fc_ui.el_switch('outer_cars', langView('vrrc_title_outer_car', App.Langs));
@@ -316,74 +323,152 @@
             var sel_operator = new this.fc_ui.el_select('operators', 'custom-select custom-select-sm', null, false);
             div_operator_form_row.$div.append(col_operator.$col.append(lab_operator.$label).append(sel_operator.$select));
             this.form_select.append(div_operator_form_row.$div);
+            // Добавим выбор ограничения
+            var div_limiting_form_row = new this.fc_ui.el_div_form_row();
+            var col_limiting = new this.fc_ui.el_col('md', 12, 'mb-1');
+            var lab_limiting = new this.fc_ui.el_label('limiting', null, langView('vrrc_title_limiting', App.Langs));
+            var sel_limiting = new this.fc_ui.el_select('limiting', 'custom-select custom-select-sm', null, false);
+            div_limiting_form_row.$div.append(col_limiting.$col.append(lab_limiting.$label).append(sel_limiting.$select));
+            this.form_select.append(div_limiting_form_row.$div);
+            // Добавим выбор груза по прибытию (autocomplete)
+            var div_arrival_cargo_form_row = new this.fc_ui.el_div_form_row();
+            var col_arrival_cargo = new this.fc_ui.el_col('md', 12, 'mb-1');
+            var lab_arrival_cargo = new this.fc_ui.el_label('arrival_cargo', null, langView('vrrc_title_cargo_arrival', App.Langs));
+            //var sel_arrival_cargo = new this.fc_ui.el_select('arrival_cargo', 'custom-select custom-select-sm', null, false);
+            var inp_arrival_cargo = new this.fc_ui.el_input_text('arrival_cargo', 'form-control form-control-sm', null, false, null, null);
+            div_arrival_cargo_form_row.$div.append(col_arrival_cargo.$col.append(lab_arrival_cargo.$label).append(inp_arrival_cargo.$input));
+            this.form_select.append(div_arrival_cargo_form_row.$div);
+
             // Отображение формы
             this.$setup_select.append(this.form_select);
-            // элементы формы
+            // Получим элементы формы
+            this.el_bt_clear = bt_clear.$button;
             this.el_sw_outer_cars = sw_outer_cars.$input;
             this.el_sw_amkr_outer_cars = sw_amkr_outer_cars.$input;
             this.el_sw_amkr_cars = sw_amkr_cars.$input;
-            // ПОбработка событий выбора
+            this.el_select_operator = sel_operator.$select;
+            this.el_select_limiting = sel_limiting.$select;
+            //this.el_arrival_cargo = sel_arrival_cargo.$select;
+            this.el_arrival_cargo = inp_arrival_cargo.$input.autocomplete({
+                minLength: 1,
+                source: [],
+                change: function (event, ui) {
+                    //event.preventDefault();
+                }.bind(this),
+                select: function (event, ui) {
+                    //event.preventDefault();
+                    var val = $.fn.dataTable.util.escapeRegex(
+                        ui.item.value
+                    );
+                    var column = this.tab_cars.obj_t_cars.columns('.fl-arrival_cargo_name');
+                    switch (val) {
+                        case "": break;
+                        case "null": val = '^\s*$'; break;
+                        default: val = '^' + val + '$'; break;
+                    }
+                    column
+                        .search(val, true, false)
+                        .draw();
+                }.bind(this),
+                close: function (event, ui) {
+                    //event.preventDefault();
+                }.bind(this)
+            });
+            // Обработка событий  ------------------
+            this.el_bt_clear.on('click', function (event) {
+                event.preventDefault();
+                this.clear_where();
+            }.bind(this));
+            // Внешние вагоны
             this.el_sw_outer_cars.on('change', function (event) {
                 event.preventDefault();
                 var checked = $(event.currentTarget).prop('checked');
                 this.where_option.outer_car = checked;
-                this.where(this.where_option, function (wagons) {
-                    LockScreen(langView('vrrc_mess_view_wagons', App.Langs));
-                    //покажем вагоны 
-                    this.tab_cars.view(wagons, null);
-                }.bind(this));
-                //var wagons = this.wagons.filter(function (i) {
-                //    return i.id_operator === 14;
-                //});
-                //this.tab_cars.view((wagons ? wagons : []), null);
+                this.update_where(); // Обновим выборку
 
-
-                //var column = this.tab_cars.obj_t_cars.columns('.fl-operator_abbr');
-
-                //column.data().filter(function (value, index) {
-                //    //return value[index] === 'АМКР' ? true : false;
-                //    return false;
-                //}).draw();
-                ////column.search('^\s*$', true, false)
-                ////    
             }.bind(this));
+            // Внешние вагоны АМКР
             this.el_sw_amkr_outer_cars.on('change', function (event) {
                 event.preventDefault();
                 var checked = $(event.currentTarget).prop('checked');
                 this.where_option.amkr_outer_cars = checked;
-                this.where(this.where_option, function (wagons) {
-                    LockScreen(langView('vrrc_mess_view_wagons', App.Langs));
-                    //покажем вагоны 
-                    this.tab_cars.view(wagons, null);
-                }.bind(this));
+                this.update_where(); // Обновим выборку
             }.bind(this));
+            // Вагоны АМКР
             this.el_sw_amkr_cars.on('change', function (event) {
                 event.preventDefault();
                 var checked = $(event.currentTarget).prop('checked');
                 this.where_option.amkr_cars = checked;
-                this.where(this.where_option, function (wagons) {
-                    LockScreen(langView('vrrc_mess_view_wagons', App.Langs));
-                    //покажем вагоны 
-                    this.tab_cars.view(wagons, null);
-                }.bind(this));
+                this.update_where(); // Обновим выборку
             }.bind(this));
-            // Выставим по умолчанию
-            this.el_sw_outer_cars.prop('checked', this.where_option.outer_car);
-            this.el_sw_amkr_outer_cars.prop('checked', this.where_option.amkr_outer_cars);
-            this.el_sw_amkr_cars.prop('checked', this.where_option.amkr_cars);
+            //
+            this.el_select_operator.on('change', function (event) {
+                event.preventDefault();
+                var val = $.fn.dataTable.util.escapeRegex(
+                    $(event.currentTarget).val()
+                );
+                var column = this.tab_cars.obj_t_cars.columns('.fl-operator_abbr');
+                switch (val) {
+                    case "": break;
+                    case "null": val = '^\s*$'; break;
+                    default: val = '^' + val + '$'; break;
+                }
+                column
+                    .search(val, true, false)
+                    .draw();
+            }.bind(this));
+            //
+            this.el_select_limiting.on('change', function (event) {
+                event.preventDefault();
+                var val = $.fn.dataTable.util.escapeRegex(
+                    $(event.currentTarget).val()
+                );
+                var column = this.tab_cars.obj_t_cars.columns('.fl-limiting_abbr');
+                switch (val) {
+                    case "": break;
+                    case "null": val = '^\s*$'; break;
+                    default: val = '^' + val + '$'; break;
+                }
+                column
+                    .search(val, true, false)
+                    .draw();
+            }.bind(this));
 
+            this.el_arrival_cargo.on('change', function (event) {
+                event.preventDefault();
+                //var val = $.fn.dataTable.util.escapeRegex(
+                //    $(event.currentTarget).val()
+                //);
+                //var column = this.tab_cars.obj_t_cars.columns('.fl-arrival_cargo_name');
+                //switch (val) {
+                //    case "": break;
+                //    case "null": val = '^\s*$'; break;
+                //    default: val = '^' + val + '$'; break;
+                //}
+                //column
+                //    .search(val, true, false)
+                //    .draw();
+            }.bind(this));
+
+            // Инициализация компонента TOP & Day
             $("input#select_day").inputSpinner();
             $("input#select_top").inputSpinner();
             //----- ТАБЛИЦА ------------------------------------------------------
             var $div_table = $('<div></div>', {
                 'id': 'table-' + this.selector,
             });
-            //
+            // Инициализация таблицы
             if ($div_table && $div_table.length > 0) {
                 this.$table_select.append($div_table);
                 this.tab_cars = new TCWay('div#table-' + this.selector);
+                // Инициализация элементов поиска по таблице
                 this.tab_cars.init({
-                    complete: [{ field: 'operator_abbr', element: sel_operator.$select }],
+                    complete: [],
+                    //complete: [
+                    //    { field: 'operator_abbr', element: sel_operator.$select, type: 'select', pattern: null }
+                    //    , { field: 'limiting_abbr', element: sel_limiting.$select, type: 'select', pattern: null }
+                    //    , { field: 'arrival_cargo_name', element: sel_arrival_cargo.$select, type: 'select', pattern: null }
+                    //],
                     type_report: 4,
                     alert: this.alert_select,
                 }, function () {
@@ -391,7 +476,10 @@
                 });
             };
             // Отобразим настройки выборки
-            //this.form_setup.view_edit(this.where_option);
+            // Определим выбор вагонов по умолчанию
+            this.el_sw_outer_cars.prop('checked', this.where_option.outer_car);
+            this.el_sw_amkr_outer_cars.prop('checked', this.where_option.amkr_outer_cars);
+            this.el_sw_amkr_cars.prop('checked', this.where_option.amkr_cars);
             //----------------------------------
             if (typeof fn_init_ok === 'function') {
                 fn_init_ok(this.result_init);
@@ -399,6 +487,45 @@
             //----------------------------------
         }.bind(this));
     };
+    // Инициализировать элементы выбора
+    view_report_remainder_cars.prototype.init_where = function () {
+        //var col = this.tab_cars.obj_t_cars.columns('.fl-operator_abbr');
+        var value = this.el_select_operator.val();
+        this.el_select_operator.empty().append('<option value="">' + langView('vrrc_title_select', App.Langs) + '</option>')
+        //var index = col.indexes();
+        var column = this.tab_cars.obj_t_cars.column(this.tab_cars.obj_t_cars.columns('.fl-operator_abbr').indexes());
+        column.data().unique().sort().each(function (d, j) {
+            if (d === null) {
+                this.el_select_operator.append('<option value=null>' + langView('vrrc_title_null', App.Langs) + '</option>')
+            } else {
+                this.el_select_operator.append('<option value="' + d + '">' + d + '</option>')
+            };
+        }.bind(this));
+        this.el_select_operator.val(value);
+        //
+        var value = this.el_select_limiting.val();
+        this.el_select_limiting.empty().append('<option value="">' + langView('vrrc_title_select', App.Langs) + '</option>')
+        //var index = col.indexes();
+        var column = this.tab_cars.obj_t_cars.column(this.tab_cars.obj_t_cars.columns('.fl-limiting_abbr').indexes());
+        column.data().unique().sort().each(function (d, j) {
+            if (d === null) {
+                this.el_select_limiting.append('<option value=null>' + langView('vrrc_title_null', App.Langs) + '</option>')
+            } else {
+                this.el_select_limiting.append('<option value="' + d + '">' + d + '</option>')
+            };
+        }.bind(this));
+        this.el_select_limiting.val(value);
+
+        var value = this.el_arrival_cargo.val();
+        var list = []
+        var column = this.tab_cars.obj_t_cars.column(this.tab_cars.obj_t_cars.columns('.fl-arrival_cargo_name').indexes());
+        column.data().unique().sort().each(function (d, j) {
+            list.push({ value: d, label: d });
+        }.bind(this));
+        this.el_arrival_cargo.autocomplete("option", "source", list);
+        this.el_arrival_cargo.val(value);
+    };
+
     // Показать данные 
     view_report_remainder_cars.prototype.view = function () {
         // Отобразим настройки выборки
@@ -408,6 +535,7 @@
             // Покажем вагоны
             LockScreen(langView('vrrc_mess_view_wagons', App.Langs));
             this.tab_cars.view(wagons_where, null);
+
         }.bind(this));
     };
     // Загрузить вагоны на пути в внутрений массив
@@ -417,74 +545,82 @@
         //this.form_setup.view_edit(this.where_option);
         this.ids_wsd.getViewWagonsOfBalance(function (wagons) {
             this.wagons = wagons;
+            this.clear_where();
             this.where(this.where_option, function (wagons) {
                 LockScreen(langView('vrrc_mess_view_wagons', App.Langs));
                 //покажем вагоны 
                 this.tab_cars.view(wagons, null);
+                this.init_where();
             }.bind(this));
         }.bind(this));
     };
-    // Сделать выборку
+    //
+    view_report_remainder_cars.prototype.clear_where = function () {
+        LockScreen(langView('vrrc_mess_clear_wagons', App.Langs));
+        // Проедемся по полям
+        this.tab_cars.obj_t_cars.columns().indexes().flatten().each(function (i) {
+            var column = this.tab_cars.obj_t_cars.column(i);
+            column.search('', true, false);
+        }.bind(this));
+        this.el_select_operator.val('');
+        this.el_select_limiting.val('');
+        this.tab_cars.obj_t_cars.search('').draw();
+        LockScreenOff();
+
+    };
+    // Обновить выборку по условию
+    view_report_remainder_cars.prototype.update_where = function () {
+        this.where(this.where_option, function (wagons) {
+            LockScreen(langView('vrrc_mess_view_wagons', App.Langs));
+            //покажем вагоны 
+            this.tab_cars.view(wagons, null);
+        }.bind(this));
+    };
+    // Сделать выборку по условию
     view_report_remainder_cars.prototype.where = function (where_option, fn_where) {
         LockScreen(langView('vrrc_mess_where_wagons', App.Langs));
         var wagons = null;
-        // Отключен весь выбор
-        if (where_option.outer_car === false && where_option.amkr_outer_cars === false && where_option.amkr_cars === false) {
-            wagons = [];
-        } else {
-            // Включен весь выбор
-            if (where_option.outer_car === true && where_option.amkr_outer_cars === true && where_option.amkr_cars === true) {
-                wagons = this.wagons;
+        // Запустим выборку отдельным процессом
+        setTimeout(function () {
+            // Отключен весь выбор
+            if (where_option.outer_car === false && where_option.amkr_outer_cars === false && where_option.amkr_cars === false) {
+                wagons = [];
             } else {
-                wagons = this.wagons.filter(function (i) {
-                    if (where_option.outer_car === true && where_option.amkr_outer_cars === false && where_option.amkr_cars === false) {
-                        return i.id_operator !== 14 && i.id_operator !== 16 && i.id_operator !== 188;
-                    } else {
-                        if (where_option.outer_car === true) {
-                            if (where_option.amkr_outer_cars === false && where_option.amkr_cars === true) {
-                                return i.id_operator !== 14 && i.id_operator !== 16;
-                            } else {
-                                return i.id_operator !== 188;
-                            };
+                // Включен весь выбор
+                if (where_option.outer_car === true && where_option.amkr_outer_cars === true && where_option.amkr_cars === true) {
+                    wagons = this.wagons;
+                } else {
+                    wagons = this.wagons.filter(function (i) {
+                        if (where_option.outer_car === true && where_option.amkr_outer_cars === false && where_option.amkr_cars === false) {
+                            return i.id_operator !== 14 && i.id_operator !== 16 && i.id_operator !== 188;
                         } else {
-                            if (where_option.amkr_outer_cars === true && where_option.amkr_cars === true) {
-                                return i.id_operator === 14 || i.id_operator === 16 || i.id_operator === 188;
-                            } else {
+                            if (where_option.outer_car === true) {
                                 if (where_option.amkr_outer_cars === false && where_option.amkr_cars === true) {
-                                    return i.id_operator === 188;
+                                    return i.id_operator !== 14 && i.id_operator !== 16;
                                 } else {
-                                    return i.id_operator === 14 || i.id_operator === 16;
+                                    return i.id_operator !== 188;
+                                };
+                            } else {
+                                if (where_option.amkr_outer_cars === true && where_option.amkr_cars === true) {
+                                    return i.id_operator === 14 || i.id_operator === 16 || i.id_operator === 188;
+                                } else {
+                                    if (where_option.amkr_outer_cars === false && where_option.amkr_cars === true) {
+                                        return i.id_operator === 188;
+                                    } else {
+                                        return i.id_operator === 14 || i.id_operator === 16;
+                                    };
                                 };
                             };
                         };
-                    };
-                }.bind(this));
+                    }.bind(this));
+                }
             }
-        }
-        if (typeof fn_where === 'function') {
-            fn_where(wagons ? wagons : []);
-        }
+            // Выборка закончена вернем данные
+            if (typeof fn_where === 'function') {
+                fn_where(wagons ? wagons : []);
+            }
+        }.bind(this), 0);
     };
-
-    ////// Загрузить вагоны на пути в внутрений массив
-    ////view_report_remainder_cars.prototype.load = function () {
-    ////    LockScreen(langView('vrrc_mess_load_wagons', App.Langs));
-    ////    this.ids_wsd.getViewWagonsOfBalance(function (wagons) {
-    ////        this.wagons = wagons;
-    ////        this.view();
-    ////    }.bind(this));
-    ////};
-    //// Показать данные 
-    //view_report_remainder_cars.prototype.where = function (where_option, fn_where) {
-    //    LockScreen(langView('vrrc_mess_where_wagons', App.Langs));
-    //    wagons_where_async.call(this, this.wagons, where_option, function (wagons_where) {
-    //        this.wagons_where = wagons_where; // сохраним отсортированные вагоны
-    //        this.where_option = where_option; // сохраним новый фильтр
-    //        if (typeof fn_where === 'function') {
-    //            fn_where(wagons_where);
-    //        }
-    //    }.bind(this));
-    //};
     //--------------------------------------------------------------------------------
     // выполнить операцию
     view_report_remainder_cars.prototype.apply = function (data) {
@@ -566,6 +702,21 @@
     window.App = App;
 })(window);
 
+
+                //var wagons = this.wagons.filter(function (i) {
+                //    return i.id_operator === 14;
+                //});
+                //this.tab_cars.view((wagons ? wagons : []), null);
+
+
+                //var column = this.tab_cars.obj_t_cars.columns('.fl-operator_abbr');
+
+                //column.data().filter(function (value, index) {
+                //    //return value[index] === 'АМКР' ? true : false;
+                //    return false;
+                //}).draw();
+                ////column.search('^\s*$', true, false)
+                //// 
 
             //this.form_setup = new FIF();
             //var fl_outer_cars = {
