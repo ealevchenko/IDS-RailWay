@@ -297,7 +297,6 @@
             var bt_clear = new this.fc_ui.el_button('md', 'btn-primary ml-2', 'where-clear', langView('vrrc_title_where_clear', App.Langs), null);
             div_button_form_row.$div.append(col_button.$col.append(bt_clear.$button));
             this.form_select.append(div_button_form_row.$div);
-
             // добавим выбор вагонов
             var div_fg_cars = new this.fc_ui.el_div_form_group();
             var sw_outer_cars = new this.fc_ui.el_switch('outer_cars', langView('vrrc_title_outer_car', App.Langs));
@@ -338,9 +337,21 @@
             var inp_arrival_cargo = new this.fc_ui.el_input_text('arrival_cargo', 'form-control form-control-sm', null, false, null, null);
             div_arrival_cargo_form_row.$div.append(col_arrival_cargo.$col.append(lab_arrival_cargo.$label).append(inp_arrival_cargo.$input));
             this.form_select.append(div_arrival_cargo_form_row.$div);
-
+            // Добавим выбор группы груза по прибытию
+            var div_arrival_group_cargo_form_row = new this.fc_ui.el_div_form_row();
+            var col_arrival_group_cargo = new this.fc_ui.el_col('md', 12, 'mb-1');
+            var lab_arrival_group_cargo = new this.fc_ui.el_label('arrival_group_cargo', null, langView('vrrc_title_cargo_group_arrival', App.Langs));
+            var sel_arrival_group_cargo = new this.fc_ui.el_select('arrival_group_cargo', 'custom-select custom-select-sm', null, false);
+            div_arrival_group_cargo_form_row.$div.append(col_arrival_group_cargo.$col.append(lab_arrival_group_cargo.$label).append(sel_arrival_group_cargo.$select));
+            this.form_select.append(div_arrival_group_cargo_form_row.$div);
             // Отображение формы
             this.$setup_select.append(this.form_select);
+            // обработка события submit
+            //this.form_select.bind("keypress", function (e) {
+            //    if (e.keyCode == 13) {
+            //        // return false;
+            //    }
+            //});
             // Получим элементы формы
             this.el_bt_clear = bt_clear.$button;
             this.el_sw_outer_cars = sw_outer_cars.$input;
@@ -350,10 +361,19 @@
             this.el_select_limiting = sel_limiting.$select;
             //this.el_arrival_cargo = sel_arrival_cargo.$select;
             this.el_arrival_cargo = inp_arrival_cargo.$input.autocomplete({
+                autoFocus: false,
                 minLength: 1,
                 source: [],
                 change: function (event, ui) {
                     //event.preventDefault();
+                    //event.stopPropagation();
+                    if (ui.item === null) {
+                        var column = this.tab_cars.obj_t_cars.columns('.fl-arrival_cargo_name');
+                        column
+                            .search('', true, false)
+                            .draw();
+                        this.el_arrival_cargo.val('');
+                    }
                 }.bind(this),
                 select: function (event, ui) {
                     //event.preventDefault();
@@ -372,11 +392,14 @@
                 }.bind(this),
                 close: function (event, ui) {
                     //event.preventDefault();
-                }.bind(this)
+                }.bind(this),
+
             });
+            this.el_arrival_group_cargo = sel_arrival_group_cargo.$select;
             // Обработка событий  ------------------
             this.el_bt_clear.on('click', function (event) {
                 event.preventDefault();
+                event.stopPropagation();
                 this.clear_where();
             }.bind(this));
             // Внешние вагоны
@@ -433,23 +456,33 @@
                     .search(val, true, false)
                     .draw();
             }.bind(this));
-
+            // Груз по прибытию
             this.el_arrival_cargo.on('change', function (event) {
                 event.preventDefault();
-                //var val = $.fn.dataTable.util.escapeRegex(
-                //    $(event.currentTarget).val()
-                //);
-                //var column = this.tab_cars.obj_t_cars.columns('.fl-arrival_cargo_name');
-                //switch (val) {
-                //    case "": break;
-                //    case "null": val = '^\s*$'; break;
-                //    default: val = '^' + val + '$'; break;
-                //}
-                //column
-                //    .search(val, true, false)
-                //    .draw();
+                var val = $(event.currentTarget).val()
+                if (val === '') {
+                    var column = this.tab_cars.obj_t_cars.columns('.fl-limiting_abbr');
+                    column
+                        .search(val, true, false)
+                        .draw();
+                }
             }.bind(this));
-
+            // группа грузза по ПРИБ
+            this.el_arrival_group_cargo.on('change', function (event) {
+                event.preventDefault();
+                var val = $.fn.dataTable.util.escapeRegex(
+                    $(event.currentTarget).val()
+                );
+                var column = this.tab_cars.obj_t_cars.columns('.fl-arrival_cargo_group_name');
+                switch (val) {
+                    case "": break;
+                    case "null": val = '^\s*$'; break;
+                    default: val = '^' + val + '$'; break;
+                }
+                column
+                    .search(val, true, false)
+                    .draw();
+            }.bind(this));
             // Инициализация компонента TOP & Day
             $("input#select_day").inputSpinner();
             $("input#select_top").inputSpinner();
@@ -490,6 +523,7 @@
     // Инициализировать элементы выбора
     view_report_remainder_cars.prototype.init_where = function () {
         //var col = this.tab_cars.obj_t_cars.columns('.fl-operator_abbr');
+        //-------------------------------------------
         var value = this.el_select_operator.val();
         this.el_select_operator.empty().append('<option value="">' + langView('vrrc_title_select', App.Langs) + '</option>')
         //var index = col.indexes();
@@ -502,7 +536,7 @@
             };
         }.bind(this));
         this.el_select_operator.val(value);
-        //
+        //-------------------------------------------
         var value = this.el_select_limiting.val();
         this.el_select_limiting.empty().append('<option value="">' + langView('vrrc_title_select', App.Langs) + '</option>')
         //var index = col.indexes();
@@ -515,7 +549,7 @@
             };
         }.bind(this));
         this.el_select_limiting.val(value);
-
+        //-------------------------------------------
         var value = this.el_arrival_cargo.val();
         var list = []
         var column = this.tab_cars.obj_t_cars.column(this.tab_cars.obj_t_cars.columns('.fl-arrival_cargo_name').indexes());
@@ -524,6 +558,19 @@
         }.bind(this));
         this.el_arrival_cargo.autocomplete("option", "source", list);
         this.el_arrival_cargo.val(value);
+        //-------------------------------------------
+        var value = this.el_arrival_group_cargo.val();
+        this.el_arrival_group_cargo.empty().append('<option value="">' + langView('vrrc_title_select', App.Langs) + '</option>')
+        //var index = col.indexes();
+        var column = this.tab_cars.obj_t_cars.column(this.tab_cars.obj_t_cars.columns('.fl-arrival_cargo_group_name').indexes());
+        column.data().unique().sort().each(function (d, j) {
+            if (d === null) {
+                this.el_arrival_group_cargo.append('<option value=null>' + langView('vrrc_title_null', App.Langs) + '</option>')
+            } else {
+                this.el_arrival_group_cargo.append('<option value="' + d + '">' + d + '</option>')
+            };
+        }.bind(this));
+        this.el_arrival_group_cargo.val(value);
     };
 
     // Показать данные 
@@ -564,6 +611,8 @@
         }.bind(this));
         this.el_select_operator.val('');
         this.el_select_limiting.val('');
+        this.el_arrival_cargo.val('');
+        this.el_arrival_group_cargo.val('');
         this.tab_cars.obj_t_cars.search('').draw();
         LockScreenOff();
 
