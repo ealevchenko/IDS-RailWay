@@ -162,11 +162,13 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string arrival_condition_abbr_ru { get; set; }
         public string arrival_condition_abbr_en { get; set; }
         public bool? arrival_condition_red { get; set; }
+        public bool? arrival_condition_repairs { get; set; }
         public string current_condition_name_ru { get; set; }
         public string current_condition_name_en { get; set; }
         public string current_condition_abbr_ru { get; set; }
         public string current_condition_abbr_en { get; set; }
         public bool? current_condition_red { get; set; }
+        public bool? current_condition_repairs { get; set; }
         public DateTime? wagon_date_rem_uz { get; set; }
         public double? wagon_gruzp_doc { get; set; }
         public double? wagon_gruzp_uz { get; set; }
@@ -186,6 +188,12 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public int? arrival_shipper_code { get; set; }
         public string arrival_shipper_name_ru { get; set; }
         public string arrival_shipper_name_en { get; set; }
+        public int? accepted_id_station_amkr { get; set; }
+        public string accepted_station_amkr_name_ru { get; set; }
+        public string accepted_station_amkr_name_en { get; set; }
+        public string accepted_station_amkr_abbr_ru { get; set; }
+        public string accepted_station_amkr_abbr_en { get; set; }        
+        public int? arrival_id_station_amkr { get; set; }
         public string arrival_station_amkr_name_ru { get; set; }
         public string arrival_station_amkr_name_en { get; set; }
         public string arrival_station_amkr_abbr_ru { get; set; }

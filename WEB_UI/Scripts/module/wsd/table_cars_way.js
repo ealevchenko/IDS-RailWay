@@ -41,9 +41,12 @@
             'field_arrival_condition_name': 'Разметка (приб.)',
             'field_arrival_condition_abbr': 'Разм.',
             'field_arrival_condition_red': 'red',
+            'field_arrival_condition_repairs': 'Разм. пр. МР.',
             'field_current_condition_name': 'Разметка (тек.)',
             'field_current_condition_abbr': 'Разм. тек.',
             'field_current_condition_red': 'red',
+            'field_current_condition_repairs': 'Разм. тек. МР.',
+            'field_condition_repairs': 'Приз. разм. МР.',
             'field_wagon_date_rem_uz': 'Дата деповского ремонта по УЗ',
             'field_wagon_gruzp_doc': 'Груз-ть, тн (док.)',
             'field_wagon_gruzp_uz': 'Груз-ть, тн (УЗ.)',
@@ -60,6 +63,10 @@
             'field_arrival_station_from_name': 'Стан. отправ.',
             'field_arrival_shipper_code': 'Код отпр.',
             'field_arrival_shipper_name': 'Отправитель',
+            'field_accepted_id_station_amkr': 'id ст. приб. АМКР',
+            'field_accepted_station_amkr_name': 'Стан. приб. АМКР',
+            'field_accepted_station_amkr_abbr': 'Стан. приб. АМКР',
+            'field_arrival_id_station_amkr': 'id ст. назн. АМКР',
             'field_arrival_station_amkr_name': 'Стан. назн. АМКР',
             'field_arrival_station_amkr_abbr': 'Стан. назн. АМКР',
             'field_arrival_division_amkr_name': 'Цех получ.',
@@ -557,6 +564,14 @@
             className: 'dt-body-centr',
             title: langView('field_arrival_condition_red', App.Langs), width: "50px", orderable: true, searchable: true
         },
+        {
+            field: 'arrival_condition_repairs',
+            data: function (row, type, val, meta) {
+                return row.arrival_condition_repairs ? langView('title_yes', App.Langs) : '';
+            },
+            className: 'dt-body-center',
+            title: langView('field_arrival_condition_repairs', App.Langs), width: "30px", orderable: true, searchable: true
+        },
         // Разметка по текущей операции 
         {
             field: 'current_condition_name',
@@ -581,6 +596,23 @@
             },
             className: 'dt-body-centr',
             title: langView('field_current_condition_red', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'current_condition_repairs',
+            data: function (row, type, val, meta) {
+                return row.current_condition_repairs ? langView('title_yes', App.Langs) : '';
+            },
+            className: 'dt-body-center',
+            title: langView('field_current_condition_repairs', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        // Признак наличия разметки с ремоном
+        {
+            field: 'condition_repairs',
+            data: function (row, type, val, meta) {
+                return row.arrival_condition_repairs || row.current_condition_repairs ? langView('title_yes', App.Langs) : '';
+            },
+            className: 'dt-body-center',
+            title: langView('field_condition_repairs', App.Langs), width: "30px", orderable: true, searchable: true
         },
         // Дата деповского ремонта по УЗ'
         {
@@ -719,7 +751,40 @@
             className: 'dt-body-nowrap text-left',
             title: langView('field_arrival_shipper_name', App.Langs), width: "300px", orderable: true, searchable: true
         },
+        // Станция прибытия АМКР
+        {
+            field: 'accepted_id_station_amkr',
+            data: function (row, type, val, meta) {
+                return row.accepted_id_station_amkr;
+            },
+            className: 'dt-body-center',
+            title: langView('field_accepted_id_station_amkr', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'accepted_station_amkr_name',
+            data: function (row, type, val, meta) {
+                return row['accepted_station_amkr_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('field_accepted_station_amkr_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'accepted_station_amkr_abbr',
+            data: function (row, type, val, meta) {
+                return row['accepted_station_amkr_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('field_accepted_station_amkr_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
         // Станция назначения АМКР
+        {
+            field: 'arrival_id_station_amkr',
+            data: function (row, type, val, meta) {
+                return row.arrival_id_station_amkr;
+            },
+            className: 'dt-body-center',
+            title: langView('field_arrival_id_station_amkr', App.Langs), width: "30px", orderable: true, searchable: true
+        },
         {
             field: 'arrival_station_amkr_name',
             data: function (row, type, val, meta) {
@@ -845,7 +910,11 @@
         {
             field: 'current_id_station_amkr',
             data: function (row, type, val, meta) {
-                return row.current_id_station_amkr;
+                if (row.current_way_end !== null && row.current_outer_way_start !== null && row.current_outer_way_end === null) {
+                    return null;
+                } else {
+                    return row.current_id_station_amkr;
+                }
             },
             className: 'dt-body-center',
             title: langView('field_current_id_station_amkr', App.Langs), width: "50px", orderable: true, searchable: true
@@ -853,7 +922,11 @@
         {
             field: 'current_station_amkr_name',
             data: function (row, type, val, meta) {
-                return row['current_station_amkr_name_' + App.Lang];
+                if (row.current_way_end !== null && row.current_outer_way_start !== null && row.current_outer_way_end === null) {
+                    return null;
+                } else {
+                    return row['current_station_amkr_name_' + App.Lang];
+                }
             },
             className: 'dt-body-left shorten mw-100',
             title: langView('field_current_station_amkr_name', App.Langs), width: "100px", orderable: true, searchable: true
@@ -861,11 +934,17 @@
         {
             field: 'current_station_amkr_abbr',
             data: function (row, type, val, meta) {
-                return row['current_station_amkr_abbr_' + App.Lang];
+                if (row.current_way_end !== null && row.current_outer_way_start !== null && row.current_outer_way_end === null) {
+                    return null;
+                } else {
+                    return row['current_station_amkr_abbr_' + App.Lang];
+                }
             },
             className: 'dt-body-left shorten mw-100',
             title: langView('field_current_station_amkr_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
+
+
         //=============== ПРОСТОЙ НА Ж.Д.СТАНЦИИ ==================
         // индикатор
         {
@@ -1512,7 +1591,12 @@
         //Отправитель
         collums.push('arrival_shipper_code');
         collums.push('arrival_shipper_name');
+        // Станция приема на АМКР
+        collums.push('accepted_id_station_amkr');
+        collums.push('accepted_station_amkr_name');
+        collums.push('accepted_station_amkr_abbr');
         // Станция назначения АМКР
+        collums.push('arrival_id_station_amkr');
         collums.push('arrival_station_amkr_name');
         collums.push('arrival_station_amkr_abbr');
         // Цех-получатель
@@ -1831,9 +1915,10 @@
             collums.push('num');
         }
         collums.push('sample_datetime');
-        collums.push('current_station_amkr_name');
+        collums.push('current_station_amkr_abbr');
         collums.push('current_way_type');
         collums.push('current_way_full_name');
+        collums.push('outgoing_sostav_status');          // Статус состава отправленного вагона
         // Администрация
         collums.push('wagon_adm');
         //collums.push('wagon_adm_name');
@@ -1842,6 +1927,7 @@
         //collums.push('id_operator');
         //collums.push('operators');
         collums.push('operator_abbr');
+        collums.push('operator_paid');// Признак платности
         //collums.push('operator_rent_start');
         //collums.push('operator_rent_end');
         // Ограничение 
@@ -1876,6 +1962,8 @@
         // Станция отправления
         //collums.push('arrival_station_from_code');
         collums.push('arrival_station_from_name');
+        // Принят на станцию
+        collums.push('accepted_station_amkr_abbr');
         // Цех-получатель
         //collums.push('arrival_division_amkr_name');
         collums.push('arrival_division_amkr_abbr');
@@ -1957,11 +2045,12 @@
         //collums.push('outgoing_date');                    // дата отправки вагона
         //collums.push('outgoing_id_return');               // Возврат
         //collums.push('outgoing_return_cause');           // Причина возврата
-        //collums.push('outgoing_sostav_status');          // Статус состава отправленного вагона
+
         //collums.push('outgoing_sostav_status_name');     // Статус состава отправленного вагона
         //collums.push('wagon_ban_uz');                    // Запреты по УЗ
         //collums.push('wagon_closed_route');                    //Замкнутый маршрут(кольцо)
         collums.push('wir_note');                    // Примечание Вагонник ГС
+        collums.push('condition_repairs');
         return init_columns(collums, list_collums);
     };
     //------------------------------- КНОПКИ -------------------------------------------------------------
@@ -2353,25 +2442,25 @@
                 //}
                 var $element = res.element;
                 $element.empty().append('<option value="">' + langView('title_select', App.Langs) + '</option>')
-                    //.off('change')
-                    //.on('change', function (event) {
-                    //    //////event.preventDefault();
-                    //    //////var val = $.fn.dataTable.util.escapeRegex(
-                    //    //////    $(event.currentTarget).val()
-                    //    //////    //$(this).val()
-                    //    //////);
-                    //    //////switch (val) {
-                    //    //////    case "": break;
-                    //    //////    case "null": val = '^\s*$'; break;
-                    //    //////    default: val = '^' + val + '$'; break;
-                    //    //////}
-                    //    //////// var val = val && val !== "null" ? '^' + val + '$' : ;
-                    //    //////column
-                    //    //////    .search(val, true, false)
-                    //    //////    .draw();
-                    //    ////////this.init_complete(res.field);
-                    //    ////////this.init_complete();
-                    //}.bind(this));
+                //.off('change')
+                //.on('change', function (event) {
+                //    //////event.preventDefault();
+                //    //////var val = $.fn.dataTable.util.escapeRegex(
+                //    //////    $(event.currentTarget).val()
+                //    //////    //$(this).val()
+                //    //////);
+                //    //////switch (val) {
+                //    //////    case "": break;
+                //    //////    case "null": val = '^\s*$'; break;
+                //    //////    default: val = '^' + val + '$'; break;
+                //    //////}
+                //    //////// var val = val && val !== "null" ? '^' + val + '$' : ;
+                //    //////column
+                //    //////    .search(val, true, false)
+                //    //////    .draw();
+                //    ////////this.init_complete(res.field);
+                //    ////////this.init_complete();
+                //}.bind(this));
                 column.data().unique().sort().each(function (d, j) {
                     if (d === null) {
                         $element.append('<option value=null>[Пусто]</option>')

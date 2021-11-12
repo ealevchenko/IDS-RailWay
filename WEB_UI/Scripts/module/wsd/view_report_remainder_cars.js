@@ -15,7 +15,9 @@
 
             'vrrc_title_outer_car': 'Внешние стороние вагоны',
             'vrrc_title_amkr_outer_cars': 'Внешние вагоны АМКР',
-            'vrrc_title_amkr_cars': 'Внутри-заводские вагоны',
+            'vrrc_title_amkr_cars': 'Внутри заводские вагоны',
+            'vrrc_title_handed_cars': 'Сданные вагоны',
+            'vrrc_title_amkr_cisterns': 'Цистерны АМКР',
             'vrrc_title_select_day': 'Сверх суток:',
             'vrrc_title_select_top': 'Топ:',
             'vrrc_title_operators': 'Оператор:',
@@ -61,6 +63,9 @@
             'vrrc_title_where_clear': 'СБРОСИТЬ',
             'vrrc_title_select': 'Все...',
             'vrrc_title_null': '-',
+            'vrrc_title_confirm_clear': 'Сбросить?',
+            'vrrc_title_mesage_clear': 'Выполнить сброс выбора?',
+
 
             //'vrrc_mess_error_not_way': 'Выберите путь',
             //'vrrc_mess_error_equal_locomotive': 'Локомотив №1 и №2 равны',
@@ -100,9 +105,9 @@
     var wsd = App.ids_wsd;
     var directory = App.ids_directory;
     // Модуль инициализаии компонентов формы
-    //var MCF = App.modal_confirm_form; // Создать модальную форму "Окно сообщений"
     var FC = App.form_control;
     var FIF = App.form_infield;
+    var MCF = App.modal_confirm_form; // Создать модальную форму "Окно сообщений"
 
     //var TSOW = App.table_sostav_outer_way; // Модуль составы на подходах
     //var TCOW = App.table_cars_outer_way; // Модуль составы на подходах
@@ -229,6 +234,9 @@
     view_report_remainder_cars.prototype.init = function (options, fn_init_ok) {
         this.result_init = true;
         // теперь выполним инициализацию, определим основные свойства
+        // Создать модальную форму "Окно сообщений"
+        this.modal_confirm_form = new MCF(this.selector); // Создадим экземпляр окно сообщений
+        this.modal_confirm_form.init();
 
         this.settings = $.extend({
             alert: null,
@@ -247,8 +255,10 @@
         // Выборка
         this.where_option = {
             outer_car: true,                //Внешние стороние вагоны
-            amkr_outer_cars: true,         //Внешние вагоны АМКР
-            amkr_cars: true,               //Внутри-заводские вагоны
+            amkr_outer_cars: true,          //Внешние вагоны АМКР
+            amkr_cars: true,                //Внутри-заводские вагоны
+            handed_cars: true,             //Сданные вагоны
+            amkr_cisterns: true,           //Цистерны АМКР
             select_day: 0,                  //Сверх суток
             select_top: 0,                  //Топ
             id_operator: -1,                //Оператор
@@ -268,7 +278,6 @@
             id_destination_station: -1,     //Станция назначения
             paid: false,                    //Признак платности
             id_station_amkr: -1,            //Станция нахождения вагона
-            not_surrender_cars: false,      //Без учета сданных вагонов
         }
         // Сообщение
         LockScreen(langView('vrrc_mess_init_panel', App.Langs));
@@ -302,7 +311,9 @@
             var sw_outer_cars = new this.fc_ui.el_switch('outer_cars', langView('vrrc_title_outer_car', App.Langs));
             var sw_amkr_outer_cars = new this.fc_ui.el_switch('amkr_outer_cars', langView('vrrc_title_amkr_outer_cars', App.Langs));
             var sw_amkr_cars = new this.fc_ui.el_switch('amkr_cars', langView('vrrc_title_amkr_cars', App.Langs));
-            div_fg_cars.$div.append(sw_outer_cars.$switch).append(sw_amkr_outer_cars.$switch).append(sw_amkr_cars.$switch);
+            var sw_handed_cars = new this.fc_ui.el_switch('handed_cars', langView('vrrc_title_handed_cars', App.Langs));
+            var sw_amkr_cisterns = new this.fc_ui.el_switch('amkr_cisterns', langView('vrrc_title_amkr_cisterns', App.Langs));
+            div_fg_cars.$div.append(sw_outer_cars.$switch).append(sw_amkr_outer_cars.$switch).append(sw_amkr_cars.$switch).append(sw_handed_cars.$switch).append(sw_amkr_cisterns.$switch);
             // Добавим top свыше дней
             var div_fr_day_top = new this.fc_ui.el_div_form_row();
             var col_day = new this.fc_ui.el_col('md', 12, 'mb-1');
@@ -333,7 +344,6 @@
             var div_arrival_cargo_form_row = new this.fc_ui.el_div_form_row();
             var col_arrival_cargo = new this.fc_ui.el_col('md', 12, 'mb-1');
             var lab_arrival_cargo = new this.fc_ui.el_label('arrival_cargo', null, langView('vrrc_title_cargo_arrival', App.Langs));
-            //var sel_arrival_cargo = new this.fc_ui.el_select('arrival_cargo', 'custom-select custom-select-sm', null, false);
             var inp_arrival_cargo = new this.fc_ui.el_input_text('arrival_cargo', 'form-control form-control-sm', null, false, null, null);
             div_arrival_cargo_form_row.$div.append(col_arrival_cargo.$col.append(lab_arrival_cargo.$label).append(inp_arrival_cargo.$input));
             this.form_select.append(div_arrival_cargo_form_row.$div);
@@ -344,6 +354,95 @@
             var sel_arrival_group_cargo = new this.fc_ui.el_select('arrival_group_cargo', 'custom-select custom-select-sm', null, false);
             div_arrival_group_cargo_form_row.$div.append(col_arrival_group_cargo.$col.append(lab_arrival_group_cargo.$label).append(sel_arrival_group_cargo.$select));
             this.form_select.append(div_arrival_group_cargo_form_row.$div);
+            // Добавим выбор сертификационные данные (autocomplete)
+            var div_arrival_sertification_data_form_row = new this.fc_ui.el_div_form_row();
+            var col_arrival_sertification_data = new this.fc_ui.el_col('md', 12, 'mb-1');
+            var lab_arrival_sertification_data = new this.fc_ui.el_label('arrival_sertification_data', null, langView('vrrc_title_certification_data', App.Langs));
+            var inp_arrival_sertification_data = new this.fc_ui.el_input_text('arrival_sertification_data', 'form-control form-control-sm', null, false, null, null);
+            div_arrival_sertification_data_form_row.$div.append(col_arrival_sertification_data.$col.append(lab_arrival_sertification_data.$label).append(inp_arrival_sertification_data.$input));
+            this.form_select.append(div_arrival_sertification_data_form_row.$div);
+            // Добавим выбор станция отправления(autocomplete)
+            var div_arrival_station_from_name_form_row = new this.fc_ui.el_div_form_row();
+            var col_arrival_station_from_name = new this.fc_ui.el_col('md', 12, 'mb-1');
+            var lab_arrival_station_from_name = new this.fc_ui.el_label('arrival_station_from_name', null, langView('vrrc_title_departure_station', App.Langs));
+            var inp_arrival_station_from_name = new this.fc_ui.el_input_text('arrival_station_from_name', 'form-control form-control-sm', null, false, null, null);
+            div_arrival_station_from_name_form_row.$div.append(col_arrival_station_from_name.$col.append(lab_arrival_station_from_name.$label).append(inp_arrival_station_from_name.$input));
+            this.form_select.append(div_arrival_station_from_name_form_row.$div);
+            // Добавим выбор грузополучатель
+            var div_arrival_division_amkr_form_row = new this.fc_ui.el_div_form_row();
+            var col_arrival_division_amkr = new this.fc_ui.el_col('md', 12, 'mb-1');
+            var lab_arrival_division_amkr = new this.fc_ui.el_label('arrival_division_amkr', null, langView('vrrc_title_division', App.Langs));
+            var sel_arrival_division_amkr = new this.fc_ui.el_select('arrival_division_amkr', 'custom-select custom-select-sm', null, false);
+            div_arrival_division_amkr_form_row.$div.append(col_arrival_division_amkr.$col.append(lab_arrival_division_amkr.$label).append(sel_arrival_division_amkr.$select));
+            this.form_select.append(div_arrival_division_amkr_form_row.$div);
+            // Добавим выбор внешнее прибытие
+            var div_accepted_station_amkr_abbr_form_row = new this.fc_ui.el_div_form_row();
+            var col_accepted_station_amkr_abbr = new this.fc_ui.el_col('md', 12, 'mb-1');
+            var lab_accepted_station_amkr_abbr = new this.fc_ui.el_label('accepted_station_amkr_abbr', null, langView('vrrc_title_station_contiguity', App.Langs));
+            var sel_accepted_station_amkr_abbr = new this.fc_ui.el_select('accepted_station_amkr_abbr', 'custom-select custom-select-sm', null, false);
+            div_accepted_station_amkr_abbr_form_row.$div.append(col_accepted_station_amkr_abbr.$col.append(lab_accepted_station_amkr_abbr.$label).append(sel_accepted_station_amkr_abbr.$select));
+            this.form_select.append(div_accepted_station_amkr_abbr_form_row.$div);
+            // Добавим выбор разметка по прибытию
+            var div_arrival_condition_abbr_form_row = new this.fc_ui.el_div_form_row();
+            var col_arrival_condition_abbr = new this.fc_ui.el_col('md', 12, 'mb-1');
+            var lab_arrival_condition_abbr = new this.fc_ui.el_label('arrival_condition_abbr', null, langView('vrrc_title_condition_arrival', App.Langs));
+            var sel_arrival_condition_abbr = new this.fc_ui.el_select('arrival_condition_abbr', 'custom-select custom-select-sm', null, false);
+            div_arrival_condition_abbr_form_row.$div.append(col_arrival_condition_abbr.$col.append(lab_arrival_condition_abbr.$label).append(sel_arrival_condition_abbr.$select));
+            this.form_select.append(div_arrival_condition_abbr_form_row.$div);
+            // добавим выбор МР МРт
+            var div_fg_condition_mr = new this.fc_ui.el_div_form_group();
+            var sw_condition_mr = new this.fc_ui.el_switch('condition_mr', langView('vrrc_title_condition_mr', App.Langs));
+            div_fg_condition_mr.$div.append(sw_condition_mr.$switch);
+            this.form_select.append(div_fg_condition_mr.$div);
+            // Добавим выбор род вагона
+            var div_wagon_rod_abbr_form_row = new this.fc_ui.el_div_form_row();
+            var col_wagon_rod_abbr = new this.fc_ui.el_col('md', 12, 'mb-1');
+            var lab_wagon_rod_abbr = new this.fc_ui.el_label('wagon_rod_abbr', null, langView('vrrc_title_genus', App.Langs));
+            var sel_wagon_rod_abbr = new this.fc_ui.el_select('wagon_rod_abbr', 'custom-select custom-select-sm', null, false);
+            div_wagon_rod_abbr_form_row.$div.append(col_wagon_rod_abbr.$col.append(lab_wagon_rod_abbr.$label).append(sel_wagon_rod_abbr.$select));
+            this.form_select.append(div_wagon_rod_abbr_form_row.$div);
+            // Добавим выбор груза по отправке (autocomplete)
+            var div_sending_cargo_form_row = new this.fc_ui.el_div_form_row();
+            var col_sending_cargo = new this.fc_ui.el_col('md', 12, 'mb-1');
+            var lab_sending_cargo = new this.fc_ui.el_label('sending_cargo', null, langView('vrrc_title_cargo_sending', App.Langs));
+            var inp_sending_cargo = new this.fc_ui.el_input_text('sending_cargo', 'form-control form-control-sm', null, false, null, null);
+            div_sending_cargo_form_row.$div.append(col_sending_cargo.$col.append(lab_sending_cargo.$label).append(inp_sending_cargo.$input));
+            this.form_select.append(div_sending_cargo_form_row.$div);
+            // Добавим выбор группы груза по отправке
+            var div_sending_group_cargo_form_row = new this.fc_ui.el_div_form_row();
+            var col_sending_group_cargo = new this.fc_ui.el_col('md', 12, 'mb-1');
+            var lab_sending_group_cargo = new this.fc_ui.el_label('sending_group_cargo', null, langView('vrrc_title_cargo_group_sending', App.Langs));
+            var sel_sending_group_cargo = new this.fc_ui.el_select('sending_group_cargo', 'custom-select custom-select-sm', null, false);
+            div_sending_group_cargo_form_row.$div.append(col_sending_group_cargo.$col.append(lab_sending_group_cargo.$label).append(sel_sending_group_cargo.$select));
+            this.form_select.append(div_sending_group_cargo_form_row.$div);
+            // Добавим цех погрузки
+            var div_loading_division_amkr_form_row = new this.fc_ui.el_div_form_row();
+            var col_loading_division_amkr = new this.fc_ui.el_col('md', 12, 'mb-1');
+            var lab_loading_division_amkr = new this.fc_ui.el_label('loading_division_amkr', null, langView('vrrc_title_division_loading', App.Langs));
+            var sel_loading_division_amkr = new this.fc_ui.el_select('loading_division_amkr', 'custom-select custom-select-sm', null, false);
+            div_loading_division_amkr_form_row.$div.append(col_loading_division_amkr.$col.append(lab_loading_division_amkr.$label).append(sel_loading_division_amkr.$select));
+            this.form_select.append(div_loading_division_amkr_form_row.$div);
+            // Добавим выбор станция назаначения
+            var div_destination_station_form_row = new this.fc_ui.el_div_form_row();
+            var col_destination_station = new this.fc_ui.el_col('md', 12, 'mb-1');
+            var lab_destination_station = new this.fc_ui.el_label('destination_station', null, langView('vrrc_title_destination_station', App.Langs));
+            var inp_destination_station = new this.fc_ui.el_input_text('destination_station', 'form-control form-control-sm', null, false, null, null);
+            div_destination_station_form_row.$div.append(col_destination_station.$col.append(lab_destination_station.$label).append(inp_destination_station.$input));
+            this.form_select.append(div_destination_station_form_row.$div);
+            // добавим выбор признака платности
+            var div_fg_paid = new this.fc_ui.el_div_form_group();
+            var sw_paid = new this.fc_ui.el_switch('paid', langView('vrrc_title_paid', App.Langs));
+            div_fg_paid.$div.append(sw_paid.$switch);
+            this.form_select.append(div_fg_paid.$div);
+            // Добавим выбор станция нахождения вагона
+            var div_current_station_amkr_form_row = new this.fc_ui.el_div_form_row();
+            var col_current_station_amkr = new this.fc_ui.el_col('md', 12, 'mb-1');
+            var lab_current_station_amkr = new this.fc_ui.el_label('current_station_amkr', null, langView('vrrc_title_station_amkr', App.Langs));
+            var sel_current_station_amkr = new this.fc_ui.el_select('current_station_amkr', 'custom-select custom-select-sm', null, false);
+            div_current_station_amkr_form_row.$div.append(col_current_station_amkr.$col.append(lab_current_station_amkr.$label).append(sel_current_station_amkr.$select));
+            this.form_select.append(div_current_station_amkr_form_row.$div);
+
+
             // Отображение формы
             this.$setup_select.append(this.form_select);
             // обработка события submit
@@ -357,16 +456,15 @@
             this.el_sw_outer_cars = sw_outer_cars.$input;
             this.el_sw_amkr_outer_cars = sw_amkr_outer_cars.$input;
             this.el_sw_amkr_cars = sw_amkr_cars.$input;
+            this.el_handed_cars = sw_handed_cars.$input;
+            this.el_amkr_cisterns = sw_amkr_cisterns.$input;
             this.el_select_operator = sel_operator.$select;
             this.el_select_limiting = sel_limiting.$select;
-            //this.el_arrival_cargo = sel_arrival_cargo.$select;
             this.el_arrival_cargo = inp_arrival_cargo.$input.autocomplete({
                 autoFocus: false,
                 minLength: 1,
                 source: [],
                 change: function (event, ui) {
-                    //event.preventDefault();
-                    //event.stopPropagation();
                     if (ui.item === null) {
                         var column = this.tab_cars.obj_t_cars.columns('.fl-arrival_cargo_name');
                         column
@@ -389,18 +487,139 @@
                     column
                         .search(val, true, false)
                         .draw();
-                }.bind(this),
-                close: function (event, ui) {
-                    //event.preventDefault();
-                }.bind(this),
-
+                }.bind(this)
             });
             this.el_arrival_group_cargo = sel_arrival_group_cargo.$select;
+            this.el_arrival_sertification_data = inp_arrival_sertification_data.$input.autocomplete({
+                autoFocus: false,
+                minLength: 1,
+                source: [],
+                change: function (event, ui) {
+                    if (ui.item === null) {
+                        var column = this.tab_cars.obj_t_cars.columns('.fl-arrival_sertification_data');
+                        column
+                            .search('', true, false)
+                            .draw();
+                        this.el_arrival_cargo.val('');
+                    }
+                }.bind(this),
+                select: function (event, ui) {
+                    var val = $.fn.dataTable.util.escapeRegex(
+                        ui.item.value
+                    );
+                    var column = this.tab_cars.obj_t_cars.columns('.fl-arrival_sertification_data');
+                    switch (val) {
+                        case "": break;
+                        case "null": val = '^\s*$'; break;
+                        default: val = '^' + val + '$'; break;
+                    }
+                    column
+                        .search(val, true, false)
+                        .draw();
+                }.bind(this)
+            });
+            this.el_arrival_station_from_name = inp_arrival_station_from_name.$input.autocomplete({
+                autoFocus: false,
+                minLength: 1,
+                source: [],
+                change: function (event, ui) {
+                    if (ui.item === null) {
+                        var column = this.tab_cars.obj_t_cars.columns('.fl-arrival_station_from_name');
+                        column
+                            .search('', true, false)
+                            .draw();
+                        this.el_arrival_cargo.val('');
+                    }
+                }.bind(this),
+                select: function (event, ui) {
+                    var val = $.fn.dataTable.util.escapeRegex(
+                        ui.item.value
+                    );
+                    var column = this.tab_cars.obj_t_cars.columns('.fl-arrival_station_from_name');
+                    switch (val) {
+                        case "": break;
+                        case "null": val = '^\s*$'; break;
+                        default: val = '^' + val + '$'; break;
+                    }
+                    column
+                        .search(val, true, false)
+                        .draw();
+                }.bind(this)
+            });
+            this.el_arrival_division_amkr = sel_arrival_division_amkr.$select;
+            this.el_accepted_station_amkr_abbr = sel_accepted_station_amkr_abbr.$select;
+            this.el_arrival_condition_abbr = sel_arrival_condition_abbr.$select;
+            this.el_condition_mr = sw_condition_mr.$input;
+            this.el_wagon_rod_abbr = sel_wagon_rod_abbr.$select;
+            this.el_sending_cargo = inp_sending_cargo.$input.prop('disabled', true).autocomplete({
+                autoFocus: false,
+                minLength: 1,
+                source: [],
+                change: function (event, ui) {
+                    //if (ui.item === null) {
+                    //    var column = this.tab_cars.obj_t_cars.columns('.fl-sending_cargo_name');
+                    //    column
+                    //        .search('', true, false)
+                    //        .draw();
+                    //    this.el_arrival_cargo.val('');
+                    //}
+                }.bind(this),
+                select: function (event, ui) {
+                    //var val = $.fn.dataTable.util.escapeRegex(
+                    //    ui.item.value
+                    //);
+                    //var column = this.tab_cars.obj_t_cars.columns('.fl-sending_cargo_name');
+                    //switch (val) {
+                    //    case "": break;
+                    //    case "null": val = '^\s*$'; break;
+                    //    default: val = '^' + val + '$'; break;
+                    //}
+                    //column
+                    //    .search(val, true, false)
+                    //    .draw();
+                }.bind(this)
+            });
+            this.el_sending_group_cargo = sel_sending_group_cargo.$select.prop('disabled', true);
+            this.el_loading_division_amkr = sel_loading_division_amkr.$select.prop('disabled', true);
+            this.el_destination_station = inp_destination_station.$input.prop('disabled', true).autocomplete({
+                autoFocus: false,
+                minLength: 1,
+                source: [],
+                change: function (event, ui) {
+                    //if (ui.item === null) {
+                    //    var column = this.tab_cars.obj_t_cars.columns('.fl-');
+                    //    column
+                    //        .search('', true, false)
+                    //        .draw();
+                    //    this.el_arrival_cargo.val('');
+                    //}
+                }.bind(this),
+                select: function (event, ui) {
+                    //var val = $.fn.dataTable.util.escapeRegex(
+                    //    ui.item.value
+                    //);
+                    //var column = this.tab_cars.obj_t_cars.columns('.fl-');
+                    //switch (val) {
+                    //    case "": break;
+                    //    case "null": val = '^\s*$'; break;
+                    //    default: val = '^' + val + '$'; break;
+                    //}
+                    //column
+                    //    .search(val, true, false)
+                    //    .draw();
+                }.bind(this)
+            });
+            this.el_paid = sw_paid.$input;
+            this.el_current_station_amkr = sel_current_station_amkr.$select;
             // Обработка событий  ------------------
             this.el_bt_clear.on('click', function (event) {
                 event.preventDefault();
                 event.stopPropagation();
-                this.clear_where();
+                this.modal_confirm_form.view(langView('vrrc_title_confirm_clear', App.Langs), langView('vrrc_title_mesage_clear', App.Langs), function (res) {
+                    if (res) {
+                        this.clear_where();
+                    }
+                }.bind(this));
             }.bind(this));
             // Внешние вагоны
             this.el_sw_outer_cars.on('change', function (event) {
@@ -424,65 +643,137 @@
                 this.where_option.amkr_cars = checked;
                 this.update_where(); // Обновим выборку
             }.bind(this));
+            // Вагоны сданные
+            this.el_handed_cars.on('change', function (event) {
+                event.preventDefault();
+                var checked = $(event.currentTarget).prop('checked');
+                this.where_option.handed_cars = checked;
+                this.update_where(); // Обновим выборку
+            }.bind(this));
+            // цистерны АМКР
+            this.el_amkr_cisterns.on('change', function (event) {
+                event.preventDefault();
+                var checked = $(event.currentTarget).prop('checked');
+                this.where_option.amkr_cisterns = checked;
+                this.update_where(); // Обновим выборку
+            }.bind(this));
             //
             this.el_select_operator.on('change', function (event) {
-                event.preventDefault();
-                var val = $.fn.dataTable.util.escapeRegex(
-                    $(event.currentTarget).val()
-                );
-                var column = this.tab_cars.obj_t_cars.columns('.fl-operator_abbr');
-                switch (val) {
-                    case "": break;
-                    case "null": val = '^\s*$'; break;
-                    default: val = '^' + val + '$'; break;
-                }
-                column
-                    .search(val, true, false)
-                    .draw();
+                this.event_select_change(event, 'operator_abbr');
             }.bind(this));
             //
             this.el_select_limiting.on('change', function (event) {
-                event.preventDefault();
-                var val = $.fn.dataTable.util.escapeRegex(
-                    $(event.currentTarget).val()
-                );
-                var column = this.tab_cars.obj_t_cars.columns('.fl-limiting_abbr');
-                switch (val) {
-                    case "": break;
-                    case "null": val = '^\s*$'; break;
-                    default: val = '^' + val + '$'; break;
-                }
-                column
-                    .search(val, true, false)
-                    .draw();
+                this.event_select_change(event, 'limiting_abbr');
             }.bind(this));
             // Груз по прибытию
-            this.el_arrival_cargo.on('change', function (event) {
+            this.el_arrival_cargo.on('keydown', function (event) {
+                if (event.keyCode == 13) {
+                    this.el_arrival_cargo.change();
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            }.bind(this)).on('change', function (event) {
+                this.event_autocomplete_change(event, 'arrival_cargo_name');
+            }.bind(this));
+            // группа груза по ПРИБ
+            this.el_arrival_group_cargo.on('change', function (event) {
+                this.event_select_change(event, 'arrival_cargo_group_name');
+            }.bind(this));
+            // Сертиф. данные
+            this.el_arrival_sertification_data.on('keydown', function (event) {
+                if (event.keyCode == 13) {
+                    this.el_arrival_sertification_data.change();
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            }.bind(this)).on('change', function (event) {
+                this.event_autocomplete_change(event, 'arrival_sertification_data');
+            }.bind(this));
+            // Станция отправления
+            this.el_arrival_station_from_name.on('keydown', function (event) {
+                if (event.keyCode == 13) {
+                    this.el_arrival_station_from_name.change();
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            }.bind(this)).on('change', function (event) {
+                this.event_autocomplete_change(event, 'arrival_station_from_name');
+            }.bind(this));
+            // грузополучатель (цех)
+            this.el_arrival_division_amkr.on('change', function (event) {
+                this.event_select_change(event, 'arrival_division_amkr_abbr');
+            }.bind(this));
+            // внешнее прибытие
+            this.el_accepted_station_amkr_abbr.on('change', function (event) {
+                this.event_select_change(event, 'accepted_station_amkr_abbr');
+            }.bind(this));
+            // разметка по прибытию
+            this.el_arrival_condition_abbr.on('change', function (event) {
+                this.event_select_change(event, 'arrival_condition_abbr');
+            }.bind(this));
+            // Выбор МР МРт
+            this.el_condition_mr.on('change', function (event) {
                 event.preventDefault();
-                var val = $(event.currentTarget).val()
-                if (val === '') {
-                    var column = this.tab_cars.obj_t_cars.columns('.fl-limiting_abbr');
+                var checked = $(event.currentTarget).prop('checked');
+                var val = '';
+                if (checked) {
+                    val = '^' + 'Да' + '$';
+                };
+                var column = this.tab_cars.obj_t_cars.columns('.fl-condition_repairs');
+                if (column && column.length > 0) {
+                    // поле выбрано, выполним выборку
                     column
                         .search(val, true, false)
                         .draw();
                 }
             }.bind(this));
-            // группа грузза по ПРИБ
-            this.el_arrival_group_cargo.on('change', function (event) {
-                event.preventDefault();
-                var val = $.fn.dataTable.util.escapeRegex(
-                    $(event.currentTarget).val()
-                );
-                var column = this.tab_cars.obj_t_cars.columns('.fl-arrival_cargo_group_name');
-                switch (val) {
-                    case "": break;
-                    case "null": val = '^\s*$'; break;
-                    default: val = '^' + val + '$'; break;
-                }
-                column
-                    .search(val, true, false)
-                    .draw();
+            // род вагона
+            this.el_wagon_rod_abbr.on('change', function (event) {
+                this.event_select_change(event, 'wagon_rod_abbr');
             }.bind(this));
+            // Груз по отпрвке
+            this.el_sending_cargo.on('keydown', function (event) {
+                if (event.keyCode == 13) {
+                    this.el_sending_cargo.change();
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            }.bind(this)).on('change', function (event) {
+                //this.event_autocomplete_change(event, '');
+            }.bind(this));
+            // группа груза по ОТПР
+            this.el_arrival_group_cargo.on('change', function (event) {
+                //this.event_select_change(event, '');
+            }.bind(this));
+            // Цех погрузки
+            this.el_loading_division_amkr.on('change', function (event) {
+                //this.event_select_change(event, '');
+            }.bind(this));
+            // станция назначения
+            this.el_destination_station.on('change', function (event) {
+                //this.event_select_change(event, '');
+            }.bind(this));
+            // Выбор платноти
+            this.el_paid.on('change', function (event) {
+                event.preventDefault();
+                var checked = $(event.currentTarget).prop('checked');
+                var val = '';
+                if (checked) {
+                    val = '^' + 'Да' + '$';
+                };
+                var column = this.tab_cars.obj_t_cars.columns('.fl-operator_paid');
+                if (column && column.length > 0) {
+                    // поле выбрано, выполним выборку
+                    column
+                        .search(val, true, false)
+                        .draw();
+                }
+            }.bind(this));
+            // текущая станция
+            this.el_current_station_amkr.on('change', function (event) {
+                this.event_select_change(event, 'current_station_amkr_abbr');
+            }.bind(this));
+
             // Инициализация компонента TOP & Day
             $("input#select_day").inputSpinner();
             $("input#select_top").inputSpinner();
@@ -513,6 +804,8 @@
             this.el_sw_outer_cars.prop('checked', this.where_option.outer_car);
             this.el_sw_amkr_outer_cars.prop('checked', this.where_option.amkr_outer_cars);
             this.el_sw_amkr_cars.prop('checked', this.where_option.amkr_cars);
+            this.el_handed_cars.prop('checked', this.where_option.handed_cars);
+            this.el_amkr_cisterns.prop('checked', this.where_option.amkr_cisterns);
             //----------------------------------
             if (typeof fn_init_ok === 'function') {
                 fn_init_ok(this.result_init);
@@ -520,59 +813,91 @@
             //----------------------------------
         }.bind(this));
     };
-    // Инициализировать элементы выбора
-    view_report_remainder_cars.prototype.init_where = function () {
-        //var col = this.tab_cars.obj_t_cars.columns('.fl-operator_abbr');
-        //-------------------------------------------
-        var value = this.el_select_operator.val();
-        this.el_select_operator.empty().append('<option value="">' + langView('vrrc_title_select', App.Langs) + '</option>')
-        //var index = col.indexes();
-        var column = this.tab_cars.obj_t_cars.column(this.tab_cars.obj_t_cars.columns('.fl-operator_abbr').indexes());
-        column.data().unique().sort().each(function (d, j) {
-            if (d === null) {
-                this.el_select_operator.append('<option value=null>' + langView('vrrc_title_null', App.Langs) + '</option>')
-            } else {
-                this.el_select_operator.append('<option value="' + d + '">' + d + '</option>')
-            };
-        }.bind(this));
-        this.el_select_operator.val(value);
-        //-------------------------------------------
-        var value = this.el_select_limiting.val();
-        this.el_select_limiting.empty().append('<option value="">' + langView('vrrc_title_select', App.Langs) + '</option>')
-        //var index = col.indexes();
-        var column = this.tab_cars.obj_t_cars.column(this.tab_cars.obj_t_cars.columns('.fl-limiting_abbr').indexes());
-        column.data().unique().sort().each(function (d, j) {
-            if (d === null) {
-                this.el_select_limiting.append('<option value=null>' + langView('vrrc_title_null', App.Langs) + '</option>')
-            } else {
-                this.el_select_limiting.append('<option value="' + d + '">' + d + '</option>')
-            };
-        }.bind(this));
-        this.el_select_limiting.val(value);
-        //-------------------------------------------
-        var value = this.el_arrival_cargo.val();
-        var list = []
-        var column = this.tab_cars.obj_t_cars.column(this.tab_cars.obj_t_cars.columns('.fl-arrival_cargo_name').indexes());
-        column.data().unique().sort().each(function (d, j) {
-            list.push({ value: d, label: d });
-        }.bind(this));
-        this.el_arrival_cargo.autocomplete("option", "source", list);
-        this.el_arrival_cargo.val(value);
-        //-------------------------------------------
-        var value = this.el_arrival_group_cargo.val();
-        this.el_arrival_group_cargo.empty().append('<option value="">' + langView('vrrc_title_select', App.Langs) + '</option>')
-        //var index = col.indexes();
-        var column = this.tab_cars.obj_t_cars.column(this.tab_cars.obj_t_cars.columns('.fl-arrival_cargo_group_name').indexes());
-        column.data().unique().sort().each(function (d, j) {
-            if (d === null) {
-                this.el_arrival_group_cargo.append('<option value=null>' + langView('vrrc_title_null', App.Langs) + '</option>')
-            } else {
-                this.el_arrival_group_cargo.append('<option value="' + d + '">' + d + '</option>')
-            };
-        }.bind(this));
-        this.el_arrival_group_cargo.val(value);
+    // Обработка события списочных элементов SELECT
+    view_report_remainder_cars.prototype.event_select_change = function (event, field) {
+        event.preventDefault();
+        var val = $.fn.dataTable.util.escapeRegex(
+            $(event.currentTarget).val()
+        );
+        var column = this.tab_cars.obj_t_cars.columns('.fl-' + field);
+        if (column && column.length > 0) {
+            // поле выбрано, выполним выборку
+            switch (val) {
+                case "": break;
+                case "null": val = '^\s*$'; break;
+                default: val = '^' + val + '$'; break;
+            }
+            column
+                .search(val, true, false)
+                .draw();
+        }
     };
+    // Обработка события списочных элементов Autocomplete
+    view_report_remainder_cars.prototype.event_autocomplete_change = function (event, field) {
+        event.preventDefault();
+        var val = $(event.currentTarget).val();
+        if (val === '') {
+            var column = this.tab_cars.obj_t_cars.columns('.fl-' + field);
+            if (column && column.length > 0) {
+                column
+                    .search('', true, false)
+                    .draw();
+            };
+        }
+    };
+    // Инициализировать элемент выбора
+    view_report_remainder_cars.prototype.init_where_element = function (element, field, type) {
+        var value = element.val();
+        element.empty().append('<option value="">' + langView('vrrc_title_select', App.Langs) + '</option>')
+        //var index = col.indexes();
+        var column = this.tab_cars.obj_t_cars.column(this.tab_cars.obj_t_cars.columns('.fl-' + field).indexes());
+        if (column && column.length > 0) {
+            switch (type) {
+                case 'select': {
+                    column.data().unique().sort().each(function (d, j) {
+                        if (d === null) {
+                            element.append('<option value=null>' + langView('vrrc_title_null', App.Langs) + '</option>')
+                        } else {
+                            element.append('<option value="' + d + '">' + d + '</option>')
+                        };
+                    }.bind(this));
+                    break;
+                }
+                case 'autocomplete': {
+                    var list = [];
+                    column.data().unique().sort().each(function (d, j) {
+                        list.push({ value: d, label: d });
+                    }.bind(this));
+                    element.autocomplete("option", "source", list);
+                    break;
+                }
+            }
 
+
+        }
+
+
+        element.val(value);
+    };
+    // Инициализировать элементов выбора
+    view_report_remainder_cars.prototype.init_where = function () {
+        this.init_where_element(this.el_select_operator, 'operator_abbr', 'select');
+        this.init_where_element(this.el_select_limiting, 'limiting_abbr', 'select');
+        this.init_where_element(this.el_arrival_cargo, 'arrival_cargo_name', 'autocomplete');
+        this.init_where_element(this.el_arrival_group_cargo, 'arrival_cargo_group_name', 'select');
+        this.init_where_element(this.el_arrival_sertification_data, 'arrival_sertification_data', 'autocomplete');
+        this.init_where_element(this.el_arrival_station_from_name, 'arrival_station_from_name', 'autocomplete');
+        this.init_where_element(this.el_arrival_division_amkr, 'arrival_division_amkr_abbr', 'select');
+        this.init_where_element(this.el_accepted_station_amkr_abbr, 'accepted_station_amkr_abbr', 'select');
+        this.init_where_element(this.el_arrival_condition_abbr, 'arrival_condition_abbr', 'select');
+        this.init_where_element(this.el_wagon_rod_abbr, 'wagon_rod_abbr', 'select');
+        //this.init_where_element(this.el_sending_cargo, '', 'autocomplete');
+        //this.init_where_element(this.el_sending_group_cargo, '', 'select');
+        //this.init_where_element(this.el_loading_division_amkr, '', 'select');
+        //this.init_where_element(this.el_destination_station, '', 'autocomplete');
+        this.init_where_element(this.el_current_station_amkr, 'current_station_amkr_abbr', 'select');
+
+    };
     // Показать данные 
     view_report_remainder_cars.prototype.view = function () {
         // Отобразим настройки выборки
@@ -604,16 +929,31 @@
     //
     view_report_remainder_cars.prototype.clear_where = function () {
         LockScreen(langView('vrrc_mess_clear_wagons', App.Langs));
-        // Проедемся по полям
+        // Проедемся по полям и сбросим выбор
         this.tab_cars.obj_t_cars.columns().indexes().flatten().each(function (i) {
             var column = this.tab_cars.obj_t_cars.column(i);
             column.search('', true, false);
         }.bind(this));
+        // Проедемся по элементам выбора и сбросим выбор
         this.el_select_operator.val('');
         this.el_select_limiting.val('');
         this.el_arrival_cargo.val('');
         this.el_arrival_group_cargo.val('');
+        this.el_arrival_sertification_data.val('');
+        this.el_arrival_station_from_name.val('');
+        this.el_arrival_division_amkr.val('');
+        this.el_accepted_station_amkr_abbr.val('');
+        this.el_arrival_condition_abbr.val('');
+        this.el_condition_mr.prop('checked', false);
+        this.el_wagon_rod_abbr.val('');
+        this.el_sending_cargo.val('');
+        this.el_sending_group_cargo.val('');
+        this.el_loading_division_amkr.val('');
+        this.el_paid.prop('checked', false);
+        this.el_current_station_amkr.val('');
+
         this.tab_cars.obj_t_cars.search('').draw();
+
         LockScreenOff();
 
     };
@@ -625,50 +965,124 @@
             this.tab_cars.view(wagons, null);
         }.bind(this));
     };
+
+    view_report_remainder_cars.prototype.where_amkr_outer_cars = function (bit, i) {
+        if (bit) {
+            return i.id_operator === 14 || i.id_operator === 16;
+        } else {
+            return i.id_operator !== 14 && i.id_operator !== 16;
+        }
+    };
+
+    view_report_remainder_cars.prototype.where_amkr_cars = function (bit, i) {
+        if (bit) {
+            return i.id_operator === 188;
+        } else {
+            return i.id_operator !== 188;
+        }
+    };
+
+    view_report_remainder_cars.prototype.where_handed_cars = function (bit, i) {
+        if (bit) {
+            return i.outgoing_sostav_status !== null && Number(i.outgoing_sostav_status) === 2;
+        } else {
+            return i.outgoing_sostav_status === null || Number(i.outgoing_sostav_status) < 2
+        }
+    };
+
+    view_report_remainder_cars.prototype.where_amkr = function (amkr_outer_cars, amkr_cars, handed_cars, i) {
+        if (amkr_outer_cars && amkr_cars) {
+            if (handed_cars) {
+                return this.where_amkr_outer_cars(amkr_outer_cars, i) || this.where_amkr_cars(amkr_cars, i);
+            } else {
+                return (this.where_amkr_outer_cars(amkr_outer_cars, i) || this.where_amkr_cars(amkr_cars, i)) && (i.outgoing_sostav_status === null || Number(i.outgoing_sostav_status) < 2);
+            }
+        } else {
+            if (handed_cars) {
+                return this.where_amkr_outer_cars(amkr_outer_cars, i) && this.where_amkr_cars(amkr_cars, i) || (i.outgoing_sostav_status !== null && Number(i.outgoing_sostav_status) === 2);
+            } else {
+                return this.where_amkr_outer_cars(amkr_outer_cars, i) && this.where_amkr_cars(amkr_cars, i) || (i.outgoing_sostav_status === null || Number(i.outgoing_sostav_status) < 2);
+            }
+
+        }
+
+        //////if (amkr_outer_cars && amkr_cars && handed_cars) {
+        //////    return this.where_amkr_outer_cars(amkr_outer_cars, i) || this.where_amkr_cars(amkr_cars, i) || this.where_handed_cars(handed_cars, i);
+        //////} else {
+        //////    if (amkr_outer_cars && amkr_cars) {
+        //////        if (handed_cars) {
+        //////            return this.where_amkr_outer_cars(amkr_outer_cars, i) || this.where_amkr_cars(amkr_cars, i) || this.where_handed_cars(handed_cars, i);
+        //////        } else {
+        //////            return this.where_amkr_outer_cars(amkr_outer_cars, i) || this.where_amkr_cars(amkr_cars, i) && this.where_handed_cars(handed_cars, i);
+        //////        }
+
+        //////        //return this.where_amkr_outer_cars(amkr_outer_cars, i) || this.where_amkr_cars(amkr_cars, i);
+        //////    } else {
+        //////        return this.where_amkr_outer_cars(amkr_outer_cars, i) && this.where_amkr_cars(amkr_cars, i);
+        //////    }
+
+        //////}
+    };
+
+
     // Сделать выборку по условию
     view_report_remainder_cars.prototype.where = function (where_option, fn_where) {
         LockScreen(langView('vrrc_mess_where_wagons', App.Langs));
         var wagons = null;
         // Запустим выборку отдельным процессом
         setTimeout(function () {
-            // Отключен весь выбор
-            if (where_option.outer_car === false && where_option.amkr_outer_cars === false && where_option.amkr_cars === false) {
+            // Отключен весь выбор  && where_option.amkr_cisterns === false
+            if (where_option.outer_car === false && where_option.amkr_outer_cars === false && where_option.amkr_cars === false && where_option.handed_cars === false) {
                 wagons = [];
             } else {
-                // Включен весь выбор
-                if (where_option.outer_car === true && where_option.amkr_outer_cars === true && where_option.amkr_cars === true) {
+                // Включен весь выбор&& where_option.amkr_cisterns === true
+                if (where_option.outer_car === true && where_option.amkr_outer_cars === true && where_option.amkr_cars === true && where_option.handed_cars === true) {
                     wagons = this.wagons;
                 } else {
+                    // Делаем выбор
                     wagons = this.wagons.filter(function (i) {
-                        if (where_option.outer_car === true && where_option.amkr_outer_cars === false && where_option.amkr_cars === false) {
-                            return i.id_operator !== 14 && i.id_operator !== 16 && i.id_operator !== 188;
-                        } else {
-                            if (where_option.outer_car === true) {
-                                if (where_option.amkr_outer_cars === false && where_option.amkr_cars === true) {
-                                    return i.id_operator !== 14 && i.id_operator !== 16;
-                                } else {
-                                    return i.id_operator !== 188;
-                                };
-                            } else {
-                                if (where_option.amkr_outer_cars === true && where_option.amkr_cars === true) {
-                                    return i.id_operator === 14 || i.id_operator === 16 || i.id_operator === 188;
-                                } else {
-                                    if (where_option.amkr_outer_cars === false && where_option.amkr_cars === true) {
-                                        return i.id_operator === 188;
-                                    } else {
-                                        return i.id_operator === 14 || i.id_operator === 16;
-                                    };
-                                };
-                            };
-                        };
+                        return this.where_amkr(where_option.amkr_outer_cars, where_option.amkr_cars, where_option.handed_cars, i);
+
+                        //if (where_option.outer_car === true) {
+
+                        //} else {
+
+                        //}
+
+
+
+                        //if (where_option.outer_car === true && where_option.amkr_outer_cars === false && where_option.amkr_cars === false) {
+                        //    return i.id_operator !== 14 && i.id_operator !== 16 && i.id_operator !== 188;
+                        //} else {
+                        //    if (where_option.outer_car === true) {
+                        //        if (where_option.amkr_outer_cars === false && where_option.amkr_cars === true) {
+                        //            return i.id_operator !== 14 && i.id_operator !== 16;
+                        //        } else {
+                        //            return i.id_operator !== 188;
+                        //        };
+                        //    } else {
+                        //        if (where_option.amkr_outer_cars === true && where_option.amkr_cars === true) {
+                        //            return i.id_operator === 14 || i.id_operator === 16 || i.id_operator === 188;
+                        //        } else {
+                        //            if (where_option.amkr_outer_cars === false && where_option.amkr_cars === true) {
+                        //                return i.id_operator === 188;
+                        //            } else {
+                        //                return i.id_operator === 14 || i.id_operator === 16;
+                        //            };
+                        //        };
+                        //    };
+                        //};
                     }.bind(this));
-                }
+                };
             }
             // Выборка закончена вернем данные
             if (typeof fn_where === 'function') {
                 fn_where(wagons ? wagons : []);
             }
         }.bind(this), 0);
+
+        //handed_cars: true,             //Сданные вагоны
+        //amkr_cisterns : true,           //Цистерны АМКР
     };
     //--------------------------------------------------------------------------------
     // выполнить операцию

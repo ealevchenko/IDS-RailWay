@@ -38,7 +38,7 @@
     var wsd = App.ids_wsd;
     var directory = App.ids_directory;
     // Модуль инициализаии компонентов формы
-    var MCF = App.modal_confirm_form; // Создать модальную форму "Окно сообщений"
+/*    var MCF = App.modal_confirm_form; // Создать модальную форму "Окно сообщений"*/
     // Модуль инициализаии компонентов формы
     var FC = App.form_control;
     var FIL = App.form_inline;
@@ -82,8 +82,8 @@
     view_history_operation_send.prototype.init = function (options, fn_init_ok) {
         this.result_init = true; // Состояние инициализации 
         // Создать модальную форму "Окно сообщений"
-        this.modal_confirm_form = new MCF(this.selector); // Создадим экземпляр окно сообщений
-        this.modal_confirm_form.init();
+        //this.modal_confirm_form = new MCF(this.selector); // Создадим экземпляр окно сообщений
+        //this.modal_confirm_form.init();
 
         // теперь выполним инициализацию, определим основные свойства
         this.settings = $.extend({
