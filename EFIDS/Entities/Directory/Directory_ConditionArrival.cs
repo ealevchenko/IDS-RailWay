@@ -53,6 +53,8 @@ namespace EFIDS.Entities
         [StringLength(50)]
         public string delete_user { get; set; }
 
+        public bool? repairs { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Arrival_UZ_Vagon> Arrival_UZ_Vagon { get; set; }
 
