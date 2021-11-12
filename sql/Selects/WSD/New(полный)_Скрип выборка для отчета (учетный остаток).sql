@@ -54,12 +54,14 @@ use [KRR-PA-CNT-Railway]
 		,arr_dir_cond.condition_abbr_ru as arrival_condition_abbr_ru
 		,arr_dir_cond.condition_abbr_en as arrival_condition_abbr_en
 		,arr_dir_cond.red as arrival_condition_red
+		,arr_dir_cond.repairs as arrival_condition_repairs
 		--> Разметка по текущей операции
 		,cur_dir_cond.condition_name_ru as current_condition_name_ru
 		,cur_dir_cond.condition_name_en as current_condition_name_en
 		,cur_dir_cond.condition_abbr_ru as current_condition_abbr_ru
 		,cur_dir_cond.condition_abbr_en as current_condition_abbr_en
 		,cur_dir_cond.red as current_condition_red
+		,cur_dir_cond.repairs as current_condition_repairs
 		--> Дата ремонта УЗ
 		,dir_wagon.date_rem_uz as wagon_date_rem_uz
 		--> Грузоподъемность
@@ -85,7 +87,14 @@ use [KRR-PA-CNT-Railway]
 		,shipper.[code] as arrival_shipper_code
 		,shipper.[shipper_name_ru] as arrival_shipper_name_ru
 		,shipper.[shipper_name_en] as arrival_shipper_name_en
+		--> Станция приема
+		,arr_sost.id_station_on as accepted_id_station_amkr
+		,acc_dir_station_amkr.station_name_ru as accepted_station_amkr_name_ru
+		,acc_dir_station_amkr.station_name_en as accepted_station_amkr_name_en
+		,acc_dir_station_amkr.station_abbr_ru as accepted_station_amkr_abbr_ru
+		,acc_dir_station_amkr.station_abbr_en as accepted_station_amkr_abbr_en
 		--> Станция назначения
+		,arr_doc_vag.id_station_on_amkr as arrival_id_station_amkr
 		,arr_dir_station_amkr.station_name_ru as arrival_station_amkr_name_ru
 		,arr_dir_station_amkr.station_name_en as arrival_station_amkr_name_en
 		,arr_dir_station_amkr.station_abbr_ru as arrival_station_amkr_abbr_ru
@@ -257,6 +266,8 @@ use [KRR-PA-CNT-Railway]
 		Left JOIN [IDS].[Directory_CommercialCondition] as arr_comm_cond ON arr_doc_vag.[id_commercial_condition] = arr_comm_cond.id
 		--> Справочник Станция отправления (Внешняя станция)
 		Left JOIN IDS.Directory_ExternalStation as arr_dir_ext_station ON arr_doc_uz.code_stn_from =  arr_dir_ext_station.code
+		--> Справочник Станции АМКР (станция приема на АМКР)
+		Left JOIN IDS.Directory_Station as acc_dir_station_amkr ON arr_sost.id_station_on =  acc_dir_station_amkr.id
 		--> Справочник Станции АМКР (станция назначения АМКР)
 		Left JOIN IDS.Directory_Station as arr_dir_station_amkr ON arr_doc_vag.id_station_on_amkr =  arr_dir_station_amkr.id
 		--> Справочник Станции АМКР (текущая станция АМКР)
