@@ -1031,48 +1031,63 @@
         var wagons = null;
         // Запустим выборку отдельным процессом
         setTimeout(function () {
-            // Отключен весь выбор  && where_option.amkr_cisterns === false
-            if (where_option.outer_car === false && where_option.amkr_outer_cars === false && where_option.amkr_cars === false && where_option.handed_cars === false) {
+            // Отключен весь выбор
+            if (where_option.outer_car === false && where_option.amkr_outer_cars === false && where_option.amkr_cars === false && where_option.handed_cars === false && where_option.amkr_cisterns === false) {
                 wagons = [];
             } else {
-                // Включен весь выбор&& where_option.amkr_cisterns === true
-                if (where_option.outer_car === true && where_option.amkr_outer_cars === true && where_option.amkr_cars === true && where_option.handed_cars === true) {
+                // Включен весь выбор
+                if (where_option.outer_car === true && where_option.amkr_outer_cars === true && where_option.amkr_cars === true && where_option.handed_cars === true && where_option.amkr_cisterns === true) {
                     wagons = this.wagons;
                 } else {
                     // Делаем выбор
                     wagons = this.wagons.filter(function (i) {
-                        return this.where_amkr(where_option.amkr_outer_cars, where_option.amkr_cars, where_option.handed_cars, i);
-
-                        //if (where_option.outer_car === true) {
-
-                        //} else {
-
-                        //}
-
-
-
-                        //if (where_option.outer_car === true && where_option.amkr_outer_cars === false && where_option.amkr_cars === false) {
-                        //    return i.id_operator !== 14 && i.id_operator !== 16 && i.id_operator !== 188;
-                        //} else {
-                        //    if (where_option.outer_car === true) {
-                        //        if (where_option.amkr_outer_cars === false && where_option.amkr_cars === true) {
-                        //            return i.id_operator !== 14 && i.id_operator !== 16;
-                        //        } else {
-                        //            return i.id_operator !== 188;
-                        //        };
-                        //    } else {
-                        //        if (where_option.amkr_outer_cars === true && where_option.amkr_cars === true) {
-                        //            return i.id_operator === 14 || i.id_operator === 16 || i.id_operator === 188;
-                        //        } else {
-                        //            if (where_option.amkr_outer_cars === false && where_option.amkr_cars === true) {
-                        //                return i.id_operator === 188;
-                        //            } else {
-                        //                return i.id_operator === 14 || i.id_operator === 16;
-                        //            };
-                        //        };
-                        //    };
-                        //};
+                        if (where_option.outer_car === true && where_option.amkr_outer_cars === false && where_option.amkr_cars === false) {
+                            return i.id_operator !== 14 && i.id_operator !== 16 && i.id_operator !== 188;
+                        } else {
+                            if (where_option.outer_car === true) {
+                                if (where_option.amkr_outer_cars === false && where_option.amkr_cars === true) {
+                                    return i.id_operator !== 14 && i.id_operator !== 16;
+                                } else {
+                                    return i.id_operator !== 188;
+                                };
+                            } else {
+                                if (where_option.amkr_outer_cars === true && where_option.amkr_cars === true) {
+                                    return i.id_operator === 14 || i.id_operator === 16 || i.id_operator === 188;
+                                } else {
+                                    if (where_option.amkr_outer_cars === false && where_option.amkr_cars === true) {
+                                        return i.id_operator === 188;
+                                    } else {
+                                        return i.id_operator === 14 || i.id_operator === 16;
+                                    };
+                                };
+                            };
+                        };
                     }.bind(this));
+                    if (wagons && wagons.length > 0) {
+                        wagons = wagons.filter(function (i) {
+                            var result = true;
+                            // && where_option.amkr_cisterns === false
+                            if (where_option.handed_cars === false) {
+                                result = result && i.outgoing_sostav_status === null || Number(i.outgoing_sostav_status) < 2
+                            }
+                            if (where_option.amkr_cisterns === false) {
+                                result = result;
+                            }
+                            return result;
+                        }.bind(this));
+                    } else {
+                        wagons = this.wagons.filter(function (i) {
+                            var result = true;
+                            // && where_option.amkr_cisterns === false
+                            if (where_option.handed_cars === true) {
+                                result = result && i.outgoing_sostav_status !== null && Number(i.outgoing_sostav_status) === 2
+                            }
+                            if (where_option.amkr_cisterns === true) {
+                                result = result;
+                            }
+                            return result;
+                        }.bind(this));
+                    }
                 };
             }
             // Выборка закончена вернем данные
