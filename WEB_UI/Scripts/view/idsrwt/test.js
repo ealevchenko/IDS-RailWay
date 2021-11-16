@@ -88,7 +88,7 @@
             ids_dir: null,
             ids_wsd: null,
         }, function (init) {
-            report_remainder_cars.load();
+            report_remainder_cars.load(true);
             //LockScreenOff();
         });
 
