@@ -61,11 +61,13 @@
             //'vrrc_title_button_tail': 'Хвост',
             'vrrc_title_add_ok': 'ОБНОВИТЬ',
             'vrrc_title_where_clear': 'СБРОСИТЬ',
+            'vrrc_title_where_load': 'ОБНОВИТЬ',
             'vrrc_title_select': 'Все...',
             'vrrc_title_null': '-',
             'vrrc_title_confirm_clear': 'Сбросить?',
             'vrrc_title_mesage_clear': 'Выполнить сброс выбора?',
-
+            'vrrc_title_confirm_load': 'Обновить?',
+            'vrrc_title_mesage_load': 'Выполнить загрузку новых данных из базы данных ИДС?',
 
             //'vrrc_mess_error_not_way': 'Выберите путь',
             //'vrrc_mess_error_equal_locomotive': 'Локомотив №1 и №2 равны',
@@ -109,85 +111,9 @@
     var FIF = App.form_infield;
     var MCF = App.modal_confirm_form; // Создать модальную форму "Окно сообщений"
 
-    //var TSOW = App.table_sostav_outer_way; // Модуль составы на подходах
-    //var TCOW = App.table_cars_outer_way; // Модуль составы на подходах
     var TCWay = App.table_cars_way;         // Модуль вагоны на путях
     var alert = App.alert_form;
 
-    // ассинхроная функция (формирования списков выбора)
-    var wagons_list_update_async = function (row, callback) {
-        var len = row ? row.length : 0; // защита от пустой выборки
-        var data = {
-            list_operators: [],
-            list_limiting: [],
-        };
-        var list_operators = [];
-        if (len === 0) {
-            if (typeof callback === 'function') {
-                callback(data);
-            };
-            return 0;
-        }
-        function WagonsListUpdate(i) {
-            if (i < len) {
-                // Поместим следующий вызов функции в цикл событий.
-                setTimeout(function () {
-                    LockScreen(langView('vrrc_mess_update_list', App.Langs));
-                    var id_operator = row[i].id_operator;
-                    var operator = data.list_operators.find(function (o) {
-                        return o.value === row[i].id_operator;
-                    });
-                    if (!operator) {
-                        data.list_operators.push({ value: row[i].id_operator, text: row[i]['operators_' + App.Lang] });
-                    }
-                    WagonsListUpdate.call(this, i + 1);
-                }.bind(this), 0);
-            } else {
-                // Так как достигнут конец массива, мы вызываем коллбэк
-                if (typeof callback === 'function') {
-                    callback(data);
-                } else return 0;
-            }
-        }
-        WagonsListUpdate.call(this, 0);
-    };
-
-    //// ассинхроная функция (формирования списков выбора)
-    //var wagons_where_async = function (row, callback) {
-    //    var len = row ? row.length : 0; // защита от пустой выборки
-    //    var list_operators = [];
-    //    if (len === 0) {
-    //        if (typeof callback === 'function') {
-    //            callback(data);
-    //        };
-    //        return 0;
-    //    }
-    //    function WagonsWhere(i) {
-    //        if (i < len) {
-    //            // Поместим следующий вызов функции в цикл событий.
-    //            setTimeout(function () {
-    //                LockScreen(langView('vrrc_mess_where_wagons', App.Langs));
-    //                var id_operator = row[i].id_operator;
-    //                var operator = data.list_operators.find(function (o) {
-    //                    return o.value === row[i].id_operator;
-    //                });
-    //                if (!operator) {
-    //                    data.list_operators.push({ value: row[i].id_operator, text: row[i]['operators_' + App.Lang] });
-    //                }
-    //                WagonsWhere.call(this, i + 1);
-    //            }.bind(this), 0);
-    //        } else {
-    //            // Так как достигнут конец массива, мы вызываем коллбэк
-    //            if (typeof callback === 'function') {
-    //                callback(data);
-    //            } else return 0;
-    //        }
-    //    }
-    //    WagonsWhere.call(this, 0);
-    //};
-
-
-    // создадим основу формы
     function div_panel(base) {
         var row = new base.fc_ui.el_row();
         var col = new base.fc_ui.el_col('xl', 12, 'mb-1 mt-1');
@@ -302,9 +228,12 @@
             this.form_select = form_select.$form;
             // Добавим кнопки
             var div_button_form_row = new this.fc_ui.el_div_form_row();
-            var col_button = new this.fc_ui.el_col('md', 12, 'mb-1');
-            var bt_clear = new this.fc_ui.el_button('md', 'btn-primary ml-2', 'where-clear', langView('vrrc_title_where_clear', App.Langs), null);
-            div_button_form_row.$div.append(col_button.$col.append(bt_clear.$button));
+            var col_button_clear = new this.fc_ui.el_col('md', 6, 'mb-1');
+            var col_button_load = new this.fc_ui.el_col('md', 6, 'mb-1');
+            var bt_clear = new this.fc_ui.el_button('sm', 'btn-primary ml-1', 'where-clear', langView('vrrc_title_where_clear', App.Langs), null);
+            var bt_load = new this.fc_ui.el_button('sm', 'btn-primary ml-1', 'where-load', langView('vrrc_title_where_load', App.Langs), null);
+            div_button_form_row.$div.append(col_button_clear.$col.append(bt_clear.$button)).append(col_button_load.$col.append(bt_load.$button));
+
             this.form_select.append(div_button_form_row.$div);
             // добавим выбор вагонов
             var div_fg_cars = new this.fc_ui.el_div_form_group();
@@ -318,13 +247,31 @@
             var div_fr_day_top = new this.fc_ui.el_div_form_row();
             var col_day = new this.fc_ui.el_col('md', 12, 'mb-1');
             var lab_day = new this.fc_ui.el_label('select_day', null, langView('vrrc_title_select_day', App.Langs));
-            var imp_day = new this.fc_ui.el_input('select_day', 'number', 'form-control form-control-sm', null, false, 0, 1000, null, null, null);
-            col_day.$col.append(lab_day.$label).append(imp_day.$input.val('0'));
+            var div_ig_day = new this.fc_ui.el_div_input_group();
+            var div_igp_day = new this.fc_ui.el_div_input_group_prepend();
+            var div_iga_day = new this.fc_ui.el_div_input_group_append();
+            var bt_plus_day = new this.fc_ui.el_button('sm', 'btn-outline-dark', 'aplly-day', null, 'fas fa-plus');
+            var bt_minus_day = new this.fc_ui.el_button('sm', 'btn-outline-dark', 'aplly-day', null, 'fas fa-minus');
+            var bt_aplly_day = new this.fc_ui.el_button('sm', 'btn-primary ml-1', 'aplly-day', null, 'fas fa-retweet');
+            var imp_day = new this.fc_ui.el_input('select_day', 'number', 'text-center form-control form-control-sm', null, false, 0, 1000, null, null, null);
+            div_igp_day.$div.append(bt_minus_day.$button);
+            div_iga_day.$div.append(bt_plus_day.$button).append(bt_aplly_day.$button);
+            div_ig_day.$div.append(div_igp_day.$div).append(imp_day.$input.val('0')).append(div_iga_day.$div);
+            col_day.$col.append(lab_day.$label).append(div_ig_day.$div);
             // Добавим top 
             var col_top = new this.fc_ui.el_col('md', 12, 'mb-1');
             var lab_top = new this.fc_ui.el_label('select_top', null, langView('vrrc_title_select_top', App.Langs));
-            var imp_top = new this.fc_ui.el_input('select_top', 'number', 'form-control form-control-sm', null, false, 0, 100, null, null, null);
-            col_top.$col.append(lab_top.$label).append(imp_top.$input.val('0'));
+            var div_ig_top = new this.fc_ui.el_div_input_group();
+            var div_igp_top = new this.fc_ui.el_div_input_group_prepend();
+            var div_iga_top = new this.fc_ui.el_div_input_group_append();
+            var bt_plus_top = new this.fc_ui.el_button('sm', 'btn-outline-dark', 'aplly-top', null, 'fas fa-plus');
+            var bt_minus_top = new this.fc_ui.el_button('sm', 'btn-outline-dark', 'aplly-top', null, 'fas fa-minus');
+            var bt_aplly_top = new this.fc_ui.el_button('sm', 'btn-primary ml-1', 'aplly-top', null, 'fas fa-retweet');
+            var imp_top = new this.fc_ui.el_input('select_top', 'number', 'text-center form-control form-control-sm', null, false, 0, 100, null, null, null);
+            div_igp_top.$div.append(bt_minus_top.$button);
+            div_iga_top.$div.append(bt_plus_top.$button).append(bt_aplly_top.$button);
+            div_ig_top.$div.append(div_igp_top.$div).append(imp_top.$input.val('0')).append(div_iga_top.$div);
+            col_top.$col.append(lab_top.$label).append(div_ig_top.$div);
             this.form_select.append(div_fg_cars.$div).append(div_fr_day_top.$div.append(col_day.$col).append(col_top.$col));
             // Добавим выбор оператора
             var div_operator_form_row = new this.fc_ui.el_div_form_row();
@@ -453,11 +400,23 @@
             //});
             // Получим элементы формы
             this.el_bt_clear = bt_clear.$button;
+            this.el_bt_load = bt_load.$button;
             this.el_sw_outer_cars = sw_outer_cars.$input;
             this.el_sw_amkr_outer_cars = sw_amkr_outer_cars.$input;
             this.el_sw_amkr_cars = sw_amkr_cars.$input;
             this.el_handed_cars = sw_handed_cars.$input;
             this.el_amkr_cisterns = sw_amkr_cisterns.$input;
+            // day
+            this.el_imp_day = imp_day.$input;
+            this.el_bt_plus_day = bt_plus_day.$button;
+            this.el_bt_minus_day = bt_minus_day.$button;
+            this.el_bt_aplly_day = bt_aplly_day.$button;
+            // top
+            this.el_imp_top = imp_top.$input;
+            this.el_bt_plus_top = bt_plus_top.$button;
+            this.el_bt_minus_top = bt_minus_top.$button;
+            this.el_bt_aplly_top = bt_aplly_top.$button;
+            //
             this.el_select_operator = sel_operator.$select;
             this.el_select_limiting = sel_limiting.$select;
             this.el_arrival_cargo = inp_arrival_cargo.$input.autocomplete({
@@ -612,12 +571,23 @@
             this.el_paid = sw_paid.$input;
             this.el_current_station_amkr = sel_current_station_amkr.$select;
             // Обработка событий  ------------------
+            // Событие сбросить
             this.el_bt_clear.on('click', function (event) {
                 event.preventDefault();
                 event.stopPropagation();
                 this.modal_confirm_form.view(langView('vrrc_title_confirm_clear', App.Langs), langView('vrrc_title_mesage_clear', App.Langs), function (res) {
                     if (res) {
                         this.clear_where();
+                    }
+                }.bind(this));
+            }.bind(this));
+            // Событие обновить
+            this.el_bt_load.on('click', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                this.modal_confirm_form.view(langView('vrrc_title_confirm_load', App.Langs), langView('vrrc_title_mesage_load', App.Langs), function (res) {
+                    if (res) {
+                        this.load_where();
                     }
                 }.bind(this));
             }.bind(this));
@@ -657,6 +627,145 @@
                 this.where_option.amkr_cisterns = checked;
                 this.update_where(); // Обновим выборку
             }.bind(this));
+            // top
+            this.el_imp_day.on('keydown', function (event) {
+                if (event.keyCode == 13) {
+                    $(event.currentTarget).change();
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            }.bind(this)).on('change', function (event) {
+                var value = $(event.currentTarget).val();
+                if (value !== '' && value !== null) {
+
+                    if (Number(value) > 1000) {
+                        this.where_option.select_day = 1000;
+                        $(event.currentTarget).val(this.where_option.select_day);
+                    }
+                    if (Number(value) < 0) {
+                        this.where_option.select_day = 0;
+                        $(event.currentTarget).val(this.where_option.select_day);
+                    }
+                    if (Number(value) >= 0 && Number(value) <= 1000) {
+                        this.where_option.select_day = Number(value);
+                    }
+                } else {
+                    this.where_option.select_day = 0;
+                    $(event.currentTarget).val(this.where_option.select_day);
+                }
+            }.bind(this));
+            //
+            this.el_bt_plus_day.on('click', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                var value = this.el_imp_day.val();
+                if (value !== '' && value !== null) {
+                    this.where_option.select_day = Number(value);
+                    if (this.where_option.select_day < 1000) {
+                        this.el_imp_day.val(++this.where_option.select_day);
+                    } else {
+                        this.where_option.select_day = 0;
+                        this.el_imp_day.val(this.where_option.select_day)
+                    }
+
+                } else {
+                    this.where_option.select_day = 0;
+                    this.el_imp_day.val(this.where_option.select_day)
+                }
+            }.bind(this));
+            this.el_bt_minus_day.on('click', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                var value = this.el_imp_day.val();
+                if (value !== '' && value !== null) {
+                    this.where_option.select_day = Number(value);
+                    if (this.where_option.select_day > 0) {
+                        this.el_imp_day.val(--this.where_option.select_day);
+                    } else {
+                        this.where_option.select_day = 1000;
+                        this.el_imp_day.val(this.where_option.select_day)
+                    }
+
+                } else {
+                    this.where_option.select_day = 0;
+                    this.el_imp_day.val(this.where_option.select_day)
+                }
+            }.bind(this));
+            this.el_bt_aplly_day.on('click', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                this.update_where(); // Обновим выборку
+            }.bind(this));
+            // top
+            this.el_imp_top.on('keydown', function (event) {
+                if (event.keyCode == 13) {
+                    $(event.currentTarget).change();
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            }.bind(this)).on('change', function (event) {
+                var value = $(event.currentTarget).val();
+                if (value !== '' && value !== null) {
+
+                    if (Number(value) > 100) {
+                        this.where_option.select_top = 100;
+                        $(event.currentTarget).val(this.where_option.select_top);
+                    }
+                    if (Number(value) < 0) {
+                        this.where_option.select_top = 0;
+                        $(event.currentTarget).val(this.where_option.select_top);
+                    }
+                    if (Number(value) >= 0 && Number(value) <= 100) {
+                        this.where_option.select_top = Number(value);
+                    }
+                } else {
+                    this.where_option.select_top = 0;
+                    $(event.currentTarget).val(this.where_option.select_top);
+                }
+            }.bind(this));
+            this.el_bt_plus_top.on('click', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                var value = this.el_imp_top.val();
+                if (value !== '' && value !== null) {
+                    this.where_option.select_top = Number(value);
+                    if (this.where_option.select_top < 100) {
+                        this.el_imp_top.val(++this.where_option.select_top);
+                    } else {
+                        this.where_option.select_top = 0;
+                        this.el_imp_top.val(this.where_option.select_top)
+                    }
+
+                } else {
+                    this.where_option.select_top = 0;
+                    this.el_imp_top.val(this.where_option.select_top)
+                }
+            }.bind(this));
+            this.el_bt_minus_top.on('click', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                var value = this.el_imp_top.val();
+                if (value !== '' && value !== null) {
+                    this.where_option.select_top = Number(value);
+                    if (this.where_option.select_top > 0) {
+                        this.el_imp_top.val(--this.where_option.select_top);
+                    } else {
+                        this.where_option.select_top = 100;
+                        this.el_imp_top.val(this.where_option.select_top)
+                    }
+
+                } else {
+                    this.where_option.select_top = 0;
+                    this.el_imp_top.val(this.where_option.select_top)
+                }
+            }.bind(this));
+            this.el_bt_aplly_top.on('click', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                this.update_where(); // Обновим выборку
+            }.bind(this));
+
+
             //
             this.el_select_operator.on('change', function (event) {
                 this.event_select_change(event, 'operator_abbr');
@@ -773,10 +882,6 @@
             this.el_current_station_amkr.on('change', function (event) {
                 this.event_select_change(event, 'current_station_amkr_abbr');
             }.bind(this));
-
-            // Инициализация компонента TOP & Day
-            $("input#select_day").inputSpinner();
-            $("input#select_top").inputSpinner();
             //----- ТАБЛИЦА ------------------------------------------------------
             var $div_table = $('<div></div>', {
                 'id': 'table-' + this.selector,
@@ -907,13 +1012,13 @@
         }.bind(this));
     };
     // Загрузить вагоны на пути в внутрений массив
-    view_report_remainder_cars.prototype.load = function () {
+    view_report_remainder_cars.prototype.load = function (b_clear_where) {
         LockScreen(langView('vrrc_mess_load_wagons', App.Langs));
         // Отобразим настройки выборки
         //this.form_setup.view_edit(this.where_option);
         this.ids_wsd.getViewWagonsOfBalance(function (wagons) {
             this.wagons = wagons;
-            this.clear_where();
+            if (b_clear_where) this.clear_where(); // если определен бит сброса тогда сбросить выборку
             this.where(this.where_option, function (wagons) {
                 LockScreen(langView('vrrc_mess_view_wagons', App.Langs));
                 //покажем вагоны 
@@ -922,7 +1027,11 @@
             }.bind(this));
         }.bind(this));
     };
-    //
+    // Обновить выборку из базы данных
+    view_report_remainder_cars.prototype.load_where = function () {
+        this.load(false); // Загрузить без сброса
+    };
+    // Выполнить сброс выборки
     view_report_remainder_cars.prototype.clear_where = function () {
         LockScreen(langView('vrrc_mess_clear_wagons', App.Langs));
         // Проедемся по полям и сбросим выбор
@@ -1013,7 +1122,7 @@
     };
     // Выполнить запрос сданные вагоны и\или цистерны
     view_report_remainder_cars.prototype.is_not_clarify_where = function (where_option, i) {
-          // Отобразить все 
+        // Отобразить все 
         if (where_option.handed_cars === false && where_option.amkr_cisterns === false) {
             return false;
         } else {
@@ -1084,6 +1193,14 @@
                     }.bind(this));
                 };
             }
+            if (this.where_option.select_day > 0) {
+                wagons = wagons.filter(function (i) {
+                    return i.arrival_duration >= (this.where_option.select_day * 24);
+                }.bind(this)).sort(function (a, b) {
+                    return b.arrival_duration - a.arrival_duration
+                });
+            }
+
             // Выборка закончена вернем данные
             if (typeof fn_where === 'function') {
                 fn_where(wagons ? wagons : []);
