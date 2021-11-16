@@ -684,11 +684,42 @@
         });
     };
     // Элемент <div class="input-group">
-    form_control.prototype.el_div_input_group = function () {
+    form_control.prototype.el_div_input_group = function (id, cl_form) {
         this.$div = $('<div></div>', {
             'class': 'input-group',
         });
+        if (id && id !== '') {
+            this.$div.attr('id', id);
+        }
+        if (cl_form && cl_form !== '') {
+            this.$div.addClass(cl_form);
+        }
     };
+    // Элемент <div class="input-group-prepend">
+    form_control.prototype.el_div_input_group_prepend = function (id, cl_form) {
+        this.$div = $('<div></div>', {
+            'class': 'input-group-prepend',
+        });
+        if (id && id !== '') {
+            this.$div.attr('id', id);
+        }
+        if (cl_form && cl_form !== '') {
+            this.$div.addClass(cl_form);
+        }
+    };
+    // Элемент <div class="input-group-append">
+    form_control.prototype.el_div_input_group_append = function (id, cl_form) {
+        this.$div = $('<div></div>', {
+            'class': 'input-group-append',
+        });
+        if (id && id !== '') {
+            this.$div.attr('id', id);
+        }
+        if (cl_form && cl_form !== '') {
+            this.$div.addClass(cl_form);
+        }
+    };
+
     // Элемент <div id="..." class="invalid-feedback"></div >
     form_control.prototype.el_div_invalid_feedback = function () {
         this.$div = $('<div></div>', {
@@ -1083,7 +1114,7 @@
                 var $form_div_if = new this.fc.el_div_invalid_feedback();
                 if ($form_div_if && $form_div_if.$div && $form_div_if.$div.length > 0) {
                     col.append($form_div_if.$div);
-                    
+
                 }
             }
             // Инициализировать элемент
