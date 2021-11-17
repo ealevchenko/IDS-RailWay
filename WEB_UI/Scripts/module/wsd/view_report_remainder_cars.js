@@ -11,7 +11,7 @@
     {
         'default':  //default language: ru
         {
-            'vrrc_card_header_panel': 'ОТЧЕТ "ОСТАТОК ВАГОНОВ НА АМКР"',
+            'vrrc_card_header_panel': 'ОТЧЕТ "ОПЕРАТИВНЫЙ ОСТАТОК ВАГОНОВ НА АМКР"',
 
             'vrrc_title_outer_car': 'Внешние стороние вагоны',
             'vrrc_title_amkr_outer_cars': 'Внешние вагоны АМКР',
@@ -39,26 +39,15 @@
             'vrrc_title_station_amkr': 'Станция нахождения вагона:',
             'vrrc_title_not_surrender_cars': 'Без учета сданных вагонов:',
 
-            //'vrrc_card_header_from': 'ОТПРАВЛЕННЫЕ СОСТАВЫ',
-            //'vrrc_title_label_station_on': 'Станция отправления:',
-            //'vrrc_title_placeholder_station_on': 'Станция отправления:',
-            //'vrrc_title_label_way_on': 'Путь возврата:',
-            //'vrrc_title_placeholder_way_on': 'Выберите путь',
-            //'vrrc_title_label_locomotive1': 'Локомотив №1:',
-            //'vrrc_title_label_locomotive2': 'Локомотив №2:',
-            //'vrrc_title_placeholder_locomotive': ' № локомотива',
-            //'vrrc_title_time_aplly': 'Время выполнения',
-            //'vrrc_title_placeholder_time_aplly': 'Время выполнения',
-            //'vrrc_title_type_return': 'Отмена операции',
-            //'vrrc_title_form_apply': 'Выполнить?',
-
             //'vrrc_title_button_export': 'Экспорт',
             //'vrrc_title_button_buffer': 'Буфер',
             //'vrrc_title_button_excel': 'Excel',
-            //'vrrc_title_button_cancel': 'Отменить',
-            //'vrrc_title_button_return': 'Вернуть',
-            //'vrrc_title_button_head': 'Голова',
-            //'vrrc_title_button_tail': 'Хвост',
+            //'title_button_field': 'Поля',
+            //'title_button_field_select': 'Выбрать',
+            //'title_button_field_view_all': 'Показать все',
+            //'title_button_field_clear': 'Сбросить',
+            'vrrc_title_yes': 'Да',
+
             'vrrc_title_add_ok': 'ОБНОВИТЬ',
             'vrrc_title_where_clear': 'СБРОСИТЬ',
             'vrrc_title_where_load': 'ОБНОВИТЬ',
@@ -69,36 +58,66 @@
             'vrrc_title_confirm_load': 'Обновить?',
             'vrrc_title_mesage_load': 'Выполнить загрузку новых данных из базы данных ИДС?',
 
-            //'vrrc_mess_error_not_way': 'Выберите путь',
-            //'vrrc_mess_error_equal_locomotive': 'Локомотив №1 и №2 равны',
-            //'vrrc_mess_error_not_locomotive': 'В справочнике ИДС отсутствует локомотив №',
-            //'vrrc_mess_error_min_time_aplly': 'Дата выполнения операции не может быть меньше текущей даты, мин. отклонение (мин) =',
-            //'vrrc_mess_error_max_time_aplly': 'Дата выполнения операции не может быть больше текущей даты, мак. отклонение (мин) =',
-            //'vrrc_mess_error_not_wagons': 'Не выбраны вагоны для операции возврата или отмены (в окне «ОТПРАВЛЕННЫЕ СОСТАВЫ», выберите станцию, отправленный состав и сформируйте возврат или отмену).',
-            //'vrrc_mess_error_operation_run': 'При выполнении операции «ВОЗВРАТ ИЛИ ОТМЕНА ОПЕРАЦИИ ОТПРАВКИ» произошла ошибка, код ошибки:',
-            //'vrrc_mess_cancel_operation_cancel': 'Операция "ОТМЕНА ОПЕРАЦИИ ОТПРАВКИ ВАГОНОВ СОСТАВА" – отменена',
-            //'vrrc_mess_cancel_operation_return': 'Операция "ВОЗРАТ ОТПРАВЛЕННЫХ ВАГОНОВ ИЗ СОСТАВА" – отменена',
-            //'vrrc_mess_run_operation_cancel': 'Выполняю операцию отмены отправки вагонов состава',
-            //'vrrc_mess_run_operation_return': 'Выполняю операцию возврата вагонов из состава',
-            //'vrrc_mess_not_select_way_on': 'Выберите путь для приема вагонов!',
-
-            //'vrrc_mess_load_operation': 'Загружаю операции...',
             'vrrc_mess_load_wagons': 'Загружаю вагоны...',
             'vrrc_mess_where_wagons': 'Применяю фильтр выборки...',
             'vrrc_mess_view_wagons': 'Показываю выборку...',
             'vrrc_mess_clear_wagons': 'Сбросить выборку...',
             'vrrc_mess_update_list': 'Обновляю списки...',
-            //'vrrc_mess_update_operation': 'Обновляю операции...',
             'vrrc_mess_init_panel': 'Выполняю инициализацию модуля остаток вагонов на АМКР',
-            //'vrrc_mess_destroy_operation': 'Закрываю форму...',
-            //'vrrc_mess_create_sostav': 'Формирую состав, переношу вагоны...',
-            //'vrrc_mess_clear_sostav': 'Формирую состав, убираю выбранные вагоны...',
-            //'vrrc_mess_reverse_head_sostav': 'Формирую состав, реверс голова-хвост',
-            //'vrrc_mess_reverse_sostav': 'Формирую состав, реверс вагонов...',
+            'vrrc_mess_destroy_operation': 'Закрываю форму...',
         },
         'en':  //default language: English
         {
+            'vrrc_card_header_panel': 'REPORT "OPERATIONAL REMAINING OF CARS ON AMKR"',
 
+            'vrrc_title_outer_car': 'Outer side carriages',
+            'vrrc_title_amkr_outer_cars': 'AMKR external cars',
+            'vrrc_title_amkr_cars': 'Inside the factory cars',
+            'vrrc_title_handed_cars': 'Handed cars',
+            'vrrc_title_amkr_cisterns': 'AMKR Tanks',
+            'vrrc_title_select_day': 'Over day:',
+            'vrrc_title_select_top': 'Top:',
+            'vrrc_title_operators': 'Operator:',
+            'vrrc_title_limiting': 'Limit:',
+            'vrrc_title_cargo_arrival': 'Cargo on arrival:',
+            'vrrc_title_cargo_group_arrival': 'Arrival group:',
+            'vrrc_title_certification_data': 'Certification data:',
+            'vrrc_title_departure_station': 'Departure station:',
+            'vrrc_title_division': 'Consignee:',
+            'vrrc_title_station_contiguity': 'External arrival:',
+            'vrrc_title_condition_arrival': 'Layout on arrival:',
+            'vrrc_title_condition_mr': 'Cars MR:',
+            'vrrc_title_genus': 'Carriage type:',
+            'vrrc_title_cargo_sending': 'Shipment by departure:',
+            'vrrc_title_cargo_group_sending': 'OTR Group:',
+            'vrrc_title_division_loading': 'Shop-loading:',
+            'vrrc_title_destination_station': 'Destination station:',
+            'vrrc_title_paid': 'Paid sign:',
+            'vrrc_title_station_amkr': 'Station of the carriage:',
+            'vrrc_title_not_surrender_cars': 'Excluding surrendered cars:',
+
+            //'vrrc_title_button_export': 'Export',
+            //'vrrc_title_button_buffer': 'Buffer',
+            //'vrrc_title_button_excel': 'Excel',
+            'vrrc_title_yes': 'Yes',
+
+            'vrrc_title_add_ok': 'UPDATE',
+            'vrrc_title_where_clear': 'RESET',
+            'vrrc_title_where_load': 'UPDATE',
+            'vrrc_title_select': 'Everyone ...',
+            'vrrc_title_null': '-',
+            'vrrc_title_confirm_clear': 'Reset?',
+            'vrrc_title_mesage_clear': 'Reset selection?',
+            'vrrc_title_confirm_load': 'Update?',
+            'vrrc_title_mesage_load': 'Do you want to load new data from the IDS database?',
+
+            'vrrc_mess_load_wagons': 'Loading wagons ...',
+            'vrrc_mess_where_wagons': 'Applying selection filter ...',
+            'vrrc_mess_view_wagons': 'Showing selection ...',
+            'vrrc_mess_clear_wagons': 'Reset selection ...',
+            'vrrc_mess_update_list': 'Updating lists ...',
+            'vrrc_mess_init_panel': 'I am initializing the module the rest of the cars on the AMKR',
+            'vrrc_mess_destroy_operation': 'Closing the form ...',
         }
     };
     // Определлим список текста для этого модуля
@@ -826,7 +845,7 @@
                 var checked = $(event.currentTarget).prop('checked');
                 var val = '';
                 if (checked) {
-                    val = '^' + 'Да' + '$';
+                    val = '^' + langView('vrrc_title_yes', App.Langs) + '$';
                 };
                 var column = this.tab_cars.obj_t_cars.columns('.fl-condition_repairs');
                 if (column && column.length > 0) {
@@ -868,7 +887,7 @@
                 var checked = $(event.currentTarget).prop('checked');
                 var val = '';
                 if (checked) {
-                    val = '^' + 'Да' + '$';
+                    val = '^' + langView('vrrc_title_yes', App.Langs) + '$';
                 };
                 var column = this.tab_cars.obj_t_cars.columns('.fl-operator_paid');
                 if (column && column.length > 0) {
@@ -1098,7 +1117,8 @@
             || i.id_operator === 31
             || i.id_operator === 29
             || i.id_operator === 32
-            || i.id_operator === 27)
+            || i.id_operator === 27
+            || i.id_operator === 1201)
             && i.wagon_rod === 70);
     };
     // Уточняющий запрос сданные вагоны и цистерны
@@ -1208,11 +1228,6 @@
         }.bind(this), 0);
     };
     //--------------------------------------------------------------------------------
-    // выполнить операцию
-    view_report_remainder_cars.prototype.apply = function (data) {
-
-    };
-    //--------------------------------------------------------------------------------
     // Показать
     view_report_remainder_cars.prototype.show = function () {
         this.$panel.show();
@@ -1254,31 +1269,18 @@
             this.modal_confirm_form.destroy();
             this.modal_confirm_form = null;
         }
-        // Очистить форму выбора пути отправки
-        if (this.form_setup_from) {
-            this.form_setup_from.destroy();
-            this.form_setup_from = null;
-        }
-        // Очистить форму выбора куда отправить
-        if (this.form_setup_on) {
-            this.form_setup_on.destroy();
-            this.form_setup_on = null;
-        }
-
-        // Уберем модуль (Таблица собранный состав для отправки детально)
+        // Уберем модуль (все вагоны отчета)
         if (this.tab_cars) {
             this.tab_cars.destroy();
             this.tab_cars = null;
         }
-        // Уберем модуль (Таблицы составы и вагоны состава детально)
-        if (this.tab_sostav_from) {
-            this.tab_sostav_from.destroy();
-            this.tab_sostav_from = null;
-        }
-        if (this.tab_wagon_from) {
-            this.tab_wagon_from.destroy();
-            this.tab_wagon_from = null;
-        }
+        // Уберем autocomplete
+        if (this.el_arrival_cargo) this.el_arrival_cargo.autocomplete("destroy");
+        if (this.el_arrival_sertification_data) this.el_arrival_sertification_data.autocomplete("destroy");
+        if (this.el_arrival_station_from_name) this.el_arrival_station_from_name.autocomplete("destroy");
+        if (this.el_sending_cargo) this.el_sending_cargo.autocomplete("destroy");
+        if (this.el_destination_station) this.el_destination_station.autocomplete("destroy");
+
         this.$panel.empty(); // empty in case the columns change
         LockScreenOff();
     };
@@ -1287,752 +1289,3 @@
 
     window.App = App;
 })(window);
-
-
-                //var wagons = this.wagons.filter(function (i) {
-                //    return i.id_operator === 14;
-                //});
-                //this.tab_cars.view((wagons ? wagons : []), null);
-
-
-                //var column = this.tab_cars.obj_t_cars.columns('.fl-operator_abbr');
-
-                //column.data().filter(function (value, index) {
-                //    //return value[index] === 'АМКР' ? true : false;
-                //    return false;
-                //}).draw();
-                ////column.search('^\s*$', true, false)
-                //// 
-
-            //this.form_setup = new FIF();
-            //var fl_outer_cars = {
-            //    field: 'outer_car',
-            //    type: 'boolean',
-            //    add: null,
-            //    edit: 'switch',
-            //    name: 'outer_car',
-            //    prefix: 'sm',
-            //    label: langView('vrrc_title_outer_car', App.Langs),
-            //    placeholder: null,
-            //    maxlength: null,
-            //    required: false,
-            //    control: null,
-            //    list: null,
-            //    select: null,
-            //    update: null,
-            //    close: null,
-            //    change: function (event) {
-            //        event.preventDefault();
-            //        var checked = $(event.currentTarget).prop('checked');
-            //        this.where_option.outer_car = checked;
-            //        this.load();
-            //    }.bind(this),
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: true,
-            //    row: 2,
-            //    col: 1,
-            //    col_prefix: 'md',
-            //    col_size: 12,
-            //};
-            //var fl_amkr_outer_cars = {
-            //    field: 'amkr_outer_cars',
-            //    type: 'boolean',
-            //    add: null,
-            //    edit: 'switch',
-            //    name: 'amkr_outer_cars',
-            //    prefix: 'sm',
-            //    label: langView('vrrc_title_amkr_outer_cars', App.Langs),
-            //    placeholder: null,
-            //    maxlength: null,
-            //    required: false,
-            //    control: null,
-            //    list: null,
-            //    select: null,
-            //    update: null,
-            //    close: null,
-            //    change: function (event) {
-            //        event.preventDefault();
-            //        var checked = $(event.currentTarget).prop('checked');
-            //        this.where_option.amkr_outer_cars = checked;
-            //        this.load();
-            //    }.bind(this),
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: false,
-            //    row: 3,
-            //    col: 1,
-            //    col_prefix: 'md',
-            //    col_size: 12,
-            //};
-            //var fl_amkr_cars = {
-            //    field: 'amkr_cars',
-            //    type: 'boolean',
-            //    add: null,
-            //    edit: 'switch',
-            //    name: 'amkr_cars',
-            //    prefix: 'sm',
-            //    label: langView('vrrc_title_amkr_cars', App.Langs),
-            //    placeholder: null,
-            //    maxlength: null,
-            //    required: false,
-            //    control: null,
-            //    list: null,
-            //    select: null,
-            //    update: null,
-            //    close: null,
-            //    change: function (event) {
-            //        event.preventDefault();
-            //        var checked = $(event.currentTarget).prop('checked');
-            //        this.where_option.amkr_cars = checked;
-            //        this.load();
-            //    }.bind(this),
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: false,
-            //    row: 4,
-            //    col: 1,
-            //    col_prefix: 'md',
-            //    col_size: 12,
-            //};
-            //var fl_select_day = {
-            //    field: 'select_day',
-            //    type: 'number',
-            //    add: null,
-            //    edit: 'number',
-            //    name: 'select_day',
-            //    prefix: 'sm',
-            //    label: langView('vrrc_title_select_day', App.Langs),
-            //    placeholder: null,
-            //    min: 0,
-            //    max: 1000,
-            //    required: false,
-            //    control: null,
-            //    list: null,
-            //    select: null,
-            //    update: null,
-            //    close: null,
-            //    change: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: 0,
-            //    row: 5,
-            //    col: 1,
-            //    col_prefix: 'md',
-            //    col_size: 12,
-            //};
-            //var fl_select_top = {
-            //    field: 'select_top',
-            //    type: 'number',
-            //    add: null,
-            //    edit: 'number',
-            //    name: 'select_top',
-            //    prefix: 'sm',
-            //    label: langView('vrrc_title_select_top', App.Langs),
-            //    placeholder: null,
-            //    min: 0,
-            //    max: 100,
-            //    required: false,
-            //    control: null,
-            //    list: null,
-            //    select: null,
-            //    update: null,
-            //    close: null,
-            //    change: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: 0,
-            //    row: 6,
-            //    col: 1,
-            //    col_prefix: 'md',
-            //    col_size: 12,
-            //};
-            ////var fl_operators = {
-            ////    field: 'id_operator',
-            ////    type: 'int',
-            ////    add: null,
-            ////    edit: 'select',
-            ////    name: 'operators',
-            ////    prefix: 'sm',
-            ////    label: langView('vrrc_title_operators', App.Langs),
-            ////    placeholder: null,
-            ////    maxlength: null,
-            ////    required: true,
-            ////    control: null,
-            ////    list: this.list_operators,
-            ////    select: function (e, ui) {
-            ////        event.preventDefault();
-            ////        // Обработать выбор
-            ////        var id = Number($(e.currentTarget).val());
-            ////        //view_wagons_from_way(id);
-            ////    }.bind(this),
-            ////    update: null,
-            ////    close: null,
-            ////    change: null,
-            ////    add_validation: null,
-            ////    edit_validation: null,
-            ////    default: -1,
-            ////    row: 7,
-            ////    col: 1,
-            ////    col_prefix: 'md',
-            ////    col_size: 12,
-            ////};
-            //var fl_limiting = {
-            //    field: 'id_limiting',
-            //    type: 'int',
-            //    add: null,
-            //    edit: 'select',
-            //    name: 'limiting',
-            //    prefix: 'sm',
-            //    label: langView('vrrc_title_limiting', App.Langs),
-            //    placeholder: null,
-            //    maxlength: null,
-            //    required: true,
-            //    control: null,
-            //    list: this.list_limiting,
-            //    select: function (e, ui) {
-            //        event.preventDefault();
-            //        // Обработать выбор
-            //        var id = Number($(e.currentTarget).val());
-            //        //view_wagons_from_way(id);
-            //    }.bind(this),
-            //    update: null,
-            //    close: null,
-            //    change: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: -1,
-            //    row: 8,
-            //    col: 1,
-            //    col_prefix: 'md',
-            //    col_size: 12,
-            //};
-            //var fl_cargo_arrival = {
-            //    field: 'id_cargo_arrival',
-            //    type: 'int',
-            //    add: null,
-            //    edit: 'autocomplete',
-            //    name: 'cargo_arrival',
-            //    prefix: 'sm',
-            //    label: langView('vrrc_title_cargo_arrival', App.Langs),
-            //    placeholder: null,
-            //    maxlength: null,
-            //    required: true,
-            //    control: null,
-            //    list: [],
-            //    select: function (e, ui) {
-            //        event.preventDefault();
-            //        // Обработать выбор
-            //        var id = Number($(e.currentTarget).val());
-            //        //view_wagons_from_way(id);
-            //    }.bind(this),
-            //    update: null,
-            //    close: null,
-            //    change: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: -1,
-            //    row: 9,
-            //    col: 1,
-            //    col_prefix: 'md',
-            //    col_size: 12,
-            //};
-            //var fl_cargo_group_arrival = {
-            //    field: 'id_cargo_group_arrival',
-            //    type: 'int',
-            //    add: null,
-            //    edit: 'select',
-            //    name: 'cargo_group_arrival',
-            //    prefix: 'sm',
-            //    label: langView('vrrc_title_cargo_group_arrival', App.Langs),
-            //    placeholder: null,
-            //    maxlength: null,
-            //    required: true,
-            //    control: null,
-            //    list: [],
-            //    select: function (e, ui) {
-            //        event.preventDefault();
-            //        // Обработать выбор
-            //        var id = Number($(e.currentTarget).val());
-            //        //view_wagons_from_way(id);
-            //    }.bind(this),
-            //    update: null,
-            //    close: null,
-            //    change: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: -1,
-            //    row: 10,
-            //    col: 1,
-            //    col_prefix: 'md',
-            //    col_size: 12,
-            //};
-            //var fl_certification_data = {
-            //    field: 'id_certification_data',
-            //    type: 'int',
-            //    add: null,
-            //    edit: 'autocomplete',
-            //    name: 'certification_data',
-            //    prefix: 'sm',
-            //    label: langView('vrrc_title_certification_data', App.Langs),
-            //    placeholder: null,
-            //    maxlength: null,
-            //    required: true,
-            //    control: null,
-            //    list: [],
-            //    select: function (e, ui) {
-            //        event.preventDefault();
-            //        // Обработать выбор
-            //        var id = Number($(e.currentTarget).val());
-            //        //view_wagons_from_way(id);
-            //    }.bind(this),
-            //    update: null,
-            //    close: null,
-            //    change: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: -1,
-            //    row: 11,
-            //    col: 1,
-            //    col_prefix: 'md',
-            //    col_size: 12,
-            //};
-            //var fl_departure_station = {
-            //    field: 'id_departure_station',
-            //    type: 'int',
-            //    add: null,
-            //    edit: 'autocomplete',
-            //    name: 'departure_station',
-            //    prefix: 'sm',
-            //    label: langView('vrrc_title_departure_station', App.Langs),
-            //    placeholder: null,
-            //    maxlength: null,
-            //    required: true,
-            //    control: null,
-            //    list: [],
-            //    select: function (e, ui) {
-            //        event.preventDefault();
-            //        // Обработать выбор
-            //        var id = Number($(e.currentTarget).val());
-            //        //view_wagons_from_way(id);
-            //    }.bind(this),
-            //    update: null,
-            //    close: null,
-            //    change: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: -1,
-            //    row: 12,
-            //    col: 1,
-            //    col_prefix: 'md',
-            //    col_size: 12,
-            //};
-            //var fl_division = {
-            //    field: 'id_division',
-            //    type: 'int',
-            //    add: null,
-            //    edit: 'autocomplete',
-            //    name: 'division',
-            //    prefix: 'sm',
-            //    label: langView('vrrc_title_division', App.Langs),
-            //    placeholder: null,
-            //    maxlength: null,
-            //    required: true,
-            //    control: null,
-            //    list: [],
-            //    select: function (e, ui) {
-            //        event.preventDefault();
-            //        // Обработать выбор
-            //        var id = Number($(e.currentTarget).val());
-            //        //view_wagons_from_way(id);
-            //    }.bind(this),
-            //    update: null,
-            //    close: null,
-            //    change: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: -1,
-            //    row: 13,
-            //    col: 1,
-            //    col_prefix: 'md',
-            //    col_size: 12,
-            //};
-            //var fl_station_contiguity = {
-            //    field: 'id_station_contiguity',
-            //    type: 'int',
-            //    add: null,
-            //    edit: 'select',
-            //    name: 'station_contiguity',
-            //    prefix: 'sm',
-            //    label: langView('vrrc_title_station_contiguity', App.Langs),
-            //    placeholder: null,
-            //    maxlength: null,
-            //    required: true,
-            //    control: null,
-            //    list: [],
-            //    select: function (e, ui) {
-            //        event.preventDefault();
-            //        // Обработать выбор
-            //        var id = Number($(e.currentTarget).val());
-            //        //view_wagons_from_way(id);
-            //    }.bind(this),
-            //    update: null,
-            //    close: null,
-            //    change: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: -1,
-            //    row: 14,
-            //    col: 1,
-            //    col_prefix: 'md',
-            //    col_size: 12,
-            //};
-            //var fl_condition_arrival = {
-            //    field: 'id_condition_arrival',
-            //    type: 'int',
-            //    add: null,
-            //    edit: 'select',
-            //    name: 'condition_arrival',
-            //    prefix: 'sm',
-            //    label: langView('vrrc_title_condition_arrival', App.Langs),
-            //    placeholder: null,
-            //    maxlength: null,
-            //    required: true,
-            //    control: null,
-            //    list: [],
-            //    select: function (e, ui) {
-            //        event.preventDefault();
-            //        // Обработать выбор
-            //        var id = Number($(e.currentTarget).val());
-            //        //view_wagons_from_way(id);
-            //    }.bind(this),
-            //    update: null,
-            //    close: null,
-            //    change: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: -1,
-            //    row: 15,
-            //    col: 1,
-            //    col_prefix: 'md',
-            //    col_size: 12,
-            //};
-            //var fl_condition_mr = {
-            //    field: 'condition_mr',
-            //    type: 'boolean',
-            //    add: null,
-            //    edit: 'switch',
-            //    name: 'condition_mr',
-            //    prefix: 'sm',
-            //    label: langView('vrrc_title_condition_mr', App.Langs),
-            //    placeholder: null,
-            //    maxlength: null,
-            //    required: false,
-            //    control: null,
-            //    list: null,
-            //    select: null,
-            //    update: null,
-            //    close: null,
-            //    change: function (event) {
-            //        event.preventDefault();
-            //        var type = $(event.currentTarget).prop('checked');
-            //    }.bind(this),
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: true,
-            //    row: 16,
-            //    col: 1,
-            //    col_prefix: 'md',
-            //    col_size: 12,
-            //};
-            //var fl_genus = {
-            //    field: 'id_genus',
-            //    type: 'int',
-            //    add: null,
-            //    edit: 'select',
-            //    name: 'genus',
-            //    prefix: 'sm',
-            //    label: langView('vrrc_title_genus', App.Langs),
-            //    placeholder: null,
-            //    maxlength: null,
-            //    required: true,
-            //    control: null,
-            //    list: [],
-            //    select: function (e, ui) {
-            //        event.preventDefault();
-            //        // Обработать выбор
-            //        var id = Number($(e.currentTarget).val());
-            //        //view_wagons_from_way(id);
-            //    }.bind(this),
-            //    update: null,
-            //    close: null,
-            //    change: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: -1,
-            //    row: 17,
-            //    col: 1,
-            //    col_prefix: 'md',
-            //    col_size: 12,
-            //};
-            //var fl_cargo_sending = {
-            //    field: 'id_cargo_sending',
-            //    type: 'int',
-            //    add: null,
-            //    edit: 'autocomplete',
-            //    name: 'cargo_sending',
-            //    prefix: 'sm',
-            //    label: langView('vrrc_title_cargo_sending', App.Langs),
-            //    placeholder: null,
-            //    maxlength: null,
-            //    required: true,
-            //    control: null,
-            //    list: [],
-            //    select: function (e, ui) {
-            //        event.preventDefault();
-            //        // Обработать выбор
-            //        var id = Number($(e.currentTarget).val());
-            //        //view_wagons_from_way(id);
-            //    }.bind(this),
-            //    update: null,
-            //    close: null,
-            //    change: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: -1,
-            //    row: 18,
-            //    col: 1,
-            //    col_prefix: 'md',
-            //    col_size: 12,
-            //};
-            //var fl_cargo_sending_arrival = {
-            //    field: 'id_cargo_group_sending',
-            //    type: 'int',
-            //    add: null,
-            //    edit: 'select',
-            //    name: 'cargo_group_v',
-            //    prefix: 'sm',
-            //    label: langView('vrrc_title_cargo_group_sending', App.Langs),
-            //    placeholder: null,
-            //    maxlength: null,
-            //    required: true,
-            //    control: null,
-            //    list: [],
-            //    select: function (e, ui) {
-            //        event.preventDefault();
-            //        // Обработать выбор
-            //        var id = Number($(e.currentTarget).val());
-            //        //view_wagons_from_way(id);
-            //    }.bind(this),
-            //    update: null,
-            //    close: null,
-            //    change: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: -1,
-            //    row: 19,
-            //    col: 1,
-            //    col_prefix: 'md',
-            //    col_size: 12,
-            //};
-            //var fl_division_loading = {
-            //    field: 'id_division_loading',
-            //    type: 'int',
-            //    add: null,
-            //    edit: 'autocomplete',
-            //    name: 'division_loading',
-            //    prefix: 'sm',
-            //    label: langView('vrrc_title_division_loading', App.Langs),
-            //    placeholder: null,
-            //    maxlength: null,
-            //    required: true,
-            //    control: null,
-            //    list: [],
-            //    select: function (e, ui) {
-            //        event.preventDefault();
-            //        // Обработать выбор
-            //        var id = Number($(e.currentTarget).val());
-            //        //view_wagons_from_way(id);
-            //    }.bind(this),
-            //    update: null,
-            //    close: null,
-            //    change: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: -1,
-            //    row: 20,
-            //    col: 1,
-            //    col_prefix: 'md',
-            //    col_size: 12,
-            //};
-            //var fl_destination_station = {
-            //    field: 'id_destination_station',
-            //    type: 'int',
-            //    add: null,
-            //    edit: 'autocomplete',
-            //    name: 'destination_station',
-            //    prefix: 'sm',
-            //    label: langView('vrrc_title_destination_station', App.Langs),
-            //    placeholder: null,
-            //    maxlength: null,
-            //    required: true,
-            //    control: null,
-            //    list: [],
-            //    select: function (e, ui) {
-            //        event.preventDefault();
-            //        // Обработать выбор
-            //        var id = Number($(e.currentTarget).val());
-            //        //view_wagons_from_way(id);
-            //    }.bind(this),
-            //    update: null,
-            //    close: null,
-            //    change: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: -1,
-            //    row: 21,
-            //    col: 1,
-            //    col_prefix: 'md',
-            //    col_size: 12,
-            //};
-            //var fl_paid = {
-            //    field: 'paid',
-            //    type: 'boolean',
-            //    add: null,
-            //    edit: 'switch',
-            //    name: 'paid',
-            //    prefix: 'sm',
-            //    label: langView('vrrc_title_paid', App.Langs),
-            //    placeholder: null,
-            //    maxlength: null,
-            //    required: false,
-            //    control: null,
-            //    list: null,
-            //    select: null,
-            //    update: null,
-            //    close: null,
-            //    change: function (event) {
-            //        event.preventDefault();
-            //        var type = $(event.currentTarget).prop('checked');
-            //    }.bind(this),
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: true,
-            //    row: 22,
-            //    col: 1,
-            //    col_prefix: 'md',
-            //    col_size: 12,
-            //};
-            //var fl_station_amkr = {
-            //    field: 'id_station_amkr',
-            //    type: 'int',
-            //    add: null,
-            //    edit: 'autocomplete',
-            //    name: 'station_amkr',
-            //    prefix: 'sm',
-            //    label: langView('vrrc_title_station_amkr', App.Langs),
-            //    placeholder: null,
-            //    maxlength: null,
-            //    required: true,
-            //    control: null,
-            //    list: [],
-            //    select: function (e, ui) {
-            //        event.preventDefault();
-            //        // Обработать выбор
-            //        var id = Number($(e.currentTarget).val());
-            //        //view_wagons_from_way(id);
-            //    }.bind(this),
-            //    update: null,
-            //    close: null,
-            //    change: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: -1,
-            //    row: 23,
-            //    col: 1,
-            //    col_prefix: 'md',
-            //    col_size: 12,
-            //};
-            //var fl_not_surrender_cars = {
-            //    field: 'not_surrender_cars',
-            //    type: 'boolean',
-            //    add: null,
-            //    edit: 'switch',
-            //    name: 'not_surrender_cars',
-            //    prefix: 'sm',
-            //    label: langView('vrrc_title_not_surrender_cars', App.Langs),
-            //    placeholder: null,
-            //    maxlength: null,
-            //    required: false,
-            //    control: null,
-            //    list: null,
-            //    select: null,
-            //    update: null,
-            //    close: null,
-            //    change: function (event) {
-            //        event.preventDefault();
-            //        var type = $(event.currentTarget).prop('checked');
-            //    }.bind(this),
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: true,
-            //    row: 24,
-            //    col: 1,
-            //    col_prefix: 'md',
-            //    col_size: 12,
-            //};
-            //var fields = [];
-            //fields.push(fl_outer_cars);
-            //fields.push(fl_amkr_outer_cars);
-            //fields.push(fl_amkr_cars);
-            //fields.push(fl_select_day);
-            //fields.push(fl_select_top);
-            ///*            fields.push(fl_operators);*/
-            //fields.push(fl_limiting);
-            //fields.push(fl_cargo_arrival);
-            //fields.push(fl_cargo_group_arrival);
-            //fields.push(fl_certification_data);
-            //fields.push(fl_departure_station);
-            //fields.push(fl_division);
-            //fields.push(fl_station_contiguity);
-            //fields.push(fl_condition_arrival);
-            //fields.push(fl_condition_mr);
-            //fields.push(fl_genus);
-            //fields.push(fl_cargo_sending);
-            //fields.push(fl_cargo_sending_arrival);
-            //fields.push(fl_division_loading);
-            //fields.push(fl_destination_station);
-            //fields.push(fl_paid);
-            //fields.push(fl_station_amkr);
-            //fields.push(fl_not_surrender_cars);
-            //// Инициализация формы
-            //this.form_setup.init({
-            //    alert: this.alert_select,
-            //    //mode: 'edit', // Указали что будем использовать форму типа add
-            //    fields: fields,
-            //    mb: 1,
-            //    id: null,
-            //    cl_form: '',
-            //    validation: true,
-            //    fn_validation: function (result) {
-            //        // Валидация успешна
-            //        if (result && result.valid) {
-            //            // Дополнительная проверка
-            //        }
-            //    }.bind(this),
-            //    button_add_ok: {
-            //        title: langView('vrrc_title_add_ok', App.Langs),
-            //        click: function (event) {
-            //            event.preventDefault();
-            //            //this.form_setup_on.$form_add.submit();
-            //        }.bind(this),
-            //    },
-            //});
-            //// Сылка на форму
-            //this.$setup_select_form = this.form_setup.$form_edit;
-            //// Отображение формы
-            //this.$setup_select.append(this.form_setup.$form_edit);
-            // Добавим элементы выбора
-
-
-            // Создадим таблицу вангонов собранных для отправки
