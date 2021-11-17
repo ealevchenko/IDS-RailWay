@@ -1275,11 +1275,26 @@
             this.tab_cars = null;
         }
         // Уберем autocomplete
-        if (this.el_arrival_cargo) this.el_arrival_cargo.autocomplete("destroy");
-        if (this.el_arrival_sertification_data) this.el_arrival_sertification_data.autocomplete("destroy");
-        if (this.el_arrival_station_from_name) this.el_arrival_station_from_name.autocomplete("destroy");
-        if (this.el_sending_cargo) this.el_sending_cargo.autocomplete("destroy");
-        if (this.el_destination_station) this.el_destination_station.autocomplete("destroy");
+        if (this.el_arrival_cargo) {
+            this.el_arrival_cargo.autocomplete("destroy");
+            this.el_arrival_cargo = null;
+        }
+        if (this.el_arrival_sertification_data) {
+            this.el_arrival_sertification_data.autocomplete("destroy");
+            this.el_arrival_sertification_data = null;
+        }
+        if (this.el_arrival_station_from_name) {
+            this.el_arrival_station_from_name.autocomplete("destroy");
+            this.el_arrival_station_from_name = null;
+        }
+        if (this.el_sending_cargo) {
+            this.el_sending_cargo.autocomplete("destroy");
+            this.el_sending_cargo = null;
+        }
+        if (this.el_destination_station) {
+            this.el_destination_station.autocomplete("destroy");
+            this.el_destination_station = null;
+        }
 
         this.$panel.empty(); // empty in case the columns change
         LockScreenOff();
