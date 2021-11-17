@@ -23,7 +23,7 @@
 
     <link href="~/Content/module/wsd/view_history_operation_arrival.css" rel="stylesheet" /><!-- CSS стили модуля "История операций прибытия вагонов на станции АМКР" -->
     <link href="~/Content/module/wsd/view_history_operation_send.css" rel="stylesheet" /><!-- CSS стили модуля "История операций отправки вагонов на станции АМКР" -->
-
+    <link href="~/Content/module/wsd/view_report_remainder_cars.css" rel="stylesheet" /> <!-- CSS стили модуля "Отчет Остаток вагонов на АМКР" -->
 }
 
 @section scripts {
@@ -65,7 +65,7 @@
     <script src="~/Scripts/module/wsd/view_history_operation_arrival.js"></script>  <!-- Модуль "История операция прием вагонов на станции АМКР" -->
     <script src="~/Scripts/module/wsd/view_history_operation_send.js"></script>     <!-- Модуль "История операция отправка вагонов на станции АМКР" -->
 
-
+    <script src="~/Scripts/module/wsd/view_report_remainder_cars.js"></script>    <!-- Модуль "Отчет Остаток вагонов на АМКР" -->
 
     <script src="~/Scripts/plugins/pl_dialog_confirm.js"></script> <!-- Плагин -->
 
@@ -101,9 +101,9 @@
                         Отчеты
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="#">Отчет-1</a>
-                        <a class="dropdown-item" href="#">Отчет-2</a>
-                        <a class="dropdown-item" href="#">Отчет-3</a>
+                        <a class="dropdown-item" id="report-operating-balance" href="#">@IDSRWTResource.title_report_operating_balance</a>
+                        @*<a class="dropdown-item" href="#">Отчет-2</a>
+                        <a class="dropdown-item" href="#">Отчет-3</a>*@
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -896,6 +896,8 @@
             <div id="operation-send-cars"></div>
             <div id="operation-arrival-cars"></div>
             <div id="operation-return-cars"></div>
+
+            <div id="report-operating-balance"></div>
 
         </form>
         <a href="#0" class="close cd-img-replace">Close</a>

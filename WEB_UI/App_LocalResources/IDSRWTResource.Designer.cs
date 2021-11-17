@@ -1384,6 +1384,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Оперативный остаток вагонов на АМКР.
+        /// </summary>
+        public static string title_report_operating_balance {
+            get {
+                return ResourceManager.GetString("title_report_operating_balance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Возврат.
         /// </summary>
         public static string title_return {

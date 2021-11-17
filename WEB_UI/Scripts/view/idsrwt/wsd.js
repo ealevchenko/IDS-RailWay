@@ -217,19 +217,24 @@
 
     // Подключаем модуль выполнения опрераций отправки на АМКР
     var VSCars = App.view_send_cars;
-    var view_send_cars = new VSCars('div#operation-send-cars'); // Создадим экземпляр
+    var view_send_cars = new VSCars('div#operation-send-cars');             // Создадим экземпляр
 
     // Подключаем модуль выполнения операций принять на АМКР
     var VACars = App.view_arrival_cars;
-    var view_arrival_cars = new VACars('div#operation-arrival-cars'); // Создадим экземпляр
+    var view_arrival_cars = new VACars('div#operation-arrival-cars');       // Создадим экземпляр
 
     // Подключаем модуль выполнения операций возврат-отмена отправки
     var VRCars = App.view_return_cars;
-    var view_return_cars = new VRCars('div#operation-return-cars'); // Создадим экземпляр
+    var view_return_cars = new VRCars('div#operation-return-cars');         // Создадим экземпляр
 
     // Подключаем модуль расчета учетного остатка
     var TTB = App.table_total_balance;
-    var table_total_balance = new TTB('div#total-balance');             // Создадим экземпляр
+    var table_total_balance = new TTB('div#total-balance');                 // Создадим экземпляр
+
+    // Подключаем модуль отчета оперативного остатка на АМКР
+    var VRRC = App.view_report_remainder_cars;
+    var report_remainder_cars = new VRRC('div#report-operating-balance');   // Создадим экземпляр
+
 
     var lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang')),
         langs = $.extend(true, $.extend(true, getLanguages($.Text_View, lang), getLanguages($.Text_Common, lang)), getLanguages($.Text_Table, lang)),
@@ -293,6 +298,24 @@
                         //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
                     });
             }),
+        //
+        rep_operating_balance = $('a#report-operating-balance').on('click',
+            function (event) {
+                alert.clear_message();
+                event.preventDefault();
+                report_remainder_cars.init({
+                    alert: alert,
+                    ids_dir: ids_dir,
+                    ids_wsd: ids_wsd,
+                },
+                    function () {
+                        report_remainder_cars.load(true);
+                        report_remainder_cars.show() // Инициализировать и спрятать
+                        operation_detali.content.addClass('is-visible');
+                        //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+                    });
+            }),
+
         // ---------- Основные кнопки управления --------------------------------------
         // Выполнить операцию отправить состав на АМКР (Обновление wsd)
         operation_send_cars = $('button#send-cars').on('click',
@@ -4588,6 +4611,7 @@
                     // отчеты по операциям
                     history_operation_send.destroy();
                     history_operation_arrival.destroy();
+                    report_remainder_cars.destroy();
 
                     view_send_cars.destroy();
                     view_arrival_cars.destroy();
