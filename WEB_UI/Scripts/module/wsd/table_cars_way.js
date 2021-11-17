@@ -175,7 +175,9 @@
         },
         'en':  //default language: English
         {
-            'field_wir_id': 'wp id',
+            'field_number': 'No. of item',
+            'field_sample_datetime': 'Remaining date',
+            'field_wir_id': 'id wp',
             'field_wim_id': 'dis id.',
             'field_wio_id': 'opera id',
             'field_position': 'Pos. no.',
@@ -199,12 +201,15 @@
             'field_arrival_condition_name': 'Arrival (arrivals)',
             'field_arrival_condition_abbr': 'Size',
             'field_arrival_condition_red': 'red',
+            'field_arrival_condition_repairs': ' Resize ave. MR. ',
             'field_current_condition_name': 'Markup (current)',
             'field_current_condition_abbr': 'Size tech. ',
             'field_current_condition_red': 'red',
+            'field_current_condition_repairs': ' Res. tech. MR. ',
+            'field_condition_repairs': ' Prize. size MR. ',
             'field_wagon_date_rem_uz': 'Date of depot repair by UZ',
             'field_wagon_gruzp_doc': 'Cargo, tons (doc.)',
-            'field_wagon_gruzp_uz': 'Cargo, tn (UZ.)',
+            'field_wagon_gruzp_uz': 'Cargo, tn (US)',
             'field_wagon_adm': 'Admin code',
             'field_wagon_adm_name': 'Administration',
             'field_wagon_adm_abbr': 'Admin.',
@@ -218,6 +223,10 @@
             'field_arrival_station_from_name': 'Station. sending ',
             'field_arrival_shipper_code': 'Shipper code',
             'field_arrival_shipper_name': 'Shipper',
+            'field_accepted_id_station_amkr': 'id st. approx. AMKR ',
+            'field_accepted_station_amkr_name': 'Station. approx. AMKR ',
+            'field_accepted_station_amkr_abbr': 'Station. approx. AMKR ',
+            'field_arrival_id_station_amkr': 'id st. assignment AMKR ',
             'field_arrival_station_amkr_name': 'Station. assignment AMKR ',
             'field_arrival_station_amkr_abbr': 'Station. assignment AMKR ',
             'field_arrival_division_amkr_name': 'Shop received',
@@ -233,6 +242,25 @@
             'field_arrival_duration': 'Simple ARP, hour',
             'field_arrival_idle_time': 'Rate, hour',
             'field_arrival_usage_fee': 'Current fee, UAH',
+
+            'field_current_id_station_amkr': 'current id. stanz. ',
+            'field_current_station_amkr_name': 'Current station being located',
+            'field_current_station_amkr_abbr': 'Current station (abbr.)',
+            'field_current_id_way': 'id current. way.',
+            'field_current_id_park': 'id current. a park.',
+            'field_current_way_num': 'Current no. ways',
+            'field_current_way_name': 'Current name ways',
+            'field_current_way_abbr': 'Abbr. tech. ways',
+            'field_current_way_start': 'Arrival time. on the way ',
+            'field_current_way_end': 'Departure time',
+            'field_current_wim_note': 'Location Description',
+            'field_current_id_outer_way': 'ferry id',
+            'field_current_outer_way_name': 'Line name',
+            'field_current_outer_way_start': 'Ferry start time',
+            'field_current_outer_way_end': 'Line end time',
+            'field_current_way_type': 'Location',
+            'field_current_way_full_name': 'Name of the path (ferry)',
+
             'field_current_station_duration': 'Fact st., h',
             'field_current_way_duration': 'Actual path, h',
             'field_current_station_idle_time': 'Station rate, h',
@@ -240,17 +268,17 @@
             'field_sap_incoming_supply_num': 'In. fast. No. ',
             'field_sap_incoming_supply_pos': ' pos. ',
             'field_sap_incoming_supply_date': 'Incoming. fast. creation date ',
-            'field_sap_incoming_supply_time': 'In. fast. creation time ',
-            'field_sap_incoming_supply_cargo_code': 'Input. fast. Math code. ',
-            'field_sap_incoming_supply_cargo_name': 'In. fast. material (cargo) ',
+            'field_sap_incoming_supply_time': 'Incoming. fast. creation time ',
+            'field_sap_incoming_supply_cargo_code': 'Incoming. fast. Math code. ',
+            'field_sap_incoming_supply_cargo_name': 'Incoming. fast. material (cargo) ',
             'field_sap_incoming_supply_warehouse_code': 'In. fast. warehouse',
             'field_sap_incoming_supply_warehouse_name': 'In. fast. Warehouse name ',
             'field_instructional_letters_num': 'Letter No.',
             'field_instructional_letters_datetime': 'Letter date',
-            'field_instructional_letters_station_code': 'Code of art. called. ',
+            'field_instructional_letters_station_code': 'Art. called. ',
             'field_instructional_letters_station_name': 'Destination station',
             'field_instructional_letters_note': 'Text',
-            'field_wagon_brutto_doc': 'EPD gross, tn',
+            'field_wagon_brutto_doc': 'Gross EPD, tn',
             'field_wagon_brutto_amkr': 'Gross AMKR, tn',
             'field_wagon_tara_doc': 'EPD packaging, tn.',
             'field_wagon_tara_arc_doc': 'EPD tare ref., tn.',
@@ -280,8 +308,10 @@
             'title_status_2': 'Completed',
             'title_status_3': 'Submitted',
             'title_status_4': 'Return',
-
+            'title_type_way': 'Station path',
+            'title_type_outer_way': 'Ferry',
             'title_link_num': 'Show wagon history ...',
+            'title_select': 'Select ...',
 
             'title_button_export': 'Export',
             'title_button_buffer': 'Buffer',
@@ -301,7 +331,6 @@
             'mess_init_module': 'Initializing a module ...',
             'mess_load_wagons': 'Loading wagons on the way ...',
             'mess_view_wagons': 'loading wagons information ...',
-
         }
     };
     // Определлим список текста для этого модуля
@@ -1918,7 +1947,7 @@
         collums.push('current_station_amkr_abbr');
         collums.push('current_way_type');
         collums.push('current_way_full_name');
-        collums.push('outgoing_sostav_status');          // Статус состава отправленного вагона
+
         // Администрация
         collums.push('wagon_adm');
         //collums.push('wagon_adm_name');
@@ -2045,7 +2074,7 @@
         //collums.push('outgoing_date');                    // дата отправки вагона
         //collums.push('outgoing_id_return');               // Возврат
         //collums.push('outgoing_return_cause');           // Причина возврата
-
+        collums.push('outgoing_sostav_status');          // Статус состава отправленного вагона
         //collums.push('outgoing_sostav_status_name');     // Статус состава отправленного вагона
         //collums.push('wagon_ban_uz');                    // Запреты по УЗ
         //collums.push('wagon_closed_route');                    //Замкнутый маршрут(кольцо)
@@ -2424,7 +2453,7 @@
         this.enable_button(); // отображение кнопки добавить
         LockScreenOff();
     };
-    // инициализация фильтров выборки
+    //TODO: ! (Пока только тестировал) инициализация фильтров выборки
     table_cars_way.prototype.init_complete = function (skip_field) {
         this.obj_t_cars.columns().indexes().flatten().each(function (i) {
             var column = this.obj_t_cars.column(i);
