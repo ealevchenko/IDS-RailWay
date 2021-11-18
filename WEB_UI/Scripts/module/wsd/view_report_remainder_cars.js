@@ -17,7 +17,7 @@
             'vrrc_title_amkr_outer_cars': 'Внешние вагоны АМКР',
             'vrrc_title_amkr_cars': 'Внутри заводские вагоны',
             'vrrc_title_handed_cars': 'Сданные вагоны',
-            'vrrc_title_amkr_cisterns': 'Цистерны АМКР',
+            'vrrc_title_amkr_cisterns': 'Цистерны прочие',
             'vrrc_title_select_day': 'Сверх суток:',
             'vrrc_title_select_top': 'Топ:',
             'vrrc_title_operators': 'Оператор:',
@@ -39,14 +39,10 @@
             'vrrc_title_station_amkr': 'Станция нахождения вагона:',
             'vrrc_title_not_surrender_cars': 'Без учета сданных вагонов:',
 
-            //'vrrc_title_button_export': 'Экспорт',
-            //'vrrc_title_button_buffer': 'Буфер',
-            //'vrrc_title_button_excel': 'Excel',
-            //'title_button_field': 'Поля',
-            //'title_button_field_select': 'Выбрать',
-            //'title_button_field_view_all': 'Показать все',
-            //'title_button_field_clear': 'Сбросить',
+            'vrrc_title_aplly_day': 'Применить выбрать свыше указанных дней',
+            'vrrc_title_aplly_top': 'Применить выбрать топ',
             'vrrc_title_yes': 'Да',
+
 
             'vrrc_title_add_ok': 'ОБНОВИТЬ',
             'vrrc_title_where_clear': 'СБРОСИТЬ',
@@ -74,7 +70,7 @@
             'vrrc_title_amkr_outer_cars': 'AMKR external cars',
             'vrrc_title_amkr_cars': 'Inside the factory cars',
             'vrrc_title_handed_cars': 'Handed cars',
-            'vrrc_title_amkr_cisterns': 'AMKR Tanks',
+            'vrrc_title_amkr_cisterns': 'Other tanks',
             'vrrc_title_select_day': 'Over day:',
             'vrrc_title_select_top': 'Top:',
             'vrrc_title_operators': 'Operator:',
@@ -96,9 +92,8 @@
             'vrrc_title_station_amkr': 'Station of the carriage:',
             'vrrc_title_not_surrender_cars': 'Excluding surrendered cars:',
 
-            //'vrrc_title_button_export': 'Export',
-            //'vrrc_title_button_buffer': 'Buffer',
-            //'vrrc_title_button_excel': 'Excel',
+            'vrrc_title_aplly_day': 'Apply select over specified days',
+            'vrrc_title_aplly_top': 'Apply select top',
             'vrrc_title_yes': 'Yes',
 
             'vrrc_title_add_ok': 'UPDATE',
@@ -274,7 +269,7 @@
             var bt_aplly_day = new this.fc_ui.el_button('sm', 'btn-primary ml-1', 'aplly-day', null, 'fas fa-retweet');
             var imp_day = new this.fc_ui.el_input('select_day', 'number', 'text-center form-control form-control-sm', null, false, 0, 1000, null, null, null);
             div_igp_day.$div.append(bt_minus_day.$button);
-            div_iga_day.$div.append(bt_plus_day.$button).append(bt_aplly_day.$button);
+            div_iga_day.$div.append(bt_plus_day.$button).append(bt_aplly_day.$button.attr('title', langView('vrrc_title_aplly_day', App.Langs)));
             div_ig_day.$div.append(div_igp_day.$div).append(imp_day.$input.val('0')).append(div_iga_day.$div);
             col_day.$col.append(lab_day.$label).append(div_ig_day.$div);
             // Добавим top 
@@ -288,7 +283,7 @@
             var bt_aplly_top = new this.fc_ui.el_button('sm', 'btn-primary ml-1', 'aplly-top', null, 'fas fa-retweet');
             var imp_top = new this.fc_ui.el_input('select_top', 'number', 'text-center form-control form-control-sm', null, false, 0, 100, null, null, null);
             div_igp_top.$div.append(bt_minus_top.$button);
-            div_iga_top.$div.append(bt_plus_top.$button).append(bt_aplly_top.$button);
+            div_iga_top.$div.append(bt_plus_top.$button).append(bt_aplly_top.$button.attr('title', langView('vrrc_title_aplly_top', App.Langs)));
             div_ig_top.$div.append(div_igp_top.$div).append(imp_top.$input.val('0')).append(div_iga_top.$div);
             col_top.$col.append(lab_top.$label).append(div_ig_top.$div);
             this.form_select.append(div_fg_cars.$div).append(div_fr_day_top.$div.append(col_day.$col).append(col_top.$col));
@@ -783,8 +778,6 @@
                 event.stopPropagation();
                 this.update_where(); // Обновим выборку
             }.bind(this));
-
-
             //
             this.el_select_operator.on('change', function (event) {
                 this.event_select_change(event, 'operator_abbr');
@@ -1200,13 +1193,12 @@
                                     } else {
                                         if (where_option.amkr_outer_cars === true) {
                                             //return this.is_amkr_outer_cars(i);
-
+                                            return this.is_clarify_where(this.is_amkr_outer_cars(i), where_option, i);
                                         } else {
                                             //return this.is_amkr_cars(i);
                                             return this.is_clarify_where(this.is_amkr_cars(i), where_option, i);
                                         }
                                     }
-
                                 }
                             }
                         }
@@ -1215,7 +1207,7 @@
             }
             if (this.where_option.select_day > 0) {
                 wagons = wagons.filter(function (i) {
-                    return i.arrival_duration >= (this.where_option.select_day * 24);
+                    return i.arrival_duration >= (this.where_option.select_day * (24*60));
                 }.bind(this)).sort(function (a, b) {
                     return b.arrival_duration - a.arrival_duration
                 });

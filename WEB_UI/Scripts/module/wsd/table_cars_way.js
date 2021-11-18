@@ -1951,7 +1951,7 @@
         // Администрация
         collums.push('wagon_adm');
         //collums.push('wagon_adm_name');
-        collums.push('wagon_adm_abbr');
+        //collums.push('wagon_adm_abbr');
         // Оператор
         //collums.push('id_operator');
         //collums.push('operators');
@@ -2185,7 +2185,7 @@
             // Таблица вагоны на АМКР (учетный остаток)
             case 4: {
                 this.type_select_rows = 1; // Выбирать одну
-                this.table_select = false;
+                this.table_select = true;
                 this.table_columns = this.init_columns_balance_select();
                 this.table_buttons = this.init_button_balance_select();
                 break;
