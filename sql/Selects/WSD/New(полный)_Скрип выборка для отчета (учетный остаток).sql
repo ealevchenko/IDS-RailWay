@@ -289,6 +289,9 @@ use [KRR-PA-CNT-Railway]
 	WHERE 
 	-- Исключим КИРОВА
 	wim.id_station <> 10
+	-- Исключим ЛОКОМОТИВЫ
+	AND dir_rod.rod_uz <> 90
+
 	and wim.id_way in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] where [way_delete] is null and id_station in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].Directory_Station where station_delete is null))
 	-- Вагоны на станциях
 	AND (wim.way_end IS NULL 
