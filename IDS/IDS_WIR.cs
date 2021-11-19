@@ -424,21 +424,6 @@ namespace IDS
         public int count_wagon_arrival { get; set; }
         public List<wagon_send_arrival> wagons { get; set; }
     }
-    /// <summary>
-    /// TODO: Убрать перенести в базовые ошибки
-    /// </summary>
-    //public enum errors_wir : int
-    //{
-    //    //global = -1,
-    //    //cancel_save_changes = -2,       // Отмена сохранений изменений в базе данных (были ошибки по ходу выполнения всей операции)
-    //    //not_input_value = -100,
-    //    //not_sostav = -101, //...
-    //    //not_wagon = -102,
-    //    //not_arrival_wir = -103,         // Нет записи [WagonInternalRoutes] зашедшей на АМКР
-    //    //not_open_wir = -104,            // Нет открытой записи положения вагона. (Если вагон защел тогда вагон всегда должен гдето стоять!)
-    //    //not_set_way_wir = -105,         // Нет вагон стоит не натом пути по которому нужно провести операцию.
-    //    //not_way_on = -106,              // Неуказан путь приема
-    //}
 
     public class IDS_WIR : IDS_Base
     {
