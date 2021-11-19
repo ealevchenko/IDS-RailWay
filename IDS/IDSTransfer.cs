@@ -415,7 +415,9 @@ namespace IDS
                             code_from = code_from,
                             code_on = uz_doc.recipient_code,
                             dt = uz_doc.dt,
-                            xml_doc = uz_doc.xml,
+                            xml_doc = uz_doc.xml, 
+                            close = null, 
+                            close_message = null
                         };
                         ef_uzdoc.Add(doc);
                         result = ef_uzdoc.Save();

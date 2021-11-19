@@ -1527,7 +1527,9 @@ namespace EFIDS.Helper
                 code_from = d.code_from,
                 code_on = d.code_on,
                 dt = d.dt,
-                xml_doc = d.xml_doc,
+                xml_doc = d.xml_doc, 
+                close = d.close, 
+                close_message = d.close_message
             };
         }
 

@@ -39,6 +39,11 @@ namespace EFIDS.Entities
         [Column(TypeName = "xml")]
         public string xml_doc { get; set; }
 
+        public DateTime? close { get; set; }
+
+        [StringLength(50)]
+        public string close_message { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ArrivalCars> ArrivalCars { get; set; }
 
