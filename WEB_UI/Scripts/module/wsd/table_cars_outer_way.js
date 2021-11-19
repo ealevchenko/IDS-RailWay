@@ -1748,7 +1748,7 @@
         // Род вагона
         collums.push('wagon_rod_abbr')
         // Администрация
-        collums.push('wagon_adm_abbr');
+        collums.push('wagon_adm');
         // Разметка по прибытию на АМКР
         collums.push('arrival_condition_abbr');
         // Разметка по операции отправки (текущая)
