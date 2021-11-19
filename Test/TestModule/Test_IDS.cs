@@ -414,6 +414,19 @@ namespace Test.TestModule
 
         #endregion
 
+        #region IDS_EPD
+        // чтение и обновление сап
+
+        public void IDS_EPD_UpdateArrivalEPD()
+        {
+
+            IDS_EPD ids = new IDS_EPD(service.Test);
+            int result = ids.UpdateArrivalEPD(null);
+
+        }
+
+        #endregion
+
 
         public void GetActs()
         {
