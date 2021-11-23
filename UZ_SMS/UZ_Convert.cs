@@ -335,8 +335,8 @@ namespace UZ
     public class PAC
     {
         public int? kol_pac { get; set; }	//	Кількість місць упаковки
-        public int? weight_place_br { get; set; }	//	Стандартна маса одного місця брутто (кг)
-        public int? weight_place_net { get; set; }	//	Стандартна маса одного місця нетто (кг)
+        public double? weight_place_br { get; set; }	//	Стандартна маса одного місця брутто (кг)
+        public double? weight_place_net { get; set; }	//	Стандартна маса одного місця нетто (кг)
     }
 
     public class PASS_MARK
@@ -1234,8 +1234,8 @@ namespace UZ
             if (node.Attributes.Count > 0)
             {
                 tag.kol_pac = getAttributes<int?>(node, "kol_pac");
-                tag.weight_place_br = getAttributes<int?>(node, "weight_place_br");
-                tag.weight_place_net = getAttributes<int?>(node, "weight_place_net");
+                tag.weight_place_br = getAttributes<double?>(node, "weight_place_br");
+                tag.weight_place_net = getAttributes<double?>(node, "weight_place_net");
             }
         }
         /// <summary>
