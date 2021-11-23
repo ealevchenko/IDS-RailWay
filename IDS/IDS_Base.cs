@@ -127,6 +127,15 @@ namespace IDS
         public int result { get; set; }
     }
     /// <summary>
+    /// 
+    /// </summary>
+    public class ResultStringID
+    {
+        public string id { get; set; }
+        public int result { get; set; }
+    }
+
+    /// <summary>
     /// Класс данных результата выполнения переноса
     /// </summary>
     public class ResultTransfer
@@ -618,6 +627,95 @@ namespace IDS
         public void AddDelete()
         {
             this.delete++;
+        }
+        public void AddSkip()
+        {
+            this.skip++;
+        }
+        public void AddError(int err_code)
+        {
+            this.error++;
+        }
+        public void AddError()
+        {
+            this.error++;
+        }
+        public void AddClose()
+        {
+            this.close++;
+        }
+    }
+
+    public class ResultUpdateStringID
+    {
+        public int result { get; set; } // Глобальный ресурс выполнения всего переноса
+        public int count { get; set; }
+        public int update { get; set; }
+        public int skip { get; set; }
+        public int error { get; set; }
+        public int close { get; set; }
+        public List<ResultStringID> listResult = new List<ResultStringID>();
+
+        public ResultUpdateStringID(int count)
+        {
+            this.count = count;
+            this.result = 0;
+            this.update = 0;
+            this.skip = 0;
+            this.error = 0;
+            this.close = 0;
+            this.listResult.Clear();
+        }
+
+        public void SetUpdateResult(int result)
+        {
+            if (result < 0)
+            {
+                AddError(result); return;
+            }
+            if (result > 0)
+            {
+                AddUpdate(); return;
+            }
+            AddSkip();
+            return;
+        }
+        public void SetUpdateResult(int result, string id)
+        {
+            listResult.Add(new ResultStringID() { id = id, result = result });
+
+            if (result < 0)
+            {
+                AddError(result); return;
+            }
+            if (result > 0)
+            {
+                AddUpdate(); return;
+            }
+            AddSkip(); return;
+        }
+        public void SetCloseResult(int result, string id)
+        {
+            listResult.Add(new ResultStringID() { id = id, result = result });
+
+            if (result < 0)
+            {
+                AddError(result); return;
+            }
+            if (result > 0)
+            {
+                AddClose(); return;
+            }
+            AddSkip(); return;
+        }
+
+        public void SetResult(int code)
+        {
+            this.result = code;
+        }
+        public void AddUpdate()
+        {
+            this.update++;
         }
         public void AddSkip()
         {
