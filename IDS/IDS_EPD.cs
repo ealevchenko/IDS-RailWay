@@ -63,8 +63,8 @@ namespace IDS
         private eventID eventID = eventID.IDS_IDSEPD;
         private int day_arhive_epd = 90; // Количество дней хранения ЭПД на сервере УЗ (3 месяца)
         public int Day_arhive_epd { get { return this.day_arhive_epd; } set { this.day_arhive_epd = value; } }
-        private bool search_in_sms = false; // Количество дней хранения ЭПД на сервере УЗ (3 месяца)
-        public bool Search_in_sms { get { return this.search_in_sms; } set { this.search_in_sms = value; } }
+        private bool searsh_in_sms = false; // Бит включить поиск в базе даных УЗ
+        public bool Searsh_in_sms { get { return this.searsh_in_sms; } set { this.searsh_in_sms = value; } }
 
         public IDS_EPD()
             : base()
@@ -99,7 +99,7 @@ namespace IDS
                 if (uz_doc_db != null) result_uz_doc.Add(uz_doc_db); // если есть добавим в список результатов
 
                 // Проверим по sms УЗ (если признак искать в SMS - true)
-                if (this.search_in_sms && !String.IsNullOrWhiteSpace(num_doc))
+                if (this.searsh_in_sms && !String.IsNullOrWhiteSpace(num_doc))
                 {
                     List<UZ.UZ_DOC> list_uz_doc_sms = uz_sms.GetUZ_DOC_Of_NumDoc(num_doc);
                     if (list_uz_doc_sms != null && list_uz_doc_sms.Count() > 0)
@@ -116,7 +116,12 @@ namespace IDS
                 return null;// Ошибка
             }
         }
-
+        /// <summary>
+        /// Получить последний документ с сервера SMS (УЗ)
+        /// </summary>
+        /// <param name="id_doc"></param>
+        /// <param name="num_doc"></param>
+        /// <returns></returns>
         public UZ.UZ_DOC getUpdateSMS_UZ_DOC(string id_doc, string num_doc)
         {
             try
@@ -145,7 +150,15 @@ namespace IDS
                 return null;// Ошибка
             }
         }
-
+        /// <summary>
+        /// Обновить ЭПД
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="doc"></param>
+        /// <param name="new_doc"></param>
+        /// <param name="close"></param>
+        /// <param name="close_message"></param>
+        /// <returns></returns>
         public int Update_UZ_DOC(ref EFIDS.Concrete.EFDbContext context, UZ_DOC_Arrival doc, UZ.UZ_DOC new_doc, DateTime? close, string close_message)
         {
             try
@@ -182,11 +195,18 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("Update_UZ_DOC()"), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("Update_UZ_DOC(context={0}, doc={1}, new_doc={2}, close={3}, close_message={4})", context, doc, new_doc, close, close_message), servece_owner, eventID);
                 return (int)errors_base.global;// Ошибка
             }
         }
-
+        /// <summary>
+        /// Закрыть ЭПД
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="doc"></param>
+        /// <param name="close"></param>
+        /// <param name="close_message"></param>
+        /// <returns></returns>
         public int Close_UZ_DOC(ref EFIDS.Concrete.EFDbContext context, UZ_DOC_Arrival doc, DateTime? close, string close_message)
         {
             try
@@ -209,29 +229,125 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("Update_UZ_DOC()"), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("Close_UZ_DOC(context={0}, doc={1}, close={2}, close_message={3})", context, doc, close, close_message), servece_owner, eventID);
                 return (int)errors_base.global;// Ошибка
             }
         }
-
-        public int UpdateArrivalEPD(string user)
+        /// <summary>
+        /// Обновить список ЭПД
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="res"></param>
+        /// <param name="list_uz_doc"></param>
+        /// <param name="searsh_uz"></param>
+        public void Update_List_UZ_DOC(ref EFIDS.Concrete.EFDbContext context, ref ResultUpdateStringID res, List<UZ_DOC_Arrival> list_uz_doc, bool searsh_uz)
+        {
+            try
+            {
+                // Начнем обработку раскредитованых с датой ниже мак даты хранения на сервере
+                foreach (UZ_DOC_Arrival doc in list_uz_doc)
+                {
+                    int res_upd = 0;
+                    DateTime date_exceeded = DateTime.Now.AddDays(-1 * this.day_arhive_epd);
+                    //Console.WriteLine("ID документа {0}, № документа {1}", doc.num_doc, doc.num_uz);
+                    // Получим документ
+                    UZ.UZ_DOC upd_doc_uz = getUpdate_UZ_DOC(doc.num_doc, doc.num_uz.ToString());
+                    if (upd_doc_uz != null)
+                    {
+                        if (((int)upd_doc_uz.status) >= 8)
+                        {
+                            // Достигли конца обновления
+                            res_upd = Update_UZ_DOC(ref context, doc, upd_doc_uz, DateTime.Now, "ЭПД найден в БД обновлен и закрыт.");
+                            res.SetCloseResult(res_upd, doc.num_doc);
+                            Console.WriteLine("ID документа {0}, № документа {1} - Найден в БД, обновлен и закрыт, код {2}", doc.num_doc, doc.num_uz, res_upd);
+                        }
+                        else
+                        {
+                            // еще требуется обновление
+                            // Проверим дата обновления документа еще в диапазоне времени хранения на сервере УЗ
+                            if ((doc.dt != null && doc.dt > date_exceeded) || (doc.dt == null))
+                            {
+                                // Дата обновления документа еще в диапазоне времени хранения на сервере УЗ или не определена
+                                res_upd = Update_UZ_DOC(ref context, doc, upd_doc_uz, null, "ЭПД найден в БД и обновлен");
+                                res.SetUpdateResult(res_upd, doc.num_doc);
+                                Console.WriteLine("ID документа {0}, № документа {1} - Найден в БД и обновлен, код {2}", doc.num_doc, doc.num_uz, res_upd);
+                            }
+                            else
+                            {
+                                // Достигли конца обновления, документ уже не доступен на УЗ
+                                res_upd = Update_UZ_DOC(ref context, doc, upd_doc_uz, DateTime.Now, "ЭПД найден в БД обновлен и закрыт по времени.");
+                                res.SetCloseResult(res_upd, doc.num_doc);
+                                Console.WriteLine("ID документа {0}, № документа {1} - Найден в БД, обновлен и закрыт по времени, код {2}", doc.num_doc, doc.num_uz, res_upd);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Искать на сервере УЗ?
+                        if (searsh_uz == true)
+                        {
+                            // Поиск на сервере УЗ 
+                            UZ.UZ_DOC sms_doc_uz = getUpdateSMS_UZ_DOC(doc.num_doc, doc.num_uz.ToString());
+                            if (sms_doc_uz != null)
+                            {
+                                // ЭПД найден на УЗ
+                                if (((int)sms_doc_uz.status) >= 8)
+                                {
+                                    // Достигли конца обновления
+                                    res_upd = Update_UZ_DOC(ref context, doc, sms_doc_uz, DateTime.Now, "ЭПД найден на УЗ обновлен и закрыт.");
+                                    res.SetCloseResult(res_upd, doc.num_doc);
+                                    Console.WriteLine("ID документа {0}, № документа {1} - Найден на УЗ, обновлен и закрыт, код {2}", doc.num_doc, doc.num_uz, res_upd);
+                                }
+                                else
+                                {
+                                    // еще требуется обновление
+                                    res_upd = Update_UZ_DOC(ref context, doc, sms_doc_uz, null, "ЭПД найден на УЗ и обновлен");
+                                    res.SetUpdateResult(res_upd, doc.num_doc);
+                                    Console.WriteLine("ID документа {0}, № документа {1} - Найден на УЗ и обновлен, код {2}", doc.num_doc, doc.num_uz, res_upd);
+                                }
+                            }
+                            else
+                            {
+                                // ЭПД не найдено на УЗ
+                                res_upd = Close_UZ_DOC(ref context, doc, DateTime.Now, "ЭПД не найден в БД и УЗ, закрыт");
+                                res.SetCloseResult(res_upd, doc.num_doc);
+                                Console.WriteLine("ID документа {0}, № документа {1} - !Не найден в БД и на УЗ, закрыт", doc.num_doc, doc.num_uz);
+                            }
+                        }
+                        else
+                        {
+                            res_upd = Close_UZ_DOC(ref context, doc, DateTime.Now, "ЭПД не найден в БД и закрыт");
+                            res.SetCloseResult(res_upd, doc.num_doc);
+                            Console.WriteLine("ID документа {0}, № документа {1} - !Не найден в БД, закрыт", doc.num_doc, doc.num_uz);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("Update_List_UZ_DOC(context={0}, res={1}, list_uz_doc={2}, searsh_uz={3})", context, res, list_uz_doc, searsh_uz), servece_owner, eventID);
+            }
+        }
+        /// <summary>
+        /// Обновим документы по прибытию
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int UpdateArrivalEPD()
         {
             try
             {
                 DateTime start = DateTime.Now;
                 ResultUpdateStringID res = new ResultUpdateStringID(0);
-                // Проверим и скорректируем пользователя
-                if (String.IsNullOrWhiteSpace(user))
-                {
-                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
-                }
+                //// Проверим и скорректируем пользователя
+                //if (String.IsNullOrWhiteSpace(user))
+                //{
+                //    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                //}
 
                 UZ.UZ_SMS uz_sms = new UZ.UZ_SMS(this.servece_owner);
 
                 EFIDS.Concrete.EFDbContext context_ids = new EFIDS.Concrete.EFDbContext();
-                //EFIDS.Concrete.EFUZ_DOC ef_uz_doc_ids = new EFIDS.Concrete.EFUZ_DOC(context_ids);
-
-                //List<UZ_DOC_Arrival> list = new List<UZ_DOC_Arrival>();
 
                 // Выполним запрос и получим все ЭПД с признапком не закрыт
                 string sql = "select * from [IDS].[get_view_uz_doc_arrival]() where [close] is null";
@@ -253,89 +369,36 @@ namespace IDS
                         DateTime date_exceeded = DateTime.Now.AddDays(-1 * this.day_arhive_epd);
                         List<UZ_DOC_Arrival> uz_doc_ids_uncredited_exceeded = uz_doc_ids_uncredited.Where(d => d.dt < date_exceeded).ToList(); // выбрать раскредитованых с датой обновления ниже мак даты хранения на сервере
                         List<UZ_DOC_Arrival> uz_doc_ids_uncredited_not_reached = uz_doc_ids_uncredited.Where(d => d.dt >= date_exceeded).ToList(); // выбрать раскредитованых с датой обновления в диапазоне периода хранения данных на сервере.
-                        // -----------------------------------------------------------------------------------------
-                        // Начнем обработку раскредитованых с датой обновления пусто
-                        foreach (UZ_DOC_Arrival doc in uz_doc_ids_uncredited_null)
-                        {
-                            Console.WriteLine("ID документа {0}, № документа {1}", doc.num_doc, doc.num_uz);
-                            // Получим документ
-                            UZ.UZ_DOC upd_doc_uz = getUpdate_UZ_DOC(doc.num_doc, doc.num_uz.ToString());
-                            if (upd_doc_uz != null)
-                            {
-                                int res_upd = Update_UZ_DOC(ref context_ids, doc, upd_doc_uz, DateTime.Now, "ЭПД(uncredited) - обновлен и закрыт");
-                                res.SetCloseResult(res_upd, doc.num_doc);
-                                Console.WriteLine("ID документа {0}, № документа {1} - Найден и обновлен, код {2}", doc.num_doc, doc.num_uz, res_upd);
-                            }
-                            else
-                            {
-                                int res_upd = Close_UZ_DOC(ref context_ids, doc, DateTime.Now, "ЭПД(uncredited) - не найден и закрыт");
-                                res.SetCloseResult(res_upd, doc.num_doc);
-                                Console.WriteLine("ID документа {0}, № документа {1} - !не найден и закрыт  ", doc.num_doc, doc.num_uz);
-                            }
-                        }
+                                                                                                                                                   // -----------------------------------------------------------------------------------------
+                                                                                                                                                   // Начнем обработку раскредитованых с датой обновления пусто
+                        Update_List_UZ_DOC(ref context_ids, ref res, uz_doc_ids_uncredited_null, false);
                         // -----------------------------------------------------------------------------------------
                         // Начнем обработку раскредитованых с датой ниже мак даты хранения на сервере
-                        foreach (UZ_DOC_Arrival doc in uz_doc_ids_uncredited_exceeded)
-                        {
-                            Console.WriteLine("ID документа {0}, № документа {1}", doc.num_doc, doc.num_uz);
-                            // Получим документ
-                            UZ.UZ_DOC upd_doc_uz = getUpdate_UZ_DOC(doc.num_doc, doc.num_uz.ToString());
-                            if (upd_doc_uz != null)
-                            {
-                                int res_upd = Update_UZ_DOC(ref context_ids, doc, upd_doc_uz, DateTime.Now, "ЭПД(uncredited) - обновлен и закрыт");
-                                res.SetCloseResult(res_upd, doc.num_doc);
-                                Console.WriteLine("ID документа {0}, № документа {1} - Найден и обновлен, код {2}", doc.num_doc, doc.num_uz, res_upd);
-                            }
-                            else
-                            {
-                                int res_upd = Close_UZ_DOC(ref context_ids, doc, DateTime.Now, "ЭПД(uncredited) - не найден и закрыт");
-                                res.SetCloseResult(res_upd, doc.num_doc);
-                                Console.WriteLine("ID документа {0}, № документа {1} - !не найден и закрыт  ", doc.num_doc, doc.num_uz);
-                            }
-                        }
+                        Update_List_UZ_DOC(ref context_ids, ref res, uz_doc_ids_uncredited_exceeded, false);
                         // -----------------------------------------------------------------------------------------
                         // Начнем обработку раскредитованых с датой обновления в диапазоне периода хранения данных на сервере
-                        foreach (UZ_DOC_Arrival doc in uz_doc_ids_uncredited_not_reached)
-                        {
-                            Console.WriteLine("ID документа {0}, № документа {1}", doc.num_doc, doc.num_uz);
-                            // Получим документ
-                            UZ.UZ_DOC upd_doc_uz = getUpdate_UZ_DOC(doc.num_doc, doc.num_uz.ToString());
-                            if (upd_doc_uz != null)
-                            {
-                                int res_upd = Update_UZ_DOC(ref context_ids, doc, upd_doc_uz, DateTime.Now, "ЭПД(uncredited) - обновлен и закрыт");
-                                res.SetCloseResult(res_upd, doc.num_doc);
-                                Console.WriteLine("ID документа {0}, № документа {1} - Найден и обновлен, код {2}", doc.num_doc, doc.num_uz, res_upd);
-                                if (upd_doc_uz.revision > doc.revision)
-                                {
+                        Update_List_UZ_DOC(ref context_ids, ref res, uz_doc_ids_uncredited_not_reached, true);
 
-                                }
-                            }
-                            else
-                            {
-                                // Поиск на сервере УЗ 
-                                UZ.UZ_DOC sms_doc_uz = getUpdateSMS_UZ_DOC(doc.num_doc, doc.num_uz.ToString());
-                                if (sms_doc_uz != null)
-                                {
-                                    int res_upd = Update_UZ_DOC(ref context_ids, doc, sms_doc_uz, DateTime.Now, "ЭПД(uncredited) - обновлен(УЗ) и закрыт");
-                                    res.SetCloseResult(res_upd, doc.num_doc);
-                                    Console.WriteLine("ID документа {0}, № документа {1} - Найден и обновлен, код {2}", doc.num_doc, doc.num_uz, res_upd);
-                                    if (sms_doc_uz.revision > doc.revision)
-                                    {
-
-                                    }
-                                }
-                                else
-                                {
-                                    int res_upd = Close_UZ_DOC(ref context_ids, doc, DateTime.Now, "ЭПД(uncredited) - не найден и закрыт");
-                                    res.SetCloseResult(res_upd, doc.num_doc);
-                                    Console.WriteLine("ID документа {0}, № документа {1} - !не найден и закрыт  ", doc.num_doc, doc.num_uz);
-                                }
-                            }
-                        }
+                    }
+                    // Начнем обработку не раскредитованых
+                    if (uz_doc_ids_open != null && uz_doc_ids_open.Count() > 0)
+                    {
+                        List<UZ_DOC_Arrival> uz_doc_ids_open_null = uz_doc_ids_open.Where(d => d.dt == null).ToList(); // выбрать раскредитованых с датой обновления пусто
+                        DateTime date_exceeded = DateTime.Now.AddDays(-1 * this.day_arhive_epd);
+                        List<UZ_DOC_Arrival> uz_doc_ids_open_exceeded = uz_doc_ids_open.Where(d => d.dt < date_exceeded).ToList(); // выбрать раскредитованых с датой обновления ниже мак даты хранения на сервере
+                        List<UZ_DOC_Arrival> uz_doc_ids_open_not_reached = uz_doc_ids_open.Where(d => d.dt >= date_exceeded).ToList(); // выбрать раскредитованых с датой обновления в диапазоне периода хранения данных на сервере.
+                        // -----------------------------------------------------------------------------------------
+                        // Начнем обработку раскредитованых с датой обновления пусто
+                        Update_List_UZ_DOC(ref context_ids, ref res, uz_doc_ids_open_null, false);
+                        // -----------------------------------------------------------------------------------------
+                        // Начнем обработку раскредитованых с датой ниже мак даты хранения на сервере
+                        Update_List_UZ_DOC(ref context_ids, ref res, uz_doc_ids_open_exceeded, false);
+                        // -----------------------------------------------------------------------------------------
+                        // Начнем обработку раскредитованых с датой обновления в диапазоне периода хранения данных на сервере
+                        Update_List_UZ_DOC(ref context_ids, ref res, uz_doc_ids_open_not_reached, true);
 
                     }
                 }
-
                 // Если операция успешна, перенумеруем позиции на пути с которого ушли вагоны
                 if (res.error == 0)
                 {
@@ -361,6 +424,82 @@ namespace IDS
 }
 
 
+
+//foreach (UZ_DOC_Arrival doc in uz_doc_ids_uncredited_null)
+//{
+//    Console.WriteLine("ID документа {0}, № документа {1}", doc.num_doc, doc.num_uz);
+//    // Получим документ
+//    UZ.UZ_DOC upd_doc_uz = getUpdate_UZ_DOC(doc.num_doc, doc.num_uz.ToString());
+//    if (upd_doc_uz != null)
+//    {
+//        int res_upd = Update_UZ_DOC(ref context_ids, doc, upd_doc_uz, DateTime.Now, "ЭПД(uncredited) - обновлен и закрыт");
+//        res.SetCloseResult(res_upd, doc.num_doc);
+//        Console.WriteLine("ID документа {0}, № документа {1} - Найден и обновлен, код {2}", doc.num_doc, doc.num_uz, res_upd);
+//    }
+//    else
+//    {
+//        int res_upd = Close_UZ_DOC(ref context_ids, doc, DateTime.Now, "ЭПД(uncredited) - не найден и закрыт");
+//        res.SetCloseResult(res_upd, doc.num_doc);
+//        Console.WriteLine("ID документа {0}, № документа {1} - !не найден и закрыт  ", doc.num_doc, doc.num_uz);
+//    }
+//}
+
+//foreach (UZ_DOC_Arrival doc in uz_doc_ids_uncredited_exceeded)
+//{
+//    Console.WriteLine("ID документа {0}, № документа {1}", doc.num_doc, doc.num_uz);
+//    // Получим документ
+//    UZ.UZ_DOC upd_doc_uz = getUpdate_UZ_DOC(doc.num_doc, doc.num_uz.ToString());
+//    if (upd_doc_uz != null)
+//    {
+//        int res_upd = Update_UZ_DOC(ref context_ids, doc, upd_doc_uz, DateTime.Now, "ЭПД(uncredited) - обновлен и закрыт");
+//        res.SetCloseResult(res_upd, doc.num_doc);
+//        Console.WriteLine("ID документа {0}, № документа {1} - Найден и обновлен, код {2}", doc.num_doc, doc.num_uz, res_upd);
+//    }
+//    else
+//    {
+//        int res_upd = Close_UZ_DOC(ref context_ids, doc, DateTime.Now, "ЭПД(uncredited) - не найден и закрыт");
+//        res.SetCloseResult(res_upd, doc.num_doc);
+//        Console.WriteLine("ID документа {0}, № документа {1} - !не найден и закрыт  ", doc.num_doc, doc.num_uz);
+//    }
+//}
+
+//foreach (UZ_DOC_Arrival doc in uz_doc_ids_uncredited_not_reached)
+//{
+//    Console.WriteLine("ID документа {0}, № документа {1}", doc.num_doc, doc.num_uz);
+//    // Получим документ
+//    UZ.UZ_DOC upd_doc_uz = getUpdate_UZ_DOC(doc.num_doc, doc.num_uz.ToString());
+//    if (upd_doc_uz != null)
+//    {
+//        int res_upd = Update_UZ_DOC(ref context_ids, doc, upd_doc_uz, DateTime.Now, "ЭПД(uncredited) - обновлен и закрыт");
+//        res.SetCloseResult(res_upd, doc.num_doc);
+//        Console.WriteLine("ID документа {0}, № документа {1} - Найден и обновлен, код {2}", doc.num_doc, doc.num_uz, res_upd);
+//        if (upd_doc_uz.revision > doc.revision)
+//        {
+
+//        }
+//    }
+//    else
+//    {
+//        // Поиск на сервере УЗ 
+//        UZ.UZ_DOC sms_doc_uz = getUpdateSMS_UZ_DOC(doc.num_doc, doc.num_uz.ToString());
+//        if (sms_doc_uz != null)
+//        {
+//            int res_upd = Update_UZ_DOC(ref context_ids, doc, sms_doc_uz, DateTime.Now, "ЭПД(uncredited) - обновлен(УЗ) и закрыт");
+//            res.SetCloseResult(res_upd, doc.num_doc);
+//            Console.WriteLine("ID документа {0}, № документа {1} - Найден и обновлен, код {2}", doc.num_doc, doc.num_uz, res_upd);
+//            if (sms_doc_uz.revision > doc.revision)
+//            {
+
+//            }
+//        }
+//        else
+//        {
+//            int res_upd = Close_UZ_DOC(ref context_ids, doc, DateTime.Now, "ЭПД(uncredited) - не найден и закрыт");
+//            res.SetCloseResult(res_upd, doc.num_doc);
+//            Console.WriteLine("ID документа {0}, № документа {1} - !не найден и закрыт  ", doc.num_doc, doc.num_uz);
+//        }
+//    }
+//}
 
 
 //// Получить список документов со статусом uncredited = 8  (Документ розкредитовано товарним касиром) с признаком строки не закрыта
