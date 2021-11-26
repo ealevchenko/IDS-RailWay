@@ -3834,10 +3834,10 @@
                                 ids_inc.postOperationUpdateEPDSendingSostav(operation_update_epd, function (result_update_epd) {
 
                                 });
-                                // Выполнить операцию отправки postOperationSendingSostavOnUZ
-                                ids_inc.postOperationUpdateEPDSendingSostav(operation_update_epd, function (result_update_epd) {
+                                //ids_inc.postOperationUpdateEPDSendingSostav(operation_update_epd, function (result_update_epd) {
 
-                                });
+                                //});
+                                // Выполнить операцию отправки postOperationSendingSostavOnUZ
                                 ids_inc.postOperationSendingSostavOnUZ(operation_sending, function (result_sending) {
                                     if (result_sending && result_sending.result > 0) {
                                         // Обновить путь отправки и станцию отправки
