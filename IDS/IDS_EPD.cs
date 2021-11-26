@@ -27,6 +27,24 @@ namespace IDS
         public string close_message { get; set; }
     }
 
+    public class UZ_DOC_Sending
+    {
+        public long id_sostav { get; set; }
+        public DateTime? date_outgoing { get; set; }
+        public DateTime? date_departure_amkr { get; set; }
+        public int status_sostav { get; set; }
+        public long? id_car { get; set; }
+        public int? num { get; set; }
+        public int? position_outgoing { get; set; }
+        public string num_doc { get; set; }
+        public int? revision { get; set; }
+        public int? status { get; set; }
+        public string code_from { get; set; }
+        public string code_on { get; set; }
+        public DateTime? dt { get; set; }
+        public int? num_uz { get; set; }
+    }
+
     public class ThreadWithState
     {
         // State information used in the task.
@@ -417,9 +435,23 @@ namespace IDS
                 e.ExceptionMethodLog(String.Format("UpdateArrivalEPD()"), servece_owner, eventID);
                 return (int)errors_base.global;// Ошибка
             }
-
-            #endregion
         }
+        #endregion
+
+        #region ДОКУМЕНТЫ ПО ОТПРАВКЕ
+        public int UpdateSendingEPD()
+        {
+            try {
+
+                return 0;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateSendingEPD()"), servece_owner, eventID);
+                return (int)errors_base.global;// Ошибка
+            }
+        }
+        #endregion
     }
 }
 
