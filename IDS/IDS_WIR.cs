@@ -425,9 +425,47 @@ namespace IDS
         public List<wagon_send_arrival> wagons { get; set; }
     }
 
+    /// <summary>
+    /// Класс описание документа по прибытию
+    /// </summary>
+    public class UZ_DOC_Arrival
+    {
+        public string num_doc { get; set; }
+        public int revision { get; set; }
+        public int? status { get; set; }
+        public int? num_uz { get; set; }
+        public string code_from { get; set; }
+        public string code_on { get; set; }
+        public DateTime? dt { get; set; }
+        public DateTime? close { get; set; }
+        public string close_message { get; set; }
+    }
+
+    public class UZ_DOC_Sending
+    {
+        public long id_sostav { get; set; }
+        public DateTime? date_outgoing { get; set; }
+        public DateTime? date_departure_amkr { get; set; }
+        public int status_sostav { get; set; }
+        public long? id_car { get; set; }
+        public int? num { get; set; }
+        public int? position_outgoing { get; set; }
+        public string num_doc { get; set; }
+        public int? revision { get; set; }
+        public int? status { get; set; }
+        public string code_from { get; set; }
+        public string code_on { get; set; }
+        public DateTime? dt { get; set; }
+        public int? num_uz { get; set; }
+    }
+
     public class IDS_WIR : IDS_Base
     {
         private eventID eventID = eventID.IDS_IDSWIR;
+        private int day_arhive_epd = 90; // Количество дней хранения ЭПД на сервере УЗ (3 месяца)
+        public int Day_arhive_epd { get { return this.day_arhive_epd; } set { this.day_arhive_epd = value; } }
+        private bool searsh_in_sms = false; // Бит включить поиск в базе даных УЗ
+        public bool Searsh_in_sms { get { return this.searsh_in_sms; } set { this.searsh_in_sms = value; } }
 
         public IDS_WIR()
             : base()
@@ -537,7 +575,6 @@ namespace IDS
                 return rt;// Возвращаем id=-1 , Ошибка
             }
         }
-
         #endregion
 
         #region ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ - АРМ ДИСПЕТЧЕРА
@@ -3132,8 +3169,653 @@ namespace IDS
 
         #endregion
 
+        #endregion
+
+        #region АДМИНИСТРИРОВАНИЕ
+        /// <summary>
+        /// Закрыть вагоны принудительно
+        /// </summary>
+        /// <param name="list_id"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int CloseWir(List<int> list_id, DateTime close_date, string note, string user)
+        {
+            ResultUpdateID res = new ResultUpdateID(list_id.Count());
+            try
+            {
+
+                EFDbContext context = new EFDbContext();
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+
+                EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
+                // Пройдемся по списку внутрених перемещений
+                int count = list_id.Count();
+                foreach (int id in list_id.ToList())
+                {
+                    WagonInternalRoutes wir = ef_wir.Context.Where(r => r.id == id).FirstOrDefault();
+                    int result = 0;
+                    ;
+                    if (wir != null)
+                    {
+                        // Запись не закрыта
+                        if (wir.close == null)
+                        {
+                            wir.CloseWagon(close_date, note, user); // Закроет все операции и дислокации
+                            ef_wir.Update(wir);
+                            result = ef_wir.Save();
+                            //res.SetUpdateResult(result, id);
+                        }
+                        else
+                        {
+                            // Запись закрыта пропустить
+                            result = 0;
+                            //res.SetUpdateResult(result, id);
+                        }
+                    }
+                    else
+                    {
+                        // Запись wir не найдена
+                        result = (int)errors_base.not_wir_db;
+
+                    }
+                    res.SetUpdateResult(result, id);
+                    Console.WriteLine("Обработал id = {0}, результат = {1}, осталось {2}", id, result, count--);
+                }
+                if (res.error == 0)
+                {
+                    res.SetResult(res.listResult.Count());                      // ОК   
+                }
+                else
+                {
+                    res.SetResult((int)errors_base.error_save_changes);      // Были ошибки по ходу выполнения операций       
+                }
+
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("CloseWir(list_id={0}, close_date={1}, note={2}, user={3})", list_id, close_date, note, user), servece_owner, eventID);
+                res.SetResult((int)errors_base.global); // Ошибка
+            }
+            return res.result;
+        }
+        /// <summary>
+        /// Закрыть вагоны принудительно
+        /// </summary>
+        /// <param name="list_id"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int DeleteDoubleWir(List<int> list_id)
+        {
+            ResultUpdateID res = new ResultUpdateID(list_id.Count());
+            try
+            {
+
+                EFDbContext context = new EFDbContext();
+
+                EFWagonInternalMovement ef_wim = new EFWagonInternalMovement(context);
+                EFWagonInternalOperation ef_wio = new EFWagonInternalOperation(context);
+                int count = list_id.Count();
+                // Пройдемся по списку внутрених перемещений
+                foreach (int id in list_id.ToList())
+                {
+                    List<WagonInternalMovement> list_wim = ef_wim.Context.Where(m => m.id_wagon_internal_routes == id).OrderBy(c => c.id).ToList();
+                    List<WagonInternalOperation> list_wio = ef_wio.Context.Where(m => m.id_wagon_internal_routes == id).OrderBy(c => c.id).ToList();
+
+                    // Сгруппируем по путям роспуска
+                    List<IGrouping<long?, WagonInternalMovement>> group_list_wim = list_wim
+                                    .ToList()
+                                    .GroupBy(w => w.parent_id)
+                                    .ToList();
+                    List<IGrouping<long?, WagonInternalOperation>> group_list_wio = list_wio
+                                    .ToList()
+                                    .GroupBy(w => w.parent_id)
+                                    .ToList();
+                    // Пройдемся по путям роспуска
+                    foreach (IGrouping<long?, WagonInternalMovement> gr_wim in group_list_wim.ToList())
+                    {
+                        // Найдем задвоение
+                        if (gr_wim.Count() > 1)
+                        {
+                            WagonInternalMovement wim_close = gr_wim.Where(m => m.way_end != null).FirstOrDefault();
+                            if (wim_close != null)
+                            {
+                                // есть закрытая запись, удалить все не закрытые
+                                List<WagonInternalMovement> list_wim_close = gr_wim.Where(m => m.way_end == null).ToList();
+                                foreach (WagonInternalMovement del_wim in list_wim_close)
+                                {
+                                    ef_wim.Delete(del_wim.id);
+                                }
+
+                            }
+                            else
+                            {
+                                // Нет закрытой записи, оставить одну с макс id
+                                WagonInternalMovement wim_max = gr_wim.OrderByDescending(m => m.id).FirstOrDefault();
+                                if (wim_max != null)
+                                {
+                                    long id_max = wim_max.id;
+                                    foreach (WagonInternalMovement del_wim in gr_wim)
+                                    {
+                                        if (del_wim.id != id_max)
+                                        {
+                                            ef_wim.Delete(del_wim.id);
+                                        }
+
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                    int result_wim = ef_wim.Save();
+
+                    count--;
+                    Console.WriteLine("Обработал wim id = {0}, результат = {1}, осталось {2}", id, result_wim, count);
+                    // Пройдемся по операциям
+                    foreach (IGrouping<long?, WagonInternalOperation> gr_wio in group_list_wio.ToList())
+                    {
+                        // Найдем задвоение
+                        if (gr_wio.Count() > 1)
+                        {
+                            // Нет закрытой записи, оставить одну с макс id
+                            WagonInternalOperation wio_max = gr_wio.OrderByDescending(m => m.id).FirstOrDefault();
+                            if (wio_max != null)
+                            {
+                                long id_max = wio_max.id;
+                                foreach (WagonInternalOperation del_wio in gr_wio)
+                                {
+                                    if (del_wio.id != id_max)
+                                    {
+                                        ef_wio.Delete(del_wio.id);
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                    int result_wio = ef_wio.Save();
+
+                    Console.WriteLine("Обработал wio id = {0}, результат = {1}, осталось {2}", id, result_wio, count);
+                }
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("DeleteDoubleWir(list_id={0})", list_id), servece_owner, eventID);
+                res.SetResult((int)errors_base.global); // Ошибка
+            }
+            return res.result;
+        }
+        /// <summary>
+        /// Административная функция вернуть вагон из отправки
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <param name="note"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int ReturnWagons(List<int> nums, string note, string user)
+        {
+            ResultUpdateWagon res = new ResultUpdateWagon(nums.Count());
+            try
+            {
+
+                EFDbContext context = new EFDbContext();
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+
+                //EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
+                // Пройдемся по списку внутрених перемещений
+                int count = nums.Count();
+                foreach (int num in nums.ToList())
+                {
+                    WagonInternalRoutes wir = context.GetLastWagon(num);
+                    int result = 0;
+                    if (wir != null)
+                    {
+                        // Запись закрыта
+                        if (wir.close != null)
+                        {
+                            // Получим текущее положение вагона
+                            WagonInternalMovement wim = wir.GetLastMovement();
+                            WagonInternalOperation wio = wir.GetLastOperation();
+                            if (wim != null)
+                            {
+                                if (wio != null)
+                                {
+                                    // Проверки закончились, выполним операции
+                                    wir.id_outgoing_car = null;
+                                    wir.note = note;
+                                    wir.close = null;
+                                    wir.close_user = null;
+                                    // вернем на путь
+                                    wim.way_end = null;
+                                    wim.note = note;
+                                    wim.close = null;
+                                    wim.close_user = null;
+                                    // Отментим отмену в операции
+                                    wio.note = note;
+                                    result = 3;
+                                }
+                                else
+                                {
+                                    result = (int)errors_base.not_wio_db;
+                                }
+                            }
+                            else
+                            {
+                                result = (int)errors_base.not_wim_db;
+                            }
+
+
+                            //wir.CloseWagon(close_date, note, user); // Закроет все операции и дислокации
+                            //ef_wir.Update(wir);
+                            //result = ef_wir.Save();
+                            //res.SetUpdateResult(result, num);
+                        }
+                        else
+                        {
+                            // Запись открыта пропустить
+                            result = 0;
+
+                        }
+                    }
+                    else
+                    {
+                        // Запись wir не найдена
+                        result = (int)errors_base.not_wir_db;
+
+                    }
+                    if (result > 0)
+                    {
+                        result = context.SaveChanges();
+                    }
+                    res.SetUpdateResult(result, num);
+                    Console.WriteLine("Обработал №  = {0}, результат = {1}, осталось {2}", num, result, count--);
+                }
+                if (res.error == 0)
+                {
+                    res.SetResult(res.listResult.Count());                      // ОК   
+                }
+                else
+                {
+                    res.SetResult((int)errors_base.error_save_changes);      // Были ошибки по ходу выполнения операций       
+                }
+
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("ReturnWagons(nums={0}, note={1}, user={2})", nums, note, user), servece_owner, eventID);
+                res.SetResult((int)errors_base.global); // Ошибка
+            }
+            return res.result;
+        }
+
+        #endregion
+
         #region ОПЕРАЦИИ ОБНОВЛЕНИЯ ДОКУМЕНТОВ ЭПД
 
+        #region ОПЕРАЦИИ ОБНОВЛЕНИЯ ДОКУМЕНТОВ ЭПД ПО ПРИБЫТИЮ
+        /// <summary>
+        /// Получить последний документ на промежуточном сервере и сервере SMS если установлен бит
+        /// </summary>
+        /// <param name="id_doc"></param>
+        /// <param name="num_doc"></param>
+        /// <returns></returns>
+        public UZ.UZ_DOC getUpdate_UZ_DOC(string id_doc, string num_doc)
+        {
+            try
+            {
+                UZ.UZ_DOC uz_doc = null;
+                List<UZ.UZ_DOC> result_uz_doc = new List<UZ.UZ_DOC>();
+
+
+                UZ.UZ_SMS uz_sms = new UZ.UZ_SMS();
+                // Проверим по промежуточной базе
+                UZ.UZ_DOC uz_doc_db = uz_sms.GetDocumentOfDB_NumDoc(id_doc);
+                if (uz_doc_db != null) result_uz_doc.Add(uz_doc_db); // если есть добавим в список результатов
+
+                // Проверим по sms УЗ (если признак искать в SMS - true)
+                if (this.searsh_in_sms && !String.IsNullOrWhiteSpace(num_doc))
+                {
+                    List<UZ.UZ_DOC> list_uz_doc_sms = uz_sms.GetUZ_DOC_Of_NumDoc(num_doc);
+                    if (list_uz_doc_sms != null && list_uz_doc_sms.Count() > 0)
+                    {
+                        result_uz_doc.Add(list_uz_doc_sms.Where(d => d.id_doc == id_doc).OrderByDescending(c => c.revision).FirstOrDefault());
+                    }
+                }
+                uz_doc = result_uz_doc.OrderByDescending(v => v.revision).FirstOrDefault();
+                return uz_doc;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("getUpdate_UZ_DOC(id_doc = {0}, num_doc = {1})", id_doc, num_doc), servece_owner, eventID);
+                return null;// Ошибка
+            }
+        }
+        /// <summary>
+        /// Получить последний документ с сервера SMS (УЗ)
+        /// </summary>
+        /// <param name="id_doc"></param>
+        /// <param name="num_doc"></param>
+        /// <returns></returns>
+        public UZ.UZ_DOC getUpdateSMS_UZ_DOC(string id_doc, string num_doc)
+        {
+            try
+            {
+                UZ.UZ_DOC uz_doc = null;
+                List<UZ.UZ_DOC> result_uz_doc = new List<UZ.UZ_DOC>();
+
+
+                UZ.UZ_SMS uz_sms = new UZ.UZ_SMS();
+
+                // Проверим по sms УЗ (если признак искать в SMS - true)
+                if (!String.IsNullOrWhiteSpace(num_doc))
+                {
+                    List<UZ.UZ_DOC> list_uz_doc_sms = uz_sms.GetUZ_DOC_Of_NumDoc(num_doc);
+                    if (list_uz_doc_sms != null && list_uz_doc_sms.Count() > 0)
+                    {
+                        result_uz_doc.Add(list_uz_doc_sms.Where(d => d.id_doc == id_doc).OrderByDescending(c => c.revision).FirstOrDefault());
+                    }
+                }
+                uz_doc = result_uz_doc.OrderByDescending(v => v.revision).FirstOrDefault();
+                return uz_doc;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("getUpdateSMS_UZ_DOC(id_doc = {0}, num_doc = {1})", id_doc, num_doc), servece_owner, eventID);
+                return null;// Ошибка
+            }
+        }
+        /// <summary>
+        /// Обновить ЭПД
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="doc"></param>
+        /// <param name="new_doc"></param>
+        /// <param name="close"></param>
+        /// <param name="close_message"></param>
+        /// <returns></returns>
+        public int Update_UZ_DOC(ref EFIDS.Concrete.EFDbContext context, UZ_DOC_Arrival doc, UZ.UZ_DOC new_doc, DateTime? close, string close_message)
+        {
+            try
+            {
+                if (context == null)
+                {
+                    context = new EFIDS.Concrete.EFDbContext();
+                }
+                EFIDS.Concrete.EFUZ_DOC ef_uz_doc = new EFIDS.Concrete.EFUZ_DOC(context);
+                EFIDS.Entities.UZ_DOC uz_doc = ef_uz_doc.Context.Where(d => d.num_doc == doc.num_doc).FirstOrDefault();
+                if (uz_doc != null)
+                {
+                    // Ревизия документа выше чем ревизия сохраненного документа
+                    if (uz_doc.revision <= new_doc.revision)
+                    {
+                        string code_from = new_doc.sender_code != null ? new_doc.sender_code : "0";
+
+                        uz_doc.num_doc = new_doc.id_doc;
+                        uz_doc.revision = new_doc.revision;
+                        uz_doc.num_uz = new_doc.otpr != null ? new_doc.otpr.nom_doc : null;
+                        uz_doc.status = (int)new_doc.status;
+                        uz_doc.code_from = code_from;
+                        uz_doc.code_on = new_doc.recipient_code;
+                        uz_doc.dt = new_doc.dt;
+                        uz_doc.xml_doc = new_doc.xml;
+                        uz_doc.close = close;
+                        uz_doc.close_message = close_message;
+                        ef_uz_doc.Update(uz_doc);
+                        return 1;
+                    }
+                    else return 0; // пропущен
+                }
+                else return (int)errors_base.not_epd_document; // Нет ЭПД
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("Update_UZ_DOC(context={0}, doc={1}, new_doc={2}, close={3}, close_message={4})", context, doc, new_doc, close, close_message), servece_owner, eventID);
+                return (int)errors_base.global;// Ошибка
+            }
+        }
+        /// <summary>
+        /// Закрыть ЭПД
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="doc"></param>
+        /// <param name="close"></param>
+        /// <param name="close_message"></param>
+        /// <returns></returns>
+        public int Close_UZ_DOC(ref EFIDS.Concrete.EFDbContext context, UZ_DOC_Arrival doc, DateTime? close, string close_message)
+        {
+            try
+            {
+                if (context == null)
+                {
+                    context = new EFIDS.Concrete.EFDbContext();
+                }
+                EFIDS.Concrete.EFUZ_DOC ef_uz_doc = new EFIDS.Concrete.EFUZ_DOC(context);
+                EFIDS.Entities.UZ_DOC uz_doc = ef_uz_doc.Context.Where(d => d.num_doc == doc.num_doc).FirstOrDefault();
+                if (uz_doc != null)
+                {
+                    uz_doc.close = close;
+                    uz_doc.close_message = close_message;
+                    ef_uz_doc.Update(uz_doc);
+                    return 1;
+
+                }
+                else return (int)errors_base.not_epd_document; // Нет ЭПД
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("Close_UZ_DOC(context={0}, doc={1}, close={2}, close_message={3})", context, doc, close, close_message), servece_owner, eventID);
+                return (int)errors_base.global;// Ошибка
+            }
+        }
+        /// <summary>
+        /// Обновить список ЭПД
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="res"></param>
+        /// <param name="list_uz_doc"></param>
+        /// <param name="searsh_uz"></param>
+        public void Update_List_UZ_DOC(ref EFIDS.Concrete.EFDbContext context, ref ResultUpdateStringID res, List<UZ_DOC_Arrival> list_uz_doc, bool searsh_uz)
+        {
+            try
+            {
+                int count = list_uz_doc.Count();
+                // Начнем обработку раскредитованых с датой ниже мак даты хранения на сервере
+                foreach (UZ_DOC_Arrival doc in list_uz_doc)
+                {
+                    int res_upd = 0;
+                    if (doc.revision == 0)
+                    {
+                        res_upd = Close_UZ_DOC(ref context, doc, DateTime.Now, "ЭПД - ручной ввод, закрыт");
+                        res.SetCloseResult(res_upd, doc.num_doc);
+                        Console.WriteLine("ID документа {0}, № документа {1} - ЭПД - ручной ввод, закрыт", doc.num_doc, doc.num_uz);
+                    }
+                    else
+                    {
+                        DateTime date_exceeded = DateTime.Now.AddDays(-1 * this.day_arhive_epd);
+                        Console.WriteLine("ID документа {0}, № документа {1}, осталось {2}", doc.num_doc, doc.num_uz, --count);
+                        // Получим документ
+                        UZ.UZ_DOC upd_doc_uz = getUpdate_UZ_DOC(doc.num_doc, doc.num_uz.ToString());
+                        if (upd_doc_uz != null)
+                        {
+                            if (((int)upd_doc_uz.status) >= 8)
+                            {
+                                // Достигли конца обновления
+                                res_upd = Update_UZ_DOC(ref context, doc, upd_doc_uz, DateTime.Now, "ЭПД найден в БД обновлен и закрыт.");
+                                res.SetCloseResult(res_upd, doc.num_doc);
+                                Console.WriteLine("ID документа {0}, № документа {1} - Найден в БД, обновлен и закрыт, код {2}", doc.num_doc, doc.num_uz, res_upd);
+                            }
+                            else
+                            {
+                                // еще требуется обновление
+                                // Проверим дата обновления документа еще в диапазоне времени хранения на сервере УЗ
+                                if ((doc.dt != null && doc.dt > date_exceeded) || (doc.dt == null))
+                                {
+                                    // Дата обновления документа еще в диапазоне времени хранения на сервере УЗ или не определена
+                                    res_upd = Update_UZ_DOC(ref context, doc, upd_doc_uz, null, "ЭПД найден в БД и обновлен");
+                                    res.SetUpdateResult(res_upd, doc.num_doc);
+                                    Console.WriteLine("ID документа {0}, № документа {1} - Найден в БД и обновлен, код {2}", doc.num_doc, doc.num_uz, res_upd);
+                                }
+                                else
+                                {
+                                    // Достигли конца обновления, документ уже не доступен на УЗ
+                                    res_upd = Update_UZ_DOC(ref context, doc, upd_doc_uz, DateTime.Now, "ЭПД найден в БД обновлен и закрыт по времени.");
+                                    res.SetCloseResult(res_upd, doc.num_doc);
+                                    Console.WriteLine("ID документа {0}, № документа {1} - Найден в БД, обновлен и закрыт по времени, код {2}", doc.num_doc, doc.num_uz, res_upd);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // Искать на сервере УЗ?
+                            if (searsh_uz == true)
+                            {
+                                // Поиск на сервере УЗ 
+                                UZ.UZ_DOC sms_doc_uz = getUpdateSMS_UZ_DOC(doc.num_doc, doc.num_uz.ToString());
+                                if (sms_doc_uz != null)
+                                {
+                                    // ЭПД найден на УЗ
+                                    if (((int)sms_doc_uz.status) >= 8)
+                                    {
+                                        // Достигли конца обновления
+                                        res_upd = Update_UZ_DOC(ref context, doc, sms_doc_uz, DateTime.Now, "ЭПД найден на УЗ обновлен и закрыт.");
+                                        res.SetCloseResult(res_upd, doc.num_doc);
+                                        Console.WriteLine("ID документа {0}, № документа {1} - Найден на УЗ, обновлен и закрыт, код {2}", doc.num_doc, doc.num_uz, res_upd);
+                                    }
+                                    else
+                                    {
+                                        // еще требуется обновление
+                                        res_upd = Update_UZ_DOC(ref context, doc, sms_doc_uz, null, "ЭПД найден на УЗ и обновлен");
+                                        res.SetUpdateResult(res_upd, doc.num_doc);
+                                        Console.WriteLine("ID документа {0}, № документа {1} - Найден на УЗ и обновлен, код {2}", doc.num_doc, doc.num_uz, res_upd);
+                                    }
+                                }
+                                else
+                                {
+                                    // ЭПД не найдено на УЗ
+                                    res_upd = Close_UZ_DOC(ref context, doc, DateTime.Now, "ЭПД не найден в БД и УЗ, закрыт");
+                                    res.SetCloseResult(res_upd, doc.num_doc);
+                                    Console.WriteLine("ID документа {0}, № документа {1} - !Не найден в БД и на УЗ, закрыт", doc.num_doc, doc.num_uz);
+                                }
+                            }
+                            else
+                            {
+                                res_upd = Close_UZ_DOC(ref context, doc, DateTime.Now, "ЭПД не найден в БД и закрыт");
+                                res.SetCloseResult(res_upd, doc.num_doc);
+                                Console.WriteLine("ID документа {0}, № документа {1} - !Не найден в БД, закрыт", doc.num_doc, doc.num_uz);
+                            }
+                        }
+                    }
+
+
+
+                }
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("Update_List_UZ_DOC(context={0}, res={1}, list_uz_doc={2}, searsh_uz={3})", context, res, list_uz_doc, searsh_uz), servece_owner, eventID);
+            }
+        }
+        /// <summary>
+        /// Обновим документы по прибытию
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int UpdateArrivalEPD()
+        {
+            try
+            {
+                DateTime start = DateTime.Now;
+                ResultUpdateStringID res = new ResultUpdateStringID(0);
+                //// Проверим и скорректируем пользователя
+                //if (String.IsNullOrWhiteSpace(user))
+                //{
+                //    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                //}
+
+                UZ.UZ_SMS uz_sms = new UZ.UZ_SMS(this.servece_owner);
+
+                EFIDS.Concrete.EFDbContext context_ids = new EFIDS.Concrete.EFDbContext();
+
+                // Выполним запрос и получим все ЭПД с признапком не закрыт
+                string sql = "select * from [IDS].[get_view_uz_doc_arrival]() where [close] is null";
+                List<UZ_DOC_Arrival> list_uz_doc = context_ids.Database.SqlQuery<UZ_DOC_Arrival>(sql).ToList();
+                res.count = list_uz_doc != null ? list_uz_doc.Count() : 0;
+                List<UZ_DOC_Arrival> uz_doc_ids_uncredited = new List<UZ_DOC_Arrival>();
+                List<UZ_DOC_Arrival> uz_doc_ids_open = new List<UZ_DOC_Arrival>();
+                // Проверим список получен?
+                if (list_uz_doc != null && list_uz_doc.Count() > 0)
+                {
+                    // Да список получен, продолжим обработку.
+                    uz_doc_ids_uncredited = list_uz_doc.Where(d => d.status == 8).ToList(); // выбрать раскредитованых
+                    uz_doc_ids_open = list_uz_doc.Where(d => d.status < 8).ToList(); // выбрать не раскредитованые
+
+                    // Начнем обработку раскредитованых
+                    if (uz_doc_ids_uncredited != null && uz_doc_ids_uncredited.Count() > 0)
+                    {
+                        List<UZ_DOC_Arrival> uz_doc_ids_uncredited_null = uz_doc_ids_uncredited.Where(d => d.dt == null).ToList(); // выбрать раскредитованых с датой обновления пусто
+                        DateTime date_exceeded = DateTime.Now.AddDays(-1 * this.day_arhive_epd);
+                        List<UZ_DOC_Arrival> uz_doc_ids_uncredited_exceeded = uz_doc_ids_uncredited.Where(d => d.dt < date_exceeded).ToList(); // выбрать раскредитованых с датой обновления ниже мак даты хранения на сервере
+                        List<UZ_DOC_Arrival> uz_doc_ids_uncredited_not_reached = uz_doc_ids_uncredited.Where(d => d.dt >= date_exceeded).ToList(); // выбрать раскредитованых с датой обновления в диапазоне периода хранения данных на сервере.
+                                                                                                                                                   // -----------------------------------------------------------------------------------------
+                                                                                                                                                   // Начнем обработку раскредитованых с датой обновления пусто
+                        Update_List_UZ_DOC(ref context_ids, ref res, uz_doc_ids_uncredited_null, false);
+                        // -----------------------------------------------------------------------------------------
+                        // Начнем обработку раскредитованых с датой ниже мак даты хранения на сервере
+                        Update_List_UZ_DOC(ref context_ids, ref res, uz_doc_ids_uncredited_exceeded, false);
+                        // -----------------------------------------------------------------------------------------
+                        // Начнем обработку раскредитованых с датой обновления в диапазоне периода хранения данных на сервере
+                        Update_List_UZ_DOC(ref context_ids, ref res, uz_doc_ids_uncredited_not_reached, true);
+
+                    }
+                    // Начнем обработку не раскредитованых
+                    if (uz_doc_ids_open != null && uz_doc_ids_open.Count() > 0)
+                    {
+                        List<UZ_DOC_Arrival> uz_doc_ids_open_null = uz_doc_ids_open.Where(d => d.dt == null).ToList(); // выбрать раскредитованых с датой обновления пусто
+                        DateTime date_exceeded = DateTime.Now.AddDays(-1 * this.day_arhive_epd);
+                        List<UZ_DOC_Arrival> uz_doc_ids_open_exceeded = uz_doc_ids_open.Where(d => d.dt < date_exceeded).ToList(); // выбрать раскредитованых с датой обновления ниже мак даты хранения на сервере
+                        List<UZ_DOC_Arrival> uz_doc_ids_open_not_reached = uz_doc_ids_open.Where(d => d.dt >= date_exceeded).ToList(); // выбрать раскредитованых с датой обновления в диапазоне периода хранения данных на сервере.
+                        // -----------------------------------------------------------------------------------------
+                        // Начнем обработку раскредитованых с датой обновления пусто
+                        Update_List_UZ_DOC(ref context_ids, ref res, uz_doc_ids_open_null, false);
+                        // -----------------------------------------------------------------------------------------
+                        // Начнем обработку раскредитованых с датой ниже мак даты хранения на сервере
+                        Update_List_UZ_DOC(ref context_ids, ref res, uz_doc_ids_open_exceeded, false);
+                        // -----------------------------------------------------------------------------------------
+                        // Начнем обработку раскредитованых с датой обновления в диапазоне периода хранения данных на сервере
+                        Update_List_UZ_DOC(ref context_ids, ref res, uz_doc_ids_open_not_reached, true);
+
+                    }
+                }
+                // Если операция успешна, перенумеруем позиции на пути с которого ушли вагоны
+                if (res.error == 0)
+                {
+                    res.SetResult(context_ids.SaveChanges());
+                }
+                string mess = String.Format("Операция обновления ЭПД по прибытию. Код выполнения = {0}. Результат обновления [определено {1} документов (из них раскредетовано но не закрыто : {2}, не раскредетовано : {3} ), обновлено {4}, пропущено {5}, закрыто {6}, ошибок обновления {7}].",
+                    res.result, res.count, uz_doc_ids_uncredited.Count(), uz_doc_ids_open.Count(), res.update, res.skip, res.close, res.error);
+                mess.WarningLog(servece_owner, eventID);
+                mess.EventLog(res.result < 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
+                DateTime stop = DateTime.Now;
+                servece_owner.ServicesToLog(eventID, String.Format("Операция обновления ЭПД по прибытию"), start, stop, res.result);
+                return res.result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateArrivalEPD()"), servece_owner, eventID);
+                return (int)errors_base.global;// Ошибка
+            }
+        }
+        #endregion
+
+        #region ОПЕРАЦИИ ОБНОВЛЕНИЯ ДОКУМЕНТОВ ЭПД ПО ОТПРАВКЕ
         /// <summary>
         /// получить текущий документ на сданный на УЗ вагон
         /// </summary>
@@ -4244,12 +4926,20 @@ namespace IDS
         /// <param name="id_outgoing_sostav"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public OperationResultID OperationUpdateEPDSendingSostav(long id_outgoing_sostav, string user)
+        public OperationResultID OperationUpdateEPDSendingSostav(ref EFDbContext context, long id_outgoing_sostav, string user)
         {
             OperationResultID rt = new OperationResultID();
             try
             {
-                EFDbContext context = new EFDbContext();
+                if (context == null)
+                {
+                    context = new EFIDS.Concrete.EFDbContext();
+                };
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
                 EFOutgoingSostav ef_out_sostav = new EFOutgoingSostav(context);
                 EFOutgoingCars ef_out_car = new EFOutgoingCars(context);
                 OutgoingSostav sostav = ef_out_sostav.Context.Where(s => s.id == id_outgoing_sostav).FirstOrDefault();
@@ -4336,294 +5026,95 @@ namespace IDS
                 return rt;// Возвращаем id=-1 , Ошибка
             }
         }
-        #endregion
-
-        #endregion
-
-        #region АДМИНИСТРИРОВАНИЕ
         /// <summary>
-        /// Закрыть вагоны принудительно
+        /// Операция обновить документы ЭПД по составу
         /// </summary>
-        /// <param name="list_id"></param>
+        /// <param name="id_outgoing_sostav"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public int CloseWir(List<int> list_id, DateTime close_date, string note, string user)
+        public OperationResultID OperationUpdateEPDSendingSostav(long id_outgoing_sostav, string user)
         {
-            ResultUpdateID res = new ResultUpdateID(list_id.Count());
+            OperationResultID rt = new OperationResultID();
             try
             {
-
                 EFDbContext context = new EFDbContext();
                 // Проверим и скорректируем пользователя
                 if (String.IsNullOrWhiteSpace(user))
                 {
                     user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
                 }
-
-                EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
-                // Пройдемся по списку внутрених перемещений
-                int count = list_id.Count();
-                foreach (int id in list_id.ToList())
-                {
-                    WagonInternalRoutes wir = ef_wir.Context.Where(r => r.id == id).FirstOrDefault();
-                    int result = 0;
-                    ;
-                    if (wir != null)
-                    {
-                        // Запись не закрыта
-                        if (wir.close == null)
-                        {
-                            wir.CloseWagon(close_date, note, user); // Закроет все операции и дислокации
-                            ef_wir.Update(wir);
-                            result = ef_wir.Save();
-                            //res.SetUpdateResult(result, id);
-                        }
-                        else
-                        {
-                            // Запись закрыта пропустить
-                            result = 0;
-                            //res.SetUpdateResult(result, id);
-                        }
-                    }
-                    else
-                    {
-                        // Запись wir не найдена
-                        result = (int)errors_base.not_wir_db;
-
-                    }
-                    res.SetUpdateResult(result, id);
-                    Console.WriteLine("Обработал id = {0}, результат = {1}, осталось {2}", id, result, count--);
-                }
-                if (res.error == 0)
-                {
-                    res.SetResult(res.listResult.Count());                      // ОК   
-                }
-                else
-                {
-                    res.SetResult((int)errors_base.error_save_changes);      // Были ошибки по ходу выполнения операций       
-                }
-
+                return OperationUpdateEPDSendingSostav(ref context, id_outgoing_sostav, user);
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("CloseWir(list_id={0}, close_date={1}, note={2}, user={3})", list_id, close_date, note, user), servece_owner, eventID);
-                res.SetResult((int)errors_base.global); // Ошибка
+                e.ExceptionMethodLog(String.Format("OperationUpdateEPDSendingSostav(id_outgoing_sostav={0}, user={1})",
+                    id_outgoing_sostav, user), servece_owner, eventID);
+                rt.SetResult((int)errors_base.global);
+                return rt;// Возвращаем id=-1 , Ошибка
             }
-            return res.result;
         }
         /// <summary>
-        /// Закрыть вагоны принудительно
+        /// Обновить документы по отправленным составам
         /// </summary>
-        /// <param name="list_id"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public int DeleteDoubleWir(List<int> list_id)
+        public int UpdateSendingEPD(string user)
         {
-            ResultUpdateID res = new ResultUpdateID(list_id.Count());
             try
             {
-
-                EFDbContext context = new EFDbContext();
-
-                EFWagonInternalMovement ef_wim = new EFWagonInternalMovement(context);
-                EFWagonInternalOperation ef_wio = new EFWagonInternalOperation(context);
-                int count = list_id.Count();
-                // Пройдемся по списку внутрених перемещений
-                foreach (int id in list_id.ToList())
-                {
-                    List<WagonInternalMovement> list_wim = ef_wim.Context.Where(m => m.id_wagon_internal_routes == id).OrderBy(c => c.id).ToList();
-                    List<WagonInternalOperation> list_wio = ef_wio.Context.Where(m => m.id_wagon_internal_routes == id).OrderBy(c => c.id).ToList();
-
-                    // Сгруппируем по путям роспуска
-                    List<IGrouping<long?, WagonInternalMovement>> group_list_wim = list_wim
-                                    .ToList()
-                                    .GroupBy(w => w.parent_id)
-                                    .ToList();
-                    List<IGrouping<long?, WagonInternalOperation>> group_list_wio = list_wio
-                                    .ToList()
-                                    .GroupBy(w => w.parent_id)
-                                    .ToList();
-                    // Пройдемся по путям роспуска
-                    foreach (IGrouping<long?, WagonInternalMovement> gr_wim in group_list_wim.ToList())
-                    {
-                        // Найдем задвоение
-                        if (gr_wim.Count() > 1)
-                        {
-                            WagonInternalMovement wim_close = gr_wim.Where(m => m.way_end != null).FirstOrDefault();
-                            if (wim_close != null)
-                            {
-                                // есть закрытая запись, удалить все не закрытые
-                                List<WagonInternalMovement> list_wim_close = gr_wim.Where(m => m.way_end == null).ToList();
-                                foreach (WagonInternalMovement del_wim in list_wim_close)
-                                {
-                                    ef_wim.Delete(del_wim.id);
-                                }
-
-                            }
-                            else
-                            {
-                                // Нет закрытой записи, оставить одну с макс id
-                                WagonInternalMovement wim_max = gr_wim.OrderByDescending(m => m.id).FirstOrDefault();
-                                if (wim_max != null)
-                                {
-                                    long id_max = wim_max.id;
-                                    foreach (WagonInternalMovement del_wim in gr_wim)
-                                    {
-                                        if (del_wim.id != id_max)
-                                        {
-                                            ef_wim.Delete(del_wim.id);
-                                        }
-
-                                    }
-                                }
-
-                            }
-                        }
-                    }
-                    int result_wim = ef_wim.Save();
-
-                    count--;
-                    Console.WriteLine("Обработал wim id = {0}, результат = {1}, осталось {2}", id, result_wim, count);
-                    // Пройдемся по операциям
-                    foreach (IGrouping<long?, WagonInternalOperation> gr_wio in group_list_wio.ToList())
-                    {
-                        // Найдем задвоение
-                        if (gr_wio.Count() > 1)
-                        {
-                            // Нет закрытой записи, оставить одну с макс id
-                            WagonInternalOperation wio_max = gr_wio.OrderByDescending(m => m.id).FirstOrDefault();
-                            if (wio_max != null)
-                            {
-                                long id_max = wio_max.id;
-                                foreach (WagonInternalOperation del_wio in gr_wio)
-                                {
-                                    if (del_wio.id != id_max)
-                                    {
-                                        ef_wio.Delete(del_wio.id);
-                                    }
-
-                                }
-                            }
-                        }
-                    }
-                    int result_wio = ef_wio.Save();
-
-                    Console.WriteLine("Обработал wio id = {0}, результат = {1}, осталось {2}", id, result_wio, count);
-                }
-            }
-            catch (Exception e)
-            {
-                e.ExceptionMethodLog(String.Format("DeleteDoubleWir(list_id={0})", list_id), servece_owner, eventID);
-                res.SetResult((int)errors_base.global); // Ошибка
-            }
-            return res.result;
-        }
-        /// <summary>
-        /// Административная функция вернуть вагон из отправки
-        /// </summary>
-        /// <param name="nums"></param>
-        /// <param name="note"></param>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        public int ReturnWagons(List<int> nums, string note, string user)
-        {
-            ResultUpdateWagon res = new ResultUpdateWagon(nums.Count());
-            try
-            {
-
-                EFDbContext context = new EFDbContext();
+                DateTime start = DateTime.Now;
+                DateTime date_exceeded = DateTime.Now.AddDays(-1 * this.day_arhive_epd);
+                OperationResultID res = new OperationResultID();
                 // Проверим и скорректируем пользователя
                 if (String.IsNullOrWhiteSpace(user))
                 {
                     user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
                 }
 
-                //EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
-                // Пройдемся по списку внутрених перемещений
-                int count = nums.Count();
-                foreach (int num in nums.ToList())
+                //IDS_WIR ids_wir = new IDS_WIR(this.servece_owner);
+                UZ.UZ_SMS uz_sms = new UZ.UZ_SMS(this.servece_owner);
+
+                EFIDS.Concrete.EFDbContext context_ids = new EFIDS.Concrete.EFDbContext();
+                // Выполним запрос и получим все ЭПД с признапком не закрыт
+                string sql = "select * from [IDS].[get_view_uz_doc_sending]() where status_sostav >=2 and  [position_outgoing] is not null and ([num_doc] is null or [status]<8)";
+                List<UZ_DOC_Sending> list_uz_doc_all = context_ids.Database.SqlQuery<UZ_DOC_Sending>(sql).ToList();
+                List<UZ_DOC_Sending> list_uz_doc = list_uz_doc_all.Where(d => d.dt >= date_exceeded).ToList();
+                //res. = list_uz_doc != null ? list_uz_doc.Count() : 0;
+                // Сгруппируем по id сотава для отправки
+                List<IGrouping<long, UZ_DOC_Sending>> group_uz_doc = list_uz_doc.ToList().GroupBy(d => d.id_sostav).ToList();
+                int count = list_uz_doc != null ? list_uz_doc.Count() : 0;
+                // Пройдемся по составам
+                foreach (IGrouping<long, UZ_DOC_Sending> uz_doc_sostav in group_uz_doc)
                 {
-                    WagonInternalRoutes wir = context.GetLastWagon(num);
-                    int result = 0;
-                    if (wir != null)
-                    {
-                        // Запись закрыта
-                        if (wir.close != null)
-                        {
-                            // Получим текущее положение вагона
-                            WagonInternalMovement wim = wir.GetLastMovement();
-                            WagonInternalOperation wio = wir.GetLastOperation();
-                            if (wim != null)
-                            {
-                                if (wio != null)
-                                {
-                                    // Проверки закончились, выполним операции
-                                    wir.id_outgoing_car = null;
-                                    wir.note = note;
-                                    wir.close = null;
-                                    wir.close_user = null;
-                                    // вернем на путь
-                                    wim.way_end = null;
-                                    wim.note = note;
-                                    wim.close = null;
-                                    wim.close_user = null;
-                                    // Отментим отмену в операции
-                                    wio.note = note;
-                                    result = 3;
-                                }
-                                else
-                                {
-                                    result = (int)errors_base.not_wio_db;
-                                }
-                            }
-                            else
-                            {
-                                result = (int)errors_base.not_wim_db;
-                            }
-
-
-                            //wir.CloseWagon(close_date, note, user); // Закроет все операции и дислокации
-                            //ef_wir.Update(wir);
-                            //result = ef_wir.Save();
-                            //res.SetUpdateResult(result, num);
-                        }
-                        else
-                        {
-                            // Запись открыта пропустить
-                            result = 0;
-
-                        }
-                    }
-                    else
-                    {
-                        // Запись wir не найдена
-                        result = (int)errors_base.not_wir_db;
-
-                    }
-                    if (result > 0)
-                    {
-                        result = context.SaveChanges();
-                    }
-                    res.SetUpdateResult(result, num);
-                    Console.WriteLine("Обработал №  = {0}, результат = {1}, осталось {2}", num, result, count--);
+                    List<UZ_DOC_Sending> list_cars = uz_doc_sostav.ToList();
+                    // Выполним обновление всего пула документов
+                    OperationResultID result = OperationUpdateEPDSendingSostav(ref context_ids, uz_doc_sostav.Key, user);
+                    // Запомним результат
+                    res.SetResultOperation(result.result, uz_doc_sostav.Key);
+                    Console.WriteLine("ID состава {0}, обновлено {1} ошибок {2}, осталось {3}", uz_doc_sostav.Key, result.result, result.error, --count);
                 }
-                if (res.error == 0)
-                {
-                    res.SetResult(res.listResult.Count());                      // ОК   
-                }
-                else
-                {
-                    res.SetResult((int)errors_base.error_save_changes);      // Были ошибки по ходу выполнения операций       
-                }
+                // Если операция успешна, перенумеруем позиции на пути с которого ушли вагоны
 
+                //if (res.error == 0)
+                //{
+                //    res.SetResult(context_ids.SaveChanges());
+                //}
+                string mess = String.Format("Операция обновления ЭПД по отправке. Код выполнения = {0}. Результат обновления [определено {1} составов, обновлено вагонов {2}, ошибок обновления {3}].",
+                    res.result, list_uz_doc != null ? list_uz_doc.Count() : 0, res.result, res.error);
+                mess.WarningLog(servece_owner, eventID);
+                mess.EventLog(res.result < 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
+                DateTime stop = DateTime.Now;
+                servece_owner.ServicesToLog(eventID, String.Format("Операция обновления ЭПД по отправке"), start, stop, res.result);
+                return res.result;
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("ReturnWagons(nums={0}, note={1}, user={2})", nums, note, user), servece_owner, eventID);
-                res.SetResult((int)errors_base.global); // Ошибка
+                e.ExceptionMethodLog(String.Format("UpdateSendingEPD()"), servece_owner, eventID);
+                return (int)errors_base.global;// Ошибка
             }
-            return res.result;
         }
+
+        #endregion
 
         #endregion
 
@@ -4867,6 +5358,7 @@ namespace IDS
         //}
 
         #endregion
+
     }
 }
 

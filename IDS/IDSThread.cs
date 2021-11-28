@@ -172,7 +172,7 @@ namespace IDS
                 int res_update = 0;
                 lock (locker_epd)
                 {
-                    IDS_EPD ids_epd = new IDS_EPD(service);
+                    IDS_WIR ids_epd = new IDS_WIR(service);
                     ids_epd.Day_arhive_epd = day_arhive_epd;
                     ids_epd.Searsh_in_sms = searsh_in_sms;
                     res_update = ids_epd.UpdateArrivalEPD();

@@ -378,8 +378,6 @@ namespace Test.TestModule
             int res_sava = context.SaveChanges();
             //Ошибка выполнения метода IncomingWagon(context=EFIDS.Concrete.EFDbContext, id_station=6, id_way=109, date_start=30.08.2021 15:50:00, position=113, wagon=System.Data.Entity.DynamicProxies.ArrivalCars_274B60BC2D59FA04CEDD4289498D58C1EE9453D9D01127990A0A0D4D3044D283, user=EUROPE\svnovikova)
         }
-
-
         // Тест формирования отчета операции отправки (вагоны)
         public void IDS_WIR_GetWagonsOperationOfSend()
         {
@@ -388,7 +386,6 @@ namespace Test.TestModule
             DateTime stop = new DateTime(2021, 8, 31, 23, 59, 59);
             List<wagon_operation_send> list = ids.GetWagonsOperationOfSend(start, stop);
         }
-
         // Тест формирования отчета операции отправки (состав-вагоны)
         public void IDS_WIR_GetSostavWagonsOperationOfSend()
         {
@@ -397,8 +394,20 @@ namespace Test.TestModule
             DateTime stop = new DateTime(2021, 8, 31, 23, 59, 59);
             List<sostav_operation_send> list = ids.GetSostavWagonsOperationOfSend(start, stop);
         }
+        // Обновить документы по прибытию
+        public void IDS_EPD_UpdateArrivalEPD()
+        {
 
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            int result = ids.UpdateArrivalEPD();
 
+        }
+        // Обновить документы по отправке по всем составам
+        public void IDS_EPD_UpdateSendingEPD()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            int result = ids.UpdateSendingEPD(@"EUROPE\ealevchenko");
+        }
         #endregion
 
         #region IDSThread
@@ -413,24 +422,6 @@ namespace Test.TestModule
         }
 
         #endregion
-
-        #region IDS_EPD
-        // Обновить документы по прибытию
-        public void IDS_EPD_UpdateArrivalEPD()
-        {
-
-            IDS_EPD ids = new IDS_EPD(service.Test);
-            int result = ids.UpdateArrivalEPD();
-
-        }
-        // Обновить документы по отправке
-        public void IDS_EPD_UpdateSendingEPD()
-        {
-            IDS_EPD ids = new IDS_EPD(service.Test);
-            int result = ids.UpdateSendingEPD();
-        }
-        #endregion
-
 
         public void GetActs()
         {

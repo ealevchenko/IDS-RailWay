@@ -57,7 +57,6 @@
     <Compile Include="IDSTransfer.cs" />
     <Compile Include="IDSThread.cs" />
     <Compile Include="IDS_Base.cs" />
-    <Compile Include="IDS_EPD.cs" />
     <Compile Include="IDS_RWT.cs" />
     <Compile Include="IDS_SAP.cs" />
     <Compile Include="IDS_WIR.cs" />
