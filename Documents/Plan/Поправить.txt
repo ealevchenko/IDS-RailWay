@@ -26,5 +26,4 @@
 
 
 SMS
-weight_place_br
-weight_place_net
+nom_dover
