@@ -224,8 +224,8 @@ namespace Test
             //tids.IDS_WIR_GetSostavWagonsOperationOfSend();          // Тест формирования отчета операции отправки (состав-вагоны)
 
             #region IDS_EPD
-            //tids.IDS_WIR_UpdateArrivalEPD();                            // Тест функции сервиса обновления входящих документов
-            tids.IDS_WIR_UpdateSendingEPD();                            // Тест функции сервиса обновления исходящих документов
+            tids.IDS_WIR_UpdateArrivalEPD();                            // Тест функции сервиса обновления входящих документов
+            //tids.IDS_WIR_UpdateSendingEPD();                            // Тест функции сервиса обновления исходящих документов
             #endregion
 
             #endregion
