@@ -26,7 +26,7 @@ namespace UZ
         public int? strah_komp_recipient { get; set; }
         public string name_strah_komp_recipient { get; set; }
         public int? nom_passp { get; set; }
-        public int? nom_dover { get; set; }
+        public long? nom_dover { get; set; }
         public string nom_strah_polis_recipient { get; set; }
         public string house { get; set; }
         public DateTime? date_dover { get; set; }
@@ -790,7 +790,7 @@ namespace UZ
                     tag.strah_komp_recipient = getAttributes<int?>(node, "strah_komp_recipient");
                     tag.name_strah_komp_recipient = getAttributes<string>(node, "name_strah_komp_recipient");
                     tag.nom_passp = getAttributes<int?>(node, "nom_passp");
-                    tag.nom_dover = getAttributes<int?>(node, "nom_dover");
+                    tag.nom_dover = getAttributes<long?>(node, "nom_dover");
                     tag.nom_strah_polis_recipient = getAttributes<string>(node, "nom_strah_polis_recipient");
                     tag.house = getAttributes<string>(node, "house");
                     tag.date_dover = getAttributes<DateTime?>(node, "date_dover");
