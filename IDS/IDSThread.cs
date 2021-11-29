@@ -26,6 +26,9 @@ namespace IDS
         protected Thread thUpdateArrivalEPD = null;
         public bool statusUpdateArrivalEPD { get { return thUpdateArrivalEPD.IsAlive; } }
 
+        protected Thread thUpdateSendingEPD = null;
+        public bool statusUpdateSendingEPD { get { return thUpdateSendingEPD.IsAlive; } }
+
         public IDSThread()
         {
 
@@ -161,8 +164,8 @@ namespace IDS
                 try
                 {
                     // Количество дней, ожидания вагона с подходов
-                    day_arhive_epd = int.Parse(ConfigurationManager.AppSettings["EPD_DayArhive"].ToString());
-                    searsh_in_sms = bool.Parse(ConfigurationManager.AppSettings["EPD_Searsh"].ToString());
+                    day_arhive_epd = int.Parse(ConfigurationManager.AppSettings["EPD_DayArhiveArrival"].ToString());
+                    searsh_in_sms = bool.Parse(ConfigurationManager.AppSettings["EPD_SearshArrival"].ToString());
 
                 }
                 catch (Exception ex)
@@ -173,8 +176,8 @@ namespace IDS
                 lock (locker_epd)
                 {
                     IDS_WIR ids_epd = new IDS_WIR(service);
-                    ids_epd.Day_arhive_epd = day_arhive_epd;
-                    ids_epd.Searsh_in_sms = searsh_in_sms;
+                    ids_epd.Day_arhive_epd_arrival = day_arhive_epd;
+                    ids_epd.Searsh_in_sms_arrival = searsh_in_sms;
                     res_update = ids_epd.UpdateArrivalEPD();
                 }
                 TimeSpan ts = DateTime.Now - dt_start;
@@ -195,6 +198,71 @@ namespace IDS
 
         #endregion
 
+        #region IDS_UpdateSendingEPD
 
+        public bool Start_UpdateSendingEPD()
+        {
+            service service = service.IDS_UpdateSendingEPD;
+            string mes_service_start = String.Format("Поток : {0} сервиса : {1}", service.ToString(), servece_owner);
+            try
+            {
+                if ((thUpdateSendingEPD == null) || (!thUpdateSendingEPD.IsAlive && thUpdateSendingEPD.ThreadState == ThreadState.Stopped))
+                {
+                    thUpdateSendingEPD = new Thread(UpdateSendingEPD);
+                    thUpdateSendingEPD.Name = service.ToString();
+                    thUpdateSendingEPD.Start();
+                }
+                return thUpdateSendingEPD.IsAlive;
+            }
+            catch (Exception ex)
+            {
+                mes_service_start += " - ошибка запуска.";
+                ex.ExceptionLog(mes_service_start, servece_owner, eventID);
+                return false;
+            }
+        }
+
+        private static void UpdateSendingEPD()
+        {
+            service service = service.IDS_UpdateSendingEPD;
+            DateTime dt_start = DateTime.Now;
+            try
+            {
+                int day_arhive_epd = 90; // Количество дней хранения ЭПД на сервере УЗ (3 месяца)
+                // считать настройки
+                try
+                {
+                    // Количество дней, ожидания вагона с подходов
+                    day_arhive_epd = int.Parse(ConfigurationManager.AppSettings["EPD_DayArhiveSending"].ToString());
+
+                }
+                catch (Exception ex)
+                {
+                    ex.ExceptionLog(String.Format("Ошибка выполнения считывания настроек потока {0}, сервиса {1}", service.ToString(), servece_owner), servece_owner, eventID);
+                }
+                int res_update = 0;
+                lock (locker_epd)
+                {
+                    IDS_WIR ids_epd = new IDS_WIR(service);
+                    ids_epd.Day_arhive_epd_sending = day_arhive_epd;
+                    res_update = ids_epd.UpdateSendingEPD(null);
+                }
+                TimeSpan ts = DateTime.Now - dt_start;
+                string mes_service_exec = String.Format("Поток {0} сервиса {1} - время выполнения: {2}:{3}:{4}({5}), код выполнения: res_update:{6}.", service.ToString(), servece_owner, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds, res_update);
+                mes_service_exec.InformationLog(servece_owner, eventID);
+                service.ServicesToLog(service.ToString() + " - выполнен.", dt_start, DateTime.Now, res_update);
+            }
+            catch (ThreadAbortException exc)
+            {
+                String.Format("Поток {0} сервиса {1} - прерван по событию ThreadAbortException={2}", service.ToString(), servece_owner, exc).WarningLog(servece_owner, eventID);
+            }
+            catch (Exception ex)
+            {
+                ex.ExceptionLog(String.Format("Ошибка выполнения цикла обновления, потока {0} сервис {1}", service.ToString(), servece_owner), servece_owner, eventID);
+                service.ServicesToLog(service.ToString() + " - завершен с ошибкой.", dt_start, DateTime.Now, -1);
+            }
+        }
+
+        #endregion
     }
 }

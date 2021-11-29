@@ -45,20 +45,23 @@ namespace IDSService
 
         private service thread_update_incoming_supply = service.IDS_UpdateIncomingSupply;
         private service thread_update_arrival_epd = service.IDS_UpdateArrivalEPD;
-
+        private service thread_update_sending_epd = service.IDS_UpdateSendingEPD;
 
 
         private int interval_update_incoming_supply = 3600; //  1раз в час
         private int interval_update_arrival_epd = 3600; //  1раз в час
+        private int interval_update_sending_epd = 3600; //  1раз в час
 
 
         bool active_update_incoming_supply = true;
         bool active_update_arrival_epd = true;
+        bool active_update_sending_epd = true;
 
         //System.Timers.Timer timer_services = new System.Timers.Timer();
 
         System.Timers.Timer timer_services_update_incoming_supply = new System.Timers.Timer();
         System.Timers.Timer timer_services_update_arrival_epd = new System.Timers.Timer();
+        System.Timers.Timer timer_services_update_sending_epd = new System.Timers.Timer();
 
         private IDSThread ids_th = new IDSThread(service.IDS);
 
@@ -80,9 +83,12 @@ namespace IDSService
                 // интервалы
                 this.interval_update_incoming_supply = int.Parse(ConfigurationManager.AppSettings["IntervalUpdateIncomingSupply"].ToString());
                 this.interval_update_arrival_epd = int.Parse(ConfigurationManager.AppSettings["IntervalUpdateArrivalEPD"].ToString());
+                this.interval_update_sending_epd = int.Parse(ConfigurationManager.AppSettings["IntervalUpdateSendingEPD"].ToString());
                 // состояние активности
                 this.active_update_incoming_supply = bool.Parse(ConfigurationManager.AppSettings["ActiveUpdateIncomingSupply"].ToString());
                 this.active_update_arrival_epd = bool.Parse(ConfigurationManager.AppSettings["ActiveUpdateArrivalEPD"].ToString());
+                this.active_update_sending_epd = bool.Parse(ConfigurationManager.AppSettings["ActiveUpdateSendingEPD"].ToString());
+
 
                 //this.active_close_approaches = RWSetting.GetDB_Config_DefaultSetting("ActiveCloseApproachesCars", this.thread_close_approaches, this.active_close_approaches, true);
 
@@ -95,6 +101,9 @@ namespace IDSService
 
                 timer_services_update_arrival_epd.Interval = this.interval_update_arrival_epd * 1000;
                 timer_services_update_arrival_epd.Elapsed += new System.Timers.ElapsedEventHandler(this.OnTimerServices_UpdateArrivalEPD);
+
+                timer_services_update_sending_epd.Interval = this.interval_update_sending_epd * 1000;
+                timer_services_update_sending_epd.Elapsed += new System.Timers.ElapsedEventHandler(this.OnTimerServices_UpdateSendingEPD);
                 //Добавить инициализацию других таймеров
                 //...............
             }
@@ -133,7 +142,8 @@ namespace IDSService
             message.WarningLog(servece_name, eventID); message.EventLog(EventStatus.Ok, servece_name, eventID);
             message = String.Format("Интервал выполнения сервиса {0}-{1} сек.", this.thread_update_arrival_epd, this.interval_update_arrival_epd);
             message.WarningLog(servece_name, eventID); message.EventLog(EventStatus.Ok, servece_name, eventID);
-
+            message = String.Format("Интервал выполнения сервиса {0}-{1} сек.", this.thread_update_sending_epd, this.interval_update_sending_epd);
+            message.WarningLog(servece_name, eventID); message.EventLog(EventStatus.Ok, servece_name, eventID);
         }
 
         protected override void OnStop()
@@ -238,6 +248,48 @@ namespace IDSService
             catch (Exception e)
             {
                 e.ExceptionLog(String.Format("OnTimerServices_UpdateArrivalEPD(sender={0}, args={1})", sender, args.ToString()), this.servece_name, eventID);
+            }
+        }
+        #endregion
+
+        #region IDS_UpdateSendingEPD
+        protected void Start_UpdateSendingEPD(bool active)
+        {
+            if (active)
+            {
+                ids_th.Start_UpdateSendingEPD();
+            }
+        }
+
+        protected void Start_UpdateSendingEPD()
+        {
+            bool active = bool.Parse(ConfigurationManager.AppSettings["ActiveUpdateSendingEPD"].ToString());
+            Start_UpdateSendingEPD(active);
+        }
+
+        protected void RunTimer_UpdateSendingEPD()
+        {
+            Start_UpdateSendingEPD();
+            timer_services_update_sending_epd.Start();
+        }
+
+        private void OnTimerServices_UpdateSendingEPD(object sender, System.Timers.ElapsedEventArgs args)
+        {
+            //String.Format("Сервис : {0} сработал таймер OnTimerServicesSending.", this.servece_name).WriteInformation(servece_name, eventID);
+            try
+            {
+                bool active = bool.Parse(ConfigurationManager.AppSettings["ActiveUpdateSendingEPD"].ToString());
+                Start_UpdateSendingEPD(active);
+                if (active != this.active_update_sending_epd)
+                {
+                    this.active_update_sending_epd = active;
+                    string mes_service_start = String.Format("Сервис : {0}, выполнение потока {1} - {2}", this.servece_name, this.thread_update_sending_epd, active ? "возабновленно" : "остановленно");
+                    mes_service_start.EventLog(EventStatus.Ok, servece_name, eventID);
+                }
+            }
+            catch (Exception e)
+            {
+                e.ExceptionLog(String.Format("OnTimerServices_UpdateSendingEPD(sender={0}, args={1})", sender, args.ToString()), this.servece_name, eventID);
             }
         }
         #endregion
