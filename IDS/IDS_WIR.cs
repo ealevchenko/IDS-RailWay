@@ -462,10 +462,15 @@ namespace IDS
     public class IDS_WIR : IDS_Base
     {
         private eventID eventID = eventID.IDS_IDSWIR;
-        private int day_arhive_epd = 90; // Количество дней хранения ЭПД на сервере УЗ (3 месяца)
-        public int Day_arhive_epd { get { return this.day_arhive_epd; } set { this.day_arhive_epd = value; } }
-        private bool searsh_in_sms = false; // Бит включить поиск в базе даных УЗ
-        public bool Searsh_in_sms { get { return this.searsh_in_sms; } set { this.searsh_in_sms = value; } }
+        private int day_arhive_epd_arrival = 90; // Количество дней хранения ЭПД на сервере УЗ (3 месяца)
+        public int Day_arhive_epd_arrival { get { return this.day_arhive_epd_arrival; } set { this.day_arhive_epd_arrival = value; } }
+        private int day_arhive_epd_sending = 80; // Количество дней хранения ЭПД на сервере УЗ (3 месяца)
+        public int Day_arhive_epd_sending { get { return this.day_arhive_epd_sending; } set { this.day_arhive_epd_sending = value; } }
+
+        private bool searsh_in_sms_arrival = false; // Бит включить поиск в базе даных УЗ
+        public bool Searsh_in_sms_arrival { get { return this.searsh_in_sms_arrival; } set { this.searsh_in_sms_arrival = value; } }
+
+
 
         public IDS_WIR()
             : base()
@@ -1668,7 +1673,7 @@ namespace IDS
 
                 // Вагон не принят, принять.
                 string note_sostav = "Состав:" + wim.num_sostav + "-" + (type_return ? " отмена" : " возврат");
-                DateTime lead_time_start; 
+                DateTime lead_time_start;
                 DateTime lead_time_stop;
                 if (type_return)
                 {
@@ -1678,9 +1683,10 @@ namespace IDS
                     locomotive1 = wio.locomotive1;
                     locomotive2 = wio.locomotive2;
                 }
-                else { 
+                else
+                {
                     lead_time_start = ((DateTime)lead_time).AddMinutes(-1);
-                    lead_time_stop = (DateTime)lead_time;                
+                    lead_time_stop = (DateTime)lead_time;
                 }
 
                 // Установим и закроем операцию принять -11- возрат 12 - отмена              
@@ -3481,7 +3487,7 @@ namespace IDS
                 if (uz_doc_db != null) result_uz_doc.Add(uz_doc_db); // если есть добавим в список результатов
 
                 // Проверим по sms УЗ (если признак искать в SMS - true)
-                if (this.searsh_in_sms && !String.IsNullOrWhiteSpace(num_doc))
+                if (this.searsh_in_sms_arrival && !String.IsNullOrWhiteSpace(num_doc))
                 {
                     List<UZ.UZ_DOC> list_uz_doc_sms = uz_sms.GetUZ_DOC_Of_NumDoc(num_doc);
                     if (list_uz_doc_sms != null && list_uz_doc_sms.Count() > 0)
@@ -3622,11 +3628,12 @@ namespace IDS
         /// <param name="res"></param>
         /// <param name="list_uz_doc"></param>
         /// <param name="searsh_uz"></param>
-        public void Update_List_UZ_DOC(ref EFIDS.Concrete.EFDbContext context, ref ResultUpdateStringID res, List<UZ_DOC_Arrival> list_uz_doc, bool searsh_uz)
+        public void Update_List_UZ_DOC(ref EFIDS.Concrete.EFDbContext context, ref ResultUpdateStringID res, List<UZ_DOC_Arrival> list_uz_doc, bool searsh_uz, int max_index)
         {
             try
             {
                 int count = list_uz_doc.Count();
+                int index = 0;
                 // Начнем обработку раскредитованых с датой ниже мак даты хранения на сервере
                 foreach (UZ_DOC_Arrival doc in list_uz_doc)
                 {
@@ -3639,7 +3646,7 @@ namespace IDS
                     }
                     else
                     {
-                        DateTime date_exceeded = DateTime.Now.AddDays(-1 * this.day_arhive_epd);
+                        DateTime date_exceeded = DateTime.Now.AddDays(-1 * this.day_arhive_epd_arrival);
                         Console.WriteLine("ID документа {0}, № документа {1}, осталось {2}", doc.num_doc, doc.num_uz, --count);
                         // Получим документ
                         UZ.UZ_DOC upd_doc_uz = getUpdate_UZ_DOC(doc.num_doc, doc.num_uz.ToString());
@@ -3715,7 +3722,11 @@ namespace IDS
                     }
 
 
-
+                    index++;
+                    if (max_index > 0 && index > max_index)
+                    {
+                        break;
+                    }
                 }
             }
             catch (Exception e)
@@ -3734,12 +3745,6 @@ namespace IDS
             {
                 DateTime start = DateTime.Now;
                 ResultUpdateStringID res = new ResultUpdateStringID(0);
-                //// Проверим и скорректируем пользователя
-                //if (String.IsNullOrWhiteSpace(user))
-                //{
-                //    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
-                //}
-
                 UZ.UZ_SMS uz_sms = new UZ.UZ_SMS(this.servece_owner);
 
                 EFIDS.Concrete.EFDbContext context_ids = new EFIDS.Concrete.EFDbContext();
@@ -3761,36 +3766,36 @@ namespace IDS
                     if (uz_doc_ids_uncredited != null && uz_doc_ids_uncredited.Count() > 0)
                     {
                         List<UZ_DOC_Arrival> uz_doc_ids_uncredited_null = uz_doc_ids_uncredited.Where(d => d.dt == null).ToList(); // выбрать раскредитованых с датой обновления пусто
-                        DateTime date_exceeded = DateTime.Now.AddDays(-1 * this.day_arhive_epd);
+                        DateTime date_exceeded = DateTime.Now.AddDays(-1 * this.day_arhive_epd_arrival);
                         List<UZ_DOC_Arrival> uz_doc_ids_uncredited_exceeded = uz_doc_ids_uncredited.Where(d => d.dt < date_exceeded).ToList(); // выбрать раскредитованых с датой обновления ниже мак даты хранения на сервере
                         List<UZ_DOC_Arrival> uz_doc_ids_uncredited_not_reached = uz_doc_ids_uncredited.Where(d => d.dt >= date_exceeded).ToList(); // выбрать раскредитованых с датой обновления в диапазоне периода хранения данных на сервере.
                                                                                                                                                    // -----------------------------------------------------------------------------------------
                                                                                                                                                    // Начнем обработку раскредитованых с датой обновления пусто
-                        Update_List_UZ_DOC(ref context_ids, ref res, uz_doc_ids_uncredited_null, false);
+                        Update_List_UZ_DOC(ref context_ids, ref res, uz_doc_ids_uncredited_null, false, 0);
                         // -----------------------------------------------------------------------------------------
                         // Начнем обработку раскредитованых с датой ниже мак даты хранения на сервере
-                        Update_List_UZ_DOC(ref context_ids, ref res, uz_doc_ids_uncredited_exceeded, false);
+                        Update_List_UZ_DOC(ref context_ids, ref res, uz_doc_ids_uncredited_exceeded, false, 0);
                         // -----------------------------------------------------------------------------------------
                         // Начнем обработку раскредитованых с датой обновления в диапазоне периода хранения данных на сервере
-                        Update_List_UZ_DOC(ref context_ids, ref res, uz_doc_ids_uncredited_not_reached, true);
+                        Update_List_UZ_DOC(ref context_ids, ref res, uz_doc_ids_uncredited_not_reached, true, 0);
 
                     }
                     // Начнем обработку не раскредитованых
                     if (uz_doc_ids_open != null && uz_doc_ids_open.Count() > 0)
                     {
                         List<UZ_DOC_Arrival> uz_doc_ids_open_null = uz_doc_ids_open.Where(d => d.dt == null).ToList(); // выбрать раскредитованых с датой обновления пусто
-                        DateTime date_exceeded = DateTime.Now.AddDays(-1 * this.day_arhive_epd);
+                        DateTime date_exceeded = DateTime.Now.AddDays(-1 * this.day_arhive_epd_arrival);
                         List<UZ_DOC_Arrival> uz_doc_ids_open_exceeded = uz_doc_ids_open.Where(d => d.dt < date_exceeded).ToList(); // выбрать раскредитованых с датой обновления ниже мак даты хранения на сервере
                         List<UZ_DOC_Arrival> uz_doc_ids_open_not_reached = uz_doc_ids_open.Where(d => d.dt >= date_exceeded).ToList(); // выбрать раскредитованых с датой обновления в диапазоне периода хранения данных на сервере.
                         // -----------------------------------------------------------------------------------------
                         // Начнем обработку раскредитованых с датой обновления пусто
-                        Update_List_UZ_DOC(ref context_ids, ref res, uz_doc_ids_open_null, false);
+                        Update_List_UZ_DOC(ref context_ids, ref res, uz_doc_ids_open_null, false, 0);
                         // -----------------------------------------------------------------------------------------
                         // Начнем обработку раскредитованых с датой ниже мак даты хранения на сервере
-                        Update_List_UZ_DOC(ref context_ids, ref res, uz_doc_ids_open_exceeded, false);
+                        Update_List_UZ_DOC(ref context_ids, ref res, uz_doc_ids_open_exceeded, false, 20000);
                         // -----------------------------------------------------------------------------------------
                         // Начнем обработку раскредитованых с датой обновления в диапазоне периода хранения данных на сервере
-                        Update_List_UZ_DOC(ref context_ids, ref res, uz_doc_ids_open_not_reached, true);
+                        Update_List_UZ_DOC(ref context_ids, ref res, uz_doc_ids_open_not_reached, true, 0);
 
                     }
                 }
@@ -5063,7 +5068,7 @@ namespace IDS
             try
             {
                 DateTime start = DateTime.Now;
-                DateTime date_exceeded = DateTime.Now.AddDays(-1 * this.day_arhive_epd);
+                DateTime date_exceeded = DateTime.Now.AddDays(-1 * this.day_arhive_epd_sending);
                 OperationResultID res = new OperationResultID();
                 // Проверим и скорректируем пользователя
                 if (String.IsNullOrWhiteSpace(user))
@@ -5079,7 +5084,6 @@ namespace IDS
                 string sql = "select * from [IDS].[get_view_uz_doc_sending]() where status_sostav >=2 and  [position_outgoing] is not null and ([num_doc] is null or [status]<8)";
                 List<UZ_DOC_Sending> list_uz_doc_all = context_ids.Database.SqlQuery<UZ_DOC_Sending>(sql).ToList();
                 List<UZ_DOC_Sending> list_uz_doc = list_uz_doc_all.Where(d => d.dt >= date_exceeded).ToList();
-                //res. = list_uz_doc != null ? list_uz_doc.Count() : 0;
                 // Сгруппируем по id сотава для отправки
                 List<IGrouping<long, UZ_DOC_Sending>> group_uz_doc = list_uz_doc.ToList().GroupBy(d => d.id_sostav).ToList();
                 int count = list_uz_doc != null ? list_uz_doc.Count() : 0;

@@ -395,7 +395,7 @@ namespace Test.TestModule
             List<sostav_operation_send> list = ids.GetSostavWagonsOperationOfSend(start, stop);
         }
         // Обновить документы по прибытию
-        public void IDS_EPD_UpdateArrivalEPD()
+        public void IDS_WIR_UpdateArrivalEPD()
         {
 
             IDS_WIR ids = new IDS_WIR(service.Test);
@@ -403,7 +403,7 @@ namespace Test.TestModule
 
         }
         // Обновить документы по отправке по всем составам
-        public void IDS_EPD_UpdateSendingEPD()
+        public void IDS_WIR_UpdateSendingEPD()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
             int result = ids.UpdateSendingEPD(@"EUROPE\ealevchenko");
