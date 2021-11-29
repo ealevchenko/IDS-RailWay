@@ -2003,6 +2003,7 @@ namespace EFIDS.Helper
                     OutgoingDetentionReturn = c.OutgoingDetentionReturn.GetOutgoingDetentionReturn(),
                     OutgoingDetentionReturn1 = c.OutgoingDetentionReturn1.GetOutgoingDetentionReturn(),
                     OutgoingDetentionReturn2 = c.OutgoingDetentionReturn2.GetOutgoingDetentionReturn(),
+                    Outgoing_UZ_Vagon = c.Outgoing_UZ_Vagon.GetOutgoing_UZ_Vagon_Outgoing_UZ_Document(),
                     //WagonInternalRoutes = c.WagonInternalRoutes.ToList().Select(w => w.GetWagonInternalRoutes()).ToList(),
                 };
             }
