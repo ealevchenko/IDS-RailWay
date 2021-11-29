@@ -161,6 +161,28 @@ use [KRR-PA-CNT-Railway]
 		,sap_is.[MATNR] as sap_incoming_supply_cargo_code 
 		,sap_is.[MAKTX] as sap_incoming_supply_cargo_name
 		--=============== ИСХОДЯЩАЯ ПОСТАВКА ==================
+		,sap_os.[id]
+      ,sap_os.[TRAID]
+      ,sap_os.[VBELN]
+      ,sap_os.[ERDAT]
+      ,sap_os.[ZBEZEI]
+      ,sap_os.[STAWN]
+      ,sap_os.[NAME1_AG]
+      ,sap_os.[KUNNR_AG]
+      ,sap_os.[ZRWNAME]
+      ,sap_os.[ZENDSTAT]
+      ,sap_os.[ZCRSTNAME]
+      ,sap_os.[ZCROSSSTAT]
+      ,sap_os.[ZZVES_NETTO]
+      ,sap_os.[ABTNR]
+      ,sap_os.[VTEXT]
+      ,sap_os.[ZZDOLG]
+      ,sap_os.[ZZFIO]
+      ,sap_os.[ZZPLATEL]
+      ,sap_os.[ZZNAME_PLATEL]
+      ,sap_os.[create]
+      ,sap_os.[processed]
+      ,sap_os.[processed_user]
 		--> ....
 		--=============== ГТД ===================================
 		--> ....
@@ -222,6 +244,9 @@ use [KRR-PA-CNT-Railway]
 		Left JOIN IDS.Arrival_UZ_Document as arr_doc_uz ON arr_doc_vag.id_document = arr_doc_uz.id
 		 --> Документы SAP Входящая поставка
 		Left JOIN [IDS].[SAPIncomingSupply] as sap_is ON wir.id_sap_incoming_supply = sap_is.id
+		--> Документы SAP Исходящая поставка
+		Left JOIN [SAP].[Out_Supply] as sap_os ON sap_os.id = (SELECT top(1) [id] FROM [SAP].[Out_Supply]  where [TRAID] = wir.num and [ERDAT]>convert(date, arr_sost.date_adoption ,120) order by [ERDAT])
+
 		 --==== СДАЧА ВАГОНА И ЗАДЕРЖАНИЯ ================================================================
 		--> Отправка вагона
 		Left JOIN [IDS].[OutgoingCars] as out_car ON wir.id_outgoing_car = out_car.id
@@ -291,7 +316,7 @@ use [KRR-PA-CNT-Railway]
 	wim.id_station <> 10
 	-- Исключим ЛОКОМОТИВЫ
 	AND (dir_rod.rod_uz <> 90 or dir_rod.rod_uz is null)
-
+	--and sap_os.id is not null
 	and wim.id_way in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] where [way_delete] is null and id_station in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].Directory_Station where station_delete is null))
 	-- Вагоны на станциях
 	AND (wim.way_end IS NULL 

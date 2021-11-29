@@ -2,7 +2,7 @@ use [KRR-PA-Test-Railway]--[KRR-PA-CNT-Railway]
 
 declare @id_way int =107--214--112;
 
-select * from [IDS].[get_view_wagons_of_id_way](@id_way)
+--select * from [IDS].[get_view_wagons_of_id_way](@id_way)
 
 
 --> Получим уставку норма простоя
@@ -131,6 +131,7 @@ select wir.id as wir_id
 	,sap_is.[MATNR] as sap_incoming_supply_cargo_code 
 	,sap_is.[MAKTX] as sap_incoming_supply_cargo_name
 	--=============== ИСХОДЯЩАЯ ПОСТАВКА ==================
+	,sap_os.*
 	--> ....
 	--=============== ГТД ===================================
 	--> ....
@@ -185,6 +186,9 @@ FROM IDS.WagonInternalMovement as wim	--> Текущая дислокаци
 	Left JOIN IDS.Arrival_UZ_Document as arr_doc_uz ON arr_doc_vag.id_document = arr_doc_uz.id
 	 --> Документы SAP Входящая поставка
 	Left JOIN [IDS].[SAPIncomingSupply] as sap_is ON wir.id_sap_incoming_supply = sap_is.id
+	 --> Документы SAP Исходящая поставка
+    Left JOIN [SAP].[Out_Supply] as sap_os ON sap_os.id = (SELECT top(1) [id] FROM [SAP].[Out_Supply]  where [TRAID] = wir.num and [ERDAT]>convert(date, arr_sost.date_adoption ,120) order by [ERDAT])
+
 	 --==== СДАЧА ВАГОНА И ЗАДЕРЖАНИЯ ================================================================
 	--> Отправка вагона
 	Left JOIN [IDS].[OutgoingCars] as out_car ON wir.id_outgoing_car = out_car.id
@@ -243,5 +247,7 @@ FROM IDS.WagonInternalMovement as wim	--> Текущая дислокаци
 	Left JOIN UZ.Directory_Stations as let_station_uz ON  il.destination_station = let_station_uz.code_cs
 	--> Справочник Возвратов
 	Left JOIN [IDS].[Directory_DetentionReturn] as dir_return ON out_car.id_outgoing_return_start = dir_return.id
-WHERE (wim.id_way = @id_way) AND (wim.way_end IS NULL)
+WHERE 
+(wim.id_way = @id_way) AND (wim.way_end IS NULL)
+
 order by wim.position
