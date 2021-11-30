@@ -196,6 +196,8 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFIDS.Abstract.IStringRepository<EFIDS.Entities.UZ_DOC_OUT>>().To<EFIDS.Concrete.EFUZ_DOC_OUT>();
 
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.SAPIncomingSupply>>().To<EFIDS.Concrete.EFSAPIncomingSupply>();
+            kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.SAPOutgoingSupply>>().To<EFIDS.Concrete.EFSAPOutgoingSupply>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Out_Supply>>().To<EFIDS.Concrete.EFOut_Supply>();
 
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.InstructionalLetters>>().To<EFIDS.Concrete.EFInstructionalLetters>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.InstructionalLettersWagon>>().To<EFIDS.Concrete.EFInstructionalLettersWagon>();
