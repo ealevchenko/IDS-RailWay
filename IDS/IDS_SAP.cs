@@ -13,21 +13,11 @@ using System.Threading.Tasks;
 
 namespace IDS
 {
-    public enum errors_sap : int
-    {
-        global = -1,
-        cancel_save_changes = -2,       // Отмена сохранений изменений в базе данных (были ошибки по ходу выполнения всей операции)
-        not_input_value = -100,
-        not_arrival_car_of_db = -101,         // В базе нет принятого вагона
-    }
-
     public class IDS_SAP : IDS_Base
     {
         private eventID eventID = eventID.IDS_IDSSAP;
         private int day_approach_limit = 30; // Количество дней, ожидания вагона с подходов
         public int Day_approach_limit { get { return this.day_approach_limit; } set { this.day_approach_limit = value; } }// TODO: Удалить 
-        //private string exceptions_cargo = "1;3;20;37;38;40"; // Код грузов для исключения из опроса обновления по ним входящей поставки
-        //public string Exceptions_Cargo { get { return this.exceptions_cargo; } set { this.exceptions_cargo = value; } }// TODO: Удалить 
 
         public IDS_SAP()
             : base()
@@ -276,7 +266,7 @@ namespace IDS
                         }
                         else
                         {
-                            result.SetResult((int)errors_sap.not_arrival_car_of_db); // Ошибка и выход
+                            result.SetResult((int)errors_base.not_arrival_cars_db); // Ошибка и выход
                         }
                     }
                     else
@@ -303,7 +293,7 @@ namespace IDS
             catch (Exception e)
             {
                 e.ExceptionMethodLog(String.Format("UpdateIncomingSupply(context = {0}, list_cargo = {1}, num = {2}, gr_sap_is = {3}, user = {4})", context, list_cargo, num, gr_sap_is, user), servece_owner, eventID);
-                result.SetResult((int)errors_sap.global);
+                result.SetResult((int)errors_base.global);
                 return result;// Ошибка
             }
         }
@@ -367,7 +357,7 @@ namespace IDS
             catch (Exception e)
             {
                 e.ExceptionMethodLog(String.Format("UpdateListIncomingSupply(context = {0}, list_cargo = {1}, user = {2})", context, list_cargo, user), servece_owner, eventID);
-                result.SetResult((int)errors_sap.global);
+                result.SetResult((int)errors_base.global);
                 return result;// Ошибка
             }
         }
