@@ -16,6 +16,9 @@ namespace EFIDS.Concrete
 
         // SAP Входящая поставка
         public virtual DbSet<SAPIncomingSupply> SAPIncomingSupply { get; set; }
+        // SAP Исходящая поставка
+        public virtual DbSet<SAPOutgoingSupply> SAPOutgoingSupply { get; set; }
+        public virtual DbSet<Out_Supply> Out_Supply { get; set; }
 
         // RWT
         public virtual DbSet<Arrival_UZ_Cont_Pay> Arrival_UZ_Cont_Pay { get; set; }
@@ -313,6 +316,11 @@ namespace EFIDS.Concrete
                 .HasForeignKey(e => e.id_outgoing);
 
             modelBuilder.Entity<OutgoingCars>()
+                .HasMany(e => e.SAPOutgoingSupply)
+                .WithOptional(e => e.OutgoingCars)
+                .HasForeignKey(e => e.id_outgoing_car);
+
+            modelBuilder.Entity<OutgoingCars>()
                 .HasMany(e => e.WagonInternalRoutes)
                 .WithOptional(e => e.OutgoingCars)
                 .HasForeignKey(e => e.id_outgoing_car);
@@ -334,6 +342,94 @@ namespace EFIDS.Concrete
 
 
             #endregion
+
+            #region OutgoingSAP
+            modelBuilder.Entity<SAPOutgoingSupply>()
+                .Property(e => e.VBELN)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<SAPOutgoingSupply>()
+                .Property(e => e.STAWN)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<SAPOutgoingSupply>()
+                .Property(e => e.KUNNR_AG)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<SAPOutgoingSupply>()
+                .Property(e => e.ZENDSTAT)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<SAPOutgoingSupply>()
+                .Property(e => e.ZCROSSSTAT)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<SAPOutgoingSupply>()
+                .Property(e => e.ABTNR)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<SAPOutgoingSupply>()
+                .Property(e => e.ZZPLATEL)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<SAPOutgoingSupply>()
+                .HasMany(e => e.WagonInternalRoutes)
+                .WithOptional(e => e.SAPOutgoingSupply)
+                .HasForeignKey(e => e.id_sap_outbound_supply);
+
+            modelBuilder.Entity<Out_Supply>()
+                .Property(e => e.TRAID)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Out_Supply>()
+                .Property(e => e.VBELN)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Out_Supply>()
+                .Property(e => e.STAWN)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Out_Supply>()
+                .Property(e => e.KUNNR_AG)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Out_Supply>()
+                .Property(e => e.ZENDSTAT)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Out_Supply>()
+                .Property(e => e.ZCROSSSTAT)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Out_Supply>()
+                .Property(e => e.ABTNR)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Out_Supply>()
+                .Property(e => e.ZZPLATEL)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Out_Supply>()
+                .HasMany(e => e.SAPOutgoingSupply)
+                .WithRequired(e => e.Out_Supply)
+                .HasForeignKey(e => e.id_out_supply)
+                .WillCascadeOnDelete(false);
+            #endregion            
 
             #region OutgoingDoc
             modelBuilder.Entity<Outgoing_UZ_Document>()

@@ -12,6 +12,7 @@ namespace EFIDS.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public OutgoingCars()
         {
+            SAPOutgoingSupply = new HashSet<SAPOutgoingSupply>();
             WagonInternalRoutes = new HashSet<WagonInternalRoutes>();
             //Outgoing_UZ_Vagon = new HashSet<Outgoing_UZ_Vagon>();
         }
@@ -73,6 +74,9 @@ namespace EFIDS.Entities
 
         [StringLength(50)]
         public string vagonnik_user { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SAPOutgoingSupply> SAPOutgoingSupply { get; set; }
 
         public virtual Directory_Reason_Discrepancy Directory_Reason_Discrepancy { get; set; }
 

@@ -451,7 +451,7 @@ namespace EFIDS.Helper
                 change = c.change,
                 change_user = c.change_user,
                 delete = c.delete,
-                delete_user = c.delete_user, 
+                delete_user = c.delete_user,
                 repairs = c.repairs,
             };
         }
@@ -1527,8 +1527,8 @@ namespace EFIDS.Helper
                 code_from = d.code_from,
                 code_on = d.code_on,
                 dt = d.dt,
-                xml_doc = d.xml_doc, 
-                close = d.close, 
+                xml_doc = d.xml_doc,
+                close = d.close,
                 close_message = d.close_message
             };
         }
@@ -1570,7 +1570,8 @@ namespace EFIDS.Helper
                     change_user = s.change_user,
                     close = s.close,
                     close_user = s.close_user,
-                    ArrivalCars = null
+                    ArrivalCars = null,
+                    WagonInternalRoutes = null,
                 };
             }
             catch (Exception e)
@@ -2058,6 +2059,92 @@ namespace EFIDS.Helper
             };
         }
 
+        public static SAPOutgoingSupply GetSAPOutgoingSupply(this SAPOutgoingSupply s)
+        {
+            try
+            {
+                if (s == null) return null;
+                return new SAPOutgoingSupply()
+                {
+                    id = s.id,
+                    id_out_supply = s.id_out_supply,
+                    id_outgoing_car = s.id_outgoing_car,
+                    num = s.num,
+                    VBELN = s.VBELN,
+                    ERDAT = s.ERDAT,
+                    ZBEZEI = s.ZBEZEI,
+                    STAWN = s.STAWN,
+                    NAME1_AG = s.NAME1_AG,
+                    KUNNR_AG = s.KUNNR_AG,
+                    ZRWNAME = s.ZRWNAME,
+                    ZENDSTAT = s.ZENDSTAT,
+                    ZCRSTNAME = s.ZCRSTNAME,
+                    ZCROSSSTAT = s.ZCROSSSTAT,
+                    ZZVES_NETTO = s.ZZVES_NETTO,
+                    ABTNR = s.ABTNR,
+                    VTEXT = s.VTEXT,
+                    ZZDOLG = s.ZZDOLG,
+                    ZZFIO = s.ZZFIO,
+                    ZZPLATEL = s.ZZPLATEL,
+                    ZZNAME_PLATEL = s.ZZNAME_PLATEL,
+                    note = s.note,
+                    create = s.create,
+                    create_user = s.create_user,
+                    change = s.change,
+                    change_user = s.change_user,
+                    close = s.close,
+                    close_user = s.close_user,
+                    OutgoingCars = null,
+                    Out_Supply = s.Out_Supply.GetOut_Supply(),
+                    WagonInternalRoutes = null,
+                };
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        public static Out_Supply GetOut_Supply(this Out_Supply s)
+        {
+            try
+            {
+                if (s == null) return null;
+                return new Out_Supply()
+                {
+                    id = s.id,
+                    TRAID = s.TRAID,
+                    VBELN = s.VBELN,
+                    ERDAT = s.ERDAT,
+                    ZBEZEI = s.ZBEZEI,
+                    STAWN = s.STAWN,
+                    NAME1_AG = s.NAME1_AG,
+                    KUNNR_AG = s.KUNNR_AG,
+                    ZRWNAME = s.ZRWNAME,
+                    ZENDSTAT = s.ZENDSTAT,
+                    ZCRSTNAME = s.ZCRSTNAME,
+                    ZCROSSSTAT = s.ZCROSSSTAT,
+                    ZZVES_NETTO = s.ZZVES_NETTO,
+                    ABTNR = s.ABTNR,
+                    VTEXT = s.VTEXT,
+                    ZZDOLG = s.ZZDOLG,
+                    ZZFIO = s.ZZFIO,
+                    ZZPLATEL = s.ZZPLATEL,
+                    ZZNAME_PLATEL = s.ZZNAME_PLATEL,
+                    create = s.create,
+                    processed = s.processed,
+                    processed_user = s.processed_user,
+                    SAPOutgoingSupply = null,
+                };
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        // -------------------------------------------------------------------------------------------
+
         public static InstructionalLettersWagon GetInstructionalLettersWagon(this InstructionalLettersWagon w)
         {
             if (w == null) return null;
@@ -2142,10 +2229,11 @@ namespace EFIDS.Helper
                 close = r.close,
                 close_user = r.close_user,
                 parent_id = r.parent_id,
-                ArrivalCars = r.ArrivalCars.GetArrivalCars_ArrivalSostav(),
                 Directory_Wagons = r.Directory_Wagons.GetDirectory_Wagons_Directory_WagonsRent(),
+                ArrivalCars = r.ArrivalCars.GetArrivalCars_ArrivalSostav(),
                 OutgoingCars = r.OutgoingCars.GetOutgoingCars_OutgoingSostav(),
                 SAPIncomingSupply = r.SAPIncomingSupply.GetSAPIncomingSupply(),
+                SAPOutgoingSupply = r.SAPOutgoingSupply.GetSAPOutgoingSupply(),
                 WagonInternalMovement = r.WagonInternalMovement.ToList().Select(w => w.GetWagonInternalMovement()).ToList(),
                 WagonInternalOperation = r.WagonInternalOperation.ToList().Select(w => w.GetWagonInternalOperation()).ToList(),
             };
