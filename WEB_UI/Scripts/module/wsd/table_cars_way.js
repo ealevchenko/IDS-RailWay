@@ -113,6 +113,25 @@
             'field_sap_incoming_supply_cargo_name': 'Вх. пост. материал (груз)',
             'field_sap_incoming_supply_warehouse_code': 'Вх. пост. склад',
             'field_sap_incoming_supply_warehouse_name': 'Вх. пост. Наименование склада',
+
+            'field_sap_outgoing_supply_num': 'Исх. пост. №',
+            'field_sap_outgoing_supply_date': 'Исх. пост. дата созд.',
+            'field_sap_outgoing_supply_cargo_code': 'Исх. пост. Код ЕТСНГ',
+            'field_sap_outgoing_supply_cargo_name': 'Исх. пост. Наименование груза',
+            'field_sap_outgoing_supply_shipper_code': 'Исх. пост. Код получателя',
+            'field_sap_outgoing_supply_shipper_name': 'Исх. пост. Получатель',
+            'field_sap_outgoing_supply_destination_station_code': 'Исх. пост. Код станции назначения',
+            'field_sap_outgoing_supply_destination_station_name': 'Исх. пост. Станция назначения',
+            'field_sap_outgoing_supply_border_checkpoint_code': 'Исх. пост. Код погранперехода',
+            'field_sap_outgoing_supply_border_checkpoint_name': 'Исх. пост. Погранпереход',
+            'field_sap_outgoing_supply_netto': 'Исх. пост. Вес нетто',
+            'field_sap_outgoing_supply_warehouse_code': 'Исх. пост. склад',
+            'field_sap_outgoing_supply_warehouse_name': 'Исх. пост. Наименование склада',
+            'field_sap_outgoing_supply_responsible_post': 'Исх. пост. Долж. отв. за погрузку',
+            'field_sap_outgoing_supply_responsible_fio': 'Исх. пост. ФИО отв. за погрузку',
+            'field_sap_outgoing_supply_payer_code': 'Исх. пост. Код плательщик',
+            'field_sap_outgoing_supply_payer_name': 'Исх. пост. Плательщик',
+
             'field_instructional_letters_num': '№ письма',
             'field_instructional_letters_datetime': 'Дата письма',
             'field_instructional_letters_station_code': 'Код ст. наз.',
@@ -273,6 +292,25 @@
             'field_sap_incoming_supply_cargo_name': 'Incoming. fast. material (cargo) ',
             'field_sap_incoming_supply_warehouse_code': 'In. fast. warehouse',
             'field_sap_incoming_supply_warehouse_name': 'In. fast. Warehouse name ',
+
+            'field_sap_outgoing_supply_num': 'Out. fast. No. ',
+            'field_sap_outgoing_supply_date': 'Out. fast. creation date ',
+            'field_sap_outgoing_supply_cargo_code': 'Ref. fast. ETSNG code ',
+            'field_sap_outgoing_supply_cargo_name': 'Outgoing. fast. Shipping Name',
+            'field_sap_outgoing_supply_shipper_code': 'Out. fast. Recipient code ',
+            'field_sap_outgoing_supply_shipper_name': 'Out. fast. Recipient',
+            'field_sap_outgoing_supply_destination_station_code': 'Ref. fast. Destination station code ',
+            'field_sap_outgoing_supply_destination_station_name': 'Out. fast. Destination station ',
+            'field_sap_outgoing_supply_border_checkpoint_code': 'Ref. fast. Border crossing code ',
+            'field_sap_outgoing_supply_border_checkpoint_name': 'Ref. fast. Border crossing ',
+            'field_sap_outgoing_supply_netto': 'Ref. fast. Net weight',
+            'field_sap_outgoing_supply_warehouse_code': 'Ref. fast. warehouse',
+            'field_sap_outgoing_supply_warehouse_name': 'Ref. fast. Warehouse name ',
+            'field_sap_outgoing_supply_responsible_post': 'Ref. fast. Should. otv. for loading ',
+            'field_sap_outgoing_supply_responsible_fio': 'Ref. fast. Full name otv. for loading ',
+            'field_sap_outgoing_supply_payer_code': 'Ref. fast. Payer code ',
+            'field_sap_outgoing_supply_payer_name': 'Ref. fast. Payer',
+
             'field_instructional_letters_num': 'Letter No.',
             'field_instructional_letters_datetime': 'Letter date',
             'field_instructional_letters_station_code': 'Art. called. ',
@@ -972,8 +1010,6 @@
             className: 'dt-body-left shorten mw-100',
             title: langView('field_current_station_amkr_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
-
-
         //=============== ПРОСТОЙ НА Ж.Д.СТАНЦИИ ==================
         // индикатор
         {
@@ -1258,6 +1294,152 @@
             },
             className: 'dt-body-left shorten mw-150 sap-inc-supp',
             title: langView('field_sap_incoming_supply_warehouse_name', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        //=============== ИСХОДЯЩАЯ ПОСТАВКА ==================
+        {
+            field: 'sap_outgoing_supply_num',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_num;
+            },
+            className: 'dt-body-nowrap sap-out-supp',
+            title: langView('field_sap_outgoing_supply_num', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // дата создания
+        {
+            field: 'sap_outgoing_supply_date',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_date ? moment(row.sap_outgoing_supply_date).format(format_date) : null;
+            },
+            className: 'dt-body-nowrap sap-out-supp',
+            title: langView('field_sap_outgoing_supply_date', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Груз
+        {
+            field: 'sap_outgoing_supply_cargo_code',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_cargo_code;
+            },
+            className: 'dt-body-center sap-out-supp',
+            title: langView('field_sap_outgoing_supply_cargo_code', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'sap_outgoing_supply_cargo_name',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_cargo_name;
+            },
+            className: 'dt-body-left shorten mw-150 sap-out-supp',
+            title: langView('field_sap_outgoing_supply_cargo_name', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        // Грузополучатель
+        {
+            field: 'sap_outgoing_supply_shipper_code',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_shipper_code;
+            },
+            className: 'dt-body-center sap-out-supp',
+            title: langView('field_sap_outgoing_supply_shipper_code', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'sap_outgoing_supply_shipper_name',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_shipper_name;
+            },
+            className: 'dt-body-left shorten mw-150 sap-out-supp',
+            title: langView('field_sap_outgoing_supply_shipper_name', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        // Станция назначения
+        {
+            field: 'sap_outgoing_supply_destination_station_code',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_destination_station_code;
+            },
+            className: 'dt-body-center sap-out-supp',
+            title: langView('field_sap_outgoing_supply_destination_station_code', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'sap_outgoing_supply_destination_station_name',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_destination_station_name;
+            },
+            className: 'dt-body-left shorten mw-100 sap-out-supp',
+            title: langView('field_sap_outgoing_supply_destination_station_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Погран переход
+        {
+            field: 'sap_outgoing_supply_border_checkpoint_code',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_border_checkpoint_code;
+            },
+            className: 'dt-body-center sap-out-supp',
+            title: langView('field_sap_outgoing_supply_border_checkpoint_code', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'sap_outgoing_supply_border_checkpoint_name',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_border_checkpoint_name;
+            },
+            className: 'dt-body-left shorten mw-100 sap-out-supp',
+            title: langView('field_sap_outgoing_supply_border_checkpoint_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Нетто по исх пост, тн
+        {
+            field: 'sap_outgoing_supply_netto',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_netto !== null ? (row.sap_outgoing_supply_netto > 0 ? Number(row.sap_outgoing_supply_netto / 1000).toFixed(2) : Number(row.sap_outgoing_supply_netto).toFixed(2)) : null;
+            },
+            className: 'dt-body-right sap-out-supp',
+            title: langView('field_sap_outgoing_supply_netto', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Склад, Наименование склада
+        {
+            field: 'sap_outgoing_supply_warehouse_code',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_warehouse_code;
+            },
+            className: 'dt-body-center sap-out-supp',
+            title: langView('field_sap_outgoing_supply_warehouse_code', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'sap_outgoing_supply_warehouse_name',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_warehouse_name;
+            },
+            className: 'dt-body-left shorten mw-100 sap-out-supp',
+            title: langView('field_sap_outgoing_supply_warehouse_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Ответственный за погрузку
+        {
+            field: 'sap_outgoing_supply_responsible_post',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_responsible_post;
+            },
+            className: 'dt-body-left shorten mw-100 sap-out-supp',
+            title: langView('field_sap_outgoing_supply_responsible_post', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'sap_outgoing_supply_responsible_fio',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_responsible_fio;
+            },
+            className: 'dt-body-left shorten mw-100 sap-out-supp',
+            title: langView('field_sap_outgoing_supply_responsible_fio', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Плательщик ж.д. тарифа
+        {
+            field: 'sap_outgoing_supply_payer_code',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_payer_code;
+            },
+            className: 'dt-body-center sap-out-supp',
+            title: langView('field_sap_outgoing_supply_payer_code', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'sap_outgoing_supply_payer_name',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_payer_name;
+            },
+            className: 'dt-body-left shorten mw-150 sap-out-supp',
+            title: langView('field_sap_outgoing_supply_payer_name', App.Langs), width: "150px", orderable: true, searchable: true
         },
         //=============== ВХОДНОЕ ВЗВЕШИВАНИЕ С УЗ ==================
         // Брутто по ЭПД, тн
@@ -1689,6 +1871,24 @@
         collums.push('sap_incoming_supply_cargo_name');     //
         collums.push('sap_incoming_supply_warehouse_code'); // материал вх. поставки
         collums.push('sap_incoming_supply_warehouse_name'); //
+        //=============== ИСХОДЯЩАЯ ПОСТАВКА ==================
+        collums.push('sap_outgoing_supply_num');
+        collums.push('sap_outgoing_supply_date');
+        collums.push('sap_outgoing_supply_cargo_code');
+        collums.push('sap_outgoing_supply_cargo_name');
+        collums.push('sap_outgoing_supply_destination_station_code');
+        collums.push('sap_outgoing_supply_destination_station_name');
+        collums.push('sap_outgoing_supply_border_checkpoint_code');
+        collums.push('sap_outgoing_supply_border_checkpoint_name');
+        collums.push('sap_outgoing_supply_shipper_code');
+        collums.push('sap_outgoing_supply_shipper_name');
+        collums.push('sap_outgoing_supply_payer_code');
+        collums.push('sap_outgoing_supply_payer_name');
+        collums.push('sap_outgoing_supply_warehouse_code');
+        collums.push('sap_outgoing_supply_warehouse_name');
+        collums.push('sap_outgoing_supply_netto');
+        collums.push('sap_outgoing_supply_responsible_post');
+        collums.push('sap_outgoing_supply_responsible_fio');
         //=============== ВХОДНОЕ ВЗВЕШИВАНИЕ С УЗ ==================
         // Брутто, тн
         collums.push('wagon_brutto_doc');                   // по ЭПД (нето ЭПД + тара ЭПД || тара ЭПД уточненная)
@@ -1834,6 +2034,24 @@
         collums.push('sap_incoming_supply_cargo_name');     //
         collums.push('sap_incoming_supply_warehouse_code'); // материал вх. поставки
         collums.push('sap_incoming_supply_warehouse_name'); //
+        //=============== ИСХОДЯЩАЯ ПОСТАВКА ==================
+        collums.push('sap_outgoing_supply_num');
+        collums.push('sap_outgoing_supply_date');
+        collums.push('sap_outgoing_supply_cargo_code');
+        collums.push('sap_outgoing_supply_cargo_name');
+        collums.push('sap_outgoing_supply_destination_station_code');
+        collums.push('sap_outgoing_supply_destination_station_name');
+        collums.push('sap_outgoing_supply_border_checkpoint_code');
+        collums.push('sap_outgoing_supply_border_checkpoint_name');
+        collums.push('sap_outgoing_supply_shipper_code');
+        collums.push('sap_outgoing_supply_shipper_name');
+        collums.push('sap_outgoing_supply_payer_code');
+        collums.push('sap_outgoing_supply_payer_name');
+        collums.push('sap_outgoing_supply_warehouse_code');
+        collums.push('sap_outgoing_supply_warehouse_name');
+        collums.push('sap_outgoing_supply_netto');
+        //collums.push('sap_outgoing_supply_responsible_post');
+        //collums.push('sap_outgoing_supply_responsible_fio');
         //=============== ВХОДНОЕ ВЗВЕШИВАНИЕ С УЗ ==================
         // Брутто, тн
         collums.push('wagon_brutto_doc');                   // по ЭПД (нето ЭПД + тара ЭПД || тара ЭПД уточненная)
@@ -2051,6 +2269,24 @@
         //collums.push('sap_incoming_supply_cargo_name');     //
         //collums.push('sap_incoming_supply_warehouse_code'); // материал вх. поставки
         //collums.push('sap_incoming_supply_warehouse_name'); //
+        //=============== ИСХОДЯЩАЯ ПОСТАВКА ==================
+        //collums.push('sap_outgoing_supply_num');
+        //collums.push('sap_outgoing_supply_date');
+        //collums.push('sap_outgoing_supply_cargo_code');
+        //collums.push('sap_outgoing_supply_cargo_name');
+        //collums.push('sap_outgoing_supply_destination_station_code');
+        //collums.push('sap_outgoing_supply_destination_station_name');
+        //collums.push('sap_outgoing_supply_border_checkpoint_code');
+        //collums.push('sap_outgoing_supply_border_checkpoint_name');
+        //collums.push('sap_outgoing_supply_shipper_code');
+        //collums.push('sap_outgoing_supply_shipper_name');
+        //collums.push('sap_outgoing_supply_payer_code');
+        //collums.push('sap_outgoing_supply_payer_name');
+        //collums.push('sap_outgoing_supply_warehouse_code');
+        //collums.push('sap_outgoing_supply_warehouse_name');
+        //collums.push('sap_outgoing_supply_netto');
+        //collums.push('sap_outgoing_supply_responsible_post');
+        //collums.push('sap_outgoing_supply_responsible_fio');
         //=============== ВХОДНОЕ ВЗВЕШИВАНИЕ С УЗ ==================
         // Брутто, тн
         //collums.push('wagon_brutto_doc');                   // по ЭПД (нето ЭПД + тара ЭПД || тара ЭПД уточненная)

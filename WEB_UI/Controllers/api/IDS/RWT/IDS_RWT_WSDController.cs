@@ -247,6 +247,25 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string sap_incoming_supply_warehouse_name { get; set; }
         public string sap_incoming_supply_cargo_code { get; set; }
         public string sap_incoming_supply_cargo_name { get; set; }
+
+        public string sap_outgoing_supply_num { get; set; }
+        public DateTime? sap_outgoing_supply_date { get; set; }
+        public string sap_outgoing_supply_cargo_name { get; set; }
+        public string sap_outgoing_supply_cargo_code { get; set; }
+        public string sap_outgoing_supply_shipper_name { get; set; }
+        public string sap_outgoing_supply_shipper_code { get; set; }
+        public string sap_outgoing_supply_destination_station_name { get; set; }
+        public string sap_outgoing_supply_destination_station_code { get; set; }
+        public string sap_outgoing_supply_border_checkpoint_name { get; set; }
+        public string sap_outgoing_supply_border_checkpoint_code { get; set; }
+        public double? sap_outgoing_supply_netto { get; set; }
+        public string sap_outgoing_supply_warehouse_code { get; set; }
+        public string sap_outgoing_supply_warehouse_name { get; set; }
+        public string sap_outgoing_supply_responsible_post { get; set; }
+        public string sap_outgoing_supply_responsible_fio { get; set; }
+        public string sap_outgoing_supply_payer_code { get; set; }
+        public string sap_outgoing_supply_payer_name { get; set; }
+
         public string instructional_letters_num { get; set; }
         public DateTime? instructional_letters_datetime { get; set; }
         public int? instructional_letters_station_code { get; set; }

@@ -114,6 +114,23 @@ table.dataTable.display tbody tr:not(.selected).even > td.sorting_1.sap-inc-supp
 table.dataTable.display thead tr th.sap-inc-supp {
     background-color: #fff4c2; /*макс*/
 }
+/*САП исходящая поставки*/
+table.dataTable tbody tr:not(.selected).odd > td.sap-out-supp, table.dataTable tbody tr:not(.selected).even > td.sap-out-supp {
+    background-color: #dfe9fb; /*мин*/
+}
+
+table.dataTable.display tbody tr:not(.selected).odd > td.sorting_1.sap-out-supp, table.dataTable.order-column.stripe tbody tr.odd > td.sorting_1.sap-out-supp {
+    background-color: #cdddf9; /*сред*/
+}
+
+table.dataTable.display tbody tr:not(.selected).even > td.sorting_1.sap-out-supp, table.dataTable.order-column.stripe tbody tr.even > td.sorting_1.sap-out-supp {
+    background-color: #cdddf9; /*сред*/
+}
+
+table.dataTable.display thead tr th.sap-out-supp {
+    background-color: #aac5f5; /*макс*/
+}
+
 /*Входящее взвешивание*/
 table.dataTable tbody tr:not(.selected).odd > td.weighing, table.dataTable tbody tr:not(.selected).even > td.weighing {
     background-color: #ececec; /*мин*/
