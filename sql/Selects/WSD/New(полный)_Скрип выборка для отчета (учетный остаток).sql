@@ -3,7 +3,7 @@ use [KRR-PA-CNT-Railway]
 	declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] where area=N'wsd' and name = N'arrival_idle_time') AS INT);
 
 	select 
-		 wir.id as wir_id
+		wir.id as wir_id
 		,wim.id as wim_id
 		,wio.id as wio_id
 		--=============== ОСНОВНОЕ ОКНО ==================
@@ -161,29 +161,23 @@ use [KRR-PA-CNT-Railway]
 		,sap_is.[MATNR] as sap_incoming_supply_cargo_code 
 		,sap_is.[MAKTX] as sap_incoming_supply_cargo_name
 		--=============== ИСХОДЯЩАЯ ПОСТАВКА ==================
-		,sap_os.[id]
-      ,sap_os.[TRAID]
-      ,sap_os.[VBELN]
-      ,sap_os.[ERDAT]
-      ,sap_os.[ZBEZEI]
-      ,sap_os.[STAWN]
-      ,sap_os.[NAME1_AG]
-      ,sap_os.[KUNNR_AG]
-      ,sap_os.[ZRWNAME]
-      ,sap_os.[ZENDSTAT]
-      ,sap_os.[ZCRSTNAME]
-      ,sap_os.[ZCROSSSTAT]
-      ,sap_os.[ZZVES_NETTO]
-      ,sap_os.[ABTNR]
-      ,sap_os.[VTEXT]
-      ,sap_os.[ZZDOLG]
-      ,sap_os.[ZZFIO]
-      ,sap_os.[ZZPLATEL]
-      ,sap_os.[ZZNAME_PLATEL]
-      ,sap_os.[create]
-      ,sap_os.[processed]
-      ,sap_os.[processed_user]
-		--> ....
+		,sap_os.[VBELN] as sap_outgoing_supply_num
+		,sap_os.[ERDAT] as sap_outgoing_supply_date
+		,sap_os.[ZBEZEI] as sap_outgoing_supply_cargo_name
+		,sap_os.[STAWN] as sap_outgoing_supply_cargo_code
+		,sap_os.[NAME1_AG] as sap_outgoing_supply_shipper_name
+		,sap_os.[KUNNR_AG] as sap_outgoing_supply_shipper_code
+		,sap_os.[ZRWNAME] as sap_outgoing_supply_destination_station_name
+		,sap_os.[ZENDSTAT] as sap_outgoing_supply_destination_station_code
+		,sap_os.[ZCRSTNAME] as sap_outgoing_supply_border_checkpoint_name
+		,sap_os.[ZCROSSSTAT] as sap_outgoing_supply_border_checkpoint_code
+		,sap_os.[ZZVES_NETTO] as sap_outgoing_supply_netto
+		,sap_os.[ABTNR] as sap_outgoing_supply_warehouse_code
+		,sap_os.[VTEXT] as sap_outgoing_supply_warehouse_name
+		,sap_os.[ZZDOLG] as sap_outgoing_supply_responsible_post
+		,sap_os.[ZZFIO] as sap_outgoing_supply_responsible_fio
+		,sap_os.[ZZPLATEL] as sap_outgoing_supply_payer_code
+		,sap_os.[ZZNAME_PLATEL] as sap_outgoing_supply_payer_name
 		--=============== ГТД ===================================
 		--> ....
 		--=============== ИНСТРУКТИВНЫЕ ПИСЬМИ ==================
@@ -227,7 +221,6 @@ use [KRR-PA-CNT-Railway]
 		,dir_wagon.note as wagon_ban_uz							-- Запреты по УЗ 
 		,dir_wagon.[closed_route] as wagon_closed_route			--Замкнутый маршрут (кольцо)
 		,wir.note as wir_note									-- Примечание по ходу движения вагона
-
 	FROM IDS.WagonInternalMovement as wim	--> Текущая дислокаци
 		--> Текущее внетренее перемещение
 		 INNER JOIN IDS.WagonInternalRoutes as wir ON wim.id_wagon_internal_routes = wir.id
@@ -244,15 +237,13 @@ use [KRR-PA-CNT-Railway]
 		Left JOIN IDS.Arrival_UZ_Document as arr_doc_uz ON arr_doc_vag.id_document = arr_doc_uz.id
 		 --> Документы SAP Входящая поставка
 		Left JOIN [IDS].[SAPIncomingSupply] as sap_is ON wir.id_sap_incoming_supply = sap_is.id
-		--> Документы SAP Исходящая поставка
-		Left JOIN [SAP].[Out_Supply] as sap_os ON sap_os.id = (SELECT top(1) [id] FROM [SAP].[Out_Supply]  where [TRAID] = wir.num and [ERDAT]>convert(date, arr_sost.date_adoption ,120) order by [ERDAT])
-
 		 --==== СДАЧА ВАГОНА И ЗАДЕРЖАНИЯ ================================================================
 		--> Отправка вагона
 		Left JOIN [IDS].[OutgoingCars] as out_car ON wir.id_outgoing_car = out_car.id
 		--> Отправка состава
 		Left JOIN [IDS].[OutgoingSostav] as out_sost ON out_car.id_outgoing = out_sost.id
-
+		 --> Документы SAP Исходящая поставка
+		Left JOIN [IDS].[SAPOutgoingSupply] as sap_os ON wir.id_sap_incoming_supply = sap_os.id
 		 --==== ИНСТРУКТИВНЫЕ ПИСЬМА =====================================================================
 		--> Перечень вагонов по письма
 		Left JOIN IDS.InstructionalLettersWagon as ilw  ON ilw.id = (SELECT TOP (1) [id] FROM [IDS].[InstructionalLettersWagon] where [num] =wir.num and [close] is null order by id desc)
@@ -316,7 +307,6 @@ use [KRR-PA-CNT-Railway]
 	wim.id_station <> 10
 	-- Исключим ЛОКОМОТИВЫ
 	AND (dir_rod.rod_uz <> 90 or dir_rod.rod_uz is null)
-	--and sap_os.id is not null
 	and wim.id_way in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] where [way_delete] is null and id_station in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].Directory_Station where station_delete is null))
 	-- Вагоны на станциях
 	AND (wim.way_end IS NULL 
