@@ -13,6 +13,190 @@ using System.Threading.Tasks;
 
 namespace IDS
 {
+    //public class view_wagons
+    //{
+    //    public long wir_id { get; set; }
+    //    public long wim_id { get; set; }
+    //    public long? wio_id { get; set; }
+    //    public DateTime sample_datetime { get; set; }
+    //    public int num { get; set; }
+    //    public int position { get; set; }
+    //    public int? id_operator { get; set; }
+    //    public string operators_ru { get; set; }
+    //    public string operators_en { get; set; }
+    //    public string operator_abbr_ru { get; set; }
+    //    public string operator_abbr_en { get; set; }
+    //    public DateTime? operator_rent_start { get; set; }
+    //    public DateTime? operator_rent_end { get; set; }
+    //    public bool? operator_paid { get; set; }
+    //    public string operator_color { get; set; }
+    //    public bool? operator_monitoring_idle_time { get; set; }
+    //    public int? id_limiting_loading { get; set; }
+    //    public string limiting_name_ru { get; set; }
+    //    public string limiting_name_en { get; set; }
+    //    public string limiting_abbr_ru { get; set; }
+    //    public string limiting_abbr_en { get; set; }
+    //    public int? id_owner_wagon { get; set; }
+    //    public string owner_wagon_ru { get; set; }
+    //    public string owner_wagon_en { get; set; }
+    //    public string owner_wagon_abbr_ru { get; set; }
+    //    public string owner_wagon_abbr_en { get; set; }
+    //    public int? wagon_adm { get; set; }
+    //    public string wagon_adm_name_ru { get; set; }
+    //    public string wagon_adm_name_en { get; set; }
+    //    public string wagon_adm_abbr_ru { get; set; }
+    //    public string wagon_adm_abbr_en { get; set; }
+    //    public int? wagon_rod { get; set; }
+    //    public string wagon_rod_name_ru { get; set; }
+    //    public string wagon_rod_name_en { get; set; }
+    //    public string wagon_rod_abbr_ru { get; set; }
+    //    public string wagon_rod_abbr_en { get; set; }
+    //    public string wagon_type_ru { get; set; }
+    //    public string wagon_type_en { get; set; }
+    //    public string arrival_condition_name_ru { get; set; }
+    //    public string arrival_condition_name_en { get; set; }
+    //    public string arrival_condition_abbr_ru { get; set; }
+    //    public string arrival_condition_abbr_en { get; set; }
+    //    public bool? arrival_condition_red { get; set; }
+    //    public bool? arrival_condition_repairs { get; set; }
+    //    public string current_condition_name_ru { get; set; }
+    //    public string current_condition_name_en { get; set; }
+    //    public string current_condition_abbr_ru { get; set; }
+    //    public string current_condition_abbr_en { get; set; }
+    //    public bool? current_condition_red { get; set; }
+    //    public bool? current_condition_repairs { get; set; }
+    //    public DateTime? wagon_date_rem_uz { get; set; }
+    //    public double? wagon_gruzp_doc { get; set; }
+    //    public double? wagon_gruzp_uz { get; set; }
+    //    public string arrival_cargo_group_name_ru { get; set; }
+    //    public string arrival_cargo_group_name_en { get; set; }
+    //    public string arrival_cargo_name_ru { get; set; }
+    //    public string arrival_cargo_name_en { get; set; }
+    //    public int? arrival_id_sertification_data { get; set; }
+    //    public string arrival_sertification_data_ru { get; set; }
+    //    public string arrival_sertification_data_en { get; set; }
+    //    public int? arrival_id_commercial_condition { get; set; }
+    //    public string arrival_commercial_condition_ru { get; set; }
+    //    public string arrival_commercial_condition_en { get; set; }
+    //    public int? arrival_station_from_code { get; set; }
+    //    public string arrival_station_from_name_ru { get; set; }
+    //    public string arrival_station_from_name_en { get; set; }
+    //    public int? arrival_shipper_code { get; set; }
+    //    public string arrival_shipper_name_ru { get; set; }
+    //    public string arrival_shipper_name_en { get; set; }
+    //    public int? accepted_id_station_amkr { get; set; }
+    //    public string accepted_station_amkr_name_ru { get; set; }
+    //    public string accepted_station_amkr_name_en { get; set; }
+    //    public string accepted_station_amkr_abbr_ru { get; set; }
+    //    public string accepted_station_amkr_abbr_en { get; set; }
+    //    public int? arrival_id_station_amkr { get; set; }
+    //    public string arrival_station_amkr_name_ru { get; set; }
+    //    public string arrival_station_amkr_name_en { get; set; }
+    //    public string arrival_station_amkr_abbr_ru { get; set; }
+    //    public string arrival_station_amkr_abbr_en { get; set; }
+    //    public string arrival_division_amkr_code { get; set; }
+    //    public string arrival_division_amkr_name_ru { get; set; }
+    //    public string arrival_division_amkr_name_en { get; set; }
+    //    public string arrival_division_amkr_abbr_ru { get; set; }
+    //    public string arrival_division_amkr_abbr_en { get; set; }
+    //    public int? current_id_loading_status { get; set; }
+    //    public string current_loading_status_ru { get; set; }
+    //    public string current_loading_status_en { get; set; }
+    //    public int? current_wagon_busy { get; set; }
+    //    public int? current_id_operation { get; set; }
+    //    public string current_operation_name_ru { get; set; }
+    //    public string current_operation_name_en { get; set; }
+    //    public DateTime? current_operation_start { get; set; }
+    //    public DateTime? current_operation_end { get; set; }
+    //    public int? arrival_duration { get; set; }
+    //    public int? arrival_idle_time { get; set; }
+    //    public decimal? arrival_usage_fee { get; set; }
+    //    public int current_id_station_amkr { get; set; }
+    //    public string current_station_amkr_name_ru { get; set; }
+    //    public string current_station_amkr_name_en { get; set; }
+    //    public string current_station_amkr_abbr_ru { get; set; }
+    //    public string current_station_amkr_abbr_en { get; set; }
+    //    public int? current_station_duration { get; set; }
+    //    public int? current_way_duration { get; set; }
+    //    public int? current_station_idle_time { get; set; }
+    //    public int current_id_way { get; set; }
+    //    public int? current_id_park { get; set; }
+    //    public string current_way_num_ru { get; set; }
+    //    public string current_way_num_en { get; set; }
+    //    public string current_way_name_ru { get; set; }
+    //    public string current_way_name_en { get; set; }
+    //    public string current_way_abbr_ru { get; set; }
+    //    public string current_way_abbr_en { get; set; }
+    //    public DateTime current_way_start { get; set; }
+    //    public DateTime? current_way_end { get; set; }
+    //    public string current_wim_note { get; set; }
+    //    public int? current_id_outer_way { get; set; }
+    //    public string current_outer_way_name_ru { get; set; }
+    //    public string current_outer_way_name_en { get; set; }
+    //    public DateTime? current_outer_way_start { get; set; }
+    //    public DateTime? current_outer_way_end { get; set; }
+    //    public string sap_incoming_supply_num { get; set; }
+    //    public string sap_incoming_supply_pos { get; set; }
+    //    public DateTime? sap_incoming_supply_date { get; set; }
+    //    public TimeSpan? sap_incoming_supply_time { get; set; }
+    //    public string sap_incoming_supply_warehouse_code { get; set; }
+    //    public string sap_incoming_supply_warehouse_name { get; set; }
+    //    public string sap_incoming_supply_cargo_code { get; set; }
+    //    public string sap_incoming_supply_cargo_name { get; set; }
+
+    //    public string sap_outgoing_supply_num { get; set; }
+    //    public DateTime? sap_outgoing_supply_date { get; set; }
+    //    public string sap_outgoing_supply_cargo_name { get; set; }
+    //    public string sap_outgoing_supply_cargo_code { get; set; }
+    //    public string sap_outgoing_supply_shipper_name { get; set; }
+    //    public string sap_outgoing_supply_shipper_code { get; set; }
+    //    public string sap_outgoing_supply_destination_station_name { get; set; }
+    //    public string sap_outgoing_supply_destination_station_code { get; set; }
+    //    public string sap_outgoing_supply_border_checkpoint_name { get; set; }
+    //    public string sap_outgoing_supply_border_checkpoint_code { get; set; }
+    //    public double? sap_outgoing_supply_netto { get; set; }
+    //    public string sap_outgoing_supply_warehouse_code { get; set; }
+    //    public string sap_outgoing_supply_warehouse_name { get; set; }
+    //    public string sap_outgoing_supply_responsible_post { get; set; }
+    //    public string sap_outgoing_supply_responsible_fio { get; set; }
+    //    public string sap_outgoing_supply_payer_code { get; set; }
+    //    public string sap_outgoing_supply_payer_name { get; set; }
+
+    //    public string instructional_letters_num { get; set; }
+    //    public DateTime? instructional_letters_datetime { get; set; }
+    //    public int? instructional_letters_station_code { get; set; }
+    //    public string instructional_letters_station_name { get; set; }
+    //    public string instructional_letters_note { get; set; }
+    //    public int? wagon_brutto_doc { get; set; }
+    //    public int? wagon_brutto_amkr { get; set; }
+    //    public int? wagon_tara_doc { get; set; }
+    //    public double? wagon_tara_uz { get; set; }
+    //    public int? wagon_tara_arc_doc { get; set; }
+    //    public int? wagon_vesg_doc { get; set; }
+    //    public int? wagon_vesg_amkr { get; set; }
+    //    public int? diff_vesg { get; set; }
+    //    public bool? doc_outgoing_car { get; set; }
+    //    public int? arrival_nom_doc { get; set; }
+    //    public int? arrival_nom_main_doc { get; set; }
+    //    public string arrival_composition_index { get; set; }
+    //    public DateTime? arrival_date_adoption { get; set; }
+    //    public int? outgoing_id_return { get; set; }
+    //    public string outgoing_return_cause_ru { get; set; }
+    //    public string outgoing_return_cause_en { get; set; }
+    //    public DateTime? outgoing_date { get; set; }
+    //    public int? outgoing_sostav_status { get; set; }
+    //    public string wagon_ban_uz { get; set; }
+    //    public bool? wagon_closed_route { get; set; }
+    //    public string wir_note { get; set; }
+    //}
+
+    public class wagons_sap_os
+    {
+        public long wir_id { get; set; }
+        public int num { get; set; }
+        public DateTime? arrival_date_adoption { get; set; }
+    }
+
     public class IDS_SAP : IDS_Base
     {
         private eventID eventID = eventID.IDS_IDSSAP;
@@ -30,6 +214,9 @@ namespace IDS
         {
 
         }
+
+        #region ОБНОВЛЕНИЕ ВХОДЯЩЕЙ ПОСТАВКИ
+
         /// <summary>
         /// Обновить строку САП
         /// </summary>
@@ -402,5 +589,194 @@ namespace IDS
                 return -1;// Возвращаем id=-1 , Ошибка
             }
         }
+
+        #endregion
+
+        #region ОБНОВЛЕНИЕ ИСХОДЯЩЕЙ ПОСТАВКИ
+        /// <summary>
+        /// Обновим входящую поставку в WIR 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_wir"></param>
+        /// <param name="out_sypp"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int UpdateWIR_SAPOutgoingSupply(ref EFDbContext context, long id_wir, Out_Supply out_sypp, string user)
+        {
+            try
+            {
+                if (context == null)
+                {
+                    context = new EFIDS.Concrete.EFDbContext();
+                };
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
+                EFSAPOutgoingSupply ef_sap_os = new EFSAPOutgoingSupply(context);
+
+                // Получим wir
+                WagonInternalRoutes wir = ef_wir.Context.Where(w => w.id == id_wir).FirstOrDefault();
+                if (wir == null) return (int)errors_base.not_wir_db; // В базе данных нет записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
+                // Проверим sap исходящая поставка указана
+                if (wir.id_sap_outbound_supply != null)
+                {
+                    SAPOutgoingSupply sap_os = ef_sap_os.Context.Where(s => s.id == wir.id_sap_outbound_supply).FirstOrDefault();
+                    if (sap_os == null) return (int)errors_base.not_sap_os_db; // В базе данных нет записи по SAPOutgoingSupply (SAP Исходящая поставка)
+                    // Проверим id соответсвуют (SAPOutgoingSupply и Out_Supply)
+                    if (sap_os.id_out_supply == out_sypp.id)
+                    {
+                        // Соответсвует обновим
+                        sap_os.id_outgoing_car = wir.id_outgoing_car;
+                        sap_os.num = wir.num;
+                        sap_os.VBELN = out_sypp.VBELN;
+                        sap_os.ERDAT = out_sypp.ERDAT;
+                        sap_os.ZBEZEI = out_sypp.ZBEZEI;
+                        sap_os.STAWN = out_sypp.STAWN;
+                        sap_os.NAME1_AG = out_sypp.NAME1_AG;
+                        sap_os.KUNNR_AG = out_sypp.KUNNR_AG;
+                        sap_os.ZRWNAME = out_sypp.ZRWNAME;
+                        sap_os.ZENDSTAT = out_sypp.ZENDSTAT;
+                        sap_os.ZCRSTNAME = out_sypp.ZCRSTNAME;
+                        sap_os.ZCROSSSTAT = out_sypp.ZCROSSSTAT;
+                        sap_os.ZZVES_NETTO = out_sypp.ZZVES_NETTO;
+                        sap_os.ABTNR = out_sypp.ABTNR;
+                        sap_os.VTEXT = out_sypp.VTEXT;
+                        sap_os.ZZDOLG = out_sypp.ZZDOLG;
+                        sap_os.ZZFIO = out_sypp.ZZFIO;
+                        sap_os.ZZPLATEL = out_sypp.ZZPLATEL;
+                        sap_os.ZZNAME_PLATEL = out_sypp.ZZNAME_PLATEL;
+                        //sap_os.note = out_sypp.note,
+                        sap_os.change = DateTime.Now;
+                        sap_os.change_user = user;
+                        ef_sap_os.Update(sap_os);
+                        return 2; // Обновлена
+                    }
+                    else
+                    {
+                        ef_sap_os.Delete(sap_os.id);
+                        // не соответсвует, удалим (и создадим новый)
+                    }
+                }
+                // Содадим и добавим новую исходящую поставку
+                SAPOutgoingSupply sap_os_new = new SAPOutgoingSupply()
+                {
+                    id = 0,
+                    id_out_supply = 0,
+                    id_outgoing_car = wir.id_outgoing_car,
+                    num = wir.num,
+                    VBELN = out_sypp.VBELN.Trim(),
+                    ERDAT = out_sypp.ERDAT,
+                    ZBEZEI = out_sypp.ZBEZEI.Trim(),
+                    STAWN = out_sypp.STAWN.Trim(),
+                    NAME1_AG = out_sypp.NAME1_AG.Trim(),
+                    KUNNR_AG = out_sypp.KUNNR_AG.Trim(),
+                    ZRWNAME = out_sypp.ZRWNAME.Trim(),
+                    ZENDSTAT = out_sypp.ZENDSTAT.Trim(),
+                    ZCRSTNAME = out_sypp.ZCRSTNAME.Trim(),
+                    ZCROSSSTAT = out_sypp.ZCROSSSTAT.Trim(),
+                    ZZVES_NETTO = out_sypp.ZZVES_NETTO,
+                    ABTNR = out_sypp.ABTNR.Trim(),
+                    VTEXT = out_sypp.VTEXT.Trim(),
+                    ZZDOLG = out_sypp.ZZDOLG.Trim(),
+                    ZZFIO = out_sypp.ZZFIO.Trim(),
+                    ZZPLATEL = out_sypp.ZZPLATEL.Trim(),
+                    ZZNAME_PLATEL = out_sypp.ZZNAME_PLATEL.Trim(),
+                    note = null,
+                    create = DateTime.Now,
+                    create_user = user,
+                };
+                sap_os_new.Out_Supply = out_sypp;
+                ef_sap_os.Add(sap_os_new);
+                wir.SAPOutgoingSupply = sap_os_new;
+                ef_wir.Update(wir);
+                return 1; // Добавлена новая
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateWIR_SAPOutgoingSupply(context = {0}, id_wir = {1}, cur_out_sypp = {2}, user = {3})", context, id_wir, out_sypp, user), servece_owner, eventID);
+                return (int)errors_base.global;
+            }
+        }
+
+        /// <summary>
+        /// Обновим САП Входящие поставки
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int UpdateSAPOutgoingSupply(string user)
+        {
+            try
+            {
+                DateTime start = DateTime.Now;
+                ResultUpdateWagon res = new ResultUpdateWagon(0);
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+
+                EFDbContext context = new EFDbContext();
+
+                EFOut_Supply ef_out_sypp = new EFOut_Supply(context);
+
+
+                string sql = "select * from [IDS].[get_view_wagons_of_balance]() where id_operator is null or id_operator NOT IN (SELECT [id_operator]  FROM [KRR-PA-CNT-Railway].[IDS].[Directory_OperatorsWagonsGroup] where [group] in ('amkr_vz'))";
+                List<wagons_sap_os> list_all_wagons = context.Database.SqlQuery<wagons_sap_os>(sql).ToList();
+                int count = list_all_wagons.Count();
+                res.count = count;
+                foreach (wagons_sap_os wagons in list_all_wagons)
+                {
+                    // Дата прибытия вагона
+                    DateTime? dt = wagons.arrival_date_adoption;
+                    // Выберем подходящую исходящую поставку
+                    Out_Supply cur_out_sypp = ef_out_sypp.Context.Where(s => s.TRAID == wagons.num.ToString() && s.ERDAT > dt).OrderBy(c => c.ERDAT).FirstOrDefault();
+                    int res_upd = 0;
+                    if (cur_out_sypp != null)
+                    {
+                        res_upd = UpdateWIR_SAPOutgoingSupply(ref context, wagons.wir_id, cur_out_sypp, user);
+                        if (res_upd > 0)
+                        {
+                            if (res_upd == 1)
+                            {
+                                res.SetInsertResult(res_upd, wagons.num);
+                            }
+                            else
+                            {
+                                res.SetUpdateResult(res_upd, wagons.num);
+                            }
+                        }
+                        else
+                        {
+                            res.SetSkipResult(res_upd, wagons.num);
+                        }
+                    }
+                    else {
+                        res.SetSkipResult(res_upd, wagons.num);
+                    }
+                    Console.WriteLine("Вагон {0}, Код обновления ИП {1} осталось вагонов {2}", wagons.num, res_upd, --count);
+                }
+                // Если операция успешна, сохраним результат
+                if (res.error == 0)
+                {
+                    res.SetResult(context.SaveChanges());
+                }
+                string mess = String.Format("Операция обновления информации исходящей поставки на вагоны. Код выполнения = {0}. Результат обновления [на АМКР определено {1} вагонов, добавлено ИП:{2}, обновлено ИП:{3}, пропущено ИП:{4}, закрыто ИП:{5}, ошибок обновления ИП:{6}].",
+                    res.result, res.count, res.add, res.update, res.skip, res.close, res.error);
+                mess.WarningLog(servece_owner, eventID);
+                mess.EventLog(res.result < 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
+                DateTime stop = DateTime.Now;
+                servece_owner.ServicesToLog(eventID, String.Format("Операция обновления исходящей поставки поставки"), start, stop, res.result);
+                return res.result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateSAPOutgoingSupply(user = {0})", user), servece_owner, eventID);
+                return -1;// Возвращаем id=-1 , Ошибка
+            }
+        }
+        #endregion
     }
 }

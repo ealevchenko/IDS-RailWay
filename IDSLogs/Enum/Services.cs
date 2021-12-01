@@ -29,6 +29,7 @@ namespace IDSLogs.Enum
         // сервисы ИДС
         IDS = 300,
         IDS_UpdateIncomingSupply = 301,     // Сервис обновления входящей поставки
+        IDS_UpdateOutgoingSupply = 304,     // Сервис обновления исходящей поставки
         IDS_UpdateArrivalEPD = 302,         // Сервис обновления ЭПД входящих вагонов
         IDS_UpdateSendingEPD = 303,         // Сервис обновления ЭПД исходящих вагонов
 

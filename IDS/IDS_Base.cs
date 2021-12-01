@@ -82,6 +82,10 @@ namespace IDS
         error_delete_park_station_apply = -705,             // Отмена удаления, состояние парка уже применили
         error_change_park_station_lock_wagon = -706,        // Отмена изменения положения парка, вагоны имеют отметку заблокирован (операция предъявления)
 
+        // Таблицы SAP -800..
+        not_sap_is_db = -801,                               // В базе данных нет записи по SAPIncomingSupply (SAP Входящая поставка)
+        not_sap_os_db = -802,                               // В базе данных нет записи по SAPOutgoingSupply (SAP Исходящая поставка)
+
         error_convert_epd = -900,                           // Ошибка конвертации данных ЭПД
         not_epd_document = -901,                            // Нет ЭПД
         not_vagon_epd_document = -902,                      // Указанного вагона нет в ЭПД
@@ -217,6 +221,7 @@ namespace IDS
         public int skip { get; set; }
         public int error { get; set; }
         public int close { get; set; }
+        public int add { get; set; }
         public List<ResultWagon> listResult = new List<ResultWagon>();
 
         public ResultUpdateWagon(int count)
@@ -227,6 +232,7 @@ namespace IDS
             this.skip = 0;
             this.error = 0;
             this.close = 0;
+            this.add = 0;
             this.listResult.Clear();
         }
 
@@ -257,6 +263,30 @@ namespace IDS
             }
             AddSkip(); return;
         }
+        public void SetInsertResult(int result, int num)
+        {
+            listResult.Add(new ResultWagon() { num = num, result = result });
+
+            if (result < 0)
+            {
+                AddError(result); return;
+            }
+            if (result > 0)
+            {
+                AddInsert(); return;
+            }
+            AddSkip(); return;
+        }
+        public void SetSkipResult(int result, int num)
+        {
+            listResult.Add(new ResultWagon() { num = num, result = result });
+
+            if (result < 0)
+            {
+                AddError(result); return;
+            }
+            AddSkip(); return;
+        }
         public void SetResult(int code)
         {
             this.result = code;
@@ -280,6 +310,10 @@ namespace IDS
         public void AddClose()
         {
             this.close++;
+        }
+        public void AddInsert()
+        {
+            this.add++;
         }
     }
     /// <summary>
