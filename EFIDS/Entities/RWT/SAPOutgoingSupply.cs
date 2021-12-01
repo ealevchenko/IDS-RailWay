@@ -23,68 +23,53 @@ namespace EFIDS.Entities
 
         public int num { get; set; }
 
-        [Required]
         [StringLength(10)]
         public string VBELN { get; set; }
 
         [Column(TypeName = "date")]
         public DateTime ERDAT { get; set; }
 
-        [Required]
         [StringLength(160)]
         public string ZBEZEI { get; set; }
 
-        [Required]
         [StringLength(17)]
         public string STAWN { get; set; }
 
-        [Required]
         [StringLength(150)]
         public string NAME1_AG { get; set; }
 
-        [Required]
         [StringLength(10)]
         public string KUNNR_AG { get; set; }
 
-        [Required]
         [StringLength(30)]
         public string ZRWNAME { get; set; }
 
-        [Required]
-        [StringLength(10)]
+         [StringLength(10)]
         public string ZENDSTAT { get; set; }
 
-        [Required]
         [StringLength(30)]
         public string ZCRSTNAME { get; set; }
 
-        [Required]
         [StringLength(10)]
         public string ZCROSSSTAT { get; set; }
 
         public double ZZVES_NETTO { get; set; }
 
-        [Required]
         [StringLength(4)]
         public string ABTNR { get; set; }
 
-        [Required]
         [StringLength(20)]
         public string VTEXT { get; set; }
 
-        [Required]
         [StringLength(50)]
         public string ZZDOLG { get; set; }
 
-        [Required]
         [StringLength(50)]
         public string ZZFIO { get; set; }
 
-        [Required]
         [StringLength(15)]
         public string ZZPLATEL { get; set; }
 
-        [Required]
         [StringLength(50)]
         public string ZZNAME_PLATEL { get; set; }
 
