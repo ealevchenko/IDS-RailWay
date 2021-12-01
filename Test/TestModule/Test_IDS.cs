@@ -109,6 +109,16 @@ namespace Test.TestModule
 
         }
 
+        public void IDS_SAP_UpdateSAPOutgoingSupply()
+        {
+
+            EFDbContext context = new EFDbContext();
+
+            IDS_SAP ids = new IDS_SAP(service.Test);
+            int result = ids.UpdateSAPOutgoingSupply(@"EUROPE\ealevchenko");
+
+        }
+
         #endregion
 
         #region IDSDirectory

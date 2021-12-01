@@ -203,12 +203,14 @@ namespace Test
             //tids.IDSTransfer_InsertOutgoingSostavOfKis();         // Перенос составов на ИДС в отправленные по данным КИС
             //tids.IDSTransfer_IncomingArrivalSostav();             // Открытие WIR по прибытию состава
             //tids.IDSTransfer_IncomingArrivalSostav_All();         // Перенос всех принятых составов на АМКР с открытием WIR
-            //tids.IDSTransfer_SetStationOutgoingWagonsOfKIS();       // Найти и поставить все вагоны по отправляемому составу на станцию и путь отправки АМКР (По данным КИС, операция перед закрытием WIR отправка состава на УЗ)
+            //tids.IDSTransfer_SetStationOutgoingWagonsOfKIS()      // Найти и поставить все вагоны по отправляемому составу на станцию и путь отправки АМКР (По данным КИС, операция перед закрытием WIR отправка состава на УЗ)
             //tids.IDSTransfer_SendingOutgoingSostav();             // Закрытие WIR отправка состава на УЗ
 
             //tids.IDS_SAP_GetCurrentIncomingSupplyOfWebSAP();      // Чтение и обновление строки САП входящие поставки
-            //tids.IDS_SAP_UpdateIncomingSupply();                    // Обновление данных по входящей поставке
-            //tids.IDSThread_Start_UpdateIncomingSupply();                // Тест потока "Обновление данных по входящей поставке"
+            //tids.IDS_SAP_UpdateIncomingSupply();                  // Обновление данных по входящей поставке
+            //tids.IDSThread_Start_UpdateIncomingSupply();          // Тест потока "Обновление данных по входящей поставке"
+
+            //tids.IDS_SAP_UpdateSAPOutgoingSupply();                 // Тест "Обновление данных по исходящей поставке поставке"
 
             //tids.IDS_WIR_RenumberingWagons();                       // Перенумерация с указанной позиции
             //tids.IDS_WIR_DislocationWagons();                       // Операция дислокация
@@ -223,10 +225,8 @@ namespace Test
             //tids.IDS_WIR_GetWagonsOperationOfSend();                // Тест формирования отчета операции отправки (вагоны)
             //tids.IDS_WIR_GetSostavWagonsOperationOfSend();          // Тест формирования отчета операции отправки (состав-вагоны)
 
-            #region IDS_EPD
-            tids.IDS_WIR_UpdateArrivalEPD();                            // Тест функции сервиса обновления входящих документов
-            //tids.IDS_WIR_UpdateSendingEPD();                            // Тест функции сервиса обновления исходящих документов
-            #endregion
+            //tids.IDS_WIR_UpdateArrivalEPD();                            // Тест функции сервиса обновления входящих документов
+            tids.IDS_WIR_UpdateSendingEPD();                            // Тест функции сервиса обновления исходящих документов
 
             #endregion
 
