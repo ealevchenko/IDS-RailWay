@@ -44,22 +44,26 @@ namespace IDSService
         private service servece_name = service.IDS;
 
         private service thread_update_incoming_supply = service.IDS_UpdateIncomingSupply;
+        private service thread_update_outgoing_supply = service.IDS_UpdateOutgoingSupply;
         private service thread_update_arrival_epd = service.IDS_UpdateArrivalEPD;
         private service thread_update_sending_epd = service.IDS_UpdateSendingEPD;
 
 
         private int interval_update_incoming_supply = 3600; //  1раз в час
+        private int interval_update_outgoing_supply = 3600; //  1раз в час
         private int interval_update_arrival_epd = 3600; //  1раз в час
         private int interval_update_sending_epd = 3600; //  1раз в час
 
 
         bool active_update_incoming_supply = true;
+        bool active_update_outgoing_supply = true;
         bool active_update_arrival_epd = true;
         bool active_update_sending_epd = true;
 
         //System.Timers.Timer timer_services = new System.Timers.Timer();
 
         System.Timers.Timer timer_services_update_incoming_supply = new System.Timers.Timer();
+        System.Timers.Timer timer_services_update_outgoing_supply = new System.Timers.Timer();
         System.Timers.Timer timer_services_update_arrival_epd = new System.Timers.Timer();
         System.Timers.Timer timer_services_update_sending_epd = new System.Timers.Timer();
 
@@ -82,10 +86,12 @@ namespace IDSService
             {
                 // интервалы
                 this.interval_update_incoming_supply = int.Parse(ConfigurationManager.AppSettings["IntervalUpdateIncomingSupply"].ToString());
+                this.interval_update_outgoing_supply = int.Parse(ConfigurationManager.AppSettings["IntervalUpdateOutgoingSupply"].ToString());
                 this.interval_update_arrival_epd = int.Parse(ConfigurationManager.AppSettings["IntervalUpdateArrivalEPD"].ToString());
                 this.interval_update_sending_epd = int.Parse(ConfigurationManager.AppSettings["IntervalUpdateSendingEPD"].ToString());
                 // состояние активности
                 this.active_update_incoming_supply = bool.Parse(ConfigurationManager.AppSettings["ActiveUpdateIncomingSupply"].ToString());
+                this.active_update_outgoing_supply = bool.Parse(ConfigurationManager.AppSettings["ActiveUpdateOutgoingSupply"].ToString());
                 this.active_update_arrival_epd = bool.Parse(ConfigurationManager.AppSettings["ActiveUpdateArrivalEPD"].ToString());
                 this.active_update_sending_epd = bool.Parse(ConfigurationManager.AppSettings["ActiveUpdateSendingEPD"].ToString());
 
@@ -98,6 +104,9 @@ namespace IDSService
 
                 timer_services_update_incoming_supply.Interval = this.interval_update_incoming_supply * 1000;
                 timer_services_update_incoming_supply.Elapsed += new System.Timers.ElapsedEventHandler(this.OnTimerServices_UpdateIncomingSupply);
+
+                timer_services_update_outgoing_supply.Interval = this.interval_update_outgoing_supply * 1000;
+                timer_services_update_outgoing_supply.Elapsed += new System.Timers.ElapsedEventHandler(this.OnTimerServices_UpdateOutgoingSupply);
 
                 timer_services_update_arrival_epd.Interval = this.interval_update_arrival_epd * 1000;
                 timer_services_update_arrival_epd.Elapsed += new System.Timers.ElapsedEventHandler(this.OnTimerServices_UpdateArrivalEPD);
@@ -126,7 +135,9 @@ namespace IDSService
             //timer_services.Start();
             // Запустить таймера потоков
             RunTimer_UpdateIncomingSupply();
+            RunTimer_UpdateOutgoingSupply();
             RunTimer_UpdateArrivalEPD();
+            RunTimer_UpdateSendingEPD();
             //TODO: Добавить запуск других таймеров
             //...............
 
@@ -139,6 +150,8 @@ namespace IDSService
             string message = String.Format("Сервис : {0} - запущен.", this.servece_name);
             message.WarningLog(servece_name, eventID); message.EventLog(EventStatus.Ok, servece_name, eventID);
             message = String.Format("Интервал выполнения сервиса {0}-{1} сек.", this.thread_update_incoming_supply, this.interval_update_incoming_supply);
+            message.WarningLog(servece_name, eventID); message.EventLog(EventStatus.Ok, servece_name, eventID);
+            message = String.Format("Интервал выполнения сервиса {0}-{1} сек.", this.thread_update_outgoing_supply, this.interval_update_outgoing_supply);
             message.WarningLog(servece_name, eventID); message.EventLog(EventStatus.Ok, servece_name, eventID);
             message = String.Format("Интервал выполнения сервиса {0}-{1} сек.", this.thread_update_arrival_epd, this.interval_update_arrival_epd);
             message.WarningLog(servece_name, eventID); message.EventLog(EventStatus.Ok, servece_name, eventID);
@@ -206,6 +219,48 @@ namespace IDSService
             catch (Exception e)
             {
                 e.ExceptionLog(String.Format("OnTimerServices_UpdateIncomingSupply(sender={0}, args={1})", sender, args.ToString()), this.servece_name, eventID);
+            }
+        }
+        #endregion
+
+        #region IDS_UpdateOutgoingSupply
+        protected void Start_UpdateOutgoingSupply(bool active)
+        {
+            if (active)
+            {
+                ids_th.Start_UpdateOutgoingSupply();
+            }
+        }
+
+        protected void Start_UpdateOutgoingSupply()
+        {
+            bool active = bool.Parse(ConfigurationManager.AppSettings["ActiveUpdateOutgoingSupply"].ToString());
+            Start_UpdateOutgoingSupply(active);
+        }
+
+        protected void RunTimer_UpdateOutgoingSupply()
+        {
+            Start_UpdateOutgoingSupply();
+            timer_services_update_outgoing_supply.Start();
+        }
+
+        private void OnTimerServices_UpdateOutgoingSupply(object sender, System.Timers.ElapsedEventArgs args)
+        {
+            //String.Format("Сервис : {0} сработал таймер OnTimerServicesArrival.", this.servece_name).WriteInformation(servece_name, eventID);
+            try
+            {
+                bool active = bool.Parse(ConfigurationManager.AppSettings["ActiveUpdateOutgoingSupply"].ToString());
+                Start_UpdateOutgoingSupply(active);
+                if (active != this.active_update_outgoing_supply)
+                {
+                    this.active_update_outgoing_supply = active;
+                    string mes_service_start = String.Format("Сервис : {0}, выполнение потока {1} - {2}", this.servece_name, this.thread_update_outgoing_supply, active ? "возабновленно" : "остановленно");
+                    mes_service_start.EventLog(EventStatus.Ok, servece_name, eventID);
+                }
+            }
+            catch (Exception e)
+            {
+                e.ExceptionLog(String.Format("OnTimerServices_UpdateOutgoingSupply(sender={0}, args={1})", sender, args.ToString()), this.servece_name, eventID);
             }
         }
         #endregion
