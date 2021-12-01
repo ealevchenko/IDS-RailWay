@@ -5086,9 +5086,9 @@ namespace IDS
                 List<UZ_DOC_Sending> list_uz_doc = list_uz_doc_all.Where(d => d.dt >= date_exceeded).ToList();
                 // Сгруппируем по id сотава для отправки
                 List<IGrouping<long, UZ_DOC_Sending>> group_uz_doc = list_uz_doc.ToList().GroupBy(d => d.id_sostav).ToList();
-                int count = list_uz_doc != null ? list_uz_doc.Count() : 0;
+                int count = group_uz_doc != null ? group_uz_doc.Count() : 0;
                 // Пройдемся по составам
-                foreach (IGrouping<long, UZ_DOC_Sending> uz_doc_sostav in group_uz_doc)
+                foreach (IGrouping<long, UZ_DOC_Sending> uz_doc_sostav in group_uz_doc.OrderBy(c=>c.Key))
                 {
                     List<UZ_DOC_Sending> list_cars = uz_doc_sostav.ToList();
                     // Выполним обновление всего пула документов
@@ -5097,14 +5097,9 @@ namespace IDS
                     res.SetResultOperation(result.result, uz_doc_sostav.Key);
                     Console.WriteLine("ID состава {0}, обновлено {1} ошибок {2}, осталось {3}", uz_doc_sostav.Key, result.result, result.error, --count);
                 }
-                // Если операция успешна, перенумеруем позиции на пути с которого ушли вагоны
-
-                //if (res.error == 0)
-                //{
-                //    res.SetResult(context_ids.SaveChanges());
-                //}
+                //
                 string mess = String.Format("Операция обновления ЭПД по отправке. Код выполнения = {0}. Результат обновления [определено {1} составов, обновлено вагонов {2}, ошибок обновления {3}].",
-                    res.result, list_uz_doc != null ? list_uz_doc.Count() : 0, res.result, res.error);
+                    res.result, list_uz_doc != null ? group_uz_doc.Count() : 0, res.result, res.error);
                 mess.WarningLog(servece_owner, eventID);
                 mess.EventLog(res.result < 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
                 DateTime stop = DateTime.Now;
