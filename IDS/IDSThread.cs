@@ -17,11 +17,15 @@ namespace IDS
 
         protected static object locker_db_outgoing = new object();
         protected static object locker_sap_is = new object();
+        protected static object locker_sap_os = new object();
         protected static object locker_epd = new object();
 
 
         protected Thread thUpdateIncomingSupply = null;
         public bool statusUpdateIncomingSupply { get { return thUpdateIncomingSupply.IsAlive; } }
+
+        protected Thread thUpdateOutgoingSupply = null;
+        public bool statusUpdateOutgoingSupply { get { return thUpdateOutgoingSupply.IsAlive; } }
 
         protected Thread thUpdateArrivalEPD = null;
         public bool statusUpdateArrivalEPD { get { return thUpdateArrivalEPD.IsAlive; } }
@@ -109,6 +113,64 @@ namespace IDS
                     IDS_SAP ids_sap = new IDS_SAP(service);
                     ids_sap.Day_approach_limit = day_approach_limit;
                     res_update = ids_sap.UpdateListIncomingSupply(list_exceptions_cargo, (System.Environment.UserDomainName + @"\" + System.Environment.UserName));
+                }
+                TimeSpan ts = DateTime.Now - dt_start;
+                string mes_service_exec = String.Format("Поток {0} сервиса {1} - время выполнения: {2}:{3}:{4}({5}), код выполнения: res_update:{6}.", service.ToString(), servece_owner, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds, res_update);
+                mes_service_exec.InformationLog(servece_owner, eventID);
+                service.ServicesToLog(service.ToString() + " - выполнен.", dt_start, DateTime.Now, res_update);
+            }
+            catch (ThreadAbortException exc)
+            {
+                String.Format("Поток {0} сервиса {1} - прерван по событию ThreadAbortException={2}", service.ToString(), servece_owner, exc).WarningLog(servece_owner, eventID);
+            }
+            catch (Exception ex)
+            {
+                ex.ExceptionLog(String.Format("Ошибка выполнения цикла обновления, потока {0} сервис {1}", service.ToString(), servece_owner), servece_owner, eventID);
+                service.ServicesToLog(service.ToString() + " - завершен с ошибкой.", dt_start, DateTime.Now, -1);
+            }
+        }
+        #endregion
+
+        #region IDS_UpdateOutgoingSupply
+        /// <summary>
+        /// Запустить поток обновления исходящей поставки по вагонам
+        /// </summary>
+        /// <returns></returns>
+        public bool Start_UpdateOutgoingSupply()
+        {
+            service service = service.IDS_UpdateOutgoingSupply;
+            string mes_service_start = String.Format("Поток : {0} сервиса : {1}", service.ToString(), servece_owner);
+            try
+            {
+                if ((thUpdateOutgoingSupply == null) || (!thUpdateOutgoingSupply.IsAlive && thUpdateOutgoingSupply.ThreadState == ThreadState.Stopped))
+                {
+                    thUpdateOutgoingSupply = new Thread(UpdateOutgoingSupply);
+                    thUpdateOutgoingSupply.Name = service.ToString();
+                    thUpdateOutgoingSupply.Start();
+                }
+                return thUpdateOutgoingSupply.IsAlive;
+            }
+            catch (Exception ex)
+            {
+                mes_service_start += " - ошибка запуска.";
+                ex.ExceptionLog(mes_service_start, servece_owner, eventID);
+                return false;
+            }
+        }
+        /// <summary>
+        /// Поток обновления исходящей поставки по вагонам
+        /// </summary>
+        private static void UpdateOutgoingSupply()
+        {
+            service service = service.IDS_UpdateOutgoingSupply;
+            DateTime dt_start = DateTime.Now;
+            try
+            {
+                int res_update = 0;
+                lock (locker_sap_os)
+                {
+                    IDS_SAP ids_sap = new IDS_SAP(service);
+                    res_update = ids_sap.UpdateSAPOutgoingSupply(null);
                 }
                 TimeSpan ts = DateTime.Now - dt_start;
                 string mes_service_exec = String.Format("Поток {0} сервиса {1} - время выполнения: {2}:{3}:{4}({5}), код выполнения: res_update:{6}.", service.ToString(), servece_owner, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds, res_update);
