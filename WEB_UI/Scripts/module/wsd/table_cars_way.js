@@ -113,6 +113,7 @@
             'field_sap_incoming_supply_cargo_name': 'Вх. пост. материал (груз)',
             'field_sap_incoming_supply_warehouse_code': 'Вх. пост. склад',
             'field_sap_incoming_supply_warehouse_name': 'Вх. пост. Наименование склада',
+            'field_sap_incoming_supply_cargo_ban': 'Вх. пост. Запрет',
 
             'field_sap_outgoing_supply_num': 'Исх. пост. №',
             'field_sap_outgoing_supply_date': 'Исх. пост. дата созд.',
@@ -292,6 +293,7 @@
             'field_sap_incoming_supply_cargo_name': 'Incoming. fast. material (cargo) ',
             'field_sap_incoming_supply_warehouse_code': 'In. fast. warehouse',
             'field_sap_incoming_supply_warehouse_name': 'In. fast. Warehouse name ',
+            'field_sap_incoming_supply_cargo_ban': 'In. fast. Ban',
 
             'field_sap_outgoing_supply_num': 'Out. fast. No. ',
             'field_sap_outgoing_supply_date': 'Out. fast. creation date ',
@@ -1295,6 +1297,20 @@
             className: 'dt-body-left shorten mw-150 sap-inc-supp',
             title: langView('field_sap_incoming_supply_warehouse_name', App.Langs), width: "150px", orderable: true, searchable: true
         },
+        // sap_incoming_supply_cargo_ban
+        {
+            field: 'sap_incoming_supply_cargo_ban',
+            data: function (row, type, val, meta) {
+                switch (row.sap_incoming_supply_cargo_ban) {
+                    case '@5C@': return "<i class='fas fa-ban' style='color:#ff4d4d;'></i>";
+                    case '@5B@': return "<i class='fas fa-check' style='color:#00ce00;'></i>";
+                    default: return null;
+                }
+            },
+            className: 'dt-body-nowrap sap-inc-supp',
+            title: langView('field_sap_incoming_supply_cargo_ban', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+
         //=============== ИСХОДЯЩАЯ ПОСТАВКА ==================
         {
             field: 'sap_outgoing_supply_num',
@@ -2026,8 +2042,9 @@
         collums.push('instructional_letters_note');         // Текст письма
         //=============== ВХОДЯЩАЯ ПОСТАВКА ==================
         // Вх. поставка САП
+        collums.push('sap_incoming_supply_cargo_ban');            // Номер вх. поставки
         collums.push('sap_incoming_supply_num');            // Номер вх. поставки
-        collums.push('sap_incoming_supply_pos');            // поз вх. поставки
+        //collums.push('sap_incoming_supply_pos');            // поз вх. поставки
         collums.push('sap_incoming_supply_date');           // дата создания вх. поставки
         collums.push('sap_incoming_supply_time');           // время создания вх. поставки
         collums.push('sap_incoming_supply_cargo_code');     // склад вх. поставки
@@ -2273,17 +2290,17 @@
         //collums.push('sap_outgoing_supply_num');
         //collums.push('sap_outgoing_supply_date');
         //collums.push('sap_outgoing_supply_cargo_code');
-        //collums.push('sap_outgoing_supply_cargo_name');
+        collums.push('sap_outgoing_supply_cargo_name');
         //collums.push('sap_outgoing_supply_destination_station_code');
-        //collums.push('sap_outgoing_supply_destination_station_name');
+        collums.push('sap_outgoing_supply_destination_station_name');
         //collums.push('sap_outgoing_supply_border_checkpoint_code');
         //collums.push('sap_outgoing_supply_border_checkpoint_name');
         //collums.push('sap_outgoing_supply_shipper_code');
-        //collums.push('sap_outgoing_supply_shipper_name');
+        collums.push('sap_outgoing_supply_shipper_name');
         //collums.push('sap_outgoing_supply_payer_code');
         //collums.push('sap_outgoing_supply_payer_name');
         //collums.push('sap_outgoing_supply_warehouse_code');
-        //collums.push('sap_outgoing_supply_warehouse_name');
+        collums.push('sap_outgoing_supply_warehouse_name');
         //collums.push('sap_outgoing_supply_netto');
         //collums.push('sap_outgoing_supply_responsible_post');
         //collums.push('sap_outgoing_supply_responsible_fio');

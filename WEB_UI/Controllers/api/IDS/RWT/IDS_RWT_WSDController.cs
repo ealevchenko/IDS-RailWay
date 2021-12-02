@@ -247,7 +247,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string sap_incoming_supply_warehouse_name { get; set; }
         public string sap_incoming_supply_cargo_code { get; set; }
         public string sap_incoming_supply_cargo_name { get; set; }
-
+        public string sap_incoming_supply_cargo_ban { get; set; }
         public string sap_outgoing_supply_num { get; set; }
         public DateTime? sap_outgoing_supply_date { get; set; }
         public string sap_outgoing_supply_cargo_name { get; set; }
