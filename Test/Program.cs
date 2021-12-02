@@ -207,7 +207,7 @@ namespace Test
             //tids.IDSTransfer_SendingOutgoingSostav();             // Закрытие WIR отправка состава на УЗ
 
             //tids.IDS_SAP_GetCurrentIncomingSupplyOfWebSAP();      // Чтение и обновление строки САП входящие поставки
-            //tids.IDS_SAP_UpdateIncomingSupply();                  // Обновление данных по входящей поставке
+            tids.IDS_SAP_UpdateIncomingSupply();                  // Обновление данных по входящей поставке
             //tids.IDSThread_Start_UpdateIncomingSupply();          // Тест потока "Обновление данных по входящей поставке"
 
             //tids.IDS_SAP_UpdateSAPOutgoingSupply();                 // Тест "Обновление данных по исходящей поставке поставке"
@@ -226,7 +226,7 @@ namespace Test
             //tids.IDS_WIR_GetSostavWagonsOperationOfSend();          // Тест формирования отчета операции отправки (состав-вагоны)
 
             //tids.IDS_WIR_UpdateArrivalEPD();                            // Тест функции сервиса обновления входящих документов
-            tids.IDS_WIR_UpdateSendingEPD();                            // Тест функции сервиса обновления исходящих документов
+            //tids.IDS_WIR_UpdateSendingEPD();                            // Тест функции сервиса обновления исходящих документов
 
             #endregion
 
