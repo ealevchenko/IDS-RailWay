@@ -304,12 +304,29 @@ namespace IDS
                     user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
                 }
                 WebAPIClientSAP web_sap = new WebAPIClientSAP(this.servece_owner);
-                IncomingSupply incoming_supply = web_sap.GetIncomingSupply(sap_is.id, sap_is.num_doc_uz.Trim(), sap_is.num.ToString().Trim());
+                string num_doc_uz = sap_is.num_doc_uz.Trim();
+                IncomingSupply incoming_supply = web_sap.GetIncomingSupply(sap_is.id, num_doc_uz, sap_is.num.ToString().Trim());
+
+                // Проверка на документ с нулем впереди
+                if (incoming_supply == null && sap_is.num_doc_uz != null && sap_is.num_doc_uz.Length <= 6)
+                {
+                    // Добавим 0 и поищем еще
+                    num_doc_uz = "0" + sap_is.num_doc_uz.Trim();
+                    incoming_supply = web_sap.GetIncomingSupply(sap_is.id, num_doc_uz, sap_is.num.ToString().Trim());
+                    if (incoming_supply == null)
+                    {
+                        // Добавим 00 и поищем еще
+                        num_doc_uz = "00" + sap_is.num_doc_uz.Trim();
+                        incoming_supply = web_sap.GetIncomingSupply(sap_is.id, num_doc_uz, sap_is.num.ToString().Trim());
+                    }
+                }
+
                 if (incoming_supply != null)
                 {
 
                     string data = null;
                     string time = null;
+                    sap_is.num_doc_uz = num_doc_uz;
                     if (!String.IsNullOrWhiteSpace(incoming_supply.ERDAT))
                     {
                         data = incoming_supply.ERDAT.Insert(4, "-").Insert(7, "-");
@@ -568,7 +585,7 @@ namespace IDS
 
                 EFDbContext context = new EFDbContext();
 
-                // Перенесем вагоны 
+                // Обновим вагоны 
                 res = UpdateListIncomingSupply(ref context, list_cargo, user);
                 // Если операция успешна, перенумеруем позиции на пути с которого ушли вагоны
                 if (res.error == 0)
@@ -753,7 +770,8 @@ namespace IDS
                             res.SetSkipResult(res_upd, wagons.num);
                         }
                     }
-                    else {
+                    else
+                    {
                         res.SetSkipResult(res_upd, wagons.num);
                     }
                     Console.WriteLine("Вагон {0}, Код обновления ИП {1} осталось вагонов {2}", wagons.num, res_upd, --count);
