@@ -2246,6 +2246,18 @@ namespace IDS
                 ef_wio.Delete(wio.id);
                 wir.id_outgoing_car = null;
                 ef_wir.Update(wir);
+                // Проверить сап исходящие, и если есть отключим привязку к отправленному вагону
+                EFSAPOutgoingSupply ef_sap_os = new EFSAPOutgoingSupply(context);
+                SAPOutgoingSupply sap_os = ef_sap_os.Context.Where(s => s.id_outgoing_car == car.id).FirstOrDefault();
+                if (sap_os != null)
+                {
+                    sap_os.id_outgoing_car = null;
+                    sap_os.OutgoingCars = null;
+                    sap_os.change = DateTime.Now;
+                    sap_os.change_user = user;
+                    ef_sap_os.Update(sap_os);
+                }
+
                 return 1;
             }
             catch (Exception e)
@@ -2476,7 +2488,7 @@ namespace IDS
         }
         #endregion
 
-        #region Операция "Возврат вагона вагона"
+        #region Операция "Возврат вагона"
         /// <summary>
         /// Выполнить операцию открыть возврат
         /// </summary>
@@ -3064,7 +3076,16 @@ namespace IDS
                 WagonInternalOperation wio = wir.GetLastOperation();
                 if (wio == null) return (int)errors_base.not_wio_db; // В базе данных нет текущей операции
                 if (wio.id_operation < 8 || wio.id_operation > 9) return (int)errors_base.wagon_not_operation; // текущая операция не предъявить вагон на УЗ
-                // Все проверки прошел
+                                                                                                               // Все проверки прошел
+                // Проверить сап исходящие, и если есть закроем
+                EFSAPOutgoingSupply ef_sap_os = new EFSAPOutgoingSupply(context);
+                SAPOutgoingSupply sap_os = ef_sap_os.Context.Where(s => s.id_outgoing_car == car.id).FirstOrDefault();
+                if (sap_os != null)
+                {
+                    sap_os.close = DateTime.Now;
+                    sap_os.close_user = user;
+                    ef_sap_os.Update(sap_os);
+                }
                 // Установим и закроем операцию отпрака на УЗ             
                 wir.SetOpenOperation(2, lead_time.AddMinutes(-10), null, null, null, null, null, user).SetCloseOperation(lead_time, null, user);
                 wir.CloseWagon(lead_time, null, user);
@@ -5095,7 +5116,9 @@ namespace IDS
                     OperationResultID result = OperationUpdateEPDSendingSostav(ref context_ids, uz_doc_sostav.Key, user);
                     // Запомним результат
                     res.SetResultOperation(result.result, uz_doc_sostav.Key);
-                    Console.WriteLine("ID состава {0}, обновлено {1} ошибок {2}, осталось {3}", uz_doc_sostav.Key, result.result, result.error, --count);
+                    string mess_update = String.Format("ID состава {0}, обновлено {1} ошибок {2}, осталось {3}", uz_doc_sostav.Key, result.result, result.error, --count);
+                    Console.WriteLine(mess_update);
+                    mess_update.WarningLog(servece_owner, eventID);
                 }
                 //
                 string mess = String.Format("Операция обновления ЭПД по отправке. Код выполнения = {0}. Результат обновления [определено {1} составов, обновлено вагонов {2}, ошибок обновления {3}].",
@@ -5108,7 +5131,7 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("UpdateSendingEPD()"), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("UpdateSendingEPD(user = {0})", user), servece_owner, eventID);
                 return (int)errors_base.global;// Ошибка
             }
         }
