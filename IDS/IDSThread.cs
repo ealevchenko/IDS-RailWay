@@ -18,7 +18,8 @@ namespace IDS
         protected static object locker_db_outgoing = new object();
         protected static object locker_sap_is = new object();
         protected static object locker_sap_os = new object();
-        protected static object locker_epd = new object();
+        protected static object locker_epd_arrival = new object();
+        protected static object locker_epd_sending = new object();
 
 
         protected Thread thUpdateIncomingSupply = null;
@@ -235,7 +236,7 @@ namespace IDS
                     ex.ExceptionLog(String.Format("Ошибка выполнения считывания настроек потока {0}, сервиса {1}", service.ToString(), servece_owner), servece_owner, eventID);
                 }
                 int res_update = 0;
-                lock (locker_epd)
+                lock (locker_epd_arrival)
                 {
                     IDS_WIR ids_epd = new IDS_WIR(service);
                     ids_epd.Day_arhive_epd_arrival = day_arhive_epd;
@@ -303,7 +304,7 @@ namespace IDS
                     ex.ExceptionLog(String.Format("Ошибка выполнения считывания настроек потока {0}, сервиса {1}", service.ToString(), servece_owner), servece_owner, eventID);
                 }
                 int res_update = 0;
-                lock (locker_epd)
+                lock (locker_epd_sending)
                 {
                     IDS_WIR ids_epd = new IDS_WIR(service);
                     ids_epd.Day_arhive_epd_sending = day_arhive_epd;
