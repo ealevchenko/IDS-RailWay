@@ -2871,6 +2871,7 @@
             // 2-ручной ввод (выбран и не принят и вся информация вводится в ручную и из существующих справочников)
             select_id: null,                                    // Выбранный id вагона
             select_num: null,                                   // Выбранный вагон
+            select_uz_doc: null,                                // Документ уз по котрому будет созданна строка САП
             select_sap_is: null,                               // Информация по САП
             select_id_cargo: null,                              // Выбранный груз (таблица [KRR-PA-CNT-Railway].[IDS].[Directory_Cargo])
             select_id_cargo_gng: null,                          // Выбранный груз (таблица [KRR-PA-CNT-Railway].[IDS].[Directory_CargoGNG])
@@ -3507,7 +3508,8 @@
                 event.preventDefault();
                 LockScreen(langView('mess_save', langs));
                 cars_detali.alert_sap_is.clear_message();
-                var num_uz = get_input_number_value(cars_detali.uz_doc_num_doc);
+/*                var num_uz = get_input_number_value(cars_detali.uz_doc_num_doc);*/
+                var num_uz = cars_detali.select_uz_doc;
                 if (num_uz) {
                     cars_detali.add_sap_incoming_supply(cars_detali.select_id, function (result_add_upd_sap_is) {
                         //if (result_add_upd_sap_is && result_add_upd_sap_is.select === true && (result_add_upd_sap_is.add !== -1 && result_add_upd_sap_is.update !== -1)) {
@@ -3546,6 +3548,7 @@
                 cars_detali.select_main_otpr = null;
                 cars_detali.select_id = null;
                 cars_detali.select_num = null;
+                cars_detali.select_uz_doc = null;
                 cars_detali.select_otpr_vagon = null;
                 cars_detali.select_otpr_cont = null;
                 cars_detali.select_vagon = null;
@@ -4777,12 +4780,14 @@
                                 cars_detali.title_num_deliv_doc.show();
                                 cars_detali.title_num_osn_doc.show();
                                 cars_detali.uz_doc_num_osn_doc.show();
+                                cars_detali.select_uz_doc = cars_detali.select_otpr.otprdp !== null ? cars_detali.select_otpr.otprdp.nom_osn_doc : null;
                             } else {
                                 // Это обычный документ
                                 cars_detali.title_num_doc.show();
                                 cars_detali.title_num_deliv_doc.hide();
                                 cars_detali.title_num_osn_doc.hide();
                                 cars_detali.uz_doc_num_osn_doc.hide();
+                                cars_detali.select_uz_doc = cars_detali.select_otpr !== null ? cars_detali.select_otpr.nom_doc : null;
                             }
                             // 
                             cars_detali.uz_doc_num_doc.val(cars_detali.select_otpr !== null ? cars_detali.select_otpr.nom_doc : null);
@@ -5580,7 +5585,8 @@
                     id: 0,
                     id_arrival_car: cars_detali.select_id,
                     num: cars_detali.select_num,
-                    num_doc_uz: get_input_number_value(cars_detali.uz_doc_num_doc),
+                    //num_doc_uz: get_input_number_value(cars_detali.uz_doc_num_doc),
+                    num_doc_uz: cars_detali.select_uz_doc,
                     date_doc_uz: null,
                     code_border_checkpoint: get_input_number_value(cars_detali.uz_route_stn_border),
                     name_border_checkpoint: get_input_string_value(cars_detali.uz_route_stn_border_name),
