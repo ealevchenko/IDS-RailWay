@@ -2973,29 +2973,29 @@ IDS_RWT.prototype.getOutgoingSostav = function (start, stop, callback) {
         },
     });
 };
-// Получить все составы (View)
-IDS_RWT.prototype.getViewOutgoingSostav = function (start, stop, callback) {
-    $.ajax({
-        type: 'GET',
-        url: '../../api/ids/rwt/outgoing_sostav/view/start/' + toISOStringTZ(start).substring(0, 19) + '/stop/' + toISOStringTZ(stop).substring(0, 19),
-        async: true,
-        dataType: 'json',
-        beforeSend: function () {
-            AJAXBeforeSend();
-        },
-        success: function (data) {
-            if (typeof callback === 'function') {
-                callback(data);
-            }
-        },
-        error: function (x, y, z) {
-            OnAJAXError("IDS_RWT.getViewOutgoingSostav", x, y, z);
-        },
-        complete: function () {
-            AJAXComplete();
-        },
-    });
-};
+//// Получить все составы (View)
+//IDS_RWT.prototype.getViewOutgoingSostav = function (start, stop, callback) {
+//    $.ajax({
+//        type: 'GET',
+//        url: '../../api/ids/rwt/outgoing_sostav/view/start/' + toISOStringTZ(start).substring(0, 19) + '/stop/' + toISOStringTZ(stop).substring(0, 19),
+//        async: true,
+//        dataType: 'json',
+//        beforeSend: function () {
+//            AJAXBeforeSend();
+//        },
+//        success: function (data) {
+//            if (typeof callback === 'function') {
+//                callback(data);
+//            }
+//        },
+//        error: function (x, y, z) {
+//            OnAJAXError("IDS_RWT.getViewOutgoingSostav", x, y, z);
+//        },
+//        complete: function () {
+//            AJAXComplete();
+//        },
+//    });
+//};
 // Получить все составы (View)
 IDS_RWT.prototype.getViewOutgoingSostavOfPeriodStation = function (start, stop, id, callback) {
     $.ajax({
