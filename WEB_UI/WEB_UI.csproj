@@ -2030,6 +2030,7 @@
     <Content Include="Content\module\shared\modal_edit_form.css" />
     <Content Include="Content\module\directory\table_dir_way.css" />
     <Content Include="Content\module\table_tree_way.css" />
+    <Content Include="Content\module\wsd\table_outgoing_sostav.css" />
     <Content Include="Content\module\wsd\view_report_remainder_cars.css" />
     <Content Include="Content\module\wsd\view_return_cars.css" />
     <Content Include="Content\module\wsd\view_history_operation_send.css" />
@@ -2112,6 +2113,7 @@
     <Content Include="Scripts\module\table_wir_detali.js" />
     <Content Include="Scripts\module\table_wir.js" />
     <Content Include="Scripts\module\table_arrival.js" />
+    <Content Include="Scripts\module\wsd\table_outgoing_sostav.js" />
     <Content Include="Scripts\module\wsd\table_total_balance.js" />
     <Content Include="Scripts\module\wsd\view_report_remainder_cars.js" />
     <Content Include="Scripts\module\wsd\view_return_cars.js" />
