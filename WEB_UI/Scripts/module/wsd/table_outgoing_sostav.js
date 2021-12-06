@@ -23,6 +23,22 @@
             'tos_field_id_station_from': 'id Станции отправления',
             'tos_field_station_from_name': 'Отправлен со станции',
             'tos_field_station_from_abbr': 'Отправлен со станции',
+            'tos_field_id_way_from': 'id пути отпр.',
+            'tos_field_way_from_num': '№ пути отправления',
+            'tos_field_way_from_name': 'Название пути отправления',
+            'tos_field_id_station_on': 'id станции назначения',
+            'tos_field_station_on_name': 'Станции назначения',
+            'tos_field_station_on_abbr': 'Станции назначения',
+            'tos_field_date_readiness_amkr': 'Время предъявления на УЗ',
+            'tos_field_date_end_inspection_acceptance_delivery': 'Время окончания осмотра приемосдатчиком',
+            'tos_field_date_end_inspection_loader': 'Время окончания осмотра грузчиками',
+            'tos_field_date_end_inspection_vagonnik': 'Время окончания осмотра вагонниками',
+            'tos_field_vagonnik_user': 'Вагонник',
+            'tos_field_date_readiness_uz': 'Время готовности к сдаче на УЗ',
+            'tos_field_date_outgoing': 'Время сдачи на УЗ',
+            'tos_field_date_outgoing_act': 'Время сдачи на УЗ (по акту)',
+            'tos_field_date_departure_amkr': 'Время отправления с АМКР',
+
 
             //'tos_field_outer_way_num_sostav': '№ состава',
             //'tos_field_status': 'Статус',
@@ -156,6 +172,140 @@
             className: 'dt-body-left shorten mw-100',
             title: langView('tos_field_station_from_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
+        // путь отправки
+        {
+            field: 'id_way_from',
+            data: function (row, type, val, meta) {
+                return row.id_way_from;
+            },
+            className: 'dt-body-center',
+            title: langView('tos_field_id_way_from', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'way_from_num',
+            data: function (row, type, val, meta) {
+                return row['way_from_num_' + App.Lang];
+            },
+            className: 'dt-body-center',
+            title: langView('tos_field_way_from_num', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'way_from_name',
+            data: function (row, type, val, meta) {
+                return row['way_from_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('tos_field_way_from_name', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        // Станция назаначения
+        {
+            field: 'id_station_on',
+            data: function (row, type, val, meta) {
+                return row.id_station_on;
+            },
+            className: 'dt-body-center',
+            title: langView('tos_field_id_station_on', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'station_on_name',
+            data: function (row, type, val, meta) {
+                return row['station_on_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('tos_field_station_on_name', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'station_on_abbr',
+            data: function (row, type, val, meta) {
+                return row['station_on_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('tos_field_station_on_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        //Время предъявления на УЗ
+        {
+            field: 'date_readiness_amkr',
+            data: function (row, type, val, meta) {
+                return row.date_readiness_amkr ? moment(row.date_readiness_amkr).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('tos_field_date_readiness_amkr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        //Время окончания осмотра приемосдатчиком
+        {
+            field: 'date_end_inspection_acceptance_delivery',
+            data: function (row, type, val, meta) {
+                return row.date_end_inspection_acceptance_delivery ? moment(row.date_end_inspection_acceptance_delivery).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('tos_field_date_end_inspection_acceptance_delivery', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        //Время окончания осмотра грузчиками
+        {
+            field: 'date_end_inspection_loader',
+            data: function (row, type, val, meta) {
+                return row.date_end_inspection_loader ? moment(row.date_end_inspection_loader).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('tos_field_date_end_inspection_loader', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        //Время окончания осмотра вагонниками
+        {
+            field: 'date_end_inspection_vagonnik',
+            data: function (row, type, val, meta) {
+                return row.date_end_inspection_vagonnik ? moment(row.date_end_inspection_vagonnik).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('tos_field_date_end_inspection_vagonnik', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Вагонник (имя пользователя)
+        {
+            field: 'vagonnik_user',
+            data: function (row, type, val, meta) {
+                return row.vagonnik_user;
+            },
+            className: 'dt-body-center',
+            title: langView('tos_field_vagonnik_user', App.Langs), width: "30px", orderable: true, searchable: true,
+        },
+        //[date_show_wagons]
+        //Время готовности к сдаче на УЗ
+        {
+            field: 'date_readiness_uz',
+            data: function (row, type, val, meta) {
+                return row.date_readiness_uz ? moment(row.date_readiness_uz).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('tos_field_date_readiness_uz', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        //Время сдачи на УЗ
+        {
+            field: 'date_outgoing',
+            data: function (row, type, val, meta) {
+                return row.date_outgoing ? moment(row.date_outgoing).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('tos_field_date_outgoing', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        //Время сдачи на УЗ (по акту)
+        {
+            field: 'date_outgoing_act',
+            data: function (row, type, val, meta) {
+                return row.date_outgoing_act ? moment(row.date_outgoing_act).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('tos_field_date_outgoing_act', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        //Время отправления с АМКР
+        {
+            field: 'date_departure_amkr',
+            data: function (row, type, val, meta) {
+                return row.date_departure_amkr ? moment(row.date_departure_amkr).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('tos_field_date_departure_amkr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+
+
 
         //{
         //    field: 'outer_way_num_sostav',
@@ -592,6 +742,26 @@
         collums.push('id_station_from');
         collums.push('station_from_name');
         collums.push('station_from_abbr');
+        collums.push('id_way_from');
+        collums.push('way_from_num');
+        collums.push('way_from_name');
+        collums.push('id_station_on');
+        collums.push('station_on_name');
+        collums.push('station_on_abbr');
+        collums.push('date_readiness_amkr');
+        collums.push('date_end_inspection_acceptance_delivery');
+        collums.push('date_end_inspection_loader');
+        collums.push('date_end_inspection_vagonnik');
+        collums.push('vagonnik_user');
+        collums.push('date_readiness_uz');                  //Время готовности к сдаче на УЗ
+        collums.push('date_outgoing');                      //Время сдачи на УЗ
+        collums.push('date_outgoing_act');                  //Время сдачи на УЗ (по акту)
+        collums.push('date_departure_amkr');                //Время отправления с АМКР
+
+        //collums.push('');
+        //collums.push('');
+        //collums.push('');
+        //collums.push('');
 
         //collums.push('outer_way_num_sostav');
         //collums.push('id_outer_way');
