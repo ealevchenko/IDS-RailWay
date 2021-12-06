@@ -304,8 +304,15 @@
             className: 'dt-body-nowrap',
             title: langView('tos_field_date_departure_amkr', App.Langs), width: "100px", orderable: true, searchable: true
         },
-
-
+        //composition_index
+        {
+            field: 'composition_index',
+            data: function (row, type, val, meta) {
+                return row.composition_index;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('tos_field_date_departure_amkr', App.Langs), width: "100px", orderable: true, searchable: true
+        },        
 
         //{
         //    field: 'outer_way_num_sostav',
