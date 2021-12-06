@@ -3509,7 +3509,7 @@
                 LockScreen(langView('mess_save', langs));
                 cars_detali.alert_sap_is.clear_message();
 /*                var num_uz = get_input_number_value(cars_detali.uz_doc_num_doc);*/
-                var num_uz = cars_detali.select_uz_doc;
+                var num_uz = cars_detali.select_uz_doc !== null ? cars_detali.select_uz_doc : get_input_number_value(cars_detali.uz_doc_num_doc);
                 if (num_uz) {
                     cars_detali.add_sap_incoming_supply(cars_detali.select_id, function (result_add_upd_sap_is) {
                         //if (result_add_upd_sap_is && result_add_upd_sap_is.select === true && (result_add_upd_sap_is.add !== -1 && result_add_upd_sap_is.update !== -1)) {
@@ -5586,7 +5586,7 @@
                     id_arrival_car: cars_detali.select_id,
                     num: cars_detali.select_num,
                     //num_doc_uz: get_input_number_value(cars_detali.uz_doc_num_doc),
-                    num_doc_uz: cars_detali.select_uz_doc,
+                    num_doc_uz: cars_detali.select_uz_doc !== null ? cars_detali.select_uz_doc : get_input_number_value(cars_detali.uz_doc_num_doc), // Проверим если документ не определен по ЭДС тогда, то что ввели с окна
                     date_doc_uz: null,
                     code_border_checkpoint: get_input_number_value(cars_detali.uz_route_stn_border),
                     name_border_checkpoint: get_input_string_value(cars_detali.uz_route_stn_border_name),
