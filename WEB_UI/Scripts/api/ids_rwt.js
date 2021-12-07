@@ -3927,6 +3927,7 @@ IDS_RWT.prototype.postProvideWagonsOfStation = function (operation_provide, call
         },
     });
 };
+//TODO: Отключить после переделки outgoing.js перенесен в ids_wsd.js
 //Операция отменить предъявление
 IDS_RWT.prototype.postReturnProvideWagonsOfStation = function (operation_provide, callback) {
     $.ajax({

@@ -399,6 +399,32 @@
             },
         });
     };
+    // Операция отменить предъявление сотава для сдачи на уз
+    ids_wsd.prototype.postReturnProvideWagonsOfStation = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/operation/return_provide/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postReturnProvideWagonsOfStation", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
 
     App.ids_wsd = ids_wsd;
 
