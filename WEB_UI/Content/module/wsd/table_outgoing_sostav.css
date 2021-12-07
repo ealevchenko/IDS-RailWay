@@ -57,12 +57,12 @@ table.dataTable.display tbody tr td a.idle-time-error {
 
 /*Отобразить типы полей*/
 /*Зафиксированные поля - не просвечиваемые*/
-/*table.dataTable.display thead tr th.fixed-column {
-    background-color: #ffffff;*/ /*макс*/
-/*}*/
+table.dataTable.display thead tr th.fixed-column {
+    background-color: #ffffff; 
+}
 
-/*Состав принят*/
-/*table.dataTable tbody tr:not(.selected).green.odd, table.dataTable tbody tr:not(.selected).green.even {
+/*Состав сдан*/
+table.dataTable tbody tr:not(.selected).green.odd, table.dataTable tbody tr:not(.selected).green.even {
     background-color: #cdffcd;
 }
 
@@ -72,9 +72,9 @@ table.dataTable.display tbody tr:not(.selected).odd.green > .sorting_1, table.da
 
 table.dataTable.display tbody tr:not(.selected).even.green > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.green > .sorting_1 {
     background-color: #a6ffa6;
-}*/
-/*Состав частично принят*/
-/*table.dataTable tbody tr:not(.selected).yellow.odd, table.dataTable tbody tr:not(.selected).yellow.even {
+}
+/*Состав сдают*/
+table.dataTable tbody tr:not(.selected).yellow.odd, table.dataTable tbody tr:not(.selected).yellow.even {
     background-color: #fef9e0;
 }
 
@@ -85,7 +85,7 @@ table.dataTable.display tbody tr:not(.selected).odd.yellow > .sorting_1, table.d
 table.dataTable.display tbody tr:not(.selected).even.yellow > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.yellow > .sorting_1 {
     background-color: #fdf2ba;
 }
-
+/*Состав отмена сдачи*/
 table.dataTable tbody tr:not(.selected).red.odd, table.dataTable tbody tr:not(.selected).red.even {
     background-color: #ffebeb;
 }
@@ -97,7 +97,7 @@ table.dataTable.display tbody tr:not(.selected).odd.red > .sorting_1, table.data
 table.dataTable.display tbody tr:not(.selected).even.red > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.red > .sorting_1 {
     background-color: #ffc4c4;
 }
-
+/*Состав отправили*/
 table.dataTable tbody tr:not(.selected).blue.odd, table.dataTable tbody tr:not(.selected).blue.even {
     background-color: #dfe9fb;
 }
@@ -108,4 +108,4 @@ table.dataTable.display tbody tr:not(.selected).odd.blue > .sorting_1, table.dat
 
 table.dataTable.display tbody tr:not(.selected).even.blue > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.blue > .sorting_1 {
     background-color: #cdddf9;
-}*/
+}

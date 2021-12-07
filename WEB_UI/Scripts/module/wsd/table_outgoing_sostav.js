@@ -19,12 +19,12 @@
         'default':  //default language: ru
         {
             'tos_field_id_sostav': 'id состав',
-            'tos_field_num_doc': '№ Ведомости',
+            'tos_field_num_doc': '№ Вед.',
             'tos_field_id_station_from': 'id Станции отправления',
             'tos_field_station_from_name': 'Отправлен со станции',
             'tos_field_station_from_abbr': 'Отправлен со станции',
             'tos_field_id_way_from': 'id пути отпр.',
-            'tos_field_way_from_num': '№ пути отправления',
+            'tos_field_way_from_num': '№ пути отп.',
             'tos_field_way_from_name': 'Название пути отправления',
             'tos_field_id_station_on': 'id станции назначения',
             'tos_field_station_on_name': 'Станции назначения',
@@ -39,6 +39,7 @@
             'tos_field_date_outgoing_act': 'Время сдачи на УЗ (по акту)',
             'tos_field_date_departure_amkr': 'Время отправления с АМКР',
             'tos_field_composition_index': 'Индекс поезда',
+            'tos_field_status_icon': '',
             'tos_field_status': 'Статус',
             'tos_field_note': 'Примечание',
             'tos_field_route_sign': 'Признак маршрута',
@@ -46,7 +47,7 @@
             'tos_field_create_user': 'Создал',
             'tos_field_change': 'Правили',
             'tos_field_change_user': 'Правил',
-            'tos_field_count_all': 'Всего вагонов',
+            'tos_field_count_all': 'Кол. ваг.',
             'tos_field_count_outgoing': 'Предъявлено вагонов',
             'tos_field_count_not_outgoing': 'Осталось вагонов',
             'tos_field_count_return': 'Возврат',
@@ -54,52 +55,13 @@
             'tos_field_count_vagonnik': 'Осмотренно',
             'tos_field_count_status': 'Всего|отпр.|ост.|возр.|зад.|осм.',
 
-            'title_yes': 'Да',
+            'tos_title_form_return': 'Вернуть состав?',
 
-            //'tos_field_outer_way_num_sostav': '№ состава',
-            //'tos_field_status': 'Статус',
-            //'tos_field_id_outer_way': 'id перег.',
-            //'tos_field_name_outer_way': 'Перегон',
-            //'tos_field_outer_way_close': 'Перег. закрыт',
-            //'tos_field_outer_way_delete': 'Перег. удален',
-            //'tos_field_from_operation_locomotive1': 'Лок.№1',
-            //'tos_field_from_operation_locomotive2': 'Лок.№2',
-            //'tos_field_from_operation_start': 'Нач. опер. отпр.',
-            //'tos_field_from_operation_end': 'Отправлен',
-            //'tos_field_from_operation_create': 'Опер. отпр. создана',
-            //'tos_field_from_operation_create_user': 'Вып. опер. отправл.',
-            //'tos_field_from_id_station': 'id ст. отпр.',
-            //'tos_field_from_station_name': 'Станция отправления',
-            //'tos_field_from_station_abbr': 'Ст. отпр. (аббр.)',
-            //'tos_field_from_id_way': 'id путь отпр.',
-            //'tos_field_from_id_park': 'id парка отпр.',
-            //'tos_field_from_way_name': 'Путь отправки',
-            //'tos_field_from_way_abbr': 'Путь отпр. (аббр.)',
-            //'tos_field_from_way_capacity': 'Путь отпр. (вмест.)',
-            //'tos_field_from_way_close': 'Путь отпр. закрыт',
-            //'tos_field_from_way_delete': 'Путь отпр. удален',
-            //'tos_field_count_wagons_send': 'Отпр. ваг.',
-            //'tos_field_on_operation_locomotive1': 'Лок.№1',
-            //'tos_field_on_operation_locomotive2': 'Лок.№2',
-            //'tos_field_on_operation_start': 'Нач. опер. приб.',
-            //'tos_field_on_operation_end': 'Принят',
-            //'tos_field_on_operation_create': 'Опер. приб. создана',
-            //'tos_field_on_operation_create_user': 'Вып. опер. приб.',
-            //'tos_field_on_id_station': 'id ст. приб.',
-            //'tos_field_on_station_name': 'Станция прибытия',
-            //'tos_field_on_station_abbr': 'Ст. приб. (аббр.)',
-            //'tos_field_on_id_way': 'id путь приб.',
-            //'tos_field_on_id_park': 'id парка приб.',
-            //'tos_field_on_way_name': 'Путь прибытия',
-            //'tos_field_on_way_abbr': 'Путь приб. (аббр.)',
-            //'tos_field_on_way_capacity': 'Путь приб. (вмест.)',
-            //'tos_field_on_way_close': 'Путь приб. закрыт',
-            //'tos_field_on_way_delete': 'Путь приб. удален',
-            //'tos_field_count_wagons_arrival': 'Прин. факт.',
-            //'tos_field_count_wagons_return': 'Возв(Отм.)',
-            //'tos_field_count_wagons_accepted': 'Принят ИДС.',
-
-            //'tos_title_detali_wagon': 'Вагоны в составе',
+            'tos_title_yes': 'Да',
+            'tos_title_yellow': 'В работе',
+            'tos_title_green': 'Сдан',
+            'tos_title_blue': 'Отправлен',
+            'tos_title_red': 'Отмена',
 
             'tos_title_all': 'Все',
             //'tos_title_status_arrival': 'Принят',
@@ -114,15 +76,24 @@
             'tos_title_button_field_select': 'Выбрать',
             'tos_title_button_field_view_all': 'Показать все',
             'tos_title_button_field_clear': 'Сбросить',
-
-            //'tos_title_button_select_all': 'Все вагоны',
-            //'tos_title_button_select_none': 'Убрать выбор',
-
+            'tos_title_button_return': 'Вернуть состав',
+            'tos_title_button_return_uz': 'Вернуть состав с УЗ',
+            'tos_title_button_wagon': 'Вагоны',
+            'tos_title_button_wagon_accept': 'Отправить вагоны',
+            'tos_title_button_wagon_view': 'Показать вагоны',
+            'tos_title_button_refresh': 'Обновить',
             'tos_mess_init_module': 'Инициализация модуля...',
             //'tos_mess_load_wagons': 'Загружаю вагоны состава…',
             'tos_mess_load_sostav': 'Загружаю составы...',
             //'tos_mess_view_wagons': 'загрузка информации о вагонах состава…',
             'tos_mess_view_sostav': 'Показываю составы...',
+
+            'tos_mess_err_return_sostav': 'Статус выбранного состава не позволяет отменить состав для предъявления!',
+            'tos_mess_comfirm_return': 'Вы уверены что хотите вернуть состав вед № {0}, станция отправления: {1}, путь отправления № {2}?',
+            'tos_mess_cancel_return': 'Операция «Вернуть состав, сформированный для предъявления» - Отменена!',
+            'tos_mess_ok_return': 'Операция «Вернуть состав, сформированный для предъявления» - Выполнена',
+            'tos_mess_error_return': 'Ошибка выполнения операции «Вернуть состав, сформированный для предъявления», код ошибки : {0}',
+            'tos_mess_error_wagon_return': '№ вагона : {0}, код ошибки : {1}',
         },
         'en':  //default language: English
         {
@@ -328,16 +299,30 @@
             },
             className: 'dt-body-nowrap',
             title: langView('tos_field_composition_index', App.Langs), width: "100px", orderable: true, searchable: true
-        },        
+        },
         // Статус
+        {
+            field: 'status_icon',
+            data: function (row, type, val, meta) {
+                switch (row.status) {
+                    case 1: return "<i class='fas fa-exclamation-circle' style='color:#ffbf00;'></i>";
+                    case 2: return "<i class='fas fa-check' style='color:#008000;'></i>";
+                    case 3: return "<i class='fas fa-share' style='color:#0b0bff;'></i>";
+                    case 4: return "<i class='fas fa-ban' style='color:#ff0b0b;'></i>";
+                    default: return null;
+                }
+            },
+            className: 'dt-body-nowrap',
+            title: langView('tos_field_status_icon', App.Langs), width: "20px", orderable: false, searchable: false
+        },
         {
             field: 'status',
             data: function (row, type, val, meta) {
                 switch (row.status) {
-                    case 1: return "<i class='fas fa-exclamation-circle' style='color:#ffbf00;'></i>";
-                    case 2: return "<i class='fas fa-check' style='color:#00ce00;'></i>";
-                    case 3: return "<i class='fas fa-share' style='color:#00cc99;'></i>";
-                    case 4: return "<i class='fas fa-ban' style='color:#ff6a8f;'></i>";
+                    case 1: return langView('tos_title_yellow', App.Langs);
+                    case 2: return langView('tos_title_green', App.Langs);
+                    case 3: return langView('tos_title_blue', App.Langs);
+                    case 4: return langView('tos_title_red', App.Langs);
                     default: return null;
                 }
             },
@@ -357,7 +342,7 @@
         {
             field: 'route_sign',
             data: function (row, type, val, meta) {
-                return row.route_sign ? langView('title_yes', App.Langs) : '';
+                return row.route_sign ? langView('tos_title_yes', App.Langs) : '';
             },
             className: 'dt-body-nowrap',
             title: langView('tos_field_route_sign', App.Langs), width: "30px", orderable: true, searchable: true
@@ -506,6 +491,28 @@
             autoClose: true
         },
         {
+            button: 'return_sostav',
+            text: langView('tos_title_button_return', App.Langs),
+            enabled: false
+        },
+        {
+            button: 'return_sostav_uz',
+            text: langView('tos_title_button_return_uz', App.Langs),
+            enabled: false
+        },
+        {
+            button: 'view_wagons',
+            text: langView('tos_title_button_wagon', App.Langs),
+            enabled: false
+        },
+        {
+            button: 'refresh',
+            text: '<i class="fas fa-retweet"></i>',
+            action: function (e, dt, node, config) {
+                //operation_detali.table_wagons_sending_way_from.obj.rows(':not(.select-sending)').select();
+            }
+        },
+        {
             button: 'page_length',
             extend: 'pageLength',
         }
@@ -528,7 +535,6 @@
     // инициализация полей по умолчанию
     table_outgoing_sostav.prototype.init_columns_detali = function () {
         var collums = [];
-        // Перегон
         collums.push('id');
         collums.push('num_doc');
         collums.push('id_station_from');
@@ -550,6 +556,7 @@
         collums.push('date_outgoing_act');                  //Время сдачи на УЗ (по акту)
         collums.push('date_departure_amkr');                //Время отправления с АМКР
         collums.push('composition_index');                  //Индекс поезда
+        collums.push('status_icon');                             //Статус
         collums.push('status');                             //Статус
         collums.push('note');
         collums.push('route_sign');
@@ -566,6 +573,33 @@
         collums.push('count_status');                       // Всего|отпр.|ост.|возр.|зад.|осм.
         return init_columns(collums, list_collums);
     };
+    // инициализация полей outgoing_sostav
+    table_outgoing_sostav.prototype.init_columns_outgoing_sostav = function () {
+        var collums = [];
+        collums.push({ field: 'status_icon', title: null, class: 'fixed-column' });                        // Статус
+        collums.push({ field: 'status', title: null, class: 'fixed-column' });                             // Статус
+        collums.push({ field: 'num_doc', title: null, class: 'fixed-column' });                            // Ведомость
+        collums.push({ field: 'date_readiness_amkr', title: null, class: 'fixed-column' });                // время предъявления
+        collums.push({ field: 'station_from_name', title: null, class: 'fixed-column' });                  // Стоит на станции
+        collums.push({ field: 'way_from_num', title: null, class: 'fixed-column' });                       // Путь
+        collums.push({ field: 'count_all', title: null, class: 'fixed-column' });                          // Всего вагонов
+        collums.push({ field: 'station_on_name', title: null, class: 'fixed-column' });                    // Станция назначения
+        collums.push({ field: 'date_end_inspection_acceptance_delivery', title: null, class: null });
+        collums.push({ field: 'date_end_inspection_loader', title: null, class: null });
+        collums.push({ field: 'date_end_inspection_vagonnik', title: null, class: null });
+        collums.push({ field: 'date_readiness_uz', title: null, class: null });                  //Время готовности к сдаче на УЗ
+        collums.push({ field: 'date_outgoing', title: null, class: null });                      //Время сдачи на УЗ
+        collums.push({ field: 'date_outgoing_act', title: null, class: null });                  //Время сдачи на УЗ (по акту)
+        collums.push({ field: 'date_departure_amkr', title: null, class: null });                //Время отправления с АМКР
+        collums.push({ field: 'count_status', title: null, class: null });                       // Всего|отпр.|ост.|возр.|зад.|осм.
+        collums.push({ field: 'composition_index', title: null, class: null });                  //Индекс поезда
+        collums.push({ field: 'note', title: null, class: null });
+        collums.push({ field: 'create', title: null, class: null });
+        collums.push({ field: 'create_user', title: null, class: null });
+        collums.push({ field: 'change', title: null, class: null });
+        collums.push({ field: 'change_user', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
     //------------------------------- КНОПКИ ----------------------------------------------------
     // инициализация кнопок по умолчанию
     table_outgoing_sostav.prototype.init_button_detali = function () {
@@ -575,19 +609,87 @@
         buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
+    // инициализация кнопок outgoing_sostav
+    table_outgoing_sostav.prototype.init_button_outgoing_sostav = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'return_sostav',
+            action: function (e, dt, node, config) {
+                if (this.select_rows_sostav && this.select_rows_sostav.length > 0 && this.select_rows_sostav[0].status === 0) {
+                    var sostav = this.select_rows_sostav[0];
+                    var message = langView('tos_mess_comfirm_return', App.Langs).format(sostav.num_doc, sostav["station_from_name_" + App.Lang], sostav["way_from_num_" + App.Lang]);
+                    this.modal_confirm_form.view(langView('tos_title_form_return', App.Langs), message, function (res) {
+                        if (res) {
+                            // Сформируем операцию
+                            var operation_provide = {
+                                id_sostav: sostav.id,
+                                user: App.User_Name,
+                            }
+                            // Выполнить операцию отменить предъявление сотава для сдачи на уз
+                            this.ids_wsd.postReturnProvideWagonsOfStation(operation_provide, function (result_provide) {
+                                if (result_provide && result_provide.result > 0) {
+                                    //pn_sel.view(true);
+                                    this.out_info(langView('tos_mess_ok_return', App.Langs));
+                                } else {
+                                    this.out_error(langView('tos_mess_error_return', App.Langs).format(result_provide ? result_provide.result : null));
+                                    if (result_provide && result_provide.listResult && result_provide.listResult.length > 0) {
+                                        $.each(result_provide.listResult, function (i, el) {
+                                            if (el.result < 0) {
+                                                //outgoing_alert.out_error_message("№ вагона :" + el.num + ", код ошибки -" + el.result);
+                                                this.out_error(langView('tos_mess_error_wagon_return', App.Langs).format(el.num, el.result));
+                                            }
+                                        }.bind(this));
+                                    }
+                                    //LockScreenOff();
+                                }
+                                // 
+                                //Обновить 
+                            }.bind(this));
+                        } else {
+                            this.out_clear();
+                            this.out_warning(langView('tos_mess_cancel_return', App.Langs));
+                        }
+                    }.bind(this));
+                } else {
+                    this.out_warning(langView('tos_mess_err_return_sostav', App.Langs));
+                }
+            }.bind(this)
+        });
+        buttons.push({
+            name: 'return_sostav_uz',
+            action: function (e, dt, node, config) {
+
+            }.bind(this)
+        });
+        buttons.push({
+            name: 'view_wagons',
+            action: function (e, dt, node, config) {
+                //this.out_warning('Jr')
+            }.bind(this)
+        });
+        buttons.push({ name: 'refresh', action: null });
+        buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
     //-------------------------------------------------------------------------------------------
     // Инициализация тип отчета
     table_outgoing_sostav.prototype.init_type_report = function () {
         switch (this.settings.type_report) {
-            case 'outgoing_sostav_detali': {
+            case 'outgoing_sostav': {
+                this.fixedHeader = true;            // вкл. фикс. заголовка
+                this.leftColumns = 8;
                 this.type_select_rows = 1; // Выбирать одну
                 this.table_select = true;
-                this.table_columns = this.init_columns_detali();
-                this.table_buttons = this.init_button_detali();
+                this.table_columns = this.init_columns_outgoing_sostav();
+                this.table_buttons = this.init_button_outgoing_sostav();
                 break;
             };
             // Таблица составы по умолчанию (если не выставят тип отчета)
             default: {
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
                 this.type_select_rows = 1; // Выбирать одну
                 this.table_select = true;
                 this.table_columns = this.init_columns_detali();
@@ -613,10 +715,13 @@
         //
         this.start = null;
         this.stop = null;
-        this.sostav = [];               // Список составов
+        this.sostav = [];                   // Список составов
+        this.select_rows_sostav = null;     // Выбранный состав
 
         this.ids_wsd = this.settings.ids_wsd ? this.settings.ids_wsd : new wsd();
         // Настройки отчета
+        this.fixedHeader = false;            // вкл. фикс. заголовка
+        this.leftColumns = 0;
         this.type_select_rows = 0; // не показывать
         this.table_select = false;
         this.table_columns = [];
@@ -626,9 +731,9 @@
 
         LockScreen(langView('tos_mess_init_module', App.Langs));
         // Вклучу когда понадобится 
-        //var MCF = App.modal_confirm_form;
-        //this.modal_confirm_form = new MCF(this.selector); // Создадим экземпляр окно сообщений
-        //this.modal_confirm_form.init();
+        var MCF = App.modal_confirm_form;
+        this.modal_confirm_form = new MCF(this.selector); // Создадим экземпляр окно сообщений
+        this.modal_confirm_form.init();
         //----------------------------------
         // Создать макет таблицы
         // Создадим и добавим макет таблицы
@@ -645,11 +750,11 @@
             "ordering": true,
             "info": true,
             "keys": true,
-            colReorder: true,               // вкл. перетаскивание полей
-            //fixedHeader: true,             // вкл. фикс. заголовка
-            //fixedColumns: {
-            //    leftColumns: 2,
-            //},
+            colReorder: true,                       // вкл. перетаскивание полей
+            fixedHeader: this.fixedHeader,          // вкл. фикс. заголовка
+            fixedColumns: {
+                leftColumns: this.leftColumns,
+            },
             select: this.table_select,
             "autoWidth": false,
             //"filter": true,
@@ -661,7 +766,14 @@
             language: language_table(App.Langs),
             jQueryUI: false,
             "createdRow": function (row, data, index) {
-                //$(row).attr('id', data.outer_way_num_sostav); // id строки дислокации вагона (data.count_wagons_arrival + data.count_wagons_return)
+
+                $(row).attr('id', data.id); // id строки 
+                switch (data.status) {
+                    case 1: $(row).addClass('yellow'); break;
+                    case 2: $(row).addClass('green'); break;
+                    case 3: $(row).addClass('blue'); break;
+                    case 4: $(row).addClass('red'); break;
+                }
                 //if ((data.count_wagons_arrival > 0 || data.count_wagons_accepted > 0) && data.count_wagons_send > data.count_wagons_accepted) {
                 //    $(row).addClass('yellow');// Отметим состав частично принят
                 //}
@@ -706,26 +818,16 @@
         });
         // Обработка события выбора
         switch (this.settings.type_report) {
-            //case 'arrival-sostav-outer-way': {
-            //    this.obj_t_sostav.on('user-select', function (e, dt, type, cell, originalEvent) {
-            //        this.out_clear();
-            //        var indexes = cell && cell.length > 0 ? cell[0][0].row : null;
-            //        var row = this.obj_t_sostav.rows(indexes).data().toArray();
-            //        //if (row && row.length > 0 && row[0].outgoing_sostav_status && row[0].outgoing_sostav_status > 0) {
-            //        //    e.preventDefault();
-            //        //    this.out_warning('Вагон № ' + row[0].num + ' для операций заблокирован (вагон пренадлежит составу который имеет статус - ' + row[0].outgoing_sostav_status + ')');
-            //        //}
-            //    }.bind(this)).on('select deselect', function (e, dt, type, indexes) {
-            //        var index = this.obj_t_sostav.rows({ selected: true });
-            //        var rows = this.obj_t_sostav.rows(index && index.length > 0 ? index[0] : null).data().toArray();
-            //        this.select_rows_sostav = rows;
-            //        //this.obj_t_sostav.button(4).enable(index && index.length > 0 && index[0].length > 0); // отображение кнопки добавить
-            //        if (typeof this.settings.fn_select_sostav === 'function') {
-            //            this.settings.fn_select_sostav(rows);
-            //        }
-            //    }.bind(this));
-            //    break;
-            //};
+            case 'outgoing_sostav': {
+                this.obj_t_sostav.on('select deselect', function (e, dt, type, indexes) {
+                    var index = this.obj_t_sostav.rows({ selected: true });
+                    var rows = this.obj_t_sostav.rows(index && index.length > 0 ? index[0] : null).data().toArray();
+                    this.select_rows_sostav = rows;
+                    this.enable_button();
+                }.bind(this));
+
+                break;
+            };
         };
         // Определим показывать вагоны детально
         /*        if (this.settings.detali_wagons) this.init_detali();*/
@@ -742,7 +844,7 @@
         LockScreen(langView('tos_mess_view_sostav', App.Langs));
         this.obj_t_sostav.clear();
         this.obj_t_sostav.rows.add(data);
-        this.obj_t_sostav.order([0, 'asc']);
+        this.obj_t_sostav.order([3, 'asc']);
         //this.obj_t_sostav.order([this.settings.detali_wagons ? 1 : 0, 'asc']);
         this.obj_t_sostav.draw();
         if (id_sostav) {
@@ -775,6 +877,32 @@
         }
 
     };
+
+    // Отображение кнопки добавить
+    table_outgoing_sostav.prototype.enable_button = function () {
+        switch (this.settings.type_report) {
+            case 'outgoing_sostav': {
+                if (this.select_rows_sostav && this.select_rows_sostav.length > 0) {
+                    this.obj_t_sostav.button(4).enable(true);
+                    if (this.select_rows_sostav[0].status < 1) {
+                        this.obj_t_sostav.button(2).enable(true);
+                        this.obj_t_sostav.button(3).enable(false); // отмена сдачи состава
+                        this.obj_t_sostav.button(4).text(langView('tos_title_button_wagon_accept', App.Langs));
+                    } else {
+                        // Если статус в работе принят или удален 
+                        this.obj_t_sostav.button(2).enable(false);
+                        if (this.select_rows_sostav[0].status === 2) { this.obj_t_sostav.button(3).enable(true); } else { this.obj_t_sostav.button(3).enable(false); }
+                        this.obj_t_sostav.button(4).text(langView('tos_title_button_wagon_view', App.Langs));
+                    }
+                } else {
+                    this.obj_t_sostav.button(2).enable(false);
+                    this.obj_t_sostav.button(3).enable(false);
+                    this.obj_t_sostav.button(4).enable(false);
+                }
+                break;
+            };
+        };
+    };
     // Загрузить составы прибывающие на станцию 
     //-------------------------------------------------------------------------------------------
     // Очистить сообщения
@@ -804,8 +932,8 @@
     // Очистить объект
     table_outgoing_sostav.prototype.destroy = function () {
         // Вкл. когда понадобится 
-        //if (this.modal_confirm_form) this.modal_confirm_form.destroy();
-        this.destroy_all_detali(); // Удалить все таблицы детально, если созданы
+        if (this.modal_confirm_form) this.modal_confirm_form.destroy();
+        //this.destroy_all_detali(); // Удалить все таблицы детально, если созданы
         if (this.obj_t_sostav) {
             this.obj_t_sostav.destroy(true);
             this.obj_t_sostav = null;
