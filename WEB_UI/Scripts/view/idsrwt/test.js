@@ -86,12 +86,12 @@
     // После загрузки документа
     $(document).ready(function ($) {
 
-        var start = moment().set({ 'hour': 0, 'minute': 0, 'second': 0, 'millisecond': 0 })._d;
+        var start = moment('05/01/2021').set({ 'hour': 0, 'minute': 0, 'second': 0, 'millisecond': 0 })._d;
         var stop = moment().set({ 'hour': 23, 'minute': 59, 'second': 59, 'millisecond': 0 })._d;
 
         table_outgoing_sostav.init({
-            type_report: 'outgoing_sostav_detali',
-            alert: null,
+            type_report: 'outgoing_sostav',
+            alert: alert,
             ids_wsd: null,
         }, function (init) {
             table_outgoing_sostav.load_outgoing_sostav(start, stop, function (sostav) {
