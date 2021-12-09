@@ -93,9 +93,12 @@
             type_report: 'outgoing_sostav',
             alert: alert,
             ids_wsd: null,
+            fn_action_view_wagons: function (rows_sostav) {
+
+            },
         }, function (init) {
             table_outgoing_sostav.load_outgoing_sostav(start, stop, function (sostav) {
-                this.view(sostav, null);
+                this.view(sostav, null, null);
                 LockScreenOff();
             }.bind(table_outgoing_sostav));
 
