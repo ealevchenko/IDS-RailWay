@@ -424,7 +424,31 @@
             },
         });
     };
-
+    // Операция отменить сдачу состава на УЗ
+    ids_wsd.prototype.postOperationReturnPresentSostav = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/operation/return_present/sostav/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postOperationReturnPresentSostav", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
 
     App.ids_wsd = ids_wsd;
 

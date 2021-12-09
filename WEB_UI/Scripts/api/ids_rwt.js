@@ -3583,6 +3583,7 @@ IDS_RWT.prototype.postOperationPresentSostav = function (operation_present, call
         },
     });
 };
+//TODO: Отключить после переделки outgoing.js перенесен в ids_wsd.js
 //Операция отменить сдачу состава на УЗ
 IDS_RWT.prototype.postOperationReturnPresentSostav = function (operation_present, callback) {
     $.ajax({
