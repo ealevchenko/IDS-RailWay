@@ -85,15 +85,24 @@
             'tos_mess_init_module': 'Инициализация модуля...',
             //'tos_mess_load_wagons': 'Загружаю вагоны состава…',
             'tos_mess_load_sostav': 'Загружаю составы...',
+            'tos_mess_update_sostav': 'Обновляю составы...',
             //'tos_mess_view_wagons': 'загрузка информации о вагонах состава…',
             'tos_mess_view_sostav': 'Показываю составы...',
+            'tos_mess_run_operation': 'Выполняю операцию...',
 
             'tos_mess_err_return_sostav': 'Статус выбранного состава не позволяет отменить состав для предъявления!',
+            'tos_mess_error_wagon_return': '№ вагона : {0}, код ошибки : {1}',
+
             'tos_mess_comfirm_return': 'Вы уверены что хотите вернуть состав вед № {0}, станция отправления: {1}, путь отправления № {2}?',
             'tos_mess_cancel_return': 'Операция «Вернуть состав, сформированный для предъявления» - Отменена!',
             'tos_mess_ok_return': 'Операция «Вернуть состав, сформированный для предъявления» - Выполнена',
             'tos_mess_error_return': 'Ошибка выполнения операции «Вернуть состав, сформированный для предъявления», код ошибки : {0}',
-            'tos_mess_error_wagon_return': '№ вагона : {0}, код ошибки : {1}',
+
+            'tos_mess_comfirm_return_uz': 'Вы уверены что хотите вернуть состав сданный на УЗ : {0}, вед № {1}, станция отправления: {2}, путь отправления № {3}?',
+            'tos_mess_cancel_return_uz': 'Операция «Вернуть состав, сданный на УЗ» - Отменена!',
+            'tos_mess_ok_return_uz': 'Операция «Вернуть состав, сданный на УЗ» - Выполнена',
+            'tos_mess_error_return_uz': 'Ошибка выполнения операции «Вернуть состав, сданный на УЗ», код ошибки : {0}',
+
         },
         'en':  //default language: English
         {
@@ -508,9 +517,6 @@
         {
             button: 'refresh',
             text: '<i class="fas fa-retweet"></i>',
-            action: function (e, dt, node, config) {
-                //operation_detali.table_wagons_sending_way_from.obj.rows(':not(.select-sending)').select();
-            }
         },
         {
             button: 'page_length',
@@ -617,59 +623,30 @@
         buttons.push({
             name: 'return_sostav',
             action: function (e, dt, node, config) {
-                if (this.select_rows_sostav && this.select_rows_sostav.length > 0 && this.select_rows_sostav[0].status === 0) {
-                    var sostav = this.select_rows_sostav[0];
-                    var message = langView('tos_mess_comfirm_return', App.Langs).format(sostav.num_doc, sostav["station_from_name_" + App.Lang], sostav["way_from_num_" + App.Lang]);
-                    this.modal_confirm_form.view(langView('tos_title_form_return', App.Langs), message, function (res) {
-                        if (res) {
-                            // Сформируем операцию
-                            var operation_provide = {
-                                id_sostav: sostav.id,
-                                user: App.User_Name,
-                            }
-                            // Выполнить операцию отменить предъявление сотава для сдачи на уз
-                            this.ids_wsd.postReturnProvideWagonsOfStation(operation_provide, function (result_provide) {
-                                if (result_provide && result_provide.result > 0) {
-                                    //pn_sel.view(true);
-                                    this.out_info(langView('tos_mess_ok_return', App.Langs));
-                                } else {
-                                    this.out_error(langView('tos_mess_error_return', App.Langs).format(result_provide ? result_provide.result : null));
-                                    if (result_provide && result_provide.listResult && result_provide.listResult.length > 0) {
-                                        $.each(result_provide.listResult, function (i, el) {
-                                            if (el.result < 0) {
-                                                //outgoing_alert.out_error_message("№ вагона :" + el.num + ", код ошибки -" + el.result);
-                                                this.out_error(langView('tos_mess_error_wagon_return', App.Langs).format(el.num, el.result));
-                                            }
-                                        }.bind(this));
-                                    }
-                                    //LockScreenOff();
-                                }
-                                // 
-                                //Обновить 
-                            }.bind(this));
-                        } else {
-                            this.out_clear();
-                            this.out_warning(langView('tos_mess_cancel_return', App.Langs));
-                        }
-                    }.bind(this));
-                } else {
-                    this.out_warning(langView('tos_mess_err_return_sostav', App.Langs));
-                }
+                this.action_return_sostav(); // выполнить операцию
             }.bind(this)
         });
         buttons.push({
             name: 'return_sostav_uz',
             action: function (e, dt, node, config) {
-
+                this.action_return_sostav_uz(); // выполнить операцию
             }.bind(this)
         });
         buttons.push({
             name: 'view_wagons',
             action: function (e, dt, node, config) {
-                //this.out_warning('Jr')
+                if (typeof this.settings.fn_action_view_wagons === 'function') {
+                    this.settings.fn_action_view_wagons(this.select_rows_sostav);
+                }
+
             }.bind(this)
         });
-        buttons.push({ name: 'refresh', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                this.action_refresh();
+            }.bind(this)
+        });
         buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
@@ -680,6 +657,7 @@
             case 'outgoing_sostav': {
                 this.fixedHeader = true;            // вкл. фикс. заголовка
                 this.leftColumns = 8;
+                this.order_column = [3, 'asc'];
                 this.type_select_rows = 1; // Выбирать одну
                 this.table_select = true;
                 this.table_columns = this.init_columns_outgoing_sostav();
@@ -690,6 +668,7 @@
             default: {
                 this.fixedHeader = false;            // вкл. фикс. заголовка
                 this.leftColumns = 0;
+                this.order_column = [0, 'asc'];
                 this.type_select_rows = 1; // Выбирать одну
                 this.table_select = true;
                 this.table_columns = this.init_columns_detali();
@@ -709,12 +688,15 @@
             type_report: null,     // 
             link_num: false,
             ids_wsd: null,
+            fn_action_view_wagons: null,
             //fn_change_data: null,   // Функция обратного вызова если изменили данные отображения (load... button:action...)
             //fn_select_sostav: null, // Функция обратного вызова возвращяет выбранный состав
         }, options);
         //
-        this.start = null;
-        this.stop = null;
+        this.start = null;                  // Время начало выборки
+        this.stop = null;                   // Время конца выборки
+        this.id_station = null;             // Станция выборки (все станции null)
+        this.id_sostav = null;              // Выбранный состав
         this.sostav = [];                   // Список составов
         this.select_rows_sostav = null;     // Выбранный состав
 
@@ -722,6 +704,7 @@
         // Настройки отчета
         this.fixedHeader = false;            // вкл. фикс. заголовка
         this.leftColumns = 0;
+        this.order_column = [0, 'asc'];
         this.type_select_rows = 0; // не показывать
         this.table_select = false;
         this.table_columns = [];
@@ -820,9 +803,7 @@
         switch (this.settings.type_report) {
             case 'outgoing_sostav': {
                 this.obj_t_sostav.on('select deselect', function (e, dt, type, indexes) {
-                    var index = this.obj_t_sostav.rows({ selected: true });
-                    var rows = this.obj_t_sostav.rows(index && index.length > 0 ? index[0] : null).data().toArray();
-                    this.select_rows_sostav = rows;
+                    this.select_rows(); // определим строку
                     this.enable_button();
                 }.bind(this));
 
@@ -838,19 +819,32 @@
         //----------------------------------
     };
     //-------------------------------------------------------------------------------------------
-    // Показать данные 
-    table_outgoing_sostav.prototype.view = function (data, id_sostav) {
+    // обновим информацию об выбраных строках
+    table_outgoing_sostav.prototype.select_rows = function () {
+        var index = this.obj_t_sostav.rows({ selected: true });
+        var rows = this.obj_t_sostav.rows(index && index.length > 0 ? index[0] : null).data().toArray();
+        this.select_rows_sostav = rows;
+        this.id_sostav = this.select_rows_sostav && this.select_rows_sostav.length > 0 ? this.select_rows_sostav[0].id : null;
+    };
+    // Показать данные
+    table_outgoing_sostav.prototype.view = function (data, id_station, id_sostav) {
+        this.id_station = id_station;
         this.out_clear();
         LockScreen(langView('tos_mess_view_sostav', App.Langs));
         this.obj_t_sostav.clear();
-        this.obj_t_sostav.rows.add(data);
-        this.obj_t_sostav.order([3, 'asc']);
+
+        this.obj_t_sostav.rows.add(id_station !== null ? data.filter(function (i) { return i.id_station_from === id_station }) : data);
+        this.obj_t_sostav.order(this.order_column);
         //this.obj_t_sostav.order([this.settings.detali_wagons ? 1 : 0, 'asc']);
         this.obj_t_sostav.draw();
-        if (id_sostav) {
-            this.obj_t_sostav.row('#' + id_select).select();
+        if (id_sostav !== null) {
+            this.id_sostav = id_sostav
+            this.obj_t_sostav.row('#' + this.id_sostav).select();
+        } else {
+            this.id_sostav = null;
         }
-        //this.enable_button(); // отображение кнопки добавить
+        this.select_rows();
+        this.enable_button();
         LockScreenOff();
     };
     // Загрузить составы по прибытию
@@ -877,7 +871,25 @@
         }
 
     };
-
+    // Обновим составы по прибытию
+    table_outgoing_sostav.prototype.update = function (cb_load) {
+        if (this.start !== null && this.stop !== null) {
+            LockScreen(langView('tos_mess_update_sostav', App.Langs));
+            this.ids_wsd.getViewOutgoingSostav(this.start, this.stop, function (sostav) {
+                this.sostav = sostav;
+                LockScreenOff();
+                if (typeof cb_load === 'function') {
+                    cb_load(this.sostav);
+                }
+                LockScreenOff();
+            }.bind(this));
+        } else {
+            this.sostav = [];
+            if (typeof cb_load === 'function') {
+                cb_load(this.sostav);
+            }
+        }
+    };
     // Отображение кнопки добавить
     table_outgoing_sostav.prototype.enable_button = function () {
         switch (this.settings.type_report) {
@@ -902,6 +914,91 @@
                 break;
             };
         };
+    };
+    // Выполнить операцию вернуть состав сформированы для предъявления
+    table_outgoing_sostav.prototype.action_return_sostav = function () {
+        if (this.select_rows_sostav && this.select_rows_sostav.length > 0 && this.select_rows_sostav[0].status === 0) {
+            var sostav = this.select_rows_sostav[0];
+            var message = langView('tos_mess_comfirm_return', App.Langs).format(sostav.num_doc, sostav["station_from_name_" + App.Lang], sostav["way_from_num_" + App.Lang]);
+            this.modal_confirm_form.view(langView('tos_title_form_return', App.Langs), message, function (res) {
+                if (res) {
+                    LockScreen(langView('tos_mess_run_operation', App.Langs));
+                    // Сформируем операцию
+                    var operation_provide = {
+                        id_sostav: sostav.id,
+                        user: App.User_Name,
+                    }
+                    // Выполнить операцию отменить предъявление сотава для сдачи на уз
+                    this.ids_wsd.postReturnProvideWagonsOfStation(operation_provide, function (result_provide) {
+                        if (result_provide && result_provide.result > 0) {
+                            this.update(function (sostav) {
+                                this.view(sostav, this.id_station, null);
+                                this.out_info(langView('tos_mess_ok_return', App.Langs));
+                                LockScreenOff();
+                            }.bind(this));
+                        } else {
+                            this.out_error(langView('tos_mess_error_return', App.Langs).format(result_provide ? result_provide.result : null));
+                            if (result_provide && result_provide.listResult && result_provide.listResult.length > 0) {
+                                $.each(result_provide.listResult, function (i, el) {
+                                    if (el.result < 0) {
+                                        this.out_error(langView('tos_mess_error_wagon_return', App.Langs).format(el.num, el.result));
+                                    }
+                                }.bind(this));
+                            }
+                            LockScreenOff();
+                        }
+                    }.bind(this));
+                } else {
+                    this.out_clear();
+                    this.out_warning(langView('tos_mess_cancel_return', App.Langs));
+                }
+            }.bind(this));
+        } else {
+            this.out_warning(langView('tos_mess_err_return_sostav', App.Langs));
+        }
+    };
+    // Выполнить операцию вернуть состав сданный на УЗ
+    table_outgoing_sostav.prototype.action_return_sostav_uz = function () {
+        if (this.select_rows_sostav && this.select_rows_sostav.length > 0 && this.select_rows_sostav[0].status === 2) {
+            var sostav = this.select_rows_sostav[0];
+            var message = langView('tos_mess_comfirm_return_uz', App.Langs).format((sostav.date_outgoing ? moment(sostav.date_outgoing).format(format_datetime) : null), sostav.num_doc, sostav["station_from_name_" + App.Lang], sostav["way_from_num_" + App.Lang]);
+            this.modal_confirm_form.view(langView('tos_title_form_return', App.Langs), message, function (res) {
+                if (res) {
+                    LockScreen(langView('tos_mess_run_operation', App.Langs));
+                    // Подготовим операцию
+                    var operation = {
+                        id_outgoing_sostav: sostav.id,
+                        user: App.User_Name
+                    };
+                    // Выполним операцию
+                    this.ids_wsd.postOperationReturnPresentSostav(operation, function (result_operation) {
+                        if (result_operation > 0) {
+                            this.update(function (sostav) {
+                                this.view(sostav, this.id_station, this.id_sostav);
+                                this.out_info(langView('tos_mess_ok_return_uz', App.Langs));
+                                LockScreenOff();
+                            }.bind(this));
+                        } else {
+                            // Ошибка выполнения
+                            this.out_error(langView('tos_mess_error_return_uz', App.Langs).format(result_operation));
+                            LockScreenOff();
+                        }
+                    }.bind(this));
+                } else {
+                    this.out_clear();
+                    this.out_warning(langView('tos_mess_cancel_return_uz', App.Langs));
+                }
+            }.bind(this));
+        } else {
+            this.out_warning(langView('tos_mess_err_return_sostav', App.Langs));
+        };
+    };
+    // Выполнить операцию обновить
+    table_outgoing_sostav.prototype.action_refresh = function () {
+        this.update(function (sostav) {
+            this.view(sostav, this.id_station, this.id_sostav);
+            LockScreenOff();
+        }.bind(this));
     };
     // Загрузить составы прибывающие на станцию 
     //-------------------------------------------------------------------------------------------
