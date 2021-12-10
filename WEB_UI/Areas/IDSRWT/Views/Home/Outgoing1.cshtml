@@ -7,8 +7,6 @@
     @Styles.Render("~/DataTables/css")
     @Styles.Render("~/DateTime/css")
     <link rel="stylesheet" type="text/css" href="~/Content/view/idsrwt/outgoing.css">
-    <!-- модули -->
-    <link href="~/Content/module/wsd/table_outgoing_sostav.css" rel="stylesheet" /><!-- CSS стили модуля "Отправляемые составы" -->
 }
 
 @section scripts {
@@ -17,55 +15,87 @@
     @Scripts.Render("~/bundles/DateTime")
 
     <script src="~/Scripts/view/shared/common.js"></script> <!-- Общая библиотека методов программы -->
-    <script src="~/Scripts/module/shared/common.js"></script>
-    <script src="~/Scripts/module/shared/modal_confirm_form.js"></script> <!-- Форма сообщений подтверждения -->
     <script src="~/Scripts/api/shared.js"></script> <!-- Общая библиотека методов API -->
-    <script src="~/Scripts/api/ids_direct.js"></script>
-    <script src="~/Scripts/api/ids_wsd.js"></script>
+    <script src="~/Scripts/api/ids_sap.js"></script> <!-- Class API SAP функции для работы с САП -->
+    <script src="~/Scripts/api/uz_directory.js"></script> <!-- Class API УЗ Справочники -->
+    <script src="~/Scripts/api/ids_directory.js"></script> <!-- Class API ИДС Справочники -->
+    <script src="~/Scripts/api/metrans.js"></script> <!-- Class API МЕТРАНС -->
+    <script src="~/Scripts/api/ids_rwt.js"></script> <!-- Class API ИДС Прием вагонов -->
+    <script src="~/Scripts/api/ids_transfer.js"></script> <!-- Class API ИДС Переносы -->
+    <script src="~/Scripts/api/uz_sms.js"></script> <!-- Class API Работа с модулем согласования -->
 
-    <!--<script src="~/Scripts/api/ids_sap.js"></script>--> <!-- Class API SAP функции для работы с САП -->
-    <!--<script src="~/Scripts/api/uz_directory.js"></script>--> <!-- Class API УЗ Справочники -->
-    <!--<script src="~/Scripts/api/ids_directory.js"></script>--> <!-- Class API ИДС Справочники -->
-    <!--<script src="~/Scripts/api/metrans.js"></script>--> <!-- Class API МЕТРАНС -->
-    <!--<script src="~/Scripts/api/ids_rwt.js"></script>--> <!-- Class API ИДС Прием вагонов -->
-    <!--<script src="~/Scripts/api/ids_transfer.js"></script>--> <!-- Class API ИДС Переносы -->
-    <!--<script src="~/Scripts/api/uz_sms.js"></script>--> <!-- Class API Работа с модулем согласования -->
-    <!--<script src="~/Scripts/plugins/pl_dialog_confirm.js"></script>--> <!-- Плагин -->
+    <script src="~/Scripts/plugins/pl_dialog_confirm.js"></script> <!-- Плагин -->
 
-    <script src="~/Scripts/module/wsd/table_outgoing_sostav.js"></script>    <!-- Модуль "Отправляемые составы" -->
-
-    <script src="~/Scripts/view/idsrwt/main_outgoing.js"></script> <!--  -->
+    <script src="~/Scripts/view/idsrwt/outgoing.js"></script> <!--  -->
 }
 
-
 <input id="username" type="hidden" value="@User.Identity.Name" />
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
+
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nb-outgoing" aria-controls="nb-outgoing" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse text-light" id="nb-outgoing">
+
+        <div class="collapse navbar-collapse" id="navbarsExample07">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <div class="input-group mr-3" style="display:block">
+                        <label class="col-form-label text-white mr-2" for="select-station">Отправить со станции: </label>
+                        <select type="text" id="select-station" name="select-station" class="form-control-sm"></select>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <div class="input-group">
+                        <label class="col-form-label text-white mr-2" for="select-date">Выбрать период: </label>
+                        <span id="select-date">
+                            <input type="datetime" class="form-control-sm" id="date-start" name="date-start">
+                            <input type="datetime" class="form-control-sm" id="date-stop" name="date-stop">
+                        </span>
+                    </div>
+
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-xl-0">
+                <div class="dropdown  mr-3">
+                    <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
+                        Отчетная документация
+                    </button>
+                    <div class="dropdown-menu">
+                        @*<a class="dropdown-item" href="#" id="report_fst">Натурная ведомость поезда</a>
+                            <a class="dropdown-item" href="#" id="report_fsci">Натурная ведомость коммерческого осмотра</a>
+                            <a class="dropdown-item" href="#">Отчет с данными о перевеске</a>
+                            <a class="dropdown-item" href="#">Отчет о приеме груза</a>
+                            <a class="dropdown-item" href="#">Заявка на выдачу с проверкой груза КР Главный</a>
+                            <a class="dropdown-item" href="#">Заявка на выдачу с проверкой груза КР</a>
+                            <a class="dropdown-item" href="#">Заявка на взвешивание</a>*@
+                    </div>
+                </div>
+                <input class="form-control-sm" type="text" placeholder="Search" aria-label="Search">
+            </form>
         </div>
     </div>
 </nav>
 @*<div><img width="100%" height="100%" src="~/Images/8m.png" /></div>*@
-<div class="container-fluid">
-    <div class="alert" id="main-alert"></div>
-    <div class="row">
-        <div class="col-xl-12 mb-3 mt-2">
-            <div class="card border-dark mb-3">
-                <div class="card-header bg-secondary text-white">Поезда по отправлению</div>
-                <div class="card-body text-dark pl-3 pr-3">
-                    <div class="row">
-                        <div class="col-xl-12">
-                            <div id="outgoing-sostav"></div>
-                        </div>
+<div class="alert" id="outgoing-alert"></div>
+<div class="row">
+    <div class="col-xl-12 mb-3 mt-2">
+        <div class="card border-dark mb-3">
+            <div class="card-header bg-secondary text-white">Поезда по отправлению</div>
+            <div class="card-body text-dark pl-3 pr-3">
+                <div class="row">
+                    <div class="col-xl-12" style="font-size:14px;">
+                        <table class="display compact cell-border row-border hover" id="table-sostav-outgoing" style="width:100%"></table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<div id="dialog-confirm"></div>
 
 <div class="cd-cars-detali">
     <div class="container-fluid">
@@ -522,3 +552,161 @@
     </div>
 </div>
 
+<div id="outgoing-sostav" title="" style="display:none">
+    <div class="alert" id="outgoing-sostav-alert"></div>
+
+    <form id="form-outgoing-sostav">
+        <div class="form-group row" style="margin-bottom:0.5rem">
+            <label for="sostav_num_sheet" class="col-xl-6 col-form-label">@IDSRWTResource.title_num_sheet:</label>
+            <div class="col-xl-6">
+                <input type="number" class="form-control" id="sostav_num_sheet" name="sostav_num_sheet" disabled>
+            </div>
+        </div>
+        <div class="form-group row" style="margin-bottom:0.5rem">
+            <label for="sostav_date_end_inspection_acceptance_delivery" class="col-xl-6 col-form-label">@IDSRWTResource.title_date_end_inspection_acceptance_delivery:</label>
+            <div class="col-xl-6">
+                <input type="datetime" class="form-control" id="sostav_date_end_inspection_acceptance_delivery" name="sostav_date_end_inspection_acceptance_delivery">
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+        <div class="form-group row" style="margin-bottom:0.5rem">
+            <label for="sostav_date_end_inspection_loader" class="col-xl-6 col-form-label">@IDSRWTResource.title_date_end_inspection_loader:</label>
+            <div class="col-xl-6">
+                <input type="datetime" class="form-control" id="sostav_date_end_inspection_loader" name="sostav_date_end_inspection_loader">
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+        <div class="form-group row" style="margin-bottom:0.5rem">
+            <label for="sostav_date_end_inspection_vagonnik" class="col-xl-6 col-form-label">@IDSRWTResource.title_date_end_inspection_vagonnik:</label>
+            <div class="col-xl-6">
+                <input type="datetime" class="form-control" id="sostav_date_end_inspection_vagonnik" name="sostav_date_end_inspection_vagonnik">
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+        <div class="form-group row" style="margin-bottom:0.5rem">
+            <label for="sostav_date_readiness_uz" class="col-xl-6 col-form-label">@IDSRWTResource.title_date_readiness_uz:</label>
+            <div class="col-xl-6">
+                <input type="datetime" class="form-control" id="sostav_date_readiness_uz" name="sostav_date_readiness_uz">
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+        <div class="form-group row" style="margin-bottom:0.5rem">
+            <label for="sostav_date_outgoing" class="col-xl-6 col-form-label">@IDSRWTResource.title_date_outgoing:</label>
+            <div class="col-xl-6">
+                <input type="datetime" class="form-control" id="sostav_date_outgoing" name="sostav_date_outgoing">
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+        <div class="form-group row" style="margin-bottom:0.5rem">
+            <label for="sostav_date_outgoing_act" class="col-xl-6 col-form-label">@IDSRWTResource.title_date_outgoing_act:</label>
+            <div class="col-xl-6">
+                <input type="datetime" class="form-control" id="sostav_date_outgoing_act" name="sostav_date_outgoing_act">
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+        <div class="form-group row" style="margin-bottom:0.5rem">
+            <label for="sostav_date_outgoing_act" class="col-xl-6 col-form-label">@IDSRWTResource.title_outgoing_station_on:</label>
+            <div class="col-xl-6">
+                <select class="form-control" id="sostav_station_on" name="sostav_station_on" required="required"></select>
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-xl-6">@IDSRWTResource.title_outgoing_sign:</div>
+            <div class="col-xl-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="sostav_outgoing_route_sign" name="sostav_outgoing_route_sign">
+                    <label class="form-check-label" for="sostav_outgoing_route_sign">@IDSRWTResource.title_outgoing_route</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row" style="margin-bottom:0.5rem">
+            <label for="sostav_composition_index" class="col-xl-6 col-form-label">@IDSRWTResource.title_composition_index:</label>
+            <div class="col-xl-6">
+                <input type="text" class="form-control" id="sostav_composition_index" name="sostav_composition_index">
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+        <!-- Allow form submission with keyboard without duplicating the dialog button -->
+        <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </form>
+
+
+
+
+    @*<form id="form-arrival-sostav">
+
+            <div class="form-group row" style="margin-bottom:0.5rem">
+                <label for="arrival_sostav_date_arrival" class="col-sm-5 col-form-label">@IDSRWTResource.title_date_arrival:</label>
+                <div class="col-sm-7">
+                    <input type="datetime" class="form-control" id="arrival_sostav_date_arrival" name="arrival_sostav_date_arrival" required="required">
+                    <div class="invalid-feedback">
+
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row" style="margin-bottom:0.5rem">
+                <label for="arrival_sostav_date_adoption" class="col-sm-5 col-form-label">@IDSRWTResource.title_date_adoption:</label>
+                <div class="col-sm-7">
+                    <input type="datetime" class="form-control" id="arrival_sostav_date_adoption" name="arrival_sostav_date_adoption" required="required">
+                    <div class="invalid-feedback">
+
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row" style="margin-bottom:0.5rem">
+                <label for="arrival_sostav_date_adoption_act" class="col-sm-5 col-form-label">@IDSRWTResource.title_date_adoption_act:</label>
+                <div class="col-sm-7">
+                    <input type="datetime" class="form-control" id="arrival_sostav_date_adoption_act" name="arrival_sostav_date_adoption_act">
+                    <div class="invalid-feedback">
+
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row" style="margin-bottom:0.5rem">
+                <label for="arrival_sostav_station_on" class="col-sm-5 col-form-label">@IDSRWTResource.title_arrival_station_on:</label>
+                <div class="col-sm-7">
+                    <select class="form-control" id="arrival_sostav_station_on" name="arrival_sostav_station_on" required="required"></select>
+                    <div class="invalid-feedback">
+
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row" style="margin-bottom:0.5rem">
+                <label for="arrival_sostav_way_on" class="col-sm-5 col-form-label">@IDSRWTResource.title_arrival_way_on:</label>
+                <div class="col-sm-7">
+                    <select class="form-control" id="arrival_sostav_way_on" name="arrival_sostav_way_on" required="required"></select>
+                    <div class="invalid-feedback">
+
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row" style="margin-bottom:0.5rem">
+                <label for="arrival_count_car" class="col-sm-5 col-form-label">@IDSRWTResource.title_arrival_count_car:</label>
+                <div class="col-sm-7">
+                    <input type="number" class="form-control" id="arrival_count_car" name="arrival_count_car" disabled="disabled">
+                    <div class="invalid-feedback">
+
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row" style="margin-bottom:0.5rem">
+                <label for="arrival_sostav_way_on" class="col-sm-5 col-form-label">@IDSRWTResource.title_numeration:</label>
+                <div class="col-sm-7" id="arrival_sostav_numeration">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="arrival_sostav_head" value="option1">
+                        <label class="form-check-label" for="arrival_sostav_head">Голова</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="arrival_sostav_tail" value="option2">
+                        <label class="form-check-label" for="arrival_sostav_tail">Хвост</label>
+                    </div>
+                </div>
+                <div class="invalid-feedback" style="margin-left:260px">
+
+                </div>
+            </div>
+             Allow form submission with keyboard without duplicating the dialog button
+            <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+        </form>*@
+</div>

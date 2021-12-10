@@ -2200,6 +2200,7 @@
     <Content Include="Areas\Directory\Views\Home\Ways.cshtml" />
     <Content Include="Areas\Directory\Views\Home\Park.cshtml" />
     <Content Include="Areas\Directory\Views\Home\OperatorsWagons.cshtml" />
+    <Content Include="Areas\IDSRWT\Views\Home\Outgoing1.cshtml" />
     <None Include="_app_offline.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -2742,6 +2743,7 @@
     <Content Include="Scripts\view\idsmors\electronic_cards.js" />
     <Content Include="Scripts\view\idsmors\report_wagons.js" />
     <Content Include="Scripts\view\idsmors\park_wagons.js" />
+    <Content Include="Scripts\view\idsrwt\main_outgoing.js" />
     <Content Include="Scripts\view\idsrwt\outgoing.js" />
     <Content Include="Scripts\view\idsrwt\incoming.js" />
     <Content Include="Scripts\view\idsrwt\arrival.js" />

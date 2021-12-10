@@ -31,7 +31,11 @@ namespace WEB_UI.Areas.IDSRWT.Controllers
         {
             return View();
         }
-
+        [AccessOfDB(LogVisit = true)]
+        public ActionResult Outgoing1()
+        {
+            return View();
+        }
         public ActionResult Report()
         {
             return View();
