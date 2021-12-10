@@ -729,6 +729,39 @@
             throw new Error('Не удалось создать элемент <div id="..." class="invalid-feedback"></div >');
         }
     };
+    // Выпадающий спсиок
+    //<div class="dropdown mr-3">
+    //  <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
+    //      Отчетная документация
+    //  </button>
+    //<div class="dropdown-menu">
+    //  <a class="dropdown-item" href="#" id="report_fst">Натурная ведомость поезда</a>
+    //  <a class="dropdown-item" href="#" id="report_fsci">Натурная ведомость коммерческого осмотра</a>
+    //  <a class="dropdown-item" href="#">Отчет с данными о перевеске</a>
+    //  <a class="dropdown-item" href="#">Отчет о приеме груза</a>
+    //  <a class="dropdown-item" href="#">Заявка на выдачу с проверкой груза КР Главный</a>
+    //  <a class="dropdown-item" href="#">Заявка на выдачу с проверкой груза КР</a>
+    //  <a class="dropdown-item" href="#">Заявка на взвешивание</a>
+    //</div>
+    //</div >
+    form_control.prototype.el_div_dropdown = function (id, cls, prefix, bt_cls, title_button) {
+        var $div = $('<div></div>', {
+            'class': 'dropdown' + (cls && cls !== null ? ' ' + cls : ''),
+        });
+        var $button = $('<button></button>', {
+            'class': 'btn btn' + (prefix ? '-' + prefix + ' ' : ' ') + ' dropdown-toggle' + (bt_cls && bt_cls !== null ? ' ' + bt_cls : ''),
+            'type': 'button',
+            'data-toggle': 'dropdown',
+        });
+        this.$div_menu = $('<div></div>', {
+            'class': 'dropdown-menu',
+        });
+        // Надпись
+        if (title_button && title_button !== '') {
+            $button.append(title_button);
+        };
+        this.$element = $div.append($button).append(this.$div_menu);
+    };
     //--------------------------------------------------------------------
     // Элемент <form class="form-inline">
     form_control.prototype.el_form_inline = function (id, cl_form) {
@@ -745,7 +778,7 @@
     //        <input type="datetime" class="form-control-sm" id="date-stop" name="date-stop">
     //    </span>
     //</div>
-    form_control.prototype.el_form_inline_interval_date = function (id, prefix) {
+    form_control.prototype.el_form_inline_interval_date = function (id, prefix, label) {
         var FC = App.form_control;
         var fc = new FC();
 
@@ -757,7 +790,7 @@
         var $label = $('<label></label>', {
             'class': 'col-form-label' + (prefix ? '-' + prefix + ' ' : ' ') + 'mr-2',
             'for': id,
-            'text': langView('title_label_date', App.Langs)
+            'text': label !== null ? label : langView('title_label_date', App.Langs)
         });
         //
         var start = new fc.el_input1(prefix, id + '-start', 'datetime');
@@ -965,7 +998,7 @@
         // создадим поля
         $.each(this.settings.fields, function (i, el) {
             if (el.type === 'interval_date') {
-                var element = new this.fc.el_form_inline_interval_date(el.id, el.prefix);
+                var element = new this.fc.el_form_inline_interval_date(el.id, el.prefix, el.title);
                 if (element && element.$element && element.$element.length > 0) {
                     this.$form.append(element.$element);
                     el['element'] = new this.fc.init_datetime_range(element.$span, el.start, el.stop, el.select);
