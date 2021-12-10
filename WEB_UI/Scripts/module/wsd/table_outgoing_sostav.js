@@ -917,6 +917,7 @@
     };
     // Выполнить операцию вернуть состав сформированы для предъявления
     table_outgoing_sostav.prototype.action_return_sostav = function () {
+        this.out_clear();
         if (this.select_rows_sostav && this.select_rows_sostav.length > 0 && this.select_rows_sostav[0].status === 0) {
             var sostav = this.select_rows_sostav[0];
             var message = langView('tos_mess_comfirm_return', App.Langs).format(sostav.num_doc, sostav["station_from_name_" + App.Lang], sostav["way_from_num_" + App.Lang]);
@@ -959,6 +960,7 @@
     };
     // Выполнить операцию вернуть состав сданный на УЗ
     table_outgoing_sostav.prototype.action_return_sostav_uz = function () {
+        this.out_clear();
         if (this.select_rows_sostav && this.select_rows_sostav.length > 0 && this.select_rows_sostav[0].status === 2) {
             var sostav = this.select_rows_sostav[0];
             var message = langView('tos_mess_comfirm_return_uz', App.Langs).format((sostav.date_outgoing ? moment(sostav.date_outgoing).format(format_datetime) : null), sostav.num_doc, sostav["station_from_name_" + App.Lang], sostav["way_from_num_" + App.Lang]);
@@ -995,6 +997,7 @@
     };
     // Выполнить операцию обновить
     table_outgoing_sostav.prototype.action_refresh = function () {
+        this.out_clear();
         this.update(function (sostav) {
             this.view(sostav, this.id_station, this.id_sostav);
             LockScreenOff();
