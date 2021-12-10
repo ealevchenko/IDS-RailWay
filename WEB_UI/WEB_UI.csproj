@@ -2030,6 +2030,7 @@
     <Content Include="Content\module\shared\modal_edit_form.css" />
     <Content Include="Content\module\directory\table_dir_way.css" />
     <Content Include="Content\module\table_tree_way.css" />
+    <Content Include="Content\module\wsd\table_outgoing_sostav.css" />
     <Content Include="Content\module\wsd\view_report_remainder_cars.css" />
     <Content Include="Content\module\wsd\view_return_cars.css" />
     <Content Include="Content\module\wsd\view_history_operation_send.css" />
@@ -2112,6 +2113,7 @@
     <Content Include="Scripts\module\table_wir_detali.js" />
     <Content Include="Scripts\module\table_wir.js" />
     <Content Include="Scripts\module\table_arrival.js" />
+    <Content Include="Scripts\module\wsd\table_outgoing_sostav.js" />
     <Content Include="Scripts\module\wsd\table_total_balance.js" />
     <Content Include="Scripts\module\wsd\view_report_remainder_cars.js" />
     <Content Include="Scripts\module\wsd\view_return_cars.js" />
@@ -2198,6 +2200,7 @@
     <Content Include="Areas\Directory\Views\Home\Ways.cshtml" />
     <Content Include="Areas\Directory\Views\Home\Park.cshtml" />
     <Content Include="Areas\Directory\Views\Home\OperatorsWagons.cshtml" />
+    <Content Include="Areas\IDSRWT\Views\Home\Outgoing1.cshtml" />
     <None Include="_app_offline.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -2740,6 +2743,7 @@
     <Content Include="Scripts\view\idsmors\electronic_cards.js" />
     <Content Include="Scripts\view\idsmors\report_wagons.js" />
     <Content Include="Scripts\view\idsmors\park_wagons.js" />
+    <Content Include="Scripts\view\idsrwt\main_outgoing.js" />
     <Content Include="Scripts\view\idsrwt\outgoing.js" />
     <Content Include="Scripts\view\idsrwt\incoming.js" />
     <Content Include="Scripts\view\idsrwt\arrival.js" />

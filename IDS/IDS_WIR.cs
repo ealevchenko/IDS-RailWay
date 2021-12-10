@@ -3077,7 +3077,7 @@ namespace IDS
                 if (wio == null) return (int)errors_base.not_wio_db; // В базе данных нет текущей операции
                 if (wio.id_operation < 8 || wio.id_operation > 9) return (int)errors_base.wagon_not_operation; // текущая операция не предъявить вагон на УЗ
                                                                                                                // Все проверки прошел
-                // Проверить сап исходящие, и если есть закроем
+                                                                                                               // Проверить сап исходящие, и если есть закроем
                 EFSAPOutgoingSupply ef_sap_os = new EFSAPOutgoingSupply(context);
                 SAPOutgoingSupply sap_os = ef_sap_os.Context.Where(s => s.id_outgoing_car == car.id).FirstOrDefault();
                 if (sap_os != null)
@@ -5108,21 +5108,29 @@ namespace IDS
                 // Сгруппируем по id сотава для отправки
                 List<IGrouping<long, UZ_DOC_Sending>> group_uz_doc = list_uz_doc.ToList().GroupBy(d => d.id_sostav).ToList();
                 int count = group_uz_doc != null ? group_uz_doc.Count() : 0;
+                int upd_cars = 0; // Количество обновленных вагонов в составах
+                int all_cars = 0; // Количество общее вагонов в составах
                 // Пройдемся по составам
-                foreach (IGrouping<long, UZ_DOC_Sending> uz_doc_sostav in group_uz_doc.OrderBy(c=>c.Key))
+                foreach (IGrouping<long, UZ_DOC_Sending> uz_doc_sostav in group_uz_doc.OrderBy(c => c.Key))
                 {
                     List<UZ_DOC_Sending> list_cars = uz_doc_sostav.ToList();
+                    all_cars += list_cars != null ? list_cars.Count() : 0; // Добавим общее количество вагонов
                     // Выполним обновление всего пула документов
                     OperationResultID result = OperationUpdateEPDSendingSostav(ref context_ids, uz_doc_sostav.Key, user);
+                    if (result.result > 0)
+                    {
+                        upd_cars += result.result; // Добавим добавленное количество вагонов
+                    }
                     // Запомним результат
                     res.SetResultOperation(result.result, uz_doc_sostav.Key);
-                    string mess_update = String.Format("ID состава {0}, обновлено {1} ошибок {2}, осталось {3}", uz_doc_sostav.Key, result.result, result.error, --count);
+                    string mess_update = String.Format("ID состава {0}, определено вагонов {1}, обновлено {2} ошибок {3}, осталось составов {4}", uz_doc_sostav.Key, (list_cars != null ? list_cars.Count() : 0), result.result, result.error, --count);
                     Console.WriteLine(mess_update);
                     mess_update.WarningLog(servece_owner, eventID);
                 }
+                res.SetResult(upd_cars);
                 //
-                string mess = String.Format("Операция обновления ЭПД по отправке. Код выполнения = {0}. Результат обновления [определено {1} составов, обновлено вагонов {2}, ошибок обновления {3}].",
-                    res.result, list_uz_doc != null ? group_uz_doc.Count() : 0, res.result, res.error);
+                string mess = String.Format("Операция обновления ЭПД по отправке. Код выполнения = {0}. Результат обновления [определено {1} вагонов в {2} составах, обновлено вагонов {3}, ошибок обновления {4}].",
+                    res.result, all_cars, group_uz_doc != null ? group_uz_doc.Count() : 0, res.result, res.error);
                 mess.WarningLog(servece_owner, eventID);
                 mess.EventLog(res.result < 0 ? EventStatus.Error : EventStatus.Ok, servece_owner, eventID);
                 DateTime stop = DateTime.Now;

@@ -747,9 +747,9 @@ namespace IDS
                 foreach (wagons_sap_os wagons in list_all_wagons)
                 {
                     // Дата прибытия вагона
-                    DateTime? dt = wagons.arrival_date_adoption;
+                    DateTime? dt = ((DateTime)wagons.arrival_date_adoption).Date;
                     // Выберем подходящую исходящую поставку
-                    Out_Supply cur_out_sypp = ef_out_sypp.Context.Where(s => s.TRAID == wagons.num.ToString() && s.ERDAT > dt).OrderBy(c => c.ERDAT).FirstOrDefault();
+                    Out_Supply cur_out_sypp = ef_out_sypp.Context.Where(s => s.TRAID == wagons.num.ToString() && s.ERDAT >= dt).OrderBy(c => c.ERDAT).FirstOrDefault();
                     int res_upd = 0;
                     if (cur_out_sypp != null)
                     {

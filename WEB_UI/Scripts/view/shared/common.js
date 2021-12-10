@@ -60,6 +60,18 @@ var langView = function (t, langs) {
     }
     return re;
 };
+
+if (!String.prototype.format) {
+    String.prototype.format = function () {
+        var args = arguments;
+        return this.replace(/{(\d+)}/g, function (match, number) {
+            return typeof args[number] != 'undefined'
+                ? args[number]
+                : match
+                ;
+        });
+    };
+}
 //==============================================================================================
 /* ----------------------------------------------------------
     Функции работы с масивами
@@ -295,6 +307,37 @@ var init_columns = function (collums_name, list_collums) {
                 };
             }
             field.className += ' fl-' + el;
+            collums.push(field);
+        });
+    }
+    return collums;
+};
+
+var init_columns_detali = function (collums_detali, list_collums) {
+    var collums = [];
+    if (collums_detali && collums_detali.length > 0) {
+        $.each(collums_detali, function (i, el) {
+            var field = list_collums.find(function (o) {
+                return o.field === el.field;
+            });
+            // Если поле не найдено, создадим по умолчанию (чтобы небыло ошибки)
+            if (!field) {
+                field = {
+                    field: el,
+                    data: function (row, type, val, meta) {
+                        return "Field_error";
+                    },
+                    title: el, width: "100px", orderable: false, searchable: false
+                };
+            }
+            field.className += ' fl-' + el.field;
+            // Добавим детали
+            if (el.title !== null) {
+                field.title = el.title;
+            }
+            if (el.class !== null) {
+                field.className += ' ' +el.class;
+            }
             collums.push(field);
         });
     }

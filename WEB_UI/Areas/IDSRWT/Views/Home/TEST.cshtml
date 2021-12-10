@@ -29,6 +29,8 @@
     <link href="~/Content/module/wsd/view_report_remainder_cars.css" rel="stylesheet" /> <!-- CSS стили модуля "Отчет Остаток вагонов на АМКР" -->
     <link href="~/Content/module/wsd/view_history_operation_arrival.css" rel="stylesheet" /><!-- CSS стили модуля "История операций принять на станцию" -->
 
+    <link href="~/Content/module/wsd/table_outgoing_sostav.css" rel="stylesheet" /><!-- CSS стили модуля "Отправляемые составы" -->
+
     <style>
         .table-directory {
             font-size: 0.8rem;
@@ -86,6 +88,9 @@
     <script src="~/Scripts/module/wsd/view_report_remainder_cars.js"></script>    <!-- Модуль "Отчет Остаток вагонов на АМКР" -->
 
     <script src="~/Scripts/module/wsd/table_total_balance.js"></script>
+
+    <script src="~/Scripts/module/wsd/table_outgoing_sostav.js"></script>    <!-- Модуль "Отправляемые составы" -->
+
 
     <script src="~/Scripts/view/idsrwt/test.js"></script>
 
@@ -188,7 +193,9 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>*@
-                    <div id="remainder-cars"></div>
+
+                    <div id="outgoing-sostav"></div>
+                    @*<div id="remainder-cars"></div>*@
                     <!--<div class="row">
                         <div class="col-xl-2">
                             <div class="card border-primary">
@@ -272,19 +279,17 @@
                                             </form>
                                         </div>
                                     </div>-->
-                                    <!--@*<div class="row">
-                                            <div class="col-xl-12">
-                                                <div id="tree-way"></div>
-                                            </div>
-                                        </div>*@
-                                    @*<div class="row">
-                                            <div class="col-xl-12">
-                                                <div id="total-balance"></div>
-                                            </div>
-                                        </div>*@-->
-
-
-                                <!--</div>
+                    <!--@*<div class="row">
+                            <div class="col-xl-12">
+                                <div id="tree-way"></div>
+                            </div>
+                        </div>*@
+                    @*<div class="row">
+                            <div class="col-xl-12">
+                                <div id="total-balance"></div>
+                            </div>
+                        </div>*@-->
+                    <!--</div>
                             </div>
                         </div>
                         <div class="col-xl-10">

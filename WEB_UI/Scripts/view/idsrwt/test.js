@@ -61,8 +61,11 @@
     //var TTB = App.table_total_balance;
     //var table_total_balance = new TTB('div#total-balance');             // Создадим экземпляр
 
-    var VRRC = App.view_report_remainder_cars;
-    var report_remainder_cars = new VRRC('div#remainder-cars');             // Создадим экземпляр
+    //var VRRC = App.view_report_remainder_cars;
+    //var report_remainder_cars = new VRRC('div#remainder-cars');             // Создадим экземпляр
+
+    var TOS = App.table_outgoing_sostav;
+    var table_outgoing_sostav = new TOS('div#outgoing-sostav');             // Создадим экземпляр
 
     $('button#arrival').on('click', function (e) {
         //var data = oper_send.operation;
@@ -83,14 +86,32 @@
     // После загрузки документа
     $(document).ready(function ($) {
 
-        report_remainder_cars.init({
-            alert: null,
-            ids_dir: null,
+        var start = moment('05/01/2021').set({ 'hour': 0, 'minute': 0, 'second': 0, 'millisecond': 0 })._d;
+        var stop = moment().set({ 'hour': 23, 'minute': 59, 'second': 59, 'millisecond': 0 })._d;
+
+        table_outgoing_sostav.init({
+            type_report: 'outgoing_sostav',
+            alert: alert,
             ids_wsd: null,
+            fn_action_view_wagons: function (rows_sostav) {
+
+            },
         }, function (init) {
-            report_remainder_cars.load(true);
-            //LockScreenOff();
+            table_outgoing_sostav.load_outgoing_sostav(start, stop, function (sostav) {
+                this.view(sostav, null, null);
+                LockScreenOff();
+            }.bind(table_outgoing_sostav));
+
         });
+
+        //report_remainder_cars.init({
+        //    alert: null,
+        //    ids_dir: null,
+        //    ids_wsd: null,
+        //}, function (init) {
+        //    report_remainder_cars.load(true);
+        //    //LockScreenOff();
+        //});
 
         //table_total_balance.init({
         //    ids_wsd: null,

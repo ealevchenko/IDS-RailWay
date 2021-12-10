@@ -33,10 +33,11 @@
 
     }
     //****************************************************************************************
-
     //-------------------------------- Функции работы с БД через api ---------------
-    // -- ПУТИ И СТАНЦИИ АМКР
-    // Получить список вагонов на пути станции
+
+
+    //================= ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ =========================================================
+    // АРМ, Получить список вагонов на пути станции
     ids_wsd.prototype.getViewWagonsOfWay = function (id, callback) {
         $.ajax({
             type: 'GET',
@@ -59,8 +60,7 @@
             },
         });
     };
-    // -- ПЕРЕГОНЫ
-    // Получить список составов на перегоне
+    // АРМ, Получить список составов на перегоне
     ids_wsd.prototype.getViewSostavOfOuterWay = function (callback) {
         $.ajax({
             type: 'GET',
@@ -83,7 +83,7 @@
             },
         });
     };
-    // Получить составы прибывающие на станцию
+    // АРМ, Получить составы прибывающие на станцию
     ids_wsd.prototype.getViewArrivalSostavOfStationOuterWay = function (id, callback) {
         $.ajax({
             type: 'GET',
@@ -106,7 +106,7 @@
             },
         });
     };
-    // Получить составы отправленные со станции
+    // АРМ, Получить составы отправленные со станции
     ids_wsd.prototype.getViewSendSostavOfStationOuterWay = function (id, callback) {
         $.ajax({
             type: 'GET',
@@ -129,7 +129,7 @@
             },
         });
     };
-    // Получить список всех вагонов на перегоне
+    // АРМ, Получить список всех вагонов на перегоне
     ids_wsd.prototype.getViewWagonsOfOuterWay = function (callback) {
         $.ajax({
             type: 'GET',
@@ -152,7 +152,7 @@
             },
         });
     };
-    // Получить список вагонов состава на перегоне
+    // АРМ, Получить список вагонов состава на перегоне
     ids_wsd.prototype.getViewWagonsOfSostavOuterWay = function (num, callback) {
         $.ajax({
             type: 'GET',
@@ -175,7 +175,7 @@
             },
         });
     };
-    // -- ОПЕРАЦИИ
+    //================= ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ (Операции) =========================================================
     // Пулучить список составаов отправленных за период
     ids_wsd.prototype.getViewSostavOfPeriodOperationSend = function (start, stop, callback) {
         $.ajax({
@@ -199,8 +199,6 @@
             },
         });
     };
-
-
     //АРМ, Операция отправки вагонов на внутрение станции АМКР 
     ids_wsd.prototype.postSendWagonsOfStation = function (operation, callback) {
         $.ajax({
@@ -276,7 +274,6 @@
             },
         });
     };
-    //================= Операции =========================================================
     // Отчеты -> Операции "Отправка на станции АМКР"
     ids_wsd.prototype.getSostavWagonsOperationOfSend = function (start, stop, callback) {
         $.ajax({
@@ -301,12 +298,11 @@
             },
         });
     };
-
-    //================= Дерево путей =========================================================
-
+    //================= ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ (Дерево путей) =========================================================
 
 
-    //================= Отчеты учетный остаток =========================================================
+
+    //================= ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ (Отчеты учетный остаток) =========================================================
     // Получить расчет остатков по вагонам
     ids_wsd.prototype.getViewTotalBalance = function (callback) {
         $.ajax({
@@ -372,6 +368,81 @@
             error: function (x, y, z) {
                 LockScreenOff();
                 OnAJAXError("ids_wsd.postViewWagonsOfWhereBalance", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
+    //================= ОТПРАВКА СОСТАВОВ НА УЗ (Составы) =========================================================
+    // Получить все составы (View)
+    ids_wsd.prototype.getViewOutgoingSostav = function (start, stop, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/outgoing_sostav/view/start/' + moment.utc(start).toISOString() + '/stop/' + moment.utc(stop).toISOString(),
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getViewOutgoingSostav", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Операция отменить предъявление сотава для сдачи на уз
+    ids_wsd.prototype.postReturnProvideWagonsOfStation = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/operation/return_provide/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postReturnProvideWagonsOfStation", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Операция отменить сдачу состава на УЗ
+    ids_wsd.prototype.postOperationReturnPresentSostav = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/operation/return_present/sostav/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postOperationReturnPresentSostav", x, y, z);
             },
             complete: function () {
                 AJAXComplete();
