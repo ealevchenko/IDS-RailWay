@@ -8,9 +8,10 @@
     {
         'default':  //default language: ru
         {
-            'mess_load_reference': 'Загружаю справочники...',
+            //'mess_load_reference': 'Загружаю справочники...',
             'mo_title_label_date': 'СОСТАВЫ ЗА ПЕРИОД :',
             'mo_title_label_station': 'СТАНЦИЯ ОТПРАВКИ:',
+            'mo_card_header_detali': 'ИНФОРМАЦИЯ ПО СОСТАВУ',
         },
         'en':  //default language: English
         {
@@ -33,6 +34,12 @@
 
     var TOS = App.table_outgoing_sostav;
     var table_outgoing_sostav = new TOS('div#outgoing-sostav');             // Создадим экземпляр
+
+    var FD = App.form_detali;
+    var form_detali = new FD('div#cars-detali');             // Создадим экземпляр
+
+    var VOC = App.view_outgoing_cars;
+    var view_outgoing_cars = null;
 
     var alert = new alert($('div#main-alert')); // Создадим класс ALERTG
 
@@ -114,7 +121,7 @@
             // Инициализация формы
             this.form_panel.init({
                 fields: fields,
-                cl_form:'d-flex w-100'
+                cl_form: 'd-flex w-100'
             });
             // Отображение формы выбора 
             div.append(this.form_panel.$form);
@@ -133,13 +140,35 @@
                 alert: alert,
                 ids_wsd: null,
                 fn_action_view_wagons: function (rows_sostav) {
-
+                    form_detali.open();
                 },
             }, function (init) {
                 table_outgoing_sostav.load_outgoing_sostav(start, stop, function (sostav) {
                     this.view(sostav, id_station, null);
                     LockScreenOff();
                 }.bind(table_outgoing_sostav));
+            });
+
+            //
+            var row = new fc_ui.el_row();
+            var col = new fc_ui.el_col('xl', 12, 'mb-1 mt-1');
+            var card_panel = new fc_ui.el_card('border-secondary mb-1', '', '', langView('mo_card_header_detali', App.Langs));
+
+            row.$row.append(col.$col.append(card_panel.$card))
+            //
+            form_detali.init({
+                alert: null,
+                fn_init: function () {
+                    var id = this.$card_detali_content.attr('id');
+                    view_outgoing_cars = new VOC('div#' + id);
+                    view_outgoing_cars.init();
+                }.bind(form_detali),
+                fn_open: function () {
+                    view_outgoing_cars.open(table_outgoing_sostav.id_sostav)
+                }.bind(form_detali),
+                fn_close: function () {
+
+                },
             });
         }.bind(this));
     });
