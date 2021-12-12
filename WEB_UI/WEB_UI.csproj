@@ -2027,6 +2027,7 @@
     <Content Include="Content\module\directory\table_dir_operators_wagons.css" />
     <Content Include="Content\module\directory\table_dir_park_station.css" />
     <Content Include="Content\module\directory\table_dir_park_ways.css" />
+    <Content Include="Content\module\shared\form_detali.css" />
     <Content Include="Content\module\shared\modal_edit_form.css" />
     <Content Include="Content\module\directory\table_dir_way.css" />
     <Content Include="Content\module\table_tree_way.css" />
@@ -2043,6 +2044,7 @@
     <Content Include="Content\view\admin\_layout.css" />
     <Content Include="Content\view\directory\ways.css" />
     <Content Include="Content\view\directory\search_wagon.css" />
+    <Content Include="Content\view\idsrwt\outgoing1.css" />
     <Content Include="Content\view\shared\print_way.css" />
     <Content Include="Content\view\shared\print_gfa.css" />
     <Content Include="Images\8m.png" />
@@ -2101,6 +2103,7 @@
     <Content Include="Scripts\module\directory\table_dir_operators_wagons.js" />
     <Content Include="Scripts\module\directory\table_dir_park_ways.js" />
     <Content Include="Scripts\module\directory\table_dir_park_station.js" />
+    <Content Include="Scripts\module\shared\form_detali.js" />
     <Content Include="Scripts\module\shared\modal_confirm_form.js" />
     <Content Include="Scripts\module\shared\modal_edit_form.js" />
     <Content Include="Scripts\module\shared\form_validation.js" />
@@ -2123,6 +2126,7 @@
     <Content Include="Scripts\module\wsd\table_cars_outer_way.js" />
     <Content Include="Scripts\module\wsd\table_cars_way.js" />
     <Content Include="Scripts\module\wsd\view_arrival_cars.js" />
+    <Content Include="Scripts\module\wsd\view_outgoing_cars.js" />
     <Content Include="Scripts\module\wsd\view_send_cars.js" />
     <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />
