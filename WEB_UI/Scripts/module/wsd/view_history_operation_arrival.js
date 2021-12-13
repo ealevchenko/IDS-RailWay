@@ -143,10 +143,10 @@
                 prefix: 'sm',
                 title: langView('vhoa_title_label_station', App.Langs),
                 list: this.list_station,
-                select: function (e, ui) {
+                select: function (event, ui) {
                     event.preventDefault();
                     // Обработать выбор
-                    var id = Number($(e.currentTarget).val());
+                    var id = Number($(event.currentTarget).val());
                     this.id_station = id;
                     this.view();
                 }.bind(this),
