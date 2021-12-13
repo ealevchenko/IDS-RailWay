@@ -17,7 +17,7 @@
             'vogc_card_list_cars': 'Вагоны',
 
 
-            
+
             //'card_header_panel': 'ВЫПОЛНИТЬ ОПЕРАЦИЮ "ОТПРАВИТЬ СОСТАВОВ НА СТАНЦИИ АМКР"',
             //'card_header_on': 'ОТПРАВИТЬ НА СТАНЦИЮ',
             //'card_header_from': 'ОТПРАВИТЬ СО СТАНЦИ',
@@ -92,9 +92,9 @@
         var col = new base.fc_ui.el_col('xl', 12, 'mb-1 mt-1');
         var card_panel = new base.fc_ui.el_card('border-secondary mb-1', 'text-center', null, langView('vogc_card_header_detali', App.Langs));
         var row_panel = new base.fc_ui.el_row();
-        var col_table_cars = new base.fc_ui.el_col('xl', 5, 'mb-1');
-        var col_info_cars = new base.fc_ui.el_col('xl', 6, 'mb-1');
-        var col_list_cars = new base.fc_ui.el_col('xl', 1, 'mb-1');
+        var col_table_cars = new base.fc_ui.el_col('xl', 5, 'mb-1 pl-1 pr-1');
+        var col_info_cars = new base.fc_ui.el_col('xl', 6, 'mb-1 pl-1 pr-1');
+        var col_list_cars = new base.fc_ui.el_col('xl', 1, 'mb-1 pl-1 pr-1');
 
         var card_table_cars = new base.fc_ui.el_card('border-success', 'text-center', 'p-1', langView('vogc_card_table_cars', App.Langs));
         var card_info_cars = new base.fc_ui.el_card('border-warning', 'text-center', 'p-1', langView('vogc_card_info_cars', App.Langs));
@@ -148,7 +148,6 @@
             alert: null,
             ids_dir: null,
             ids_wsd: null,
-            fn_db_update: null,
             fn_init: null,
         }, options);
         // Создадим ссылку на модуль работы с базой данных
@@ -163,9 +162,17 @@
         // Создать макет панели
         var panelElement = new div_panel(this);
         this.$panel.empty();
+        //--------------------------------------------------------
+        // Создадим и добавим макет для модуля отправленые вагоны
+        var sel_ogc = 'table-ogc-' + this.selector;
+        var $div_ogc = $('<div></div>', {'id': sel_ogc});
+        panelElement.$table_cars.append($div_ogc);
         this.$table_cars = panelElement.$table_cars;
+        //--------------------------------------------------------
+        // Создадим и добавим макет для модуля вагон детально
         this.$info_cars = panelElement.$info_cars;
-        // Добавим список вагонов
+        //--------------------------------------------------------
+        // Создадим и добавим макет для список не предъявленных вагонов 
         //<div class="list-group" id="list-cars-not-outgoing" role="tablist">
         //</div>
         var $div_tablist = new this.fc_ui.el_div(null, 'list-group');
@@ -173,21 +180,35 @@
         this.tablist = $div_tablist.$div;
         panelElement.$list_cars.append(this.tablist);
         this.$list_cars = panelElement.$list_cars;
-
-
-
-
-
+        //--------------------------------------------------------
+        // Алерты
         //this.alert_on = new alert(panelElement.$alert_on);
         //this.alert_from = new alert(panelElement.$alert_from);
-
+        // Покажем элементы на форме
         this.$panel.append(panelElement.$element);
+        //------------------------------------------------------------
+        // Создадим и инициализируем модуль Отправленые вагоны детально
+        var TOGC = App.table_outgoing_cars; // Отправленные вагоны
+        this.table_outgoing_cars = new TOGC('div#' + sel_ogc);             // Создадим экземпляр
+        this.table_outgoing_cars.init({
+            type_report: 'outgoing_cars',
+            alert: null,
+            ids_wsd: null,
+            fn_action_view_wagons: function (rows) {
 
+            },
+            fn_init: function (init) {
+
+            },
+        });
         // Создадим и добавим макет таблицы
 
         // Загрузим справочные данные, определим поля формы правки
         this.load_db(['station', 'ways', 'outer_ways', 'locomotive'], false, function (result) {
-
+            //
+            if (typeof this.settings.fn_init === 'function') {
+                this.settings.fn_init();
+            }
         }.bind(this));
     };
     // Открыть модуль 
@@ -197,7 +218,7 @@
             this.ids_wsd.getOutgoingSostavOfID(id_sostav, function (sostav) {
                 this.select_sostav = sostav;
                 // Показать вагоны которые не сдали.
-                this.view_cars_not_outgoing(this.select_sostav && this.select_sostav.OutgoingCars ? this.select_sostav.OutgoingCars: []);
+                this.view_cars_not_outgoing(this.select_sostav && this.select_sostav.OutgoingCars ? this.select_sostav.OutgoingCars : []);
                 LockScreenOff();
             }.bind(this));
         } else {
@@ -209,21 +230,35 @@
 
     view_outgoing_cars.prototype.view_cars_not_outgoing = function (cars) {
         this.tablist.empty();
-        $.each(cars, function (i, el) {
-            var icon_arrival = (el.parent_wir_id ? 'fa-retweet' : 'fa-train');
-            var link = $('<a class="list-group-item list-group-item-action" id="' + el.id + '" data-toggle="list" href="#" role="tab" aria-controls="">' + el.num + ' <i class="fa ' + icon_arrival + '" aria-hidden="true"></i> ' + (el.vagonnik ? '<i class="fa fa-thumbs-o-up" aria-hidden="true" title="Вагон размечен"></i>' : '') + '</a>');
-            if (el.parent_wir_id) {
-                link.addClass('disabled');
+        // Фильтр на не принятые вагоны
+        var wagons = cars.filter(function (i) {
+            return i.outgoing === null ? true : false;
+        }).sort(function (a, b) {
+            return Number(a.position) - Number(b.position);
+        });
+        $.each(wagons, function (i, el) {
+            var $icon = (el.parent_wir_id ? $('<i class="fas fa-retweet" aria-hidden="true"></i>') : $('<i class="fas fa-train" aria-hidden="true"></i>'));
+            var $link = new this.fc_ui.el_a(el.id, 'list-group-item list-group-item-action', '#', el.num, null, null);
+            if ($link && $link.$alink && $link.$alink.length > 0) {
+                $link.$alink.attr('data-toggle', 'list');
+                $link.$alink.attr('role', 'tab');
+                $link.$alink.attr('aria-controls', '');
+                $link.$alink.prepend(' ').prepend($icon);
+                if (el.parent_wir_id) {
+                    $link.$alink.addClass('disabled');
+                } else {
+                    $link.$alink.on('click', function (event) {
+                        event.preventDefault();
+                        // Обработать выбор
+                        var id = Number($(event.currentTarget).attr('id'));
+                        //cars_detali.view_select_car(id, true);
+                    }.bind(this));
+                }
+                this.tablist.append($link.$alink);
             }
-            this.tablist.append(link);
+
 
         }.bind(this));
-        // Определим событие
-        $('#list-cars-not-outgoing a').on('click', function (e) {
-            e.preventDefault();
-            var id = $(this).attr('id');
-            cars_detali.view_select_car(id, true);
-        });
     };
     //--------------------------------------------------------------------------------
     // Показать
