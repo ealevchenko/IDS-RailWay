@@ -9,23 +9,23 @@ select
 	,dir_wagon.tara as wagon_tara_uz
 	,dir_wagon.note as wagon_ban_uz							-- Запреты по УЗ 
 	,dir_wagon.[closed_route] as wagon_closed_route			--Замкнутый маршрут (кольцо)
-	--> Оператор
-	,dir_operator.[id] as id_operator
-	,dir_operator.[operators_ru]
-	,dir_operator.[operators_en]
-	,dir_operator.[abbr_ru] as operator_abbr_ru
-	,dir_operator.[abbr_en] as operator_abbr_en
-	,dir_rent.[rent_start] as operator_rent_start
-	,dir_rent.[rent_end] as operator_rent_end
-	,dir_operator.[paid] as operator_paid
-	,dir_operator.[color] as operator_color
-	,dir_operator.monitoring_idle_time as operator_monitoring_idle_time
-	--> Ограничение
-	,dir_limload.[id] as id_limiting_loading
-	,dir_limload.[limiting_name_ru]
-	,dir_limload.[limiting_name_en]
-	,dir_limload.[limiting_abbr_ru]
-	,dir_limload.[limiting_abbr_en]
+	----> Оператор
+	--,dir_operator.[id] as id_operator
+	--,dir_operator.[operators_ru]
+	--,dir_operator.[operators_en]
+	--,dir_operator.[abbr_ru] as operator_abbr_ru
+	--,dir_operator.[abbr_en] as operator_abbr_en
+	--,dir_rent.[rent_start] as operator_rent_start
+	--,dir_rent.[rent_end] as operator_rent_end
+	--,dir_operator.[paid] as operator_paid
+	--,dir_operator.[color] as operator_color
+	--,dir_operator.monitoring_idle_time as operator_monitoring_idle_time
+	----> Ограничение
+	--,dir_limload.[id] as id_limiting_loading
+	--,dir_limload.[limiting_name_ru]
+	--,dir_limload.[limiting_name_en]
+	--,dir_limload.[limiting_abbr_ru]
+	--,dir_limload.[limiting_abbr_en]
 	--> Собственник по УЗ
 	,dir_owner.[id] as id_owner_wagon
 	,dir_owner.[owner_ru] as owner_wagon_ru
@@ -75,16 +75,54 @@ select
 	--,out_doc_vag.[id_outgoing]
 	--,out_doc_vag.[id_car]
 	,out_doc_vag.[id_condition] as outgoing_id_condition
-	--> Разметка по текущей операции
+	--> Разметка по отправке
 	,out_dir_cond.condition_name_ru as outgoing_condition_name_ru
 	,out_dir_cond.condition_name_en as outgoing_condition_name_en
 	,out_dir_cond.condition_abbr_ru as outgoing_condition_abbr_ru
 	,out_dir_cond.condition_abbr_en as outgoing_condition_abbr_en
 	,out_dir_cond.red as outgoing_condition_red
 	,out_dir_cond.repairs as outgoing_condition_repairs
-
-	,out_doc_vag.[id_wagons_rent_arrival]
-	,out_doc_vag.[id_wagons_rent_outgoing]
+	-- Оператор по прибытию
+	,arr_wag_rent.[id] as arrival_id_wagons_rent
+	--> Оператор
+	,arr_wag_rent.[id_operator] as arrival_wagons_rent_id_operator
+	--,arr_dir_operator.[id] as id_operator
+	,arr_dir_operator.[operators_ru] as arrival_wagons_rent_operators_ru
+	,arr_dir_operator.[operators_en] as arrival_wagons_rent_operators_en
+	,arr_dir_operator.[abbr_ru] as arrival_wagons_rent_operator_abbr_ru
+	,arr_dir_operator.[abbr_en] as arrival_wagons_rent_operator_abbr_en
+	,arr_wag_rent.[rent_start] as arrival_wagons_rent_start
+	,arr_wag_rent.[rent_end] as arrival_wagons_rent_end
+	,arr_dir_operator.[paid] as arrival_wagons_rent_operator_paid
+	,arr_dir_operator.[color] as arrival_wagons_rent_operator_color
+	--> Ограничение
+	,arr_wag_rent.[id_limiting] as arrival_wagons_rent_id_limiting
+	--,arr_dir_limload.[id] as id_limiting_loading
+	,arr_dir_limload.[limiting_name_ru] as arrival_wagons_rent_limiting_name_ru
+	,arr_dir_limload.[limiting_name_en] as arrival_wagons_rent_limiting_name_en
+	,arr_dir_limload.[limiting_abbr_ru] as arrival_wagons_rent_limiting_abbr_ru
+	,arr_dir_limload.[limiting_abbr_en] as arrival_wagons_rent_limiting_abbr_en
+	-- Оператор по отправке
+	,out_wag_rent.[id] as outgoing_id_wagons_rent
+		--> Оператор
+	,out_wag_rent.[id_operator] as outgoing_wagons_rent_id_operator
+	,out_dir_operator.[operators_ru] as outgoing_wagons_rent_operators_ru
+	,out_dir_operator.[operators_en] as outgoing_wagons_rent_operators_en
+	,out_dir_operator.[abbr_ru] as outgoing_wagons_rent_operator_abbr_ru
+	,out_dir_operator.[abbr_en] as outgoing_wagons_rent_operator_abbr_en
+	,out_wag_rent.[rent_start] as outgoing_wagons_rent_start
+	,out_wag_rent.[rent_end] as outgoing_wagons_rent_end
+	,out_dir_operator.[paid] as outgoing_wagons_rent_operator_paid
+	,out_dir_operator.[color] as outgoing_wagons_rent_operator_color
+		--> Ограничение
+	,out_wag_rent.[id_limiting] as outgoing_wagons_rent_id_limiting
+	--,arr_dir_limload.[id] as id_limiting_loading
+	,out_dir_limload.[limiting_name_ru] as outgoing_wagons_rent_limiting_name_ru
+	,out_dir_limload.[limiting_name_en] as outgoing_wagons_rent_limiting_name_en
+	,out_dir_limload.[limiting_abbr_ru] as outgoing_wagons_rent_limiting_abbr_ru
+	,out_dir_limload.[limiting_abbr_en] as outgoing_wagons_rent_limiting_abbr_en
+	--,out_doc_vag.[id_wagons_rent_arrival]
+	--,out_doc_vag.[id_wagons_rent_outgoing]
 	,out_doc_vag.[id_countrys]
 	,out_doc_vag.[id_genus]
 	,out_doc_vag.[id_owner]
@@ -105,7 +143,6 @@ select
 	,out_doc_vag.[create_user]
 	,out_doc_vag.[change]
 	,out_doc_vag.[change_user]
-
 	-- Состав по отправке
 	,out_sost.[id] as id_outgoing_sostav
 	,out_sost.[num_doc]
@@ -304,11 +341,19 @@ FROM [IDS].[OutgoingSostav] as out_sost
 		--> Справочник вагонов
 		Left JOIN IDS.Directory_Wagons as dir_wagon ON out_car.num = dir_wagon.num
 		--> Справочник аренд
-		Left JOIN IDS.Directory_WagonsRent as dir_rent ON dir_rent.id = (SELECT top(1) [id] FROM [IDS].[Directory_WagonsRent] where [num] = out_car.num and rent_end is null order by [id] desc)	
-		--> Справочник Оператор вагона
-		Left JOIN IDS.Directory_OperatorsWagons as dir_operator ON dir_rent.id_operator =  dir_operator.id
-		--> Справочник Ограничение погрузки
-		Left JOIN IDS.Directory_LimitingLoading as dir_limload ON dir_rent.id_limiting =  dir_limload.id
+		--Left JOIN IDS.Directory_WagonsRent as dir_rent ON dir_rent.id = (SELECT top(1) [id] FROM [IDS].[Directory_WagonsRent] where [num] = out_car.num and rent_end is null order by [id] desc)	
+				--> Справочник Аренд по прибытию
+		Left JOIN [IDS].[Directory_WagonsRent] as arr_wag_rent ON out_doc_vag.id_wagons_rent_arrival = arr_wag_rent.id
+		--> Справочник Аренд по отправке
+		Left JOIN [IDS].[Directory_WagonsRent] as out_wag_rent ON out_doc_vag.id_wagons_rent_outgoing = out_wag_rent.id
+		--> Справочник Оператор вагона по прибытию
+		Left JOIN IDS.Directory_OperatorsWagons as arr_dir_operator ON arr_wag_rent.id_operator =  arr_dir_operator.id
+		--> Справочник Ограничение погрузки по прибытию
+		Left JOIN IDS.Directory_LimitingLoading as arr_dir_limload ON arr_wag_rent.id_limiting =  arr_dir_limload.id
+		--> Справочник Оператор вагона по прибытию
+		Left JOIN IDS.Directory_OperatorsWagons as out_dir_operator ON out_wag_rent.id_operator =  out_dir_operator.id
+		--> Справочник Ограничение погрузки по прибытию
+		Left JOIN IDS.Directory_LimitingLoading as out_dir_limload ON out_wag_rent.id_limiting =  out_dir_limload.id
 		--> Справочник Собственник вагона по УЗ
 		Left JOIN [IDS].[Directory_OwnersWagons] as dir_owner ON dir_wagon.id_owner = dir_owner.id
 		--> Справочник строна (Администрация вагона)
@@ -338,12 +383,13 @@ FROM [IDS].[OutgoingSostav] as out_sost
 
 		--..............
 
-				--> Справочник Операции над вагоном (текущая операция)
+		--> Справочник Операции над вагоном (текущая операция)
 		Left JOIN IDS.Directory_WagonOperations as cur_dir_operation ON wio.id_operation =  cur_dir_operation.id
 		--> Справочник Сотояния загрузки
 		Left JOIN [IDS].[Directory_WagonLoadingStatus] as cur_load ON wio.id_loading_status = cur_load.id
-				--> Справочник Внешних станций УЗ
+		--> Справочник Внешних станций УЗ
 		Left JOIN UZ.Directory_Stations as let_station_uz ON  il.destination_station = let_station_uz.code_cs
+
 
 WHERE 
 
