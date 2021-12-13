@@ -3019,6 +3019,7 @@ IDS_RWT.prototype.getViewOutgoingSostavOfPeriodStation = function (start, stop, 
         },
     });
 };
+//TODO: Отключить после переделки outgoing.js перенесен в ids_wsd.js
 // Получить состав
 IDS_RWT.prototype.getOutgoingSostavOfID = function (id, callback) {
     $.ajax({
