@@ -243,7 +243,7 @@ use [KRR-PA-CNT-Railway]
 		--> Отправка состава
 		Left JOIN [IDS].[OutgoingSostav] as out_sost ON out_car.id_outgoing = out_sost.id
 		 --> Документы SAP Исходящая поставка
-		Left JOIN [IDS].[SAPOutgoingSupply] as sap_os ON wir.id_sap_incoming_supply = sap_os.id
+		Left JOIN [IDS].[SAPOutgoingSupply] as sap_os ON wir.id_sap_outbound_supply = sap_os.id
 		 --==== ИНСТРУКТИВНЫЕ ПИСЬМА =====================================================================
 		--> Перечень вагонов по письма
 		Left JOIN IDS.InstructionalLettersWagon as ilw  ON ilw.id = (SELECT TOP (1) [id] FROM [IDS].[InstructionalLettersWagon] where [num] =wir.num and [close] is null order by id desc)
