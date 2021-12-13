@@ -103,21 +103,9 @@
                     }.bind(this));
                 }.bind(table_outgoing_sostav),
             };
-            //var fl_refresh = {
-            //    type: 'button',
-            //    id: 'refresh',
-            //    prefix: 'sm',
-            //    title: null,
-            //    icon: 'fas fa-retweet',
-            //    select: function (e, ui) {
-            //        event.preventDefault();
-            //        //this.update();
-            //    }.bind(this),
-            //};
             var fields = [];
             fields.push(fl_interval_date);
             fields.push(fl_station);
-            /*            fields.push(fl_refresh);*/
             // Инициализация формы
             this.form_panel.init({
                 fields: fields,
