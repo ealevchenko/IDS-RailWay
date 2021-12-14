@@ -26,106 +26,114 @@ select
 	--,dir_limload.[limiting_name_en]
 	--,dir_limload.[limiting_abbr_ru]
 	--,dir_limload.[limiting_abbr_en]
-	--> Собственник по УЗ
-	,dir_owner.[id] as id_owner_wagon
-	,dir_owner.[owner_ru] as owner_wagon_ru
-	,dir_owner.[owner_en] as owner_wagon_en
-	,dir_owner.[abbr_ru] as owner_wagon_abbr_ru
-	,dir_owner.[abbr_en] as owner_wagon_abbr_en
-	--> Администрация
-	,dir_countrys.code_sng as wagon_adm
-	,dir_countrys.countrys_name_ru as wagon_adm_name_ru
-	,dir_countrys.countrys_name_en as wagon_adm_name_en
-	,dir_countrys.country_abbr_ru as wagon_adm_abbr_ru
-	,dir_countrys.country_abbr_en as wagon_adm_abbr_en
-	--> Род вагона
-	,dir_rod.rod_uz as wagon_rod
-	,dir_rod.genus_ru as wagon_rod_name_ru
-	,dir_rod.genus_en as wagon_rod_name_en
-	,dir_rod.abbr_ru as wagon_rod_abbr_ru
-	,dir_rod.abbr_en as wagon_rod_abbr_en
+	----> Собственник по УЗ
+	--,dir_owner.[id] as id_owner_wagon
+	--,dir_owner.[owner_ru] as owner_wagon_ru
+	--,dir_owner.[owner_en] as owner_wagon_en
+	--,dir_owner.[abbr_ru] as owner_wagon_abbr_ru
+	--,dir_owner.[abbr_en] as owner_wagon_abbr_en
+	----> Администрация
+	--,dir_countrys.code_sng as wagon_adm
+	--,dir_countrys.countrys_name_ru as wagon_adm_name_ru
+	--,dir_countrys.countrys_name_en as wagon_adm_name_en
+	--,dir_countrys.country_abbr_ru as wagon_adm_abbr_ru
+	--,dir_countrys.country_abbr_en as wagon_adm_abbr_en
+	----> Род вагона
+	--,dir_rod.rod_uz as wagon_rod
+	--,dir_rod.genus_ru as wagon_rod_name_ru
+	--,dir_rod.genus_en as wagon_rod_name_en
+	--,dir_rod.abbr_ru as wagon_rod_abbr_ru
+	--,dir_rod.abbr_en as wagon_rod_abbr_en
 	--> Тип вагона
 	,dir_type.type_ru as wagon_type_ru
 	,dir_type.type_en as wagon_type_en
 	--========== ДОКУМЕНТЫ ПО ОТПРАВКЕ ==========================
 	,out_car.[position_outgoing]
-    ,out_car.[num_doc] as outgoing_num_doc -- Номер документа(по отправке)
-	,out_car.[note] as outgoing_car_note
-	,out_car.[date_outgoing_act] as outgoing_car_date_outgoing_act
-	,out_car.[outgoing] as outgoing_car_outgoing
-	,out_car.[outgoing_user] as outgoing_car_outgoing_user
+    ,out_car.[num_doc] as outgoing_num_doc							-- Номер документа(по отправке)
+	,out_car.[note] as outgoing_car_note							-- примечание вагона по отправке
+	,out_car.[date_outgoing_act] as outgoing_car_date_outgoing_act	-- сдан по акту
+	,out_car.[outgoing] as outgoing_car_outgoing					-- вагон был сдан (дата и время)
+	,out_car.[outgoing_user] as outgoing_car_outgoing_user			-- вагон был сдан (пользователь)
 
 	,out_car.[id_outgoing_detention] as outgoing_car_
 	,out_car.[id_reason_discrepancy_amkr] as outgoing_car_
 	,out_car.[id_reason_discrepancy_uz] as outgoing_car_
 	,out_car.[id_outgoing_return_start] as outgoing_car_
 	,out_car.[id_outgoing_return_stop] as outgoing_car_
-	,out_car.[parent_wir_id] as outgoing_car_parent_wir_id
-	,out_car.[create] as outgoing_car_create
-	,out_car.[create_user] as outgoing_car_create_user
-	,out_car.[change] as outgoing_car_change
-	,out_car.[change_user] as outgoing_car_change_user
-	,out_car.[note_vagonnik] as outgoing_car_note_vagonnik
-	,out_car.[vagonnik] as outgoing_car_vagonnik
-	,out_car.[vagonnik_user] as outgoing_car_vagonnik_user
-	-- Документ на вагон по отправке
-	,out_doc_vag.[id] as id_outgoing_uz_vagon
-	--,out_doc_vag.[id_document]
-	--,out_doc_vag.[num]
-	--,out_doc_vag.[id_outgoing]
-	--,out_doc_vag.[id_car]
-	,out_doc_vag.[id_condition] as outgoing_id_condition
-	--> Разметка по отправке
-	,out_dir_cond.condition_name_ru as outgoing_condition_name_ru
-	,out_dir_cond.condition_name_en as outgoing_condition_name_en
-	,out_dir_cond.condition_abbr_ru as outgoing_condition_abbr_ru
-	,out_dir_cond.condition_abbr_en as outgoing_condition_abbr_en
-	,out_dir_cond.red as outgoing_condition_red
-	,out_dir_cond.repairs as outgoing_condition_repairs
-	-- Оператор по прибытию
-	,arr_wag_rent.[id] as arrival_id_wagons_rent
-	--> Оператор
-	,arr_wag_rent.[id_operator] as arrival_wagons_rent_id_operator
-	--,arr_dir_operator.[id] as id_operator
-	,arr_dir_operator.[operators_ru] as arrival_wagons_rent_operators_ru
-	,arr_dir_operator.[operators_en] as arrival_wagons_rent_operators_en
-	,arr_dir_operator.[abbr_ru] as arrival_wagons_rent_operator_abbr_ru
-	,arr_dir_operator.[abbr_en] as arrival_wagons_rent_operator_abbr_en
-	,arr_wag_rent.[rent_start] as arrival_wagons_rent_start
-	,arr_wag_rent.[rent_end] as arrival_wagons_rent_end
-	,arr_dir_operator.[paid] as arrival_wagons_rent_operator_paid
-	,arr_dir_operator.[color] as arrival_wagons_rent_operator_color
-	--> Ограничение
-	,arr_wag_rent.[id_limiting] as arrival_wagons_rent_id_limiting
-	--,arr_dir_limload.[id] as id_limiting_loading
-	,arr_dir_limload.[limiting_name_ru] as arrival_wagons_rent_limiting_name_ru
-	,arr_dir_limload.[limiting_name_en] as arrival_wagons_rent_limiting_name_en
-	,arr_dir_limload.[limiting_abbr_ru] as arrival_wagons_rent_limiting_abbr_ru
-	,arr_dir_limload.[limiting_abbr_en] as arrival_wagons_rent_limiting_abbr_en
-	-- Оператор по отправке
-	,out_wag_rent.[id] as outgoing_id_wagons_rent
-		--> Оператор
-	,out_wag_rent.[id_operator] as outgoing_wagons_rent_id_operator
-	,out_dir_operator.[operators_ru] as outgoing_wagons_rent_operators_ru
-	,out_dir_operator.[operators_en] as outgoing_wagons_rent_operators_en
-	,out_dir_operator.[abbr_ru] as outgoing_wagons_rent_operator_abbr_ru
-	,out_dir_operator.[abbr_en] as outgoing_wagons_rent_operator_abbr_en
-	,out_wag_rent.[rent_start] as outgoing_wagons_rent_start
-	,out_wag_rent.[rent_end] as outgoing_wagons_rent_end
-	,out_dir_operator.[paid] as outgoing_wagons_rent_operator_paid
-	,out_dir_operator.[color] as outgoing_wagons_rent_operator_color
-		--> Ограничение
-	,out_wag_rent.[id_limiting] as outgoing_wagons_rent_id_limiting
-	--,arr_dir_limload.[id] as id_limiting_loading
-	,out_dir_limload.[limiting_name_ru] as outgoing_wagons_rent_limiting_name_ru
-	,out_dir_limload.[limiting_name_en] as outgoing_wagons_rent_limiting_name_en
-	,out_dir_limload.[limiting_abbr_ru] as outgoing_wagons_rent_limiting_abbr_ru
-	,out_dir_limload.[limiting_abbr_en] as outgoing_wagons_rent_limiting_abbr_en
-	--,out_doc_vag.[id_wagons_rent_arrival]
-	--,out_doc_vag.[id_wagons_rent_outgoing]
-	,out_doc_vag.[id_countrys]
-	,out_doc_vag.[id_genus]
-	,out_doc_vag.[id_owner]
+
+	,out_car.[parent_wir_id] as outgoing_car_parent_wir_id			-- ссылка на внутренее перемещение если открыт "возврат"
+	,out_car.[create] as outgoing_car_create						-- строку по отправленому вагону создали (дата и время)
+	,out_car.[create_user] as outgoing_car_create_user				-- строку по отправленому вагону создали (пользователь)
+	,out_car.[change] as outgoing_car_change						-- строку по отправленому вагону правили (дата и время)
+	,out_car.[change_user] as outgoing_car_change_user				-- строку по отправленому вагону правили (пользователь)
+	,out_car.[note_vagonnik] as outgoing_car_note_vagonnik			-- Примечание сделанное вагонником
+	,out_car.[vagonnik] as outgoing_car_vagonnik					-- Вагонник (дата и время)
+	,out_car.[vagonnik_user] as outgoing_car_vagonnik_user			-- Вагонник (пользователь)
+	--> ДОКУМЕНТ НА ВАГОН ПО ОТПРАВКЕ [IDS].[Outgoing_UZ_Vagon]
+	,out_doc_vag.[id] as id_outgoing_uz_vagon						-- id строки документа по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_doc_vag.[id_condition] as outgoing_id_condition			-- id строки готовность по прибытию [IDS].[Outgoing_UZ_Vagon]
+	--> РАЗМЕТКА ПО ПРИБЫТИЮ [IDS].[Directory_ConditionArrival]
+	,out_dir_cond.condition_name_ru as outgoing_condition_name_ru	-- Готовность [IDS].[Directory_ConditionArrival] по прибытию [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_cond.condition_name_en as outgoing_condition_name_en	-- Готовность [IDS].[Directory_ConditionArrival] по прибытию [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_cond.condition_abbr_ru as outgoing_condition_abbr_ru	-- Готовность [IDS].[Directory_ConditionArrival] по прибытию [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_cond.condition_abbr_en as outgoing_condition_abbr_en	-- Готовность [IDS].[Directory_ConditionArrival] по прибытию [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_cond.repairs as outgoing_condition_repairs				-- Готовность [IDS].[Directory_ConditionArrival] по прибытию призаак ремонт [IDS].[Outgoing_UZ_Vagon]
+	--> АРЕНДА ПО ПРИБЫТИЮ [IDS].[Directory_WagonsRent]
+	,arr_wag_rent.[id] as arrival_id_wagons_rent					-- id строки аренда [IDS].[Directory_WagonsRent] по прибытию [IDS].[Outgoing_UZ_Vagon]
+	--> ОПЕРАТОР ПО ПРИБЫТИЮ [IDS].[Directory_OperatorsWagons]
+	,arr_wag_rent.[id_operator] as arrival_wagons_rent_id_operator  -- id строки оператор [IDS].[Directory_OperatorsWagons] по прибытию [IDS].[Outgoing_UZ_Vagon]
+	,arr_dir_operator.[operators_ru] as arrival_wagons_rent_operators_ru	-- Оператор [IDS].[Directory_OperatorsWagons] по прибытию [IDS].[Outgoing_UZ_Vagon]
+	,arr_dir_operator.[operators_en] as arrival_wagons_rent_operators_en	-- Оператор [IDS].[Directory_OperatorsWagons] по прибытию [IDS].[Outgoing_UZ_Vagon]
+	,arr_dir_operator.[abbr_ru] as arrival_wagons_rent_operator_abbr_ru		-- Оператор [IDS].[Directory_OperatorsWagons] по прибытию [IDS].[Outgoing_UZ_Vagon]
+	,arr_dir_operator.[abbr_en] as arrival_wagons_rent_operator_abbr_en		-- Оператор [IDS].[Directory_OperatorsWagons] по прибытию [IDS].[Outgoing_UZ_Vagon]
+	,arr_wag_rent.[rent_start] as arrival_wagons_rent_start					-- Начало аренды оператора [IDS].[Directory_WagonsRent] по прибытию [IDS].[Outgoing_UZ_Vagon]
+	,arr_wag_rent.[rent_end] as arrival_wagons_rent_end						-- Конец аренды оператора [IDS].[Directory_WagonsRent] по прибытию [IDS].[Outgoing_UZ_Vagon]
+	,arr_dir_operator.[paid] as arrival_wagons_rent_operator_paid			-- Признак платности оператора [IDS].[Directory_OperatorsWagons] по прибытию [IDS].[Outgoing_UZ_Vagon]
+	,arr_dir_operator.[color] as arrival_wagons_rent_operator_color			-- Цвет оператора [IDS].[Directory_OperatorsWagons] по прибытию [IDS].[Outgoing_UZ_Vagon]
+	--> ОГРАНИЧЕНИЕ ПО ПРИБЫТИЮ [IDS].[Directory_LimitingLoading]
+	,arr_wag_rent.[id_limiting] as arrival_wagons_rent_id_limiting			-- id строки оганичение [IDS].[Directory_LimitingLoading] по прибытию [IDS].[Outgoing_UZ_Vagon]
+	,arr_dir_limload.[limiting_name_ru] as arrival_wagons_rent_limiting_name_ru	-- Оганичение [IDS].[Directory_LimitingLoading] по прибытию [IDS].[Outgoing_UZ_Vagon]
+	,arr_dir_limload.[limiting_name_en] as arrival_wagons_rent_limiting_name_en	-- Оганичение [IDS].[Directory_LimitingLoading] по прибытию [IDS].[Outgoing_UZ_Vagon]
+	,arr_dir_limload.[limiting_abbr_ru] as arrival_wagons_rent_limiting_abbr_ru	-- Оганичение [IDS].[Directory_LimitingLoading] по прибытию [IDS].[Outgoing_UZ_Vagon]
+	,arr_dir_limload.[limiting_abbr_en] as arrival_wagons_rent_limiting_abbr_en	-- Оганичение [IDS].[Directory_LimitingLoading] по прибытию [IDS].[Outgoing_UZ_Vagon]
+	--> АРЕНДА ПО ОТПРАВКЕ [IDS].[Directory_WagonsRent]
+	,out_wag_rent.[id] as outgoing_id_wagons_rent					-- id строки аренда [IDS].[Directory_WagonsRent] по отправке [IDS].[Outgoing_UZ_Vagon]
+	--> ОПЕРАТОР ПО ОТПРАВКЕ [IDS].[Directory_OperatorsWagons]
+	,out_wag_rent.[id_operator] as outgoing_wagons_rent_id_operator			-- id строки оператор [IDS].[Directory_OperatorsWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_operator.[operators_ru] as outgoing_wagons_rent_operators_ru	-- Оператор [IDS].[Directory_OperatorsWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_operator.[operators_en] as outgoing_wagons_rent_operators_en	-- Оператор [IDS].[Directory_OperatorsWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_operator.[abbr_ru] as outgoing_wagons_rent_operator_abbr_ru	-- Оператор [IDS].[Directory_OperatorsWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_operator.[abbr_en] as outgoing_wagons_rent_operator_abbr_en	-- Оператор [IDS].[Directory_OperatorsWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_wag_rent.[rent_start] as outgoing_wagons_rent_start				-- Начало аренды оператора [IDS].[Directory_WagonsRent] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_wag_rent.[rent_end] as outgoing_wagons_rent_end					-- Конец аренды оператора [IDS].[Directory_WagonsRent] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_operator.[paid] as outgoing_wagons_rent_operator_paid			-- Признак платности оператора [IDS].[Directory_OperatorsWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_operator.[color] as outgoing_wagons_rent_operator_color		-- Цвет оператора [IDS].[Directory_OperatorsWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	--> ОГРАНИЧЕНИЕ ПО ОТПРАВКЕ [IDS].[Directory_LimitingLoading]
+	,out_wag_rent.[id_limiting] as outgoing_wagons_rent_id_limiting					-- id строки оганичение [IDS].[Directory_LimitingLoading] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_limload.[limiting_name_ru] as outgoing_wagons_rent_limiting_name_ru	-- Оганичение [IDS].[Directory_LimitingLoading] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_limload.[limiting_name_en] as outgoing_wagons_rent_limiting_name_en	-- Оганичение [IDS].[Directory_LimitingLoading] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_limload.[limiting_abbr_ru] as outgoing_wagons_rent_limiting_abbr_ru	-- Оганичение [IDS].[Directory_LimitingLoading] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_limload.[limiting_abbr_en] as outgoing_wagons_rent_limiting_abbr_en	-- Оганичение [IDS].[Directory_LimitingLoading] по отправке [IDS].[Outgoing_UZ_Vagon]
+	--> АДМИНИСТРАЦИЯ ПО ОТПРАВКЕ [IDS].[Directory_Countrys]
+	,out_doc_vag.[id_countrys] as outgoing_id_countrys						-- id строки администрация [IDS].[Directory_Countrys] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_countrys.code_sng as outgoing_wagon_adm						-- Код администрации [IDS].[Directory_Countrys] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_countrys.countrys_name_ru as outgoing_wagon_adm_name_ru		-- Администрации [IDS].[Directory_Countrys] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_countrys.countrys_name_en as outgoing_wagon_adm_name_en		-- Администрации [IDS].[Directory_Countrys] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_countrys.country_abbr_ru as outgoing_wagon_adm_abbr_ru			-- Администрации [IDS].[Directory_Countrys] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_countrys.country_abbr_en as outgoing_wagon_adm_abbr_en			-- Администрации [IDS].[Directory_Countrys] по отправке [IDS].[Outgoing_UZ_Vagon]
+	--> РОД ВАГОНА ПО ОТПРАВКЕ [IDS].[Directory_GenusWagons]
+	,out_doc_vag.[id_genus]	 as outgoing_wagon_id_genus							-- id строки род вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,dir_rod.rod_uz as outgoing_wagon_rod									-- Код рода вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,dir_rod.genus_ru as outgoing_wagon_rod_name_ru							-- Род вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,dir_rod.genus_en as outgoing_wagon_rod_name_en							-- Род вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,dir_rod.abbr_ru as outgoing_wagon_rod_abbr_ru							-- Род вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,dir_rod.abbr_en as outgoing_wagon_rod_abbr_en							-- Род вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	--> СОБСТВЕННИК ПО УЗ [IDS].[Directory_OwnersWagons]
+	,out_doc_vag.[id_owner] as outgoing_wagon_id_owner							-- id строки владелец [IDS].[Directory_OwnersWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,dir_owner.[owner_ru] as outgoing_wagon_owner_wagon_ru									-- Владелец [IDS].[Directory_OwnersWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,dir_owner.[owner_en] as outgoing_wagon_owner_wagon_en									-- Владелец [IDS].[Directory_OwnersWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,dir_owner.[abbr_ru] as outgoing_wagon_owner_wagon_abbr_ru								-- Владелец [IDS].[Directory_OwnersWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,dir_owner.[abbr_en] as outgoing_wagon_owner_wagon_abbr_en								-- Владелец [IDS].[Directory_OwnersWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
 	,out_doc_vag.[gruzp_uz]
 	,out_doc_vag.[tara_uz]
 	,out_doc_vag.[note_uz]
@@ -356,8 +364,8 @@ FROM [IDS].[OutgoingSostav] as out_sost
 		Left JOIN IDS.Directory_LimitingLoading as out_dir_limload ON out_wag_rent.id_limiting =  out_dir_limload.id
 		--> Справочник Собственник вагона по УЗ
 		Left JOIN [IDS].[Directory_OwnersWagons] as dir_owner ON dir_wagon.id_owner = dir_owner.id
-		--> Справочник строна (Администрация вагона)
-		Left JOIN IDS.Directory_Countrys as dir_countrys ON dir_wagon.id_countrys = dir_countrys.id
+		--> Справочник строна (Администрация вагона по отправке)
+		Left JOIN IDS.Directory_Countrys as out_dir_countrys ON out_doc_vag.id_countrys = out_dir_countrys.id
 		--> Справочник Род вагона
 		Left JOIN IDS.Directory_GenusWagons as dir_rod ON dir_wagon.id_genus = dir_rod.id
 		--> Справочник Тип вагона
