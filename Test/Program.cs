@@ -207,7 +207,7 @@ namespace Test
             //tids.IDSTransfer_SendingOutgoingSostav();             // Закрытие WIR отправка состава на УЗ
 
             //tids.IDS_SAP_GetCurrentIncomingSupplyOfWebSAP();      // Чтение и обновление строки САП входящие поставки
-            tids.IDS_SAP_UpdateIncomingSupply();                  // Обновление данных по входящей поставке
+            //tids.IDS_SAP_UpdateIncomingSupply();                  // Обновление данных по входящей поставке
             //tids.IDSThread_Start_UpdateIncomingSupply();          // Тест потока "Обновление данных по входящей поставке"
 
             //tids.IDS_SAP_UpdateSAPOutgoingSupply();                 // Тест "Обновление данных по исходящей поставке поставке"
@@ -243,7 +243,7 @@ namespace Test
             Test_Metrans tmt = new Test_Metrans();
             //tmt.MTTransfer_TransferApproaches();
             //tmt.MTTransfer_TransferArrival();
-            //tmt.MTTransfer_TransferArrivalAPI(); // Тест переноса метранса через API
+            tmt.MTTransfer_TransferArrivalAPI(); // Тест переноса метранса через API
             //tmt.MTThread_SFTPTransfer();
             //tmt.MTTransfer_WebApiClientMT();
             //tmt.MTThread_Start_TransferWT();
