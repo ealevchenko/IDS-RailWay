@@ -44,7 +44,7 @@ namespace Test.TestModule
             //mtt.ArrivalToRailWay = false;
             //mtt.FromPath = @"D:\xlm_new";
             //mtt.DeleteFile = true;
-            int res_transfer = mtt.TransferArrivalAPI("https://inform.umtrans.com.ua", "Arcelor1","12345678-","/api/TrainNaturList");
+             int res_transfer = mtt.TransferArrivalAPI("https://inform.metrans.com.ua", "Arcelor1","12345678-","/api/TrainNaturList");
         }
 
         public void MTTransfer_WebApiClientMT()
