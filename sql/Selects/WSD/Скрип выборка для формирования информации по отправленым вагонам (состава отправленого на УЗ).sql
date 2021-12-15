@@ -48,7 +48,7 @@ select
 	,dir_type.type_ru as wagon_type_ru
 	,dir_type.type_en as wagon_type_en
 	-->======================================================================================================
-	--> ДОКУМЕНТЫ ПО ОТПРАВКЕ [IDS].[OutgoingCars]
+	--> ОТПРАВКА ВАГОНОВ [IDS].[OutgoingCars]
 	,out_car.[position_outgoing]
     ,out_car.[num_doc] as outgoing_num_doc							-- Номер документа(по отправке)
 	,out_car.[note] as outgoing_car_note							-- примечание вагона по отправке
@@ -100,6 +100,49 @@ select
 	,out_car.[note_vagonnik] as outgoing_car_note_vagonnik											-- Примечание сделанное вагонником по отправке [IDS].[OutgoingCars]
 	,out_car.[vagonnik] as outgoing_car_vagonnik													-- Вагонник (дата и время) по отправке [IDS].[OutgoingCars]
 	,out_car.[vagonnik_user] as outgoing_car_vagonnik_user											-- Вагонник (пользователь) по отправке [IDS].[OutgoingCars]
+	-->*****************************************************************************************************************************
+	--> ОТПРАВКА СОСТАВ [IDS].[OutgoingSostav]
+	,out_sost.[id] as id_outgoing_sostav
+	,out_sost.[num_doc] as outgoing_sostav_num_doc
+	--> СТАНЦИЯ ОТПРАВЛЕНИЯ АМКР IDS.Directory_Station
+	,out_sost.[id_station_from] as outgoing_sostav_id_station_from
+	,out_dir_station_amkr.station_name_ru as outgoing_sostav_from_station_amkr_name_ru
+	,out_dir_station_amkr.station_name_en as outgoing_sostav_from_station_amkr_name_en
+	,out_dir_station_amkr.station_abbr_ru as outgoing_sostav_from_station_amkr_abbr_ru
+	,out_dir_station_amkr.station_abbr_en as outgoing_sostav_from_station_amkr_abbr_en
+	--> ПУТЬ ОТПРАВЛЕНИЯ АМКР IDS.[Directory_Ways]
+	,out_sost.[id_way_from] as outgoing_sostav_id_way_from
+	,out_dir_way_amkr.[id_park] as outgoing_sostav_from_id_park
+	,out_dir_way_amkr.[way_num_ru] as outgoing_sostav_from_way_num_ru
+	,out_dir_way_amkr.[way_num_en] as outgoing_sostav_from_way_num_en
+	,out_dir_way_amkr.[way_name_ru] as outgoing_sostav_from_way_name_ru
+	,out_dir_way_amkr.[way_name_en] as outgoing_sostav_from_way_name_en
+	,out_dir_way_amkr.[way_abbr_ru] as outgoing_sostav_from_way_abbr_ru
+	,out_dir_way_amkr.[way_abbr_en] as outgoing_sostav_from_way_abbr_en
+	--> СТАНЦИЯ КУДА ОТПРАВЛЯЕТСЯ СОСТАВ АМКР IDS.Directory_Station
+	,out_sost.[id_station_on] as outgoing_sostav_id_station_from
+	,out_dir_station_on.station_name_ru as outgoing_sostav_on_station_amkr_name_ru
+	,out_dir_station_on.station_name_en as outgoing_sostav_on_station_amkr_name_en
+	,out_dir_station_on.station_abbr_ru as outgoing_sostav_on_station_amkr_abbr_ru
+	,out_dir_station_on.station_abbr_en as outgoing_sostav_on_station_amkr_abbr_en
+	,out_sost.[date_readiness_amkr] as outgoing_sostav_date_readiness_amkr
+	,out_sost.[date_end_inspection_acceptance_delivery] as outgoing_sostav_
+	,out_sost.[date_end_inspection_loader] as outgoing_sostav_
+	,out_sost.[date_end_inspection_vagonnik] as outgoing_sostav_
+	,out_sost.[date_show_wagons] as outgoing_sostav_date_show_wagons
+	,out_sost.[date_readiness_uz] as outgoing_sostav_date_readiness_uz
+	,out_sost.[date_outgoing] as outgoing_sostav_date_outgoing
+	,out_sost.[date_outgoing_act] as outgoing_sostav_date_outgoing_act
+	,out_sost.[date_departure_amkr] as outgoing_sostav_date_departure_amkr
+	,out_sost.[composition_index] as outgoing_sostav_
+	,out_sost.[status] as outgoing_sostav_status
+	,out_sost.[route_sign] as outgoing_sostav_route_sign
+	,out_sost.[note] as outgoing_sostav_note
+	,out_sost.[create] as outgoing_sostav_create
+	,out_sost.[create_user] as outgoing_sostav_create_user
+	,out_sost.[change] as outgoing_sostav_change
+	,out_sost.[change_user] as outgoing_sostav_change_user
+	,out_sost.[vagonnik_user] as outgoing_sostav_vagonnik_user
 	-->*****************************************************************************************************************************
 	--> ДОКУМЕНТ НА ВАГОН ПО ОТПРАВКЕ [IDS].[Outgoing_UZ_Vagon]
 	,out_doc_vag.[id] as id_outgoing_uz_vagon								-- id строки документа по отправке [IDS].[Outgoing_UZ_Vagon]
@@ -209,30 +252,7 @@ select
 	--,out_doc_vag.[change]
 	--,out_doc_vag.[change_user]
 	-->*****************************************************************************************************************************
-	--> ДОКУМЕНТ НА СОСТАВ ПО ОТПРАВКЕ [IDS].[OutgoingSostav]
-	,out_sost.[id] as id_outgoing_sostav
-	,out_sost.[num_doc] as outgoing_sostav_num_doc
-	,out_sost.[id_station_from] as outgoing_sostav_id_station_from
-	,out_sost.[id_way_from]
-	,out_sost.[id_station_on]
-	,out_sost.[date_readiness_amkr]
-	,out_sost.[date_end_inspection_acceptance_delivery]
-	,out_sost.[date_end_inspection_loader]
-	,out_sost.[date_end_inspection_vagonnik]
-	,out_sost.[date_show_wagons]
-	,out_sost.[date_readiness_uz]
-	,out_sost.[date_outgoing]
-	,out_sost.[date_outgoing_act]
-	,out_sost.[date_departure_amkr]
-	,out_sost.[composition_index]
-	,out_sost.[status]
-	,out_sost.[route_sign]
-	,out_sost.[note]
-	,out_sost.[create]
-	,out_sost.[create_user]
-	,out_sost.[change]
-	,out_sost.[change_user]
-	,out_sost.[vagonnik_user]
+	--> ДОКУМЕНТ НА СОСТАВ ПО ОТПРАВКЕ [IDS].[Outgoing_UZ_Document]
 
 	--========== ДОКУМЕНТЫ ПО ПРИБЫТИЮ ==========================
 	,arr_doc_uz.[nom_doc] as arrival_nom_doc						-- Номер документа(досылки)
@@ -473,6 +493,11 @@ FROM [IDS].[OutgoingSostav] as out_sost
 		Left JOIN IDS.Directory_Station as arr_dir_station_amkr ON arr_sost.id_station_on =  arr_dir_station_amkr.id
 		--> Справочник Станции АМКР (станция отправки на АМКР)
 		Left JOIN IDS.Directory_Station as out_dir_station_amkr ON out_sost.id_station_from =  out_dir_station_amkr.id
+		--> Справочник Станции АМКР (отправка станция на которую отправлен состав)
+		Left JOIN IDS.Directory_Station as out_dir_station_on ON out_sost.id_station_on =  out_dir_station_on.id
+		--> Справочник Путь АМКР (путь отправки на АМКР)
+		Left JOIN [IDS].[Directory_Ways] as out_dir_way_amkr ON out_sost.[id_way_from] =  out_dir_way_amkr.id
+
 		--> Справочник Подразделений АМКР (по отправке)
 		Left JOIN [IDS].[Directory_Divisions] as arr_dir_divis ON out_doc_vag.id_division = arr_dir_divis.id
 		--..............
