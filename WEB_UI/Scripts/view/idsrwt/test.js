@@ -64,8 +64,8 @@
     //var VRRC = App.view_report_remainder_cars;
     //var report_remainder_cars = new VRRC('div#remainder-cars');             // Создадим экземпляр
 
-    var TOS = App.table_outgoing_sostav;
-    var table_outgoing_sostav = new TOS('div#outgoing-sostav');             // Создадим экземпляр
+    var TOC = App.table_outgoing_cars;
+    var table_outgoing_cars = new TOC('div#outgoing-cars');             // Создадим экземпляр
 
     $('button#arrival').on('click', function (e) {
         //var data = oper_send.operation;
@@ -89,19 +89,34 @@
         var start = moment('05/01/2021').set({ 'hour': 0, 'minute': 0, 'second': 0, 'millisecond': 0 })._d;
         var stop = moment().set({ 'hour': 23, 'minute': 59, 'second': 59, 'millisecond': 0 })._d;
 
-        table_outgoing_sostav.init({
-            type_report: 'outgoing_sostav',
-            alert: alert,
+        //table_outgoing_sostav.init({
+        //    type_report: 'outgoing_sostav',
+        //    alert: alert,
+        //    ids_wsd: null,
+        //    fn_action_view_wagons: function (rows_sostav) {
+
+        //    },
+        //}, function (init) {
+        //    table_outgoing_sostav.load_outgoing_sostav(start, stop, function (sostav) {
+        //        this.view(sostav, null, null);
+        //        LockScreenOff();
+        //    }.bind(table_outgoing_sostav));
+
+        //});
+
+        table_outgoing_cars.init({
+            type_report: 'outgoing_cars',
+            alert: null,
             ids_wsd: null,
-            fn_action_view_wagons: function (rows_sostav) {
+            fn_action_view_wagons: function (rows) {
 
             },
-        }, function (init) {
-            table_outgoing_sostav.load_outgoing_sostav(start, stop, function (sostav) {
-                this.view(sostav, null, null);
-                LockScreenOff();
-            }.bind(table_outgoing_sostav));
-
+            fn_init: function (init) {
+                table_outgoing_cars.load_outgoing_cars_of_id_sostav(127697, function (wagons) {
+                    this.view(wagons, null, null);
+                    LockScreenOff();
+                }.bind(table_outgoing_cars));
+            },
         });
 
         //report_remainder_cars.init({
