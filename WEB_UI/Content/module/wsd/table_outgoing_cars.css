@@ -35,3 +35,9 @@ table.dataTable tbody td.shorten {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+/*Отобразить типы полей*/
+/*Зафиксированные поля - не просвечиваемые*/
+table.dataTable.display thead tr th.fixed-column {
+    background-color: #ffffff;
+}
