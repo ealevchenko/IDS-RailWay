@@ -473,6 +473,30 @@
         });
     };
 
+    //================= ОТПРАВКА ВАГОНОВ НА УЗ (Вагоны) =========================================================
+    // Получить все составы (View)
+    ids_wsd.prototype.getViewOutgoingCarsOfIDSostav = function (id, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/outgoing_cars/view/sostav/id/' + id,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getViewOutgoingCarsOfIDSostav", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     App.ids_wsd = ids_wsd;
 
     window.App = App;
