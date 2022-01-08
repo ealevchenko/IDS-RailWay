@@ -106,7 +106,7 @@
 
         table_outgoing_cars.init({
             type_report: 'outgoing_cars',
-            alert: null,
+            alert: alert,
             ids_wsd: null,
             fn_action_view_wagons: function (rows) {
 
