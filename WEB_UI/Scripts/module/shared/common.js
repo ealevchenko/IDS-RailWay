@@ -1711,7 +1711,17 @@
                 } else {
                     field['element_' + this.mode].disable();
                 }
-
+            }
+        }
+    };
+    //
+    form_infield.prototype.disabled = function (name, value) {
+        if (this.settings.fields) {
+            var field = this.settings.fields.find(function (o) {
+                return o.field === name
+            });
+            if (field && field['element_' + this.mode]) {
+                field['element_' + this.mode].$element.prop("disabled", value);
             }
         }
     };
