@@ -12,6 +12,7 @@
         'default':  //default language: ru
         {
             'vogc_card_header_detali': 'ИНФОРМАЦИЯ ПО СОСТАВУ',
+            'vogc_card_header_detali_sostav': 'ИНФОРМАЦИЯ ПО СОСТАВУ [Накладная № :{0}, время предъявления на УЗ :{1}, станция отправления :{2}, путь :{3} ]',
             'vogc_card_table_cars': 'Предъявленные вагоны',
             'vogc_card_info_cars': 'Информация по вагону',
             'vogc_card_list_cars': 'Вагоны',
@@ -91,6 +92,7 @@
         var row = new base.fc_ui.el_row();
         var col = new base.fc_ui.el_col('xl', 12, 'mb-1 mt-1');
         var card_panel = new base.fc_ui.el_card('border-secondary mb-1', 'text-center', null, langView('vogc_card_header_detali', App.Langs));
+        this.$header_card_panel = card_panel.$header;
         var row_panel = new base.fc_ui.el_row();
         var col_table_cars = new base.fc_ui.el_col('xl', 5, 'mb-1 pl-1 pr-1');
         var col_info_cars = new base.fc_ui.el_col('xl', 6, 'mb-1 pl-1 pr-1');
@@ -155,6 +157,7 @@
         this.ids_wsd = this.settings.ids_wsd ? this.settings.ids_wsd : new wsd();
 
         this.id_sostav = null;
+        this.wagons = [];
         this.select_sostav = null;
         // Сообщение
         LockScreen(langView('vogc_mess_init_panel', App.Langs));
@@ -165,8 +168,10 @@
         //--------------------------------------------------------
         // Создадим и добавим макет для модуля отправленые вагоны
         var sel_ogc = 'table-ogc-' + this.selector;
-        var $div_ogc = $('<div></div>', {'id': sel_ogc});
+        var $div_ogc = $('<div></div>', { 'id': sel_ogc });
         panelElement.$table_cars.append($div_ogc);
+        // Сылка на надпись
+        this.$header_card_panel = panelElement.$header_card_panel;
         this.$table_cars = panelElement.$table_cars;
         //--------------------------------------------------------
         // Создадим и добавим макет для модуля вагон детально
@@ -200,6 +205,9 @@
             fn_init: function (init) {
 
             },
+            fn_refresh: function () {
+                this.update();
+            }.bind(this),
         });
         // Создадим и добавим макет таблицы
 
@@ -213,28 +221,47 @@
     };
     // Открыть модуль 
     view_outgoing_cars.prototype.open = function (id_sostav) {
-        if (id_sostav) {
+        this.id_sostav = id_sostav;
+        this.update();
+    };
+    // Обновить информацию по модуль
+    view_outgoing_cars.prototype.update = function () {
+        this.out_clear();
+        this.tablist.empty();
+        this.table_outgoing_cars.clear();
+
+        if (this.id_sostav) {
             LockScreen(langView('vogc_mess_load_sostav', App.Langs));
-            this.ids_wsd.getOutgoingSostavOfID(id_sostav, function (sostav) {
-                this.select_sostav = sostav;
+            this.ids_wsd.getViewOutgoingCarsOfIDSostav(this.id_sostav, function (wagons) {
+                this.wagons = wagons;
+                // Отобразить информацию о составе
+                if (this.wagons && this.wagons.length > 0) {
+                    var outgoing_sostav_num_doc = this.wagons[0].outgoing_sostav_num_doc;
+                    var outgoing_sostav_date_readiness_uz = this.wagons[0].outgoing_sostav_date_readiness_uz;
+                    var outgoing_sostav_from_station_amkr_abbr = this.wagons[0]['outgoing_sostav_from_station_amkr_abbr_' + App.Lang];
+                    var outgoing_sostav_from_way = this.wagons[0]['outgoing_sostav_from_way_num_' + App.Lang] + '-' + this.wagons[0]['outgoing_sostav_from_way_abbr_' + App.Lang];
+                    this.$header_card_panel.empty().append(langView('vogc_card_header_detali_sostav', App.Langs).format(outgoing_sostav_num_doc, outgoing_sostav_date_readiness_uz, outgoing_sostav_from_station_amkr_abbr, outgoing_sostav_from_way));
+                } else {
+                    this.$header_card_panel.empty().append(langView('vogc_card_header_detali', App.Langs));
+                }
                 // Показать вагоны которые не сдали.
-                this.view_cars_not_outgoing(this.select_sostav && this.select_sostav.OutgoingCars ? this.select_sostav.OutgoingCars : []);
+                this.view_cars_not_outgoing(this.wagons);
+                // Показать вагоны которые не сдали.
+                this.view_cars_outgoing(this.wagons)
                 LockScreenOff();
             }.bind(this));
         } else {
-            this.out_clear();
             this.out_warning(langView('vogc_mess_not_id_sostav', App.Langs));
         }
-
     };
-
+    // Показать вагоны не перенесеные влево
     view_outgoing_cars.prototype.view_cars_not_outgoing = function (cars) {
         this.tablist.empty();
         // Фильтр на не принятые вагоны
         var wagons = cars.filter(function (i) {
-            return i.outgoing === null ? true : false;
+            return i.outgoing_car_outgoing === null ? true : false;
         }).sort(function (a, b) {
-            return Number(a.position) - Number(b.position);
+            return Number(a.outgoing_car_position) - Number(b.outgoing_car_position);
         });
         $.each(wagons, function (i, el) {
             var $icon = (el.parent_wir_id ? $('<i class="fas fa-retweet" aria-hidden="true"></i>') : $('<i class="fas fa-train" aria-hidden="true"></i>'));
@@ -259,6 +286,11 @@
 
 
         }.bind(this));
+    };
+    // Показать вагоны перенесеные влево
+    view_outgoing_cars.prototype.view_cars_outgoing = function (wagons) {
+        wagons = this.table_outgoing_cars.filter_wagons(wagons);
+        this.table_outgoing_cars.view(wagons, null, null);
     };
     //--------------------------------------------------------------------------------
     // Показать
