@@ -2924,6 +2924,7 @@ namespace IDS
         /// <param name="date_readiness_uz"></param>
         /// <param name="date_outgoing"></param>
         /// <param name="date_outgoing_act"></param>
+        /// <param name="status"></param>
         /// <param name="station_on"></param>
         /// <param name="route_sign"></param>
         /// <param name="composition_index"></param>
@@ -2931,7 +2932,7 @@ namespace IDS
         /// <returns></returns>
         public int OperationPresentSostav(long id_outgoing_sostav, DateTime date_end_inspection_acceptance_delivery,
             DateTime date_end_inspection_loader, DateTime date_end_inspection_vagonnik, DateTime date_readiness_uz,
-            DateTime date_outgoing, DateTime? date_outgoing_act, int station_on, bool route_sign, string composition_index, string user)
+            DateTime date_outgoing, DateTime? date_outgoing_act, int status, int station_on, bool route_sign, string composition_index, string user)
         {
             try
             {
@@ -2944,31 +2945,37 @@ namespace IDS
                 EFOutgoingSostav ef_out_sostav = new EFOutgoingSostav(context);
                 EFOutgoingCars ef_out_car = new EFOutgoingCars(context);
                 OutgoingSostav sostav = ef_out_sostav.Context.Where(s => s.id == id_outgoing_sostav).FirstOrDefault();
-                if (sostav == null) return (int)errors_base.not_outgoing_sostav_db; //В базе данных нет записи состава для оправки
-                if (sostav.status >= 2) return (int)errors_base.error_status_outgoing_sostav; // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
-                int count_car = sostav.OutgoingCars.Where(c => c.outgoing != null).ToList().Count();
-                List<OutgoingCars> list_not_out_car = sostav.OutgoingCars.Where(c => c.outgoing == null).ToList();
-                if (count_car == 0) return (int)errors_base.not_outgoing_cars_db; // В базе данных нет записи по вагонам для отпправки
-                // Проверить есть вагоны которые не перенесли в левую часть, если да убрать вагоны и убрать блокировку
-                if (list_not_out_car != null && list_not_out_car.Count() > 0)
-                {
-                    foreach (OutgoingCars car in list_not_out_car)
+                if (sostav == null) return (int)errors_base.not_outgoing_sostav_db;                     //В базе данных нет записи состава для оправки
+                // Проверим состав откланен
+                if (sostav.status == 4) return (int)errors_base.error_status_outgoing_sostav;           // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
+                // Сдается впервые?
+                if (sostav.status < 2) {
+                    sostav.status = 2;
+                    // Если впервый раз сдаем тогда откорректируем вагоны
+                    int count_car = sostav.OutgoingCars.Where(c => c.outgoing != null).ToList().Count();
+                    List<OutgoingCars> list_not_out_car = sostav.OutgoingCars.Where(c => c.outgoing == null).ToList();
+                    if (count_car == 0) return (int)errors_base.not_outgoing_cars_db; // В базе данных нет записи по вагонам для отпправки
+                    // Проверить есть вагоны которые не перенесли в левую часть, если да убрать вагоны и убрать блокировку
+                    if (list_not_out_car != null && list_not_out_car.Count() > 0)
                     {
-                        if (car.parent_wir_id == null)
+                        foreach (OutgoingCars car in list_not_out_car)
                         {
-                            // Это реальный вагон а не неактивная ссылка на изменения по задержанию
-                            int result = OperationReturnProvideWagon(ref context, car, sostav.id_way_from, user);
-                            if (result > 0)
+                            if (car.parent_wir_id == null)
                             {
-                                ef_out_car.Delete(car.id);
+                                // Это реальный вагон а не неактивная ссылка на изменения по задержанию
+                                int result = OperationReturnProvideWagon(ref context, car, sostav.id_way_from, user);
+                                if (result > 0)
+                                {
+                                    ef_out_car.Delete(car.id);
+                                }
                             }
+
                         }
-
                     }
-                }
 
+                }
                 // Обновим состав
-                sostav.status = 2;
+                //sostav.status = 2;
                 sostav.date_end_inspection_acceptance_delivery = date_end_inspection_acceptance_delivery;
                 sostav.date_end_inspection_loader = date_end_inspection_loader;
                 sostav.date_end_inspection_vagonnik = date_end_inspection_vagonnik;

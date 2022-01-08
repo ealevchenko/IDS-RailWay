@@ -3559,7 +3559,8 @@ IDS_RWT.prototype.postOutgoingReturnPresentWagon = function (operation_return, c
         },
     });
 };
-//Операция предъявить состав на УЗ 
+//TODO: Отключить после переделки outgoing.js перенесен в ids_wsd.js
+//Операция предъявить состав на УЗ
 IDS_RWT.prototype.postOperationPresentSostav = function (operation_present, callback) {
     $.ajax({
         url: '../../api/ids/rwt/wsd/operation/present/sostav/',
