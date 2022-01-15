@@ -67,6 +67,10 @@
     var TOC = App.table_outgoing_cars;
     var table_outgoing_cars = new TOC('div#outgoing-cars');             // Создадим экземпляр
 
+    var FOCD = App.form_outgoing_cars_detali;
+    var form_outgoing_cars_detali = new FOCD('div#outgoing-cars-detali');             // Создадим экземпляр
+
+
     $('button#arrival').on('click', function (e) {
         //var data = oper_send.operation;
         //tab_car_oper.view(data);
@@ -112,11 +116,20 @@
 
             },
             fn_init: function (init) {
-                table_outgoing_cars.load_outgoing_cars_of_id_sostav(127697, function (wagons) {
+                table_outgoing_cars.load_outgoing_cars_of_id_sostav(127615, function (wagons) {
                     this.view(wagons, null, null);
                     LockScreenOff();
                 }.bind(table_outgoing_cars));
             },
+        });
+
+        form_outgoing_cars_detali.init({
+            alert: alert,
+            ids_wsd: null,
+            ids_dir: null,
+            fn_init: function (init) {
+                LockScreenOff();
+            }.bind(this),
         });
 
         //report_remainder_cars.init({

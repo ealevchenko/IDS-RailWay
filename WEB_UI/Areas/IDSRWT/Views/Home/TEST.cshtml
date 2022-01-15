@@ -30,6 +30,7 @@
     <link href="~/Content/module/wsd/view_report_remainder_cars.css" rel="stylesheet" /> <!-- CSS стили модуля "Отчет Остаток вагонов на АМКР" -->
     <link href="~/Content/module/wsd/view_history_operation_arrival.css" rel="stylesheet" /><!-- CSS стили модуля "История операций принять на станцию" -->
 
+    <link href="~/Content/module/wsd/form_outgoing_cars_detali.css" rel="stylesheet" />
     <link href="~/Content/module/wsd/form_ho_outgoing_sostav.css" rel="stylesheet" />
     <link href="~/Content/module/wsd/table_outgoing_sostav.css" rel="stylesheet" /><!-- CSS стили модуля "Отправляемые составы" -->
     <link href="~/Content/module/wsd/table_outgoing_cars.css" rel="stylesheet" />
@@ -93,7 +94,7 @@
 
     <script src="~/Scripts/module/wsd/table_outgoing_sostav.js"></script>    <!-- Модуль "Отправляемые составы" -->
 
-
+    <script src="~/Scripts/module/wsd/form_outgoing_cars_detali.js"></script>
     <script src="~/Scripts/module/wsd/form_ho_outgoing_sostav.js"></script>
     <script src="~/Scripts/module/wsd/table_outgoing_cars.js"></script>
 
@@ -193,133 +194,593 @@
                     </div>
                 </div>
                 <div class="card-body text-dark pl-3 pr-3">
-
-
-
-
-
-
-
-
-                    @*<div id="remainder">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>*@
-
-                    <div id="outgoing-cars"></div>
-                    @*<div id="remainder-cars"></div>*@
-                    <!--<div class="row">
-                        <div class="col-xl-2">
-                            <div class="card border-primary">
-                                <div class="card-header">
-                                    <div id="dds-station"></div>
-                                    Дерево путей
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-xl-12 text-left">
-                                            <form>
-                                                <div class="form-group">
-                                                    <div class="custom-control custom-switch">
-                                                        <input type="checkbox" class="custom-control-input" id="outer_cars">
-                                                        <label class="custom-control-label" for="outer_cars">Внешние стороние вагоны</label>
-                                                    </div>
-                                                    <div class="custom-control custom-switch">
-                                                        <input type="checkbox" class="custom-control-input" id="amkr_outer_cars">
-                                                        <label class="custom-control-label" for="amkr_outer_cars">Внешние вагоны АМКР</label>
-                                                    </div>
-                                                    <div class="custom-control custom-switch">
-                                                        <input type="checkbox" class="custom-control-input" id="amkr_cars">
-                                                        <label class="custom-control-label" for="amkr_cars">Внутри-заводские вагоны</label>
-                                                    </div>
-                                                </div>
-                                                <div class="form-row">
-                                                    <div class="col-md-6 mb-1">
-                                                        <label for="select_day">Свыше суток:</label>
-                                                        <input type="number" min="1" max="1000" class="form-control form-control-sm" id="select_day" placeholder="0..1000">
-                                                    </div>
-                                                    <div class="col-md-6 mb-1">
-                                                        <label for="select_top">Топ:</label>
-                                                        <input type="number" min="1" max="1000" class="form-control form-control-sm" id="select_top" placeholder="0..100">
-                                                    </div>
-                                                </div>
-
-                                                <div id="select-width" class="p-1" style="background-color:antiquewhite;">
-                                                    <div class="form-group p-1" style="border:1px solid #808080">
-                                                        <button type="button" class="close" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                        <label for="operator">Оператор:</label>
-                                                        <select id="operator" class="custom-select custom-select-sm" required>
-                                                            <option value="">Open this select menu</option>
-                                                            <option value="1">One</option>
-                                                            <option value="2">Two</option>
-                                                            <option value="3">Three</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group p-1" style="border:1px solid #808080">
-                                                        <button type="button" class="close" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                        <label for="limit">Ограничение:</label>
-                                                        <select id="limit" class="custom-select custom-select-sm" required>
-                                                            <option value="">Open this select menu</option>
-                                                            <option value="1">One</option>
-                                                            <option value="2">Two</option>
-                                                            <option value="3">Three</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <br />
-                                                <div class="form-group p-1">
-                                                    <label for="where">ДОБАВИТЬ ВЫБОРКУ:</label>
-                                                    <div class="input-group">
-                                                        <select id="where" class="form-control form-control-sm" placeholder="добавить выборку" required>
-                                                            <option value="1">Оператор</option>
-                                                            <option value="2">Ограничение</option>
-                                                            <option value="3">Груз по прибытию</option>
-                                                        </select>
-                                                        <div class="input-group-append">
-                                                            <button class="btn btn-sm btn-outline-secondary" type="button">
-                                                                <i class="fas fa-plus-circle" aria-hidden="true"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                                <button type="submit" class="btn btn-primary">Submit</button>
-                                            </form>
-                                        </div>
-                                    </div>-->
-                    <!--@*<div class="row">
-                            <div class="col-xl-12">
-                                <div id="tree-way"></div>
-                            </div>
-                        </div>*@
-                    @*<div class="row">
-                            <div class="col-xl-12">
-                                <div id="total-balance"></div>
-                            </div>
-                        </div>*@-->
-                    <!--</div>
-                            </div>
+                    <div class="card border-secondary">
+                        <div class="card-header bg-secondary text-white" id="sostav-info">
                         </div>
-                        <div class="col-xl-10">
-                            <div class="card border-info">
-                                <div class="card-header">Перечень вагонов</div>
-                                <div class="card-body" style="font-size:13px">
-                                    <div class="row">
-                                        <div class="col-xl-12">
-                                            <div id="wagons"></div>
-                                            <table id="wagons-way" class="display compact table-striped table-hover" style="width:100%;table-layout: fixed"></table>
+                        <div class="card-body">
+                            <div class="alert" id="car-detali-alert"></div>
+                            <div class="form-row">
+                                <div class="col-xl-5 mb-1">
+                                    <div class="card border-success" id="card-arrived-cars">
+                                        <div class="card-header">
+                                            Отправленные вагоны
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="outgoing-cars">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 mb-1">
+                                    <div class="card border-warning" id="card-car-info">
+                                        <div class="card-header">Информация о вагоне</div>
+                                        <div class="card-body text-dark">
+                                            <div id="outgoing-cars-detali">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-1 mb-1">
+                                    <div class="card border-primary" id="card-not-arrived-cars">
+                                        <div class="card-header">
+                                            Вагоны
+                                        </div>
+                                        <div class="card-body text-primary" style="padding: 0.5rem;">
+                                            <div class="list-group" id="list-cars-not-outgoing" role="tablist">
+
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>-->
+                    </div>
                 </div>
+
+                <div class="card-body text-dark pl-3 pr-3">
+                    <div class="card border-secondary">
+                        <div class="card-header bg-secondary text-white" id="sostav-info">
+                        </div>
+                        <div class="card-body">
+                            <div class="alert" id="car-detali-alert"></div>
+                            <div class="form-row">
+                                <div class="col-xl-5 mb-1">
+                                    <div class="card border-success" id="card-arrived-cars">
+                                        <div class="card-header">
+                                            Отправленные вагоны
+                                        </div>
+                                        <div class="card-body">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 mb-1">
+                                    <div class="card border-warning" id="card-car-info">
+                                        <div class="card-header">Информация о вагоне</div>
+                                        <div class="card-body text-dark">
+                                            <div class="row">
+                                                <div class="col-xl-12 text-left">
+                                                    <button type="button" class="btn btn-primary btn" id="present_car" data-mode="" data-edit="" data-form=""><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Предъявить вагон</button>
+                                                    <button type="button" class="btn btn-danger btn float-right" id="return_car" data-mode="" data-edit="" data-form="">Вернуть вагон <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></button>
+                                                </div>
+                                            </div>
+                                            <fieldset class="border-primary">
+                                                <div class="form-row">
+                                                    <div class="form-group col-xl-3 text-left">
+                                                        <label for="num_car" class="mb-1">@IDSRWTResource.title_num_car:</label>
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control inp-auto" id="num_car" title="Номер вагона" name="num_car" data-mode="" data-edit="" data-form="transceiver">
+                                                            <div class="input-group-append">
+                                                                <button type="button" class="btn btn-warning btn" id="car_return" title="Вернуть вагон" data-mode="edit" data-edit="" data-form="transceiver">
+                                                                    <i class="fa fa-retweet" aria-hidden="true"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-3 mb-1 text-left">
+                                                        <label for="position_outgoing" class="mb-1">@IDSRWTResource.title_position:</label>
+                                                        <input type="number" value="1" class="form-control inp-auto" min="1" max="120" step="1" id="position_outgoing" name="position_outgoing" title="Автоматический ввод\корректировка (номер вагона в составе)" data-mode="edit" data-edit="" data-form="transceiver" />
+                                                        <div class="invalid-feedback">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-3 mb-1 text-left">
+                                                        <label for="num_cont_1" class="mb-1">@IDSRWTResource.title_num_cont-1:</label>
+                                                        <input type="text" class="form-control inp-manual" id="num_cont_1" name="num_cont_1" title="Номер контейнера" data-mode="edit" data-edit="" data-form="transceiver">
+                                                    </div>
+                                                    <div class="col-xl-3 mb-1 text-left">
+                                                        <label for="num_cont_2" class="mb-1">@IDSRWTResource.title_num_cont-2:</label>
+                                                        <input type="text" class="form-control inp-manual" id="num_cont_2" name="num_cont_2" title="Номер контейнера" data-mode="edit" data-edit="" data-form="transceiver">
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                            <fieldset class="border-primary">
+                                                <div class="form-row">
+                                                    <div class="col-xl-3 text-left">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+                                                            <label class="form-check-label" for="invalidCheck">Пример</label>
+                                                            <div class="invalid-feedback"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-1 mb-1">
+                                    <div class="card border-primary" id="card-not-arrived-cars">
+                                        <div class="card-header">
+                                            Вагоны
+                                        </div>
+                                        <div class="card-body text-primary" style="padding: 0.5rem;">
+                                            <div class="list-group" id="list-cars-not-outgoing" role="tablist">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+                <!--<div class="card-body text-dark pl-3 pr-3">
+        <div class="card border-secondary">
+            <div class="card-header bg-secondary text-white" id="sostav-info">
+                <h1 id="sostav-title"></h1>
+            </div>
+            <div class="card-body">
+                <div class="alert" id="car-detali-alert"></div>
+                <div class="form-row">
+                    <div class="col-xl-5 mb-1">
+                        <div class="card border-success" id="card-arrived-cars">
+                            <div class="card-header">
+                                Отправленные вагоны
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-xl-12">
+                                        <table class="display compact cell-border row-border hover" id="table-outgoing-cars" style="width:100%; font-size:0.8rem;"></table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer text-muted">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 mb-1">
+                        <div class="card border-warning" id="card-car-info">
+                            <div class="card-header">Информация о вагоне</div>
+                            <div class="card-body text-dark">
+                                <div class="row mb-1">
+                                    <div class="col-xl-12 text-left">
+                                        <button type="button" class="btn btn-primary btn" id="present_car" data-mode="" data-edit="" data-form=""><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Предъявить вагон</button>
+                                        <button type="button" class="btn btn-danger btn float-right" id="return_car" data-mode="" data-edit="" data-form="">Вернуть вагон <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xl-12">
+                                        <fieldset class="border-primary">
+                                            <div class="form-row">
+                                                <div class="form-group col-xl-3 text-left">
+                                                    <label for="num_car" class="mb-1">@IDSRWTResource.title_num_car:</label>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control inp-auto" id="num_car" title="Номер вагона" name="num_car" data-mode="" data-edit="" data-form="transceiver">
+                                                        <div class="input-group-append">
+                                                            <button type="button" class="btn btn-warning btn" id="car_return" title="Вернуть вагон" data-mode="edit" data-edit="" data-form="transceiver">
+                                                                <i class="fa fa-retweet" aria-hidden="true"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-3 mb-1 text-left">
+                                                    <label for="position_outgoing" class="mb-1">@IDSRWTResource.title_position:</label>
+                                                    <input type="number" value="1" class="form-control inp-auto" min="1" max="120" step="1" id="position_outgoing" name="position_outgoing" title="Автоматический ввод\корректировка (номер вагона в составе)" data-mode="edit" data-edit="" data-form="transceiver" />
+                                                    <div class="invalid-feedback">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-3 mb-1 text-left">
+                                                    <label for="num_cont_1" class="mb-1">@IDSRWTResource.title_num_cont-1:</label>
+                                                    <input type="text" class="form-control inp-manual" id="num_cont_1" name="num_cont_1" title="Номер контейнера" data-mode="edit" data-edit="" data-form="transceiver">
+                                                </div>
+                                                <div class="col-xl-3 mb-1 text-left">
+                                                    <label for="num_cont_2" class="mb-1">@IDSRWTResource.title_num_cont-2:</label>
+                                                    <input type="text" class="form-control inp-manual" id="num_cont_2" name="num_cont_2" title="Номер контейнера" data-mode="edit" data-edit="" data-form="transceiver">
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-xl-3 mb-1 text-left">
+                                                    <label for="date_outgoing_act" class="mb-1">@IDSRWTResource.title_car_date_outgoing_act:</label>
+                                                    <input type="datetime" class="form-control inp-manual" id="date_outgoing_act" name="date_outgoing_act" title="Ручной ввод (если вагон сдается по акту)" data-mode="edit" data-edit="" data-form="transceiver">
+                                                    <div class="invalid-feedback">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-5 mb-1 text-left">
+                                                    <label for="reason_discrepancy_amkr" class="mb-1">@IDSRWTResource.title_reason_discrepancy_amkr:</label>
+                                                    <input type="text" class="form-control inp-manual" id="reason_discrepancy_amkr" name="reason_discrepancy_amkr" title="" data-mode="edit" data-edit="" data-form="transceiver">
+                                                    <div class="invalid-feedback">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-4 mb-1 text-left">
+                                                    <label for="reason_discrepancy_uz" class="mb-1">@IDSRWTResource.title_reason_discrepancy_uz:</label>
+                                                    <input type="text" class="form-control inp-manual" id="reason_discrepancy_uz" name="reason_discrepancy_uz" title="" data-mode="edit" data-edit="" data-form="transceiver">
+                                                    <div class="invalid-feedback">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-xl-3 mb-1 text-left">
+                                                    <label for="adm_kod" class="mb-1">@IDSRWTResource.title_adm_kod:</label>
+                                                    <input type="text" class="form-control inp-auto" id="adm_kod" name="adm_kod" title="" data-mode="" data-edit="" data-form="transceiver">
+                                                    <div class="invalid-feedback">
+                                                    </div>
+                                                </div>-->
+                @*<div class="col-xl-4 mb-1 text-left">
+            <label for="adm_name" class="mb-1">@IDSRWTResource.title_adm_name:</label>
+            <input type="text" class="form-control inp-auto" id="adm_name" name="adm_name" title="" data-mode="" data-edit="" data-form="transceiver">
+            <div class="invalid-feedback">
+            </div>
+        </div>*@
+                <!--<div class="col-xl-3 mb-1 text-left">
+        <label for="rod_vag_abbr" class="mb-1">@IDSRWTResource.title_rod_vag_abbr:</label>
+        <input type="text" class="form-control inp-auto" id="rod_vag_abbr" name="rod_vag_abbr" title="Справочник 'Карточка вагона' -> Название 'Рода вагона (абр.)'" data-mode="" data-edit="" data-form="transceiver">
+        <div class="invalid-feedback">
+        </div>
+    </div>-->
+                @*<div class="col-xl-4 mb-1 text-left">
+            <label for="rod_vag_name" class="mb-1">@IDSRWTResource.title_name_rod_vag:</label>
+            <input type="text" class="form-control inp-auto" id="rod_vag_name" name="rod_vag_name" title="Справочник 'Карточка вагона' -> Название 'Рода вагона'" data-mode="" data-edit="" data-form="transceiver">
+            <div class="invalid-feedback">
+            </div>
+        </div>*@
+                <!--<div class="col-xl-3 mb-1 text-left">
+                                    <label for="gruzp_uz" class="mb-1">@IDSRWTResource.title_gruzp_uz:</label>
+                                    <input type="text" class="form-control inp-auto" id="gruzp_uz" name="gruzp_uz" title="" data-mode="" data-edit="" data-form="transceiver">
+                                </div>
+                                <div class="col-xl-3 mb-1 text-left">
+                                    <label for="tara_uz" class="mb-1">@IDSRWTResource.title_tara_uz:</label>
+                                    <input type="text" class="form-control inp-auto" id="tara_uz" name="tara_uz" title="" data-mode="" data-edit="" data-form="transceiver">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-xl-6 mb-1 text-left">
+                                    <label for="condition_arrival" class="mb-1">@IDSRWTResource.title_condition_arrival:</label>
+                                    <input type="text" class="form-control inp-auto" id="condition_arrival" name="condition_arrival" title="" data-mode="" data-edit="" data-form="transceiver">
+                                </div>
+                                <div class="col-xl-6 mb-1 text-left">
+                                    <label for="condition_provide" class="mb-1">@IDSRWTResource.title_condition_provide:</label>
+                                    <input type="text" class="form-control inp-auto" id="condition_provide" name="condition_provide" title="" data-mode="" data-edit="" data-form="transceiver">
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="border-primary">
+                            <legend>@IDSRWTResource.title_detention_return</legend>
+                            <div class="form-row">
+                                <div class="col-xl-12 mb-1 text-left">
+                                    <label for="condition_present" id="condition_present_user" class="mb-1">@IDSRWTResource.title_condition_present:</label>
+                                    <div class="input-group">
+                                        <textarea class="form-control" id="condition_present" name="condition_present" disabled></textarea>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-xl-12 mb-1 text-left">
+                                    <fieldset class="border-warning">
+                                        <legend>@IDSRWTResource.title_detention</legend>
+                                        <div class="form-row">
+                                            <div class=" col-xl-11">
+                                                <div class="alert" id="car-detention-alert"></div>
+                                            </div>
+                                            <div class="col-xl-1 pull-right mb-1 text-left">
+                                                <button type="button" class="btn btn-danger btn" id="detention_save" title="Сохранить" data-mode="edit" data-edit="" data-form="transceiver">
+                                                    <i class="fa fa-save" aria-hidden="true"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-warning btn" id="detention_edit" title="Править" data-mode="edit" data-edit="" data-form="transceiver">
+                                                    <i class="fa fa-edit" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-xl-6 mb-1 text-left">
+                                                <label for="cause_detention" class="mb-1">@IDSRWTResource.title_cause_detention:</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control inp-manual" id="cause_detention" name="cause_detention" title="" data-mode="edit" data-edit="" data-form="transceiver">
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-3 mb-1 text-left">
+                                                <label for="detention_start" class="mb-1">@IDSRWTResource.title_detention_start</label>
+                                                <input type="text" class="form-control inp-manual" id="detention_start" name="detention_start" title="" data-mode="edit" data-edit="" data-form="transceiver">
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-3 mb-1 text-left">
+                                                <label for="detention_stop" class="mb-1">@IDSRWTResource.title_detention_stop:</label>
+                                                <input type="text" class="form-control inp-manual" id="detention_stop" name="detention_stop" title="" data-mode="edit" data-edit="" data-form="transceiver">
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-xl-12 mb-1 text-left">
+                                    <fieldset class="border-danger">
+                                        <legend>@IDSRWTResource.title_return</legend>
+                                        <div class="form-row">
+                                            <div class=" col-xl-11">
+                                                <div class="alert" id="car-return-alert"></div>
+                                            </div>
+                                            <div class="col-xl-1  pull-right mb-1 text-left">
+                                                <button type="button" class="btn btn-danger btn" id="return_open" title="Выполнить возврат" data-mode="edit" data-edit="" data-form="transceiver">
+                                                    <i class="fa fa-save" aria-hidden="true"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-success btn" id="return_close" title="Закрыть возврат" data-mode="edit" data-edit="" data-form="transceiver">
+                                                    <i class="fa fa-close" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-xl-6 mb-1 text-left">
+                                                <label for="cause_return" class="mb-1">@IDSRWTResource.title_cause_return:</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control inp-manual" id="cause_return" name="cause_return" title="" data-mode="edit" data-edit="" data-form="transceiver">
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-3 mb-1 text-left">
+                                                <label for="return_start" class="mb-1">@IDSRWTResource.title_return_start</label>
+                                                <input type="text" class="form-control inp-manual" id="return_start" name="return_start" title="" data-mode="edit" data-edit="" data-form="transceiver">
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-3 mb-1 text-left">
+                                                <label for="return_stop" class="mb-1">@IDSRWTResource.title_return_stop:</label>
+                                                <input type="text" class="form-control inp-manual" id="return_stop" name="return_stop" title="" data-mode="edit" data-edit="" data-form="transceiver">
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-xl-3 mb-1 text-left">
+                                                <label for="return_num_act" class="mb-1">@IDSRWTResource.title_return_num_act:</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control inp-manual" id="return_num_act" name="return_num_act" title="" data-mode="edit" data-edit="" data-form="transceiver">
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-3 mb-1 text-left">
+                                                <label for="return_date_act" class="mb-1">@IDSRWTResource.title_return_date_act</label>
+                                                <input type="text" class="form-control inp-manual" id="return_date_act" name="return_date_act" title="" data-mode="edit" data-edit="" data-form="transceiver">
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-6 mb-1 text-left">
+                                                <label for="return_note" class="mb-1">@IDSRWTResource.title_return_note:</label>
+                                                <textarea class="form-control inp-manual" id="return_note" name="return_note" title="" data-mode="edit" data-edit="" data-form="transceiver"></textarea>
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-xl-12 mb-1">
+                                                <table class="display compact cell-border row-border hover" id="table-return-car" style="width:100%;"></table>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="border-primary">
+                            <legend>@IDSRWTResource.title_loading_data</legend>
+                            <div class="form-row">
+                                <div class="col-xl-12 mb-1 text-left">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input inp-manual" id="loaded_car" name="loaded_car" data-mode="edit" data-edit="" data-form="transceiver">
+                                        <label class="custom-control-label" for="loaded_car">@IDSRWTResource.title_loaded_car</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-xl-7 mb-1 text-left">
+                                    <label for="cargo_name" class="mb-1">@IDSRWTResource.title_cargo_name:</label>
+                                    <input type="text" class="form-control inp-manual" id="cargo_name" name="cargo_name" title="" data-mode="edit" data-edit="" data-form="transceiver">
+                                    <div class="invalid-feedback">
+                                    </div>
+                                </div>
+                                <div class="col-xl-2 mb-1 text-left">
+                                    <label for="loading_devision_code" class="mb-1">@IDSRWTResource.title_loading_devision_code:</label>
+                                    <input type="text" class="form-control inp-auto" id="loading_devision_code" name="loading_devision_code" title="" data-mode="" data-edit="" data-form="transceiver">
+                                    <div class="invalid-feedback">
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 mb-1 text-left">
+                                    <label for="loading_devision" class="mb-1">@IDSRWTResource.title_loading_devision:</label>
+                                    <input type="text" class="form-control inp-manual" id="loading_devision" name="loading_devision" title="" data-mode="edit" data-edit="" data-form="transceiver">
+                                    <div class="invalid-feedback">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-xl-2 mb-1 text-left">
+                                    <label for="code_station_to" class="mb-1">@IDSRWTResource.title_code_station_to:</label>
+                                    <input type="text" class="form-control inp-auto" id="code_station_to" name="code_station_to" title="" data-mode="" data-edit="" data-form="transceiver">
+                                    <div class="invalid-feedback">
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 mb-1 text-left">
+                                    <label for="name_station_to" class="mb-1">@IDSRWTResource.title_name_station_to:</label>
+                                    <input type="text" class="form-control inp-manual" id="name_station_to" name="name_station_to" title="" data-mode="edit" data-edit="" data-form="transceiver">
+                                    <div class="invalid-feedback">
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 mb-1 text-left">
+                                    <label for="owner_name" class="mb-1">@IDSRWTResource.title_name_owner:</label>
+                                    <input type="text" class="form-control inp-auto" id="owner_name" name="owner_name" title="" data-mode="" data-edit="" data-form="transceiver">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-xl-6 mb-1 text-left">
+                                    <label for="operator_name" class="mb-1">@IDSRWTResource.title_name_operator:</label>
+                                    <input type="text" class="form-control inp-auto" id="operator_name" name="operator_name" title="" data-mode="" data-edit="" data-form="transceiver">
+                                </div>
+                                <div class="col-xl-6 mb-1 text-left">
+                                    <label for="limiting_loading_amkr" class="mb-1">@IDSRWTResource.title_limiting_loading_amkr:</label>
+                                    <input type="text" class="form-control inp-auto" id="limiting_loading_amkr" name="limiting_loading_amkr" title="" data-mode="" data-edit="" data-form="transceiver">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-xl-12 mb-1 text-left">
+                                    <label for="limiting_loading_uz" class="mb-1">@IDSRWTResource.title_limiting_loading_uz:</label>
+                                    <textarea class="form-control inp-auto" id="limiting_loading_uz" name="limiting_loading_uz" title="" data-mode="" data-edit="" data-form="transceiver"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-xl-12 mb-1 text-left">
+                                    <fieldset class="border-info">
+                                        <legend>@IDSRWTResource.title_epd</legend>
+                                        <div class="form-row">
+                                            <div class="col-xl-4 mb-1 text-left">
+                                                <label for="uz_doc_num" class="mb-1">@IDSRWTResource.title_uz_doc_num_doc:</label>
+                                                <input type="text" class="form-control inp-epd" id="uz_doc_num" name="uz_doc_num" title="" data-mode="" data-edit="" data-form="transceiver">
+                                            </div>
+                                            <div class="col-xl-2 mb-1 text-left">
+                                                <label for="vesg_uz_doc" class="mb-1">@IDSRWTResource.title_vesg_uz_doc:</label>
+                                                <input type="text" class="form-control inp-epd" id="vesg_uz_doc" name="vesg_uz_doc" title="" data-mode="" data-edit="" data-form="transceiver">
+                                            </div>
+                                            <div class="col-xl-2 mb-1 text-left">
+                                                <label for="ves_tary_uz_doc" class="mb-1">@IDSRWTResource.title_ves_tary_uz:</label>
+                                                <input type="text" class="form-control inp-epd" id="ves_tary_uz_doc" name="ves_tary_uz_doc" title="" data-mode="" data-edit="" data-form="transceiver">
+                                            </div>
+                                            <div class="col-xl-4 mb-1 text-left">
+                                                <label for="brigadier_loading_uz_doc" class="mb-1">@IDSRWTResource.title_brigadier_loading:</label>
+                                                <input type="text" class="form-control inp-epd" id="brigadier_loading_uz_doc" name="brigadier_loading_uz_doc" title="" data-mode="" data-edit="" data-form="transceiver">
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-xl-3 mb-1 text-left">
+                                                <label for="kod_etsng" class="mb-1">@IDSRWTResource.title_kod_etsng:</label>
+                                                <input type="text" class="form-control inp-epd" id="kod_etsng" name="kod_etsng" title="ЭПД [OTPR/VAGON/COLLECT_V/kod_etsng] -> Код груза по ЕТ СНГ" data-mode="" data-edit="" data-form="transceiver">
+                                            </div>
+                                            <div class="col-xl-9 mb-1 text-left">
+                                                <label for="name_etsng" class="mb-1">@IDSRWTResource.title_name_etsng</label>
+                                                <div class="input-group">
+                                                    <textarea class="form-control inp-epd" id="name_etsng" name="name_etsng" title="ЭПД [OTPR/VAGON/COLLECT_V/name_etsng] -> Справочник 'Грузов ЕТ СНГ' -> Справочник 'Грузов ИДС' -> Название груза по ЕТ СНГ" data-mode="" data-edit="" data-form="transceiver"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-xl-3 mb-1 text-left">
+                                                <label for="station_code_on" class="mb-1">@IDSRWTResource.title_stn_code:</label>
+                                                <input type="text" class="form-control inp-epd" id="station_code_on" name="uz_route_stn_on" title="" data-mode="" data-edit="" data-form="transceiver">
+                                            </div>
+                                            <div class="col-xl-4 mb-1 text-left">
+                                                <label for="station_name_on" class="mb-1">@IDSRWTResource.title_station_name_on</label>
+                                                <input type="text" class="form-control inp-epd" id="station_name_on" name="station_name_on" title="" data-mode="" data-edit="" data-form="transceiver">
+                                            </div>
+                                            <div class="col-xl-5 mb-1 text-left">
+                                                <label for="railway_name_on" class="mb-1">@IDSRWTResource.title_railway_name</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control inp-epd" id="railway_name_on" name="railway_name_on" title="" data-mode="" data-edit="" data-form="transceiver">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-xl-3 mb-1 text-left">
+                                                <label for="client_kod_on" class="mb-1">@IDSRWTResource.title_client_kod:</label>
+                                                <input type="text" class="form-control inp-epd" id="client_kod_on" name="client_kod_on" title="" data-mode="" data-edit="" data-form="transceiver">
+                                            </div>
+                                            <div class="col-xl-9 mb-1 text-left">
+                                                <label for="client_name_on" class="mb-1">@IDSRWTResource.title_client_name_on</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control inp-epd" id="client_name_on" name="client_name_on" title="" data-mode="" data-edit="" data-form="transceiver">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-xl-12 mb-1 text-left">
+                                    <fieldset class="border-info">
+                                        <legend>@IDSRWTResource.title_sap_outbound_supply</legend>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="border-primary">
+                            <legend>@IDSRWTResource.title_data_arrival</legend>
+                            <div class="form-row">
+                                <div class="col-xl-4 mb-1 text-left">
+                                    <label for="cargo_arrival" class="mb-1">@IDSRWTResource.title_cargo:</label>
+                                    <input type="text" class="form-control inp-auto" id="cargo_arrival" name="cargo_arrival" placeholder="" data-mode="" data-edit="" data-form="transceiver">
+                                </div>
+                                <div class="col-xl-8 mb-1 text-left">
+                                    <label for="cargo_sap" class="mb-1">@IDSRWTResource.title_material_name SAP:</label>
+                                    <input type="text" class="form-control inp-auto" id="cargo_sap" name="cargo_sap" placeholder="" data-mode="" data-edit="" data-form="transceiver">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-xl-4 mb-1 text-left">
+                                    <label for="date_arrival" class="mb-1">@IDSRWTResource.title_date_adoption:</label>
+                                    <input type="datetime" class="form-control inp-auto" id="date_arrival" name="date_arrival" title="" data-mode="" data-edit="" data-form="transceiver">
+                                </div>
+                                <div class="col-xl-8 mb-1 text-left">
+                                    <label for="owner_name_arrival" class="mb-1">@IDSRWTResource.title_name_owner:</label>
+                                    <input type="text" class="form-control inp-auto" id="owner_name_arrival" name="owner_name_arrival" title="" data-mode="" data-edit="" data-form="transceiver">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-xl-6 mb-1 text-left">
+                                    <label for="operator_name_arrival" class="mb-1">@IDSRWTResource.title_name_operator:</label>
+                                    <input type="text" class="form-control inp-auto" id="operator_name_arrival" name="operator_name_arrival" title="" data-mode="" data-edit="" data-form="transceiver">
+                                </div>
+                                <div class="col-xl-6 mb-1 text-left">
+                                    <label for="limiting_loading_arrival" class="mb-1">@IDSRWTResource.title_limiting_loading_amkr:</label>
+                                    <input type="text" class="form-control inp-auto" id="limiting_loading_arrival" name="limiting_loading_arrival" title="" data-mode="" data-edit="" data-form="transceiver">
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-1 mb-1">
+        <div class="card border-primary" id="card-not-arrived-cars">
+            <div class="card-header">
+                Вагоны-->
+                @*<button type="button" class="btn btn-warning btn-sm" id="add-num-car-of-epd" title="Найти вагоны по ЭПД, поиск документа по номеру" data-form="transceiver">
+            <i class="fa fa-file-code-o" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="btn btn-warning btn-sm" id="add-num-car-manual" title="Добавить вагон вручную" data-form="transceiver">
+            <i class="fa fa-hand-paper-o" aria-hidden="true"></i>
+        </button>*@
+                <!--</div>
+                            <div class="card-body text-primary" style="padding: 0.5rem;">
+                                <div class="list-group" id="list-cars-not-outgoing" role="tablist">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>-->
+
                 <div class="card-footer bg-transparent border-dark"></div>
             </div>
         </div>
