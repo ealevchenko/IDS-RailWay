@@ -2032,6 +2032,7 @@
     <Content Include="Content\module\directory\table_dir_way.css" />
     <Content Include="Content\module\table_tree_way.css" />
     <Content Include="Content\module\wsd\form_ho_outgoing_sostav.css" />
+    <Content Include="Content\module\wsd\form_outgoing_cars_detali.css" />
     <Content Include="Content\module\wsd\table_outgoing_cars.css" />
     <Content Include="Content\module\wsd\table_outgoing_sostav.css" />
     <Content Include="Content\module\wsd\view_report_remainder_cars.css" />
@@ -2119,6 +2120,7 @@
     <Content Include="Scripts\module\table_wir_detali.js" />
     <Content Include="Scripts\module\table_wir.js" />
     <Content Include="Scripts\module\table_arrival.js" />
+    <Content Include="Scripts\module\wsd\form_outgoing_cars_detali.js" />
     <Content Include="Scripts\module\wsd\form_ho_outgoing_sostav.js" />
     <Content Include="Scripts\module\wsd\table_outgoing_cars.js" />
     <Content Include="Scripts\module\wsd\table_outgoing_sostav.js" />
