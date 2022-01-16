@@ -864,9 +864,11 @@
     // Элемент <form class="">
     form_control.prototype.el_form = function (id, cl_form, valid_html5) {
         this.$form = $('<form></form>', {
-            'class': cl_form,
             'id': id
         });
+        if (cl_form && cl_form !== '') {
+            this.$form.addClass(cl_form);
+        };
         if (!valid_html5) {
             this.$form.attr('novalidate', '');
         }
@@ -904,7 +906,7 @@
     //</div>
     form_control.prototype.el_form_input = function (options) {
         this.settings = $.extend({
-            fg_cl : null,
+            fg_cl: null,
             id: null,
             lb_cl: null,
             lb_text: null,
@@ -947,10 +949,10 @@
         div_ig.$div.append(div_ifb.$div);
         this.$element = div.$div.append($label).append(div_ig.$div);
     };
-
+    //
     form_control.prototype.el_form_textarea = function (options) {
         this.settings = $.extend({
-            fg_cl : null,
+            fg_cl: null,
             id: null,
             lb_cl: null,
             lb_text: null,
@@ -998,7 +1000,7 @@
     //</div>
     form_control.prototype.el_form_checkbox = function (options) {
         this.settings = $.extend({
-            div_cl : null,
+            div_cl: null,
             id: null,
             lb_cl: null,
             lb_text: null,
@@ -1977,6 +1979,245 @@
     };
 
     App.form_infield = form_infield;
+
+    //================================================================================
+    // Класс для создания объектов 
+    //--------------------------------Конструктор и инициализация---------------
+    // создать класс
+    function form_element() {
+
+    };
+
+    var add_class = function (element, tag) {
+        if (element && tag && tag !== '') {
+            element.addClass(tag);
+        }
+    }
+
+    var add_id = function (element, tag) {
+        if (element && tag && tag !== '') {
+            element.attr('id', tag);
+        }
+    }
+
+    form_element.prototype.div = function (options) {
+        this.settings = $.extend({
+            class: null,
+            id: null,
+        }, options);
+        this.$div = $('<div></div>');
+        if (!this.$div || this.$div.length === 0) {
+            throw new Error('Не удалось создать элемент <div></div>');
+        } else {
+            add_class(this.$div, this.settings.class);
+            add_id(this.$div, this.settings.id);
+        }
+    };
+    // Элемент <div class="row">
+    form_element.prototype.bs_row = function (options) {
+        this.settings = $.extend({
+            class: null,
+            id: null,
+        }, options);
+        this.fe = new form_element();
+        var div = new this.fe.div({ class: 'row' });
+        this.$row = div.$div;
+        add_class(this.$row, this.settings.class);
+        add_id(this.$row, this.settings.id);
+    };
+    // Элемент <div class="col-..-..">
+    form_control.prototype.el_col = function (prefix, col, cl_col) {
+        this.$col = $('<div></div>', {
+            'class': 'col-' + prefix + '-' + col,
+        });
+        if (cl_col && cl_col !== '') {
+            this.$col.addClass(cl_col);
+        }
+        if (!this.$col || this.$col.length === 0) {
+            throw new Error('Не удалось создать элемент <div class="col-' + prefix + '-' + col + '"></div>');
+        }
+    };
+    App.form_element = form_element;
+    //================================================================================
+    // Конструктор формы диалог, большие формы
+    function form_dialog() {
+        this.fc = new form_control();
+        this.fe = new form_element();
+    }
+    //-----------------------------------------------------------------------------
+    // Инициализация формы
+    form_dialog.prototype.init = function (options) {
+        this.init = true;
+        // Настройки формы правки строк таблицы
+        this.settings = $.extend({
+            alert: null,
+            objs: [],
+            mb: 2,
+            id: '',
+            cl_form: null,
+            validation: true,
+            fn_validation_ok: null,
+            fn_init: null,
+        }, options);
+        var form = new this.fc.el_form(this.settings.id, this.settings.cl_form + ' text-left');
+
+        this.$form = form.$form;
+
+        // Алерт 
+        if (!this.settings.alert) {
+            var $alert = new this.fc.el_alert();
+            if ($alert && $alert.$alert && $alert.$alert.length > 0) {
+                var $alert = $alert.$alert;
+                this.$form.append($alert);
+                this.alert = new alert_form($alert);
+            }
+        };
+        // Привяжем событие submit
+        this.$form.on('submit', function (event) {
+            this.submit(event);
+        }.bind(this));
+        //---------------------------------------------------------
+        // Создаем элементы и отрисовываем их на форме
+        // Получим список элементов которые должны отображатся на форме
+        this.el_destroy = []; // Элементы которые нужно удалить методом destroy()
+        this.data = null;
+        /*        this.el_validation = $([]); // Элементы для валидации*/
+        // Пройдемся по элементам
+        this.add_obj(this.$form, this.settings.objs, function (form) {
+            // Инициализация закончена
+            if (typeof this.settings.fn_init === 'function') {
+                this.settings.fn_init(this.init);
+            }
+        }.bind(this));
+
+        //$.each(this.settings.objs, function (i, obj) {
+        //    if (obj && obj.obj) {
+        //        if (obj.obj === 'row') {
+        //            var element = new this.fe.bs_row(obj.options);
+        //            if (element && element.length > 0) {
+        //                if (obj.childs && obj.childs.length > 0) {
+
+        //                }
+        //            }
+        //        }
+        //    }
+        //}.bind(this));
+
+        // Отсортируем элементы по row
+        //var form_elements = this.settings.fields.filter(function (i) {
+        //    return i.row !== null;
+        //}).sort(function (a, b) {
+        //    return a.row - b.row;
+        //});
+        //var row = 0;
+        //var col = 0;
+        //var row_add$ = null;
+        //var row_edit$ = null;
+        //// Пройдемся по элементам и отрисуем их на форме
+        //$.each(form_elements, function (i, el_field) {
+        //    if (el_field.row !== row) {
+        //        // Это новая строка, создадим ее
+        //        row = el_field.row; // запомним для следующей проверки
+        //        col = 0;            // начнем счет col с 0;
+        //        // Форма добавить
+        //        var form_row_add$ = new this.fc.el_div_form_row();
+        //        if (form_row_add$ && form_row_add$.$div && form_row_add$.$div.length > 0) {
+        //            row_add$ = form_row_add$.$div;
+        //            this.$form_add.append(row_add$); // добавим на форму
+        //        } else {
+        //            throw new Error('Не удалось создать элемент <div class="form-row">');
+        //        };
+        //        // форма править
+        //        var form_row_edit$ = new this.fc.el_div_form_row();
+        //        if (form_row_edit$ && form_row_edit$.$div && form_row_edit$.$div.length > 0) {
+        //            row_edit$ = form_row_edit$.$div;
+        //            this.$form_edit.append(row_edit$); // добавим на форму
+        //        } else {
+        //            throw new Error('Не удалось создать элемент <div class="form-row">');
+        //        };
+        //    };
+        //    if (el_field.col !== col) {
+        //        // Это новая ячейка сетки, строки
+        //        col = el_field.col; // запомним для следующей проверки
+        //        // Форма добавить
+        //        var $form_col_add = new this.fc.el_col(el_field.col_prefix, el_field.col_size, (this.settings.mb ? 'mb-' + this.settings.mb : ''))
+        //        if ($form_col_add && $form_col_add.$col && $form_col_add.$col.length > 0) {
+        //            row_add$.append($form_col_add.$col); // добавим на форму
+        //            this.add_element_form(el_field, 'add', $form_col_add.$col);
+        //        } else {
+        //            throw new Error('Не удалось создать элемент <div class="col-..-..">');
+        //        };
+        //        // форма править
+        //        var $form_col_edit = new this.fc.el_col(el_field.col_prefix, el_field.col_size, (this.settings.mb ? 'mb-' + this.settings.mb : ''))
+        //        if ($form_col_edit && $form_col_edit.$col && $form_col_edit.$col.length > 0) {
+        //            row_edit$.append($form_col_edit.$col); // добавим на форму
+        //            this.add_element_form(el_field, 'edit', $form_col_edit.$col);
+        //        } else {
+        //            throw new Error('Не удалось создать элемент <div class="col-..-..">');
+        //        };
+        //    }
+        //}.bind(this));
+        //// Пройдемся по зависимостям
+        //$.each(form_elements.filter(function (i) { return i.control !== null }), function (i, el_control) {
+        //    if (el_control.control) {
+        //        var n_control = el_control.control;
+        //        var element_control = form_elements.find(function (o) {
+        //            return o.name === n_control;
+        //        });
+        //        if (element_control) {
+        //            if (element_control.element_add && el_control.element_add) {
+        //                el_control.element_add['element_control'] = element_control.element_add;
+        //            }
+        //            if (element_control.element_edit && el_control.element_edit) {
+        //                el_control.element_edit['element_control'] = element_control.element_edit;
+        //            }
+        //        } else {
+        //            throw new Error('Неопределен контролируемый элемент : ' + n_control);
+        //        }
+        //    }
+        //}.bind(this));
+        //// Валидация
+        //if (this.settings.validation) {
+        //    this.validation = new validation_form();
+        //    var elements_add = this.$form_add.find('input, select, textarea');
+        //    var elements_edit = this.$form_edit.find('input, select, textarea');
+        //    var elements = [];
+        //    elements = $.merge(elements_add, elements_edit);
+        //    this.validation.init({
+        //        alert: this.settings.alert, //TODO: решить вопрос привязки this.alert_add или this.alert_edit к общей валидации
+        //        elements: elements,
+        //    });
+        //};
+
+
+    };
+
+    form_dialog.prototype.add_obj = function (content, objs, callback) {
+        $.each(objs, function (i, obj) {
+            if (obj && obj.obj) {
+                if (obj.obj === 'row') {
+                    var element = new this.fe.bs_row(obj.options);
+                    if (element && element.$row && element.$row.length > 0) {
+                        if (obj.childs && obj.childs.length > 0) {
+                            this.add_obj(element.$row, obj.childs, function (content) {
+                                //element.$row
+                            }.bind(this));
+                        }
+                        content.append(element.$row);
+                    }
+                }
+            }
+        }.bind(this));
+        if (typeof callback === 'function') {
+            callback(content);
+        };
+    };
+    // Удаление формы
+    form_dialog.prototype.destroy = function () {
+
+    };
+
+    App.form_dialog = form_dialog;
 
     //================================================================================
     // Класс для создания объектов модальные окна
