@@ -1097,10 +1097,13 @@
                 childs: []
             };
             var bt_present_car = {
-                obj: 'button',
+                obj: 'bs_button',
                 options: {
-                    class: 'btn btn-primary btn',
+                    color: 'primary',
+                    size: null,
+                    class: null,
                     id: 'present_car',
+                    label: 'Предъявить вагон',
                     title: '',
                     icon: 'fa fa-arrow-circle-left',
                     click: function () { },
@@ -1109,8 +1112,11 @@
             var bt_return_car = {
                 obj: 'button',
                 options: {
-                    class: 'btn btn-danger btn float-right',
+                    color: 'danger',
+                    size: null,
+                    class: 'float-right',
                     id: 'return_car',
+                    label: 'Вернуть вагон ',
                     title: '',
                     icon: 'fa fa-arrow-circle-right',
                     click: function () { },

@@ -2000,6 +2000,34 @@
         }
     }
 
+    var add_title = function (element, tag) {
+        if (element && tag && tag !== '') {
+            element.attr('title', tag);
+        }
+    }
+
+    var add_value = function (element, value) {
+        if (element && value && value !== '') {
+            element.attr('value', value);
+        }
+    }
+    var add_val = function (element, value) {
+        if (element && value && value !== '') {
+            element.val(value);
+        }
+    }
+    var append_label = function (element, label) {
+        if (element && label && label !== '') {
+            element.append(label);
+        }
+    }
+
+    var add_click = function (element, fn) {
+        if (element && typeof fn === 'function') {
+            element.on('click', fn);
+        }
+    }
+
     form_element.prototype.div = function (options) {
         this.settings = $.extend({
             class: null,
@@ -2026,17 +2054,57 @@
         add_id(this.$row, this.settings.id);
     };
     // Элемент <div class="col-..-..">
-    form_control.prototype.el_col = function (prefix, col, cl_col) {
-        this.$col = $('<div></div>', {
-            'class': 'col-' + prefix + '-' + col,
+    form_element.prototype.bs_col = function (options) {
+        this.settings = $.extend({
+            class: null,
+            id: null,
+        }, options);
+        this.fe = new form_element();
+        var div = new this.fe.div();
+        this.$col = div.$div;
+        add_class(this.$col, this.settings.class);
+        add_id(this.$col, this.settings.id);
+    };
+    // Элемент <button>...</button>
+    form_element.prototype.bs_button = function (options) {
+        this.settings = $.extend({
+            color: null,
+            size: null,
+            class: null,
+            id: null,
+            label: null,
+            title: null,
+            icon: null,
+            click: null,
+        }, options);
+
+        this.$button = $('<button></button>', {
+            'class': 'btn',
         });
-        if (cl_col && cl_col !== '') {
-            this.$col.addClass(cl_col);
-        }
-        if (!this.$col || this.$col.length === 0) {
-            throw new Error('Не удалось создать элемент <div class="col-' + prefix + '-' + col + '"></div>');
+        if (!this.$button || this.$button.length === 0) {
+            throw new Error('Не удалось создать элемент <button></button>');
+        } else {
+            if (this.settings.color && this.settings.color != null) {
+                this.$button.addClass('btn-' + this.settings.color);
+            };
+            if (this.settings.size && this.settings.size != null) {
+                this.$button.addClass('btn-' + this.settings.size);
+            };
+            add_class(this.$button, this.settings.class);
+            add_id(this.$button, this.settings.id);
+            if (this.settings.icon && this.settings.icon !== '') {
+                var icon = $('<i></i>', {
+                    'class': this.settings.icon,
+                    'aria-hidden': 'true'
+                });
+                this.$button.append(icon).append(' ');
+            };
+            append_label(this.$button, this.settings.label);
+            add_title(this.$button, this.settings.title);
+            add_click(this.$button, this.settings.click);
         }
     };
+
     App.form_element = form_element;
     //================================================================================
     // Конструктор формы диалог, большие формы
@@ -2090,122 +2158,36 @@
             }
         }.bind(this));
 
-        //$.each(this.settings.objs, function (i, obj) {
-        //    if (obj && obj.obj) {
-        //        if (obj.obj === 'row') {
-        //            var element = new this.fe.bs_row(obj.options);
-        //            if (element && element.length > 0) {
-        //                if (obj.childs && obj.childs.length > 0) {
-
-        //                }
-        //            }
-        //        }
-        //    }
-        //}.bind(this));
-
-        // Отсортируем элементы по row
-        //var form_elements = this.settings.fields.filter(function (i) {
-        //    return i.row !== null;
-        //}).sort(function (a, b) {
-        //    return a.row - b.row;
-        //});
-        //var row = 0;
-        //var col = 0;
-        //var row_add$ = null;
-        //var row_edit$ = null;
-        //// Пройдемся по элементам и отрисуем их на форме
-        //$.each(form_elements, function (i, el_field) {
-        //    if (el_field.row !== row) {
-        //        // Это новая строка, создадим ее
-        //        row = el_field.row; // запомним для следующей проверки
-        //        col = 0;            // начнем счет col с 0;
-        //        // Форма добавить
-        //        var form_row_add$ = new this.fc.el_div_form_row();
-        //        if (form_row_add$ && form_row_add$.$div && form_row_add$.$div.length > 0) {
-        //            row_add$ = form_row_add$.$div;
-        //            this.$form_add.append(row_add$); // добавим на форму
-        //        } else {
-        //            throw new Error('Не удалось создать элемент <div class="form-row">');
-        //        };
-        //        // форма править
-        //        var form_row_edit$ = new this.fc.el_div_form_row();
-        //        if (form_row_edit$ && form_row_edit$.$div && form_row_edit$.$div.length > 0) {
-        //            row_edit$ = form_row_edit$.$div;
-        //            this.$form_edit.append(row_edit$); // добавим на форму
-        //        } else {
-        //            throw new Error('Не удалось создать элемент <div class="form-row">');
-        //        };
-        //    };
-        //    if (el_field.col !== col) {
-        //        // Это новая ячейка сетки, строки
-        //        col = el_field.col; // запомним для следующей проверки
-        //        // Форма добавить
-        //        var $form_col_add = new this.fc.el_col(el_field.col_prefix, el_field.col_size, (this.settings.mb ? 'mb-' + this.settings.mb : ''))
-        //        if ($form_col_add && $form_col_add.$col && $form_col_add.$col.length > 0) {
-        //            row_add$.append($form_col_add.$col); // добавим на форму
-        //            this.add_element_form(el_field, 'add', $form_col_add.$col);
-        //        } else {
-        //            throw new Error('Не удалось создать элемент <div class="col-..-..">');
-        //        };
-        //        // форма править
-        //        var $form_col_edit = new this.fc.el_col(el_field.col_prefix, el_field.col_size, (this.settings.mb ? 'mb-' + this.settings.mb : ''))
-        //        if ($form_col_edit && $form_col_edit.$col && $form_col_edit.$col.length > 0) {
-        //            row_edit$.append($form_col_edit.$col); // добавим на форму
-        //            this.add_element_form(el_field, 'edit', $form_col_edit.$col);
-        //        } else {
-        //            throw new Error('Не удалось создать элемент <div class="col-..-..">');
-        //        };
-        //    }
-        //}.bind(this));
-        //// Пройдемся по зависимостям
-        //$.each(form_elements.filter(function (i) { return i.control !== null }), function (i, el_control) {
-        //    if (el_control.control) {
-        //        var n_control = el_control.control;
-        //        var element_control = form_elements.find(function (o) {
-        //            return o.name === n_control;
-        //        });
-        //        if (element_control) {
-        //            if (element_control.element_add && el_control.element_add) {
-        //                el_control.element_add['element_control'] = element_control.element_add;
-        //            }
-        //            if (element_control.element_edit && el_control.element_edit) {
-        //                el_control.element_edit['element_control'] = element_control.element_edit;
-        //            }
-        //        } else {
-        //            throw new Error('Неопределен контролируемый элемент : ' + n_control);
-        //        }
-        //    }
-        //}.bind(this));
-        //// Валидация
-        //if (this.settings.validation) {
-        //    this.validation = new validation_form();
-        //    var elements_add = this.$form_add.find('input, select, textarea');
-        //    var elements_edit = this.$form_edit.find('input, select, textarea');
-        //    var elements = [];
-        //    elements = $.merge(elements_add, elements_edit);
-        //    this.validation.init({
-        //        alert: this.settings.alert, //TODO: решить вопрос привязки this.alert_add или this.alert_edit к общей валидации
-        //        elements: elements,
-        //    });
-        //};
-
-
     };
 
     form_dialog.prototype.add_obj = function (content, objs, callback) {
+        // Добавить элемент
+        var add_element = function (element, content, obj) {
+            if (element && element.length > 0) {
+                if (obj.childs && obj.childs.length > 0) {
+                    this.add_obj(element, obj.childs, function (content) {
+                        return content;
+                    }.bind(this));
+                }
+                content.append(element);
+            };
+            return element;
+        }.bind(this);
+        // Пройдемся по элементам
         $.each(objs, function (i, obj) {
             if (obj && obj.obj) {
                 if (obj.obj === 'row') {
                     var element = new this.fe.bs_row(obj.options);
-                    if (element && element.$row && element.$row.length > 0) {
-                        if (obj.childs && obj.childs.length > 0) {
-                            this.add_obj(element.$row, obj.childs, function (content) {
-                                //element.$row
-                            }.bind(this));
-                        }
-                        content.append(element.$row);
-                    }
-                }
+                    add_element(element.$row, content, obj);
+                };
+                if (obj.obj === 'col') {
+                    var element = new this.fe.bs_col(obj.options);
+                    add_element(element.$col, content, obj);
+                };
+                if (obj.obj === 'bs_button') {
+                    var element = new this.fe.bs_button(obj.options);
+                    add_element(element.$button, content, obj);
+                };
             }
         }.bind(this));
         if (typeof callback === 'function') {
