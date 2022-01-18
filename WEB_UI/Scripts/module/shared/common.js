@@ -1988,6 +1988,12 @@
 
     };
 
+    var add_tag = function (element, tag_name, tag_value) {
+        if (element && tag_name && tag_name !== '' && tag_value !== null) {
+            element.attr(tag_name, tag_value);
+        }
+    }
+
     var add_class = function (element, tag) {
         if (element && tag && tag !== '') {
             element.addClass(tag);
@@ -1997,6 +2003,12 @@
     var add_id = function (element, tag) {
         if (element && tag && tag !== '') {
             element.attr('id', tag);
+        }
+    }
+
+    var add_for = function (element, tag) {
+        if (element && tag && tag !== '') {
+            element.attr('for', tag);
         }
     }
 
@@ -2021,6 +2033,12 @@
     var append_label = function (element, label) {
         if (element && label && label !== '') {
             element.append(label);
+        }
+    }
+
+    var append_element = function (element, el) {
+        if (element && el && el !== '') {
+            element.append(el);
         }
     }
 
@@ -2069,7 +2087,60 @@
             }
         }
     };
+    // Элемент <label for="..." class="..">..</label>
+    form_element.prototype.label = function (options) {
+        this.settings = $.extend({
+            class: null,
+            id: null,
+            for: null,
+            label: null
+        }, options);
+        this.$label = $('<label></label>');
+        if (!this.$label || this.$label.length === 0) {
+            throw new Error('Не удалось создать элемент <div></div>');
+        } else {
+            add_class(this.$label, this.settings.class);
+            add_id(this.$label, this.settings.id);
+            append_label(this.$label, this.settings.label);
+            add_for(this.$label, this.settings.for);
+        }
+    };
+    // Элемент <input type=".." class=".." id="num_car" title=".." name="..".>
+    form_element.prototype.input = function (options) {
+        this.settings = $.extend({
+            id: null,
+            type: 'text',
+            class: null,
+            title: null,
+            placeholder: null,
+            required: null,
+            maxlength: null,
+            pattern: null,
+            min: null,
+            max: null,
+            step: null,
+        }, options);
+        this.$input = $('<input></input>', {
+            'type': this.settings.type
+        });
 
+        if (!this.$input || this.$input.length === 0) {
+            throw new Error('Не удалось создать элемент <input></input>');
+        } else {
+            add_class(this.$input, this.settings.class);
+            add_id(this.$input, this.settings.id);
+            add_tag(this.$input, 'name', this.settings.id);
+            add_tag(this.$input, 'title', this.settings.title);
+            add_tag(this.$input, 'placeholder', this.settings.placeholder);
+            add_tag(this.$input, 'required', this.settings.required);
+            add_tag(this.$input, 'maxlength', this.settings.maxlength);
+            add_tag(this.$input, 'pattern', this.settings.pattern);
+            add_tag(this.$input, 'required', this.settings.required);
+            add_tag(this.$input, 'min', this.settings.min);
+            add_tag(this.$input, 'max', this.settings.max);
+            add_tag(this.$input, 'step', this.settings.step);
+        }
+    };
     //--------------- bootstrap ------------------------
     // Элемент <div class="row"></div>
     form_element.prototype.bs_row = function (options) {
@@ -2094,6 +2165,47 @@
         this.$row = div.$div;
         add_class(this.$row, this.settings.class);
         add_id(this.$row, this.settings.id);
+    };
+    // Элемент <div class="input-group"></div>
+    form_element.prototype.bs_input_group = function (options) {
+        this.settings = $.extend({
+            class: null,
+            id: null,
+        }, options);
+        this.fe = new form_element();
+        var div = new this.fe.div({ class: 'input-group' });
+        this.$div = div.$div;
+        add_class(this.$div, this.settings.class);
+        add_id(this.$div, this.settings.id);
+    };
+    // Элемент <div class="input-group-prepend"></div>
+    form_element.prototype.bs_input_group_prepend = function (options) {
+        this.settings = $.extend({
+            class: null,
+            id: null,
+            element: null,
+        }, options);
+        this.fe = new form_element();
+        var div = new this.fe.div({ class: 'input-group-prepend' });
+        this.$div = div.$div;
+        add_class(this.$div, this.settings.class);
+        add_id(this.$div, this.settings.id);
+        append_element(this.$div, this.settings.element);
+    };
+    // Элемент <div class="input-group-append"></div>
+    form_element.prototype.bs_input_group_append = function (options) {
+        this.settings = $.extend({
+            class: null,
+            id: null,
+            element: null,
+            obj:null,
+        }, options);
+        this.fe = new form_element();
+        var div = new this.fe.div({ class: 'input-group-append' });
+        this.$div = div.$div;
+        add_class(this.$div, this.settings.class);
+        add_id(this.$div, this.settings.id);
+        append_element(this.$div, this.settings.element);
     };
     // Элемент <div class="col-..-.."></div>
     form_element.prototype.bs_col = function (options) {
@@ -2163,6 +2275,104 @@
 
             add_title(this.$button, this.settings.title);
             add_click(this.$button, this.settings.click);
+        }
+    };
+    //<div class="form-group col-xl-3 text-left">
+    //    <label for="num_car" class="mb-1">@IDSRWTResource.title_num_car:</label>
+    //    <div class="input-group">
+    //        <input type="text" class="form-control inp-auto" id="num_car" title="Номер вагона" name="num_car" data-mode="" data-edit="" data-form="transceiver">
+    //            <div class="input-group-append">
+    //                <button type="button" class="btn btn-warning btn" id="car_return" title="Вернуть вагон" data-mode="edit" data-edit="" data-form="transceiver">
+    //                    <i class="fa fa-retweet" aria-hidden="true"></i>
+    //                </button>
+    //            </div>
+    //    </div>
+    //</div>
+    form_element.prototype.bs_input_number = function (options) {
+        this.settings = $.extend({
+            id: null,
+            form_group_size: null,
+            form_group_col: null,
+            form_group_class: null,
+            label: null,
+            label_class: null,
+            input_size: null,
+            input_class: null,
+            input_title: null,
+            input_placeholder: null,
+            input_required: null,
+            input_min: null,
+            input_max: null,
+            input_step: null,
+            input_group: false,
+            input_group_prepend_class: null,
+            input_group_prepend_element: null,
+            input_group_append_class: null,
+            input_group_append_element: null,
+            class: null,
+        }, options);
+        //
+        this.fe = new form_element();
+        var div = new this.fe.div();
+        this.$element = div.$div;
+        if (this.settings.input_group) {
+            add_class(this.$element, 'form-group');
+        }
+        var cl = 'col';
+        if (this.settings.form_group_size && this.settings.form_group_size !== '') {
+            cl += '-' + this.settings.form_group_size;
+        }
+        if (this.settings.form_group_col && this.settings.form_group_col !== '') {
+            cl += '-' + this.settings.form_group_col;
+        }
+        add_class(this.$element, cl);
+        add_class(this.$element, this.settings.form_group_class);
+        // Подпись
+        var label = new this.fe.label({
+            class: this.settings.label_class,
+            id: null,
+            for: this.settings.id,
+            label: this.settings.label
+        });
+        this.$element.append(label.$label);
+        // Input
+        var input = new this.fe.input({
+            id: this.settings.id,
+            type: 'number',
+            class: 'form-control',
+            title: this.settings.input_title,
+            placeholder: this.settings.input_placeholder,
+            required: this.settings.input_required,
+            maxlength: this.settings.input_maxlength,
+            pattern: this.settings.input_pattern,
+            min: this.settings.input_min,
+            max: this.settings.input_max,
+            step: this.settings.input_step,
+        });
+        add_class(input.$input, this.settings.input_class);
+
+        if (this.settings.input_group) {
+            var ig = new this.fe.bs_input_group();
+            if (this.settings.input_group_prepend_element && this.settings.input_group_prepend_element !== null) {
+                var input_group_prepend = new this.fe.bs_input_group_prepend({
+                    class: this.settings.input_group_prepend_class,
+                    element: this.settings.input_group_prepend_element
+                });
+                ig.$div.append(input_group_prepend.$div);
+            };
+            //
+            ig.$div.append(input.$input);
+            if (this.settings.input_group_append_element && this.settings.input_group_append_element !== null) {
+                var input_group_append = new this.fe.bs_input_group_append({
+                    class: this.settings.input_group_append_class,
+                    element: this.settings.input_group_append_element,
+                    obj:this.settings.input_group_append_obj
+                });
+                ig.$div.append(input_group_append.$div);
+            };
+            this.$element.append(ig.$div);
+        } else {
+            this.$element.append(input.$input);
         }
     };
     // 
@@ -2257,6 +2467,11 @@
                     var element = new this.fe.fieldset(obj.options);
                     add_element(element.$fieldset, content, obj);
                 };
+                if (obj.obj === 'bs_input_number') {
+                    var element = new this.fe.bs_input_number(obj.options);
+                    add_element(element.$element, content, obj);
+                };
+
             }
         }.bind(this));
         if (typeof callback === 'function') {

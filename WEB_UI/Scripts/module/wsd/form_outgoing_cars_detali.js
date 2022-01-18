@@ -1160,23 +1160,20 @@
                 },
                 childs: []
             };
-            //var el_num = new base.fc_ui.el_form_input({
-            //    fg_cl: 'col-xl-3 text-left',
-            //    id: 'num_car',
-            //    lb_cl: 'mb-1',
-            //    lb_text: langView('fogcd_label_num', App.Langs),
-            //    inp_type: 'number',
-            //    inp_cl: 'form-control inp-auto',
-            //    inp_title: langView('fogcd_title_num', App.Langs),
-            //    placeholder: null,
-            //    required: null,
-            //    min: null,
-            //    max: null,
-            //    step: null,
-            //    maxlength: null,
-            //    pattern: null,
-            //    el_iga: bt_car_return.$button
-            //});
+            var bt_car_return = {
+                obj: 'bs_button',
+                options: {
+                    color: 'warning',
+                    size: 'sm',
+                    class: null,
+                    id: 'car_return',
+                    label: null,
+                    title: '',
+                    icon_left: null,
+                    icon_right: 'fa fa-retweet',
+                    click: function () { },
+                }
+            };
             var form_input_num = {
                 obj: 'bs_input_number',
                 options: {
@@ -1199,6 +1196,7 @@
                     input_group_prepend_element: null,
                     input_group_append_class: null,
                     input_group_append_element: null,
+                    input_group_append_obj: bt_car_return,
                     class: null,
                 },
                 childs: []
