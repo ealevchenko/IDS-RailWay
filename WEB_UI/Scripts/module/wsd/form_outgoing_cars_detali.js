@@ -1083,16 +1083,18 @@
             var objs = [];
             // Кнопки
             var row1 = {
-                obj: 'row',
+                obj: 'bs_row',
                 options: {
                     class: 'mb-1',
                 },
                 childs: []
             };
             var col1 = {
-                obj: 'col',
+                obj: 'bs_col',
                 options: {
-                    class: 'col-xl-12 text-left',
+                    size: 'xl',
+                    col: 12,
+                    class: 'text-left',
                 },
                 childs: []
             };
@@ -1105,39 +1107,44 @@
                     id: 'present_car',
                     label: 'Предъявить вагон',
                     title: '',
-                    icon: 'fa fa-arrow-circle-left',
+                    icon_left: 'fa fa-arrow-circle-left',
+                    icon_right: null,
                     click: function () { },
                 }
             };
             var bt_return_car = {
-                obj: 'button',
+                obj: 'bs_button',
                 options: {
                     color: 'danger',
                     size: null,
                     class: 'float-right',
                     id: 'return_car',
-                    label: 'Вернуть вагон ',
+                    label: 'Вернуть вагон',
                     title: '',
-                    icon: 'fa fa-arrow-circle-right',
+                    icon_left: null,
+                    icon_right: 'fa fa-arrow-circle-right',
                     click: function () { },
                 }
             };
             // Форма детально
             var row_detali = {
-                obj: 'row',
+                obj: 'bs_row',
                 options: {
                     class: null,
                 },
                 childs: []
             };
             var col_detali = {
-                obj: 'col',
+                obj: 'bs_col',
                 options: {
-                    class: 'col-xl-12',
+                    size: 'xl',
+                    col: 12,
+                    class: null,
                 },
                 childs: []
             };
-            var fieldset_detali = {
+            // Общие данные
+            var fieldset_common = {
                 obj: 'fieldset',
                 options: {
                     class: 'border-primary',
@@ -1146,12 +1153,90 @@
                 },
                 childs: []
             };
+            var form_row_common1 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            //var el_num = new base.fc_ui.el_form_input({
+            //    fg_cl: 'col-xl-3 text-left',
+            //    id: 'num_car',
+            //    lb_cl: 'mb-1',
+            //    lb_text: langView('fogcd_label_num', App.Langs),
+            //    inp_type: 'number',
+            //    inp_cl: 'form-control inp-auto',
+            //    inp_title: langView('fogcd_title_num', App.Langs),
+            //    placeholder: null,
+            //    required: null,
+            //    min: null,
+            //    max: null,
+            //    step: null,
+            //    maxlength: null,
+            //    pattern: null,
+            //    el_iga: bt_car_return.$button
+            //});
+            var form_input_num = {
+                obj: 'bs_input_number',
+                options: {
+                    id: 'num_car',
+                    form_group_size: 'xl',
+                    form_group_col: 3,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_num', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-auto',
+                    input_title: langView('fogcd_title_num', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_min: null,
+                    input_max: null,
+                    input_step: null,
+                    input_group: true,
+                    input_group_prepend_class: null,
+                    input_group_prepend_element: null,
+                    input_group_append_class: null,
+                    input_group_append_element: null,
+                    class: null,
+                },
+                childs: []
+            };
+            var form_row_common2 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_row_common3 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_row_common4 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+
             // Собираем
             col1.childs.push(bt_present_car);
             col1.childs.push(bt_return_car);
             row1.childs.push(col1);
             //
-            col_detali.childs.push(fieldset_detali);
+            form_row_common1.childs.push(form_input_num);
+
+            fieldset_common.childs.push(form_row_common1);
+            fieldset_common.childs.push(form_row_common2);
+            fieldset_common.childs.push(form_row_common3);
+            fieldset_common.childs.push(form_row_common4);
+            col_detali.childs.push(fieldset_common);
             row_detali.childs.push(col_detali);
             //
             objs.push(row1);

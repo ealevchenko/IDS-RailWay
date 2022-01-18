@@ -2011,11 +2011,13 @@
             element.attr('value', value);
         }
     }
+
     var add_val = function (element, value) {
         if (element && value && value !== '') {
             element.val(value);
         }
     }
+
     var append_label = function (element, label) {
         if (element && label && label !== '') {
             element.append(label);
@@ -2027,7 +2029,8 @@
             element.on('click', fn);
         }
     }
-
+    //---------------- HTML ----------------------------
+    // Элемент <div></div>
     form_element.prototype.div = function (options) {
         this.settings = $.extend({
             class: null,
@@ -2041,7 +2044,34 @@
             add_id(this.$div, this.settings.id);
         }
     };
-    // Элемент <div class="row">
+    // Элемент <fieldset">
+    //            <legend></legend>
+    //            ...
+    //         </fieldset>
+    form_element.prototype.fieldset = function (options) {
+        this.settings = $.extend({
+            class: null,
+            legend: null,
+            class_legend: null,
+        }, options);
+        this.$fieldset = $('<fieldset></fieldset>');
+        if (!this.$fieldset || this.$fieldset.length === 0) {
+            throw new Error('Не удалось создать элемент <fieldset></fieldset>');
+        } else {
+            add_class(this.$fieldset, this.settings.class);
+            if (this.settings.legend && this.settings.legend !== '') {
+                this.$legend = $('<legend></legend>');
+                this.$legend.append(this.settings.legend);
+                if (this.settings.class_legend && this.settings.class_legend !== '') {
+                    add_class(this.$legend, this.settings.class_legend);
+                }
+                this.$fieldset.append(this.$legend);
+            }
+        }
+    };
+
+    //--------------- bootstrap ------------------------
+    // Элемент <div class="row"></div>
     form_element.prototype.bs_row = function (options) {
         this.settings = $.extend({
             class: null,
@@ -2053,15 +2083,37 @@
         add_class(this.$row, this.settings.class);
         add_id(this.$row, this.settings.id);
     };
-    // Элемент <div class="col-..-..">
-    form_element.prototype.bs_col = function (options) {
+    // Элемент <div class="form-row"></div>
+    form_element.prototype.bs_form_row = function (options) {
         this.settings = $.extend({
             class: null,
             id: null,
         }, options);
         this.fe = new form_element();
+        var div = new this.fe.div({ class: 'form-row' });
+        this.$row = div.$div;
+        add_class(this.$row, this.settings.class);
+        add_id(this.$row, this.settings.id);
+    };
+    // Элемент <div class="col-..-.."></div>
+    form_element.prototype.bs_col = function (options) {
+        this.settings = $.extend({
+            id: null,
+            size: null,
+            col: null,
+            class: null,
+        }, options);
+        this.fe = new form_element();
         var div = new this.fe.div();
         this.$col = div.$div;
+        var cl = 'col';
+        if (this.settings.size && this.settings.size !== '') {
+            cl += '-' + this.settings.size;
+        }
+        if (this.settings.col && this.settings.col !== '') {
+            cl += '-' + this.settings.col;
+        }
+        add_class(this.$col, cl);
         add_class(this.$col, this.settings.class);
         add_id(this.$col, this.settings.id);
     };
@@ -2074,7 +2126,8 @@
             id: null,
             label: null,
             title: null,
-            icon: null,
+            icon_left: null,
+            icon_right: null,
             click: null,
         }, options);
 
@@ -2092,19 +2145,27 @@
             };
             add_class(this.$button, this.settings.class);
             add_id(this.$button, this.settings.id);
-            if (this.settings.icon && this.settings.icon !== '') {
+            if (this.settings.icon_left && this.settings.icon_left !== '') {
                 var icon = $('<i></i>', {
-                    'class': this.settings.icon,
+                    'class': this.settings.icon_left,
                     'aria-hidden': 'true'
                 });
                 this.$button.append(icon).append(' ');
             };
             append_label(this.$button, this.settings.label);
+            if (this.settings.icon_right && this.settings.icon_right !== '') {
+                var icon = $('<i></i>', {
+                    'class': this.settings.icon_right,
+                    'aria-hidden': 'true'
+                });
+                this.$button.append(' ').append(icon);
+            };
+
             add_title(this.$button, this.settings.title);
             add_click(this.$button, this.settings.click);
         }
     };
-
+    // 
     App.form_element = form_element;
     //================================================================================
     // Конструктор формы диалог, большие формы
@@ -2142,7 +2203,7 @@
         };
         // Привяжем событие submit
         this.$form.on('submit', function (event) {
-            this.submit(event);
+
         }.bind(this));
         //---------------------------------------------------------
         // Создаем элементы и отрисовываем их на форме
@@ -2176,17 +2237,25 @@
         // Пройдемся по элементам
         $.each(objs, function (i, obj) {
             if (obj && obj.obj) {
-                if (obj.obj === 'row') {
+                if (obj.obj === 'bs_row') {
                     var element = new this.fe.bs_row(obj.options);
                     add_element(element.$row, content, obj);
                 };
-                if (obj.obj === 'col') {
+                if (obj.obj === 'bs_form_row') {
+                    var element = new this.fe.bs_form_row(obj.options);
+                    add_element(element.$row, content, obj);
+                };
+                if (obj.obj === 'bs_col') {
                     var element = new this.fe.bs_col(obj.options);
                     add_element(element.$col, content, obj);
                 };
                 if (obj.obj === 'bs_button') {
                     var element = new this.fe.bs_button(obj.options);
                     add_element(element.$button, content, obj);
+                };
+                if (obj.obj === 'fieldset') {
+                    var element = new this.fe.fieldset(obj.options);
+                    add_element(element.$fieldset, content, obj);
                 };
             }
         }.bind(this));
