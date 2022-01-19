@@ -1080,6 +1080,8 @@
             // Создать макет панели
             this.form = new FDL();
 
+
+
             var objs = [];
             // Кнопки
             var row1 = {
@@ -1187,17 +1189,72 @@
                     input_class: 'inp-auto',
                     input_title: langView('fogcd_title_num', App.Langs),
                     input_placeholder: null,
-                    input_required: null,
+                    input_required: true,
                     input_min: null,
                     input_max: null,
                     input_step: null,
                     input_group: true,
                     input_group_prepend_class: null,
-                    input_group_prepend_element: null,
+                    input_group_prepend_objs: [],
                     input_group_append_class: null,
-                    input_group_append_element: null,
-                    input_group_append_obj: bt_car_return,
-                    class: null,
+                    input_group_append_objs: [bt_car_return],
+                },
+                childs: []
+            };
+            var form_input_position_outgoing = {
+                obj: 'bs_input_number',
+                options: {
+                    id: 'position_outgoing',
+                    form_group_size: 'xl',
+                    form_group_col: 3,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_position_outgoing', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-auto',
+                    input_title: langView('fogcd_title_position_outgoing', App.Langs),
+                    input_placeholder: null,
+                    input_required: true,
+                    input_min: 1,
+                    input_max: 120,
+                    input_step: 1,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_num_cont_1 = {
+                obj: 'bs_input_text',
+                options: {
+                    id: 'num_cont_1',
+                    form_group_size: 'xl',
+                    form_group_col: 3,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_num_cont_1', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-manual',
+                    input_title: langView('fogcd_title_num_cont_1', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_num_cont_2 = {
+                obj: 'bs_input_text',
+                options: {
+                    id: 'num_cont_2',
+                    form_group_size: 'xl',
+                    form_group_col: 3,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_num_cont_2', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-manual',
+                    input_title: langView('fogcd_title_num_cont_2', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_group: false,
                 },
                 childs: []
             };
@@ -1208,6 +1265,66 @@
                 },
                 childs: []
             };
+            var form_input_date_outgoing_act = {
+                obj: 'bs_input_datetime',
+                options: {
+                    id: 'date_outgoing_act',
+                    form_group_size: 'xl',
+                    form_group_col: 3,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_date_outgoing_act', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-manual',
+                    input_title: langView('fogcd_title_date_outgoing_act', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_group: false,
+                    element_time: true,
+                    element_default: null,
+                    element_fn_close: function (datetime) {
+
+                    },
+                },
+                childs: []
+            };
+            var form_input_reason_discrepancy_amkr = {
+                obj: 'bs_autocomplete',
+                element: null,
+                options: {
+                    id: 'reason_discrepancy_amkr',
+                    form_group_size: 'xl',
+                    form_group_col: 5,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_reason_discrepancy_amkr', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-manual',
+                    input_title: langView('fogcd_title_reason_discrepancy_amkr', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_group: false,
+                    element_data: this.list_reason_discrepancy,
+                    element_minLength: 0,
+                    element_out_value: false,
+                    element_val_inp: 'value',
+                    element_check: function (text) {
+                        if (text) {
+                            var w = form_input_reason_discrepancy_amkr.element.$element;
+                            var obj = this.ids_dir.getReason_Discrepancy_Of_CultureName('reason_discrepancy_name', text)
+                            //if (obj && obj.length > 0) {
+                            //    this.validation.set_control_ok($(this.reason_discrepancy_amkr.$element), "");
+                            //} else {
+                            //    this.validation.set_control_error($(this.reason_discrepancy_amkr.$element), langView('fogcd_mess_valid_reason_discrepancy', App.Langs));
+                            //}
+                        } else {
+
+                        }
+                    }.bind(this),
+                },
+                childs: []
+            };
+            //this.reason_discrepancy_amkr = form_input_reason_discrepancy_amkr.element;
             var form_row_common3 = {
                 obj: 'bs_form_row',
                 options: {
@@ -1229,6 +1346,11 @@
             row1.childs.push(col1);
             //
             form_row_common1.childs.push(form_input_num);
+            form_row_common1.childs.push(form_input_position_outgoing);
+            form_row_common1.childs.push(form_input_num_cont_1);
+            form_row_common1.childs.push(form_input_num_cont_2);
+            form_row_common2.childs.push(form_input_date_outgoing_act);
+            form_row_common2.childs.push(form_input_reason_discrepancy_amkr);
 
             fieldset_common.childs.push(form_row_common1);
             fieldset_common.childs.push(form_row_common2);
