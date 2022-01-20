@@ -106,6 +106,9 @@
 
             //'fogcd_title_': '',
             //'fogcd_label_': '',
+            'fogcd_title_button_save': 'Сохранить',
+            'fogcd_title_button_edit': 'Править',
+
             'fogcd_title_fieldset_detention_return': 'ЗАДЕРЖАНИЕ/ВОЗВРАТ',
             'fogcd_title_fieldset_detention': 'ЗАДЕРЖАНИЕ',
             'fogcd_title_fieldset_return': 'ВОЗВРАТ',
@@ -1066,7 +1069,9 @@
         this.modal_confirm_form = new MCF(this.selector); // Создадим экземпляр окно сообщений
         this.modal_confirm_form.init();
 
-        var validation = App.validation_form
+        var validation = App.validation_form;
+        // Валидация перечень элементов
+        this.all_elements = null;
 
         // Загрузим справочные данные, определим поля формы правки
         this.load_db(['reason_discrepancy'], false, function (result) {
@@ -1079,9 +1084,6 @@
             //----------------------------------
             // Создать макет панели
             this.form = new FDL();
-
-
-
             var objs = [];
             // Кнопки
             var row1 = {
@@ -1178,6 +1180,7 @@
             };
             var form_input_num = {
                 obj: 'bs_input_number',
+                element: null,
                 options: {
                     id: 'num_car',
                     form_group_size: 'xl',
@@ -1203,6 +1206,7 @@
             };
             var form_input_position_outgoing = {
                 obj: 'bs_input_number',
+                element: null,
                 options: {
                     id: 'position_outgoing',
                     form_group_size: 'xl',
@@ -1224,6 +1228,7 @@
             };
             var form_input_num_cont_1 = {
                 obj: 'bs_input_text',
+                element: null,
                 options: {
                     id: 'num_cont_1',
                     form_group_size: 'xl',
@@ -1242,6 +1247,7 @@
             };
             var form_input_num_cont_2 = {
                 obj: 'bs_input_text',
+                element: null,
                 options: {
                     id: 'num_cont_2',
                     form_group_size: 'xl',
@@ -1267,6 +1273,7 @@
             };
             var form_input_date_outgoing_act = {
                 obj: 'bs_input_datetime',
+                element: null,
                 options: {
                     id: 'date_outgoing_act',
                     form_group_size: 'xl',
@@ -1310,13 +1317,12 @@
                     element_val_inp: 'value',
                     element_check: function (text) {
                         if (text) {
-                            var w = form_input_reason_discrepancy_amkr.element.$element;
                             var obj = this.ids_dir.getReason_Discrepancy_Of_CultureName('reason_discrepancy_name', text)
-                            //if (obj && obj.length > 0) {
-                            //    this.validation.set_control_ok($(this.reason_discrepancy_amkr.$element), "");
-                            //} else {
-                            //    this.validation.set_control_error($(this.reason_discrepancy_amkr.$element), langView('fogcd_mess_valid_reason_discrepancy', App.Langs));
-                            //}
+                            if (obj && obj.length > 0) {
+                                this.validation.set_control_ok($(form_input_reason_discrepancy_amkr.element.$element), "");
+                            } else {
+                                this.validation.set_control_error($(form_input_reason_discrepancy_amkr.element.$element), langView('fogcd_mess_valid_reason_discrepancy', App.Langs));
+                            }
                         } else {
 
                         }
@@ -1324,7 +1330,41 @@
                 },
                 childs: []
             };
-            //this.reason_discrepancy_amkr = form_input_reason_discrepancy_amkr.element;
+            var form_input_reason_discrepancy_uz = {
+                obj: 'bs_autocomplete',
+                element: null,
+                options: {
+                    id: 'reason_discrepancy_uz',
+                    form_group_size: 'xl',
+                    form_group_col: 4,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_reason_discrepancy_uz', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-manual',
+                    input_title: langView('fogcd_title_reason_discrepancy_uz', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_group: false,
+                    element_data: this.list_reason_discrepancy,
+                    element_minLength: 0,
+                    element_out_value: false,
+                    element_val_inp: 'value',
+                    element_check: function (text) {
+                        if (text) {
+                            var obj = this.ids_dir.getReason_Discrepancy_Of_CultureName('reason_discrepancy_name', text)
+                            if (obj && obj.length > 0) {
+                                this.validation.set_control_ok($(form_input_reason_discrepancy_uz.element.$element), "");
+                            } else {
+                                this.validation.set_control_error($(form_input_reason_discrepancy_uz.element.$element), langView('fogcd_mess_valid_reason_discrepancy', App.Langs));
+                            }
+                        } else {
+
+                        }
+                    }.bind(this),
+                },
+                childs: []
+            };
             var form_row_common3 = {
                 obj: 'bs_form_row',
                 options: {
@@ -1332,10 +1372,318 @@
                 },
                 childs: []
             };
+            var form_input_adm_kod = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'adm_kod',
+                    form_group_size: 'xl',
+                    form_group_col: 3,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_adm_kod', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-auto',
+                    input_title: langView('fogcd_title_adm_kod', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_rod_vag_abbr = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'rod_vag_abbr',
+                    form_group_size: 'xl',
+                    form_group_col: 3,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_rod_vag_abbr', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-auto',
+                    input_title: langView('fogcd_title_rod_vag_abbr', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_gruzp_uz = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'gruzp_uz',
+                    form_group_size: 'xl',
+                    form_group_col: 3,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_gruzp_uz', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-auto',
+                    input_title: langView('fogcd_title_gruzp_uz', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_tara_uz = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'tara_uz',
+                    form_group_size: 'xl',
+                    form_group_col: 3,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_tara_uz', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-auto',
+                    input_title: langView('fogcd_title_tara_uz', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_group: false,
+                },
+                childs: []
+            };
             var form_row_common4 = {
                 obj: 'bs_form_row',
                 options: {
                     class: null,
+                },
+                childs: []
+            };
+            var form_input_condition_arrival = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'condition_arrival',
+                    form_group_size: 'xl',
+                    form_group_col: 6,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_condition_arrival', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-auto',
+                    input_title: langView('fogcd_title_condition_arrival', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_condition_present = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'condition_present',
+                    form_group_size: 'xl',
+                    form_group_col: 6,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_condition_present', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-auto',
+                    input_title: langView('fogcd_title_condition_present', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_group: false,
+                },
+                childs: []
+            };
+            // Задержания возврат
+            var fieldset_detention_return = {
+                obj: 'fieldset',
+                options: {
+                    class: 'border-warning',
+                    legend: langView('fogcd_title_fieldset_detention_return', App.Langs),
+                    class_legend: null,
+                },
+                childs: []
+            };
+            var form_row_detention_return1 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_textarea_condition_present = {
+                obj: 'bs_textarea',
+                element: null,
+                options: {
+                    id: 'condition_present',
+                    form_group_size: 'xl',
+                    form_group_col: 12,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_condition_present', App.Langs),
+                    label_class: 'mb-1',
+                    textarea_size: null,
+                    textarea_rows: 3,
+                    textarea_class: null,
+                    textarea_title: langView('fogcd_title_condition_present', App.Langs),
+                    textarea_maxlength: null,
+                    textarea_placeholder: null,
+                    textarea_required: null,
+                    textarea_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_row_detention = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var col_detention = {
+                obj: 'bs_col',
+                options: {
+                    size: 'xl',
+                    col: 12,
+                    class: 'text-left',
+                },
+                childs: []
+            };
+            var fieldset_detention = {
+                obj: 'fieldset',
+                options: {
+                    class: 'border-warning',
+                    legend: langView('fogcd_title_fieldset_detention', App.Langs),
+                    class_legend: null,
+                },
+                childs: []
+            };
+            var form_row_detention1 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var col_detention1_1 = {
+                obj: 'bs_col',
+                options: {
+                    size: 'xl',
+                    col: 11,
+                    class: 'text-left',
+                },
+                childs: []
+            };
+            var col_detention1_2 = {
+                obj: 'bs_col',
+                options: {
+                    size: 'xl',
+                    col: 1,
+                    class: 'pull-right mb-1 text-left',
+                },
+                childs: []
+            };
+            var form_alert = {
+                obj: 'bs_alert',
+                options: {
+                    id: null,
+                    class: null,
+                },
+                childs: []
+            };
+            var bt_detention_save = {
+                obj: 'bs_button',
+                options: {
+                    color: 'danger',
+                    size: 'sm',
+                    class: null,
+                    id: 'detention_save',
+                    label: null,
+                    title: langView('fogcd_title_button_save', App.Langs),
+                    icon_left: null,
+                    icon_right: 'fa fa-save',
+                    click: function () { },
+                }
+            };
+            var bt_detention_edit = {
+                obj: 'bs_button',
+                options: {
+                    color: 'warning',
+                    size: 'sm',
+                    class: null,
+                    id: 'detention_edit',
+                    label: null,
+                    title: langView('fogcd_title_button_edit', App.Langs),
+                    icon_left: null,
+                    icon_right: 'fa fa-edit',
+                    click: function () { },
+                }
+            };
+
+            var form_row_detention2 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_input_cause_detention = {
+                obj: 'bs_autocomplete',
+                element: null,
+                options: {
+                    id: 'cause_detention',
+                    form_group_size: 'xl',
+                    form_group_col: 6,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_cause_detention', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-manual',
+                    input_title: langView('fogcd_title_cause_detention', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_group: false,
+                    element_data: this.list_reason_discrepancy,
+                    element_minLength: 0,
+                    element_out_value: false,
+                    element_val_inp: 'value',
+                    element_check: function (text) {
+                        if (text) {
+                            var obj = this.ids_dir.getReason_Discrepancy_Of_CultureName('reason_discrepancy_name', text)
+                            if (obj && obj.length > 0) {
+                                this.validation.set_control_ok($(form_input_reason_discrepancy_uz.element.$element), "");
+                            } else {
+                                this.validation.set_control_error($(form_input_reason_discrepancy_uz.element.$element), langView('fogcd_mess_valid_reason_discrepancy', App.Langs));
+                            }
+                        } else {
+
+                        }
+                    }.bind(this),
+                },
+                childs: []
+            };
+
+            var form_row_return = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var col_return = {
+                obj: 'bs_col',
+                options: {
+                    size: 'xl',
+                    col: 12,
+                    class: 'text-left',
+                },
+                childs: []
+            };
+            var fieldset_return = {
+                obj: 'fieldset',
+                options: {
+                    class: 'border-warning',
+                    legend: langView('fogcd_title_fieldset_return', App.Langs),
+                    class_legend: null,
                 },
                 childs: []
             };
@@ -1351,12 +1699,42 @@
             form_row_common1.childs.push(form_input_num_cont_2);
             form_row_common2.childs.push(form_input_date_outgoing_act);
             form_row_common2.childs.push(form_input_reason_discrepancy_amkr);
-
+            form_row_common2.childs.push(form_input_reason_discrepancy_uz);
+            form_row_common3.childs.push(form_input_adm_kod);
+            form_row_common3.childs.push(form_input_rod_vag_abbr);
+            form_row_common3.childs.push(form_input_gruzp_uz);
+            form_row_common3.childs.push(form_input_tara_uz);
+            form_row_common4.childs.push(form_input_condition_arrival);
+            form_row_common4.childs.push(form_input_condition_present);
+            //
             fieldset_common.childs.push(form_row_common1);
             fieldset_common.childs.push(form_row_common2);
             fieldset_common.childs.push(form_row_common3);
             fieldset_common.childs.push(form_row_common4);
+            //
+            form_row_detention_return1.childs.push(form_textarea_condition_present);
+            fieldset_detention_return.childs.push(form_row_detention_return1);
+            //
+            col_detention1_2.childs.push(bt_detention_save);
+            col_detention1_2.childs.push(bt_detention_edit);
+            col_detention1_1.childs.push(form_alert);
+            form_row_detention1.childs.push(col_detention1_1);
+            form_row_detention1.childs.push(col_detention1_2);
+            fieldset_detention.childs.push(form_row_detention1);
+
+            form_row_detention2.childs.push(form_input_cause_detention);
+            fieldset_detention.childs.push(form_row_detention2);
+            col_detention.childs.push(fieldset_detention);
+            form_row_detention.childs.push(col_detention);
+            fieldset_detention_return.childs.push(form_row_detention);
+            //
+
+            col_return.childs.push(fieldset_return);
+            form_row_return.childs.push(col_return);
+            fieldset_detention_return.childs.push(form_row_return);
+            //
             col_detali.childs.push(fieldset_common);
+            col_detali.childs.push(fieldset_detention_return);
             row_detali.childs.push(col_detali);
             //
             objs.push(row1);
@@ -1375,6 +1753,32 @@
                     if (result && result.valid) {
 
                     }
+                }.bind(this),
+                fn_html_init: function () {
+                    // HTML документы создало, выполним инициализацию валидации
+                    // Все элементы
+                    this.all_elements = $([])
+                        .add(form_input_num.element.$element)
+                        .add(form_input_position_outgoing.element.$element)
+                        .add(form_input_num_cont_1.element.$element)
+                        .add(form_input_num_cont_2.element.$element)
+                        .add(form_input_date_outgoing_act.element.$element)
+                        .add(form_input_reason_discrepancy_amkr.element.$element)
+                        .add(form_input_reason_discrepancy_uz.element.$element)
+                        .add(form_input_adm_kod.element.$element)
+                        .add(form_input_rod_vag_abbr.element.$element)
+                        .add(form_input_gruzp_uz.element.$element)
+                        .add(form_input_tara_uz.element.$element)
+                        .add(form_input_condition_arrival.element.$element)
+                        .add(form_input_condition_present.element.$element)
+                        .add(form_textarea_condition_present.element.$element)
+                        ;
+                    // Валидация инициализация
+                    this.validation = new validation();
+                    this.validation.init({
+                        alert: this.settings.alert,
+                        elements: this.all_elements,
+                    });
                 }.bind(this),
                 fn_init: function (init) {
                     // Инициализация формы закончена

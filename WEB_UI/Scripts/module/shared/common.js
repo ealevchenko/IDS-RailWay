@@ -2135,10 +2135,39 @@
             add_tag(this.$input, 'required', this.settings.required);
             add_tag(this.$input, 'maxlength', this.settings.maxlength);
             add_tag(this.$input, 'pattern', this.settings.pattern);
-            add_tag(this.$input, 'required', this.settings.required);
             add_tag(this.$input, 'min', this.settings.min);
             add_tag(this.$input, 'max', this.settings.max);
             add_tag(this.$input, 'step', this.settings.step);
+        }
+    };
+
+    form_element.prototype.textarea = function (options) {
+        this.settings = $.extend({
+            id: null,
+            rows: null,
+            class: null,
+            title: null,
+            placeholder: null,
+            required: null,
+            maxlength: null,
+            readonly: false,
+        }, options);
+        this.$textarea = $('<textarea></textarea>', {
+            'type': this.settings.type
+        });
+
+        if (!this.$textarea || this.$textarea.length === 0) {
+            throw new Error('Не удалось создать элемент <textarea></textarea>');
+        } else {
+            add_class(this.$textarea, this.settings.class);
+            add_id(this.$textarea, this.settings.id);
+            add_tag(this.$textarea, 'name', this.settings.id);
+            add_tag(this.$textarea, 'rows', this.settings.rows);
+            add_tag(this.$textarea, 'title', this.settings.title);
+            add_tag(this.$textarea, 'placeholder', this.settings.placeholder);
+            add_tag(this.$textarea, 'required', this.settings.required);
+            add_tag(this.$textarea, 'maxlength', this.settings.maxlength);
+            this.$textarea.prop('readonly', this.settings.readonly);
         }
     };
     //--------------- bootstrap ------------------------
@@ -2153,6 +2182,28 @@
         this.$row = div.$div;
         add_class(this.$row, this.settings.class);
         add_id(this.$row, this.settings.id);
+    };
+    // Элемент <div class="col-..-.."></div>
+    form_element.prototype.bs_col = function (options) {
+        this.settings = $.extend({
+            id: null,
+            size: null,
+            col: null,
+            class: null,
+        }, options);
+        this.fe = new form_element();
+        var div = new this.fe.div();
+        this.$col = div.$div;
+        var cl = 'col';
+        if (this.settings.size && this.settings.size !== '') {
+            cl += '-' + this.settings.size;
+        }
+        if (this.settings.col && this.settings.col !== '') {
+            cl += '-' + this.settings.col;
+        }
+        add_class(this.$col, cl);
+        add_class(this.$col, this.settings.class);
+        add_id(this.$col, this.settings.id);
     };
     // Элемент <div class="form-row"></div>
     form_element.prototype.bs_form_row = function (options) {
@@ -2190,7 +2241,7 @@
         this.$div = div.$div;
         add_class(this.$div, this.settings.class);
         add_id(this.$div, this.settings.id);
-        this.fe.add_obj(this.$div, [], this.settings.objs, function (content) {
+        this.fe.add_obj(this.$div, this.settings.objs, function (content) {
 
         }.bind(this))
     };
@@ -2206,7 +2257,7 @@
         this.$div = div.$div;
         add_class(this.$div, this.settings.class);
         add_id(this.$div, this.settings.id);
-        this.fe.add_obj(this.$div, [], this.settings.objs, function (content) {
+        this.fe.add_obj(this.$div, this.settings.objs, function (content) {
 
         }.bind(this))
     };
@@ -2222,27 +2273,17 @@
         add_class(this.$div, this.settings.class);
         add_id(this.$div, this.settings.id);
     };
-    // Элемент <div class="col-..-.."></div>
-    form_element.prototype.bs_col = function (options) {
+    // Элемент <div class="row"></div>
+    form_element.prototype.bs_alert = function (options) {
         this.settings = $.extend({
-            id: null,
-            size: null,
-            col: null,
             class: null,
+            id: null,
         }, options);
         this.fe = new form_element();
-        var div = new this.fe.div();
-        this.$col = div.$div;
-        var cl = 'col';
-        if (this.settings.size && this.settings.size !== '') {
-            cl += '-' + this.settings.size;
-        }
-        if (this.settings.col && this.settings.col !== '') {
-            cl += '-' + this.settings.col;
-        }
-        add_class(this.$col, cl);
-        add_class(this.$col, this.settings.class);
-        add_id(this.$col, this.settings.id);
+        var div = new this.fe.div({ class: 'alert' });
+        this.$alert = div.$div;
+        add_class(this.$alert, this.settings.class);
+        add_id(this.$alert, this.settings.id);
     };
     // Элемент <button>...</button>
     form_element.prototype.bs_button = function (options) {
@@ -2586,6 +2627,96 @@
         }
     };
 
+    form_element.prototype.bs_textarea = function (options) {
+        this.settings = $.extend({
+            id: null,
+            form_group_size: null,
+            form_group_col: null,
+            form_group_class: null,
+            label: null,
+            label_class: null,
+            textarea_size: null,
+            textarea_rows: null,
+            textarea_class: null,
+            textarea_title: null,
+            textarea_maxlength: null,
+            textarea_placeholder: null,
+            textarea_required: null,
+            textarea_readonly: null,
+            input_group: false,
+            input_group_prepend_class: null,
+            input_group_prepend_objs: null,
+            input_group_append_class: null,
+            input_group_append_objs: null,
+        }, options);
+        //
+        this.fe = new form_element();
+        this.fc = new form_control();
+
+        var div = new this.fe.div();
+        this.$element = div.$div;
+        if (this.settings.input_group) {
+            add_class(this.$element, 'form-group');
+        }
+        var cl = 'col';
+        if (this.settings.form_group_size && this.settings.form_group_size !== '') {
+            cl += '-' + this.settings.form_group_size;
+        }
+        if (this.settings.form_group_col && this.settings.form_group_col !== '') {
+            cl += '-' + this.settings.form_group_col;
+        }
+        add_class(this.$element, cl);
+        add_class(this.$element, this.settings.form_group_class);
+        // Подпись
+        var label = new this.fe.label({
+            class: this.settings.label_class,
+            id: null,
+            for: this.settings.id,
+            label: this.settings.label
+        });
+        this.$element.append(label.$label);
+        // Input
+        var textarea = new this.fe.textarea({
+            id: this.settings.id,
+            rows: this.settings.textarea_rows,
+            class: 'form-control',
+            title: this.settings.input_title,
+            placeholder: this.settings.textarea_placeholder,
+            required: this.settings.textarea_required,
+            maxlength: this.settings.textarea_maxlength,
+            readonly: this.settings.textarea_readonly,
+        });
+        add_class(textarea.$textarea, this.settings.textarea_class);
+        this.element = new this.fc.init_textarea(textarea.$textarea, '', null);
+        //
+        var ifb = new this.fe.bs_invalid_feedback();
+
+        if (this.settings.input_group) {
+            var ig = new this.fe.bs_input_group();
+            if (this.settings.input_group_prepend_objs && this.settings.input_group_prepend_objs !== null) {
+                var input_group_prepend = new this.fe.bs_input_group_prepend({
+                    class: this.settings.input_group_prepend_class,
+                    objs: this.settings.input_group_prepend_objs
+                });
+                ig.$div.append(input_group_prepend.$div);
+            };
+            //
+            ig.$div.append(textarea.$textarea);
+            if (this.settings.input_group_append_objs && this.settings.input_group_append_objs !== null) {
+                var input_group_append = new this.fe.bs_input_group_append({
+                    class: this.settings.input_group_append_class,
+                    objs: this.settings.input_group_append_objs
+                });
+                ig.$div.append(input_group_append.$div);
+            };
+            ig.$div.append(ifb.$div);
+            this.$element.append(ig.$div);
+        } else {
+            this.$element.append(textarea.$textarea);
+            this.$element.append(ifb.$div);
+        }
+    };
+
     form_element.prototype.bs_autocomplete = function (options) {
         this.settings = $.extend({
             id: null,
@@ -2691,12 +2822,12 @@
     };
 
     //-------------------
-    form_element.prototype.add_obj = function (content, elements, objs, callback) {
+    form_element.prototype.add_obj = function (content, objs, callback) {
         // Добавить элемент
         var add_element = function (element, content, obj) {
             if (element && element.length > 0) {
                 if (obj.childs && obj.childs.length > 0) {
-                    this.add_obj(element, elements, obj.childs, function (content) {
+                    this.add_obj(element, obj.childs, function (content) {
                         return content;
                     }.bind(this));
                 }
@@ -2711,48 +2842,68 @@
                     var element = new this.bs_row(obj.options);
                     add_element(element.$row, content, obj);
                 };
-                if (obj.obj === 'bs_form_row') {
-                    var element = new this.bs_form_row(obj.options);
-                    add_element(element.$row, content, obj);
-                };
                 if (obj.obj === 'bs_col') {
                     var element = new this.bs_col(obj.options);
                     add_element(element.$col, content, obj);
                 };
-                if (obj.obj === 'bs_button') {
-                    var element = new this.bs_button(obj.options);
-                    add_element(element.$button, content, obj);
+                if (obj.obj === 'bs_form_row') {
+                    var element = new this.bs_form_row(obj.options);
+                    add_element(element.$row, content, obj);
                 };
                 if (obj.obj === 'fieldset') {
                     var element = new this.fieldset(obj.options);
                     add_element(element.$fieldset, content, obj);
                 };
+                if (obj.obj === 'bs_alert') {
+                    var element = new this.bs_alert(obj.options);
+                    add_element(element.$alert, content, obj);
+                };
+                if (obj.obj === 'bs_button') {
+                    var element = new this.bs_button(obj.options);
+                    add_element(element.$button, content, obj);
+                };
                 if (obj.obj === 'bs_input_number') {
                     var input = new this.bs_input_number(obj.options);
-                    if (elements) {
-                        elements.push(input.element);
+                    if (input && input.element) {
+                        obj.element = input.element;
+                    } else {
+                        throw new Error('Не удалось создать элемент ' + obj.obj);
                     }
                     add_element(input.$element, content, obj);
                 };
                 if (obj.obj === 'bs_input_text') {
                     var input = new this.bs_input_text(obj.options);
-                    if (elements) {
-                        elements.push(input.element);
+                    if (input && input.element) {
+                        obj.element = input.element;
+                    } else {
+                        throw new Error('Не удалось создать элемент ' + obj.obj);
                     }
                     add_element(input.$element, content, obj);
                 };
                 if (obj.obj === 'bs_input_datetime') {
                     var input = new this.bs_input_datetime(obj.options);
-                    if (elements) {
-                        elements.push(input.element);
+                    if (input && input.element) {
+                        obj.element = input.element;
+                    } else {
+                        throw new Error('Не удалось создать элемент ' + obj.obj);
                     }
                     add_element(input.$element, content, obj);
                 };
+                if (obj.obj === 'bs_textarea') {
+                    var textarea = new this.bs_textarea(obj.options);
+                    if (textarea && textarea.element) {
+                        obj.element = textarea.element;
+                    } else {
+                        throw new Error('Не удалось создать элемент ' + obj.obj);
+                    }
+                    add_element(textarea.$element, content, obj);
+                };
                 if (obj.obj === 'bs_autocomplete') {
                     var input = new this.bs_autocomplete(obj.options);
-                    if (elements) {
+                    if (input && input.element) {
                         obj.element = input.element;
-                        elements.push(input.element);
+                    } else {
+                        throw new Error('Не удалось создать элемент ' + obj.obj);
                     }
                     add_element(input.$element, content, obj);
                 };
@@ -2785,12 +2936,12 @@
             cl_form: null,
             validation: true,
             fn_validation_ok: null,
+            fn_html_init: null,
             fn_init: null,
         }, options);
         var form = new this.fc.el_form(this.settings.id, this.settings.cl_form + ' text-left');
 
         this.$form = form.$form;
-
         // Алерт 
         if (!this.settings.alert) {
             var $alert = new this.fc.el_alert();
@@ -2809,14 +2960,18 @@
         // Получим список элементов которые должны отображатся на форме
         this.el_destroy = []; // Элементы которые нужно удалить методом destroy()
         this.data = null;
-        this.elements = [];
         /*        this.el_validation = $([]); // Элементы для валидации*/
         // Пройдемся по элементам
-        this.fe.add_obj(this.$form, this.elements, this.settings.objs, function (form) {
-            // Инициализация закончена
-            if (typeof this.settings.fn_init === 'function') {
-                this.settings.fn_init(this.init);
+        this.fe.add_obj(this.$form, this.settings.objs, function (form) {
+            // Построение HTML закончена
+            if (typeof this.settings.fn_html_init === 'function') {
+                this.settings.fn_html_init();
             }
+
+            if (typeof this.settings.fn_init === 'function') {
+                this.settings.fn_init();
+            }
+
         }.bind(this));
 
     };
