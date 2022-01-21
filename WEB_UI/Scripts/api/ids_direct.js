@@ -34,8 +34,7 @@
         this.list_operators_wagons_group = null;
         this.list_locomotive = null;
         this.list_reason_discrepancy = null;
-
-
+        this.list_detention_return = null;
     }
     //****************************************************************************************
     //-------------------------------- Функции работы с БД через api ---------------
@@ -164,6 +163,18 @@
                             this.list_reason_discrepancy = data;
                             process--;
                             result.push('reason_discrepancy');
+                            out_load(process);
+                        }.bind(this));
+                    };
+                };
+                if (table === 'detention_return') {
+                    if (lock) LockScreen(langView('mess_load_reference', App.Langs));
+                    if (update || !this.list_detention_return) {
+                        process++;
+                        this.getDetention_Return(function (data) {
+                            this.list_detention_return = data;
+                            process--;
+                            result.push('detention_return');
                             out_load(process);
                         }.bind(this));
                     };
@@ -1046,6 +1057,30 @@
         });
     };
 
+    //======= Directory_DetentionReturn (Справочник причин возвратов и задержаний) ======================================
+    ids_directory.prototype.getDetention_Return = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/directory/detention_return/all',
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_directory.getDetention_Return", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
 
     //****************************************************************************************
     //-------------------------------- функции для работы с таблицами ------------------------
@@ -1175,6 +1210,26 @@
         }
         return null;
     };
+
+    //*======= ids_directory.list_detention_return  (Справочник причин возвратов и задержаний) ======================================
+
+    ids_directory.prototype.getDetention_Return_Of_ID = function (id) {
+        return this.getObj_Of_ID(this.list_detention_return, id);
+    };
+
+    ids_directory.prototype.getListDetention_Return = function (fvalue, ftext, lang, filter) {
+        return this.getListObj(this.list_detention_return, fvalue, ftext, lang, filter);
+    };
+
+    // Получим список с выборкой по полю
+    ids_directory.prototype.getDetention_Return_Of_CultureName = function (name, text) {
+        if (this.list_detention_return) {
+            var obj = getObjects(this.list_detention_return, name + '_' + App.Lang, text);
+            return obj;
+        }
+        return null;
+    };
+
 
     App.ids_directory = ids_directory;
 
