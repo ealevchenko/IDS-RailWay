@@ -108,6 +108,8 @@
             //'fogcd_label_': '',
             'fogcd_title_button_save': 'Сохранить',
             'fogcd_title_button_edit': 'Править',
+            'fogcd_title_button_return_open': 'Выполнить возврат',
+            'fogcd_title_button_return_close': 'Закрыть возврат',
 
             'fogcd_title_fieldset_detention_return': 'ЗАДЕРЖАНИЕ/ВОЗВРАТ',
             'fogcd_title_fieldset_detention': 'ЗАДЕРЖАНИЕ',
@@ -118,6 +120,9 @@
             'fogcd_title_fieldset_data_arrival': 'ДАННЫЕ О ПРИБЫТИИ',
 
             'fogcd_mess_valid_reason_discrepancy': 'Указанной причины расхождения нет в справочнике ИДС.',
+            'fogcd_mess_valid_cause_detention': 'Указанной причины задержания нет в справочнике ИДС.',
+            'fogcd_mess_valid_cause_return': 'Указанной причины возврата нет в справочнике ИДС.',
+
             'fogcd_mess_init_panel': 'Инициализация модуля...',
 
 
@@ -1074,10 +1079,11 @@
         this.all_elements = null;
 
         // Загрузим справочные данные, определим поля формы правки
-        this.load_db(['reason_discrepancy'], false, function (result) {
+        this.load_db(['reason_discrepancy', 'detention_return'], false, function (result) {
             // Подгрузили списки
             //this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === true && i.station_delete === null; });
             this.list_reason_discrepancy = this.ids_dir.getListReason_Discrepancy('id', 'reason_discrepancy_name', App.Lang, null);
+            this.list_detention_return = this.ids_dir.getListDetention_Return('id', 'cause', App.Lang, null);
             //-------------------------------------
             // Сообщение
             LockScreen(langView('fogcd_mess_init_panel', App.Langs));
@@ -1584,6 +1590,7 @@
             };
             var form_alert = {
                 obj: 'bs_alert',
+                element: null,
                 options: {
                     id: null,
                     class: null,
@@ -1618,7 +1625,6 @@
                     click: function () { },
                 }
             };
-
             var form_row_detention2 = {
                 obj: 'bs_form_row',
                 options: {
@@ -1642,17 +1648,17 @@
                     input_placeholder: null,
                     input_required: null,
                     input_group: false,
-                    element_data: this.list_reason_discrepancy,
+                    element_data: this.list_detention_return,
                     element_minLength: 0,
                     element_out_value: false,
                     element_val_inp: 'value',
                     element_check: function (text) {
                         if (text) {
-                            var obj = this.ids_dir.getReason_Discrepancy_Of_CultureName('reason_discrepancy_name', text)
+                            var obj = this.ids_dir.getDetention_Return_Of_CultureName('cause', text)
                             if (obj && obj.length > 0) {
-                                this.validation.set_control_ok($(form_input_reason_discrepancy_uz.element.$element), "");
+                                this.validation_detention.set_control_ok($(form_input_cause_detention.element.$element), "");
                             } else {
-                                this.validation.set_control_error($(form_input_reason_discrepancy_uz.element.$element), langView('fogcd_mess_valid_reason_discrepancy', App.Langs));
+                                this.validation_detention.set_control_error($(form_input_cause_detention.element.$element), langView('fogcd_mess_valid_cause_detention', App.Langs));
                             }
                         } else {
 
@@ -1661,7 +1667,54 @@
                 },
                 childs: []
             };
+            var form_input_detention_start = {
+                obj: 'bs_input_datetime',
+                element: null,
+                options: {
+                    id: 'detention_start',
+                    form_group_size: 'xl',
+                    form_group_col: 3,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_detention_start', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-manual',
+                    input_title: langView('fogcd_title_detention_start', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_group: false,
+                    element_time: true,
+                    element_default: null,
+                    element_fn_close: function (datetime) {
 
+                    },
+                },
+                childs: []
+            };
+            var form_input_detention_stop = {
+                obj: 'bs_input_datetime',
+                element: null,
+                options: {
+                    id: 'detention_stop',
+                    form_group_size: 'xl',
+                    form_group_col: 3,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_detention_stop', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-manual',
+                    input_title: langView('fogcd_title_detention_stop', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_group: false,
+                    element_time: true,
+                    element_default: null,
+                    element_fn_close: function (datetime) {
+
+                    },
+                },
+                childs: []
+            };
             var form_row_return = {
                 obj: 'bs_form_row',
                 options: {
@@ -1687,7 +1740,251 @@
                 },
                 childs: []
             };
+            var form_row_return1 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var col_return1_1 = {
+                obj: 'bs_col',
+                options: {
+                    size: 'xl',
+                    col: 11,
+                    class: 'text-left',
+                },
+                childs: []
+            };
+            var col_return1_2 = {
+                obj: 'bs_col',
+                options: {
+                    size: 'xl',
+                    col: 1,
+                    class: 'pull-right mb-1 text-left',
+                },
+                childs: []
+            };
+            var form_alert_return = {
+                obj: 'bs_alert',
+                element: null,
+                options: {
+                    id: null,
+                    class: null,
+                },
+                childs: []
+            };
+            var bt_return_open = {
+                obj: 'bs_button',
+                options: {
+                    color: 'danger',
+                    size: 'sm',
+                    class: null,
+                    id: 'return_open',
+                    label: null,
+                    title: langView('fogcd_title_button_return_open', App.Langs),
+                    icon_left: null,
+                    icon_right: 'fa fa-save',
+                    click: function () { },
+                }
+            };
+            var bt_return_close = {
+                obj: 'bs_button',
+                options: {
+                    color: 'warning',
+                    size: 'sm',
+                    class: null,
+                    id: 'return_close',
+                    label: null,
+                    title: langView('fogcd_title_button_return_close', App.Langs),
+                    icon_left: null,
+                    icon_right: 'fa fa-times',
+                    click: function () { },
+                }
+            };
+            var form_row_return2 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_input_cause_return = {
+                obj: 'bs_autocomplete',
+                element: null,
+                options: {
+                    id: 'cause_return',
+                    form_group_size: 'xl',
+                    form_group_col: 6,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_cause_return', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-manual',
+                    input_title: langView('fogcd_title_cause_return', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_group: false,
+                    element_data: this.list_detention_return,
+                    element_minLength: 0,
+                    element_out_value: false,
+                    element_val_inp: 'value',
+                    element_check: function (text) {
+                        if (text) {
+                            var obj = this.ids_dir.getDetention_Return_Of_CultureName('cause', text)
+                            if (obj && obj.length > 0) {
+                                this.validation_return.set_control_ok($(form_input_cause_return.element.$element), "");
+                            } else {
+                                this.validation_return.set_control_error($(form_input_cause_return.element.$element), langView('fogcd_mess_valid_cause_return', App.Langs));
+                            }
+                        } else {
 
+                        }
+                    }.bind(this),
+                },
+                childs: []
+            };
+            var form_input_return_start = {
+                obj: 'bs_input_datetime',
+                element: null,
+                options: {
+                    id: 'return_start',
+                    form_group_size: 'xl',
+                    form_group_col: 3,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_return_start', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-manual',
+                    input_title: langView('fogcd_title_return_start', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_group: false,
+                    element_time: true,
+                    element_default: null,
+                    element_fn_close: function (datetime) {
+
+                    },
+                },
+                childs: []
+            };
+            var form_input_return_stop = {
+                obj: 'bs_input_datetime',
+                element: null,
+                options: {
+                    id: 'return_stop',
+                    form_group_size: 'xl',
+                    form_group_col: 3,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_return_stop', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-manual',
+                    input_title: langView('fogcd_title_return_stop', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_group: false,
+                    element_time: true,
+                    element_default: null,
+                    element_fn_close: function (datetime) {
+
+                    },
+                },
+                childs: []
+            };
+            var form_row_return3 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_input_return_num_act = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'return_num_act',
+                    form_group_size: 'xl',
+                    form_group_col: 3,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_return_num_act', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-manual',
+                    input_title: langView('fogcd_title_return_num_act', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_return_date_act= {
+                obj: 'bs_input_datetime',
+                element: null,
+                options: {
+                    id: 'return_date_act',
+                    form_group_size: 'xl',
+                    form_group_col: 3,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_return_date_act', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-manual',
+                    input_title: langView('fogcd_title_return_date_act', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_group: false,
+                    element_time: true,
+                    element_default: null,
+                    element_fn_close: function (datetime) {
+
+                    },
+                },
+                childs: []
+            };
+            var form_textarea_return_note = {
+                obj: 'bs_textarea',
+                element: null,
+                options: {
+                    id: 'return_note',
+                    form_group_size: 'xl',
+                    form_group_col: 6,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_return_note', App.Langs),
+                    label_class: 'mb-1',
+                    textarea_size: null,
+                    textarea_rows: 2,
+                    textarea_class: 'inp-manual',
+                    textarea_title: langView('fogcd_title_return_note', App.Langs),
+                    textarea_maxlength: null,
+                    textarea_placeholder: null,
+                    textarea_required: null,
+                    textarea_readonly: false,
+                    input_group: false,
+                },
+                childs: []
+            };
+            // ДАННЫЕ О ПОГРУЗКЕ
+            var fieldset_loading_data = {
+                obj: 'fieldset',
+                options: {
+                    class: 'border-primary',
+                    legend: langView('fogcd_title_fieldset_loading_data', App.Langs),
+                    class_legend: null,
+                },
+                childs: []
+            };
+
+            // ДАННЫЕ О ПРИБЫТИИ'
+            var fieldset_data_arrival = {
+                obj: 'fieldset',
+                options: {
+                    class: 'border-primary',
+                    legend: langView('fogcd_title_fieldset_data_arrival', App.Langs),
+                    class_legend: null,
+                },
+                childs: []
+            };
             // Собираем
             col1.childs.push(bt_present_car);
             col1.childs.push(bt_return_car);
@@ -1723,18 +2020,40 @@
             fieldset_detention.childs.push(form_row_detention1);
 
             form_row_detention2.childs.push(form_input_cause_detention);
+            form_row_detention2.childs.push(form_input_detention_start);
+            form_row_detention2.childs.push(form_input_detention_stop);
+
             fieldset_detention.childs.push(form_row_detention2);
             col_detention.childs.push(fieldset_detention);
             form_row_detention.childs.push(col_detention);
             fieldset_detention_return.childs.push(form_row_detention);
             //
-
+            //
+            col_return1_2.childs.push(bt_return_open);
+            col_return1_2.childs.push(bt_return_close);
+            col_return1_1.childs.push(form_alert_return);
+            form_row_return1.childs.push(col_return1_1);
+            form_row_return1.childs.push(col_return1_2);
+            fieldset_return.childs.push(form_row_return1);
+            //
+            form_row_return2.childs.push(form_input_cause_return);
+            form_row_return2.childs.push(form_input_return_start);
+            form_row_return2.childs.push(form_input_return_stop);
+            fieldset_return.childs.push(form_row_return2);
+            //
+            form_row_return3.childs.push(form_input_return_num_act);
+            form_row_return3.childs.push(form_input_return_date_act);
+            form_row_return3.childs.push(form_textarea_return_note);
+            fieldset_return.childs.push(form_row_return3);
+            //
             col_return.childs.push(fieldset_return);
             form_row_return.childs.push(col_return);
             fieldset_detention_return.childs.push(form_row_return);
             //
             col_detali.childs.push(fieldset_common);
             col_detali.childs.push(fieldset_detention_return);
+            col_detali.childs.push(fieldset_loading_data);
+            col_detali.childs.push(fieldset_data_arrival);
             row_detali.childs.push(col_detali);
             //
             objs.push(row1);
@@ -1773,11 +2092,34 @@
                         .add(form_input_condition_present.element.$element)
                         .add(form_textarea_condition_present.element.$element)
                         ;
+                    this.all_elements_detention = $([])
+                        .add(form_input_cause_detention.element.$element)
+                        .add(form_input_detention_start.element.$element)
+                        .add(form_input_detention_stop.element.$element)
+                        ;
+                    this.all_elements_return = $([])
+                        .add(form_input_cause_return.element.$element)
+                        .add(form_input_return_start.element.$element)
+                        .add(form_input_return_stop.element.$element)
+                        .add(form_input_return_num_act.element.$element)
+                        .add(form_input_return_date_act.element.$element)
+                        .add(form_textarea_return_note.element.$element)
+                        ;
                     // Валидация инициализация
                     this.validation = new validation();
                     this.validation.init({
                         alert: this.settings.alert,
                         elements: this.all_elements,
+                    });
+                    this.validation_detention = new validation();
+                    this.validation_detention.init({
+                        alert: form_alert.element,
+                        elements: this.all_elements_detention,
+                    });
+                    this.validation_return = new validation();
+                    this.validation_return.init({
+                        alert: form_alert_return.element,
+                        elements: this.all_elements_return,
                     });
                 }.bind(this),
                 fn_init: function (init) {

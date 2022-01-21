@@ -2284,6 +2284,7 @@
         this.$alert = div.$div;
         add_class(this.$alert, this.settings.class);
         add_id(this.$alert, this.settings.id);
+        this.alert = new alert_form(this.$alert);
     };
     // Элемент <button>...</button>
     form_element.prototype.bs_button = function (options) {
@@ -2856,6 +2857,11 @@
                 };
                 if (obj.obj === 'bs_alert') {
                     var element = new this.bs_alert(obj.options);
+                    if (element && element.alert) {
+                        obj.element = element.alert;
+                    } else {
+                        throw new Error('Не удалось создать элемент ' + obj.obj);
+                    }
                     add_element(element.$alert, content, obj);
                 };
                 if (obj.obj === 'bs_button') {
