@@ -2116,6 +2116,7 @@
             required: null,
             maxlength: null,
             pattern: null,
+            readonly: false,
             min: null,
             max: null,
             step: null,
@@ -2138,6 +2139,7 @@
             add_tag(this.$input, 'min', this.settings.min);
             add_tag(this.$input, 'max', this.settings.max);
             add_tag(this.$input, 'step', this.settings.step);
+            this.$input.prop('readonly', this.settings.readonly);
         }
     };
 
@@ -2214,6 +2216,18 @@
         this.fe = new form_element();
         var div = new this.fe.div({ class: 'form-row' });
         this.$row = div.$div;
+        add_class(this.$row, this.settings.class);
+        add_id(this.$row, this.settings.id);
+    };
+    // Элемент <div class="form-check"></div>
+    form_element.prototype.bs_form_check = function (options) {
+        this.settings = $.extend({
+            class: null,
+            id: null,
+        }, options);
+        this.fe = new form_element();
+        var div = new this.fe.div({ class: 'form-check' });
+        this.$div = div.$div;
         add_class(this.$row, this.settings.class);
         add_id(this.$row, this.settings.id);
     };
@@ -2361,6 +2375,7 @@
             input_min: null,
             input_max: null,
             input_step: null,
+            input_readonly: null,
             input_group: false,
             input_group_prepend_class: null,
             input_group_prepend_objs: null,
@@ -2403,6 +2418,7 @@
             required: this.settings.input_required,
             maxlength: this.settings.input_maxlength,
             pattern: this.settings.input_pattern,
+            readonly: this.settings.input_readonly,
             min: this.settings.input_min,
             max: this.settings.input_max,
             step: this.settings.input_step,
@@ -2454,6 +2470,7 @@
             input_min: null,
             input_max: null,
             input_step: null,
+            input_readonly: null,
             input_group: false,
             input_group_prepend_class: null,
             input_group_prepend_objs: null,
@@ -2496,9 +2513,11 @@
             required: this.settings.input_required,
             maxlength: this.settings.input_maxlength,
             pattern: this.settings.input_pattern,
+            readonly: this.settings.input_readonly,
             min: this.settings.input_min,
             max: this.settings.input_max,
             step: this.settings.input_step,
+
         });
         add_class(input.$input, this.settings.input_class);
         this.element = new this.fc.init_input(input.$input, '', null);
@@ -2626,6 +2645,72 @@
             this.$element.append(input.$input);
             this.$element.append(ifb.$div);
         }
+    };
+    //<div class="form-group col-xl-3 text-left">
+    //  <div class="form-check">
+    //      <input class="form-check-input" type="checkbox" id="gridCheck">
+    //      <label class="form-check-label" for="gridCheck">Check me out</label>
+    //  </div>
+    //</div>
+    form_element.prototype.bs_checkbox = function (options) {
+        this.settings = $.extend({
+            id: null,
+            form_group_size: null,
+            form_group_col: null,
+            form_group_class: null,
+            label: null,
+            label_class: null,
+            checkbox_class: null,
+            checkbox_title: null,
+            checkbox_required: null,
+            element_default: null,
+            element_change: null,
+        }, options);
+        //
+        this.fe = new form_element();
+        this.fc = new form_control();
+
+        var div = new this.fe.div();
+        this.$element = div.$div;
+        if (this.settings.input_group) {
+            add_class(this.$element, 'form-group');
+        }
+        var cl = 'col';
+        if (this.settings.form_group_size && this.settings.form_group_size !== '') {
+            cl += '-' + this.settings.form_group_size;
+        }
+        if (this.settings.form_group_col && this.settings.form_group_col !== '') {
+            cl += '-' + this.settings.form_group_col;
+        }
+        add_class(this.$element, cl);
+        add_class(this.$element, this.settings.form_group_class);
+        //
+        var form_check = new this.fe.bs_form_check();
+        // Input
+        var input = new this.fe.input({
+            id: this.settings.id,
+            type: 'checkbox',
+            class: 'form-check-input',
+            title: this.settings.checkbox_title,
+            placeholder: null,
+            required: this.settings.checkbox_required,
+        });
+        add_class(input.$input, this.settings.checkbox_class);
+        //
+        this.element = new this.fc.init_checkbox(input.$input, this.settings.element_default, this.settings.element_change);
+        // Подпись
+        var label = new this.fe.label({
+            class: 'form-check-label',
+            id: null,
+            for: this.settings.id,
+            label: this.settings.label
+        });
+        add_class(label.$label, this.settings.label_class);
+        //
+        var ifb = new this.fe.bs_invalid_feedback();
+
+        form_check.$div.append(input.$input).append(label.$label).append(ifb.$div);
+        this.$element.append(form_check.$div);
     };
 
     form_element.prototype.bs_textarea = function (options) {
@@ -2894,6 +2979,15 @@
                         throw new Error('Не удалось создать элемент ' + obj.obj);
                     }
                     add_element(input.$element, content, obj);
+                };
+                if (obj.obj === 'bs_checkbox') {
+                    var checkbox = new this.bs_checkbox(obj.options);
+                    if (checkbox && checkbox.element) {
+                        obj.element = checkbox.element;
+                    } else {
+                        throw new Error('Не удалось создать элемент ' + obj.obj);
+                    }
+                    add_element(checkbox.$element, content, obj);
                 };
                 if (obj.obj === 'bs_textarea') {
                     var textarea = new this.bs_textarea(obj.options);

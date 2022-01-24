@@ -103,6 +103,18 @@
             'fogcd_label_client_kod_on': 'Код:',
             'fogcd_title_client_name_on': '',
             'fogcd_label_client_name_on': 'Грузополучатель:',
+            'fogcd_title_cargo_arrival': '',
+            'fogcd_label_cargo_arrival': 'Груз:',
+            'fogcd_title_cargo_sap': '',
+            'fogcd_label_cargo_sap': 'Название материала SAP:',
+            'fogcd_title_date_arrival': '',
+            'fogcd_label_date_arrival': 'Время приема:',
+            'fogcd_title_owner_name_arrival': '',
+            'fogcd_label_owner_name_arrival': 'Собственник:',
+            'fogcd_title_operator_name_arrival': '',
+            'fogcd_label_operator_name_arrival': 'Оператор (АМКР):',
+            'fogcd_title_limiting_loading_arrival': '',
+            'fogcd_label_limiting_loading_arrival': 'Ограничение (АМКР):',
 
             //'fogcd_title_': '',
             //'fogcd_label_': '',
@@ -115,13 +127,16 @@
             'fogcd_title_fieldset_detention': 'ЗАДЕРЖАНИЕ',
             'fogcd_title_fieldset_return': 'ВОЗВРАТ',
             'fogcd_title_fieldset_loading_data': 'ДАННЫЕ О ПОГРУЗКЕ',
-            'fogcd_title_fieldset_loading_data6': 'ЭПД(ПОСЛЕ ПРИНЯТИЯ УЗ)',
-            'fogcd_title_fieldset_loading_data7': 'SAP (ИСХОДЯЩАЯ ПОСТАВКА)',
+            'fogcd_title_fieldset_epd': 'ЭПД(ПОСЛЕ ПРИНЯТИЯ УЗ)',
+            'fogcd_title_fieldset_sap': 'SAP (ИСХОДЯЩАЯ ПОСТАВКА)',
             'fogcd_title_fieldset_data_arrival': 'ДАННЫЕ О ПРИБЫТИИ',
 
             'fogcd_mess_valid_reason_discrepancy': 'Указанной причины расхождения нет в справочнике ИДС.',
             'fogcd_mess_valid_cause_detention': 'Указанной причины задержания нет в справочнике ИДС.',
             'fogcd_mess_valid_cause_return': 'Указанной причины возврата нет в справочнике ИДС.',
+            'fogcd_mess_valid_cargo': 'Указанного груза нет в справочнике ИДС.',
+            'fogcd_mess_valid_loading_devision': 'Указанного подразделения нет в справочнике ИДС.',
+            'fogcd_mess_valid_name_station_to': 'Указанной станции нет в справочнике ИДС.',
 
             'fogcd_mess_init_panel': 'Инициализация модуля...',
 
@@ -1079,11 +1094,14 @@
         this.all_elements = null;
 
         // Загрузим справочные данные, определим поля формы правки
-        this.load_db(['reason_discrepancy', 'detention_return'], false, function (result) {
+        this.load_db(['reason_discrepancy', 'detention_return', 'cargo', 'divisions', 'external_station'], false, function (result) {
             // Подгрузили списки
             //this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === true && i.station_delete === null; });
             this.list_reason_discrepancy = this.ids_dir.getListReason_Discrepancy('id', 'reason_discrepancy_name', App.Lang, null);
             this.list_detention_return = this.ids_dir.getListDetention_Return('id', 'cause', App.Lang, null);
+            this.list_cargo = this.ids_dir.getListCargo('id', 'cargo_name', App.Lang, null);
+            this.list_divisions = this.ids_dir.getListDivisions('code', 'division_abbr', App.Lang, null);
+            this.list_external_station = this.ids_dir.getListExternalStation('code', 'station_name', App.Lang, null);
             //-------------------------------------
             // Сообщение
             LockScreen(langView('fogcd_mess_init_panel', App.Langs));
@@ -1199,6 +1217,7 @@
                     input_title: langView('fogcd_title_num', App.Langs),
                     input_placeholder: null,
                     input_required: true,
+                    input_readonly: true,
                     input_min: null,
                     input_max: null,
                     input_step: null,
@@ -1393,6 +1412,7 @@
                     input_title: langView('fogcd_title_adm_kod', App.Langs),
                     input_placeholder: null,
                     input_required: null,
+                    input_readonly: true,
                     input_group: false,
                 },
                 childs: []
@@ -1412,6 +1432,7 @@
                     input_title: langView('fogcd_title_rod_vag_abbr', App.Langs),
                     input_placeholder: null,
                     input_required: null,
+                    input_readonly: true,
                     input_group: false,
                 },
                 childs: []
@@ -1431,6 +1452,7 @@
                     input_title: langView('fogcd_title_gruzp_uz', App.Langs),
                     input_placeholder: null,
                     input_required: null,
+                    input_readonly: true,
                     input_group: false,
                 },
                 childs: []
@@ -1450,6 +1472,7 @@
                     input_title: langView('fogcd_title_tara_uz', App.Langs),
                     input_placeholder: null,
                     input_required: null,
+                    input_readonly: true,
                     input_group: false,
                 },
                 childs: []
@@ -1476,6 +1499,7 @@
                     input_title: langView('fogcd_title_condition_arrival', App.Langs),
                     input_placeholder: null,
                     input_required: null,
+                    input_readonly: true,
                     input_group: false,
                 },
                 childs: []
@@ -1495,6 +1519,7 @@
                     input_title: langView('fogcd_title_condition_present', App.Langs),
                     input_placeholder: null,
                     input_required: null,
+                    input_readonly: true,
                     input_group: false,
                 },
                 childs: []
@@ -1918,7 +1943,7 @@
                 },
                 childs: []
             };
-            var form_input_return_date_act= {
+            var form_input_return_date_act = {
                 obj: 'bs_input_datetime',
                 element: null,
                 options: {
@@ -1974,7 +1999,593 @@
                 },
                 childs: []
             };
+            var form_row_loading_data1 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_checkbox_loaded_car = {
+                obj: 'bs_checkbox',
+                element: null,
+                options: {
+                    id: 'loaded_car',
+                    form_group_size: 'xl',
+                    form_group_col: 12,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_loaded_car', App.Langs),
+                    label_class: 'mb-1',
+                    checkbox_class: 'inp-manual',
+                    checkbox_title: null,
+                    checkbox_required: null,
+                    element_default: null,
+                    element_change: null,
+                },
+                childs: []
+            };
+            var form_row_loading_data2 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_input_cargo_name = {
+                obj: 'bs_autocomplete',
+                element: null,
+                options: {
+                    id: 'cargo_name',
+                    form_group_size: 'xl',
+                    form_group_col: 7,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_cargo_name', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-manual',
+                    input_title: langView('fogcd_title_cargo_name', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_group: false,
+                    element_data: this.list_cargo,
+                    element_minLength: 0,
+                    element_out_value: false,
+                    element_val_inp: 'value',
+                    element_check: function (text) {
+                        if (text) {
+                            var obj = this.ids_dir.getCargo_Of_CultureName('cargo_name', text)
+                            if (obj && obj.length > 0) {
+                                this.validation.set_control_ok($(form_input_cargo_name.element.$element), "");
+                            } else {
+                                this.validation.set_control_error($(form_input_cargo_name.element.$element), langView('fogcd_mess_valid_cargo', App.Langs));
+                            }
+                        } else {
 
+                        }
+                    }.bind(this),
+                },
+                childs: []
+            };
+            var form_input_loading_devision_code = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'loading_devision_code',
+                    form_group_size: 'xl',
+                    form_group_col: 2,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_loading_devision_code', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-auto',
+                    input_title: langView('fogcd_title_loading_devision_code', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_loading_devision = {
+                obj: 'bs_autocomplete',
+                element: null,
+                options: {
+                    id: 'loading_devision',
+                    form_group_size: 'xl',
+                    form_group_col: 3,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_loading_devision', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-manual',
+                    input_title: langView('fogcd_title_loading_devision', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_group: false,
+                    input_readonly: false,
+                    element_data: this.list_divisions,
+                    element_minLength: 0,
+                    element_out_value: false,
+                    element_val_inp: 'value',
+                    element_check: function (text) {
+                        if (text) {
+                            var obj = this.ids_dir.getDivisions_Of_CultureName('division_abbr', text)
+                            if (obj && obj.length > 0) {
+                                this.validation.set_control_ok($(form_input_loading_devision.element.$element), "");
+                                form_input_loading_devision_code.element.val(obj[0].code);
+                            } else {
+                                this.validation.set_control_error($(form_input_loading_devision.element.$element), langView('fogcd_mess_valid_loading_devision', App.Langs));
+                                form_input_loading_devision_code.element.val('');
+                            }
+                        } else {
+
+                        }
+                    }.bind(this),
+                },
+                childs: []
+            };
+            var form_row_loading_data3 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_input_code_station_to = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'code_station_to',
+                    form_group_size: 'xl',
+                    form_group_col: 2,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_code_station_to', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-auto',
+                    input_title: langView('fogcd_title_code_station_to', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_name_station_to = {
+                obj: 'bs_autocomplete',
+                element: null,
+                options: {
+                    id: 'name_station_to',
+                    form_group_size: 'xl',
+                    form_group_col: 4,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_name_station_to', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-manual',
+                    input_title: langView('fogcd_title_name_station_to', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_group: false,
+                    input_readonly: false,
+                    element_data: this.list_external_station,
+                    element_minLength: 0,
+                    element_out_value: false,
+                    element_val_inp: 'value',
+                    element_check: function (text) {
+                        if (text) {
+                            var obj = this.ids_dir.getExternalStation_Of_CultureName('station_name', text)
+                            if (obj && obj.length > 0) {
+                                this.validation.set_control_ok($(form_input_name_station_to.element.$element), "");
+                                form_input_code_station_to.element.val(obj[0].code);
+                            } else {
+                                this.validation.set_control_error($(form_input_name_station_to.element.$element), langView('fogcd_mess_valid_name_station_to', App.Langs));
+                                form_input_code_station_to.element.val('');
+                            }
+                        } else {
+
+                        }
+                    }.bind(this),
+                },
+                childs: []
+            };
+            var form_input_owner_name = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'owner_name',
+                    form_group_size: 'xl',
+                    form_group_col: 6,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_owner_name', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-auto',
+                    input_title: langView('fogcd_title_owner_name', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: false,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_row_loading_data4 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_input_operator_name = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'operator_name',
+                    form_group_size: 'xl',
+                    form_group_col: 6,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_operator_name', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-auto',
+                    input_title: langView('fogcd_title_operator_name', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_limiting_loading_amkr = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'limiting_loading_amkr',
+                    form_group_size: 'xl',
+                    form_group_col: 6,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_limiting_loading_amkr', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-auto',
+                    input_title: langView('fogcd_title_limiting_loading_amkr', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_row_loading_data5 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_textarea_limiting_loading_uz = {
+                obj: 'bs_textarea',
+                element: null,
+                options: {
+                    id: 'limiting_loading_uz',
+                    form_group_size: 'xl',
+                    form_group_col: 12,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_limiting_loading_uz', App.Langs),
+                    label_class: 'mb-1',
+                    textarea_size: null,
+                    textarea_rows: 2,
+                    textarea_class: 'inp-auto',
+                    textarea_title: langView('fogcd_title_limiting_loading_uz', App.Langs),
+                    textarea_maxlength: null,
+                    textarea_placeholder: null,
+                    textarea_required: null,
+                    textarea_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_row_loading_data6 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var col_epd = {
+                obj: 'bs_col',
+                options: {
+                    size: 'xl',
+                    col: 12,
+                    class: 'text-left',
+                },
+                childs: []
+            };
+            var fieldset_epd = {
+                obj: 'fieldset',
+                options: {
+                    class: 'border-info',
+                    legend: langView('fogcd_title_fieldset_epd', App.Langs),
+                    class_legend: null,
+                },
+                childs: []
+            };
+            var form_row_epd1 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_input_uz_doc_num = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'uz_doc_num',
+                    form_group_size: 'xl',
+                    form_group_col: 4,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_uz_doc_num', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-epd',
+                    input_title: langView('fogcd_title_uz_doc_num', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_vesg_uz_doc = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'vesg_uz_doc',
+                    form_group_size: 'xl',
+                    form_group_col: 2,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_vesg_uz_doc', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-epd',
+                    input_title: langView('fogcd_title_vesg_uz_doc', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_ves_tary_uz_doc = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'ves_tary_uz_doc',
+                    form_group_size: 'xl',
+                    form_group_col: 2,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_ves_tary_uz_doc', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-epd',
+                    input_title: langView('fogcd_title_ves_tary_uz_doc', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_brigadier_loading_uz_doc = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'brigadier_loading_uz_doc',
+                    form_group_size: 'xl',
+                    form_group_col: 4,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_brigadier_loading_uz_doc', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-epd',
+                    input_title: langView('fogcd_title_brigadier_loading_uz_doc', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_row_epd2 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_input_kod_etsng = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'kod_etsng',
+                    form_group_size: 'xl',
+                    form_group_col: 3,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_kod_etsng', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-epd',
+                    input_title: langView('fogcd_title_kod_etsng', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_textarea_name_etsng = {
+                obj: 'bs_textarea',
+                element: null,
+                options: {
+                    id: 'name_etsng',
+                    form_group_size: 'xl',
+                    form_group_col: 9,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_name_etsng', App.Langs),
+                    label_class: 'mb-1',
+                    textarea_size: null,
+                    textarea_rows: 2,
+                    textarea_class: 'inp-epd',
+                    textarea_title: langView('fogcd_title_name_etsng', App.Langs),
+                    textarea_maxlength: null,
+                    textarea_placeholder: null,
+                    textarea_required: null,
+                    textarea_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_row_epd3 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_input_station_code_on = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'station_code_on',
+                    form_group_size: 'xl',
+                    form_group_col: 3,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_station_code_on', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-epd',
+                    input_title: langView('fogcd_title_station_code_on', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_station_name_on = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'station_name_on',
+                    form_group_size: 'xl',
+                    form_group_col: 4,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_station_name_on', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-epd',
+                    input_title: langView('fogcd_title_station_name_on', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_railway_name_on = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'railway_name_on',
+                    form_group_size: 'xl',
+                    form_group_col: 5,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_railway_name_on', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-epd',
+                    input_title: langView('fogcd_title_railway_name_on', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_row_epd4 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_input_client_kod_on = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'client_kod_on',
+                    form_group_size: 'xl',
+                    form_group_col: 3,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_client_kod_on', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-epd',
+                    input_title: langView('fogcd_title_client_kod_on', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_client_name_on = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'client_name_on',
+                    form_group_size: 'xl',
+                    form_group_col: 9,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_client_name_on', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-epd',
+                    input_title: langView('fogcd_title_client_name_on', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            //
+            var form_row_loading_data7 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var col_sap = {
+                obj: 'bs_col',
+                options: {
+                    size: 'xl',
+                    col: 12,
+                    class: 'text-left',
+                },
+                childs: []
+            };
+            var fieldset_sap = {
+                obj: 'fieldset',
+                options: {
+                    class: 'border-info',
+                    legend: langView('fogcd_title_fieldset_sap', App.Langs),
+                    class_legend: null,
+                },
+                childs: []
+            };
             // ДАННЫЕ О ПРИБЫТИИ'
             var fieldset_data_arrival = {
                 obj: 'fieldset',
@@ -1985,6 +2596,148 @@
                 },
                 childs: []
             };
+            var form_row_data_arrival1 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_input_cargo_arrival = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'cargo_arrival',
+                    form_group_size: 'xl',
+                    form_group_col: 4,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_cargo_arrival', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-auto',
+                    input_title: langView('fogcd_title_cargo_arrival', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_cargo_sap = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'cargo_sap',
+                    form_group_size: 'xl',
+                    form_group_col: 8,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_cargo_sap', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-auto',
+                    input_title: langView('fogcd_title_cargo_sap', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_row_data_arrival2 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_input_date_arrival = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'date_arrival',
+                    form_group_size: 'xl',
+                    form_group_col: 4,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_date_arrival', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-auto',
+                    input_title: langView('fogcd_title_date_arrival', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_owner_name_arrival = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'owner_name_arrival',
+                    form_group_size: 'xl',
+                    form_group_col: 8,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_owner_name_arrival', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-auto',
+                    input_title: langView('fogcd_title_owner_name_arrival', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_row_data_arrival3 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_input_operator_name_arrival = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'operator_name_arrival',
+                    form_group_size: 'xl',
+                    form_group_col: 6,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_operator_name_arrival', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-auto',
+                    input_title: langView('fogcd_title_operator_name_arrival', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_limiting_loading_arrival = {
+                obj: 'bs_input_text',
+                element: null,
+                options: {
+                    id: 'limiting_loading_arrival',
+                    form_group_size: 'xl',
+                    form_group_col: 6,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_limiting_loading_arrival', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-auto',
+                    input_title: langView('fogcd_title_limiting_loading_arrival', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+
             // Собираем
             col1.childs.push(bt_present_car);
             col1.childs.push(bt_return_car);
@@ -2050,6 +2803,67 @@
             form_row_return.childs.push(col_return);
             fieldset_detention_return.childs.push(form_row_return);
             //
+            form_row_loading_data1.childs.push(form_checkbox_loaded_car);
+            //
+            form_row_loading_data2.childs.push(form_input_cargo_name);
+            form_row_loading_data2.childs.push(form_input_loading_devision_code);
+            form_row_loading_data2.childs.push(form_input_loading_devision);
+            //
+            form_row_loading_data3.childs.push(form_input_code_station_to);
+            form_row_loading_data3.childs.push(form_input_name_station_to);
+            form_row_loading_data3.childs.push(form_input_owner_name);
+            //
+            form_row_loading_data4.childs.push(form_input_operator_name);
+            form_row_loading_data4.childs.push(form_input_limiting_loading_amkr);
+            //
+            form_row_loading_data5.childs.push(form_textarea_limiting_loading_uz);
+            //
+            form_row_epd1.childs.push(form_input_uz_doc_num);
+            form_row_epd1.childs.push(form_input_vesg_uz_doc);
+            form_row_epd1.childs.push(form_input_ves_tary_uz_doc);
+            form_row_epd1.childs.push(form_input_brigadier_loading_uz_doc);
+            fieldset_epd.childs.push(form_row_epd1);
+            //
+            form_row_epd2.childs.push(form_input_kod_etsng);
+            form_row_epd2.childs.push(form_textarea_name_etsng);
+            fieldset_epd.childs.push(form_row_epd2);
+            //
+            form_row_epd3.childs.push(form_input_station_code_on);
+            form_row_epd3.childs.push(form_input_station_name_on);
+            form_row_epd3.childs.push(form_input_railway_name_on);
+            fieldset_epd.childs.push(form_row_epd3);
+            //
+            form_row_epd4.childs.push(form_input_client_kod_on);
+            form_row_epd4.childs.push(form_input_client_name_on);
+            fieldset_epd.childs.push(form_row_epd4);
+            //
+            col_epd.childs.push(fieldset_epd);
+            form_row_loading_data6.childs.push(col_epd);
+            //
+            col_sap.childs.push(fieldset_sap);
+            form_row_loading_data6.childs.push(col_sap);
+            //
+            fieldset_loading_data.childs.push(form_row_loading_data1);
+            fieldset_loading_data.childs.push(form_row_loading_data2);
+            fieldset_loading_data.childs.push(form_row_loading_data3);
+            fieldset_loading_data.childs.push(form_row_loading_data4);
+            fieldset_loading_data.childs.push(form_row_loading_data5);
+            fieldset_loading_data.childs.push(form_row_loading_data6);
+            fieldset_loading_data.childs.push(form_row_loading_data7);
+            //
+            form_row_data_arrival1.childs.push(form_input_cargo_arrival);
+            form_row_data_arrival1.childs.push(form_input_cargo_sap);
+            //
+            form_row_data_arrival2.childs.push(form_input_date_arrival);
+            form_row_data_arrival2.childs.push(form_input_owner_name_arrival);
+            //
+            form_row_data_arrival3.childs.push(form_input_operator_name_arrival);
+            form_row_data_arrival3.childs.push(form_input_limiting_loading_arrival);
+            //
+            fieldset_data_arrival.childs.push(form_row_data_arrival1);
+            fieldset_data_arrival.childs.push(form_row_data_arrival2);
+            fieldset_data_arrival.childs.push(form_row_data_arrival3);
+            //
             col_detali.childs.push(fieldset_common);
             col_detali.childs.push(fieldset_detention_return);
             col_detali.childs.push(fieldset_loading_data);
@@ -2091,6 +2905,14 @@
                         .add(form_input_condition_arrival.element.$element)
                         .add(form_input_condition_present.element.$element)
                         .add(form_textarea_condition_present.element.$element)
+                        .add(form_input_cargo_name.element.$element)
+                        .add(form_input_loading_devision_code.element.$element)
+                        .add(form_input_loading_devision.element.$element)
+                        .add(form_input_code_station_to.element.$element)
+                        .add(form_input_name_station_to.element.$element)
+                        .add(form_input_owner_name.element.$element)
+                        .add(form_input_operator_name.element.$element)
+                        .add(form_input_limiting_loading_amkr.element.$element)
                         ;
                     this.all_elements_detention = $([])
                         .add(form_input_cause_detention.element.$element)

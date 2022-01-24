@@ -35,6 +35,8 @@
         this.list_locomotive = null;
         this.list_reason_discrepancy = null;
         this.list_detention_return = null;
+        this.list_cargo = null;
+        this.list_external_station = null;
     }
     //****************************************************************************************
     //-------------------------------- Функции работы с БД через api ---------------
@@ -175,6 +177,30 @@
                             this.list_detention_return = data;
                             process--;
                             result.push('detention_return');
+                            out_load(process);
+                        }.bind(this));
+                    };
+                };
+                if (table === 'cargo') {
+                    if (lock) LockScreen(langView('mess_load_reference', App.Langs));
+                    if (update || !this.list_cargo) {
+                        process++;
+                        this.getCargo(function (data) {
+                            this.list_cargo = data;
+                            process--;
+                            result.push('cargo');
+                            out_load(process);
+                        }.bind(this));
+                    };
+                };
+                if (table === 'external_station') {
+                    if (lock) LockScreen(langView('mess_load_reference', App.Langs));
+                    if (update || !this.list_external_station) {
+                        process++;
+                        this.getExternalStation(function (data) {
+                            this.list_external_station = data;
+                            process--;
+                            result.push('external_station');
                             out_load(process);
                         }.bind(this));
                     };
@@ -741,7 +767,7 @@
         });
     };
     // Операция автокоррекции
-    ids_directory.prototype.posOperationAutoPositionParkOfStation= function (operation, callback) {
+    ids_directory.prototype.posOperationAutoPositionParkOfStation = function (operation, callback) {
         $.ajax({
             url: '../../api/ids/directory/park_ways/operation/auto_correct/',
             type: 'POST',
@@ -1037,7 +1063,7 @@
     ids_directory.prototype.getReason_Discrepancy = function (callback) {
         $.ajax({
             type: 'GET',
-            url: '../../api/ids/directory/reason_discrepancy/all', 
+            url: '../../api/ids/directory/reason_discrepancy/all',
             async: true,
             dataType: 'json',
             beforeSend: function () {
@@ -1056,7 +1082,6 @@
             },
         });
     };
-
     //======= Directory_DetentionReturn (Справочник причин возвратов и задержаний) ======================================
     ids_directory.prototype.getDetention_Return = function (callback) {
         $.ajax({
@@ -1080,7 +1105,54 @@
             },
         });
     };
-
+    //======= Directory_Cargo (Справочник грузов) ======================================
+    //
+    ids_directory.prototype.getCargo = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/directory/cargo/all',
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_directory.getCargo", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //======= Directory_ExternalStation (Справочник внешних станций) ======================================
+    //
+    ids_directory.prototype.getExternalStation = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/directory/external_station/all',
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_directory.getExternalStation", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
 
     //****************************************************************************************
     //-------------------------------- функции для работы с таблицами ------------------------
@@ -1090,7 +1162,7 @@
         return this.getObj_Of_ID(this.list_locomotive, 'locomotive', locomotive);
     };
     // Вернуть значение поля строки по номеру локомотива
-    ids_directory.prototype.getValue_Locomotive_Of_ID= function (locomotive, name, lang) {
+    ids_directory.prototype.getValue_Locomotive_Of_ID = function (locomotive, name, lang) {
         var obj = this.getLocomotive_Of_ID(locomotive);
         return this.getValueObj(obj, name, lang);
     };
@@ -1184,9 +1256,9 @@
         return this.getListObj(this.list_divisions, fvalue, ftext, lang, filter);
     };
     // Получим список с выборкой по полю
-    ids_directory.prototype.getDivisions_Of_CultureName = function (name, lang, text) {
+    ids_directory.prototype.getDivisions_Of_CultureName = function (name, text) {
         if (this.list_divisions) {
-            var obj = getObjects(this.list_divisions, name + '_' + lang, text);
+            var obj = getObjects(this.list_divisions, name + '_' + App.Lang, text);
             return obj;
         }
         return null;
@@ -1230,6 +1302,41 @@
         return null;
     };
 
+    //*======= ids_directory.list_cargo  (Справочник грузов) ======================================
+    //
+    ids_directory.prototype.getCargo_Of_ID = function (id) {
+        return this.getObj_Of_ID(this.list_cargo, id);
+    };
+    //
+    ids_directory.prototype.getListCargo = function (fvalue, ftext, lang, filter) {
+        return this.getListObj(this.list_cargo, fvalue, ftext, lang, filter);
+    };
+    // Получим список с выборкой по полю
+    ids_directory.prototype.getCargo_Of_CultureName = function (name, text) {
+        if (this.list_cargo) {
+            var obj = getObjects(this.list_cargo, name + '_' + App.Lang, text);
+            return obj;
+        }
+        return null;
+    };
+
+    //*======= ids_directory.list_external_station  (Справочник внешних станций) ======================================
+    //
+    ids_directory.prototype.getExternalStation_Of_ID = function (id) {
+        return this.getObj_Of_ID(this.list_external_station, id);
+    };
+    //
+    ids_directory.prototype.getListExternalStation = function (fvalue, ftext, lang, filter) {
+        return this.getListObj(this.list_external_station, fvalue, ftext, lang, filter);
+    };
+    // Получим список с выборкой по полю
+    ids_directory.prototype.getExternalStation_Of_CultureName = function (name, text) {
+        if (this.list_external_station) {
+            var obj = getObjects(this.list_external_station, name + '_' + App.Lang, text);
+            return obj;
+        }
+        return null;
+    };
 
     App.ids_directory = ids_directory;
 
