@@ -1,12 +1,12 @@
-﻿body {
-}
+﻿/*body {
+}*/
 
 /* -------------------------------- 
 
 cars detali panel 
 
 -------------------------------- */
-.cd-cars-detali {
+/*.cd-cars-detali {
     position: fixed;
     z-index: 3;
     top: 0;
@@ -14,9 +14,9 @@ cars detali panel
     width: 100%;
     height: 100%;
     visibility: hidden;
-    background-color: #ebebeb;
+    background-color: #ebebeb;*/
     /* Force Hardware Acceleration */
-    -webkit-transform: translateZ(0);
+    /*-webkit-transform: translateZ(0);
     -moz-transform: translateZ(0);
     -ms-transform: translateZ(0);
     -o-transform: translateZ(0);
@@ -57,9 +57,9 @@ cars detali panel
         transition-timing-function: cubic-bezier(0.67, 0.15, 0.83, 0.83);
     }
 
-        .cd-cars-detali.is-visible > div {
+        .cd-cars-detali.is-visible > div {*/
             /* smooth scrolling on iOS */
-            -webkit-overflow-scrolling: touch;
+            /*-webkit-overflow-scrolling: touch;
         }
 
     .cd-cars-detali .close {
@@ -72,16 +72,16 @@ cars detali panel
         background: url(../../../Images/cd/cd-close-dark.svg) no-repeat center center;
     }
 
-.cd-img-replace {
+.cd-img-replace {*/
     /* replace text with image */
-    color: transparent;
+    /*color: transparent;
     overflow: hidden;
     text-indent: 100%;
     white-space: nowrap;
 }
 
-.cd-form {
+.cd-form {*/
     /*width: 90%;*/
     /*max-width: 600px;*/
-    margin: 2em auto;
-}
+    /*margin: 2em auto;
+}*/

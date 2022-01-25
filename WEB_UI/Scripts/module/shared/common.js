@@ -2255,7 +2255,7 @@
         this.$div = div.$div;
         add_class(this.$div, this.settings.class);
         add_id(this.$div, this.settings.id);
-        this.fe.add_obj(this.$div, this.settings.objs, function (content) {
+        this.fe.add_obj(this.$div, this.settings.objs, [], function (content) {
 
         }.bind(this))
     };
@@ -2271,7 +2271,7 @@
         this.$div = div.$div;
         add_class(this.$div, this.settings.class);
         add_id(this.$div, this.settings.id);
-        this.fe.add_obj(this.$div, this.settings.objs, function (content) {
+        this.fe.add_obj(this.$div, this.settings.objs, [], function (content) {
 
         }.bind(this))
     };
@@ -2908,12 +2908,12 @@
     };
 
     //-------------------
-    form_element.prototype.add_obj = function (content, objs, callback) {
+    form_element.prototype.add_obj = function (content, objs, elements, callback) {
         // Добавить элемент
         var add_element = function (element, content, obj) {
             if (element && element.length > 0) {
                 if (obj.childs && obj.childs.length > 0) {
-                    this.add_obj(element, obj.childs, function (content) {
+                    this.add_obj(element, obj.childs, elements, function (content) {
                         return content;
                     }.bind(this));
                 }
@@ -2943,7 +2943,15 @@
                 if (obj.obj === 'bs_alert') {
                     var element = new this.bs_alert(obj.options);
                     if (element && element.alert) {
-                        obj.element = element.alert;
+                        elements.push({
+                            name: obj.options.id,
+                            validation_group: null,
+                            type: obj.obj,
+                            element: element.alert,
+                            $element: element.alert.$alert,
+                            destroy: false
+                        });
+                        //obj.element = element.alert;
                     } else {
                         throw new Error('Не удалось создать элемент ' + obj.obj);
                     }
@@ -2951,12 +2959,33 @@
                 };
                 if (obj.obj === 'bs_button') {
                     var element = new this.bs_button(obj.options);
+                    if (element && element.$button) {
+                        elements.push({
+                            name: obj.options.id,
+                            validation_group: obj.options.validation_group,
+                            type: obj.obj,
+                            element: null,
+                            $element: element.$button,
+                            destroy: false
+                        });
+                        //obj.button = element.$button;
+                    } else {
+                        throw new Error('Не удалось создать элемент ' + obj.obj);
+                    }
                     add_element(element.$button, content, obj);
                 };
                 if (obj.obj === 'bs_input_number') {
                     var input = new this.bs_input_number(obj.options);
                     if (input && input.element) {
-                        obj.element = input.element;
+                        elements.push({
+                            name: obj.options.id,
+                            validation_group: obj.options.validation_group,
+                            type: obj.obj,
+                            element: input.element,
+                            $element: input.element.$element,
+                            destroy: false
+                        });
+                        //obj.element = input.element;
                     } else {
                         throw new Error('Не удалось создать элемент ' + obj.obj);
                     }
@@ -2965,7 +2994,15 @@
                 if (obj.obj === 'bs_input_text') {
                     var input = new this.bs_input_text(obj.options);
                     if (input && input.element) {
-                        obj.element = input.element;
+                        elements.push({
+                            name: obj.options.id,
+                            validation_group: obj.options.validation_group,
+                            type: obj.obj,
+                            element: input.element,
+                            $element: input.element.$element,
+                            destroy: false
+                        });
+                        //obj.element = input.element;
                     } else {
                         throw new Error('Не удалось создать элемент ' + obj.obj);
                     }
@@ -2974,7 +3011,15 @@
                 if (obj.obj === 'bs_input_datetime') {
                     var input = new this.bs_input_datetime(obj.options);
                     if (input && input.element) {
-                        obj.element = input.element;
+                        elements.push({
+                            name: obj.options.id,
+                            validation_group: obj.options.validation_group,
+                            type: obj.obj,
+                            element: input.element,
+                            $element: input.element.$element,
+                            destroy: true
+                        });
+                        //obj.element = input.element;
                     } else {
                         throw new Error('Не удалось создать элемент ' + obj.obj);
                     }
@@ -2983,7 +3028,15 @@
                 if (obj.obj === 'bs_checkbox') {
                     var checkbox = new this.bs_checkbox(obj.options);
                     if (checkbox && checkbox.element) {
-                        obj.element = checkbox.element;
+                        elements.push({
+                            name: obj.options.id,
+                            validation_group: obj.options.validation_group,
+                            type: obj.obj,
+                            element: checkbox.element,
+                            $element: checkbox.element.$element,
+                            destroy: false
+                        });
+                        //obj.element = checkbox.element;
                     } else {
                         throw new Error('Не удалось создать элемент ' + obj.obj);
                     }
@@ -2992,7 +3045,15 @@
                 if (obj.obj === 'bs_textarea') {
                     var textarea = new this.bs_textarea(obj.options);
                     if (textarea && textarea.element) {
-                        obj.element = textarea.element;
+                        elements.push({
+                            name: obj.options.id,
+                            validation_group: obj.options.validation_group,
+                            type: obj.obj,
+                            element: textarea.element,
+                            $element: textarea.element.$element,
+                            destroy: false
+                        });
+                        //obj.element = textarea.element;
                     } else {
                         throw new Error('Не удалось создать элемент ' + obj.obj);
                     }
@@ -3001,7 +3062,15 @@
                 if (obj.obj === 'bs_autocomplete') {
                     var input = new this.bs_autocomplete(obj.options);
                     if (input && input.element) {
-                        obj.element = input.element;
+                        elements.push({
+                            name: obj.options.id,
+                            validation_group: obj.options.validation_group,
+                            type: obj.obj,
+                            element: input.element,
+                            $element: input.element.$element,
+                            destroy: false
+                        });
+                        //obj.element = input.element;
                     } else {
                         throw new Error('Не удалось создать элемент ' + obj.obj);
                     }
@@ -3059,10 +3128,11 @@
         // Создаем элементы и отрисовываем их на форме
         // Получим список элементов которые должны отображатся на форме
         this.el_destroy = []; // Элементы которые нужно удалить методом destroy()
+        this.elements = [];
         this.data = null;
         /*        this.el_validation = $([]); // Элементы для валидации*/
         // Пройдемся по элементам
-        this.fe.add_obj(this.$form, this.settings.objs, function (form) {
+        this.fe.add_obj(this.$form, this.settings.objs, this.elements, function (form) {
             // Построение HTML закончена
             if (typeof this.settings.fn_html_init === 'function') {
                 this.settings.fn_html_init();

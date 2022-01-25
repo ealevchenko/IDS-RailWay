@@ -122,11 +122,12 @@
                 //.....
                 //<a class="dropdown-item" href="#" id="report_fsci">Натурная ведомость коммерческого осмотра</a>
             }
-            // Инициализация модуля "Таблица справочника путей"
+            // Инициализация модуля "Таблица отправляемых сотавов"
             table_outgoing_sostav.init({
                 type_report: 'outgoing_sostav',
                 alert: alert,
                 ids_wsd: null,
+                // Нажата кнопка показать вагоны
                 fn_action_view_wagons: function (rows_sostav) {
                     form_detali.open();
                 },
@@ -143,7 +144,7 @@
             var card_panel = new fc_ui.el_card('border-secondary mb-1', '', '', langView('mo_card_header_detali', App.Langs));
 
             row.$row.append(col.$col.append(card_panel.$card))
-            //
+            // Окно детально
             form_detali.init({
                 alert: null,
                 fn_init: function () {

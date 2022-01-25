@@ -176,6 +176,9 @@
         //--------------------------------------------------------
         // Создадим и добавим макет для модуля вагон детально
         this.$info_cars = panelElement.$info_cars;
+        var sel_focd = 'focd-' + this.selector;
+        var $div_focd = $('<div></div>', { 'id': sel_focd });
+        this.$info_cars.append($div_focd);
         //--------------------------------------------------------
         // Создадим и добавим макет для список не предъявленных вагонов 
         //<div class="list-group" id="list-cars-not-outgoing" role="tablist">
@@ -209,15 +212,28 @@
                 this.update();
             }.bind(this),
         });
-        // Создадим и добавим макет таблицы
+        // Создадим и добавим макет формы
+        var FOCD = App.form_outgoing_cars_detali;
+        this.form_outgoing_cars_detali = new FOCD('div#' + sel_focd);             // Создадим экземпляр
+        this.form_outgoing_cars_detali.init({
+            alert: alert,
+            ids_wsd: null,
+            ids_dir: null,
+            fn_init: function (init) {
+                if (typeof this.settings.fn_init === 'function') {
+                    this.settings.fn_init();
+                }
+                //LockScreenOff();
+            }.bind(this),
+        });
 
-        // Загрузим справочные данные, определим поля формы правки
-        this.load_db(['station', 'ways', 'outer_ways', 'locomotive'], false, function (result) {
-            //
-            if (typeof this.settings.fn_init === 'function') {
-                this.settings.fn_init();
-            }
-        }.bind(this));
+        //// Загрузим справочные данные, определим поля формы правки
+        //this.load_db(['station', 'ways', 'outer_ways', 'locomotive'], false, function (result) {
+        //    //
+        //    if (typeof this.settings.fn_init === 'function') {
+        //        this.settings.fn_init();
+        //    }
+        //}.bind(this));
     };
     // Открыть модуль 
     view_outgoing_cars.prototype.open = function (id_sostav) {
@@ -248,6 +264,9 @@
                 this.view_cars_not_outgoing(this.wagons);
                 // Показать вагоны которые не сдали.
                 this.view_cars_outgoing(this.wagons)
+                // Закрыть форму детально
+                this.form_outgoing_cars_detali.close();
+
                 LockScreenOff();
             }.bind(this));
         } else {
