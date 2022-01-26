@@ -2376,6 +2376,7 @@
             input_max: null,
             input_step: null,
             input_readonly: null,
+            input_spinner: true,
             input_group: false,
             input_group_prepend_class: null,
             input_group_prepend_objs: null,
@@ -2424,6 +2425,12 @@
             step: this.settings.input_step,
         });
         add_class(input.$input, this.settings.input_class);
+        //if (this.settings.input_spinner) {
+        //    this.element = new this.fc.init_input(input.$input.inputSpinner(), '', null);
+        //} else {
+
+        //}
+        //input.$input
         this.element = new this.fc.init_input(input.$input, '', null);
         //
         var ifb = new this.fe.bs_invalid_feedback();
@@ -2945,7 +2952,7 @@
                     if (element && element.alert) {
                         elements.push({
                             name: obj.options.id,
-                            validation_group: null,
+                            validation_group: obj.options.validation_group,
                             type: obj.obj,
                             element: element.alert,
                             $element: element.alert.$alert,
@@ -2976,6 +2983,9 @@
                 };
                 if (obj.obj === 'bs_input_number') {
                     var input = new this.bs_input_number(obj.options);
+                    if (obj.options.input_spinner) {
+                        input.element.$element.inputSpinner();
+                    }
                     if (input && input.element) {
                         elements.push({
                             name: obj.options.id,
@@ -3076,14 +3086,12 @@
                     }
                     add_element(input.$element, content, obj);
                 };
-
             }
         }.bind(this));
         if (typeof callback === 'function') {
             callback(content);
         };
     };
-
     // 
     App.form_element = form_element;
     //================================================================================
@@ -3105,21 +3113,21 @@
             cl_form: null,
             validation: true,
             fn_validation_ok: null,
-            fn_html_init: null,
+            fn_html_init: function () { },
             fn_init: null,
         }, options);
         var form = new this.fc.el_form(this.settings.id, this.settings.cl_form + ' text-left');
 
         this.$form = form.$form;
         // Алерт 
-        if (!this.settings.alert) {
-            var $alert = new this.fc.el_alert();
-            if ($alert && $alert.$alert && $alert.$alert.length > 0) {
-                var $alert = $alert.$alert;
-                this.$form.append($alert);
-                this.alert = new alert_form($alert);
-            }
-        };
+        //if (!this.settings.alert) {
+        //    var $alert = new this.fc.el_alert();
+        //    if ($alert && $alert.$alert && $alert.$alert.length > 0) {
+        //        var $alert = $alert.$alert;
+        //        this.$form.append($alert);
+        //        this.alert = new alert_form($alert);
+        //    }
+        //};
         // Привяжем событие submit
         this.$form.on('submit', function (event) {
 
@@ -3127,23 +3135,126 @@
         //---------------------------------------------------------
         // Создаем элементы и отрисовываем их на форме
         // Получим список элементов которые должны отображатся на форме
-        this.el_destroy = []; // Элементы которые нужно удалить методом destroy()
         this.elements = [];
-        this.data = null;
+        /*        this.data = null;*/
         /*        this.el_validation = $([]); // Элементы для валидации*/
         // Пройдемся по элементам
         this.fe.add_obj(this.$form, this.settings.objs, this.elements, function (form) {
             // Построение HTML закончена
-            if (typeof this.settings.fn_html_init === 'function') {
-                this.settings.fn_html_init();
-            }
+            // -------------НАСТРОИМ ВАЛИДАЦИЮ -----------------------
+            // Получим список validation
+            this.list_validation = [];
+            $.each(this.elements, function (i, obj) {
+                if (obj.validation_group) {
+                    var val = this.list_validation.find(function (o) { return o === obj.validation_group; }.bind(this));
+                    if (!val) {
+                        this.list_validation.push(obj.validation_group);
+                    }
+                }
+            }.bind(this));
+            this.validations = [];
+            // Создадим validation для элементов
+            $.each(this.list_validation, function (i, validation_name) {
+                this['validation_' + validation_name] = new validation_form();
+                // Настроим валидацию
+                var validation = {};
+                validation.name = validation_name;
+                validation.elements = [];
+                // Настроим Alert
+                if (validation_name === 'common') {
+                    validation.alert = this.settings.alert;
+                } else {
+                    var alert = this.elements.find(function (o) { return o.validation_group === validation_name && o.type === 'bs_alert'; });
+                    validation.alert = alert && alert.element ? alert.element : this.settings.alert;
+                }
+                // Получим перечень элементов
+                $.each(this.elements.filter(function (i) { return i.validation_group === validation_name && i.type !== 'bs_alert'; }),
+                    function (i, obj) {
+                        validation.elements.push(obj.$element);
+                    }.bind(this));
+                validation.$elements = $([]).add($(validation.elements));
+                this['validation_' + validation_name].init({
+                    alert: validation.alert,
+                    elements: validation.$elements,
+                });
+                validation.validation = this['validation_' + validation_name];
+                this.validations.push(validation);
+            }.bind(this));
+            // -------------------------------------------------------
+            //if (typeof this.settings.fn_html_init === 'function') {
+            //    this.settings.fn_html_init();
+            //}
 
             if (typeof this.settings.fn_init === 'function') {
-                this.settings.fn_init();
+                this.settings.fn_init(this.init);
             }
 
         }.bind(this));
 
+    };
+
+    // Установит значение компонента
+    form_dialog.prototype.set = function (id, value) {
+        if (this.elements) {
+            var element = this.elements.find(function (o) {
+                return o.name === id;
+            });
+            if (element && element.element) {
+                element.element.val(value);
+            }
+        }
+    };
+    // Прочесть значение компонента
+    form_dialog.prototype.get = function (id) {
+        if (this.elements) {
+            var element = this.elements.find(function (o) {
+                return o.name === id;
+            });
+            if (element && element.element) {
+                return element.element.val();
+            }
+        }
+        return undefined;
+    };
+    // Установить или обновить значение компонента
+    form_dialog.prototype.val = function (id, value) {
+        if (value !== undefined) {
+            this.set(id, value);
+        } else {
+            return this.get(id);
+        }
+    }
+    // Вывести на форме сообщение об ошибке под элементом 
+    form_dialog.prototype.set_validation_object_error = function (validation_name, id, message) {
+        var element = this.elements.find(function (o) {
+            return o.name === id;
+        });
+        if (element) {
+            if (!validation_name) {
+                validation_name = 'common';
+            }
+            if (this['validation_' + validation_name]) {
+                this['validation_' + validation_name].set_control_error(element.$element, message);
+            }
+        } else {
+            throw new Error('Не удалось найти элемент ' + id);
+        }
+    };
+    // Вывести на форме сообщение об ошибке под элементом 
+    form_dialog.prototype.set_validation_object_ok = function (validation_name, id, message) {
+        var element = this.elements.find(function (o) {
+            return o.name === id;
+        });
+        if (element) {
+            if (!validation_name) {
+                validation_name = 'common';
+            }
+            if (this['validation_' + validation_name]) {
+                this['validation_' + validation_name].set_control_ok(element.$element, message);
+            }
+        } else {
+            throw new Error('Не удалось найти элемент ' + id);
+        }
     };
 
     form_dialog.prototype.destroy = function () {
