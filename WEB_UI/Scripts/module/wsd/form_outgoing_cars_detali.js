@@ -1997,8 +1997,7 @@
             //
             objs.push(row1);
             objs.push(row_detali);
-
-
+            // Инициализируем форму
             this.form.init({
                 alert: this.settings.alert, // Подключим Alert модальной формы
                 objs: objs,
@@ -2141,93 +2140,6 @@
                     };
                 }.bind(this),
             });
-
-
-
-            /*var panelElement = new div_panel(this);*/
-            // Отобразим макет панели
-
-
-            //this.$form_outgoing_cars.append(panelElement.$element);
-            // Валидация перечень элементов
-            //var all_elements = $([])
-            //    .add(panelElement.$num_car)
-            //    .add(panelElement.$position_outgoing)
-            //    .add(panelElement.$num_cont_1)
-            //    .add(panelElement.$num_cont_2)
-            //    .add(panelElement.$date_outgoing_act)
-            //    .add(panelElement.$reason_discrepancy_amkr)
-            //    .add(panelElement.$reason_discrepancy_uz)
-            //    .add(panelElement.$adm_kod)
-            //    .add(panelElement.$rod_vag_abbr)
-            //    .add(panelElement.$gruzp_uz)
-            //    .add(panelElement.$tara_uz)
-            //    .add(panelElement.$condition_arrival)
-            //    .add(panelElement.$condition_provide)
-
-            //// Валидация инициализация
-            //this.validation = new validation();
-            //this.validation.init({
-            //    alert: this.settings.alert,
-            //    elements: all_elements,
-            //});
-            //// Инициализируем элементы макета панели
-            //this.num_car = new this.fc_ui.init_input(panelElement.$num_car, 0, function (e) { });
-            //this.position_outgoing = new this.fc_ui.init_input(panelElement.$position_outgoing.inputSpinner(), 1, function (e) { });
-            //this.num_cont_1 = new this.fc_ui.init_input(panelElement.$num_cont_1, null, function (e) { });
-            //this.num_cont_2 = new this.fc_ui.init_input(panelElement.$num_cont_2, null, function (e) { });
-            ////
-            //this.$date_outgoing_act = new this.fc_ui.init_datetime_input(panelElement.$date_outgoing_act, null, function (dt) { }, true);
-            //this.reason_discrepancy_amkr = new this.fc_ui.init_autocomplete(panelElement.$reason_discrepancy_amkr, {
-            //    data: this.list_reason_discrepancy,
-            //    minLength: 0,
-            //    out_value: false,
-            //    val_inp: 'value',
-            //    check: function (text) {
-            //        if (text) {
-            //            var obj = this.ids_dir.getReason_Discrepancy_Of_CultureName('reason_discrepancy_name', text)
-            //            if (obj && obj.length > 0) {
-            //                this.validation.set_control_ok($(this.reason_discrepancy_amkr.$element), "");
-            //            } else {
-            //                this.validation.set_control_error($(this.reason_discrepancy_amkr.$element), langView('fogcd_mess_valid_reason_discrepancy', App.Langs));
-            //            }
-            //        } else {
-
-            //        }
-            //    }.bind(this)
-            //});
-            //this.reason_discrepancy_uz = new this.fc_ui.init_autocomplete(panelElement.$reason_discrepancy_uz, {
-            //    data: this.list_reason_discrepancy,
-            //    minLength: 0,
-            //    out_value: false,
-            //    val_inp: 'value',
-            //    check: function (text) {
-            //        if (text) {
-            //            var obj = this.ids_dir.getReason_Discrepancy_Of_CultureName('reason_discrepancy_name', text)
-            //            if (obj && obj.length > 0) {
-            //                this.validation.set_control_ok($(this.reason_discrepancy_uz.$element), "");
-            //            } else {
-            //                this.validation.set_control_error($(this.reason_discrepancy_uz.$element), langView('fogcd_mess_valid_reason_discrepancy', App.Langs));
-            //            }
-            //        } else {
-
-            //        }
-            //    }.bind(this)
-            //});
-            ////
-            //this.adm_kod = new this.fc_ui.init_input(panelElement.$adm_kod, null, function (e) { });
-            //this.rod_vag_abbr = new this.fc_ui.init_input(panelElement.$rod_vag_abbr, null, function (e) { });
-            //this.gruzp_uz = new this.fc_ui.init_input(panelElement.$gruzp_uz, null, function (e) { });
-            //this.tara_uz = new this.fc_ui.init_input(panelElement.$tara_uz, null, function (e) { });
-            ////
-            //this.condition_arrival = new this.fc_ui.init_input(panelElement.$condition_arrival, null, function (e) { });
-            //this.condition_provide = new this.fc_ui.init_input(panelElement.$condition_provide, null, function (e) { });
-
-            //this.validation.clear_all();
-            //this.validation.set_object_error($(this.num_car.$element), "Элемент - не выбран.");
-            //this.validation.set_object_error($(this.reason_discrepancy_uz.$element), "Элемент - не выбран.");
-
-            //-------------------------------------
         }.bind(this));
     }
 

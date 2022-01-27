@@ -2425,12 +2425,6 @@
             step: this.settings.input_step,
         });
         add_class(input.$input, this.settings.input_class);
-        //if (this.settings.input_spinner) {
-        //    this.element = new this.fc.init_input(input.$input.inputSpinner(), '', null);
-        //} else {
-
-        //}
-        //input.$input
         this.element = new this.fc.init_input(input.$input, '', null);
         //
         var ifb = new this.fe.bs_invalid_feedback();
@@ -2983,6 +2977,7 @@
                 };
                 if (obj.obj === 'bs_input_number') {
                     var input = new this.bs_input_number(obj.options);
+                    // Включил отображение компонента inputSpinner
                     if (obj.options.input_spinner) {
                         input.element.$element.inputSpinner();
                     }
