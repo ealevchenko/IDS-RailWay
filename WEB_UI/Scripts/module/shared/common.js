@@ -402,6 +402,13 @@
                 return select ? select.value : null;
             };
         };
+        this.set = function (value) {
+            if (value !== undefined && value !== null) {
+                this.$element.val(value);
+            } else {
+                this.$element.val('');
+            }
+        };
         this.destroy = function (data) {
             this.$element.autocomplete("destroy");
         };
@@ -2249,13 +2256,14 @@
             class: null,
             id: null,
             objs: null,
+            obj_form: null,
         }, options);
         this.fe = new form_element();
         var div = new this.fe.div({ class: 'input-group-prepend' });
         this.$div = div.$div;
         add_class(this.$div, this.settings.class);
         add_id(this.$div, this.settings.id);
-        this.fe.add_obj(this.$div, this.settings.objs, [], function (content) {
+        this.fe.add_obj(this.$div, this.settings.objs, this.settings.obj_form, function (content) {
 
         }.bind(this))
     };
@@ -2265,13 +2273,14 @@
             class: null,
             id: null,
             objs: null,
+            obj_form: null,
         }, options);
         this.fe = new form_element();
         var div = new this.fe.div({ class: 'input-group-append' });
         this.$div = div.$div;
         add_class(this.$div, this.settings.class);
         add_id(this.$div, this.settings.id);
-        this.fe.add_obj(this.$div, this.settings.objs, [], function (content) {
+        this.fe.add_obj(this.$div, this.settings.objs, this.settings.obj_form, function (content) {
 
         }.bind(this))
     };
@@ -2382,6 +2391,7 @@
             input_group_prepend_objs: null,
             input_group_append_class: null,
             input_group_append_objs: null,
+            input_group_prepend_obj_form: null,
         }, options);
         //
         this.fe = new form_element();
@@ -2434,7 +2444,8 @@
             if (this.settings.input_group_prepend_objs && this.settings.input_group_prepend_objs !== null) {
                 var input_group_prepend = new this.fe.bs_input_group_prepend({
                     class: this.settings.input_group_prepend_class,
-                    objs: this.settings.input_group_prepend_objs
+                    objs: this.settings.input_group_prepend_objs,
+                    obj_form: this.settings.input_group_prepend_obj_form
                 });
                 ig.$div.append(input_group_prepend.$div);
             };
@@ -2443,7 +2454,8 @@
             if (this.settings.input_group_append_objs && this.settings.input_group_append_objs !== null) {
                 var input_group_append = new this.fe.bs_input_group_append({
                     class: this.settings.input_group_append_class,
-                    objs: this.settings.input_group_append_objs
+                    objs: this.settings.input_group_append_objs,
+                    obj_form: this.settings.input_group_prepend_obj_form
                 });
                 ig.$div.append(input_group_append.$div);
             };
@@ -2909,12 +2921,12 @@
     };
 
     //-------------------
-    form_element.prototype.add_obj = function (content, objs, elements, callback) {
+    form_element.prototype.add_obj = function (content, objs, obj_form, callback) {
         // Добавить элемент
         var add_element = function (element, content, obj) {
             if (element && element.length > 0) {
                 if (obj.childs && obj.childs.length > 0) {
-                    this.add_obj(element, obj.childs, elements, function (content) {
+                    this.add_obj(element, obj.childs, obj_form, function (content) {
                         return content;
                     }.bind(this));
                 }
@@ -2944,10 +2956,10 @@
                 if (obj.obj === 'bs_alert') {
                     var element = new this.bs_alert(obj.options);
                     if (element && element.alert) {
-                        elements.push({
+                        obj_form.alerts.push({
                             name: obj.options.id,
                             validation_group: obj.options.validation_group,
-                            type: obj.obj,
+                            type: 'alert',
                             element: element.alert,
                             $element: element.alert.$alert,
                             destroy: false
@@ -2961,10 +2973,10 @@
                 if (obj.obj === 'bs_button') {
                     var element = new this.bs_button(obj.options);
                     if (element && element.$button) {
-                        elements.push({
+                        obj_form.buttons.push({
                             name: obj.options.id,
                             validation_group: obj.options.validation_group,
-                            type: obj.obj,
+                            type: 'button',
                             element: null,
                             $element: element.$button,
                             destroy: false
@@ -2976,16 +2988,17 @@
                     add_element(element.$button, content, obj);
                 };
                 if (obj.obj === 'bs_input_number') {
+                    obj.options.input_group_prepend_obj_form = obj_form;
                     var input = new this.bs_input_number(obj.options);
                     // Включил отображение компонента inputSpinner
                     if (obj.options.input_spinner) {
                         input.element.$element.inputSpinner();
                     }
                     if (input && input.element) {
-                        elements.push({
+                        obj_form.views.push({
                             name: obj.options.id,
                             validation_group: obj.options.validation_group,
-                            type: obj.obj,
+                            type: 'input_number',
                             element: input.element,
                             $element: input.element.$element,
                             destroy: false
@@ -2999,10 +3012,10 @@
                 if (obj.obj === 'bs_input_text') {
                     var input = new this.bs_input_text(obj.options);
                     if (input && input.element) {
-                        elements.push({
+                        obj_form.views.push({
                             name: obj.options.id,
                             validation_group: obj.options.validation_group,
-                            type: obj.obj,
+                            type: 'input_text',
                             element: input.element,
                             $element: input.element.$element,
                             destroy: false
@@ -3016,10 +3029,10 @@
                 if (obj.obj === 'bs_input_datetime') {
                     var input = new this.bs_input_datetime(obj.options);
                     if (input && input.element) {
-                        elements.push({
+                        obj_form.views.push({
                             name: obj.options.id,
                             validation_group: obj.options.validation_group,
-                            type: obj.obj,
+                            type: 'input_datetime',
                             element: input.element,
                             $element: input.element.$element,
                             destroy: true
@@ -3033,10 +3046,10 @@
                 if (obj.obj === 'bs_checkbox') {
                     var checkbox = new this.bs_checkbox(obj.options);
                     if (checkbox && checkbox.element) {
-                        elements.push({
+                        obj_form.views.push({
                             name: obj.options.id,
                             validation_group: obj.options.validation_group,
-                            type: obj.obj,
+                            type: 'checkbox',
                             element: checkbox.element,
                             $element: checkbox.element.$element,
                             destroy: false
@@ -3050,10 +3063,10 @@
                 if (obj.obj === 'bs_textarea') {
                     var textarea = new this.bs_textarea(obj.options);
                     if (textarea && textarea.element) {
-                        elements.push({
+                        obj_form.views.push({
                             name: obj.options.id,
                             validation_group: obj.options.validation_group,
-                            type: obj.obj,
+                            type: 'textarea',
                             element: textarea.element,
                             $element: textarea.element.$element,
                             destroy: false
@@ -3067,10 +3080,10 @@
                 if (obj.obj === 'bs_autocomplete') {
                     var input = new this.bs_autocomplete(obj.options);
                     if (input && input.element) {
-                        elements.push({
+                        obj_form.views.push({
                             name: obj.options.id,
                             validation_group: obj.options.validation_group,
-                            type: obj.obj,
+                            type: 'autocomplete',
                             element: input.element,
                             $element: input.element.$element,
                             destroy: false
@@ -3130,16 +3143,19 @@
         //---------------------------------------------------------
         // Создаем элементы и отрисовываем их на форме
         // Получим список элементов которые должны отображатся на форме
-        this.elements = [];
-        /*        this.data = null;*/
-        /*        this.el_validation = $([]); // Элементы для валидации*/
+        this.obj_form = {
+            alerts: [],
+            views: [],
+            buttons: [],
+            validations: [],
+        }
         // Пройдемся по элементам
-        this.fe.add_obj(this.$form, this.settings.objs, this.elements, function (form) {
+        this.fe.add_obj(this.$form, this.settings.objs, this.obj_form, function (form) {
             // Построение HTML закончена
             // -------------НАСТРОИМ ВАЛИДАЦИЮ -----------------------
             // Получим список validation
             this.list_validation = [];
-            $.each(this.elements, function (i, obj) {
+            $.each(this.obj_form.views, function (i, obj) {
                 if (obj.validation_group) {
                     var val = this.list_validation.find(function (o) { return o === obj.validation_group; }.bind(this));
                     if (!val) {
@@ -3147,7 +3163,6 @@
                     }
                 }
             }.bind(this));
-            this.validations = [];
             // Создадим validation для элементов
             $.each(this.list_validation, function (i, validation_name) {
                 this['validation_' + validation_name] = new validation_form();
@@ -3159,11 +3174,11 @@
                 if (validation_name === 'common') {
                     validation.alert = this.settings.alert;
                 } else {
-                    var alert = this.elements.find(function (o) { return o.validation_group === validation_name && o.type === 'bs_alert'; });
+                    var alert = this.obj_form.alerts.find(function (o) { return o.validation_group === validation_name && o.type === 'alert'; });
                     validation.alert = alert && alert.element ? alert.element : this.settings.alert;
                 }
                 // Получим перечень элементов
-                $.each(this.elements.filter(function (i) { return i.validation_group === validation_name && i.type !== 'bs_alert'; }),
+                $.each(this.obj_form.views.filter(function (i) { return i.validation_group === validation_name; }),
                     function (i, obj) {
                         validation.elements.push(obj.$element);
                     }.bind(this));
@@ -3173,7 +3188,7 @@
                     elements: validation.$elements,
                 });
                 validation.validation = this['validation_' + validation_name];
-                this.validations.push(validation);
+                this.obj_form.validations.push(validation);
             }.bind(this));
             // -------------------------------------------------------
             //if (typeof this.settings.fn_html_init === 'function') {
@@ -3187,11 +3202,28 @@
         }.bind(this));
 
     };
+    // Создать элементы и привязать элементы к ссылке
+    form_dialog.prototype.create_element = function (link, add_type) {
 
+        $.each(this.obj_form.views, function (i, obj) {
+            var type = ''
+            if (add_type) {
+                type = obj.type + '_';
+            }
+            link[type + obj.name] = obj.element;
+        }.bind(this));
+        $.each(this.obj_form.buttons, function (i, obj) {
+            var type = ''
+            if (add_type) {
+                type = obj.type + '_';
+            }
+            link[(type !== '' ? type : '$bt_') + obj.name] = obj.$element;
+        }.bind(this));
+    }
     // Установит значение компонента
     form_dialog.prototype.set = function (id, value) {
-        if (this.elements) {
-            var element = this.elements.find(function (o) {
+        if (this.obj_form.views) {
+            var element = this.obj_form.views.find(function (o) {
                 return o.name === id;
             });
             if (element && element.element) {
@@ -3201,8 +3233,8 @@
     };
     // Прочесть значение компонента
     form_dialog.prototype.get = function (id) {
-        if (this.elements) {
-            var element = this.elements.find(function (o) {
+        if (this.obj_form.views) {
+            var element = this.obj_form.views.find(function (o) {
                 return o.name === id;
             });
             if (element && element.element) {
@@ -3219,9 +3251,32 @@
             return this.get(id);
         }
     }
+    // Показать кнопку
+    form_dialog.prototype.bt_show = function (id) {
+        if (this.obj_form.buttons) {
+            var element = this.obj_form.buttons.find(function (o) {
+                return o.name === id;
+            });
+            if (element && element.$element) {
+                element.$element.show();
+            }
+        }
+    };
+    // убрать кнопку
+    form_dialog.prototype.bt_hide = function (id) {
+        if (this.obj_form.buttons) {
+            var element = this.obj_form.buttons.find(function (o) {
+                return o.name === id;
+            });
+            if (element && element.$element) {
+                element.$element.hide();
+            }
+        }
+    };
+
     // Вывести на форме сообщение об ошибке под элементом 
     form_dialog.prototype.set_validation_object_error = function (validation_name, id, message) {
-        var element = this.elements.find(function (o) {
+        var element = this.obj_form.views.find(function (o) {
             return o.name === id;
         });
         if (element) {
@@ -3237,7 +3292,7 @@
     };
     // Вывести на форме сообщение об ошибке под элементом 
     form_dialog.prototype.set_validation_object_ok = function (validation_name, id, message) {
-        var element = this.elements.find(function (o) {
+        var element = this.obj_form.views.find(function (o) {
             return o.name === id;
         });
         if (element) {

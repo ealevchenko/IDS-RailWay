@@ -284,7 +284,7 @@
         });
         $.each(wagons, function (i, el) {
             var $icon = (el.parent_wir_id ? $('<i class="fas fa-retweet" aria-hidden="true"></i>') : $('<i class="fas fa-train" aria-hidden="true"></i>'));
-            var $link = new this.fc_ui.el_a(el.id, 'list-group-item list-group-item-action', '#', el.num, null, null);
+            var $link = new this.fc_ui.el_a(el.outgoing_car_id, 'list-group-item list-group-item-action', '#', el.num, null, null);
             if ($link && $link.$alink && $link.$alink.length > 0) {
                 $link.$alink.attr('data-toggle', 'list');
                 $link.$alink.attr('role', 'tab');
@@ -297,7 +297,7 @@
                         event.preventDefault();
                         // Обработать выбор
                         var id = Number($(event.currentTarget).attr('id'));
-                        //cars_detali.view_select_car(id, true);
+                        this.view_car_detali(id);
                     }.bind(this));
                 }
                 this.tablist.append($link.$alink);
@@ -310,6 +310,13 @@
     view_outgoing_cars.prototype.view_cars_outgoing = function (wagons) {
         wagons = this.table_outgoing_cars.filter_wagons(wagons);
         this.table_outgoing_cars.view(wagons, null, null);
+    };
+
+    view_outgoing_cars.prototype.view_car_detali = function (id) {
+        var wagon = this.wagons.find(function (o) {
+            return o.outgoing_car_id === id;
+        });
+        this.form_outgoing_cars_detali.view_wagon(wagon);
     };
     //--------------------------------------------------------------------------------
     // Показать
