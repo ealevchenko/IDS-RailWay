@@ -71,6 +71,13 @@ namespace WebApiClient
                 //handler.UseProxy = true;
 
                 //using (var client = new HttpClient(handler))
+
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
+                       | SecurityProtocolType.Tls11
+                       | SecurityProtocolType.Tls12
+                       | SecurityProtocolType.Ssl3;
+
                 using (var client = new HttpClient())
                 {
                     client.Timeout = TimeSpan.FromMinutes(10);
