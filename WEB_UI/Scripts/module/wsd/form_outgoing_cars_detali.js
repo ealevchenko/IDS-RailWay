@@ -2113,24 +2113,27 @@
         }
     }
 
-    form_outgoing_cars_detali.prototype.view_wagon = function (wagon) {
+    form_outgoing_cars_detali.prototype.view_wagon = function (wagon, position) {
         if (wagon) {
             if (this.elements) {
+                if (position) {
+                    this.edit();
+                } else {
+                    this.view();
+                }
                 this.elements.input_number_num_car.val(wagon.num);
-                this.elements.input_number_position_outgoing.val('1');
-                this.elements.input_text_num_cont_1.val('');
-                this.elements.input_text_num_cont_2.val('');
-                this.elements.input_datetime_date_outgoing_act.set(null); // уберем дату
-                this.elements.autocomplete_reason_discrepancy_amkr.set('');
-                this.elements.autocomplete_reason_discrepancy_uz.set('');
-                this.elements.input_text_adm_kod.val('');
-                this.elements.input_text_rod_vag_abbr.val('');
-                this.elements.input_text_gruzp_uz.val('');
-                this.elements.input_text_tara_uz.val('');
-                this.elements.input_text_condition_arrival.val('');
-                //this.elements.input_text_condition_provide.val('');
-
-                this.elements.textarea_condition_present.val('');
+                this.elements.input_number_position_outgoing.val(position ? position : wagon.outgoing_car_position_outgoing);
+                this.elements.input_text_num_cont_1.val(wagon.outgoing_uz_vagon_cont_1_nom_cont);
+                this.elements.input_text_num_cont_2.val(wagon.outgoing_uz_vagon_cont_2_nom_cont);
+                this.elements.input_datetime_date_outgoing_act.val(wagon.outgoing_car_date_outgoing_act); // уберем дату
+                this.elements.autocomplete_reason_discrepancy_amkr.val(wagon['outgoing_car_reason_discrepancy_amkr_name_'+ App.Lang]);
+                this.elements.autocomplete_reason_discrepancy_uz.val(wagon['outgoing_car_reason_discrepancy_uz_name_'+ App.Lang]);
+                this.elements.input_text_adm_kod.val(wagon.outgoing_uz_vagon_wagon_adm);
+                this.elements.input_text_rod_vag_abbr.val(wagon.outgoing_uz_vagon_rod);
+                this.elements.input_text_gruzp_uz.val(wagon.outgoing_uz_vagon_gruzp);
+                this.elements.input_text_tara_uz.val(wagon.outgoing_uz_vagon_tara_uz);
+                this.elements.input_text_condition_arrival.val(wagon['outgoing_uz_vagon_condition_' + App.Lang]);
+                this.elements.textarea_condition_present.val(wagon['outgoing_uz_vagon_condition_' + App.Lang]);
                 //this.elements.condition_present_user.val('Разметка по отправлению:');
                 // Задержание
                 this.elements.autocomplete_cause_detention.set('');

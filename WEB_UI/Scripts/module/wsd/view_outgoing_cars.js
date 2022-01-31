@@ -202,9 +202,11 @@
             type_report: 'outgoing_cars',
             alert: null,
             ids_wsd: null,
-            fn_action_view_wagons: function (rows) {
-
-            },
+            fn_select_rows: function (rows) {
+                if (rows && rows.length > 0) {
+                    this.form_outgoing_cars_detali.view_wagon(rows[0], null);
+                }
+            }.bind(this),
             fn_init: function (init) {
 
             },
@@ -316,7 +318,12 @@
         var wagon = this.wagons.find(function (o) {
             return o.outgoing_car_id === id;
         });
-        this.form_outgoing_cars_detali.view_wagon(wagon);
+
+        var wagons = this.wagons.filter(function (i) { return i.outgoing_car_position_outgoing !== null }).sort(function (a, b) {
+            return b.outgoing_car_position_outgoing - a.outgoing_car_position_outgoing;
+        });
+        var position = wagons && wagons.length > 0 ? wagons[0].outgoing_car_position_outgoing + 1 : 1;
+        this.form_outgoing_cars_detali.view_wagon(wagon, position);
     };
     //--------------------------------------------------------------------------------
     // Показать

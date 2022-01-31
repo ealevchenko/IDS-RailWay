@@ -516,7 +516,7 @@
             type_report: null,     // 
             link_num: false,
             ids_wsd: null,
-            fn_action_view_wagons: null,
+            fn_select_rows: null,
             fn_init: null,
             fn_refresh: null,
         }, options);
@@ -655,10 +655,15 @@
                 this.obj_t_cars.on('select deselect', function (e, dt, type, indexes) {
                     this.select_rows(); // определим строку
                     this.enable_button();
+                    // Обработать событие выбрана строка
+                    if (typeof this.settings.fn_select_rows === 'function') {
+                        this.settings.fn_select_rows(this.select_rows_wagons);
+                    }
                 }.bind(this));
 
                 break;
             };
+
         };
         // Определим показывать вагоны детально
         /*        if (this.settings.detali_wagons) this.init_detali();*/
@@ -674,6 +679,7 @@
         var index = this.obj_t_cars.rows({ selected: true });
         var rows = this.obj_t_cars.rows(index && index.length > 0 ? index[0] : null).data().toArray();
         this.select_rows_wagons = rows;
+
         //this.id_sostav = this.select_rows_wagons && this.select_rows_wagons.length > 0 ? this.select_rows_wagons[0].id : null;
     };
     // Показать данные
