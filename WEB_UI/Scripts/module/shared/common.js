@@ -342,6 +342,7 @@
             minLength: 0,
             out_value: false,
             val_inp: 'value',
+            check: null,
         }, options);
 
         this.init = function () {
@@ -350,6 +351,25 @@
             this.$element = element.autocomplete({
                 minLength: this.settings.minLength,
                 source: this.alist,
+                change: function (event, ui) {
+                    if (typeof this.settings.check === 'function') {
+                        this.settings.check(element.val());
+                    }
+                }.bind(this),
+                select: function (event, ui) {
+                    //if (ui.item.value)
+                }.bind(this),
+                search: function (event, ui) {
+                    if (typeof this.settings.check === 'function') {
+                        this.settings.check(element.val());
+                    }
+                }.bind(this),
+                focus: function (event, ui) {
+                    if (ui.item.value)
+                        if (typeof this.settings.check === 'function') {
+                            this.settings.check(ui.item.value);
+                        }
+                }.bind(this)
             });
             var widgetInst = this.$element.autocomplete('instance');
             widgetInst._renderItem = function (ul, item) {
@@ -432,8 +452,11 @@
     // Элемент <div class="col-..-..">
     form_control.prototype.el_col = function (prefix, col, cl_col) {
         this.$col = $('<div></div>', {
-            'class': 'col-' + prefix + '-' + col + ' ' + (cl_col ? $.trim(cl_col) + ' ' : ''),
+            'class': 'col-' + prefix + '-' + col,
         });
+        if (cl_col && cl_col !== '') {
+            this.$col.addClass(cl_col);
+        }
         if (!this.$col || this.$col.length === 0) {
             throw new Error('Не удалось создать элемент <div class="col-' + prefix + '-' + col + '"></div>');
         }
@@ -481,6 +504,18 @@
         if (required) { this.$input.attr('required', true) };
         if (maxlength !== null) { this.$input.attr('maxlength', maxlength) };
         if (pattern && pattern !== '') { this.$input.attr('pattern', pattern) };
+    };
+    // Элемент <textarea class="..." id="..." name="..." ></textarea>
+    form_control.prototype.el_textarea = function (id, cl_tar, placeholder, required, maxlength, pattern) {
+        this.$textarea = $('<textarea></textarea>', {
+            'id': id,
+            'name': id,
+        });
+        if (cl_tar && cl_tar !== '') { this.$textarea.addClass(cl_tar) };
+        if (placeholder && placeholder !== '') { this.$textarea.attr('placeholder', placeholder) };
+        if (required) { this.$textarea.attr('required', true) };
+        if (maxlength !== null) { this.$textarea.attr('maxlength', maxlength) };
+        if (pattern && pattern !== '') { this.$textarea.attr('pattern', pattern) };
     };
     // Элемент <input type="..." min="..." max="..." class="..." id="..." placeholder="...">
     form_control.prototype.el_input_number = function (id, cl_inp, placeholder, required, min, max, step) {
@@ -856,6 +891,149 @@
         this.$select = select.$select;
         this.$element = div.$div.append($label).append(this.$select);
     };
+    //<div class="form-group col-xl-3 text-left">
+    //    <label for="num_car" class="mb-1">@IDSRWTResource.title_num_car:</label>
+    //    <div class="input-group">
+    //        <input type="text" class="form-control inp-auto" id="num_car" title="Номер вагона" name="num_car" data-mode="" data-edit="" data-form="transceiver">
+    //            <div class="input-group-append">
+    //                <button type="button" class="btn btn-warning btn" id="car_return" title="Вернуть вагон" data-mode="edit" data-edit="" data-form="transceiver">
+    //                    <i class="fa fa-retweet" aria-hidden="true"></i>
+    //                </button>
+    //            </div>
+    //    </div>
+    //</div>
+    form_control.prototype.el_form_input = function (options) {
+        this.settings = $.extend({
+            fg_cl : null,
+            id: null,
+            lb_cl: null,
+            lb_text: null,
+            inp_type: null,
+            inp_cl: null,
+            inp_title: null,
+            placeholder: null,
+            required: null,
+            min: null,
+            max: null,
+            step: null,
+            maxlength: null,
+            pattern: null,
+            el_iga: null
+        }, options);
+        var FC = App.form_control;
+        var fc = new FC();
+        var div = new fc.el_div_form_group();
+        if (this.settings.fg_cl && this.settings.fg_cl !== '') {
+            div.$div.addClass(this.settings.fg_cl);
+        }
+        var $label = $('<label></label>', {
+            'for': this.settings.id,
+            'text': this.settings.lb_text
+        });
+        if (this.settings.lb_cl && this.settings.lb_cl == '') {
+            $label.addClass(this.settings.cl_lb);
+        };
+        var div_ig = new fc.el_div_input_group(null, null);
+        var div_iga = new fc.el_div_input_group_append(null, null);
+        var div_ifb = new fc.el_div_invalid_feedback();
+
+        var input = new fc.el_input(this.settings.id, this.settings.inp_type, this.settings.inp_cl, this.settings.placeholder, this.settings.required, this.settings.min, this.settings.max, this.settings.step, this.settings.maxlength, this.settings.pattern);
+        this.$input = input.$input.attr('title', this.settings.inp_title);
+        div_ig.$div.append(this.$input);
+        if (this.settings.el_iga && this.settings.el_iga !== '') {
+            div_iga.$div.append(this.settings.el_iga);
+            div_ig.$div.append(div_iga.$div);
+        }
+        div_ig.$div.append(div_ifb.$div);
+        this.$element = div.$div.append($label).append(div_ig.$div);
+    };
+
+    form_control.prototype.el_form_textarea = function (options) {
+        this.settings = $.extend({
+            fg_cl : null,
+            id: null,
+            lb_cl: null,
+            lb_text: null,
+            txar_cl: null,
+            txar_title: null,
+            placeholder: null,
+            required: null,
+            maxlength: null,
+            pattern: null,
+            el_iga: null
+        }, options);
+        var FC = App.form_control;
+        var fc = new FC();
+        var div = new fc.el_div_form_group();
+        if (this.settings.fg_cl && this.settings.fg_cl !== '') {
+            div.$div.addClass(this.settings.fg_cl);
+        }
+        var $label = $('<label></label>', {
+            'for': this.settings.id,
+            'text': this.settings.lb_text
+        });
+        if (this.settings.lb_cl && this.settings.lb_cl == '') {
+            $label.addClass(this.settings.cl_lb);
+        };
+        var div_ig = new fc.el_div_input_group(null, null);
+        var div_iga = new fc.el_div_input_group_append(null, null);
+        var div_ifb = new fc.el_div_invalid_feedback();
+
+        var textarea = new fc.el_textarea(this.settings.id, this.settings.txar_cl, this.settings.placeholder, this.settings.required, this.settings.maxlength, this.settings.pattern);
+        this.$textarea = textarea.$textarea.attr('title', this.settings.txar_title);
+        div_ig.$div.append(this.$textarea);
+        if (this.settings.el_iga && this.settings.el_iga !== '') {
+            div_iga.$div.append(this.settings.el_iga);
+            div_ig.$div.append(div_iga.$div);
+        }
+        div_ig.$div.append(div_ifb.$div);
+        this.$element = div.$div.append($label).append(div_ig.$div);
+    };
+    //<div class="col-xl-3 text-left">
+    //    <div class="form-check">
+    //        <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+    //        <label class="form-check-label" for="invalidCheck">Пример</label>
+    //        <div class="invalid-feedback"></div>
+    //    </div>
+    //</div>
+    form_control.prototype.el_form_checkbox = function (options) {
+        this.settings = $.extend({
+            div_cl : null,
+            id: null,
+            lb_cl: null,
+            lb_text: null,
+            inp_cl: null,
+            inp_title: null,
+            required: null,
+        }, options);
+        var FC = App.form_control;
+        var fc = new FC();
+        var div = new fc.el_div(null, this.settings.div_cl);
+        var div_fc = new fc.el_div_form_check();
+        div_fc.$div.addClass('text-left');
+        var $label = $('<label></label>', {
+            'for': this.settings.id,
+            'class': 'form-check-label',
+            'text': this.settings.lb_text
+        });
+        if (this.settings.lb_cl && this.settings.lb_cl == '') {
+            $label.addClass(this.settings.cl_lb);
+        };
+        var div_ifb = new fc.el_div_invalid_feedback();
+
+        var input = new fc.el_input(this.settings.id, 'checkbox', 'form-check-input', null, this.settings.required, null, null, null, null, null);
+        if (this.settings.inp_cl && this.settings.inp_cl == '') {
+            input.$input.addClass(this.settings.inp_cl);
+        };
+        this.$input = input.$input.attr('title', this.settings.inp_title);
+
+        div_fc.$div.append(this.$input).append($label).append(div_ifb.$div);
+        this.$element = div.$div.append(div_fc.$div);
+    };
+
+    //<div class="invalid-feedback">
+    //    Please choose a username.
+    //</div>
     //--------------------------------------------------------------------
     // Элемент CARD
     form_control.prototype.el_card = function (cl_card, cl_header, cl_body, title) {
@@ -894,9 +1072,11 @@
     form_control.prototype.el_table = function (id, cl_table) {
         var $table = $('<table></table>', {
             'id': id,
-            'class': cl_table,
             'style': 'width:100%;'
         });
+        if (cl_table && cl_table !== '') {
+            $table.addClass(cl_table);
+        }
         this.$element = $table;
     };
     //---------------------------------------------------------------------------
@@ -1159,14 +1339,10 @@
     // Добавить и иницилизировать элемент INPUT-checkbox
     form_infield.prototype.add_checkbox_element_form = function (el_field, type, col) {
         //<div class="form-check">
-        //    <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
-        //        <label class="form-check-label" for="invalidCheck">
-        //            Agree to terms and conditions
-        //                        </label>
-        //        <div class="invalid-feedback">
-        //            You must agree before submitting.
-        //                        </div>
-        //                    </div>
+        //  <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+        //  <label class="form-check-label" for="invalidCheck">...</label>
+        //  <div class="invalid-feedback"></div>
+        //</div>
         // Создадим form-check
         var div = new this.fc.el_div_form_check();
         if (div && div.$div && div.$div.length > 0) {
@@ -1711,7 +1887,17 @@
                 } else {
                     field['element_' + this.mode].disable();
                 }
-
+            }
+        }
+    };
+    //
+    form_infield.prototype.disabled = function (name, value) {
+        if (this.settings.fields) {
+            var field = this.settings.fields.find(function (o) {
+                return o.field === name
+            });
+            if (field && field['element_' + this.mode]) {
+                field['element_' + this.mode].$element.prop("disabled", value);
             }
         }
     };
@@ -1987,18 +2173,24 @@
         }
     };
     // Установить признак ошибка
+    //validation_form.prototype.set_control_error = function (o, message) {
+    //    o.removeClass('is-valid').addClass('is-invalid');
+    //    if (message) {
+    //        o.next(".invalid-feedback").text(message);
+    //    } else { o.next(".invalid-feedback").text('') };
+    //};
     validation_form.prototype.set_control_error = function (o, message) {
         o.removeClass('is-valid').addClass('is-invalid');
         if (message) {
-            o.next(".invalid-feedback").text(message);
-        } else { o.next(".invalid-feedback").text('') };
+            o.nextAll(".invalid-feedback").text(message);
+        } else { o.nextAll(".invalid-feedback").text('') };
     };
     // Установить признак Ok
     validation_form.prototype.set_control_ok = function (o, message) {
         o.removeClass('is-invalid').addClass('is-valid');
         if (message) {
-            o.next(".valid-feedback").text(message);
-        } else { o.next(".invalid-feedback").text('') };
+            o.nextAll(".valid-feedback").text(message);
+        } else { o.nextAll(".invalid-feedback").text('') };
     };
     // Установить признак ошибка
     validation_form.prototype.set_object_error = function (o, mes_error) {

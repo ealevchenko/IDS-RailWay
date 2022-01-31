@@ -33,6 +33,7 @@
         this.list_operators_wagons = null;
         this.list_operators_wagons_group = null;
         this.list_locomotive = null;
+        this.list_reason_discrepancy = null;
 
 
     }
@@ -151,6 +152,18 @@
                             this.list_locomotive = data;
                             process--;
                             result.push('operators_wagons');
+                            out_load(process);
+                        }.bind(this));
+                    };
+                };
+                if (table === 'reason_discrepancy') {
+                    if (lock) LockScreen(langView('mess_load_reference', App.Langs));
+                    if (update || !this.list_reason_discrepancy) {
+                        process++;
+                        this.getReason_Discrepancy(function (data) {
+                            this.list_reason_discrepancy = data;
+                            process--;
+                            result.push('reason_discrepancy');
                             out_load(process);
                         }.bind(this));
                     };
@@ -1009,6 +1022,31 @@
         }
         return objs;
     };
+    //======= Directory_Reason_Discrepancy (Справочник причин расхождения) ===============================
+    ids_directory.prototype.getReason_Discrepancy = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/directory/reason_discrepancy/all', 
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_directory.getReason_Discrepancy", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
+
     //****************************************************************************************
     //-------------------------------- функции для работы с таблицами ------------------------
     //*======= ids_directory.list_locomotive  (Справочник локомотивов) ======================================
@@ -1114,6 +1152,25 @@
     ids_directory.prototype.getDivisions_Of_CultureName = function (name, lang, text) {
         if (this.list_divisions) {
             var obj = getObjects(this.list_divisions, name + '_' + lang, text);
+            return obj;
+        }
+        return null;
+    };
+
+    //*======= ids_directory.list_reason_discrepancy  (Справочник причин расхождения) ======================================
+
+    ids_directory.prototype.getReason_Discrepancy_Of_ID = function (id) {
+        return this.getObj_Of_ID(this.list_reason_discrepancy, id);
+    };
+
+    ids_directory.prototype.getListReason_Discrepancy = function (fvalue, ftext, lang, filter) {
+        return this.getListObj(this.list_reason_discrepancy, fvalue, ftext, lang, filter);
+    };
+
+    // Получим список с выборкой по полю
+    ids_directory.prototype.getReason_Discrepancy_Of_CultureName = function (name, text) {
+        if (this.list_reason_discrepancy) {
+            var obj = getObjects(this.list_reason_discrepancy, name + '_' + App.Lang, text);
             return obj;
         }
         return null;

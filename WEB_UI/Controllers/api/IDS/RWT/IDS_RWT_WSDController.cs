@@ -336,7 +336,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string accepted_station_amkr_name_ru { get; set; }
         public string accepted_station_amkr_name_en { get; set; }
         public string accepted_station_amkr_abbr_ru { get; set; }
-        public string accepted_station_amkr_abbr_en { get; set; }        
+        public string accepted_station_amkr_abbr_en { get; set; }
         public int? arrival_id_station_amkr { get; set; }
         public string arrival_station_amkr_name_ru { get; set; }
         public string arrival_station_amkr_name_en { get; set; }
@@ -714,6 +714,24 @@ namespace WEB_UI.Controllers.api.IDS.RWT
     }
     #endregion
 
+    #region ОПЕРАЦИЯ СДАТЬ НА УЗ (Обновленный АРМ)
+    public class OperationPresentSostav
+    {
+        public long id { get; set; }
+        public DateTime date_end_inspection_acceptance_delivery { get; set; }
+        public DateTime date_end_inspection_loader { get; set; }
+        public DateTime date_end_inspection_vagonnik { get; set; }
+        public DateTime date_readiness_uz { get; set; }
+        public DateTime date_outgoing { get; set; }
+        public DateTime? date_outgoing_act { get; set; }
+        public int status { get; set; }
+        public int id_station_on { get; set; }
+        public bool route_sign { get; set; }
+        public string composition_index { get; set; }
+        public string user { get; set; }
+    }
+    #endregion
+
     public class view_arrival_sostav
     {
         public string num_train { get; set; }
@@ -830,21 +848,6 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string nom_cont1 { get; set; }
         public string nom_cont2 { get; set; }
         public int? code_stn_to { get; set; }
-        public string user { get; set; }
-    }
-
-    public class OperationPresentSostav
-    {
-        public long id_outgoing_sostav { get; set; }
-        public DateTime date_end_inspection_acceptance_delivery { get; set; }
-        public DateTime date_end_inspection_loader { get; set; }
-        public DateTime date_end_inspection_vagonnik { get; set; }
-        public DateTime date_readiness_uz { get; set; }
-        public DateTime date_outgoing { get; set; }
-        public DateTime? date_outgoing_act { get; set; }
-        public int station_on { get; set; }
-        public bool route_sign { get; set; }
-        public string composition_index { get; set; }
         public string user { get; set; }
     }
 
@@ -1660,6 +1663,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             }
         }
 
+        #region ОПЕРАЦИЯ СДАТЬ НА УЗ (Обновленный АРМ)
         // POST api/ids/rwt/wsd/operation/present/sostav
         /// <summary>
         /// Операция предявить весь состав на уз
@@ -1674,8 +1678,8 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             try
             {
                 IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
-                int result = ids_wir.OperationPresentSostav(value.id_outgoing_sostav, value.date_end_inspection_acceptance_delivery, value.date_end_inspection_loader,
-                    value.date_end_inspection_vagonnik, value.date_readiness_uz, value.date_outgoing, value.date_outgoing_act, value.station_on, value.route_sign, value.composition_index, value.user);
+                int result = ids_wir.OperationPresentSostav(value.id, value.date_end_inspection_acceptance_delivery, value.date_end_inspection_loader,
+                    value.date_end_inspection_vagonnik, value.date_readiness_uz, value.date_outgoing, value.date_outgoing_act, value.status, value.id_station_on, value.route_sign, value.composition_index, value.user);
                 return Ok(result);
             }
             catch (Exception e)
@@ -1683,6 +1687,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 return BadRequest(e.Message);
             }
         }
+        #endregion
 
         // POST api/ids/rwt/wsd/operation/return_present/sostav
         /// <summary>

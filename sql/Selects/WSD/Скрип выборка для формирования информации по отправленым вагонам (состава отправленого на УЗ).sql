@@ -1,64 +1,224 @@
 use [KRR-PA-CNT-Railway]
 
 select 
-	out_car.[id] as id_outgoing_cars
+	out_car.[id] as outgoing_car_id
 	,out_car.[num]
-	,out_car.[position]
+	,out_car.[position] as outgoing_car_position
 	--================= ИНФОРМАЦИЯ ПО ВАГОНУ ==========================================
 	-- Справочник вагона
+	,dir_wagon.date_rem_uz as wagon_date_rem_uz
+	,dir_wagon.gruzp as wagon_gruzp_uz	--> Грузоподъемность
 	,dir_wagon.tara as wagon_tara_uz
 	,dir_wagon.note as wagon_ban_uz							-- Запреты по УЗ 
 	,dir_wagon.[closed_route] as wagon_closed_route			--Замкнутый маршрут (кольцо)
-	----> Оператор
-	--,dir_operator.[id] as id_operator
-	--,dir_operator.[operators_ru]
-	--,dir_operator.[operators_en]
-	--,dir_operator.[abbr_ru] as operator_abbr_ru
-	--,dir_operator.[abbr_en] as operator_abbr_en
-	--,dir_rent.[rent_start] as operator_rent_start
-	--,dir_rent.[rent_end] as operator_rent_end
-	--,dir_operator.[paid] as operator_paid
-	--,dir_operator.[color] as operator_color
-	--,dir_operator.monitoring_idle_time as operator_monitoring_idle_time
-	----> Ограничение
-	--,dir_limload.[id] as id_limiting_loading
-	--,dir_limload.[limiting_name_ru]
-	--,dir_limload.[limiting_name_en]
-	--,dir_limload.[limiting_abbr_ru]
-	--,dir_limload.[limiting_abbr_en]
-	----> Собственник по УЗ
-	--,dir_owner.[id] as id_owner_wagon
-	--,dir_owner.[owner_ru] as owner_wagon_ru
-	--,dir_owner.[owner_en] as owner_wagon_en
-	--,dir_owner.[abbr_ru] as owner_wagon_abbr_ru
-	--,dir_owner.[abbr_en] as owner_wagon_abbr_en
-	----> Администрация
-	--,dir_countrys.code_sng as wagon_adm
-	--,dir_countrys.countrys_name_ru as wagon_adm_name_ru
-	--,dir_countrys.countrys_name_en as wagon_adm_name_en
-	--,dir_countrys.country_abbr_ru as wagon_adm_abbr_ru
-	--,dir_countrys.country_abbr_en as wagon_adm_abbr_en
-	----> Род вагона
-	--,dir_rod.rod_uz as wagon_rod
-	--,dir_rod.genus_ru as wagon_rod_name_ru
-	--,dir_rod.genus_en as wagon_rod_name_en
-	--,dir_rod.abbr_ru as wagon_rod_abbr_ru
-	--,dir_rod.abbr_en as wagon_rod_abbr_en
-	--> Тип вагона
-	,dir_type.type_ru as wagon_type_ru
-	,dir_type.type_en as wagon_type_en
+
+	--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	-->================================= ПРИБЫТИЕ =====================================
+	--> ПРИБЫТИЕ ВАГОНОВ [IDS].[ArrivalCars]
+	,arr_car.[id] as arrival_car_id
+	--,arr_car.[id_arrival]
+	--,arr_car.[num]
+	,arr_car.[position] as arrival_car_position
+	,arr_car.[position_arrival] as arrival_car_position_arrival
+	,arr_car.[consignee] as arrival_car_consignee
+	,arr_car.[num_doc] as arrival_car_num_doc
+	--,arr_car.[id_transfer] as arrival_car_
+	,arr_car.[note] as arrival_car_note
+	,arr_car.[date_adoption_act] as arrival_car_date_adoption_act
+	,arr_car.[arrival] as arrival_car_arrival
+	,arr_car.[arrival_user] as arrival_car_arrival_user
+	,arr_car.[create] as arrival_car_create
+	,arr_car.[create_user] as arrival_car_create_user
+	,arr_car.[change] as arrival_car_change
+	,arr_car.[change_user] as arrival_car_change_user
+	--,arr_car.[id_arrival_uz_vagon] as arrival_car_
 	-->======================================================================================================
+	--> ПРИБЫТИЕ СОСТАВА [IDS].[ArrivalSostav]
+	,arr_sost.[id] as arrival_sostav_id
+	,arr_sost.[id_arrived] as arrival_sostav_id_arrived
+	,arr_sost.[id_sostav] as arrival_sostav_id_sostav
+	,arr_sost.[train] as arrival_sostav_train
+	,arr_sost.[composition_index] as arrival_sostav_composition_index
+	,arr_sost.[date_arrival] as arrival_sostav_date_arrival
+	,arr_sost.[date_adoption] as arrival_sostav_date_adoption
+	,arr_sost.[date_adoption_act] as arrival_sostav_date_adoption_act
+	-->IDS.Directory_Station
+	,arr_sost.[id_station_from] as arrival_sostav_id_station_from
+	,arr_dir_station_from.station_name_ru as arrival_sostav_station_from_name_ru
+	,arr_dir_station_from.station_name_en as arrival_sostav_station_from_name_en
+	,arr_dir_station_from.station_abbr_ru as arrival_sostav_station_from_abbr_ru
+	,arr_dir_station_from.station_abbr_en as arrival_sostav_station_from_abbr_en
+	-->IDS.Directory_Station
+	,arr_sost.[id_station_on] as arrival_sostav_id_station_on
+	,arr_dir_station_on.station_name_ru as arrival_sostav_station_on_name_ru
+	,arr_dir_station_on.station_name_en as arrival_sostav_station_on_name_en
+	,arr_dir_station_on.station_abbr_ru as arrival_sostav_station_on_abbr_ru
+	,arr_dir_station_on.station_abbr_en as arrival_sostav_station_on_abbr_en
+	--> [IDS].[Directory_Ways]
+	,arr_sost.[id_way] as arrival_sostav_id_way
+	,arr_dir_way_on.[id_park] as arrival_sostav_way_on_id_park
+	,arr_dir_way_on.[way_num_ru] as arrival_sostav_way_on_num_ru
+	,arr_dir_way_on.[way_num_en] as arrival_sostav_way_on_num_en
+	,arr_dir_way_on.[way_name_ru] as arrival_sostav_way_on_name_ru
+	,arr_dir_way_on.[way_name_en] as arrival_sostav_way_on_name_en
+	,arr_dir_way_on.[way_abbr_ru] as arrival_sostav_way_on_abbr_ru
+	,arr_dir_way_on.[way_abbr_en] as arrival_sostav_way_on_abbr_en
+	,arr_sost.[numeration] as arrival_sostav_numeration
+	,arr_sost.[num_doc] as arrival_sostav_num_doc
+	,arr_sost.[count] as arrival_sostav_count
+	,arr_sost.[status] as arrival_sostav_status
+	,arr_sost.[note] as arrival_sostav_note
+	,arr_sost.[create] as arrival_sostav_create
+	,arr_sost.[create_user] as arrival_sostav_create_user
+	,arr_sost.[change] as arrival_sostav_change
+	,arr_sost.[change_user] as arrival_sostav_change_user
+	-->======================================================================================================
+	--> ДОКУМЕНТ НА ВАГОН ПО ПРИБЫТИЮ [IDS].[Arrival_UZ_Vagon]
+	,arr_doc_vag.[id] as arrival_uz_vagon_id
+	--,arr_doc_vag.[id_document]
+	--,arr_doc_vag.[num]
+	,arr_doc_vag.[id_arrival] as arrival_uz_vagon_id_arrival
+	--,arr_doc_vag.[id_car] as arrival_uz_vagon_
+	--> РАЗМЕТКА ПО ПРИБЫТИЮ [IDS].[Directory_ConditionArrival]
+	,arr_doc_vag.[id_condition] as arrival_uz_vagon_id_condition
+	,arr_dir_cond.condition_name_ru as arrival_uz_vagon_condition_name_ru			-- Готовность [IDS].[Directory_ConditionArrival] по прибытию [IDS].[Arrival_UZ_Vagon]
+	,arr_dir_cond.condition_name_en as arrival_uz_vagon_condition_name_en			-- Готовность [IDS].[Directory_ConditionArrival] по прибытию [IDS].[Arrival_UZ_Vagon]
+	,arr_dir_cond.condition_abbr_ru as arrival_uz_vagon_condition_abbr_ru			-- Готовность [IDS].[Directory_ConditionArrival] по прибытию [IDS].[Arrival_UZ_Vagon]
+	,arr_dir_cond.condition_abbr_en as arrival_uz_vagon_condition_abbr_en			-- Готовность [IDS].[Directory_ConditionArrival] по прибытию [IDS].[Arrival_UZ_Vagon]
+	,arr_dir_cond.repairs as arrival_uz_vagon_condition_repairs						-- Готовность [IDS].[Directory_ConditionArrival] по прибытию призаак ремонт [IDS].[Arrival_UZ_Vagon]
+	--> IDS.Directory_TypeWagons
+	,arr_doc_vag.[id_type] as arrival_uz_vagon_id_type
+	,dir_type.type_ru as arrival_uz_vagon_type_ru
+	,dir_type.type_en as arrival_uz_vagon_type_en
+	,arr_doc_vag.[gruzp] as arrival_uz_vagon_gruzp
+	,arr_doc_vag.[u_tara] as arrival_uz_vagon_u_tara
+	,arr_doc_vag.[ves_tary_arc] as arrival_uz_vagon_ves_tary_arc
+	,arr_doc_vag.[route] as arrival_uz_vagon_route
+	,arr_doc_vag.[note_vagon] as arrival_uz_vagon_note_vagon
+	--> IDS.Directory_Cargo
+	,arr_doc_vag.[id_cargo] as arrival_uz_vagon_id_cargo
+	,arr_dir_cargo.cargo_name_ru as arrival_uz_vagon_cargo_name_ru
+	,arr_dir_cargo.cargo_name_en as arrival_uz_vagon_cargo_name_en
+	--> СПРАВОЧНИК ГРУППА ГРУЗА [IDS].[Directory_CargoGroup]	
+	,arr_dir_cargo.[id_group] as arrival_uz_vagon_id_group							-- id группа груза [IDS].[Directory_CargoGroup] по прибытию [IDS].[Arrival_UZ_Vagon]
+	,arr_dir_group_cargo.cargo_group_name_ru as arrival_uz_vagon_cargo_group_name_ru	-- Группа грузов [IDS].[Directory_CargoGroup] по прибытию [IDS].[Arrival_UZ_Vagon]
+	,arr_dir_group_cargo.cargo_group_name_en as arrival_uz_vagon_cargo_group_name_en	-- Группа грузов [IDS].[Directory_CargoGroup] по прибытию [IDS].[Arrival_UZ_Vagon]
+	--> СПРАВОЧНИК ГРУЗА ЕТСНГ [IDS].[Directory_CargoETSNG]
+	,arr_dir_cargo.[id_cargo_etsng] as arrival_uz_vagon_id_cargo_etsng					-- id груза ЕТСНГ [IDS].[Directory_CargoETSNG] по прибытию [IDS].[Arrival_UZ_Vagon]
+	,arr_dir_cargo_etsng.[code] as arrival_uz_vagon_cargo_etsng_code						-- Код груза ЕТСНГ [IDS].[Directory_CargoETSNG] по прибытию [IDS].[Arrival_UZ_Vagon]
+	,arr_dir_cargo_etsng.[cargo_etsng_name_ru] as arrival_uz_vagon_cargo_etsng_name_ru	-- Груз ЕТСНГ [IDS].[Directory_CargoETSNG] по прибытию [IDS].[Arrival_UZ_Vagon]
+	,arr_dir_cargo_etsng.[cargo_etsng_name_en] as arrival_uz_vagon_cargo_etsng_name_en	-- Груз ЕТСНГ [IDS].[Directory_CargoETSNG] по прибытию [IDS].[Arrival_UZ_Vagon]
+	--> [IDS].[Directory_CargoGNG]
+	,arr_doc_vag.[id_cargo_gng] as arrival_uz_vagon_id_cargo_gng
+	,arr_dir_cargo_gng.[code] as arrival_uz_vagon_cargo_gng_code							-- Код груза ГНГ [IDS].[Directory_CargoGNG] по отправке [IDS].[Arrival_UZ_Vagon]
+	,arr_dir_cargo_gng.[cargo_gng_name_ru] as arrival_uz_vagon_cargo_gng_name_ru			-- Груз ГНГ [IDS].[Directory_CargoGNG] по отправке [IDS].[Arrival_UZ_Vagon]
+	,arr_dir_cargo_gng.[cargo_gng_name_en] as arrival_uz_vagon_cargo_gng_name_en			-- Груз ГНГ [IDS].[Directory_CargoGNG] по отправке [IDS].[Arrival_UZ_Vagon]
+	--> IDS.Directory_CertificationData
+	,arr_doc_vag.[id_certification_data] as arrival_uz_vagon_id_certification_data
+	,arr_dir_certif.[certification_data_ru] as arrival_uz_vagon_sertification_data_ru
+	,arr_dir_certif.[certification_data_en] as arrival_uz_vagon_sertification_data_en
+	--> [IDS].[Directory_CommercialCondition]
+	,arr_doc_vag.[id_commercial_condition] as arrival_uz_vagon_id_commercial_condition
+	,arr_comm_cond.[commercial_condition_ru] as arrival_uz_vagon_commercial_condition_ru
+	,arr_comm_cond.[commercial_condition_en] as arrival_uz_vagon_commercial_condition_en
+	,arr_doc_vag.[kol_pac] as arrival_uz_vagon_kol_pac
+	,arr_doc_vag.[pac] as arrival_uz_vagon_pac
+	,arr_doc_vag.[vesg] as arrival_uz_vagon_vesg
+	,arr_doc_vag.[vesg_reweighing] as arrival_uz_vagon_vesg_reweighing
+	,arr_doc_vag.[nom_zpu] as arrival_uz_vagon_nom_zpu
+	,arr_doc_vag.[danger] as arrival_uz_vagon_danger
+	,arr_doc_vag.[danger_kod] as arrival_uz_vagon_danger_kod
+	,arr_doc_vag.[cargo_returns] as arrival_uz_vagon_cargo_returns
+	--> IDS.Directory_Station
+	,arr_doc_vag.[id_station_on_amkr] as arrival_uz_vagon_id_station_on_amkr
+	,arr_dir_station_amkr.station_name_ru as arrival_uz_vagon_station_amkr_name_ru
+	,arr_dir_station_amkr.station_name_en as arrival_uz_vagon_tation_amkr_name_en
+	,arr_dir_station_amkr.station_abbr_ru as arrival_uz_vagon_station_amkr_abbr_ru
+	,arr_dir_station_amkr.station_abbr_en as arrival_uz_vagon_station_amkr_abbr_en
+	--> [IDS].[Directory_Divisions] 
+	,arr_doc_vag.[id_division_on_amkr] as arrival_uz_vagon_id_division_on_amkr
+	,arr_dir_divis_amkr.[code] as arrival_uz_vagon_division_code					-- Код подразделения [IDS].[Directory_Divisions] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,arr_dir_divis_amkr.[name_division_ru] as arrival_uz_vagon_name_division_ru	-- Подразделение [IDS].[Directory_Divisions] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,arr_dir_divis_amkr.[name_division_en] as arrival_uz_vagon_name_division_en	-- Подразделение [IDS].[Directory_Divisions] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,arr_dir_divis_amkr.[division_abbr_ru] as arrival_uz_vagon_division_abbr_ru	-- Подразделение [IDS].[Directory_Divisions] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,arr_dir_divis_amkr.[division_abbr_en] as arrival_uz_vagon_division_abbr_en	-- Подразделение [IDS].[Directory_Divisions] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,arr_dir_divis_amkr.[id_type_devision] as arrival_uz_vagon_id_type_devision	-- id типа подразделения [IDS].[Directory_Divisions] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,arr_doc_vag.[empty_car] as arrival_uz_vagon_empty_car
+	,arr_doc_vag.[kol_conductor] as arrival_uz_vagon_kol_conductor
+	--,arr_doc_vag.[create]
+	--,arr_doc_vag.[create_user]
+	--,arr_doc_vag.[change]
+	--,arr_doc_vag.[change_user]
+	-->======================================================================================================
+	--> ДОКУМЕНТ НА СОСТАВ ПО ПРИБЫТИЮ [IDS].[Arrival_UZ_Document]
+	,arr_doc_uz.[id]  as arrival_uz_document_id
+	,arr_doc_uz.[id_doc_uz]  as arrival_uz_document_id_doc_uz
+	,arr_doc_uz.[nom_doc]  as arrival_uz_document_nom_doc
+	,arr_doc_uz.[nom_main_doc]  as arrival_uz_document_nom_main_doc
+	--> [IDS].[Directory_ExternalStation]
+	,arr_doc_uz.[code_stn_from]  as arrival_uz_document_code_stn_from
+	,arr_ext_station_from.[station_name_ru] as arrival_uz_document_station_from_name_ru
+	,arr_ext_station_from.[station_name_en] as arrival_uz_document_station_from_name_en
+	--> [IDS].[Directory_InlandRailway]
+	,arr_ext_station_from.[code_inlandrailway] as arrival_uz_document_from_code_inlandrailway
+	,arr_ir_from.[inlandrailway_name_ru] as arrival_uz_document_from_inlandrailway_name_ru
+	,arr_ir_from.[inlandrailway_name_en] as arrival_uz_document_from_inlandrailway_name_en
+	,arr_ir_from.[inlandrailway_abbr_ru] as arrival_uz_document_from_inlandrailway_abbr_ru
+	,arr_ir_from.[inlandrailway_abbr_en] as arrival_uz_document_from_inlandrailway_abbr_en
+	,arr_ir_from.[code_railway] as arrival_uz_document_from_code_railway
+	--> [IDS].[Directory_ExternalStation]
+	,arr_doc_uz.[code_stn_to]  as arrival_uz_document_code_stn_to
+	,arr_ext_station_to.[station_name_ru] as arrival_uz_document_station_to_name_ru
+	,arr_ext_station_to.[station_name_en] as arrival_uz_document_station_to_name_en
+	--> [IDS].[Directory_InlandRailway]
+	,arr_ext_station_to.[code_inlandrailway] as arrival_uz_document_to_code_inlandrailway
+	,arr_ir_to.[inlandrailway_name_ru] as arrival_uz_document_to_inlandrailway_name_ru
+	,arr_ir_to.[inlandrailway_name_en] as arrival_uz_document_to_inlandrailway_name_en
+	,arr_ir_to.[inlandrailway_abbr_ru] as arrival_uz_document_to_inlandrailway_abbr_ru
+	,arr_ir_to.[inlandrailway_abbr_en] as arrival_uz_document_to_inlandrailway_abbr_en
+	,arr_ir_to.[code_railway] as arrival_uz_document_to_code_railway
+	-->  [IDS].[Directory_BorderCheckpoint]
+	,arr_doc_uz.[code_border_checkpoint]  as arrival_uz_document_code_border_checkpoint
+	,arr_border_checkpoint.[station_name_ru] as arrival_uz_document_border_checkpoint_station_name_ru
+	,arr_border_checkpoint.[station_name_en] as arrival_uz_document_border_checkpoint_station_name_en
+	,arr_border_checkpoint.[code_inlandrailway] as arrival_uz_document_border_checkpoint_code_inlandrailway
+	,arr_doc_uz.[cross_time]  as arrival_uz_document_cross_time
+	--> [IDS].[Directory_Shipper]
+	,arr_doc_uz.[code_shipper]  as arrival_uz_document_code_shipper
+	,arr_shipper.[shipper_name_ru] as arrival_uz_document_shipper_name_ru
+	,arr_shipper.[shipper_name_en] as arrival_uz_document_shipper_name_en
+	--> [IDS].[Directory_Consignee]
+	,arr_doc_uz.[code_consignee] as arrival_uz_document_code_consignee
+	,arr_consignee.[name] as arrival_uz_document_name_consignee
+	,arr_doc_uz.[klient]  as arrival_uz_document_klient
+	--> [IDS].[Directory_PayerArrival]
+	,arr_doc_uz.[code_payer_sender]  as arrival_uz_document_code_payer_sender
+	,arr_payer_send.[payer_name_ru] as arrival_uz_document_payer_sender_name_ru
+	,arr_payer_send.[payer_name_en] as arrival_uz_document_payer_sender_name_en
+	--> [IDS].[Directory_PayerArrival]
+	,arr_doc_uz.[code_payer_arrival]  as arrival_uz_document_code_payer_arrival
+	,arr_payer_arr.[payer_name_ru] as arrival_uz_document_payer_arrival_name_ru
+	,arr_payer_arr.[payer_name_en] as arrival_uz_document_payer_arriva_name_en
+	,arr_doc_uz.[distance_way]  as arrival_uz_document_distance_way
+	,arr_doc_uz.[note]  as arrival_uz_document_note
+	,arr_doc_uz.[parent_id]  as arrival_uz_document_parent_id
+	--,arr_doc_uz.[create]
+	--,arr_doc_uz.[create_user]
+	--,arr_doc_uz.[change]
+	--,arr_doc_uz.[change_user]
+	--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	-->================================= ОТПРАВКА =====================================
 	--> ОТПРАВКА ВАГОНОВ [IDS].[OutgoingCars]
 	,out_car.[position_outgoing] as outgoing_car_position_outgoing
-    ,out_car.[num_doc] as outgoing_car_num_doc							-- Номер документа(по отправке)
-	,out_car.[note] as outgoing_car_note							-- примечание вагона по отправке
-	,out_car.[date_outgoing_act] as outgoing_car_date_outgoing_act	-- сдан по акту
-	,out_car.[outgoing] as outgoing_car_outgoing					-- вагон был сдан (дата и время)
-	,out_car.[outgoing_user] as outgoing_car_outgoing_user			-- вагон был сдан (пользователь)
+    ,out_car.[num_doc] as outgoing_car_num_doc														-- Номер документа(по отправке)
+	,out_car.[note] as outgoing_car_note															-- примечание вагона по отправке
+	,out_car.[date_outgoing_act] as outgoing_car_date_outgoing_act									-- сдан по акту
+	,out_car.[outgoing] as outgoing_car_outgoing													-- вагон был сдан (дата и время)
+	,out_car.[outgoing_user] as outgoing_car_outgoing_user											-- вагон был сдан (пользователь)
 	--> ПРИЧИНА ЗАДЕРЖАНИЯ [IDS].[Directory_DetentionReturn]
-	,out_car.[id_outgoing_detention] as outgoing_car_id_outgoing_detention	-- id строки задержание [IDS].[Directory_DetentionReturn] по отправке [IDS].[OutgoingCars]
-	,out_dir_dr.[cause_ru] as outgoing_car_detention_cause_ru				-- Задержание [IDS].[Directory_DetentionReturn] по отправке [IDS].[OutgoingCars]
-	,out_dir_dr.[cause_en] as outgoing_car_detention_cause_en				-- Задержание [IDS].[Directory_DetentionReturn] по отправке [IDS].[OutgoingCars]
+	,out_car.[id_outgoing_detention] as outgoing_car_id_outgoing_detention							-- id строки задержание [IDS].[Directory_DetentionReturn] по отправке [IDS].[OutgoingCars]
+	,out_dir_dr.[cause_ru] as outgoing_car_detention_cause_ru										-- Задержание [IDS].[Directory_DetentionReturn] по отправке [IDS].[OutgoingCars]
+	,out_dir_dr.[cause_en] as outgoing_car_detention_cause_en										-- Задержание [IDS].[Directory_DetentionReturn] по отправке [IDS].[OutgoingCars]
 	--> ПРИЧИНА НЕСООТВЕТСВИЯ [Directory_Reason_Discrepancy]
 	,out_car.[id_reason_discrepancy_amkr] as outgoing_car_id_reason_discrepancy_amkr				-- id строки несоответсвия АМКР [IDS].[Directory_Reason_Discrepancy] по отправке [IDS].[OutgoingCars]
 	,out_dir_rd_amkr.[reason_discrepancy_name_ru] as outgoing_car_reason_discrepancy_amkr_name_ru	-- Несоответсвие АМКР [IDS].[Directory_Reason_Discrepancy] по отправке [IDS].[OutgoingCars]
@@ -67,11 +227,11 @@ select
 	,out_dir_rd_uz.[reason_discrepancy_name_ru] as outgoing_car_reason_discrepancy_uz_name_ru		-- Несоответсвие УЗ [IDS].[Directory_Reason_Discrepancy] по отправке [IDS].[OutgoingCars]
 	,out_dir_rd_uz.[reason_discrepancy_name_en] as outgoing_car_reason_discrepancy_uz_name_en		-- Несоответсвие УЗ [IDS].[Directory_Reason_Discrepancy] по отправке [IDS].[OutgoingCars]
 	--> ВОЗВРАТ НАЧАЛО ПО ОТПРАВКЕ [IDS].[OutgoingDetentionReturn]	
-	,out_car.[id_outgoing_return_start] as outgoing_car_id_outgoing_return_start		-- id строки начало возврата [IDS].[OutgoingDetentionReturn] по отправке [IDS].[OutgoingCars]
+	,out_car.[id_outgoing_return_start] as outgoing_car_id_outgoing_return_start					-- id строки начало возврата [IDS].[OutgoingDetentionReturn] по отправке [IDS].[OutgoingCars]
 	--> ВОЗВРАТ НАЧАЛО [IDS].[Directory_DetentionReturn]
-	,out_detect_return_start.[id_detention_return] as outgoing_car_id_detention_return_start	-- id начала возврата [IDS].[Directory_DetentionReturn] по отправке [IDS].[OutgoingCars]
-	,out_dir_dr_start.[cause_ru] as outgoing_car_detention_cause_start_ru						-- Возврат начало [IDS].[Directory_DetentionReturn] по отправке [IDS].[OutgoingCars]
-	,out_dir_dr_start.[cause_en] as outgoing_car_detention_cause_start_en						-- Возврат начало [IDS].[Directory_DetentionReturn] по отправке [IDS].[OutgoingCars]
+	,out_detect_return_start.[id_detention_return] as outgoing_car_id_detention_return_start		-- id начала возврата [IDS].[Directory_DetentionReturn] по отправке [IDS].[OutgoingCars]
+	,out_dir_dr_start.[cause_ru] as outgoing_car_detention_cause_start_ru							-- Возврат начало [IDS].[Directory_DetentionReturn] по отправке [IDS].[OutgoingCars]
+	,out_dir_dr_start.[cause_en] as outgoing_car_detention_cause_start_en							-- Возврат начало [IDS].[Directory_DetentionReturn] по отправке [IDS].[OutgoingCars]
 	--
 	,out_detect_return_start.[type_detention_return] as outgoing_car_return_start_type_detention_return -- Тип начала возврата [IDS].[OutgoingDetentionReturn] по отправке [IDS].[OutgoingCars]
 	,out_detect_return_start.[date_start] as outgoing_car_return_start_date_start						-- Дата начала начала возврата [IDS].[OutgoingDetentionReturn] по отправке [IDS].[OutgoingCars]
@@ -100,9 +260,9 @@ select
 	,out_car.[note_vagonnik] as outgoing_car_note_vagonnik											-- Примечание сделанное вагонником по отправке [IDS].[OutgoingCars]
 	,out_car.[vagonnik] as outgoing_car_vagonnik													-- Вагонник (дата и время) по отправке [IDS].[OutgoingCars]
 	,out_car.[vagonnik_user] as outgoing_car_vagonnik_user											-- Вагонник (пользователь) по отправке [IDS].[OutgoingCars]
-	-->*****************************************************************************************************************************
+	-->======================================================================================================
 	--> ОТПРАВКА СОСТАВ [IDS].[OutgoingSostav]
-	,out_sost.[id] as id_outgoing_sostav
+	,out_sost.[id] as outgoing_sostav_id
 	,out_sost.[num_doc] as outgoing_sostav_num_doc
 	--> СТАНЦИЯ ОТПРАВЛЕНИЯ АМКР IDS.Directory_Station
 	,out_sost.[id_station_from] as outgoing_sostav_id_station_from
@@ -120,7 +280,7 @@ select
 	,out_dir_way_amkr.[way_abbr_ru] as outgoing_sostav_from_way_abbr_ru
 	,out_dir_way_amkr.[way_abbr_en] as outgoing_sostav_from_way_abbr_en
 	--> СТАНЦИЯ КУДА ОТПРАВЛЯЕТСЯ СОСТАВ АМКР IDS.Directory_Station
-	,out_sost.[id_station_on] as outgoing_sostav_id_station_from
+	,out_sost.[id_station_on] as outgoing_sostav_id_station_on
 	,out_dir_station_on.station_name_ru as outgoing_sostav_on_station_amkr_name_ru
 	,out_dir_station_on.station_name_en as outgoing_sostav_on_station_amkr_name_en
 	,out_dir_station_on.station_abbr_ru as outgoing_sostav_on_station_amkr_abbr_ru
@@ -143,9 +303,9 @@ select
 	,out_sost.[change] as outgoing_sostav_change
 	,out_sost.[change_user] as outgoing_sostav_change_user
 	,out_sost.[vagonnik_user] as outgoing_sostav_vagonnik_user
-	-->*****************************************************************************************************************************
+	-->======================================================================================================
 	--> ДОКУМЕНТ НА ВАГОН ПО ОТПРАВКЕ [IDS].[Outgoing_UZ_Vagon]
-	,out_doc_vag.[id] as id_outgoing_uz_vagon								-- id строки документа по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_doc_vag.[id] as outgoing_uz_vagon_id										-- id строки документа по отправке [IDS].[Outgoing_UZ_Vagon]
 	,out_doc_vag.[id_condition] as outgoing_uz_vagon_id_condition					-- id строки готовность по прибытию [IDS].[Outgoing_UZ_Vagon]
 	--> РАЗМЕТКА ПО ПРИБЫТИЮ [IDS].[Directory_ConditionArrival]
 	,out_dir_cond.condition_name_ru as outgoing_uz_vagon_condition_name_ru			-- Готовность [IDS].[Directory_ConditionArrival] по прибытию [IDS].[Outgoing_UZ_Vagon]
@@ -246,177 +406,107 @@ select
 	,out_doc_vag.[vesg] as outgoing_uz_vagon_vesg											-- Вес груза ГНГ [IDS].[Directory_CargoGNG] по отправке [IDS].[Outgoing_UZ_Vagon]
 	--> СПРАВОЧНИК СТАНЦИИ УЗ ПО ОТПРАВКЕ [UZ].[Directory_Stations]
 	,out_doc_vag.[code_stn_to] as outgoing_uz_vagon_to_station_uz_code						-- Код станции УЗ [UZ].[Directory_Stations] по отправке [IDS].[Outgoing_UZ_Vagon]
-	,out_station_uz.[station] as outgoing_uz_vagon_to_station_uz_name						-- Станция УЗ [UZ].[Directory_Stations] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_vag_station_uz.[station] as outgoing_uz_vagon_to_station_uz_name						-- Станция УЗ [UZ].[Directory_Stations] по отправке [IDS].[Outgoing_UZ_Vagon]
 	--,out_doc_vag.[create]
 	--,out_doc_vag.[create_user]
 	--,out_doc_vag.[change]
 	--,out_doc_vag.[change_user]
-	-->*****************************************************************************************************************************
+	-->======================================================================================================
 	--> ДОКУМЕНТ НА СОСТАВ ПО ОТПРАВКЕ [IDS].[Outgoing_UZ_Document]
+	,out_doc_sostav.[id] as outgoing_uz_document_id
 	,out_doc_sostav.[id_doc_uz] as outgoing_uz_document_id_doc_uz
-	,out_doc_sostav.[nom_doc] as outgoing_uz_document_
-	,out_doc_sostav.[code_stn_from] as outgoing_uz_document_
-	,out_doc_sostav.[code_stn_to] as outgoing_uz_document_
-	,out_doc_sostav.[country_nazn] as outgoing_uz_document_
-	,out_doc_sostav.[code_border_checkpoint] as outgoing_uz_document_
-	,out_doc_sostav.[cross_date] as outgoing_uz_document_
-	,out_doc_sostav.[code_shipper] as outgoing_uz_document_
-	,out_doc_sostav.[code_consignee] as outgoing_uz_document_
-	,out_doc_sostav.[vid] as outgoing_uz_document_
-	,out_doc_sostav.[code_payer] as outgoing_uz_document_
-	,out_doc_sostav.[distance_way] as outgoing_uz_document_
-	,out_doc_sostav.[osum] as outgoing_uz_document_
-	,out_doc_sostav.[date_sozdan] as outgoing_uz_document_
-	,out_doc_sostav.[date_otpr] as outgoing_uz_document_
-	,out_doc_sostav.[date_pr] as outgoing_uz_document_
-	,out_doc_sostav.[date_grpol] as outgoing_uz_document_
-	,out_doc_sostav.[date_vid] as outgoing_uz_document_
-	,out_doc_sostav.[info_sht] as outgoing_uz_document_
-	,out_doc_sostav.[name_gr] as outgoing_uz_document_
-	,out_doc_sostav.[note] as outgoing_uz_document_
+	,out_doc_sostav.[nom_doc] as outgoing_uz_document_nom_doc
+	,out_doc_sostav.[code_stn_from] as outgoing_uz_document_code_stn_from
+	--> [IDS].[Directory_ExternalStation]
+	,out_doc_sostav.[code_stn_to] as outgoing_uz_document_code_stn_to
+	,out_ext_station.[station_name_ru] as outgoing_uz_document_station_to_name_ru
+	,out_ext_station.[station_name_en] as outgoing_uz_document_station_to_name_en
+	--> [IDS].[Directory_InlandRailway]
+	,out_ext_station.[code_inlandrailway] as outgoing_uz_document_to_code_inlandrailway
+	,out_ir_to.[inlandrailway_name_ru] as outgoing_uz_document_to_inlandrailway_name_ru
+	,out_ir_to.[inlandrailway_name_en] as outgoing_uz_document_to_inlandrailway_name_en
+	,out_ir_to.[inlandrailway_abbr_ru] as outgoing_uz_document_to_inlandrailway_abbr_ru
+	,out_ir_to.[inlandrailway_abbr_en] as outgoing_uz_document_to_inlandrailway_abbr_en
+	,out_ir_to.[code_railway] as outgoing_uz_document_to_code_railway
+	--> [IDS].[Directory_Countrys]
+	,out_doc_sostav.[country_nazn] as outgoing_uz_document_country_nazn
+	--,out_countrys_to.[code_sng] as outgoing_uz_document_to_code_sng
+	--,out_countrys_to.[code_europe] as outgoing_uz_document_to_code_europe
+	--,out_countrys_to.[code_iso] as outgoing_uz_document_to_code_iso
+	,out_countrys_to.[countrys_name_ru] as outgoing_uz_document_to_countrys_name_ru
+	,out_countrys_to.[countrys_name_en] as outgoing_uz_document_to_countrys_name_en
+	,out_countrys_to.[country_abbr_ru] as outgoing_uz_document_to_country_abbr_ru
+	,out_countrys_to.[country_abbr_en] as outgoing_uz_document_to_country_abbr_en
+	--> [IDS].[Directory_BorderCheckpoint]
+	,out_doc_sostav.[code_border_checkpoint] as outgoing_uz_document_code_border_checkpoint
+	,out_border_checkpoint.[station_name_ru] as outgoing_uz_document_border_checkpoint_station_name_ru
+	,out_border_checkpoint.[station_name_en] as outgoing_uz_document_border_checkpoint_station_name_en
+	,out_border_checkpoint.[code_inlandrailway] as outgoing_uz_document_border_checkpoint_code_inlandrailway
+	,out_doc_sostav.[cross_date] as outgoing_uz_document_cross_date
+	--> [IDS].[Directory_Consignee]
+	,out_doc_sostav.[code_shipper] as outgoing_uz_document_code_shipper
+	,out_consignee.[name] as outgoing_uz_document_name_shipper
+	--> [IDS].[Directory_Shipper]
+	,out_doc_sostav.[code_consignee] as outgoing_uz_document_code_consignee
+	,out_shipper.[shipper_name_ru] as outgoing_uz_document_consignee_name_ru
+	,out_shipper.[shipper_name_en] as outgoing_uz_document_consignee_name_en
+	,out_doc_sostav.[vid] as outgoing_uz_document_vid
+	--> [IDS].[Directory_PayerSender]
+	,out_doc_sostav.[code_payer] as outgoing_uz_document_code_payer
+	,out_payer_sender.[payer_name_ru] as outgoing_uz_document_payer_name_ru
+	,out_payer_sender.[payer_name_en] as outgoing_uz_document_payer_name_en
+	,out_doc_sostav.[distance_way] as outgoing_uz_document_distance_way
+	,out_doc_sostav.[osum] as outgoing_uz_document_osum
+	,out_doc_sostav.[date_sozdan] as outgoing_uz_document_date_sozdan
+	,out_doc_sostav.[date_otpr] as outgoing_uz_document_date_otpr
+	,out_doc_sostav.[date_pr] as outgoing_uz_document_date_pr
+	,out_doc_sostav.[date_grpol] as outgoing_uz_document_date_grpol
+	,out_doc_sostav.[date_vid] as outgoing_uz_document_date_vid
+	,out_doc_sostav.[info_sht] as outgoing_uz_document_info_sht
+	,out_doc_sostav.[name_gr] as outgoing_uz_document_name_gr
+	,out_doc_sostav.[note] as outgoing_uz_document_note
 	--,out_doc_sostav.[create]
 	--,out_doc_sostav.[create_user]
 	--,out_doc_sostav.[change]
 	--,out_doc_sostav.[change_user]
-	--========== ДОКУМЕНТЫ ПО ПРИБЫТИЮ ==========================
-	,arr_doc_uz.[nom_doc] as arrival_nom_doc						-- Номер документа(досылки)
-	,arr_doc_uz.[nom_main_doc] as arrival_nom_main_doc				-- Номер основного документа (если заполнен)
-	,arr_sost.composition_index as arrival_composition_index
-	,arr_sost.date_adoption as arrival_date_adoption				-- дата приема
-	,arr_sost.date_adoption_act as arrival_date_adoption_act		-- дата приема (по акту)
-	,arr_car.date_adoption_act as arrival_car_date_adoption_act		-- дата приема вагона (по акту)
-	--> Разметка по прибытию
-	,arr_dir_cond.condition_name_ru as arrival_condition_name_ru
-	,arr_dir_cond.condition_name_en as arrival_condition_name_en
-	,arr_dir_cond.condition_abbr_ru as arrival_condition_abbr_ru
-	,arr_dir_cond.condition_abbr_en as arrival_condition_abbr_en
-	,arr_dir_cond.red as arrival_condition_red
-	,arr_dir_cond.repairs as arrival_condition_repairs
-	--> Дата ремонта УЗ
-	,dir_wagon.date_rem_uz as wagon_date_rem_uz
-	--> Грузоподъемность
-	,arr_doc_vag.gruzp as wagon_gruzp_doc
-	,dir_wagon.gruzp as wagon_gruzp_uz
-	--> груз по прибытию
-	,arr_dir_group_cargo.cargo_group_name_ru as arrival_cargo_group_name_ru
-	,arr_dir_group_cargo.cargo_group_name_en as arrival_cargo_group_name_en
-	,arr_dir_cargo.cargo_name_ru as arrival_cargo_name_ru
-	,arr_dir_cargo.cargo_name_en as arrival_cargo_name_en
-	--> Сертификационные данные
-	,arr_dir_certif.[id] as arrival_id_sertification_data
-	,arr_dir_certif.[certification_data_ru] as arrival_sertification_data_ru
-	,arr_dir_certif.[certification_data_en] as arrival_sertification_data_en
-	--> Комерчиское состояние
-	,arr_comm_cond.[id] as arrival_id_commercial_condition
-	,arr_comm_cond.[commercial_condition_ru] as arrival_commercial_condition_ru
-	,arr_comm_cond.[commercial_condition_en] as arrival_commercial_condition_en
-	--> Станция отправитель
-	,arr_dir_ext_station.code as arrival_station_from_code
-	,arr_dir_ext_station.station_name_ru as arrival_station_from_name_ru
-	,arr_dir_ext_station.station_name_en as arrival_station_from_name_en
-	,shipper.[code] as arrival_shipper_code
-	,shipper.[shipper_name_ru] as arrival_shipper_name_ru
-	,shipper.[shipper_name_en] as arrival_shipper_name_en
-	--> Станция приема АМКР
-	,arr_sost.id_station_on as accepted_id_station_amkr
-	,arr_dir_station_amkr.station_name_ru as accepted_station_amkr_name_ru
-	,arr_dir_station_amkr.station_name_en as accepted_station_amkr_name_en
-	,arr_dir_station_amkr.station_abbr_ru as accepted_station_amkr_abbr_ru
-	,arr_dir_station_amkr.station_abbr_en as accepted_station_amkr_abbr_en
-		--	--> Станция назначения
-		--,arr_doc_vag.id_station_on_amkr as arrival_id_station_amkr
-		--,arr_dir_station_amkr.station_name_ru as arrival_station_amkr_name_ru
-		--,arr_dir_station_amkr.station_name_en as arrival_station_amkr_name_en
-		--,arr_dir_station_amkr.station_abbr_ru as arrival_station_amkr_abbr_ru
-		--,arr_dir_station_amkr.station_abbr_en as arrival_station_amkr_abbr_en
-		----> Цех получатель
-		--,arr_dir_division_amkr.code as arrival_division_amkr_code
-		--,arr_dir_division_amkr.name_division_ru as arrival_division_amkr_name_ru
-		--,arr_dir_division_amkr.name_division_en as arrival_division_amkr_name_en
-		--,arr_dir_division_amkr.division_abbr_ru as arrival_division_amkr_abbr_ru
-		--,arr_dir_division_amkr.division_abbr_en as arrival_division_amkr_abbr_en
-	--================ ТЕКУЩЕЕ СОСТОЯНИЕ ========================================
-	--> Состояние загрузки
-	,cur_load.[id] as current_id_loading_status
-	,cur_load.[loading_status_ru] as current_loading_status_ru
-	,cur_load.[loading_status_en] as current_loading_status_en
-		--> Состояние занят
-	,current_wagon_busy = CASE WHEN wio.[operation_end] is null THEN 1  ELSE 0 END
-		--> Текущая операция
-	,cur_dir_operation.[id] as current_id_operation
-	,cur_dir_operation.[operation_name_ru] as current_operation_name_ru
-	,cur_dir_operation.[operation_name_en] as current_operation_name_en
-	,wio.[operation_start] as current_operation_start
-	,wio.[operation_end] as current_operation_end
-			--=============== ПРОСТОЙ ПО ПРИБЫТИЮ ==================
-		--,[arrival_duration] = DATEDIFF (minute, arr_sost.date_adoption, getdate())
-		--,[arrival_idle_time] = @arrival_idle_time -- Норма простоя
-		--,[arrival_usage_fee] = 0.00
-		--=============== ТЕКУЩАЯ СТАНЦИЯ ==================
-		--,wim.id_station as current_id_station_amkr
-		--,cur_dir_station_amkr.station_name_ru as current_station_amkr_name_ru
-		--,cur_dir_station_amkr.station_name_en as current_station_amkr_name_en
-		--,cur_dir_station_amkr.station_abbr_ru as current_station_amkr_abbr_ru
-		--,cur_dir_station_amkr.station_abbr_en as current_station_amkr_abbr_en
-		--=============== ПРОСТОЙ НА ЖД. СТАНЦИИ ==================
-		--,[current_station_duration] = DATEDIFF (minute, (select [IDS].[get_start_datetime_station_of_wim](wim.id)), getdate())
-		--,[current_way_duration] = DATEDIFF (minute, wim.way_start, getdate())
-		--,cur_dir_station_amkr.idle_time as current_station_idle_time
-		--=============== ТЕКУЩИЙ ПУТЬ ==================
-		--,wim.[id_way] as current_id_way
-		--,cur_dir_way.[id_park] as current_id_park
-		--,cur_dir_way.[way_num_ru] as current_way_num_ru
-		--,cur_dir_way.[way_num_en] as current_way_num_en
-		--,cur_dir_way.[way_name_ru] as current_way_name_ru
-		--,cur_dir_way.[way_name_en] as current_way_name_en
-		--,cur_dir_way.[way_abbr_ru] as current_way_abbr_ru
-		--,cur_dir_way.[way_abbr_en] as current_way_abbr_en
-		--,wim.[way_start] as current_way_start
-		--,wim.[way_end] as current_way_end
-		--,wim.note as current_wim_note
-		--=============== ПЕРЕГОН ==================
-		--,wim.[id_outer_way] as current_id_outer_way
-		--,outer_ways.[name_outer_way_ru] as current_outer_way_name_ru
-		--,outer_ways.[name_outer_way_en] as current_outer_way_name_en
-		--,wim.[outer_way_start] as current_outer_way_start
-		--,wim.[outer_way_end] as current_outer_way_end
-		--=============== ВХОДЯЩАЯ ПОСТАВКА ==================
-		,sap_is.[VBELN] as sap_incoming_supply_num
-		,sap_is.[NUM_VBELN] as sap_incoming_supply_pos
-		,sap_is.[ERDAT] as sap_incoming_supply_date
-		,sap_is.[ETIME] as sap_incoming_supply_time
-		,sap_is.[LGORT_10] as sap_incoming_supply_warehouse_code 
-		,sap_is.[LGOBE_10] as sap_incoming_supply_warehouse_name
-		,sap_is.[MATNR] as sap_incoming_supply_cargo_code 
-		,sap_is.[MAKTX] as sap_incoming_supply_cargo_name
-		--=============== ИСХОДЯЩАЯ ПОСТАВКА ==================
-		,sap_os.[VBELN] as sap_outgoing_supply_num
-		,sap_os.[ERDAT] as sap_outgoing_supply_date
-		,sap_os.[ZBEZEI] as sap_outgoing_supply_cargo_name
-		,sap_os.[STAWN] as sap_outgoing_supply_cargo_code
-		,sap_os.[NAME1_AG] as sap_outgoing_supply_shipper_name
-		,sap_os.[KUNNR_AG] as sap_outgoing_supply_shipper_code
-		,sap_os.[ZRWNAME] as sap_outgoing_supply_destination_station_name
-		,sap_os.[ZENDSTAT] as sap_outgoing_supply_destination_station_code
-		,sap_os.[ZCRSTNAME] as sap_outgoing_supply_border_checkpoint_name
-		,sap_os.[ZCROSSSTAT] as sap_outgoing_supply_border_checkpoint_code
-		,sap_os.[ZZVES_NETTO] as sap_outgoing_supply_netto
-		,sap_os.[ABTNR] as sap_outgoing_supply_warehouse_code
-		,sap_os.[VTEXT] as sap_outgoing_supply_warehouse_name
-		,sap_os.[ZZDOLG] as sap_outgoing_supply_responsible_post
-		,sap_os.[ZZFIO] as sap_outgoing_supply_responsible_fio
-		,sap_os.[ZZPLATEL] as sap_outgoing_supply_payer_code
-		,sap_os.[ZZNAME_PLATEL] as sap_outgoing_supply_payer_name
-		--=============== ГТД ===================================
-		--> ....
-		--=============== ИНСТРУКТИВНЫЕ ПИСЬМИ ==================
-		--> Инструктивные письма
-		,il.num as instructional_letters_num
-		,il.dt as instructional_letters_datetime
-		,il.destination_station as instructional_letters_station_code
-		,let_station_uz.station as instructional_letters_station_name
-		,il.[note] as instructional_letters_note
-
+	-->======================================================================================================
+	--> Входящая поставка [IDS].[SAPIncomingSupply]
+	,sap_is.[VBELN] as sap_incoming_supply_num
+	,sap_is.[NUM_VBELN] as sap_incoming_supply_pos
+	,sap_is.[ERDAT] as sap_incoming_supply_date
+	,sap_is.[ETIME] as sap_incoming_supply_time
+	,sap_is.[LGORT_10] as sap_incoming_supply_warehouse_code 
+	,sap_is.[LGOBE_10] as sap_incoming_supply_warehouse_name
+	,sap_is.[MATNR] as sap_incoming_supply_cargo_code 
+	,sap_is.[MAKTX] as sap_incoming_supply_cargo_name
+	--> Исходящая поставка [IDS].[SAPOutgoingSupply]
+	,sap_os.[VBELN] as sap_outgoing_supply_num
+	,sap_os.[ERDAT] as sap_outgoing_supply_date
+	,sap_os.[ZBEZEI] as sap_outgoing_supply_cargo_name
+	,sap_os.[STAWN] as sap_outgoing_supply_cargo_code
+	,sap_os.[NAME1_AG] as sap_outgoing_supply_shipper_name
+	,sap_os.[KUNNR_AG] as sap_outgoing_supply_shipper_code
+	,sap_os.[ZRWNAME] as sap_outgoing_supply_destination_station_name
+	,sap_os.[ZENDSTAT] as sap_outgoing_supply_destination_station_code
+	,sap_os.[ZCRSTNAME] as sap_outgoing_supply_border_checkpoint_name
+	,sap_os.[ZCROSSSTAT] as sap_outgoing_supply_border_checkpoint_code
+	,sap_os.[ZZVES_NETTO] as sap_outgoing_supply_netto
+	,sap_os.[ABTNR] as sap_outgoing_supply_warehouse_code
+	,sap_os.[VTEXT] as sap_outgoing_supply_warehouse_name
+	,sap_os.[ZZDOLG] as sap_outgoing_supply_responsible_post
+	,sap_os.[ZZFIO] as sap_outgoing_supply_responsible_fio
+	,sap_os.[ZZPLATEL] as sap_outgoing_supply_payer_code
+	,sap_os.[ZZNAME_PLATEL] as sap_outgoing_supply_payer_name
+	--=============== ГТД ===================================
+	--> ....
+	--=============== ИНСТРУКТИВНЫЕ ПИСЬМИ ==================
+	--> Инструктивные письма
+	,il.num as instructional_letters_num
+	,il.dt as instructional_letters_datetime
+	,il.destination_station as instructional_letters_station_code
+	,let_station_uz.station as instructional_letters_station_name
+	,il.[note] as instructional_letters_note
+	--into view_outgoing_cars
 FROM [IDS].[OutgoingSostav] as out_sost
 		--> Отправка вагона
 		Left JOIN [IDS].[OutgoingCars] as out_car ON out_sost.id = out_car.id_outgoing
@@ -424,7 +514,7 @@ FROM [IDS].[OutgoingSostav] as out_sost
 		--> Текущее внетренее перемещение
 		Left JOIN IDS.WagonInternalRoutes as wir ON out_car.id = wir.[id_outgoing_car]
 		--> Текущая операция
-        Left JOIN IDS.WagonInternalOperation as wio ON wio.id = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalOperation] where [id_wagon_internal_routes]= wir.id order by id desc)
+        --Left JOIN IDS.WagonInternalOperation as wio ON wio.id = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalOperation] where [id_wagon_internal_routes]= wir.id order by id desc)
 		--==== СДАЧА ВАГОНА, ЗАДЕРЖАНИЯ, ВОЗВРАТ И ОТПРАВКА  ================================================================
 		--> Документы SAP Исходящая поставка
 		Left JOIN [IDS].[SAPOutgoingSupply] as sap_os ON wir.id_sap_outbound_supply = sap_os.id
@@ -439,7 +529,7 @@ FROM [IDS].[OutgoingSostav] as out_sost
 		Left JOIN IDS.ArrivalSostav as arr_sost ON arr_car.id_arrival = arr_sost.id
 		 --> Документы на вагон по принятию вагона на АМКР
 		Left JOIN IDS.Arrival_UZ_Vagon as arr_doc_vag ON arr_car.id_arrival_uz_vagon = arr_doc_vag.id
-		 --> Документы на группу вагонов (состав) по принятию вагона на АМКР
+		 --> Документы на группу вагонов (состав) по принятию ваг она на АМКР
 		Left JOIN IDS.Arrival_UZ_Document as arr_doc_uz ON arr_doc_vag.id_document = arr_doc_uz.id
 		 --> Документы SAP Входящая поставка
 		Left JOIN [IDS].[SAPIncomingSupply] as sap_is ON wir.id_sap_incoming_supply = sap_is.id
@@ -478,7 +568,7 @@ FROM [IDS].[OutgoingSostav] as out_sost
 		--> Справочник Разметка по отправке
 		Left JOIN IDS.Directory_ConditionArrival as out_dir_cond ON out_doc_vag.id_condition = out_dir_cond.id
 		--> Справочник Грузоотправитель
-		Left JOIN [IDS].[Directory_Shipper] as shipper ON arr_doc_uz.[code_shipper] = shipper.[code]
+		--Left JOIN [IDS].[Directory_Shipper] as shipper ON arr_doc_uz.[code_shipper] = shipper.[code]
 		--> Справочник Грузов по прибытию
 		Left JOIN IDS.Directory_Cargo as arr_dir_cargo ON arr_doc_vag.id_cargo =  arr_dir_cargo.id
 		--> Справочник Грузов по отправке
@@ -487,8 +577,12 @@ FROM [IDS].[OutgoingSostav] as out_sost
 		Left JOIN IDS.Directory_CargoGroup as arr_dir_group_cargo ON arr_dir_cargo.id_group =  arr_dir_group_cargo.id
 		--> Справочник Группы Грузов по отправке
 		Left JOIN IDS.Directory_CargoGroup as out_dir_group_cargo ON out_dir_cargo.id_group =  out_dir_group_cargo.id
+		--> Справочник Грузов ЕТСНГ по прибытию
+		Left JOIN [IDS].[Directory_CargoETSNG] as arr_dir_cargo_etsng ON arr_dir_cargo.id_cargo_etsng = arr_dir_cargo_etsng.id
 		--> Справочник Грузов ЕТСНГ по отправке
 		Left JOIN [IDS].[Directory_CargoETSNG] as out_dir_cargo_etsng ON out_dir_cargo.id_cargo_etsng = out_dir_cargo_etsng.id
+		--> Справочник Грузов ГНГ по прибытию
+		Left JOIN [IDS].[Directory_CargoGNG] as arr_dir_cargo_gng ON arr_doc_vag.id_cargo_gng = arr_dir_cargo_gng.id
 		--> Справочник Грузов ГНГ по отправке
 		Left JOIN [IDS].[Directory_CargoGNG] as out_dir_cargo_gng ON out_doc_vag.id_cargo_gng = out_dir_cargo_gng.id
 
@@ -514,31 +608,70 @@ FROM [IDS].[OutgoingSostav] as out_sost
 		--> Справочник комерческое состояние
 		Left JOIN [IDS].[Directory_CommercialCondition] as arr_comm_cond ON arr_doc_vag.[id_commercial_condition] = arr_comm_cond.id
 		--> Справочник Станция отправления (Внешняя станция)
-		Left JOIN IDS.Directory_ExternalStation as arr_dir_ext_station ON arr_doc_uz.code_stn_from =  arr_dir_ext_station.code
+		--Left JOIN IDS.Directory_ExternalStation as arr_dir_ext_station ON arr_doc_uz.code_stn_from =  arr_dir_ext_station.code
 		--> Справочник Станции АМКР (станция приема на АМКР)
-		Left JOIN IDS.Directory_Station as arr_dir_station_amkr ON arr_sost.id_station_on =  arr_dir_station_amkr.id
+		Left JOIN IDS.Directory_Station as arr_dir_station_from ON arr_sost.[id_station_from] =  arr_dir_station_from.id
+		--> Справочник Станции АМКР (станция приема на АМКР)
+		Left JOIN IDS.Directory_Station as arr_dir_station_on ON arr_sost.id_station_on =  arr_dir_station_on.id
 		--> Справочник Станции АМКР (станция отправки на АМКР)
+		Left JOIN IDS.Directory_Station as arr_dir_station_amkr ON arr_doc_vag.[id_station_on_amkr] =  arr_dir_station_amkr.id
+		--> Справочник Станции АМКР (станция прибытия на АМКР)
 		Left JOIN IDS.Directory_Station as out_dir_station_amkr ON out_sost.id_station_from =  out_dir_station_amkr.id
 		--> Справочник Станции АМКР (отправка станция на которую отправлен состав)
 		Left JOIN IDS.Directory_Station as out_dir_station_on ON out_sost.id_station_on =  out_dir_station_on.id
+		--> Справочник Путь АМКР (путь прибытия на АМКР)
+		Left JOIN [IDS].[Directory_Ways] as arr_dir_way_on ON arr_sost.[id_way] =  arr_dir_way_on.id
 		--> Справочник Путь АМКР (путь отправки на АМКР)
 		Left JOIN [IDS].[Directory_Ways] as out_dir_way_amkr ON out_sost.[id_way_from] =  out_dir_way_amkr.id
-
+		--> Справочник Подразделений АМКР (по отправке)
+		Left JOIN [IDS].[Directory_Divisions] as arr_dir_divis_amkr ON arr_doc_vag.[id_division_on_amkr] = arr_dir_divis_amkr.id
 		--> Справочник Подразделений АМКР (по отправке)
 		Left JOIN [IDS].[Directory_Divisions] as arr_dir_divis ON out_doc_vag.id_division = arr_dir_divis.id
 		--..............
 
 		--> Справочник Операции над вагоном (текущая операция)
-		Left JOIN IDS.Directory_WagonOperations as cur_dir_operation ON wio.id_operation =  cur_dir_operation.id
+		--Left JOIN IDS.Directory_WagonOperations as cur_dir_operation ON wio.id_operation =  cur_dir_operation.id
 		--> Справочник Сотояния загрузки
-		Left JOIN [IDS].[Directory_WagonLoadingStatus] as cur_load ON wio.id_loading_status = cur_load.id
+		--Left JOIN [IDS].[Directory_WagonLoadingStatus] as cur_load ON wio.id_loading_status = cur_load.id
 		--> Справочник Внешних станций УЗ
 		Left JOIN UZ.Directory_Stations as let_station_uz ON  il.destination_station = let_station_uz.code_cs
 		--> Справочник Внешних станций УЗ (по отправке)
-		Left JOIN [UZ].[Directory_Stations] as out_station_uz ON  out_doc_vag.[code_stn_to] = out_station_uz.code_cs
-
+		Left JOIN [UZ].[Directory_Stations] as out_vag_station_uz ON  out_doc_vag.[code_stn_to] = out_vag_station_uz.code_cs
+		--> Справочник Внешних станций (по прибытию from)
+		Left JOIN [IDS].[Directory_ExternalStation] as arr_ext_station_from ON arr_doc_uz.[code_stn_from] = arr_ext_station_from.code
+		--> Справочник Внешних станций (по прибытию to)
+		Left JOIN [IDS].[Directory_ExternalStation] as arr_ext_station_to ON arr_doc_uz.[code_stn_to] = arr_ext_station_to.code
+		--> Справочник Внешних станций (по отправке)
+		Left JOIN [IDS].[Directory_ExternalStation] as out_ext_station ON out_doc_sostav.[code_stn_to] = out_ext_station.code
+		--> Справочник Железных дорог (по прибытию from)
+		Left JOIN [IDS].[Directory_InlandRailway] as arr_ir_from ON arr_ext_station_from.[code_inlandrailway] = arr_ir_from.code
+		--> Справочник Железных дорог (по прибытию from)
+		Left JOIN [IDS].[Directory_InlandRailway] as arr_ir_to ON arr_ext_station_to.[code_inlandrailway] = arr_ir_to.code
+		--> Справочник Железных дорог (по отправке)
+		Left JOIN [IDS].[Directory_InlandRailway] as out_ir_to ON out_ext_station.[code_inlandrailway] = out_ir_to.code
+		--> Справочник Стран (по отправке)
+		Left JOIN [IDS].[Directory_Countrys] as out_countrys_to ON out_doc_sostav.[country_nazn] = out_countrys_to.[code_iso]
+		--> Справочник Погран переходов (по отправке)
+		Left JOIN [IDS].[Directory_BorderCheckpoint] as arr_border_checkpoint ON arr_doc_uz.[code_border_checkpoint] = arr_border_checkpoint.[code]
+		--> Справочник Погран переходов (по отправке)
+		Left JOIN [IDS].[Directory_BorderCheckpoint] as out_border_checkpoint ON out_doc_sostav.[code_border_checkpoint] = out_border_checkpoint.[code]
+		--> Справочник грузоотправители (по прибытию)
+		Left JOIN [IDS].[Directory_Consignee] arr_consignee ON arr_doc_uz.[code_consignee] = arr_consignee.code		
+		--> Справочник грузоотправители (по отправке)
+		Left JOIN [IDS].[Directory_Consignee] as out_consignee ON out_doc_sostav.[code_shipper] = out_consignee.code
+		--> Справочник грузополучателей (по отправке)
+		Left JOIN [IDS].[Directory_Shipper] as arr_shipper ON arr_doc_uz.[code_shipper] = arr_shipper.code
+		--> Справочник грузополучателей (по отправке)
+		Left JOIN [IDS].[Directory_Shipper] as out_shipper ON out_doc_sostav.[code_consignee] = out_shipper.code
+		--> Справочник платильщик по отправке (по отправке)
+		Left JOIN [IDS].[Directory_PayerSender] as arr_payer_send ON arr_doc_uz.[code_payer_sender] = arr_payer_send.[code]
+		--> Справочник платильщик по отправке (по отправке)
+		Left JOIN [IDS].[Directory_PayerArrival] as arr_payer_arr ON arr_doc_uz.[code_payer_arrival] = arr_payer_arr.[code]
+		
+		--> Справочник платильщик (по отправке)
+		Left JOIN [IDS].[Directory_PayerSender] as out_payer_sender ON out_doc_sostav.[code_payer] = out_payer_sender.[code]
 WHERE 
 
-out_sost.id =127697 
+out_sost.id =51208 
 
 order by out_car.position
