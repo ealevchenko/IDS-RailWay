@@ -411,6 +411,18 @@ select
 	--,out_doc_vag.[create_user]
 	--,out_doc_vag.[change]
 	--,out_doc_vag.[change_user]
+				-->======================================================================================================
+	--> ДОКУМЕНТ НА КОНТЕЙНЕРА [IDS].[Outgoing_UZ_Vagon_Cont]
+	,out_doc_vag_cont1.[nom_cont] as outgoing_uz_vagon_cont_1_nom_cont
+	,out_doc_vag_cont1.[kod_tiporazmer] as outgoing_uz_vagon_cont_1_kod_tiporazmer
+	,out_doc_vag_cont1.[gruzp] as outgoing_uz_vagon_cont_1_gruzp
+	,out_doc_vag_cont1.[ves_tary_arc] as outgoing_uz_vagon_cont_1_ves_tary_arc
+	,out_doc_vag_cont1.[id_cargo] as outgoing_uz_vagon_cont_1_id_cargo
+	,out_doc_vag_cont2.[nom_cont] as outgoing_uz_vagon_cont_2_nom_cont
+	,out_doc_vag_cont2.[kod_tiporazmer] as outgoing_uz_vagon_cont_2_kod_tiporazmer
+	,out_doc_vag_cont2.[gruzp] as outgoing_uz_vagon_cont_2_gruzp
+	,out_doc_vag_cont2.[ves_tary_arc] as outgoing_uz_vagon_cont_2_ves_tary_arc
+	,out_doc_vag_cont2.[id_cargo] as outgoing_uz_vagon_cont_2_id_cargo
 	-->======================================================================================================
 	--> ДОКУМЕНТ НА СОСТАВ ПО ОТПРАВКЕ [IDS].[Outgoing_UZ_Document]
 	,out_doc_sostav.[id] as outgoing_uz_document_id
@@ -520,6 +532,9 @@ FROM [IDS].[OutgoingSostav] as out_sost
 		Left JOIN [IDS].[SAPOutgoingSupply] as sap_os ON wir.id_sap_outbound_supply = sap_os.id
 		--> Документы на вагон по отправки вагона на УЗ
 		Left JOIN [IDS].[Outgoing_UZ_Vagon] as out_doc_vag ON out_car.id_outgoing_uz_vagon = out_doc_vag.id
+		--> Документы на контейнера по отправки вагона на УЗ
+		Left JOIN [IDS].[Outgoing_UZ_Vagon_Cont] as out_doc_vag_cont1 ON out_doc_vag_cont1.id = (SELECT TOP (1) [id] FROM [IDS].[Outgoing_UZ_Vagon_Cont] where [id_vagon]= out_doc_vag.id order by id)
+		Left JOIN [IDS].[Outgoing_UZ_Vagon_Cont] as out_doc_vag_cont2 ON out_doc_vag_cont2.id = (SELECT TOP (1) [id] FROM [IDS].[Outgoing_UZ_Vagon_Cont] where [id_vagon]= out_doc_vag.id order by id desc)
 		--> Документы на состав по отправки вагона на УЗ
 		Left JOIN [IDS].[Outgoing_UZ_Document] as out_doc_sostav ON out_doc_vag.id_document = out_doc_sostav.id
 		--==== ПРИБЫТИЕ И ПРИЕМ ВАГОНА =====================================================================
