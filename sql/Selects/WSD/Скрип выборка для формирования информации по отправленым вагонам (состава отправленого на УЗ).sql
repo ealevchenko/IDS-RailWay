@@ -11,7 +11,15 @@ select
 	,dir_wagon.tara as wagon_tara_uz
 	,dir_wagon.note as wagon_ban_uz							-- Запреты по УЗ 
 	,dir_wagon.[closed_route] as wagon_closed_route			--Замкнутый маршрут (кольцо)
-
+	-- Последняя операция
+	,wio.[id_operation] as last_operation_id_operation
+	,wio.id_condition as last_operation_id_condition
+	--> Разметка по последней операции
+	,cur_dir_cond.condition_name_ru as last_operation_condition_name_ru
+	,cur_dir_cond.condition_name_en as last_operationt_condition_name_en
+	,cur_dir_cond.condition_abbr_ru as last_operation_condition_abbr_ru
+	,cur_dir_cond.condition_abbr_en as last_operation_condition_abbr_en
+	,cur_dir_cond.red as last_operation_condition_red
 	--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	-->================================= ПРИБЫТИЕ =====================================
 	--> ПРИБЫТИЕ ВАГОНОВ [IDS].[ArrivalCars]
@@ -526,7 +534,7 @@ FROM [IDS].[OutgoingSostav] as out_sost
 		--> Текущее внетренее перемещение
 		Left JOIN IDS.WagonInternalRoutes as wir ON out_car.id = wir.[id_outgoing_car]
 		--> Текущая операция
-        --Left JOIN IDS.WagonInternalOperation as wio ON wio.id = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalOperation] where [id_wagon_internal_routes]= wir.id order by id desc)
+        Left JOIN IDS.WagonInternalOperation as wio ON wio.id = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalOperation] where [id_wagon_internal_routes]= wir.id order by id desc)
 		--==== СДАЧА ВАГОНА, ЗАДЕРЖАНИЯ, ВОЗВРАТ И ОТПРАВКА  ================================================================
 		--> Документы SAP Исходящая поставка
 		Left JOIN [IDS].[SAPOutgoingSupply] as sap_os ON wir.id_sap_outbound_supply = sap_os.id
@@ -578,6 +586,8 @@ FROM [IDS].[OutgoingSostav] as out_sost
 		Left JOIN IDS.Directory_GenusWagons as dir_rod ON dir_wagon.id_genus = dir_rod.id
 		--> Справочник Тип вагона
 		Left JOIN IDS.Directory_TypeWagons as dir_type ON arr_doc_vag.id_type =  dir_type.id
+		--> Справочник Разметка по текущей операции
+		Left JOIN IDS.Directory_ConditionArrival as cur_dir_cond ON wio.id_condition =  cur_dir_cond.id
 		--> Справочник Разметка по прибытию
 		Left JOIN IDS.Directory_ConditionArrival as arr_dir_cond ON arr_doc_vag.id_condition = arr_dir_cond.id
 		--> Справочник Разметка по отправке
@@ -687,6 +697,6 @@ FROM [IDS].[OutgoingSostav] as out_sost
 		Left JOIN [IDS].[Directory_PayerSender] as out_payer_sender ON out_doc_sostav.[code_payer] = out_payer_sender.[code]
 WHERE 
 
-out_sost.id =51208 
-
+--out_sost.id =51208 
+out_sost.id =138457 
 order by out_car.position

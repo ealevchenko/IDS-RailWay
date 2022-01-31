@@ -27,6 +27,13 @@ namespace WEB_UI.Controllers.api
         public double? wagon_tara_uz { get; set; }
         public string wagon_ban_uz { get; set; }
         public bool? wagon_closed_route { get; set; }
+        public int? last_operation_id_operation { get; set; }
+        public int? last_operation_id_condition { get; set; }
+        public string last_operation_condition_name_ru { get; set; }
+        public string last_operationt_condition_name_en { get; set; }
+        public string last_operation_condition_abbr_ru { get; set; }
+        public string last_operation_condition_abbr_en { get; set; }
+        public bool? last_operation_condition_red { get; set; }
         public long? arrival_car_id { get; set; }
         public int? arrival_car_position { get; set; }
         public int? arrival_car_position_arrival { get; set; }
