@@ -443,6 +443,18 @@ namespace WEB_UI.Controllers.api
         public int? outgoing_uz_vagon_to_station_uz_code { get; set; }
 
         public string outgoing_uz_vagon_to_station_uz_name { get; set; }
+        public string outgoing_uz_vagon_cont_1_nom_cont { get; set; }
+        public string outgoing_uz_vagon_cont_1_kod_tiporazmer { get; set; }
+        public int? outgoing_uz_vagon_cont_1_gruzp { get; set; }
+        public int? outgoing_uz_vagon_cont_1_ves_tary_arc { get; set; }
+        public int? outgoing_uz_vagon_cont_1_id_cargo { get; set; }
+        public string outgoing_uz_vagon_cont_2_nom_cont { get; set; }
+        public string outgoing_uz_vagon_cont_2_kod_tiporazmer { get; set; }
+        public int? outgoing_uz_vagon_cont_2_gruzp { get; set; }
+
+        public int? outgoing_uz_vagon_cont_2_ves_tary_arc { get; set; }
+
+        public int? outgoing_uz_vagon_cont_2_id_cargo { get; set; }
 
         public long? outgoing_uz_document_id { get; set; }
 
