@@ -139,7 +139,7 @@
             'fogcd_mess_valid_name_station_to': 'Указанной станции нет в справочнике ИДС.',
 
             'fogcd_mess_init_panel': 'Инициализация модуля...',
-
+            'fogcd_mess_load_db_uz': 'Обновляю информацию о вагоне с бд УЗ...',
 
             //'fhoogs_title_form_add': 'Сдать состав',
             //'fhoogs_title_form_edit': 'Править сданный состав',
@@ -163,6 +163,7 @@
 
     var wsd = App.ids_wsd;
     var directory = App.ids_directory;
+    var uz_directory = App.uz_directory;
 
     // Модуль инициализаии компонентов формы
     var FC = App.form_control;
@@ -198,11 +199,13 @@
             alert: null,
             ids_wsd: null,
             ids_dir: null,
+            uz_dir: null,
             fn_init: null,
         }, options);
         // Создадим ссылку на модуль работы с базой данных
         this.ids_wsd = this.settings.ids_wsd ? this.settings.ids_wsd : new wsd();
         this.ids_dir = this.settings.ids_dir ? this.settings.ids_dir : new directory();
+        this.uz_dir = this.settings.uz_dir ? this.settings.uz_dir : new uz_directory();
 
         this.list_station = [];
         this.elements = {};
@@ -2059,9 +2062,9 @@
             this.elements.input_text_gruzp_uz.val('');
             this.elements.input_text_tara_uz.val('');
             this.elements.input_text_condition_arrival.val('');
-            //this.elements.input_text_condition_provide.val('');
+            this.elements.input_text_condition_present.val('');
 
-            this.elements.textarea_condition_present.val('');
+            //this.elements.textarea_condition_present.val('');
             //this.elements.condition_present_user.val('Разметка по отправлению:');
             // Задержание
             this.elements.autocomplete_cause_detention.set('');
@@ -2113,78 +2116,89 @@
         }
     }
 
-    form_outgoing_cars_detali.prototype.view_wagon = function (wagon, position) {
+    form_outgoing_cars_detali.prototype.wagon_detali = function (wagon, position) {
         if (wagon) {
             if (this.elements) {
                 if (position) {
                     this.edit();
+                    LockScreen(langView('fogcd_mess_load_db_uz', App.Langs));
+                    this.uz_dir.getInfoWagonOfNum(wagon.num, function (info) {
+                        this.wiew_wagon_detali(wagon, position, info)
+                        LockScreenOff();
+                    }.bind(this));
                 } else {
                     this.view();
+                    this.wiew_wagon_detali(wagon, position, null)
+                    LockScreenOff();
                 }
-                this.elements.input_number_num_car.val(wagon.num);
-                this.elements.input_number_position_outgoing.val(position ? position : wagon.outgoing_car_position_outgoing);
-                this.elements.input_text_num_cont_1.val(wagon.outgoing_uz_vagon_cont_1_nom_cont);
-                this.elements.input_text_num_cont_2.val(wagon.outgoing_uz_vagon_cont_2_nom_cont);
-                this.elements.input_datetime_date_outgoing_act.val(wagon.outgoing_car_date_outgoing_act); // уберем дату
-                this.elements.autocomplete_reason_discrepancy_amkr.val(wagon['outgoing_car_reason_discrepancy_amkr_name_'+ App.Lang]);
-                this.elements.autocomplete_reason_discrepancy_uz.val(wagon['outgoing_car_reason_discrepancy_uz_name_'+ App.Lang]);
-                this.elements.input_text_adm_kod.val(wagon.outgoing_uz_vagon_wagon_adm);
-                this.elements.input_text_rod_vag_abbr.val(wagon.outgoing_uz_vagon_rod);
-                this.elements.input_text_gruzp_uz.val(wagon.outgoing_uz_vagon_gruzp);
-                this.elements.input_text_tara_uz.val(wagon.outgoing_uz_vagon_tara_uz);
-                this.elements.input_text_condition_arrival.val(wagon['outgoing_uz_vagon_condition_' + App.Lang]);
-                this.elements.textarea_condition_present.val(wagon['outgoing_uz_vagon_condition_' + App.Lang]);
-                //this.elements.condition_present_user.val('Разметка по отправлению:');
-                // Задержание
-                this.elements.autocomplete_cause_detention.set('');
-                this.elements.input_datetime_detention_start.set(null); // уберем дату
-                this.elements.input_datetime_detention_stop.set(null); // уберем дату
-                // Возврат
-                this.elements.autocomplete_cause_return.set('');
-                this.elements.input_datetime_return_start.set(null); // уберем дату
-                this.elements.input_datetime_return_stop.set(null); // уберем дату
-                this.elements.input_text_return_num_act.val('');
-                this.elements.input_datetime_return_date_act.set(null); // уберем дату
-                this.elements.textarea_return_note.val('');
-                //this.elements.table_return_cars.view(null) // Очистить таблицу возвратов
-                // Данные о погрузке
-                this.elements.checkbox_loaded_car.val(false);
-                this.elements.autocomplete_cargo_name.set('');
-                this.elements.input_text_loading_devision_code.val('');
-                this.elements.autocomplete_loading_devision.set('');
-                this.elements.input_text_code_station_to.val('');
-                this.elements.autocomplete_name_station_to.set('');
-                this.elements.input_text_owner_name.val('');
-                this.elements.input_text_operator_name.val('');
-                this.elements.input_text_limiting_loading_amkr.val('');
-                this.elements.textarea_limiting_loading_uz.val('');
-                // ЭПД
-                this.elements.input_text_uz_doc_num.val('');
-                this.elements.input_text_vesg_uz_doc.val('');
-                this.elements.input_text_ves_tary_uz_doc.val('');
-                this.elements.input_text_brigadier_loading_uz_doc.val('');
-                //
-                this.elements.input_text_kod_etsng.val('');
-                this.elements.textarea_name_etsng.val('');
-                //
-                this.elements.input_text_station_code_on.val('');
-                this.elements.input_text_station_name_on.val('');
-                this.elements.input_text_railway_name_on.val('');
-                //
-                this.elements.input_text_client_kod_on.val('');
-                this.elements.input_text_client_name_on.val('');
-                // Прибытие
-                this.elements.input_text_cargo_arrival.val('');
-                this.elements.input_text_cargo_sap.val('');
-                this.elements.input_text_date_arrival.val('');
-                this.elements.input_text_owner_name_arrival.val('');
-                this.elements.input_text_operator_name_arrival.val('');
-                this.elements.input_text_limiting_loading_arrival.val('');
             } else {
                 throw new Error('this.elements - пустой, нет привязки');
             }
         }
     }
+
+    form_outgoing_cars_detali.prototype.wiew_wagon_detali = function (wagon, position, wagon_info) {
+        this.elements.input_number_num_car.val(wagon.num);
+        this.elements.input_number_position_outgoing.val(position ? position : wagon.outgoing_car_position_outgoing);
+        this.elements.input_text_num_cont_1.val(wagon.outgoing_uz_vagon_cont_1_nom_cont);
+        this.elements.input_text_num_cont_2.val(wagon.outgoing_uz_vagon_cont_2_nom_cont);
+        this.elements.input_datetime_date_outgoing_act.val(wagon.outgoing_car_date_outgoing_act); // уберем дату
+        this.elements.autocomplete_reason_discrepancy_amkr.val(wagon['outgoing_car_reason_discrepancy_amkr_name_' + App.Lang]);
+        this.elements.autocomplete_reason_discrepancy_uz.val(wagon['outgoing_car_reason_discrepancy_uz_name_' + App.Lang]);
+        this.elements.input_text_adm_kod.val(wagon.outgoing_uz_vagon_wagon_adm);
+        this.elements.input_text_rod_vag_abbr.val(wagon.outgoing_uz_vagon_rod);
+        this.elements.input_text_gruzp_uz.val(wagon.outgoing_uz_vagon_gruzp);
+        this.elements.input_text_tara_uz.val(wagon.outgoing_uz_vagon_tara_uz);
+        this.elements.input_text_condition_arrival.val(wagon['arrival_uz_vagon_condition_abbr_' + App.Lang]);
+        this.elements.input_text_condition_present.val(position ? wagon['last_operation_condition_' + App.Lang] : wagon['arrival_uz_vagon_condition_abbr_' + App.Lang]);
+        //this.elements.condition_present_user.val('Разметка по отправлению:');
+        // Задержание
+        this.elements.autocomplete_cause_detention.set('');
+        this.elements.input_datetime_detention_start.set(null); // уберем дату
+        this.elements.input_datetime_detention_stop.set(null); // уберем дату
+        // Возврат
+        this.elements.autocomplete_cause_return.set('');
+        this.elements.input_datetime_return_start.set(null); // уберем дату
+        this.elements.input_datetime_return_stop.set(null); // уберем дату
+        this.elements.input_text_return_num_act.val('');
+        this.elements.input_datetime_return_date_act.set(null); // уберем дату
+        this.elements.textarea_return_note.val('');
+        //this.elements.table_return_cars.view(null) // Очистить таблицу возвратов
+        // Данные о погрузке
+        this.elements.checkbox_loaded_car.val(false);
+        this.elements.autocomplete_cargo_name.set('');
+        this.elements.input_text_loading_devision_code.val('');
+        this.elements.autocomplete_loading_devision.set('');
+        this.elements.input_text_code_station_to.val('');
+        this.elements.autocomplete_name_station_to.set('');
+        this.elements.input_text_owner_name.val('');
+        this.elements.input_text_operator_name.val('');
+        this.elements.input_text_limiting_loading_amkr.val('');
+        this.elements.textarea_limiting_loading_uz.val('');
+        // ЭПД
+        this.elements.input_text_uz_doc_num.val('');
+        this.elements.input_text_vesg_uz_doc.val('');
+        this.elements.input_text_ves_tary_uz_doc.val('');
+        this.elements.input_text_brigadier_loading_uz_doc.val('');
+        //
+        this.elements.input_text_kod_etsng.val('');
+        this.elements.textarea_name_etsng.val('');
+        //
+        this.elements.input_text_station_code_on.val('');
+        this.elements.input_text_station_name_on.val('');
+        this.elements.input_text_railway_name_on.val('');
+        //
+        this.elements.input_text_client_kod_on.val('');
+        this.elements.input_text_client_name_on.val('');
+        // Прибытие
+        this.elements.input_text_cargo_arrival.val('');
+        this.elements.input_text_cargo_sap.val('');
+        this.elements.input_text_date_arrival.val('');
+        this.elements.input_text_owner_name_arrival.val('');
+        this.elements.input_text_operator_name_arrival.val('');
+        this.elements.input_text_limiting_loading_arrival.val('');
+    }
+
     // Перевести форму в режим не активно
     form_outgoing_cars_detali.prototype.close = function () {
         // Переведем все компоненты в режим disabled

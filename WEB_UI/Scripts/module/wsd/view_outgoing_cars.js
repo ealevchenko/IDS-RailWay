@@ -71,6 +71,7 @@
             //'mess_create_sostav': 'Формирую состав, переношу вагоны...',
             //'mess_clear_sostav': 'Формирую состав, убираю выбранные вагоны...',
             //'mess_reverse_sostav': 'Формирую состав, реверс вагонов...',
+            'vogc_mess_load_vagon_detali': 'Загружаю информацию по вагону',
         },
         'en':  //default language: English
         {
@@ -204,7 +205,8 @@
             ids_wsd: null,
             fn_select_rows: function (rows) {
                 if (rows && rows.length > 0) {
-                    this.form_outgoing_cars_detali.view_wagon(rows[0], null);
+                    LockScreen(langView('vogc_mess_load_vagon_detali', App.Langs));
+                    this.form_outgoing_cars_detali.wagon_detali(rows[0], null);
                 }
             }.bind(this),
             fn_init: function (init) {
@@ -315,6 +317,7 @@
     };
 
     view_outgoing_cars.prototype.view_car_detali = function (id) {
+        LockScreen(langView('vogc_mess_load_vagon_detali', App.Langs));
         var wagon = this.wagons.find(function (o) {
             return o.outgoing_car_id === id;
         });
@@ -323,7 +326,7 @@
             return b.outgoing_car_position_outgoing - a.outgoing_car_position_outgoing;
         });
         var position = wagons && wagons.length > 0 ? wagons[0].outgoing_car_position_outgoing + 1 : 1;
-        this.form_outgoing_cars_detali.view_wagon(wagon, position);
+        this.form_outgoing_cars_detali.wagon_detali(wagon, position);
     };
     //--------------------------------------------------------------------------------
     // Показать
