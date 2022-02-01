@@ -22,6 +22,12 @@ namespace WEB_UI.Controllers.api
         public long? outgoing_car_id { get; set; }
         public int? num { get; set; }
         public int? outgoing_car_position { get; set; }
+        public int? wagon_id_countrys { get; set; }
+        public int? wagon_wagon_adm { get; set; }
+        public string wagon_adm_name_ru { get; set; }
+        public string wagon_adm_name_en { get; set; }
+        public string wagon_adm_abbr_ru { get; set; }
+        public string wagon_adm_abbr_en { get; set; }
         public DateTime? wagon_date_rem_uz { get; set; }
         public double? wagon_gruzp_uz { get; set; }
         public double? wagon_tara_uz { get; set; }
