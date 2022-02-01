@@ -85,23 +85,74 @@
     var directory = App.ids_directory;
     // Модуль инициализаии компонентов формы
     var MCF = App.modal_confirm_form; // Создать модальную форму "Окно сообщений"
-    var FC = App.form_control;
-    var alert = App.alert_form;
+    //var FC = App.form_control;
+    var FE = App.form_element;
 
     // создадим основу формы
     function div_panel(base) {
-        var row = new base.fc_ui.el_row();
-        var col = new base.fc_ui.el_col('xl', 12, 'mb-1 mt-1');
-        var card_panel = new base.fc_ui.el_card('border-secondary mb-1', 'text-center', null, langView('vogc_card_header_detali', App.Langs));
+        var row = new base.fe_ui.bs_row();
+        var col = new base.fe_ui.bs_col({
+            size: 'xl',
+            col: 12,
+            class: 'mb-1 mt-1',
+        });
+        var card_panel = new base.fe_ui.bs_card({
+            id: null,
+            class_card: 'border-secondary mb-1',
+            header: true,
+            class_header: 'text-center',
+            class_body: 'text-center',
+            title_header: langView('vogc_card_header_detali', App.Langs),
+        });
+        var alert = new base.fe_ui.bs_alert({ class: null, id: null, })
+        this.$alert = alert.$alert;
+        this.alert = alert.alert;
+        card_panel.$body.append(this.$alert)
         this.$header_card_panel = card_panel.$header;
-        var row_panel = new base.fc_ui.el_row();
-        var col_table_cars = new base.fc_ui.el_col('xl', 5, 'mb-1 pl-1 pr-1');
-        var col_info_cars = new base.fc_ui.el_col('xl', 6, 'mb-1 pl-1 pr-1');
-        var col_list_cars = new base.fc_ui.el_col('xl', 1, 'mb-1 pl-1 pr-1');
 
-        var card_table_cars = new base.fc_ui.el_card('border-success', 'text-center', 'p-1', langView('vogc_card_table_cars', App.Langs));
-        var card_info_cars = new base.fc_ui.el_card('border-warning', 'text-center', 'p-1', langView('vogc_card_info_cars', App.Langs));
-        var card_list_cars = new base.fc_ui.el_card('border-primary', 'text-center', 'p-1', langView('vogc_card_list_cars', App.Langs));
+        var row_panel = new base.fe_ui.bs_row();
+        //var col_table_cars = new base.fc_ui.el_col('xl', 5, 'mb-1 pl-1 pr-1');
+        //var col_info_cars = new base.fc_ui.el_col('xl', 6, 'mb-1 pl-1 pr-1');
+        //var col_list_cars = new base.fc_ui.el_col('xl', 1, 'mb-1 pl-1 pr-1');
+        var col_table_cars = new base.fe_ui.bs_col({
+            size: 'xl',
+            col: 5,
+            class: 'mb-1 pl-1 pr-1',
+        });
+        var col_info_cars = new base.fe_ui.bs_col({
+            size: 'xl',
+            col: 6,
+            class: 'mb-1 pl-1 pr-1',
+        });
+        var col_list_cars = new base.fe_ui.bs_col({
+            size: 'xl',
+            col: 1,
+            class: 'mb-1 pl-1 pr-1',
+        });
+        //var card_table_cars = new base.fc_ui.el_card('border-success', 'text-center', 'p-1', langView('vogc_card_table_cars', App.Langs));
+        var card_table_cars = new base.fe_ui.bs_card({
+            class_card: 'border-success',
+            header: true,
+            class_header: 'text-center',
+            class_body: 'p-1',
+            title_header: langView('vogc_card_table_cars', App.Langs),
+        });
+        //var card_info_cars = new base.fc_ui.el_card('border-warning', 'text-center', 'p-1', langView('vogc_card_info_cars', App.Langs));
+        var card_info_cars = new base.fe_ui.bs_card({
+            class_card: 'border-warning',
+            header: true,
+            class_header: 'text-center',
+            class_body: 'p-1',
+            title_header: langView('vogc_card_info_cars', App.Langs),
+        });
+        //var card_list_cars = new base.fc_ui.el_card('border-primary', 'text-center', 'p-1', langView('vogc_card_list_cars', App.Langs));
+        var card_list_cars = new base.fe_ui.bs_card({
+            class_card: 'border-primary',
+            header: true,
+            class_header: 'text-center',
+            class_body: 'p-1',
+            title_header: langView('vogc_card_list_cars', App.Langs),
+        });
 
         this.$table_cars = card_table_cars.$body;
         this.$info_cars = card_info_cars.$body;
@@ -126,7 +177,8 @@
             throw new Error('Не удалось найти элемент с селектором: ' + selector);
         }
         this.selector = this.$panel.attr('id');
-        this.fc_ui = new FC();
+        //this.fc_ui = new FC();
+        this.fe_ui = new FE();
     }
     // Функция обновить данные из базы list-список таблиц, update-обновить принудительно, callback-возврат список обновленных таблиц
     view_outgoing_cars.prototype.load_db = function (list, update, callback) {
@@ -184,15 +236,18 @@
         // Создадим и добавим макет для список не предъявленных вагонов 
         //<div class="list-group" id="list-cars-not-outgoing" role="tablist">
         //</div>
-        var $div_tablist = new this.fc_ui.el_div(null, 'list-group');
+        var $div_tablist = new this.fe_ui.div({
+            class: 'list-group',
+            id: null,
+        });
         $div_tablist.$div.attr('role', 'tablist');
         this.tablist = $div_tablist.$div;
         panelElement.$list_cars.append(this.tablist);
         this.$list_cars = panelElement.$list_cars;
         //--------------------------------------------------------
         // Алерты
-        //this.alert_on = new alert(panelElement.$alert_on);
-        //this.alert_from = new alert(panelElement.$alert_from);
+        this.alert = panelElement.alert;
+        this.$alert = panelElement.$alert;
         // Покажем элементы на форме
         this.$panel.append(panelElement.$element);
         //------------------------------------------------------------
@@ -220,7 +275,7 @@
         var FOCD = App.form_outgoing_cars_detali;
         this.form_outgoing_cars_detali = new FOCD('div#' + sel_focd);             // Создадим экземпляр
         this.form_outgoing_cars_detali.init({
-            alert: alert,
+            alert: this.alert,
             ids_wsd: null,
             ids_dir: null,
             fn_init: function (init) {
@@ -287,14 +342,22 @@
             return Number(a.outgoing_car_position) - Number(b.outgoing_car_position);
         });
         $.each(wagons, function (i, el) {
-            var $icon = (el.parent_wir_id ? $('<i class="fas fa-retweet" aria-hidden="true"></i>') : $('<i class="fas fa-train" aria-hidden="true"></i>'));
-            var $link = new this.fc_ui.el_a(el.outgoing_car_id, 'list-group-item list-group-item-action', '#', el.num, null, null);
+            var $icon = (el.outgoing_car_parent_wir_id ? $('<i class="fas fa-retweet" aria-hidden="true"></i>') : $('<i class="fas fa-train" aria-hidden="true"></i>'));
+            var $link = new this.fe_ui.a({
+                id: el.outgoing_car_id,
+                class: 'list-group-item list-group-item-action',
+                href: '#',
+                text: el.num,
+                target: null,
+                title: null,
+            });
+            //el.outgoing_car_id, 'list-group-item list-group-item-action', '#', el.num, null, null
             if ($link && $link.$alink && $link.$alink.length > 0) {
                 $link.$alink.attr('data-toggle', 'list');
                 $link.$alink.attr('role', 'tab');
                 $link.$alink.attr('aria-controls', '');
                 $link.$alink.prepend(' ').prepend($icon);
-                if (el.parent_wir_id) {
+                if (el.outgoing_car_parent_wir_id) {
                     $link.$alink.addClass('disabled');
                 } else {
                     $link.$alink.on('click', function (event) {
@@ -321,7 +384,6 @@
         var wagon = this.wagons.find(function (o) {
             return o.outgoing_car_id === id;
         });
-
         var wagons = this.wagons.filter(function (i) { return i.outgoing_car_position_outgoing !== null }).sort(function (a, b) {
             return b.outgoing_car_position_outgoing - a.outgoing_car_position_outgoing;
         });

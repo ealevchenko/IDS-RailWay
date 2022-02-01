@@ -2069,6 +2069,29 @@
             add_id(this.$div, this.settings.id);
         }
     };
+
+    //Элемент <a class="..." id="..." href='...' target="_blank">...</a>
+    form_element.prototype.a = function (options) {
+        this.settings = $.extend({
+            id: null,
+            class: null,
+            href: null,
+            text: null,
+            target: null,
+            title: null,
+        }, options);
+        this.$alink = $('<a></a>');
+        if (!this.$alink || this.$alink.length === 0) {
+            throw new Error('Не удалось создать элемент <a></a>');
+        } else {
+            add_id(this.$alink, this.settings.id);
+            add_class(this.$alink, this.settings.class);
+            add_title(this.$alink, this.settings.title);
+            append_label(this.$alink, this.settings.text);
+            add_tag(this.$alink, 'target', this.settings.target);
+            add_tag(this.$alink, 'href', this.settings.href);
+        }
+    };
     // Элемент <fieldset">
     //            <legend></legend>
     //            ...
@@ -2149,7 +2172,7 @@
             this.$input.prop('readonly', this.settings.readonly);
         }
     };
-
+    // Элемент <textarea rows=".." class=".." id=".." title=".." name="..".></textarea>
     form_element.prototype.textarea = function (options) {
         this.settings = $.extend({
             id: null,
@@ -2296,7 +2319,7 @@
         add_class(this.$div, this.settings.class);
         add_id(this.$div, this.settings.id);
     };
-    // Элемент <div class="row"></div>
+    // Элемент <div class="alert"></div>
     form_element.prototype.bs_alert = function (options) {
         this.settings = $.extend({
             class: null,
@@ -2308,6 +2331,50 @@
         add_class(this.$alert, this.settings.class);
         add_id(this.$alert, this.settings.id);
         this.alert = new alert_form(this.$alert);
+    };
+    // 
+    //<div class="card border-success mb-3">
+    //    <div class="card-header bg-transparent border-success">Header</div>
+    //    <div class="card-body text-success"></div>
+    //    <div class="card-footer bg-transparent border-success">Footer</div>
+    //</div>
+    form_element.prototype.bs_card = function (options) {
+        this.settings = $.extend({
+            id: null,
+            class_card: null,
+            header: true,
+            class_header: null,
+            class_body: null,
+            title_header: null,
+            footer: false,
+            class_footer: null,
+        }, options);
+
+        this.fe = new form_element();
+        var div_card = new this.fe.div({ class: 'card' });
+        this.$card = div_card.$div;
+        add_id(this.$card, this.settings.id);
+        add_class(this.$card, this.settings.class_card);
+
+        if (this.settings.header) {
+            var div_header = new this.fe.div({ class: 'card-header' });
+            this.$header = div_header.$div;
+            add_class(this.$header, this.settings.class_header);
+            append_label(this.$header, this.settings.title_header);
+            this.$card.append(this.$header);
+        }
+
+        var div_body = new this.fe.div({ class: 'card-body' });
+        this.$body = div_body.$div;
+        add_class(this.$body, this.settings.class_body);
+        this.$card.append(this.$body);
+
+        if (this.settings.footer) {
+            var div_footer = new this.fe.div({ class: 'card-footer' });
+            this.$footer = div_footer.$div;
+            add_class(this.$footer, this.settings.class_footer);
+            this.$card.append(this.$footer);
+        }
     };
     // Элемент <button>...</button>
     form_element.prototype.bs_button = function (options) {

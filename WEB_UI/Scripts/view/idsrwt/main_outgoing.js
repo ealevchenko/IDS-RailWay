@@ -11,7 +11,7 @@
             //'mess_load_reference': 'Загружаю справочники...',
             'mo_title_label_date': 'СОСТАВЫ ЗА ПЕРИОД :',
             'mo_title_label_station': 'СТАНЦИЯ ОТПРАВКИ:',
-            'mo_card_header_detali': 'ИНФОРМАЦИЯ ПО СОСТАВУ',
+/*            'mo_card_header_detali': 'ИНФОРМАЦИЯ ПО СОСТАВУ',*/
         },
         'en':  //default language: English
         {
@@ -28,8 +28,11 @@
     var ids_dir = new IDS_DIRECTORY();
     // Модуль инициализаии компонентов формы
     var FC = App.form_control;
+    var FE = App.form_element;
+
     var FIL = App.form_inline;
     var fc_ui = new FC();
+    var fe_ui = new FE();
     var alert = App.alert_form;
 
     var TOS = App.table_outgoing_sostav;
@@ -139,18 +142,31 @@
             });
 
             //
-            var row = new fc_ui.el_row();
-            var col = new fc_ui.el_col('xl', 12, 'mb-1 mt-1');
-            var card_panel = new fc_ui.el_card('border-secondary mb-1', '', '', langView('mo_card_header_detali', App.Langs));
-
-            row.$row.append(col.$col.append(card_panel.$card))
+            //var row = new fc_ui.el_row();
+            //var col = new fc_ui.el_col('xl', 12, 'mb-1 mt-1');
+            //var card_panel = new fe_ui.bs_card({
+            //    id: null,
+            //    class_card: 'border-secondary mb-1',
+            //    header: true,
+            //    class_header: null,
+            //    class_body: null,
+            //    title_header: langView('mo_card_header_detali', App.Langs),
+            //});
+            //var alert = new fe_ui.bs_alert({ class: null, id: null, })
+            //card_panel.$body.append(alert.$alert)
+            //row.$row.append(col.$col.append(card_panel.$card));
             // Окно детально
             form_detali.init({
-                alert: null,
+                alert: alert,
                 fn_init: function () {
                     var id = this.$card_detali_content.attr('id');
                     view_outgoing_cars = new VOC('div#' + id);
-                    view_outgoing_cars.init();
+                    view_outgoing_cars.init({
+                        alert: alert,
+                        ids_dir: null,
+                        ids_wsd: null,
+                        fn_init: null,
+                    });
                 }.bind(form_detali),
                 fn_open: function () {
                     view_outgoing_cars.open(table_outgoing_sostav.id_sostav)
