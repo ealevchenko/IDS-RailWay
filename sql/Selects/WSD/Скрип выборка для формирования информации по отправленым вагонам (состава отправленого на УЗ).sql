@@ -5,7 +5,15 @@ select
 	,out_car.[num]
 	,out_car.[position] as outgoing_car_position
 	--================= ИНФОРМАЦИЯ ПО ВАГОНУ ==========================================
-	-- Справочник вагона
+	-- Справочник вагона Directory_Wagons
+	-- администрация
+	,dir_wagon.id_countrys as wagon_id_countrys
+	,wag_dir_countrys.code_sng as wagon_wagon_adm				-- Код администрации [IDS].[Directory_Countrys] по справочнику [IDS].[Directory_Wagons]
+	,wag_dir_countrys.countrys_name_ru as wagon_adm_name_ru		-- Администрации [IDS].[Directory_Countrys] по справочнику [IDS].[Directory_Wagons]
+	,wag_dir_countrys.countrys_name_en as wagon_adm_name_en		-- Администрации [IDS].[Directory_Countrys] по справочнику [IDS].[Directory_Wagons]
+	,wag_dir_countrys.country_abbr_ru as wagon_adm_abbr_ru		-- Администрации [IDS].[Directory_Countrys] по справочнику [IDS].[Directory_Wagons]
+	,wag_dir_countrys.country_abbr_en as wagon_adm_abbr_en		-- Администрации [IDS].[Directory_Countrys] по справочнику [IDS].[Directory_Wagons]
+	--
 	,dir_wagon.date_rem_uz as wagon_date_rem_uz
 	,dir_wagon.gruzp as wagon_gruzp_uz	--> Грузоподъемность
 	,dir_wagon.tara as wagon_tara_uz
@@ -580,6 +588,8 @@ FROM [IDS].[OutgoingSostav] as out_sost
 		Left JOIN IDS.Directory_LimitingLoading as out_dir_limload ON out_wag_rent.id_limiting =  out_dir_limload.id
 		--> Справочник Собственник вагона по УЗ
 		Left JOIN [IDS].[Directory_OwnersWagons] as dir_owner ON dir_wagon.id_owner = dir_owner.id
+		--> Справочник строна (Администрация вагона по справочнику)
+		Left JOIN IDS.Directory_Countrys as wag_dir_countrys ON dir_wagon.id_countrys = wag_dir_countrys.id
 		--> Справочник строна (Администрация вагона по отправке)
 		Left JOIN IDS.Directory_Countrys as out_dir_countrys ON out_doc_vag.id_countrys = out_dir_countrys.id
 		--> Справочник Род вагона
