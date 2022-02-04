@@ -15,6 +15,10 @@
     // Определим язык
     App.Lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang'));
 
+
+    var min_err_create = -2; // TODO: Минимальная разница в часах создания строки и указаной даты выполнения
+    var max_err_create = 2; // TODO: Максимальная разница в часах создания строки и указаной даты выполнения
+
     // Массив текстовых сообщений 
     $.Text_View =
     {
@@ -138,16 +142,23 @@
 
             'fogcd_mess_valid_reason_discrepancy': 'Указанной причины расхождения нет в справочнике ИДС.',
             'fogcd_mess_valid_cause_detention': 'Указанной причины задержания нет в справочнике ИДС.',
+            'fogcd_mess_valid_not_cause_detention': 'Укажите причину задержания',
+            'fogcd_mess_valid_not_detention_start': 'Укажите начало задержания',
+            'fogcd_mess_valid_not_detention_stop': 'Укажите конец задержания',
+
             'fogcd_mess_valid_cause_return': 'Указанной причины возврата нет в справочнике ИДС.',
+
             'fogcd_mess_valid_cargo': 'Указанного груза нет в справочнике ИДС.',
             'fogcd_mess_valid_loading_devision': 'Указанного подразделения нет в справочнике ИДС.',
             'fogcd_mess_valid_name_station_to': 'Указанной станции нет в справочнике ИДС.',
             'fogcd_mess_warning_no_data_wagon_uz': 'По выбранному вагону нет данных в БД УЗ. (будут применены данный из справочника ИДС).',
 
+
             'fogcd_value_vagonnik': 'Разметил : {0}, Разметка : {1}',
 
             'fogcd_mess_init_panel': 'Инициализация модуля...',
             'fogcd_mess_load_db_uz': 'Обновляю информацию о вагоне с бд УЗ...',
+            'fogcd_mess_load_return_wagon': 'Поиск информации по возвратам',
 
             //'fhoogs_title_form_add': 'Сдать состав',
             //'fhoogs_title_form_edit': 'Править сданный состав',
@@ -776,7 +787,8 @@
                     icon_right: 'fa fa-save',
                     click: function (event) {
                         event.preventDefault();
-                    },
+                        this.action_save_detention()
+                    }.bind(this),
                 }
             };
             var bt_detention_edit = {
@@ -826,9 +838,9 @@
                         if (text) {
                             var obj = this.ids_dir.getDetention_Return_Of_CultureName('cause', text)
                             if (obj && obj.length > 0) {
-                                this.form.set_validation_object_ok('detention', 'cause_detention', "");
+                                this.form.set_validation_control_ok('detention', 'cause_detention', "");
                             } else {
-                                this.form.set_validation_object_error('detention', 'cause_detention', langView('fogcd_mess_valid_cause_detention', App.Langs));
+                                this.form.set_validation_control_error('detention', 'cause_detention', langView('fogcd_mess_valid_cause_detention', App.Langs));
                             }
                         } else {
 
@@ -1007,9 +1019,9 @@
                         if (text) {
                             var obj = this.ids_dir.getDetention_Return_Of_CultureName('cause', text)
                             if (obj && obj.length > 0) {
-                                this.form.set_validation_object_ok('return', 'cause_return', "");
+                                this.form.set_validation_control_ok('return', 'cause_return', "");
                             } else {
-                                this.form.set_validation_object_error('return', 'cause_return', langView('fogcd_mess_valid_cause_return', App.Langs));
+                                this.form.set_validation_control_error('return', 'cause_return', langView('fogcd_mess_valid_cause_return', App.Langs));
                             }
                         } else {
 
@@ -2055,6 +2067,7 @@
             });
         }.bind(this));
     }
+    //----------------------------------------------------------------
     // Очистить форму
     form_outgoing_cars_detali.prototype.clear_form = function () {
         this.out_clear();
@@ -2064,8 +2077,8 @@
             this.elements.input_text_num_cont_1.val('');
             this.elements.input_text_num_cont_2.val('');
             this.elements.input_datetime_date_outgoing_act.set(null); // уберем дату
-            this.elements.autocomplete_reason_discrepancy_amkr.set('');
-            this.elements.autocomplete_reason_discrepancy_uz.set('');
+            this.elements.autocomplete_reason_discrepancy_amkr.text('');
+            this.elements.autocomplete_reason_discrepancy_uz.text('');
             this.elements.input_text_adm_kod.val('');
             this.elements.input_text_rod_vag_abbr.val('');
             this.elements.input_text_gruzp_uz.val('');
@@ -2075,11 +2088,11 @@
 
             this.elements.textarea_condition_present.val('');
             // Задержание
-            this.elements.autocomplete_cause_detention.set('');
+            this.elements.autocomplete_cause_detention.text('');
             this.elements.input_datetime_detention_start.set(null); // уберем дату
             this.elements.input_datetime_detention_stop.set(null); // уберем дату
             // Возврат
-            this.elements.autocomplete_cause_return.set('');
+            this.elements.autocomplete_cause_return.text('');
             this.elements.input_datetime_return_start.set(null); // уберем дату
             this.elements.input_datetime_return_stop.set(null); // уберем дату
             this.elements.input_text_return_num_act.val('');
@@ -2088,11 +2101,11 @@
             //this.elements.table_return_cars.view(null) // Очистить таблицу возвратов
             // Данные о погрузке
             this.elements.checkbox_loaded_car.val(false);
-            this.elements.autocomplete_cargo_name.set('');
+            this.elements.autocomplete_cargo_name.text('');
             this.elements.input_text_loading_devision_code.val('');
-            this.elements.autocomplete_loading_devision.set('');
+            this.elements.autocomplete_loading_devision.text('');
             this.elements.input_text_code_station_to.val('');
-            this.elements.autocomplete_name_station_to.set('');
+            this.elements.autocomplete_name_station_to.text('');
             this.elements.input_text_owner_name.val('');
             this.elements.input_text_operator_name.val('');
             this.elements.input_text_limiting_loading_amkr.val('');
@@ -2169,8 +2182,8 @@
         this.elements.input_text_num_cont_1.val(wagon.outgoing_uz_vagon_cont_1_nom_cont);
         this.elements.input_text_num_cont_2.val(wagon.outgoing_uz_vagon_cont_2_nom_cont);
         this.elements.input_datetime_date_outgoing_act.val(wagon.outgoing_car_date_outgoing_act); // уберем дату
-        this.elements.autocomplete_reason_discrepancy_amkr.val(wagon['outgoing_car_reason_discrepancy_amkr_name_' + App.Lang]);
-        this.elements.autocomplete_reason_discrepancy_uz.val(wagon['outgoing_car_reason_discrepancy_uz_name_' + App.Lang]);
+        this.elements.autocomplete_reason_discrepancy_amkr.text(wagon['outgoing_car_reason_discrepancy_amkr_name_' + App.Lang]);
+        this.elements.autocomplete_reason_discrepancy_uz.text(wagon['outgoing_car_reason_discrepancy_uz_name_' + App.Lang]);
         //
         this.elements.input_text_adm_kod.val(adm_kod);
         this.elements.input_text_rod_vag_abbr.val(wagon['outgoing_uz_vagon_rod_abbr_' + App.Lang]);
@@ -2179,36 +2192,81 @@
         //
         this.elements.input_text_condition_arrival.val(wagon['arrival_uz_vagon_condition_abbr_' + App.Lang]);
         this.elements.input_text_condition_present.val(position ? wagon['last_operation_condition_' + App.Lang] : wagon['arrival_uz_vagon_condition_abbr_' + App.Lang]);
-        // Задержание
-        // Разметка
+        // -------------------------------------------
         var vagonik = wagon.outgoing_car_vagonnik_user ? wagon.outgoing_car_vagonnik_user : '';
         var vagonik_data = wagon.outgoing_car_vagonnik ? '(' + (wagon.outgoing_car_vagonnik ? moment(wagon.outgoing_car_vagonnik).format(format_datetime) : '') + ')' : '';
         var vagonik_note = wagon.outgoing_car_note_vagonnik ? wagon.outgoing_car_note_vagonnik : '';
-
         this.elements.textarea_condition_present.val(vagonik || vagonik_data || vagonik_note ? langView('fogcd_value_vagonnik', App.Langs).format(vagonik + vagonik_data, vagonik_note) : '-');
-        //
-        var id_outgoing_return_start = wagon.outgoing_car_id_outgoing_return_start
-        var id_outgoing_return_stop = wagon.outgoing_car_id_outgoing_return_stop
+        // ---------- ЗАДЕРЖАНИЯ ------------------------------------------------------------------------------------
+        var id_outgoing_detention = wagon.outgoing_car_id_outgoing_detention
+        // обновим состояние элементов
+        if (position === null) {
+            this.elements.button_detention_edit.hide();
+            this.elements.button_detention_save.hide();
+        } else {
+            if (id_outgoing_detention) {
+                if (wagon.outgoing_car_detention_date_stop === null) {
+                    this.elements.button_detention_edit.hide();
+                    this.elements.button_detention_save.show();
+                } else {
+                    this.elements.button_detention_edit.show();
+                    this.elements.button_detention_save.hide();
+                    // скроем элементы
+                    this.form.obj_form.validations[1].$elements.each(function () {
+                        this.prop('disabled', true);
+                    });
+                }
+            } else {
+                this.elements.button_detention_edit.hide();
+                this.elements.button_detention_save.show();
+            }
+        }
+        //this.elements.autocomplete_cause_detention.text(wagon['outgoing_car_detention_cause_' + App.Lang]);
+        this.elements.autocomplete_cause_detention.val(wagon.outgoing_car_id_detention_return);
+        this.elements.input_datetime_detention_start.set(wagon.outgoing_car_detention_date_start); // уберем дату
+        this.elements.input_datetime_detention_stop.set(wagon.outgoing_car_detention_date_stop); // уберем дату
+        // ---------- ВОЗВРАТЫ ------------------------------------------------------------------------------------
+        // Найдем все возвраты
+        LockScreen(langView('fogcd_mess_load_return_wagon', App.Langs));
+        var current_return_wagons = null;
+        this.ids_wsd.getOutgoingDetentionReturnOfNum(wagon.num, function (return_wagons) {
+            if (return_wagons && return_wagons.length > 0) {
+                current_return_wagons = return_wagons.find(function (o) {
+                    return o.date_stop === null;
+                });
+            }
+            // обновим состояние элементов
+            if (position === null) {
+                this.elements.button_return_open.hide();
+                this.elements.button_return_close.hide()
+            } else {
+                if (current_return_wagons) {
+                    // Показать возврат
+                    this.elements.button_return_open.hide();
+                    this.elements.button_return_close.show();
+                    this.elements.autocomplete_cause_return.val(current_return_wagons.id_detention_return);
+                    this.elements.input_datetime_return_start.set(current_return_wagons.date_start); // уберем дату
+                    this.elements.input_datetime_return_stop.set(current_return_wagons.date_stop); // уберем дату
+                    this.elements.input_text_return_num_act.val(current_return_wagons.num_act);
+                    this.elements.input_datetime_return_date_act.set(current_return_wagons.date_act); // уберем дату
+                    this.elements.textarea_return_note.val(current_return_wagons.note);
+                } else {
+                    this.elements.button_return_open.show();
+                    this.elements.button_return_close.hide();
+                };
+            };
+            LockScreenOff();
+        }.bind(this));
 
-        this.elements.autocomplete_cause_detention.set('');
-        this.elements.input_datetime_detention_start.set(null); // уберем дату
-        this.elements.input_datetime_detention_stop.set(null); // уберем дату
-        
-        // Возврат
-        this.elements.autocomplete_cause_return.set('');
-        this.elements.input_datetime_return_start.set(null); // уберем дату
-        this.elements.input_datetime_return_stop.set(null); // уберем дату
-        this.elements.input_text_return_num_act.val('');
-        this.elements.input_datetime_return_date_act.set(null); // уберем дату
-        this.elements.textarea_return_note.val('');
+
         //this.elements.table_return_cars.view(null) // Очистить таблицу возвратов
         // Данные о погрузке
         this.elements.checkbox_loaded_car.val(false);
-        this.elements.autocomplete_cargo_name.set('');
+        this.elements.autocomplete_cargo_name.text('');
         this.elements.input_text_loading_devision_code.val('');
-        this.elements.autocomplete_loading_devision.set('');
+        this.elements.autocomplete_loading_devision.text('');
         this.elements.input_text_code_station_to.val('');
-        this.elements.autocomplete_name_station_to.set('');
+        this.elements.autocomplete_name_station_to.text('');
         this.elements.input_text_owner_name.val('');
         this.elements.input_text_operator_name.val('');
         this.elements.input_text_limiting_loading_amkr.val('');
@@ -2265,21 +2323,21 @@
         this.clear_form();
         // Переведем все компоненты в режим disabled
         // Общие компоненты
-        this.form.bt_hide('present_car');
-        this.form.bt_show('return_car');
-        this.form.bt_hide('car_return');
+        this.elements.button_present_car.hide();
+        this.elements.button_return_car.show();
+        this.elements.button_car_return.hide();
         this.form.obj_form.validations[0].$elements.each(function () {
             this.prop('disabled', true);
         });
         //-- Задержание
-        this.form.bt_hide('detention_save');
-        this.form.bt_hide('detention_edit');
+        this.elements.button_detention_edit.hide();
+        this.elements.button_detention_save.hide();
         this.form.obj_form.validations[1].$elements.each(function () {
             this.prop('disabled', true);
         });
         //-- Возврат
-        this.form.bt_hide('return_open');
-        this.form.bt_hide('return_close');
+        this.elements.button_return_open.hide();
+        this.elements.button_return_close.hide();
         this.form.obj_form.validations[2].$elements.each(function () {
             this.prop('disabled', true);
         });
@@ -2290,26 +2348,103 @@
         this.clear_form();
         // Переведем все компоненты в режим disabled
         // Общие компоненты
-        this.form.bt_show('present_car');
-        this.form.bt_hide('return_car');
-        this.form.bt_show('car_return');
-        this.form.obj_form.validations[0].$elements.find('.inp-manual').each(function () {
-            this.prop('disabled', false);
+        this.elements.button_present_car.show();
+        this.elements.button_return_car.hide();
+        this.elements.button_car_return.show();
+        this.form.obj_form.validations[0].$elements.each(function () {
+            if (this.is('.inp-manual')) {
+                this.prop('disabled', false);
+            };
         });
         //-- Задержание
-        this.form.bt_hide('detention_save');
-        this.form.bt_hide('detention_edit');
+        this.elements.button_detention_edit.hide();
+        this.elements.button_detention_save.hide();
         this.form.obj_form.validations[1].$elements.each(function () {
-            this.prop('disabled', true);
+            //this.prop('disabled', true);
+            if (this.is('.inp-manual')) {
+                this.prop('disabled', false);
+            };
         });
         //-- Возврат
-        this.form.bt_hide('return_open');
-        this.form.bt_hide('return_close');
+        this.elements.button_return_open.hide();
+        this.elements.button_return_close.hide();
         this.form.obj_form.validations[2].$elements.each(function () {
-            this.prop('disabled', true);
+            //this.prop('disabled', true);
+            if (this.is('.inp-manual')) {
+                this.prop('disabled', false);
+            };
         });
     }
+    //----------------------------------------------------------------
+    // Валидация формы задержания
+    form_outgoing_cars_detali.prototype.validation_wagon_detention = function () {
+        this.form.validation_detention.clear_all();
+        var valid = true;
+        valid = valid & this.form.validation_detention.check_control_autocomplete(this.elements.autocomplete_cause_detention, langView('fogcd_mess_valid_cause_detention', App.Langs), '', langView('fogcd_mess_valid_not_cause_detention', App.Langs), true);
+        // Проверка на время начало и конца
+        var valid_start = this.form.validation_detention.check_control_datetime_input(this.elements.input_datetime_detention_start,langView('fogcd_mess_valid_not_detention_start', App.Langs),'', true);
+        var valid_stop = this.form.validation_detention.check_control_datetime_input(this.elements.input_datetime_detention_stop, langView('fogcd_mess_valid_not_detention_stop', App.Langs),'', true);
+        // Проверим временные интервалы 120<start<120
+        if (valid_start && valid_stop) {
+            var current = moment();
+            var detention_start = moment(this.elements.input_datetime_detention_start.val());
+            var hour = current.diff(detention_start, 'hours');
 
+            var return_stop = moment(this.elements.input_datetime_detention_stop.val());
+
+
+        }
+
+        //var detention_start = moment(this.elements.input_datetime_detention_start.val());
+        //if (!detention_start.isValid()) {
+        //    valid = false;
+        //    this.form.set_validation_object_error('detention', 'detention_start', langView('fogcd_mess_valid_not_detention_start', App.Langs));
+        //}
+        //var return_stop = moment(this.elements.input_datetime_detention_stop.val());
+        //if (!return_stop.isValid()) {
+        //    valid = false;
+        //    this.form.set_validation_object_error('detention', 'detention_stop', langView('fogcd_mess_valid_not_detention_stop', App.Langs));
+        //}
+        var current = moment();
+
+        //if (detention_start && return_stop && detention_start.isValid() && return_stop.isValid()) {
+        //    var hour = detention_start.diff(return_stop, 'hours');
+        //    if (hour >= max_err_create || hour <= min_err_create) {
+        //        this.form.set_validation_object_error('detention', 'cause_detention', langView('fogcd_mess_valid_not_cause_detention', App.Langs));
+        //    }
+        //}
+
+        //var val_det = cars_detali.val_outgoing_car_detention.checkInputOfNull(cars_detali.cause_detention, "Укажите причину задержания");
+        //valid = valid & val_det;
+        //if (val_det) {
+        //    valid = valid & cars_detali.view_cause_detention_manual(cars_detali.cause_detention.val());
+        //}
+        //valid = valid & cars_detali.val_outgoing_car_detention.checkInputOfNull(cars_detali.detention_start.obj, "Укажите время начало задержания");
+        //valid = valid & cars_detali.val_outgoing_car_detention.checkInputOfNull(cars_detali.detention_stop.obj, "Укажите время конца задержания");
+        //if (valid) {
+        //    var start = moment(cars_detali.detention_start.getDateTime());
+        //    var stop = moment(cars_detali.detention_stop.getDateTime());
+        //    if (start.isBefore(stop)) {  //|| !start.isSame(stop)
+        //        valid = valid & true;
+        //    } else {
+        //        cars_detali.val_outgoing_car_detention.set_object_error(cars_detali.detention_start.obj, "Время начала должно быть меньше времени конца.");
+        //        cars_detali.val_outgoing_car_detention.set_object_error(cars_detali.detention_stop.obj, "Время начала должно быть меньше времени конца.");
+        //        valid = valid & false;
+        //    }
+        //}
+        return valid;
+    },
+
+        //----------------------------------------------------------------
+        // Выполнить операцию сохранить задержание
+        form_outgoing_cars_detali.prototype.action_save_detention = function () {
+            this.elements.button_detention_save.prop("disabled", true); // сделаем не активной
+            var valid = this.validation_wagon_detention();
+
+            this.elements.button_detention_save.prop("disabled", false); // сделаем не активной
+        };
+    //----------------------------------------------------------------
+    // Очистить сообщения об ошибках
     form_outgoing_cars_detali.prototype.out_clear = function () {
         if (this.settings.alert) {
             this.settings.alert.clear_message()

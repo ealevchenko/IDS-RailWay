@@ -523,6 +523,78 @@
         });
     };
 
+    //================= ОТПРАВКА ВАГОНОВ НА УЗ (Задержания и возвраты) =========================================================
+    //======= OutgoingDetentionReturn (Таблица задержаных-возвращеных вагонов) ======================================
+    // Получить все задержания и возвраты
+    ids_wsd.prototype.getOutgoingDetentionReturn = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/outgoing_detention_return/all',
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getOutgoingDetentionReturn", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить вагоны по id задержания и возврата
+    ids_wsd.prototype.getOutgoingDetentionReturnOfID = function (id, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/outgoing_detention_return/id/' + id,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getOutgoingDetentionReturnOfID", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить все задержания и возвраты по номеру вагона 
+    ids_wsd.prototype.getOutgoingDetentionReturnOfNum = function (num, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/outgoing_detention_return/num/' + num,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getOutgoingDetentionReturnOfNum", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
     App.ids_wsd = ids_wsd;
 
     window.App = App;

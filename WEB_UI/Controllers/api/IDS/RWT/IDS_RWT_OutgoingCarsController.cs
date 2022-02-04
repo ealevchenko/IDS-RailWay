@@ -194,9 +194,16 @@ namespace WEB_UI.Controllers.api
         public DateTime? outgoing_car_date_outgoing_act { get; set; }
         public DateTime? outgoing_car_outgoing { get; set; }
         public string outgoing_car_outgoing_user { get; set; }
+        //public int? outgoing_car_id_outgoing_detention { get; set; }
+        //public string outgoing_car_detention_cause_ru { get; set; }
+        //public string outgoing_car_detention_cause_en { get; set; }
         public int? outgoing_car_id_outgoing_detention { get; set; }
+        public int? outgoing_car_id_detention_return { get; set; }
         public string outgoing_car_detention_cause_ru { get; set; }
         public string outgoing_car_detention_cause_en { get; set; }
+        public int? outgoing_car_detention_type_detention_return { get; set; }
+        public DateTime? outgoing_car_detention_date_start { get; set; }
+        public DateTime? outgoing_car_detention_date_stop { get; set; }
         public int? outgoing_car_id_reason_discrepancy_amkr { get; set; }
         public string outgoing_car_reason_discrepancy_amkr_name_ru { get; set; }
         public string outgoing_car_reason_discrepancy_amkr_name_en { get; set; }

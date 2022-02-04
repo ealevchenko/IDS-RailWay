@@ -385,6 +385,7 @@
             this.$element.autocomplete("option", "source", this.alist);
             this.val(value);
         };
+        // вернуть value
         this.val = function (value) {
             if (value !== undefined) {
                 var text_out = value;
@@ -402,13 +403,21 @@
                 return select ? select.value : null;
             };
         };
-        this.set = function (value) {
-            if (value !== undefined && value !== null) {
-                this.$element.val(value);
+        // вернуть техт
+        this.text = function (text) {
+            if (text !== undefined) {
+                this.$element.val(text);
             } else {
-                this.$element.val('');
-            }
+                return this.$element.val();
+            };
         };
+        //this.set = function (value) {
+        //    if (value !== undefined && value !== null) {
+        //        this.$element.val(value);
+        //    } else {
+        //        this.$element.val('');
+        //    }
+        //};
         this.destroy = function (data) {
             this.$element.autocomplete("destroy");
         };
@@ -3351,14 +3360,46 @@
                 validation_name = 'common';
             }
             if (this['validation_' + validation_name]) {
+                this['validation_' + validation_name].set_object_error(element.$element, message);
+            }
+        } else {
+            throw new Error('Не удалось найти элемент ' + id);
+        }
+    };
+    // Вывести на форме сообщение об успехе под элементом 
+    form_dialog.prototype.set_validation_object_ok = function (validation_name, id, message) {
+        var element = this.obj_form.views.find(function (o) {
+            return o.name === id;
+        });
+        if (element) {
+            if (!validation_name) {
+                validation_name = 'common';
+            }
+            if (this['validation_' + validation_name]) {
+                this['validation_' + validation_name].set_object_ok(element.$element, message);
+            }
+        } else {
+            throw new Error('Не удалось найти элемент ' + id);
+        }
+    };
+    // Вывести на форме сообщение об ошибке под элементом и на Alert
+    form_dialog.prototype.set_validation_control_error = function (validation_name, id, message) {
+        var element = this.obj_form.views.find(function (o) {
+            return o.name === id;
+        });
+        if (element) {
+            if (!validation_name) {
+                validation_name = 'common';
+            }
+            if (this['validation_' + validation_name]) {
                 this['validation_' + validation_name].set_control_error(element.$element, message);
             }
         } else {
             throw new Error('Не удалось найти элемент ' + id);
         }
     };
-    // Вывести на форме сообщение об ошибке под элементом 
-    form_dialog.prototype.set_validation_object_ok = function (validation_name, id, message) {
+    // Вывести на форме сообщение об успехе под элементом и на Alert
+    form_dialog.prototype.set_validation_control_ok = function (validation_name, id, message) {
         var element = this.obj_form.views.find(function (o) {
             return o.name === id;
         });
@@ -3529,7 +3570,10 @@
         if (obj) {
             obj.removeClass('is-valid is-invalid');
         } else {
-            this.settings.elements.removeClass('is-valid is-invalid');
+            this.settings.elements.each(function () {
+                this.removeClass('is-valid is-invalid').nextAll(".invalid-feedback").text('');
+            });
+
         }
     };
     // Очистить сообщения
@@ -3606,6 +3650,40 @@
         this.out_info_message(mes_ok);
         return true;
     };
+    // --------------------------------------------------------------------------
+    // Проверить элемент "autocomplete" на введенное значение
+    validation_form.prototype.check_control_autocomplete = function (o, mes_error, mes_ok, mes_null, out_message) {
+        if (o.text()) {
+            if (o.val()) {
+                this.set_control_ok(o.$element, mes_ok);
+                if (out_message) this.out_info_message(mes_ok);
+                return true;
+            } else {
+                this.set_control_error(o.$element, mes_error);
+                if (out_message) this.out_error_message(mes_error);
+                return false;
+            }
+        } else {
+            this.set_control_error(o.$element, mes_null);
+            if (out_message) this.out_error_message(mes_null);
+            return false;
+        }
+    };
+    // Проверить элемент "datetime_input" на введенное значение
+    validation_form.prototype.check_control_datetime_input = function (o, mes_error, mes_ok, out_message) {
+        var datetime = moment(o.val());
+        if (!datetime.isValid()) {
+            this.set_control_error(o.$element, mes_error);
+            if (out_message) this.out_error_message(mes_error);
+            return false;
+        } else {
+            this.set_control_ok(o.$element, mes_ok);
+            if (out_message) this.out_info_message(mes_ok);
+            return true;
+        }
+    };
+
+
 
     App.validation_form = validation_form;
 

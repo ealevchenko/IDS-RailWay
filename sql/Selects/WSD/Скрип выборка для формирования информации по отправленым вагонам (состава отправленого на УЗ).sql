@@ -231,10 +231,14 @@ select
 	,out_car.[date_outgoing_act] as outgoing_car_date_outgoing_act									-- сдан по акту
 	,out_car.[outgoing] as outgoing_car_outgoing													-- вагон был сдан (дата и время)
 	,out_car.[outgoing_user] as outgoing_car_outgoing_user											-- вагон был сдан (пользователь)
-	--> ПРИЧИНА ЗАДЕРЖАНИЯ [IDS].[Directory_DetentionReturn]
-	,out_car.[id_outgoing_detention] as outgoing_car_id_outgoing_detention							-- id строки задержание [IDS].[Directory_DetentionReturn] по отправке [IDS].[OutgoingCars]
-	,out_dir_dr.[cause_ru] as outgoing_car_detention_cause_ru										-- Задержание [IDS].[Directory_DetentionReturn] по отправке [IDS].[OutgoingCars]
-	,out_dir_dr.[cause_en] as outgoing_car_detention_cause_en										-- Задержание [IDS].[Directory_DetentionReturn] по отправке [IDS].[OutgoingCars]
+	--> ПРИЧИНА ЗАДЕРЖАНИЯ [IDS].[OutgoingDetentionReturn]
+	,out_car.[id_outgoing_detention] as outgoing_car_id_outgoing_detention							-- id строки задержание [IDS].[OutgoingDetentionReturn] по отправке [IDS].[OutgoingCars]
+	,out_detect_return.id_detention_return as outgoing_car_id_detention_return						-- id строки описания задержания [IDS].[Directory_Reason_Discrepancy] по строку задержания [IDS].[OutgoingDetentionReturn]
+	,out_dir_dr.[cause_ru] as outgoing_car_detention_cause_ru										-- Задержание [IDS].[Directory_DetentionReturn] по строку задержания [IDS].[OutgoingDetentionReturn]]
+	,out_dir_dr.[cause_en] as outgoing_car_detention_cause_en										-- Задержание [IDS].[Directory_DetentionReturn] по строку задержания [IDS].[OutgoingDetentionReturn]
+	,out_detect_return.[type_detention_return] as outgoing_car_detention_type_detention_return		-- Тип задержания [IDS].[OutgoingDetentionReturn] по строку задержания [IDS].[OutgoingDetentionReturn]
+	,out_detect_return.[date_start] as outgoing_car_detention_date_start							-- Дата начала задержания [IDS].[OutgoingDetentionReturn] по строку задержания [IDS].[OutgoingDetentionReturn]
+	,out_detect_return.[date_stop] as outgoing_car_detention_date_stop								-- Дата конца задержания [IDS].[OutgoingDetentionReturn] по строку задержания [IDS].[OutgoingDetentionReturn]
 	--> ПРИЧИНА НЕСООТВЕТСВИЯ [Directory_Reason_Discrepancy]
 	,out_car.[id_reason_discrepancy_amkr] as outgoing_car_id_reason_discrepancy_amkr				-- id строки несоответсвия АМКР [IDS].[Directory_Reason_Discrepancy] по отправке [IDS].[OutgoingCars]
 	,out_dir_rd_amkr.[reason_discrepancy_name_ru] as outgoing_car_reason_discrepancy_amkr_name_ru	-- Несоответсвие АМКР [IDS].[Directory_Reason_Discrepancy] по отправке [IDS].[OutgoingCars]
@@ -620,18 +624,18 @@ FROM [IDS].[OutgoingSostav] as out_sost
 		Left JOIN [IDS].[Directory_CargoGNG] as arr_dir_cargo_gng ON arr_doc_vag.id_cargo_gng = arr_dir_cargo_gng.id
 		--> Справочник Грузов ГНГ по отправке
 		Left JOIN [IDS].[Directory_CargoGNG] as out_dir_cargo_gng ON out_doc_vag.id_cargo_gng = out_dir_cargo_gng.id
-
-		--> Справочник Задержаний 
-		Left JOIN [IDS].[Directory_DetentionReturn] as out_dir_dr ON out_car.id_outgoing_detention = out_dir_dr.id
+		--> Справочник задержаний (подробно)
+		Left JOIN [IDS].[OutgoingDetentionReturn] as out_detect_return ON out_car.[id_outgoing_detention] = out_detect_return.id
+		--> Справочник перечня задержаний 
+		Left JOIN [IDS].[Directory_DetentionReturn] as out_dir_dr ON out_detect_return.[id_detention_return] = out_dir_dr.id
 		--> Справочник несоответсвий АМКР		
 		Left JOIN [IDS].[Directory_Reason_Discrepancy] as out_dir_rd_amkr ON out_car.id_reason_discrepancy_amkr = out_dir_rd_amkr.id
 		--> Справочник несоответсвий АМКР		
 		Left JOIN [IDS].[Directory_Reason_Discrepancy] as out_dir_rd_uz ON out_car.id_reason_discrepancy_uz = out_dir_rd_uz.id
-		--> Справочник возврата начала
-		Left JOIN [IDS].[OutgoingDetentionReturn] as out_detect_return_start ON out_car.id_reason_discrepancy_amkr = out_detect_return_start.id
-		--> Справочник возврата стоп
-		Left JOIN [IDS].[OutgoingDetentionReturn] as out_detect_return_stop ON out_car.id_reason_discrepancy_uz = out_detect_return_stop.id
-
+		--> Справочник возврата начала (подробно)
+		Left JOIN [IDS].[OutgoingDetentionReturn] as out_detect_return_start ON out_car.id_outgoing_return_start = out_detect_return_start.id
+		--> Справочник возврата стоп (подробно)
+		Left JOIN [IDS].[OutgoingDetentionReturn] as out_detect_return_stop ON out_car.id_outgoing_return_stop = out_detect_return_stop.id
 		--> Справочник Возврата начало 
 		Left JOIN [IDS].[Directory_DetentionReturn] as out_dir_dr_start ON out_detect_return_start.id_detention_return = out_dir_dr_start.id
 		--> Справочник Возврата начало 
@@ -708,5 +712,6 @@ FROM [IDS].[OutgoingSostav] as out_sost
 WHERE 
 
 --out_sost.id =51208 
-out_sost.id =138457 
+--out_sost.id =138457 
+out_sost.id =107420
 order by out_car.position
