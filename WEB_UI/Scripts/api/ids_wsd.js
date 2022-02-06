@@ -594,6 +594,31 @@
             },
         });
     };
+    //Операция добавить или обновить задержание вагона
+    ids_wsd.prototype.postUpdateOutgoingDetention = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/operation/detention/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postUpdateOutgoingDetention", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
 
     App.ids_wsd = ids_wsd;
 

@@ -3434,6 +3434,7 @@ IDS_RWT.prototype.putOutgoingDetentionReturn = function (obj, callback) {
         },
     });
 };
+//TODO:Отключить после переделки outgoing.js перенесен в ids_wsd.js
 //Операция добавить или обновить задержание 
 IDS_RWT.prototype.postUpdateOutgoingDetention = function (operation_detention, callback) {
     $.ajax({
