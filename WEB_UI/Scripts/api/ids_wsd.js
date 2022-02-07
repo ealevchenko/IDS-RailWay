@@ -499,7 +499,7 @@
     };
 
     //================= ОТПРАВКА ВАГОНОВ НА УЗ (Вагоны) =========================================================
-    // Получить все составы (View)
+    // Получить все вагоны состава для отправки по id состава (View)
     ids_wsd.prototype.getViewOutgoingCarsOfIDSostav = function (id, callback) {
         $.ajax({
             type: 'GET',
@@ -516,6 +516,29 @@
             },
             error: function (x, y, z) {
                 OnAJAXError("ids_wsd.getViewOutgoingCarsOfIDSostav", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // вагонs состава для отправки по id вагона (View)
+    ids_wsd.prototype.getViewOutgoingCarsOfIDCar = function (id, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/outgoing_cars/view/car/id/' + id,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getViewOutgoingCarsOfIDCar", x, y, z);
             },
             complete: function () {
                 AJAXComplete();
@@ -613,6 +636,56 @@
             error: function (x, y, z) {
                 LockScreenOff();
                 OnAJAXError("ids_wsd.postUpdateOutgoingDetention", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //Операция открыть возврат по вагону 
+    ids_wsd.prototype.postOpenOutgoingReturn = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/operation/open_return/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postOpenOutgoingReturn", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //Операция закрыть возврат по вагону
+    ids_wsd.prototype.postCloseOutgoingReturn = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/operation/close_return/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postCloseOutgoingReturn", x, y, z);
             },
             complete: function () {
                 AJAXComplete();

@@ -3460,6 +3460,7 @@ IDS_RWT.prototype.postUpdateOutgoingDetention = function (operation_detention, c
         },
     });
 };
+//TODO:Отключить после переделки outgoing.js перенесен в ids_wsd.js
 //Операция открыть возврат 
 IDS_RWT.prototype.postOpenOutgoingReturn = function (operation_return, callback) {
     $.ajax({
@@ -3485,6 +3486,7 @@ IDS_RWT.prototype.postOpenOutgoingReturn = function (operation_return, callback)
         },
     });
 };
+//TODO:Отключить после переделки outgoing.js перенесен в ids_wsd.js
 //Операция закрыть возврат 
 IDS_RWT.prototype.postCloseOutgoingReturn = function (operation_return, callback) {
     $.ajax({
