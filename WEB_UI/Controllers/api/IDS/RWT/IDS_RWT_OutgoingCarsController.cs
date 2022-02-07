@@ -707,6 +707,23 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // GET: api/ids/rwt/outgoing_cars/view/car/id/6
+        [Route("view/car/id/{id:int}")]
+        [ResponseType(typeof(ViewOutgoingCars))]
+        public IHttpActionResult GetViewOutgoingCarsOfIDCar(int id)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter p_id = new System.Data.SqlClient.SqlParameter("@id_car", id);
+                string sql = "select * from [IDS].[get_view_outgoing_cars_of_id_car](@id_car)";
+                ViewOutgoingCars result = this.ef_ids.Database.SqlQuery<ViewOutgoingCars>(sql, p_id).FirstOrDefault();
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
         // GET: api/ids/rwt/outgoing_cars/num/63303077
         [Route("num/{num:int}")]
         [ResponseType(typeof(OutgoingCars))]
