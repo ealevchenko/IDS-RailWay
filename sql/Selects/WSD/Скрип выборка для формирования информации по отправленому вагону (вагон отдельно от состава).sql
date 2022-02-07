@@ -539,9 +539,9 @@ select
 	,let_station_uz.station as instructional_letters_station_name
 	,il.[note] as instructional_letters_note
 	--into view_outgoing_cars
-FROM [IDS].[OutgoingSostav] as out_sost
-		--> Отправка вагона
-		Left JOIN [IDS].[OutgoingCars] as out_car ON out_sost.id = out_car.id_outgoing
+	FROM [IDS].[OutgoingCars] as out_car
+		--> Отправка состава
+		Left JOIN [IDS].[OutgoingSostav] as out_sost ON out_sost.id = out_car.id_outgoing
 		--==== ТЕКУЩЕЕ ПЕРЕМЕЩЕНИЕ ================================================================
 		--> Текущее внетренее перемещение
 		Left JOIN IDS.WagonInternalRoutes as wir ON out_car.id = wir.[id_outgoing_car]
@@ -711,7 +711,5 @@ FROM [IDS].[OutgoingSostav] as out_sost
 		Left JOIN [IDS].[Directory_PayerSender] as out_payer_sender ON out_doc_sostav.[code_payer] = out_payer_sender.[code]
 WHERE 
 
---out_sost.id =51208 
---out_sost.id =138457 
-out_sost.id =107420
+out_car.id = 429193
 order by out_car.position
