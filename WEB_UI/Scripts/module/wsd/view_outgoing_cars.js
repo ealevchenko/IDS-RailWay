@@ -261,7 +261,8 @@
             fn_select_rows: function (rows) {
                 if (rows && rows.length > 0) {
                     LockScreen(langView('vogc_mess_load_vagon_detali', App.Langs));
-                    this.form_outgoing_cars_detali.wagon_detali(rows[0], null);
+                    var id = rows[0].outgoing_car_id;
+                    this.view_car_detali(id, { type: 0 }); // Показать выбраный вагон в режиме просмотр
                 }
             }.bind(this),
             fn_init: function (init) {
@@ -364,7 +365,7 @@
                         event.preventDefault();
                         // Обработать выбор
                         var id = Number($(event.currentTarget).attr('id'));
-                        this.view_car_detali(id);
+                        this.view_car_detali(id, { type: 1 }); // Показать выбраный вагон в режиме "правка"
                     }.bind(this));
                 }
                 this.tablist.append($link.$alink);
@@ -378,17 +379,26 @@
         wagons = this.table_outgoing_cars.filter_wagons(wagons);
         this.table_outgoing_cars.view(wagons, null, null);
     };
-
-    view_outgoing_cars.prototype.view_car_detali = function (id) {
+    // Показать вагон детально
+    view_outgoing_cars.prototype.view_car_detali = function (id, options) {
         LockScreen(langView('vogc_mess_load_vagon_detali', App.Langs));
-        var wagon = this.wagons.find(function (o) {
-            return o.outgoing_car_id === id;
-        });
-        var wagons = this.wagons.filter(function (i) { return i.outgoing_car_position_outgoing !== null }).sort(function (a, b) {
-            return b.outgoing_car_position_outgoing - a.outgoing_car_position_outgoing;
-        });
-        var position = wagons && wagons.length > 0 ? wagons[0].outgoing_car_position_outgoing + 1 : 1;
-        this.form_outgoing_cars_detali.wagon_detali(wagon, position);
+        if (options && options.type != null) {
+            if (options.type === 1) {
+                // Наполняем дополнительной информацией
+                // Определим следующую позицию
+                var wagons = this.wagons.filter(function (i) { return i.outgoing_car_position_outgoing !== null }).sort(function (a, b) {
+                    return b.outgoing_car_position_outgoing - a.outgoing_car_position_outgoing;
+                });
+                options.position = wagons && wagons.length > 0 ? wagons[0].outgoing_car_position_outgoing + 1 : 1;
+            }
+            this.form_outgoing_cars_detali.wagon_detali(id, options);
+        }
+
+        //var wagon = this.wagons.find(function (o) {
+        //    return o.outgoing_car_id === id;
+        //});
+
+
     };
     //--------------------------------------------------------------------------------
     // Показать
