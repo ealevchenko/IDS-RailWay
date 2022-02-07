@@ -86,8 +86,8 @@
         this.enable = function () {
             this.$element.prop("disabled", false);
         };
-        this.disable = function () {
-            this.$element.val(-1);
+        this.disable = function (clear) {
+            if (clear) this.$element.val(-1);
             this.$element.prop("disabled", true);
         };
         this.init();
@@ -121,8 +121,8 @@
         this.enable = function () {
             this.$element.prop("disabled", false);
         };
-        this.disable = function () {
-            this.$element.val('');
+        this.disable = function (clear) {
+            if (clear) this.$element.val('');
             this.$element.prop("disabled", true);
         };
         this.init();
@@ -187,6 +187,7 @@
         };
         this.set = function (datetime) {
             if (datetime !== null) {
+                var ms = moment(datetime).format('DD.MM.YYYY' + (time ? ' HH:mm' : ''));
                 this.$element.data('dateRangePicker').setDateRange(moment(datetime).format('DD.MM.YYYY' + (time ? ' HH:mm' : '')), moment(datetime).format('DD.MM.YYYY' + (time ? ' HH:mm' : '')), true);
             } else {
                 // Установить текущую дату и время
@@ -215,8 +216,8 @@
         this.enable = function () {
             this.$element.prop("disabled", false);
         };
-        this.disable = function () {
-            this.set(null);
+        this.disable = function (clear) {
+            if (clear) this.set(null);
             this.$element.prop("disabled", true);
         };
         this.destroy = function () {
@@ -433,9 +434,9 @@
             this.$element.autocomplete("enable");
             this.$element.prop("disabled", false);
         };
-        this.disable = function () {
+        this.disable = function (clear) {
             this.$element.autocomplete("disable");
-            this.$element.val('');
+            if (clear) this.$element.val('');
             this.$element.prop("disabled", true);
         };
         this.init();
@@ -3682,7 +3683,26 @@
             return true;
         }
     };
+    // Проверить элемент "datetime_input" на введенное значение (с подержкой пустого значения)
+    validation_form.prototype.check_control_datetime_input_null = function (o, mes_error, mes_ok, out_message) {
+        if (o.val() !== null && o.val() !== '') {
+            var datetime = moment(o.val());
+            if (!datetime.isValid()) {
+                this.set_control_error(o.$element, mes_error);
+                if (out_message) this.out_error_message(mes_error);
+                return false;
+            } else {
+                this.set_control_ok(o.$element, mes_ok);
+                if (out_message) this.out_info_message(mes_ok);
+                return true;
+            }
+        } else {
+                this.set_control_ok(o.$element, mes_ok);
+                if (out_message) this.out_info_message(mes_ok);
+                return true;
+        }
 
+    };
 
 
     App.validation_form = validation_form;
