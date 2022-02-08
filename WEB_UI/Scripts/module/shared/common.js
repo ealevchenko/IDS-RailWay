@@ -2212,6 +2212,23 @@
             this.$textarea.prop('readonly', this.settings.readonly);
         }
     };
+    // Элемент <textarea rows=".." class=".." id=".." title=".." name="..".></textarea>
+    form_element.prototype.table = function (options) {
+        this.settings = $.extend({
+            id: null,
+            class: null,
+            title: null,
+        }, options);
+        this.$table = $('<table></table>');
+
+        if (!this.$table || this.$table.length === 0) {
+            throw new Error('Не удалось создать элемент <table></table>');
+        } else {
+            add_class(this.$table, this.settings.class);
+            add_id(this.$table, this.settings.id);
+            add_tag(this.$table, 'title', this.settings.title);
+        }
+    };
     //--------------- bootstrap ------------------------
     // Элемент <div class="row"></div>
     form_element.prototype.bs_row = function (options) {

@@ -18,7 +18,8 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <Use64BitIISExpress>false</Use64BitIISExpress>
+    <Use64BitIISExpress>
+    </Use64BitIISExpress>
     <IISExpressSSLPort>44326</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication>disabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
@@ -2034,6 +2035,7 @@
     <Content Include="Content\module\wsd\form_ho_outgoing_sostav.css" />
     <Content Include="Content\module\wsd\form_outgoing_cars_detali.css" />
     <Content Include="Content\module\wsd\table_outgoing_cars.css" />
+    <Content Include="Content\module\wsd\table_outgoing_detention_return.css" />
     <Content Include="Content\module\wsd\table_outgoing_sostav.css" />
     <Content Include="Content\module\wsd\view_report_remainder_cars.css" />
     <Content Include="Content\module\wsd\view_outgoing_cars.css" />
@@ -2124,6 +2126,7 @@
     <Content Include="Scripts\module\wsd\form_outgoing_cars_detali.js" />
     <Content Include="Scripts\module\wsd\form_ho_outgoing_sostav.js" />
     <Content Include="Scripts\module\wsd\table_outgoing_cars.js" />
+    <Content Include="Scripts\module\wsd\table_outgoing_detention_return.js" />
     <Content Include="Scripts\module\wsd\table_outgoing_sostav.js" />
     <Content Include="Scripts\module\wsd\table_total_balance.js" />
     <Content Include="Scripts\module\wsd\view_report_remainder_cars.js" />

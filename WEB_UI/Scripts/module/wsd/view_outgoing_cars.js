@@ -285,6 +285,9 @@
                 }
                 //LockScreenOff();
             }.bind(this),
+            fn_update: function (wagon) {
+                this.update();
+            }.bind(this),
         });
 
         //// Загрузим справочные данные, определим поля формы правки
@@ -303,9 +306,9 @@
     // Обновить информацию по модуль
     view_outgoing_cars.prototype.update = function () {
         this.out_clear();
+
         this.tablist.empty();
         this.table_outgoing_cars.clear();
-
         if (this.id_sostav) {
             LockScreen(langView('vogc_mess_load_sostav', App.Langs));
             this.ids_wsd.getViewOutgoingCarsOfIDSostav(this.id_sostav, function (wagons) {
