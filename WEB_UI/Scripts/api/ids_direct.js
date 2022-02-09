@@ -36,6 +36,7 @@
         this.list_reason_discrepancy = null;
         this.list_detention_return = null;
         this.list_cargo = null;
+        this.list_cargo_group = null;
         this.list_external_station = null;
     }
     //****************************************************************************************
@@ -189,6 +190,18 @@
                             this.list_cargo = data;
                             process--;
                             result.push('cargo');
+                            out_load(process);
+                        }.bind(this));
+                    };
+                };
+                if (table === 'cargo_group') {
+                    if (lock) LockScreen(langView('mess_load_reference', App.Langs));
+                    if (update || !this.list_cargo_group) {
+                        process++;
+                        this.getCargoGroup(function (data) {
+                            this.list_cargo_group = data;
+                            process--;
+                            result.push('cargo_group');
                             out_load(process);
                         }.bind(this));
                     };
@@ -1129,6 +1142,31 @@
             },
         });
     };
+    //======= Directory_CargoGroup (Справочник группа грузов) ======================================
+    //
+    ids_directory.prototype.getCargoGroup = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/directory/cargo_group/all',
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_directory.getCargoGroup", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
     //======= Directory_ExternalStation (Справочник внешних станций) ======================================
     //
     ids_directory.prototype.getExternalStation = function (callback) {
@@ -1319,7 +1357,23 @@
         }
         return null;
     };
-
+    //*======= ids_directory.list_cargo_group  (Справочник группы грузов) ======================================
+    //
+    ids_directory.prototype.getCargoGroup_Of_ID = function (id) {
+        return this.getObj_Of_ID(this.list_cargo_group, id);
+    };
+    //
+    ids_directory.prototype.getListCargoGroup = function (fvalue, ftext, lang, filter) {
+        return this.getListObj(this.list_cargo_group, fvalue, ftext, lang, filter);
+    };
+    // Получим список с выборкой по полю
+    ids_directory.prototype.getCargoGroup_Of_CultureName = function (name, text) {
+        if (this.list_cargo_group) {
+            var obj = getObjects(this.list_cargo_group, name + '_' + App.Lang, text);
+            return obj;
+        }
+        return null;
+    };
     //*======= ids_directory.list_external_station  (Справочник внешних станций) ======================================
     //
     ids_directory.prototype.getExternalStation_Of_ID = function (id) {

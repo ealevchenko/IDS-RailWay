@@ -392,7 +392,15 @@
                 var wagons = this.wagons.filter(function (i) { return i.outgoing_car_position_outgoing !== null }).sort(function (a, b) {
                     return b.outgoing_car_position_outgoing - a.outgoing_car_position_outgoing;
                 });
-                options.position = wagons && wagons.length > 0 ? wagons[0].outgoing_car_position_outgoing + 1 : 1;
+                // Берем последнюю запись по вагону о подставляем значения
+                if (wagons && wagons.length) {
+                    options.position = wagons[0].outgoing_car_position_outgoing + 1;
+                    options.id_group = wagon.outgoing_uz_vagon_id_group;
+                    options.id_division = wagon.outgoing_uz_vagon_id_division;
+                    options.division_code = wagon.outgoing_uz_vagon_division_code;
+                } else {
+                    options.position = 1;
+                }
             }
             this.form_outgoing_cars_detali.wagon_detali(id, options);
         }

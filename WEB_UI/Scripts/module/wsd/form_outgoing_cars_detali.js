@@ -277,6 +277,7 @@
         this.list_reason_discrepancy = null;    // Список
         this.list_detention_return = null;
         this.list_cargo = null;
+        this.list_cargo_group = null;
         this.list_divisions = null;
         this.list_external_station = null;
         this.id = null;                         // текущее id вагона
@@ -284,12 +285,13 @@
         this.current_id_return_wagons = null;   // Текущий id открытой строки возврата
 
         // Загрузим справочные данные, определим поля формы правки
-        this.load_db(['reason_discrepancy', 'detention_return', 'cargo', 'divisions', 'external_station'], false, function (result) {
+        this.load_db(['reason_discrepancy', 'detention_return', 'cargo', 'cargo_group', 'divisions', 'external_station'], false, function (result) {
             // Подгрузили списки
             this.list_reason_discrepancy = this.ids_dir.getListReason_Discrepancy('id', 'reason_discrepancy_name', App.Lang, null);
             this.list_detention_return = this.ids_dir.getListDetention_Return('id', 'cause', App.Lang, null);
             this.list_cargo = this.ids_dir.getListCargo('id', 'cargo_name', App.Lang, null);
-            this.list_divisions = this.ids_dir.getListDivisions('code', 'division_abbr', App.Lang, null);
+            this.list_cargo_group = this.ids_dir.getListCargoGroup('id', 'cargo_group_name', App.Lang, null);
+            this.list_divisions = this.ids_dir.getListDivisions('id', 'division_abbr', App.Lang, null);
             this.list_external_station = this.ids_dir.getListExternalStation('code', 'station_name', App.Lang, null);
             //-------------------------------------
             // Сообщение
@@ -1274,7 +1276,7 @@
                     input_placeholder: null,
                     input_required: null,
                     input_group: false,
-                    element_data: this.list_cargo,
+                    element_data: this.list_cargo_group,
                     element_minLength: 0,
                     element_out_value: false,
                     element_val_inp: 'value',
@@ -2322,8 +2324,17 @@
         var adm_kod = wagon.outgoing_uz_vagon_wagon_adm;
         var gruzp_uz = wagon.outgoing_uz_vagon_gruzp_uz;
         var tara_uz = wagon.outgoing_uz_vagon_tara_uz;
+
+        var laden = wagon.outgoing_uz_vagon_laden;
+        var outgoing_uz_vagon_id_group = wagon.outgoing_uz_vagon_id_group;
+        var outgoing_uz_vagon_id_division = wagon.outgoing_uz_vagon_id_division;
+        var outgoing_uz_vagon_division_code = wagon.outgoing_uz_vagon_division_code;
+        var outgoing_uz_vagon_to_station_uz_code = wagon.outgoing_uz_vagon_to_station_uz_code;
+        var outgoing_uz_vagon_to_station_uz_name = wagon.outgoing_uz_vagon_to_station_uz_name;
+
         if (this.wagon_settings.type === 1) {
             adm_kod = wagon.wagon_wagon_adm;
+            //laden // коректируем по грузу
         }
         // Проверим это правка
         if (this.wagon_settings.type === 1 && this.wagon_settings.wagon_info) {
@@ -2344,6 +2355,7 @@
         this.elements.input_text_rod_vag_abbr.val(wagon['outgoing_uz_vagon_rod_abbr_' + App.Lang]);
         this.elements.input_text_gruzp_uz.val(gruzp_uz);
         this.elements.input_text_tara_uz.val(tara_uz);
+
         //
         this.elements.input_text_condition_arrival.val(wagon['arrival_uz_vagon_condition_abbr_' + App.Lang]);
         this.elements.input_text_condition_present.val(this.wagon_settings.type === 1 ? wagon['last_operation_condition_' + App.Lang] : wagon['arrival_uz_vagon_condition_abbr_' + App.Lang]);
@@ -2358,12 +2370,14 @@
         this.wiew_return_wagon_detali(wagon)
         //this.elements.table_return_cars.view(null) // Очистить таблицу возвратов
         // Данные о погрузке
-        this.elements.checkbox_loaded_car.val(false);
-        this.elements.autocomplete_cargo_name.text('');
-        this.elements.input_text_loading_devision_code.val('');
-        this.elements.autocomplete_loading_devision.text('');
-        this.elements.input_text_code_station_to.val('');
-        this.elements.autocomplete_name_station_to.text('');
+        this.elements.checkbox_loaded_car.val(laden);
+
+        this.elements.autocomplete_cargo_name.val(outgoing_uz_vagon_id_group);
+
+        this.elements.input_text_loading_devision_code.val(outgoing_uz_vagon_division_code);
+        this.elements.autocomplete_loading_devision.val(outgoing_uz_vagon_id_division);
+        this.elements.input_text_code_station_to.val(outgoing_uz_vagon_to_station_uz_code);
+        this.elements.autocomplete_name_station_to.val(outgoing_uz_vagon_to_station_uz_code);
         this.elements.input_text_owner_name.val('');
         this.elements.input_text_operator_name.val('');
         this.elements.input_text_limiting_loading_amkr.val('');
