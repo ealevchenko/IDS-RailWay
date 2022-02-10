@@ -28,6 +28,11 @@ namespace WEB_UI.Controllers.api
         public string wagon_adm_name_en { get; set; }
         public string wagon_adm_abbr_ru { get; set; }
         public string wagon_adm_abbr_en { get; set; }
+        public int? wagon_id_owner { get; set; }
+        public string wagon_owner_wagon_ru { get; set; }
+        public string wagon_owner_wagon_en { get; set; }
+        public string wagon_owner_wagon_abbr_ru { get; set; }
+        public string wagon_owner_wagon_abbr_en { get; set; }
         public DateTime? wagon_date_rem_uz { get; set; }
         public double? wagon_gruzp_uz { get; set; }
         public double? wagon_tara_uz { get; set; }

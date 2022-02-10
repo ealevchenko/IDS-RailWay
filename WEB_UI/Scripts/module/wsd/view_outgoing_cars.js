@@ -395,9 +395,9 @@
                 // Берем последнюю запись по вагону о подставляем значения
                 if (wagons && wagons.length) {
                     options.position = wagons[0].outgoing_car_position_outgoing + 1;
-                    options.id_group = wagon.outgoing_uz_vagon_id_group;
-                    options.id_division = wagon.outgoing_uz_vagon_id_division;
-                    options.division_code = wagon.outgoing_uz_vagon_division_code;
+                    options.id_group = wagons[0].outgoing_uz_vagon_id_group;
+                    options.id_division = wagons[0].outgoing_uz_vagon_id_division;
+                    options.division_code = wagons[0].outgoing_uz_vagon_division_code;
                 } else {
                     options.position = 1;
                 }
