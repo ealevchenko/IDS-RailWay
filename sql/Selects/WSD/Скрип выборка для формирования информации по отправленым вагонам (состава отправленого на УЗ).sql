@@ -13,6 +13,12 @@ select
 	,wag_dir_countrys.countrys_name_en as wagon_adm_name_en		-- Администрации [IDS].[Directory_Countrys] по справочнику [IDS].[Directory_Wagons]
 	,wag_dir_countrys.country_abbr_ru as wagon_adm_abbr_ru		-- Администрации [IDS].[Directory_Countrys] по справочнику [IDS].[Directory_Wagons]
 	,wag_dir_countrys.country_abbr_en as wagon_adm_abbr_en		-- Администрации [IDS].[Directory_Countrys] по справочнику [IDS].[Directory_Wagons]
+		-- владелец
+	,dir_owner.id as wagon_id_owner
+	,dir_owner.[owner_ru] as wagon_owner_wagon_ru					-- Владелец [IDS].[Directory_OwnersWagons] по справочнику [IDS].[Directory_Wagons]
+	,dir_owner.[owner_en] as wagon_owner_wagon_en					-- Владелец [IDS].[Directory_OwnersWagons] по справочнику [IDS].[Directory_Wagons]
+	,dir_owner.[abbr_ru] as wagon_owner_wagon_abbr_ru				-- Владелец [IDS].[Directory_OwnersWagons] по справочнику [IDS].[Directory_Wagons]
+	,dir_owner.[abbr_en] as wagon_owner_wagon_abbr_en				-- Владелец [IDS].[Directory_OwnersWagons] по справочнику [IDS].[Directory_Wagons]
 	--
 	,dir_wagon.date_rem_uz as wagon_date_rem_uz
 	,dir_wagon.gruzp as wagon_gruzp_uz	--> Грузоподъемность
@@ -385,10 +391,11 @@ select
 	,dir_rod.abbr_en as outgoing_uz_vagon_rod_abbr_en							-- Род вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
 	--> СОБСТВЕННИК ПО УЗ [IDS].[Directory_OwnersWagons]
 	,out_doc_vag.[id_owner] as outgoing_uz_vagon_id_owner						-- id строки владелец [IDS].[Directory_OwnersWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
-	,dir_owner.[owner_ru] as outgoing_uz_vagon_owner_wagon_ru					-- Владелец [IDS].[Directory_OwnersWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
-	,dir_owner.[owner_en] as outgoing_uz_vagon_owner_wagon_en					-- Владелец [IDS].[Directory_OwnersWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
-	,dir_owner.[abbr_ru] as outgoing_uz_vagon_owner_wagon_abbr_ru				-- Владелец [IDS].[Directory_OwnersWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
-	,dir_owner.[abbr_en] as outgoing_uz_vagon_owner_wagon_abbr_en				-- Владелец [IDS].[Directory_OwnersWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	--
+	,out_dir_owner.[owner_ru] as outgoing_uz_vagon_owner_wagon_ru					-- Владелец [IDS].[Directory_OwnersWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_owner.[owner_en] as outgoing_uz_vagon_owner_wagon_en					-- Владелец [IDS].[Directory_OwnersWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_owner.[abbr_ru] as outgoing_uz_vagon_owner_wagon_abbr_ru				-- Владелец [IDS].[Directory_OwnersWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_owner.[abbr_en] as outgoing_uz_vagon_owner_wagon_abbr_en				-- Владелец [IDS].[Directory_OwnersWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
 	,out_doc_vag.[gruzp_uz] as outgoing_uz_vagon_gruzp_uz						-- Грузоподъемность по документу УЗ [IDS].[Directory_OwnersWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
 	,out_doc_vag.[tara_uz] as outgoing_uz_vagon_tara_uz						-- Тара по документу УЗ по отправке [IDS].[Outgoing_UZ_Vagon]
 	,out_doc_vag.[note_uz] as outgoing_uz_vagon_note_uz						-- Примечание по документу УЗ по отправке [IDS].[Outgoing_UZ_Vagon]
@@ -590,8 +597,10 @@ FROM [IDS].[OutgoingSostav] as out_sost
 		Left JOIN IDS.Directory_OperatorsWagons as out_dir_operator ON out_wag_rent.id_operator =  out_dir_operator.id
 		--> Справочник Ограничение погрузки по прибытию
 		Left JOIN IDS.Directory_LimitingLoading as out_dir_limload ON out_wag_rent.id_limiting =  out_dir_limload.id
-		--> Справочник Собственник вагона по УЗ
+		--> Справочник Собственник вагона по УЗ по справочнику
 		Left JOIN [IDS].[Directory_OwnersWagons] as dir_owner ON dir_wagon.id_owner = dir_owner.id
+		--> Справочник Собственник вагона по УЗ по отправке
+		Left JOIN [IDS].[Directory_OwnersWagons] as out_dir_owner ON out_doc_vag.id_owner = out_dir_owner.id
 		--> Справочник строна (Администрация вагона по справочнику)
 		Left JOIN IDS.Directory_Countrys as wag_dir_countrys ON dir_wagon.id_countrys = wag_dir_countrys.id
 		--> Справочник строна (Администрация вагона по отправке)
