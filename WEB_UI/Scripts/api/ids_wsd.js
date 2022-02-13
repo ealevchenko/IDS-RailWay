@@ -692,6 +692,83 @@
             },
         });
     };
+    //======================================================================================================
+    //                                  РАЗДЕЛ ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ ВАГОНОВ
+    //======= WagonInternalRoutes (Внутреннее перемещение вагона на АМКР) =========================================================================
+
+    //======= WagonInternalOperation (Внутреннее перемещение вагона на АМКР, операции над вагонами) =====================================
+    // Вернуть строку операций по id
+    ids_wsd.prototype.getWagonInternalOperationOfID = function (id, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wio/id/' + id,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getWagonInternalOperationOfID", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Вернуть список операций по id wir
+    ids_wsd.prototype.getWagonInternalOperationOfIDWIR = function (id, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wio/wir/id/' + id,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getWagonInternalOperationOfWIRID", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Вернуть песледнюю запись операций из внутренего перемещения вагонов
+    ids_wsd.prototype.getLastWagonInternalOperationOfWIR = function (list_wio) {
+        if (list_wio && list_wio.length > 0) {
+            var wio = list_wio.sort(function (a, b) {
+                return b.id - a.id;
+            });
+            if (wio && wio.length > 0) {
+                return wio[0]
+            }
+        }
+        return null;
+    };
+
+    //// Вернуть песледнюю запись операций из внутренего перемещения вагонов
+    //IDS_RWT.prototype.getLastWagonInternalOperationOfWIR = function (wir) {
+    //    var last_wio = null;
+    //    if (wir && wir.WagonInternalOperation && wir.WagonInternalOperation.length > 0) {
+    //        $.each(wir.WagonInternalOperation, function (i, el) {
+    //            var wio = el;
+    //            if (last_wio === null || wio.id > last_wio.id) {
+    //                last_wio = wio;
+    //            }
+    //        });
+    //    }
+    //    return last_wio;
+    //};
 
     App.ids_wsd = ids_wsd;
 

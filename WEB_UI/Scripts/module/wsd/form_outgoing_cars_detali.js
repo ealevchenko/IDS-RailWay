@@ -2258,19 +2258,21 @@
                         // режим правки
                         this.edit();
                         LockScreen(langView('fogcd_mess_load_db_uz', App.Langs));
-                        var process = 2;
-                        this.uz_dir.getInfoWagonOfNum(this.wagon.num, function (info) {
-                            if (info === null) {
-                                // Иногда нет ответа, сообщаем!
-                                this.out_warning(langView('fogcd_mess_warning_no_data_wagon_uz', App.Langs))
-                            }
-                            options.info = info;
-                            process--;
-                            if (process === 0) {
-                                LockScreenOff();
-                                this.wiew_wagon_detali(this.wagon, options);
-                            }
-                        }.bind(this));
+                        var process = 1;//2;
+                        //TODO:!ОТКЛЮЧИЛ ДЛЯ ПРОВЕРКИ
+                        options.info = null;
+                        //this.uz_dir.getInfoWagonOfNum(this.wagon.num, function (info) {
+                        //    if (info === null) {
+                        //        // Иногда нет ответа, сообщаем!
+                        //        this.out_warning(langView('fogcd_mess_warning_no_data_wagon_uz', App.Langs))
+                        //    }
+                        //    options.info = info;
+                        //    process--;
+                        //    if (process === 0) {
+                        //        //LockScreenOff();
+                        //        this.wiew_wagon_detali(this.wagon, options);
+                        //    }
+                        //}.bind(this));
                         this.ids_dir.getWagonsOfNum(this.wagon.num, function (dir_wagon) {
                             if (dir_wagon === null) {
                                 // Иногда нет ответа, сообщаем!
@@ -2279,10 +2281,9 @@
                             options.dir_wagon = dir_wagon;
                             process--;
                             if (process === 0) {
-                                LockScreenOff();
+                                //LockScreenOff();
                                 this.wiew_wagon_detali(this.wagon, options);
                             }
-                            LockScreenOff();
                         }.bind(this));
                     } else {
                         // режим просмотра
@@ -2308,6 +2309,8 @@
         var adm_kod = wagon.outgoing_uz_vagon_wagon_adm;
         var gruzp_uz = wagon.outgoing_uz_vagon_gruzp_uz;
         var tara_uz = wagon.outgoing_uz_vagon_tara_uz;
+        var note_uz = wagon.outgoing_uz_vagon_note_uz;
+        var current_condition = wagon['outgoing_uz_vagon_condition_abbr' + App.Lang];
 
         var laden = wagon.outgoing_uz_vagon_laden;
         var outgoing_uz_vagon_id_group = wagon.outgoing_uz_vagon_id_group;
@@ -2323,27 +2326,33 @@
         // Настроем отображение если окно в режиме редактирования
         if (this.wagon_settings.type === 1) {
             if (options.dir_wagon) {
+                gruzp_uz = options.dir_wagon.gruzp;         //
+                tara_uz = options.dir_wagon.tara;
                 var wagon_contrys = options.dir_wagon.Directory_Countrys;
                 adm_kod = wagon_contrys ? wagon_contrys.code_sng : null;
                 var wagon_owners = options.dir_wagon.Directory_OwnersWagons;
-                owner_name = wagon_owners ?  wagon_owners['abbr_' + App.Lang] : null;
+                owner_name = wagon_owners ? wagon_owners['abbr_' + App.Lang] : null;
                 var wagon_rents = options.dir_wagon.Directory_WagonsRent;
                 if (wagon_rents) {
                     var wagon_rent = wagon_rents.find(function (o) {
                         return o.rent_end === null;
                     });
                     if (wagon_rent) {
-
+                        var dir_oper = wagon_rent.Directory_OperatorsWagons;
+                        rent_operator = dir_oper ? dir_oper['abbr_' + App.Lang] : null;
+                        var dir_ll = wagon_rent.Directory_LimitingLoading;
+                        rent_limiting = dir_ll ? dir_ll['limiting_abbr_' + App.Lang] : null;
                     }
                 }
+                note_uz = options.dir_wagon.note;
+                // Текущая операция
+                this.ids_wsd.getWagonInternalOperationOfIDWIR(wagon.id_wir, function (list) {
+
+                });
+                //current_condition wagon['arrival_uz_vagon_condition_abbr_' + App.Lang]
+
+
             };
-
-
-
-            //Directory_Countrys.code_sng;
-            //Directory_OwnersWagons.abbr_en;
-            //Directory_WagonsRent[0].Directory_OperatorsWagons.
-            //options.dir_wagon;
             if (options && options.id_group) {
                 outgoing_uz_vagon_id_group = options.id_group;
             }
@@ -2358,9 +2367,10 @@
         // Проверим это правка
         if (this.wagon_settings.type === 1 && this.wagon_settings.info) {
             // Да заполним
-            gruzp_uz = this.wagon_settings.info.carrying_capacity;         //
-            tara_uz = this.wagon_settings.info.tara;
+            gruzp_uz = this.wagon_settings.info.carrying_capacity ? this.wagon_settings.info.carrying_capacity : gruzp_uz;         //
+            tara_uz = this.wagon_settings.info.tara ? this.wagon_settings.info.tara : tara_uz;
             owner_name = this.wagon_settings.info.owner !== null && this.wagon_settings.info.owner !== '' ? this.wagon_settings.info.owner : owner_name;
+            note_uz = (wagon_settings.info.exit_ban !== null ? wagon_settings.info.exit_ban + '; ' : '') + (wagon_settings.info.other_bans !== null ? wagon_settings.info.other_bans.replace(/<br>/g, '') : note_uz);
         }
 
         this.elements.input_number_num_car.val(wagon.num);
@@ -2375,10 +2385,10 @@
         this.elements.input_text_rod_vag_abbr.val(wagon['outgoing_uz_vagon_rod_abbr_' + App.Lang]);
         this.elements.input_text_gruzp_uz.val(gruzp_uz);
         this.elements.input_text_tara_uz.val(tara_uz);
-
         //
         this.elements.input_text_condition_arrival.val(wagon['arrival_uz_vagon_condition_abbr_' + App.Lang]);
-        this.elements.input_text_condition_present.val(this.wagon_settings.type === 1 ? wagon['last_operation_condition_' + App.Lang] : wagon['arrival_uz_vagon_condition_abbr_' + App.Lang]);
+        //this.wagon_settings.type === 1 ? wagon['last_operation_condition_' + App.Lang] : wagon['outgoing_uz_vagon_condition_abbr' + App.Lang]
+        this.elements.input_text_condition_present.val(current_condition);
         // -------------------------------------------
         var vagonik = wagon.outgoing_car_vagonnik_user ? wagon.outgoing_car_vagonnik_user : '';
         var vagonik_data = wagon.outgoing_car_vagonnik ? '(' + (wagon.outgoing_car_vagonnik ? moment(wagon.outgoing_car_vagonnik).format(format_datetime) : '') + ')' : '';
@@ -2401,7 +2411,7 @@
         this.elements.input_text_owner_name.val(owner_name);
         this.elements.input_text_operator_name.val(rent_operator);
         this.elements.input_text_limiting_loading_amkr.val(rent_limiting);
-        this.elements.textarea_limiting_loading_uz.val('');
+        this.elements.textarea_limiting_loading_uz.val(note_uz);
         // ЭПД
         this.elements.input_text_uz_doc_num.val('');
         this.elements.input_text_vesg_uz_doc.val('');

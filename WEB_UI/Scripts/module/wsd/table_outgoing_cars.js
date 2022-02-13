@@ -18,7 +18,7 @@
             'togc_field_outgoing_car_id': 'id вагона',
             'togc_field_outgoing_car_position_outgoing': '№ поз.',
             'togc_field_num': '№ вагона',
-            'togc_field_outgoing_car_num_doc': '№ накл.',
+            'togc_field_outgoing_uz_document_nom_doc': '№ накл.',
             'togc_field_outgoing_uz_vagon_cargo_group_name': 'Груз',
             'togc_field_outgoing_uz_vagon_to_station_uz_name': 'Станция назначения',
             'togc_field_outgoing_uz_vagon_wagon_adm': 'Код Адм.',
@@ -145,12 +145,12 @@
             title: langView('togc_field_outgoing_car_position_outgoing', App.Langs), width: "30px", orderable: true, searchable: true
         },
         {
-            field: 'outgoing_car_num_doc',
+            field: 'outgoing_uz_document_nom_doc',
             data: function (row, type, val, meta) {
-                return row.outgoing_car_num_doc;
+                return row.outgoing_uz_document_nom_doc;
             },
             className: 'dt-body-center',
-            title: langView('togc_field_outgoing_car_num_doc', App.Langs), width: "30px", orderable: true, searchable: true
+            title: langView('togc_field_outgoing_uz_document_nom_doc', App.Langs), width: "30px", orderable: true, searchable: true
         },
         {
             field: 'outgoing_uz_vagon_cargo_group_name',
@@ -418,13 +418,13 @@
         //collums.push('id');
         return init_columns(collums, list_collums);
     };
-    // инициализация полей outgoing_sostav
+    // инициализация полей outgoing_cars
     table_outgoing_cars.prototype.init_columns_outgoing_cars = function () {
         var collums = [];
         //collums.push({ field: 'id', title: null, class: null });
         collums.push({ field: 'outgoing_car_position_outgoing', title: null, class: 'fixed-column' });
         collums.push({ field: 'num', title: null, class: 'fixed-column' });
-        collums.push({ field: 'outgoing_car_num_doc', title: null, class: 'fixed-column' });
+        collums.push({ field: 'outgoing_uz_document_nom_doc', title: null, class: 'fixed-column' });
         collums.push({ field: 'outgoing_uz_vagon_cargo_group_name', title: null, class: null });
         collums.push({ field: 'outgoing_uz_vagon_to_station_uz_name', title: null, class: null });
         collums.push({ field: 'outgoing_uz_vagon_adm_abbr', title: null, class: null });
