@@ -397,7 +397,8 @@
                     options.position = wagons[0].outgoing_car_position_outgoing + 1;
                     options.id_group = wagons[0].outgoing_uz_vagon_id_group;
                     options.id_division = wagons[0].outgoing_uz_vagon_id_division;
-                    options.division_code = wagons[0].outgoing_uz_vagon_division_code;
+                    //options.division_code = wagons[0].outgoing_uz_vagon_division_code;
+                    options.station_uz_code = wagons[0].outgoing_uz_vagon_to_station_uz_code;
                 } else {
                     options.position = 1;
                 }

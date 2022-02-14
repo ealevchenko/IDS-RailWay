@@ -131,6 +131,28 @@
             'fogcd_label_operator_name_arrival': 'Оператор (АМКР):',
             'fogcd_title_limiting_loading_arrival': '',
             'fogcd_label_limiting_loading_arrival': 'Ограничение (АМКР):',
+            'fogcd_title_sap_outgoing_supply_num': '',
+            'fogcd_label_sap_outgoing_supply_num': '№ исх. поставки:',
+            'fogcd_title_sap_outgoing_supply_netto': '',
+            'fogcd_label_sap_outgoing_supply_netto': 'Вес груза:',
+            'fogcd_title_sap_outgoing_supply_responsible_fio': '',
+            'fogcd_label_sap_outgoing_supply_responsible_fio': 'Бригадир погрузки:',
+            'fogcd_title_sap_outgoing_supply_warehouse_code': '',
+            'fogcd_label_sap_outgoing_supply_warehouse_code': 'Склад:',
+            'fogcd_title_sap_outgoing_supply_warehouse_name': '',
+            'fogcd_label_sap_outgoing_supply_warehouse_name': 'Цех погрузки:',
+            'fogcd_title_sap_outgoing_supply_cargo_code': '',
+            'fogcd_label_sap_outgoing_supply_cargo_code': 'Код ЕТСНГ:',
+            'fogcd_title_sap_outgoing_supply_cargo_name': '',
+            'fogcd_label_sap_outgoing_supply_cargo_name': 'Наименование груза:',
+            'fogcd_title_sap_outgoing_supply_destination_station_code': '',
+            'fogcd_label_sap_outgoing_supply_destination_station_code': 'Код:',
+            'fogcd_title_sap_outgoing_supply_destination_station_name': '',
+            'fogcd_label_sap_outgoing_supply_destination_station_name': 'Станция назначения:',
+            'fogcd_title_sap_outgoing_supply_shipper_code': '',
+            'fogcd_label_sap_outgoing_supply_shipper_code': 'Код:',
+            'fogcd_title_sap_outgoing_supply_shipper_name': '',
+            'fogcd_label_sap_outgoing_supply_shipper_name': 'Грузополучатель:',
 
             //'fogcd_title_': '',
             //'fogcd_label_': '',
@@ -1817,6 +1839,262 @@
                 },
                 childs: []
             };
+            var form_row_sap1 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_input_sap_outgoing_supply_num = {
+                obj: 'bs_input_text',
+                options: {
+                    id: 'sap_outgoing_supply_num',
+                    validation_group: 'common',
+                    form_group_size: 'xl',
+                    form_group_col: 4,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_sap_outgoing_supply_num', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-sap',
+                    input_title: langView('fogcd_title_sap_outgoing_supply_num', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_sap_outgoing_supply_netto = {
+                obj: 'bs_input_text',
+                options: {
+                    id: 'sap_outgoing_supply_netto',
+                    validation_group: 'common',
+                    form_group_size: 'xl',
+                    form_group_col: 2,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_sap_outgoing_supply_netto', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-sap',
+                    input_title: langView('fogcd_title_sap_outgoing_supply_netto', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_sap_outgoing_supply_responsible_fio = {
+                obj: 'bs_input_text',
+                options: {
+                    id: 'sap_outgoing_supply_responsible_fio',
+                    validation_group: 'common',
+                    form_group_size: 'xl',
+                    form_group_col: 6,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_sap_outgoing_supply_responsible_fio', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-sap',
+                    input_title: langView('fogcd_title_sap_outgoing_supply_responsible_fio', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_row_sap2 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_input_sap_outgoing_supply_warehouse_code = {
+                obj: 'bs_input_text',
+                options: {
+                    id: 'sap_outgoing_supply_warehouse_code',
+                    validation_group: 'common',
+                    form_group_size: 'xl',
+                    form_group_col: 3,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_sap_outgoing_supply_warehouse_code', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-sap',
+                    input_title: langView('fogcd_title_sap_outgoing_supply_warehouse_code', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_sap_outgoing_supply_warehouse_name = {
+                obj: 'bs_input_text',
+                options: {
+                    id: 'sap_outgoing_supply_warehouse_name',
+                    validation_group: 'common',
+                    form_group_size: 'xl',
+                    form_group_col: 9,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_sap_outgoing_supply_warehouse_name', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-sap',
+                    input_title: langView('fogcd_title_sap_outgoing_supply_warehouse_name', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_row_sap3 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_input_sap_outgoing_supply_cargo_code = {
+                obj: 'bs_input_text',
+                options: {
+                    id: 'sap_outgoing_supply_cargo_code',
+                    validation_group: 'common',
+                    form_group_size: 'xl',
+                    form_group_col: 3,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_sap_outgoing_supply_cargo_code', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-sap',
+                    input_title: langView('fogcd_title_sap_outgoing_supply_cargo_code', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_sap_outgoing_supply_cargo_name = {
+                obj: 'bs_input_text',
+                options: {
+                    id: 'sap_outgoing_supply_cargo_name',
+                    validation_group: 'common',
+                    form_group_size: 'xl',
+                    form_group_col: 9,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_sap_outgoing_supply_cargo_name', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-sap',
+                    input_title: langView('fogcd_title_sap_outgoing_supply_cargo_name', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_row_sap4 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_input_sap_outgoing_supply_destination_station_code = {
+                obj: 'bs_input_text',
+                options: {
+                    id: 'sap_outgoing_supply_destination_station_code',
+                    validation_group: 'common',
+                    form_group_size: 'xl',
+                    form_group_col: 3,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_sap_outgoing_supply_destination_station_code', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-sap',
+                    input_title: langView('fogcd_title_sap_outgoing_supply_destination_station_code', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_sap_outgoing_supply_destination_station_name = {
+                obj: 'bs_input_text',
+                options: {
+                    id: 'sap_outgoing_supply_destination_station_name',
+                    validation_group: 'common',
+                    form_group_size: 'xl',
+                    form_group_col: 9,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_sap_outgoing_supply_destination_station_name', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-sap',
+                    input_title: langView('fogcd_title_sap_outgoing_supply_destination_station_name', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_row_sap5 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_input_sap_outgoing_supply_shipper_code = {
+                obj: 'bs_input_text',
+                options: {
+                    id: 'sap_outgoing_supply_shipper_code',
+                    validation_group: 'common',
+                    form_group_size: 'xl',
+                    form_group_col: 3,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_sap_outgoing_supply_shipper_code', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-sap',
+                    input_title: langView('fogcd_title_sap_outgoing_supply_shipper_code', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_sap_outgoing_supply_shipper_name = {
+                obj: 'bs_input_text',
+                options: {
+                    id: 'sap_outgoing_supply_shipper_name',
+                    validation_group: 'common',
+                    form_group_size: 'xl',
+                    form_group_col: 9,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_sap_outgoing_supply_shipper_name', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: 'inp-sap',
+                    input_title: langView('fogcd_title_sap_outgoing_supply_shipper_name', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+
             // ДАННЫЕ О ПРИБЫТИИ'
             var fieldset_data_arrival = {
                 obj: 'fieldset',
@@ -2074,6 +2352,27 @@
             col_epd.childs.push(fieldset_epd);
             form_row_loading_data6.childs.push(col_epd);
             //
+            form_row_sap1.childs.push(form_input_sap_outgoing_supply_num);
+            form_row_sap1.childs.push(form_input_sap_outgoing_supply_netto);
+            form_row_sap1.childs.push(form_input_sap_outgoing_supply_responsible_fio);
+            fieldset_sap.childs.push(form_row_sap1);
+            //
+            form_row_sap2.childs.push(form_input_sap_outgoing_supply_warehouse_code);
+            form_row_sap2.childs.push(form_input_sap_outgoing_supply_warehouse_name);
+            fieldset_sap.childs.push(form_row_sap2);
+            //
+            form_row_sap3.childs.push(form_input_sap_outgoing_supply_cargo_code);
+            form_row_sap3.childs.push(form_input_sap_outgoing_supply_cargo_name);
+            fieldset_sap.childs.push(form_row_sap3);
+            //
+            form_row_sap4.childs.push(form_input_sap_outgoing_supply_destination_station_code);
+            form_row_sap4.childs.push(form_input_sap_outgoing_supply_destination_station_name);
+            fieldset_sap.childs.push(form_row_sap4);
+            //
+            form_row_sap5.childs.push(form_input_sap_outgoing_supply_shipper_code);
+            form_row_sap5.childs.push(form_input_sap_outgoing_supply_shipper_name);
+            fieldset_sap.childs.push(form_row_sap5);
+            //
             col_sap.childs.push(fieldset_sap);
             form_row_loading_data6.childs.push(col_sap);
             //
@@ -2214,6 +2513,18 @@
             //
             this.elements.input_text_client_kod_on.val('');
             this.elements.input_text_client_name_on.val('');
+            // САП
+            this.elements.input_text_sap_outgoing_supply_num.val('');
+            this.elements.input_text_sap_outgoing_supply_netto.val('');
+            this.elements.input_text_sap_outgoing_supply_responsible_fio.val('');
+            this.elements.input_text_sap_outgoing_supply_warehouse_code.val('');
+            this.elements.input_text_sap_outgoing_supply_warehouse_name.val('');
+            this.elements.input_text_sap_outgoing_supply_cargo_code.val('');
+            this.elements.input_text_sap_outgoing_supply_cargo_name.val('');
+            this.elements.input_text_sap_outgoing_supply_destination_station_code.val('');
+            this.elements.input_text_sap_outgoing_supply_destination_station_name.val('');
+            this.elements.input_text_sap_outgoing_supply_shipper_code.val('');
+            this.elements.input_text_sap_outgoing_supply_shipper_name.val('');
             // Прибытие
             this.elements.input_text_cargo_arrival.val('');
             this.elements.input_text_cargo_sap.val('');
@@ -2258,27 +2569,36 @@
                         // режим правки
                         this.edit();
                         LockScreen(langView('fogcd_mess_load_db_uz', App.Langs));
-                        var process = 1;//2;
+                        var process = 3;
                         //TODO:!ОТКЛЮЧИЛ ДЛЯ ПРОВЕРКИ
-                        options.info = null;
-                        //this.uz_dir.getInfoWagonOfNum(this.wagon.num, function (info) {
-                        //    if (info === null) {
-                        //        // Иногда нет ответа, сообщаем!
-                        //        this.out_warning(langView('fogcd_mess_warning_no_data_wagon_uz', App.Langs))
-                        //    }
-                        //    options.info = info;
-                        //    process--;
-                        //    if (process === 0) {
-                        //        //LockScreenOff();
-                        //        this.wiew_wagon_detali(this.wagon, options);
-                        //    }
-                        //}.bind(this));
+                        //options.info = null;
+                        this.uz_dir.getInfoWagonOfNum(this.wagon.num, function (info) {
+                            if (info === null) {
+                                // Иногда нет ответа, сообщаем!
+                                this.out_warning(langView('fogcd_mess_warning_no_data_wagon_uz', App.Langs))
+                            }
+                            options.info = info;
+                            process--;
+                            if (process === 0) {
+                                //LockScreenOff();
+                                this.wiew_wagon_detali(this.wagon, options);
+                            }
+                        }.bind(this));
                         this.ids_dir.getWagonsOfNum(this.wagon.num, function (dir_wagon) {
                             if (dir_wagon === null) {
                                 // Иногда нет ответа, сообщаем!
                                 this.out_warning(langView('fogcd_mess_warning_no_data_dir_wagon', App.Langs))
                             }
                             options.dir_wagon = dir_wagon;
+                            process--;
+                            if (process === 0) {
+                                //LockScreenOff();
+                                this.wiew_wagon_detali(this.wagon, options);
+                            }
+                        }.bind(this));
+                        this.ids_wsd.getWagonInternalOperationOfIDWIR(wagon.id_wir, function (list) {
+                            var last_wio = this.ids_wsd.getLastWagonInternalOperationOfWIR(list);
+                            options.wio = last_wio;
                             process--;
                             if (process === 0) {
                                 //LockScreenOff();
@@ -2320,8 +2640,10 @@
         //var outgoing_uz_vagon_to_station_uz_name = wagon.outgoing_uz_vagon_to_station_uz_name;
 
         var owner_name = wagon['outgoing_uz_vagon_owner_wagon_abbr_' + App.Lang];
-        var rent_operator = wagon['outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr_' + App.Lang];
-        var rent_limiting = wagon['outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr_' + App.Lang];
+        var arr_rent_operator = wagon['outgoing_uz_vagon_arrival_wagons_rent_operator_abbr_' + App.Lang];
+        var arr_rent_limiting = wagon['outgoing_uz_vagon_arrival_wagons_rent_limiting_abbr_' + App.Lang];
+        var out_rent_operator = wagon['outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr_' + App.Lang];
+        var out_rent_limiting = wagon['outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr_' + App.Lang];
 
         // Настроем отображение если окно в режиме редактирования
         if (this.wagon_settings.type === 1) {
@@ -2334,33 +2656,55 @@
                 owner_name = wagon_owners ? wagon_owners['abbr_' + App.Lang] : null;
                 var wagon_rents = options.dir_wagon.Directory_WagonsRent;
                 if (wagon_rents) {
-                    var wagon_rent = wagon_rents.find(function (o) {
+                    var out_wagon_rent = wagon_rents.find(function (o) {
                         return o.rent_end === null;
                     });
-                    if (wagon_rent) {
-                        var dir_oper = wagon_rent.Directory_OperatorsWagons;
-                        rent_operator = dir_oper ? dir_oper['abbr_' + App.Lang] : null;
-                        var dir_ll = wagon_rent.Directory_LimitingLoading;
-                        rent_limiting = dir_ll ? dir_ll['limiting_abbr_' + App.Lang] : null;
+
+
+                    if (out_wagon_rent) {
+                        var dir_oper = out_wagon_rent.Directory_OperatorsWagons;
+                        out_rent_operator = dir_oper ? dir_oper['abbr_' + App.Lang] : null;
+                        var dir_ll = out_wagon_rent.Directory_LimitingLoading;
+                        out_rent_limiting = dir_ll ? dir_ll['limiting_abbr_' + App.Lang] : null;
                     }
+                    var rents = wagon_rents.filter(function (i) {
+                        return i.rent_start <= wagon.arrival_sostav_date_adoption;
+                    });
+                    if (rents && rents.length > 0) {
+                        var arr_wagon_rent = rents.sort(function (a, b) {
+                            return b.id - a.id;
+                        });
+                        if (arr_wagon_rent && arr_wagon_rent.length > 0) {
+
+                            var dir_oper = arr_wagon_rent[0].Directory_OperatorsWagons;
+                            arr_rent_operator = dir_oper ? dir_oper['abbr_' + App.Lang] : null;
+                            var dir_ll = arr_wagon_rent[0].Directory_LimitingLoading;
+                            arr_rent_limiting = dir_ll ? dir_ll['limiting_abbr_' + App.Lang] : null;
+                        }
+                    }
+
                 }
                 note_uz = options.dir_wagon.note;
-                // Текущая операция
-                this.ids_wsd.getWagonInternalOperationOfIDWIR(wagon.id_wir, function (list) {
-
-                });
                 //current_condition wagon['arrival_uz_vagon_condition_abbr_' + App.Lang]
 
 
             };
+            // Уточним группу груза (если уже были вагоны в левой части)
             if (options && options.id_group) {
                 outgoing_uz_vagon_id_group = options.id_group;
             }
+            // Уточним подразделение погрузки (если уже были вагоны в левой части)
             if (options && options.id_division) {
                 var outgoing_uz_vagon_id_division = options.id_division;
             }
-            if (options && options.division_code) {
-                var outgoing_uz_vagon_division_code = options.division_code
+            // Уточним станцию назначения (если уже были вагоны в левой части)
+            if (options && options.station_uz_code) {
+                var outgoing_uz_vagon_to_station_uz_code = options.station_uz_code;
+            }
+            // Определим текущую разметку
+            if (options && options.wio) {
+                var dir_cond_arr = options.wio.Directory_ConditionArrival;
+                current_condition = dir_cond_arr ? dir_cond_arr['condition_abbr_' + App.Lang] : current_condition;
             }
             //laden // коректируем по грузу
         }
@@ -2370,7 +2714,7 @@
             gruzp_uz = this.wagon_settings.info.carrying_capacity ? this.wagon_settings.info.carrying_capacity : gruzp_uz;         //
             tara_uz = this.wagon_settings.info.tara ? this.wagon_settings.info.tara : tara_uz;
             owner_name = this.wagon_settings.info.owner !== null && this.wagon_settings.info.owner !== '' ? this.wagon_settings.info.owner : owner_name;
-            note_uz = (wagon_settings.info.exit_ban !== null ? wagon_settings.info.exit_ban + '; ' : '') + (wagon_settings.info.other_bans !== null ? wagon_settings.info.other_bans.replace(/<br>/g, '') : note_uz);
+            note_uz = (this.wagon_settings.info.exit_ban !== null ? this.wagon_settings.info.exit_ban + '; ' : '') + (this.wagon_settings.info.other_bans !== null ? this.wagon_settings.info.other_bans.replace(/<br>/g, '') : note_uz);
         }
 
         this.elements.input_number_num_car.val(wagon.num);
@@ -2409,31 +2753,43 @@
         this.elements.input_text_code_station_to.val(outgoing_uz_vagon_to_station_uz_code);
         this.elements.autocomplete_name_station_to.val(outgoing_uz_vagon_to_station_uz_code);
         this.elements.input_text_owner_name.val(owner_name);
-        this.elements.input_text_operator_name.val(rent_operator);
-        this.elements.input_text_limiting_loading_amkr.val(rent_limiting);
+        this.elements.input_text_operator_name.val(out_rent_operator);
+        this.elements.input_text_limiting_loading_amkr.val(out_rent_limiting);
         this.elements.textarea_limiting_loading_uz.val(note_uz);
         // ЭПД
-        this.elements.input_text_uz_doc_num.val('');
-        this.elements.input_text_vesg_uz_doc.val('');
-        this.elements.input_text_ves_tary_uz_doc.val('');
+        this.elements.input_text_uz_doc_num.val(wagon.outgoing_uz_document_nom_doc);
+        this.elements.input_text_vesg_uz_doc.val(wagon.outgoing_uz_vagon_vesg);
+        this.elements.input_text_ves_tary_uz_doc.val(wagon.outgoing_uz_vagon_tara_uz);
         this.elements.input_text_brigadier_loading_uz_doc.val('');
         //
-        this.elements.input_text_kod_etsng.val('');
-        this.elements.textarea_name_etsng.val('');
+        this.elements.input_text_kod_etsng.val(wagon.outgoing_uz_vagon_cargo_etsng_code);
+        this.elements.textarea_name_etsng.val(wagon['outgoing_uz_vagon_cargo_etsng_name_' + App.Lang]);
         //
-        this.elements.input_text_station_code_on.val('');
-        this.elements.input_text_station_name_on.val('');
-        this.elements.input_text_railway_name_on.val('');
+        this.elements.input_text_station_code_on.val(wagon.outgoing_uz_document_code_stn_to);
+        this.elements.input_text_station_name_on.val(wagon['outgoing_uz_document_station_to_name_' + App.Lang]);
+        this.elements.input_text_railway_name_on.val(wagon['outgoing_uz_document_to_inlandrailway_name_' + App.Lang]);
         //
-        this.elements.input_text_client_kod_on.val('');
-        this.elements.input_text_client_name_on.val('');
+        this.elements.input_text_client_kod_on.val(wagon.outgoing_uz_document_code_consignee);
+        this.elements.input_text_client_name_on.val(wagon['outgoing_uz_document_consignee_name_' + App.Lang]);
+        // САП
+        this.elements.input_text_sap_outgoing_supply_num.val(wagon.sap_outgoing_supply_num);
+        this.elements.input_text_sap_outgoing_supply_netto.val(wagon.sap_outgoing_supply_netto);
+        this.elements.input_text_sap_outgoing_supply_responsible_fio.val(wagon.sap_outgoing_supply_responsible_fio);
+        this.elements.input_text_sap_outgoing_supply_warehouse_code.val(wagon.sap_outgoing_supply_warehouse_code);
+        this.elements.input_text_sap_outgoing_supply_warehouse_name.val(wagon.sap_outgoing_supply_warehouse_name);
+        this.elements.input_text_sap_outgoing_supply_cargo_code.val(wagon.sap_outgoing_supply_cargo_code);
+        this.elements.input_text_sap_outgoing_supply_cargo_name.val(wagon.sap_outgoing_supply_cargo_name);
+        this.elements.input_text_sap_outgoing_supply_destination_station_code.val(wagon.sap_outgoing_supply_destination_station_code);
+        this.elements.input_text_sap_outgoing_supply_destination_station_name.val(wagon.sap_outgoing_supply_destination_station_name);
+        this.elements.input_text_sap_outgoing_supply_shipper_code.val(wagon.sap_outgoing_supply_shipper_code);
+        this.elements.input_text_sap_outgoing_supply_shipper_name.val(wagon.sap_outgoing_supply_shipper_name);
         // Прибытие
-        this.elements.input_text_cargo_arrival.val('');
-        this.elements.input_text_cargo_sap.val('');
-        this.elements.input_text_date_arrival.val('');
-        this.elements.input_text_owner_name_arrival.val('');
-        this.elements.input_text_operator_name_arrival.val('');
-        this.elements.input_text_limiting_loading_arrival.val('');
+        this.elements.input_text_cargo_arrival.val(wagon['arrival_uz_vagon_cargo_group_name_' + App.Lang]);
+        this.elements.input_text_cargo_sap.val(wagon.sap_incoming_supply_cargo_name);
+        this.elements.input_text_date_arrival.val(wagon.arrival_sostav_date_adoption);
+        this.elements.input_text_owner_name_arrival.val(owner_name);
+        this.elements.input_text_operator_name_arrival.val(arr_rent_operator);
+        this.elements.input_text_limiting_loading_arrival.val(arr_rent_limiting);
     }
     // Показать детали задержания
     form_outgoing_cars_detali.prototype.wiew_detention_wagon_detali = function (wagon) {
