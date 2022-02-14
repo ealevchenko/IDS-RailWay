@@ -722,5 +722,5 @@ select
 		Left JOIN [IDS].[Directory_PayerSender] as out_payer_sender ON out_doc_sostav.[code_payer] = out_payer_sender.[code]
 WHERE 
 
-out_car.id = 429193
+out_car.id = 511491
 order by out_car.position
