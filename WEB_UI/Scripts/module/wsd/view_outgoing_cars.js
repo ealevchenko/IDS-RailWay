@@ -392,6 +392,10 @@
                 var wagons = this.wagons.filter(function (i) { return i.outgoing_car_position_outgoing !== null }).sort(function (a, b) {
                     return b.outgoing_car_position_outgoing - a.outgoing_car_position_outgoing;
                 });
+                var present_wagons = [];
+                wagons.forEach(function (el) {
+                    present_wagons.push({num:el.num, position:el.outgoing_car_position_outgoing});
+                }.bind(this));
                 // Берем последнюю запись по вагону о подставляем значения
                 if (wagons && wagons.length) {
                     options.position = wagons[0].outgoing_car_position_outgoing + 1;
@@ -399,6 +403,7 @@
                     options.id_division = wagons[0].outgoing_uz_vagon_id_division;
                     //options.division_code = wagons[0].outgoing_uz_vagon_division_code;
                     options.station_uz_code = wagons[0].outgoing_uz_vagon_to_station_uz_code;
+                    options.present_wagons = present_wagons;
                 } else {
                     options.position = 1;
                 }

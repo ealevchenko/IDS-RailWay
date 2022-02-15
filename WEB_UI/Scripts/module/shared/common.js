@@ -2064,6 +2064,53 @@
             element.on('click', fn);
         }
     }
+    //---------------- ИНИЦИАЛИЗАЦИЯ ЭЛЕМЕНТОВ ----------------------
+    // Инициализация текстового поля "INPUT"
+    form_element.prototype.init_input = function (element, options) {
+        this.settings = $.extend({
+            default_value: null,
+            fn_change: null,
+        }, options);
+        this.type = element.attr('type');
+        this.$element = element;
+        this.init = function () {
+            this.update(this.settings.default_value);
+            if (typeof this.settings.fn_change === 'function') {
+                this.$element.on("change", this.settings.fn_change.bind(this));
+            }
+        };
+        this.val = function (value) {
+            if (value !== undefined) {
+                this.$element.val(value);
+                //this.$element.change();
+            } else {
+                if (this.type === 'number') {
+                    return this.$element.val() !== '' ? Number(this.$element.val()) : null;
+                }
+                if (this.type === 'text') {
+                    return this.$element.val() !== '' ? $.trim(String(this.$element.val())) : null;
+                }
+                return this.$element.val();
+            };
+        };
+        this.update = function (default_value) {
+            this.$element.val(default_value);
+        };
+        this.show = function () {
+            this.$element.show();
+        };
+        this.hide = function () {
+            this.$element.hide();
+        };
+        this.enable = function () {
+            this.$element.prop("disabled", false);
+        };
+        this.disable = function (clear) {
+            if (clear) this.$element.val('');
+            this.$element.prop("disabled", true);
+        };
+        this.init();
+    };
     //---------------- HTML ----------------------------
     // Элемент <div></div>
     form_element.prototype.div = function (options) {
@@ -2486,6 +2533,9 @@
             input_group_append_class: null,
             input_group_append_objs: null,
             input_group_prepend_obj_form: null,
+            element_default: null,
+            element_fn_change: null,
+
         }, options);
         //
         this.fe = new form_element();
@@ -2529,7 +2579,10 @@
             step: this.settings.input_step,
         });
         add_class(input.$input, this.settings.input_class);
-        this.element = new this.fc.init_input(input.$input, '', null);
+        this.element = new this.fe.init_input(input.$input, {
+            default_value: this.settings.element_default,
+            fn_change: this.settings.element_fn_change,
+        });
         //
         var ifb = new this.fe.bs_invalid_feedback();
 
@@ -3687,6 +3740,24 @@
             return false;
         }
     };
+    // Проверить элемент "autocomplete" на введенное значение
+    validation_form.prototype.check_control_autocomplete_null = function (o, mes_error, mes_ok, out_message) {
+        if (o.text()) {
+            if (o.val()) {
+                this.set_control_ok(o.$element, mes_ok);
+                if (out_message) this.out_info_message(mes_ok);
+                return true;
+            } else {
+                this.set_control_error(o.$element, mes_error);
+                if (out_message) this.out_error_message(mes_error);
+                return false;
+            }
+        } else {
+            this.set_control_ok(o.$element, mes_ok);
+            if (out_message) this.out_info_message(mes_ok);
+            return true;
+        }
+    };
     // Проверить элемент "datetime_input" на введенное значение
     validation_form.prototype.check_control_datetime_input = function (o, mes_error, mes_ok, out_message) {
         var datetime = moment(o.val());
@@ -3714,9 +3785,9 @@
                 return true;
             }
         } else {
-                this.set_control_ok(o.$element, mes_ok);
-                if (out_message) this.out_info_message(mes_ok);
-                return true;
+            this.set_control_ok(o.$element, mes_ok);
+            if (out_message) this.out_info_message(mes_ok);
+            return true;
         }
 
     };
