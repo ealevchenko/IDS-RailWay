@@ -324,6 +324,9 @@
         this.current_id_condition = null;       // Текущий id разметки
         this.arrival_id_wagon_rent = null;      // Текущий id аренды по прибытию
         this.outgoing_id_wagon_rent = null;     // Текущий id аренды по отправке
+        this.current_id_countrys = null;        // Текущий id администрации
+        this.current_id_genus = null;           // Текущий id род вагона
+        this.current_id_owner = null;           // Текущий id владелец
 
         // Загрузим справочные данные, определим поля формы правки
         this.load_db(['reason_discrepancy', 'detention_return', 'cargo', 'cargo_group', 'divisions', 'external_station'], false, function (result) {
@@ -680,7 +683,7 @@
                 childs: []
             };
             var form_input_gruzp_uz = {
-                obj: 'bs_input_text',
+                obj: 'bs_input_number',
                 options: {
                     id: 'gruzp_uz',
                     validation_group: 'common',
@@ -700,7 +703,7 @@
                 childs: []
             };
             var form_input_tara_uz = {
-                obj: 'bs_input_text',
+                obj: 'bs_input_number',
                 options: {
                     id: 'tara_uz',
                     validation_group: 'common',
@@ -2492,8 +2495,8 @@
             this.elements.autocomplete_reason_discrepancy_uz.text('');
             this.elements.input_text_adm_kod.val('');
             this.elements.input_text_rod_vag_abbr.val('');
-            this.elements.input_text_gruzp_uz.val('');
-            this.elements.input_text_tara_uz.val('');
+            this.elements.input_number_gruzp_uz.val('');
+            this.elements.input_number_tara_uz.val('');
             this.elements.input_text_condition_arrival.val('');
             this.elements.input_text_condition_present.val('');
 
@@ -2658,12 +2661,16 @@
         this.current_id_condition = null;       // Текущий id разметки
         this.arrival_id_wagon_rent = null;      // Текущий id аренды по прибытию
         this.outgoing_id_wagon_rent = null;     // Текущий id аренды по отправке
+        this.current_id_countrys = null;        // Текущий id администрации
+        this.current_id_genus = null;           // Текущий id род вагона
+        this.current_id_owner = null;           // Текущий id владелец
 
         var adm_kod = wagon.outgoing_uz_vagon_wagon_adm;
         var gruzp_uz = wagon.outgoing_uz_vagon_gruzp_uz;
         var tara_uz = wagon.outgoing_uz_vagon_tara_uz;
         var note_uz = wagon.outgoing_uz_vagon_note_uz;
         var current_condition = wagon['outgoing_uz_vagon_condition_abbr' + App.Lang];
+        var current_rod = wagon['outgoing_uz_vagon_rod_abbr_' + App.Lang];
 
         var laden = wagon.outgoing_uz_vagon_laden;
         var outgoing_uz_vagon_id_group = wagon.outgoing_uz_vagon_id_group;
@@ -2683,17 +2690,24 @@
             if (this.wagon_settings.dir_wagon) {
                 gruzp_uz = options.dir_wagon.gruzp;         //
                 tara_uz = options.dir_wagon.tara;
+                // Администрация
                 var wagon_contrys = options.dir_wagon.Directory_Countrys;
-                adm_kod = wagon_contrys ? wagon_contrys.code_sng : null;
+                this.current_id_countrys = wagon_contrys ? wagon_contrys.id : null;
+                adm_kod = wagon_contrys ? wagon_contrys.code_sng : adm_kod;
+                // Род вагона
+                var wagon_genus = options.dir_wagon.Directory_GenusWagons;
+                this.current_id_genus = wagon_genus ? wagon_genus.id : null;
+                current_rod = wagon_genus ? wagon_genus['abbr_' + App.Lang] : current_rod;
+                // Владелец
                 var wagon_owners = options.dir_wagon.Directory_OwnersWagons;
-                owner_name = wagon_owners ? wagon_owners['abbr_' + App.Lang] : null;
+                owner_name = wagon_owners ? wagon_owners['abbr_' + App.Lang] : owner_name;
+                this.current_id_owner = wagon_owners ? wagon_owners.id : null;
+                // Аренды
                 var wagon_rents = options.dir_wagon.Directory_WagonsRent;
                 if (wagon_rents) {
                     var out_wagon_rent = wagon_rents.find(function (o) {
                         return o.rent_end === null;
                     });
-
-
                     if (out_wagon_rent) {
                         this.outgoing_id_wagon_rent = out_wagon_rent.id;                        // Текущий id аренды по отправке
                         var dir_oper = out_wagon_rent.Directory_OperatorsWagons;
@@ -2720,8 +2734,6 @@
                 }
                 note_uz = options.dir_wagon.note;
                 //current_condition wagon['arrival_uz_vagon_condition_abbr_' + App.Lang]
-
-
             };
             // Уточним группу груза (если уже были вагоны в левой части)
             if (this.wagon_settings && this.wagon_settings.id_group) {
@@ -2761,9 +2773,9 @@
         this.elements.autocomplete_reason_discrepancy_uz.text(wagon['outgoing_car_reason_discrepancy_uz_name_' + App.Lang]);
         //
         this.elements.input_text_adm_kod.val(adm_kod);
-        this.elements.input_text_rod_vag_abbr.val(wagon['outgoing_uz_vagon_rod_abbr_' + App.Lang]);
-        this.elements.input_text_gruzp_uz.val(gruzp_uz);
-        this.elements.input_text_tara_uz.val(tara_uz);
+        this.elements.input_text_rod_vag_abbr.val(current_rod);
+        this.elements.input_number_gruzp_uz.val(gruzp_uz);
+        this.elements.input_number_tara_uz.val(tara_uz);
         //
         this.elements.input_text_condition_arrival.val(wagon['arrival_uz_vagon_condition_abbr_' + App.Lang]);
         //this.wagon_settings.type === 1 ? wagon['last_operation_condition_' + App.Lang] : wagon['outgoing_uz_vagon_condition_abbr' + App.Lang]
@@ -3299,23 +3311,23 @@
                         id_condition: this.current_id_condition, // разметка по отправке
                         id_wagons_rent_arrival: this.arrival_id_wagon_rent,
                         id_wagons_rent_outgoing: this.outgoing_id_wagon_rent,
-                        id_countrys: cars_detali.select_dir_wagon ? cars_detali.select_dir_wagon.id_countrys : null,
-                        id_genus: cars_detali.select_dir_wagon ? cars_detali.select_dir_wagon.id_genus : null,
-                        id_owner: cars_detali.select_dir_wagon ? cars_detali.select_dir_wagon.id_owner : null,
-                        gruzp_uz: get_input_number_value(cars_detali.gruzp_uz),
-                        tara_uz: get_input_number_value(cars_detali.tara_uz),
-                        note_uz: get_input_string_value(cars_detali.limiting_loading_uz),
+                        id_countrys: this.current_id_countrys,
+                        id_genus: this.current_id_genus,
+                        id_owner: this.current_id_owner,
+                        gruzp_uz: this.elements.input_number_gruzp_uz.val(),
+                        tara_uz: this.elements.input_number_tara_uz.val(),
+                        note_uz: this.elements.textarea_limiting_loading_uz.val(),
                         id_warehouse: null,
-                        id_division: cars_detali.ids_inc.ids_dir.getID_Divisions_Of_Name(cars_detali.loading_devision.val(), 'division_abbr', cars_detali.lang),
-                        laden: cars_detali.loaded_car.prop("checked"),
-                        id_cargo: cars_detali.ids_inc.ids_dir.getID_Cargo_Of_Name(cars_detali.cargo_name.val(), 'cargo_name', cars_detali.lang),
-                        nom_cont1: get_input_string_value(cars_detali.num_cont_1),
-                        nom_cont2: get_input_string_value(cars_detali.num_cont_2),
+                        id_division: this.elements.autocomplete_loading_devision.val(),
+                        laden: this.elements.checkbox_loaded_car.val(),
+                        id_cargo: this.elements.autocomplete_cargo_name.val(),
+                        nom_cont1: this.elements.input_text_num_cont_1.val(),
+                        nom_cont2: this.elements.input_text_num_cont_2.val(),
                         //id_outgoing_detention_return: cars_detali.current_cars_return ? cars_detali.current_cars_return.id : null,
-                        code_stn_to: get_input_number_value(cars_detali.code_station_to),
+                        code_stn_to: this.elements.autocomplete_name_station_to.val(),
                         user: App.User_Name,
                     };
-
+                    var ds = '';
                     //if (this.current_id_return_wagons !== null) {
                     //    // Подготовим операцию
                     //    var operation_return = {
