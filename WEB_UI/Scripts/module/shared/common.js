@@ -147,6 +147,19 @@
         this.update = function (default_value) {
             this.$element.val(default_value);
         };
+        this.show = function () {
+            this.$element.show();
+        };
+        this.hide = function () {
+            this.$element.hide();
+        };
+        this.enable = function () {
+            this.$element.prop("disabled", false);
+        };
+        this.disable = function (clear) {
+            if (clear) this.$element.val('');
+            this.$element.prop("disabled", true);
+        };
         this.init();
     };
     // Инициализация поля дата и время "INPUT"
@@ -392,7 +405,11 @@
                 var text_out = value;
                 if (this.settings.val_inp === 'value') {
                     var select = this.settings.data.find(function (o) {
-                        return o.value == $.trim(value);
+                        if (value === null) {
+                            return o.value === value;
+                        } else {
+                            return o.value == $.trim(value);
+                        };
                     }.bind(this));
                     text_out = select ? select.text : null;
                 }
@@ -2823,6 +2840,7 @@
             checkbox_class: null,
             checkbox_title: null,
             checkbox_required: null,
+            checkbox_readonly: true,
             element_default: null,
             element_change: null,
         }, options);
@@ -2854,10 +2872,14 @@
             title: this.settings.checkbox_title,
             placeholder: null,
             required: this.settings.checkbox_required,
+            //readonly: this.settings.checkbox_readonly,
         });
         add_class(input.$input, this.settings.checkbox_class);
         //
         this.element = new this.fc.init_checkbox(input.$input, this.settings.element_default, this.settings.element_change);
+        if (this.settings.checkbox_readonly) {
+            this.element.disable();
+        }
         // Подпись
         var label = new this.fe.label({
             class: 'form-check-label',
