@@ -167,7 +167,10 @@
             'fogcd_form_return_close': 'Закрыть возврат?',
             'fogcd_form_return_close_message': 'Закрыть возврат по вагону {0}?',
             'fogcd_form_present': 'Выполнить?',
-            'fogcd_form_present_message': 'Подтвердите выполнение операции «ПРЕДЪЯВИТЬ ВАГОН № {0} УЗ»?',
+            'fogcd_form_present_message': 'Подтвердите выполнение операции «ПРЕДЪЯВИТЬ ВАГОН № {0} НА УЗ»?',
+            'fogcd_form_return_present': 'Выполнить?',
+            'fogcd_form_return_present_message': 'Подтвердите выполнение операции «ВЕРНУТЬ ВАГОН № {0} ПРЕДЪЯВЛЕННЫ НА УЗ»?',
+
 
             'fogcd_title_fieldset_detention_return': 'ЗАДЕРЖАНИЕ/ВОЗВРАТ',
             'fogcd_title_fieldset_detention': 'ЗАДЕРЖАНИЕ',
@@ -233,6 +236,12 @@
             'fogcd_mess_error_operation_return_close_not_id': 'Ошибка выполения операции "Закрыть возврат по вагону", id cтроки возврата неопределенн',
             'fogcd_mess_run_operation_present': 'Выполняю операцию "Предъявить вагон на УЗ"',
             'fogcd_mess_cancel_operation_present': 'Отмена выполнения операции "Предъявить вагон на УЗ"',
+            'fogcd_mess_ok_operation_present': 'Операция "Предъявить вагон на УЗ" - выполнена',
+            'fogcd_mess_error_operation_present': 'Ошибка выполения операции "Предъявить вагон на УЗ", код ошибки = ',
+            'fogcd_mess_run_operation_return_present': 'Выполняю операцию "Вернуть вагон предъявленный на УЗ"',
+            'fogcd_mess_cancel_operation_return_present': 'Отмена выполнения операции "Вернуть вагон предъявленный на УЗ"',
+            'fogcd_mess_ok_operation_return_present': 'Операция "Вернуть вагон предъявленный на УЗ" - выполнена',
+            'fogcd_mess_error_operation_return_present': 'Ошибка выполения операции "Вернуть вагон предъявленный на УЗ", код ошибки = ',
 
             //'fhoogs_title_form_add': 'Сдать состав',
             //'fhoogs_title_form_edit': 'Править сданный состав',
@@ -391,7 +400,8 @@
                     icon_right: 'fa fa-arrow-circle-right',
                     click: function (event) {
                         event.preventDefault();
-                    },
+                        this.action_return_wagon();
+                    }.bind(this),
                 }
             };
             // Форма детально
@@ -1290,9 +1300,10 @@
                     form_group_class: 'text-left',
                     label: langView('fogcd_label_loaded_car', App.Langs),
                     label_class: 'mb-1',
-                    checkbox_class: 'inp-manual',
+                    checkbox_class: 'inp-auto',
                     checkbox_title: null,
                     checkbox_required: null,
+                    checkbox_readonly: true,
                     element_default: null,
                     element_change: null,
                 },
@@ -1321,7 +1332,7 @@
                     input_placeholder: null,
                     input_required: null,
                     input_group: false,
-                    element_data: this.list_cargo_group,
+                    element_data: this.list_cargo,
                     element_minLength: 0,
                     element_out_value: false,
                     element_val_inp: 'value',
@@ -1329,7 +1340,25 @@
                         if (text) {
                             var obj = this.ids_dir.getCargo_Of_CultureName('cargo_name', text)
                             if (obj && obj.length > 0) {
+                                this.out_clear();
                                 this.form.set_validation_object_ok(null, 'cargo_name', "");
+                                // Это порожний вагон
+                                if (obj[0].id_group === 11) {
+                                    // вагон порожний
+                                    this.elements.checkbox_loaded_car.val(false);
+                                    this.elements.autocomplete_loading_devision.val(1);
+                                } else {
+                                    // Вагон гружен
+                                    this.elements.checkbox_loaded_car.val(true);
+                                    // Уточним группу груза (если уже были вагоны в левой части)
+                                    if (this.wagon_settings && this.wagon_settings.id_cargo && this.wagon_settings.id_cargo === obj[0].id && this.wagon_settings.id_division) {
+                                        this.elements.autocomplete_loading_devision.val(this.wagon_settings.id_division); // Убрать подразделение по умолчанию
+                                        this.elements.input_text_loading_devision_code.val(this.wagon_settings.division_code); // Убрать подразделение по умолчанию                                        this.elements.autocomplete_loading_devision_code.val(this.wagon_settings.division_code); // Убрать подразделение по умолчанию
+                                    } else {
+                                        this.elements.autocomplete_loading_devision.val(null); // Убрать подразделение
+                                        this.elements.input_text_loading_devision_code.val(null); // Убрать подразделение
+                                    }
+                                }
                             } else {
                                 this.form.set_validation_object_error(null, 'cargo_name', langView('fogcd_mess_valid_cargo', App.Langs));
                             }
@@ -1451,14 +1480,14 @@
                             var obj = this.ids_dir.getExternalStation_Of_CultureName('station_name', text)
                             if (obj && obj.length > 0) {
                                 this.form.set_validation_object_ok(null, 'name_station_to', "");
-                                this.form.val('code_station_to', obj[0].code)
-
+                                this.elements.input_text_code_station_to.val(obj[0].code);
                             } else {
                                 this.form.set_validation_object_error(null, 'name_station_to', langView('fogcd_mess_valid_name_station_to', App.Langs));
-                                this.form.val('code_station_to', '')
+                                this.elements.input_text_code_station_to.val('');
+                                //this.elements.autocomplete_name_station_to.text('');
                             }
                         } else {
-
+                                this.elements.input_text_code_station_to.val('');
                         }
                     }.bind(this),
                 },
@@ -2673,7 +2702,7 @@
         var current_rod = wagon['outgoing_uz_vagon_rod_abbr_' + App.Lang];
 
         var laden = wagon.outgoing_uz_vagon_laden;
-        var outgoing_uz_vagon_id_group = wagon.outgoing_uz_vagon_id_group;
+        var outgoing_uz_vagon_id_cargo = wagon.outgoing_uz_vagon_id_cargo;
         var outgoing_uz_vagon_id_division = wagon.outgoing_uz_vagon_id_division;
         var outgoing_uz_vagon_division_code = wagon.outgoing_uz_vagon_division_code;
         var outgoing_uz_vagon_to_station_uz_code = wagon.outgoing_uz_vagon_to_station_uz_code;
@@ -2736,16 +2765,21 @@
                 //current_condition wagon['arrival_uz_vagon_condition_abbr_' + App.Lang]
             };
             // Уточним группу груза (если уже были вагоны в левой части)
-            if (this.wagon_settings && this.wagon_settings.id_group) {
-                outgoing_uz_vagon_id_group = this.wagon_settings.id_group;
+            if (this.wagon_settings && this.wagon_settings.id_cargo) {
+                outgoing_uz_vagon_id_cargo = this.wagon_settings.id_cargo;
             }
             // Уточним подразделение погрузки (если уже были вагоны в левой части)
             if (this.wagon_settings && this.wagon_settings.id_division) {
-                var outgoing_uz_vagon_id_division = this.wagon_settings.id_division;
+                outgoing_uz_vagon_id_division = this.wagon_settings.id_division;
             }
+            // Уточним подразделение погрузки (если уже были вагоны в левой части)
+            if (this.wagon_settings && this.wagon_settings.division_code) {
+                outgoing_uz_vagon_division_code = this.wagon_settings.division_code;
+            }
+
             // Уточним станцию назначения (если уже были вагоны в левой части)
             if (this.wagon_settings && this.wagon_settings.station_uz_code) {
-                var outgoing_uz_vagon_to_station_uz_code = this.wagon_settings.station_uz_code;
+                outgoing_uz_vagon_to_station_uz_code = this.wagon_settings.station_uz_code;
             }
             // Определим текущую разметку
             if (this.wagon_settings && this.wagon_settings.wio) {
@@ -2768,7 +2802,15 @@
         this.elements.input_number_position_outgoing.val(this.wagon_settings.type === 1 ? this.wagon_settings.position : wagon.outgoing_car_position_outgoing);
         this.elements.input_text_num_cont_1.val(wagon.outgoing_uz_vagon_cont_1_nom_cont);
         this.elements.input_text_num_cont_2.val(wagon.outgoing_uz_vagon_cont_2_nom_cont);
-        this.elements.input_datetime_date_outgoing_act.val(wagon.outgoing_car_date_outgoing_act); //
+        // сделал из-за того что неактивный компонент нехочет показывать дату
+        if (this.wagon_settings.type !== 1) {
+            this.elements.input_datetime_date_outgoing_act.enable();
+            this.elements.input_datetime_date_outgoing_act.val(wagon.outgoing_car_date_outgoing_act); //
+            this.elements.input_datetime_date_outgoing_act.disable();
+        } else {
+            this.elements.input_datetime_date_outgoing_act.val(wagon.outgoing_car_date_outgoing_act); //
+        }
+
         this.elements.autocomplete_reason_discrepancy_amkr.text(wagon['outgoing_car_reason_discrepancy_amkr_name_' + App.Lang]);
         this.elements.autocomplete_reason_discrepancy_uz.text(wagon['outgoing_car_reason_discrepancy_uz_name_' + App.Lang]);
         //
@@ -2793,7 +2835,7 @@
         // Данные о погрузке
         this.elements.checkbox_loaded_car.val(laden);
 
-        this.elements.autocomplete_cargo_name.val(outgoing_uz_vagon_id_group);
+        this.elements.autocomplete_cargo_name.val(outgoing_uz_vagon_id_cargo);
 
         this.elements.input_text_loading_devision_code.val(outgoing_uz_vagon_division_code);
         this.elements.autocomplete_loading_devision.val(outgoing_uz_vagon_id_division);
@@ -3132,7 +3174,6 @@
         }
         return valid;
     };
-
     //----------------------------------------------------------------
     // Выполнить операцию сохранить задержание
     form_outgoing_cars_detali.prototype.action_save_detention = function () {
@@ -3224,7 +3265,7 @@
                         this.elements.button_return_open.prop("disabled", false); // сделаем активной
                         LockScreenOff();
                     }.bind(this));
-                    this.elements.button_return_open.prop("disabled", false); // сделаем активной
+                    //this.elements.button_return_open.prop("disabled", false); // сделаем активной
                 } else {
                     this.form.validation_return.out_warning_message(langView('fogcd_mess_cancel_operation_return_open', App.Langs))
                     this.elements.button_return_open.prop("disabled", false); // сделаем активной
@@ -3304,7 +3345,7 @@
                     // Подготовим операцию
                     var operation_present = {
                         id_outgoing_car: this.wagon ? this.wagon.outgoing_car_id : null,
-                        position: this.elements.input_number_num_car.val(),
+                        position: this.elements.input_number_position_outgoing.val(),
                         date_outgoing_act: this.elements.input_datetime_date_outgoing_act.val(),
                         id_reason_discrepancy_amkr: this.elements.autocomplete_reason_discrepancy_amkr.val(),
                         id_reason_discrepancy_uz: this.elements.autocomplete_reason_discrepancy_uz.val(),
@@ -3327,45 +3368,22 @@
                         code_stn_to: this.elements.autocomplete_name_station_to.val(),
                         user: App.User_Name,
                     };
-                    var ds = '';
-                    //if (this.current_id_return_wagons !== null) {
-                    //    // Подготовим операцию
-                    //    var operation_return = {
-                    //        id_outgoing_car: this.wagon ? this.wagon.outgoing_car_id : null,
-                    //        id_outgoin_return: this.current_id_return_wagons,
-                    //        date_stop: this.elements.input_datetime_return_stop.val(),
-                    //        num_act: this.elements.input_text_return_num_act.val(),
-                    //        date_act: this.elements.input_datetime_return_date_act.val(),
-                    //        note: this.elements.textarea_return_note.val(),
-                    //        user: App.User_Name,
-                    //    };
-                    //    // Закроем
-                    //    this.ids_wsd.postCloseOutgoingReturn(operation_return, function (result_operation) {
-                    //        if (result_operation > 0) {
-                    //            this.form.validation_return.out_info_message(langView('fogcd_mess_ok_operation_return_close', App.Langs));
-                    //        } else {
-                    //            // Ошибка выполнения
-                    //            this.form.validation_return.out_error_message(langView('fogcd_mess_error_operation_return_close', App.Langs) + result_operation);
-                    //            LockScreenOff();
-                    //        }
-                    //        // Обновим данные
-                    //        this.update_wagon(function (wagon) {
-                    //            this.wiew_return_wagon_detali(wagon);
-                    //            this.elements.button_detention_save.prop("disabled", false); // сделаем активной
-                    //            LockScreenOff();
-                    //        }.bind(this));
-                    //        this.elements.button_return_close.prop("disabled", false); // сделаем активной
-                    //        LockScreenOff();
-                    //    }.bind(this));
-                    //    this.elements.button_return_close.prop("disabled", false); // сделаем активной
-
-                    //} else {
-                    //    // Не определен id строки возврата
-                    //    this.form.validation_return.out_warning_message(langView('fogcd_mess_error_operation_return_close_not_id', App.Langs))
-                    //    this.elements.button_return_close.prop("disabled", false); // сделаем активной
-                    //    LockScreenOff();
-                    //};
-
+                    // Выполним предъявить
+                    this.ids_wsd.postOutgoingPresentWagon(operation_present, function (result_operation) {
+                        if (result_operation > 0) {
+                            this.form.validation_common.out_info_message(langView('fogcd_mess_ok_operation_present', App.Langs));
+                        } else {
+                            // Ошибка выполнения
+                            this.form.validation_common.out_error_message(langView('fogcd_mess_error_operation_present', App.Langs) + result_operation);
+                            LockScreenOff();
+                        }
+                        // Обновим данные полностью
+                        if (typeof this.settings.fn_update === 'function') {
+                            this.settings.fn_update();
+                        };
+                        this.elements.button_present_car.prop("disabled", false); // сделаем активной
+                        LockScreenOff();
+                    }.bind(this));
                 } else {
                     // Отмена операции
                     this.clear_out_validation(); // очистить все сообщения
@@ -3377,6 +3395,42 @@
             this.elements.button_present_car.prop("disabled", false); // сделаем активной
         }
 
+    };
+    // Предявить вагон (перенести в левую сторону)
+    form_outgoing_cars_detali.prototype.action_return_wagon = function () {
+        this.elements.button_return_car.prop("disabled", true); // сделаем не активной
+        this.modal_confirm_form.view(langView('fogcd_form_return_present', App.Langs), langView('fogcd_form_return_present_message', App.Langs).format(this.wagon ? this.wagon.num : null), function (res) {
+            if (res) {
+                // Выполнить операцию
+                LockScreen(langView('fogcd_mess_run_operation_return_present', App.Langs));
+                // Подготовим операцию
+                var operation_return = {
+                    id_outgoing_car: this.wagon ? this.wagon.outgoing_car_id : null,
+                    user: App.User_Name,
+                };
+                // Выполним предъявить
+                this.ids_wsd.postOutgoingReturnPresentWagon(operation_return, function (result_operation) {
+                    if (result_operation > 0) {
+                        this.form.validation_common.out_info_message(langView('fogcd_mess_ok_operation_return_present', App.Langs));
+                    } else {
+                        // Ошибка выполнения
+                        this.form.validation_common.out_error_message(langView('fogcd_mess_error_operation_return_present', App.Langs) + result_operation);
+                        LockScreenOff();
+                    }
+                    // Обновим данные полностью
+                    if (typeof this.settings.fn_update === 'function') {
+                        this.settings.fn_update();
+                    };
+                    this.elements.button_return_car.prop("disabled", false); // сделаем активной
+                    LockScreenOff();
+                }.bind(this));
+            } else {
+                // Отмена операции
+                this.clear_out_validation(); // очистить все сообщения
+                this.form.validation_common.out_warning_message(langView('fogcd_mess_cancel_operation_return_present', App.Langs))
+                this.elements.button_return_car.prop("disabled", false); // сделаем активной
+            }
+        }.bind(this));
     };
 
     //----------------------------------------------------------------
