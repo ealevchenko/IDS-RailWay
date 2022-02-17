@@ -692,6 +692,59 @@
             },
         });
     };
+    //================= ОТПРАВКА ВАГОНОВ НА УЗ (Предъявление) =========================================================
+    // Операция предъявить вагон (перенести в левую часть)
+    ids_wsd.prototype.postOutgoingPresentWagon = function (operation_present, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/operation/present/wagon/',
+            type: 'POST',
+            data: JSON.stringify(operation_present),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postOutgoingPresentWagon", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Операция вернуть предъявленный вагон (вернуть в правую часть)
+    ids_wsd.prototype.postOutgoingReturnPresentWagon = function (operation_return, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/operation/return_present/wagon/',
+            type: 'POST',
+            data: JSON.stringify(operation_return),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postOutgoingReturnPresentWagon", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
+
     //======================================================================================================
     //                                  РАЗДЕЛ ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ ВАГОНОВ
     //======= WagonInternalRoutes (Внутреннее перемещение вагона на АМКР) =========================================================================
