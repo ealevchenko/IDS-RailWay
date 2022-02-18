@@ -497,6 +497,31 @@
             },
         });
     };
+    // Операция вернуть вагон с пръедявления
+    ids_wsd.prototype.postPostOperationReturnProvideWagon = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/operation/return_provide/wagon/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postPostOperationReturnProvideWagon", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
 
     //================= ОТПРАВКА ВАГОНОВ НА УЗ (Вагоны) =========================================================
     // Получить все вагоны состава для отправки по id состава (View)
@@ -808,20 +833,6 @@
         }
         return null;
     };
-
-    //// Вернуть песледнюю запись операций из внутренего перемещения вагонов
-    //IDS_RWT.prototype.getLastWagonInternalOperationOfWIR = function (wir) {
-    //    var last_wio = null;
-    //    if (wir && wir.WagonInternalOperation && wir.WagonInternalOperation.length > 0) {
-    //        $.each(wir.WagonInternalOperation, function (i, el) {
-    //            var wio = el;
-    //            if (last_wio === null || wio.id > last_wio.id) {
-    //                last_wio = wio;
-    //            }
-    //        });
-    //    }
-    //    return last_wio;
-    //};
 
     App.ids_wsd = ids_wsd;
 

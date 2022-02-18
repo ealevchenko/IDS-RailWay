@@ -675,12 +675,16 @@
     };
     //-------------------------------------------------------------------------------------------
     // обновим информацию об выбраных строках
+    table_outgoing_cars.prototype.select_clear = function () {
+        this.obj_t_cars.rows({ selected: true }).deselect();
+        this.obj_t_cars.draw();
+    };
+
+    // обновим информацию об выбраных строках
     table_outgoing_cars.prototype.select_rows = function () {
         var index = this.obj_t_cars.rows({ selected: true });
         var rows = this.obj_t_cars.rows(index && index.length > 0 ? index[0] : null).data().toArray();
         this.select_rows_wagons = rows;
-
-        //this.id_sostav = this.select_rows_wagons && this.select_rows_wagons.length > 0 ? this.select_rows_wagons[0].id : null;
     };
     // Показать данные
     table_outgoing_cars.prototype.view = function (data, id_outgoing_car) {

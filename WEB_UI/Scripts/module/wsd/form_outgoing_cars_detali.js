@@ -170,6 +170,8 @@
             'fogcd_form_present_message': 'Подтвердите выполнение операции «ПРЕДЪЯВИТЬ ВАГОН № {0} НА УЗ»?',
             'fogcd_form_return_present': 'Выполнить?',
             'fogcd_form_return_present_message': 'Подтвердите выполнение операции «ВЕРНУТЬ ВАГОН № {0} ПРЕДЪЯВЛЕННЫ НА УЗ»?',
+            'fogcd_form_remove_wagon': 'Выполнить?',
+            'fogcd_form_remove_wagon_message': 'Подтвердите выполнение операции «УБРАТЬ ВАГОН № {0} ИЗ СОТАВА ДЛЯ ПРЕДЪЯВЛЕНИЯ»?',
 
 
             'fogcd_title_fieldset_detention_return': 'ЗАДЕРЖАНИЕ/ВОЗВРАТ',
@@ -242,6 +244,11 @@
             'fogcd_mess_cancel_operation_return_present': 'Отмена выполнения операции "Вернуть вагон предъявленный на УЗ"',
             'fogcd_mess_ok_operation_return_present': 'Операция "Вернуть вагон предъявленный на УЗ" - выполнена',
             'fogcd_mess_error_operation_return_present': 'Ошибка выполения операции "Вернуть вагон предъявленный на УЗ", код ошибки = ',
+            'fogcd_mess_run_operation_remove_wagon': 'Выполняю операцию "Убрать вагон из состава для предъявления"',
+            'fogcd_mess_cancel_operation_remove_wagon': 'Отмена выполнения операции "Убрать вагон из состава для предъявления"',
+            'fogcd_mess_ok_operation_remove_wagon': 'Операция "Убрать вагон из состава для предъявления" - выполнена',
+            'fogcd_mess_error_operation_remove_wagon': 'Ошибка выполения операции "Убрать вагон из состава для предъявления", код ошибки = ',
+
 
             //'fhoogs_title_form_add': 'Сдать состав',
             //'fhoogs_title_form_edit': 'Править сданный состав',
@@ -451,7 +458,8 @@
                     icon_right: 'fa fa-retweet',
                     click: function (event) {
                         event.preventDefault();
-                    },
+                        this.action_remove_wagon();
+                    }.bind(this),
                 }
             };
             var form_input_num = {
@@ -800,7 +808,7 @@
                 obj: 'bs_textarea',
                 options: {
                     id: 'condition_present',
-                    validation_group: null,
+                    validation_group: 'common',
                     form_group_size: 'xl',
                     form_group_col: 12,
                     form_group_class: 'text-left',
@@ -1487,7 +1495,7 @@
                                 //this.elements.autocomplete_name_station_to.text('');
                             }
                         } else {
-                                this.elements.input_text_code_station_to.val('');
+                            this.elements.input_text_code_station_to.val('');
                         }
                     }.bind(this),
                 },
@@ -2989,7 +2997,11 @@
         // Переведем все компоненты в режим disabled
         // Общие компоненты
         this.elements.button_present_car.hide();
-        this.elements.button_return_car.show();
+        if (this.wagon && this.wagon.outgoing_sostav_status <= 1) {
+            this.elements.button_return_car.show();
+        } else {
+            this.elements.button_return_car.hide();
+        }
         this.elements.button_car_return.hide();
         this.form.obj_form.validations[0].$elements.each(function () {
             this.prop('disabled', true);
@@ -3013,9 +3025,14 @@
         this.clear_form();
         // Переведем все компоненты в режим disabled
         // Общие компоненты
-        this.elements.button_present_car.show();
+        if (this.wagon && this.wagon.outgoing_sostav_status <= 1) {
+            this.elements.button_present_car.show();
+            this.elements.button_car_return.show();
+        } else {
+            this.elements.button_present_car.hide();
+            this.elements.button_car_return.hide();
+        }
         this.elements.button_return_car.hide();
-        this.elements.button_car_return.show();
         this.form.obj_form.validations[0].$elements.each(function () {
             if (this.is('.inp-manual')) {
                 this.prop('disabled', false);
@@ -3371,12 +3388,14 @@
                     // Выполним предъявить
                     this.ids_wsd.postOutgoingPresentWagon(operation_present, function (result_operation) {
                         if (result_operation > 0) {
+                            this.clear_out_validation(); // очистить все сообщения
                             this.form.validation_common.out_info_message(langView('fogcd_mess_ok_operation_present', App.Langs));
                         } else {
                             // Ошибка выполнения
+                            this.clear_out_validation(); // очистить все сообщения
                             this.form.validation_common.out_error_message(langView('fogcd_mess_error_operation_present', App.Langs) + result_operation);
                             LockScreenOff();
-                        }
+                        };
                         // Обновим данные полностью
                         if (typeof this.settings.fn_update === 'function') {
                             this.settings.fn_update();
@@ -3386,7 +3405,6 @@
                     }.bind(this));
                 } else {
                     // Отмена операции
-                    this.clear_out_validation(); // очистить все сообщения
                     this.form.validation_common.out_warning_message(langView('fogcd_mess_cancel_operation_present', App.Langs))
                     this.elements.button_present_car.prop("disabled", false); // сделаем активной
                 }
@@ -3396,7 +3414,7 @@
         }
 
     };
-    // Предявить вагон (перенести в левую сторону)
+    // Отменить пръедявление (вернуть в правую сторону)
     form_outgoing_cars_detali.prototype.action_return_wagon = function () {
         this.elements.button_return_car.prop("disabled", true); // сделаем не активной
         this.modal_confirm_form.view(langView('fogcd_form_return_present', App.Langs), langView('fogcd_form_return_present_message', App.Langs).format(this.wagon ? this.wagon.num : null), function (res) {
@@ -3429,6 +3447,42 @@
                 this.clear_out_validation(); // очистить все сообщения
                 this.form.validation_common.out_warning_message(langView('fogcd_mess_cancel_operation_return_present', App.Langs))
                 this.elements.button_return_car.prop("disabled", false); // сделаем активной
+            }
+        }.bind(this));
+    };
+    // Убрать вагон с состава для предявления 
+    form_outgoing_cars_detali.prototype.action_remove_wagon= function () {
+        this.elements.button_car_return.prop("disabled", true); // сделаем не активной
+        this.modal_confirm_form.view(langView('fogcd_form_remove_wagon', App.Langs), langView('fogcd_form_remove_wagon_message', App.Langs).format(this.wagon ? this.wagon.num : null), function (res) {
+            if (res) {
+                // Выполнить операцию
+                LockScreen(langView('fogcd_mess_run_operation_remove_wagon', App.Langs));
+                // Подготовим операцию
+                var operation_return = {
+                    id_outgoing_car: this.wagon ? this.wagon.outgoing_car_id : null,
+                    user: App.User_Name,
+                };
+                // Выполним убрать вагон
+                this.ids_wsd.postPostOperationReturnProvideWagon(operation_return, function (result_operation) {
+                    if (result_operation > 0) {
+                        this.form.validation_common.out_info_message(langView('fogcd_mess_ok_operation_remove_wagon', App.Langs));
+                    } else {
+                        // Ошибка выполнения
+                        this.form.validation_common.out_error_message(langView('fogcd_mess_error_operation_remove_wagon', App.Langs) + result_operation);
+                        LockScreenOff();
+                    }
+                    // Обновим данные полностью
+                    if (typeof this.settings.fn_update === 'function') {
+                        this.settings.fn_update();
+                    };
+                    this.elements.button_car_return.prop("disabled", false); // сделаем активной
+                    LockScreenOff();
+                }.bind(this));
+            } else {
+                // Отмена операции
+                this.clear_out_validation(); // очистить все сообщения
+                this.form.validation_common.out_warning_message(langView('fogcd_mess_cancel_operation_return_present', App.Langs))
+                this.elements.button_car_return.prop("disabled", false); // сделаем активной
             }
         }.bind(this));
     };

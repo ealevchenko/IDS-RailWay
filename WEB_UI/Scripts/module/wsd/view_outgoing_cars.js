@@ -269,6 +269,7 @@
 
             },
             fn_refresh: function () {
+                this.out_clear();
                 this.update();
             }.bind(this),
         });
@@ -301,18 +302,18 @@
     // Открыть модуль 
     view_outgoing_cars.prototype.open = function (id_sostav) {
         this.id_sostav = id_sostav;
+        this.out_clear();
         this.update();
     };
     // Обновить информацию по модуль
     view_outgoing_cars.prototype.update = function () {
-        this.out_clear();
-
         this.tablist.empty();
         this.table_outgoing_cars.clear();
         if (this.id_sostav) {
             LockScreen(langView('vogc_mess_load_sostav', App.Langs));
             this.ids_wsd.getViewOutgoingCarsOfIDSostav(this.id_sostav, function (wagons) {
                 this.wagons = wagons;
+                this.table_outgoing_cars.id_sostav = this.id_sostav; // передадим состав
                 // Отобразить информацию о составе
                 if (this.wagons && this.wagons.length > 0) {
                     var outgoing_sostav_num_doc = this.wagons[0].outgoing_sostav_num_doc;
@@ -387,14 +388,15 @@
         LockScreen(langView('vogc_mess_load_vagon_detali', App.Langs));
         if (options && options.type != null) {
             if (options.type === 1) {
-                // Наполняем дополнительной информацией
+                // редактируем
+                this.table_outgoing_cars.select_clear(); // очистим выбор в таблице
                 // Определим следующую позицию
                 var wagons = this.wagons.filter(function (i) { return i.outgoing_car_position_outgoing !== null }).sort(function (a, b) {
                     return b.outgoing_car_position_outgoing - a.outgoing_car_position_outgoing;
                 });
                 var present_wagons = [];
                 wagons.forEach(function (el) {
-                    present_wagons.push({num:el.num, position:el.outgoing_car_position_outgoing});
+                    present_wagons.push({ num: el.num, position: el.outgoing_car_position_outgoing });
                 }.bind(this));
                 // Берем последнюю запись по вагону о подставляем значения
                 if (wagons && wagons.length) {
@@ -408,15 +410,12 @@
                 } else {
                     options.position = 1;
                 }
+            } else {
+                // только отображаем
+                this.tablist.find('a.active').removeClass('active'); // очистим выбор в правой стороне
             }
             this.form_outgoing_cars_detali.wagon_detali(id, options);
         }
-
-        //var wagon = this.wagons.find(function (o) {
-        //    return o.outgoing_car_id === id;
-        //});
-
-
     };
     //--------------------------------------------------------------------------------
     // Показать

@@ -3986,6 +3986,7 @@ IDS_RWT.prototype.postTransferProvideWagonsOfStation = function (operation_trans
         },
     });
 };
+//TODO: Отключить после переделки outgoing.js перенесен в ids_wsd.js
 //Операция вернуть вагон с пръедявления
 IDS_RWT.prototype.postPostOperationReturnProvideWagon = function (operation_return, callback) {
     $.ajax({
