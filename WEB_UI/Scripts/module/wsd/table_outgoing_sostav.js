@@ -845,7 +845,7 @@
         }
         this.select_rows();
         this.enable_button();
-        LockScreenOff();
+        //LockScreenOff();
     };
     // Загрузить составы по прибытию
     table_outgoing_sostav.prototype.load_outgoing_sostav = function (start, stop, cb_load) {
@@ -855,11 +855,11 @@
                 this.start = start;
                 this.stop = stop;
                 this.sostav = sostav;
-                LockScreenOff();
+                //LockScreenOff();
                 if (typeof cb_load === 'function') {
                     cb_load(this.sostav);
                 }
-                LockScreenOff();
+                //LockScreenOff();
             }.bind(this));
         } else {
             this.sostav = [];
@@ -877,11 +877,11 @@
             LockScreen(langView('tos_mess_update_sostav', App.Langs));
             this.ids_wsd.getViewOutgoingSostav(this.start, this.stop, function (sostav) {
                 this.sostav = sostav;
-                LockScreenOff();
+                //LockScreenOff();
                 if (typeof cb_load === 'function') {
                     cb_load(this.sostav);
                 }
-                LockScreenOff();
+                //LockScreenOff();
             }.bind(this));
         } else {
             this.sostav = [];

@@ -3663,11 +3663,12 @@
         if (obj) {
             obj.removeClass('is-valid is-invalid');
         } else {
-            this.settings.elements.each(function () {
-                this.removeClass('is-valid is-invalid').nextAll(".invalid-feedback").text('');
-            });
-
-        }
+            if (this.settings.elements && this.settings.elements.length > 0) {
+                this.settings.elements.each(function () {
+                    $(this).removeClass('is-valid is-invalid').nextAll(".invalid-feedback").text('');
+                });
+            };
+        };
     };
     // Очистить сообщения
     validation_form.prototype.clear_message = function () {

@@ -32,7 +32,8 @@ namespace WEB_UI.Controllers.api
         {
             try
             {
-                List<Directory_Station> list = this.ef_ds.Context.ToList().Select(d => d.GetDirectory_Station_Directory_Ways()).ToList();
+                List<Directory_Station> list = this.ef_ds.Context.ToList().Select(d => d.GetDirectory_Station()).ToList();
+                //List<Directory_Station> list = this.ef_ds.Context.ToList().Select(d => d.GetDirectory_Station_Directory_Ways()).ToList();
                 //if (list == null || list.Count() == 0)
                 //{
                 //    return NotFound();

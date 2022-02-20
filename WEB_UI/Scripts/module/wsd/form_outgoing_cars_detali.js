@@ -303,6 +303,9 @@
     };
     // Инициализаия формы
     form_outgoing_cars_detali.prototype.init = function (options) {
+        //-------------------------------------
+        // Сообщение
+        LockScreen(langView('fogcd_mess_init_panel', App.Langs));
         this.init = true;
         this.settings = $.extend({
             alert: null,
@@ -343,7 +346,6 @@
         this.current_id_countrys = null;        // Текущий id администрации
         this.current_id_genus = null;           // Текущий id род вагона
         this.current_id_owner = null;           // Текущий id владелец
-
         // Загрузим справочные данные, определим поля формы правки
         this.load_db(['reason_discrepancy', 'detention_return', 'cargo', 'cargo_group', 'divisions', 'external_station'], false, function (result) {
             // Подгрузили списки
@@ -353,9 +355,6 @@
             this.list_cargo_group = this.ids_dir.getListCargoGroup('id', 'cargo_group_name', App.Lang, null);
             this.list_divisions = this.ids_dir.getListDivisions('id', 'division_abbr', App.Lang, null);
             this.list_external_station = this.ids_dir.getListExternalStation('code', 'station_name', App.Lang, null);
-            //-------------------------------------
-            // Сообщение
-            LockScreen(langView('fogcd_mess_init_panel', App.Langs));
             //----------------------------------
             // Создать макет панели
             this.form = new FDL();

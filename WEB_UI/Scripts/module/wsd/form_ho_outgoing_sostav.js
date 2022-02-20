@@ -133,7 +133,7 @@
             this.form = new FIF();
             // Определим поля
             var fl_id = {
-                field: 'id',
+                field: 'outgoing_sostav_id',
                 type: 'number',
                 add: null,
                 edit: null,
@@ -703,10 +703,11 @@
             //-------------------------------------
         }.bind(this));
     }
-    // Уточняющая валидация данных
+    // Уточняющая валидация данных 
     form_ho_outgoing_sostav.prototype.validation = function (result) {
         var valid = true;
         // Сдесь можно проверить дополнительно
+        var current = moment();
         var date_readiness_amkr = moment(result.old.date_readiness_amkr);
         var sostav_date_end_inspection_acceptance_delivery = result.new.date_end_inspection_acceptance_delivery ? moment(result.new.date_end_inspection_acceptance_delivery) : null;
         var sostav_date_end_inspection_loader = result.new.date_end_inspection_loader ? moment(result.new.date_end_inspection_loader) : null;

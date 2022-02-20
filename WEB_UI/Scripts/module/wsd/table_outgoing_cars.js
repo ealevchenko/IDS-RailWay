@@ -808,22 +808,9 @@
         this.out_clear();
         LockScreen(langView('togc_mess_run_operation', App.Langs));
         if (this.id_sostav !== null) {
-            this.ids_wsd.getOutgoingSostavOfID(this.id_sostav, function (sostav) {
+            this.ids_wsd.getOutgoingSostavOfIDSostav(this.id_sostav, function (sostav) {
                 if (sostav) {
                     if (sostav.status < 4) {
-                        //var outgoing_operation = {
-                        //    num_doc: sostav.num_doc,
-                        //    date_readiness_amkr: sostav.date_readiness_amkr,
-                        //    date_end_inspection_acceptance_delivery: sostav.date_end_inspection_acceptance_delivery,
-                        //    date_end_inspection_loader: sostav.date_end_inspection_loader,
-                        //    date_end_inspection_vagonnik: sostav.date_end_inspection_vagonnik,
-                        //    date_readiness_uz: sostav.date_readiness_uz,
-                        //    date_outgoing: sostav.date_outgoing,
-                        //    date_outgoing_act: sostav.date_outgoing_act,
-                        //    id_station_on: sostav.id_station_on,
-                        //    route_sign: sostav.route_sign,
-                        //    composition_index: sostav.composition_index,
-                        //};
                         if (sostav.status < 2) {
                             // Сдать состав
                             LockScreenOff();
