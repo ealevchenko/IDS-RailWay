@@ -64,11 +64,15 @@
     //var VRRC = App.view_report_remainder_cars;
     //var report_remainder_cars = new VRRC('div#remainder-cars');             // Создадим экземпляр
 
-    var TOC = App.table_outgoing_cars;
-    var table_outgoing_cars = new TOC('div#outgoing-cars');             // Создадим экземпляр
+    //////var TOC = App.table_outgoing_cars;
+    //////var table_outgoing_cars = new TOC('div#outgoing-cars');             // Создадим экземпляр
 
     var FOCD = App.form_outgoing_cars_detali;
     var form_outgoing_cars_detali = new FOCD('div#outgoing-cars-detali');             // Создадим экземпляр
+
+    // Создадим форму правки операторов
+    var FDL = App.form_dialog;
+
 
 
     $('button#arrival').on('click', function (e) {
@@ -108,20 +112,20 @@
 
         //});
 
-        table_outgoing_cars.init({
-            type_report: 'outgoing_cars',
-            alert: alert,
-            ids_wsd: null,
-            fn_action_view_wagons: function (rows) {
+        //////table_outgoing_cars.init({
+        //////    type_report: 'outgoing_cars',
+        //////    alert: alert,
+        //////    ids_wsd: null,
+        //////    fn_action_view_wagons: function (rows) {
 
-            },
-            fn_init: function (init) {
-                table_outgoing_cars.load_outgoing_cars_of_id_sostav(127615, function (wagons) {
-                    this.view(wagons, null, null);
-                    LockScreenOff();
-                }.bind(table_outgoing_cars));
-            },
-        });
+        //////    },
+        //////    fn_init: function (init) {
+        //////        table_outgoing_cars.load_outgoing_cars_of_id_sostav(127615, function (wagons) {
+        //////            this.view(wagons, null, null);
+        //////            LockScreenOff();
+        //////        }.bind(table_outgoing_cars));
+        //////    },
+        //////});
 
         form_outgoing_cars_detali.init({
             alert: alert,
@@ -131,6 +135,7 @@
                 LockScreenOff();
             }.bind(this),
         });
+        
 
         //report_remainder_cars.init({
         //    alert: null,

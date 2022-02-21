@@ -22,11 +22,30 @@ namespace WEB_UI.Controllers.api
         public long? outgoing_car_id { get; set; }
         public int? num { get; set; }
         public int? outgoing_car_position { get; set; }
-        public DateTime? wagon_date_rem_uz { get; set; }
-        public double? wagon_gruzp_uz { get; set; }
-        public double? wagon_tara_uz { get; set; }
-        public string wagon_ban_uz { get; set; }
-        public bool? wagon_closed_route { get; set; }
+        public long? id_wir { get; set; }
+        //public int? wagon_id_countrys { get; set; }
+        //public int? wagon_wagon_adm { get; set; }
+        //public string wagon_adm_name_ru { get; set; }
+        //public string wagon_adm_name_en { get; set; }
+        //public string wagon_adm_abbr_ru { get; set; }
+        //public string wagon_adm_abbr_en { get; set; }
+        //public int? wagon_id_owner { get; set; }
+        //public string wagon_owner_wagon_ru { get; set; }
+        //public string wagon_owner_wagon_en { get; set; }
+        //public string wagon_owner_wagon_abbr_ru { get; set; }
+        //public string wagon_owner_wagon_abbr_en { get; set; }
+        //public DateTime? wagon_date_rem_uz { get; set; }
+        //public double? wagon_gruzp_uz { get; set; }
+        //public double? wagon_tara_uz { get; set; }
+        //public string wagon_ban_uz { get; set; }
+        //public bool? wagon_closed_route { get; set; }
+        //public int? last_operation_id_operation { get; set; }
+        //public int? last_operation_id_condition { get; set; }
+        //public string last_operation_condition_name_ru { get; set; }
+        //public string last_operationt_condition_name_en { get; set; }
+        //public string last_operation_condition_abbr_ru { get; set; }
+        //public string last_operation_condition_abbr_en { get; set; }
+        //public bool? last_operation_condition_red { get; set; }
         public long? arrival_car_id { get; set; }
         public int? arrival_car_position { get; set; }
         public int? arrival_car_position_arrival { get; set; }
@@ -181,9 +200,16 @@ namespace WEB_UI.Controllers.api
         public DateTime? outgoing_car_date_outgoing_act { get; set; }
         public DateTime? outgoing_car_outgoing { get; set; }
         public string outgoing_car_outgoing_user { get; set; }
+        //public int? outgoing_car_id_outgoing_detention { get; set; }
+        //public string outgoing_car_detention_cause_ru { get; set; }
+        //public string outgoing_car_detention_cause_en { get; set; }
         public int? outgoing_car_id_outgoing_detention { get; set; }
+        public int? outgoing_car_id_detention_return { get; set; }
         public string outgoing_car_detention_cause_ru { get; set; }
         public string outgoing_car_detention_cause_en { get; set; }
+        public int? outgoing_car_detention_type_detention_return { get; set; }
+        public DateTime? outgoing_car_detention_date_start { get; set; }
+        public DateTime? outgoing_car_detention_date_stop { get; set; }
         public int? outgoing_car_id_reason_discrepancy_amkr { get; set; }
         public string outgoing_car_reason_discrepancy_amkr_name_ru { get; set; }
         public string outgoing_car_reason_discrepancy_amkr_name_en { get; set; }
@@ -443,6 +469,18 @@ namespace WEB_UI.Controllers.api
         public int? outgoing_uz_vagon_to_station_uz_code { get; set; }
 
         public string outgoing_uz_vagon_to_station_uz_name { get; set; }
+        public string outgoing_uz_vagon_cont_1_nom_cont { get; set; }
+        public string outgoing_uz_vagon_cont_1_kod_tiporazmer { get; set; }
+        public int? outgoing_uz_vagon_cont_1_gruzp { get; set; }
+        public int? outgoing_uz_vagon_cont_1_ves_tary_arc { get; set; }
+        public int? outgoing_uz_vagon_cont_1_id_cargo { get; set; }
+        public string outgoing_uz_vagon_cont_2_nom_cont { get; set; }
+        public string outgoing_uz_vagon_cont_2_kod_tiporazmer { get; set; }
+        public int? outgoing_uz_vagon_cont_2_gruzp { get; set; }
+
+        public int? outgoing_uz_vagon_cont_2_ves_tary_arc { get; set; }
+
+        public int? outgoing_uz_vagon_cont_2_id_cargo { get; set; }
 
         public long? outgoing_uz_document_id { get; set; }
 
@@ -675,6 +713,23 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // GET: api/ids/rwt/outgoing_cars/view/car/id/6
+        [Route("view/car/id/{id:int}")]
+        [ResponseType(typeof(ViewOutgoingCars))]
+        public IHttpActionResult GetViewOutgoingCarsOfIDCar(int id)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter p_id = new System.Data.SqlClient.SqlParameter("@id_car", id);
+                string sql = "select * from [IDS].[get_view_outgoing_cars_of_id_car](@id_car)";
+                ViewOutgoingCars result = this.ef_ids.Database.SqlQuery<ViewOutgoingCars>(sql, p_id).FirstOrDefault();
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
         // GET: api/ids/rwt/outgoing_cars/num/63303077
         [Route("num/{num:int}")]
         [ResponseType(typeof(OutgoingCars))]

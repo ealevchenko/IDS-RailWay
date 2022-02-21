@@ -4,36 +4,37 @@ select
 	out_car.[id] as outgoing_car_id
 	,out_car.[num]
 	,out_car.[position] as outgoing_car_position
+	,wir.id as id_wir
 	--================= ИНФОРМАЦИЯ ПО ВАГОНУ ==========================================
 	-- Справочник вагона Directory_Wagons
 	-- администрация
-	,dir_wagon.id_countrys as wagon_id_countrys
-	,wag_dir_countrys.code_sng as wagon_wagon_adm				-- Код администрации [IDS].[Directory_Countrys] по справочнику [IDS].[Directory_Wagons]
-	,wag_dir_countrys.countrys_name_ru as wagon_adm_name_ru		-- Администрации [IDS].[Directory_Countrys] по справочнику [IDS].[Directory_Wagons]
-	,wag_dir_countrys.countrys_name_en as wagon_adm_name_en		-- Администрации [IDS].[Directory_Countrys] по справочнику [IDS].[Directory_Wagons]
-	,wag_dir_countrys.country_abbr_ru as wagon_adm_abbr_ru		-- Администрации [IDS].[Directory_Countrys] по справочнику [IDS].[Directory_Wagons]
-	,wag_dir_countrys.country_abbr_en as wagon_adm_abbr_en		-- Администрации [IDS].[Directory_Countrys] по справочнику [IDS].[Directory_Wagons]
-		-- владелец
-	,dir_owner.id as wagon_id_owner
-	,dir_owner.[owner_ru] as wagon_owner_wagon_ru					-- Владелец [IDS].[Directory_OwnersWagons] по справочнику [IDS].[Directory_Wagons]
-	,dir_owner.[owner_en] as wagon_owner_wagon_en					-- Владелец [IDS].[Directory_OwnersWagons] по справочнику [IDS].[Directory_Wagons]
-	,dir_owner.[abbr_ru] as wagon_owner_wagon_abbr_ru				-- Владелец [IDS].[Directory_OwnersWagons] по справочнику [IDS].[Directory_Wagons]
-	,dir_owner.[abbr_en] as wagon_owner_wagon_abbr_en				-- Владелец [IDS].[Directory_OwnersWagons] по справочнику [IDS].[Directory_Wagons]
-	--
-	,dir_wagon.date_rem_uz as wagon_date_rem_uz
-	,dir_wagon.gruzp as wagon_gruzp_uz	--> Грузоподъемность
-	,dir_wagon.tara as wagon_tara_uz
-	,dir_wagon.note as wagon_ban_uz							-- Запреты по УЗ 
-	,dir_wagon.[closed_route] as wagon_closed_route			--Замкнутый маршрут (кольцо)
-	-- Последняя операция
-	,wio.[id_operation] as last_operation_id_operation
-	,wio.id_condition as last_operation_id_condition
-	--> Разметка по последней операции
-	,cur_dir_cond.condition_name_ru as last_operation_condition_name_ru
-	,cur_dir_cond.condition_name_en as last_operationt_condition_name_en
-	,cur_dir_cond.condition_abbr_ru as last_operation_condition_abbr_ru
-	,cur_dir_cond.condition_abbr_en as last_operation_condition_abbr_en
-	,cur_dir_cond.red as last_operation_condition_red
+	--,dir_wagon.id_countrys as wagon_id_countrys
+	--,wag_dir_countrys.code_sng as wagon_wagon_adm				-- Код администрации [IDS].[Directory_Countrys] по справочнику [IDS].[Directory_Wagons]
+	--,wag_dir_countrys.countrys_name_ru as wagon_adm_name_ru		-- Администрации [IDS].[Directory_Countrys] по справочнику [IDS].[Directory_Wagons]
+	--,wag_dir_countrys.countrys_name_en as wagon_adm_name_en		-- Администрации [IDS].[Directory_Countrys] по справочнику [IDS].[Directory_Wagons]
+	--,wag_dir_countrys.country_abbr_ru as wagon_adm_abbr_ru		-- Администрации [IDS].[Directory_Countrys] по справочнику [IDS].[Directory_Wagons]
+	--,wag_dir_countrys.country_abbr_en as wagon_adm_abbr_en		-- Администрации [IDS].[Directory_Countrys] по справочнику [IDS].[Directory_Wagons]
+	---- владелец
+	--,dir_owner.id as wagon_id_owner
+	--,dir_owner.[owner_ru] as wagon_owner_wagon_ru					-- Владелец [IDS].[Directory_OwnersWagons] по справочнику [IDS].[Directory_Wagons]
+	--,dir_owner.[owner_en] as wagon_owner_wagon_en					-- Владелец [IDS].[Directory_OwnersWagons] по справочнику [IDS].[Directory_Wagons]
+	--,dir_owner.[abbr_ru] as wagon_owner_wagon_abbr_ru				-- Владелец [IDS].[Directory_OwnersWagons] по справочнику [IDS].[Directory_Wagons]
+	--,dir_owner.[abbr_en] as wagon_owner_wagon_abbr_en				-- Владелец [IDS].[Directory_OwnersWagons] по справочнику [IDS].[Directory_Wagons]
+	----
+	--,dir_wagon.date_rem_uz as wagon_date_rem_uz
+	--,dir_wagon.gruzp as wagon_gruzp_uz	--> Грузоподъемность
+	--,dir_wagon.tara as wagon_tara_uz
+	--,dir_wagon.note as wagon_ban_uz							-- Запреты по УЗ 
+	--,dir_wagon.[closed_route] as wagon_closed_route			--Замкнутый маршрут (кольцо)
+	---- Последняя операция
+	--,wio.[id_operation] as last_operation_id_operation
+	--,wio.id_condition as last_operation_id_condition
+	----> Разметка по последней операции
+	--,cur_dir_cond.condition_name_ru as last_operation_condition_name_ru
+	--,cur_dir_cond.condition_name_en as last_operationt_condition_name_en
+	--,cur_dir_cond.condition_abbr_ru as last_operation_condition_abbr_ru
+	--,cur_dir_cond.condition_abbr_en as last_operation_condition_abbr_en
+	--,cur_dir_cond.red as last_operation_condition_red
 	--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	-->================================= ПРИБЫТИЕ =====================================
 	--> ПРИБЫТИЕ ВАГОНОВ [IDS].[ArrivalCars]
@@ -333,7 +334,7 @@ select
 	--> ДОКУМЕНТ НА ВАГОН ПО ОТПРАВКЕ [IDS].[Outgoing_UZ_Vagon]
 	,out_doc_vag.[id] as outgoing_uz_vagon_id										-- id строки документа по отправке [IDS].[Outgoing_UZ_Vagon]
 	,out_doc_vag.[id_condition] as outgoing_uz_vagon_id_condition					-- id строки готовность по прибытию [IDS].[Outgoing_UZ_Vagon]
-	--> РАЗМЕТКА ПО ПРИБЫТИЮ [IDS].[Directory_ConditionArrival]
+	--> РАЗМЕТКА ПО ОТПРАВКЕ [IDS].[Directory_ConditionArrival]
 	,out_dir_cond.condition_name_ru as outgoing_uz_vagon_condition_name_ru			-- Готовность [IDS].[Directory_ConditionArrival] по прибытию [IDS].[Outgoing_UZ_Vagon]
 	,out_dir_cond.condition_name_en as outgoing_uz_vagon_condition_name_en			-- Готовность [IDS].[Directory_ConditionArrival] по прибытию [IDS].[Outgoing_UZ_Vagon]
 	,out_dir_cond.condition_abbr_ru as outgoing_uz_vagon_condition_abbr_ru			-- Готовность [IDS].[Directory_ConditionArrival] по прибытию [IDS].[Outgoing_UZ_Vagon]
@@ -383,12 +384,13 @@ select
 	,out_dir_countrys.country_abbr_ru as outgoing_uz_vagon_adm_abbr_ru			-- Администрации [IDS].[Directory_Countrys] по отправке [IDS].[Outgoing_UZ_Vagon]
 	,out_dir_countrys.country_abbr_en as outgoing_uz_vagon_adm_abbr_en			-- Администрации [IDS].[Directory_Countrys] по отправке [IDS].[Outgoing_UZ_Vagon]
 	--> РОД ВАГОНА ПО ОТПРАВКЕ [IDS].[Directory_GenusWagons]
+	-- правил!
 	,out_doc_vag.[id_genus]	 as outgoing_uz_vagon_id_genus							-- id строки род вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
-	,dir_rod.rod_uz as outgoing_uz_vagon_rod									-- Код рода вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
-	,dir_rod.genus_ru as outgoing_uz_vagon_rod_name_ru							-- Род вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
-	,dir_rod.genus_en as outgoing_uz_vagon_rod_name_en							-- Род вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
-	,dir_rod.abbr_ru as outgoing_uz_vagon_rod_abbr_ru							-- Род вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
-	,dir_rod.abbr_en as outgoing_uz_vagon_rod_abbr_en							-- Род вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_rod.rod_uz as outgoing_uz_vagon_rod									-- Код рода вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_rod.genus_ru as outgoing_uz_vagon_rod_name_ru							-- Род вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_rod.genus_en as outgoing_uz_vagon_rod_name_en							-- Род вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_rod.abbr_ru as outgoing_uz_vagon_rod_abbr_ru							-- Род вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_rod.abbr_en as outgoing_uz_vagon_rod_abbr_en							-- Род вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
 	--> СОБСТВЕННИК ПО УЗ [IDS].[Directory_OwnersWagons]
 	,out_doc_vag.[id_owner] as outgoing_uz_vagon_id_owner						-- id строки владелец [IDS].[Directory_OwnersWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
 	--
@@ -438,7 +440,7 @@ select
 	--,out_doc_vag.[create_user]
 	--,out_doc_vag.[change]
 	--,out_doc_vag.[change_user]
-				-->======================================================================================================
+	-->======================================================================================================
 	--> ДОКУМЕНТ НА КОНТЕЙНЕРА [IDS].[Outgoing_UZ_Vagon_Cont]
 	,out_doc_vag_cont1.[nom_cont] as outgoing_uz_vagon_cont_1_nom_cont
 	,out_doc_vag_cont1.[kod_tiporazmer] as outgoing_uz_vagon_cont_1_kod_tiporazmer
@@ -546,14 +548,14 @@ select
 	,let_station_uz.station as instructional_letters_station_name
 	,il.[note] as instructional_letters_note
 	--into view_outgoing_cars
-FROM [IDS].[OutgoingSostav] as out_sost
-		--> Отправка вагона
-		Left JOIN [IDS].[OutgoingCars] as out_car ON out_sost.id = out_car.id_outgoing
+	FROM [IDS].[OutgoingCars] as out_car
+		--> Отправка состава
+		Left JOIN [IDS].[OutgoingSostav] as out_sost ON out_sost.id = out_car.id_outgoing
 		--==== ТЕКУЩЕЕ ПЕРЕМЕЩЕНИЕ ================================================================
 		--> Текущее внетренее перемещение
 		Left JOIN IDS.WagonInternalRoutes as wir ON out_car.id = wir.[id_outgoing_car]
 		--> Текущая операция
-        Left JOIN IDS.WagonInternalOperation as wio ON wio.id = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalOperation] where [id_wagon_internal_routes]= wir.id order by id desc)
+        --Left JOIN IDS.WagonInternalOperation as wio ON wio.id = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalOperation] where [id_wagon_internal_routes]= wir.id order by id desc)
 		--==== СДАЧА ВАГОНА, ЗАДЕРЖАНИЯ, ВОЗВРАТ И ОТПРАВКА  ================================================================
 		--> Документы SAP Исходящая поставка
 		Left JOIN [IDS].[SAPOutgoingSupply] as sap_os ON wir.id_sap_outbound_supply = sap_os.id
@@ -582,7 +584,7 @@ FROM [IDS].[OutgoingSostav] as out_sost
 		Left JOIN IDS.InstructionalLetters as il ON ilw.id_instructional_letters = il.id
 		--==== СПРАВОЧНИКИ ===================================================================================
 		--> Справочник вагонов
-		Left JOIN IDS.Directory_Wagons as dir_wagon ON out_car.num = dir_wagon.num
+		--Left JOIN IDS.Directory_Wagons as dir_wagon ON out_car.num = dir_wagon.num
 		--> Справочник аренд
 		--Left JOIN IDS.Directory_WagonsRent as dir_rent ON dir_rent.id = (SELECT top(1) [id] FROM [IDS].[Directory_WagonsRent] where [num] = out_car.num and rent_end is null order by [id] desc)	
 		--> Справочник Аренд по прибытию
@@ -598,19 +600,21 @@ FROM [IDS].[OutgoingSostav] as out_sost
 		--> Справочник Ограничение погрузки по прибытию
 		Left JOIN IDS.Directory_LimitingLoading as out_dir_limload ON out_wag_rent.id_limiting =  out_dir_limload.id
 		--> Справочник Собственник вагона по УЗ по справочнику
-		Left JOIN [IDS].[Directory_OwnersWagons] as dir_owner ON dir_wagon.id_owner = dir_owner.id
+		--Left JOIN [IDS].[Directory_OwnersWagons] as dir_owner ON dir_wagon.id_owner = dir_owner.id
 		--> Справочник Собственник вагона по УЗ по отправке
 		Left JOIN [IDS].[Directory_OwnersWagons] as out_dir_owner ON out_doc_vag.id_owner = out_dir_owner.id
 		--> Справочник строна (Администрация вагона по справочнику)
-		Left JOIN IDS.Directory_Countrys as wag_dir_countrys ON dir_wagon.id_countrys = wag_dir_countrys.id
+		--Left JOIN IDS.Directory_Countrys as wag_dir_countrys ON dir_wagon.id_countrys = wag_dir_countrys.id
 		--> Справочник строна (Администрация вагона по отправке)
 		Left JOIN IDS.Directory_Countrys as out_dir_countrys ON out_doc_vag.id_countrys = out_dir_countrys.id
 		--> Справочник Род вагона
-		Left JOIN IDS.Directory_GenusWagons as dir_rod ON dir_wagon.id_genus = dir_rod.id
+		--Left JOIN IDS.Directory_GenusWagons as dir_rod ON dir_wagon.id_genus = dir_rod.id
+		--> Справочник Род вагона (По отправке)
+		Left JOIN IDS.Directory_GenusWagons as out_dir_rod ON out_doc_vag.id_genus = out_dir_rod.id
 		--> Справочник Тип вагона
 		Left JOIN IDS.Directory_TypeWagons as dir_type ON arr_doc_vag.id_type =  dir_type.id
 		--> Справочник Разметка по текущей операции
-		Left JOIN IDS.Directory_ConditionArrival as cur_dir_cond ON wio.id_condition =  cur_dir_cond.id
+		--Left JOIN IDS.Directory_ConditionArrival as cur_dir_cond ON wio.id_condition =  cur_dir_cond.id
 		--> Справочник Разметка по прибытию
 		Left JOIN IDS.Directory_ConditionArrival as arr_dir_cond ON arr_doc_vag.id_condition = arr_dir_cond.id
 		--> Справочник Разметка по отправке
@@ -649,8 +653,6 @@ FROM [IDS].[OutgoingSostav] as out_sost
 		Left JOIN [IDS].[Directory_DetentionReturn] as out_dir_dr_start ON out_detect_return_start.id_detention_return = out_dir_dr_start.id
 		--> Справочник Возврата начало 
 		Left JOIN [IDS].[Directory_DetentionReturn] as out_dir_dr_stop ON out_detect_return_stop.id_detention_return = out_dir_dr_stop.id
-
-
 		--> Справочник Сертификат данные
 		Left JOIN IDS.Directory_CertificationData as arr_dir_certif ON arr_doc_vag.id_certification_data =  arr_dir_certif.id
 		--> Справочник комерческое состояние
@@ -720,7 +722,5 @@ FROM [IDS].[OutgoingSostav] as out_sost
 		Left JOIN [IDS].[Directory_PayerSender] as out_payer_sender ON out_doc_sostav.[code_payer] = out_payer_sender.[code]
 WHERE 
 
---out_sost.id =51208 
---out_sost.id =138457 
-out_sost.id =107420
+out_car.id = 511491
 order by out_car.position

@@ -472,6 +472,29 @@
             },
         });
     };
+    // Получить информацию по составу
+    ids_wsd.prototype.getOutgoingSostavOfIDSostav = function (id, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/outgoing_sostav/sostav/id/' + id,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getOutgoingSostavOfID", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     // Выполнить операцию обновить или сдать состав на УЗ
     ids_wsd.prototype.postOperationPresentSostav = function (operation, callback) {
         $.ajax({
@@ -497,9 +520,34 @@
             },
         });
     };
+    // Операция вернуть вагон с пръедявления
+    ids_wsd.prototype.postPostOperationReturnProvideWagon = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/operation/return_provide/wagon/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postPostOperationReturnProvideWagon", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
 
     //================= ОТПРАВКА ВАГОНОВ НА УЗ (Вагоны) =========================================================
-    // Получить все составы (View)
+    // Получить все вагоны состава для отправки по id состава (View)
     ids_wsd.prototype.getViewOutgoingCarsOfIDSostav = function (id, callback) {
         $.ajax({
             type: 'GET',
@@ -521,6 +569,292 @@
                 AJAXComplete();
             },
         });
+    };
+    // вагонs состава для отправки по id вагона (View)
+    ids_wsd.prototype.getViewOutgoingCarsOfIDCar = function (id, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/outgoing_cars/view/car/id/' + id,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getViewOutgoingCarsOfIDCar", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
+    //================= ОТПРАВКА ВАГОНОВ НА УЗ (Задержания и возвраты) =========================================================
+    //======= OutgoingDetentionReturn (Таблица задержаных-возвращеных вагонов) ======================================
+    // Получить все задержания и возвраты
+    ids_wsd.prototype.getOutgoingDetentionReturn = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/outgoing_detention_return/all',
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getOutgoingDetentionReturn", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить вагоны по id задержания и возврата
+    ids_wsd.prototype.getOutgoingDetentionReturnOfID = function (id, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/outgoing_detention_return/id/' + id,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getOutgoingDetentionReturnOfID", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить все задержания и возвраты по номеру вагона 
+    ids_wsd.prototype.getOutgoingDetentionReturnOfNum = function (num, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/outgoing_detention_return/num/' + num,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getOutgoingDetentionReturnOfNum", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //Операция добавить или обновить задержание вагона
+    ids_wsd.prototype.postUpdateOutgoingDetention = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/operation/detention/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postUpdateOutgoingDetention", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //Операция открыть возврат по вагону 
+    ids_wsd.prototype.postOpenOutgoingReturn = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/operation/open_return/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postOpenOutgoingReturn", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //Операция закрыть возврат по вагону
+    ids_wsd.prototype.postCloseOutgoingReturn = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/operation/close_return/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postCloseOutgoingReturn", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //================= ОТПРАВКА ВАГОНОВ НА УЗ (Предъявление) =========================================================
+    // Операция предъявить вагон (перенести в левую часть)
+    ids_wsd.prototype.postOutgoingPresentWagon = function (operation_present, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/operation/present/wagon/',
+            type: 'POST',
+            data: JSON.stringify(operation_present),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postOutgoingPresentWagon", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Операция вернуть предъявленный вагон (вернуть в правую часть)
+    ids_wsd.prototype.postOutgoingReturnPresentWagon = function (operation_return, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/operation/return_present/wagon/',
+            type: 'POST',
+            data: JSON.stringify(operation_return),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postOutgoingReturnPresentWagon", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
+
+    //======================================================================================================
+    //                                  РАЗДЕЛ ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ ВАГОНОВ
+    //======= WagonInternalRoutes (Внутреннее перемещение вагона на АМКР) =========================================================================
+
+    //======= WagonInternalOperation (Внутреннее перемещение вагона на АМКР, операции над вагонами) =====================================
+    // Вернуть строку операций по id
+    ids_wsd.prototype.getWagonInternalOperationOfID = function (id, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wio/id/' + id,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getWagonInternalOperationOfID", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Вернуть список операций по id wir
+    ids_wsd.prototype.getWagonInternalOperationOfIDWIR = function (id, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wio/wir/id/' + id,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getWagonInternalOperationOfWIRID", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Вернуть песледнюю запись операций из внутренего перемещения вагонов
+    ids_wsd.prototype.getLastWagonInternalOperationOfWIR = function (list_wio) {
+        if (list_wio && list_wio.length > 0) {
+            var wio = list_wio.sort(function (a, b) {
+                return b.id - a.id;
+            });
+            if (wio && wio.length > 0) {
+                return wio[0]
+            }
+        }
+        return null;
     };
 
     App.ids_wsd = ids_wsd;

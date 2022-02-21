@@ -3434,6 +3434,7 @@ IDS_RWT.prototype.putOutgoingDetentionReturn = function (obj, callback) {
         },
     });
 };
+//TODO:Отключить после переделки outgoing.js перенесен в ids_wsd.js
 //Операция добавить или обновить задержание 
 IDS_RWT.prototype.postUpdateOutgoingDetention = function (operation_detention, callback) {
     $.ajax({
@@ -3459,6 +3460,7 @@ IDS_RWT.prototype.postUpdateOutgoingDetention = function (operation_detention, c
         },
     });
 };
+//TODO:Отключить после переделки outgoing.js перенесен в ids_wsd.js
 //Операция открыть возврат 
 IDS_RWT.prototype.postOpenOutgoingReturn = function (operation_return, callback) {
     $.ajax({
@@ -3484,6 +3486,7 @@ IDS_RWT.prototype.postOpenOutgoingReturn = function (operation_return, callback)
         },
     });
 };
+//TODO:Отключить после переделки outgoing.js перенесен в ids_wsd.js
 //Операция закрыть возврат 
 IDS_RWT.prototype.postCloseOutgoingReturn = function (operation_return, callback) {
     $.ajax({
@@ -3509,6 +3512,7 @@ IDS_RWT.prototype.postCloseOutgoingReturn = function (operation_return, callback
         },
     });
 };
+//TODO: Отключить после переделки outgoing.js перенесен в ids_wsd.js
 // Операция предъявить вагон (перенести в левую часть)
 IDS_RWT.prototype.postOutgoingPresentWagon = function (operation_present, callback) {
     $.ajax({
@@ -3534,6 +3538,7 @@ IDS_RWT.prototype.postOutgoingPresentWagon = function (operation_present, callba
         },
     });
 };
+//TODO: Отключить после переделки outgoing.js перенесен в ids_wsd.js
 // Операция вернуть предъявленный вагон (вернуть в правую часть)
 IDS_RWT.prototype.postOutgoingReturnPresentWagon = function (operation_return, callback) {
     $.ajax({
@@ -3981,6 +3986,7 @@ IDS_RWT.prototype.postTransferProvideWagonsOfStation = function (operation_trans
         },
     });
 };
+//TODO: Отключить после переделки outgoing.js перенесен в ids_wsd.js
 //Операция вернуть вагон с пръедявления
 IDS_RWT.prototype.postPostOperationReturnProvideWagon = function (operation_return, callback) {
     $.ajax({

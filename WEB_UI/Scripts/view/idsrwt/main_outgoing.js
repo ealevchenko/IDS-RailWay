@@ -11,7 +11,8 @@
             //'mess_load_reference': 'Загружаю справочники...',
             'mo_title_label_date': 'СОСТАВЫ ЗА ПЕРИОД :',
             'mo_title_label_station': 'СТАНЦИЯ ОТПРАВКИ:',
-            'mo_card_header_detali': 'ИНФОРМАЦИЯ ПО СОСТАВУ',
+            'mo_init_main': 'Инициализация формы отправки...',
+            /*            'mo_card_header_detali': 'ИНФОРМАЦИЯ ПО СОСТАВУ',*/
         },
         'en':  //default language: English
         {
@@ -28,8 +29,11 @@
     var ids_dir = new IDS_DIRECTORY();
     // Модуль инициализаии компонентов формы
     var FC = App.form_control;
+    var FE = App.form_element;
+
     var FIL = App.form_inline;
     var fc_ui = new FC();
+    var fe_ui = new FE();
     var alert = App.alert_form;
 
     var TOS = App.table_outgoing_sostav;
@@ -60,9 +64,15 @@
     var stop = moment().set({ 'hour': 23, 'minute': 59, 'second': 59 })._d;
     var id_station = null; // По умолчанию не выбрана
     var list_station = [];
-
+    var out_init = function (process) {
+        process--;
+        if (process === 0) {
+            LockScreenOff();
+        }
+    };
     // После загрузки документа
     $(document).ready(function ($) {
+        LockScreen(langView('mo_init_main', App.Langs));
         // Загрузим справочники, с признаком обязательно
         load_db(['station'], true, function (result) {
             var div = $('div#nb-outgoing');
@@ -122,41 +132,50 @@
                 //.....
                 //<a class="dropdown-item" href="#" id="report_fsci">Натурная ведомость коммерческого осмотра</a>
             }
-            // Инициализация модуля "Таблица справочника путей"
+            var process = 2;
+            // Инициализация модуля "Таблица отправляемых сотавов"
             table_outgoing_sostav.init({
                 type_report: 'outgoing_sostav',
                 alert: alert,
                 ids_wsd: null,
+                // Нажата кнопка показать вагоны
                 fn_action_view_wagons: function (rows_sostav) {
                     form_detali.open();
                 },
             }, function (init) {
                 table_outgoing_sostav.load_outgoing_sostav(start, stop, function (sostav) {
                     this.view(sostav, id_station, null);
-                    LockScreenOff();
+                    //
+                    out_init(process);          // Инициализация завершена
+                    //LockScreenOff();
                 }.bind(table_outgoing_sostav));
             });
-
-            //
-            var row = new fc_ui.el_row();
-            var col = new fc_ui.el_col('xl', 12, 'mb-1 mt-1');
-            var card_panel = new fc_ui.el_card('border-secondary mb-1', '', '', langView('mo_card_header_detali', App.Langs));
-
-            row.$row.append(col.$col.append(card_panel.$card))
-            //
+            // Окно детально
             form_detali.init({
-                alert: null,
+                alert: alert,//alert,
                 fn_init: function () {
                     var id = this.$card_detali_content.attr('id');
                     view_outgoing_cars = new VOC('div#' + id);
-                    view_outgoing_cars.init();
+                    view_outgoing_cars.init({
+                        alert: alert,
+                        ids_dir: ids_dir,
+                        ids_wsd: null,
+                        fn_init: function (init) {
+                            out_init(process);  // Инициализация завершена
+                        }.bind(this),
+                    });
                 }.bind(form_detali),
                 fn_open: function () {
                     view_outgoing_cars.open(table_outgoing_sostav.id_sostav)
                 }.bind(form_detali),
                 fn_close: function () {
-
-                },
+                    // Обновим информацию по составу
+                    this.update(function (sostav) {
+                        // Покажем обновленную информацию
+                        this.view(sostav, this.id_station, this.id_sostav);
+                        LockScreenOff();
+                    }.bind(this));
+                }.bind(table_outgoing_sostav),
             });
         }.bind(this));
     });

@@ -1,8 +1,20 @@
 
-declare @id_car int = 1052066
+declare @id_car int = 1374399
 declare @id_sostav int = (select [id_arrival]   FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars] where id = @id_car)
+declare @id_wir int = (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes] where [id_arrival_car] = @id_car)
+declare @id_vagon int = (select [id_arrival_uz_vagon]   FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars] where id = @id_car)
+declare @id_sap_incoming_supply int = (select [id_sap_incoming_supply] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes] where [id_arrival_car] = @id_car)
 
-  -- Внутренее перемещение
+-- Оставить информацию о прибытии
+--UPDATE [IDS].[ArrivalCars]
+--   SET [position_arrival] = null
+--      ,[num_doc] = null
+--      ,[arrival] = null
+--      ,[arrival_user] = null
+--      ,[id_arrival_uz_vagon] = null
+-- WHERE where [id_arrival_car] = @id_car
+
+  -- Удалить информацию о прибытии
   --SELECT TOP (1000) [id]
   --    ,[num]
   --    ,[id_arrival_car]
@@ -20,7 +32,6 @@ declare @id_sostav int = (select [id_arrival]   FROM [KRR-PA-CNT-Railway].[IDS].
   FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes]
   where [id_arrival_car] = @id_car
 
-  declare @id_wir int = (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes] where [id_arrival_car] = @id_car)
 
   --SELECT TOP (1000) [id]
   --    ,[id_wagon_internal_routes]
@@ -93,7 +104,7 @@ declare @id_sostav int = (select [id_arrival]   FROM [KRR-PA-CNT-Railway].[IDS].
   --    ,[close_user]
 	  delete
   FROM [KRR-PA-CNT-Railway].[IDS].[SAPIncomingSupply]
-  where [id_arrival_car] = @id_car
+  where [id] = @id_sap_incoming_supply
 
   --SELECT [id]
   --    ,[id_arrival]
@@ -120,7 +131,7 @@ declare @id_sostav int = (select [id_arrival]   FROM [KRR-PA-CNT-Railway].[IDS].
 
 
 
-declare @id_vagon int = (select [id_arrival_uz_vagon]   FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars] where id = @id_car)--339483
+
 
 --> Вагоны
 --SELECT TOP (1000) [id]

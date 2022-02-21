@@ -102,6 +102,25 @@ namespace WEB_UI.Controllers.api
                 return BadRequest(e.Message);
             }
         }
+        // GET: api/ids/rwt/outgoing_sostav/sostav/id/4647
+        [Route("sostav/id/{id:long}")]
+        [ResponseType(typeof(OutgoingSostav))]
+        public IHttpActionResult GetOutgoingSostavOfID(long id)
+        {
+            try
+            {
+               OutgoingSostav sostav = this.ef_ids
+                    .Context
+                    .Where(s=>s.id == id)
+                    .ToList()
+                    .Select(c => c.GetOutgoingSostav()).FirstOrDefault();
+               return Ok(sostav);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
         //// GET: api/ids/rwt/outgoing_sostav/current_num/station/id/6
         //[Route("current_num/station/id/{id:int}")]
