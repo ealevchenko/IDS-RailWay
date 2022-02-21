@@ -12,7 +12,7 @@
             'mo_title_label_date': 'СОСТАВЫ ЗА ПЕРИОД :',
             'mo_title_label_station': 'СТАНЦИЯ ОТПРАВКИ:',
             'mo_init_main': 'Инициализация формы отправки...',
-/*            'mo_card_header_detali': 'ИНФОРМАЦИЯ ПО СОСТАВУ',*/
+            /*            'mo_card_header_detali': 'ИНФОРМАЦИЯ ПО СОСТАВУ',*/
         },
         'en':  //default language: English
         {
@@ -152,7 +152,7 @@
             });
             // Окно детально
             form_detali.init({
-                alert: alert,
+                alert: alert,//alert,
                 fn_init: function () {
                     var id = this.$card_detali_content.attr('id');
                     view_outgoing_cars = new VOC('div#' + id);
@@ -169,8 +169,13 @@
                     view_outgoing_cars.open(table_outgoing_sostav.id_sostav)
                 }.bind(form_detali),
                 fn_close: function () {
-
-                },
+                    // Обновим информацию по составу
+                    this.update(function (sostav) {
+                        // Покажем обновленную информацию
+                        this.view(sostav, this.id_station, this.id_sostav);
+                        LockScreenOff();
+                    }.bind(this));
+                }.bind(table_outgoing_sostav),
             });
         }.bind(this));
     });

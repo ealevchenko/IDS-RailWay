@@ -256,7 +256,7 @@
         this.table_outgoing_cars = new TOGC('div#' + sel_ogc);             // Создадим экземпляр
         this.table_outgoing_cars.init({
             type_report: 'outgoing_cars',
-            alert: null,
+            alert: this.alert,
             ids_wsd: null,
             fn_select_rows: function (rows) {
                 if (rows && rows.length > 0) {

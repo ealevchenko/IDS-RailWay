@@ -10,6 +10,9 @@
     // Определим язык
     App.Lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang'));
 
+    var min_err_data_outgoing = -2 * 60;   // TODO: Минимальная разница в часах дата предъявления
+    var max_err_data_outgoing = 2 * 60;    // TODO: Максимальная разница в часах дата сдачи
+
     // Массив текстовых сообщений 
     $.Text_View =
     {
@@ -48,6 +51,11 @@
             'fhoogs_error_date_readiness_uz': 'Время готовности к сдаче на УЗ должно быть больше времени осмотров',
             'fhoogs_error_date_outgoing': 'Время сдачи на УЗ должно быть больше времени готовности сдачи на УЗ',
             'fhoogs_error_date_outgoing_act': 'Время сдаче на УЗ по акту должно быть больше времени сдачи на УЗ',
+            'fhoogs_error_date_time': 'Укажите правильно дату и время',
+            'fhoogs_error_date_outgoing_not_deff_date_detention': 'Дата и время предъявления должны быть не меньше {0} мин. или больше {1} мин. от текущего времени',
+
+            //'fhoogs_mess_ok_operation_return_present': 'Операция "Предъявить состав на УЗ" - выполнена',
+            'fhoogs_mess_error_operation_return_present': 'Ошибка выполения операции "Предъявить состав на УЗ", код ошибки = ',
         },
         'en':  //default language: English
         {
@@ -78,7 +86,6 @@
     };
     // Инициализаия формы
     form_ho_outgoing_sostav.prototype.init = function (options, fn_init_ok) {
-
         var init = true;
         this.settings = $.extend({
             id: 'fhoogs',
@@ -100,7 +107,6 @@
             // Подгрузили списки
             this.list_station = this.ids_dir.getListStation('id', 'station_name', App.Lang, function (i) { return i.station_uz === true && i.station_delete === null; });
             //-------------------------------------
-
             // Создать модальную форму "Окно сообщений"
             var MCF = App.modal_confirm_form;
             this.modal_confirm_form = new MCF(this.settings.id); // Создадим экземпляр окно сообщений
@@ -127,13 +133,12 @@
 
                 //},
             });
-
             // Создадим форму правки операторов
             var FIF = App.form_infield;
             this.form = new FIF();
             // Определим поля
             var fl_id = {
-                field: 'outgoing_sostav_id',
+                field: 'id',
                 type: 'number',
                 add: null,
                 edit: null,
@@ -180,81 +185,6 @@
                 col_prefix: 'md',
                 col_size: 4,
             };
-            //var fl_station_from = {
-            //    field: 'id_station_from',
-            //    type: 'int',
-            //    add: null,
-            //    edit: null,
-            //    name: null,
-            //    prefix: null,
-            //    label: null,
-            //    placeholder: null,
-            //    maxlength: null,
-            //    required: true,
-            //    control: null,
-            //    list: null,
-            //    select: null,
-            //    update: null,
-            //    close: null,
-            //    change: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: null,
-            //    row: null,
-            //    col: null,
-            //    col_prefix: null,
-            //    col_size: null,
-            //};
-            //var fl_way_from = {
-            //    field: 'id_way_from',
-            //    type: 'int',
-            //    add: null,
-            //    edit: null,
-            //    name: null,
-            //    prefix: null,
-            //    label: null,
-            //    placeholder: null,
-            //    maxlength: null,
-            //    required: true,
-            //    control: null,
-            //    list: null,
-            //    select: null,
-            //    update: null,
-            //    close: null,
-            //    change: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: null,
-            //    row: null,
-            //    col: null,
-            //    col_prefix: null,
-            //    col_size: null,
-            //};
-
-            //var fl_date_readiness_amkr = {
-            //    field: 'date_departure_amkr',
-            //    type: 'datetime',
-            //    add: null,
-            //    edit: null,
-            //    name: null,
-            //    prefix: null,
-            //    label: null,
-            //    placeholder: null,
-            //    maxlength: null,
-            //    required: null,
-            //    control: null,
-            //    list: null,
-            //    select: null,
-            //    update: null,
-            //    close: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: null,
-            //    row: null,
-            //    col: null,
-            //    col_prefix: null,
-            //    col_size: null,
-            //};
             var fl_date_end_inspection_acceptance_delivery = {
                 field: 'date_end_inspection_acceptance_delivery',
                 type: 'datetime',
@@ -399,55 +329,6 @@
                 col_prefix: 'md',
                 col_size: 4,
             };
-            //var fl_date_departure_amkr = {
-            //    field: 'date_departure_amkr',
-            //    type: 'datetime',
-            //    add: null,
-            //    edit: null,
-            //    name: null,
-            //    prefix: null,
-            //    label: null,
-            //    placeholder: null,
-            //    maxlength: null,
-            //    required: null,
-            //    control: null,
-            //    list: null,
-            //    select: null,
-            //    update: null,
-            //    close: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: null,
-            //    row: null,
-            //    col: null,
-            //    col_prefix: null,
-            //    col_size: null,
-            //};
-
-            //var fl_status = {
-            //    field: 'status',
-            //    type: 'number',
-            //    add: null,
-            //    edit: null,
-            //    name: null,
-            //    prefix: null,
-            //    label: null,
-            //    placeholder: null,
-            //    maxlength: null,
-            //    required: true,
-            //    control: null,
-            //    list: null,
-            //    select: null,
-            //    update: null,
-            //    close: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: 0,
-            //    row: null,
-            //    col: null,
-            //    col_prefix: null,
-            //    col_size: null,
-            //};
             var fl_station_on = {
                 field: 'id_station_on',
                 type: 'int',
@@ -526,150 +407,18 @@
                 col_prefix: 'md',
                 col_size: 4,
             };
-
-            //var fl_note = {
-            //    field: 'note',
-            //    type: 'string',
-            //    add: null,
-            //    edit: null,
-            //    name: null,
-            //    label: null,
-            //    control: null,
-            //    list: null,
-            //    select: null,
-            //    update: null,
-            //    close: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: null,
-            //    row: null,
-            //    col: null,
-            //    col_prefix: null,
-            //    col_size: null,
-            //};
-            //var fl_create = {
-            //    field: 'create',
-            //    type: 'datetime',
-            //    add: null,
-            //    edit: null,
-            //    name: null,
-            //    label: null,
-            //    control: null,
-            //    list: null,
-            //    select: null,
-            //    update: null,
-            //    close: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: moment().format("YYYY-MM-DDThh:mm:ss"), //.utc().toISOString(),
-            //    row: null,
-            //    col: null,
-            //    col_prefix: null,
-            //    col_size: null,
-            //};
-            //var fl_create_user = {
-            //    field: 'create_user',
-            //    type: 'string',
-            //    add: null,
-            //    edit: null,
-            //    name: null,
-            //    label: null,
-            //    control: null,
-            //    list: null,
-            //    select: null,
-            //    update: null,
-            //    close: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: App.User_Name,
-            //    row: null,
-            //    col: null,
-            //    col_prefix: null,
-            //    col_size: null,
-            //};
-            //var fl_change = {
-            //    field: 'change',
-            //    type: 'datetime',
-            //    add: null,
-            //    edit: null,
-            //    name: null,
-            //    label: null,
-            //    control: null,
-            //    list: null,
-            //    select: null,
-            //    update: null,
-            //    close: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: null,
-            //    row: null,
-            //    col: null,
-            //    col_prefix: null,
-            //    col_size: null,
-            //};
-            //var fl_change_user = {
-            //    field: 'change_user',
-            //    type: 'string',
-            //    add: null,
-            //    edit: null,
-            //    name: null,
-            //    label: null,
-            //    control: null,
-            //    list: null,
-            //    select: null,
-            //    update: null,
-            //    close: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: null,
-            //    row: null,
-            //    col: null,
-            //    col_prefix: null,
-            //    col_size: null,
-            //};
-            //var fl_vagonnik_user = {
-            //    field: 'vagonnik_user',
-            //    type: 'string',
-            //    add: null,
-            //    edit: null,
-            //    name: null,
-            //    label: null,
-            //    control: null,
-            //    list: null,
-            //    select: null,
-            //    update: null,
-            //    close: null,
-            //    add_validation: null,
-            //    edit_validation: null,
-            //    default: null,
-            //    row: null,
-            //    col: null,
-            //    col_prefix: null,
-            //    col_size: null,
-            //};
             var fields = [];
             fields.push(fl_id);
             fields.push(fl_num_doc);
-            //fields.push(fl_station_from);
-            //fields.push(fl_way_from);
             fields.push(fl_station_on);
-/*            fields.push(fl_date_readiness_amkr);*/
             fields.push(fl_date_end_inspection_acceptance_delivery);
             fields.push(fl_date_end_inspection_loader);
             fields.push(fl_date_end_inspection_vagonnik);
             fields.push(fl_date_readiness_uz);
             fields.push(fl_date_outgoing);
             fields.push(fl_date_outgoing_act);
-/*            fields.push(fl_date_departure_amkr);*/
             fields.push(fl_composition_index);
-/*            fields.push(fl_status);*/
             fields.push(fl_route_sign);
-            //fields.push(fl_note);
-            //fields.push(fl_create);
-            //fields.push(fl_create_user);
-            //fields.push(fl_change);
-            //fields.push(fl_change_user);
-            //fields.push(fl_vagonnik_user);
             // Инициализация формы
             this.form.init({
                 alert: this.mf_edit.alert, // Подключим Alert модальной формы
@@ -716,36 +465,61 @@
         var sostav_date_outgoing = result.new.date_outgoing ? moment(result.new.date_outgoing) : null;
         var sostav_date_outgoing_act = result.new.date_outgoing_act ? moment(result.new.date_outgoing_act) : null;
 
-        // Проверим на интервалы времени
-        if (!date_readiness_amkr.isBefore(sostav_date_end_inspection_acceptance_delivery)) {
-            this.form.set_object_error('date_end_inspection_acceptance_delivery', langView('fhoogs_error_date_end_inspection_acceptance_delivery', App.Langs).format(date_readiness_amkr.format('DD.MM.YYYY HH:mm:ss')));
-            valid = false;
-        }
-        if (!date_readiness_amkr.isBefore(sostav_date_end_inspection_loader)) {
-            this.form.set_object_error('date_end_inspection_loader', langView('fhoogs_error_date_end_inspection_loader', App.Langs).format(date_readiness_amkr.format('DD.MM.YYYY HH:mm:ss')));
-            valid = false;
-        }
-        if (!date_readiness_amkr.isBefore(sostav_date_end_inspection_vagonnik)) {
-            this.form.set_object_error('date_end_inspection_vagonnik', langView('fhoogs_error_date_end_inspection_vagonnik', App.Langs).format(date_readiness_amkr.format('DD.MM.YYYY HH:mm:ss')));
-            valid = false;
-        }
-        if (!sostav_date_readiness_uz.isAfter(sostav_date_end_inspection_acceptance_delivery) ||
-            !sostav_date_readiness_uz.isAfter(sostav_date_end_inspection_loader) ||
-            !sostav_date_readiness_uz.isAfter(sostav_date_end_inspection_vagonnik)) {
-            this.form.set_object_error('date_readiness_uz', langView('fhoogs_error_date_readiness_uz', App.Langs));
-            valid = false;
-        }
-        if (!sostav_date_outgoing.isAfter(sostav_date_readiness_uz)) {
-            this.form.set_object_error('date_outgoing', langView('fhoogs_error_date_outgoing', App.Langs));
-            valid = false;
-        }
-        if (sostav_date_outgoing_act!==null) {
-            if (sostav_date_outgoing_act && !sostav_date_outgoing_act.isAfter(sostav_date_readiness_uz)) {
-                this.form.set_object_error('date_outgoing_act', langView('fhoogs_error_date_outgoing_act', App.Langs));
-                valid = false;
+        if (date_readiness_amkr.isValid &&
+            sostav_date_end_inspection_acceptance_delivery.isValid &&
+            sostav_date_end_inspection_loader.isValid &&
+            sostav_date_end_inspection_vagonnik.isValid &&
+            sostav_date_readiness_uz.isValid &&
+            sostav_date_outgoing.isValid
+        ) {
+            // Дата указана правильно проверим далее
+            // Проверим на интервалы времени
+            if (!date_readiness_amkr.isBefore(sostav_date_end_inspection_acceptance_delivery)) {
+                this.form.set_object_error('date_end_inspection_acceptance_delivery', langView('fhoogs_error_date_end_inspection_acceptance_delivery', App.Langs).format(date_readiness_amkr.format('DD.MM.YYYY HH:mm:ss')));
+                valid = valid & false;
             }
+            if (!date_readiness_amkr.isBefore(sostav_date_end_inspection_loader)) {
+                this.form.set_object_error('date_end_inspection_loader', langView('fhoogs_error_date_end_inspection_loader', App.Langs).format(date_readiness_amkr.format('DD.MM.YYYY HH:mm:ss')));
+                valid = valid & false;
+            }
+            if (!date_readiness_amkr.isBefore(sostav_date_end_inspection_vagonnik)) {
+                this.form.set_object_error('date_end_inspection_vagonnik', langView('fhoogs_error_date_end_inspection_vagonnik', App.Langs).format(date_readiness_amkr.format('DD.MM.YYYY HH:mm:ss')));
+                valid = valid & false;
+            }
+            if (!sostav_date_readiness_uz.isAfter(sostav_date_end_inspection_acceptance_delivery) ||
+                !sostav_date_readiness_uz.isAfter(sostav_date_end_inspection_loader) ||
+                !sostav_date_readiness_uz.isAfter(sostav_date_end_inspection_vagonnik)) {
+                this.form.set_object_error('date_readiness_uz', langView('fhoogs_error_date_readiness_uz', App.Langs));
+                valid = valid & false;
+            }
+            if (!sostav_date_outgoing.isAfter(sostav_date_readiness_uz)) {
+                this.form.set_object_error('date_outgoing', langView('fhoogs_error_date_outgoing', App.Langs));
+                valid = valid & false;
+            }
+            // Проверим временной период предъявления - будущее + Прошлое
+            var minute_outgoing = current.diff(sostav_date_outgoing, 'minute');
+            //- зашло в будущее + зашло в прошлое
+            if (minute_outgoing >= max_err_data_outgoing || minute_outgoing <= min_err_data_outgoing) {
+                this.form.set_object_error('date_outgoing', langView('fhoogs_error_date_outgoing_not_deff_date_detention', App.Langs).format(min_err_data_outgoing, max_err_data_outgoing));
+                valid = valid & false;
+            }
+            if (sostav_date_outgoing_act !== null) {
+                if (sostav_date_outgoing_act && !sostav_date_outgoing_act.isAfter(sostav_date_readiness_uz)) {
+                    this.form.set_object_error('date_outgoing_act', langView('fhoogs_error_date_outgoing_act', App.Langs));
+                    valid = valid & false;
+                }
+            } else {
+                //this.form.set_object_ok('date_outgoing_act','');
+            }
+
         } else {
-            //this.form.set_object_ok('date_outgoing_act','');
+            // Вывести сообщение о неправильной дате
+            if (!sostav_date_end_inspection_acceptance_delivery.isValid) this.form.set_object_error('date_end_inspection_acceptance_delivery', langView('fhoogs_error_date_time', App.Langs));
+            if (!sostav_date_end_inspection_loader.isValid) this.form.set_object_error('date_end_inspection_loader', langView('fhoogs_error_date_time', App.Langs));
+            if (!sostav_date_end_inspection_vagonnik.isValid) this.form.set_object_error('date_end_inspection_vagonnik', langView('fhoogs_error_date_time', App.Langs));
+            if (!sostav_date_readiness_uz.isValid) this.form.set_object_error('date_readiness_uz', langView('fhoogs_error_date_time', App.Langs));
+            if (!sostav_date_outgoing.isValid) this.form.set_object_error('date_outgoing', langView('fhoogs_error_date_time', App.Langs));
+            valid = valid & false;
         }
         return valid;
     };
@@ -763,33 +537,11 @@
         this.form.disabled('num_doc', true);
         this.mf_edit.open(langView('fhoogs_title_form_edit', App.Langs));
     };
-    // Выполнить удаление
-    form_ho_outgoing_sostav.prototype.del = function (data) {
-        this.out_clear();
-        this.delete(data);
-    };
     // Сохранить объект
     form_ho_outgoing_sostav.prototype.save = function (data) {
         this.out_clear();
         this.update(data);
     };
-    //// Добавить объект
-    //form_ho_outgoing_sostav.prototype.insert = function (data) {
-    //    // Добавить 
-    //    LockScreen(langView('fhoogs_mess_operation_run', App.Langs));
-    //    this.ids_dir.postOperatorsWagons(data, function (result) {
-    //        if (result > 0) {
-    //            this.mf_edit.close(); // закроем форму
-    //            if (typeof this.settings.fn_add === 'function') {
-    //                this.settings.fn_add({ data: data, result: result });
-    //            }
-    //            LockScreenOff();
-    //        } else {
-    //            LockScreenOff();
-    //            this.mf_edit.out_error('При добавлении оператора произошла ошибка, код ошибки : ' + result);
-    //        }
-    //    }.bind(this));
-    //};
     // Изменить объект
     form_ho_outgoing_sostav.prototype.update = function (data) {
         LockScreen(langView('fhoogs_mess_operation_run', App.Langs));
@@ -802,37 +554,10 @@
                 LockScreenOff();
             } else {
                 LockScreenOff();
-                this.mf_edit.out_error('При обновлении оператора произошла ошибка, код ошибки : ' + result);
+                this.mf_edit.out_error(langView('fogcd_mess_error_operation_return_present', App.Langs) + result);
             }
         }.bind(this));
     };
-    //// Удалить объект
-    //form_ho_outgoing_sostav.prototype.delete = function (data) {
-    //    if (data !== null) {
-    //        this.modal_confirm_form.view(langView('fhoogs_title_form_del', App.Langs), 'Удалить выбранный оператор [' + data['operators_' + App.Lang] + '] ?', function (result) {
-    //            if (result) {
-
-    //                this.ids_dir.deleteOperatorsWagons(data.id, function (result) {
-    //                    if (result > 0) {
-    //                        if (typeof this.settings.fn_delete === 'function') {
-    //                            this.settings.fn_delete({ data: data, result: result });
-    //                        }
-    //                        LockScreenOff();
-    //                    } else {
-    //                        LockScreenOff();
-    //                        this.out_error('При удалении оператора произошла ошибка, код ошибки : ' + result);
-    //                    }
-    //                }.bind(this));
-
-    //            } else {
-    //                // Отмена
-    //                this.out_warning("Операция 'Удалить оператора' – отменена");
-    //            }
-    //        }.bind(this));
-    //    } else {
-
-    //    }
-    //};
     // Очистить сообщения
     form_ho_outgoing_sostav.prototype.out_clear = function () {
         if (this.settings.alert) {

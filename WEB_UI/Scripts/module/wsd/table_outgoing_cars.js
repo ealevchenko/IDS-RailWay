@@ -82,6 +82,10 @@
             'togc_mess_warning_sostav_status_4': 'Операция недопустима состав отклонён!',
             'togc_mess_error_sostav_null': 'Состав по id:{0} не найден!',
 
+            'togc_mess_ok_operation_return_present': 'Операция "Предъявить состав на УЗ" - выполнена',
+            'togc_mess_update_operation_return_present': 'Информация об операция "Предъявить состав на УЗ" - обновлена',
+            'togc_mess_error_operation_return_present': 'Ошибка выполнения операции "Предъявить состав на УЗ", статус выполнения не определён!',
+
             //'togc_mess_err_return_sostav': 'Статус выбранного состава не позволяет отменить состав для предъявления!',
             //'togc_mess_error_wagon_return': '№ вагона : {0}, код ошибки : {1}',
 
@@ -546,24 +550,21 @@
             alert: this.settings.alert,
             ids_wsd: this.ids_wsd,
             fn_add: function (result) {
-                this.update();
-                this.out_clear();
-                this.out_info("Новый оператор  [" + (result && result.data ? result.data['operators_' + App.Lang] : '') + "] - добавлен");
-                //this.settings.fn_db_update(['ways']);
+
             }.bind(this),
             fn_edit: function (result) {
                 this.update();
                 this.out_clear();
-                this.out_info("Оператор [" + (result && result.data ? result.data['operators_' + App.Lang] : '') + "] - Обновлен");
-                //this.settings.fn_db_update(['ways']);
+                if (result && result.data) {
+                    if (result.data.status < 2) {
+                        this.out_info(langView('togc_mess_ok_operation_return_present', App.Langs));
+                    } else {
+                        this.out_info(langView('togc_mess_update_operation_return_present', App.Langs));
+                    }
+                } else {
+                    this.out_info(langView('togc_mess_error_operation_return_present', App.Langs));
+                }
             }.bind(this),
-            //fn_delete: function (result) {
-            //    this.select_row_operation = null;
-            //    this.update();
-            //    this.out_clear();
-            //    this.out_info("Оператор [" + (result && result.data ? result.data['operators_' + App.Lang] : '') + "] - Удален");
-            //    //this.settings.fn_db_update(['ways']);
-            //}.bind(this),
         });
         var MCF = App.modal_confirm_form;
         this.modal_confirm_form = new MCF(this.selector); // Создадим экземпляр окно сообщений
@@ -601,47 +602,6 @@
             jQueryUI: false,
             "createdRow": function (row, data, index) {
                 $(row).attr('id', data.outgoing_car_id); // id строки
-                //switch (data.status) {
-                //    case 1: $(row).addClass('yellow'); break;
-                //    case 2: $(row).addClass('green'); break;
-                //    case 3: $(row).addClass('blue'); break;
-                //    case 4: $(row).addClass('red'); break;
-                //}
-                //if ((data.count_wagons_arrival > 0 || data.count_wagons_accepted > 0) && data.count_wagons_send > data.count_wagons_accepted) {
-                //    $(row).addClass('yellow');// Отметим состав частично принят
-                //}
-
-                //if (data.count_wagons_accepted > 0 && data.count_wagons_send === data.count_wagons_accepted) {
-                //    // Вагоны приняты, проверим как
-
-                //    if (data.count_wagons_send === data.count_wagons_arrival) {
-                //        $(row).addClass('green');// Вагоны приняты, все
-                //    };
-                //    if (data.count_wagons_arrival === 0 && data.count_wagons_return > 0 && data.count_wagons_send === data.count_wagons_return) {
-                //        $(row).addClass('blue');// Вагоны возвращены или отменены, все
-                //    };
-                //    if (data.count_wagons_send > (data.count_wagons_arrival + data.count_wagons_return)) {
-                //        $(row).addClass('red');// Вагоны приняты другой операцией
-                //    };
-                //};
-                //// Проверка на создание строки операции отправки (ошибка если дата строки создания и выполнения операции больше часа )
-                //var from_create = moment(data.from_operation_create);
-                //var from_operat = moment(data.from_operation_end);
-                //if (from_create && from_operat && from_create.isValid() && from_operat.isValid()) {
-                //    var hour = from_create.diff(from_operat, 'hours');
-                //    if (hour >= max_err_create || hour <= min_err_create) {
-                //        $('td.from_create', row).addClass('error');
-                //    }
-                //}
-                //// Проверка на создание строки операции прибытия (ошибка если дата строки создания и выполнения операции больше часа )
-                //var on_create = moment(data.on_operation_create);
-                //var on_operat = moment(data.on_operation_end);
-                //if (on_create && on_operat && on_create.isValid() && on_operat.isValid()) {
-                //    var hour = on_create.diff(on_operat, 'hours');
-                //    if (hour >= max_err_create || hour <= min_err_create) {
-                //        $('td.on_create', row).addClass('error');
-                //    }
-                //}
 
             }.bind(this),
             columns: this.table_columns,

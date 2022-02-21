@@ -2953,6 +2953,10 @@
                     this.current_id_return_wagons = null;
                     this.elements.button_return_open.show();
                     this.elements.button_return_close.hide();
+                    this.elements.autocomplete_cause_return.enable();
+                    this.elements.input_datetime_return_start.enable();
+                    this.elements.input_datetime_return_stop.enable();
+
                     this.elements.autocomplete_cause_return.val('');
                     this.elements.input_datetime_return_start.set(null); // уберем дату
                     this.elements.input_datetime_return_stop.set(null); // уберем дату
@@ -3328,7 +3332,7 @@
                                 LockScreenOff();
                             }.bind(this));
                             this.elements.button_return_close.prop("disabled", false); // сделаем активной
-                            LockScreenOff();
+                            //LockScreenOff();
                         }.bind(this));
                         this.elements.button_return_close.prop("disabled", false); // сделаем активной
 
@@ -3400,7 +3404,7 @@
                             this.settings.fn_update();
                         };
                         this.elements.button_present_car.prop("disabled", false); // сделаем активной
-                        LockScreenOff();
+                        //LockScreenOff();
                     }.bind(this));
                 } else {
                     // Отмена операции
@@ -3439,7 +3443,7 @@
                         this.settings.fn_update();
                     };
                     this.elements.button_return_car.prop("disabled", false); // сделаем активной
-                    LockScreenOff();
+                    //LockScreenOff();
                 }.bind(this));
             } else {
                 // Отмена операции
@@ -3475,7 +3479,7 @@
                         this.settings.fn_update();
                     };
                     this.elements.button_car_return.prop("disabled", false); // сделаем активной
-                    LockScreenOff();
+                    //LockScreenOff();
                 }.bind(this));
             } else {
                 // Отмена операции
