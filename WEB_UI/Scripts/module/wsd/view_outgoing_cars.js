@@ -1,4 +1,5 @@
-﻿(function (window) {
+﻿/*Модуль Форма выполнения предъявления вагонов состава на УЗ*/
+(function (window) {
     'use strict';
 
     var App = window.App || {};
@@ -16,66 +17,22 @@
             'vogc_card_table_cars': 'Предъявленные вагоны',
             'vogc_card_info_cars': 'Информация по вагону',
             'vogc_card_list_cars': 'Вагоны',
-
-
-
-            //'card_header_panel': 'ВЫПОЛНИТЬ ОПЕРАЦИЮ "ОТПРАВИТЬ СОСТАВОВ НА СТАНЦИИ АМКР"',
-            //'card_header_on': 'ОТПРАВИТЬ НА СТАНЦИЮ',
-            //'card_header_from': 'ОТПРАВИТЬ СО СТАНЦИ',
-            //'fieldset_on_table_title': 'Сформированный состав',
-            //'title_label_station_from': 'Станция отправления:',
-            //'title_placeholder_station_from': 'Станция отправления:',
-            //'title_label_way': 'Путь отправления:',
-            //'title_placeholder_way': 'Выберите путь',
-            //'fieldset_on_as_table_title': 'Прибывающие составы на выбранную станцию',
-
-            //'title_label_station_on': 'Станция прибытия:',
-            //'title_placeholder_station_on': 'Станция прибытия:',
-            //'title_label_outer_way': 'Внешний путь:',
-            //'title_placeholder_outer_way': 'Внешний путь',
-            //'title_label_locomotive1': 'Локомотив №1:',
-            //'title_label_locomotive2': 'Локомотив №2:',
-            //'title_placeholder_locomotive': ' № локомотива',
-            //'title_time_aplly': 'Время выполнения',
-            //'title_placeholder_time_aplly': 'Время выполнения',
-
-            //'title_form_apply': 'Выполнить?',
-
-            //'title_button_export': 'Экспорт',
-            //'title_button_buffer': 'Буфер',
-            //'title_button_excel': 'Excel',
-            //'title_button_cancel': 'Отменить',
-            //'title_button_return': 'Вернуть',
-
-            //'title_add_ok': 'ВЫПОЛНИТЬ',
-
-
-            //'mess_error_equal_locomotive': 'Локомотив №1 и №2 равны',
-            //'mess_error_not_locomotive': 'В справочнике ИДС отсутствует локомотив №',
-            //'mess_error_min_time_aplly': 'Дата выполнения операции не может быть меньше текущей даты, мин. отклонение (мин) =',
-            //'mess_error_max_time_aplly': 'Дата выполнения операции не может быть больше текущей даты, мак. отклонение (мин) =',
-            //'mess_error_not_wagons': 'Не выбраны вагоны для отправления (в окне «ОТПРАВИТЬ СО СТАНЦИ», на пути отправки выберите вагоны и сформируйте состав).',
-            //'mess_error_operation_run': 'При выполнении операции «ОТПРАВИТЬ СО СТАНЦИ» произошла ошибка, код ошибки:',
-
-            //'mess_cancel_operation': 'Операция "ОТПРАВИТЬ СОСТАВОВ НА СТАНЦИИ АМКР" – отменена',
-            //'mess_run_operation_send': 'Выполняю операцию отправки состава на станцию АМКР',
-
-            'vogc_mess_not_id_sostav': 'Состав не выбран, неопределен id',
-
-            //'mess_load_operation': 'Загружаю операции...',
-            //'mess_load_wagons': 'Загружаю вагоны на пути...',
-            //'mess_update_operation': 'Обновляю операции...',
+            'vogc_mess_not_id_sostav': 'Состав не выбран, не определен id',
             'vogc_mess_init_panel': 'Выполняю инициализацию модуля ...',
             'vogc_mess_load_sostav': 'Загружаю информацию по выбранному составу...',
-            //'mess_destroy_operation': 'Закрываю форму...',
-            //'mess_create_sostav': 'Формирую состав, переношу вагоны...',
-            //'mess_clear_sostav': 'Формирую состав, убираю выбранные вагоны...',
-            //'mess_reverse_sostav': 'Формирую состав, реверс вагонов...',
             'vogc_mess_load_vagon_detali': 'Загружаю информацию по вагону',
         },
         'en':  //default language: English
         {
-
+            'vogc_card_header_detali': 'CONTENT INFO',
+            'vogc_card_header_detali_sostav': 'INFORMATION ON THE COMPOSITION [Invoice no. :{0}, time of presentation to the OC :{1}, departure station :{2}, route :{3} ]',
+            'vogc_card_table_cars': 'Cars presented',
+            'vogc_card_info_cars': 'Car Information',
+            'vogc_card_list_cars': 'Cars',
+            'vogc_mess_not_id_sostav': 'No composition selected, no id defined',
+            'vogc_mess_init_panel': 'Initiating module...',
+            'vogc_mess_load_sostav': 'Loading information for the selected composition...',
+            'vogc_mess_load_vagon_detali': 'Loading vagon details',
         }
     };
     // Определлим список текста для этого модуля
@@ -290,14 +247,6 @@
                 this.update();
             }.bind(this),
         });
-
-        //// Загрузим справочные данные, определим поля формы правки
-        //this.load_db(['station', 'ways', 'outer_ways', 'locomotive'], false, function (result) {
-        //    //
-        //    if (typeof this.settings.fn_init === 'function') {
-        //        this.settings.fn_init();
-        //    }
-        //}.bind(this));
     };
     // Открыть модуль 
     view_outgoing_cars.prototype.open = function (id_sostav) {
@@ -459,28 +408,17 @@
             this.modal_confirm_form.destroy();
             this.modal_confirm_form = null;
         }
-        // Очистить форму выбора пути отправки
-        if (this.form_setup_from) {
-            this.form_setup_from.destroy();
-            this.form_setup_from = null;
+        // Уберем модуль (Таблица вагонов по отправке детально)
+        if (this.table_outgoing_cars) {
+            this.table_outgoing_cars.destroy();
+            this.table_outgoing_cars = null;
         }
-        // Очистить форму выбора куда отправить
-        if (this.form_setup_on) {
-            this.form_setup_on.destroy();
-            this.form_setup_on = null;
+        // Уберем модуль (Таблица вагонов по отправке детально)
+        if (this.form_outgoing_cars_detali) {
+            this.form_outgoing_cars_detali.destroy();
+            this.form_outgoing_cars_detali = null;
         }
 
-        // Уберем модуль (Таблица собранный состав для отправки детально)
-        if (this.tab_cars_on) {
-            this.tab_cars_on.destroy();
-            this.tab_cars_on = null;
-        }
-        // Уберем модуль (Таблица вагоны на на пути отправки детально)
-        if (this.tab_cars_from) {
-            this.tab_cars_from.destroy();
-            this.tab_cars_from = null;
-
-        }
         this.$panel.empty(); // empty in case the columns change
         LockScreenOff();
     };

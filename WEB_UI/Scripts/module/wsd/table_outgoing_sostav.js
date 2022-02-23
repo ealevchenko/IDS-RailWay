@@ -1,4 +1,5 @@
-﻿(function (window) {
+﻿/*Модуль Таблица "Отправляемые составы"*/
+(function (window) {
     'use strict';
 
     var App = window.App || {};
@@ -52,9 +53,8 @@
             'tos_field_count_not_outgoing': 'Осталось вагонов',
             'tos_field_count_return': 'Возврат',
             'tos_field_count_detention': 'Задержано',
-            'tos_field_count_vagonnik': 'Осмотренно',
+            'tos_field_count_vagonnik': 'Осмотрено',
             'tos_field_count_status': 'Всего|отпр.|ост.|возр.|зад.|осм.',
-
             'tos_title_form_return': 'Вернуть состав?',
 
             'tos_title_yes': 'Да',
@@ -62,12 +62,7 @@
             'tos_title_green': 'Сдан',
             'tos_title_blue': 'Отправлен',
             'tos_title_red': 'Отмена',
-
             'tos_title_all': 'Все',
-            //'tos_title_status_arrival': 'Принят',
-            //'tos_title_status_work': 'В работе',
-            //'tos_title_status_send': 'Отправлен',
-
             'tos_title_button_export': 'Экспорт',
             'tos_title_button_buffer': 'Буфер',
             'tos_title_button_excel': 'Excel',
@@ -83,21 +78,16 @@
             'tos_title_button_wagon_view': 'Показать вагоны',
             'tos_title_button_refresh': 'Обновить',
             'tos_mess_init_module': 'Инициализация модуля...',
-            //'tos_mess_load_wagons': 'Загружаю вагоны состава…',
             'tos_mess_load_sostav': 'Загружаю составы...',
             'tos_mess_update_sostav': 'Обновляю составы...',
-            //'tos_mess_view_wagons': 'загрузка информации о вагонах состава…',
             'tos_mess_view_sostav': 'Показываю составы...',
             'tos_mess_run_operation': 'Выполняю операцию...',
-
             'tos_mess_err_return_sostav': 'Статус выбранного состава не позволяет отменить состав для предъявления!',
             'tos_mess_error_wagon_return': '№ вагона : {0}, код ошибки : {1}',
-
             'tos_mess_comfirm_return': 'Вы уверены что хотите вернуть состав вед № {0}, станция отправления: {1}, путь отправления № {2}?',
             'tos_mess_cancel_return': 'Операция «Вернуть состав, сформированный для предъявления» - Отменена!',
             'tos_mess_ok_return': 'Операция «Вернуть состав, сформированный для предъявления» - Выполнена',
             'tos_mess_error_return': 'Ошибка выполнения операции «Вернуть состав, сформированный для предъявления», код ошибки : {0}',
-
             'tos_mess_comfirm_return_uz': 'Вы уверены что хотите вернуть состав сданный на УЗ : {0}, вед № {1}, станция отправления: {2}, путь отправления № {3}?',
             'tos_mess_cancel_return_uz': 'Операция «Вернуть состав, сданный на УЗ» - Отменена!',
             'tos_mess_ok_return_uz': 'Операция «Вернуть состав, сданный на УЗ» - Выполнена',
@@ -106,7 +96,79 @@
         },
         'en':  //default language: English
         {
+            'tos_field_id_composition': 'composition id',
+            'tos_field_num_doc': 'Ved. No.',
+            'tos_field_id_station_from': 'id of Station of departure',
+            'tos_field_station_from_name': 'Sent from station',
+            'tos_field_station_from_abbr': 'Sent from station',
+            'tos_field_id_way_from': 'tos path id',
+            'tos_field_way_from_num': 'tos_field_way_from_num',
+            'tos_field_way_from_name': 'Departure path name',
+            'tos_field_id_station_on': 'id of destination station',
+            'tos_field_station_on_name': 'Destination Stations',
+            'tos_field_station_on_abbr': 'Destination Stations',
+            'tos_field_date_readiness_amkr': 'Tos Presentation Time',
+            'tos_field_date_end_inspection_acceptance_delivery': 'End time of inspection by the receiver/delivery',
+            'tos_field_date_end_inspection_loader': 'Field Inspection End Time',
+            'tos_field_date_end_inspection_vagonnik': 'Tos_field_date_end_inspection_vagonnik',
+            'tos_field_vagonnik_user': 'Vagonnik',
+            'tos_field_date_readiness_uz': 'Tos field_date_readiness_uz',
+            'tos_field_date_outgoing': 'Tos Field Date Outgoing',
+            'tos_field_date_outgoing_act': 'Tos field date (by act)',
+            'tos_field_date_departure_amkr': 'AMKR Departure Time',
+            'tos_field_composition_index': 'Train index',
+            'tos_field_status_icon': '',
+            'tos_field_status': 'Status',
+            'tos_field_note': 'Note',
+            'tos_field_route_sign': 'Route sign',
+            'tos_field_create': 'Created',
+            'tos_field_create_user': 'Created',
+            'tos_field_change': 'Rules',
+            'tos_field_change_user': 'Rules',
+            'tos_field_count_all': 'Tos. vag.',
+            'tos_field_count_outgoing': 'Wagons Outgoing',
+            'tos_field_count_not_outgoing': 'Wagons left',
+            'tos_field_count_return': 'Return',
+            'tos_field_count_detention': 'Delayed',
+            'tos_field_count_vagonnik': 'Viewed',
+            'tos_field_count_status': 'Total|departure|residual|asc|task|inspection',
+            'tos_title_form_return': 'Return lineup?',
 
+            'tos_title_yes': 'Yes',
+            'tos_title_yellow': 'In Progress',
+            'tos_title_green': 'Passed',
+            'tos_title_blue': 'Sent',
+            'tos_title_red': 'Cancel',
+            'tos_title_all': 'All',
+            'tos_title_button_export': 'Export',
+            'tos_title_button_buffer': 'Buffer',
+            'tos_title_button_excel': 'Excel',
+            'tos_title_excel_sheet_name': 'Sheets',
+            'tos_title_button_field': 'Fields',
+            'tos_title_button_field_select': 'Select',
+            'tos_title_button_field_view_all': 'Show All',
+            'tos_title_button_field_clear': 'Reset',
+            'tos_title_button_return': 'Return lineup',
+            'tos_title_button_return_uz': 'Return the composition from UZ',
+            'tos_title_button_wagon': 'Wagons',
+            'tos_title_button_wagon_accept': 'Send wagons',
+            'tos_title_button_wagon_view': 'Show wagons',
+            'tos_title_button_refresh': 'Refresh',
+            'tos_mess_init_module': 'Initiating module...',
+            'tos_mess_load_sostav': 'Loading lineups...',
+            'tos_mess_update_sostav': 'Updating lineups...',
+            'tos_mess_view_sostav': 'Showing lineups...',
+            'tos_mess_run_operation': 'Running operation...',
+            'tos_mess_err_return_sostav': 'The status of the selected composition does not allow you to cancel the presentation composition!',
+            'tos_mess_error_wagon_return': 'wagon no : {0}, error code : {1}',
+            'tos_mess_comfirm_return': 'Are you sure you want to return ved number {0}, departure station: {1}, departure route {2}?',
+            'tos_mess_cancel_return': 'Operation "Return Composition Formed for Presentation" - Canceled!',
+            'tos_mess_ok_return': 'Operation "Return the composition formed for presentation" - Completed',
+            'tos_mess_error_return': 'Error performing operation "Return composition formed for presentation", error code : {0}',
+            'tos_mess_comfirm_return_uz': 'Are you sure you want to return the train handed over to UZ : {0}, route number {1}, departure station: {2}, departure route number {3}?',
+            'tos_mess_cancel_return_uz': 'Operation "Return Train Returned to UZ" - Canceled!',
+            'tos_mess_ok_return_uz': 'Operation "Return Train Returned to UZ" - Done',
+            'tos_mess_error_return_uz': 'Error performing the operation "Return train returned to UZ", error code : {0}',
         }
     };
     // Определлим список текста для этого модуля
@@ -529,12 +591,12 @@
         if (!selector) {
             throw new Error('Не указан селектор');
         }
-        this.$cars_way = $(selector);
-        if (this.$cars_way.length === 0) {
+        this.$outgoing_sostav = $(selector);
+        if (this.$outgoing_sostav.length === 0) {
             throw new Error('Не удалось найти элемент с селектором: ' + selector);
         }
         this.fc_ui = new FC();
-        this.selector = this.$cars_way.attr('id');
+        this.selector = this.$outgoing_sostav.attr('id');
     }
     //==========================================================================================
     //------------------------------- ПОЛЯ ----------------------------------------------------
@@ -722,7 +784,7 @@
         // Создадим и добавим макет таблицы
         var table_cars = new this.fc_ui.el_table('tab-os-' + this.selector, 'display compact cell-border row-border hover');
         this.$table_sostav = table_cars.$element;
-        this.$cars_way.addClass('table-report-operation').append(this.$table_sostav);
+        this.$outgoing_sostav.addClass('table-report-operation').append(this.$table_sostav);
         // Инициализируем таблицу
         this.obj_t_sostav = this.$table_sostav.DataTable({
             "lengthMenu": [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('tos_title_all', App.Langs)]],
@@ -1031,15 +1093,17 @@
     }
     // Очистить объект
     table_outgoing_sostav.prototype.destroy = function () {
-        // Вкл. когда понадобится 
-        if (this.modal_confirm_form) this.modal_confirm_form.destroy();
-        //this.destroy_all_detali(); // Удалить все таблицы детально, если созданы
+        // Вкл. когда понадобится
+        if (this.modal_confirm_form) {
+            this.modal_confirm_form.destroy();
+            this.modal_confirm_form = null;
+        }
+        //
         if (this.obj_t_sostav) {
             this.obj_t_sostav.destroy(true);
             this.obj_t_sostav = null;
         }
-
-        this.$table_sostav.empty(); // empty in case the columns change
+        this.$outgoing_sostav.empty(); // empty in case the columns change
     }
 
     App.table_outgoing_sostav = table_outgoing_sostav;

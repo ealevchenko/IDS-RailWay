@@ -1,6 +1,6 @@
 ﻿/// <reference path="../../api/ids_direct.js" />
 /// <reference path="../shared/common.js" />
-
+/*Модуль Форма "Сдать состав на УЗ"*/
 (function (window) {
     'use strict';
 
@@ -39,11 +39,8 @@
             'fhoogs_title_label_route_sign': 'Маршрут',
             'fhoogs_title_label_composition_index': 'Индекс поезда',
             'fhoogs_title_placeholder_composition_index': 'XXXX-XXX-XXXX',
-
             'fhoogs_title_form_add': 'Сдать состав',
             'fhoogs_title_form_edit': 'Править сданный состав',
-            /*            'fhoogs_title_form_del': 'Удалить',*/
-
             'fhoogs_mess_operation_run': 'Выполняю операцию...',
             'fhoogs_error_date_end_inspection_acceptance_delivery': 'Время окончания осмотра должно быть больше времени предъявления АМКР {0}',
             'fhoogs_error_date_end_inspection_loader': 'Время окончания осмотра должно быть больше времени предъявления АМКР {0}',
@@ -53,13 +50,43 @@
             'fhoogs_error_date_outgoing_act': 'Время сдаче на УЗ по акту должно быть больше времени сдачи на УЗ',
             'fhoogs_error_date_time': 'Укажите правильно дату и время',
             'fhoogs_error_date_outgoing_not_deff_date_detention': 'Дата и время предъявления должны быть не меньше {0} мин. или больше {1} мин. от текущего времени',
-
-            //'fhoogs_mess_ok_operation_return_present': 'Операция "Предъявить состав на УЗ" - выполнена',
-            'fhoogs_mess_error_operation_return_present': 'Ошибка выполения операции "Предъявить состав на УЗ", код ошибки = ',
+            'fhoogs_mess_error_operation_return_present': 'Ошибка выполнения операции "Предъявить состав на УЗ", код ошибки = ',
         },
         'en':  //default language: English
         {
-
+            'fhoogs_title_edit': 'Edit',
+            'fhoogs_title_cancel': 'Cancel',
+            'fhoogs_title_num_doc': 'sheet number',
+            'fhoogs_title_placeholder_num_doc': 'fhoogs_title_placeholder_num_doc',
+            'fhoogs_title_date_end_inspection_acceptance_delivery': 'Windows times. osm. reception ',
+            'fhoogs_title_placeholder_date_end_inspection_acceptance_delivery': 'Add Time',
+            'fhoogs_title_date_end_inspection_loader': 'Windows time. osm. movers.',
+            'fhoogs_title_placeholder_date_end_inspection_loadery': 'Add Time',
+            'fhoogs_title_date_end_inspection_vagonnik': 'Windows time. osm. wagons.',
+            'fhoogs_title_placeholder_date_end_inspection_vagonnik': 'Add time',
+            'fhoogs_title_date_readiness_uz': 'Uz readiness time',
+            'fhoogs_title_placeholder_date_readiness_uz': 'Add time',
+            'fhoogs_title_date_outgoing': 'Title Date Outgoing',
+            'fhoogs_title_placeholder_date_outgoing': 'Add time',
+            'fhoogs_title_date_outgoing_act': 'Title delivery time (by act)',
+            'fhoogs_title_placeholder_date_outgoing_act': 'Add time',
+            'fhoogs_title_label_station_on': 'Send to station',
+            'fhoogs_title_placeholder_station_on': 'Select a station',
+            'fhoogs_title_label_route_sign': 'Route',
+            'fhoogs_title_label_composition_index': 'Train index',
+            'fhoogs_title_placeholder_composition_index': 'XXXX-XXX-XXXX',
+            'fhoogs_title_form_add': 'Submit Composition',
+            'fhoogs_title_form_edit': 'Edit Turned In Form',
+            'fhoogs_mess_operation_run': 'Running operation...',
+            'fhoogs_error_date_end_inspection_acceptance_delivery': 'Inspection end time must be greater than AMC present time {0}',
+            'fhoogs_error_date_end_inspection_loader': 'Inspection end time must be greater than AMKR presentation time {0}',
+            'fhoogs_error_date_end_inspection_vagonnik': 'Inspection end time must be greater than AMKR presentation time {0}',
+            'fhoogs_error_date_readiness_uz': 'Uz readiness time must be greater than inspection time',
+            'fhoogs_error_date_outgoing': 'OF turn-in time must be greater than OZ ready time',
+            'fhoogs_error_date_outgoing_act': 'The turn-in time for the OZ according to the act must be greater than the turn-in time for the OZ',
+            'fhoogs_error_date_time': 'Please enter the correct date and time',
+            'fhoogs_error_date_outgoing_not_deff_date_detention': 'Date and time of presentation must be at least {0} min. or more {1} min. from current time',
+            'fhoogs_mess_error_operation_return_present': 'Error executing operation "Present composition to UZ", error code = ',
         }
     };
     // Определлим список текста для этого модуля
@@ -584,9 +611,18 @@
     }
     // Удалить объект
     form_ho_outgoing_sostav.destroy = function () {
-        this.modal_confirm_form.destroy();
-        this.form.destroy();
-        this.mf_edit.destroy();
+        if (this.modal_confirm_form) {
+            this.modal_confirm_form.destroy();
+            this.modal_confirm_form = null;
+        }
+        if (this.mf_edit) {
+            this.mf_edit.destroy();
+            this.mf_edit = null;
+        }
+        if (this.form) {
+            this.form.destroy();
+            this.form = null;
+        }
     };
 
     App.form_ho_outgoing_sostav = form_ho_outgoing_sostav;

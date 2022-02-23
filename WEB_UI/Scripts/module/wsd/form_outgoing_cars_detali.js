@@ -1,6 +1,6 @@
 ﻿/// <reference path="../../api/ids_direct.js" />
 /// <reference path="../shared/common.js" />
-
+/*Модуль форма "Отправляемый вагон детально"*/
 (function (window) {
     'use strict';
 
@@ -18,13 +18,13 @@
 
     var min_err_detention_start = -2 * 60;   // TODO: Минимальная разница в часах начало задержания и текущей даты
     var max_err_detention_start = 2 * 60;    // TODO: Максимальная разница в часах начало задержания и текущей даты
-    var max_err_detention_deff = 4 * 60;    // TODO: Минимальная разница в часах межу началом и концом задержания
-    var min_err_return_start = -2 * 60;   // TODO: Минимальная разница в часах начало задержания и текущей даты
-    var max_err_return_start = 2 * 60;    // TODO: Максимальная разница в часах начало задержания и текущей даты
-    var min_err_return_stop = -2 * 60;   // TODO: Минимальная разница в часах начало задержания и текущей даты
-    var max_err_return_stop = 2 * 60;    // TODO: Максимальная разница в часах начало задержания и текущей даты
-    //var max_err_return_deff = 4 * 60;    // TODO: Минимальная разница в часах межу началом и концом задержания
-
+    var max_err_detention_deff = 4 * 60;        // TODO: Минимальная разница в часах межу началом и концом задержания
+    var min_err_return_start = -2 * 60;     // TODO: Минимальная разница в часах начало задержания и текущей даты
+    var max_err_return_start = 2 * 60;      // TODO: Максимальная разница в часах начало задержания и текущей даты
+    var min_err_return_stop = -2 * 60;      // TODO: Минимальная разница в часах начало задержания и текущей даты
+    var max_err_return_stop = 2 * 60;       // TODO: Максимальная разница в часах начало задержания и текущей даты
+    //var max_err_return_deff = 4 * 60;     // TODO: Минимальная разница в часах межу началом и концом задержания
+    var list_groups_cargo = [11,20];        // TODO: Список id групп груза с порожними вагонами
 
     // Массив текстовых сообщений 
     $.Text_View =
@@ -115,6 +115,7 @@
             'fogcd_label_station_name_on': 'Станция назначения:',
             'fogcd_title_railway_name_on': '',
             'fogcd_label_railway_name_on': 'Дорога:',
+
             'fogcd_title_client_kod_on': '',
             'fogcd_label_client_kod_on': 'Код:',
             'fogcd_title_client_name_on': '',
@@ -153,9 +154,6 @@
             'fogcd_label_sap_outgoing_supply_shipper_code': 'Код:',
             'fogcd_title_sap_outgoing_supply_shipper_name': '',
             'fogcd_label_sap_outgoing_supply_shipper_name': 'Грузополучатель:',
-
-            //'fogcd_title_': '',
-            //'fogcd_label_': '',
             'fogcd_title_button_save': 'Сохранить',
             'fogcd_title_button_edit': 'Править',
             'fogcd_title_button_return_open': 'Выполнить возврат',
@@ -172,8 +170,6 @@
             'fogcd_form_return_present_message': 'Подтвердите выполнение операции «ВЕРНУТЬ ВАГОН № {0} ПРЕДЪЯВЛЕННЫ НА УЗ»?',
             'fogcd_form_remove_wagon': 'Выполнить?',
             'fogcd_form_remove_wagon_message': 'Подтвердите выполнение операции «УБРАТЬ ВАГОН № {0} ИЗ СОТАВА ДЛЯ ПРЕДЪЯВЛЕНИЯ»?',
-
-
             'fogcd_title_fieldset_detention_return': 'ЗАДЕРЖАНИЕ/ВОЗВРАТ',
             'fogcd_title_fieldset_detention': 'ЗАДЕРЖАНИЕ',
             'fogcd_title_fieldset_return': 'ВОЗВРАТ',
@@ -189,6 +185,8 @@
             'fogcd_mess_valid_not_detention_stop': 'Укажите конец задержания',
             'fogcd_mess_valid_not_deff_date_detention': 'Дата и время начало задержания должны быть не меньше {0} мин. или больше {1} мин. от текущей даты',
             'fogcd_mess_valid_not_deff_date_detention_start_stop': 'Разница между началом и окончанием задержания должна быть больше 0 мин. но меньше {0} мин.',
+            'fogcd_mess_valid_no_save_detention': 'Сохраните задержание, затем переносите вагон!',
+
             'fogcd_mess_valid_cause_return': 'Указанной причины возврата нет в справочнике ИДС.',
             'fogcd_mess_valid_not_cause_return': 'Укажите причину возврата',
             'fogcd_mess_valid_not_return_start': 'Укажите начало возврата',
@@ -197,17 +195,15 @@
             'fogcd_mess_valid_not_deff_date_stop_return': 'Дата и время окончания возврата должны быть не меньше {0} мин. или больше {1} мин. от текущей даты',
             'fogcd_mess_valid_not_deff_date_return_start_stop': 'Разница между началом и окончанием возврата должна быть больше 0 мин.',
             'fogcd_mess_valid_error_date_act': 'Ошибка формата даты акта',
-
             'fogcd_mess_valid_cargo': 'Указанного груза нет в справочнике ИДС.',
             'fogcd_mess_valid_loading_devision': 'Указанного подразделения нет в справочнике ИДС.',
             'fogcd_mess_valid_not_loading_devision': 'Укажите подразделение погрузки.',
             'fogcd_mess_valid_name_station_to': 'Указанной станции нет в справочнике ИДС.',
-            'fogcd_mess_warning_no_data_wagon_ids': 'По указаному ID {0} вагона нет данных в БД ИДС.',
+            'fogcd_mess_warning_no_data_wagon_ids': 'По указанному ID {0} вагона нет данных в БД ИДС.',
             'fogcd_mess_warning_no_data_wagon_uz': 'По выбранному вагону нет данных в БД УЗ. (будут применены данный из справочника ИДС).',
             'fogcd_mess_warning_no_data_dir_wagon': 'По выбранному вагону нет данных в справочнике вагонов ИДС.',
-
             'fogcd_mess_valid_error_position1': 'Первый предъявленный вагон должен начинается с 1 позиции',
-            'fogcd_mess_valid_error_position2': 'Указаная позиция {0} уже существует, вагон № {1}',
+            'fogcd_mess_valid_error_position2': 'Указанная позиция {0} уже существует, вагон № {1}',
             'fogcd_mess_valid_error_num': 'Указанный вагон {0} уже предъявлен, позиция № {1}',
             'fogcd_mess_valid_date_outgoing_act': 'Укажите правильно дату сдачи по акту',
             'fogcd_mess_valid_not_date_outgoing_act': 'Не указана дата сдачи по акту',
@@ -216,55 +212,249 @@
             'fogcd_mess_valid_not_reason_discrepancy': 'Укажите причину расхождения.',
             'fogcd_mess_valid_null_condition_present': 'Вагон не размечен вагонником.',
 
-
             'fogcd_value_vagonnik': 'Разметил : {0}, Разметка : {1}',
-
             'fogcd_mess_init_panel': 'Инициализация модуля...',
             'fogcd_mess_load_wagon': 'Обновляю информацию по вагону...',
-            'fogcd_mess_load_db_uz': 'Обновляю информацию о вагоне с бд УЗ...',
+            'fogcd_mess_load_db_uz': 'Обновляю информацию о вагоне с БД УЗ...',
             'fogcd_mess_load_return_wagon': 'Поиск информации по возвратам',
             'fogcd_mess_update_operation_detention': 'Выполняю операцию обновления задержания по вагону',
             'fogcd_mess_cancel_operation_detention': 'Отмена выполнения операции "Обновить задержание по вагону"',
             'fogcd_mess_ok_operation_detention': 'Операция "Обновить задержание по вагону" - выполнена',
-            'fogcd_mess_error_operation_detention': 'Ошибка выполения операции "Обновить задержание по вагону", код ошибки = ',
+            'fogcd_mess_error_operation_detention': 'Ошибка выполнения операции "Обновить задержание по вагону", код ошибки = ',
             'fogcd_mess_update_operation_return_open': 'Выполняю операцию "Открыть возврат по вагону"',
             'fogcd_mess_cancel_operation_return_open': 'Отмена выполнения операции "Открыть возврат по вагону"',
             'fogcd_mess_ok_operation_return_open': 'Операция "Открыть возврат по вагону" - выполнена',
-            'fogcd_mess_error_operation_return_open': 'Ошибка выполения операции "Открыть возврат по вагону", код ошибки = ',
+            'fogcd_mess_error_operation_return_open': 'Ошибка выполнения операции "Открыть возврат по вагону", код ошибки = ',
             'fogcd_mess_update_operation_return_close': 'Выполняю операцию "Закрыть возврат по вагону"',
             'fogcd_mess_cancel_operation_return_close': 'Отмена выполнения операции "Закрыть возврат по вагону"',
             'fogcd_mess_ok_operation_return_close': 'Операция "Закрыть возврат по вагону" - выполнена',
-            'fogcd_mess_error_operation_return_close': 'Ошибка выполения операции "Закрыть возврат по вагону", код ошибки = ',
-            'fogcd_mess_error_operation_return_close_not_id': 'Ошибка выполения операции "Закрыть возврат по вагону", id cтроки возврата неопределенн',
+            'fogcd_mess_error_operation_return_close': 'Ошибка выполнения операции "Закрыть возврат по вагону", код ошибки = ',
+            'fogcd_mess_error_operation_return_close_not_id': 'Ошибка выполнения операции "Закрыть возврат по вагону", id строки возврата неопределенно',
             'fogcd_mess_run_operation_present': 'Выполняю операцию "Предъявить вагон на УЗ"',
             'fogcd_mess_cancel_operation_present': 'Отмена выполнения операции "Предъявить вагон на УЗ"',
             'fogcd_mess_ok_operation_present': 'Операция "Предъявить вагон на УЗ" - выполнена',
-            'fogcd_mess_error_operation_present': 'Ошибка выполения операции "Предъявить вагон на УЗ", код ошибки = ',
+            'fogcd_mess_error_operation_present': 'Ошибка выполнения операции "Предъявить вагон на УЗ", код ошибки = ',
             'fogcd_mess_run_operation_return_present': 'Выполняю операцию "Вернуть вагон предъявленный на УЗ"',
             'fogcd_mess_cancel_operation_return_present': 'Отмена выполнения операции "Вернуть вагон предъявленный на УЗ"',
             'fogcd_mess_ok_operation_return_present': 'Операция "Вернуть вагон предъявленный на УЗ" - выполнена',
-            'fogcd_mess_error_operation_return_present': 'Ошибка выполения операции "Вернуть вагон предъявленный на УЗ", код ошибки = ',
+            'fogcd_mess_error_operation_return_present': 'Ошибка выполнения операции "Вернуть вагон предъявленный на УЗ", код ошибки = ',
             'fogcd_mess_run_operation_remove_wagon': 'Выполняю операцию "Убрать вагон из состава для предъявления"',
             'fogcd_mess_cancel_operation_remove_wagon': 'Отмена выполнения операции "Убрать вагон из состава для предъявления"',
             'fogcd_mess_ok_operation_remove_wagon': 'Операция "Убрать вагон из состава для предъявления" - выполнена',
-            'fogcd_mess_error_operation_remove_wagon': 'Ошибка выполения операции "Убрать вагон из состава для предъявления", код ошибки = ',
-
-
-            //'fhoogs_title_form_add': 'Сдать состав',
-            //'fhoogs_title_form_edit': 'Править сданный состав',
-            ///*            'fhoogs_title_form_del': 'Удалить',*/
-
-            //'fhoogs_mess_operation_run': 'Выполняю операцию...',
-            //'fhoogs_error_date_end_inspection_acceptance_delivery': 'Время окончания осмотра должно быть больше времени предъявления АМКР {0}',
-            //'fhoogs_error_date_end_inspection_loader': 'Время окончания осмотра должно быть больше времени предъявления АМКР {0}',
-            //'fhoogs_error_date_end_inspection_vagonnik': 'Время окончания осмотра должно быть больше времени предъявления АМКР {0}',
-            //'fhoogs_error_date_readiness_uz': 'Время готовности к сдаче на УЗ должно быть больше времени осмотров',
-            //'fhoogs_error_date_outgoing': 'Время сдачи на УЗ должно быть больше времени готовности сдачи на УЗ',
-            //'fhoogs_error_date_outgoing_act': 'Время сдаче на УЗ по акту должно быть больше времени сдачи на УЗ',
+            'fogcd_mess_error_operation_remove_wagon': 'Ошибка выполнения операции "Убрать вагон из состава для предъявления", код ошибки = ',
         },
         'en':  //default language: English
         {
+            'fogcd_label_num': 'Car #:',
+            'fogcd_title_num': 'Wagon number',
+            'fogcd_label_position_outgoing': 'Train #:',
+            'fogcd_title_position_outgoing': 'Auto input/correction (car number in train)',
+            'fogcd_label_num_cont_1': 'container-1:',
+            'fogcd_title_num_cont_1': 'Container Number',
+            'fogcd_label_num_cont_2': 'container-2:',
+            'fogcd_title_num_cont_2': 'Container Number',
+            'fogcd_label_date_outgoing_act': 'Fogcd_label_date_outgoing_act:',
+            'fogcd_title_date_outgoing_act': 'Manual entry (if wagon is outgoing by act)',
+            'fogcd_label_reason_discrepancy_amkr': 'Reason for change discrepancy (AMKR):',
+            'fogcd_title_reason_discrepancy_amkr': 'Reason for change discrepancy',
+            'fogcd_label_reason_discrepancy_uz': 'Cost discrepancy in change (KU):',
+            'fogcd_title_reason_discrepancy_uz': 'Reason for change discrepancy',
+            'fogcd_label_adm_kod': 'Adm.(code):',
+            'fogcd_title_adm_kod': 'Admin Code',
+            'fogcd_label_rod_vag_abbr': 'Rod(abbr):',
+            'fogcd_title_rod_vag_abbr': 'Reference book "Car card" -> Title "Car type(abbr.)"',
+            'fogcd_label_gruzp_uz': 'Freight. (UZ),t:',
+            'fogcd_title_gruzp_uz': '',
+            'fogcd_label_tara_uz': 'Tara (UZ),t:',
+            'fogcd_title_tara_uz': '',
+            'fogcd_label_condition_arrival': 'Label (arrival):',
+            'fogcd_title_condition_arrival': '',
+            'fogcd_label_condition_provide': 'Label (current):',
+            'fogcd_title_condition_provide': '',
+            'fogcd_label_condition_present': 'Fogcd_label_condition_present:',
+            'fogcd_title_condition_present': '',
+            'fogcd_label_cause_detention': 'Detention reason:',
+            'fogcd_title_cause_detention': '',
+            'fogcd_label_detention_start': 'Detention start:',
+            'fogcd_title_detention_start': '',
+            'fogcd_label_detention_stop': 'Detention end:',
+            'fogcd_title_detention_stop': '',
+            'fogcd_label_cause_return': 'Return Reason:',
+            'fogcd_title_cause_return': '',
+            'fogcd_label_return_start': 'Fogcd_label_return_start:',
+            'fogcd_title_return_start': '',
+            'fogcd_label_return_stop': 'Fogcd_label_return_stop',
+            'fogcd_title_return_stop': '',
+            'fogcd_label_return_num_act': 'Return act number:',
+            'fogcd_title_return_num_act': '',
+            'fogcd_label_return_date_act': 'Return act date:',
+            'fogcd_title_return_date_act': '',
+            'fogcd_label_return_note': 'Note return:',
+            'fogcd_title_return_note': '',
+            'fogcd_label_loaded_car': 'Loaded/empty',
+            'fogcd_title_cargo_name': '',
+            'fogcd_label_cargo_name': 'Cargo Name:',
+            'fogcd_title_loading_devision_code': '',
+            'fogcd_label_loading_devision_code': 'Code:',
+            'fogcd_title_loading_devision': '',
+            'fogcd_label_loading_devision': 'Loading department:',
+            'fogcd_title_code_station_to': '',
+            'fogcd_label_code_station_to': 'Code:',
+            'fogcd_title_name_station_to': '',
+            'fogcd_label_name_station_to': 'Destination station:',
+            'fogcd_title_owner_name': '',
+            'fogcd_label_owner_name': 'Owner:',
+            'fogcd_title_operator_name': '',
+            'fogcd_label_operator_name': 'Operator (mcr):',
+            'fogcd_title_limiting_loading_amkr': '',
+            'fogcd_label_limiting_loading_amkr': 'Limiting (AMKR):',
+            'fogcd_title_limiting_loading_uz': '',
+            'fogcd_label_limiting_loading_uz': 'Limiting (LL):',
+            'fogcd_title_uz_doc_num': '',
+            'fogcd_label_uz_doc_num': 'Invoice number:',
+            'fogcd_title_vesg_uz_doc': '',
+            'fogcd_label_vesg_uz_doc': 'Weight:',
+            'fogcd_title_ves_tary_uz_doc': '',
+            'fogcd_label_ves_tary_uz_doc': 'Tare:',
+            'fogcd_title_brigadier_loading_uz_doc': '',
+            'fogcd_label_brigadier_loading_uz_doc': 'Loading Foreman:',
+            'fogcd_title_kod_etsng': 'ETD [OTPR/VAGON/COLLECT_V/kod_etsng] -> ET CIS cargo code',
+            'fogcd_label_kod_etsng': 'ETSNG code:',
+            'fogcd_title_name_etsng': 'EPD [OTPR/VAGON/COLLECT_V/name_etsng] -> "CIS UT Cargo" Directory -> "IDS Cargo" Directory -> CIS UT Cargo Name',
+            'fogcd_label_name_etsng': 'Fogcd_label_name_etsng',
+            'fogcd_title_station_code_on': '',
+            'fogcd_label_station_code_on': 'Code:',
+            'fogcd_title_station_name_on': '',
+            'fogcd_label_station_name_on': 'Destination station:',
+            'fogcd_title_railway_name_on': '',
+            'fogcd_label_railway_name_on': 'Road:',
 
+            'fogcd_title_client_kod_on': '',
+            'fogcd_label_client_kod_on': 'Code:',
+            'fogcd_title_client_name_on': '',
+            'fogcd_label_client_name_on': 'Consignee:',
+            'fogcd_title_cargo_arrival': '',
+            'fogcd_label_cargo_arrival': 'Cargo:',
+            'fogcd_title_cargo_sap': '',
+            'fogcd_label_cargo_sap': 'SAP material name:',
+            'fogcd_title_date_arrival': '',
+            'fogcd_label_date_arrival': 'Received Time:',
+            'fogcd_title_owner_name_arrival': '',
+            'fogcd_label_owner_name_arrival': 'Owner:',
+            'fogcd_title_operator_name_arrival': '',
+            'fogcd_label_operator_name_arrival': 'Operator (mcr):',
+            'fogcd_title_limiting_loading_arrival': '',
+            'fogcd_label_limiting_loading_arrival': 'Limiting (mcr):',
+            'fogcd_title_sap_outgoing_supply_num': '',
+            'fogcd_label_sap_outgoing_supply_num': 'outgoing no. supplies:',
+            'fogcd_title_sap_outgoing_supply_netto': '',
+            'fogcd_label_sap_outgoing_supply_netto': 'Load Weight:',
+            'fogcd_title_sap_outgoing_supply_responsible_fio': '',
+            'fogcd_label_sap_outgoing_supply_responsible_fio': 'Loading Foreman:',
+            'fogcd_title_sap_outgoing_supply_warehouse_code': '',
+            'fogcd_label_sap_outgoing_supply_warehouse_code': 'Warehouse:',
+            'fogcd_title_sap_outgoing_supply_warehouse_name': '',
+            'fogcd_label_sap_outgoing_supply_warehouse_name': 'Loading House:',
+            'fogcd_title_sap_outgoing_supply_cargo_code': '',
+            'fogcd_label_sap_outgoing_supply_cargo_code': 'ETSNG Code:',
+            'fogcd_title_sap_outgoing_supply_cargo_name': '',
+            'fogcd_label_sap_outgoing_supply_cargo_name': 'Cargo Name:',
+            'fogcd_title_sap_outgoing_supply_destination_station_code': '',
+            'fogcd_label_sap_outgoing_supply_destination_station_code': 'Code:',
+            'fogcd_title_sap_outgoing_supply_destination_station_name': '',
+            'fogcd_label_sap_outgoing_supply_destination_station_name': 'Destination Station:',
+            'fogcd_title_sap_outgoing_supply_shipper_code': '',
+            'fogcd_label_sap_outgoing_supply_shipper_code': 'Code:',
+            'fogcd_title_sap_outgoing_supply_shipper_name': '',
+            'fogcd_label_sap_outgoing_supply_shipper_name': 'Consignee:',
+            'fogcd_title_button_save': 'Save',
+            'fogcd_title_button_edit': 'Edit',
+            'fogcd_title_button_return_open': 'Return',
+            'fogcd_title_button_return_close': 'Close Return',
+            'fogcd_form_detention': 'Edit Detention?',
+            'fogcd_form_detention_message': 'Update wagon detention information?',
+            'fogcd_form_return_open': 'Open return?',
+            'fogcd_form_return_open_message': 'Open return to wagon {0}?',
+            'fogcd_form_return_close': 'Close return?',
+            'fogcd_form_return_close_message': 'Close return on wagon {0}?',
+            'fogcd_form_present': 'Run?',
+            'fogcd_form_present_message': 'Confirm the operation "PRESENT CAR #{0} TO OZ"?',
+            'fogcd_form_return_present': 'Run?',
+            'fogcd_form_return_present_message': 'Confirm operation "RETURN CAR #{0} PRESENTED TO OZ"?',
+            'fogcd_form_remove_wagon': 'Run?',
+            'fogcd_form_remove_wagon_message': 'Confirm "REMOVE WAGON #{0} FROM PRESENTATION"?',
+            'fogcd_title_fieldset_detention_return': 'DETENTION/RETURN',
+            'fogcd_title_fieldset_detention': 'DETENTION',
+            'fogcd_title_fieldset_return': 'RETURN',
+            'fogcd_title_fieldset_loading_data': 'LOADING DATA',
+            'fogcd_title_fieldset_epd': 'EPD(AFTER TITLE)',
+            'fogcd_title_fieldset_sap': 'SAP (OUT DELIVERY)',
+            'fogcd_title_fieldset_data_arrival': 'ARRIVAL DATA',
+
+            'fogcd_mess_valid_reason_discrepancy': 'Specified reason for discrepancy is not in the FID directory.',
+            'fogcd_mess_valid_cause_detention': 'The specified reason for detention is not in the FID directory.',
+            'fogcd_mess_valid_not_cause_detention': 'Specify Detention Reason',
+            'fogcd_mess_valid_not_detention_start': 'Specify Detention Start',
+            'fogcd_mess_valid_not_detention_stop': 'Specify Detention End',
+            'fogcd_mess_valid_not_deff_date_detention': 'The start date and time of the delay must be at least {0} min. or more {1} min. from current date',
+            'fogcd_mess_valid_not_deff_date_detention_start_stop': 'The difference between the start and end of the delay must be greater than 0 minutes. but less than {0} min.',
+            'fogcd_mess_valid_no_save_detention': 'Save the delay, then move the car!',
+
+            'fogcd_mess_valid_cause_return': 'The specified reason for the return is not in the FID directory.',
+            'fogcd_mess_valid_not_cause_return': 'Specify reason for return',
+            'fogcd_mess_valid_not_return_start': 'Specify start of return',
+            'fogcd_mess_valid_not_return_stop': 'Specify end of return',
+            'fogcd_mess_valid_not_deff_date_return': 'The start date and time of the return must be at least {0} min. or more {1} min. from current date',
+            'fogcd_mess_valid_not_deff_date_stop_return': 'The return end date and time must be at least {0} min. or more {1} min. from current date',
+            'fogcd_mess_valid_not_deff_date_return_start_stop': 'Difference between start and end of return must be greater than 0 min.',
+            'fogcd_mess_valid_error_date_act': 'Act date format error',
+            'fogcd_mess_valid_cargo': 'The specified cargo is not in the CID directory.',
+            'fogcd_mess_valid_loading_devision': 'The specified division is not in the FID directory.',
+            'fogcd_mess_valid_not_loading_devision': 'Specify a loading division.',
+            'fogcd_mess_valid_name_station_to': 'The specified station is not in the FID directory.',
+            'fogcd_mess_warning_no_data_wagon_ids': 'The given wagon ID {0} has no data in the Wagon ID DB.',
+            'fogcd_mess_warning_no_data_wagon_uz': 'There is no data for the selected wagon in the uz database. (data from the IDS directory will be applied).',
+            'fogcd_mess_warning_no_data_dir_wagon': 'There is no data for the selected wagon in the FID wagon directory.',
+            'fogcd_mess_valid_error_position1': 'First presented wagon must start at position 1',
+            'fogcd_mess_valid_error_position2': 'The specified position {0} already exists, wagon #{1}',
+            'fogcd_mess_valid_error_num': 'The specified wagon {0} has already been validated, position #{1}',
+            'fogcd_mess_valid_date_outgoing_act': 'Please enter a valid outgoing date for the act',
+            'fogcd_mess_valid_not_date_outgoing_act': 'Fogcd_mess_valid_not_date_outgoing_act',
+            'fogcd_mess_valid_not_cargo_name': 'Please enter cargo name',
+            'fogcd_mess_valid_cargo_name': 'The specified cargo name is not in the CID directory.',
+            'fogcd_mess_valid_not_reason_discrepancy': 'Specify reason for discrepancy.',
+            'fogcd_mess_valid_null_condition_present': 'The car is not marked with a wagon.',
+
+            'fogcd_value_vagonnik': 'Marked : {0}, Marked : {1}',
+            'fogcd_mess_init_panel': 'Initializing module...',
+            'fogcd_mess_load_wagon': 'Updating wagon info...',
+            'fogcd_mess_load_db_uz': 'Updating wagon info from uz DB...',
+            'fogcd_mess_load_return_wagon': 'Search Information on Returns',
+            'fogcd_mess_update_operation_detention': 'Performing a wagon detention update operation',
+            'fogcd_mess_cancel_operation_detention': 'Cancel the operation "Update Detention by Car"',
+            'fogcd_mess_ok_operation_detention': 'Operation "Update Detention by Wagon" completed',
+            'fogcd_mess_error_operation_detention': 'Error performing operation "Update detention by wagon", error code = ',
+            'fogcd_mess_update_operation_return_open': 'Performing the operation "Open return on wagon"',
+            'fogcd_mess_cancel_operation_return_open': 'Canceling the operation "Open return wagon"',
+            'fogcd_mess_ok_operation_return_open': 'Operation "Open wagon return" completed',
+            'fogcd_mess_error_operation_return_open': 'Error executing operation "Open return wagon", error code = ',
+            'fogcd_mess_update_operation_return_close': 'Performing Close Return Car operation',
+            'fogcd_mess_cancel_operation_return_close': 'Canceling the operation "Close Return by Car"',
+            'fogcd_mess_ok_operation_return_close': 'Operation "Close return wagon" completed',
+            'fogcd_mess_error_operation_return_close': 'Error executing operation "Close return by wagon", error code = ',
+            'fogcd_mess_error_operation_return_close_not_id': 'Error executing operation "Close return by wagon", return row id is undefined',
+            'fogcd_mess_run_operation_present': 'Performing the operation "Present a wagon to the FG"',
+            'fogcd_mess_cancel_operation_present': 'Canceling the operation "Present a wagon to the FG"',
+            'fogcd_mess_ok_operation_present': 'Operation "Present wagon to OZ" completed',
+            'fogcd_mess_error_operation_present': 'Error performing the operation "Present a wagon to UZ", error code = ',
+            'fogcd_mess_run_operation_return_present': 'Performing the operation "Return the car presented to the FG"',
+            'fogcd_mess_cancel_operation_return_present': 'Canceling the operation "Return the wagon presented to the FG"',
+            'fogcd_mess_ok_operation_return_present': 'Operation "Return the wagon presented to the FG" has been completed',
+            'fogcd_mess_error_operation_return_present': 'Error performing the operation "Return the wagon presented to UZ", error code = ',
+            'fogcd_mess_run_operation_remove_wagon': 'Running "Remove wagon from present train"',
+            'fogcd_mess_cancel_operation_remove_wagon': 'Canceling the operation "Remove wagon from train for presentation"',
+            'fogcd_mess_ok_operation_remove_wagon': 'Remove wagon operation completed for presentation',
+            'fogcd_mess_error_operation_remove_wagon': 'Error performing operation "Remove wagon from train for presentation", error code = ',
         }
     };
     // Определлим список текста для этого модуля
@@ -346,6 +536,7 @@
         this.current_id_countrys = null;        // Текущий id администрации
         this.current_id_genus = null;           // Текущий id род вагона
         this.current_id_owner = null;           // Текущий id владелец
+        this.detention_edit = false;            // Текущий режим правки задержания
         // Загрузим справочные данные, определим поля формы правки
         this.load_db(['reason_discrepancy', 'detention_return', 'cargo', 'cargo_group', 'divisions', 'external_station'], false, function (result) {
             // Подгрузили списки
@@ -1350,7 +1541,8 @@
                                 this.out_clear();
                                 this.form.set_validation_object_ok(null, 'cargo_name', "");
                                 // Это порожний вагон
-                                if (obj[0].id_group === 11) {
+                                var res = list_groups_cargo.indexOf(obj[0].id_group)
+                                if (list_groups_cargo.indexOf(obj[0].id_group)>=0) {
                                     // вагон порожний
                                     this.elements.checkbox_loaded_car.val(false);
                                     this.elements.autocomplete_loading_devision.val(1);
@@ -2897,6 +3089,7 @@
         if (this.wagon_settings.type === 0) {
             this.elements.button_detention_edit.hide();
             this.elements.button_detention_save.hide();
+            this.detention_edit = false;
         } else {
             if (id_outgoing_detention) {
                 if (wagon.outgoing_car_detention_date_stop === null) {
@@ -2913,6 +3106,7 @@
             } else {
                 this.elements.button_detention_edit.hide();
                 this.elements.button_detention_save.show();
+                this.detention_edit = true;
             }
         }
     };
@@ -3012,6 +3206,7 @@
         //-- Задержание
         this.elements.button_detention_edit.hide();
         this.elements.button_detention_save.hide();
+        this.detention_edit = false;
         this.form.obj_form.validations[1].$elements.each(function () {
             this.prop('disabled', true);
         });
@@ -3044,6 +3239,7 @@
         //-- Задержание
         this.elements.button_detention_edit.hide();
         this.elements.button_detention_save.hide();
+        this.detention_edit = false;
         this.form.obj_form.validations[1].$elements.each(function () {
             //this.prop('disabled', true);
             if (this.is('.inp-manual')) {
@@ -3086,6 +3282,8 @@
             if (minute <= 0 || minute > max_err_detention_deff) {
                 valid = valid & this.form.validation_detention.set_object_error(this.elements.input_datetime_detention_stop.$element, langView('fogcd_mess_valid_not_deff_date_detention_start_stop', App.Langs).format(max_err_detention_deff));
             }
+        } else {
+            valid = false;
         }
         return valid;
     };
@@ -3185,10 +3383,21 @@
         if (this.wagon && this.wagon.outgoing_car_vagonnik === null) {
             this.form.validation_common.set_object_error(this.elements.textarea_condition_present.$element, langView('fogcd_mess_valid_null_condition_present', App.Langs));
         }
+        // Задержание
+        if (this.detention_edit && (this.elements.autocomplete_cause_detention.text() !== '' || this.elements.input_datetime_detention_start.val() !== null || this.elements.input_datetime_detention_stop.val() !== null)) {
+            valid = valid & this.validation_wagon_detention();
+            // Проверка валидация прошла но кнопка не нажата
+            if (this.detention_edit && valid) {
+                this.form.validation_detention.out_error_message(langView('fogcd_mess_valid_no_save_detention', App.Langs))
+                valid = false;
+            };
+        }
+
         // Задержания
         if (this.current_return_wagons && this.current_return_wagons.date_stop === null) {
             valid = valid & this.validation_wagon_return(true);
         }
+
         if (this.elements.checkbox_loaded_car.val() === true) {
             valid = valid & this.form.validation_common.check_control_autocomplete(this.elements.autocomplete_loading_devision, langView('fogcd_mess_valid_loading_devision', App.Langs), '', langView('fogcd_mess_valid_not_loading_devision', App.Langs), true);
         }
@@ -3225,6 +3434,7 @@
                         // Обновим данные
                         this.update_wagon(function (wagon) {
                             this.wiew_detention_wagon_detali(wagon);
+                            this.detention_edit = false;
                             this.elements.button_detention_save.prop("disabled", false); // сделаем активной
                             LockScreenOff();
                         }.bind(this));
@@ -3244,6 +3454,7 @@
     form_outgoing_cars_detali.prototype.action_edit_detention = function () {
         this.elements.button_detention_edit.hide();
         this.elements.button_detention_save.show();
+        this.detention_edit = true;
         // раскроем элементы
         this.form.obj_form.validations[1].$elements.each(function () {
             this.prop('disabled', false);
@@ -3454,7 +3665,7 @@
         }.bind(this));
     };
     // Убрать вагон с состава для предявления 
-    form_outgoing_cars_detali.prototype.action_remove_wagon= function () {
+    form_outgoing_cars_detali.prototype.action_remove_wagon = function () {
         this.elements.button_car_return.prop("disabled", true); // сделаем не активной
         this.modal_confirm_form.view(langView('fogcd_form_remove_wagon', App.Langs), langView('fogcd_form_remove_wagon_message', App.Langs).format(this.wagon ? this.wagon.num : null), function (res) {
             if (res) {
@@ -3517,9 +3728,21 @@
     };
     // Удалить объект
     form_outgoing_cars_detali.destroy = function () {
-        this.modal_confirm_form.destroy();
-        this.form.destroy();
-        this.mf_edit.destroy();
+        // Очистить модальную форму подтверждения
+        if (this.modal_confirm_form) {
+            this.modal_confirm_form.destroy();
+            this.modal_confirm_form = null;
+        }
+        if (this.table_outgoing_detention_return) {
+            this.table_outgoing_detention_return.destroy();
+            this.table_outgoing_detention_return = null;
+        }
+        if (this.form) {
+            this.form.destroy();
+            this.form = null;
+        }
+        this.$form_outgoing_cars.empty();
+        LockScreenOff();
     };
 
     App.form_outgoing_cars_detali = form_outgoing_cars_detali;

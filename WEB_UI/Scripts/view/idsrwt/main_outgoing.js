@@ -8,15 +8,15 @@
     {
         'default':  //default language: ru
         {
-            //'mess_load_reference': 'Загружаю справочники...',
             'mo_title_label_date': 'СОСТАВЫ ЗА ПЕРИОД :',
             'mo_title_label_station': 'СТАНЦИЯ ОТПРАВКИ:',
             'mo_init_main': 'Инициализация формы отправки...',
-            /*            'mo_card_header_detali': 'ИНФОРМАЦИЯ ПО СОСТАВУ',*/
         },
         'en':  //default language: English
         {
-            'mess_load_reference': 'Loading references ...',
+            'mo_title_label_date': 'LINE-UP PERIOD :',
+            'mo_title_label_station': 'DEPARTURE STATION:',
+            'mo_init_main': 'Initializing the submit form...',
         }
     };
 
@@ -64,12 +64,6 @@
     var stop = moment().set({ 'hour': 23, 'minute': 59, 'second': 59 })._d;
     var id_station = null; // По умолчанию не выбрана
     var list_station = [];
-    var out_init = function (process) {
-        process--;
-        if (process === 0) {
-            LockScreenOff();
-        }
-    };
     // После загрузки документа
     $(document).ready(function ($) {
         LockScreen(langView('mo_init_main', App.Langs));
@@ -132,36 +126,36 @@
                 //.....
                 //<a class="dropdown-item" href="#" id="report_fsci">Натурная ведомость коммерческого осмотра</a>
             }
-            var process = 2;
-            // Инициализация модуля "Таблица отправляемых сотавов"
-            table_outgoing_sostav.init({
-                type_report: 'outgoing_sostav',
-                alert: alert,
-                ids_wsd: null,
-                // Нажата кнопка показать вагоны
-                fn_action_view_wagons: function (rows_sostav) {
-                    form_detali.open();
-                },
-            }, function (init) {
-                table_outgoing_sostav.load_outgoing_sostav(start, stop, function (sostav) {
-                    this.view(sostav, id_station, null);
-                    //
-                    out_init(process);          // Инициализация завершена
-                    //LockScreenOff();
-                }.bind(table_outgoing_sostav));
-            });
-            // Окно детально
+            //var process = 2;
+            // Окно детально. Инициализация окна
             form_detali.init({
                 alert: alert,//alert,
                 fn_init: function () {
+                    // Инициализация окна детально выполнена
                     var id = this.$card_detali_content.attr('id');
                     view_outgoing_cars = new VOC('div#' + id);
+                    // Инициализация окна предъявить состав
                     view_outgoing_cars.init({
                         alert: alert,
                         ids_dir: ids_dir,
                         ids_wsd: null,
                         fn_init: function (init) {
-                            out_init(process);  // Инициализация завершена
+                            // Инициализация окна предъявить состав - выполненап
+                            // Инициализация модуля "Таблица отправляемых составов"
+                            table_outgoing_sostav.init({
+                                type_report: 'outgoing_sostav',
+                                alert: alert,
+                                ids_wsd: null,
+                                // Нажата кнопка показать вагоны
+                                fn_action_view_wagons: function (rows_sostav) {
+                                    form_detali.open();
+                                },
+                            }, function (init) {
+                                table_outgoing_sostav.load_outgoing_sostav(start, stop, function (sostav) {
+                                    this.view(sostav, id_station, null);
+                                    LockScreenOff();
+                                }.bind(table_outgoing_sostav));
+                            });
                         }.bind(this),
                     });
                 }.bind(form_detali),

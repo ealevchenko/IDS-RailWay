@@ -1,4 +1,5 @@
-﻿(function (window) {
+﻿/*Модуль Сплывающее окно детально*/
+(function (window) {
     'use strict';
 
     var App = window.App || {};
@@ -26,17 +27,6 @@
     function form_detali() {
         this.fc_ui = new FC();
     }
-    //function form_detali(selector) {
-    //    if (!selector) {
-    //        throw new Error('No selector provided');
-    //    }
-    //    this.$card_detali = $(selector);
-    //    if (this.$card_detali.length === 0) {
-    //        throw new Error('Неуказан селектор form: ' + selector);
-    //    }
-    //    this.fc_ui = new FC();
-    //    this.selector = this.$card_detali.attr('id');
-    //}
     // Инициализация валидации
     form_detali.prototype.init = function (options) {
         this.settings = $.extend({

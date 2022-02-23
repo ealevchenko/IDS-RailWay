@@ -1,4 +1,5 @@
-﻿(function (window) {
+﻿/*Модуль Таблица "Вагоны отправляемого состава"*/
+(function (window) {
     'use strict';
 
     var App = window.App || {};
@@ -41,20 +42,8 @@
             'togc_field_outgoing_uz_vagon_outgoing_wagons_rent_id_limiting': 'id Огран. по отправке',
             'togc_field_outgoing_uz_vagon_outgoing_wagons_rent_limiting_name': 'Огран. по отправке',
             'togc_field_outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr': 'Огран. по отправке',
-
-            //'togc_title_form_return': 'Вернуть состав?',
-
             'togc_title_yes': 'Да',
-            //'togc_title_yellow': 'В работе',
-            //'togc_title_green': 'Сдан',
-            //'togc_title_blue': 'Отправлен',
-            //'togc_title_red': 'Отмена',
-
             'togc_title_all': 'Все',
-            ////'togc_title_status_arrival': 'Принят',
-            ////'togc_title_status_work': 'В работе',
-            ////'togc_title_status_send': 'Отправлен',
-
             'togc_title_button_export': 'Экспорт',
             'togc_title_button_buffer': 'Буфер',
             'togc_title_button_excel': 'Excel',
@@ -64,45 +53,68 @@
             'togc_title_button_field_view_all': 'Показать все',
             'togc_title_button_field_clear': 'Сбросить',
             'togc_title_button_hand_over_sostav': 'Сдать состав',
-
-            //'togc_title_button_return': 'Вернуть состав',
-            //'togc_title_button_return_uz': 'Вернуть состав с УЗ',
-            //'togc_title_button_wagon': 'Вагоны',
-            //'togc_title_button_wagon_accept': 'Отправить вагоны',
-            //'togc_title_button_wagon_view': 'Показать вагоны',
-            //'togc_title_button_refresh': 'Обновить',
             'togc_mess_init_module': 'Инициализация модуля...',
-            ////'togc_mess_load_wagons': 'Загружаю вагоны состава…',
             'togc_mess_load_sostav': 'Загружаю вагоны...',
             'togc_mess_update_sostav': 'Обновляю вагоны...',
-            ////'togc_mess_view_wagons': 'загрузка информации о вагонах состава…',
             'togc_mess_view_sostav': 'Показываю составы...',
             'togc_mess_run_operation': 'Выполняю операцию...',
             'togc_mess_warning_id_sostav_null': 'Операция недопустима состав не выбран!',
             'togc_mess_warning_sostav_status_4': 'Операция недопустима состав отклонён!',
             'togc_mess_error_sostav_null': 'Состав по id:{0} не найден!',
-
             'togc_mess_ok_operation_return_present': 'Операция "Предъявить состав на УЗ" - выполнена',
             'togc_mess_update_operation_return_present': 'Информация об операция "Предъявить состав на УЗ" - обновлена',
             'togc_mess_error_operation_return_present': 'Ошибка выполнения операции "Предъявить состав на УЗ", статус выполнения не определён!',
-
-            //'togc_mess_err_return_sostav': 'Статус выбранного состава не позволяет отменить состав для предъявления!',
-            //'togc_mess_error_wagon_return': '№ вагона : {0}, код ошибки : {1}',
-
-            //'togc_mess_comfirm_return': 'Вы уверены что хотите вернуть состав вед № {0}, станция отправления: {1}, путь отправления № {2}?',
-            //'togc_mess_cancel_return': 'Операция «Вернуть состав, сформированный для предъявления» - Отменена!',
-            //'togc_mess_ok_return': 'Операция «Вернуть состав, сформированный для предъявления» - Выполнена',
-            //'togc_mess_error_return': 'Ошибка выполнения операции «Вернуть состав, сформированный для предъявления», код ошибки : {0}',
-
-            //'togc_mess_comfirm_return_uz': 'Вы уверены что хотите вернуть состав сданный на УЗ : {0}, вед № {1}, станция отправления: {2}, путь отправления № {3}?',
-            //'togc_mess_cancel_return_uz': 'Операция «Вернуть состав, сданный на УЗ» - Отменена!',
-            //'togc_mess_ok_return_uz': 'Операция «Вернуть состав, сданный на УЗ» - Выполнена',
-            //'togc_mess_error_return_uz': 'Ошибка выполнения операции «Вернуть состав, сданный на УЗ», код ошибки : {0}',
-
         },
         'en':  //default language: English
         {
-
+            'togc_field_outgoing_car_id': 'car id',
+            'togc_field_outgoing_car_position_outgoing': 'Pos#',
+            'togc_field_num': 'car number',
+            'togc_field_outgoing_uz_document_nom_doc': 'inc#',
+            'togc_field_outgoing_uz_vagon_cargo_group_name': 'Cargo',
+            'togc_field_outgoing_uz_vagon_to_station_uz_name': 'Destination Station',
+            'togc_field_outgoing_uz_vagon_wagon_adm': 'Admin Code',
+            'togc_field_outgoing_uz_vagon_adm_name': 'Adm.',
+            'togc_field_outgoing_uz_vagon_adm_abbr': 'Adm.',
+            'togc_field_outgoing_uz_vagon_rod': 'Rod Code',
+            'togc_field_outgoing_uz_vagon_rod_name': 'Rod',
+            'togc_field_outgoing_uz_vagon_rod_abbr': 'Rod',
+            'togc_field_outgoing_uz_vagon_division_code': 'Workshop Code',
+            'togc_field_outgoing_uz_vagon_name_division': 'Togc_field_outgoing_uz_vagon_name_division',
+            'togc_field_outgoing_uz_vagon_division_abbr': 'Togc_field_outgoing_uz_vagon_division_abbr',
+            'togc_field_outgoing_uz_vagon_owner_wagon': 'Owner',
+            'togc_field_outgoing_uz_vagon_owner_wagon_abbr': 'Owner',
+            'togc_field_outgoing_uz_vagon_outgoing_wagons_rent_id_operator': 'operator id on dispatch',
+            'togc_field_outgoing_uz_vagon_outgoing_wagons_rent_operators': 'Dispatch Operator',
+            'togc_field_outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr': 'Dispatch Operator',
+            'togc_field_outgoing_uz_vagon_outgoing_wagons_rent_start': 'Oper. by desp. early rent',
+            'togc_field_outgoing_uz_vagon_outgoing_wagons_rent_end': 'Oper. by desp. con. rent',
+            'togc_field_outgoing_uz_vagon_outgoing_wagons_rent_operator_paid': 'Op. by desp. paid',
+            'togc_field_outgoing_uz_vagon_outgoing_wagons_rent_id_limiting': 'id limiting on dispatch',
+            'togc_field_outgoing_uz_vagon_outgoing_wagons_rent_limiting_name': 'Limited. on dispatch',
+            'togc_field_outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr': 'Limited. on dispatch',
+            'togc_title_yes': 'Yes',
+            'togc_title_all': 'All',
+            'togc_title_button_export': 'Export',
+            'togc_title_button_buffer': 'Buffer',
+            'togc_title_button_excel': 'Excel',
+            'togc_title_excel_sheet_name': 'Wagons',
+            'togc_title_button_field': 'Fields',
+            'togc_title_button_field_select': 'Select',
+            'togc_title_button_field_view_all': 'Show All',
+            'togc_title_button_field_clear': 'Reset',
+            'togc_title_button_hand_over_sostav': 'Hand Over Composition',
+            'togc_mess_init_module': 'Initiating module...',
+            'togc_mess_load_sostav': 'Loading wagons...',
+            'togc_mess_update_sostav': 'Updating wagons...',
+            'togc_mess_view_sostav': 'Showing lineups...',
+            'togc_mess_run_operation': 'Running operation...',
+            'togc_mess_warning_id_sostav_null': 'Operation invalid no composition selected!',
+            'togc_mess_warning_sostav_status_4': 'Operation invalid composition rejected!',
+            'togc_mess_error_sostav_null': 'Composition by id:{0} not found!',
+            'togc_mess_ok_operation_return_present': 'Operation "Present composition to OC" - completed',
+            'togc_mess_update_operation_return_present': 'Information about the operation "Present Composition at OZ" - updated',
+            'togc_mess_error_operation_return_present': 'Error executing the operation "Present composition to OC", execution status is undefined!',
         }
     };
     // Определлим список текста для этого модуля
@@ -625,8 +637,6 @@
             };
 
         };
-        // Определим показывать вагоны детально
-        /*        if (this.settings.detali_wagons) this.init_detali();*/
         //----------------------------------
         if (typeof this.settings.fn_init === 'function') {
             this.settings.fn_init(this.result_init);
@@ -639,7 +649,6 @@
         this.obj_t_cars.rows({ selected: true }).deselect();
         this.obj_t_cars.draw();
     };
-
     // обновим информацию об выбраных строках
     table_outgoing_cars.prototype.select_rows = function () {
         var index = this.obj_t_cars.rows({ selected: true });
@@ -827,15 +836,23 @@
     }
     // Очистить объект
     table_outgoing_cars.prototype.destroy = function () {
-        // Вкл. когда понадобится 
-        if (this.modal_confirm_form) this.modal_confirm_form.destroy();
-        //this.destroy_all_detali(); // Удалить все таблицы детально, если созданы
+        // Очистить модальную форму подтверждения
+        if (this.modal_confirm_form) {
+            this.modal_confirm_form.destroy();
+            this.modal_confirm_form = null;
+        }
+        // Уберем модуль Форма "Предъявить состав"
+        if (this.fhoogs) {
+            this.fhoogs.destroy();
+            this.fhoogs = null;
+        }
+        // Очистить таблицы
         if (this.obj_t_cars) {
             this.obj_t_cars.destroy(true);
             this.obj_t_cars = null;
         }
 
-        this.$table_cars.empty(); // empty in case the columns change
+        this.$cars_sostav.empty(); // empty in case the columns change
     }
 
     App.table_outgoing_cars = table_outgoing_cars;
