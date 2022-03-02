@@ -18,7 +18,7 @@
     {
         'default':  //default language: ru
         {
-            'fhoogs_title_edit': 'Править',
+            'fhoogs_title_edit': 'Ок',
             'fhoogs_title_cancel': 'Отмена',
             'fhoogs_title_num_doc': '№ ведомости',
             'fhoogs_title_placeholder_num_doc': '№ вед.',
@@ -54,7 +54,7 @@
         },
         'en':  //default language: English
         {
-            'fhoogs_title_edit': 'Edit',
+            'fhoogs_title_edit': 'Ok',
             'fhoogs_title_cancel': 'Cancel',
             'fhoogs_title_num_doc': 'sheet number',
             'fhoogs_title_placeholder_num_doc': 'fhoogs_title_placeholder_num_doc',

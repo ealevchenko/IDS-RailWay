@@ -351,6 +351,7 @@
                 if (wagons && wagons.length) {
                     options.position = wagons[0].outgoing_car_position_outgoing + 1;
                     options.id_cargo = wagons[0].outgoing_uz_vagon_id_cargo;
+                    options.laden = wagons[0].outgoing_uz_vagon_laden;
                     options.id_division = wagons[0].outgoing_uz_vagon_id_division;
                     options.code_division = wagons[0].outgoing_uz_vagon_id_division;
                     options.division_code = wagons[0].outgoing_uz_vagon_division_code;

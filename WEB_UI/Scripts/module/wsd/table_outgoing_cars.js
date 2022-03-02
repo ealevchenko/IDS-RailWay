@@ -20,6 +20,7 @@
             'togc_field_outgoing_car_position_outgoing': '№ поз.',
             'togc_field_num': '№ вагона',
             'togc_field_outgoing_uz_document_nom_doc': '№ накл.',
+            'togc_field_outgoing_uz_vagon_cargo_name': 'Груз',
             'togc_field_outgoing_uz_vagon_cargo_group_name': 'Груз',
             'togc_field_outgoing_uz_vagon_to_station_uz_name': 'Станция назначения',
             'togc_field_outgoing_uz_vagon_wagon_adm': 'Код Адм.',
@@ -167,6 +168,14 @@
             },
             className: 'dt-body-center',
             title: langView('togc_field_outgoing_uz_document_nom_doc', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_uz_vagon_cargo_name',
+            data: function (row, type, val, meta) {
+                return row['outgoing_uz_vagon_cargo_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('togc_field_outgoing_uz_vagon_cargo_name', App.Langs), width: "100px", orderable: true, searchable: true
         },
         {
             field: 'outgoing_uz_vagon_cargo_group_name',
@@ -441,7 +450,8 @@
         collums.push({ field: 'outgoing_car_position_outgoing', title: null, class: 'fixed-column' });
         collums.push({ field: 'num', title: null, class: 'fixed-column' });
         collums.push({ field: 'outgoing_uz_document_nom_doc', title: null, class: 'fixed-column' });
-        collums.push({ field: 'outgoing_uz_vagon_cargo_group_name', title: null, class: null });
+        collums.push({ field: 'outgoing_uz_vagon_cargo_name', title: null, class: null });
+        //collums.push({ field: 'outgoing_uz_vagon_cargo_group_name', title: null, class: null });
         collums.push({ field: 'outgoing_uz_vagon_to_station_uz_name', title: null, class: null });
         collums.push({ field: 'outgoing_uz_vagon_adm_abbr', title: null, class: null });
         collums.push({ field: 'outgoing_uz_vagon_rod_abbr', title: null, class: null });

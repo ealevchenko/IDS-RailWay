@@ -2967,26 +2967,29 @@
             if (this.wagon_settings && this.wagon_settings.id_cargo) {
                 outgoing_uz_vagon_id_cargo = this.wagon_settings.id_cargo;
             }
+            // Уточним группу груза (если уже были вагоны в левой части)
+            if (this.wagon_settings && this.wagon_settings.laden) {
+                laden = this.wagon_settings.laden;
+            };
             // Уточним подразделение погрузки (если уже были вагоны в левой части)
             if (this.wagon_settings && this.wagon_settings.id_division) {
                 outgoing_uz_vagon_id_division = this.wagon_settings.id_division;
-            }
+            };
             // Уточним подразделение погрузки (если уже были вагоны в левой части)
             if (this.wagon_settings && this.wagon_settings.division_code) {
                 outgoing_uz_vagon_division_code = this.wagon_settings.division_code;
-            }
+            };
 
             // Уточним станцию назначения (если уже были вагоны в левой части)
             if (this.wagon_settings && this.wagon_settings.station_uz_code) {
                 outgoing_uz_vagon_to_station_uz_code = this.wagon_settings.station_uz_code;
-            }
+            };
             // Определим текущую разметку
             if (this.wagon_settings && this.wagon_settings.wio) {
                 var dir_cond_arr = this.wagon_settings.wio.Directory_ConditionArrival;
                 this.current_id_condition = dir_cond_arr ? dir_cond_arr.id : null;
                 current_condition = dir_cond_arr ? dir_cond_arr['condition_abbr_' + App.Lang] : current_condition;
-            }
-            //laden // коректируем по грузу
+            };
         }
         // Проверим это правка
         if (this.wagon_settings.type === 1 && this.wagon_settings.info) {
@@ -3072,9 +3075,9 @@
         this.elements.input_text_sap_outgoing_supply_shipper_code.val(wagon.sap_outgoing_supply_shipper_code);
         this.elements.input_text_sap_outgoing_supply_shipper_name.val(wagon.sap_outgoing_supply_shipper_name);
         // Прибытие
-        this.elements.input_text_cargo_arrival.val(wagon['arrival_uz_vagon_cargo_group_name_' + App.Lang]);
+        this.elements.input_text_cargo_arrival.val(wagon['arrival_uz_vagon_cargo_name_' + App.Lang]);
         this.elements.input_text_cargo_sap.val(wagon.sap_incoming_supply_cargo_name);
-        this.elements.input_text_date_arrival.val(wagon.arrival_sostav_date_adoption);
+        this.elements.input_text_date_arrival.val(wagon.arrival_sostav_date_adoption ? moment(wagon.arrival_sostav_date_adoption).format(format_datetime) : '');
         this.elements.input_text_owner_name_arrival.val(owner_name);
         this.elements.input_text_operator_name_arrival.val(arr_rent_operator);
         this.elements.input_text_limiting_loading_arrival.val(arr_rent_limiting);
