@@ -54,6 +54,7 @@
             'togc_title_button_field_view_all': 'Показать все',
             'togc_title_button_field_clear': 'Сбросить',
             'togc_title_button_hand_over_sostav': 'Сдать состав',
+            'togc_title_button_dislocation_over_sostav': 'Перем. состав',
             'togc_mess_init_module': 'Инициализация модуля...',
             'togc_mess_load_sostav': 'Загружаю вагоны...',
             'togc_mess_update_sostav': 'Обновляю вагоны...',
@@ -61,6 +62,7 @@
             'togc_mess_run_operation': 'Выполняю операцию...',
             'togc_mess_warning_id_sostav_null': 'Операция недопустима состав не выбран!',
             'togc_mess_warning_sostav_status_4': 'Операция недопустима состав отклонён!',
+            'togc_mess_warning_sostav_status_5': 'Операция недопустима, состав не имеет статус «в работе» или «предъявлен»!',
             'togc_mess_error_sostav_null': 'Состав по id:{0} не найден!',
             'togc_mess_ok_operation_return_present': 'Операция "Предъявить состав на УЗ" - выполнена',
             'togc_mess_update_operation_return_present': 'Информация об операция "Предъявить состав на УЗ" - обновлена',
@@ -105,6 +107,7 @@
             'togc_title_button_field_view_all': 'Show All',
             'togc_title_button_field_clear': 'Reset',
             'togc_title_button_hand_over_sostav': 'Hand Over Composition',
+            'togc_title_button_dislocation_over_sostav': 'Wagon Disloc.',
             'togc_mess_init_module': 'Initiating module...',
             'togc_mess_load_sostav': 'Loading wagons...',
             'togc_mess_update_sostav': 'Updating wagons...',
@@ -112,6 +115,7 @@
             'togc_mess_run_operation': 'Running operation...',
             'togc_mess_warning_id_sostav_null': 'Operation invalid no composition selected!',
             'togc_mess_warning_sostav_status_4': 'Operation invalid composition rejected!',
+            'togc_mess_warning_sostav_status_5': 'Operation is invalid, composition does not have status "in progress" or "submitted"!',
             'togc_mess_error_sostav_null': 'Composition by id:{0} not found!',
             'togc_mess_ok_operation_return_present': 'Operation "Present composition to OC" - completed',
             'togc_mess_update_operation_return_present': 'Information about the operation "Present Composition at OZ" - updated',
@@ -414,6 +418,11 @@
             enabled: true
         },
         {
+            button: 'hand_dislocation_sostav',
+            text: langView('togc_title_button_dislocation_over_sostav', App.Langs),
+            enabled: true
+        },
+        {
             button: 'refresh',
             text: '<i class="fas fa-retweet"></i>',
         },
@@ -479,6 +488,12 @@
             name: 'hand_over_sostav',
             action: function (e, dt, node, config) {
                 this.action_hand_over_sostav_sostav(); // выполнить операцию
+            }.bind(this)
+        });
+        buttons.push({
+            name: 'hand_dislocation_sostav',
+            action: function (e, dt, node, config) {
+                this.action_hand_dislocation_sostav_sostav(); // выполнить операцию
             }.bind(this)
         });
         //buttons.push({
@@ -802,6 +817,43 @@
                     } else {
                         // Ошибка, состав откланен 
                         this.out_warning(langView('togc_mess_warning_sostav_status_4', App.Langs).format(this.id_sostav));
+                        LockScreenOff();
+                    };
+                } else {
+                    // Ошибка, состав не найден 
+                    this.out_warning(langView('togc_mess_error_sostav_null', App.Langs).format(this.id_sostav));
+                    LockScreenOff();
+                };
+            }.bind(this));
+
+        } else {
+            // Ошибка id не определено
+            this.out_warning(langView('togc_mess_warning_id_sostav_null', App.Langs));
+            LockScreenOff();
+        }
+
+    };
+    // Выполнить операцию переместить состав
+    table_outgoing_cars.prototype.action_hand_dislocation_sostav_sostav = function () {
+        this.out_clear();
+        LockScreen(langView('togc_mess_run_operation', App.Langs));
+        if (this.id_sostav !== null) {
+            this.ids_wsd.getOutgoingSostavOfIDSostav(this.id_sostav, function (sostav) {
+                if (sostav) {
+                    if (sostav.status === 1 || sostav.status === 2) {
+                        //if (sostav.status < 2) {
+                        //    // Сдать состав
+                        //    LockScreenOff();
+                        //    this.fhoogs.add(sostav);
+                        //} else {
+                        //    // Править сданный состав
+                        //    
+                        //    this.fhoogs.edit(sostav);
+                        //};
+                        LockScreenOff();
+                    } else {
+                        // Ошибка, состав откланен 
+                        this.out_warning(langView('togc_mess_warning_sostav_status_5', App.Langs).format(this.id_sostav));
                         LockScreenOff();
                     };
                 } else {

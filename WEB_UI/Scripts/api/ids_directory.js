@@ -3883,7 +3883,7 @@ IDS_DIRECTORY.prototype.getLocomotive = function (callback) {
 IDS_DIRECTORY.prototype.getStation = function (callback) {
     $.ajax({
         type: 'GET',
-        url: '../../api/ids/directory/station/all',
+        url: '../../api/ids/directory/station/all_old',
         async: true,
         dataType: 'json',
         beforeSend: function () {
