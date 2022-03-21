@@ -49,7 +49,7 @@
         var result = [];
         var out_load = function (process) {
             if (process === 0) {
-                LockScreenOff();
+                if (lock) { LockScreenOff(); }
                 if (typeof callback === 'function') {
                     callback(result);
                 }
