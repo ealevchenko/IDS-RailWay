@@ -3858,7 +3858,7 @@ IDS_RWT.prototype.getViewWaysStatusOfIDStation = function (id_station, callback)
         },
     });
 };
-
+// Операция выполнить дислокацию
 IDS_RWT.prototype.postDislocationWagonsOfStation = function (operation_dislocation, callback) {
     $.ajax({
         url: '../../api/ids/rwt/wsd/operation/dislocation/',

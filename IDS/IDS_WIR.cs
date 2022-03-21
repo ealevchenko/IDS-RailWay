@@ -632,7 +632,7 @@ namespace IDS
         /// <param name="locomotive2"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public int DislocationWagon(ref EFDbContext context, int id_way_from, int id_way_on, int position_on, DateTime lead_time, WagonInternalRoutes wagon, string locomotive1, string locomotive2, string user)
+        public int DislocationWagon(ref EFDbContext context, int id_way_from, int id_way_on, int position_on, DateTime lead_time, WagonInternalRoutes wagon, string locomotive1, string locomotive2, bool wagon_outgoing, string user)
         {
             try
             {
@@ -643,14 +643,14 @@ namespace IDS
                 if (wim.id_way != id_way_from) return (int)errors_base.wagon_not_way;
                 wagon.SetStationWagon_old(wim.id_station, id_way_on, lead_time, position_on, null, user);
                 // Установим и закроем операцию дислокация -3              
-                wagon.SetOpenOperation(3, lead_time.AddMinutes(-10), null, null, null, null, null, user).SetCloseOperation(lead_time, null, user);
+                wagon.SetOpenOperation(wagon_outgoing ? 8 : 3, lead_time.AddMinutes(-10), null, null, null, null, null, user).SetCloseOperation(lead_time, null, user);
                 //context.Update(wagon); // Обновим контекст
                 return 1;
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("DislocationWagon(context={0}, id_way_from={1}, id_way_on={2}, position_on={3}, lead_time={4}, wagon={5}, locomotive1={6}, locomotive2={7}, user={8})",
-                    context, id_way_from, id_way_on, position_on, lead_time, wagon, locomotive1, locomotive2, user), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("DislocationWagon(context={0}, id_way_from={1}, id_way_on={2}, position_on={3}, lead_time={4}, wagon={5}, locomotive1={6}, locomotive2={7}, wagon_outgoing={8}, user={9})",
+                    context, id_way_from, id_way_on, position_on, lead_time, wagon, locomotive1, locomotive2, wagon_outgoing, user), servece_owner, eventID);
                 return -1;// Возвращаем id=-1 , Ошибка
             }
         }
@@ -668,7 +668,7 @@ namespace IDS
         /// <param name="locomotive2"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public ResultTransfer DislocationWagons(ref EFDbContext context, int id_way_from, bool reverse, int id_way_on, bool side_on, DateTime lead_time, List<WagonInternalRoutes> wagons, string locomotive1, string locomotive2, string user)
+        public ResultTransfer DislocationWagons(ref EFDbContext context, int id_way_from, bool reverse, int id_way_on, bool side_on, DateTime lead_time, List<WagonInternalRoutes> wagons, string locomotive1, string locomotive2, bool wagon_outgoing, string user)
         {
             ResultTransfer rt = new ResultTransfer(wagons.Count());
             try
@@ -690,7 +690,7 @@ namespace IDS
 
                     foreach (WagonInternalRoutes wagon in wagon_position)
                     {
-                        int result = DislocationWagon(ref context, id_way_from, id_way_on, position, lead_time, wagon, locomotive1, locomotive2, user);
+                        int result = DislocationWagon(ref context, id_way_from, id_way_on, position, lead_time, wagon, locomotive1, locomotive2, wagon_outgoing, user);
                         rt.SetMovedResult(result, wagon.num);
                         position++;
                     }
@@ -708,7 +708,7 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("DislocationWagons(context={0}, id_way_from={1}, reverse={2}, id_way_on={3}, side={4}, lead_time={5}, wagons={6}, locomotive1={7}, locomotive2={8}, user={9})",
+                e.ExceptionMethodLog(String.Format("DislocationWagons(context={0}, id_way_from={1}, reverse={2}, id_way_on={3}, side={4}, lead_time={5}, wagons={6}, locomotive1={7}, locomotive2={8}, wagon_outgoing={9}, user={10})",
                     context, id_way_from, reverse, id_way_on, side_on, lead_time, wagons, locomotive1, locomotive2, user), servece_owner, eventID);
                 rt.SetResult(-1);
                 return rt;// Возвращаем id=-1 , Ошибка
@@ -727,7 +727,7 @@ namespace IDS
         /// <param name="locomotive2"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public int DislocationWagonsOfStation(int id_way_from, bool reverse, List<ListOperationWagon> list_dislocation, int id_way_on, bool side_on, DateTime lead_time, string locomotive1, string locomotive2, string user)
+        public int DislocationWagonsOfStation(int id_way_from, bool reverse, List<ListOperationWagon> list_dislocation, int id_way_on, bool side_on, DateTime lead_time, string locomotive1, string locomotive2, bool wagon_outgoing, string user)
         {
             try
             {
@@ -745,11 +745,31 @@ namespace IDS
                 {
                     wagons.Add(context.WagonInternalRoutes.Where(r => r.id == dw.wir_id).FirstOrDefault());
                 }
+                // Если этопредъявленные вагоны, тогда поменяем номер пути
+                if (wagon_outgoing == true)
+                {
+                    EFOutgoingCars ef_out_car = new EFOutgoingCars(context);
+                    EFOutgoingSostav ef_out_sostav = new EFOutgoingSostav(context);
+                    long id_outgoing_car = (long)wagons[0].id_outgoing_car;
+                    OutgoingCars out_car = ef_out_car.Context.Where(c => c.id == id_outgoing_car).FirstOrDefault();
+                    if (out_car != null)
+                    {
+                        OutgoingSostav out_sos = ef_out_sostav.Context.Where(s => s.id == out_car.id_outgoing).FirstOrDefault();
+                        if (out_sos != null)
+                        {
+                            // Заменим путь
+                            out_sos.id_way_from = id_way_on;
+                            ef_out_sostav.Update(out_sos);
+                        }
+                    }
+                }
+
                 // Перенесем вагоны 
-                res = DislocationWagons(ref context, id_way_from, reverse, id_way_on, side_on, lead_time, wagons, locomotive1, locomotive2, user);
+                res = DislocationWagons(ref context, id_way_from, reverse, id_way_on, side_on, lead_time, wagons, locomotive1, locomotive2, wagon_outgoing, user);
                 // Если операция успешна, перенумеруем позиции на пути с которого ушли вагоны
                 if (res.result > 0)
                 {
+                    // Перенумеруем
                     int result_rnw = RenumberingWagons(ref context, id_way_from, 1);
                     if (result_rnw > 0)
                     {
@@ -768,7 +788,7 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("DislocationWagonsOfStation(id_way_from={0},reverse ={1}, list_dislocation={2}, id_way_on={3}, side_on={4}, lead_time={5}, locomotive1={6}, locomotive2={7}, user={8})",
+                e.ExceptionMethodLog(String.Format("DislocationWagonsOfStation(id_way_from={0},reverse ={1}, list_dislocation={2}, id_way_on={3}, side_on={4}, lead_time={5}, locomotive1={6}, locomotive2={7}, wagon_outgoing ={8}, user={9})",
                     id_way_from, reverse, list_dislocation, id_way_on, side_on, lead_time, locomotive1, locomotive2, user), servece_owner, eventID);
                 return -1;// Возвращаем id=-1 , Ошибка
             }
@@ -2949,7 +2969,8 @@ namespace IDS
                 // Проверим состав откланен
                 if (sostav.status == 4) return (int)errors_base.error_status_outgoing_sostav;           // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
                 // Сдается впервые?
-                if (sostav.status < 2) {
+                if (sostav.status < 2)
+                {
                     sostav.status = 2;
                     // Если впервый раз сдаем тогда откорректируем вагоны
                     int count_car = sostav.OutgoingCars.Where(c => c.outgoing != null).ToList().Count();

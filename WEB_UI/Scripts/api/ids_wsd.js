@@ -374,7 +374,6 @@
             },
         });
     };
-
     //================= ОТПРАВКА СОСТАВОВ НА УЗ (Составы) =========================================================
     // Получить все составы (View)
     ids_wsd.prototype.getViewOutgoingSostav = function (start, stop, callback) {
@@ -545,7 +544,6 @@
             },
         });
     };
-
     //================= ОТПРАВКА ВАГОНОВ НА УЗ (Вагоны) =========================================================
     // Получить все вагоны состава для отправки по id состава (View)
     ids_wsd.prototype.getViewOutgoingCarsOfIDSostav = function (id, callback) {
@@ -593,7 +591,6 @@
             },
         });
     };
-
     //================= ОТПРАВКА ВАГОНОВ НА УЗ (Задержания и возвраты) =========================================================
     //======= OutgoingDetentionReturn (Таблица задержаных-возвращеных вагонов) ======================================
     // Получить все задержания и возвраты
@@ -791,8 +788,31 @@
             },
         });
     };
-
-
+    // Операция выполнить дислокацию (Предъявленных вагонов)
+    ids_wsd.prototype.postOutgoingDislocationWagons = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/operation/outgoing_dislocation/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postOutgoingDislocationWagons", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     //======================================================================================================
     //                                  РАЗДЕЛ ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ ВАГОНОВ
     //======= WagonInternalRoutes (Внутреннее перемещение вагона на АМКР) =========================================================================

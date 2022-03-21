@@ -227,7 +227,7 @@ namespace Test.TestModule
 
             ResultTransfer res = new ResultTransfer(0);
 
-            res = ids.DislocationWagons(ref context, 111, false, 115, false, DateTime.Now, wagons, "TЭM18-183", "TЭM18-184", "TEST");
+            res = ids.DislocationWagons(ref context, 111, false, 115, false, DateTime.Now, wagons, "TЭM18-183", "TЭM18-184", false, "TEST");
             //int res_save = context.SaveChanges();
 
         }

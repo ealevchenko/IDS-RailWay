@@ -732,6 +732,21 @@ namespace WEB_UI.Controllers.api.IDS.RWT
     }
     #endregion
 
+    #region ОПЕРАЦИЯ ПРЕДЪЯВИТЬ НА УЗ (Обновленный АРМ)
+    public class OperationOutgoingDislocationWagons
+    {
+        public int id_way_from { get; set; }
+        public bool reverse { get; set; }
+        public List<ListOperationWagon> list_dislocation { get; set; }
+        public int id_way_on { get; set; }
+        public bool side_on { get; set; }
+        public DateTime lead_time { get; set; }
+        public string locomotive1 { get; set; }
+        public string locomotive2 { get; set; }
+        public string user { get; set; }
+    }
+    #endregion
+
     public class view_arrival_sostav
     {
         public string num_train { get; set; }
@@ -1430,6 +1445,77 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         }
         #endregion
 
+        #region ОПЕРАЦИЯ ПРЕДЪЯВИТЬ НА УЗ (Обновленный АРМ)
+        // POST api/ids/rwt/wsd/operation/present/wagon
+        /// <summary>
+        /// Операция предявить вагон на уз (Перенести в левую часть экрана)
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("operation/present/wagon")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostOperationPresentWagon([FromBody] OperationPresentWagon value)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                int result = ids_wir.OperationPresentWagon(value.id_outgoing_car, value.position, value.date_outgoing_act, value.id_reason_discrepancy_amkr, value.id_reason_discrepancy_uz,
+                    //value.id_outgoing_detention_return, 
+                    value.id_condition, value.id_wagons_rent_arrival, value.id_wagons_rent_outgoing, value.id_countrys, value.id_genus, value.id_owner,
+                    value.gruzp_uz, value.tara_uz, value.note_uz, value.id_warehouse, value.id_division, value.laden, value.id_cargo, value.nom_cont1, value.nom_cont2, value.code_stn_to, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST api/ids/rwt/wsd/operation/return_present/wagon
+        /// <summary>
+        /// Операция вернуть предявленный вагон на уз в правую часть
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("operation/return_present/wagon")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostOperationReturnPresentWagon([FromBody] OperationReturnPresentWagon value)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                int result = ids_wir.OperationReturnPresentWagon(value.id_outgoing_car, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST api/ids/rwt/wsd/operation/outgoing_dislocation
+        [HttpPost]
+        [Route("operation/outgoing_dislocation")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostOperationOutgoingDislocationWagons([FromBody] OperationOutgoingDislocationWagons value)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                int result = ids_wir.DislocationWagonsOfStation(value.id_way_from, value.reverse, value.list_dislocation, value.id_way_on, value.side_on, value.lead_time, value.locomotive1, value.locomotive2, true, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        #endregion
+
+
         // GET: api/ids/rwt/wsd/view/ways/status/station/id/6
         [Route("view/ways/status/station/id/{id_station:int}")]
         [ResponseType(typeof(view_way_status))]
@@ -1456,7 +1542,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             try
             {
                 IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
-                int result = ids_wir.DislocationWagonsOfStation(value.id_way_from, value.reverse, value.list_dislocation, value.id_way_on, value.side_on, value.lead_time, value.locomotive1, value.locomotive2, value.user);
+                int result = ids_wir.DislocationWagonsOfStation(value.id_way_from, value.reverse, value.list_dislocation, value.id_way_on, value.side_on, value.lead_time, value.locomotive1, value.locomotive2, false, value.user);
                 return Ok(result);
             }
             catch (Exception e)
@@ -1637,31 +1723,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             }
         }
 
-        // POST api/ids/rwt/wsd/operation/present/wagon
-        /// <summary>
-        /// Операция предявить вагон на уз
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [Route("operation/present/wagon")]
-        [ResponseType(typeof(int))]
-        public IHttpActionResult PostOperationPresentWagon([FromBody] OperationPresentWagon value)
-        {
-            try
-            {
-                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
-                int result = ids_wir.OperationPresentWagon(value.id_outgoing_car, value.position, value.date_outgoing_act, value.id_reason_discrepancy_amkr, value.id_reason_discrepancy_uz,
-                    //value.id_outgoing_detention_return, 
-                    value.id_condition, value.id_wagons_rent_arrival, value.id_wagons_rent_outgoing, value.id_countrys, value.id_genus, value.id_owner,
-                    value.gruzp_uz, value.tara_uz, value.note_uz, value.id_warehouse, value.id_division, value.laden, value.id_cargo, value.nom_cont1, value.nom_cont2, value.code_stn_to, value.user);
-                return Ok(result);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
+
 
         #region ОПЕРАЦИЯ СДАТЬ НА УЗ (Обновленный АРМ)
         // POST api/ids/rwt/wsd/operation/present/sostav
@@ -1704,29 +1766,6 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             {
                 IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
                 int result = ids_wir.OperationReturnPresentSostav(value.id_outgoing_sostav, value.user);
-                return Ok(result);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        // POST api/ids/rwt/wsd/operation/return_present/wagon
-        /// <summary>
-        /// Операция вернуть предявленный вагон на уз в правую часть
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [Route("operation/return_present/wagon")]
-        [ResponseType(typeof(int))]
-        public IHttpActionResult PostOperationReturnPresentWagon([FromBody] OperationReturnPresentWagon value)
-        {
-            try
-            {
-                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
-                int result = ids_wir.OperationReturnPresentWagon(value.id_outgoing_car, value.user);
                 return Ok(result);
             }
             catch (Exception e)
