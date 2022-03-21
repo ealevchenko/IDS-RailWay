@@ -10,8 +10,8 @@
     // Определим язык
     App.Lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang'));
 
-    var min_err_data_outgoing = -2 * 60;   // TODO: Минимальная разница в часах дата предъявления
-    var max_err_data_outgoing = 2 * 60;    // TODO: Максимальная разница в часах дата сдачи
+    var min_err_data_outgoing = -20 * 60;   // TODO: Минимальная разница в часах дата предъявления
+    var max_err_data_outgoing = 20 * 60;    // TODO: Максимальная разница в часах дата сдачи
 
     // Массив текстовых сообщений 
     $.Text_View =
@@ -112,12 +112,13 @@
         };
     };
     // Инициализаия формы
-    form_ho_outgoing_sostav.prototype.init = function (options, fn_init_ok) {
+    form_ho_outgoing_sostav.prototype.init = function (options) {
         var init = true;
         this.settings = $.extend({
             id: 'fhoogs',
             alert: null,
             ids_wsd: null,
+            fn_init: null,
             fn_add: null,
             fn_edit: null,
             fn_delete: null,
@@ -473,8 +474,8 @@
                 this.mf_edit.$body.append(this.form.$form_add).append(this.form.$form_edit);
             }
 
-            if (typeof fn_init_ok === 'function') {
-                fn_init_ok(init);
+            if (typeof this.settings.fn_init === 'function') {
+                this.settings.fn_init(this.init);
             }
             //-------------------------------------
         }.bind(this));
