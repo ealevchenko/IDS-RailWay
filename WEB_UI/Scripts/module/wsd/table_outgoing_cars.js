@@ -756,7 +756,7 @@
             this.obj_t_cars.draw();
         };
     };
-    // Загрузить составы по прибытию
+    // Загрузить составы по отправке
     table_outgoing_cars.prototype.load_outgoing_cars_of_id_sostav = function (id_sostav, cb_load) {
         if (id_sostav !== null) {
             LockScreen(langView('togc_mess_load_sostav', App.Langs));
