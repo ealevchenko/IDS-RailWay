@@ -30,40 +30,13 @@
             'fhdogs_title_placeholder_locomotive': 'Локомотив',
             'fhdogs_title_time_aplly': 'Время выполнения:',
             'fhdogs_title_placeholder_time_aplly': 'Время выполнения',
-
-            //'fhdogs_title_num_doc': '№ ведомости',
-            //'fhdogs_title_placeholder_num_doc': '№ вед.',
-            //'fhdogs_title_date_end_inspection_acceptance_delivery': 'Время окон. осм. приемосд.',
-            //'fhdogs_title_placeholder_date_end_inspection_acceptance_delivery': 'Добавить время',
-            //'fhdogs_title_date_end_inspection_loader': 'Время окон. осм. грузчиками.',
-            //'fhdogs_title_placeholder_date_end_inspection_loadery': 'Добавить время',
-            //'fhdogs_title_date_end_inspection_vagonnik': 'Время окон. осм. вагонниками.',
-            //'fhdogs_title_placeholder_date_end_inspection_vagonnik': 'Добавить время',
-            //'fhdogs_title_date_readiness_uz': 'Время готовности к сдаче на УЗ',
-            //'fhdogs_title_placeholder_date_readiness_uz': 'Добавить время',
-            //'fhdogs_title_date_outgoing': 'Время сдачи на УЗ',
-            //'fhdogs_title_placeholder_date_outgoing': 'Добавить время',
-            //'fhdogs_title_date_outgoing_act': 'Время сдачи на УЗ (по акту)',
-            //'fhdogs_title_placeholder_date_outgoing_act': 'Добавить время',
-            //'fhdogs_title_label_station_on': 'Отправить на станцию',
-            //'fhdogs_title_placeholder_station_on': 'Выберите станцию',
-            //'fhdogs_title_label_route_sign': 'Маршрут',
-            //'fhdogs_title_label_composition_index': 'Индекс поезда',
-            //'fhdogs_title_placeholder_composition_index': 'XXXX-XXX-XXXX',
-            /*            'fhdogs_title_form_add': 'Сдать состав',*/
+            'fhdogs_mess_init_module': 'Инициализация модуля(form_hd_outgoing_sostav)...',
             'fhdogs_mess_error_operation_outgoing_dislocation': 'Ошибка выполнения операции "Сменить дислокацию предъявленного состава"',
             'fhdogs_mess_error_equal_way': 'Выберите новый путь',
             'fhdogs_mess_error_equal_locomotive': 'Локомотив №1 и №2 равны',
             'fhdogs_mess_error_not_locomotive': 'В справочнике ИДС отсутствует локомотив №',
             'fhdogs_mess_error_min_time_aplly': 'Дата выполнения операции не может быть меньше текущей даты, мин. отклонение (мин) =',
             'fhdogs_mess_error_max_time_aplly': 'Дата выполнения операции не может быть больше текущей даты, мак. отклонение (мин) =',
-
-            //'fhdogs_mess_error_operation_run': 'При выполнении операции «ПРИНЯТЬ СОСТАВ НА СТАНЦИЮ» произошла ошибка, код ошибки:',
-
-
-
-
-
             'fhdogs_title_form_edit': 'Выполнить дислокацию состава',
             'fhdogs_mess_operation_run': 'Выполняю операцию...',
             'fhdogs_error_date_end_inspection_acceptance_delivery': 'Время окончания осмотра должно быть больше времени предъявления АМКР {0}',
@@ -78,39 +51,36 @@
         },
         'en':  //default language: English
         {
-            //'fhdogs_title_edit': 'Ok',
-            //'fhdogs_title_cancel': 'Cancel',
-            //'fhdogs_title_num_doc': 'sheet number',
-            //'fhdogs_title_placeholder_num_doc': 'fhdogs_title_placeholder_num_doc',
-            //'fhdogs_title_date_end_inspection_acceptance_delivery': 'Windows times. osm. reception ',
-            //'fhdogs_title_placeholder_date_end_inspection_acceptance_delivery': 'Add Time',
-            //'fhdogs_title_date_end_inspection_loader': 'Windows time. osm. movers.',
-            //'fhdogs_title_placeholder_date_end_inspection_loadery': 'Add Time',
-            //'fhdogs_title_date_end_inspection_vagonnik': 'Windows time. osm. wagons.',
-            //'fhdogs_title_placeholder_date_end_inspection_vagonnik': 'Add time',
-            //'fhdogs_title_date_readiness_uz': 'Uz readiness time',
-            //'fhdogs_title_placeholder_date_readiness_uz': 'Add time',
-            //'fhdogs_title_date_outgoing': 'Title Date Outgoing',
-            //'fhdogs_title_placeholder_date_outgoing': 'Add time',
-            //'fhdogs_title_date_outgoing_act': 'Title delivery time (by act)',
-            //'fhdogs_title_placeholder_date_outgoing_act': 'Add time',
-            //'fhdogs_title_label_station_on': 'Send to station',
-            //'fhdogs_title_placeholder_station_on': 'Select a station',
-            //'fhdogs_title_label_route_sign': 'Route',
-            //'fhdogs_title_label_composition_index': 'Train index',
-            //'fhdogs_title_placeholder_composition_index': 'XXXX-XXX-XXXX',
-            //'fhdogs_title_form_add': 'Submit Composition',
-            //'fhdogs_title_form_edit': 'Edit Turned In Form',
-            //'fhdogs_mess_operation_run': 'Running operation...',
-            //'fhdogs_error_date_end_inspection_acceptance_delivery': 'Inspection end time must be greater than AMC present time {0}',
-            //'fhdogs_error_date_end_inspection_loader': 'Inspection end time must be greater than AMKR presentation time {0}',
-            //'fhdogs_error_date_end_inspection_vagonnik': 'Inspection end time must be greater than AMKR presentation time {0}',
-            //'fhdogs_error_date_readiness_uz': 'Uz readiness time must be greater than inspection time',
-            //'fhdogs_error_date_outgoing': 'OF turn-in time must be greater than OZ ready time',
-            //'fhdogs_error_date_outgoing_act': 'The turn-in time for the OZ according to the act must be greater than the turn-in time for the OZ',
-            //'fhdogs_error_date_time': 'Please enter the correct date and time',
-            //'fhdogs_error_date_outgoing_not_deff_date_detention': 'Date and time of presentation must be at least {0} min. or more {1} min. from current time',
-            //'fhdogs_mess_error_operation_return_present': 'Error executing operation "Present composition to UZ", error code = ',
+            'fhdogs_title_edit': 'OK',
+            'fhdogs_title_cancel': 'Cancel',
+            'fhdogs_title_label_reverse': 'Reverse',
+            'fhdogs_title_label_side': 'Side:',
+            'fhdogs_title_placeholder_side': 'Side',
+            'fhdogs_title_label_way': 'Deployment Path',
+            'fhdogs_title_placeholder_way': 'Location Path',
+            'fhdogs_title_label_locomotive1': 'Locomotive #1:',
+            'fhdogs_title_label_locomotive2': 'Locomotive #2:',
+            'fhdogs_title_placeholder_locomotive': 'Locomotive',
+            'fhdogs_title_time_aplly': 'Due time:',
+            'fhdogs_title_placeholder_time_aplly': 'Execution Time',
+            'fhdogs_mess_init_module': 'Module initialization(form_hd_outgoing_sostav)...',
+            'fhdogs_mess_error_operation_outgoing_dislocation': 'Error performing the operation "Change the location of the presented composition"',
+            'fhdogs_mess_error_equal_way': 'Choose a new path',
+            'fhdogs_mess_error_equal_locomotive': 'Locomotive #1 and #2 are equal',
+            'fhdogs_mess_error_not_locomotive': 'There is no locomotive # in the CID directory',
+            'fhdogs_mess_error_min_time_aplly': 'The operation execution date cannot be less than the current date, min. deviation (min) =',
+            'fhdogs_mess_error_max_time_aplly': 'The operation execution date cannot be greater than the current date, max. deviation (min) =',
+            'fhdogs_title_form_edit': 'Deploy Squad',
+            'fhdogs_mess_operation_run': 'Running operation...',
+            'fhdogs_error_date_end_inspection_acceptance_delivery': 'Inspection end time must be greater than AMC present time {0}',
+            'fhdogs_error_date_end_inspection_loader': 'Inspection end time must be greater than AMKR presentation time {0}',
+            'fhdogs_error_date_end_inspection_vagonnik': 'Inspection end time must be greater than AMKR presentation time {0}',
+            'fhdogs_error_date_readiness_uz': 'Uz readiness time must be greater than inspection time',
+            'fhdogs_error_date_outgoing': 'The time of delivery to OZ must be greater than the time of the readiness of delivery to OZ',
+            'fhdogs_error_date_outgoing_act': 'The time of delivery to OZ according to the act must be greater than the time of delivery to OZ',
+            'fhdogs_error_date_time': 'Please enter the correct date and time',
+            'fhdogs_error_date_outgoing_not_deff_date_detention': 'Date and time of presentation must be at least {0} min. or more {1} min. from current time',
+            'fhdogs_mess_error_operation_return_present': 'Error performing the operation "Present composition to UZ", error code = ',
         }
     };
     // Определлим список текста для этого модуля
@@ -138,6 +108,7 @@
     // Инициализаия формы
     form_hd_outgoing_sostav.prototype.init = function (options) {
         this.init = true;
+        LockScreen(langView('fhdogs_mess_init_module', App.Langs));
         this.settings = $.extend({
             id: 'fhdogs',
             alert: null,
@@ -151,9 +122,6 @@
         // Создадим ссылку на модуль работы с базой данных
         this.ids_wsd = this.settings.ids_wsd ? this.settings.ids_wsd : new wsd();
         this.ids_dir = new directory();
-
-        //this.list_station = [];
-
         // Загрузим справочные данные, определим поля формы правки
         this.load_db(['ways', 'locomotive'], false, function (result) {
             // Подгрузили списки
@@ -373,6 +341,17 @@
                 id: null,
                 cl_form: '',
                 validation: true,
+                fn_init: function (init) {
+                    // Окончание инициализации
+                    // Добавим в мондальное окно форму правки
+                    if (this.form && this.form.$form_add && this.form.$form_edit) {
+                        this.mf_edit.$body.append(this.form.$form_add).append(this.form.$form_edit);
+                    }
+
+                    if (typeof this.settings.fn_init === 'function') {
+                        this.settings.fn_init(this.init);
+                    }
+                }.bind(this),
                 fn_validation: function (result) {
                     // Валидация успешна
                     if (result && result.valid) {
@@ -385,14 +364,7 @@
                     }
                 }.bind(this),
             });
-            // Добавим в мондальное окно форму правки
-            if (this.form && this.form.$form_add && this.form.$form_edit) {
-                this.mf_edit.$body.append(this.form.$form_add).append(this.form.$form_edit);
-            }
 
-            if (typeof this.settings.fn_init === 'function') {
-                this.settings.fn_init(this.init);
-            }
             //-------------------------------------
         }.bind(this));
     }

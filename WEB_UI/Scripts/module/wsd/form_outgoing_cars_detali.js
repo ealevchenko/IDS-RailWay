@@ -213,7 +213,7 @@
             'fogcd_mess_valid_null_condition_present': 'Вагон не размечен вагонником.',
 
             'fogcd_value_vagonnik': 'Разметил : {0}, Разметка : {1}',
-            'fogcd_mess_init_panel': 'Инициализация модуля...',
+            'fogcd_mess_init_panel': 'Инициализация модуля (form_outgoing_cars_detali) ...',
             'fogcd_mess_load_wagon': 'Обновляю информацию по вагону...',
             'fogcd_mess_load_db_uz': 'Обновляю информацию о вагоне с БД УЗ...',
             'fogcd_mess_load_return_wagon': 'Поиск информации по возвратам',
@@ -493,10 +493,10 @@
     };
     // Инициализаия формы
     form_outgoing_cars_detali.prototype.init = function (options) {
+        this.init = true;
         //-------------------------------------
         // Сообщение
         LockScreen(langView('fogcd_mess_init_panel', App.Langs));
-        this.init = true;
         this.settings = $.extend({
             alert: null,
             ids_wsd: null,

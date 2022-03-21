@@ -34,12 +34,32 @@
             'togdr_title_button_field_clear': 'Сбросить',
 
 
-            'togdr_mess_init_module': 'Инициализация модуля...',
+            'togdr_mess_init_module': 'Инициализация модуля(table_outgoing_detention_return)...',
             'togdr_mess_view_wagons': 'Отображаю вагоны...',
         },
         'en':  //default language: English
         {
+            'togdr_field_id': 'id',
+            'togdr_field_num': 'Wagon#',
+            'togdr_field_return_cause': 'Return Reason',
+            'togdr_field_date_start': 'Returned',
+            'togdr_field_date_stop': 'Stopped return',
+            'togdr_field_num_act': 'Act number',
+            'togdr_field_date_act': 'Act Date',
 
+            'togdr_title_button_export': 'Export',
+            'togdr_title_button_buffer': 'Buffer',
+            'togdr_title_button_excel': 'Excel',
+
+            'togdr_title_excel_sheet_name': 'Wagon List',
+            'togdr_title_button_field': 'Fields',
+            'togdr_title_button_field_select': 'Select',
+            'togdr_title_button_field_view_all': 'Show All',
+            'togdr_title_button_field_clear': 'Reset',
+
+
+            'togdr_mess_init_module': 'Module initialization(table_outgoing_detention_return)...',
+            'togdr_mess_view_wagons': 'Displaying wagons...',
         }
     };
     // Определлим список текста для этого модуля
@@ -285,6 +305,7 @@
     // Инициализация
     table_outgoing_detention_return.prototype.init = function (options) {
         this.result_init = true;
+        LockScreen(langView('togdr_mess_init_module', App.Langs));
         // теперь выполним инициализацию
         // Определим основные свойства
         this.settings = $.extend({
@@ -319,9 +340,6 @@
         this.table_buttons = [];
 
         this.init_type_report();
-
-        LockScreen(langView('togdr_mess_init_module', App.Langs));
-        //
 
         this.load_db(['detention_return'], false, function (result) {
             //----------------------------------

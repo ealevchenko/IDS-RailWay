@@ -29,6 +29,7 @@
     }
     // Инициализация валидации
     form_detali.prototype.init = function (options) {
+        this.init = true;
         this.settings = $.extend({
             alert: null,
             fn_init: null,
@@ -68,7 +69,7 @@
         }.bind(this));
         //
         if (typeof this.settings.fn_init === 'function') {
-            this.settings.fn_init();
+            this.settings.fn_init(this.init);
         }
     };
     // Очистить форму от сообщений

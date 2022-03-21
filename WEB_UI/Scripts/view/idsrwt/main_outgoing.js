@@ -126,39 +126,29 @@
                 //.....
                 //<a class="dropdown-item" href="#" id="report_fsci">Натурная ведомость коммерческого осмотра</a>
             }
-            //var process = 2;
-            // Окно детально. Инициализация окна
+            // Запускаем 3 процесса инициализации (паралельно)
+            var process = 3;
+            // Выход из инициализации
+            var out_init = function (process) {
+                if (process === 0) {
+                    // Загрузим составы
+                    table_outgoing_sostav.load_outgoing_sostav(start, stop, function (sostav) {
+                        this.view(sostav, id_station, null);
+                        LockScreenOff();
+                    }.bind(table_outgoing_sostav));
+                }
+            }.bind(this);
+
+            // Инициализация Окно детально
             form_detali.init({
                 alert: alert,//alert,
                 fn_init: function () {
                     // Инициализация окна детально выполнена
                     var id = this.$card_detali_content.attr('id');
                     view_outgoing_cars = new VOC('div#' + id);
-                    // Инициализация окна предъявить состав
-                    view_outgoing_cars.init({
-                        alert: alert,
-                        ids_dir: ids_dir,
-                        ids_wsd: null,
-                        fn_init: function (init) {
-                            // Инициализация окна предъявить состав - выполненап
-                            // Инициализация модуля "Таблица отправляемых составов"
-                            table_outgoing_sostav.init({
-                                type_report: 'outgoing_sostav',
-                                alert: alert,
-                                ids_wsd: null,
-                                fn_init: function () {
-                                    table_outgoing_sostav.load_outgoing_sostav(start, stop, function (sostav) {
-                                        this.view(sostav, id_station, null);
-                                        LockScreenOff();
-                                    }.bind(table_outgoing_sostav));
-                                },
-                                // Нажата кнопка показать вагоны
-                                fn_action_view_wagons: function (rows_sostav) {
-                                    form_detali.open();
-                                },
-                            });
-                        }.bind(this),
-                    });
+                    // На проверку окончания инициализации
+                    process--;
+                    out_init(process);
                 }.bind(form_detali),
                 fn_open: function () {
                     view_outgoing_cars.open(table_outgoing_sostav.id_sostav)
@@ -172,6 +162,35 @@
                     }.bind(this));
                 }.bind(table_outgoing_sostav),
             });
+            // Инициализация окна предъявить состав
+            view_outgoing_cars.init({
+                alert: alert,
+                ids_dir: ids_dir,
+                ids_wsd: null,
+                fn_init: function (init) {
+                    // Инициализация окна предъявить состав - выполнена
+                    // На проверку окончания инициализации
+                    process--;
+                    out_init(process);
+                }.bind(this),
+            });
+            // Инициализация модуля "Таблица отправляемых составов"
+            table_outgoing_sostav.init({
+                type_report: 'outgoing_sostav',
+                alert: alert,
+                ids_wsd: null,
+                fn_init: function () {
+                    // На проверку окончания инициализации
+                    process--;
+                    out_init(process);
+                },
+                // Нажата кнопка показать вагоны детально
+                fn_action_view_wagons: function (rows_sostav) {
+
+                    form_detali.open();
+                },
+            });
+
         }.bind(this));
     });
 

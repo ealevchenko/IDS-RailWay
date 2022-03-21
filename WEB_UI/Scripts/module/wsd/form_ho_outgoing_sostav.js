@@ -41,6 +41,7 @@
             'fhoogs_title_placeholder_composition_index': 'XXXX-XXX-XXXX',
             'fhoogs_title_form_add': 'Сдать состав',
             'fhoogs_title_form_edit': 'Править сданный состав',
+            'fhoogs_mess_init_module': 'Инициализация модуля(form_ho_outgoing_sostav)...',
             'fhoogs_mess_operation_run': 'Выполняю операцию...',
             'fhoogs_error_date_end_inspection_acceptance_delivery': 'Время окончания осмотра должно быть больше времени предъявления АМКР {0}',
             'fhoogs_error_date_end_inspection_loader': 'Время окончания осмотра должно быть больше времени предъявления АМКР {0}',
@@ -77,6 +78,7 @@
             'fhoogs_title_placeholder_composition_index': 'XXXX-XXX-XXXX',
             'fhoogs_title_form_add': 'Submit Composition',
             'fhoogs_title_form_edit': 'Edit Turned In Form',
+            'fhoogs_mess_init_module': 'Module initialization(form_ho_outgoing_sostav)...',
             'fhoogs_mess_operation_run': 'Running operation...',
             'fhoogs_error_date_end_inspection_acceptance_delivery': 'Inspection end time must be greater than AMC present time {0}',
             'fhoogs_error_date_end_inspection_loader': 'Inspection end time must be greater than AMKR presentation time {0}',
@@ -113,7 +115,8 @@
     };
     // Инициализаия формы
     form_ho_outgoing_sostav.prototype.init = function (options) {
-        var init = true;
+        this.init = true;
+        LockScreen(langView('fhoogs_mess_init_module', App.Langs));
         this.settings = $.extend({
             id: 'fhoogs',
             alert: null,
@@ -455,6 +458,17 @@
                 id: null,
                 cl_form: '',
                 validation: true,
+                fn_init: function (init) {
+                    // Окончание инициализации
+                    // Добавим в мондальное окно форму правки
+                    if (this.form && this.form.$form_add && this.form.$form_edit) {
+                        this.mf_edit.$body.append(this.form.$form_add).append(this.form.$form_edit);
+                    }
+
+                    if (typeof this.settings.fn_init === 'function') {
+                        this.settings.fn_init(this.init);
+                    }
+                }.bind(this),
                 fn_validation: function (result) {
                     // Валидация успешна
                     if (result && result.valid) {
@@ -469,14 +483,7 @@
                 }.bind(this),
             });
 
-            // Добавим в мондальное окно форму правки
-            if (this.form && this.form.$form_add && this.form.$form_edit) {
-                this.mf_edit.$body.append(this.form.$form_add).append(this.form.$form_edit);
-            }
 
-            if (typeof this.settings.fn_init === 'function') {
-                this.settings.fn_init(this.init);
-            }
             //-------------------------------------
         }.bind(this));
     }

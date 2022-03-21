@@ -1530,6 +1530,7 @@
     //-----------------------------------------------------------------------------
     // Инициализация формы
     form_infield.prototype.init = function (options) {
+        this.init = true;
         // Настройки формы правки строк таблицы
         this.settings = $.extend({
             alert: null,
@@ -1539,6 +1540,7 @@
             id: '',
             cl_form: '',
             validation: true,
+            fn_init: null,
             fn_validation_ok: null,
             button_add_ok: null,
         }, options);
@@ -1680,6 +1682,10 @@
                 elements: elements,
             });
         };
+        // Завершение инициализации
+        if (typeof this.settings.fn_init === 'function') {
+            this.settings.fn_init(this.init);
+        }
     };
     // Показать форму добавить
     form_infield.prototype.view_add = function () {

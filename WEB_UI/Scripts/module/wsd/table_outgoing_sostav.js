@@ -77,7 +77,7 @@
             'tos_title_button_wagon_accept': 'Отправить вагоны',
             'tos_title_button_wagon_view': 'Показать вагоны',
             'tos_title_button_refresh': 'Обновить',
-            'tos_mess_init_module': 'Инициализация модуля...',
+            'tos_mess_init_module': 'Инициализация модуля (table_outgoing_sostav) ...',
             'tos_mess_load_sostav': 'Загружаю составы...',
             'tos_mess_update_sostav': 'Обновляю составы...',
             'tos_mess_view_sostav': 'Показываю составы...',
@@ -742,6 +742,7 @@
     // Инициализация
     table_outgoing_sostav.prototype.init = function (options, fn_init_ok) {
         this.result_init = true;
+        LockScreen(langView('tos_mess_init_module', App.Langs));
         // теперь выполним инициализацию
         // Определим основные свойства
         this.settings = $.extend({
@@ -752,8 +753,6 @@
             ids_wsd: null,
             fn_init: null,
             fn_action_view_wagons: null,
-            //fn_change_data: null,   // Функция обратного вызова если изменили данные отображения (load... button:action...)
-            //fn_select_sostav: null, // Функция обратного вызова возвращяет выбранный состав
         }, options);
         //
         this.start = null;                  // Время начало выборки
@@ -775,8 +774,7 @@
 
         this.init_type_report();
 
-        LockScreen(langView('tos_mess_init_module', App.Langs));
-        // Вклучу когда понадобится 
+        // Включу когда понадобится 
         var MCF = App.modal_confirm_form;
         this.modal_confirm_form = new MCF(this.selector); // Создадим экземпляр окно сообщений
         this.modal_confirm_form.init();

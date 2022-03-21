@@ -18,7 +18,7 @@
             'vogc_card_info_cars': 'Информация по вагону',
             'vogc_card_list_cars': 'Вагоны',
             'vogc_mess_not_id_sostav': 'Состав не выбран, не определен id',
-            'vogc_mess_init_panel': 'Выполняю инициализацию модуля ...',
+            'vogc_mess_init_panel': 'Выполняю инициализацию модуля(view_outgoing_cars)...',
             'vogc_mess_load_sostav': 'Загружаю информацию по выбранному составу...',
             'vogc_mess_load_vagon_detali': 'Загружаю информацию по вагону',
         },
@@ -30,7 +30,7 @@
             'vogc_card_info_cars': 'Car Information',
             'vogc_card_list_cars': 'Cars',
             'vogc_mess_not_id_sostav': 'No composition selected, no id defined',
-            'vogc_mess_init_panel': 'Initiating module...',
+            'vogc_mess_init_panel': 'Initiating module(view_outgoing_cars)...',
             'vogc_mess_load_sostav': 'Loading information for the selected composition...',
             'vogc_mess_load_vagon_detali': 'Loading vagon details',
         }
@@ -150,12 +150,12 @@
     // инициализация модуля
     view_outgoing_cars.prototype.init = function (options) {
         this.result_init = true;
-        // теперь выполним инициализацию, определим основные свойства
-
+        // Сообщение
+        LockScreen(langView('vogc_mess_init_panel', App.Langs));
         // Создать модальную форму "Окно сообщений"
         this.modal_confirm_form = new MCF(this.selector); // Создадим экземпляр окно сообщений
         this.modal_confirm_form.init();
-
+        //
         this.settings = $.extend({
             alert: null,
             ids_dir: null,
@@ -169,8 +169,6 @@
         this.id_sostav = null;
         this.wagons = [];
         this.select_sostav = null;
-        // Сообщение
-        LockScreen(langView('vogc_mess_init_panel', App.Langs));
         //----------------------------------
         // Создать макет панели
         var panelElement = new div_panel(this);
@@ -207,6 +205,18 @@
         this.$alert = panelElement.$alert;
         // Покажем элементы на форме
         this.$panel.append(panelElement.$element);
+        // Запускаем 2 процесса инициализации (паралельно)
+        var process = 2;
+        // Выход из инициализации
+        var out_init = function (process) {
+            if (process === 0) {
+                //----------------------------------
+                if (typeof this.settings.fn_init === 'function') {
+                    this.settings.fn_init(this.result_init);
+                }
+                //----------------------------------
+            }
+        }.bind(this);
         //------------------------------------------------------------
         // Создадим и инициализируем модуль Отправленые вагоны детально
         var TOGC = App.table_outgoing_cars; // Отправленные вагоны
@@ -223,14 +233,16 @@
                 }
             }.bind(this),
             fn_init: function (init) {
-
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
             },
             fn_refresh: function () {
                 this.out_clear();
                 this.update();
             }.bind(this),
         });
-        // Создадим и добавим макет формы
+        // Создадим и добавим макет формы (Предъявляемый вагон детально)
         var FOCD = App.form_outgoing_cars_detali;
         this.form_outgoing_cars_detali = new FOCD('div#' + sel_focd);             // Создадим экземпляр
         this.form_outgoing_cars_detali.init({
@@ -238,10 +250,9 @@
             ids_wsd: null,
             ids_dir: null,
             fn_init: function (init) {
-                if (typeof this.settings.fn_init === 'function') {
-                    this.settings.fn_init();
-                }
-                //LockScreenOff();
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
             }.bind(this),
             fn_update: function (wagon) {
                 this.update();
@@ -266,10 +277,10 @@
                 // Отобразить информацию о составе
                 if (this.wagons && this.wagons.length > 0) {
                     var outgoing_sostav_num_doc = this.wagons[0].outgoing_sostav_num_doc;
-                    var outgoing_sostav_date_readiness_uz = this.wagons[0].outgoing_sostav_date_readiness_uz;
+                    var outgoing_sostav_date_readiness_amkr = this.wagons[0].outgoing_sostav_date_readiness_amkr;//outgoing_sostav_date_readiness_uz;
                     var outgoing_sostav_from_station_amkr_abbr = this.wagons[0]['outgoing_sostav_from_station_amkr_abbr_' + App.Lang];
                     var outgoing_sostav_from_way = this.wagons[0]['outgoing_sostav_from_way_num_' + App.Lang] + '-' + this.wagons[0]['outgoing_sostav_from_way_abbr_' + App.Lang];
-                    this.$header_card_panel.empty().append(langView('vogc_card_header_detali_sostav', App.Langs).format(outgoing_sostav_num_doc, outgoing_sostav_date_readiness_uz, outgoing_sostav_from_station_amkr_abbr, outgoing_sostav_from_way));
+                    this.$header_card_panel.empty().append(langView('vogc_card_header_detali_sostav', App.Langs).format(outgoing_sostav_num_doc, getReplaceTOfDT(outgoing_sostav_date_readiness_amkr), outgoing_sostav_from_station_amkr_abbr, outgoing_sostav_from_way));
                 } else {
                     this.$header_card_panel.empty().append(langView('vogc_card_header_detali', App.Langs));
                 }

@@ -55,7 +55,7 @@
             'togc_title_button_field_clear': 'Сбросить',
             'togc_title_button_hand_over_sostav': 'Сдать состав',
             'togc_title_button_dislocation_over_sostav': 'Перем. состав',
-            'togc_mess_init_module': 'Инициализация модуля...',
+            'togc_mess_init_module': 'Инициализация модуля (table_outgoing_cars)...',
             'togc_mess_load_sostav': 'Загружаю вагоны...',
             'togc_mess_update_sostav': 'Обновляю вагоны...',
             'togc_mess_view_sostav': 'Показываю составы...',
@@ -466,7 +466,8 @@
         collums.push({ field: 'outgoing_uz_vagon_cargo_name', title: null, class: null });
         //collums.push({ field: 'outgoing_uz_vagon_cargo_group_name', title: null, class: null });
         collums.push({ field: 'outgoing_uz_vagon_to_station_uz_name', title: null, class: null });
-        collums.push({ field: 'outgoing_uz_vagon_adm_abbr', title: null, class: null });
+        collums.push({ field: 'outgoing_uz_vagon_wagon_adm', title: null, class: null });
+        //collums.push({ field: 'outgoing_uz_vagon_adm_abbr', title: null, class: null });
         collums.push({ field: 'outgoing_uz_vagon_rod_abbr', title: null, class: null });
         collums.push({ field: 'outgoing_uz_vagon_division_abbr', title: null, class: null });
         collums.push({ field: 'outgoing_uz_vagon_owner_wagon_abbr', title: null, class: null });
@@ -556,6 +557,7 @@
     // Инициализация
     table_outgoing_cars.prototype.init = function (options) {
         this.result_init = true;
+        LockScreen(langView('togc_mess_init_module', App.Langs));
         // теперь выполним инициализацию
         // Определим основные свойства
         this.settings = $.extend({
@@ -585,9 +587,9 @@
 
         this.init_type_report();
 
-        LockScreen(langView('togc_mess_init_module', App.Langs));
-
+        // Запускаем 2 процесса инициализации (паралельно)
         var process = 2;
+        // Выход из инициализации
         var out_init = function (process) {
             if (process === 0) {
                 var MCF = App.modal_confirm_form;
@@ -664,6 +666,7 @@
             alert: this.settings.alert,
             ids_wsd: this.ids_wsd,
             fn_init: function (init) {
+                // На проверку окончания инициализации
                 process--;
                 out_init(process);
             }.bind(this),
@@ -691,6 +694,7 @@
             alert: this.settings.alert,
             ids_wsd: this.ids_wsd,
             fn_init: function (init) {
+                // На проверку окончания инициализации
                 process--;
                 out_init(process);
             }.bind(this),
@@ -700,6 +704,9 @@
             fn_edit: function (result) {
                 this.update();
                 this.out_clear();
+                if (typeof this.settings.fn_refresh === 'function') {
+                    this.settings.fn_refresh();
+                }
                 if (result && result.data) {
                     this.out_info(langView('togc_mess_ok_operation_outgoing_dislocation', App.Langs));
                 } else {
@@ -722,29 +729,32 @@
     };
     // Показать данные
     table_outgoing_cars.prototype.view = function (data, id_outgoing_car) {
-        this.id_outgoing_car = id_outgoing_car;
-        this.out_clear();
-        LockScreen(langView('togc_mess_view_sostav', App.Langs));
-        this.obj_t_cars.clear();
+        if (this.obj_t_cars) {
+            this.id_outgoing_car = id_outgoing_car;
+            this.out_clear();
+            LockScreen(langView('togc_mess_view_sostav', App.Langs));
+            this.obj_t_cars.clear();
 
-        this.obj_t_cars.rows.add(data);
-        this.obj_t_cars.order(this.order_column);
-        //this.obj_t_cars.order([this.settings.detali_wagons ? 1 : 0, 'asc']);
-        this.obj_t_cars.draw();
-        if (id_outgoing_car !== null) {
-            this.id_outgoing_car = id_outgoing_car
-            this.obj_t_cars.row('#' + this.id_outgoing_car).select();
-        } else {
-            this.id_outgoing_car = null;
-        }
-        this.select_rows();
-        this.enable_button();
-        //LockScreenOff();
+            this.obj_t_cars.rows.add(data);
+            this.obj_t_cars.order(this.order_column);
+            //this.obj_t_cars.order([this.settings.detali_wagons ? 1 : 0, 'asc']);
+            this.obj_t_cars.draw();
+            if (id_outgoing_car !== null) {
+                this.id_outgoing_car = id_outgoing_car
+                this.obj_t_cars.row('#' + this.id_outgoing_car).select();
+            } else {
+                this.id_outgoing_car = null;
+            }
+            this.select_rows();
+            this.enable_button();
+        };
     };
     // Показать данные
     table_outgoing_cars.prototype.clear = function () {
-        this.obj_t_cars.clear();
-        this.obj_t_cars.draw();
+        if (this.obj_t_cars) {
+            this.obj_t_cars.clear();
+            this.obj_t_cars.draw();
+        };
     };
     // Загрузить составы по прибытию
     table_outgoing_cars.prototype.load_outgoing_cars_of_id_sostav = function (id_sostav, cb_load) {
