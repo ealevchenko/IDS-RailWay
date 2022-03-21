@@ -750,6 +750,7 @@
             type_report: null,     // 
             link_num: false,
             ids_wsd: null,
+            fn_init: null,
             fn_action_view_wagons: null,
             //fn_change_data: null,   // Функция обратного вызова если изменили данные отображения (load... button:action...)
             //fn_select_sostav: null, // Функция обратного вызова возвращяет выбранный состав
@@ -875,8 +876,8 @@
         // Определим показывать вагоны детально
         /*        if (this.settings.detali_wagons) this.init_detali();*/
         //----------------------------------
-        if (typeof fn_init_ok === 'function') {
-            fn_init_ok(this.result_init);
+        if (typeof this.settings.fn_init === 'function') {
+            this.settings.fn_init(this.result_init);
         }
         //----------------------------------
     };

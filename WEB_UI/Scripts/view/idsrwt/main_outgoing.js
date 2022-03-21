@@ -146,15 +146,16 @@
                                 type_report: 'outgoing_sostav',
                                 alert: alert,
                                 ids_wsd: null,
+                                fn_init: function () {
+                                    table_outgoing_sostav.load_outgoing_sostav(start, stop, function (sostav) {
+                                        this.view(sostav, id_station, null);
+                                        LockScreenOff();
+                                    }.bind(table_outgoing_sostav));
+                                },
                                 // Нажата кнопка показать вагоны
                                 fn_action_view_wagons: function (rows_sostav) {
                                     form_detali.open();
                                 },
-                            }, function (init) {
-                                table_outgoing_sostav.load_outgoing_sostav(start, stop, function (sostav) {
-                                    this.view(sostav, id_station, null);
-                                    LockScreenOff();
-                                }.bind(table_outgoing_sostav));
                             });
                         }.bind(this),
                     });
