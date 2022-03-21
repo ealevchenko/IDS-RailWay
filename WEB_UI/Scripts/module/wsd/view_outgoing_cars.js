@@ -330,6 +330,7 @@
     // Показать вагоны перенесеные влево
     view_outgoing_cars.prototype.view_cars_outgoing = function (wagons) {
         wagons = this.table_outgoing_cars.filter_wagons(wagons);
+        this.table_outgoing_cars.wagons = wagons;
         this.table_outgoing_cars.view(wagons, null, null);
     };
     // Показать вагон детально
