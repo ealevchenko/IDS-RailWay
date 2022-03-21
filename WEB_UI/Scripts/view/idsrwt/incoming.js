@@ -325,7 +325,7 @@
         email_krr_services = 'KRR.IT.Service@arcelormittal.com',
         email_error_epd = 'vasiliy.litvin@arcelormittal.com',
         email_error_mt = 'eduard.levchenko@arcelormittal.com',
-        interval_min_epd = 90,
+        interval_min_epd = 180,
         duration_min_epd = 0,
         langs = $.extend(true, $.extend(true, getLanguages($.Text_View, lang), getLanguages($.Text_Common, lang)), getLanguages($.Text_Table, lang)),
         user_name = $('input#username').val(),
