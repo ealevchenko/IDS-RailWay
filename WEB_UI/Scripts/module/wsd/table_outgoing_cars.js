@@ -67,6 +67,8 @@
             'togc_mess_ok_operation_return_present': 'Операция "Предъявить состав на УЗ" - выполнена',
             'togc_mess_update_operation_return_present': 'Информация об операция "Предъявить состав на УЗ" - обновлена',
             'togc_mess_error_operation_return_present': 'Ошибка выполнения операции "Предъявить состав на УЗ", статус выполнения не определён!',
+            'togc_mess_ok_operation_outgoing_dislocation': 'Операция "Сменить дислокацию предъявленного состава" - выполнена',
+            'togc_mess_error_operation_outgoing_dislocation': 'Ошибка выполнения операции "Сменить дислокацию предъявленного состава"',
         },
         'en':  //default language: English
         {
@@ -120,6 +122,7 @@
             'togc_mess_ok_operation_return_present': 'Operation "Present composition to OC" - completed',
             'togc_mess_update_operation_return_present': 'Information about the operation "Present Composition at OZ" - updated',
             'togc_mess_error_operation_return_present': 'Error executing the operation "Present composition to OC", execution status is undefined!',
+
         }
     };
     // Определлим список текста для этого модуля
@@ -129,6 +132,7 @@
     // Модуль инициализаии компонентов формы
     var FC = App.form_control;
     var FHOOGS = App.form_ho_outgoing_sostav; // форма отправить состав
+    var FHDOGS = App.form_hd_outgoing_sostav; // форма перенести состав
 
     // Перечень полей
     var list_collums = [
@@ -547,6 +551,8 @@
             };
         }
     };
+
+
     // Инициализация
     table_outgoing_cars.prototype.init = function (options) {
         this.result_init = true;
@@ -580,12 +586,87 @@
         this.init_type_report();
 
         LockScreen(langView('togc_mess_init_module', App.Langs));
+
+        var process = 2;
+        var out_init = function (process) {
+            if (process === 0) {
+                var MCF = App.modal_confirm_form;
+                this.modal_confirm_form = new MCF(this.selector); // Создадим экземпляр окно сообщений
+                this.modal_confirm_form.init();
+                //----------------------------------
+                // Создать макет таблицы
+                // Создадим и добавим макет таблицы
+                var table_cars = new this.fc_ui.el_table('tab-oc-' + this.selector, 'display compact cell-border row-border hover');
+                this.$table_cars = table_cars.$element;
+                this.$cars_sostav.addClass('table-report-operation').append(this.$table_cars);
+                // Инициализируем таблицу
+                this.obj_t_cars = this.$table_cars.DataTable({
+                    "lengthMenu": [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('togc_title_all', App.Langs)]],
+                    "pageLength": -1,
+                    "deferRender": true,
+                    "paging": true,
+                    "searching": true,
+                    "ordering": true,
+                    "info": true,
+                    "keys": true,
+                    colReorder: true,                       // вкл. перетаскивание полей
+                    fixedHeader: this.fixedHeader,          // вкл. фикс. заголовка
+                    fixedColumns: {
+                        leftColumns: this.leftColumns,
+                    },
+                    select: this.table_select,
+                    "autoWidth": false,
+                    //"filter": true,
+                    //"scrollY": "600px",
+                    sScrollX: "100%",
+                    scrollX: true,
+                    //"responsive": true,
+                    //"bAutoWidth": false,
+                    language: language_table(App.Langs),
+                    jQueryUI: false,
+                    "createdRow": function (row, data, index) {
+                        $(row).attr('id', data.outgoing_car_id); // id строки
+
+                    }.bind(this),
+                    columns: this.table_columns,
+                    dom: 'Bfrtip',
+                    stateSave: false,
+                    buttons: this.table_buttons,
+                });
+                // Обработка события выбора
+                switch (this.settings.type_report) {
+                    case 'outgoing_cars': {
+                        this.obj_t_cars.on('select deselect', function (e, dt, type, indexes) {
+                            this.select_rows(); // определим строку
+                            this.enable_button();
+                            // Обработать событие выбрана строка
+                            if (typeof this.settings.fn_select_rows === 'function') {
+                                this.settings.fn_select_rows(this.select_rows_wagons);
+                            }
+                        }.bind(this));
+
+                        break;
+                    };
+
+                };
+                //----------------------------------
+                if (typeof this.settings.fn_init === 'function') {
+                    this.settings.fn_init(this.result_init);
+                }
+                //----------------------------------
+
+            }
+        }.bind(this);
         //
         // Форма отправить состав ===============================================================================
         this.fhoogs = new FHOOGS();
         this.fhoogs.init({
             alert: this.settings.alert,
             ids_wsd: this.ids_wsd,
+            fn_init: function (init) {
+                process--;
+                out_init(process);
+            }.bind(this),
             fn_add: function (result) {
 
             }.bind(this),
@@ -603,70 +684,29 @@
                 }
             }.bind(this),
         });
-        var MCF = App.modal_confirm_form;
-        this.modal_confirm_form = new MCF(this.selector); // Создадим экземпляр окно сообщений
-        this.modal_confirm_form.init();
-        //----------------------------------
-        // Создать макет таблицы
-        // Создадим и добавим макет таблицы
-        var table_cars = new this.fc_ui.el_table('tab-oc-' + this.selector, 'display compact cell-border row-border hover');
-        this.$table_cars = table_cars.$element;
-        this.$cars_sostav.addClass('table-report-operation').append(this.$table_cars);
-        // Инициализируем таблицу
-        this.obj_t_cars = this.$table_cars.DataTable({
-            "lengthMenu": [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('togc_title_all', App.Langs)]],
-            "pageLength": -1,
-            "deferRender": true,
-            "paging": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "keys": true,
-            colReorder: true,                       // вкл. перетаскивание полей
-            fixedHeader: this.fixedHeader,          // вкл. фикс. заголовка
-            fixedColumns: {
-                leftColumns: this.leftColumns,
-            },
-            select: this.table_select,
-            "autoWidth": false,
-            //"filter": true,
-            //"scrollY": "600px",
-            sScrollX: "100%",
-            scrollX: true,
-            //"responsive": true,
-            //"bAutoWidth": false,
-            language: language_table(App.Langs),
-            jQueryUI: false,
-            "createdRow": function (row, data, index) {
-                $(row).attr('id', data.outgoing_car_id); // id строки
+        //
+        // Форма дислокации состав ===============================================================================
+        this.fhdogs = new FHDOGS();
+        this.fhdogs.init({
+            alert: this.settings.alert,
+            ids_wsd: this.ids_wsd,
+            fn_init: function (init) {
+                process--;
+                out_init(process);
+            }.bind(this),
+            fn_add: function (result) {
 
             }.bind(this),
-            columns: this.table_columns,
-            dom: 'Bfrtip',
-            stateSave: false,
-            buttons: this.table_buttons,
+            fn_edit: function (result) {
+                this.update();
+                this.out_clear();
+                if (result && result.data) {
+                    this.out_info(langView('togc_mess_ok_operation_outgoing_dislocation', App.Langs));
+                } else {
+                    this.out_info(langView('togc_mess_error_operation_outgoing_dislocation', App.Langs));
+                }
+            }.bind(this),
         });
-        // Обработка события выбора
-        switch (this.settings.type_report) {
-            case 'outgoing_cars': {
-                this.obj_t_cars.on('select deselect', function (e, dt, type, indexes) {
-                    this.select_rows(); // определим строку
-                    this.enable_button();
-                    // Обработать событие выбрана строка
-                    if (typeof this.settings.fn_select_rows === 'function') {
-                        this.settings.fn_select_rows(this.select_rows_wagons);
-                    }
-                }.bind(this));
-
-                break;
-            };
-
-        };
-        //----------------------------------
-        if (typeof this.settings.fn_init === 'function') {
-            this.settings.fn_init(this.result_init);
-        }
-        //----------------------------------
     };
     //-------------------------------------------------------------------------------------------
     // обновим информацию об выбраных строках
@@ -738,7 +778,7 @@
                 if (typeof cb_load === 'function') {
                     cb_load(this.wagons);
                 }
-                LockScreenOff();
+                //LockScreenOff();
             }.bind(this));
         } else {
             this.sostav = [];
@@ -790,8 +830,8 @@
         if (typeof this.settings.fn_refresh === 'function') {
             this.settings.fn_refresh();
         } else {
-            this.update(function (sostav) {
-                this.view(sostav, this.id_station, this.id_sostav);
+            this.update(function (wagons) {
+                this.view(wagons, this.id_station, this.id_sostav);
                 LockScreenOff();
             }.bind(this));
         }
@@ -841,15 +881,17 @@
             this.ids_wsd.getOutgoingSostavOfIDSostav(this.id_sostav, function (sostav) {
                 if (sostav) {
                     if (sostav.status === 1 || sostav.status === 2) {
-                        //if (sostav.status < 2) {
-                        //    // Сдать состав
-                        //    LockScreenOff();
-                        //    this.fhoogs.add(sostav);
-                        //} else {
-                        //    // Править сданный состав
-                        //    
-                        //    this.fhoogs.edit(sostav);
-                        //};
+                        var hand_dislocation = {
+                            reverse: false,
+                            side: 0,
+                            id_station: sostav.id_station_from,
+                            id_way: sostav.id_way_from,
+                            wagons: this.wagons,
+                            locomotive1: null,
+                            locomotive2: null,
+                            time_aplly: null
+                        };
+                        this.fhdogs.edit(hand_dislocation);
                         LockScreenOff();
                     } else {
                         // Ошибка, состав откланен 
