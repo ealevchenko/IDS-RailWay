@@ -201,6 +201,16 @@
             className: 'dt-body-left shorten mw-100',
             title: langView('togc_field_outgoing_uz_vagon_to_station_uz_name', App.Langs), width: "100px", orderable: true, searchable: true
         },
+        // Станция назначения основное поле по документу САП если пусто тогда по ручному вводу
+        {
+            field: 'outgoing_to_station_uz_name',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_destination_station_name !== null && row.sap_outgoing_supply_destination_station_name !== '' ? row.sap_outgoing_supply_destination_station_name : row.outgoing_uz_vagon_to_station_uz_name;
+                
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('togc_field_outgoing_uz_vagon_to_station_uz_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
         // Администрация по отправке
         {
             field: 'outgoing_uz_vagon_wagon_adm',
@@ -465,7 +475,8 @@
         collums.push({ field: 'outgoing_uz_document_nom_doc', title: null, class: 'fixed-column' });
         collums.push({ field: 'outgoing_uz_vagon_cargo_name', title: null, class: null });
         //collums.push({ field: 'outgoing_uz_vagon_cargo_group_name', title: null, class: null });
-        collums.push({ field: 'outgoing_uz_vagon_to_station_uz_name', title: null, class: null });
+        //collums.push({ field: 'outgoing_uz_vagon_to_station_uz_name', title: null, class: null });
+        collums.push({ field: 'outgoing_to_station_uz_name', title: null, class: null });
         collums.push({ field: 'outgoing_uz_vagon_wagon_adm', title: null, class: null });
         //collums.push({ field: 'outgoing_uz_vagon_adm_abbr', title: null, class: null });
         collums.push({ field: 'outgoing_uz_vagon_rod_abbr', title: null, class: null });
