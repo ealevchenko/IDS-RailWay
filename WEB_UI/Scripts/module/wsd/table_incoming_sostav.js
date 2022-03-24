@@ -95,6 +95,7 @@
     var wsd = App.ids_wsd;
     // Модуль инициализаии компонентов формы
     var FC = App.form_control;
+    var FHIIGS = App.form_hi_incoming_sostav; // форма Добавления и изменения состава
 
     // Перечень полей
     var list_collums = [
@@ -650,8 +651,35 @@
                 break;
             };
         };
-        // Определим показывать вагоны детально
-        /*        if (this.settings.detali_wagons) this.init_detali();*/
+
+        // Форма править состав по приему ===============================================================================
+        this.fhoogs = new FHIIGS();
+        this.fhoogs.init({
+            alert: this.settings.alert,
+            ids_wsd: this.ids_wsd,
+            fn_init: function (init) {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            }.bind(this),
+            fn_add: function (result) {
+
+            }.bind(this),
+            fn_edit: function (result) {
+                this.update();
+                this.out_clear();
+                if (result && result.data) {
+                    if (result.data.status < 2) {
+                        this.out_info(langView('togc_mess_ok_operation_return_present', App.Langs));
+                    } else {
+                        this.out_info(langView('togc_mess_update_operation_return_present', App.Langs));
+                    }
+                } else {
+                    this.out_info(langView('togc_mess_error_operation_return_present', App.Langs));
+                }
+            }.bind(this),
+        });
+
         //----------------------------------
         if (typeof this.settings.fn_init === 'function') {
             this.settings.fn_init(this.result_init);
