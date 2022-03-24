@@ -908,7 +908,7 @@
         this.enable_button();
         //LockScreenOff();
     };
-    // Загрузить составы по прибытию
+    // Загрузить составы по отправке
     table_outgoing_sostav.prototype.load_outgoing_sostav = function (start, stop, cb_load) {
         if (start !== null && stop !== null) {
             LockScreen(langView('tos_mess_load_sostav', App.Langs));
