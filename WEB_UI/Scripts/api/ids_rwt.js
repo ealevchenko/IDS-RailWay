@@ -2383,6 +2383,7 @@ IDS_RWT.prototype.deleteArrival_UZ_Cont_PayOfListCont = function (list_cont, cal
 //======================================================================================================
 // РАЗДЕЛ ПРИБЫТИЕ
 //======= ArrivalSostav (Таблица составов) =============================================================
+//TODO: !! Удалить после переделки Incoming перенесено в ids.wsd
 // Получить все составы
 IDS_RWT.prototype.getArrivalSostav = function (start, stop, callback) {
     $.ajax({

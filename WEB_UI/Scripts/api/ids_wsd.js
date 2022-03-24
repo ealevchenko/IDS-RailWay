@@ -300,6 +300,30 @@
     };
     //================= ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ (Дерево путей) =========================================================
 
+    //================= ПРИБЫТИЕ СОСТАВОВ НА УЗ (Составы) =========================================================
+    // Получить все составы (View)
+    ids_wsd.prototype.getViewIncomingSostav = function (start, stop, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/arrival_sostav/view/start/' + moment.utc(start).toISOString() + '/stop/' + moment.utc(stop).toISOString(),
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getViewOutgoingSostav", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
 
 
     //================= ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ (Отчеты учетный остаток) =========================================================
