@@ -205,8 +205,8 @@
         {
             field: 'outgoing_to_station_uz_name',
             data: function (row, type, val, meta) {
-                return row.sap_outgoing_supply_destination_station_name !== null && row.sap_outgoing_supply_destination_station_name !== '' ? row.sap_outgoing_supply_destination_station_name : row.outgoing_uz_vagon_to_station_uz_name;
-                
+                return row['outgoing_uz_document_station_to_name_' + App.Lang] !== null && row['outgoing_uz_document_station_to_name_' + App.Lang] !== '' ? row['outgoing_uz_document_station_to_name_' + App.Lang] : row.outgoing_uz_vagon_to_station_uz_name;
+                //return row.sap_outgoing_supply_destination_station_name !== null && row.sap_outgoing_supply_destination_station_name !== '' ? row.sap_outgoing_supply_destination_station_name : row.outgoing_uz_vagon_to_station_uz_name;
             },
             className: 'dt-body-left shorten mw-100',
             title: langView('togc_field_outgoing_uz_vagon_to_station_uz_name', App.Langs), width: "100px", orderable: true, searchable: true
