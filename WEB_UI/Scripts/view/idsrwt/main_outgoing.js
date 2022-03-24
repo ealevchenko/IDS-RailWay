@@ -29,11 +29,11 @@
     var ids_dir = new IDS_DIRECTORY();
     // Модуль инициализаии компонентов формы
     var FC = App.form_control;
-    var FE = App.form_element;
+/*    var FE = App.form_element;*/
 
     var FIL = App.form_inline;
     var fc_ui = new FC();
-    var fe_ui = new FE();
+/*    var fe_ui = new FE();*/
     var alert = App.alert_form;
 
     var TOS = App.table_outgoing_sostav;
