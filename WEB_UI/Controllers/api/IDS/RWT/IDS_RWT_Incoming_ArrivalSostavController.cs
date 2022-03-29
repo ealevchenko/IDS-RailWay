@@ -137,6 +137,26 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // GET: api/ids/rwt/arrival_sostav/sostav/id/4647
+        [Route("sostav/id/{id:long}")]
+        [ResponseType(typeof(ArrivalSostav))]
+        public IHttpActionResult GetArrivalSostavOfID(long id)
+        {
+            try
+            {
+               ArrivalSostav sostav = this.ef_ids
+                    .Context
+                    .Where(s=>s.id == id)
+                    .ToList()
+                    .Select(c => c.GetArrivalSostav()).FirstOrDefault();
+               return Ok(sostav);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         // GET: api/ids/rwt/arrival_sostav/current_num/station/id/6
         [Route("current_num/station/id/{id:int}")]
         [ResponseType(typeof(int))]
