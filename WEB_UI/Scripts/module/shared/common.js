@@ -1282,6 +1282,7 @@
             case 'autocomplete': { this.add_autocomplete_element_form(el_field, type, col); break; }
             case 'datetime': { this.add_datetime_element_form(el_field, type, col); break; }
             case 'switch': { this.add_switch_element_form(el_field, type, col); break; }
+            case 'textarea': { this.add_textarea_element_form(el_field, type, col); break; }
         }
     };
     // Добавить и иницилизировать элемент SELECT
@@ -1342,6 +1343,37 @@
             throw new Error('Не удалось создать элемент <select class="..." id=".." name=".." aria-describedby=".." required>');
         };
     };
+    // Добавить и иницилизировать элемент TEXTAREA
+    form_infield.prototype.add_textarea_element_form = function (el_field, type, col) {
+        // Создадим label
+        var $form_label = new this.fc.el_label(el_field.name, null, el_field.label);
+        if ($form_label && $form_label.$label && $form_label.$label.length > 0) {
+            col.append($form_label.$label);
+        } else {
+            throw new Error('Не удалось создать элемент <label class=".." for="...">...</label>');
+        };
+        // Создадим input
+        var cl_inp = 'form-control' + (el_field.prefix && el_field.prefix !== '' ? ' form-control-' + el_field.prefix + ' ' : ' ');
+        var $form_textarea = new this.fc.el_textarea(el_field.name, cl_inp, el_field.placeholder, el_field.required, el_field.maxlength, el_field.pattern);
+        if ($form_textarea && $form_textarea.$textarea && $form_textarea.$textarea.length > 0) {
+            col.append($form_textarea.$textarea); // Добавить элемент на форму
+            // Проверить задана проверка валидации формы
+            if (this.settings.validation) {
+                // добавим контейнер для вывода сообщений
+                var $form_div_if = new this.fc.el_div_invalid_feedback();
+                if ($form_div_if && $form_div_if.$div && $form_div_if.$div.length > 0) {
+                    col.append($form_div_if.$div);
+                }
+            }
+            // Инициализировать элемент
+            el_field['element_' + type] = new this.fc.init_textarea($form_textarea.$textarea, el_field.default, el_field.change);
+
+        } else {
+            throw new Error('Не удалось создать элемент <select class="..." id=".." name=".." aria-describedby=".." required>');
+        };
+    };
+
+
     // Добавить и иницилизировать элемент INPUT-number
     form_infield.prototype.add_number_element_form = function (el_field, type, col) {
         // Создадим label
@@ -1766,9 +1798,9 @@
                                 if (valid.patternMismatch) {
                                     this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не соответствует шаблону.");
                                 }
-                                if (valid.patternMismatch) {
-                                    this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не соответствует шаблону.");
-                                }
+                                //if (valid.patternMismatch) {
+                                //    this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не соответствует шаблону.");
+                                //}
                                 if (valid.rangeOverflow) {
                                     this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - больше максимально допустимого (" + $element.max + ").");
                                 }
@@ -1776,10 +1808,10 @@
                                     this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - меньше минимально допустимого (" + $element.min + ").");
                                 }
                                 if (valid.tooLong) {
-                                    this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - значение превышает лимит (" + $element.maxlength + ").");
+                                    this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - значение превышает лимит (" + $element.maxLength + ").");
                                 }
                                 if (valid.tooShort) {
-                                    this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не достигает минимума (" + $element.minlength + ").");
+                                    this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не достигает минимума (" + $element.minLength + ").");
                                 }
                                 if (valid.typeMismatch) {
                                     this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не соответствует требуемому синтаксису (" + $element.type + ").");
