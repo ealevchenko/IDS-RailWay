@@ -46,7 +46,6 @@
             'tis_title_yes': 'Да',
             'tis_title_yellow': 'В работе',
             'tis_title_green': 'Сдан',
-            'tis_title_blue': 'Отправлен',
             'tis_title_red': 'Отмена',
             'tis_title_all': 'Все',
             'tis_title_button_export': 'Экспорт',
@@ -63,26 +62,36 @@
             'tis_title_button_wagon': 'Вагоны',
             'tis_title_button_wagon_accept': 'Принять вагоны',
             'tis_title_button_wagon_view': 'Показать вагоны',
-
-
-
             'tis_title_button_refresh': 'Обновить',
+
             'tis_mess_init_module': 'Инициализация модуля (table_incoming_sostav) ...',
             'tis_mess_load_sostav': 'Загружаю составы...',
+            'tis_mess_run_operation': 'Выполняю операцию...',
+            'tis_mess_warning_id_sostav_null': 'Операция недопустима состав не выбран!',
+            'tis_mess_error_sostav_null': 'Состав по id:{0} не найден!',
+            'tis_mess_operation_delete': '"УДАЛИТЬ СОСТАВ"',
+            'tis_mess_operation_reject': '"ОТКЛОНИТЬ СОСТАВ"',
+
             'tis_mess_update_sostav': 'Обновляю составы...',
             'tis_mess_view_sostav': 'Показываю составы...',
-            'tis_mess_run_operation': 'Выполняю операцию...',
-            'tis_mess_err_return_sostav': 'Статус выбранного состава не позволяет отменить состав для предъявления!',
-            'tis_mess_error_wagon_return': '№ вагона : {0}, код ошибки : {1}',
-            'tis_mess_comfirm_return': 'Вы уверены что хотите вернуть состав вед № {0}, станция отправления: {1}, путь отправления № {2}?',
-            'tis_mess_cancel_return': 'Операция «Вернуть состав, сформированный для предъявления» - Отменена!',
-            'tis_mess_ok_return': 'Операция «Вернуть состав, сформированный для предъявления» - Выполнена',
-            'tis_mess_error_return': 'Ошибка выполнения операции «Вернуть состав, сформированный для предъявления», код ошибки : {0}',
-            'tis_mess_comfirm_return_uz': 'Вы уверены что хотите вернуть состав сданный на УЗ : {0}, вед № {1}, станция отправления: {2}, путь отправления № {3}?',
-            'tis_mess_cancel_return_uz': 'Операция «Вернуть состав, сданный на УЗ» - Отменена!',
-            'tis_mess_ok_return_uz': 'Операция «Вернуть состав, сданный на УЗ» - Выполнена',
-            'tis_mess_error_return_uz': 'Ошибка выполнения операции «Вернуть состав, сданный на УЗ», код ошибки : {0}',
+            'tis_mess_ok_operation_edit_sostav': 'Операция «ПРАВИТЬ СОСТАВ» - Выполнена',
+            'tis_mess_error_operation_edit_sostav': 'Ошибка выполнения операции «ПРАВИТЬ СОСТАВ»',
+            'tis_mess_ok_operation_add_sostav': 'Операция «ДОБАВИТЬ СОСТАВ» - Выполнена',
+            'tis_mess_error_operation_add_sostav': 'Ошибка выполнения операции «ДОБАВИТЬ СОСТАВ»',
 
+            'tis_mess_error_select_sostav': 'Операция {0} - невозможна состав не выбран!',
+            'tis_mess_error_status_sostav': 'Операция {0} - невозможна, состав уже обрабатывается или отклонён.',
+            'tis_title_form_delete': 'Удалить?',
+            'tis_title_form_reject': 'Отклонить?',
+            'tis_message_form_delete_reject': 'Вы уверены что хотите выполнить операцию {0} над составом прибывшим : {1}, поездом №{2}?',
+            'tis_mess_cancel_operation_delete': 'Операция {0} - Отменена!',
+            'tis_mess_run_operation_reject': 'Выполняю операцию "ОТКЛОНИТЬ СОСТАВ"',
+            'tis_mess_run_operation_delete': 'Выполняю операцию "УДАЛИТЬ СОСТАВ"',
+
+            'tis_mess_ok_operation_reject': 'Операция "ОТКЛОНИТЬ СОСТАВ" - Выполнена',
+            'tis_mess_error_operation_reject': 'Ошибка выполнения операции "ОТКЛОНИТЬ СОСТАВ", код ошибки :',
+            'tis_mess_ok_operation_delete': 'Операция "УДАЛИТЬ СОСТАВ" - Выполнена',
+            'tis_mess_error_operation_delete': 'Ошибка выполнения операции "УДАЛИТЬ СОСТАВ", код ошибки :',
         },
         'en':  //default language: English
         {
@@ -114,7 +123,7 @@
             data: function (row, type, val, meta) {
                 if (row.id_arrived !== null && row.id_sostav !== null) {
                     return "<i class='fas fa-train' style='color:#795acd;'></i>";
-                } else { return "<i class='fas fa-user-pen' style='color:#ff3b3b;'></i>"; }
+                } else { return "<i class='fas fa-user' style='color:#ffbf00;'></i>"; }
             },
             className: 'dt-body-nowrap',
             title: langView('tis_field_status_icon', App.Langs), width: "20px", orderable: false, searchable: false
@@ -138,7 +147,7 @@
             field: 'status',
             data: function (row, type, val, meta) {
                 switch (row.status) {
-                    case 1: return "<i class='fas fa-exclamation-circle' style='color:#ffbf00;'></i> " +langView('tis_title_yellow', App.Langs);
+                    case 1: return "<i class='fas fa-exclamation-circle' style='color:#ffbf00;'></i> " + langView('tis_title_yellow', App.Langs);
                     case 2: return "<i class='fas fa-check' style='color:#008000;'></i> " + langView('tis_title_green', App.Langs);
                     case 3: return "<i class='fas fa-ban' style='color:#ff0b0b;'></i> " + langView('tis_title_red', App.Langs);
                     default: return null;
@@ -162,7 +171,7 @@
 
                 if (row.id_arrived !== null && row.id_sostav !== null) {
                     return "<i class='fas fa-train' style='color:#795acd;'></i> " + row.train;
-                } else { return "<i class='fas fa-user' style='color:#795acd;'></i> " + row.train; }
+                } else { return "<i class='fas fa-user' style='color:#ffbf00;'></i> " + row.train; }
             },
             className: 'dt-body-center',
             title: langView('tis_field_train', App.Langs), width: "50px", orderable: true, searchable: true
@@ -189,7 +198,7 @@
         {
             field: 'date_adoption',
             data: function (row, type, val, meta) {
-                return row.date_adoption ? moment(row.date_arrival).format(format_datetime) : null;
+                return row.date_adoption ? moment(row.date_adoption).format(format_datetime) : null;
             },
             className: 'dt-body-nowrap',
             title: langView('tis_field_date_adoption', App.Langs), width: "100px", orderable: true, searchable: true
@@ -465,7 +474,7 @@
         collums.push({ field: 'status', title: null, class: 'fixed-column' });                            // Статус
         collums.push({ field: 'train', title: null, class: 'fixed-column' });                             // Ведомость
         collums.push({ field: 'composition_index', title: null, class: 'fixed-column' });                 //Индекс поезда
-        collums.push({ field: 'date_arrival', title: null, class: 'fixed-column'  });                      // время прибытия
+        collums.push({ field: 'date_arrival', title: null, class: 'fixed-column' });                      // время прибытия
         collums.push({ field: 'date_adoption', title: null, class: null });                     // время приема
         collums.push({ field: 'date_adoption_act', title: null, class: null });                 // время приема
         collums.push({ field: 'station_from_name', title: null, class: null });                 // Станция отправки
@@ -631,8 +640,7 @@
                 switch (data.status) {
                     case 1: $(row).addClass('yellow'); break;
                     case 2: $(row).addClass('green'); break;
-                    case 3: $(row).addClass('blue'); break;
-                    case 4: $(row).addClass('red'); break;
+                    case 3: $(row).addClass('red'); break;
                 }
             }.bind(this),
             columns: this.table_columns,
@@ -653,38 +661,41 @@
         };
 
         // Форма править состав по приему ===============================================================================
-        this.fhoogs = new FHIIGS();
-        this.fhoogs.init({
+        this.fhiigs = new FHIIGS();
+        this.fhiigs.init({
             alert: this.settings.alert,
             ids_wsd: this.ids_wsd,
             fn_init: function (init) {
                 // На проверку окончания инициализации
-                process--;
-                out_init(process);
+                //----------------------------------
+                if (typeof this.settings.fn_init === 'function') {
+                    this.settings.fn_init(this.result_init);
+                }
+                //----------------------------------
             }.bind(this),
             fn_add: function (result) {
 
+                this.out_clear();
+                this.action_refresh(function () {
+                    if (result && result.result > 0) {
+                        this.out_info(langView('tis_mess_ok_operation_add_sostav', App.Langs));
+                    } else {
+                        this.out_info(langView('tis_mess_error_operation_add_sostav', App.Langs));
+                    }
+                }.bind(this));
+
             }.bind(this),
             fn_edit: function (result) {
-                this.update();
                 this.out_clear();
-                if (result && result.data) {
-                    if (result.data.status < 2) {
-                        this.out_info(langView('togc_mess_ok_operation_return_present', App.Langs));
+                this.action_refresh(function () {
+                    if (result && result.result > 0) {
+                        this.out_info(langView('tis_mess_ok_operation_edit_sostav', App.Langs));
                     } else {
-                        this.out_info(langView('togc_mess_update_operation_return_present', App.Langs));
+                        this.out_info(langView('tis_mess_error_operation_edit_sostav', App.Langs));
                     }
-                } else {
-                    this.out_info(langView('togc_mess_error_operation_return_present', App.Langs));
-                }
+                }.bind(this));
             }.bind(this),
         });
-
-        //----------------------------------
-        if (typeof this.settings.fn_init === 'function') {
-            this.settings.fn_init(this.result_init);
-        }
-        //----------------------------------
     };
     //-------------------------------------------------------------------------------------------
     // обновим информацию об выбраных строках
@@ -698,12 +709,16 @@
     table_incoming_sostav.prototype.view = function (data, id_station, id_sostav) {
         this.id_station = id_station;
         this.out_clear();
+        //var current_order = this.obj_t_sostav.order();
         LockScreen(langView('tis_mess_view_sostav', App.Langs));
         this.obj_t_sostav.clear();
 
         this.obj_t_sostav.rows.add(id_station !== null ? data.filter(function (i) { return i.id_station_from === id_station }) : data);
-        this.obj_t_sostav.order(this.order_column);
-        //this.obj_t_sostav.order([this.settings.detali_wagons ? 1 : 0, 'asc']);
+        // Если состав не выбран, сортировка по умолчанию
+        if (id_sostav === null) {
+            this.obj_t_sostav.order(this.order_column); // Сортируем по умолчанию если не выбран состав
+            //this.obj_t_sostav.order([this.settings.detali_wagons ? 1 : 0, 'asc']);
+        }
         this.obj_t_sostav.draw();
         if (id_sostav !== null) {
             this.id_sostav = id_sostav
@@ -770,7 +785,7 @@
                         this.obj_t_sostav.button(5).text(langView('tis_title_button_wagon_accept', App.Langs));
                     } else {
                         // Если статус в работе принят или удален 
-                        this.obj_t_sostav.button(3).enable(false);
+                        this.obj_t_sostav.button(3).enable(true);
                         this.obj_t_sostav.button(4).enable(false);
                         //if (this.select_rows_sostav[0].status === 2) { this.obj_t_sostav.button(4).enable(true); } else { this.obj_t_sostav.button(4).enable(false); }
                         this.obj_t_sostav.button(5).text(langView('tis_title_button_wagon_view', App.Langs));
@@ -784,7 +799,139 @@
             };
         };
     };
-    //// Выполнить операцию вернуть состав сформированы для предъявления
+    // Выполнить операцию создать состав
+    table_incoming_sostav.prototype.action_add_sostav = function () {
+        this.out_clear();
+        this.fhiigs.add();
+    };
+    // Выполнить операцию изменить состав
+    table_incoming_sostav.prototype.action_edit_sostav = function () {
+        this.out_clear();
+        LockScreen(langView('tis_mess_run_operation', App.Langs));
+        if (this.id_sostav !== null) {
+            this.ids_wsd.getIncomingSostavOfID(this.id_sostav, function (sostav) {
+                if (sostav) {
+                    LockScreenOff();
+                    this.fhiigs.edit(sostav);
+                } else {
+                    // Ошибка, состав не найден 
+                    this.out_warning(langView('tis_mess_error_sostav_null', App.Langs).format(this.id_sostav));
+                    LockScreenOff();
+                };
+            }.bind(this));
+        } else {
+            // Ошибка id не определено
+            this.out_warning(langView('tis_mess_warning_id_sostav_null', App.Langs));
+            LockScreenOff();
+        }
+
+
+    };
+    // Выполнить операцию удалить состав
+    table_incoming_sostav.prototype.action_delete_sostav = function () {
+        this.out_clear();
+        // Получим выбранный состав, если выбран
+        var sostav = this.select_rows_sostav && this.select_rows_sostav.length > 0 ? this.select_rows_sostav[0] : null;
+        if (sostav) {
+            var name_operation = sostav.id_arrived === null ? langView('tis_mess_operation_delete', App.Langs) : langView('tis_mess_operation_reject', App.Langs);
+            if (sostav.status === 0) {
+
+                var message = langView('tis_message_form_delete_reject', App.Langs).format(name_operation, moment(sostav.date_arrival).format(format_datetime), sostav.train);
+                var title = sostav.id_arrived === null ? langView('tis_title_form_delete', App.Langs) : langView('tis_title_form_reject', App.Langs)
+                this.modal_confirm_form.view(title, message, function (res) {
+                    if (res) {
+                        // Проверим ручной ввод или автоматический
+                        if (sostav.id_arrived === null) {
+                            // Ручной ввод, удалим
+                            LockScreen(langView('tis_mess_run_operation_delete', App.Langs));
+                            this.out_clear();
+                            // Выполнить операцию удалить состав
+                            this.ids_wsd.deleteIncomingSostav(sostav.id, function (result_delete) {
+                                if (result_delete > 0) {
+                                    this.action_refresh(function () {
+                                        this.out_info(langView('tis_mess_ok_operation_delete', App.Langs).format(name_operation));
+                                        //LockScreenOff();
+                                    }.bind(this));
+
+
+                                } else {
+                                    this.out_error(langView('tis_mess_error_operation_delete', App.Langs) + result);
+                                    LockScreenOff();
+                                }
+                            }.bind(this));
+                        } else {
+                            // Автоматический ввод, откланим
+                            LockScreen(langView('tis_mess_run_operation_reject', App.Langs));
+                            this.out_clear();
+                            sostav.status = 3;
+                            sostav.change = moment().format("YYYY-MM-DDThh:mm:ss");
+                            sostav.change_user = App.User_Name;
+                            this.ids_wsd.putIncomingSostav(sostav, function (result) {
+                                if (result > 0) {
+                                    this.action_refresh(function () {
+                                        this.out_info(langView('tis_mess_ok_operation_reject', App.Langs).format(name_operation));
+                                        //LockScreenOff();
+                                    }.bind(this));
+                                } else {
+                                    this.out_error(langView('tis_mess_error_operation_reject', App.Langs) + result);
+                                    LockScreenOff();
+                                }
+                            }.bind(this));
+                        }
+                    } else {
+                        this.out_clear();
+                        this.out_warning(langView('tis_mess_cancel_operation_delete', App.Langs).format(name_operation));
+                    }
+                }.bind(this));
+            } else {
+                this.out_warning(langView('tis_mess_error_status_sostav', App.Langs).format(name_operation));
+            }
+        } else {
+            this.out_warning(langView('tis_mess_error_select_sostav', App.Langs).format(name_operation));
+        }
+
+
+
+        //if (this.select_rows_sostav && this.select_rows_sostav.length > 0 && this.select_rows_sostav[0].status === 0) {
+        //    var sostav = this.select_rows_sostav[0];
+        //    var message = langView('tos_mess_comfirm_return', App.Langs).format(sostav.num_doc, sostav["station_from_name_" + App.Lang], sostav["way_from_num_" + App.Lang]);
+        //    this.modal_confirm_form.view(langView('tos_title_form_return', App.Langs), message, function (res) {
+        //        if (res) {
+        //            LockScreen(langView('tos_mess_run_operation', App.Langs));
+        //            // Сформируем операцию
+        //            var operation_provide = {
+        //                id_sostav: sostav.id,
+        //                user: App.User_Name,
+        //            }
+        //            // Выполнить операцию отменить предъявление сотава для сдачи на уз
+        //            this.ids_wsd.postReturnProvideWagonsOfStation(operation_provide, function (result_provide) {
+        //                if (result_provide && result_provide.result > 0) {
+        //                    this.update(function (sostav) {
+        //                        this.view(sostav, this.id_station, null);
+        //                        this.out_info(langView('tos_mess_ok_return', App.Langs));
+        //                        LockScreenOff();
+        //                    }.bind(this));
+        //                } else {
+        //                    this.out_error(langView('tos_mess_error_return', App.Langs).format(result_provide ? result_provide.result : null));
+        //                    if (result_provide && result_provide.listResult && result_provide.listResult.length > 0) {
+        //                        $.each(result_provide.listResult, function (i, el) {
+        //                            if (el.result < 0) {
+        //                                this.out_error(langView('tos_mess_error_wagon_return', App.Langs).format(el.num, el.result));
+        //                            }
+        //                        }.bind(this));
+        //                    }
+        //                    LockScreenOff();
+        //                }
+        //            }.bind(this));
+        //        } else {
+        //            this.out_clear();
+        //            this.out_warning(langView('tos_mess_cancel_return', App.Langs));
+        //        }
+        //    }.bind(this));
+        //} else {
+        //    this.out_warning(langView('tos_mess_err_return_sostav', App.Langs));
+        //}
+    };
     //table_incoming_sostav.prototype.action_return_sostav = function () {
     //    this.out_clear();
     //    if (this.select_rows_sostav && this.select_rows_sostav.length > 0 && this.select_rows_sostav[0].status === 0) {
@@ -865,11 +1012,14 @@
     //    };
     //};
     // Выполнить операцию обновить
-    table_incoming_sostav.prototype.action_refresh = function () {
+    table_incoming_sostav.prototype.action_refresh = function (cb_refresh) {
         this.out_clear();
         this.update(function (sostav) {
             this.view(sostav, this.id_station, this.id_sostav);
             LockScreenOff();
+            if (typeof cb_refresh === 'function') {
+                cb_refresh(this.sostav);
+            }
         }.bind(this));
     };
     // Загрузить составы прибывающие на станцию 
@@ -904,6 +1054,11 @@
         if (this.modal_confirm_form) {
             this.modal_confirm_form.destroy();
             this.modal_confirm_form = null;
+        }
+        // Уберем модуль Форма "Править состав прибытия"
+        if (this.fhiigs) {
+            this.fhiigs.destroy();
+            this.fhiigs = null;
         }
         //
         if (this.obj_t_sostav) {
