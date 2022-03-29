@@ -2766,7 +2766,6 @@
     <Content Include="Scripts\view\idsmors\park_wagons.js" />
     <Content Include="Scripts\view\idsrwt\main_incoming.js" />
     <Content Include="Scripts\view\idsrwt\main_outgoing.js" />
-    <Content Include="Scripts\view\idsrwt\del_outgoing.js" />
     <Content Include="Scripts\view\idsrwt\incoming.js" />
     <Content Include="Scripts\view\idsrwt\arrival.js" />
     <Content Include="Scripts\view\idsrwt\test.js" />
