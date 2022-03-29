@@ -895,8 +895,11 @@
         this.obj_t_sostav.clear();
 
         this.obj_t_sostav.rows.add(id_station !== null ? data.filter(function (i) { return i.id_station_from === id_station }) : data);
-        this.obj_t_sostav.order(this.order_column);
-        //this.obj_t_sostav.order([this.settings.detali_wagons ? 1 : 0, 'asc']);
+        // если состав не выбран сортировка по умолчанию
+        if (id_sostav === null) {
+            this.obj_t_sostav.order(this.order_column);
+            //this.obj_t_sostav.order([this.settings.detali_wagons ? 1 : 0, 'asc']);
+        }
         this.obj_t_sostav.draw();
         if (id_sostav !== null) {
             this.id_sostav = id_sostav
@@ -1057,11 +1060,14 @@
         };
     };
     // Выполнить операцию обновить
-    table_outgoing_sostav.prototype.action_refresh = function () {
+    table_outgoing_sostav.prototype.action_refresh = function (cb_refresh) {
         this.out_clear();
         this.update(function (sostav) {
             this.view(sostav, this.id_station, this.id_sostav);
             LockScreenOff();
+            if (typeof cb_refresh === 'function') {
+                cb_refresh();
+            }
         }.bind(this));
     };
     // Загрузить составы прибывающие на станцию 

@@ -13,7 +13,7 @@
         'default':  //default language: ru
         {
             'vogc_card_header_detali': 'ИНФОРМАЦИЯ ПО СОСТАВУ',
-            'vogc_card_header_detali_sostav': 'ИНФОРМАЦИЯ ПО СОСТАВУ [Накладная № :{0}, время предъявления на УЗ :{1}, станция отправления :{2}, путь :{3} ]',
+            'vogc_card_header_detali_sostav': 'ИНФОРМАЦИЯ ПО СОСТАВУ [Ведомость№ :{0}, время предъявления на УЗ :{1}, станция отправления :{2}, путь :{3} ]',
             'vogc_card_table_cars': 'Предъявленные вагоны',
             'vogc_card_info_cars': 'Информация по вагону',
             'vogc_card_list_cars': 'Вагоны',
@@ -25,7 +25,7 @@
         'en':  //default language: English
         {
             'vogc_card_header_detali': 'CONTENT INFO',
-            'vogc_card_header_detali_sostav': 'INFORMATION ON THE COMPOSITION [Invoice no. :{0}, time of presentation to the OC :{1}, departure station :{2}, route :{3} ]',
+            'vogc_card_header_detali_sostav': 'INFORMATION ON THE COMPOSITION [list# :{0}, time of presentation to the OC :{1}, departure station :{2}, route :{3} ]',
             'vogc_card_table_cars': 'Cars presented',
             'vogc_card_info_cars': 'Car Information',
             'vogc_card_list_cars': 'Cars',
