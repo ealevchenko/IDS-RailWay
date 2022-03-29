@@ -1515,6 +1515,32 @@ namespace WEB_UI.Controllers.api.IDS.RWT
 
         #endregion
 
+        #region ОПЕРАЦИЯ ПРИНЯТЬ НА АМКР (Обновленный АРМ)
+        /// <summary>
+        /// Удалить состав и вагоны прибывшего состава введенного вручную
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        // DELETE api/ids/rwt/wsd/operation/delete/arrival_sostav/id/
+        [HttpDelete]
+        [Route("operation/delete/arrival_sostav/id/{id:long}")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult DeleteArrivalSostav(long id)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                int result = ids_wir.DeleteManualArrivalSostav(id);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        #endregion
+
+
 
         // GET: api/ids/rwt/wsd/view/ways/status/station/id/6
         [Route("view/ways/status/station/id/{id_station:int}")]

@@ -580,6 +580,43 @@ namespace IDS
                 return rt;// Возвращаем id=-1 , Ошибка
             }
         }
+        /// <summary>
+        /// Операция удалить состав введенный вручную
+        /// </summary>
+        /// <param name="id_sostav"></param>
+        /// <returns></returns>
+        public int DeleteManualArrivalSostav(long id_sostav)
+        {
+            try
+            {
+                EFDbContext context = new EFDbContext();
+                EFArrivalSostav ef_arr_sostav = new EFArrivalSostav(context);
+                EFArrivalCars ef_arr_car = new EFArrivalCars(context);
+                ArrivalSostav sostav = ef_arr_sostav.Context.Where(s => s.id == id_sostav).FirstOrDefault();
+                if (sostav == null) return (int)errors_base.not_arrival_sostav_db; // В базе данных нет записи состава для оправкиия
+                if (sostav.status >0) return (int)errors_base.error_status_arrival_sostav; // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
+                if (sostav.id_arrived != null) return (int)errors_base.error_status_arrival_sostav; // Ошибка статуса состава (Состав введен не руками)
+                List<ArrivalCars> list_cars = ef_arr_car.Context.Where(s => s.id_arrival == id_sostav).ToList();
+                if (list_cars != null && list_cars.Count > 0)
+                {
+                    // Если есть вагоны проверим чтобы они небыли приняты
+                    List<ArrivalCars> list_adoption_cars = list_cars.Where(c => c.arrival != null).ToList();
+                    if (list_adoption_cars != null && list_adoption_cars.Count > 0) return (int)errors_base.arrival_cars_adoption; // Запрет операции вагон(ы) прибывшего состава уже приняты
+                }
+                // Проверки закончены
+                if (list_cars != null && list_cars.Count > 0) {
+                    ef_arr_car.Delete(list_cars.Select(w => w.id).ToList());
+                }
+                ef_arr_sostav.Delete(sostav.id);
+                return context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("DeleteManualArrivalSostav(id_sostav={0})", id_sostav), servece_owner, eventID);
+                return (int)errors_base.global; // Глобальная ошибка
+            }
+        }
+
         #endregion
 
         #region ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ - АРМ ДИСПЕТЧЕРА
