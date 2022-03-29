@@ -301,6 +301,29 @@
     //================= ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ (Дерево путей) =========================================================
 
     //================= ПРИБЫТИЕ СОСТАВОВ НА УЗ (Составы) =========================================================
+    // Получить состав по ID
+    ids_wsd.prototype.getIncomingSostavOfID = function (id, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/arrival_sostav/sostav/id/' + id,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getIncomingSostavOfID", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     // Получить все составы (View)
     ids_wsd.prototype.getViewIncomingSostav = function (start, stop, callback) {
         $.ajax({
@@ -324,8 +347,79 @@
             },
         });
     };
-
-
+    // Добавить
+    ids_wsd.prototype.postIncomingSostav = function (sostav, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/arrival_sostav/',
+            type: 'POST',
+            data: JSON.stringify(sostav),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postIncomingSostav", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //Обновить состав
+    ids_wsd.prototype.putIncomingSostav = function (sostav, callback) {
+        $.ajax({
+            type: 'PUT',
+            url: '../../api/ids/rwt/arrival_sostav/id/' + sostav.id,
+            data: JSON.stringify(sostav),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.putIncomingSostav", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Выполнить операцию удалить состав введенный вручную
+    ids_wsd.prototype.deleteIncomingSostav = function (id, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/operation/delete/arrival_sostav/id/' + id,
+            type: 'DELETE',
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.deleteIncomingSostav", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     //================= ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ (Отчеты учетный остаток) =========================================================
     // Получить расчет остатков по вагонам
     ids_wsd.prototype.getViewTotalBalance = function (callback) {

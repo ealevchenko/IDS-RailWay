@@ -2407,6 +2407,7 @@ IDS_RWT.prototype.getArrivalSostav = function (start, stop, callback) {
         },
     });
 };
+//TODO: !! Удалить после переделки Incoming перенесено в ids.wsd
 // Получить все составы представление 
 IDS_RWT.prototype.getViewArrivalSostav = function (start, stop, callback) {
     $.ajax({
@@ -2453,6 +2454,7 @@ IDS_RWT.prototype.getArrivalSostavOfDatePeriodIDStationOn = function (start, sto
         },
     });
 };
+//TODO: !! Удалить после переделки Incoming перенесено в ids.wsd
 // Получить состав
 IDS_RWT.prototype.getArrivalSostavOfID = function (id, callback) {
     $.ajax({
@@ -2499,7 +2501,8 @@ IDS_RWT.prototype.getCurrentNumArrivalSostavOfStation = function (id, callback) 
         },
     });
 };
-//Обновить 
+//TODO: !! Удалить после переделки Incoming перенесено в ids.wsd
+//Обновить
 IDS_RWT.prototype.putArrivalSostav = function (arrival_sostav, callback) {
     $.ajax({
         type: 'PUT',
@@ -2546,7 +2549,8 @@ IDS_RWT.prototype.deleteArrivalSostav = function (id, callback) {
         },
     });
 };
-//Добавить 
+//TODO: !! Удалить после переделки Incoming перенесено в ids.wsd
+//Добавить
 IDS_RWT.prototype.postArrivalSostav = function (arrival_sostav, callback) {
     $.ajax({
         url: '../../api/ids/rwt/arrival_sostav/',
