@@ -7,88 +7,71 @@
     var App = window.App || {};
     var $ = window.jQuery;
 
+    var format_date = "YYYY-MM-DD";
+    var format_time = "HH:mm:ss";
+    var format_datetime = "YYYY-MM-DD HH:mm:ss";
+
     // Определим язык
     App.Lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang'));
 
-    var min_err_data_outgoing = -20 * 60;   // TODO: Минимальная разница в часах дата предъявления
-    var max_err_data_outgoing = 20 * 60;    // TODO: Максимальная разница в часах дата сдачи
+    var min_err_date_arrival = -2 * 60;         // TODO: Минимальная разница в минутах дата предъявления
+    var max_err_date_arrival = 2 * 60;          // TODO: Максимальная разница в минутах дата сдачи
+    var max_err_date_adoption = 3 * 24 * 60;    // TODO: Максимальная разница в минутах дата предъявления
+
 
     // Массив текстовых сообщений 
     $.Text_View =
     {
         'default':  //default language: ru
         {
-            'fhiigs_title_edit': 'Ок',
-            'fhiigs_title_cancel': 'Отмена',
-            'fhiigs_title_num_doc': '№ ведомости',
-            'fhiigs_title_placeholder_num_doc': '№ вед.',
-            'fhiigs_title_date_end_inspection_acceptance_delivery': 'Время окон. осм. приемосд.',
-            'fhiigs_title_placeholder_date_end_inspection_acceptance_delivery': 'Добавить время',
-            'fhiigs_title_date_end_inspection_loader': 'Время окон. осм. грузчиками.',
-            'fhiigs_title_placeholder_date_end_inspection_loadery': 'Добавить время',
-            'fhiigs_title_date_end_inspection_vagonnik': 'Время окон. осм. вагонниками.',
-            'fhiigs_title_placeholder_date_end_inspection_vagonnik': 'Добавить время',
-            'fhiigs_title_date_readiness_uz': 'Время готовности к сдаче на УЗ',
-            'fhiigs_title_placeholder_date_readiness_uz': 'Добавить время',
-            'fhiigs_title_date_outgoing': 'Время сдачи на УЗ',
-            'fhiigs_title_placeholder_date_outgoing': 'Добавить время',
-            'fhiigs_title_date_outgoing_act': 'Время сдачи на УЗ (по акту)',
-            'fhiigs_title_placeholder_date_outgoing_act': 'Добавить время',
-            'fhiigs_title_label_station_on': 'Отправить на станцию',
-            'fhiigs_title_placeholder_station_on': 'Выберите станцию',
-            'fhiigs_title_label_route_sign': 'Маршрут',
-            'fhiigs_title_label_composition_index': 'Индекс поезда',
-            'fhiigs_title_placeholder_composition_index': 'XXXX-XXX-XXXX',
-            'fhiigs_title_form_add': 'Сдать состав',
-            'fhiigs_title_form_edit': 'Править сданный состав',
-            'fhiigs_mess_init_module': 'Инициализация модуля(form_hi_incoming_sostav)...',
-            'fhiigs_mess_operation_run': 'Выполняю операцию...',
-            'fhiigs_error_date_end_inspection_acceptance_delivery': 'Время окончания осмотра должно быть больше времени предъявления АМКР {0}',
-            'fhiigs_error_date_end_inspection_loader': 'Время окончания осмотра должно быть больше времени предъявления АМКР {0}',
-            'fhiigs_error_date_end_inspection_vagonnik': 'Время окончания осмотра должно быть больше времени предъявления АМКР {0}',
-            'fhiigs_error_date_readiness_uz': 'Время готовности к сдаче на УЗ должно быть больше времени осмотров',
-            'fhiigs_error_date_outgoing': 'Время сдачи на УЗ должно быть больше времени готовности сдачи на УЗ',
-            'fhiigs_error_date_outgoing_act': 'Время сдаче на УЗ по акту должно быть больше времени сдачи на УЗ',
-            'fhiigs_error_date_time': 'Укажите правильно дату и время',
-            'fhiigs_error_date_outgoing_not_deff_date_detention': 'Дата и время предъявления должны быть не меньше {0} мин. или больше {1} мин. от текущего времени',
-            'fhiigs_mess_error_operation_return_present': 'Ошибка выполнения операции "Предъявить состав на УЗ", код ошибки = ',
+            'fhiis_title_edit': 'Ок',
+            'fhiis_title_cancel': 'Отмена',
+            'fhiis_title_label_train': '№ Поезда:',
+            'fhiis_title_placeholder_train': '№Поезда',
+            'fhiis_title_label_composition_index': 'Индекс поезда',
+            'fhiis_title_placeholder_composition_index': 'Индекс поезда',
+            'fhiis_title_label_date_arrival': 'Дата и время прибытия:',
+            'fhiis_title_placeholder_date_arrival': 'Время прибытия',
+            'fhiis_title_label_station_from': 'Прибытие со станции:',
+            'fhiis_title_placeholder_station_from': 'Станция прибытия:',
+            'fhiis_title_label_note': 'Примечание:',
+            'fhiis_title_placeholder_note': 'Примечание',
+            'fhiis_title_form_add': 'Добавить состав',
+            'fhiis_title_form_edit': 'Править состав',
+            'fhiis_mess_init_module': 'Инициализация модуля(form_hi_incoming_sostav)...',
+            'fhiis_mess_operation_run': 'Выполняю операцию...',
+            'fhiis_error_date_arrival': 'Укажите правильно дату и время',
+            'fhiis_error_date_arrival_not_deff_date_curent': 'Дата и время прибытия должны быть не меньше {0} мин. или больше {1} мин. от текущего времени',
+            'fhiis_error_date_arrival_not_deff_date_curent_arrival': 'Дата и время прибытия должны быть не меньше {0} мин. или больше {1} мин. от прошлой даты прибытия {2}',
+            'fhiis_error_date_arrival_not_deff_date_adoption': 'Дата и время прибытия должны быть не меньше {0} мин. и не равно {1} времени приема',
+            'fhiis_mess_error_add_sostav': 'Ошибка выполнения операции "Создать состав прибытия", код ошибки = ',
+            'fhiis_mess_error_edit_sostav': 'Ошибка выполнения операции "Обновить состав прибытия", код ошибки = ',
+
         },
         'en':  //default language: English
         {
-            'fhiigs_title_edit': 'Ok',
-            'fhiigs_title_cancel': 'Cancel',
-            'fhiigs_title_num_doc': 'sheet number',
-            'fhiigs_title_placeholder_num_doc': 'fhiigs_title_placeholder_num_doc',
-            'fhiigs_title_date_end_inspection_acceptance_delivery': 'Windows times. osm. reception ',
-            'fhiigs_title_placeholder_date_end_inspection_acceptance_delivery': 'Add Time',
-            'fhiigs_title_date_end_inspection_loader': 'Windows time. osm. movers.',
-            'fhiigs_title_placeholder_date_end_inspection_loadery': 'Add Time',
-            'fhiigs_title_date_end_inspection_vagonnik': 'Windows time. osm. wagons.',
-            'fhiigs_title_placeholder_date_end_inspection_vagonnik': 'Add time',
-            'fhiigs_title_date_readiness_uz': 'Uz readiness time',
-            'fhiigs_title_placeholder_date_readiness_uz': 'Add time',
-            'fhiigs_title_date_outgoing': 'Title Date Outgoing',
-            'fhiigs_title_placeholder_date_outgoing': 'Add time',
-            'fhiigs_title_date_outgoing_act': 'Title delivery time (by act)',
-            'fhiigs_title_placeholder_date_outgoing_act': 'Add time',
-            'fhiigs_title_label_station_on': 'Send to station',
-            'fhiigs_title_placeholder_station_on': 'Select a station',
-            'fhiigs_title_label_route_sign': 'Route',
-            'fhiigs_title_label_composition_index': 'Train index',
-            'fhiigs_title_placeholder_composition_index': 'XXXX-XXX-XXXX',
-            'fhiigs_title_form_add': 'Submit Composition',
-            'fhiigs_title_form_edit': 'Edit Turned In Form',
-            'fhiigs_mess_init_module': 'Module initialization(form_hi_incoming_sostav)...',
-            'fhiigs_mess_operation_run': 'Running operation...',
-            'fhiigs_error_date_end_inspection_acceptance_delivery': 'Inspection end time must be greater than AMC present time {0}',
-            'fhiigs_error_date_end_inspection_loader': 'Inspection end time must be greater than AMKR presentation time {0}',
-            'fhiigs_error_date_end_inspection_vagonnik': 'Inspection end time must be greater than AMKR presentation time {0}',
-            'fhiigs_error_date_readiness_uz': 'Uz readiness time must be greater than inspection time',
-            'fhiigs_error_date_outgoing': 'OF turn-in time must be greater than OZ ready time',
-            'fhiigs_error_date_outgoing_act': 'The turn-in time for the OZ according to the act must be greater than the turn-in time for the OZ',
-            'fhiigs_error_date_time': 'Please enter the correct date and time',
-            'fhiigs_error_date_outgoing_not_deff_date_detention': 'Date and time of presentation must be at least {0} min. or more {1} min. from current time',
-            'fhiigs_mess_error_operation_return_present': 'Error executing operation "Present composition to UZ", error code = ',
+            'fhiis_title_edit': 'OK',
+            'fhiis_title_cancel': 'Cancel',
+            'fhiis_title_label_train': 'Train #:',
+            'fhiis_title_placeholder_train': 'Train#',
+            'fhiis_title_label_composition_index': 'Train index',
+            'fhiis_title_placeholder_composition_index': 'Train Index',
+            'fhiis_title_label_date_arrival': 'Date and time of arrival:',
+            'fhiis_title_placeholder_date_arrival': 'Arrival Time',
+            'fhiis_title_label_station_from': 'Arrived from station:',
+            'fhiis_title_placeholder_station_from': 'Arrival Station:',
+            'fhiis_title_label_note': 'Note:',
+            'fhiis_title_placeholder_note': 'Note',
+            'fhiis_title_form_add': 'Add Form',
+            'fhiis_title_form_edit': 'Edit Composition',
+            'fhiis_mess_init_module': 'Module initialization(form_hi_incoming_sostav)...',
+            'fhiis_mess_operation_run': 'Performing an operation...',
+            'fhiis_error_date_arrival': 'Please enter the correct date and time',
+            'fhiis_error_date_arrival_not_deff_date_current': 'Date and time of arrival must be at least {0} min. or more {1} min. from current time',
+            'fhiis_error_date_arrival_not_deff_date_current_arrival': 'Date and time of arrival must be at least {0} min. or more {1} min. from last arrival date {2}',
+            'fhiis_error_date_arrival_not_deff_date_adoption': 'Date and time of arrival must be at least {0} min. and not equal to {1} reception time',
+            'fhiis_mess_error_add_sostav': 'Error performing "Create arrival composition" operation, error code = ',
+            'fhiis_mess_error_edit_sostav': 'Error performing "Update arrival composition" operation, error code = ',
         }
     };
     // Определлим список текста для этого модуля
@@ -116,9 +99,9 @@
     // Инициализаия формы
     form_hi_incoming_sostav.prototype.init = function (options) {
         this.init = true;
-        LockScreen(langView('fhiigs_mess_init_module', App.Langs));
+        LockScreen(langView('fhiis_mess_init_module', App.Langs));
         this.settings = $.extend({
-            id: 'fhoogs',
+            id: 'fhiis',
             alert: null,
             ids_wsd: null,
             fn_init: null,
@@ -148,12 +131,12 @@
             this.mf_edit = new MF();
             this.mf_edit.init({
                 alert: null,
-                id: 'mfhoogs-' + this.settings.id,
-                prefix: 'lg',
+                id: 'mfhiis-' + this.settings.id,
+                prefix: null,
                 cl_modal: null,
                 //form: this.form,
-                label_ok: langView('fhiigs_title_edit', App.Langs),
-                label_close: langView('fhiigs_title_cancel', App.Langs),
+                label_ok: langView('fhiis_title_edit', App.Langs),
+                label_close: langView('fhiis_title_cancel', App.Langs),
                 ok_click: function (e) {
                     e.preventDefault();
                     if (this.form) {
@@ -167,6 +150,7 @@
             // Создадим форму правки операторов
             var FIF = App.form_infield;
             this.form = new FIF();
+
             // Определим поля
             var fl_id = {
                 field: 'id',
@@ -192,15 +176,15 @@
                 col_prefix: null,
                 col_size: null,
             };
-            var fl_num_doc = {
-                field: 'num_doc',
+            var fl_id_arrived = {
+                field: 'id_arrived',
                 type: 'number',
                 add: null,
-                edit: 'text',
-                name: 'num_doc',
+                edit: null,
+                name: null,
                 prefix: null,
-                label: langView('fhiigs_title_num_doc', App.Langs),
-                placeholder: null,//langView('fhiigs_title_placeholder_num_doc', App.Langs),
+                label: null,
+                placeholder: null,
                 maxlength: null,
                 required: true,
                 control: null,
@@ -208,23 +192,97 @@
                 select: null,
                 update: null,
                 close: null,
+                add_validation: null,
+                edit_validation: null,
+                default: null,
+                row: null,
+                col: null,
+                col_prefix: null,
+                col_size: null,
+            };
+            var fl_id_sostav = {
+                field: 'id_sostav',
+                type: 'number',
+                add: null,
+                edit: null,
+                name: null,
+                prefix: null,
+                label: null,
+                placeholder: null,
+                maxlength: null,
+                required: true,
+                control: null,
+                list: null,
+                select: null,
+                update: null,
+                close: null,
+                add_validation: null,
+                edit_validation: null,
+                default: null,
+                row: null,
+                col: null,
+                col_prefix: null,
+                col_size: null,
+            };
+            var fl_train = {
+                field: 'train',
+                type: 'number',
+                add: 'text',
+                edit: 'text',
+                name: 'train',
+                label: langView('fhiis_title_label_train', App.Langs),
+                placeholder: langView('fhiis_title_placeholder_train', App.Langs),
+                maxlength: 4,
+                required: true,
+                pattern: '[0-9]{4}',
+                control: null,
+                list: null,
+                select: null,
+                update: null,
+                close: null,
+                change: null,
                 add_validation: null,
                 edit_validation: null,
                 default: null,
                 row: 1,
                 col: 1,
                 col_prefix: 'md',
-                col_size: 4,
+                col_size: 6,
             };
-            var fl_date_end_inspection_acceptance_delivery = {
-                field: 'date_end_inspection_acceptance_delivery',
+            var fl_composition_index = {
+                field: 'composition_index',
+                type: 'string',
+                add: 'text',
+                edit: 'text',
+                name: 'composition_index',
+                label: langView('fhiis_title_label_composition_index', App.Langs),
+                placeholder: langView('fhiis_title_placeholder_composition_index', App.Langs),
+                maxlength: 13,
+                required: true,
+                pattern: '[0-9]{4}\-[0-9]{3}\-[0-9]{4}',
+                control: null,
+                list: null,
+                select: null,
+                update: null,
+                close: null,
+                change: null,
+                add_validation: null,
+                edit_validation: null,
+                default: null,
+                row: 1,
+                col: 2,
+                col_prefix: 'md',
+                col_size: 6,
+            };
+            var fl_date_arrival = {
+                field: 'date_arrival',
                 type: 'datetime',
-                add: null,
+                add: 'datetime',
                 edit: 'datetime',
-                name: 'date_end_inspection_acceptance_delivery',
+                name: 'date_arrival',
                 prefix: null,
-                label: langView('fhiigs_title_date_end_inspection_acceptance_delivery', App.Langs),
-                placeholder: langView('fhiigs_title_placeholder_date_end_inspection_acceptance_delivery', App.Langs),
+                label: langView('fhiis_title_label_date_arrival', App.Langs),
+                placeholder: langView('fhiis_title_placeholder_date_arrival', App.Langs),
                 maxlength: null,
                 required: true,
                 control: null,
@@ -238,113 +296,17 @@
                 row: 2,
                 col: 1,
                 col_prefix: 'md',
-                col_size: 4,
+                col_size: 6,
             };
-            var fl_date_end_inspection_loader = {
-                field: 'date_end_inspection_loader',
+            var fl_date_adoption = {
+                field: 'date_adoption',
                 type: 'datetime',
                 add: null,
-                edit: 'datetime',
-                name: 'date_end_inspection_loader',
+                edit: null,
+                name: null,
                 prefix: null,
-                label: langView('fhiigs_title_date_end_inspection_loader', App.Langs),
-                placeholder: langView('fhiigs_title_placeholder_date_end_inspection_loadery', App.Langs),
-                maxlength: null,
-                required: true,
-                control: null,
-                list: null,
-                select: null,
-                update: null,
-                close: null,
-                add_validation: null,
-                edit_validation: null,
-                default: null,
-                row: 2,
-                col: 2,
-                col_prefix: 'md',
-                col_size: 4,
-            };
-            var fl_date_end_inspection_vagonnik = {
-                field: 'date_end_inspection_vagonnik',
-                type: 'datetime',
-                add: null,
-                edit: 'datetime',
-                name: 'date_end_inspection_vagonnik',
-                prefix: null,
-                label: langView('fhiigs_title_date_end_inspection_vagonnik', App.Langs),
-                placeholder: langView('fhiigs_title_placeholder_date_end_inspection_vagonnik', App.Langs),
-                maxlength: null,
-                required: true,
-                control: null,
-                list: null,
-                select: null,
-                update: null,
-                close: null,
-                add_validation: null,
-                edit_validation: null,
-                default: null,
-                row: 2,
-                col: 3,
-                col_prefix: 'md',
-                col_size: 4,
-            };
-            var fl_date_readiness_uz = {
-                field: 'date_readiness_uz',
-                type: 'datetime',
-                add: null,
-                edit: 'datetime',
-                name: 'date_readiness_uz',
-                prefix: null,
-                label: langView('fhiigs_title_date_readiness_uz', App.Langs),
-                placeholder: langView('fhiigs_title_placeholder_date_readiness_uz', App.Langs),
-                maxlength: null,
-                required: true,
-                control: null,
-                list: null,
-                select: null,
-                update: null,
-                close: null,
-                add_validation: null,
-                edit_validation: null,
-                default: null,
-                row: 3,
-                col: 1,
-                col_prefix: 'md',
-                col_size: 4,
-            };
-            var fl_date_outgoing = {
-                field: 'date_outgoing',
-                type: 'datetime',
-                add: null,
-                edit: 'datetime',
-                name: 'date_outgoing',
-                prefix: null,
-                label: langView('fhiigs_title_date_outgoing', App.Langs),
-                placeholder: langView('fhiigs_title_placeholder_date_outgoing', App.Langs),
-                maxlength: null,
-                required: true,
-                control: null,
-                list: null,
-                select: null,
-                update: null,
-                close: null,
-                add_validation: null,
-                edit_validation: null,
-                default: null,
-                row: 3,
-                col: 2,
-                col_prefix: 'md',
-                col_size: 4,
-            };
-            var fl_date_outgoing_act = {
-                field: 'date_outgoing_act',
-                type: 'datetime',
-                add: null,
-                edit: 'datetime',
-                name: 'date_outgoing_act',
-                prefix: null,
-                label: langView('fhiigs_title_date_outgoing_act', App.Langs),
-                placeholder: langView('fhiigs_title_placeholder_date_outgoing_act', App.Langs),
+                label: null,
+                placeholder: null,
                 maxlength: null,
                 required: null,
                 control: null,
@@ -355,20 +317,44 @@
                 add_validation: null,
                 edit_validation: null,
                 default: null,
-                row: 3,
-                col: 3,
-                col_prefix: 'md',
-                col_size: 4,
+                row: null,
+                col: null,
+                col_prefix: null,
+                col_size: null,
             };
-            var fl_station_on = {
-                field: 'id_station_on',
-                type: 'int',
+            var fl_date_adoption_act = {
+                field: 'date_adoption_act',
+                type: 'datetime',
                 add: null,
-                edit: 'select',
-                name: 'station',
+                edit: null,
+                name: null,
                 prefix: null,
-                label: langView('fhiigs_title_label_station_on', App.Langs),
-                placeholder: langView('fhiigs_title_placeholder_station_on', App.Langs),
+                label: null,
+                placeholder: null,
+                maxlength: null,
+                required: null,
+                control: null,
+                list: null,
+                select: null,
+                update: null,
+                close: null,
+                add_validation: null,
+                edit_validation: null,
+                default: null,
+                row: null,
+                col: null,
+                col_prefix: null,
+                col_size: null,
+            };
+            var fl_station_from = {
+                field: 'id_station_from',
+                type: 'int',
+                add: 'select',
+                edit: 'select',
+                name: 'station_from',
+                prefix: null,
+                label: langView('fhiis_title_label_station_from', App.Langs),
+                placeholder: langView('fhiis_title_placeholder_station_from', App.Langs),
                 maxlength: null,
                 required: true,
                 control: null,
@@ -385,18 +371,91 @@
                 add_validation: null,
                 edit_validation: null,
                 default: -1,
-                row: 4,
-                col: 1,
+                row: 2,
+                col: 2,
                 col_prefix: 'md',
-                col_size: 4,
+                col_size: 6,
             };
-            var fl_route_sign = {
-                field: 'route_sign',
-                type: 'boolean',
+            var fl_station_on = {
+                field: 'id_station_on',
+                type: 'number',
                 add: null,
-                edit: 'checkbox',
-                name: 'route_sign',
-                label: langView('fhiigs_title_label_route_sign', App.Langs),
+                edit: null,
+                name: null,
+                prefix: null,
+                label: null,
+                placeholder: null,
+                maxlength: null,
+                required: false,
+                control: null,
+                list: null,
+                select: null,
+                update: null,
+                close: null,
+                add_validation: null,
+                edit_validation: null,
+                default: null,
+                row: null,
+                col: null,
+                col_prefix: null,
+                col_size: null,
+            };
+            var fl_way = {
+                field: 'id_way',
+                type: 'number',
+                add: null,
+                edit: null,
+                name: null,
+                prefix: null,
+                label: null,
+                placeholder: null,
+                maxlength: null,
+                required: false,
+                control: null,
+                list: null,
+                select: null,
+                update: null,
+                close: null,
+                add_validation: null,
+                edit_validation: null,
+                default: null,
+                row: null,
+                col: null,
+                col_prefix: null,
+                col_size: null,
+            };
+            var fl_numeration = {
+                field: 'numeration',
+                type: 'checkbox',
+                add: null,
+                edit: null,
+                name: null,
+                prefix: null,
+                label: null,
+                placeholder: null,
+                maxlength: null,
+                required: false,
+                control: null,
+                list: null,
+                select: null,
+                update: null,
+                close: null,
+                add_validation: null,
+                edit_validation: null,
+                default: null,
+                row: null,
+                col: null,
+                col_prefix: null,
+                col_size: null,
+            };
+            var fl_num_doc = {
+                field: 'num_doc',
+                type: 'number',
+                add: null,
+                edit: null,
+                name: null,
+                prefix: null,
+                label: null,
                 placeholder: null,
                 maxlength: null,
                 required: null,
@@ -408,22 +467,70 @@
                 add_validation: null,
                 edit_validation: null,
                 default: null,
-                row: 4,
-                col: 2,
-                col_prefix: 'md',
-                col_size: 4,
+                row: null,
+                col: null,
+                col_prefix: null,
+                col_size: null,
             };
-            var fl_composition_index = {
-                field: 'composition_index',
-                type: 'string',
+            var fl_count = {
+                field: 'count',
+                type: 'number',
                 add: null,
-                edit: 'text',
-                name: 'composition_index',
-                label: langView('fhiigs_title_label_composition_index', App.Langs),
-                placeholder: langView('fhiigs_title_placeholder_composition_index', App.Langs),
-                maxlength: 100,
+                edit: null,
+                name: null,
+                prefix: null,
+                label: null,
+                placeholder: null,
+                maxlength: null,
                 required: null,
-                pattern: '[0-9]{4}\-[0-9]{3}\-[0-9]{4}',
+                control: null,
+                list: null,
+                select: null,
+                update: null,
+                close: null,
+                add_validation: null,
+                edit_validation: null,
+                default: null,
+                row: null,
+                col: null,
+                col_prefix: null,
+                col_size: null,
+            };
+            var fl_status = {
+                field: 'status',
+                type: 'number',
+                add: null,
+                edit: null,
+                name: null,
+                prefix: null,
+                label: null,
+                placeholder: null,
+                maxlength: null,
+                required: null,
+                control: null,
+                list: null,
+                select: null,
+                update: null,
+                close: null,
+                add_validation: null,
+                edit_validation: null,
+                default: 0,
+                row: null,
+                col: null,
+                col_prefix: null,
+                col_size: null,
+            };
+            var fl_note = {
+                field: 'note',
+                type: 'string',
+                add: 'textarea',
+                edit: 'textarea',
+                name: 'note',
+                label: langView('fhiis_title_label_note', App.Langs),
+                placeholder: langView('fhiis_title_placeholder_note', App.Langs),
+                maxlength: 200,
+                required: false,
+                pattern: null,
                 control: null,
                 list: null,
                 select: null,
@@ -433,23 +540,112 @@
                 add_validation: null,
                 edit_validation: null,
                 default: null,
-                row: 4,
-                col: 3,
+                row: 3,
+                col: 1,
                 col_prefix: 'md',
-                col_size: 4,
+                col_size: 12,
+            };
+            var fl_create = {
+                field: 'create',
+                type: 'datetime',
+                add: null,
+                edit: null,
+                name: null,
+                label: null,
+                control: null,
+                list: null,
+                select: null,
+                update: null,
+                close: null,
+                add_validation: null,
+                edit_validation: null,
+                default: moment().format("YYYY-MM-DDThh:mm:ss"), //.utc().toISOString(),
+                row: null,
+                col: null,
+                col_prefix: null,
+                col_size: null,
+            };
+            var fl_create_user = {
+                field: 'create_user',
+                type: 'string',
+                add: null,
+                edit: null,
+                name: null,
+                label: null,
+                control: null,
+                list: null,
+                select: null,
+                update: null,
+                close: null,
+                add_validation: null,
+                edit_validation: null,
+                default: App.User_Name,
+                row: null,
+                col: null,
+                col_prefix: null,
+                col_size: null,
+            };
+            var fl_change = {
+                field: 'change',
+                type: 'datetime',
+                add: null,
+                edit: null,
+                name: null,
+                label: null,
+                control: null,
+                list: null,
+                select: null,
+                update: null,
+                close: null,
+                add_validation: null,
+                edit_validation: null,
+                default: null,
+                row: null,
+                col: null,
+                col_prefix: null,
+                col_size: null,
+            };
+            var fl_change_user = {
+                field: 'change_user',
+                type: 'string',
+                add: null,
+                edit: null,
+                name: null,
+                label: null,
+                control: null,
+                list: null,
+                select: null,
+                update: null,
+                close: null,
+                add_validation: null,
+                edit_validation: null,
+                default: null,
+                row: null,
+                col: null,
+                col_prefix: null,
+                col_size: null,
             };
             var fields = [];
             fields.push(fl_id);
-            fields.push(fl_num_doc);
-            fields.push(fl_station_on);
-            fields.push(fl_date_end_inspection_acceptance_delivery);
-            fields.push(fl_date_end_inspection_loader);
-            fields.push(fl_date_end_inspection_vagonnik);
-            fields.push(fl_date_readiness_uz);
-            fields.push(fl_date_outgoing);
-            fields.push(fl_date_outgoing_act);
+            fields.push(fl_id_arrived);
+            fields.push(fl_id_sostav);
+            fields.push(fl_train);
             fields.push(fl_composition_index);
-            fields.push(fl_route_sign);
+            fields.push(fl_date_arrival);
+            fields.push(fl_date_adoption);
+            fields.push(fl_date_adoption_act);
+            fields.push(fl_station_from);
+            fields.push(fl_station_on);
+            fields.push(fl_way);
+            fields.push(fl_numeration);
+            fields.push(fl_num_doc);
+            fields.push(fl_count);
+            fields.push(fl_status);
+            fields.push(fl_note);
+            fields.push(fl_create);
+            fields.push(fl_create_user);
+            fields.push(fl_change);
+            fields.push(fl_change_user);
             // Инициализация формы
             this.form.init({
                 alert: this.mf_edit.alert, // Подключим Alert модальной формы
@@ -475,9 +671,7 @@
                         // Дополнительная проверка
                         var valid = this.validation(result);
                         if (valid) {
-                            result.new.status = result.old.status; // передадим текущий статус
-                            result.new.user = App.User_Name;
-                            this.save(result.new);
+                            this.save(result);
                         }
                     }
                 }.bind(this),
@@ -490,87 +684,65 @@
     // Уточняющая валидация данных 
     form_hi_incoming_sostav.prototype.validation = function (result) {
         var valid = true;
-        // Сдесь можно проверить дополнительно
+        //// Сдесь можно проверить дополнительно
         var current = moment();
-        var date_readiness_amkr = moment(result.old.date_readiness_amkr);
-        var sostav_date_end_inspection_acceptance_delivery = result.new.date_end_inspection_acceptance_delivery ? moment(result.new.date_end_inspection_acceptance_delivery) : null;
-        var sostav_date_end_inspection_loader = result.new.date_end_inspection_loader ? moment(result.new.date_end_inspection_loader) : null;
-        var sostav_date_end_inspection_vagonnik = result.new.date_end_inspection_vagonnik ? moment(result.new.date_end_inspection_vagonnik) : null;
-        var sostav_date_readiness_uz = result.new.date_readiness_uz ? moment(result.new.date_readiness_uz) : null;
-        var sostav_date_outgoing = result.new.date_outgoing ? moment(result.new.date_outgoing) : null;
-        var sostav_date_outgoing_act = result.new.date_outgoing_act ? moment(result.new.date_outgoing_act) : null;
+        var current_date_arrival = result.old && result.old.date_arrival ? moment(result.old.date_arrival) : null;
+        var date_arrival = moment(result.new.date_arrival);
+        var date_adoption = result.new.date_adoption ? moment(result.new.date_adoption) : null;
 
-        if (date_readiness_amkr.isValid &&
-            sostav_date_end_inspection_acceptance_delivery.isValid &&
-            sostav_date_end_inspection_loader.isValid &&
-            sostav_date_end_inspection_vagonnik.isValid &&
-            sostav_date_readiness_uz.isValid &&
-            sostav_date_outgoing.isValid
-        ) {
-            // Дата указана правильно проверим далее
-            // Проверим на интервалы времени
-            if (!date_readiness_amkr.isBefore(sostav_date_end_inspection_acceptance_delivery)) {
-                this.form.set_object_error('date_end_inspection_acceptance_delivery', langView('fhiigs_error_date_end_inspection_acceptance_delivery', App.Langs).format(date_readiness_amkr.format('DD.MM.YYYY HH:mm:ss')));
-                valid = valid & false;
-            }
-            if (!date_readiness_amkr.isBefore(sostav_date_end_inspection_loader)) {
-                this.form.set_object_error('date_end_inspection_loader', langView('fhiigs_error_date_end_inspection_loader', App.Langs).format(date_readiness_amkr.format('DD.MM.YYYY HH:mm:ss')));
-                valid = valid & false;
-            }
-            if (!date_readiness_amkr.isBefore(sostav_date_end_inspection_vagonnik)) {
-                this.form.set_object_error('date_end_inspection_vagonnik', langView('fhiigs_error_date_end_inspection_vagonnik', App.Langs).format(date_readiness_amkr.format('DD.MM.YYYY HH:mm:ss')));
-                valid = valid & false;
-            }
-            if (!sostav_date_readiness_uz.isAfter(sostav_date_end_inspection_acceptance_delivery) ||
-                !sostav_date_readiness_uz.isAfter(sostav_date_end_inspection_loader) ||
-                !sostav_date_readiness_uz.isAfter(sostav_date_end_inspection_vagonnik)) {
-                this.form.set_object_error('date_readiness_uz', langView('fhiigs_error_date_readiness_uz', App.Langs));
-                valid = valid & false;
-            }
-            if (!sostav_date_outgoing.isAfter(sostav_date_readiness_uz)) {
-                this.form.set_object_error('date_outgoing', langView('fhiigs_error_date_outgoing', App.Langs));
-                valid = valid & false;
-            }
-            // Проверим временной период предъявления - будущее + Прошлое
-            var minute_outgoing = current.diff(sostav_date_outgoing, 'minute');
-            //- зашло в будущее + зашло в прошлое
-            if (minute_outgoing >= max_err_data_outgoing || minute_outgoing <= min_err_data_outgoing) {
-                this.form.set_object_error('date_outgoing', langView('fhiigs_error_date_outgoing_not_deff_date_detention', App.Langs).format(min_err_data_outgoing, max_err_data_outgoing));
-                valid = valid & false;
-            }
-            if (sostav_date_outgoing_act !== null) {
-                if (sostav_date_outgoing_act && !sostav_date_outgoing_act.isAfter(sostav_date_readiness_uz)) {
-                    this.form.set_object_error('date_outgoing_act', langView('fhiigs_error_date_outgoing_act', App.Langs));
+        if (date_arrival.isValid) {
+            // Если это операция добавить, проверим на время
+            if (result.old === null) {
+                // Проверим временной период предъявления - будущее + Прошлое
+                var minute_arrival = current.diff(date_arrival, 'minute');
+                //- зашло в будущее + зашло в прошлое
+                if (minute_arrival >= max_err_date_arrival || minute_arrival <= min_err_date_arrival) {
+                    this.form.set_object_error('date_arrival', langView('fhiis_error_date_arrival_not_deff_date_curent', App.Langs).format(min_err_date_arrival, max_err_date_arrival));
                     valid = valid & false;
                 }
             } else {
-                //this.form.set_object_ok('date_outgoing_act','');
+                // Форма правим, проверим чтобы дата прибытия была меньше даты принятия на определенное время
+                if (date_adoption !== null && date_adoption.isValid) {
+                    // Есть дата приема, тогда пляшем вокруг ее
+                    // Проверим временной период предъявления - будущее + Прошлое
+                    var minute_adoption = date_adoption.diff(date_arrival, 'minute');
+                    //- зашло в будущее + зашло в прошлое
+                    if (minute_adoption >= max_err_date_adoption || minute_adoption < 0) {
+                        this.form.set_object_error('date_arrival', langView('fhiis_error_date_arrival_not_deff_date_adoption', App.Langs).format(max_err_date_adoption, date_adoption.format(format_datetime)));
+                        valid = valid & false;
+                    }
+                } else {
+                    // Нет дата приема, тогда пляшем вокруг старой даты прибытия
+                    if (current_date_arrival.isValid) {
+                        // Проверим временной период предъявления - будущее + Прошлое
+                        var minute_arrival = current_date_arrival.diff(date_arrival, 'minute');
+                        //- зашло в будущее + зашло в прошлое
+                        if (minute_arrival >= max_err_date_arrival || minute_arrival <= min_err_date_arrival) {
+                            this.form.set_object_error('date_arrival', langView('fhiis_error_date_arrival_not_deff_date_curent_arrival', App.Langs).format(min_err_date_arrival, max_err_date_arrival, current_date_arrival.format(format_datetime)));
+                            valid = valid & false;
+                        }
+                    }
+                }
             }
-
         } else {
-            // Вывести сообщение о неправильной дате
-            if (!sostav_date_end_inspection_acceptance_delivery.isValid) this.form.set_object_error('date_end_inspection_acceptance_delivery', langView('fhiigs_error_date_time', App.Langs));
-            if (!sostav_date_end_inspection_loader.isValid) this.form.set_object_error('date_end_inspection_loader', langView('fhiigs_error_date_time', App.Langs));
-            if (!sostav_date_end_inspection_vagonnik.isValid) this.form.set_object_error('date_end_inspection_vagonnik', langView('fhiigs_error_date_time', App.Langs));
-            if (!sostav_date_readiness_uz.isValid) this.form.set_object_error('date_readiness_uz', langView('fhiigs_error_date_time', App.Langs));
-            if (!sostav_date_outgoing.isValid) this.form.set_object_error('date_outgoing', langView('fhiigs_error_date_time', App.Langs));
+            this.form.set_object_error('date_arrival', langView('fhiis_error_date_arrival', App.Langs));
             valid = valid & false;
+
         }
         return valid;
     };
     // Открыть форму добавить
-    form_hi_incoming_sostav.prototype.add = function (data) {
+    form_hi_incoming_sostav.prototype.add = function () {
         this.out_clear();
-        this.form.view_edit(data);
-        this.form.disabled('num_doc', true);
-        this.mf_edit.open(langView('fhiigs_title_form_add', App.Langs));
+        this.form.view_add();
+        this.mf_edit.open(langView('fhiis_title_form_add', App.Langs));
     };
     // Открыть форму править
     form_hi_incoming_sostav.prototype.edit = function (data) {
         this.out_clear();
         this.form.view_edit(data);
-        this.form.disabled('num_doc', true);
-        this.mf_edit.open(langView('fhiigs_title_form_edit', App.Langs));
+        //this.form.disabled('num_doc', true);
+        this.mf_edit.open(langView('fhiis_title_form_edit', App.Langs));
     };
     // Сохранить объект
     form_hi_incoming_sostav.prototype.save = function (data) {
@@ -579,19 +751,38 @@
     };
     // Изменить объект
     form_hi_incoming_sostav.prototype.update = function (data) {
-        LockScreen(langView('fhiigs_mess_operation_run', App.Langs));
-        this.ids_wsd.postOperationPresentSostav(data, function (result) {
-            if (result > 0) {
-                this.mf_edit.close(); // закроем форму
-                if (typeof this.settings.fn_edit === 'function') {
-                    this.settings.fn_edit({ data: data, result: result });
+        LockScreen(langView('fhiis_mess_operation_run', App.Langs));
+        if (data.old === null) {
+            // Добавить
+            this.ids_wsd.postIncomingSostav(data.new, function (result) {
+                if (result > 0) {
+                    this.mf_edit.close(); // закроем форму
+                    if (typeof this.settings.fn_edit === 'function') {
+                        this.settings.fn_add({ data: data, result: result });
+                    }
+                    LockScreenOff();
+                } else {
+                    LockScreenOff();
+                    this.mf_edit.out_error(langView('fhiis_mess_error_add_sostav', App.Langs) + result);
                 }
-                LockScreenOff();
-            } else {
-                LockScreenOff();
-                this.mf_edit.out_error(langView('fogcd_mess_error_operation_return_present', App.Langs) + result);
-            }
-        }.bind(this));
+            }.bind(this));
+        } else {
+            // Править
+            data.new.change = moment().format("YYYY-MM-DDThh:mm:ss");
+            data.new.change_user = App.User_Name;
+            this.ids_wsd.putIncomingSostav(data.new, function (result) {
+                if (result > 0) {
+                    this.mf_edit.close(); // закроем форму
+                    if (typeof this.settings.fn_edit === 'function') {
+                        this.settings.fn_edit({ data: data, result: result });
+                    }
+                    LockScreenOff();
+                } else {
+                    LockScreenOff();
+                    this.mf_edit.out_error(langView('fhiis_mess_error_edit_sostav', App.Langs) + result);
+                }
+            }.bind(this));
+        }
     };
     // Очистить сообщения
     form_hi_incoming_sostav.prototype.out_clear = function () {
