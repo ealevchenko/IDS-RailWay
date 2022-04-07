@@ -2802,7 +2802,7 @@
                 }
             } else {
                 this.wagon = null;
-                this.out_error(langView('fogcd_mess_warning_no_data_wagon_uz', App.Langs).format(this.id));
+                this.out_error(langView('fogcd_mess_warning_no_data_wagon_ids', App.Langs).format(this.id));
                 LockScreenOff();
                 if (typeof callback === 'function') {
                     callback(this.wagon);
