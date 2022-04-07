@@ -1175,7 +1175,7 @@
     ids_directory.prototype.getObj_Of_field = function (list_obj, field_name, value) {
         var obj = null;
         if (list_obj && list_obj.length > 0) {
-            obj = list_obj.find(function (o) { return o[field_name] === value });
+            obj = list_obj.find(function (o) { return o[field_name] == value });
         }
         return obj;
     };
@@ -1309,7 +1309,31 @@
             },
         });
     };
-
+    //Добавить внешнюю станцию ИДС
+    ids_directory.prototype.postOperationExternalStation = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/directory/external_station/operation/add/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_directory.postOperationExternalStation", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     //****************************************************************************************
     //-------------------------------- функции для работы с таблицами ------------------------
     //*======= ids_directory.list_locomotive  (Справочник локомотивов) ======================================
@@ -1494,8 +1518,8 @@
     };
     //*======= ids_directory.list_external_station  (Справочник внешних станций) ======================================
     //
-    ids_directory.prototype.getExternalStation_Of_ID = function (id) {
-        return this.getObj_Of_ID(this.list_external_station, id);
+    ids_directory.prototype.getExternalStation_Of_ID = function (code) {
+        return this.getObj_Of_field(this.list_external_station, 'code', code);
     };
     //
     ids_directory.prototype.getListExternalStation = function (fvalue, ftext, lang, filter) {
