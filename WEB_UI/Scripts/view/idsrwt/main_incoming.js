@@ -42,8 +42,8 @@
     var FD = App.form_detali;
     var form_detali = new FD('div#cars-detali');             // Создадим экземпляр
 
-    //var VOC = App.view_outgoing_cars;
-    //var view_outgoing_cars = null;
+    var VICC = App.view_incoming_cars;
+    var view_incoming_cars = null;
 
     var alert = new alert($('div#main-alert')); // Создадим класс ALERTG
 
@@ -127,7 +127,7 @@
                 //<a class="dropdown-item" href="#" id="report_fsci">Натурная ведомость коммерческого осмотра</a>
             }
             // Запускаем 3 процесса инициализации (паралельно)
-            var process = 2;
+            var process = 3;
             // Выход из инициализации
             var out_init = function (process) {
                 if (process === 0) {
@@ -145,13 +145,13 @@
                 fn_init: function () {
                     // Инициализация окна детально выполнена
                     var id = this.$card_detali_content.attr('id');
-                    //view_outgoing_cars = new VOC('div#' + id);
+                    view_incoming_cars = new VICC('div#' + id);
                     // На проверку окончания инициализации
                     process--;
                     out_init(process);
                 }.bind(form_detali),
                 fn_open: function () {
-                    view_outgoing_cars.open(table_incoming_sostav.id_sostav)
+                    view_incoming_cars.open(table_incoming_sostav.id_sostav)
                 }.bind(form_detali),
                 fn_close: function () {
                     // Обновим информацию по составу
@@ -162,18 +162,18 @@
                     }.bind(this));
                 }.bind(table_incoming_sostav),
             });
-            ////// Инициализация окна предъявить состав
-            ////view_outgoing_cars.init({
-            ////    alert: alert,
-            ////    ids_dir: ids_dir,
-            ////    ids_wsd: null,
-            ////    fn_init: function (init) {
-            ////        // Инициализация окна предъявить состав - выполнена
-            ////        // На проверку окончания инициализации
-            ////        process--;
-            ////        out_init(process);
-            ////    }.bind(this),
-            ////});
+            // Инициализация окна предъявить состав
+            view_incoming_cars.init({
+                alert: alert,
+                ids_dir: ids_dir,
+                ids_wsd: null,
+                fn_init: function (init) {
+                    // Инициализация окна предъявить состав - выполнена
+                    // На проверку окончания инициализации
+                    process--;
+                    out_init(process);
+                }.bind(this),
+            });
             // Инициализация модуля "Таблица отправляемых составов"
             table_incoming_sostav.init({
                 type_report: 'incoming_sostav',
@@ -186,7 +186,6 @@
                 },
                 // Нажата кнопка показать вагоны детально
                 fn_action_view_wagons: function (rows_sostav) {
-
                     form_detali.open();
                 },
             });
