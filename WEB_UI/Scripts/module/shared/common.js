@@ -2906,7 +2906,7 @@
             input_group_prepend_objs: null,
             input_group_append_class: null,
             input_group_append_objs: null,
-            input_group_prepend_obj_form: null,
+            input_group_obj_form: null,
             element_default: null,
             element_fn_change: null,
 
@@ -2966,7 +2966,7 @@
                 var input_group_prepend = new this.fe.bs_input_group_prepend({
                     class: this.settings.input_group_prepend_class,
                     objs: this.settings.input_group_prepend_objs,
-                    obj_form: this.settings.input_group_prepend_obj_form
+                    obj_form: this.settings.input_group_obj_form
                 });
                 ig.$div.append(input_group_prepend.$div);
             };
@@ -2976,7 +2976,7 @@
                 var input_group_append = new this.fe.bs_input_group_append({
                     class: this.settings.input_group_append_class,
                     objs: this.settings.input_group_append_objs,
-                    obj_form: this.settings.input_group_prepend_obj_form
+                    obj_form: this.settings.input_group_obj_form
                 });
                 ig.$div.append(input_group_append.$div);
             };
@@ -3010,6 +3010,7 @@
             input_group_prepend_objs: null,
             input_group_append_class: null,
             input_group_append_objs: null,
+            input_group_obj_form: null,
         }, options);
         //
         this.fe = new form_element();
@@ -3054,7 +3055,7 @@
 
         });
         add_class(input.$input, this.settings.input_class);
-/*        this.element = new this.fc.init_input(input.$input, '', null);*/
+        /*        this.element = new this.fc.init_input(input.$input, '', null);*/
         this.element = new this.fe.init_input(input.$input, {
             default_value: '',
             fn_change: null,
@@ -3067,7 +3068,8 @@
             if (this.settings.input_group_prepend_objs && this.settings.input_group_prepend_objs !== null) {
                 var input_group_prepend = new this.fe.bs_input_group_prepend({
                     class: this.settings.input_group_prepend_class,
-                    objs: this.settings.input_group_prepend_objs
+                    objs: this.settings.input_group_prepend_objs,
+                    obj_form: this.settings.input_group_obj_form
                 });
                 ig.$div.append(input_group_prepend.$div);
             };
@@ -3076,7 +3078,8 @@
             if (this.settings.input_group_append_objs && this.settings.input_group_append_objs !== null) {
                 var input_group_append = new this.fe.bs_input_group_append({
                     class: this.settings.input_group_append_class,
-                    objs: this.settings.input_group_append_objs
+                    objs: this.settings.input_group_append_objs,
+                    obj_form: this.settings.input_group_obj_form
                 });
                 ig.$div.append(input_group_append.$div);
             };
@@ -3108,7 +3111,7 @@
             input_group_prepend_class: null,
             input_group_prepend_objs: null,
             input_group_append_class: null,
-            input_group_append_objs: null,
+            input_group_obj_form: null,
             element_time: null,
             element_default: null,
             element_fn_close: null,
@@ -3155,7 +3158,7 @@
             step: this.settings.input_step,
         });
         add_class(input.$input, this.settings.input_class);
-        this.element = new this.fe.init_datetime_input(input.$input, { default_value: this.settings.element_default, fn_close: this.settings.element_fn_close, time: this.settings.element_time});
+        this.element = new this.fe.init_datetime_input(input.$input, { default_value: this.settings.element_default, fn_close: this.settings.element_fn_close, time: this.settings.element_time });
         //
         var ifb = new this.fe.bs_invalid_feedback();
 
@@ -3164,7 +3167,8 @@
             if (this.settings.input_group_prepend_objs && this.settings.input_group_prepend_objs !== null) {
                 var input_group_prepend = new this.fe.bs_input_group_prepend({
                     class: this.settings.input_group_prepend_class,
-                    objs: this.settings.input_group_prepend_objs
+                    objs: this.settings.input_group_prepend_objs,
+                    obj_form: this.settings.input_group_obj_form
                 });
                 ig.$div.append(input_group_prepend.$div);
             };
@@ -3173,7 +3177,8 @@
             if (this.settings.input_group_append_objs && this.settings.input_group_append_objs !== null) {
                 var input_group_append = new this.fe.bs_input_group_append({
                     class: this.settings.input_group_append_class,
-                    objs: this.settings.input_group_append_objs
+                    objs: this.settings.input_group_append_objs,
+                    obj_form: this.settings.input_group_obj_form
                 });
                 ig.$div.append(input_group_append.$div);
             };
@@ -3316,7 +3321,7 @@
             readonly: this.settings.textarea_readonly,
         });
         add_class(textarea.$textarea, this.settings.textarea_class);
-        this.element = new this.fe.init_textarea(textarea.$textarea, {default_value: '', fn_change: null});
+        this.element = new this.fe.init_textarea(textarea.$textarea, { default_value: '', fn_change: null });
         //
         var ifb = new this.fe.bs_invalid_feedback();
 
@@ -3516,7 +3521,7 @@
                     add_element(element.$button, content, obj);
                 };
                 if (obj.obj === 'bs_input_number') {
-                    obj.options.input_group_prepend_obj_form = obj_form;
+                    obj.options.input_group_obj_form = obj_form;
                     var input = new this.bs_input_number(obj.options);
                     // Включил отображение компонента inputSpinner
                     if (obj.options.input_spinner) {
@@ -3537,6 +3542,7 @@
                     add_element(input.$element, content, obj);
                 };
                 if (obj.obj === 'bs_input_text') {
+                    obj.options.input_group_obj_form = obj_form;
                     var input = new this.bs_input_text(obj.options);
                     if (input && input.element) {
                         obj_form.views.push({
@@ -3553,6 +3559,7 @@
                     add_element(input.$element, content, obj);
                 };
                 if (obj.obj === 'bs_input_datetime') {
+                    obj.options.input_group_obj_form = obj_form;
                     var input = new this.bs_input_datetime(obj.options);
                     if (input && input.element) {
                         obj_form.views.push({
@@ -3790,7 +3797,7 @@
         }
     };
     // Вывести на форме сообщение об ошибке под элементом 
-    form_dialog.prototype.set_validation_object_error = function (validation_name, id, message) {
+    form_dialog.prototype.set_validation_object_error = function (validation_name, id, message, not_alert) {
         var element = this.obj_form.views.find(function (o) {
             return o.name === id;
         });
@@ -3799,14 +3806,18 @@
                 validation_name = 'common';
             }
             if (this['validation_' + validation_name]) {
-                this['validation_' + validation_name].set_object_error(element.$element, message);
+                if (not_alert) {
+                    this['validation_' + validation_name].set_control_error(element.$element, message);
+                } else {
+                    this['validation_' + validation_name].set_object_error(element.$element, message);
+                }
             }
         } else {
             throw new Error('Не удалось найти элемент ' + id);
         }
     };
     // Вывести на форме сообщение об успехе под элементом 
-    form_dialog.prototype.set_validation_object_ok = function (validation_name, id, message) {
+    form_dialog.prototype.set_validation_object_ok = function (validation_name, id, message, not_alert) {
         var element = this.obj_form.views.find(function (o) {
             return o.name === id;
         });
@@ -3815,7 +3826,11 @@
                 validation_name = 'common';
             }
             if (this['validation_' + validation_name]) {
-                this['validation_' + validation_name].set_object_ok(element.$element, message);
+                if (not_alert) {
+                    this['validation_' + validation_name].set_control_ok(element.$element, message);
+                } else {
+                    this['validation_' + validation_name].set_object_ok(element.$element, message);
+                }
             }
         } else {
             throw new Error('Не удалось найти элемент ' + id);
