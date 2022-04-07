@@ -1,6 +1,6 @@
 ﻿/// <reference path="../../api/ids_direct.js" />
 /// <reference path="../shared/common.js" />
-/*Модуль Форма "Сдать состав на УЗ"*/
+/*Модуль Форма "Добавить или править состав по прибытию на АМКР"*/
 (function (window) {
     'use strict';
 
