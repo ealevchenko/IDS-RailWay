@@ -35,8 +35,71 @@
     //****************************************************************************************
     //-------------------------------- Функции работы с БД через api ---------------
 
+    //=============================================================================================================
+    //                                  РАЗДЕЛ ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ ВАГОНОВ
+    //=============================================================================================================
+    //======= WagonInternalRoutes (Внутреннее перемещение вагона на АМКР) =========================================================================
 
-    //================= ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ =========================================================
+    //======= WagonInternalOperation (Внутреннее перемещение вагона на АМКР, операции над вагонами) =====================================
+    // Вернуть строку операций по id
+    ids_wsd.prototype.getWagonInternalOperationOfID = function (id, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wio/id/' + id,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getWagonInternalOperationOfID", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Вернуть список операций по id wir
+    ids_wsd.prototype.getWagonInternalOperationOfIDWIR = function (id, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wio/wir/id/' + id,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getWagonInternalOperationOfWIRID", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Вернуть песледнюю запись операций из внутренего перемещения вагонов
+    ids_wsd.prototype.getLastWagonInternalOperationOfWIR = function (list_wio) {
+        if (list_wio && list_wio.length > 0) {
+            var wio = list_wio.sort(function (a, b) {
+                return b.id - a.id;
+            });
+            if (wio && wio.length > 0) {
+                return wio[0]
+            }
+        }
+        return null;
+    };
+    //================= ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ (Дерево путей) =========================================================
     // АРМ, Получить список вагонов на пути станции
     ids_wsd.prototype.getViewWagonsOfWay = function (id, callback) {
         $.ajax({
@@ -224,7 +287,7 @@
             },
         });
     };
-     //АРМ, Операция принять вагоны на внутреную станцию АМКР 
+    //АРМ, Операция принять вагоны на внутреную станцию АМКР 
     ids_wsd.prototype.postArrivalWagonsOfStation = function (operation, callback) {
         $.ajax({
             url: '../../api/ids/rwt/wsd/operation/arrival/',
@@ -249,7 +312,7 @@
             },
         });
     };
-     //АРМ, Операция вернуть-оменить вагоны на внутреную станцию АМКР 
+    //АРМ, Операция вернуть-оменить вагоны на внутреную станцию АМКР 
     ids_wsd.prototype.postReturnWagonsOfStation = function (operation, callback) {
         $.ajax({
             url: '../../api/ids/rwt/wsd/operation/return/',
@@ -298,8 +361,82 @@
             },
         });
     };
-    //================= ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ (Дерево путей) =========================================================
+    //================= ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ (Отчеты учетный остаток) =========================================================
+    // Получить расчет остатков по вагонам
+    ids_wsd.prototype.getViewTotalBalance = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wsd/view/total_balance/',
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getViewTotalBalance", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить все вагоны на АМКР (Отчет учетный остаток)
+    ids_wsd.prototype.getViewWagonsOfBalance = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wsd/view/vagons/balance/',
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getViewWagonsOfBalance", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить все вагоны на АМКР (Отчет учетный остаток по условию выбора)
+    ids_wsd.prototype.postViewWagonsOfBalance = function (option, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/view/vagons/balance/',
+            type: 'POST',
+            data: JSON.stringify(option),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postViewWagonsOfWhereBalance", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
 
+    //=============================================================================================================
+    //                                  РАЗДЕЛ ПРИЕМ СОСТАВОВ НА АМКР
+    //=============================================================================================================
     //================= ПРИБЫТИЕ СОСТАВОВ НА УЗ (Составы) =========================================================
     // Получить состав по ID
     ids_wsd.prototype.getIncomingSostavOfID = function (id, callback) {
@@ -420,12 +557,11 @@
             },
         });
     };
-    //================= ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ (Отчеты учетный остаток) =========================================================
-    // Получить расчет остатков по вагонам
-    ids_wsd.prototype.getViewTotalBalance = function (callback) {
+    // Получить все вагоны принятого состава по id состава (View)
+    ids_wsd.prototype.getViewIncomingCarsOfIDSostav = function (id, callback) {
         $.ajax({
             type: 'GET',
-            url: '../../api/ids/rwt/wsd/view/total_balance/',
+            url: '../../api/ids/rwt/arrival_cars/view/sostav/id/' + id,
             async: true,
             dataType: 'json',
             beforeSend: function () {
@@ -437,18 +573,18 @@
                 }
             },
             error: function (x, y, z) {
-                OnAJAXError("ids_wsd.getViewTotalBalance", x, y, z);
+                OnAJAXError("ids_wsd.getViewIncomingCarsOfIDSostav", x, y, z);
             },
             complete: function () {
                 AJAXComplete();
             },
         });
     };
-    // Получить все вагоны на АМКР (Отчет учетный остаток)
-    ids_wsd.prototype.getViewWagonsOfBalance = function (callback) {
+    // вагон принятого состава по id вагона (View)
+    ids_wsd.prototype.getViewIncomingCarsOfIDCar = function (id, callback) {
         $.ajax({
             type: 'GET',
-            url: '../../api/ids/rwt/wsd/view/vagons/balance/',
+            url: '../../api/ids/rwt/arrival_cars/view/car/id/' + id,
             async: true,
             dataType: 'json',
             beforeSend: function () {
@@ -460,38 +596,17 @@
                 }
             },
             error: function (x, y, z) {
-                OnAJAXError("ids_wsd.getViewWagonsOfBalance", x, y, z);
+                OnAJAXError("ids_wsd.getViewIncomingCarsOfIDCar", x, y, z);
             },
             complete: function () {
                 AJAXComplete();
             },
         });
     };
-    // Получить все вагоны на АМКР (Отчет учетный остаток по условию выбора)
-    ids_wsd.prototype.postViewWagonsOfBalance = function (option, callback) {
-        $.ajax({
-            url: '../../api/ids/rwt/wsd/view/vagons/balance/',
-            type: 'POST',
-            data: JSON.stringify(option),
-            contentType: "application/json;charset=utf-8",
-            async: true,
-            beforeSend: function () {
-                AJAXBeforeSend();
-            },
-            success: function (data) {
-                if (typeof callback === 'function') {
-                    callback(data);
-                }
-            },
-            error: function (x, y, z) {
-                LockScreenOff();
-                OnAJAXError("ids_wsd.postViewWagonsOfWhereBalance", x, y, z);
-            },
-            complete: function () {
-                AJAXComplete();
-            },
-        });
-    };
+
+    //=============================================================================================================
+    //                                  РАЗДЕЛ СДАЧА СОСТАВОВ НА УЗ
+    //=============================================================================================================
     //================= ОТПРАВКА СОСТАВОВ НА УЗ (Составы) =========================================================
     // Получить все составы (View)
     ids_wsd.prototype.getViewOutgoingSostav = function (start, stop, callback) {
@@ -931,16 +1046,16 @@
             },
         });
     };
-    //======================================================================================================
-    //                                  РАЗДЕЛ ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ ВАГОНОВ
-    //======= WagonInternalRoutes (Внутреннее перемещение вагона на АМКР) =========================================================================
 
-    //======= WagonInternalOperation (Внутреннее перемещение вагона на АМКР, операции над вагонами) =====================================
-    // Вернуть строку операций по id
-    ids_wsd.prototype.getWagonInternalOperationOfID = function (id, callback) {
+    //=============================================================================================================
+    //                                  РАЗДЕЛ ДОКУМЕНТЫ ЭПД
+    //=============================================================================================================
+    //======= UZ_DOC (Таблица ЭПД принятых вагонов) ======================================
+    // Получить разпарсеный ЭПД принятого вагона по внутренему num_doc
+    ids_wsd.prototype.getOTPR_UZ_DOCOfNum = function (num, callback) {
         $.ajax({
             type: 'GET',
-            url: '../../api/ids/rwt/wio/id/' + id,
+            url: '../../api/ids/rwt/uz_doc/otpr/num/' + num,
             async: true,
             dataType: 'json',
             beforeSend: function () {
@@ -952,18 +1067,18 @@
                 }
             },
             error: function (x, y, z) {
-                OnAJAXError("ids_wsd.getWagonInternalOperationOfID", x, y, z);
+                OnAJAXError("ids_wsd.getOTPR_UZ_DOCOfNum", x, y, z);
             },
             complete: function () {
                 AJAXComplete();
             },
         });
     };
-    // Вернуть список операций по id wir
-    ids_wsd.prototype.getWagonInternalOperationOfIDWIR = function (id, callback) {
+    // Получить разпарсеный ЭПД принятого вагона по № накладной УЗ
+    ids_wsd.prototype.getOTPR_UZ_DOCOfNum_UZ = function (num_uz, callback) {
         $.ajax({
             type: 'GET',
-            url: '../../api/ids/rwt/wio/wir/id/' + id,
+            url: '../../api/ids/rwt/uz_doc/otpr/num_uz/' + num_uz,
             async: true,
             dataType: 'json',
             beforeSend: function () {
@@ -975,24 +1090,12 @@
                 }
             },
             error: function (x, y, z) {
-                OnAJAXError("ids_wsd.getWagonInternalOperationOfWIRID", x, y, z);
+                OnAJAXError("ids_wsd.getOTPR_UZ_DOCOfNum_UZ", x, y, z);
             },
             complete: function () {
                 AJAXComplete();
             },
         });
-    };
-    // Вернуть песледнюю запись операций из внутренего перемещения вагонов
-    ids_wsd.prototype.getLastWagonInternalOperationOfWIR = function (list_wio) {
-        if (list_wio && list_wio.length > 0) {
-            var wio = list_wio.sort(function (a, b) {
-                return b.id - a.id;
-            });
-            if (wio && wio.length > 0) {
-                return wio[0]
-            }
-        }
-        return null;
     };
 
     App.ids_wsd = ids_wsd;
