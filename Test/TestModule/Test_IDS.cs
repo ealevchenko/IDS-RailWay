@@ -178,6 +178,20 @@ namespace Test.TestModule
         }
         #endregion
 
+        #region IDS_Directory
+
+        /// <summary>
+        /// Тест считования и создания внешней станции
+        /// </summary>
+        public void IDS_GetDirectory_ExternalStation()
+        {
+
+            IDS_Directory ids = new IDS_Directory(service.Test);
+            Directory_ExternalStation station = ids.GetDirectory_ExternalStation(887500, "АБАЗА", true, "test");
+
+        }
+        #endregion
+
         #region IDSMORS
         // Тест Вернуть последнюю обработаную запись ID nолученую их таблицы WT
         public void IDSMORS_GetLastIDWTWagonsMotionSignals()
@@ -339,7 +353,7 @@ namespace Test.TestModule
         public void IDS_WIR_CloseWir()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            List<int> list = new List<int>() { 296214 };
+            List<int> list = new List<int>() { 377878, 448015, 468761, 469337, 482173, 469338, 482821, 482526, 482527, 482529, 468715, 480427, 482177, 482178, 482030, 482028, 482027, 482033, 482162, 482160 };
             int res = ids.CloseWir(list, DateTime.Now, "Запись закрыта принудительно (очистка согласно положению парка)", @"EUROPE\ealevchenko");
         }
         /// <summary>

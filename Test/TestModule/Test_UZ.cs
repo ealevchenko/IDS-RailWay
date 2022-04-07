@@ -23,13 +23,35 @@ namespace Test.TestModule
         }
 
         #region UZ
-
-        public void UZ_WebApiClientUZWagon()
+        /// <summary>
+        /// !тест старого запроса вагоны по уз (Удалить)
+        /// </summary>
+        //public void UZ_WebApiClientUZWagon() 
+        //{
+        //    WebAPIClientUZ client = new WebAPIClientUZ(service.Null);
+        //    Console.WriteLine("Запрос....");
+        //    //List<string> list2 = client.GetInfoWagon(58647785);
+        //    UZWagonInfo info = client.GetInfoWagonOfNum(62079280);
+        //}
+        /// <summary>
+        /// Тест нового запроса вагоны по уз
+        /// </summary>
+        public void UZ_WebAPIClientUZ_GOV_Wagon()
         {
-            WebAPIClientUZ client = new WebAPIClientUZ(service.Null);
+            WebAPIClientUZ_GOV client = new WebAPIClientUZ_GOV(service.Null);
             Console.WriteLine("Запрос....");
             //List<string> list2 = client.GetInfoWagon(58647785);
-            UZWagonInfo info = client.GetInfoWagonOfNum(62079280);
+            UZWagonInfo info = client.GetInfoWagonOfNum(56964851);
+        }
+        /// <summary>
+        /// Тест нового запроса по коду станции
+        /// </summary>
+        public void UZ_WebAPIClientUZ_GOV_Station()
+        {
+            WebAPIClientUZ_GOV client = new WebAPIClientUZ_GOV(service.Null);
+            Console.WriteLine("Запрос....");
+            List<UZStationInfo> list2 = client.GetInfoStationOfCode(454606);
+            //UZWagonInfo info = client.GetInfoStation(454606);
         }
 
         public void UZ_XML()
