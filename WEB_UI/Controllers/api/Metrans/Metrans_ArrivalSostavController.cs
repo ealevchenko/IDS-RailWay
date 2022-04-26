@@ -11,6 +11,12 @@ using EFMT.Helper;
 
 namespace WEB_UI.Controllers.api
 {
+    public class SostavOfFirstLast
+    {
+        public int num { get; set; }
+        public int position { get; set; }
+    }
+
     [RoutePrefix("api/metrans/arrival_sostav")]
     public class Metrans_ArrivalSostavController : ApiController
     {
@@ -70,6 +76,26 @@ namespace WEB_UI.Controllers.api
                     .Where(s=>s.date_time >=start && s.date_time<=stop)
                     .ToList()
                     .Select(c => c.GetArrivalSostav()).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // GET: api/metrans/arrival_sostav/first/53550521/last/56267057/count/39
+        [Route("first/{first:int}/last/{last:int}/count/{count:int}")]
+        [ResponseType(typeof(SostavOfFirstLast))]
+        public IHttpActionResult GetSostavOfFirstLast(int first, int last, int count)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter p_first = new System.Data.SqlClient.SqlParameter("@FirstNumber", first);
+                System.Data.SqlClient.SqlParameter p_last = new System.Data.SqlClient.SqlParameter("@LastNumber", last);
+                System.Data.SqlClient.SqlParameter p_count = new System.Data.SqlClient.SqlParameter("@Count", count);
+                string sql = "select * from [IDS].[get_metrans_sostav_of_first_last_num](@FirstNumber, @LastNumber, @Count)";
+                List<SostavOfFirstLast> list = this.ef_metrans.Database.SqlQuery<SostavOfFirstLast>(sql, p_first, p_last, p_count).ToList();
                 return Ok(list);
             }
             catch (Exception e)
