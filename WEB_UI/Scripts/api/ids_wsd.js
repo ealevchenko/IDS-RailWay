@@ -1097,6 +1097,552 @@
             },
         });
     };
+    //======= IDS_DOC (Таблица ЭПД принятых вагонов в базе данных АМКР ИДС) ======================================
+    //======= Arrival_UZ_Document_Docs (Доки по ЭПД УЗ по прибытию (не досылочные)) ======================================
+    // Получить все доки
+    ids_wsd.prototype.getArrival_UZ_Document_Docs = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/arrival_uz_document_docs/all',
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getArrival_UZ_Document_Docs", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить док по id
+    ids_wsd.prototype.getArrival_UZ_Document_DocsOfID = function (id, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/arrival_uz_document/id/' + id,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getArrival_UZ_Document_DocsOfID", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить доки по id документа
+    ids_wsd.prototype.getArrival_UZ_Document_DocsOfID_Document = function (id_document, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/arrival_uz_document_docs/document/id/' + id_document,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getArrival_UZ_Document_DocsOfID_DOC_UZ", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //======= Arrival_UZ_Document_Acts (Акты по ЭПД УЗ по прибытию (не досылочные)) ======================================
+    // Получить все акты
+    ids_wsd.prototype.getArrival_UZ_Document_Acts = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/arrival_uz_document_acts/all',
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getArrival_UZ_Document_Acts", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить акт по id
+    ids_wsd.prototype.getArrival_UZ_Document_ActsOfID = function (id, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/arrival_uz_document_acts/id/' + id,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getArrival_UZ_Document_ActsOfID", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить акты по id документа
+    ids_wsd.prototype.getArrival_UZ_Document_ActsOfID_Document = function (id_document, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/arrival_uz_document_acts/document/id/' + id_document,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getArrival_UZ_Document_ActsOfID_DOC_UZ", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //======= Arrival_UZ_Vagon_Acts (Акты по ЭПД УЗ по прибытию (не досылочные)) ======================================
+    // Получить все акты
+    ids_wsd.prototype.getArrival_UZ_Vagon_Acts = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/arrival_uz_vagon_acts/all',
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getArrival_UZ_Vagon_Acts", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить акт по id
+    ids_wsd.prototype.getArrival_UZ_Vagon_ActsOfID = function (id, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/arrival_uz_vagon_acts/id/' + id,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getArrival_UZ_Vagon_ActsOfID", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить акты по id вагона
+    ids_wsd.prototype.getArrival_UZ_Vagon_ActsOfID_Vagon = function (id_vagon, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/arrival_uz_vagon_acts/vagon/id/' + id_vagon,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getArrival_UZ_Vagon_ActsOfID_Vagon", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //======= Arrival_UZ_Vagon_Pay (Платежки по плательщикам ЭПД УЗ по прибытию) ======================================
+    // Получить все платежки
+    ids_wsd.prototype.getArrival_UZ_Vagon_Pay = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/arrival_uz_vagon_pay/all',
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getArrival_UZ_Vagon_Pay", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить платежку по id
+    ids_wsd.prototype.getArrival_UZ_Vagon_PayOfID = function (id, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/arrival_uz_vagon_pay/id/' + id,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getArrival_UZ_Vagon_PayOfID", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить платежку по id вагона
+    ids_wsd.prototype.getArrival_UZ_Vagon_PayOfID_Vagon = function (id_vagon, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/arrival_uz_vagon_pay/vagon/id/' + id_vagon,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getArrival_UZ_Vagon_PayOfID_Vagon", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //======= Arrival_UZ_Vagon_Cont (Контейнеры на вагоне по ЭПД УЗ ) ======================================
+    // Получить все контейнера
+    ids_wsd.prototype.getArrival_UZ_Vagon_Cont = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/arrival_uz_vagon_cont/all',
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getArrival_UZ_Vagon_Cont", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить контейнер по id
+    ids_wsd.prototype.getArrival_UZ_Vagon_ContOfID = function (id, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/arrival_uz_vagon_cont/id/' + id,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getArrival_UZ_Vagon_ContOfID", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить контейнера по id вагона
+    ids_wsd.prototype.getArrival_UZ_Vagon_ContOfID_Vagon = function (id_vagon, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/arrival_uz_vagon_cont/vagon/id/' + id_vagon,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getArrival_UZ_Vagon_ContOfID_Vagon", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
+    //=============================================================================================================
+    //                                  РАЗДЕЛ ДОКУМЕНТЫ САП
+    //=============================================================================================================
+    //======= SAPIncomingSupply (SAP Входящие поставки) ======================================
+    // Получить все поставки
+    ids_wsd.prototype.getSAPIncomingSupply = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/sap/incoming_supply/all',
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getSAPIncomingSupply", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить поставку по id
+    ids_wsd.prototype.getSAPIncomingSupplyOfID = function (id, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/sap/incoming_supply/id/' + id,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getSAPIncomingSupplyOfID", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить поставку по id_arrival_car
+    ids_wsd.prototype.getSAPIncomingSupplyOfIDArrivalCar = function (id_arrival_car, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/sap/incoming_supply/arrival_car/id/' + id_arrival_car,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getSAPIncomingSupplyOfIDArrivalCar", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить поставки по номеру вагона
+    ids_wsd.prototype.getSAPIncomingSupplyOfNum = function (num, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/sap/incoming_supply/num/' + num,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getSAPIncomingSupplyOfNum", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //Добавить поставку
+    ids_wsd.prototype.postSAPIncomingSupply = function (sap, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/sap/incoming_supply/',
+            type: 'POST',
+            data: JSON.stringify(sap),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postSAPIncomingSupply", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //Обновить поставку
+    ids_wsd.prototype.putSAPIncomingSupply = function (sap, callback) {
+        $.ajax({
+            type: 'PUT',
+            url: '../../api/ids/rwt/sap/incoming_supply/id/' + sap.id,
+            data: JSON.stringify(sap),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.putSAPIncomingSupply", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Удалить поставку
+    ids_wsd.prototype.deleteSAPIncomingSupply = function (id, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/sap/incoming_supply/id/' + id,
+            type: 'DELETE',
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.deleteSAPIncomingSupply", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Обновить входящую поставку с учетом данных на Web САП
+    ids_wsd.prototype.postOperationUpdateSAPIncomingSupply = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/sap/incoming_supply/operation/update/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postOperationUpdateSAPIncomingSupply", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
 
     App.ids_wsd = ids_wsd;
 
