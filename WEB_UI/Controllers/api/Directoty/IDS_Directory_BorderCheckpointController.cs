@@ -1,6 +1,8 @@
 ﻿using EFIDS.Abstract;
 using EFIDS.Entities;
 using EFIDS.Helper;
+using IDS;
+using IDSLogs.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -106,6 +108,29 @@ namespace WEB_UI.Controllers.api
             catch (Exception e)
             {
                 return -1;
+            }
+        }
+
+        /// <summary>
+        /// Выполнить операцию добавить станцию погран перехода в справочник ИДС (за исходник станций берем справочник УЗ)
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        // POST api/ids/directory/border_checkpoint/operation/add
+        [HttpPost]
+        [Route("operation/add")]
+        [ResponseType(typeof(Directory_BorderCheckpoint))]
+        public IHttpActionResult PostOperationAddBorderCheckpoint([FromBody] OperationAddCodeName value)
+        {
+            try
+            {
+                IDS_Directory ids_dir = new IDS_Directory(service.WebAPI_IDS);
+                Directory_BorderCheckpoint result = ids_dir.GetDirectory_BorderCheckpoint(value.code, value.name, true, value.user);
+                return Ok(result.GetDirectory_BorderCheckpoint());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
             }
         }
 

@@ -1,6 +1,8 @@
 ﻿using EFIDS.Abstract;
 using EFIDS.Entities;
 using EFIDS.Helper;
+using IDS;
+using IDSLogs.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +13,13 @@ using System.Web.Http.Description;
 
 namespace WEB_UI.Controllers.api
 {
+    public class OperationAddSCodeName
+    {
+        public string code { get; set; }
+        public string name { get; set; }
+        public string user { get; set; }
+    }
+
     /// <summary>
     /// СПИСОК Платильщиков при получении
     /// </summary>
@@ -106,6 +115,29 @@ namespace WEB_UI.Controllers.api
             catch (Exception e)
             {
                 return -1;
+            }
+        }
+
+        /// <summary>
+        /// Выполнить операцию добавить платильщика по отправе в справочник ИДС
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        // POST api/ids/directory/payer_sender/operation/add/
+        [HttpPost]
+        [Route("operation/add")]
+        [ResponseType(typeof(Directory_PayerSender))]
+        public IHttpActionResult PostOperationAddBorderCheckpoint([FromBody] OperationAddSCodeName value)
+        {
+            try
+            {
+                IDS_Directory ids_dir = new IDS_Directory(service.WebAPI_IDS);
+                Directory_PayerSender result = ids_dir.GetDirectory_PayerSender(value.code, value.name, true, value.user);
+                return Ok(result.GetDirectory_PayerSender());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
             }
         }
 

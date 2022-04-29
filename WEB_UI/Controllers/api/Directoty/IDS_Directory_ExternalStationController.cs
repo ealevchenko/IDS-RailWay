@@ -13,7 +13,7 @@ using System.Web.Http.Description;
 
 namespace WEB_UI.Controllers.api
 {
-    public class OperationAddExternalStation
+    public class OperationAddCodeName
     {
         public int code { get; set; }
         public string name { get; set; }
@@ -129,7 +129,7 @@ namespace WEB_UI.Controllers.api
         [HttpPost]
         [Route("operation/add")]
         [ResponseType(typeof(Directory_ExternalStation))]
-        public IHttpActionResult PostOperationAddExternalStation([FromBody] OperationAddExternalStation value)
+        public IHttpActionResult PostOperationAddExternalStation([FromBody] OperationAddCodeName value)
         {
             try
             {
@@ -142,7 +142,5 @@ namespace WEB_UI.Controllers.api
                 return BadRequest(e.Message);
             }
         }
-
-
     }
 }

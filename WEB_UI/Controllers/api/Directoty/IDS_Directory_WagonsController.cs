@@ -121,6 +121,16 @@ namespace WEB_UI.Controllers.api
         public int? id_limiting { get; set; }
         public string user { get; set; }
     }
+    public class OperationCreateUpdateWagons
+    {
+        public int num { get; set; }
+        public int adm { get; set; }
+        public int? rod { get; set; }
+        public int kol_os { get; set; }
+        public string usl_tip { get; set; }
+        public bool not_check_numeration { get; set; }
+        public string user { get; set; }
+    }
 
     /// <summary>
     /// СПИСОК ВАГОНОВ
@@ -276,7 +286,7 @@ namespace WEB_UI.Controllers.api
             try
             {
                 List<view_directory_wagon> list = new List<view_directory_wagon>();
-                if (nums == null || nums.Count() == 0) return Ok(list); 
+                if (nums == null || nums.Count() == 0) return Ok(list);
                 String s_nums = String.Join(",", nums.ToArray());
                 string sql = "select * from [IDS].[get_view_directory_wagon]() where num in(" + s_nums + ")";
                 list = this.ef_dir.Database.SqlQuery<view_directory_wagon>(sql).ToList();
@@ -370,12 +380,12 @@ namespace WEB_UI.Controllers.api
             public int kol_os { get; set; }
             public string usl_tip { get; set; }
         }
-
+        //TODO: Убрать старая
         // POST: api/ids/directory/wagon/num/53185617/specification/
         [HttpPost]
         [Route("num/{num:int}/specification/")]
         [ResponseType(typeof(Directory_Wagons))]
-        public IHttpActionResult POSTWagonOfNumSpecification(int num, [FromBody]WagonSpecification specification)
+        public IHttpActionResult POSTWagonOfNumSpecification(int num, [FromBody] WagonSpecification specification)
         {
             try
             {
@@ -396,7 +406,7 @@ namespace WEB_UI.Controllers.api
         // POST api/ids/directory/wagon/
         [HttpPost]
         [Route("")]
-        public int PostWagon([FromBody]Directory_Wagons value)
+        public int PostWagon([FromBody] Directory_Wagons value)
         {
             try
             {
@@ -413,7 +423,7 @@ namespace WEB_UI.Controllers.api
         // PUT api/ids/directory/wagon/num
         [HttpPut]
         [Route("num/{num:int}")]
-        public int PutWagon(int num, [FromBody]Directory_Wagons value)
+        public int PutWagon(int num, [FromBody] Directory_Wagons value)
         {
             try
             {
@@ -430,7 +440,7 @@ namespace WEB_UI.Controllers.api
         // PUT api/ids/directory/wagon/list
         [HttpPut]
         [Route("list")]
-        public int PutListWagon([FromBody]List<Directory_Wagons> list)
+        public int PutListWagon([FromBody] List<Directory_Wagons> list)
         {
             try
             {
@@ -457,6 +467,30 @@ namespace WEB_UI.Controllers.api
             catch (Exception e)
             {
                 return -1;
+            }
+        }
+
+        /// <summary>
+        ///  Метод выполнения операции чтения данных с картачки вагона ИДС с автоматическим обновлением по текущим даным БД УЗ
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        // POST api/ids/directory/wagon/operation/create_update
+        [HttpPost]
+        [Route("operation/create_update")]
+        [ResponseType(typeof(ResultObject))]
+        public IHttpActionResult PostOperationCreateUpdateWagons([FromBody] OperationCreateUpdateWagons value)
+        {
+            try
+            {
+                IDS_Directory ids_dir = new IDS_Directory(service.WebAPI_IDS);
+                ResultObject result = ids_dir.OperationCreateUpdateWagon(value.num, value.adm, value.rod, value.kol_os, value.usl_tip, value.not_check_numeration, value.user);
+                result.obj = result.obj!=null ? ((Directory_Wagons)result.obj).GetDirectory_Wagons_Directory_WagonsRent() : null;
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
             }
         }
 
