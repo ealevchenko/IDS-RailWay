@@ -88,7 +88,17 @@ namespace EFIDS.Entities
 
         [StringLength(50)]
         public string change_user { get; set; }
-
+        public int? id_owner { get; set; }
+        public int? id_countrys { get; set; }
+        public int? id_genus { get; set; }
+        public int? kol_os { get; set; }
+        [StringLength(10)]
+        public string usl_tip { get; set; }
+        public DateTime? date_rem_uz { get; set; }
+        public DateTime? date_rem_vag { get; set; }
+        public int? id_type_ownership { get; set; }
+        public double? gruzp_uz { get; set; }
+        public double? tara_uz { get; set; }
         public virtual Arrival_UZ_Document Arrival_UZ_Document { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
