@@ -2035,6 +2035,7 @@
     <Content Include="Content\module\wsd\form_ho_outgoing_sostav.css" />
     <Content Include="Content\module\wsd\form_incoming_cars_detali.css" />
     <Content Include="Content\module\wsd\form_outgoing_cars_detali.css" />
+    <Content Include="Content\module\wsd\view_epd.css" />
     <Content Include="Content\module\wsd\table_incoming_cars.css" />
     <Content Include="Content\module\wsd\table_outgoing_cars.css" />
     <Content Include="Content\module\wsd\table_outgoing_detention_return.css" />
@@ -2115,6 +2116,7 @@
     <Content Include="Scripts\module\directory\table_dir_operators_wagons.js" />
     <Content Include="Scripts\module\directory\table_dir_park_ways.js" />
     <Content Include="Scripts\module\directory\table_dir_park_station.js" />
+    <Content Include="Scripts\module\shared\epd.js" />
     <Content Include="Scripts\module\shared\form_detali.js" />
     <Content Include="Scripts\module\shared\modal_confirm_form.js" />
     <Content Include="Scripts\module\shared\modal_edit_form.js" />
@@ -2139,6 +2141,7 @@
     <Content Include="Scripts\module\wsd\table_incoming_sostav.js" />
     <Content Include="Scripts\module\wsd\table_outgoing_sostav.js" />
     <Content Include="Scripts\module\wsd\table_total_balance.js" />
+    <Content Include="Scripts\module\wsd\view_epd.js" />
     <Content Include="Scripts\module\wsd\view_incoming_cars.js" />
     <Content Include="Scripts\module\wsd\view_report_remainder_cars.js" />
     <Content Include="Scripts\module\wsd\view_return_cars.js" />
