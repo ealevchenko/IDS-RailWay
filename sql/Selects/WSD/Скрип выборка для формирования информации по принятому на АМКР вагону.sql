@@ -1,6 +1,6 @@
 use [KRR-PA-CNT-Railway]
 
-declare @id_car int = 1369701
+declare @id_car int = 1413924
 
 	select 
 		 arr_car.[id] as arrival_car_id
@@ -75,6 +75,10 @@ declare @id_car int = 1369701
 		,dir_owner.[owner_en] as arrival_uz_vagon_owner_wagon_en					-- Владелец [IDS].[Directory_OwnersWagons] по справочнику [IDS].[Directory_Wagons]
 		,dir_owner.[abbr_ru] as arrival_uz_vagon_owner_wagon_abbr_ru				-- Владелец [IDS].[Directory_OwnersWagons] по справочнику [IDS].[Directory_Wagons]
 		,dir_owner.[abbr_en] as arrival_uz_vagon_owner_wagon_abbr_en				-- Владелец [IDS].[Directory_OwnersWagons] по справочнику [IDS].[Directory_Wagons]
+		-- Добавил 16.04.2022	
+		,arr_doc_vag.id_type_ownership as arrival_uz_vagon_id_type_ownership
+		,dir_type_os.[type_ownership_ru] as arrival_uz_vagon_type_ownership_ru		-- ТИП Владения для АМКР [IDS].[Directory_TypeOwnerShip] по справочнику [IDS].[Directory_Wagons]
+		,dir_type_os.[type_ownership_en] as arrival_uz_vagon_type_ownership_en      -- ТИП Владения для АМКР [IDS].[Directory_TypeOwnerShip] по справочнику [IDS].[Directory_Wagons]
 		-- администрация
 		,arr_doc_vag.[id_countrys] as arrival_uz_vagon_id_countrys
 		,wag_dir_countrys.code_sng as arrival_uz_vagon_wagon_adm				-- Код администрации [IDS].[Directory_Countrys] по справочнику [IDS].[Directory_Wagons]
@@ -126,6 +130,9 @@ declare @id_car int = 1369701
 		,arr_doc_vag.[gruzp] as arrival_uz_vagon_gruzp
 		,arr_doc_vag.[u_tara] as arrival_uz_vagon_u_tara
 		,arr_doc_vag.[ves_tary_arc] as arrival_uz_vagon_ves_tary_arc
+		-- Добавил 16.04.2022
+		,arr_doc_vag.[gruzp_uz] as arrival_uz_vagon_gruzp_uz
+		,arr_doc_vag.[tara_uz] as arrival_uz_vagon_tara_uz
 		,arr_doc_vag.[route] as arrival_uz_vagon_route
 		,arr_doc_vag.[note_vagon] as arrival_uz_vagon_note_vagon
 		--> IDS.Directory_Cargo
@@ -154,6 +161,7 @@ declare @id_car int = 1369701
 		,arr_doc_vag.[id_commercial_condition] as arrival_uz_vagon_id_commercial_condition
 		,arr_comm_cond.[commercial_condition_ru] as arrival_uz_vagon_commercial_condition_ru
 		,arr_comm_cond.[commercial_condition_en] as arrival_uz_vagon_commercial_condition_en
+		,arr_doc_vag.[zayava]  as arrival_uz_vagon_zayava
 		,arr_doc_vag.[kol_pac] as arrival_uz_vagon_kol_pac
 		,arr_doc_vag.[pac] as arrival_uz_vagon_pac
 		,arr_doc_vag.[vesg] as arrival_uz_vagon_vesg
@@ -245,10 +253,15 @@ declare @id_car int = 1369701
 		,sap_is.[NUM_VBELN] as sap_incoming_supply_pos
 		,sap_is.[ERDAT] as sap_incoming_supply_date
 		,sap_is.[ETIME] as sap_incoming_supply_time
-		,sap_is.[LGORT_10] as sap_incoming_supply_warehouse_code 
-		,sap_is.[LGOBE_10] as sap_incoming_supply_warehouse_name
-		,sap_is.[MATNR] as sap_incoming_supply_cargo_code 
+		,sap_is.[LGORT] as sap_incoming_supply_warehouse_code			-- Заадресовка
+		,sap_is.[LGOBE] as sap_incoming_supply_warehouse_name
+		,sap_is.[LGORT_10] as sap_incoming_supply_warehouse_code_10		-- Переадресация (Заадресовка 10км)
+		,sap_is.[LGOBE_10] as sap_incoming_supply_warehouse_name_10
+		,sap_is.[MATNR] as sap_incoming_supply_cargo_code				-- Материал
 		,sap_is.[MAKTX] as sap_incoming_supply_cargo_name
+		,sap_is.[WERKS] as sap_incoming_supply_works
+		,sap_is.[NAME_SH] as sap_incoming_supply_ship					--Судно:
+		,sap_is.[KOD_R_10] as sap_incoming_supply_ban					-- Запрет выгр.
 		--=============== ГТД ===================================
 		--> ....
 		--=============== ИНСТРУКТИВНЫЕ ПИСЬМИ ==================
@@ -298,6 +311,9 @@ declare @id_car int = 1369701
 		Left JOIN IDS.Directory_GenusWagons as dir_rod ON arr_doc_vag.[id_genus] = dir_rod.id
 		--> Справочник Тип вагона
 		Left JOIN IDS.Directory_TypeWagons as dir_type ON arr_doc_vag.id_type =  dir_type.id
+		-- Добавил 16.04.2022		
+		--> Справочник Тип владения вагоном
+		Left JOIN IDS.[Directory_TypeOwnerShip] as dir_type_os ON arr_doc_vag.id_type_ownership =  dir_type_os.id
 		--> Справочник Разметка по прибытию
 		Left JOIN IDS.Directory_ConditionArrival as arr_dir_cond ON arr_doc_vag.id_condition = arr_dir_cond.id
 		--> Справочник Грузов по прибытию
