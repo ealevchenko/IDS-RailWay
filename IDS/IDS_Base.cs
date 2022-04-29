@@ -7,6 +7,11 @@ using System.Threading.Tasks;
 
 namespace IDS
 {
+    public enum mode_obj { 
+      not = 0,
+      add = 1,
+      update = 2,
+    }
     public enum errors_base : int
     {
         global = -1,
@@ -108,11 +113,24 @@ namespace IDS
 
         // Directory_Wagons -1400..
         not_dir_wagon_of_db = -1401,                        // В базе данных нет записи указанной строки вагона
-
+        error_sys_numeration_wagon  = -1402,                // Ошибка системной нумерации вагона
+        error_numeration_wagon  = -1403,                    // Ошибка нумерации вагона (- или =0)
         // Directory_OuterWays -1500..
         not_dir_outerways_of_db = -1501,                    // В базе данных нет записи указаного перегона
 
 
+    }
+    public class ResultObject
+    {
+        public Object obj { get; set; }
+        public mode_obj mode  { get; set; }
+        public int result { get; set; }
+        public ResultObject()
+        {
+            this.obj = null;
+            this.mode = mode_obj.not;
+            this.result = 0;
+        }
     }
 
     /// <summary>
