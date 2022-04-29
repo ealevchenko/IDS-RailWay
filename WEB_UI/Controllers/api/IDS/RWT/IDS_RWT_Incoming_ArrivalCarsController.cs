@@ -74,6 +74,11 @@ namespace WEB_UI.Controllers.api
         public string arrival_uz_vagon_owner_wagon_en { get; set; }
         public string arrival_uz_vagon_owner_wagon_abbr_ru { get; set; }
         public string arrival_uz_vagon_owner_wagon_abbr_en { get; set; }
+        //Добавил 16.04
+        public int? arrival_uz_vagon_id_type_ownership { get; set; }
+        public string arrival_uz_vagon_type_ownership_ru { get; set; }
+        public string arrival_uz_vagon_type_ownership_en { get; set; }
+        //----------------------------------------------------------------
         public int? arrival_uz_vagon_id_countrys { get; set; }
         public int? arrival_uz_vagon_wagon_adm { get; set; }
         public string arrival_uz_vagon_wagon_adm_name_ru { get; set; }
@@ -117,6 +122,10 @@ namespace WEB_UI.Controllers.api
         public double? arrival_uz_vagon_gruzp { get; set; }
         public int? arrival_uz_vagon_u_tara { get; set; }
         public int? arrival_uz_vagon_ves_tary_arc { get; set; }
+        // Добавил 16.04
+        public double? arrival_uz_vagon_gruzp_uz { get; set; }
+        public double? arrival_uz_vagon_tara_uz { get; set; }
+        //
         public bool? arrival_uz_vagon_route { get; set; }
         public string arrival_uz_vagon_note_vagon { get; set; }
         public int? arrival_uz_vagon_id_cargo { get; set; }
@@ -139,6 +148,8 @@ namespace WEB_UI.Controllers.api
         public int? arrival_uz_vagon_id_commercial_condition { get; set; }
         public string arrival_uz_vagon_commercial_condition_ru { get; set; }
         public string arrival_uz_vagon_commercial_condition_en { get; set; }
+        // добавил 25.04.2022
+        public string arrival_uz_vagon_zayava { get; set; }
         public int? arrival_uz_vagon_kol_pac { get; set; }
         public string arrival_uz_vagon_pac { get; set; }
         public int? arrival_uz_vagon_vesg { get; set; }
@@ -207,14 +218,21 @@ namespace WEB_UI.Controllers.api
         public int? arrival_uz_document_distance_way { get; set; }
         public string arrival_uz_document_note { get; set; }
         public long? arrival_uz_document_parent_id { get; set; }
+        // Исправил 27.04.2022
         public string sap_incoming_supply_num { get; set; }
         public string sap_incoming_supply_pos { get; set; }
         public DateTime? sap_incoming_supply_date { get; set; }
         public TimeSpan? sap_incoming_supply_time { get; set; }
         public string sap_incoming_supply_warehouse_code { get; set; }
         public string sap_incoming_supply_warehouse_name { get; set; }
+        public string sap_incoming_supply_warehouse_code_10 { get; set; }
+        public string sap_incoming_supply_warehouse_name_10 { get; set; }
         public string sap_incoming_supply_cargo_code { get; set; }
         public string sap_incoming_supply_cargo_name { get; set; }
+        public string sap_incoming_supply_works { get; set; }
+        public string sap_incoming_supply_ship { get; set; }
+        public string sap_incoming_supply_ban { get; set; }
+        //-------------
         public string instructional_letters_num { get; set; }
         public DateTime? instructional_letters_datetime { get; set; }
         public int? instructional_letters_station_code { get; set; }
