@@ -607,6 +607,120 @@ namespace IDS
             }
         }
 
+        public SAPIncomingSupply GetSAPIncomingSupply(long id_arrival_car, int num, string doc_uz,
+            DateTime? date_doc_uz, string code_border_checkpoint, string name_border_checkpoint, DateTime? cross_time, bool add, string user)
+        {
+            try
+            {
+                //Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+
+                EFDbContext context = new EFDbContext();
+                SAPIncomingSupply sap = GetSAPIncomingSupply(ref context, id_arrival_car, num, doc_uz, date_doc_uz, code_border_checkpoint, name_border_checkpoint, cross_time, add, user);
+                if (sap != null)
+                {
+                    if (context.Entry(sap).State != System.Data.Entity.EntityState.Unchanged)
+                    {
+                        int res_add = context.SaveChanges();
+                    }
+                }
+                return sap;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetSAPIncomingSupply(id_arrival_car={0}, num={1}, doc_uz={2}, date_doc_uz={3}, code_border_checkpoint={4}, name_border_checkpoint={5}, cross_time={6}, add={7}, user={8})", id_arrival_car, num, doc_uz, date_doc_uz, code_border_checkpoint, name_border_checkpoint, cross_time, add, user), servece_owner, eventID);
+                return null;
+            }
+        }
+        /// <summary>
+        /// Метод обновляет информацию по входящей поставке, поиск входящей поставки по id_arrival_car, если нет и стоит признак add=true,
+        /// тогда входящая поставка сосздается по входным данным и обновляется на сервере САП.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_arrival_car"></param>
+        /// <param name="num"></param>
+        /// <param name="doc_uz"></param>
+        /// <param name="date_doc_uz"></param>
+        /// <param name="code_border_checkpoint"></param>
+        /// <param name="name_border_checkpoint"></param>
+        /// <param name="cross_time"></param>
+        /// <param name="add"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public SAPIncomingSupply GetSAPIncomingSupply(ref EFDbContext context, long id_arrival_car, int num, string doc_uz,
+            DateTime? date_doc_uz, string code_border_checkpoint, string name_border_checkpoint, DateTime? cross_time, bool add, string user)
+        {
+            try
+            {
+                //Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+
+
+                EFSAPIncomingSupply ef_sap = new EFSAPIncomingSupply(context);
+                SAPIncomingSupply sap = ef_sap.Context.Where(s => s.id_arrival_car == id_arrival_car).FirstOrDefault();
+                // Проверим наличие 
+                if (sap == null && add)
+                {
+                    // Определим по умолчанию
+                    sap = new SAPIncomingSupply()
+                    {
+                        id = 0,
+                        id_arrival_car = id_arrival_car,
+                        num = num,
+                        num_doc_uz = doc_uz,
+                        date_doc_uz = date_doc_uz,
+                        code_border_checkpoint = code_border_checkpoint,
+                        name_border_checkpoint = name_border_checkpoint,
+                        cross_time = cross_time,
+                        VBELN = null,
+                        NUM_VBELN = null,
+                        WERKS = null,
+                        LGORT = null,
+                        LGOBE = null,
+                        ERDAT = null,
+                        ETIME = null,
+                        LGORT_10 = null,
+                        LGOBE_10 = null,
+                        MATNR = null,
+                        MAKTX = null,
+                        NAME_SH = null,
+                        KOD_R_10 = null,
+                        note = null,
+                        term = DateTime.Now.AddDays(15),
+                        attempt = 0,
+                        create = DateTime.Now,
+                        create_user = user,
+                        change = null,
+                        change_user = null,
+                        close = null,
+                        close_user = null
+
+                    };
+                    sap = GetCurrentIncomingSupplyOfWebSAP(sap);
+                    ef_sap.Add(sap);
+                }
+                else
+                {
+                    sap.change = DateTime.Now;
+                    sap.change_user = user;
+                    sap = GetCurrentIncomingSupplyOfWebSAP(sap);
+                    ef_sap.Update(sap);
+                };
+                return sap;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetSAPIncomingSupply(context={0}, id_arrival_car={1}, num={2}, doc_uz={3}, date_doc_uz={4}, code_border_checkpoint={5}, name_border_checkpoint={6}, cross_time={7}, add={8}, user={9})", context, id_arrival_car, num, doc_uz, date_doc_uz, code_border_checkpoint, name_border_checkpoint, cross_time, add, user), servece_owner, eventID);
+                return null;
+            }
+        }
+
         #endregion
 
         #region ОБНОВЛЕНИЕ ИСХОДЯЩЕЙ ПОСТАВКИ
