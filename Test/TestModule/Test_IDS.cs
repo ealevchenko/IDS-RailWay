@@ -432,6 +432,22 @@ namespace Test.TestModule
             IDS_WIR ids = new IDS_WIR(service.Test);
             int result = ids.UpdateSendingEPD(@"EUROPE\ealevchenko");
         }
+        /// <summary>
+        /// Тест переноса вагона в левую сторону
+        /// </summary>
+        public void IDS_WIR_OperationIncomingWagon()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            //ids.OperationIncomingWagon(1427183, @"EUROPE\test");
+        }
+        /// <summary>
+        /// Тест поиска документа по номеру накладной и номеру вагона
+        /// </summary>
+        public void IDS_WIR_Search_UZ_DOC()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            ids.Search_UZ_DOC("0675011", 52830882, true, true);
+        }
         #endregion
 
         #region IDSThread

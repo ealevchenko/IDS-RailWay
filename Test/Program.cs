@@ -231,6 +231,8 @@ namespace Test
             //tids.IDS_WIR_UpdateArrivalEPD();                            // Тест функции сервиса обновления входящих документов
             //tids.IDS_WIR_UpdateSendingEPD();                            // Тест функции сервиса обновления исходящих документов
 
+            //tids.IDS_WIR_OperationIncomingWagon();                       // Тест переноса вагона в левую сторону
+            tids.IDS_WIR_Search_UZ_DOC();                               // Тест поиска документа по номеру накладной и номеру вагона
             #endregion
 
             #region Test_Logs тест логирования
@@ -246,7 +248,7 @@ namespace Test
             Test_Metrans tmt = new Test_Metrans();
             //tmt.MTTransfer_TransferApproaches();
             //tmt.MTTransfer_TransferArrival();
-            tmt.MTTransfer_TransferArrivalAPI(); // Тест переноса метранса через API
+            //tmt.MTTransfer_TransferArrivalAPI(); // Тест переноса метранса через API
             //tmt.MTThread_SFTPTransfer();
             //tmt.MTTransfer_WebApiClientMT();
             //tmt.MTThread_Start_TransferWT();
