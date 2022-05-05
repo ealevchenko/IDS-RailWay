@@ -62,10 +62,24 @@
     // Диапазон времени
     var start = moment().set({ 'hour': 0, 'minute': 0, 'second': 0 })._d;
     var stop = moment().set({ 'hour': 23, 'minute': 59, 'second': 59 })._d;
-    var id_station = null; // По умолчанию не выбрана
+    var id_station = null;  // По умолчанию не выбрана
     var list_station = [];
+    var id_sostav = null;   // По умолчанию не выбрана
+
+    // Считаем строку с дополнительными параметрами
+    var id_arrival = getUrlVar('id_arrival');
+    var arrival = getUrlVar('arrival');
+
     // После загрузки документа
     $(document).ready(function ($) {
+
+        if (id_arrival && arrival) {
+            start = moment(arrival).set({ 'hour': 0, 'minute': 0, 'second': 0 })._d;
+            stop = moment(arrival).set({ 'hour': 23, 'minute': 59, 'second': 59 })._d;
+
+            id_sostav = Number(id_arrival);
+        }
+
         LockScreen(langView('mi_init_main', App.Langs));
         // Загрузим справочники, с признаком обязательно
         load_db(['station'], true, function (result) {
@@ -133,7 +147,7 @@
                 if (process === 0) {
                     // Загрузим составы
                     table_incoming_sostav.load_outgoing_sostav(start, stop, function (sostav) {
-                        this.view(sostav, id_station, null);
+                        this.view(sostav, id_station, id_sostav);
                         LockScreenOff();
                     }.bind(table_incoming_sostav));
                 }

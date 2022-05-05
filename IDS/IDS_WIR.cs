@@ -15,6 +15,24 @@ using System.Globalization;
 namespace IDS
 {
     /// <summary>
+    /// Класс набора данных отображения ЭПД в ИДС 
+    /// </summary>
+    //public class IDS_UZ_DOC
+    //{
+    //    public string num_doc { get; set; }
+    //    public int revision { get; set; }
+    //    public int? status { get; set; }
+    //    public int? num_uz { get; set; }
+    //    public string code_from { get; set; }
+    //    public string code_on { get; set; }
+    //    public DateTime? dt { get; set; }
+    //    public string xml_doc { get; set; }
+    //    public string xml_final { get; set; }
+    //    public OTPR otpr { get; set; }
+
+    //}
+
+    /// <summary>
     /// Класс данных задание на роспуск
     /// </summary>
     public class DissolutionWagon
@@ -594,7 +612,7 @@ namespace IDS
                 EFArrivalCars ef_arr_car = new EFArrivalCars(context);
                 ArrivalSostav sostav = ef_arr_sostav.Context.Where(s => s.id == id_sostav).FirstOrDefault();
                 if (sostav == null) return (int)errors_base.not_arrival_sostav_db; // В базе данных нет записи состава для оправкиия
-                if (sostav.status >0) return (int)errors_base.error_status_arrival_sostav; // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
+                if (sostav.status > 0) return (int)errors_base.error_status_arrival_sostav; // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
                 if (sostav.id_arrived != null) return (int)errors_base.error_status_arrival_sostav; // Ошибка статуса состава (Состав введен не руками)
                 List<ArrivalCars> list_cars = ef_arr_car.Context.Where(s => s.id_arrival == id_sostav).ToList();
                 if (list_cars != null && list_cars.Count > 0)
@@ -604,7 +622,8 @@ namespace IDS
                     if (list_adoption_cars != null && list_adoption_cars.Count > 0) return (int)errors_base.arrival_cars_adoption; // Запрет операции вагон(ы) прибывшего состава уже приняты
                 }
                 // Проверки закончены
-                if (list_cars != null && list_cars.Count > 0) {
+                if (list_cars != null && list_cars.Count > 0)
+                {
                     ef_arr_car.Delete(list_cars.Select(w => w.id).ToList());
                 }
                 ef_arr_sostav.Delete(sostav.id);
@@ -613,6 +632,60 @@ namespace IDS
             catch (Exception e)
             {
                 e.ExceptionMethodLog(String.Format("DeleteManualArrivalSostav(id_sostav={0})", id_sostav), servece_owner, eventID);
+                return (int)errors_base.global; // Глобальная ошибка
+            }
+        }
+
+        public int OperationIncomingWagon(long id_arrival_car, int mode, string nom_main_doc, string nom_doc, string user)
+        {
+            try
+            {
+                EFDbContext context = new EFDbContext();
+                EFArrivalCars ef_arr_car = new EFArrivalCars(context);
+                EFUZ_DOC ef_uz_doc = new EFUZ_DOC(context);
+                EFArrival_UZ_Document ef_arr_uz_doc = new EFArrival_UZ_Document(context);
+                ArrivalCars car = ef_arr_car.Context.Where(c => c.id == id_arrival_car).FirstOrDefault();
+                if (car == null) return (int)errors_base.not_arrival_cars_db;                               // Ошибка, нет записи вагона по прибытию  
+                if (car.arrival == null) return (int)errors_base.arrival_cars_arrival;                      // Запрет операции вагон уже принят                
+                if (String.IsNullOrWhiteSpace(car.num_doc)) return (int)errors_base.arrival_cars_num_doc;   // Запрет по вагону нет документа уз                
+                // Вагон проверен
+                EFIDS.Entities.UZ_DOC doc_uz = ef_uz_doc.Context.Where(d => d.num_doc == car.num_doc).FirstOrDefault();
+                if (doc_uz == null) return (int)errors_base.not_inp_uz_vag_db;                                // Запрет в базе данных нет документа уз  
+                // Получим документ на вагон (если уже создали)
+                Arrival_UZ_Document arr_uz_doc = ef_arr_uz_doc.Context.Where(d => d.id_doc_uz == doc_uz.num_doc).FirstOrDefault();
+                if (arr_uz_doc == null)
+                {
+                    //// Документ не создан, создадим
+                    //arr_uz_doc = new Arrival_UZ_Document()
+                    //{
+                    //  id = 0,
+                    //  id_doc_uz = ,
+                    //    nom_doc = ,
+                    //    nom_main_doc = ,
+                    //    code_stn_from = ,
+                    //    code_stn_to = ,
+                    //    code_border_checkpoint = ,
+                    //    cross_time = ,
+                    //    code_shipper = ,
+                    //    code_consignee = ,
+                    //    klient = ,
+                    //    code_payer_sender = ,
+                    //    code_payer_arrival = ,
+                    //    distance_way = ,
+                    //    note = ,
+                    //    parent_id = , // сылка на основной
+                    //    create = DateTime.Now,
+                    //    create_user = user,
+                    //    change = ,
+                    //    change_user = ,
+                    //};
+                }
+                return 0;
+            }
+
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationIncomingWagon(id_arrival_car={0}, user={1})", id_arrival_car, user), servece_owner, eventID);
                 return (int)errors_base.global; // Глобальная ошибка
             }
         }
@@ -3902,6 +3975,107 @@ namespace IDS
             {
                 e.ExceptionMethodLog(String.Format("UpdateArrivalEPD()"), servece_owner, eventID);
                 return (int)errors_base.global;// Ошибка
+            }
+        }
+        /// <summary>
+        /// Метод поиска документа ЭПД в БД ИДС (Таблица UZ_DOC), если документа нет, документ ищим в промежуточной базе (таблица [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data]),
+        /// если документа нет в промежуточной базе и стоит признак search_sms = true, тогда документ ищим на УЗ через модуль SMS.
+        /// если документ найден и стоит признак add = true, тогда документ будет сохранен в БД ИДС (Таблица UZ_DOC)
+        /// </summary>
+        /// <param name="num_doc"></param>
+        /// <param name="num"></param>
+        /// <param name="add"></param>
+        /// <param name="search_sms"></param>
+        /// <returns></returns>
+        public ResultObject OperationUpdateUZ_DOC(string num_doc, int num, bool add, bool search_sms)
+        {
+            ResultObject result = new ResultObject();
+            try
+            {
+                EFDbContext context = new EFDbContext();
+                EFUZ_DOC ef_uz_doc = new EFUZ_DOC(context);
+                if (string.IsNullOrWhiteSpace(num_doc))
+                {
+                    result.result = (int)errors_base.not_input_value; // Ошибка входные параметры
+                    return result;
+                }
+
+                int doc_num = int.Parse(num_doc);
+                // Найдем документ в БД ИДС
+                EFIDS.Entities.UZ_DOC uz_doc = ef_uz_doc.Context.Where(d => d.num_uz == doc_num).FirstOrDefault();
+                if (uz_doc == null)
+                {
+                    // Документа нет в БД ИДС, продолжим поиск в промежуточной
+                    UZ_SMS uz_sms = new UZ_SMS();
+                    // Проверим по промежуточной базе
+                    UZ_DOC_FULL doc = uz_sms.Get_UZ_DOC_SDB_Of_Num_NumDoc(num, doc_num);
+                    if (doc == null && search_sms)
+                    {
+                        // Документа нет в промежуточной базе, продолжим поиск в СМС
+                        List<UZ_DOC_FULL> docs = uz_sms.Get_UZ_DOC_SMS_Of_NumDoc(num_doc); //num_doc
+                        if (docs != null && docs.Count() > 0)
+                        {
+                            doc = docs[0];
+                            uz_doc = new EFIDS.Entities.UZ_DOC()
+                            {
+                                num_doc = doc.id_doc,
+                                revision = doc.revision,
+                                num_uz = doc.num_uz,
+                                status = (int)doc.status,
+                                code_from = doc.sender_code != null ? doc.sender_code : "0",
+                                code_on = doc.recipient_code,
+                                dt = doc.dt,
+                                xml_doc = doc.xml,
+
+                            };
+                            result.obj = uz_doc;
+                            // Сохраним
+                            if (add)
+                            {
+                                ef_uz_doc.Add(uz_doc);
+                                result.mode = mode_obj.add;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        uz_doc = new EFIDS.Entities.UZ_DOC()
+                        {
+                            num_doc = doc.id_doc,
+                            revision = doc.revision,
+                            num_uz = doc.num_uz,
+                            status = (int)doc.status,
+                            code_from = doc.sender_code != null ? doc.sender_code : "0",
+                            code_on = doc.recipient_code,
+                            dt = doc.dt,
+                            xml_doc = doc.xml,
+
+                        };
+                        result.obj = uz_doc;
+                        // Сохраним
+                        if (add)
+                        {
+                            ef_uz_doc.Add(uz_doc);
+                            result.mode = mode_obj.add;
+                        }
+                    }
+
+                }
+                if (uz_doc != null)
+                {
+                    if (context.Entry(uz_doc).State != System.Data.Entity.EntityState.Unchanged)
+                    {
+                        result.result = context.SaveChanges();
+                    }
+                }
+                result.obj = uz_doc;
+                return result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationUpdateUZ_DOC(num_doc={0}, num={1}, add={2}, search_sms={3})", num_doc, num, add, search_sms), servece_owner, eventID);
+                result.result = (int)errors_base.global;// Ошибка
+                return result;
             }
         }
         #endregion

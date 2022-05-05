@@ -2456,7 +2456,7 @@
                 var select = this.settings.data.find(function (o) {
                     return o.text === $.trim(this.$element.val());
                 }.bind(this));
-                return select ? select.value : null;
+                return select ? select.value : undefined;
             };
         };
         // вернуть техт
@@ -2507,11 +2507,20 @@
             data: [],
             default_value: null,
             fn_change: null,
+            check: null,
         }, options);
         this.init = function () {
             this.update(this.settings.data, this.settings.default_value);
             if (typeof this.settings.fn_change === 'function') {
-                this.$element.on("change", this.settings.fn_change.bind(this));
+                this.$element.on("change", function (event) {
+                    //this.settings.fn_change.bind(this);
+                    if (typeof this.settings.fn_change) {
+                        this.settings.fn_change(event);
+                    }
+                    if (typeof this.settings.check === 'function') {
+                        this.settings.check(element.val());
+                    };
+                }.bind(this));
             }
         };
         this.val = function (value) {
@@ -3508,7 +3517,7 @@
             label_class: null,
             textarea_size: null,
             textarea_rows: null,
-            textarea_cols : null,
+            textarea_cols: null,
             textarea_class: null,
             textarea_title: null,
             textarea_maxlength: null,
@@ -3759,6 +3768,7 @@
             element_data: [],
             element_default: -1,
             element_change: null,
+            element_check: null,
         }, options);
         //
         this.fe = new form_element();
@@ -3801,7 +3811,8 @@
         this.element = new this.fe.init_select(select.$select, {
             data: this.settings.element_data,
             default_value: this.settings.element_default,
-            change: this.settings.element_change,
+            fn_change: this.settings.element_change,
+            check: this.settings.element_check
         });
         //
         var ifb = new this.fe.bs_invalid_feedback();
@@ -4527,10 +4538,92 @@
         return true;
     };
     // --------------------------------------------------------------------------
+    // Проверка на пустое значение "INPUT"
+    validation_form.prototype.check_control_input_not_null = function (o, mes_error, mes_ok, out_message) {
+        if (o.val() !== null && o.val() !== '') {
+            this.set_control_ok(o.$element, mes_ok);
+            if (out_message) this.out_info_message(mes_ok);
+            return true;
+        } else {
+            this.set_control_error(o.$element, mes_error);
+            if (out_message) this.out_error_message(mes_error);
+            return false;
+        }
+    };
+    // Проверим Input введенное значение входит в диапазон (пустое значение - не допускается)
+    validation_form.prototype.checkInputOfRange = function (o, min, max, mes_error, mes_ok, out_message) {
+        if (o.val() !== '' && o.val() !== null) {
+            var value = Number(o.val());
+            if (isNaN(value) || value > max || value < min) {
+                this.set_control_error(o.$element, mes_error);
+                if (out_message) this.out_error_message(mes_error);
+                return false;
+            } else {
+                this.set_control_ok(o.$element, mes_ok);
+                if (out_message) this.out_info_message(mes_ok);
+                return true;
+            }
+        } else {
+            this.set_control_error(o.$element, mes_error);
+            if (out_message) this.out_error_message(mes_error);
+            return false;
+        }
+    };
+    // Проверим Input введенное значение входит в диапазон (пустое значение - допускается)
+    validation_form.prototype.checkInputOfRange_IsNull = function (o, min, max, mes_error, mes_ok, out_message) {
+        if (o.val() !== '' && o.val() !== null) {
+            var value = Number(o.val());
+            if (isNaN(value) || value > max || value < min) {
+                this.set_control_error(o.$element, mes_error);
+                if (out_message) this.out_error_message(mes_error);
+                return false;
+            } else {
+                this.set_control_ok(o.$element, mes_ok);
+                if (out_message) this.out_info_message(mes_ok);
+                return true;
+            }
+        } else {
+            this.set_control_ok(o.$element, mes_ok);
+            if (out_message) this.out_info_message(mes_ok);
+            return true;
+        }
+    };
+    // Проверка на пустое значение "SELECT"
+    validation_form.prototype.check_control_select_not_null = function (o, mes_error, mes_ok, out_message) {
+        if (Number(o.val()) >= 0) {
+            this.set_control_ok(o.$element, mes_ok);
+            if (out_message) this.out_info_message(mes_ok);
+            return true;
+        } else {
+            this.set_control_error(o.$element, mes_error);
+            if (out_message) this.out_error_message(mes_error);
+            return false;
+        }
+    };
     // Проверить элемент "autocomplete" на введенное значение
     validation_form.prototype.check_control_autocomplete = function (o, mes_error, mes_ok, mes_null, out_message) {
         if (o.text()) {
+            var s = o.val();
             if (o.val()) {
+                this.set_control_ok(o.$element, mes_ok);
+                if (out_message) this.out_info_message(mes_ok);
+                return true;
+            } else {
+                this.set_control_error(o.$element, mes_error);
+                if (out_message) this.out_error_message(mes_error);
+                return false;
+            }
+        } else {
+            this.set_control_error(o.$element, mes_null);
+            if (out_message) this.out_error_message(mes_null);
+            return false;
+        }
+    };
+    // Проверить элемент "autocomplete" на введенное значение (c учетом value = null)
+    validation_form.prototype.check_control_autocomplete_is_value_null = function (o, mes_error, mes_ok, mes_null, out_message) {
+        if (o.text()) {
+            var s = o.val();
+            if (o.val() !== undefined) {
                 this.set_control_ok(o.$element, mes_ok);
                 if (out_message) this.out_info_message(mes_ok);
                 return true;

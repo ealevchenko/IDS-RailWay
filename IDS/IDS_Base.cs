@@ -49,12 +49,17 @@ namespace IDS
         // таблицы прибытие -500..
         not_arrival_sostav_db = -501,              // В базе данных нет записи состава для оправки
         error_status_arrival_sostav = -502,        // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
-        not_arrival_cars_db = -505,                // В базе данных нет записи по вагонам для отправки
-        arrival_cars_arrival = -506,               // Запрет операции вагон уже отправлен
+        not_arrival_cars_db = -505,                // Ошибка, нет записи вагона по прибытию 
+        arrival_cars_arrival = -506,               // Запрет операции вагон уже принят
         arrival_cars_adoption = -507,              // Запрет операции вагон(ы) прибывшего состава уже приняты
+        arrival_cars_num_doc = -508,               // По вагону неопределен докумен уз
+        not_arrival_uz_vagon = -509,               // Ошибка, нет записи или ссылки на документ прибывшего вагона  
+        
+        // документы по прибытию
+        not_inp_uz_vag_db = -551,                   // В базе данных нет записи документа на вагон.
 
         // документы по прибытию
-        not_arrival_uz_vagon = -551,               // Ошибка, нет записи или ссылки на документ прибывшего вагона  
+        
 
         // таблицы отправки -600..      
         not_outgoing_sostav_db = -601,              // В базе данных нет записи состава для оправки
@@ -70,7 +75,6 @@ namespace IDS
         // документы на отправку
         exist_out_uz_vag = -651,                    // Запрет операции, строка по вагону уже создана.
         not_out_uz_vag_db = -652,                   // В базе данных нет записи документа на вагон.
-
 
         error_update_out_doc = -660,                        // Ошибка обновления документов (документ на группу вагонов)
         error_update_out_doc_pay = -661,                    // Ошибка обновления документов (платежки на документ на группу вагонов)                                                // 
@@ -132,7 +136,20 @@ namespace IDS
             this.result = 0;
         }
     }
-
+    public class ResultTwoObject
+    {
+        public Object obj1 { get; set; }
+        public Object obj2 { get; set; }
+        public mode_obj mode  { get; set; }
+        public int result { get; set; }
+        public ResultTwoObject()
+        {
+            this.obj1 = null;
+            this.obj2 = null;
+            this.mode = mode_obj.not;
+            this.result = 0;
+        }
+    }
     /// <summary>
     /// 
     /// </summary>

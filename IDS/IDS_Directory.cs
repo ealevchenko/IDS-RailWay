@@ -15,6 +15,7 @@ namespace IDS
     public class IDS_Directory : IDS_Base
     {
         private eventID eventID = eventID.IDS_Direct;
+        private bool select_uz_info = true;
 
         public IDS_Directory()
             : base()
@@ -1050,7 +1051,7 @@ namespace IDS
                 }
                 WebAPIClientUZ_GOV client = new WebAPIClientUZ_GOV(this.servece_owner); // Подключим WebAPI справочник УЗ
                 // Получим информацию из БД УЗ
-                UZWagonInfo info = client.GetInfoWagonOfNum(num);
+                UZWagonInfo info = this.select_uz_info ? client.GetInfoWagonOfNum(num): null;
                 //int? id_type_ownership = null;
                 // Определим АДМ -> id_countrys
                 Directory_Railway dir_rw = (info != null ? context.Directory_Railway.Where(r => r.railway_abbr_ru == info.admin).FirstOrDefault() : null);

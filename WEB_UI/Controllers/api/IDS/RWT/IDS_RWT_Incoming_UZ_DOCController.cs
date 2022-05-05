@@ -8,9 +8,19 @@ using System.Web.Http.Description;
 using EFIDS.Helper;
 using EFIDS.Abstract;
 using EFIDS.Entities;
+using IDS;
+using IDSLogs.Enum;
 
 namespace WEB_UI.Controllers.api
 {
+    public class OperationUZ_DOC
+    {
+        public string num_doc { get; set; }
+        public int num { get; set; }
+        public bool add { get; set; }
+        public bool search_sms { get; set; }
+    }
+
     [RoutePrefix("api/ids/rwt/uz_doc")]
     public class IDS_RWT_Incoming_UZ_DOCController : ApiController
     {
@@ -179,6 +189,59 @@ namespace WEB_UI.Controllers.api
             catch (Exception e)
             {
                 return -1;
+            }
+        }
+
+        /// <summary>
+        /// Выполнить операцию поиска ЭПД по всем БД ИДС, Промежуточной, СМС
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        // POST api/ids/rwt/uz_doc/operation/update_num_doc/
+        [HttpPost]
+        [Route("operation/update_num_doc")]
+        [ResponseType(typeof(ResultObject))]
+        public IHttpActionResult PostOperationUpdateUZ_DOC([FromBody] OperationUZ_DOC value)
+        {
+            try
+            {
+                IDS_WIR ids_dir = new IDS_WIR(service.WebAPI_IDS);
+                ResultObject result = ids_dir.OperationUpdateUZ_DOC(value.num_doc, value.num, value.add, value.search_sms);
+                if (result.obj != null) {
+                    result.obj = ((UZ_DOC)result.obj).GetUZ_DOC();
+                }
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Выполнить распарсить документ из XML
+        /// </summary>
+        /// <param name="xml"></param>
+        /// <returns></returns>
+        // POST: api/ids/rwt/uz_doc/otpr/xml/
+        [HttpPost]
+        [Route("otpr/xml")]
+        [ResponseType(typeof(UZ.OTPR))]
+        public IHttpActionResult PostOTPROfXML([FromBody] string xml)
+        {
+            try
+            {
+                UZ.UZ_Convert convert = new UZ.UZ_Convert();
+                UZ.OTPR otpr = null;
+                if (!String.IsNullOrWhiteSpace(xml))
+                {
+                    otpr = convert.XMLToOTPR(xml);
+                }
+                return Ok(otpr);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
             }
         }
     }
