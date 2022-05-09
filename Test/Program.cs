@@ -232,7 +232,9 @@ namespace Test
             //tids.IDS_WIR_UpdateSendingEPD();                            // Тест функции сервиса обновления исходящих документов
 
             //tids.IDS_WIR_OperationIncomingWagon();                       // Тест переноса вагона в левую сторону
-            tids.IDS_WIR_Search_UZ_DOC();                               // Тест поиска документа по номеру накладной и номеру вагона
+            tids.IDS_WIR_OperationUpdateUZ_DOC1();                         // Тест поиска документа по номеру накладной и номеру вагона
+            //tids.IDS_WIR_OperationUpdateUZ_DOC2();                         // Тест поиска документа по номеру вагона грузополучателям , станциям и времени
+            //tids.IDS_WIR_OperationUpdateUZ_DOC3();                         // Тест поиска документа по номеру вагона грузополучателям , станциям и времени
             #endregion
 
             #region Test_Logs тест логирования

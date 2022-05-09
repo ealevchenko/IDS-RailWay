@@ -443,11 +443,39 @@ namespace Test.TestModule
         /// <summary>
         /// Тест поиска документа по номеру накладной и номеру вагона
         /// </summary>
-        public void IDS_WIR_Search_UZ_DOC()
+        public void IDS_WIR_OperationUpdateUZ_DOC1()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            ids.Search_UZ_DOC("0675011", 52830882, true, true);
+            ids.OperationUpdateUZ_DOC("0675011", 52830882, true, true);
         }
+        /// <summary>
+        /// Тест поиска документа по номеру вагона грузополучателям , станциям и времени
+        /// </summary>
+        public void IDS_WIR_OperationUpdateUZ_DOC2()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            List<int> consignees = new List<int>() { 7932, 6302, 659 };
+            List<int> stations = new List<int>() { 457905, 466904, 466923, 467004, 467108, 467201, 466603, 457708 };
+            DateTime? dt_arrival = new DateTime(2022, 5, 6, 6, 40, 0);
+            //2021-12-03 11:42:05.133
+            //52830882
+            // 2022-05-06 06:40:00
+            ids.OperationUpdateUZ_DOC(56299563, consignees, stations, dt_arrival, -36, true, true);
+        }
+        /// <summary>
+        /// Тест поиска документа по номеру вагона грузополучателям , станциям и времени
+        /// </summary>
+        public void IDS_WIR_OperationUpdateUZ_DOC3()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            DateTime? dt_arrival = new DateTime(2022, 5, 1, 5, 0, 0);
+            //2021-12-03 11:42:05.133
+            //52830882
+            // 2022-05-06 06:40:00
+            ids.OperationUpdateUZ_DOC(52926623, dt_arrival, true, true);
+        }
+
+
         #endregion
 
         #region IDSThread
